@@ -32,15 +32,18 @@
                 </select>
             </span>
             <span class="ipu_wrap right_float">
-                <button type="button" class="defaultBtn radius blue" id="DAILY_PROCESS_STATUS_SEARCH">검색</button>
+<%--                <button type="button" class="defaultBtn radius blue" id="DAILY_PROCESS_STATUS_SEARCH">검색</button>--%>
             </span>
         </form>
     </div>
     <div class="leftWrap left_float">
         <div style="height: inherit;">
             <div class="d-flex align-items-center">
-                <div></div>
+                <div>
+                    <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#TARGET_AMOUNT_REGISTER_POPUP">목표금액 설정</button>
+                </div>
                 <div class="ml-auto">
+                    <button type="button" id="DAILY_PROCESS_STATUSLEFT_EXPORT_EXCEL"><img src="/resource/asset/images/common/export_excel.png"></button>
                     <button type="button" class="defaultBtn btn-100w green" id="DAILY_PROCESS_STATUS_LEFT_SAVE">저장</button>
                 </div>
             </div>
@@ -56,10 +59,9 @@
             <div style="height: inherit;">
                 <div class="d-flex align-items-center">
                     <div>
-<%--                        <span class="chk_box"><input name="VIEW_UNIT_PRICE_INFORMATION" id="VIEW_UNIT_PRICE_INFORMATION" type="checkbox"><label for="VIEW_UNIT_PRICE_INFORMATION"> 단가정보 보기</label></span>--%>
+                        <span class="chk_box"><input name="VIEW_UNIT_PRICE_INFORMATION" id="VIEW_UNIT_PRICE_INFORMATION" type="checkbox"><label for="VIEW_UNIT_PRICE_INFORMATION"> 단가정보 보기</label></span>
                     </div>
                     <div class="ml-auto">
-                        <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#TARGET_AMOUNT_REGISTER_POPUP">목표금액 설정</button>
                         <button type="button" class="defaultBtn btn-100w green" id="DAILY_PROCESS_STATUS_RIGHT_SAVE">저장</button>
                     </div>
                 </div>
@@ -115,7 +117,8 @@
     $(function () {
         'use strict';
         /* init */
-        // TODO: element name 변경
+        let isRightSaveButtonClick = false;
+        let selectedRowIndex = [];
         fnAppendSelectboxYear('DAILY_PROCESS_STATUS_YEAR', 10);
         fnAppendSelectboxMonth('DAILY_PROCESS_STATUS_MONTH');
         $('#DAILY_PROCESS_STATUS_MONTH').val(CURRENT_MONTH < 9 ? '0' + (CURRENT_MONTH + 1) : CURRENT_MONTH + 1).prop('selected', true);
@@ -146,14 +149,14 @@
                     {title: '수량', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PART_QTY'}
                 ]
             },
-            {title: '예상금액', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT'},
-            {title: '목표금액', dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
+            {title: '예상금액', minWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT'},
+            {title: '목표금액', minWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
             {title: '달성<br>비율', minWidth: 40, maxWidth: 40, dataIndx: 'GOAL_RATIO'},
             {title: '기준<br>근무', minWidth: 40, maxWidth: 40, dataType: 'integer', format: '#,###', dataIndx: 'WORKING_TIME'},
             {
                 title: '부적합', align: 'center', colModel: [
-                    {title: '품수', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ERROR_CNT'},
-                    {title: '수량', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'ERROR_QTY'}
+                    {title: '품수', minWidth: 40, maxWidth: 45, dataType: 'integer', format: '#,###', dataIndx: 'ERROR_CNT'},
+                    {title: '수량', minWidth: 40, maxWidth: 45, dataType: 'integer', format: '#,###', dataIndx: 'ERROR_QTY'}
                 ]
             },
             {
@@ -191,7 +194,10 @@
                 const data = $dailyProcessStatusLeftGrid.pqGrid('option', 'dataModel.data');
 
                 if (data.length > 0) {
-                    $dailyProcessStatusLeftGrid.pqGrid('setSelection', {rowIndx: 0});
+                    const rowIndx = isRightSaveButtonClick ? selectedRowIndex[0] : 0;
+                    console.log(rowIndx);
+
+                    $dailyProcessStatusLeftGrid.pqGrid('setSelection', {rowIndx: rowIndx});
                 }
             },
             rowSelect: function (event, ui) {
@@ -199,6 +205,8 @@
                     const rowData = ui.addList[0].rowData;
                     const dt = rowData.DT || null;
                     const workFactory = rowData.WORK_FACTORY || null;
+                    selectedRowIndex[0] = rowData.pq_ri;
+
                     $("#DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM").find("#DT").val(dt);
                     $("#DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM").find("#WORK_FACTORY").val(workFactory);
                     $dailyProcessStatusRightGrid.pqGrid("option", "dataModel.postData", function(ui){
@@ -209,14 +217,14 @@
             },
             rowInit: function (ui) {
                 if (ui.rowData.WEEK_DAY_NM === '일') {
-                    return {style: {'color': 'red'}};
+                    return {style: {'color': '#FF0000'}};
                 }
 
                 switch (ui.rowData.CAL_DT_NM) {
                     case '합계':
-                        return {style: {'background': 'yellow'}};
+                        return {style: {'background': '#FFFF00'}};
                     case '총계':
-                        return {style: {'background': 'moccasin'}};
+                        return {style: {'background': '#FFE4B5'}};
                 }
             }
         };
@@ -246,7 +254,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
+            {title: '관리번호', minWidth: 150, maxWidth: 180, dataIndx: 'CONTROL_NUM'},
             {
                 title: '', minWidth: 30, maxWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
@@ -265,26 +273,26 @@
             {title: '가공<br>납기', minWidth: 40, maxWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT'},
             {title: '발주량', minWidth: 40, maxWidth: 40, dataIndx: 'PART_QTY'},
             {title: '가공완료<br>일시', minWidth: 75, maxWidth: 75, dataIndx: 'INNER_WORK_FINISH_DT'},
-            {title: '소요<br>시간', maxWidth: 55, dataIndx: 'WORK_TIME'},
+            {title: '소요<br>시간(분)', maxWidth: 55, dataIndx: 'WORK_TIME'},
             {
-                title: '예상단가', minWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT', editable: true,
+                title: '예상단가', minWidth: 65, maxWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT', editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
-            {title: '합계금액', minWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
+            {title: '합계금액', minWidth: 65, maxWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
                 title: 'P/H', dataType: 'integer', format: '#,###', dataIndx: 'PRICE_PER_HOUR',
                 style: {'color': 'blue'}
             },
             {
                 title: '단가정보', align: 'center', colModel: [
-                    {title: '종전가', maxWidth: 55, dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT'},
-                    {title: '견적가', maxWidth: 55, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT'},
-                    {title: '공급가', maxWidth: 55, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'}
+                    {title: '종전가', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT', hidden: true},
+                    {title: '견적가', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', hidden: true},
+                    {title: '공급가', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', hidden: true}
                 ]
             },
             {
                 title: '검사결과', align: 'center', colModel: [
-                    {title: '등급', minWidth: 40, maxWidth: 40, dataIndx: 'INSPECT_GRADE_NM'},
+                    {title: '등급', minWidth: 30, maxWidth: 40, dataIndx: 'INSPECT_GRADE_NM'},
                     {title: '검사코드', maxWidth: 95, dataIndx: 'INSPECT_RESULT_NM'}
                 ]
             },
@@ -329,8 +337,24 @@
             {title: '대상공장', dataIndx: 'WORK_FACTORY', hidden: true},
             {title: '대상공장', dataIndx: 'WORK_FACTORY_NM'},
             {
-                title: '목표금액', dataType: 'integer', format: '#,###', dataIndx: 'GOAL_AMT', editable: true,
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+                title: '검사결과', align: 'center', colModel: [
+                    {title: '등급', minWidth: 30, maxWidth: 40, dataIndx: 'INSPECT_GRADE_NM'},
+                    {title: '검사코드', maxWidth: 95, dataIndx: 'INSPECT_RESULT_NM'}
+                ]
+            },
+            {
+                title: '목표금액', align: 'center',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                colModel: [
+                    {
+                        title: '생산목표', dataType: 'integer', format: '#,###', dataIndx: 'PRODUCTION_GOAL_AMT', editable: true,
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+                    },
+                    {
+                        title: '매출목표', dataType: 'integer', format: '#,###', dataIndx: 'SALES_GOAL_AMT', editable: true,
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+                    }
+                ]
             }
         ];
         const targetAmountObj = {
@@ -377,17 +401,18 @@
         /* init */
 
         /* function */
-        // const changeViewColumn = function (checked) {
-        //     const $dailyProcessStatusRightGridInstance = $dailyProcessStatusRightGrid.pqGrid('getInstance').grid;
-        //     const Cols = $dailyProcessStatusRightGridInstance.Columns();
-        //     const array = ['PREV_UNIT_FINAL_AMT','UNIT_FINAL_EST_AMT','UNIT_FINAL_AMT'];
-        //     const parameter = checked ? 'diShow' : 'diHide';
-        //     Cols.hide({[parameter]: array});
-        // };
+        const changeViewColumn = function (checked) {
+            const $dailyProcessStatusRightGridInstance = $dailyProcessStatusRightGrid.pqGrid('getInstance').grid;
+            const Cols = $dailyProcessStatusRightGridInstance.Columns();
+            const array = ['PREV_UNIT_FINAL_AMT','UNIT_FINAL_EST_AMT','UNIT_FINAL_AMT'];
+            const parameter = checked ? 'diShow' : 'diHide';
+            Cols.hide({[parameter]: array});
+        };
         /* function */
 
         /* event */
-        $('#DAILY_PROCESS_STATUS_SEARCH').on('click', function () {
+        $('#DAILY_PROCESS_STATUS_LEFT_SEARCH_FORM').on('change', function () {
+            isRightSaveButtonClick = false;
             $dailyProcessStatusLeftGrid.pqGrid('option', 'dataModel.postData', function () {
                 return fnFormToJsonArrayData('#DAILY_PROCESS_STATUS_LEFT_SEARCH_FORM');
             });
@@ -401,6 +426,7 @@
         });
         $('#DAILY_PROCESS_STATUS_RIGHT_SAVE').on('click', function () {
             const updateQueryList = ['reportMapper.updateControlNote', 'reportMapper.updateControlPartForecastUnitAmt'];
+            isRightSaveButtonClick = true;
 
             fnModifyPQGrid($dailyProcessStatusRightGrid, [], updateQueryList);
             //FIXME: 변경된 데이터의 cell만 reload
@@ -408,9 +434,9 @@
                 $dailyProcessStatusLeftGrid.pqGrid('refreshDataAndView');
             }, 1000);
         });
-        // $('#VIEW_UNIT_PRICE_INFORMATION').on('click', function () {
-        //     changeViewColumn(this.checked);
-        // });
+        $('#VIEW_UNIT_PRICE_INFORMATION').on('click', function () {
+            changeViewColumn(this.checked);
+        });
 
         $('#TARGET_AMOUNT_REGISTER_POPUP').on({
             'show.bs.modal': function () {
@@ -437,6 +463,16 @@
             const updateQueryList = ['reportMapper.createTargetAmount'];
 
             fnModifyPQGrid($targetAmountRegisterGrid, insertQueryList, updateQueryList);
+        });
+        
+        $('#DAILY_PROCESS_STATUSLEFT_EXPORT_EXCEL').on('click', function () {
+            const blob = $dailyProcessStatusLeftGrid.pqGrid('getInstance').grid.exportData({
+               format: 'xlsx',
+               render: true,
+               type: 'blob'
+            });
+
+            saveAs(blob, '일별 가공현황.xlsx' );
         });
         /* event */
     });

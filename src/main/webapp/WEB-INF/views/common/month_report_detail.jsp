@@ -26,7 +26,7 @@
     <div class="d-flex align-items-center">
         <div>
             <form class="form-inline" id="MONTH_REPORT_DETAIL_LIST_VIEW_FORM" name="MONTH_REPORT_DETAIL_LIST_VIEW_FORM" role="form">
-                <input type="hidden" name="queryId" id="queryId" value="reportMapper.selectMonthlyReportDetailList1">
+                <input type="hidden" name="queryId" id="queryId" value="reportMapper.selectMonthlyReportDetailList">
                 <span class="slt_wrap">
                     <label>조회 대상 납기</label>
                 </span>
@@ -100,6 +100,7 @@
     <div class="d-flex align-items-center">
         <div></div>
         <div class="ml-auto">
+            <span class="chk_box"><input name="VIEW_UNIT_PRICE_INFORMATION_1" id="VIEW_UNIT_PRICE_INFORMATION_1" type="checkbox"><label for="VIEW_UNIT_PRICE_INFORMATION_1"> 단가정보</label></span>
             <button type="button" class="defaultBtn btn-100w green" id="MONTH_REPORT_DETAIL_LIST_VIEW_SAVE">저장</button>
         </div>
     </div>
@@ -205,48 +206,48 @@
             {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM'},
             {title: '발주<br>납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
             {title: '발주<br>량', dataIndx: 'PART_QTY'},
-            {title: '진행상태', dataIndx: 'PART_STATUS_NM'},
+            {title: '진행상태', width: 80, dataIndx: 'PART_STATUS_NM'},
             {title: '수행<br>공장', dataIndx: 'WORK_FACTORY_NM'},
-            {title: '가공완료<br>일시', width: 70, dataIndx: 'INNER_WORK_FINISH_DT'},
+            {title: '가공완료<br>일시', width: 80, dataIndx: 'INNER_WORK_FINISH_DT'},
             {title: '가공시간', dataIndx: 'WORK_TIME'},
-            {title: '외주<br>업체', dataIndx: 'OUTSIDE_COMP_NM'},
-            {title: '외주<br>입고일시', dataIndx: 'OUTSIDE_IN_DT'},
-            {title: '출고일시', dataIndx: 'ORDER_OUT_FINISH_DT'},
+            {title: '외주<br>업체', width:75, dataIndx: 'OUTSIDE_COMP_NM'},
+            {title: '외주<br>입고일시', width: 80, dataIndx: 'OUTSIDE_IN_DT'},
+            {title: '출고일시', width: 80, dataIndx: 'OUT_FINISH_DT'},
             {
                 title: '예상단가', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT', editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
             {title: '합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {title: 'P/H', dataType: 'integer', format: '#,###', dataIndx: 'PRICE_PER_HOUR'},
-            // {
-            //     title: '단가정보', align: 'center', colModel: [
-            //         {title: '종전가', dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT', hidden: true},
-            //         {title: '견적가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', hidden: true},
-            //         {title: '공급가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', hidden: true}
-            //     ]
-            // },
             {
-                title: '검사결과', align: 'center', colModel: [
-                    {title: '등급', dataIndx: 'INSPECT_GRADE_NM'},
-                    {title: '검사코드', dataIndx: 'INSPECT_RESULT_NM'}
+                title: '단가정보', align: 'center', colModel: [
+                    {title: '종전가', dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT', hidden: true},
+                    {title: '견적가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', hidden: true},
+                    {title: '공급가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', hidden: true}
+                ]
+            },
+            {
+                title: '검사결과(First)', align: 'center', colModel: [
+                    {title: '등급', minWidth: 30, maxWidth: 40, dataIndx: 'INSPECT_GRADE_NM'},
+                    {title: '검사코드', maxWidth: 95, dataIndx: 'INSPECT_RESULT_NM'}
                 ]
             },
             {title: '부적합<br>수량', dataIndx: 'ERROR_QTY'},
             {title: '반품<br>수량', dataIndx: 'RETURN_QTY'},
             {
-                title: '비고', dataIndx: 'NOTE', editable: true,
+                title: '비고', width: 100, dataIndx: 'NOTE', editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             }
         ];
         const monthReportDetailListViewObj = {
-            height: 600,
+            height: 750,
             collapsible: false,
             postRenderInterval: -1,
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
             numberCell: {title: 'No.'},
-            scrollModel: {autoFit: true},
+            // scrollModel: {autoFit: true},
             trackModel: {on: true},
             editable: false,
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
@@ -271,6 +272,16 @@
         };
        const $monthReportDetailListViewGrid = $('#' + detailListViewGridId).pqGrid(monthReportDetailListViewObj);
        /* init */
+
+        /* function */
+        const changeViewColumn = function (checked) {
+            const $monthReportDetailListViewGridInstance = $monthReportDetailListViewGrid.pqGrid('getInstance').grid;
+            const Cols = $monthReportDetailListViewGridInstance.Columns();
+            const array = ['PREV_UNIT_FINAL_AMT','UNIT_FINAL_EST_AMT','UNIT_FINAL_AMT'];
+            const parameter = checked ? 'diShow' : 'diHide';
+            Cols.hide({[parameter]: array});
+        };
+        /* function */
 
         /* event */
         // TODO: 창크기가 변경 되면 그리드 높이를 조절한다.
@@ -299,6 +310,10 @@
            const updateQueryList = ['reportMapper.updateControlPartForecastUnitAmt', 'reportMapper.updateControlNote'];
 
             fnModifyPQGrid($monthReportDetailListViewGrid, [], updateQueryList);
+        });
+
+        $('#VIEW_UNIT_PRICE_INFORMATION_1').on('click', function () {
+            changeViewColumn(this.checked);
         });
        /* event */
     });

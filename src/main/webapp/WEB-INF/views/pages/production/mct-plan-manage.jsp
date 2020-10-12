@@ -405,29 +405,37 @@
                     {title: 'E/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
-            {title: 'MCT Actual', align: 'center',
-                colModel: [
-                    {title: '1', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_1'},
-                    {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_1'},
-                    {title: '2', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_2'},
-                    {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_2'},
-                    {title: '3', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_3'},
-                    {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_3'},
-                    {title: '4', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_4'},
-                    {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_4'},
-                ]
-            },
-            {title: '총 가공<br>시간(분)', dataType: 'integer', align: 'right', dataIndx: 'MCT_WORK_TIME'},
+            // {title: 'MCT Actual', align: 'center',
+            //     colModel: [
+            //         {title: '1', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_1'},
+            //         {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_1'},
+            //         {title: '2', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_2'},
+            //         {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_2'},
+            //         {title: '3', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_3'},
+            //         {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_3'},
+            //         {title: '4', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_4'},
+            //         {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_4'},
+            //     ]
+            // },
+            // {title: '총 가공<br>시간(분)', dataType: 'integer', align: 'right', dataIndx: 'MCT_WORK_TIME'},
             {title: '현재위치', minWidth: 40, width: 100, dataType: 'string', dataIndx: 'POP_POSITION'},
             {title: '진행상태', minWidth: 40, width: 100, dataType: 'string', dataIndx: 'PART_STATUS'},
-            {title: '가공진행 현황', align: 'center',
+            {title: 'NC 가공 현황', align: 'center',
                 colModel: [
-                    {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_NC'},
-                    {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_MILLING'},
-                    {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK'},
-                    {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING'},
+                    {title: '공정', dataIndx: 'NC_WORK_TYPE'},
+                    {title: '기기명', dataIndx: 'EQUIP_NM_1'},
+                    {title: '작업자', dataIndx: 'NC_WORK_USER_NM'},
+                    {title: 'R/t', datatype: 'integer', dataIndx: 'WORKING_TIME_1'},
                 ]
             },
+            // {title: '가공진행 현황', align: 'center',
+            //     colModel: [
+            //         {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_NC'},
+            //         {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_MILLING'},
+            //         {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK'},
+            //         {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING'},
+            //     ]
+            // },
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
@@ -441,9 +449,25 @@
                     });
                 }
             },
-            {title: '관리번호', width: 120, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM'},
-            {title: '소재종류<br>상세', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+            {title: '관리번호', width: 160, dataType: 'string', dataIndx: 'CONTROL_NUM_PART_NUM'},
+            // {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM'},
+            {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
+            {
+                title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
+                render: function (ui) {
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>';
+                    else return '';
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('#imageView').bind('click', function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -468,7 +492,7 @@
             },
             {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
             {title: '규격', width: 100, dataType: 'string', dataIndx: 'STANDARD_SIZE'},
-            {title: '소재 Size', width: 100, dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
+            {title: '주문소재 Size', width: 100, dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
             {title: '비고<br>기록사항', minWidth: 20, width: 100, dataType: 'string', dataIndx: 'NOTE'},
             {title: '가공계획<br>비고', minWidth: 20, width: 150, dataType: 'string', dataIndx: 'MCT_NOTE',
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
@@ -521,13 +545,13 @@
             {title: '이전위치', dataType: 'string', minWidth: 40, width: 100, dataIndx: 'POP_PREV_POSITION'},
             {
                 title: '과거 경험', align: 'center', colModel: [
-                    {title: '단위<br>소요', dataType: 'string', minWidth: 40, width: 100, dataIndx: 'LAST_UNIT_LEAD_TIME'},
+                    {title: '총 L/T', dataType: 'string', minWidth: 40, width: 40, dataIndx: 'LAST_UNIT_LEAD_TIME'},
                     {title: '실행일자', dataType: 'string', minWidth: 40, width: 100, dataIndx: 'LAST_MCT_START_DT'},
-                    {title: '작업자', dataType: 'string', minWidth: 40, width: 100, dataIndx: 'LAST_MCT_WORK_USER'}
+                    {title: '작업자', dataType: 'string', width: 65, dataIndx: 'LAST_MCT_WORK_USER'}
                 ]
             },
-            {title: '확정<br>일시', minWidth: 40, width: 50, dataType: 'string', dataIndx: 'CONTROL_STATUS_DT'},
-            {title: '소재<br>입고일시', minWidth: 40, width: 50, dataType: 'string', dataIndx: 'MATERIAL_RECEIPT_DT'}
+            {title: '확정<br>일시', minWidth: 40, width: 40, dataType: 'string', dataIndx: 'CONTROL_STATUS_DT'},
+            {title: '소재<br>입고일시', width: 75, dataType: 'string', dataIndx: 'MATERIAL_RECEIPT_DT'}
         ];
         const processTargetGridObj = {
             height: '100%',
