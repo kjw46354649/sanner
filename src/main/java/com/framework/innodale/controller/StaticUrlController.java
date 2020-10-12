@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -216,6 +215,18 @@ public class StaticUrlController {
         return "/common/month_report_detail";
     }
 
+    /**
+     * 월간 상세현황 상세 List
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/monthReportInspectionDetail")
+    public String monthReportInspectionDetailController(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return "/common/month_report_inspection_detail";
+    }
 
     /**
      * 외주현황 상세 List

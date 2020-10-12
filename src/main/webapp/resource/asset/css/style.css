@@ -483,8 +483,8 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
 .arrow.right_Arrow:after {border-color:transparent transparent transparent #7d1919; top:-10px; left:20px;}
 
 .daily_process_status .toolWrap { width: 96%; border-right: 1px solid #e5e5e5; margin: 0 1%; height: 30px; overflow: hidden; padding: 5px 15px; background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); }
-.daily_process_status .leftWrap { width: 36%; height: 87vh; margin: 0.3% 0.15% 0.3% 1%; padding: 0.35%; background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); }
-.daily_process_status .rightWrap { width: 60%; height: 87vh; margin: 0.3% 1% 0.3% 0.15%; padding: 0.35%; background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); }
+.daily_process_status .leftWrap { width: 32%; height: 87vh; margin: 0.3% 0.15% 0.3% 1%; padding: 0.35%; background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); }
+.daily_process_status .rightWrap { width: 64%; height: 87vh; margin: 0.3% 1% 0.3% 0.15%; padding: 0.35%; background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)"; -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1); filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); }
 .daily_process_status p { display:inline; font-size: 1.6rem; font-family: 'NotoKrB'; color: #000; }
 .daily_process_status label { font-size: 1.2rem; color: #343434;}
 .daily_process_status hr { display: block; border: 0; border-top: 1px solid #e2e2e2; margin: 10px 0; }
@@ -529,4 +529,8 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
 
 .pq-grid-col, .pq-grid-row > .pq-grid-number-cell{
     border-color: #ececec;
+}
+
+#STATUS_BY_CLIENT_GRID [id^=pq-head-cell] {
+    background-color: #E0F1FC
 }
