@@ -1929,6 +1929,7 @@
                 C.ORDER_SEQ,
                 SF_GET_CODE_NM(1038, A.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
                 A.CONTROL_NUM, <!-- 관리번호 -->
+                B.PART_NUM,
                 C.ORDER_NUM, <!-- 발주번호 -->
                 B.DRAWING_NUM, <!-- 도면번호 -->
                 B.SIZE_TXT, <!-- 규격 -->
@@ -1958,6 +1959,7 @@
                 C.ORDER_SEQ,
                 SF_GET_CODE_NM(1038, A.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM,
                 A.CONTROL_NUM, <!-- 관리번호 -->
+                B.PART_NUM,
                 C.ORDER_NUM,
                 B.DRAWING_NUM,
                 B.SIZE_TXT,
@@ -1977,7 +1979,7 @@
                                                    AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
             WHERE D.INVOICE_NUM = #{INVOICE_NUM}
         ) X
-        ORDER BY X.CONTROL_SEQ, X.ORDER_NUM
+        ORDER BY X.CONTROL_NUM, X.PART_NUM, X.ORDER_NUM
     </select>
 
     <select id="selectTransactionStatementOrderStaff" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -2365,10 +2367,10 @@
             CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END EMERGENCY_YN_NM,
             A.ORDER_COMP_CD, SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
             SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
-            SF_GET_DATE_F(C.DELIVERY_DT, '', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
+            SF_GET_DATE_F(C.OUT_FINISH_DT, '', '') AS OUT_FINISH_DT, <!-- 발주정보_납품확인 -->
             A.CONTROL_NUM, C.ORDER_QTY, C.ORDER_NUM,
-            SF_GET_CODE_NM(1013, B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS,
-            SF_GET_CODE_NM(1009, D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION, <!-- 현재 등록된 위치 -->
+            SF_GET_CODE_NM('1013', B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS,
+            SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION, <!-- 현재 등록된 위치 -->
             G.INSPECT_GRADE, jmes.SF_GET_CODE_NM('1040', G.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 --> F.USER_NM, H.STAFF_NM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL
