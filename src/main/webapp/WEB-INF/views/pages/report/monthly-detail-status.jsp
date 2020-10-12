@@ -481,9 +481,7 @@
 
                             if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    // isProcessTargetListButtonClick = false;
-
-                                    // changeProcessTargetBeforeForm(rowData.DT, '', '', '', 'Y');
+                                    changeProcessTargetBeforeForm(rowData.DT);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
                             }
@@ -509,9 +507,7 @@
 
                             if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    // isProcessTargetListButtonClick = false;
-
-                                    // changeProcessTargetBeforeForm(rowData.DT, '', '', '', 'Y');
+                                    changeProcessTargetBeforeForm(rowData.DT);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
                             }
@@ -541,9 +537,7 @@
 
                             if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    // isProcessTargetListButtonClick = false;
-
-                                    // changeProcessTargetBeforeForm(rowData.DT, '', '', '', 'Y');
+                                    changeProcessTargetBeforeForm(rowData.DT);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
                             }
@@ -569,9 +563,7 @@
 
                             if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    // isProcessTargetListButtonClick = false;
-
-                                    // changeProcessTargetBeforeForm(rowData.DT, '', '', '', 'Y');
+                                    changeProcessTargetBeforeForm(rowData.DT);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
                             }
