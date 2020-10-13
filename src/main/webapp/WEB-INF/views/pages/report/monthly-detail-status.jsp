@@ -70,7 +70,7 @@
     <div class="modal-dialog" role="document" style="width: 1536px; height: 864px">
         <div class="modal-content" style="height: inherit;">
             <div class="modal-header">
-                <h5 class="modal-title" style="font-size: large; font-weight: bold">상세 List 조회</h5>
+                <h5 class="modal-title" style="font-size: large; font-weight: bold">발주처별 현황</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -21.5px">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -1285,7 +1285,7 @@
             if (monthReportDetailPopup === undefined || monthReportDetailPopup.closed) {
                 monthReportDetailPopup = window.open('/' + url, '', strOption);
             } else {
-                monthReportDetailPopup.location.reload();
+                monthReportDetailPopup.location.replace('/' + url);
                 monthReportDetailPopup.focus();
             }
         };
@@ -1387,7 +1387,7 @@
                type: 'blob'
             });
 
-            saveAs(blob, '발주처별 현황.xlsx' );
+            saveAs(blob, '발주처별 현황.xlsx');
         });
 
 
