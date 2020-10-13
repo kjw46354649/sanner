@@ -145,7 +145,7 @@
     // Open a popup immediately do go around popup blocker
     // Mostly only available on user interaction and the fileReader is async so...
     popup = popup || open('', '_blank');
-
+    debugger;
     if (popup) {
       popup.document.title = popup.document.body.innerText = 'downloading...';
     }

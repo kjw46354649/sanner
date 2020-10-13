@@ -465,7 +465,7 @@
                     , jmes.SF_GET_CODE_NM('1033',Y.WORK_TYPE,#{LOGIN_LOCALE}) AS WORK_TYPE_NM   <!-- 언어조건 -->
                     , jmes.SF_GET_DATE_F(P.ORDER_DUE_DT,'','') AS ORDER_DUE_DT
                     , P.PART_QTY
-                    , jmes.SF_GET_CODE_NM(1013, Y.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS_NM      <!-- 언어조건 -->
+                    , jmes.SF_GET_CODE_NM('1013', Y.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS_NM      <!-- 언어조건 -->
                     , jmes.SF_GET_CODE_NM('1014',Y.WORK_FACTORY,#{LOGIN_LOCALE}) AS WORK_FACTORY_NM   <!-- 언어조건 -->
                     , jmes.SF_GET_DATE_F(Y.INNER_WORK_FINISH_DT,'','M') AS INNER_WORK_FINISH_DT
                     , (SELECT ROUND(SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)),0) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = P.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ) AS WORK_TIME
@@ -497,7 +497,7 @@
                             , C.OUTSIDE_YN
                             , CASE WHEN C.INNER_WORK_FINISH_DT IS NULL THEN 'N' ELSE 'Y' END AS INNER_WORK_FINISH_YN
                             , CASE WHEN B.OUT_FINISH_DT IS NULL THEN 'N' ELSE 'Y' END AS OUT_FINISH_YN
-                            , DATE_FORMAT(B.OUT_FINISH_DT,'%Y%m%d') AS OUT_FINISH_DT
+                            , B.OUT_FINISH_DT
                             , C.FORECAST_UNIT_AMT
                             , ROW_NUMBER() OVER (PARTITION BY C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ ORDER BY D.INSPECT_SEQ) AS INSPECT_RNUM
                             , D.INSPECT_GRADE

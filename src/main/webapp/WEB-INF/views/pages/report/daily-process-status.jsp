@@ -151,7 +151,7 @@
             },
             {title: '예상금액', minWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT'},
             {title: '목표금액', minWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
-            {title: '달성<br>비율', minWidth: 40, maxWidth: 40, dataIndx: 'GOAL_RATIO'},
+            {title: '달성<br>비율', minWidth: 50, maxWidth: 50, dataIndx: 'GOAL_RATIO'},
             {title: '기준<br>근무', minWidth: 40, maxWidth: 40, dataType: 'integer', format: '#,###', dataIndx: 'WORKING_TIME'},
             {
                 title: '부적합', align: 'center', colModel: [
@@ -336,12 +336,6 @@
             {title: '대상년월', dataIndx: 'YYYYMM'},
             {title: '대상공장', dataIndx: 'WORK_FACTORY', hidden: true},
             {title: '대상공장', dataIndx: 'WORK_FACTORY_NM'},
-            {
-                title: '검사결과', align: 'center', colModel: [
-                    {title: '등급', minWidth: 30, maxWidth: 40, dataIndx: 'INSPECT_GRADE_NM'},
-                    {title: '검사코드', maxWidth: 95, dataIndx: 'INSPECT_RESULT_NM'}
-                ]
-            },
             {
                 title: '목표금액', align: 'center',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
