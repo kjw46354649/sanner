@@ -24,7 +24,7 @@
             , Z.PART_QTY
             , Z.FORECAST_AMT
             , Z.DT_GOAL_AMT
-            , CASE WHEN IFNULL(Z.DT_GOAL_AMT,0) = 0 THEN NULL ELSE ROUND(IFNULL(Z.FORECAST_AMT,0) / IFNULL(Z.DT_GOAL_AMT,0) * 100,1) END AS GOAL_RATIO
+            , CASE WHEN IFNULL(Z.DT_GOAL_AMT,0) = 0 THEN NULL ELSE CONCAT(FORMAT(IFNULL(Z.FORECAST_AMT,0) / IFNULL(Z.DT_GOAL_AMT,0) * 100,1),'%') END AS GOAL_RATIO
             , Z.WORKING_TIME
             , Z.ERROR_CNT
             , Z.ERROR_QTY
@@ -41,7 +41,7 @@
                 FROM (  SELECT F.DT
                             , DATE_FORMAT(STR_TO_DATE(F.DT,'%Y%m%d'),'%u') AS WEEK_SEQ
                             , CASE WHEN F.WEEK_DAY > 0 THEN (   SELECT ROUND(M.GOAL_AMT / N.DT_CNT,0) AS DT_GOAL_AMT
-                                                                FROM (  SELECT SUM(GOAL_AMT) AS GOAL_AMT
+                                                                FROM (  SELECT SUM(M.PRODUCTION_GOAL_AMT) AS GOAL_AMT
                                                                         FROM jmes.TBL_SALES_GOAL M
                                                                         WHERE YYYYMM = CONCAT(#{YEAR}, #{MONTH})           <!-- 고정조건 -->
                                                                         <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
