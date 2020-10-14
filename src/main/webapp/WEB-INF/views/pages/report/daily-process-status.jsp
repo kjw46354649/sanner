@@ -149,7 +149,7 @@
                     {title: '수량', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PART_QTY'}
                 ]
             },
-            {title: '예상금액', minWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT'},
+            {title: '예상금액', minWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_AMT'},
             {title: '목표금액', minWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
             {title: '달성<br>비율', minWidth: 50, maxWidth: 50, dataIndx: 'GOAL_RATIO'},
             {title: '기준<br>근무', minWidth: 40, maxWidth: 40, dataType: 'integer', format: '#,###', dataIndx: 'WORKING_TIME'},
