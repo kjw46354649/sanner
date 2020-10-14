@@ -83,7 +83,7 @@
 
         fnAppendSelectboxYear('CONTROL_MONTH_CLOSE_YEAR', 3);
         fnAppendSelectboxMonth('CONTROL_MONTH_CLOSE_MONTH');
-        $('#CONTROL_MONTH_CLOSE_MONTH').val(CURRENT_MONTH < 9 ? '0' + CURRENT_MONTH : CURRENT_MONTH).prop('selected', true);
+        $('#CONTROL_MONTH_CLOSE_MONTH').val(CURRENT_MONTH < 10 ? '0' + CURRENT_MONTH : CURRENT_MONTH).prop('selected', true);
 
         $('#CONTROL_MONTH_CLOSE_POPUP #CLOSE_VER');
 
