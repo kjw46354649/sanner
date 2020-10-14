@@ -954,7 +954,7 @@
         ) Z
     </insert>
 
-    <insert id="createMailAttachCadFilePlusBackup" parameterType="java.util.HashMap">
+    <insert id="createMailAttachCadFilePlusBackup_OLD" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_FILE
         (FILE_SEQ, FILE_NM, FILE_PATH, TIME_PATH, ORGINAL_FILE_NM, FILE_TYPE, FILE_EXT, FILE_SIZE,
             FILE_KIND, GFILE_SEQ, INSERT_ID)

@@ -2859,11 +2859,14 @@
             let amountSummaryChk = $('#CONTROL_MANAGE_SEARCH_FORM').find('#AMOUNT_SUMMARY').is(":checked");
             if(amountSummaryChk) {
                 let totalAmount = 0;
+                let beforeControlSeq = "";
                 let gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
                 $.each(gridData, function (key, rowData) {
-                    if (rowData.FINAL_AMT) {
+                    let currentControlSeq = rowData.CONTROL_SEQ + ' ' + rowData.CONTROL_DETAIL_SEQ;
+                    if (rowData.FINAL_AMT && rowData.ORDER_SEQ && beforeControlSeq != currentControlSeq) {
                         totalAmount += parseFloat(rowData.FINAL_AMT);
                     }
+                    beforeControlSeq = rowData.CONTROL_SEQ + ' ' + rowData.CONTROL_DETAIL_SEQ;
                 });
                 let totalAmountCurrency = pq.formatNumber(totalAmount, "#,###,###");
                 $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_area').addClass("controlAmountSummaryActive");
