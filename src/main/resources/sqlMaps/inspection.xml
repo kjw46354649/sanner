@@ -613,8 +613,9 @@
             </if>
         </if>
         <if test="SEL_PART_NUM_VIEW_YN == null">
-            AND PART_NUM IS NULL    <!-- Part 단위표시가 체크가 안되어 있는 경우 -->
+            AND T.PART_NUM IS NULL    <!-- Part 단위표시가 체크가 안되어 있는 경우 -->
         </if>
+        ORDER BY T.ORDER_NUM
     </select>
 
 
@@ -1213,7 +1214,7 @@
                 AND DATE_FORMAT(X.INSERT_DT, '%Y/%m/%d') BETWEEN #{SEL_ST_DT} AND #{SEL_END_DT}
             </when>
         </choose>
-        ORDER BY X.INSERT_DT DESC
+        ORDER BY X.INSERT_DT DESC, X.CONTROL_NUM
     </select>
     <select id="selectInspectionHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <!-- 2. 검사 이력관리 쿼리 -->
