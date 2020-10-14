@@ -105,9 +105,9 @@ public class OutServiceImpl implements OutService {
             mailReceiverList = (ArrayList<HashMap<String, Object>>) jsonMap.get("mailReceiverList");
 
         String mailAttachGfileSeq = "";
-        if (requestMailForm.get("GFILE_SEQ") != null && !"".equals(requestMailForm.get("GFILE_SEQ"))){
-            mailAttachGfileSeq = (String)requestMailForm.get("GFILE_SEQ");
-        }else{
+        if (requestMailForm.get("GFILE_SEQ") != null && !"".equals(requestMailForm.get("GFILE_SEQ"))) {
+            mailAttachGfileSeq = (String) requestMailForm.get("GFILE_SEQ");
+        } else {
             requestMailForm.put("GFILE_SEQ", "");                   // GFILE 신규 등록
             requestMailForm.put("queryId", "common.insertFileGroup");
             innodaleDao.update(requestMailForm);
@@ -118,16 +118,12 @@ public class OutServiceImpl implements OutService {
         // 주문관리 Part 저장
         if (controlPartList != null && controlPartList.size() > 0) {
             for (HashMap<String, Object> hashMap : controlPartList) {
-
                 hashMap.put("queryId", "outMapper.updateOutsideRequestDetailDelete");
                 this.innodaleDao.update(hashMap);
 
                 if (status.equals("request")) {
                     hashMap.put("PART_STATUS", "PRO001");
                     hashMap.put("OUTSIDE_STATUS", "OST001");
-                    hashMap.put("queryId", "orderMapper.createControlPartProgress");
-                    this.innodaleDao.create(hashMap);
-
                     // 첨부 파일을 하나의 Gfile로 추가 한다.
                     hashMap.put("GFILE_SEQ", mailAttachGfileSeq);
                     hashMap.put("queryId", "outMapper.createMailAttachCadFilePlus");
@@ -137,6 +133,8 @@ public class OutServiceImpl implements OutService {
                     hashMap.put("PART_STATUS", null);
                     hashMap.put("OUTSIDE_STATUS", "OST002");
                 }
+                hashMap.put("queryId", "orderMapper.createControlPartProgress");
+                this.innodaleDao.create(hashMap);
 
                 hashMap.put("queryId", "orderMapper.updateControlPart");
                 this.innodaleDao.update(hashMap);
