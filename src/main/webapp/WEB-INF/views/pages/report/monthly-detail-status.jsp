@@ -130,7 +130,7 @@
         let startDt, endDt; // 발주처별 현황
         fnAppendSelectboxYear('MONTHLY_DETAIL_STATUS_YEAR', 10);
         fnAppendSelectboxMonth('MONTHLY_DETAIL_STATUS_MONTH');
-        $('#MONTHLY_DETAIL_STATUS_MONTH').val(CURRENT_MONTH < 9 ? '0' + (CURRENT_MONTH + 1) : CURRENT_MONTH + 1).prop('selected', true);
+        $('#MONTHLY_DETAIL_STATUS_MONTH').val(CURRENT_MONTH < 10 ? '0' + (CURRENT_MONTH + 1) : CURRENT_MONTH + 1).prop('selected', true);
 
         fnCommCodeDatasourceSelectBoxCreate($('#MONTHLY_DETAIL_STATUS_SEARCH_FORM').find('#COMP_CD'), 'all', {
             'url': '/json-list',
