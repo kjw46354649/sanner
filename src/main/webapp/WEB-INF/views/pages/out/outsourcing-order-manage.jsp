@@ -1625,6 +1625,7 @@
                     '<thead>\n' +
                     '    <tr>\n' +
                     '        <th rowspan="2" style="' + st_center + font_header + '">No.</th>\n' +
+                    '        <th rowspan="2" style="width:80px; ' + st_center + font_header + '">업체명</th>\n' +
                     '        <th rowspan="2" style="width:200px; ' + st_center + font_header + '">관리번호</th>\n' +
                     '        <th rowspan="2" style="width:30px; ' + st_center + font_header + '">Part</th>\n' +
                     '        <th rowspan="2" style="width:150px; ' + st_center + font_header + '">도면번호</th>\n' +
@@ -1669,6 +1670,7 @@
                 table +=
                 '    <tr>\n' +
                 '        <td style="' + st_center + '">' + list[i].ROW_NUM + '</td>\n' +
+                '        <td style="' + st_center + '">' + list[i].COMP_NM + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].CONTROL_NUM + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].PART_NUM + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].DRAWING_NUM + '</td>\n' +
