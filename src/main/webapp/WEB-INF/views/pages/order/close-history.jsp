@@ -191,7 +191,7 @@
         const gridId = 'CLOSE_HISTORY_GRID';
         let postData = fnFormToJsonArrayData('#CLOSE_HISTORY_SEARCH_FORM');
         postData.CLOSE_YEAR = CURRENT_YEAR;
-        postData.CLOSE_MONTH = CURRENT_MONTH < 10 ? '0' + CURRENT_MONTH : CURRENT_MONTH;
+        postData.CLOSE_MONTH = CURRENT_MONTH < 9 ? '0' + CURRENT_MONTH : CURRENT_MONTH;
         const colModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},

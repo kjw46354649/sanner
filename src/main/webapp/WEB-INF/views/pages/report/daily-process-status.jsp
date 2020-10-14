@@ -121,7 +121,7 @@
         let selectedRowIndex = [];
         fnAppendSelectboxYear('DAILY_PROCESS_STATUS_YEAR', 10);
         fnAppendSelectboxMonth('DAILY_PROCESS_STATUS_MONTH');
-        $('#DAILY_PROCESS_STATUS_MONTH').val(CURRENT_MONTH < 10 ? '0' + (CURRENT_MONTH + 1) : CURRENT_MONTH + 1).prop('selected', true);
+        $('#DAILY_PROCESS_STATUS_MONTH').val(CURRENT_MONTH < 9 ? '0' + (CURRENT_MONTH + 1) : CURRENT_MONTH + 1).prop('selected', true);
 
         (function (id, severalYears) {
             $('#' + id).empty();
