@@ -119,6 +119,7 @@
     <input type="hidden" name="OUTSIDE_YN" id="OUTSIDE_YN">
     <input type="hidden" name="OUT_FINISH_YN" id="OUT_FINISH_YN">
     <input type="hidden" name="DELAY_YN" id="DELAY_YN">
+    <input type="hidden" name="INSPECT_TYPE" id="INSPECT_TYPE">
 </form>
 
 <script>
@@ -481,7 +482,7 @@
 
                             if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    changeProcessTargetBeforeForm(rowData.DT);
+                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', '', 1);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
                             }
@@ -507,7 +508,7 @@
 
                             if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    changeProcessTargetBeforeForm(rowData.DT);
+                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', '', 1);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
                             }
@@ -537,7 +538,7 @@
 
                             if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    changeProcessTargetBeforeForm(rowData.DT);
+                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', '', 2);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
                             }
@@ -563,7 +564,7 @@
 
                             if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    changeProcessTargetBeforeForm(rowData.DT);
+                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', '', 2);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
                             }
@@ -1255,12 +1256,13 @@
             changeTbody();
         };
 
-        const changeProcessTargetBeforeForm = function (a, c = '', d = '', e = '', f = '') {
+        const changeProcessTargetBeforeForm = function (a, b = '', c = '', d = '', e = '', f = '') {
             $('#PROCESS_TARGET_BEFORE_FORM > #DT').val(a);
-            $('#PROCESS_TARGET_BEFORE_FORM > #FACTORY_CLASSIFY_YN').val(c);
-            $('#PROCESS_TARGET_BEFORE_FORM > #OUTSIDE_YN').val(d);
-            $('#PROCESS_TARGET_BEFORE_FORM > #OUT_FINISH_YN').val(e);
-            $('#PROCESS_TARGET_BEFORE_FORM > #DELAY_YN').val(f);
+            $('#PROCESS_TARGET_BEFORE_FORM > #FACTORY_CLASSIFY_YN').val(b);
+            $('#PROCESS_TARGET_BEFORE_FORM > #OUTSIDE_YN').val(c);
+            $('#PROCESS_TARGET_BEFORE_FORM > #OUT_FINISH_YN').val(d);
+            $('#PROCESS_TARGET_BEFORE_FORM > #DELAY_YN').val(e);
+            $('#PROCESS_TARGET_BEFORE_FORM > #INSPECT_TYPE').val(f);
         };
 
         const openNewWindowMonthReportDetail = function (url) {

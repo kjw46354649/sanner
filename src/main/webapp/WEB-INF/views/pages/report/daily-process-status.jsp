@@ -280,7 +280,7 @@
             },
             {title: '합계금액', minWidth: 65, maxWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
-                title: 'P/H', dataType: 'integer', format: '#,###', dataIndx: 'PRICE_PER_HOUR',
+                title: '예상<br>P/H', dataType: 'integer', format: '#,###', dataIndx: 'PRICE_PER_HOUR',
                 style: {'color': 'blue'}
             },
             {

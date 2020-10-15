@@ -35,7 +35,7 @@
                     , SUM(IFNULL(Y.PART_QTY,0)) AS PART_QTY
                     , SUM(IFNULL(Y.FORECAST_AMT,0)) AS FORECAST_AMT
                     , SUM(IFNULL(X.DT_GOAL_AMT,0)) AS DT_GOAL_AMT
-                    , SUM(IFNULL(X.WORKING_TIME,0)) AS WORKING_TIME
+                    , SUM(X.WORKING_TIME) AS WORKING_TIME
                     , SUM(IFNULL(Y.ERROR_CNT,0)) AS ERROR_CNT
                     , SUM(IFNULL(Y.ERROR_QTY,0)) AS ERROR_QTY
                 FROM (  SELECT F.DT
@@ -594,6 +594,7 @@
                                     FROM (  SELECT ROW_NUMBER() OVER (PARTITION BY C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ ORDER BY D.INSPECT_SEQ) AS INSPECT_RNUM
                                                 , D.INSPECT_SEQ
                                                 , D.INSPECT_GRADE
+                                                , D.ERROR_QTY
                                             FROM (  SELECT M.CONTROL_SEQ
                                                         , MAX(M.ORDER_DUE_DT) AS ORDER_DUE_DT
                                                     FROM jmes.TBL_CONTROL_PART_ORDER M
@@ -602,7 +603,15 @@
                                                   ) A
                                                 , jmes.TBL_CONTROL B
                                                 , jmes.TBL_CONTROL_PART C
-                                                        LEFT OUTER JOIN jmes.TBL_INSPECT D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.INSPECT_TYPE = '1'
+                                                        LEFT OUTER JOIN jmes.TBL_INSPECT D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                                                        <choose>
+                                                            <when test='INSPECT_TYPE == "1"'>
+                                                                AND D.INSPECT_TYPE = '1' <!-- 부적합 -->
+                                                            </when>
+                                                            <when test='INSPECT_TYPE == "2"'>
+                                                                AND D.INSPECT_TYPE = '2' <!-- 반품 -->
+                                                            </when>
+                                                        </choose>
                                             WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                                                 AND A.CONTROL_SEQ = C.CONTROL_SEQ
                                                 AND B.DEL_YN = 'N'
@@ -615,7 +624,15 @@
                                             </if>
                                         ) P
                                     WHERE P.INSPECT_RNUM = 1
-                                        AND P.INSPECT_GRADE = 'GRD040'
+                                        AND P.ERROR_QTY > 0
+                                    <choose>
+                                        <when test='INSPECT_TYPE == "1"'>
+                                            AND P.INSPECT_GRADE = 'GRD040' <!-- 부적합 -->
+                                        </when>
+                                        <when test='INSPECT_TYPE == "2"'>
+                                            AND P.INSPECT_GRADE IN ('GRD050', 'GRD060') <!-- 반품 -->
+                                        </when>
+                                    </choose>
             )
     </select>
 
