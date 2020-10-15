@@ -28,6 +28,7 @@
             <form class="form-inline" id="MONTH_REPORT_DETAIL_LIST_VIEW_FORM" name="MONTH_REPORT_DETAIL_LIST_VIEW_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="reportMapper.selectMonthlyReportInspectionDetailList">
                 <input type="hidden" name="DT" id="DT">
+                <input type="hidden" name="INSPECT_TYPE" id="INSPECT_TYPE">
             </form>
         </div>
         <div class="ml-auto">
@@ -49,8 +50,9 @@
         'use strict';
         /* init */
         $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #DT').val($(opener.document).find('#PROCESS_TARGET_BEFORE_FORM > #DT').val());
+        $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #INSPECT_TYPE').val($(opener.document).find('#PROCESS_TARGET_BEFORE_FORM > #INSPECT_TYPE').val());
 
-        const detailListViewGridId = 'DETAIL_LIST_VIEW_GRID';
+        const monthReportInspectionDetailListViewGridId = 'DETAIL_LIST_VIEW_GRID';
         const monthReportInspectionDetailListViewPostData = fnFormToJsonArrayData('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM');
         const monthReportInspectionDetailListViewColModel = [
             {title: '발주업체', width:75, dataIndx: 'ORDER_COMP_NM'},
@@ -137,8 +139,14 @@
                 this.option('freezeCols', 9);
             },
         };
-       const $monthReportInspectionDetailListViewGrid = $('#' + detailListViewGridId).pqGrid(monthReportInspectionDetailListViewObj);
+       const $monthReportInspectionDetailListViewGrid = $('#' + monthReportInspectionDetailListViewGridId).pqGrid(monthReportInspectionDetailListViewObj);
         /* init */
+
+        /* event */
+        $('#MONTH_REPORT_INSPECTION_DETAIL_CLOSE_BUTTON').on('click', function () {
+            window.close();
+        });
+        /* event */
     });
 </script>
 </body>

@@ -119,6 +119,7 @@
     <input type="hidden" name="OUTSIDE_YN" id="OUTSIDE_YN">
     <input type="hidden" name="OUT_FINISH_YN" id="OUT_FINISH_YN">
     <input type="hidden" name="DELAY_YN" id="DELAY_YN">
+    <input type="hidden" name="INSPECT_TYPE" id="INSPECT_TYPE">
 </form>
 
 <script>
@@ -130,7 +131,7 @@
         let startDt, endDt; // 발주처별 현황
         fnAppendSelectboxYear('MONTHLY_DETAIL_STATUS_YEAR', 10);
         fnAppendSelectboxMonth('MONTHLY_DETAIL_STATUS_MONTH');
-        $('#MONTHLY_DETAIL_STATUS_MONTH').val(CURRENT_MONTH < 10 ? '0' + (CURRENT_MONTH + 1) : CURRENT_MONTH + 1).prop('selected', true);
+        $('#MONTHLY_DETAIL_STATUS_MONTH').val(CURRENT_MONTH < 9 ? '0' + (CURRENT_MONTH + 1) : CURRENT_MONTH + 1).prop('selected', true);
 
         fnCommCodeDatasourceSelectBoxCreate($('#MONTHLY_DETAIL_STATUS_SEARCH_FORM').find('#COMP_CD'), 'all', {
             'url': '/json-list',
@@ -432,7 +433,7 @@
                 }
             },
             {
-                title: '외주율<br>(수량)', minWidth: 50, maxWidth: 50, dataIndx: 'OUTSIDE_RATIO', style: {'background': '#FFD966'},
+                title: '외주율', minWidth: 50, maxWidth: 50, dataIndx: 'OUTSIDE_RATIO', style: {'background': '#FFD966'},
                 render: function (ui) {
                     const rowData = ui.rowData;
 
@@ -444,8 +445,8 @@
                     }
                 }
             },
-            {title: '매출<br>예상금액', minWidth: 100, maxWidth: 100,dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT'},
-            {title: '목표금액', minWidth: 100, maxWidth: 100, dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
+            {title: '매출<br>예상금액', minWidth: 100, maxWidth: 100, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT'},
+            {title: '목표금액', minWidth: 100, maxWidth: 100, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
             {
                 title: '달성율', minWidth: 50, maxWidth: 50, dataIndx: 'GOAL_RATIO', style: {'background': '#D9E1F2'},
                 render: function (ui) {
@@ -481,7 +482,7 @@
 
                             if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    changeProcessTargetBeforeForm(rowData.DT);
+                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', '', 1);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
                             }
@@ -507,7 +508,7 @@
 
                             if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    changeProcessTargetBeforeForm(rowData.DT);
+                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', '', 1);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
                             }
@@ -537,7 +538,7 @@
 
                             if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    changeProcessTargetBeforeForm(rowData.DT);
+                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', '', 2);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
                             }
@@ -563,7 +564,7 @@
 
                             if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    changeProcessTargetBeforeForm(rowData.DT);
+                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', '', 2);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
                             }
@@ -1255,12 +1256,13 @@
             changeTbody();
         };
 
-        const changeProcessTargetBeforeForm = function (a, c = '', d = '', e = '', f = '') {
+        const changeProcessTargetBeforeForm = function (a, b = '', c = '', d = '', e = '', f = '') {
             $('#PROCESS_TARGET_BEFORE_FORM > #DT').val(a);
-            $('#PROCESS_TARGET_BEFORE_FORM > #FACTORY_CLASSIFY_YN').val(c);
-            $('#PROCESS_TARGET_BEFORE_FORM > #OUTSIDE_YN').val(d);
-            $('#PROCESS_TARGET_BEFORE_FORM > #OUT_FINISH_YN').val(e);
-            $('#PROCESS_TARGET_BEFORE_FORM > #DELAY_YN').val(f);
+            $('#PROCESS_TARGET_BEFORE_FORM > #FACTORY_CLASSIFY_YN').val(b);
+            $('#PROCESS_TARGET_BEFORE_FORM > #OUTSIDE_YN').val(c);
+            $('#PROCESS_TARGET_BEFORE_FORM > #OUT_FINISH_YN').val(d);
+            $('#PROCESS_TARGET_BEFORE_FORM > #DELAY_YN').val(e);
+            $('#PROCESS_TARGET_BEFORE_FORM > #INSPECT_TYPE').val(f);
         };
 
         const openNewWindowMonthReportDetail = function (url) {
