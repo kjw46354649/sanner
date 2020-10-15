@@ -89,7 +89,7 @@
                     });
                 }
             },
-            {title: '발주<br>량', dataIndx: 'PART_QTY'},
+            {title: '발주량', dataIndx: 'PART_QTY'},
             {title: '가공완료<br>(입고)일시', width: 80, dataIndx: 'INNER_WORK_FINISH_DT'},
             {title: '소요<br>시간(분)', maxWidth: 55, dataIndx: 'WORK_TIME'},
              {
@@ -133,11 +133,7 @@
             load: function () {
                 let data = $monthReportInspectionDetailListViewGrid.pqGrid('option', 'dataModel.data');
                 $('#MONTH_REPORT_INSPECTION_DETAIL_LIST_VIEW_RECORDS').html(data.length);
-            },
-            render: function () {
-                // 열 고정
-                this.option('freezeCols', 9);
-            },
+            }
         };
        const $monthReportInspectionDetailListViewGrid = $('#' + monthReportInspectionDetailListViewGridId).pqGrid(monthReportInspectionDetailListViewObj);
         /* init */

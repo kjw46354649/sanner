@@ -214,7 +214,7 @@
             {title: '외주<br>입고일시', width: 80, dataIndx: 'OUTSIDE_IN_DT'},
             {title: '출고일시', width: 80, dataIndx: 'OUT_FINISH_DT'},
             {
-                title: '예상단가', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT', editable: true,
+                title: '예상단가', width: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT', editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
             {title: '합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
@@ -229,7 +229,7 @@
             {
                 title: '검사결과(First)', align: 'center', colModel: [
                     {title: '등급', minWidth: 30, maxWidth: 40, dataIndx: 'INSPECT_GRADE_NM'},
-                    {title: '검사코드', maxWidth: 95, dataIndx: 'INSPECT_RESULT_NM'}
+                    {title: '검사코드', width: 95, dataIndx: 'INSPECT_RESULT_NM'}
                 ]
             },
             {title: '부적합<br>수량', dataIndx: 'ERROR_QTY'},
