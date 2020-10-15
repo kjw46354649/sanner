@@ -205,7 +205,7 @@
             {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM'},
             {title: '발주<br>납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
-            {title: '발주<br>량', dataIndx: 'PART_QTY'},
+            {title: '발주량', dataIndx: 'PART_QTY'},
             {title: '진행상태', width: 80, dataIndx: 'PART_STATUS_NM'},
             {title: '수행<br>공장', dataIndx: 'WORK_FACTORY_NM'},
             {title: '가공완료<br>일시', width: 80, dataIndx: 'INNER_WORK_FINISH_DT'},
