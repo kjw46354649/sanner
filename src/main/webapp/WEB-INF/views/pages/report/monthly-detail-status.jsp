@@ -445,8 +445,8 @@
                     }
                 }
             },
-            {title: '매출<br>예상금액', minWidth: 100, maxWidth: 100,dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT'},
-            {title: '목표금액', minWidth: 100, maxWidth: 100, dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
+            {title: '매출<br>예상금액', minWidth: 100, maxWidth: 100, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT'},
+            {title: '목표금액', minWidth: 100, maxWidth: 100, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
             {
                 title: '달성율', minWidth: 50, maxWidth: 50, dataIndx: 'GOAL_RATIO', style: {'background': '#D9E1F2'},
                 render: function (ui) {

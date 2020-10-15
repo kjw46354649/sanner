@@ -149,8 +149,8 @@
                     {title: '수량', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PART_QTY'}
                 ]
             },
-            {title: '예상금액', minWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_AMT'},
-            {title: '목표금액', minWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
+            {title: '예상금액', minWidth: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_AMT'},
+            {title: '목표금액', minWidth: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DT_GOAL_AMT'},
             {title: '달성<br>비율', minWidth: 50, maxWidth: 50, dataIndx: 'GOAL_RATIO'},
             {title: '기준<br>근무', minWidth: 40, maxWidth: 40, dataType: 'integer', format: '#,###', dataIndx: 'WORKING_TIME'},
             {
@@ -275,19 +275,19 @@
             {title: '가공완료<br>일시', minWidth: 75, maxWidth: 75, dataIndx: 'INNER_WORK_FINISH_DT'},
             {title: '소요<br>시간(분)', maxWidth: 55, dataIndx: 'WORK_TIME'},
             {
-                title: '예상단가', minWidth: 65, maxWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT', editable: true,
+                title: '예상단가', minWidth: 65, maxWidth: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT', editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
-            {title: '합계금액', minWidth: 65, maxWidth: 65, dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
+            {title: '합계금액', minWidth: 65, maxWidth: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
                 title: '예상<br>P/H', dataType: 'integer', format: '#,###', dataIndx: 'PRICE_PER_HOUR',
                 style: {'color': 'blue'}
             },
             {
                 title: '단가정보', align: 'center', colModel: [
-                    {title: '종전가', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT', hidden: true},
-                    {title: '견적가', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', hidden: true},
-                    {title: '공급가', maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', hidden: true}
+                    {title: '종전가', maxWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT', hidden: true},
+                    {title: '견적가', maxWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', hidden: true},
+                    {title: '공급가', maxWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', hidden: true}
                 ]
             },
             {
