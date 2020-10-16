@@ -113,9 +113,10 @@
 &lt;%&ndash;                                <button type="button">달력선택</button>&ndash;%&gt;
                             </span>
                         </div>--%>
-                        <span class="gubun"></span>
-                        <button type="button" class="right_float defaultBtn radius blue" id="inspection_history_search_btn">검색</button>
-                        <button type="button" class="right_float" id="inspection_history_export_btn" style="position: absolute; right: 78px; bottom: 7px;"><img src="/resource/asset/images/common/export_excel.png"></button>
+                         <span class="ipu_wrap right_float">
+                            <button type="button" id="inspection_history_export_btn"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue ml-10" id="inspection_history_search_btn">검색</button>
+                        </span>
                     </li>
                 </ul>
             </div>

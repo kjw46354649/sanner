@@ -36,6 +36,27 @@
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 AND B.OUTSIDE_YN = 'Y'
+            <choose>
+                <when test="INCLUDE_REQUEST_COMPLETE != null and INCLUDE_REQUEST_COMPLETE != '' or INCLUDE_RECEIVED_COMPLETE != null and INCLUDE_RECEIVED_COMPLETE != ''">
+                    <choose>
+                        <when test="INCLUDE_REQUEST_COMPLETE != null and INCLUDE_REQUEST_COMPLETE != '' and INCLUDE_RECEIVED_COMPLETE != null and INCLUDE_RECEIVED_COMPLETE != ''">
+                            AND (B.OUTSIDE_STATUS IS NULL OR B.OUTSIDE_STATUS IN ('OST001', 'OST002', 'OST003'))
+                        </when>
+                        <when test="INCLUDE_REQUEST_COMPLETE != null and INCLUDE_REQUEST_COMPLETE != ''">
+                            AND (B.OUTSIDE_STATUS IS NULL OR B.OUTSIDE_STATUS IN ('OST001', 'OST002'))
+                        </when>
+                        <when test="INCLUDE_RECEIVED_COMPLETE != null and INCLUDE_RECEIVED_COMPLETE != ''">
+                            AND (B.OUTSIDE_STATUS IS NULL OR B.OUTSIDE_STATUS IN ('OST002', 'OST003'))
+                        </when>
+                    </choose>
+                </when>
+                <otherwise>
+                    AND (B.OUTSIDE_STATUS IS NULL OR B.OUTSIDE_STATUS = 'OST002')
+                </otherwise>
+            </choose>
+            <if test="INCLUDE_RECEIVED_COMPLETE != null and INCLUDE_RECEIVED_COMPLETE != ''">
+                AND B.OUTSIDE_IN_DT IS NOT NULL
+            </if>
             <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
                 AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
             </if>
@@ -47,12 +68,6 @@
             </if>
             <if test="OUTSIDE_STATUS != null and OUTSIDE_STATUS != ''">
                 AND B.OUTSIDE_STATUS = #{OUTSIDE_STATUS}
-            </if>
-            <if test="IN_STOCK != null and IN_STOCK != ''">
-                AND B.OUTSIDE_IN_DT IS NOT NULL
-            </if>
-            <if test="EXCLUDE_REQUEST_COMPLETED != null and EXCLUDE_REQUEST_COMPLETED != ''">
-                AND (B.OUTSIDE_STATUS NOT IN ('OST001', 'OST003') OR B.OUTSIDE_STATUS IS  NULL)
             </if>
             LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                                             AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ

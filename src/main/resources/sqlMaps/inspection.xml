@@ -68,6 +68,7 @@
                     FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
                     WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                         AND A.DEL_YN = 'N'
+                        AND A.CONTROL_STATUS IN ('ORD001', 'ORD003') <!-- TODO: 컬럼 -->
                         AND (EXISTS (SELECT *
                                     FROM TBL_CONTROL_PART_PROGRESS
                                     WHERE 1 = 1
@@ -573,7 +574,7 @@
                     AND B.CONTROL_SEQ = C.CONTROL_SEQ
                     AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.DEL_YN = 'N'
-                    AND A.CONTROL_STATUS IN ('ORD001', 'ORD003', 'ORD004')
+                    AND A.CONTROL_STATUS IN ('ORD001', 'ORD003') <!-- TODO: 컬럼 -->
                     <!-- AND B.PART_STATUS IN ('PRO009','PRO010','PRO011') 상태확인 필요 -->
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
@@ -872,7 +873,7 @@
                   AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
                   AND A.ORDER_SEQ = #{ORDER_SEQ}
               ) X
-              
+
     </select>
     <select id="selectOutgoingReturnInfo2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
@@ -1279,6 +1280,7 @@
                             , jmes.TBL_CONTROL_PART B
                         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                             AND A.DEL_YN = 'N'
+                            AND A.CONTROL_STATUS IN ('ORD001', 'ORD003') <!-- TODO: 컬럼 -->
                             <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                                 AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                             </if>

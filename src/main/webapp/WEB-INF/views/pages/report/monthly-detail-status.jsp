@@ -1214,22 +1214,24 @@
                 for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
                     const rowData = data.list[i];
                     let color = '';
-                    let backgroundColor = '';
+                    let backgroundColor_head = '';
+                    let backgroundColor_body = '';
 
                     if (DAYS.includes(rowData.DAY)) {
-                        backgroundColor = '#F4FAFE';
+                        backgroundColor_body = '#F4FAFE';
                     } else if (rowData.DAY === '(일)') {
-                        color = '#FF0000';
+                        backgroundColor_head = '#FFD9D9';
+                        backgroundColor_body = '#FFE8E8';
                     }
 
                     colModel[i + 2].title = rowData.F_DT + rowData.DAY;
-                    colModel[i + 2].styleHead = {'color': color};
-                    colModel[i + 2].colModel[0].styleHead = {};
-                    colModel[i + 2].colModel[1].styleHead = {'color': '#0000FF'};
-                    colModel[i + 2].colModel[2].styleHead = {'color': '#FF0000'};
-                    colModel[i + 2].colModel[0].style = {'background': backgroundColor};
-                    colModel[i + 2].colModel[1].style = {'background': backgroundColor, 'color': '#0000FF'};
-                    colModel[i + 2].colModel[2].style = {'background': backgroundColor, 'color': '#FF0000'};
+                    colModel[i + 2].styleHead = {'background': backgroundColor_head, 'color': color};
+                    colModel[i + 2].colModel[0].styleHead = {'background': backgroundColor_head};
+                    colModel[i + 2].colModel[1].styleHead = {'background': backgroundColor_head, 'color': '#0000FF'};
+                    colModel[i + 2].colModel[2].styleHead = {'background': backgroundColor_head, 'color': '#FF0000'};
+                    colModel[i + 2].colModel[0].style = {'background': backgroundColor_body};
+                    colModel[i + 2].colModel[1].style = {'background': backgroundColor_body, 'color': '#0000FF'};
+                    colModel[i + 2].colModel[2].style = {'background': backgroundColor_body, 'color': '#FF0000'};
 
                     if (rowData.TODAY_YN === 'Y') {
                         colModel[i + 2].styleHead = {'background': '#FFFED1'};

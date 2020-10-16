@@ -63,8 +63,8 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100">외주발주상태</label>
-                            <label for="OUTSIDE_STATUS"></label><select class="wd_200" name="OUTSIDE_STATUS" id="OUTSIDE_STATUS">
+                            <label class="label_100" for="OUTSIDE_STATUS">외주발주상태</label>
+                            <select class="wd_200" name="OUTSIDE_STATUS" id="OUTSIDE_STATUS">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1031}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -113,8 +113,8 @@
                     <li>
                         <span>
                             <span class="ipu_wrap"><label class="label_100">Option</label></span>
-                            <span class="chk_box wd_100"><input name="EXCLUDE_REQUEST_COMPLETED" id="EXCLUDE_REQUEST_COMPLETED" type="checkbox" checked><label for="EXCLUDE_REQUEST_COMPLETED"> 요청완료제외</label></span>
-                            <span class="chk_box wd_100"><input name="IN_STOCK" id="IN_STOCK" type="checkbox" checked><label for="IN_STOCK"> 입고완료제외</label></span>
+                            <span class="chk_box wd_100"><input name="INCLUDE_REQUEST_COMPLETE" id="INCLUDE_REQUEST_COMPLETE" type="checkbox"><label for="INCLUDE_REQUEST_COMPLETE"> 요청완료 포함</label></span>
+                            <span class="chk_box wd_100"><input name="INCLUDE_RECEIVED_COMPLETE" id="INCLUDE_RECEIVED_COMPLETE" type="checkbox"><label for="INCLUDE_RECEIVED_COMPLETE"> 입고완료 포함</label></span>
                             <span class="gubun"></span>
                             <span class="ipu_wrap">
                                 <label class="label_100" for="AMOUNT_SUM">금액총합계</label>
