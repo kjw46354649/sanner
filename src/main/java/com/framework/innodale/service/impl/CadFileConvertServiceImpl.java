@@ -29,6 +29,8 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
         ArrayList<HashMap<String, Object>> addList = null;
         HashMap<String, Object> queryIdList = null;
 
+        ArrayList<HashMap<String, Object>> orderControlPartRevList = null;
+
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
@@ -44,36 +46,63 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
             String beforeControlNum = "";
             String currentControlNum = "";
 
+            String queryCommonId = "";
+
             for (HashMap<String, Object> hashMap : addList) {
                 for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
+
+                    queryCommonId = queryId.get(0);
+
                     // 주문 도면의 경우만 아래 Order 처리 한다.
-                    if("orderMapper.manageControlCadFiles".equals(queryId.get(0)) || "orderMapper.manageControlCadRevFiles".equals(queryId.get(0))){
-                        if(hashMap.containsValue("ORDER_SEQ")) {
-                            hashMap.put("queryId", queryId.get(0) + "_order");
+                    if("drawingUploadMapper.manageControlCadFiles".equals(queryId.get(0))){
+                        // 일반 도면 업로드
+                        if(null != hashMap.get("ORDER_SEQ") && !"".equals(hashMap.get("ORDER_SEQ"))) {
+                            // order 업로드
+                            currentControlNum = (String)hashMap.get("CONTROL_NUM");
+                            hashMap.put("queryId", queryCommonId + "_order");
                             this.innodaleDao.insertGrid(hashMap);
-
                         }else{
-
-                            hashMap.put("queryId", queryId.get(0));
+                            // part 업로드
+                            hashMap.put("queryId", queryCommonId);
                             this.innodaleDao.insertGrid(hashMap);
-                            // CAD 파일이 확정이후 출고 이전에 CAD 도면 파일을 수정하는 경우 도면 파일의 REV 버젼을 업로드 한다.
-                            if("orderMapper.manageControlCadRevFiles".equals(queryId.get(0))){
+                        }
+                    } else if("drawingUploadMapper.manageControlCadRevFiles".equals(queryId.get(0))) {
+                        // 도면 리번젼 처리
+                        if (null != hashMap.get("ORDER_SEQ") && !"".equals(hashMap.get("ORDER_SEQ"))) {
+                            // order 업로드
+                            currentControlNum = (String) hashMap.get("CONTROL_NUM");
+                            hashMap.put("queryId", queryCommonId + "_order");
+                            this.innodaleDao.insertGrid(hashMap);
 
-                                hashMap.put("queryId", queryId.get(0) + "_revDelete");     // 데이터 저장 파일 등록
+                            currentControlNum = (String) hashMap.get("CONTROL_NUM");
+                            if (!beforeControlNum.equals(currentControlNum)) {
+
+                                hashMap.put("queryId", queryCommonId + "_revDelete");     // 데이터 저장 파일 등록
                                 innodaleDao.create(hashMap);
 
-                                hashMap.put("queryId", queryId.get(0) + "_revInsert");     // 데이터 저장 파일 등록
+                                hashMap.put("queryId", queryCommonId + "_revInsert");     // 데이터 저장 파일 등록
                                 innodaleDao.create(hashMap);
+
+                                beforeControlNum = currentControlNum;
                             }
+
+                        } else {
+                            // part 업로드
+                            hashMap.put("queryId", queryCommonId);
+                            this.innodaleDao.insertGrid(hashMap);
+
+                            hashMap.put("queryId", queryCommonId + "_revDelete");     // 데이터 저장 파일 등록
+                            innodaleDao.create(hashMap);
+
+                            hashMap.put("queryId", queryCommonId + "_revInsert");     // 데이터 저장 파일 등록
+                            innodaleDao.create(hashMap);
                         }
                     }else{
-                        hashMap.put("queryId", queryId.get(0));
+                        // 견적 & 재고 업로드
+                        hashMap.put("queryId", queryCommonId);
                         this.innodaleDao.insertGrid(hashMap);
                     }
                 }
-
-                beforeControlNum = (String)hashMap.get("CONTROL_NUM");
-
             }
         }
     }

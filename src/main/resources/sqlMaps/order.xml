@@ -24,7 +24,7 @@
         IFNULL(A.PRICE_CONFIRM, SPACE(0)) AS PRICE_CONFIRM, <!-- 단가확인 -->
         IFNULL(SF_GET_CODE_NM('1017', PRICE_CONFIRM, #{LOGIN_LOCALE}), SPACE(0)) AS PRICE_CONFIRM_NM, <!-- 단가확인 -->
         IFNULL(A.OUT_FINISH_DT, SPACE(0)) AS CONTROL_OUT_FINISH_DT, <!-- 주문관리 출고완료일 -->
-        SAME_SIDE_YN <!-- 대칭여부 -->
+        A.SAME_SIDE_YN <!-- 대칭여부 -->
     </sql>
 
     <sql id="controlPart">
@@ -1480,6 +1480,163 @@
         ORDER BY A.CONTROL_SEQ, B.PART_NUM
     </select>
 
+    <select id="manageControlCadFiles_select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            UUID() AS ROW_NUM,
+            C.CONTROL_SEQ,
+            C.CONTROL_STATUS,
+            B.CONTROL_DETAIL_SEQ,
+            C.CONTROL_NUM, <!-- 관리번호 -->
+            B.ITEM_NM, <!-- 품명 -->
+            B.PART_NUM, <!-- Part -->
+            B.DRAWING_NUM,
+            B.DRAWING_VER,
+            CONCAT(C.CONTROL_NUM, IFNULL(B.PART_NUM, 0)) AS SORTKEY,
+            #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
+            #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
+            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ
+        FROM TBL_CONTROL C
+            INNER JOIN TBL_CONTROL_PART B ON C.CONTROL_SEQ = B.CONTROL_SEQ
+        WHERE 1 = 1
+            AND C.DEL_YN = 'N'
+            AND IFNULL(C.CONTROL_STATUS, 'ORD002') IN ('ORD002')    <!-- 확정/종료/마감 완료된 대상은 업로드 불가 추소 & 대기만 업로드 가능 -->
+            AND UPPER(B.DRAWING_NUM) = #{MAPPING_STR}
+    </select>
+
+    <update id="manageControlCadFiles" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            DRAWING_UP_DT = NOW(),
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+    <!--<update id="manageControlCadFiles" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            DRAWING_UP_DT = NOW(),
+            PREV_DRAWING_NUM = DRAWING_NUM,
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
+            PDF_GFILE_SEQ = NULL,
+            IMG_GFILE_SEQ = NULL,
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE
+        CONTROL_SEQ = #{CONTROL_SEQ}
+    </update>
+
+    <update id="manageControlCadFiles_mapping" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ}
+    </update>-->
+
+    <!-- 캐드 도면 교체 -->
+    <select id="manageControlCadRevFiles_select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            UUID() AS ROW_NUM,
+            'VER_UP' AS UPDATE_TYPE,
+            C.CONTROL_SEQ,
+            C.CONTROL_STATUS,
+            B.CONTROL_DETAIL_SEQ,
+            C.CONTROL_NUM, <!-- 관리번호 -->
+            B.ITEM_NM, <!-- 품명 -->
+            B.PART_NUM, <!-- Part -->
+            B.DRAWING_NUM,
+            B.DRAWING_VER,
+            B.SIZE_TXT, <!-- 규격 -->
+            CONCAT(C.CONTROL_NUM, IFNULL(B.PART_NUM, 0)) AS SORTKEY,
+            SF_GET_DATE_F(B.DRAWING_UP_DT,'YY','M') AS DRAWING_UP_DT,
+            #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
+            #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
+            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ
+        FROM TBL_CONTROL C
+            INNER JOIN TBL_CONTROL_PART B ON C.CONTROL_SEQ = B.CONTROL_SEQ
+        WHERE 1 = 1
+            AND C.DEL_YN = 'N'
+            AND IFNULL(C.CONTROL_STATUS, 'ORD002') IN ('ORD001', 'ORD003') <!-- 확정/마감 대상이며  -->
+            AND C.OUT_FINISH_DT IS NULL <!-- 확정 마감상태의 출고 완료 이전에 변경 가능 -->
+            AND UPPER(B.DRAWING_NUM) = #{MAPPING_STR}
+    </select>
+
+    <update id="manageControlCadRevFiles" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            DRAWING_VER = IFNULL(DRAWING_VER, 0) + 1,
+            DRAWING_UP_DT = NOW(),
+            PREV_DRAWING_NUM = DRAWING_NUM,
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+    <!--<update id="manageControlCadRevFiles" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            DRAWING_VER = IFNULL(DRAWING_VER, 0) + 1,
+            DRAWING_UP_DT = NOW(),
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
+            PDF_GFILE_SEQ = NULL,
+            IMG_GFILE_SEQ = NULL,
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+    <update id="manageControlCadRevFiles_mapping" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ}
+    </update>-->
+
+    <update id="manageControlCadRevFiles_revDelete" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_BARCODE
+        SET
+            DEL_YN = 'Y',
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND DEL_YN = 'N'
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+
+    </update>
+
+    <update id="manageControlCadRevFiles_revInsert" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_CONTROL_BARCODE (BARCODE_NUM, CONTROL_SEQ, CONTROL_DETAIL_SEQ, CONTROL_VER, DRAWING_VER, DEL_YN, INSERT_ID)
+        SELECT
+            CONCAT('C', LPAD(NEXTVAL(SEQ_BARCODE), 9, '0')) as BARCODE_NUM, A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.CONTROL_VER, IFNULL(B.DRAWING_VER, 1), 'N' AS DEL_YN, #{LOGIN_USER_ID} AS INSERT_ID
+        FROM jmes.TBL_CONTROL A
+            INNER JOIN jmes.TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+                AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        WHERE 1 = 1
+            AND A.DEL_YN = 'N'
+    </update>
+
     <select id="selectCloseHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
@@ -2236,31 +2393,30 @@
     </select>
 
     <select id="businessMonthOutgoingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-            SELECT
-                DATE_FORMAT(STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d'), '%Y-%m-%d') as `start`,
-                CONCAT(F.COMP_NM, '  ', SUM(IFNULL(E.OUT_QTY, 0)), ' / ', SUM(IFNULL(C.ORDER_QTY, 0))) AS `title`,
-                CASE
-                    WHEN SUM(IFNULL(E.OUT_QTY, 0)) = SUM(IFNULL(C.ORDER_QTY, 0)) THEN '#E1F7FF' <!-- 출고가 모두 완료되었을 때 -->
-                    WHEN SUM(IFNULL(E.OUT_QTY, 0)) <![CDATA[ < ]]> SUM(IFNULL(C.ORDER_QTY, 0)) THEN '#FFFDA9' <!-- 아직 출고가 완료되지 않은상태 -->
-                    WHEN (SUM(IFNULL(E.OUT_QTY, 0)) <![CDATA[ < ]]> SUM(IFNULL(C.ORDER_QTY, 0))) AND STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d') <![CDATA[ <= ]]> NOW()  THEN '#FFECDD' <!-- 오늘날짜가 지났는데 하나라도 출고완료되지 않은상태 -->
-                END AS 'color'
-            FROM TBL_CONTROL A
-                INNER JOIN TBL_COMPANY F ON A.ORDER_COMP_CD = F.COMP_CD
-                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL
-                INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                    AND C.ORDER_DUE_DT BETWEEN #{SEL_START_DATE} AND #{SEL_END_DATE}
-                <if test="ORDER_COMP_CHARGE != null and ORDER_COMP_CHARGE != ''">
-                    AND C.ORDER_OXO_STAFF_SEQ = #{ORDER_COMP_CHARGE}
-                </if>
-                LEFT OUTER JOIN TBL_MCT_WORK D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.DEL_YN = 'N'
-                LEFT OUTER JOIN TBL_OUT E ON C.CONTROL_SEQ = E.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND C.ORDER_SEQ = E.ORDER_SEQ
-            WHERE 1 = 1
-                <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-                    AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-                </if>
-            GROUP BY C.ORDER_DUE_DT, F.COMP_CD
-        </select>
-
+        SELECT
+            DATE_FORMAT(STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS `start`,
+            CONCAT(E.COMP_NM, ' ', COUNT(C.OUT_FINISH_DT), ' / ', COUNT(*)) AS `title`,
+            CASE
+                WHEN SUM(IFNULL(D.OUT_QTY, 0)) = SUM(IFNULL(C.ORDER_QTY, 0)) THEN '#E1F7FF' <!-- 출고가 모두 완료되었을 때 -->
+                WHEN SUM(IFNULL(D.OUT_QTY, 0)) <![CDATA[ < ]]> SUM(IFNULL(C.ORDER_QTY, 0)) THEN '#FFFDA9' <!-- 아직 출고가 완료되지 않은상태 -->
+                WHEN (SUM(IFNULL(D.OUT_QTY, 0)) <![CDATA[ < ]]> SUM(IFNULL(C.ORDER_QTY, 0))) AND STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d') <![CDATA[ <= ]]> NOW()  THEN '#FFECDD' <!-- 오늘날짜가 지났는데 하나라도 출고완료되지 않은상태 -->
+            END AS 'color'
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ AND B.PART_NUM IS NULL
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                AND C.ORDER_DUE_DT BETWEEN #{SEL_START_DATE} AND #{SEL_END_DATE}
+<!--        <if test="ORDER_COMP_CHARGE != null and ORDER_COMP_CHARGE != ''">
+                AND C.ORDER_OXO_STAFF_SEQ = #{ORDER_COMP_CHARGE}
+            </if>-->
+            LEFT OUTER JOIN TBL_OUT D ON D.CONTROL_SEQ = C.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND D.ORDER_SEQ = C.ORDER_SEQ
+            LEFT OUTER JOIN TBL_COMPANY E ON E.COMP_CD = A.ORDER_COMP_CD AND E.DEL_YN = 'N'
+        WHERE 1 = 1
+            AND A.DEL_YN = 'N'
+        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+        </if>
+        GROUP BY C.ORDER_DUE_DT, A.ORDER_COMP_CD
+    </select>
 
     <select id="businessEmergencyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
@@ -2325,7 +2481,8 @@
         UPDATE TBL_MONTH_CLOSE_DETAIL
         SET
             CLOSE_DETAIL_NOTE = #{CLOSE_DETAIL_NOTE},
-            UPDATE_DT = NOW()
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE
             COMP_CD = #{COMP_CD}
             AND CLOSE_MONTH = #{CLOSE_MONTH}
@@ -2414,15 +2571,14 @@
             IFNULL(SF_GET_CODE_NM('1058', B.MATERIAL_FINISH_HEAT, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
             IFNULL(SF_GET_CODE_NM('1059', A.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
             CONCAT(IFNULL(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0), SPACE(0)) AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
-            IFNULL(R.ORIGINAL_OXO_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
-            IFNULL(R.OTHER_OXO_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
+            jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
+            jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
             IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'MM', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
             (SELECT M.FILE_PATH FROM TBL_FILE M WHERE M.GFILE_SEQ = B.IMG_GFILE_SEQ) AS IMAGE_PATH
-        FROM TBL_CONTROL A, TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER_MAIN R
+        FROM TBL_CONTROL A, TBL_CONTROL_PART B
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
             AND A.CONTROL_SEQ = B.CONTROL_SEQ
-	        AND A.CONTROL_SEQ = R.CONTROL_SEQ
             AND CONCAT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN
             <foreach collection="selectControlLists" item="bean" index="index"  open="(" close=")" separator=",">
                 #{bean}
