@@ -18,7 +18,7 @@
             SF_GET_CODE_NM('1035', B.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM, <!-- 소재 종류 -->
             B.SIZE_TXT, <!-- 규격 -->
             CASE WHEN B.PART_NUM IS NOT NULL THEN B.PART_UNIT_QTY * SF_GET_CONTROL_ORDER_QTY(A.CONTROL_SEQ, '') ELSE C.ORDER_QTY END AS ORDER_QTY, <!-- 수량 -->
-            CASE WHEN B.ORIGINAL_SIDE_QTY AND B.OTHER_SIDE_QTY THEN TRUE ELSE FALSE END AS SYMMETRY, <!-- 대칭 -->
+            CASE WHEN C.ORIGINAL_OXO_SIDE_QTY AND C.OTHER_OXO_SIDE_QTY THEN TRUE ELSE FALSE END AS SYMMETRY, <!-- 대칭 --> <!-- FIXME -->
             CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN ( SELECT jmes.SF_GET_DATE_F(MAX(M.STATUS_DT), '', 'M')
                                                                               FROM jmes.TBL_CONTROL_PART_PROGRESS M
                                                                               WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO002')
@@ -27,7 +27,7 @@
             <!-- A.ORDER_COMP_CD, SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM, -->
             SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION, <!-- 현재 등록된 위치 -->
             SF_GET_CODE_NM('1013', B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS, <!-- 진행상태 -->
-            SF_GET_STAFF_NM(A.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM <!-- 구매담당자(영업 담당자)  -->
+            SF_GET_STAFF_NM(C.ORDER_OXO_STAFF_SEQ) AS ORDER_STAFF_NM <!-- 구매담당자(영업 담당자)  -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 AND B.OUTSIDE_YN = 'N' <!-- 외주대상 제외 -->
