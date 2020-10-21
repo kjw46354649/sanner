@@ -24,7 +24,7 @@
         IFNULL(A.PRICE_CONFIRM, SPACE(0)) AS PRICE_CONFIRM, <!-- 단가확인 -->
         IFNULL(SF_GET_CODE_NM('1017', PRICE_CONFIRM, #{LOGIN_LOCALE}), SPACE(0)) AS PRICE_CONFIRM_NM, <!-- 단가확인 -->
         IFNULL(A.OUT_FINISH_DT, SPACE(0)) AS CONTROL_OUT_FINISH_DT, <!-- 주문관리 출고완료일 -->
-        SAME_SIDE_YN <!-- 대칭여부 -->
+        A.SAME_SIDE_YN <!-- 대칭여부 -->
     </sql>
 
     <sql id="controlPart">
@@ -2481,7 +2481,8 @@
         UPDATE TBL_MONTH_CLOSE_DETAIL
         SET
             CLOSE_DETAIL_NOTE = #{CLOSE_DETAIL_NOTE},
-            UPDATE_DT = NOW()
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE
             COMP_CD = #{COMP_CD}
             AND CLOSE_MONTH = #{CLOSE_MONTH}
@@ -2570,15 +2571,14 @@
             IFNULL(SF_GET_CODE_NM('1058', B.MATERIAL_FINISH_HEAT, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
             IFNULL(SF_GET_CODE_NM('1059', A.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
             CONCAT(IFNULL(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0), SPACE(0)) AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
-            IFNULL(R.ORIGINAL_OXO_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
-            IFNULL(R.OTHER_OXO_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
+            jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
+            jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
             IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'MM', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
             (SELECT M.FILE_PATH FROM TBL_FILE M WHERE M.GFILE_SEQ = B.IMG_GFILE_SEQ) AS IMAGE_PATH
-        FROM TBL_CONTROL A, TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER_MAIN R
+        FROM TBL_CONTROL A, TBL_CONTROL_PART B
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
             AND A.CONTROL_SEQ = B.CONTROL_SEQ
-	        AND A.CONTROL_SEQ = R.CONTROL_SEQ
             AND CONCAT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN
             <foreach collection="selectControlLists" item="bean" index="index"  open="(" close=")" separator=",">
                 #{bean}
