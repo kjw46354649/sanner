@@ -14,8 +14,8 @@
                 , X.MCT_WORK_SEQ, X.INSPECT_SEQ, Z.INSPECT_TYPE, Z.INSPECT_GRADE
                 , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'YY','') AS INNER_DUE_DT
                 , P.POP_POSITION
-                , SF_GET_CODE_NM(1009, P.POP_POSITION, #{LOGIN_LOCALE}) AS POP_NM <!-- 현재 등록된 위치 -->
-                , ( SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
+                , SF_GET_CODE_NM('1009', P.POP_POSITION, #{LOGIN_LOCALE}) AS POP_NM <!-- 현재 등록된 위치 -->
+                , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
                 , jmes.SF_GET_CODE_NM('1013', X.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS_NM
                 , X.CONTROL_NUM
                 , X.PART_NUM
@@ -57,7 +57,8 @@
                         , B.INNER_DUE_DT, B.OUTSIDE_COMP_CD, B.PART_STATUS
                         , A.CONTROL_NUM, B.PART_NUM, B.DRAWING_NUM
                         , B.MATERIAL_DETAIL, B.WORK_TYPE, B.MATERIAL_TYPE
-                        , B.ORIGINAL_SIDE_QTY, OTHER_SIDE_QTY
+                        , jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
+                        , jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
                         , B.PART_UNIT_QTY, B.SIZE_TXT, A.NOTE
                         , B.IMG_GFILE_SEQ
                         , SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', '') AS WORK_FINISH_DT
@@ -65,8 +66,9 @@
                         , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS INSPECT_SEQ
                         , A.OUT_FINISH_DT
                         , (SELECT COUNT(*) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.INSPECT_TYPE = '2' AND M.RETURN_SETTLEMENT_DT IS NULL) AS NOT_RETURN_SETTLEMENT_CNT
-                    FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+                    FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER_MAIN C
                     WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                        AND A.CONTROL_SEQ = C.CONTROL_SEQ
                         AND A.DEL_YN = 'N'
                         AND (EXISTS (SELECT *
                                     FROM TBL_CONTROL_PART_PROGRESS
@@ -120,13 +122,13 @@
         SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
           , CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' # ', B.PART_NUM) END AS CONTROL_NUM
           , CASE WHEN B.DRAWING_VER IS NULL THEN B.DRAWING_NUM ELSE CONCAT(B.DRAWING_NUM, ' (', B.DRAWING_VER, ')') END AS DRAWING_NUM
-          , SF_GET_CODE_NM(1059, A.MAIN_INSPECTION, #{LOGIN_LOCALE}) AS MAIN_INSPECTION_NM
+          , SF_GET_CODE_NM('1059', A.MAIN_INSPECTION, #{LOGIN_LOCALE}) AS MAIN_INSPECTION_NM
           , jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'','') AS INNER_DUE_DT
           , A.EMERGENCY_YN
-          , B.ITEM_NM
+          , C.ITEM_OXO_NM AS ITEM_NM
           , jmes.SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
           , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS ORDER_QTY
-          , CASE WHEN IFNULL(B.ORIGINAL_SIDE_QTY,0) + IFNULL(B.OTHER_SIDE_QTY,0) > 0 THEN CONCAT(jmes.SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, 0),' (',IFNULL(B.ORIGINAL_SIDE_QTY,0),',',IFNULL(B.OTHER_SIDE_QTY,0),')')
+          , CASE WHEN IFNULL(C.ORIGINAL_OXO_SIDE_QTY,0) + IFNULL(C.OTHER_OXO_SIDE_QTY,0) > 0 THEN CONCAT(jmes.SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, 0),' (',IFNULL(C.ORIGINAL_OXO_SIDE_QTY,0),',',IFNULL(C.OTHER_OXO_SIDE_QTY,0),')')
                  ELSE jmes.SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, 0)
             END ORDER_QTY_INFO
           , B.SIZE_TXT
@@ -140,8 +142,10 @@
           , B.IMG_GFILE_SEQ
         FROM jmes.TBL_CONTROL A
           , jmes.TBL_CONTROL_PART B
+          , jmes.TBL_CONTROL_PART_ORDER_MAIN C
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-          AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.CONTROL_SEQ = C.CONTROL_SEQ
+            AND B.CONTROL_SEQ = #{CONTROL_SEQ}
             AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </select>
     <select id="selectInspectionPopInfoList1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -216,18 +220,18 @@
           , CASE WHEN B.DRAWING_VER IS NULL THEN B.DRAWING_NUM ELSE CONCAT(B.DRAWING_NUM, ' (', B.DRAWING_VER, ')') END AS DRAWING_NUM
           , jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT
           , IFNULL(A.EMERGENCY_YN, 'N') AS EMERGENCY_YN
-          , B.ITEM_NM
-          , A.PROJECT_NM <!-- 프로젝트 -->
-          , A.MODULE_NM
+          , C.ITEM_OXO_NM AS ITEM_NM
+          , C.PROJECT_OXO_NM AS PROJECT_NM  <!-- 프로젝트 -->
+          , C.MODULE_OXO_NM AS MODULE_NM
           , jmes.SF_GET_CODE_NM('1059', A.MAIN_INSPECTION, #{LOGIN_LOCALE}) AS MAIN_INSPECTION_NM <!-- 주요검사품 -->
-<!--          , CASE WHEN IFNULL(B.ORIGINAL_SIDE_QTY,0) + IFNULL(B.OTHER_SIDE_QTY,0) > 0 -->
-<!--                     THEN CONCAT(IFNULL(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0),' (',IFNULL(B.ORIGINAL_SIDE_QTY,0),',',IFNULL(B.OTHER_SIDE_QTY,0),')') -->
+<!--          , CASE WHEN IFNULL(C.ORIGINAL_OXO_SIDE_QTY,0) + IFNULL(C.OTHER_OXO_SIDE_QTY,0) > 0 -->
+<!--                     THEN CONCAT(IFNULL(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0),' (',IFNULL(C.ORIGINAL_OXO_SIDE_QTY,0),',',IFNULL(C.OTHER_OXO_SIDE_QTY,0),')') -->
 <!--                  ELSE jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) -->
 <!--             END ORDER_QTY_INFO -->
-          , CASE WHEN jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) > 0 THEN (CASE WHEN IFNULL(B.ORIGINAL_SIDE_QTY,0) + IFNULL(B.OTHER_SIDE_QTY,0) > 0 THEN CONCAT(jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, 'EN'), ' / ', IFNULL(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0),' (',IFNULL(B.ORIGINAL_SIDE_QTY,0),',',IFNULL(B.OTHER_SIDE_QTY,0),')')
-                                                                                                       ELSE CONCAT(jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, 'EN'), ' / ', jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ))
+          , CASE WHEN jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) > 0 THEN (CASE WHEN IFNULL(C.ORIGINAL_OXO_SIDE_QTY,0) + IFNULL(C.OTHER_OXO_SIDE_QTY,0) > 0 THEN CONCAT(jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), ' / ', IFNULL(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0),' (',IFNULL(C.ORIGINAL_OXO_SIDE_QTY,0),',',IFNULL(C.OTHER_OXO_SIDE_QTY,0),')')
+                                                                                                       ELSE CONCAT(jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), ' / ', jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ))
                                                                                                   END)
-                 ELSE jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, 'EN')
+                 ELSE jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE})
             END AS WORK_TYPE_NM_ORDER_QTY_INFO
           , B.SIZE_TXT
 <!--          , jmes.SF_GET_MATERIAL_SIZE_TXT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS MATERIAL_SIZE_TXT -->
@@ -241,26 +245,30 @@
 <!--          , B.DRAWING_VER -->
           , B.DXF_GFILE_SEQ, B.PDF_GFILE_SEQ, B.IMG_GFILE_SEQ       <!-- 확인필요 -->
 <!--          , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM -->
-<!--          , A.DESIGNER_NM -->
-          , CASE WHEN A.DESIGNER_NM IS NULL THEN SF_GET_COMP_NM(A.ORDER_COMP_CD)
-                 ELSE CONCAT(SF_GET_COMP_NM(A.ORDER_COMP_CD), ' / ', A.DESIGNER_NM)
+<!--          , C.DESIGNER_OXO_NM -->
+          , CASE WHEN C.DESIGNER_OXO_NM IS NULL THEN SF_GET_COMP_NM(A.ORDER_COMP_CD)
+                 ELSE CONCAT(SF_GET_COMP_NM(A.ORDER_COMP_CD), ' / ', C.DESIGNER_OXO_NM)
             END AS ORDER_COMP_NM_DESIGNER_NM
           , SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
           , CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN (SELECT jmes.SF_GET_DATE_F(MAX(M.STATUS_DT),'YYYY','M') FROM jmes.TBL_CONTROL_PROGRESS M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.ORDER_STATUS = 'ORD001') END AS CONTROL_CONFIRM_DT
           , jmes.SF_GET_DATE_F(A.OUT_FINISH_DT,'','M') AS OUT_FINISH_DT
-<!--          , ( SELECT CONCAT(IFNULL(jmes.SF_GET_DATE_F(Q.INSERT_DT,'YYYY',''), SPACE(0)),' / ', IFNULL((SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Q.WORK_USER_ID), SPACE(0))) -->
-<!--              FROM jmes.TBL_CAM P, jmes.TBL_CAM_DETAIL Q, jmes.TBL_CONTROL_PART R -->
-<!--              WHERE P.CAM_SEQ = Q.CAM_SEQ -->
-<!--                AND P.CONTROL_SEQ = R.CONTROL_SEQ -->
-<!--                AND P.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ -->
-<!--                AND R.DRAWING_NUM = B.DRAWING_NUM -->
-<!--              ORDER BY Q.SEQ DESC -->
-<!--              LIMIT 1 -->
-<!--            ) AS WORK_HISTORY_INFO, -->
-          , CASE WHEN C.START_DT IS NOT NULL AND C.FINISH_DT IS NOT NULL THEN 'CWS030'  <!-- 완료 상태 -->
-                 WHEN C.START_DT IS NOT NULL AND C.FINISH_DT IS NULL THEN 'CWS020'   <!-- 진행중 상태 -->
-                 ELSE 'CWS010'   <!-- 대기 상태 -->
-            END CAM_STATUS <!-- CAM 작업 상태 -->
+          , ( SELECT CONCAT(jmes.SF_GET_DATE_F(Q.INSERT_DT,'YYYY',''),' / ',(SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Q.WORK_USER_ID))
+              FROM jmes.TBL_CAM P, jmes.TBL_CAM_DETAIL Q, jmes.TBL_CONTROL_PART R
+              WHERE P.CAM_SEQ = Q.CAM_SEQ
+                AND P.CONTROL_SEQ = R.CONTROL_SEQ
+                AND P.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ
+                AND R.DRAWING_NUM = B.DRAWING_NUM
+              ORDER BY Q.SEQ DESC
+              LIMIT 1
+            ) AS WORK_HISTORY_INFO <!-- 과거 경험 -->
+            , (SELECT
+                    CASE
+                        WHEN M.START_DT IS NOT NULL AND M.FINISH_DT IS NOT NULL THEN 'CWS030'  -- 완료 상태 -->
+                        WHEN M.START_DT IS NOT NULL AND M.FINISH_DT IS NULL THEN 'CWS020'   -- 진행중 상태 -->
+                        ELSE 'CWS010'
+                    END
+               FROM TBL_CAM M
+               WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_SEQ) AS CAM_STATUS <!-- CAM 작업 상태 -->
           , CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN ( SELECT jmes.SF_GET_DATE_F(MAX(M.STATUS_DT), '', 'M')
                                                                               FROM jmes.TBL_CONTROL_PART_PROGRESS M
                                                                               WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO002')
@@ -287,10 +295,11 @@
                                       AND K.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ)) AS POP_POSITION_NM
           , jmes.SF_GET_DATE_F(OUTSIDE_CONFIRM_DT, '', 'M') AS OUTSIDE_CONFIRM_DT <!-- 외주확정 일시 -->
           , CASE WHEN B.MATERIAL_FINISH_HEAT = 'FNL030' THEN '열처리' ELSE SPACE(0) END AS MATERIAL_FINISH_HEAT
-        FROM jmes.TBL_CONTROL A , jmes.TBL_CONTROL_PART B
-            LEFT OUTER JOIN jmes.TBL_CAM C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+        FROM jmes.TBL_CONTROL A , jmes.TBL_CONTROL_PART B , jmes.TBL_CONTROL_PART_ORDER C
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-          AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            AND A.DEL_YN = 'N'
+            AND B.CONTROL_SEQ = #{CONTROL_SEQ}
             AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </select>
     <select id="selectCommItemDetailInfo2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -484,7 +493,7 @@
                 , jmes.SF_GET_CODE_NM('1025', Z.ERROR_ACTION, #{LOGIN_LOCALE}) AS Q_ERROR_ACTION_NM
                 , Z.ERROR_NOTE AS Q_ERROR_NOTE
                 , jmes.SF_GET_CODE_NM('1013', X.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS_NM
-                , (SELECT SF_GET_CODE_NM(1009, M.POP_POSITION, #{LOGIN_LOCALE}) FROM jmes.TBL_POP M WHERE M.POP_SEQ = X.POP_SEQ) AS POP_NM
+                , (SELECT SF_GET_CODE_NM('1009', M.POP_POSITION, #{LOGIN_LOCALE}) FROM jmes.TBL_POP M WHERE M.POP_SEQ = X.POP_SEQ) AS POP_NM
                 , X.OUT_FINISH_DT
                 , (SELECT SUM(M.ERROR_QTY) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = X.ORDER_SEQ AND M.INSPECT_TYPE = '2') AS RETURN_QTY
                 , (SELECT MAX(M.INSERT_DT) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = X.ORDER_SEQ AND M.INSPECT_TYPE = '2') AS  RETURN_LAST_DT
@@ -541,8 +550,8 @@
                     , (SELECT COUNT(M.PACKING_NUM) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS ORDER_PACKING_NUM_CNT
                     , (SELECT SUM(M.OUT_QTY) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS ORDER_OUT_QTY
                     , (SELECT MAX(M.OUT_DT) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS ORDER_OUT_DT
-                    , B.ORIGINAL_SIDE_QTY
-                    , B.OTHER_SIDE_QTY
+                    , C.ORIGINAL_OXO_SIDE_QTY AS ORIGINAL_SIDE_QTY
+                    , C.OTHER_OXO_SIDE_QTY AS OTHER_SIDE_QTY
                     , B.INNER_WORK_FINISH_DT
                     , jmes.SF_GET_CODE_NM('1014', B.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
                     , jmes.SF_GET_MATERIAL_RECEIPT_DT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT
@@ -618,7 +627,6 @@
         ORDER BY T.ORDER_NUM
     </select>
 
-
     <select id="selectOutgoingOutType1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         /* 그리드 출고버튼시 */
         SELECT
@@ -627,8 +635,8 @@
         FROM(
             SELECT C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
                 , A.CONTROL_NUM
-                , B.DRAWING_NUM
-                , B.IMG_GFILE_SEQ
+                , C.DRAWING_NUM
+                , C.IMG_GFILE_SEQ
                 , C.ORDER_NUM
                 , IFNULL(C.ORDER_QTY,0) AS ORDER_QTY
                 , (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY
@@ -734,16 +742,19 @@
             , X.ORDER_QTY - X.OUT_QTY AS PLAN_QTY
         FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                     , A.CONTROL_NUM
-                    , B.DRAWING_NUM
-                    , B.IMG_GFILE_SEQ
+                    , C.DRAWING_NUM
+                    , C.IMG_GFILE_SEQ
                     , jmes.SF_GET_CONTROL_ORDER_QTY(A.CONTROL_SEQ, 0) AS ORDER_QTY
                     , (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS OUT_QTY
-                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER_MAIN C <!-- FIXME: 확인 필요 -->
                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                AND B.CONTROL_SEQ = #{CONTROL_SEQ}
-                AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                    AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND A.DEL_YN = 'N'
+                    AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+                    AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
         ) X
     </select>
+
     <insert id="insertOutgoingOutType3" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_OUT (OUT_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, ORDER_SEQ, OUT_QTY, INSERT_ID)
         SELECT NEXTVAL(jmes.OUT_SEQ) AS OUT_SEQ
@@ -793,8 +804,8 @@
           , X.OUT_CNT
         FROM (  SELECT T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ
                   , A.CONTROL_NUM
-                  , B.DRAWING_NUM
-                  , B.IMG_GFILE_SEQ
+                  , C.DRAWING_NUM
+                  , C.IMG_GFILE_SEQ
                   , C.ORDER_NUM
                   , jmes.SF_GET_CONTROL_ORDER_QTY(T.CONTROL_SEQ, T.ORDER_SEQ) AS ORDER_QTY
                   , C.PACKING_CNT
@@ -813,6 +824,7 @@
                   AND T.ORDER_SEQ = C.ORDER_SEQ
                   AND T.BARCODE_NUM = #{BARCODE_NUM}
                   AND T.DEL_YN = 'N'
+                  AND A.DEL_YN = 'N'
                   AND NOT EXISTS (SELECT * FROM TBL_OUT O WHERE O.CONTROL_SEQ = T.CONTROL_SEQ AND O.CONTROL_DETAIL_SEQ = T.CONTROL_DETAIL_SEQ AND O.ORDER_SEQ = T.ORDER_SEQ AND O.PACKING_NUM = T.PACKING_NUM)
             ) X
     </select>
@@ -872,22 +884,23 @@
                   AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
                   AND A.ORDER_SEQ = #{ORDER_SEQ}
               ) X
-              
+
     </select>
     <select id="selectOutgoingReturnInfo2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
             , CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' # ', B.PART_NUM) END AS CONTROL_NUM
             , CASE WHEN B.DRAWING_VER IS NULL THEN B.DRAWING_NUM ELSE CONCAT(B.DRAWING_NUM, ' (', B.DRAWING_VER, ')') END AS DRAWING_NUM
-            , SF_GET_CODE_NM(1059, A.MAIN_INSPECTION, #{LOGIN_LOCALE}) AS MAIN_INSPECTION_NM
+            , SF_GET_CODE_NM('1059', A.MAIN_INSPECTION, #{LOGIN_LOCALE}) AS MAIN_INSPECTION_NM
             , CONCAT(jmes.SF_GET_DATE_F(C.ORDER_DUE_DT,'YYYY',''), CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴급' ELSE SPACE(0) END) AS INNER_DUE_DT
             , A.EMERGENCY_YN
-            , B.ITEM_NM
+            , C.ITEM_OXO_NM AS ITEM_NM
             , jmes.SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
             , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS ORDER_QTY
-            , CASE WHEN IFNULL(B.ORIGINAL_SIDE_QTY,0) + IFNULL(B.OTHER_SIDE_QTY,0) > 0 THEN CONCAT(jmes.SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, 0),' (',IFNULL(B.ORIGINAL_SIDE_QTY,0),',',IFNULL(B.OTHER_SIDE_QTY,0),')')
+            , CASE
+                WHEN IFNULL(C.ORIGINAL_OXO_SIDE_QTY,0) + IFNULL(C.OTHER_OXO_SIDE_QTY,0) > 0 THEN CONCAT(jmes.SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, 0),' (',IFNULL(C.ORIGINAL_OXO_SIDE_QTY,0),',',IFNULL(C.OTHER_OXO_SIDE_QTY,0),')')
                 ELSE jmes.SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, 0)
-                END ORDER_QTY_INFO
+              END ORDER_QTY_INFO
             , B.SIZE_TXT
             , jmes.SF_GET_CODE_NM('1039', B.SURFACE_TREAT, #{LOGIN_LOCALE}) AS SURFACE_TREAT_NM
             , jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
@@ -946,7 +959,7 @@
             , jmes.SF_GET_CODE_NM('1040', T.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM
             , jmes.SF_GET_CODE_NM('1021', T.INSPECT_RESULT, #{LOGIN_LOCALE}) AS INSPECT_RESULT_NM
             , T.ERROR_NOTE
-            , (SELECT SF_GET_CODE_NM(1009, M.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION_NM FROM jmes.TBL_POP M WHERE M.POP_SEQ = T.POP_SEQ) AS POP_NM
+            , (SELECT SF_GET_CODE_NM('1009', M.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION_NM FROM jmes.TBL_POP M WHERE M.POP_SEQ = T.POP_SEQ) AS POP_NM
             FROM (  SELECT A.INSPECT_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.ORDER_SEQ
                     , A.ERROR_QTY
                     , A.INSERT_DT AS RETURN_DT
@@ -975,21 +988,22 @@
 
     <select id="selectOutgoingLabelType1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.CONTROL_NUM
-        , B.DRAWING_NUM
-        , B.IMG_GFILE_SEQ
-        , C.ORDER_NUM
-        , C.ORDER_QTY
-        , C.PACKING_CNT
-        ,C.CONTROL_SEQ,C.CONTROL_DETAIL_SEQ,C.ORDER_SEQ
+            , C.DRAWING_NUM
+            , C.IMG_GFILE_SEQ
+            , C.ORDER_NUM
+            , C.ORDER_QTY
+            , C.PACKING_CNT
+            , C.CONTROL_SEQ
+            , C.CONTROL_DETAIL_SEQ
+            , C.ORDER_SEQ
         FROM jmes.TBL_CONTROL A
-        , jmes.TBL_CONTROL_PART B
-        , jmes.TBL_CONTROL_PART_ORDER C
+            , jmes.TBL_CONTROL_PART B
+            , jmes.TBL_CONTROL_PART_ORDER_MAIN C
         WHERE A.CONTROL_SEQ = C.CONTROL_SEQ
-        AND B.CONTROL_SEQ = C.CONTROL_SEQ
-        AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-        AND C.CONTROL_SEQ = #{CONTROL_SEQ}
-        AND C.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-        AND C.ORDER_SEQ = #{ORDER_SEQ}
+            AND A.CONTROL_SEQ = C.CONTROL_SEQ
+            AND C.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND C.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND C.ORDER_SEQ = #{ORDER_SEQ}
      </select>
     <select id="selectOutgoingLabelType1Combo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
@@ -1031,6 +1045,7 @@
             AND B.CONTROL_SEQ = #{CONTROL_SEQ}
             AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </select>
+
     <select id="selectCommItemDetailGridCamPop" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
             , X.CONTROL_NUM, X.PART_NUM, X.ORDER_COMP_NM, X.SIZE_TXT, X.DRAWING_NUM, X.MATERIAL_TYPE_NM, X.CAD_FILE_SIZE
@@ -1252,7 +1267,7 @@
                     <!-- , (SELECT jmes.SF_GET_DATE_F(M.POP_DT,'YY','M') FROM jmes.TBL_POP M WHERE M.POP_POSITION = 'POP100' AND M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ ORDER BY M.POP_SEQ LIMIT 1) AS WORK_FINISH_DT -->
                     , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'','') AS INNER_DUE_DT
                     <!-- , P.POP_POSITION_NM AS POP_NM  -->
-                    , SF_GET_CODE_NM(1009, P.POP_POSITION, #{LOGIN_LOCALE}) AS POP_NM <!-- 현재 등록된 위치 -->
+                    , SF_GET_CODE_NM('1009', P.POP_POSITION, #{LOGIN_LOCALE}) AS POP_NM <!-- 현재 등록된 위치 -->
                     , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
                     , jmes.SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
                     , jmes.SF_GET_CODE_NM('1013', X.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS_NM
