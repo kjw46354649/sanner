@@ -119,7 +119,7 @@
                 </ul>
             </div>
         </form>
-        <button type="button" class="topWrap_btn" id="CONTROL_MANAGE_TOPWRAP_BTN">펼치기 / 접기</button>
+        <button type="button" class="topWrap_btn" id="CONTROL_MANAGE_TOP_WRAP_BTN">펼치기 / 접기</button>
     </div>
     <div class="bottomWrap row1_bottomWrap">
         <div class="hWrap mb-10">
@@ -388,12 +388,12 @@
                         newRowData = fnCloneObj(newRowData);
                         newRowData.ROW_NUM = totalRecords + 1;
                         newRowData.PART_NUM = newPartNum;
+                        newRowData.WORK_TYPE = 'WTP050';
                         newRowData.CONTROL_DETAIL_SEQ = null;
                         newRowData.DRAWING_NUM = null;
                         newRowData.DRAWING_VER = null;
                         newRowData.DRAWING_UP_DT = null;
                         newRowData.PREV_DRAWING_NUM = null;
-                        newRowData.WORK_TYPE = null;
                         newRowData.OUTSIDE_YN = null;
                         newRowData.WORK_FACTORY = null;
                         newRowData.MATERIAL_SUPPLY_YN = null;
@@ -470,28 +470,31 @@
                         newRowData.OUTSIDE_STATUS_DT = null;
                         newRowData.INNER_WORK_FINISH_DT = null;
                         newRowData.FORECAST_UNIT_AMT = null;
-
-                        /*
-                        newRowData.CONTROL_DETAIL_SEQ = null;
-                        newRowData.CONTROL_PART_QTY = null;
-                        newRowData.OUT_QTY = null;
-                        newRowData.ORDER_OUT_FINISH_DT = null;
-                        newRowData.OUTSIDE_COMP_CD = null;
-                        newRowData.OUTSIDE_COMP_NM = null;
-                        newRowData.OUTSIDE_ORDER_NUM = null;
-                        newRowData.OUTSIDE_NOTE = null;
-                        newRowData.OUTSIDE_MATERIAL_SUPPLY_YN = null;
-                        newRowData.OUTSIDE_REQUEST_FINISH_YN = null;
-                        newRowData.OUTSIDE_REQUEST_PROCESS_YN = null;
-                        newRowData.OUTSIDE_REQUEST_GRIND_YN = null;
-                        newRowData.OUTSIDE_REQUEST_SURFACE_YN = null;
-                        newRowData.OUTSIDE_REQUEST_ETC = null;
-                        newRowData.OUTSIDE_HOPE_DUE_DT = null;
-                        newRowData.OUTSIDE_UNIT_AMT = null;
-                        newRowData.OUTSIDE_IN_DT = null;
-                        newRowData.OUTSIDE_STATUS = null;
-                        newRowData.OUTSIDE_STATUS_DT = null;
-                        */
+                        // 발주
+                        newRowData.ORDER_SEQ = null;
+                        newRowData.ORDER_NUM = null;
+                        newRowData.ORDER_QTY = null;
+                        newRowData.ORDER_DUE_DT = null;
+                        newRowData.DELIVERY_DT = null;
+                        // newRowData.OUT_FINISH_DT = null;
+                        newRowData.PROJECT_NM = null;
+                        newRowData.MODULE_NM = null;
+                        newRowData.DELIVERY_COMP_NM = null;
+                        newRowData.LABEL_NOTE = null;
+                        newRowData.ORDER_STAFF_SEQ = null;
+                        newRowData.DESIGNER_NM = null;
+                        newRowData.DRAWING_NUM = null;
+                        // newRowData.DWG_GFILE_SEQ = null; // 확인 필요
+                        // newRowData.DXF_GFILE_SEQ = null; // 확인 필요
+                        // newRowData.PDF_GFILE_SEQ = null; // 확인 필요
+                        // newRowData.IMG_GFILE_SEQ = null; // 확인 필요
+                        // newRowData.VIEW_GFILE_SEQ = null; // 확인 필요
+                        newRowData.ITEM_NM = null;
+                        newRowData.ORIGINAL_SIDE_QTY = null;
+                        newRowData.OTHER_SIDE_QTY = null;
+                        newRowData.UNIT_FINAL_EST_AMT = null;
+                        newRowData.UNIT_FINAL_AMT = null;
+                        newRowData.PREV_DRAWING_NUM = null;
 
                         $orderManagementGrid.pqGrid('addRow', {
                             newRow: newRowData,
@@ -655,29 +658,25 @@
                                 newRowData.ORDER_QTY = null;
                                 newRowData.ORDER_DUE_DT = null;
                                 newRowData.DELIVERY_DT = null;
-                                newRowData.PACKING_CNT = null;
-                                newRowData.OUT_FINISH_DT = null;
-                                newRowData.PROJECT_OXO_NM = null;
-                                newRowData.INSERT_DT = null;
-                                newRowData.INSERT_ID = null;
-                                newRowData.UPDATE_DT = null;
-                                newRowData.UPDATE_ID = null;
-                                newRowData.MODULE_OXO_NM = null;
-                                newRowData.DELIVERY_OXO_COMP_NM = null;
-                                newRowData.LABEL_OXO_NOTE = null;
-                                newRowData.ORDER_OXO_STAFF_SEQ = null;
-                                newRowData.DESIGNER_OXO_NM = null;
+                                // newRowData.OUT_FINISH_DT = null;
+                                newRowData.PROJECT_NM = null;
+                                newRowData.MODULE_NM = null;
+                                newRowData.DELIVERY_COMP_NM = null;
+                                newRowData.LABEL_NOTE = null;
+                                newRowData.ORDER_STAFF_SEQ = null;
+                                newRowData.DESIGNER_NM = null;
                                 newRowData.DRAWING_NUM = null;
-                                newRowData.DWG_GFILE_SEQ = null;
-                                newRowData.DXF_GFILE_SEQ = null;
-                                newRowData.PDF_GFILE_SEQ = null;
-                                newRowData.IMG_GFILE_SEQ = null;
-                                newRowData.VIEW_GFILE_SEQ = null;
-                                newRowData.ITEM_OXO_NM = null;
-                                newRowData.ORIGINAL_OXO_SIDE_QTY = null;
-                                newRowData.OTHER_OXO_SIDE_QTY = null;
-                                newRowData.UNIT_OXO_FINAL_EST_AMT = null;
-                                newRowData.UNIT_OXO_FINAL_AMT = null;
+                                // newRowData.DWG_GFILE_SEQ = null; // 확인 필요
+                                // newRowData.DXF_GFILE_SEQ = null; // 확인 필요
+                                // newRowData.PDF_GFILE_SEQ = null; // 확인 필요
+                                // newRowData.IMG_GFILE_SEQ = null; // 확인 필요
+                                // newRowData.VIEW_GFILE_SEQ = null; // 확인 필요
+                                newRowData.ITEM_NM = null;
+                                newRowData.ORIGINAL_SIDE_QTY = null;
+                                newRowData.OTHER_SIDE_QTY = null;
+                                newRowData.UNIT_FINAL_EST_AMT = null;
+                                newRowData.UNIT_FINAL_AMT = null;
+                                newRowData.PREV_DRAWING_NUM = null;
                                 /*
                                 newRowData.ORDER_SEQ = null;
                                 newRowData.ORDER_NUM = null;
@@ -2269,7 +2268,7 @@
         /* function */
 
         /* event */
-        $('#CONTROL_MANAGE_TOPWRAP_BTN').on('click', function () {
+        $('#CONTROL_MANAGE_TOP_WRAP_BTN').on('click', function () {
             if ($(this).hasClass('on')) {
                 topMenuClose();
                 $(this).removeClass('on');
@@ -2974,7 +2973,7 @@
             $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_area').removeClass("controlAmountSummaryActive");
             $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_area').addClass("controlAmountSummaryUnActive");
             let amountSummaryChk = $('#CONTROL_MANAGE_SEARCH_FORM').find('#AMOUNT_SUMMARY').is(":checked");
-            if(amountSummaryChk) {
+            if (amountSummaryChk) {
                 let totalAmount = 0;
                 let gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
                 $.each(gridData, function (key, rowData) {

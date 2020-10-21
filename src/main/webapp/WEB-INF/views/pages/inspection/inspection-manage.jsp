@@ -367,7 +367,7 @@
                     if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
-                        return ui.rowData.SYMMETRY ? cellData + '&nbsp;<span style="background-color: #C00000; color: white; font-size: 1.2rem; text-align: center; vertical-align: middle;">대</span>' : cellData;
+                        return ui.rowData.SAME_SIDE_YN === 'Y' ? cellData + '&nbsp;<span style="background-color: #C00000; color: white; font-size: 1.2rem; text-align: center; vertical-align: middle;">대</span>' : cellData;
                     }
                 }
             },
