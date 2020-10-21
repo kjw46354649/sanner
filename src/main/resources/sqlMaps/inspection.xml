@@ -57,8 +57,8 @@
                         , B.INNER_DUE_DT, B.OUTSIDE_COMP_CD, B.PART_STATUS
                         , A.CONTROL_NUM, B.PART_NUM, B.DRAWING_NUM
                         , B.MATERIAL_DETAIL, B.WORK_TYPE, B.MATERIAL_TYPE
-                        , jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
-                        , jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
+                        , jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS ORIGINAL_SIDE_QTY <!-- 대칭_원칭 -->
+                        , jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS OTHER_SIDE_QTY <!-- 대칭_대칭 -->
                         , B.PART_UNIT_QTY, B.SIZE_TXT, A.NOTE
                         , B.IMG_GFILE_SEQ
                         , SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', '') AS WORK_FINISH_DT

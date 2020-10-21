@@ -265,21 +265,21 @@ public class FileUploadServiceImpl implements FileUploadService {
                 }
 
                 // 업로드 도면 기준 프로시저 적용 대상 작업 처리
-                hashMap.put("queryId", "drawingTempMapper.insertDrawingUpload");
+                hashMap.put("queryId", "drawingUploadMapper.insertDrawingUpload");
                 innodaleDao.create(hashMap);
             }
 
             // 도면 대상 업로드 리스트 및 적둉 대상 작업 리스트 조회
             hashMap.put("queryId", "procedure.SP_CONTROL_DRAWING_UPLOAD");
-            innodaleDao.create(hashMap);
+            innodaleDao.callProcedureMethod(hashMap);
         }
         model.addAttribute("result",       "success");
         model.addAttribute("message",      "업로드를 완료 하였습니다.");
 
-        hashMap.put("queryId", "drawingTempMapper.SP_CONTROL_DRAWING_UPLOAD");
+        hashMap.put("queryId", "drawingUploadMapper.selectDrawingUploadFileList");
         model.addAttribute("fileUploadList",     innodaleDao.getList(hashMap));
 
-        hashMap.put("queryId", "drawingTempMapper.SP_CONTROL_DRAWING_UPLOAD");
+        hashMap.put("queryId", "drawingUploadMapper.selectDrawingUploadControlDataList");
         model.addAttribute("fileUploadDataList", innodaleDao.getList(hashMap));
     }
 
