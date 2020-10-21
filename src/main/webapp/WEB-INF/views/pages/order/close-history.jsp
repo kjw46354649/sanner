@@ -109,7 +109,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100">항목 Option</label></span>
                         <span class="wd_200" style="display: inline-block;">
-                            <span class="chk_box"><input type="checkbox" name="PART_NUM" id="PART_NUM"><label for="PART_NUM">Part</label></span>
+                            <span class="chk_box"><input type="checkbox" name="VISIBLE_PART" id="VISIBLE_PART"><label for="VISIBLE_PART">Part</label></span>
                             <span class="chk_box"><input type="checkbox" name="ORDER_NUM" id="ORDER_NUM"><label for="ORDER_NUM">발주번호</label></span>
                         </span>
                         <button type="button" class="right_float defaultBtn radius blue" id="CLOSE_HISTORY_SEARCH">검색</button>
