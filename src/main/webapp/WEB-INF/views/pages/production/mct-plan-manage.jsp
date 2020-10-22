@@ -659,7 +659,7 @@
                     let txt1 = val.toString().substring(0, indx);
                     let txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     let txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + '<span style="background:yellow;color:#333;">' + txt2 + '</span>' + txt3;
+                    return txt1 + '<span style="background: #FFFF00; color: #333;">' + txt2 + '</span>' + txt3;
                 } else {
                     return val;
                 }

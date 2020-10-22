@@ -74,7 +74,10 @@
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
-                        <button type="button" class="right_float defaultBtn radius blue" id="outgoing_manage_search_btn">검색</button>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="OUTGOING_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue" id="outgoing_manage_search_btn">검색</button>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -284,7 +287,7 @@
                         <th>도면번호</th>
                         <td id="DRAWING_NUM_VIEW_T" class="red"></td>
                         <th>주요검사</th>
-                        <td id="MAIN_INSPECTION_NM_VIEW_T" style="color: red;"></td>
+                        <td id="MAIN_INSPECTION_NM_VIEW_T" style="color: #FF0000;"></td>
                     </tr>
                     <tr>
                         <th>품명</th>
@@ -1189,7 +1192,7 @@
                             $("#outgoing_manage_return_form").find("#DRAWING_NUM" + "_VIEW_T").html(dataInfo.DRAWING_NUM);
                             $("#outgoing_manage_return_form").find("#MAIN_INSPECTION_NM" + "_VIEW_T").html(dataInfo.MAIN_INSPECTION_NM);
                             if(dataInfo.EMERGENCY_YN === 'Y') {
-                                emergencySpan = '<span style="display: inline-block; margin: 0 5px; padding: 0px 7px; border: solid red; border-radius: 5px; color: red; text-align: center; font-size: 1rem;">긴급</span>';
+                                emergencySpan = '<span style="display: inline-block; margin: 0 5px; padding: 0px 7px; border: solid red; border-radius: 5px; color: #FF0000; text-align: center; font-size: 1rem;">긴급</span>';
                             }
                             $("#outgoing_manage_return_form").find("#INNER_DUE_DT" + "_VIEW_T").html(dataInfo.INNER_DUE_DT + emergencySpan);
                             $("#outgoing_manage_return_form").find("#ITEM_NM" + "_VIEW_T").html(dataInfo.ITEM_NM);
@@ -1789,7 +1792,7 @@
                     let txt1 = val.toString().substring(0, indx);
                     let txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     let txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
                 } else {
                     return val;
                 }
@@ -1818,6 +1821,16 @@
 
         $('#SEL_OUTGOING_DATE_TYPE').on('change', function () {
             $(this).val() === '' ? $('[id^=SEL][id$=DT]').prop('disabled', true) : $('[id^=SEL][id$=DT]').prop('disabled', false);
+        });
+
+        $('#OUTGOING_MANAGE_EXCEL_EXPORT').on('click', function () {
+            const blob = outgoingManageGridId01.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, '출하관리.xlsx');
         });
     });
 

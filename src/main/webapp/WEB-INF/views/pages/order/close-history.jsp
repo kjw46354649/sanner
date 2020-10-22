@@ -112,7 +112,10 @@
                             <span class="chk_box"><input type="checkbox" name="PART_NUM" id="PART_NUM"><label for="PART_NUM">Part</label></span>
                             <span class="chk_box"><input type="checkbox" name="ORDER_NUM" id="ORDER_NUM"><label for="ORDER_NUM">발주번호</label></span>
                         </span>
-                        <button type="button" class="right_float defaultBtn radius blue" id="CLOSE_HISTORY_SEARCH">검색</button>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="CLOSE_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue" id="CLOSE_HISTORY_SEARCH">검색</button>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -756,7 +759,7 @@
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
                 }
                 else {
                     return val;
@@ -972,7 +975,16 @@
                 checkedValue += '\'' + $(this).val() + '\'';
             });
             $('#CONTROL_STATUS').val(checkedValue);
-            console.log(checkedValue)
+        });
+
+        $('#CLOSE_HISTORY_EXCEL_EXPORT').on('click', function () {
+            const blob = $closeHistoryGrid.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, '마감이력.xlsx');
         });
         /* event */
 

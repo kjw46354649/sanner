@@ -421,7 +421,10 @@
                             </span>
                             <%--<span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
                         </div>
-                        <button type="button" class="right_float defaultBtn radius blue" id="CAM_WORK_HISTORY_SEARCH">검색</button>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="CAM_WORK_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue" id="CAM_WORK_HISTORY_SEARCH">검색</button>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -510,7 +513,10 @@
                             </span>
 <%--                            <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
                         </div>
-                        <button type="button" class="right_float defaultBtn radius blue" id="NC_PERFORMANCE_HISTORY_SEARCH">검색</button>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="NC_PERFORMANCE_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue" id="NC_PERFORMANCE_HISTORY_SEARCH">검색</button>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -945,7 +951,7 @@
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
                 }
                 else {
                     return val;
@@ -992,7 +998,7 @@
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
                 }
                 else {
                     return val;
@@ -1018,6 +1024,26 @@
                 return fnFormToJsonArrayData('#NC_PERFORMANCE_HISTORY_SEARCH_FORM');
             });
             $ncPerformanceHistoryGrid.pqGrid('refreshDataAndView');
+        });
+
+        $('#CAM_WORK_HISTORY_EXCEL_EXPORT').on('click', function () {
+            const blob = $camWorkHistoryGrid.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, 'CAM 작업이력.xlsx');
+        });
+
+        $('#NC_PERFORMANCE_HISTORY_EXCEL_EXPORT').on('click', function () {
+            const blob = $ncPerformanceHistoryGrid.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, 'NC 수행 이력.xlsx');
         });
         /* event */
 
