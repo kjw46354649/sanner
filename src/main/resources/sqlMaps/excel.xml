@@ -233,16 +233,16 @@
             END AS CALC_EST_UNIT_COST, <!-- 계산 견적가 -->
             C.UNIT_OXO_FINAL_EST_AMT, <!-- 최종 견적가 -->
             IFNULL( CASE
-                        WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.UNIT_FINAL_AMT
-                                                                    FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                        WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.UNIT_OXO_FINAL_AMT
+                                                                    FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                                                                     WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                                                         AND N.CONTROL_STATUS = 'ORD003'
                                                                         AND N.DEL_YN = 'N'
                                                                         AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
                                                                     ORDER BY M.CONTROL_SEQ DESC
                                                                     LIMIT 1)
-                        ELSE (  SELECT M.UNIT_FINAL_AMT
-                                FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                        ELSE (  SELECT M.UNIT_OXO_FINAL_AMT
+                                FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                                 WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                     AND N.CONTROL_STATUS = 'ORD003'
                                     AND N.DEL_YN = 'N'

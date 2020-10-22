@@ -14,8 +14,8 @@
                 WHEN B.OUTSIDE_STATUS IN ('OST001', 'OST003') THEN (SELECT SF_GET_DATE_F(M.INSERT_DT, 'YY', 'M') FROM TBL_OUTSIDE_REQUEST_DETAIL M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N')
             END AS OUTSIDE_REQUEST_DT,
             IFNULL( CASE
-                        WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.OUTSIDE_UNIT_AMT
-                                                                    FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                        WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.OUTSIDE_OXO_UNIT_AMT
+                                                                    FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                                                                     WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                                                         AND M.OUTSIDE_YN = 'Y'
                                                                         AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
@@ -23,8 +23,8 @@
                                                                         AND N.DEL_YN = 'N'
                                                                     ORDER BY M.CONTROL_SEQ DESC
                                                                     LIMIT 1)
-                        ELSE (  SELECT M.OUTSIDE_UNIT_AMT
-                                FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                        ELSE (  SELECT M.OUTSIDE_OXO_UNIT_AMT
+                                FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                                 WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                     AND M.OUTSIDE_YN = 'Y'
                                     AND M.DRAWING_NUM = B.DRAWING_NUM

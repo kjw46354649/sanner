@@ -87,7 +87,7 @@
                 THEN CONCAT(jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ),' (',IFNULL(jmes.SF_GET_SIDE_QTY(D.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1),0),',',IFNULL(jmes.SF_GET_SIDE_QTY(D.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1),0),')')
                 ELSE jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ)
             END ORDER_QTY_INFO, <!-- 수량에 대칭 추가 -->
-            D.SAME_SIDE_YN AS SIDE_YN, <!--  대칭 여부 -->
+            D.SAME_SIDE_YN, <!--  대칭 여부 -->
         	jmes.SF_GET_DATE_F(C.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
         	'' AS NOTE, F.BARCODE_NUM
         FROM TBL_MCT_WORK A
@@ -124,7 +124,7 @@
                 THEN CONCAT(jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ),' (',IFNULL(jmes.SF_GET_SIDE_QTY(D.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1),0),',',IFNULL(jmes.SF_GET_SIDE_QTY(D.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1),0),')')
                 ELSE jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ)
             END ORDER_QTY_INFO, <!-- 수량에 대칭 추가 -->
-            D.SAME_SIDE_YN AS SIDE_YN, <!--  대칭 여부 -->
+            D.SAME_SIDE_YN, <!--  대칭 여부 -->
             jmes.SF_GET_DATE_F(C.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
             '' AS NOTE, F.BARCODE_NUM
         FROM TBL_MCT_WORK A
