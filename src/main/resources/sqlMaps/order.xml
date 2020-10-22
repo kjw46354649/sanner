@@ -2023,24 +2023,6 @@
         ORDER BY X.CONTROL_NUM, X.ORDER_NUM
     </select>
 
-    <select id="selectTransactionStatementOrderStaff" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            C.ORDER_OXO_STAFF_SEQ,
-            SF_GET_STAFF_NM(C.ORDER_OXO_STAFF_SEQ) AS ORDER_STAFF_NM
-        FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                AND IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050' <!-- Part 부속은 제외(작업형태 파트가공) -->
-            INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON A.CONTROL_SEQ = C.CONTROL_SEQ
-        WHERE 1 = 1
-            AND A.DEL_YN = 'N'
-            AND A.CONTROL_SEQ IN (${CONTROL_SEQ_STR})
-            AND A.COMP_CD = #{COMP_CD}
-            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-        GROUP BY
-            C.ORDER_OXO_STAFF_SEQ
-        LIMIT 1
-    </select>
-
     <insert id="createInvoice" parameterType="java.util.HashMap" >
         INSERT INTO TBL_INVOICE (
             INVOICE_NUM,
