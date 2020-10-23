@@ -94,7 +94,7 @@
             A.CONTROL_NUM, <!-- 관리번호 -->
             DATE_FORMAT(STR_TO_DATE(B.OUTSIDE_HOPE_DUE_DT, '%Y%m%d'), '%m월%d일') AS OUTSIDE_HOPE_DUE_DT, <!-- 요망납기 -->
             B.DRAWING_NUM, <!-- 도면번호 -->
-            C.ITEM_OXO_NM AS ITEM_NM, <!-- 품명 -->
+            C.ITEM_NM, <!-- 품명 -->
             B.SIZE_TXT, <!-- 규격 -->
             IFNULL(SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL, <!-- 소재 종류 -->
             SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 발주량 -->
@@ -129,7 +129,7 @@
             B.BUSINESS_TYPE, <!-- 업태 -->
             B.BUSINESS_ITEM, <!-- 종목 -->
             CONCAT(B.BUSINESS_TYPE, ' / ', B.BUSINESS_ITEM) AS BUSINESS_TYPE_BUSINESS_ITEM,
-            (   SELECT SUM(C.UNIT_OXO_FINAL_AMT * C.ORDER_QTY)
+            (   SELECT SUM(C.UNIT_FINAL_AMT * C.ORDER_QTY)
                 FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -172,12 +172,12 @@
                 A.CONTROL_NUM,
                 C.ORDER_NUM,
                 B.DRAWING_NUM,
-                C.ITEM_OXO_NM AS ITEM_NM,
+                C.ITEM_NM,
                 CONCAT(B.DRAWING_NUM, '\n', B.ITEM_NM) AS DRAWING_NUM_ITEM_NM,
                 B.SIZE_TXT,
                 SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
-                C.UNIT_OXO_FINAL_AMT AS UNIT_FINAL_AMT,
-                C.UNIT_OXO_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
+                C.UNIT_FINAL_AMT,
+                C.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
                 D.NOTE
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -231,9 +231,9 @@
                 WHEN 0 THEN SPACE(0)
                 ELSE IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)
             END AS CALC_EST_UNIT_COST, <!-- 계산 견적가 -->
-            C.UNIT_OXO_FINAL_EST_AMT, <!-- 최종 견적가 -->
+            C.UNIT_FINAL_EST_AMT, <!-- 최종 견적가 -->
             IFNULL( CASE
-                        WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.UNIT_OXO_FINAL_AMT
+                        WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.UNIT_FINAL_AMT
                                                                     FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                                                                     WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                                                         AND N.CONTROL_STATUS = 'ORD003'
@@ -241,7 +241,7 @@
                                                                         AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
                                                                     ORDER BY M.CONTROL_SEQ DESC
                                                                     LIMIT 1)
-                        ELSE (  SELECT M.UNIT_OXO_FINAL_AMT
+                        ELSE (  SELECT M.UNIT_FINAL_AMT
                                 FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                                 WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                     AND N.CONTROL_STATUS = 'ORD003'

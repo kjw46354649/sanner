@@ -621,7 +621,7 @@
             CASE WHEN IFNULL(B.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN, <!-- 긴급 -->
             CASE WHEN IFNULL(B.MAIN_INSPECTION, 'N') = 'Y' THEN '주' ELSE SPACE(0) END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
             CASE WHEN A.WORK_TYPE = 'WTP030' THEN '수' WHEN A.WORK_TYPE = 'WTP040' THEN '재' END AS WORK_NM, <!-- 형태 -->
-            R.ITEM_OXO_NM AS ITEM_NM, <!-- 품명 -->
+            R.ITEM_NM, <!-- 품명 -->
             jmes.SF_GET_CODE_NM('1009', C.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION, <!-- 현재위치 -->
             jmes.SF_GET_CODE_NM('1013', A.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS, <!-- 진행상태 -->
             B.CONTROL_NUM, <!-- 관리번호 -->
@@ -870,7 +870,7 @@
         	C.PART_NUM, <!-- Part -->
         	C.DRAWING_NUM, <!-- 도면번호 -->
         	C.IMG_GFILE_SEQ, <!-- 도면 이미지 번호 -->
-        	R.ITEM_OXO_NM AS ITEM_NM, <!-- 품명 -->
+        	R.ITEM_NM, <!-- 품명 -->
         	C.WORK_TYPE, <!-- 작업형태 -->
             IFNULL(SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 이름 -->
         	C.MATERIAL_DETAIL, <!-- 소재종류 상세 -->
@@ -927,7 +927,7 @@
             CASE WHEN IFNULL(B.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN, <!-- 긴급 -->
             CASE WHEN IFNULL(B.MAIN_INSPECTION, 'N') = 'Y' THEN '주' ELSE SPACE(0) END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
             CASE WHEN A.WORK_TYPE = 'WTP030' THEN '수' WHEN A.WORK_TYPE = 'WTP040' THEN '재' END AS WORK_NM, <!-- 형태 -->
-            R.ITEM_OXO_NM AS ITEM_NM, <!-- 품명 -->
+            R.ITEM_NM, <!-- 품명 -->
             jmes.SF_GET_CODE_NM('1009', C.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION, <!-- 현재위치 -->
             jmes.SF_GET_CODE_NM('1013', A.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS, <!-- 진행상태 -->
             B.CONTROL_NUM, <!-- 관리번호 -->
@@ -1082,7 +1082,7 @@
             CASE WHEN IFNULL(B.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN, <!-- 긴급 -->
             CASE WHEN IFNULL(B.MAIN_INSPECTION, 'N') = 'Y' THEN '주' ELSE SPACE(0) END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
             CASE WHEN A.WORK_TYPE = 'WTP030' THEN '수' WHEN A.WORK_TYPE = 'WTP040' THEN '재' END AS WORK_NM, <!-- 형태 -->
-            R.ITEM_OXO_NM AS ITEM_NM, <!-- 품명 -->
+            R.ITEM_NM, <!-- 품명 -->
             SF_GET_CODE_NM('1009', C.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION, <!-- 현재위치 -->
             <!-- C.POP_POSITION_NM AS POP_POSITION, 현재위치 -->
             SF_GET_CODE_NM('1013,' A.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS, <!-- 진행상태 -->

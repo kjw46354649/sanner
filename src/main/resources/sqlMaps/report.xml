@@ -111,7 +111,7 @@
             , Z.FORECAST_UNIT_AMT
             , Z.PART_QTY * Z.FORECAST_UNIT_AMT AS TOTAL_AMT
             , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE Z.PART_QTY * Z.FORECAST_UNIT_AMT / (Z.WORK_TIME / 60 / 60) END AS PRICE_PER_HOUR
-            , CASE WHEN Z.PREV_DRAWING_NUM IS NOT NULL THEN (   SELECT M.UNIT_OXO_FINAL_AMT
+            , CASE WHEN Z.PREV_DRAWING_NUM IS NOT NULL THEN (   SELECT M.UNIT_FINAL_AMT
                                                                 FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                                                                 WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                                                     AND N.CONTROL_STATUS = 'ORD003'
@@ -119,7 +119,7 @@
                                                                     AND M.DRAWING_NUM = Z.PREV_DRAWING_NUM
                                                                 ORDER BY M.CONTROL_SEQ DESC
                                                                 LIMIT 1)
-                   ELSE (   SELECT M.UNIT_OXO_FINAL_AMT
+                   ELSE (   SELECT M.UNIT_FINAL_AMT
                             FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                             WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                 AND N.CONTROL_STATUS = 'ORD003'
@@ -147,8 +147,8 @@
                     , jmes.SF_GET_DATE_F(Y.INNER_WORK_FINISH_DT,'','M') AS INNER_WORK_FINISH_DT
                     , (SELECT ROUND(SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)),0) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = P.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ) AS WORK_TIME
                     , Y.FORECAST_UNIT_AMT
-                    , M.UNIT_OXO_FINAL_EST_AMT AS UNIT_FINAL_EST_AMT
-                    , M.UNIT_OXO_FINAL_AMT AS UNIT_FINAL_AMT
+                    , M.UNIT_FINAL_EST_AMT
+                    , M.UNIT_FINAL_AMT
                     , jmes.SF_GET_CODE_NM('1040',P.INSPECT_GRADE,#{LOGIN_LOCALE}) AS INSPECT_GRADE_NM   <!-- 언어조건 -->
                     , jmes.SF_GET_CODE_NM('1020',P.INSPECT_RESULT,#{LOGIN_LOCALE}) AS INSPECT_RESULT_NM   <!-- 언어조건 -->
                     , P.ERROR_QTY
@@ -431,7 +431,7 @@
             , Z.FORECAST_UNIT_AMT
             , Z.PART_QTY * Z.FORECAST_UNIT_AMT AS TOTAL_AMT
             , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE Z.PART_QTY * Z.FORECAST_UNIT_AMT / (Z.WORK_TIME / 60 / 60) END AS PRICE_PER_HOUR
-            , CASE WHEN Z.PREV_DRAWING_NUM IS NOT NULL THEN (   SELECT M.UNIT_OXO_FINAL_AMT
+            , CASE WHEN Z.PREV_DRAWING_NUM IS NOT NULL THEN (   SELECT M.UNIT_FINAL_AMT
                                                                 FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                                                                 WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                                                     AND N.CONTROL_STATUS = 'ORD003'
@@ -439,7 +439,7 @@
                                                                     AND M.DRAWING_NUM = Z.PREV_DRAWING_NUM
                                                                 ORDER BY M.CONTROL_SEQ DESC
                                                                 LIMIT 1)
-                   ELSE (   SELECT M.UNIT_OXO_FINAL_AMT
+                   ELSE (   SELECT M.UNIT_FINAL_AMT
                             FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                             WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                 AND N.CONTROL_STATUS = 'ORD003'
@@ -474,8 +474,8 @@
                     , CASE WHEN P.OUTSIDE_YN = 'Y' THEN jmes.SF_GET_DATE_F(Y.OUTSIDE_IN_DT,'','M') END AS OUTSIDE_IN_DT
                     , jmes.SF_GET_DATE_F(P.OUT_FINISH_DT,'','M') AS OUT_FINISH_DT
                     , Y.FORECAST_UNIT_AMT
-                    , M.UNIT_OXO_FINAL_EST_AMT AS UNIT_FINAL_EST_AMT
-                    , M.UNIT_OXO_FINAL_AMT AS UNIT_FINAL_AMT
+                    , M.UNIT_FINAL_EST_AMT
+                    , M.UNIT_FINAL_AMT
                     , jmes.SF_GET_CODE_NM('1040',P.INSPECT_GRADE,#{LOGIN_LOCALE}) AS INSPECT_GRADE_NM   <!-- 언어조건 -->
                     , jmes.SF_GET_CODE_NM('1020',P.INSPECT_RESULT,#{LOGIN_LOCALE}) AS INSPECT_RESULT_NM   <!-- 언어조건 -->
                     , P.ERROR_QTY

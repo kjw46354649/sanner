@@ -198,18 +198,18 @@
             , A.PACKING_NUM
             , D.PACKING_CNT
             , (SELECT IFNULL(M.COMP_NM2, M.COMP_NM)  FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = B.COMP_CD) AS COMP_NM
-            , D.ITEM_OXO_NM AS ITEM_NM
+            , D.ITEM_NM
             , (SELECT IFNULL(M.COMP_NM2, M.COMP_NM) FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = B.ORDER_COMP_CD) AS ORDER_COMP_NM
             , D.DRAWING_NUM
             , D.IMG_GFILE_SEQ
             , D.ORDER_NUM
-            , D.MODULE_OXO_NM AS MODULE_NM
+            , D.MODULE_NM
             , jmes.SF_GET_DATE_F(D.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT
             , B.CONTROL_NUM
-            , D.DELIVERY_OXO_COMP_NM AS DELIVERY_COMP_NM
-            , D.PROJECT_OXO_NM AS PROJECT_NM
+            , D.DELIVERY_COMP_NM
+            , D.PROJECT_NM
             , CONCAT(C.SIZE_TXT, ' / ', IFNULL(D.ORDER_QTY, 0), 'EA') AS SIZE_QTY_INFO
-            , D.LABEL_OXO_NOTE AS LABEL_NOTE
+            , D.LABEL_NOTE
         FROM jmes.TBL_OUT_BARCODE A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C, jmes.TBL_CONTROL_PART_ORDER D
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
             AND A.CONTROL_SEQ = C.CONTROL_SEQ

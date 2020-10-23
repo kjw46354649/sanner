@@ -1677,7 +1677,7 @@
 
     <select id="selectInsideStockPopInfoBarcodeNew" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-              C.MATERIAL_DETAIL, B.ORDER_COMP_CD, C.DRAWING_NUM, R.ITEM_OXO_NM AS ITEM_NM, B.COMP_CD
+              C.MATERIAL_DETAIL, B.ORDER_COMP_CD, C.DRAWING_NUM, R.ITEM_NM, B.COMP_CD
             , C.SIZE_TXT, C.SIZE_TYPE, C.SIZE_W, C.SIZE_H, C.SIZE_T, C.SIZE_D, C.SIZE_L
             , '0' AS POP_STOCK_QTY
             , '' AS INSIDE_STOCK_NUM
