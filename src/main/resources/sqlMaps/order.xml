@@ -153,7 +153,7 @@
             <include refid="control"/>,
             <include refid="controlPart"/>,
             <include refid="controlPartOrder"/>,
-            C.DRAWING_NUM AS ORDER_DRAWING_NUM,
+            CASE WHEN B.PART_NUM IS NULL THEN C.DRAWING_NUM ELSE B.DRAWING_NUM END AS ORDER_DRAWING_NUM,
             CASE WHEN IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0) > 0
                 THEN FORMAT(IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0), 0)
                 ELSE SPACE(0)
@@ -898,9 +898,14 @@
             REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
             #{LOGIN_USER_ID}
         FROM DUAL
-        WHERE
-            #{ORDER_QTY} IS NOT NULL
-            AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART_ORDER WHERE ORDER_NUM = #{ORDER_NUM} AND CONTROL_SEQ = #{CONTROL_SEQ})
+        WHERE NOT EXISTS (  SELECT *
+                            FROM TBL_CONTROL_PART_ORDER M
+                            WHERE M.CONTROL_SEQ = #{CONTROL_SEQ}
+                                AND M.ORDER_NUM = #{ORDER_NUM}
+                            <if test="ORDER_DRAWING_NUM != null and ORDER_DRAWING_NUM != ''" >
+                                AND M.DRAWING_NUM = #{ORDER_DRAWING_NUM}
+                            </if>
+                         )
     </insert>
 
     <insert id="createControlProgress" parameterType="java.util.HashMap" >
@@ -1189,7 +1194,7 @@
         </choose>
     </update>
 
-    <update id="updateControlPartOrder" parameterType="java.util.HashMap">
+    <update id="updateControlPartOrderFromControlManage" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART_ORDER
         SET
             ORDER_NUM = #{ORDER_NUM},
