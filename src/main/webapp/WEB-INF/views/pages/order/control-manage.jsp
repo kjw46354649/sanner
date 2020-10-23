@@ -2435,12 +2435,21 @@
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-
                 // TODO: 필수데이터가 입력되어 있어야만 확정 가능
                 if (fnIsEmpty(rowData.PDF_GFILE_SEQ)) {
-                    //TODO: 문구 수정
                     fnAlert(null, 'PDF확장자 파일 도면을 등록 후 다시 시도해주세요.');
                     return false;
+                }
+
+                if (!fnIsEmpty(rowData.ORIGINAL_SIDE_QTY) || !fnIsEmpty(rowData.OTHER_SIDE_QTY)) {
+                    if (!(Number(rowData.ORIGINAL_SIDE_QTY) === Number(rowData.OTHER_SIDE_QTY))) {
+                        fnAlert(null, rowData.CONTROL_NUM + '<br>대칭 수량을 확인해주시기 바랍니다');
+                        return false;
+                    }
+                    if (!(rowData.SAME_SIDE_YN === 'Y')) {
+                        fnAlert(null, rowData.CONTROL_NUM + '<br>대칭 수량을 확인해주시기 바랍니다');
+                        return false;
+                    }
                 }
             }
 

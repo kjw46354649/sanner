@@ -178,6 +178,20 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
+            {
+                title: '대칭', minWidth: 30, dataIndx: 'SAME_SIDE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1042')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    return cellData === 'Y' ? cellData : '';
+                }
+            },
             {title: '총<br>장', minWidth: 30, dataType: 'integer', dataIndx: 'TOTAL_SHEET', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '관리번호', align: 'left', width: 180, dataIndx: 'CONTROL_NUM',
@@ -220,20 +234,6 @@
                 editor: {type: 'textbox', init: dateEditor}
             },
             {title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
-            {
-                title: '대칭', minWidth: 30, dataIndx: 'SAME_SIDE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1042')
-                },
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    return cellData === 'Y' ? cellData : '';
-                }
-            },
             {
                 title: '외<br>주', minWidth: 30, dataIndx: 'OUTSIDE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
@@ -925,6 +925,23 @@
                     }
 
                     $orderRegisterGrid.pqGrid('updateRow', {rowList: rowListConvert});
+                }
+            },
+            beforePaste: function (evt, ui) {
+                let CM = this.getColModel(),
+                    rows = ui.rows,
+                    area = ui.areas[0],
+                    //r1 = area.r1,
+                    c1 = area.c1;
+                for (let i = 0; i < rows.length; i++) {
+                    let row = rows[i];
+                    for (let j = 0; j < row.length; j++) {
+                        let column = CM[j + c1],
+                            dt = column.dataType;
+                        if (dt == 'integer' || dt == 'float') {
+                            row[j] = row[j].replace(/[^(\d|\.)]/g, '');
+                        }
+                    }
                 }
             }
         };
