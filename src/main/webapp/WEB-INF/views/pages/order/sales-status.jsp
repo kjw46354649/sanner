@@ -55,7 +55,10 @@
                         <span class="chk_box"><select name="CLOSE_MONTH_RIGHT" id="CLOSE_MONTH_RIGHT" disabled></select></span>
                         <span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH">
                         <label for="RANGE_SEARCH"> Range 검색</label></span>
-                        <button type="button" class="right_float defaultBtn radius blue" id="CONTROL_SALES_CLOSING_HISTORY_SEARCH">검색</button>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="CONTROL_SALES_CLOSING_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue" id="CONTROL_SALES_CLOSING_HISTORY_SEARCH">검색</button>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -106,7 +109,10 @@
                         <span class="wd_200" style="display: inline-block;">
                             <span class="chk_box"><input type="checkbox" name="DEPOSIT_STATUS_DISPLAY" id="DEPOSIT_STATUS_DISPLAY"><label for="DEPOSIT_STATUS_DISPLAY">입금현황 표시</label></span>
                         </span>
-                        <button type="button" class="right_float defaultBtn radius blue" id="CONTROL_MONTH_SALE_STATUS_SEARCH">검색</button>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="CONTROL_MONTH_SALE_STATUS_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue" id="CONTROL_MONTH_SALE_STATUS_SEARCH">검색</button>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -402,6 +408,26 @@
                 return fnFormToJsonArrayData('#MONTH_SALE_STATUS_SEARCH_FORM');
             });
             $monthlySalesStatusGrid.pqGrid('refreshDataAndView');
+        });
+
+        $('#CONTROL_SALES_CLOSING_HISTORY_EXCEL_EXPORT').on('click', function () {
+            const blob = $closingHistoryGrid.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, '마감이력.xlsx');
+        });
+
+        $('#CONTROL_MONTH_SALE_STATUS_EXCEL_EXPORT').on('click', function () {
+            const blob = $monthlySalesStatusGrid.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, '월별 매출현황.xlsx');
         });
 
         /* init */

@@ -458,15 +458,15 @@
 
             fnModifyPQGrid($targetAmountRegisterGrid, insertQueryList, updateQueryList);
         });
-        
+
         $('#DAILY_PROCESS_STATUSLEFT_EXPORT_EXCEL').on('click', function () {
             const blob = $dailyProcessStatusLeftGrid.pqGrid('getInstance').grid.exportData({
-               format: 'xlsx',
-               render: true,
-               type: 'blob'
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
             });
 
-            saveAs(blob, '일별 가공현황.xlsx' );
+            saveAs(blob, '일별 가공현황.xlsx');
         });
         /* event */
     });

@@ -52,7 +52,10 @@
                         <span class="chk_box"><input id="INSPECTION_MANAGE_SEL_INSPECT_GRADE" name="SEL_INSPECT_GRADE" type="checkbox" checked><label for="INSPECTION_MANAGE_SEL_INSPECT_GRADE">검사완료제외</label></span>
                         <span class="chk_box"><input id="INSPECTION_MANAGE_SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox" checked><label for="INSPECTION_MANAGE_SEL_OUTSIDE_YN">외주제외</label></span>
                         <span class="chk_box"><input id="INSPECTION_MANAGE_SEL_INNER_WORK_FINISH_YN" name="SEL_INNER_WORK_FINISH_YN" type="checkbox" checked><label for="INSPECTION_MANAGE_SEL_INNER_WORK_FINISH_YN">가공완료</label></span>
-                        <button type="button" class="right_float defaultBtn radius blue" id="inspection_manage_search_btn">검색</button>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="INSPECTION_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue" id="inspection_manage_search_btn">검색</button>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -220,7 +223,7 @@
                             <th>도면번호</th>
                             <td id="DRAWING_NUM_VIEW_T" class="red"></td>
                             <th>주요검사</th>
-                            <td id="MAIN_INSPECTION_NM_VIEW_T" style="color: red;"></td>
+                            <td id="MAIN_INSPECTION_NM_VIEW_T" style="color: #FF0000;"></td>
                         </tr>
                         <tr>
                             <th>품명</th>
@@ -399,7 +402,7 @@
                                 let rowData = ui.rowData;
 
                                 if (rowData.INSPECT_GRADE === 'GRD040' || rowData.INSPECT_GRADE === 'GRD050') {
-                                    style = 'color: red;font-weight: bold;';
+                                    style = 'color: #FF0000;font-weight: bold;';
                                 }
 
                                 return {text: text, style: style};
@@ -616,7 +619,7 @@
                     $("#inspection_manage_pop_form").find("#DRAWING_NUM" + "_VIEW_T").html(dataInfo.DRAWING_NUM);
                     $("#inspection_manage_pop_form").find("#MAIN_INSPECTION_NM" + "_VIEW_T").html(dataInfo.MAIN_INSPECTION_NM);
                     if(dataInfo.EMERGENCY_YN === 'Y') {
-                        emergencySpan = '<span style="display: inline-block; margin: 0 5px; padding: 0px 7px; border: solid red; border-radius: 5px; color: red; text-align: center; font-size: 1rem;">긴급</span>';
+                        emergencySpan = '<span style="display: inline-block; margin: 0 5px; padding: 0px 7px; border: solid red; border-radius: 5px; color: #FF0000; text-align: center; font-size: 1rem;">긴급</span>';
                     }
                     $("#inspection_manage_pop_form").find("#INNER_DUE_DT" + "_VIEW_T").html(dataInfo.INNER_DUE_DT + emergencySpan);
                     $("#inspection_manage_pop_form").find("#ITEM_NM" + "_VIEW_T").html(dataInfo.ITEM_NM);
@@ -664,9 +667,15 @@
             inspectionManageGridId01.pqGrid("refreshDataAndView");
         });
 
+        $('#INSPECTION_MANAGE_EXCEL_EXPORT').on('click', function () {
+            const blob = inspectionManageGridId01.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
 
-
-
+            saveAs(blob, '검사실적 관리.xlsx');
+        });
 
         $('#inspection_manage_pop_save').on('click', function () {
             // validation
@@ -968,7 +977,7 @@
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
                 }
                 else {
                     return val;
@@ -1000,7 +1009,4 @@
              clearInterval(inspectionsetIntervalTimer);
          }
      }*/
-
-
-
 </script>

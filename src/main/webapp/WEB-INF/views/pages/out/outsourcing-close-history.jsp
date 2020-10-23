@@ -77,6 +77,7 @@
                             <input type="text" class="wd_200" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
                         </span>
                         <span class="ipu_wrap right_float">
+                            <button type="button" id="OUTSIDE_CLOSE_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
                             <button type="button" class="defaultBtn radius blue" id="OUTSIDE_CLOSE_HISTORY_SEARCH">검색</button>
                         </span>
                     </li>
@@ -612,7 +613,7 @@
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
                 }
                 else {
                     return val;
@@ -728,6 +729,16 @@
 
         $("#outsourcingCloseHistoryFrozen").on('change', function(e){
             fnFrozenHandler($outsideCloseHistoryGrid, $(this).val());
+        });
+
+        $('#OUTSIDE_CLOSE_HISTORY_EXCEL_EXPORT').on('click', function () {
+            const blob = $outsideCloseHistoryGrid.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, '외주 마감이력.xlsx');
         });
         /* event */
 
