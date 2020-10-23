@@ -418,6 +418,7 @@
                     }
                 }
             },
+            {title: '외주업체', dataIndx: 'OUTSIDE_COMP_NM', hidden: true},
             {title: '비고(주문)', width: 90, dataIndx: 'CONTROL_NOTE'},
             {title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
@@ -1671,7 +1672,7 @@
                 table +=
                 '    <tr>\n' +
                 '        <td style="' + st_center + '">' + list[i].ROW_NUM + '</td>\n' +
-                '        <td style="' + st_center + '">' + list[i].COMP_NM + '</td>\n' +
+                '        <td style="' + st_center + '">' + list[i].OUTSIDE_COMP_NM + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].CONTROL_NUM + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].PART_NUM + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].DRAWING_NUM + '</td>\n' +
