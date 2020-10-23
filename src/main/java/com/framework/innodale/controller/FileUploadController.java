@@ -83,7 +83,8 @@ public class FileUploadController {
         model.addAttribute("message", "처리 할수 없는 파일 형식 입니다.");
 
 //        fileUploadService.uploadDxfCadFiles(request, model);
-        fileUploadService.uploadDxfAndPdfCadFiles(request, model);
+        // fileUploadService.uploadDxfAndPdfCadFiles(request, model);
+        fileUploadService.uploadDxfAndPdfCadFilesControlOrder(request, model);
 
         return "jsonView";
     }
