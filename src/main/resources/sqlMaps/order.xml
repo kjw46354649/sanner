@@ -153,13 +153,14 @@
             <include refid="control"/>,
             <include refid="controlPart"/>,
             <include refid="controlPartOrder"/>,
+            C.DRAWING_NUM AS ORDER_DRAWING_NUM,
             CASE WHEN IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0) > 0
                 THEN FORMAT(IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0), 0)
                 ELSE SPACE(0)
             END AS CALC_EST_UNIT_COST,
             LAG(B.WORK_TYPE, 1) OVER(PARTITION BY A.CONTROL_NUM ORDER BY A.CONTROL_SEQ, B.PART_NUM, C.ORDER_NUM) AS LAG_WORK_TYPE,
             CONCAT(A.CONTROL_NUM, ':', IFNULL(B.PART_NUM, 0)) AS CONTROL_NUM_BUTTON, <!-- merge 용도 -->
-            CONCAT(B.DRAWING_NUM, ':', IFNULL(B.PART_NUM, 0)) AS DRAWING_NUM_BUTTON, <!-- merge 용도 -->
+            CONCAT(C.DRAWING_NUM, ':', IFNULL(B.PART_NUM, 0)) AS DRAWING_NUM_BUTTON, <!-- merge 용도 -->
             CONCAT(B.WORK_TYPE, ':', IFNULL(B.PART_NUM, 0)) AS ORDER_NUM_PLUS_BUTTON, <!-- merge 용도 -->
             CONCAT(B.WORK_TYPE, ':', IFNULL(B.PART_NUM, 0)) AS DETAIL_MACHINE_REQUIREMENT, <!-- merge 용도 -->
             IFNULL(SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1), SPACE(0)) AS DNJSCLD,
@@ -218,9 +219,6 @@
             SF_GET_DATE_F(CASE WHEN IFNULL(TIMESTAMPDIFF(SECOND, B.INSERT_DT, B.UPDATE_DT), -1) <![CDATA[ < ]]> 0 THEN B.INSERT_DT ELSE B.UPDATE_DT END, 'YY', 'M') AS CONTROL_PART_INSERT_UPDATE_DT <!-- 등록/업데이트 일시 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-            <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-                AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
-            </if>
             <if test="HIDDEN_WORK_TYPE != null and HIDDEN_WORK_TYPE != ''">
                 AND B.WORK_TYPE IN (${HIDDEN_WORK_TYPE})
             </if>
@@ -293,8 +291,11 @@
         <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
             AND A.EMERGENCY_YN = 'Y'
         </if>
+        <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
+            AND UPPER(C.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
+        </if>
         <if test="ITEM_NM != null and ITEM_NM != ''">
-            AND C.ITEM_OXO_NM LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
+            AND UPPER(C.ITEM_OXO_NM) LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
         </if>
         <if test="NO_UNIT_FINAL_AMT != null and NO_UNIT_FINAL_AMT != ''">
             AND C.UNIT_OXO_FINAL_AMT IS NULL
@@ -749,7 +750,7 @@
             #{CONTROL_SEQ},
             NEXTVAL(SEQ_CONTROL_PART),
             #{PART_NUM},
-            #{DRAWING_NUM},
+            #{ORDER_DRAWING_NUM},
             #{DRAWING_VER},
             #{DRAWING_UP_DT},
             #{PREV_DRAWING_NUM},
@@ -869,7 +870,10 @@
         )
         SELECT
             #{CONTROL_SEQ},
-            #{CONTROL_DETAIL_SEQ},
+            IFNULL(#{CONTROL_DETAIL_SEQ}, ( SELECT M.CONTROL_DETAIL_SEQ
+                                            FROM TBL_CONTROL_PART M
+                                            WHERE M.CONTROL_SEQ = #{CONTROL_SEQ}
+                                                AND M.PART_NUM = #{PART_NUM})),
             NEXTVAL(SEQ_CONTROL_PART_ORDER),
             #{ORDER_NUM},
             #{ORDER_QTY},
@@ -881,7 +885,7 @@
             #{LABEL_NOTE},
             #{ORDER_STAFF_SEQ},
             #{DESIGNER_NM},
-            #{DRAWING_NUM},
+            #{ORDER_DRAWING_NUM},
             #{DWG_GFILE_SEQ},
             #{DXF_GFILE_SEQ},
             #{PDF_GFILE_SEQ},
@@ -1017,13 +1021,13 @@
             PART_NUM = #{PART_NUM},
         </if>
         <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-            DRAWING_NUM = UPPER(#{DRAWING_NUM}),
+            DRAWING_NUM = #{DRAWING_NUM},
         </if>
         <if test="DRAWING_VER != null and DRAWING_VER != ''">
             DRAWING_VER = #{DRAWING_VER},
         </if>
         <if test="PREV_DRAWING_NUM != null and PREV_DRAWING_NUM != ''">
-            PREV_DRAWING_NUM = UPPER(#{PREV_DRAWING_NUM}),
+            PREV_DRAWING_NUM = #{PREV_DRAWING_NUM},
         </if>
         <if test="WORK_TYPE != null and WORK_TYPE != ''">
             WORK_TYPE = #{WORK_TYPE},
@@ -1198,13 +1202,13 @@
             LABEL_OXO_NOTE = #{LABEL_NOTE},
             ORDER_OXO_STAFF_SEQ = #{ORDER_STAFF_SEQ},
             DESIGNER_OXO_NM = #{DESIGNER_NM},
-            DRAWING_NUM = UPPER(#{DRAWING_NUM}),
+            DRAWING_NUM = #{ORDER_DRAWING_NUM},
             DWG_GFILE_SEQ = #{DWG_GFILE_SEQ},
             DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
             PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
             IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
             VIEW_GFILE_SEQ = #{VIEW_GFILE_SEQ},
-            ITEM_OXO_NM = UPPER(#{ITEM_NM}),
+            ITEM_OXO_NM = #{ITEM_NM},
             ORIGINAL_OXO_SIDE_QTY = REPLACE(#{ORIGINAL_SIDE_QTY}, ',', SPACE(0)),
             OTHER_OXO_SIDE_QTY = REPLACE(#{OTHER_SIDE_QTY}, ',', SPACE(0)),
             UNIT_OXO_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
@@ -1226,6 +1230,7 @@
                 AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
                 AND B.PART_STATUS IS NULL
         WHERE 1 = 1
+            AND A.DEL_YN = 'N'
             AND A.CONTROL_STATUS = 'ORD001'
             AND A.OUT_FINISH_DT IS NULL
             <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
@@ -1413,7 +1418,7 @@
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
             <include refid="control"/>,
             <include refid="controlPart"/>,
-            SF_GET_CODE_NM(1009, D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION <!-- 현재 등록된 위치 -->
+            SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION <!-- 현재 등록된 위치 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
@@ -2673,7 +2678,7 @@
         UPDATE TBL_CONTROL_PART
         SET
             PART_NUM = #{PART_NUM},
-            DRAWING_NUM = #{DRAWING_NUM},
+            DRAWING_NUM = #{ORDER_DRAWING_NUM},
             PREV_DRAWING_NUM = #{PREV_DRAWING_NUM},
             WORK_TYPE = #{WORK_TYPE},
             OUTSIDE_YN = IFNULL(#{OUTSIDE_YN}, 'N'),
@@ -2687,7 +2692,6 @@
             SIZE_T = SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
             SIZE_D = SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}),
             SIZE_L = SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
-            MATERIAL_TYPE = #{MATERIAL_TYPE},
             MATERIAL_DETAIL = #{MATERIAL_DETAIL},
             MATERIAL_KIND = #{MATERIAL_KIND},
             SURFACE_TREAT = #{SURFACE_TREAT},
@@ -2703,14 +2707,7 @@
             UNIT_SURFACE_AMT = #{UNIT_SURFACE_AMT},
             UNIT_PROCESS_AMT = #{UNIT_PROCESS_AMT},
             UNIT_ETC_AMT = #{UNIT_ETC_AMT},
-            UNIT_MATERIAL_AUTO_YN = IFNULL(#{UNIT_MATERIAL_AUTO_YN}, 'N'),
-            UNIT_TM_AUTO_YN = IFNULL(#{UNIT_TM_AUTO_YN}, 'N'),
-            UNIT_GRIND_AUTO_YN = IFNULL(#{UNIT_GRIND_AUTO_YN}, 'N'),
-            UNIT_HEAT_AUTO_YN = IFNULL(#{UNIT_HEAT_AUTO_YN}, 'N'),
-            UNIT_SURFACE_AUTO_YN = IFNULL(#{UNIT_SURFACE_AUTO_YN}, 'N'),
-            UNIT_PROCESS_AUTO_YN = IFNULL(#{UNIT_PROCESS_AUTO_YN}, 'N'),
             UNIT_AMT_NOTE = #{UNIT_AMT_NOTE},
-            DWG_GFILE_SEQ = #{DWG_GFILE_SEQ},
             ETC_GFILE_SEQ = #{ETC_GFILE_SEQ},
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}

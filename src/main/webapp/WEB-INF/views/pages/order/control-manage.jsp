@@ -389,7 +389,7 @@
                         newRowData.PART_NUM = newPartNum;
                         newRowData.WORK_TYPE = 'WTP050';
                         newRowData.CONTROL_DETAIL_SEQ = null;
-                        newRowData.DRAWING_NUM = null;
+                        newRowData.ORDER_DRAWING_NUM = null;
                         newRowData.DRAWING_VER = null;
                         newRowData.DRAWING_UP_DT = null;
                         newRowData.PREV_DRAWING_NUM = null;
@@ -433,12 +433,6 @@
                         newRowData.UNIT_SURFACE_AMT = null;
                         newRowData.UNIT_PROCESS_AMT = null;
                         newRowData.UNIT_ETC_AMT = null;
-                        newRowData.UNIT_MATERIAL_AUTO_YN = null;
-                        newRowData.UNIT_TM_AUTO_YN = null;
-                        newRowData.UNIT_GRIND_AUTO_YN = null;
-                        newRowData.UNIT_HEAT_AUTO_YN = null;
-                        newRowData.UNIT_SURFACE_AUTO_YN = null;
-                        newRowData.UNIT_PROCESS_AUTO_YN = null;
                         newRowData.UNIT_AMT_NOTE = null;
                         newRowData.UNIT_FINAL_EST_AMT = null;
                         newRowData.UNIT_FINAL_AMT = null;
@@ -482,7 +476,7 @@
                         newRowData.LABEL_NOTE = null;
                         newRowData.ORDER_STAFF_SEQ = null;
                         newRowData.DESIGNER_NM = null;
-                        newRowData.DRAWING_NUM = null;
+                        newRowData.ORDER_DRAWING_NUM = null;
                         // newRowData.DWG_GFILE_SEQ = null; // 확인 필요
                         // newRowData.DXF_GFILE_SEQ = null; // 확인 필요
                         // newRowData.PDF_GFILE_SEQ = null; // 확인 필요
@@ -664,7 +658,7 @@
                                 newRowData.LABEL_NOTE = null;
                                 newRowData.ORDER_STAFF_SEQ = null;
                                 newRowData.DESIGNER_NM = null;
-                                newRowData.DRAWING_NUM = null;
+                                newRowData.ORDER_DRAWING_NUM = null;
                                 // newRowData.DWG_GFILE_SEQ = null; // 확인 필요
                                 // newRowData.DXF_GFILE_SEQ = null; // 확인 필요
                                 // newRowData.PDF_GFILE_SEQ = null; // 확인 필요
@@ -716,7 +710,7 @@
                         }
                     },
                     {
-                        title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM',
+                        title: '도면번호', align: 'left', width: 150, dataIndx: 'ORDER_DRAWING_NUM',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1905,7 +1899,7 @@
             let array = [];
             const inputModeArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN',
-                'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
+                'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'ORDER_DRAWING_NUM',
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'PART_UNIT_QTY',
                 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'SIZE_TXT', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN',
                 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
@@ -1917,7 +1911,7 @@
             const normalModeArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD',
                 'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'TOTAL_SHEET', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM',
-                'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
+                'DRAWING_NUM_BUTTON', 'ORDER_DRAWING_NUM', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
                 'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'INVOICE_NUM', 'PART_UNIT_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
                 'CONTROL_PART_QTY', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN',
                 'PART_STATUS_NM', 'SIZE_TXT', 'INNER_WORK_FINISH_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT',
@@ -1931,7 +1925,7 @@
             const closeModeArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'INVOICE_NUM',
                 'MAIN_INSPECTION', 'TOTAL_SHEET',
-                'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM',
+                'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'ORDER_DRAWING_NUM',
                 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'OUTSIDE_YN',
                 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL', 'MATERIAL_KIND',
                 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
@@ -1947,7 +1941,7 @@
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'ORDER_STAFF_SEQ',
                 'DESIGNER_NM', 'CONTROL_NOTE', 'INVOICE_NUM', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE',
                 'MAIN_INSPECTION', 'EMERGENCY_YN', 'TOTAL_SHEET', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM',
-                'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
+                'DRAWING_NUM_BUTTON', 'ORDER_DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
                 'WORK_TYPE', 'EOCLD', 'DNJSCLD', 'SAME_SIDE_YN', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'INNER_WORK_FINISH_DT', 'MATERIAL_DETAIL',
                 'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY',
                 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
@@ -2181,8 +2175,8 @@
                 'DETAIL_DIFFICULTY', 'CALC_EST_UNIT_COST', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT',
                 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'DETAIL_MACHINE_REQUIREMENT',
-                'UNIT_MATERIAL_AUTO_YN', 'UNIT_TM_AUTO_YN', 'POP_POSITION_NM',
-                'UNIT_GRIND_AUTO_YN', 'UNIT_HEAT_AUTO_YN', 'UNIT_SURFACE_AUTO_YN', 'UNIT_PROCESS_AUTO_YN', 'UNIT_AMT _NOTE',
+                'POP_POSITION_NM',
+                'UNIT_AMT _NOTE',
                 'FINAL_TOTAL_AMT', 'DWG_GFILE_SEQ', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'VIEW_GFILE_SEQ', 'ETC_GFILE_SEQ',
                 'PART_STATUS_NM', 'MCT_NOTE', 'MCT_WORK_TYPE',
                 'OUTSIDE_COMP_CD', 'OUTSIDE_COMP_NM', 'OUTSIDE_ORDER_NUM', 'OUTSIDE_NOTE', 'OUTSIDE_MATERIAL_SUPPLY_YN',
