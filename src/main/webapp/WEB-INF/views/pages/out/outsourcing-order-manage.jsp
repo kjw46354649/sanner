@@ -122,6 +122,7 @@
                             </span>
                         </span>
                         <span class="ipu_wrap right_float">
+                            <button type="button" id="OUTSIDE_ORDER_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
                             <button type="button" class="defaultBtn radius blue" id="OUTSIDE_ORDER_SEARCH">검색</button>
                         </span>
                     </li>
@@ -417,6 +418,7 @@
                     }
                 }
             },
+            {title: '외주업체', dataIndx: 'OUTSIDE_COMP_NM', hidden: true},
             {title: '비고(주문)', width: 90, dataIndx: 'CONTROL_NOTE'},
             {title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
@@ -1670,7 +1672,7 @@
                 table +=
                 '    <tr>\n' +
                 '        <td style="' + st_center + '">' + list[i].ROW_NUM + '</td>\n' +
-                '        <td style="' + st_center + '">' + list[i].COMP_NM + '</td>\n' +
+                '        <td style="' + st_center + '">' + list[i].OUTSIDE_COMP_NM + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].CONTROL_NUM + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].PART_NUM + '</td>\n' +
                 '        <td style="' + st_center + '">' + list[i].DRAWING_NUM + '</td>\n' +
@@ -1765,7 +1767,7 @@
                     let txt1 = val.toString().substring(0, indx);
                     let txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     let txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
                 } else {
                     return val;
                 }
@@ -2183,6 +2185,16 @@
 
         $('#CANCEL_REQUEST_OUTSIDE_MAIL_DESTINATION_DELETE_BUTTON').on('click', function () {
             $cancelMailRecipientGrid.pqGrid('deleteRow', {'rowIndx': selectedReqeustMailRowIndex});
+        });
+
+        $('#OUTSIDE_ORDER_EXCEL_EXPORT').on('click', function () {
+            const blob = $outsideOrderManageGrid.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, '외주 주문관리.xlsx');
         });
         /* event */
 

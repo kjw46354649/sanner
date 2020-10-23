@@ -95,8 +95,6 @@
                                 </c:forEach>
                             </select>
                         </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnItemOrderRegisterSearch">검색</button></span>
                     </li>
                     <li>
                         <span class="ipu_wrap"><label class="label_100" for="CONTROL_NUM">관리번호</label><input type="text" name="CONTROL_NUM" id="CONTROL_NUM" class="wd_200" value="" title="관리번호"></span>
@@ -118,7 +116,6 @@
                                 </c:forEach>
                             </select>
                         </span>
-                        <span class="gubun"></span>
                     </li>
                     <li class="">
                         <span class="slt_wrap trans_slt" style="width: 120px;">
@@ -152,6 +149,10 @@
                             <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_WAIT_YN" value="NULL,MST003" checked><label for="ORDER_WAIT_YN"> 주문대기</label></span>
                             <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_YN" value="MST001,MST002" checked><label for="ORDER_YN"> 주문완료</label></span>
                             <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="IN_YN" value="MST004,MST005"><label for="IN_YN"> 입고완료</label></span>
+                        </span>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="ITEM_ORDER_REGISTER_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue" id="btnItemOrderRegisterSearch">검색</button>
                         </span>
                     </li>
                 </ul>
@@ -1895,7 +1896,7 @@
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
                 }
                 else {
                     return val;
@@ -1958,4 +1959,15 @@
         });
         $('#ORDER_STATUS').val(checkedValue);
     });
+
+    $('#ITEM_ORDER_REGISTER_EXCEL_EXPORT').on('click', function () {
+        const blob = itemOrderRegisterLeftGrid.pqGrid('getInstance').grid.exportData({
+            format: 'xlsx',
+            render: true,
+            type: 'blob'
+        });
+
+        saveAs(blob, '소재 주문등록.xlsx');
+    });
+
 </script>

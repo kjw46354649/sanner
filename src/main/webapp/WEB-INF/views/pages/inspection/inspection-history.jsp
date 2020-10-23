@@ -380,7 +380,7 @@
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
                 }
                 else {
                     return val;
@@ -398,7 +398,7 @@
                     render: true,
                     type: 'blob'
                 });
-            saveAs(blob, "pqGrid.xlsx" );
+            saveAs(blob, "검사이력 관리.xlsx" );
             // inspectionHistoryGridId01.pqGrid('getInstance').grid.exportData({
             //     url: "/exportData",
             //     filename: 'Inspection_history',

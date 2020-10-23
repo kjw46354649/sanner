@@ -37,7 +37,10 @@
                             <label class="label_100" for="MONEY_MANAGE_STATUS_YEAR">조회 년도</label>
                             <select class="wd_150" name="MONEY_MANAGE_STATUS_YEAR" id="MONEY_MANAGE_STATUS_YEAR"></select>
                         </span>
-                        <button type="button" class="right_float defaultBtn radius blue" id="moneyManageStatusSearchBtn">검색</button>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="MONEY_MANAGE_STATUS_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue" id="moneyManageStatusSearchBtn">검색</button>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -574,6 +577,16 @@
                 $('.money_receive_save_id').toggle();
                 $('.money_year_note_save_id').toggle();
             }
+        });
+
+        $('#MONEY_MANAGE_STATUS_EXCEL_EXPORT').on('click', function () {
+            const blob = $moneyManageStatusGrid.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, '전체현황.xlsx');
         });
 
     });

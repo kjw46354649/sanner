@@ -388,7 +388,10 @@
                         <span class="chk_box"><input id="SEL_ASSEMBLY" name="SEL_ASSEMBLY" type="checkbox"><label for="SEL_ASSEMBLY">조립포함</label></span>
                         <span class="chk_box"><input id="SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox"><label for="SEL_OUTSIDE_YN">외주포함</label></span>
                         <span class="chk_box"><input id="SEL_COMPLETED_YN" name="SEL_COMPLETED_YN" type="checkbox" checked><label for="SEL_COMPLETED_YN">가공완료제외</label></span>
-                        <button type="button" class="right_float defaultBtn radius blue" id="mctCamManageSearchBtn">검색</button>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="MCT_RESULT_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue" id="mctCamManageSearchBtn">검색</button>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -1292,7 +1295,7 @@
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
                 }
                 else {
                     return val;
@@ -1306,6 +1309,15 @@
         $mctResultManageGrid = $('#' + machineResultManageGridId).pqGrid(machineResultManageObj);
     });
 
+    $('#MCT_RESULT_MANAGE_EXCEL_EXPORT').on('click', function () {
+        const blob = $mctResultManageGrid.pqGrid('getInstance').grid.exportData({
+            format: 'xlsx',
+            render: true,
+            type: 'blob'
+        });
+
+        saveAs(blob, 'MCT 실적관리.xlsx');
+    });
     /* event */
     function resetMctResult(index){
         $("#cam_work_manage_pop_form").find("#CAM_WORK_DIRECTION_" + index).val($("#cam_work_manage_pop_form").find("#CAM_WORK_DIRECTION_" + index).find('option:first').val());
