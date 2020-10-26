@@ -2704,7 +2704,7 @@
         <!--     SIZE_T_M = NULL, -->
         <!--     SIZE_D_M = NULL, -->
         <!--     SIZE_L_M = NULL, -->
-            MATERIAL_TYPE = #{MATERIAL_TYPE},
+            MATERIAL_TYPE = SF_GET_ETC_CD('1027', #{MATERIAL_DETAIL}),
             MATERIAL_DETAIL = #{MATERIAL_DETAIL},
             MATERIAL_KIND = #{MATERIAL_KIND},
             SURFACE_TREAT = #{SURFACE_TREAT},

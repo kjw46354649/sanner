@@ -738,45 +738,89 @@
     </select>
 
     <select id="selectItemOrderRegisterPopTable" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-			GROUP_CONCAT(Z.MATERIAL_ORDER_SEQ) CONCAT_SEQ,
-            Z.MATERIAL_COMP_NM, Z.MATERIAL_COMP_EMAIL,
-            GROUP_CONCAT(Z.CONTENTS separator ', ') CONTENTS,
-            Z.MATERIAL_COMP_CD, #{MATERIAL_ORDER_NUM} AS MATERIAL_ORDER_NUM,
-            DATE_FORMAT(NOW(), '%Y-%m-%d') AS ORDER_DT,
-            Z.USER_ID, Z.USER_NM, Z.USER_TEL, Z.POSITION_NM
-        FROM
-			(
-			SELECT
-				A.MATERIAL_ORDER_SEQ, A.MATERIAL_COMP_CD, C.COMP_NM AS MATERIAL_COMP_NM,
-				CONCAT(C.CEO_NM ,'(',C.COMP_EMAIL,')' )AS MATERIAL_COMP_EMAIL,
-				CONCAT( SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(1),
-						A.SIZE_TXT, SPACE(1), A.ORDER_QTY, 'EA') AS CONTENTS,
+        SELECT X.MATERIAL_ORDER_SEQ
+            , X.MATERIAL_COMP_CD
+            , X.MATERIAL_COMP_NM
+            , X.COMP_EMAIL
+            , SF_GET_CODE_NM('1027', X.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+            , X.SIZE_TXT
+            , CONCAT(X.ORDER_QTY, 'EA') AS ORDER_QTY_INFO
+            , X.USER_ID
+            , X.USER_NM
+            , X.USER_TEL
+            , X.POSITION_NM
+        FROM (
+            SELECT
+                A.MATERIAL_ORDER_SEQ, A.MATERIAL_COMP_CD, C.COMP_NM AS MATERIAL_COMP_NM,
+                C.COMP_EMAIL,
+                A.MATERIAL_DETAIL,
+                A.SIZE_TXT,
+                A.ORDER_QTY,
                 E.USER_ID, E.USER_NM, E.USER_TEL, E.POSITION_NM
-			FROM TBL_MATERIAL_ORDER A
-				INNER JOIN TBL_COMPANY C ON A.MATERIAL_COMP_CD = C.COMP_CD
+            FROM TBL_MATERIAL_ORDER A
+                INNER JOIN TBL_COMPANY C ON A.MATERIAL_COMP_CD = C.COMP_CD
                 LEFT OUTER JOIN TBL_MY_MATERIAL_OUT D ON A.MATERIAL_ORDER_SEQ = D.MATERIAL_ORDER_SEQ
                 LEFT OUTER JOIN TBL_USER E ON A.ORDER_USER_ID = E.USER_ID AND E.DEL_YN = 'N'
-			WHERE A.MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
- 			    <!-- AND IFNULL(A.ORDER_STATUS, SPACE(0)) NOT IN('MST004', 'MST005') -->
- 			    AND A.ORDER_QTY > 0
+            WHERE A.MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
+                AND A.ORDER_QTY > 0
             UNION ALL
             SELECT
-				A.MATERIAL_ORDER_SEQ, C.COMP_CD, C.COMP_NM AS MATERIAL_COMP_NM,
-				CONCAT(C.CEO_NM ,'(',C.COMP_EMAIL,')' )AS MATERIAL_COMP_EMAIL,
-				CONCAT( SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(1),
-						A.SIZE_TXT, SPACE(1), IFNULL(SF_GET_STOCK_OUT(D.MATERIAL_ORDER_SEQ, 'QTY'), 0), 'EA') AS CONTENTS,
+                A.MATERIAL_ORDER_SEQ, C.COMP_CD, C.COMP_NM AS MATERIAL_COMP_NM,
+                C.COMP_EMAIL,
+                A.MATERIAL_DETAIL,
+                A.SIZE_TXT,
+                A.ORDER_QTY,
                 E.USER_ID, E.USER_NM, E.USER_TEL, E.POSITION_NM
-			FROM TBL_MATERIAL_ORDER A
-				INNER JOIN TBL_COMPANY C ON 'CMP0076' = C.COMP_CD
+            FROM TBL_MATERIAL_ORDER A
+                INNER JOIN TBL_COMPANY C ON 'CMP0076' = C.COMP_CD
                 INNER JOIN TBL_MY_MATERIAL_OUT D ON A.MATERIAL_ORDER_SEQ = D.MATERIAL_ORDER_SEQ
                 LEFT OUTER JOIN TBL_USER E ON A.ORDER_USER_ID = E.USER_ID AND E.DEL_YN = 'N'
-			WHERE A.MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
- 			    <!-- AND IFNULL(A.ORDER_STATUS, SPACE(0)) NOT IN('MST004', 'MST005') -->
-			    AND IFNULL(SF_GET_STOCK_OUT(D.MATERIAL_ORDER_SEQ, 'QTY'), 0) > 0
-			) Z
-        GROUP BY Z.MATERIAL_COMP_CD
-        ORDER BY MATERIAL_COMP_CD
+            WHERE A.MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
+                AND IFNULL(SF_GET_STOCK_OUT(D.MATERIAL_ORDER_SEQ, 'QTY'), 0) > 0
+            UNION ALL 
+            SELECT NULL AS MATERIAL_ORDER_SEQ
+                , Q.MATERIAL_COMP_CD
+                , Q.MATERIAL_COMP_NM
+                , Q.COMP_EMAIL
+                , Q.SIZE_TXT
+                , Q.MATERIAL_DETAIL
+                , SUM(ORDER_QTY)
+                , Q.USER_ID
+                , Q.USER_NM
+                , Q.USER_TEL
+                , Q.POSITION_NM 
+            FROM (
+                SELECT
+                    A.MATERIAL_ORDER_SEQ, A.MATERIAL_COMP_CD, C.COMP_NM AS MATERIAL_COMP_NM,
+                    C.COMP_EMAIL,
+                    A.MATERIAL_DETAIL,
+                    A.SIZE_TXT,
+                    A.ORDER_QTY,
+                    E.USER_ID, E.USER_NM, E.USER_TEL, E.POSITION_NM
+                FROM TBL_MATERIAL_ORDER A
+                    INNER JOIN TBL_COMPANY C ON A.MATERIAL_COMP_CD = C.COMP_CD
+                    LEFT OUTER JOIN TBL_MY_MATERIAL_OUT D ON A.MATERIAL_ORDER_SEQ = D.MATERIAL_ORDER_SEQ
+                    LEFT OUTER JOIN TBL_USER E ON A.ORDER_USER_ID = E.USER_ID AND E.DEL_YN = 'N'
+                WHERE A.MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
+                    AND A.ORDER_QTY > 0
+                UNION ALL
+                SELECT
+                    A.MATERIAL_ORDER_SEQ, C.COMP_CD, C.COMP_NM AS MATERIAL_COMP_NM,
+                    C.COMP_EMAIL,
+                    A.MATERIAL_DETAIL,
+                    A.SIZE_TXT,
+                    A.ORDER_QTY,
+                    E.USER_ID, E.USER_NM, E.USER_TEL, E.POSITION_NM
+                FROM TBL_MATERIAL_ORDER A
+                    INNER JOIN TBL_COMPANY C ON 'CMP0076' = C.COMP_CD
+                    INNER JOIN TBL_MY_MATERIAL_OUT D ON A.MATERIAL_ORDER_SEQ = D.MATERIAL_ORDER_SEQ
+                    LEFT OUTER JOIN TBL_USER E ON A.ORDER_USER_ID = E.USER_ID AND E.DEL_YN = 'N'
+                WHERE A.MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
+                    AND IFNULL(SF_GET_STOCK_OUT(D.MATERIAL_ORDER_SEQ, 'QTY'), 0) > 0
+            ) Q
+            GROUP BY Q.MATERIAL_COMP_CD
+        ) X 
+        ORDER BY X.MATERIAL_COMP_CD, MATERIAL_ORDER_SEQ IS NULL ASC
     </select>
 
     <select id="selectItemOrderRegisterOrderSheetListPdf" parameterType="java.util.HashMap" resultType="java.util.HashMap">

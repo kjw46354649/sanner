@@ -9,7 +9,7 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="popup_container" id="item_order_register_popup" style="display: none;" data-backdrop="static">
-    <div class="layerPopup" style="width:1132px; height: fit-content;">
+    <div class="layerPopup" style="width:1728px; height: fit-content;">
         <h3>소재 주문</h3>
         <span style="padding-left: 30px;">
             <span class="barCode" id="itemOrderRegisterBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="itempOrderResgisterBarcodeImg" style="height: 32px;"></span>
@@ -50,14 +50,18 @@
             <input type="hidden" id="CONCAT_SEQ" name="CONCAT_SEQ"/>
             <input type="hidden" id="MATERIAL_ORDER_NUM" name="MATERIAL_ORDER_NUM"/>
             <input type="hidden" id="MATERIAL_ORDER_SEQ" name="MATERIAL_ORDER_SEQ"/>
-            <div class="tableWrap">
-                <div id="item_order_register_popup_top_grid"></div>
-                <div class="right_sort">
-                    전체 조회 건수 (Total : <span id="item_order_register_popup_top_grid_records" style="color: #00b3ee">0</span>)
+            <div class="d-flex tableWrap">
+                <div class="mr-10" style="width: 100%;">
+                    <div id="item_order_register_popup_top_grid"></div>
+                    <div class="right_sort">
+                        전체 조회 건수 (Total : <span id="item_order_register_popup_top_grid_records" style="color: #00b3ee">0</span>)
+                    </div>
+                </div>
+                <div class="ml-auto" style="display: none; width: 518px;">
+                    <div class="gridWrap popupTableDiv list1" style="height: 500px; overflow: auto"></div>
                 </div>
             </div>
             <br/>
-            <div class="gridWrap popupTableDiv list1" style="overflow-x: auto;"></div>
             <div class="btnWrap">
                 <button type="button" class="defaultBtn grayPopGra" data-dismiss="modal">닫기</button>
             </div>
@@ -253,7 +257,6 @@
     let itemOrderRegisterRightGrid = $("#item_order_register_right_grid");
 
     let itemOrderRegisterPopTopGrid = $("#item_order_register_popup #item_order_register_popup_top_grid");
-    let itemOrderRegisterPopBotGrid = $("#item_order_register_popup #item_order_register_popup_bot_grid");
 
     $(function () {
         'use strict';
@@ -1091,19 +1094,19 @@
             if(itemOrderRegisterPopTopGrid.hasClass('pq-grid')){
                 itemOrderRegisterPopTopGrid.pqGrid( "destroy" );
             }
-            if(itemOrderRegisterPopBotGrid.hasClass('pq-grid')){
-                itemOrderRegisterPopBotGrid.pqGrid( "destroy" );
-            }
 
             $("#item_order_register_material_order_num").val('');
             $("#item_order_register_material_order_num_temp").val('');
 
+            $(".popupTableDiv").parent().hide();
             $(".popupTableDiv").html('');
 
             $("#btnItemOrderRegisterSearch").trigger('click');
         });
 
         $('#item_order_register_popup').on('show.bs.modal',function() {
+            $(".popupTableDiv").parent().prev().width('100%');
+
             itemOrderRegisterPopTopGrid.pqGrid({
                 width: "100%", height: 500,
                 dataModel: {
@@ -1115,7 +1118,7 @@
                     }
                 },
                 columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
-                scrollModel: {autoFit: false},
+                scrollModel: {autoFit: true},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'cell', mode: 'multiple'} ,
                 swipeModel: {on: false},
@@ -1635,59 +1638,57 @@
         }
 
         function makeInnerTable() {
-            let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
-
-            let table="";
-            var row_span1 ="rowspan='1'";
-            var row_span2 ="rowspan='2'";
-
-            let parameter = {
+            const MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
+            const parameter = {
                 'queryId': 'material.selectItemOrderRegisterPopTable',
                 'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM
             };
-            let parameters = {'url': '/json-list', 'data': parameter};
-            fnPostAjaxAsync(function (data, callFunctionParam) {
-                let list = data.list;
-                if(list.length > 0 ){
-                    table += "<table class='rowStyle' style='border-spacing:0; width:100%;'><tr>";
-                    table += "<th>업체</th>";
-                    for(var i=0; i<list.length; i++) {
-                        if(list[i].MATERIAL_COMP_CD == 'CMP0076'){
-                            table += "<th "+row_span2+">"	+ list[i].MATERIAL_COMP_NM +"</th>";
-                        }else{
-                            table += "<th>"	+ list[i].MATERIAL_COMP_NM +"</th>";
-                        }
-                    }
-                    table += "</tr>";
-                    table += "<tr>";
-                    table += "<th>담당자</th>";
-                    for(var j=0; j<list.length; j++) {
-                        if(list[j].MATERIAL_COMP_CD == 'CMP0076'){
-                            table += "";
-                        }else{
-                            table += "<th>"	+ list[j].MATERIAL_COMP_EMAIL +"</th>";
-                        }
-                    }
-                    table += "</tr>";
-                    table += "<tr>";
-                    table += "<td>내용</td>";
-                    for(var h=0; h<list.length; h++){
-                        table += "<td>" 	+ list[h].CONTENTS +"</td>";
-                    }
-                    table += "</tr></table>";
-                }else{
-                    table = "<table class='rowStyle' style='border-spacing:0; width:100%;'>";
-                    table += "<tr><th>업체</th>";
-                    table += "<th></th><th></th><th></th></tr>";
-                    table += "<tr><th>담당자</th>";
-                    table += "<th></th><th></th><th></th></tr>";
-                    table += "<tr><td>내용</td>";
-                    table += "<td></td><td></td>";
-                    table += "<td></td></tr>";
-                    table += "</table>";
-                }
+            const parameters = {'url': '/json-list', 'data': parameter};
+            let table = '';
 
-                $(".popupTableDiv").html(table);
+            fnPostAjaxAsync(function (data, callFunctionParam) {
+                const list = data.list;
+                const LIST_LENGTH = list.length;
+
+                if (LIST_LENGTH > 0) {
+                    table = '<table class="rowStyle" style="border-spacing:0; width:100%; height: 500px; overflow-y: auto;">';
+                    table +=    '<tbody>';
+
+                    for (let i = 0; i < LIST_LENGTH; i++) {
+                        const rowData = list[i];
+                        const materialCompCd = rowData.MATERIAL_COMP_CD;
+                        const materialCompCdPrev = list[i - 1] ? list[i - 1].MATERIAL_COMP_CD : undefined;
+                        const materialCompCdNext = list[i + 1] ? list[i + 1].MATERIAL_COMP_CD : undefined;
+                        const groupedMaterialCompCd = fnGroupBy(list, 'MATERIAL_COMP_CD');
+
+                        if (materialCompCd === materialCompCdNext) {
+                            if (materialCompCd !== materialCompCdPrev) {
+                                const ROWSPAN_LENGTH = groupedMaterialCompCd[rowData.MATERIAL_COMP_CD].length + 1;
+
+                                table += '<tr>';
+                                table += '<td rowspan="' + ROWSPAN_LENGTH + '" style="max-width: 125px; max-height: 27px; background-color: #C1F9BD">' + rowData.MATERIAL_COMP_NM + '</td>';
+                                table += '<td colspan="3" style="max-height: 27px; background-color: #C1F9BD">' + rowData.COMP_EMAIL + '</td>';
+                                table += '</tr>';
+                            }
+                            table += '<tr>';
+                            table += '<td class="text-right" style="max-width: 110px;  max-height: 27px;">' + rowData.MATERIAL_DETAIL_NM + '</td>';
+                            table += '<td class="text-right" style="max-width: 150px;  max-height: 27px;">' + rowData.SIZE_TXT + '</td>';
+                            table += '<td class="text-right" style="max-width: 55px; max-height: 27px;">' + rowData.ORDER_QTY_INFO + '</td>';
+                            table += '</tr>';
+                        } else {
+                            table += '<tr style="max-height: 27px;">';
+                            table +=    '<td colspan="2" style="max-height: 27px; background-color: #FFF2CC ">합계</td>';
+                            table +=    '<td style="max-height: 27px; background-color: #FFF2CC">' + rowData.ORDER_QTY_INFO + '</td>';
+                            table += '</tr>';
+                        }
+                    }
+                    table +=    '</tbody>';
+                    table += '</table>';
+                    $(".popupTableDiv").parent().prev().width(1200);
+                    itemOrderRegisterPopTopGrid.pqGrid('option', 'width', '100%').pqGrid('refresh');
+                    $(".popupTableDiv").parent().show();
+                    $(".popupTableDiv").html(table);
+                }
             }, parameters, '');
         }
 
