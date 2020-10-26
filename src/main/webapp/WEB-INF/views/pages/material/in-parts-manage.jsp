@@ -99,7 +99,11 @@
                             </span>
                         </div>
 <%--                        <span class="chk_box ml-20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>--%>
-                        <button type="button" class="right_float defaultBtn radius blue" id="searchBtn">검색</button>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="CONTROL_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue" id="searchBtn">검색</button>
+                        </span>
+
                     </li>
                 </ul>
 
@@ -1008,7 +1012,7 @@
                 var txt1 = val.toString().substring(0, indx);
                 var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                 var txt3 = val.toString().substring(indx + txtUpper.length);
-                return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
             }
             else {
                 return val;
@@ -1055,7 +1059,7 @@
                 var txt1 = val.toString().substring(0, indx);
                 var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                 var txt3 = val.toString().substring(indx + txtUpper.length);
-                return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
             }
             else {
                 return val;
@@ -1079,4 +1083,25 @@
        $('#MATERIAL_CONSUMABLE_END_DT').focus();
     });
 
+    $('#CONTROL_MANAGE_EXCEL_EXPORT').on('click', function () {
+        let targetTab = $('#search_form').find('#SEL_TAB_TYPE').val();
+        let blob;
+        let text;
+        if (targetTab === '1') {
+           blob = mainGridId01.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+           });
+           text = '현황관리';
+        } else if (targetTab === '2') {
+            blob = mainGridId02.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+            text = '수불이력';
+        }
+        saveAs(blob, text + '.xlsx');
+    });
 </script>

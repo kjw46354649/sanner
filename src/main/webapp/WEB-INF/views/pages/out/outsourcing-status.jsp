@@ -64,7 +64,10 @@
                             <input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH">
                             <label for="RANGE_SEARCH"> Range 검색</label>
                         </span>
-                        <button type="button" class="right_float defaultBtn radius blue" id="TAB1_SEARCH">검색</button>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="OUTSIDE_CLOSE_STATUS_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue" id="TAB1_SEARCH">검색</button>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -103,7 +106,10 @@
                             <label class="label_100">Option</label>
                         </span>
                         <span class="chk_box"><input type="checkbox" name="ORIGINAL_ORDER_AMOUNT" id="ORIGINAL_ORDER_AMOUNT"><label for="ORIGINAL_ORDER_AMOUNT">원 발주 금액</label></span>
-                        <button type="button" class="right_float defaultBtn radius blue" id="TAB2_SEARCH">검색</button>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="MONTH_OUTSIDE_STATUS_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue" id="TAB2_SEARCH">검색</button>
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -346,7 +352,7 @@
         };
         /* funciton */
 
-
+        /* event */
         $('#TAB1_SEARCH').on('click', function () {
             tab1PostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM');
             $outsideCloseStatusGrid.pqGrid('option', 'dataModel.postData', function () {
@@ -362,33 +368,6 @@
             });
             $monthlyOutsideStatusGrid.pqGrid('refreshDataAndView');
         });
-
-        /* init */
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').find('#COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_OUTSIDE_STATUS_SEARCH_FORM').find('#COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_OUTSIDE_STATUS_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
-        });
-        $outsideCloseStatusGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
-        $monthlyOutsideStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
-
-        fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR_LEFT', 10);
-        fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_LEFT');
-        $('#OUTSIDE_CLOSE_MONTH_LEFT').val('01').prop('selected', true);
-        fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR_RIGHT', 10);
-        fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_RIGHT');
-        fnAppendSelectboxYear('YEAR', 10);
 
         $('#OUTSIDE_CLOSE_YEAR_LEFT').on('change', function () {
             fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_LEFT', this.value);
@@ -419,6 +398,54 @@
                 $('.out_status_save_id').toggle();
             }
         });
+
+        $('#OUTSIDE_CLOSE_STATUS_EXCEL_EXPORT').on('click', function () {
+            const blob = $outsideCloseStatusGrid.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, '외주마감 현황.xlsx');
+        });
+
+        $('#MONTH_OUTSIDE_STATUS_EXCEL_EXPORT').on('click', function () {
+            const blob = $monthlyOutsideStatusGrid.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, '외주 월별 현황.xlsx');
+        });
+        /* event */
+
+        /* init */
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_OUTSIDE_STATUS_SEARCH_FORM').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_OUTSIDE_STATUS_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
+        });
+        $outsideCloseStatusGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
+        $monthlyOutsideStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
+
+        fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR_LEFT', 10);
+        fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_LEFT');
+        $('#OUTSIDE_CLOSE_MONTH_LEFT').val('01').prop('selected', true);
+        fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR_RIGHT', 10);
+        fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_RIGHT');
+        fnAppendSelectboxYear('YEAR', 10);
         /* init */
     });
 </script>

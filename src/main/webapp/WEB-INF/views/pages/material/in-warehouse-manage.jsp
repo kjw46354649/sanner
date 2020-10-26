@@ -182,8 +182,10 @@
                                     </c:forEach>
                                 </select>
                             </span>
-                            <span class="ipu_wrap right_float"></span>
-                            <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnInWarehouseManageManageSearch">검색</button></span>
+                            <span class="ipu_wrap right_float">
+<%--                                <button type="button" id="IN_WAREHOUSE_MANAGE_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>--%>
+                                <button type="button" class="defaultBtn radius blue" id="btnInWarehouseManageManageSearch">검색</button>
+                            </span>
                         </li>
                         <li>
                             <span class="ipu_wrap"><label class="label_100" for="SIZE">소재규격</label><input type="text" name="SIZE" id="SIZE" class="wd_200" value="" title="소재규격"></span>
@@ -241,7 +243,10 @@
                                     </c:forEach>
                                 </select>
                             </span>
-                            <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnInWarehouseManageOutSearch">검색</button></span>
+                            <span class="ipu_wrap right_float">
+                                <button type="button" id="IN_WAREHOUSE_MANAGE_OUT_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                                <button type="button" class="defaultBtn radius blue" id="btnInWarehouseManageOutSearch">검색</button>
+                            </span>
                         </li>
                         <li>
                             <span class="ipu_wrap"><label class="label_100" for="SIZE">소재규격</label><input type="text" name="SIZE" id="SIZE" class="wd_200" value="" title="소재규격"></span>
@@ -1111,7 +1116,7 @@
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
                 }
                 else {
                     return val;
@@ -1158,7 +1163,7 @@
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
                 }
                 else {
                     return val;
@@ -1178,7 +1183,25 @@
             'data': {'queryId': 'dataSource.getLocationListWithWarehouse'}
         });
 
+        // $('#IN_WAREHOUSE_MANAGE_MANAGE_EXCEL_EXPORT').on('click', function () {
+        //     const blob = inWarehouseManageManageGrid01.pqGrid('getInstance').grid.exportData({
+        //         format: 'xlsx',
+        //         render: true,
+        //         type: 'blob'
+        //     });
+        //
+        //     saveAs(blob, '현황관리.xlsx');
+        // });
 
+        $('#IN_WAREHOUSE_MANAGE_OUT_EXCEL_EXPORT').on('click', function () {
+            const blob = inWarehouseManageOutGrid.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, '불출이력.xlsx');
+        });
     });
 
 </script>

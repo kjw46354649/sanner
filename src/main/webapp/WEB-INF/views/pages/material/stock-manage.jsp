@@ -36,8 +36,6 @@
                             <label class="label_100" for="SEL_ITEM_NM">품명</label>
                             <input type="text" class="wd_200" name="SEL_ITEM_NM" id="SEL_ITEM_NM" title="품명">
                         </span>
-                        <span class="gubun"></span>
-
                     </li>
                     <li>
                         <span class="ipu_wrap">
@@ -106,7 +104,10 @@
                                 <span class="nbsp" id="SEL_SIZE_SEARCH_TYPE_R_6_SPAN">~</span>
                             <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_6" id="SEL_SIZE_SEARCH_TYPE_R_6">
                         </span>
-                        <button type="button" class="right_float defaultBtn radius blue" id="stock_manage_search_btn">검색</button>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="STOCK_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" class="defaultBtn radius blue" id="stock_manage_search_btn">검색</button>
+                        </span>
                         <%--<span class="txt_span pd-right20">조회 Option</span>
                         <span class="chk_box"><input type="checkbox" name="DEADLINE" id="DEADLINE"><label for="DEADLINE">마감</label></span>
                         <span class="chk_box"><input type="checkbox" name="END" id="END"><label for="END">종료</label></span>
@@ -1189,7 +1190,7 @@
                     var txt1 = val.toString().substring(0, indx);
                     var txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     var txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
                 }
                 else {
                     return val;
@@ -1199,5 +1200,15 @@
                 return val;
             }
         }
+
+        $('#STOCK_MANAGE_EXCEL_EXPORT').on('click', function () {
+            const blob = stockManageGridId01.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, '재고 관리.xlsx');
+        });
     });
 </script>
