@@ -534,7 +534,7 @@
                     , B.OUTSIDE_COMP_CD
                     , A.CONTROL_NUM
                     , B.PART_NUM
-                    , B.DRAWING_NUM
+                    , CASE WHEN B.PART_NUM IS NULL THEN C.DRAWING_NUM ELSE B.DRAWING_NUM END AS DRAWING_NUM
                     , B.WORK_TYPE
                     , B.MATERIAL_DETAIL
                     , B.SURFACE_TREAT
@@ -576,10 +576,8 @@
                 FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND A.CONTROL_SEQ = C.CONTROL_SEQ
-                    AND B.CONTROL_SEQ = C.CONTROL_SEQ
-                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.DEL_YN = 'N'
-                    AND A.CONTROL_STATUS IN ('ORD001', 'ORD003') <!-- TODO: 컬럼 -->
+                    AND A.CONTROL_STATUS IN ('ORD001', 'ORD003')
                     <!-- AND B.PART_STATUS IN ('PRO009','PRO010','PRO011') 상태확인 필요 -->
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
@@ -1144,7 +1142,7 @@
                     , D.ORDER_NUM
                     , B.CONTROL_NUM
                     , B.ORDER_COMP_CD
-                    , C.DRAWING_NUM
+                    , CASE WHEN C.PART_NUM IS NULL THEN D.DRAWING_NUM ELSE C.DRAWING_NUM END AS DRAWING_NUM
                     , C.MATERIAL_DETAIL
                     , C.SIZE_TXT
                     , D.ORDER_QTY
@@ -1162,7 +1160,6 @@
                     AND A.CONTROL_SEQ = C.CONTROL_SEQ
                     AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.CONTROL_SEQ = D.CONTROL_SEQ
-                    AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
                     AND A.ORDER_SEQ = D.ORDER_SEQ
                     AND A.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_ST_DT},'/',space(0)),'%Y%m%d') AND DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY)
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
@@ -1187,7 +1184,7 @@
                     , D.ORDER_NUM
                     , B.CONTROL_NUM
                     , B.ORDER_COMP_CD
-                    , C.DRAWING_NUM
+                    , CASE WHEN C.PART_NUM IS NULL THEN D.DRAWING_NUM ELSE C.DRAWING_NUM END AS DRAWING_NUM
                     , C.MATERIAL_DETAIL
                     , C.SIZE_TXT
                     , D.ORDER_QTY
@@ -1205,7 +1202,6 @@
                     AND A.CONTROL_SEQ = C.CONTROL_SEQ
                     AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.CONTROL_SEQ = D.CONTROL_SEQ
-                    AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
                     AND A.ORDER_SEQ = D.ORDER_SEQ
                     AND A.INSPECT_TYPE = '2'
                     AND A.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_ST_DT},'/',space(0)),'%Y%m%d') AND DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY) <!-- 인덱스 고려 -->

@@ -1361,7 +1361,7 @@
                 $("#g_item_detail_pop_form").find("#PART_STATUS_NM").html(dataInfo.PART_STATUS_NM);
 
                 $("#g_item_detail_pop_form").find("#ITEM_NM").html(dataInfo.ITEM_NM);
-                $("#g_item_detail_pop_form").find("#MATERIAL_DETAIL_NM").html(dataInfo.MATERIAL_DETAIL_NM + materialFinishHeatSpanElement);
+                $("#g_item_detail_pop_form").find("#MATERIAL_DETAIL_NM").html(dataInfo.MATERIAL_DETAIL_NM || '' + materialFinishHeatSpanElement);
                 $("#g_item_detail_pop_form").find("#POP_POSITION_NM").html(dataInfo.POP_POSITION_NM);
 
                 $("#g_item_detail_pop_form").find("#MODULE_NM").html(dataInfo.MODULE_NM);
