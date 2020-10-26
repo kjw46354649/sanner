@@ -72,7 +72,7 @@
                                                 , SUM(P.ERROR_CNT) AS ERROR_CNT
                                                 , SUM(P.ERROR_QTY) AS ERROR_QTY
                                             FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
-                                                        , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
+                                                        , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
                                                         , 1 AS PART_CNT
                                                         , jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS PART_QTY
                                                         , IFNULL(A.FORECAST_UNIT_AMT,0) AS FORECAST_UNIT_AMT
@@ -561,7 +561,7 @@
                 WHERE P.CONTROL_SEQ = X.CONTROL_SEQ
                     AND P.CONTROL_SEQ = Y.CONTROL_SEQ
                     AND P.CONTROL_DETAIL_SEQ = Y.CONTROL_DETAIL_SEQ
-					P.CONTROL_SEQ = M.CONTROL_SEQ
+					AND P.CONTROL_SEQ = M.CONTROL_SEQ
                     AND P.INSPECT_RNUM = 1
             ) Z
     </select>
