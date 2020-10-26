@@ -1328,6 +1328,17 @@
 		}).show();
 	};
 
+	const fnConfirm = function (title, message) {
+		alertify.confirm().setting({
+			'title': title,
+			'message': message,
+			'onok': function(){ location.reload(); },
+			'oncancel': null,
+			'movable': false,
+			'transitionOff': true
+		}).show().autoOk(60);
+	};
+
 	$(function () {
 
 		let getInitData = function () {
@@ -1338,7 +1349,7 @@
 				data: {},
 				success: function (data, textStatus, jqXHR) {
 					if (textStatus !== 'success' || data == null) {
-						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
+						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
 
@@ -1363,7 +1374,7 @@
 					createGrid3(data.grid_list3);	//납기지연목록
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-					fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
+					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 				}
 			});
 		};
@@ -1401,7 +1412,7 @@
 				type: 'POST', url: "/tv/mct/gridDataList", dataType: 'json', data: {},
 				success: function (data, textStatus, jqXHR) {
 					if (textStatus !== 'success' || data == null) {
-						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
+						fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
 					createGrid1(data.grid_list1);	//불량/반품
@@ -1409,7 +1420,7 @@
 					createGrid3(data.grid_list3);	//납기지연목록
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-					fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
+					fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 				}
 			});
 		};
@@ -1422,7 +1433,7 @@
 				data: {"EQUIP_SEQ": equipSeq},
 				success: function (data, textStatus, jqXHR) {
 					if (textStatus !== 'success' || data == null) {
-						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
+						fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
 					let $target = $("#" + factoryArea + "_" + equipRow + "_" + equipCol);
@@ -1497,7 +1508,7 @@
 					}
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-					fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
+					fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 				}
 			});
 		};
@@ -1632,7 +1643,7 @@
 				}
 			}
 		};
-
+		let iConnectCount = 0;
 		function jmesConnect() {
 		    let socket = new SockJS('/jmes-ws');
 		    stompClient = Stomp.over(socket);
@@ -1647,7 +1658,13 @@
 				});
 		    }, () => {
 			  	setTimeout(() => {
-					jmesConnect();
+					if(iConnectCount == 6) {
+						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+						return;
+					}else if(iConnectCount <= 5){
+						jmesConnect();
+					}
+					iConnectCount++
 			  	}, 5000);
 			});
 		}

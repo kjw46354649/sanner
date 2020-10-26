@@ -1205,6 +1205,17 @@
 		}).show();
 	};
 
+	const fnConfirm = function (title, message) {
+		alertify.confirm().setting({
+			'title': title,
+			'message': message,
+			'onok': function(){ location.reload(); },
+			'oncancel': null,
+			'movable': false,
+			'transitionOff': true
+		}).show().autoOk(60);
+	};
+
 	$(function () {
 
 		let getInitData = function () {
@@ -1215,7 +1226,7 @@
 				data: {},
 				success: function (data, textStatus, jqXHR) {
 					if (textStatus !== 'success' || data === null) {
-						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
+						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
 
@@ -1306,7 +1317,7 @@
                     }
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-					fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
+					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 				}
 			});
 		};
@@ -1317,7 +1328,7 @@
 				type: 'POST', url: "/tv/pop/schedulerPopDrawingData", dataType: 'json', data: {},
 				success: function (data, textStatus, jqXHR) {
 					if (textStatus !== 'success' || data == null) {
-						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
+						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
 					let pop_list2 = data.pop_list2;//소재대기
@@ -1367,7 +1378,7 @@
 					}
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-					fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
+					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 				}
 			});
 		};
@@ -1379,7 +1390,7 @@
 				data: {"POP_POSITION":popLocation, "LIMIT":limit},
 				success: function (data, textStatus, jqXHR) {
 					if (textStatus !== 'success' || data == null) {
-						fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.2");
+						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
 					let pop_list = data.pop_list; //pop
@@ -1394,7 +1405,7 @@
 					}
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-					fnAlert(null, "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.");
+					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 				}
 			});
 		};
@@ -1506,6 +1517,7 @@
 			}
 		};
 
+		let iConnectCount = 0;
 		function jmesConnect() {
 		    let socket = new SockJS('/jmes-ws');
 		    stompClient = Stomp.over(socket);
@@ -1532,10 +1544,21 @@
 				});
 			}, () => {
 				setTimeout(() => {
-					jmesConnect();
+					if(iConnectCount == 6) {
+						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+						return;
+					}else if(iConnectCount <= 5){
+						jmesConnect();
+					}
+					iConnectCount++
 				}, 5000);
 			});
 		}
+
+		function reloadPage(){
+			console.log("reloadPage");
+			// location.reload();
+		};
 
 		let setIntervalTimer;
 		let timer = function(){
