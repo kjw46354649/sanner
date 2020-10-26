@@ -41,6 +41,7 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap right_float">
+                            <button type="button" id="CONTROL_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
                             <button type="button" class="defaultBtn radius blue" id="CONTROL_MANAGE_SEARCH">검색</button>
                         </span>
                     </li>
@@ -132,7 +133,7 @@
                 <button type="button" class="defaultBtn btn-100w" id="TRANSACTION_STATEMENT">거래명세표</button>
                 <%--                <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#TRANSACTION_STATEMENT_POPUP">거래명세표</button>--%>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CONFIRMATION" data-control_status="ORD001" style="color: blue;">확정</button>
-                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002" style="color: red;">취소</button>
+                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002" style="color: #FF0000;">취소</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="TERMINATION" data-control_status="ORD004">종료</button>
                 <button type="button" class="defaultBtn btn-50w" id="CONTROL_MONTH_CLOSE">마감</button>
                 <%--                <button type="button" class="defaultBtn btn-50w" data-toggle="modal" data-target="#CONTROL_CLOSE_POPUP">마감</button>--%>
@@ -273,7 +274,7 @@
             },
             {
                 title: '발주업체', width: 100, dataIndx: 'ORDER_COMP_CD',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
@@ -283,7 +284,7 @@
             },
             {
                 title: '비고', align: 'left', width: 100, dataIndx: 'CONTROL_NOTE',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
@@ -291,8 +292,8 @@
                 }
             },
             {
-                title: '주요<br>검사', width: 50, dataIndx: 'MAIN_INSPECTION',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                title: '주요<br>검사', dataIndx: 'MAIN_INSPECTION',
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
@@ -323,7 +324,7 @@
             {title: '주요<br>검사', width: 50, dataIndx: 'MAIN_INSPECTION_NM', hidden: true},
             {
                 title: '긴<br>급', minWidth: 30, dataIndx: 'EMERGENCY_YN',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
@@ -338,7 +339,7 @@
             },
             {
                 title: '대칭', minWidth: 30, dataIndx: 'SAME_SIDE_YN',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
@@ -362,8 +363,8 @@
             },
             {
                 title: '관리번호', align: 'left', width: 180, dataIndx: 'CONTROL_NUM',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'red'},
-                style: {'font-weight': 'bold', 'color': 'black'},
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#FF0000'},
+                style: {'font-weight': 'bold', 'color': '#000000'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
@@ -371,7 +372,7 @@
                 }
             },
             {
-                title: '파<br>트', minWidth: 30, dataIndx: 'PART_NUM', styleHead: {'background':'#a9d3f5'},
+                title: '파<br>트', minWidth: 30, dataIndx: 'PART_NUM', styleHead: {'background':'#A9D3F5'},
                 editable: function(ui) {
                     let rowData = ui.rowData;
 
@@ -515,7 +516,7 @@
                 }
             },
             {
-                title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
+                title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON', styleHead: {'background':'#A9D3F5'},
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
                         return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
@@ -540,7 +541,37 @@
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')}
             },
-            {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM', hidden: true},
+            {title: '참<br>조', minWidth: 30, dataIndx: 'ETC_GFILE_SEQ', styleHead: {'background':'#a9d3f5'},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let cls = cellData ? 'floppyDiskAble' : 'floppyDiskDisable';
+                    let text = '<span class="' + cls + '" name="attachment" style="cursor: pointer"></span>';
+
+                    return {text: text};
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui),
+                        rowData = ui.rowData;
+
+                    $cell.find('[name=attachment]').bind('click', function () {
+                        if (fnIsGridEditing($orderManagementGrid)) {
+                            return false;
+                        }
+
+                        let GfileKey = ui.rowData.ETC_GFILE_SEQ;
+                        $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
+                        $('#ATTACHMENT_BUTTON').data('rowIndx', ui.rowIndx);
+                        $('#ATTACHMENT_BUTTON').data('GfileKey', GfileKey);
+                        if (rowData.ETC_GFILE_SEQ) {
+                            $("#common_file_download_form #deleteYn").val(true);
+                        } else {
+                            $("#common_file_download_form #deleteYn").val(false);
+                        }
+                        commonFileDownUploadPopupCall(GfileKey, 'ATTACHMENT_BUTTON');
+                    });
+                }
+            },
             {
                 title: '가공<br>납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
@@ -553,7 +584,7 @@
             },
             {
                 title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
@@ -691,8 +722,8 @@
                         }
                     },
                     {
-                        title: '발주번호', width: 90, dataIndx: 'ORDER_NUM',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM',
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -734,7 +765,7 @@
                     },
                     {
                         title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -794,7 +825,7 @@
                     },
                     {
                         title: '발주납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -872,7 +903,7 @@
                     },
                     {
                         title: '견적단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -891,7 +922,7 @@
                     },
                     {
                         title: '공급단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -936,7 +967,7 @@
                     },
                     {
                         title: '품명', align: 'left', width: 150, dataIndx: 'ITEM_NM',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -955,7 +986,7 @@
                     },
                     {
                         title: '프로젝트', align: 'left', width: 200, align: 'left', dataIndx: 'PROJECT_NM', hidden: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -974,7 +1005,7 @@
                     },
                     {
                         title: '모듈', align: 'left', width: 70, align: 'left', dataIndx: 'MODULE_NM', hidden: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -993,7 +1024,7 @@
                     },
                     {
                         title: '납품처', align: 'left', dataIndx: 'DELIVERY_COMP_NM', hidden: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -1012,7 +1043,7 @@
                     },
                     {
                         title: '비고(라벨)', align: 'left', width: 100, align: 'left', dataIndx: 'LABEL_NOTE', hidden: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -1031,7 +1062,7 @@
                     },
                     {
                         title: '구매담당', dataIndx: 'ORDER_STAFF_SEQ', hidden: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -1073,7 +1104,7 @@
                     },
                     {
                         title: '설계자', dataIndx: 'DESIGNER_NM', hidden: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -1094,7 +1125,7 @@
             },
             {
                 title: '변경전 도면번호', align: 'left', width: 120, dataIndx: 'PREV_DRAWING_NUM',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
@@ -1122,7 +1153,7 @@
             },
             {
                 title: '소재종류', width: 80, dataIndx: 'MATERIAL_DETAIL',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
@@ -1142,7 +1173,7 @@
             },
             {
                 title: '소재<br>형태', dataIndx: 'MATERIAL_KIND',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
@@ -1162,7 +1193,7 @@
             },
             {
                 title: '표면<br>처리', width: 80, dataIndx: 'SURFACE_TREAT',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
@@ -1187,7 +1218,7 @@
             },
             {
                 title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
@@ -1207,7 +1238,7 @@
             },
             {
                 title: '소재비고', dataIndx: 'MATERIAL_NOTE',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
@@ -1226,11 +1257,11 @@
             },
             {
                 title: '소재마감', align: 'center', hidden: true,
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 colModel: [
                     {
                         title: 'TM각비', width: 70, dataIndx: 'MATERIAL_FINISH_TM', hidden: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -1255,7 +1286,7 @@
                     },
                     {
                         title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND', hidden: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -1398,12 +1429,12 @@
             {
                 title: '항목별 계산견적 단가 (10원단위 반올림)',
                 align: 'center',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                 hidden: true,
                 colModel: [
                     {
                         title: '소재비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AMT',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -1422,7 +1453,7 @@
                     },
                     {
                         title: 'TM각비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_TM_AMT',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -1441,7 +1472,7 @@
                     },
                     {
                         title: '연마비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_GRIND_AMT',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -1460,7 +1491,7 @@
                     },
                     {
                         title: '열처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_HEAT_AMT',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -1479,7 +1510,7 @@
                     },
                     {
                         title: '표면처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AMT',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -1498,7 +1529,7 @@
                     },
                     {
                         title: '가공비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_PROCESS_AMT',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -1517,7 +1548,7 @@
                     },
                     {
                         title: '기타추가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_ETC_AMT',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -1536,7 +1567,7 @@
                     },
                     {
                         title: '견적비고', dataIndx: 'UNIT_AMT_NOTE',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
@@ -1624,37 +1655,6 @@
             },
             {title: 'Rev.', dataIndx: 'DRAWING_VER'},
             {title: 'Rev. 일시', width: 120, dataIndx: 'DRAWING_UP_DT'},
-            /*{title: '참<br>조', minWidth: 30, dataIndx: 'ETC_GFILE_SEQ', styleHead: {'background':'#a9d3f5'},
-                render: function (ui) {
-                    let cellData = ui.cellData;
-                    let cls = cellData ? 'floppyDiskAble' : 'floppyDiskDisable';
-                    let text = '<span class="' + cls + '" name="attachment" style="cursor: pointer"></span>';
-
-                    return {text: text};
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui),
-                        rowData = ui.rowData;
-
-                    $cell.find('[name=attachment]').bind('click', function () {
-                        if (fnIsGridEditing($orderManagementGrid)) {
-                            return false;
-                        }
-
-                        let GfileKey = ui.rowData.ETC_GFILE_SEQ;
-                        $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
-                        $('#ATTACHMENT_BUTTON').data('rowIndx', ui.rowIndx);
-                        $('#ATTACHMENT_BUTTON').data('GfileKey', GfileKey);
-                        if (rowData.ETC_GFILE_SEQ) {
-                            $("#common_file_download_form #deleteYn").val(true);
-                        } else {
-                            $("#common_file_download_form #deleteYn").val(false);
-                        }
-                        commonFileDownUploadPopupCall(GfileKey, 'ATTACHMENT_BUTTON');
-                    });
-                }
-            },*/
             {
                 title: '품질현황', align: 'center', colModel: [
                     {title: 'Seq.', minWidth: 30, width: 35, dataType: 'integer', dataIndx: 'INSPECT_NUM'},
@@ -2145,7 +2145,7 @@
                     let txt1 = val.toString().substring(0, indx);
                     let txt2 = val.toString().substring(indx, indx + txtUpper.length);
                     let txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background:yellow;color:#333;'>" + txt2 + "</span>" + txt3;
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
                     // return val;
                 } else {
                     return val;
@@ -2782,6 +2782,16 @@
 
         $('[name=CONTROL_MANGE_CLOSE]').on('click', function () {
             $('#CONTROL_MANGE_POPUP').modal('hide');
+        });
+
+        $('#CONTROL_MANAGE_EXCEL_EXPORT').on('click', function () {
+            const blob = $orderManagementGrid.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, '주문관리.xlsx');
         });
         /* event */
 

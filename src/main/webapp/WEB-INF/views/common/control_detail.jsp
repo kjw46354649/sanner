@@ -93,7 +93,7 @@
             {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL'},
             {title: '표면<br>처리', width: 80, dataIndx: 'SURFACE_TREAT'},
             {title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY'},
-            {title: '발주번호', width: 90, dataIndx: 'ORDER_NUM'},
+            {title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM'},
             {title: '수량', dataIndx: 'ORDER_QTY'},
             {
                 title: '대칭', align: 'center', colModel: [

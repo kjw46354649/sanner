@@ -332,7 +332,7 @@
                 D.CLOSE_MONTH,
                 D.CLOSE_VER,
                 SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
-                C.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS TOTAL_AMT,
+                C.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
                 E.FINAL_NEGO_AMT
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -390,7 +390,7 @@
                     D.CLOSE_MONTH,
                     D.CLOSE_VER,
                     SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
-                    C.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS TOTAL_AMT,
+                    C.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
                     E.FINAL_NEGO_AMT
                 FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -429,8 +429,8 @@
                     CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH}) AS CLOSE_MONTH,
                     #{CLOSE_VER} AS CLOSE_VER,
                     SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
-                    C.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS TOTAL_AMT,
-                    C.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS FINAL_NEGO_AMT
+                    C.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
+                    C.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS FINAL_NEGO_AMT
                 FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = B.CONTROL_SEQ
@@ -1980,23 +1980,17 @@
                 A.CONTROL_SEQ,
                 B.CONTROL_DETAIL_SEQ,
                 C.ORDER_SEQ,
-                SF_GET_CODE_NM('1038', A.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
                 A.CONTROL_NUM, <!-- 관리번호 -->
+                B.PART_NUM,
                 C.ORDER_NUM, <!-- 발주번호 -->
-                B.DRAWING_NUM, <!-- 도면번호 -->
-                B.SIZE_TXT, <!-- 규격 -->
+                C.DRAWING_NUM, <!-- 도면번호 -->
                 IFNULL(SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
-                C.UNIT_FINAL_AMT, <!-- 최종공급단가 -->
                 SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
-                SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
-                SF_GET_CONTROL_FINAL_AMT(A.CONTROL_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
-                C.PACKING_CNT, <!-- 포장수량 -->
-                '' AS NOTE, <!-- 비고 -->
-                B.IMG_GFILE_SEQ
+                '' AS NOTE <!-- 비고 -->
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050' <!-- Part 부속은 제외(작업형태 파트) -->
-                INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON A.CONTROL_SEQ = C.CONTROL_SEQ
+                INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ
             WHERE 1 = 1
                 AND A.DEL_YN = 'N'
                 AND A.CONTROL_SEQ IN (${CONTROL_SEQ_STR})
@@ -2008,29 +2002,24 @@
                 A.CONTROL_SEQ,
                 B.CONTROL_DETAIL_SEQ,
                 C.ORDER_SEQ,
-                SF_GET_CODE_NM('1038', A.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM,
                 A.CONTROL_NUM, <!-- 관리번호 -->
-                C.ORDER_NUM,
-                B.DRAWING_NUM,
-                B.SIZE_TXT,
+                B.PART_NUM,
+                C.ORDER_NUM, <!-- 발주번호 -->
+                C.DRAWING_NUM, <!-- 도면번호 -->
                 IFNULL(SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
-                C.UNIT_FINAL_AMT,
                 SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
-                SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
-                SF_GET_CONTROL_FINAL_AMT(A.CONTROL_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
-                C.PACKING_CNT,
-                D.NOTE,
-                B.IMG_GFILE_SEQ
+                D.NOTE
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON A.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050' <!-- Part 부속은 제외(작업형태 파트) -->
+                INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ
                 INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
                                                    AND C.ORDER_SEQ = D.ORDER_SEQ
                                                    AND D.INVOICE_NUM = #{INVOICE_NUM}
             WHERE 1 = 1
                 AND A.DEL_YN = 'N'
         ) X
-        ORDER BY X.CONTROL_NUM, X.ORDER_NUM
+        ORDER BY X.CONTROL_NUM, X.PART_NUM, X.ORDER_NUM
     </select>
 
     <insert id="createInvoice" parameterType="java.util.HashMap" >
@@ -2368,13 +2357,14 @@
             A.ORDER_COMP_CD, SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
             SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
             SF_GET_DATE_F(C.DELIVERY_DT, '', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
-            A.CONTROL_NUM, C.ORDER_QTY, C.ORDER_NUM,
+            A.CONTROL_NUM, C.ORDER_QTY, C.ORDER_NUM, C.DRAWING_NUM,
             SF_GET_CODE_NM('1013', B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS,
             SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION, <!-- 현재 등록된 위치 -->
-            H.INSPECT_GRADE, jmes.SF_GET_CODE_NM('1040', H.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 --> G.USER_NM, F.STAFF_NM
+            H.INSPECT_GRADE, jmes.SF_GET_CODE_NM('1040', H.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 -->
+            G.USER_NM, F.STAFF_NM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL
-            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ
                 <if test="INNER_DUE_DT != null and INNER_DUE_DT != ''">
                     AND C.ORDER_DUE_DT = REPLACE(#{INNER_DUE_DT}, '/', SPACE(0))
                 </if>
