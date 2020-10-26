@@ -24,7 +24,7 @@
             , Z.PART_QTY
             , Z.FORECAST_AMT
             , Z.DT_GOAL_AMT
-            , CASE WHEN IFNULL(Z.DT_GOAL_AMT,0) = 0 THEN NULL ELSE CONCAT(FORMAT(IFNULL(Z.FORECAST_AMT,0) / IFNULL(Z.DT_GOAL_AMT,0) * 100,1),'%') END AS GOAL_RATIO
+            , CASE WHEN IFNULL(Z.DT_GOAL_AMT,0) = 0 THEN NULL ELSE FORMAT(IFNULL(Z.FORECAST_AMT,0) / IFNULL(Z.DT_GOAL_AMT,0) * 100,1) END AS GOAL_RATIO
             , Z.WORKING_TIME
             , Z.ERROR_CNT
             , Z.ERROR_QTY
@@ -72,7 +72,7 @@
                                                 , SUM(P.ERROR_CNT) AS ERROR_CNT
                                                 , SUM(P.ERROR_QTY) AS ERROR_QTY
                                             FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
-                                                        , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
+                                                        , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
                                                         , 1 AS PART_CNT
                                                         , jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS PART_QTY
                                                         , IFNULL(A.FORECAST_UNIT_AMT,0) AS FORECAST_UNIT_AMT
@@ -107,10 +107,10 @@
             , Z.INNER_DUE_DT
             , Z.PART_QTY
             , Z.INNER_WORK_FINISH_DT
-            , ROUND(Z.WORK_TIME / 60,1) AS WORK_TIME
+            , FORMAT(Z.WORK_TIME / 60,1) AS WORK_TIME
             , Z.FORECAST_UNIT_AMT
             , Z.PART_QTY * Z.FORECAST_UNIT_AMT AS TOTAL_AMT
-            , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE Z.PART_QTY * Z.FORECAST_UNIT_AMT / (Z.WORK_TIME / 60 / 60) END AS PRICE_PER_HOUR
+            , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE FORMAT(Z.PART_QTY * Z.UNIT_FINAL_AMT / (Z.WORK_TIME / 60 / 60),0) END AS PRICE_PER_HOUR
             , CASE WHEN Z.PREV_DRAWING_NUM IS NOT NULL THEN (   SELECT M.UNIT_FINAL_AMT
                                                                 FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                                                                 WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
@@ -156,7 +156,7 @@
                     , Y.DRAWING_NUM
                     , Y.PREV_DRAWING_NUM
                 FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.IMG_GFILE_SEQ
-                            , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
+                            , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
                             , jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS PART_QTY
                             , IFNULL(A.FORECAST_UNIT_AMT,0) AS FORECAST_UNIT_AMT
                             , ROW_NUMBER() OVER (PARTITION BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ ORDER BY B.INSPECT_SEQ) AS INSPECT_RNUM
@@ -424,13 +424,13 @@
             , Z.PART_STATUS_NM
             , Z.WORK_FACTORY_NM
             , Z.INNER_WORK_FINISH_DT
-	        , ROUND(Z.WORK_TIME / 60,1) AS WORK_TIME
+	        , FORMAT(Z.WORK_TIME / 60,1) AS WORK_TIME
             , Z.OUTSIDE_COMP_NM
             , Z.OUTSIDE_IN_DT
             , Z.OUT_FINISH_DT
             , Z.FORECAST_UNIT_AMT
             , Z.PART_QTY * Z.FORECAST_UNIT_AMT AS TOTAL_AMT
-            , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE Z.PART_QTY * Z.FORECAST_UNIT_AMT / (Z.WORK_TIME / 60 / 60) END AS PRICE_PER_HOUR
+            , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE FORMAT(Z.PART_QTY * Z.UNIT_FINAL_AMT / (Z.WORK_TIME / 60 / 60),0) END AS PRICE_PER_HOUR
             , CASE WHEN Z.PREV_DRAWING_NUM IS NOT NULL THEN (   SELECT M.UNIT_FINAL_AMT
                                                                 FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                                                                 WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
@@ -559,7 +559,7 @@
                 WHERE P.CONTROL_SEQ = X.CONTROL_SEQ
                     AND P.CONTROL_SEQ = Y.CONTROL_SEQ
                     AND P.CONTROL_DETAIL_SEQ = Y.CONTROL_DETAIL_SEQ
-					P.CONTROL_SEQ = M.CONTROL_SEQ
+					AND P.CONTROL_SEQ = M.CONTROL_SEQ
                     AND P.INSPECT_RNUM = 1
             ) Z
     </select>
