@@ -561,7 +561,7 @@
                 WHERE P.CONTROL_SEQ = X.CONTROL_SEQ
                     AND P.CONTROL_SEQ = Y.CONTROL_SEQ
                     AND P.CONTROL_DETAIL_SEQ = Y.CONTROL_DETAIL_SEQ
-					P.CONTROL_SEQ = M.CONTROL_SEQ
+					AND P.CONTROL_SEQ = M.CONTROL_SEQ
                     AND P.INSPECT_RNUM = 1
             ) Z
     </select>
