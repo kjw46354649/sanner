@@ -72,7 +72,7 @@
                                                 , SUM(P.ERROR_CNT) AS ERROR_CNT
                                                 , SUM(P.ERROR_QTY) AS ERROR_QTY
                                             FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
-                                                        , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
+                                                        , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
                                                         , 1 AS PART_CNT
                                                         , jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS PART_QTY
                                                         , IFNULL(A.FORECAST_UNIT_AMT,0) AS FORECAST_UNIT_AMT
@@ -389,6 +389,7 @@
                                                             WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                                                                 AND A.CONTROL_SEQ = C.CONTROL_SEQ
                                                                 AND B.DEL_YN = 'N'
+                                                                AND B.CONTROL_STATUS IN ('ORD001', 'ORD003')
                                                                 AND C.WORK_TYPE != 'WTP020'
                                                             <if test="COMP_CD != null and COMP_CD != ''">
                                                                 AND B.COMP_CD = #{COMP_CD}          <!-- 가변조건 -->
@@ -515,6 +516,7 @@
                         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                             AND A.CONTROL_SEQ = C.CONTROL_SEQ
                             AND B.DEL_YN = 'N'
+                            AND B.CONTROL_STATUS IN ('ORD001', 'ORD003')
                             AND C.WORK_TYPE != 'WTP020'
                         <if test="COMP_CD != null and COMP_CD != ''">
                             AND B.COMP_CD = #{COMP_CD}          <!-- 가변조건 -->
