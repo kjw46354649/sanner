@@ -390,6 +390,7 @@
                                                             WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                                                                 AND A.CONTROL_SEQ = C.CONTROL_SEQ
                                                                 AND B.DEL_YN = 'N'
+                                                                AND B.CONTROL_STATUS IN ('ORD001', 'ORD003')
                                                                 AND C.WORK_TYPE != 'WTP020'
                                                             <if test="COMP_CD != null and COMP_CD != ''">
                                                                 AND B.COMP_CD = #{COMP_CD}          <!-- 가변조건 -->
@@ -516,6 +517,7 @@
                         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                             AND A.CONTROL_SEQ = C.CONTROL_SEQ
                             AND B.DEL_YN = 'N'
+                            AND B.CONTROL_STATUS IN ('ORD001', 'ORD003')
                             AND C.WORK_TYPE != 'WTP020'
                         <if test="COMP_CD != null and COMP_CD != ''">
                             AND B.COMP_CD = #{COMP_CD}          <!-- 가변조건 -->
