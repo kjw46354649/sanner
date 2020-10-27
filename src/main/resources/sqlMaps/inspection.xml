@@ -994,9 +994,10 @@
             , C.ORDER_SEQ
         FROM jmes.TBL_CONTROL A
             , jmes.TBL_CONTROL_PART B
-            , jmes.TBL_CONTROL_PART_ORDER_MAIN C
+            , jmes.TBL_CONTROL_PART_ORDER C
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-            AND A.CONTROL_SEQ = C.CONTROL_SEQ
+            AND B.CONTROL_SEQ = C.CONTROL_SEQ
+            AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             AND A.DEL_YN = 'N'
             AND C.CONTROL_SEQ = #{CONTROL_SEQ}
             AND C.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
