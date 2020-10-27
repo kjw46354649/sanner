@@ -1640,7 +1640,7 @@
         function makeInnerTable() {
             const MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();
             const parameter = {
-                'queryId': 'material.selectItemOrderRegisterPopTable',
+                'queryId': 'material.selectItemOrderRegisterPopTable2',
                 'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM
             };
             const parameters = {'url': '/json-list', 'data': parameter};
@@ -1666,19 +1666,19 @@
                                 const ROWSPAN_LENGTH = groupedMaterialCompCd[rowData.MATERIAL_COMP_CD].length + 1;
 
                                 table += '<tr>';
-                                table += '<td rowspan="' + ROWSPAN_LENGTH + '" style="max-width: 125px; max-height: 27px; background-color: #C1F9BD">' + rowData.MATERIAL_COMP_NM + '</td>';
-                                table += '<td colspan="3" style="max-height: 27px; background-color: #C1F9BD">' + rowData.COMP_EMAIL + '</td>';
+                                table += '<td rowspan="' + ROWSPAN_LENGTH + '" style="max-width: 125px; max-height: 27px; background-color: #F3FEFF">' + rowData.MATERIAL_COMP_NM + '</td>';
+                                table += '<td colspan="3" style="max-height: 27px; background-color: #F3FEFF">' + rowData.COMP_EMAIL + '</td>';
                                 table += '</tr>';
                             }
                             table += '<tr>';
-                            table += '<td class="text-right" style="max-width: 110px;  max-height: 27px;">' + rowData.MATERIAL_DETAIL_NM + '</td>';
-                            table += '<td class="text-right" style="max-width: 150px;  max-height: 27px;">' + rowData.SIZE_TXT + '</td>';
-                            table += '<td class="text-right" style="max-width: 55px; max-height: 27px;">' + rowData.ORDER_QTY_INFO + '</td>';
+                            table += '<td style="max-width: 110px; max-height: 27px;">' + rowData.MATERIAL_DETAIL_NM + '</td>';
+                            table += '<td style="max-width: 150px; max-height: 27px; text-align: right;">' + rowData.SIZE_TXT + '</td>';
+                            table += '<td style="max-width: 55px; max-height: 27px; text-align: right;">' + rowData.ORDER_QTY_INFO + '</td>';
                             table += '</tr>';
                         } else {
                             table += '<tr style="max-height: 27px;">';
-                            table +=    '<td colspan="2" style="max-height: 27px; background-color: #FFF2CC ">합계</td>';
-                            table +=    '<td style="max-height: 27px; background-color: #FFF2CC">' + rowData.ORDER_QTY_INFO + '</td>';
+                            table +=    '<td colspan="2" style="max-height: 27px; background-color: #FFFBEF ">합계</td>';
+                            table +=    '<td style="max-height: 27px; background-color: #FFFBEF; text-align: right;">' + rowData.ORDER_QTY_INFO + '</td>';
                             table += '</tr>';
                         }
                     }
