@@ -669,55 +669,48 @@
                             return {cls: cls, text: text};
                         },
                         postRender: function (ui) {
-                            let grid = this;
-                            let $cell = grid.getCell(ui);
+                            const grid = this;
+                            const $cell = grid.getCell(ui);
 
                             $cell.find('[name=ORDER_NUM_PLUS_BUTTON]').on('click', function (event) {
+                                const data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+                                const totalRecords = data.length;
+                                const groupedControlNum = fnGroupBy(data, 'CONTROL_NUM');
+                                let assembleCount = 0;
                                 let newRowData = fnCloneObj(ui.rowData);
-                                let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-                                let totalRecords = data.length;
                                 newRowData.ROW_NUM = totalRecords + 1;
                                 newRowData.ORDER_SEQ = null;
                                 newRowData.ORDER_NUM = null;
-                                newRowData.ORDER_QTY = null;
-                                newRowData.ORDER_DUE_DT = null;
-                                newRowData.DELIVERY_DT = null;
-                                // newRowData.OUT_FINISH_DT = null;
-                                newRowData.PROJECT_NM = null;
-                                newRowData.MODULE_NM = null;
-                                newRowData.DELIVERY_COMP_NM = null;
-                                newRowData.LABEL_NOTE = null;
-                                newRowData.ORDER_STAFF_SEQ = null;
-                                newRowData.DESIGNER_NM = null;
                                 newRowData.ORDER_DRAWING_NUM = null;
+                                newRowData.ORDER_QTY = null;
+                                newRowData.ORIGINAL_SIDE_QTY = null;
+                                newRowData.OTHER_SIDE_QTY = null;
+                                newRowData.ORDER_DUE_DT = null;
+                                newRowData.OUT_QTY = null;
+                                newRowData.ORDER_OUT_FINISH_DT = null;
+                                newRowData.INVOICE_NUM = null;
+                                newRowData.DELIVERY_DT = null;
                                 // newRowData.DWG_GFILE_SEQ = null; // 확인 필요
                                 // newRowData.DXF_GFILE_SEQ = null; // 확인 필요
                                 // newRowData.PDF_GFILE_SEQ = null; // 확인 필요
                                 // newRowData.IMG_GFILE_SEQ = null; // 확인 필요
                                 // newRowData.VIEW_GFILE_SEQ = null; // 확인 필요
-                                newRowData.ITEM_NM = null;
-                                newRowData.ORIGINAL_SIDE_QTY = null;
-                                newRowData.OTHER_SIDE_QTY = null;
-                                newRowData.UNIT_FINAL_EST_AMT = null;
-                                newRowData.UNIT_FINAL_AMT = null;
-                                newRowData.PREV_DRAWING_NUM = null;
-                                /*
-                                newRowData.ORDER_SEQ = null;
-                                newRowData.ORDER_NUM = null;
-                                newRowData.ORDER_QTY = null;
-                                newRowData.ORDER_DUE_DT = null;
-                                newRowData.OUT_QTY = null;
-                                newRowData.ORDER_OUT_FINISH_DT = null;
-                                newRowData.DELIVERY_DT = null;
-                                */
+
+                                for (let i = 0; i < groupedControlNum[newRowData.CONTROL_NUM].length; i++) {
+                                    if (groupedControlNum[newRowData.CONTROL_NUM][i].WORK_TYPE === newRowData.WORK_TYPE) {
+                                        assembleCount++;
+                                    }
+                                }
 
                                 $orderManagementGrid.pqGrid('addRow', {
                                     newRow: newRowData,
-                                    rowIndx: ui.rowIndx + 1,
+                                    rowIndx: ui.rowIndx + assembleCount,
                                     checkEditable: false
                                 });
-                                $orderManagementGrid.pqGrid('setSelection', {rowIndx: ui.rowIndx + 1});
-                                event.preventDefault();
+                                $orderManagementGrid.pqGrid('setSelection', {rowIndx: ui.rowIndx + assembleCount});
+
+                                autoMerge($orderManagementGrid.pqGrid('getInstance').grid, true);
+                                // event.preventDefault();
                             });
                         }
                     },
@@ -1809,7 +1802,7 @@
                         let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT === '' ? 0 : Number(data.UNIT_SURFACE_AMT); // 표면처리
                         let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT === '' ? 0 : Number(data.UNIT_PROCESS_AMT); // 가공비
                         let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT === '' ? 0 : Number(data.UNIT_ETC_AMT); // 기타추가
-                        let CONTROL_PART_QTY = data.CONTROL_PART_QTY == null || data.CONTROL_PART_QTY === '' ? 0 : Number(data.CONTROL_PART_QTY); //발주 수량
+                        const ORDER_QTY = data.ORDER_QTY == null || data.ORDER_QTY === '' ? 0 : Number(data.ORDER_QTY); //발주 수량
                         let calculateEstimateAmount = 0; // 견적금액(계산 견적단가)
                         calculateEstimateAmount += UNIT_MATERIAL_AMT;
                         calculateEstimateAmount += UNIT_TM_AMT;
@@ -1820,10 +1813,10 @@
                         calculateEstimateAmount += UNIT_ETC_AMT;
 
                         // let unitFinalEstimateAmount = ui.updateList[0].newRow.UNIT_FINAL_EST_AMT || calculateEstimateAmount; // 최종 견적단가
-                        // let estimatedTotalAmount = unitFinalEstimateAmount * CONTROL_PART_QTY; // 견적 합계 금액
+                        // let estimatedTotalAmount = unitFinalEstimateAmount * ORDER_QTY; // 견적 합계 금액
                         let unitFinalAmount = ui.updateList[0].newRow.UNIT_FINAL_AMT || 0; // 최종 공급단가
                         // let unitFinalAmount = ui.updateList[0].newRow.UNIT_FINAL_AMT || unitFinalEstimateAmount; // 최종 공급단가
-                        let finalAmount = unitFinalAmount * CONTROL_PART_QTY;// 합계 금액
+                        let finalAmount = unitFinalAmount * ORDER_QTY;// 합계 금액
 
                         if (ui.updateList[0].newRow.UNIT_FINAL_AMT) {
                             row = {
@@ -1853,7 +1846,6 @@
                                 };
                             }
                         }
-
 
                         $orderManagementGrid.pqGrid('updateRow', {
                             rowIndx: rowIndx,
@@ -2441,8 +2433,8 @@
                     return false;
                 }
 
-                if (!fnIsEmpty(rowData.ORIGINAL_SIDE_QTY) || !fnIsEmpty(rowData.OTHER_SIDE_QTY)) {
-                    if (!(Number(rowData.ORIGINAL_SIDE_QTY) === Number(rowData.OTHER_SIDE_QTY))) {
+                if (!fnIsEmpty(rowData.DNJSCLD) || !fnIsEmpty(rowData.EOCLD)) {
+                    if(Number(rowData.CONTROL_PART_QTY) !== (Number(rowData.DNJSCLD) + Number(rowData.EOCLD))) {
                         fnAlert(null, rowData.CONTROL_NUM + '<br>대칭 수량을 확인해주시기 바랍니다');
                         return false;
                     }

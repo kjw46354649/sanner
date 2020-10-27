@@ -1151,7 +1151,7 @@
             let drawingNum = rowData.DRAWING_NUM;
             if(rowData.DRAWING_VER === "Y") drawingNum += " <span> ( " + rowData.DRAWING_VER + ") </span>";
             $("#cam_work_history_pop_form").find("#DRAWING_NUM").html(drawingNum);
-            $("#cam_work_history_pop_form").find("#WORK_TYPE").html(rowData.MCT_WORK_TYPE_NM);
+            $("#cam_work_history_pop_form").find("#WORK_TYPE").html(rowData.WORK_TYPE_NM);
             let drawingFile = "";
             if(rowData.CAM_STATUS === "CWS020") drawingFile = "<a href='/downloadGfile/" + rowData.DXF_GFILE_SEQ + "' download><input type='button' class='smallBtn blue' value='다운로드'/></a>";
             $("#cam_work_history_pop_form").find("#DXF_DOWNLOAD").html(drawingFile);

@@ -242,7 +242,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 180},
+            {title: '관리번호', align: 'left', width: 150, dataIndx: 'CONTROL_NUM'},
             {
                 title: '', minWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {

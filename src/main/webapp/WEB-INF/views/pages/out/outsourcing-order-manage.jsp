@@ -540,13 +540,14 @@
                         let date = ui.cellData;
 
                         return date.substring(5);
-                    } else {
-                        if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
-                            let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
-                            visibleDate.setDate(visibleDate.getDate() - 1);
-                            return visibleDate.mmdd();
-                        }
                     }
+                    // else {
+                        // if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
+                        //     let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
+                        //     visibleDate.setDate(visibleDate.getDate() - 1);
+                        //     return visibleDate.mmdd();
+                        // }
+                    // }
                 }
             },
             {
@@ -937,13 +938,14 @@
                         let date = ui.cellData;
 
                         return date.substring(5);
-                    } else {
-                        if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
-                            let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
-                            visibleDate.setDate(visibleDate.getDate() - 1);
-                            return visibleDate.mmdd();
-                        }
                     }
+                    // else {
+                    //     if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
+                    //         let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
+                    //         visibleDate.setDate(visibleDate.getDate() - 1);
+                    //         return visibleDate.mmdd();
+                    //     }
+                    // }
                 }
             },
             {title: '비고', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
