@@ -165,6 +165,7 @@
                     }
                 }
             },
+            {title: '비고', align: 'left', width: 100, dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '긴<br>급', minWidth: 30, dataIndx: 'EMERGENCY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select',
@@ -228,6 +229,7 @@
                     }
                 }
             },
+            {title: '총<br>장', minWidth: 30, dataType: 'integer', dataIndx: 'TOTAL_SHEET', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '가공<br>납기', width: 70, dataIndx: 'INNER_DUE_DT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
@@ -248,6 +250,7 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
+            {title: '파<br>트', minWidth: 30, dataIndx: 'PART_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '수행<br>공장', dataIndx: 'WORK_FACTORY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
@@ -308,10 +311,30 @@
                     {
                         title: '발주납기', width: 70, dataIndx: 'ORDER_DUE_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                        editor: {type: 'textbox', init: dateEditor}
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            if (cellData === '' || cellData === undefined) {
+                                return '';
+                            } else {
+                                let materialFinishTm = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
+                                let index = materialFinishTm.findIndex(function (element) {
+                                    return element.text === cellData;
+                                });
+
+                                if (index < 0) {
+                                    index = materialFinishTm.findIndex(function (element) {
+                                        return element.value === cellData;
+                                    });
+                                }
+
+                                return (index < 0) ? cellData : materialFinishTm[index].text;
+                            }
+                        }
                     },
                     {
-                        title: '납품확인', width: 70, datatype: 'date', dataIndx: 'DELIVERY_DT',
+                        title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                         editor: {type: 'textbox', init: dateEditor}
                     },
@@ -387,6 +410,8 @@
                     }
                 }
             },
+            {title: '변경전 도면번호', align: 'left', width: 150, dataIndx: 'PREV_DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '규격', width: 110, dataIndx: 'SIZE_TXT',styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '소재<br>형태', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029')},
@@ -529,7 +554,7 @@
                         }
                     }
                 },
-                {
+                /*{
                     type: 'button', label: 'Save & 확정', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function () {
                             prevErrorList = errorList;
@@ -558,7 +583,7 @@
                             }, parameters, '');
                         }
                     }
-                },
+                },*/
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function () {
@@ -579,12 +604,26 @@
                             };
 
                             $(this).startWaitMe();
-                            fnPostAjax(function () {
+                            fnPostAjax(function (data) {
                                 $(this).stopWaitMe();
-                                fnAlert(null, '<spring:message code="com.alert.default.save.success"/>', function () {
-                                    window.close();
-                                    opener.$orderManagementGrid.pqGrid('refreshDataAndView');
-                                });
+                                if (fnIsEmpty(data.list)) {
+                                    fnAlert(null, '<spring:message code="com.alert.default.save.success"/>', function () {
+                                        window.close();
+                                        opener.$orderManagementGrid.pqGrid('refreshDataAndView');
+                                    });
+                                } else {
+                                    let controlNumStr = '';
+
+                                    for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                                        controlNumStr += data.list[i].CONTROL_NUM;
+
+                                        if (i < LENGTH - 1) {
+                                            controlNumStr += ', ';
+                                        }
+                                    }
+
+                                    fnAlert(null, controlNumStr + '<br>이미 등록된 주문입니다.');
+                                }
                             }, parameters, '');
                         }
                     }

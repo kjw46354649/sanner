@@ -453,16 +453,7 @@
             {
                 title: '소재<br>제공', minWidth: 30, width: 40, dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-                    // console.log(rowData.OUTSIDE_STATUS);
-                    // console.log(rowData.MATERIAL_SUPPLY_YN);
-                    // console.log(rowData.OUTSIDE_STATUS !== 'OST001');
-                    // console.log(rowData.MATERIAL_SUPPLY_YN !== 'Y');
-                    // console.log(rowData.OUTSIDE_STATUS !== 'OST001' || rowData.MATERIAL_SUPPLY_YN !== 'Y');
-                    // return rowData.OUTSIDE_STATUS !== 'OST001' || rowData.MATERIAL_SUPPLY_YN !== 'Y';
-                    return rowData.OUTSIDE_STATUS !== 'OST001';
-                },
+                editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -549,13 +540,14 @@
                         let date = ui.cellData;
 
                         return date.substring(5);
-                    } else {
-                        if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
-                            let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
-                            visibleDate.setDate(visibleDate.getDate() - 1);
-                            return visibleDate.mmdd();
-                        }
                     }
+                    // else {
+                        // if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
+                        //     let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
+                        //     visibleDate.setDate(visibleDate.getDate() - 1);
+                        //     return visibleDate.mmdd();
+                        // }
+                    // }
                 }
             },
             {
@@ -946,13 +938,14 @@
                         let date = ui.cellData;
 
                         return date.substring(5);
-                    } else {
-                        if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
-                            let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
-                            visibleDate.setDate(visibleDate.getDate() - 1);
-                            return visibleDate.mmdd();
-                        }
                     }
+                    // else {
+                    //     if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
+                    //         let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
+                    //         visibleDate.setDate(visibleDate.getDate() - 1);
+                    //         return visibleDate.mmdd();
+                    //     }
+                    // }
                 }
             },
             {title: '비고', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},

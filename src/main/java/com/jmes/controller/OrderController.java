@@ -7,10 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -23,10 +21,10 @@ public class OrderController {
      * @description 신규 주문 등록
      */
     @RequestMapping(value = "/createNewOrder", method = RequestMethod.POST)
-    public String createNewOrder(HttpServletRequest request) throws Exception {
+    public String createNewOrder(Model model, HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
 
-        this.orderService.createNewOrder(map);
+        this.orderService.createNewOrder(model, map);
 
         return "jsonView";
     }
