@@ -40,6 +40,8 @@
         const materialKindList = fnGetCommCodeGridSelectBox('1029');
         const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
         const materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
+        const materialFinishTmList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
+        const materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
         const BUSINESS_COMPANY = fnCommCodeDatasourceGridSelectBoxCreate({
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
@@ -90,7 +92,7 @@
                 }
             },
             {
-                title: '사업자<br>구분', width: 100, dataIndx: 'COMP_CD',  styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                title: '사업자<br>구분', width: 75, dataIndx: 'COMP_CD',  styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: BUSINESS_COMPANY},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -135,44 +137,9 @@
                     }
                 }
             },
+            {title: '비고', align: 'left', width: 100, dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
-                title: '구매<br>담당자', width: 70, dataIndx: 'ORDER_STAFF_SEQ', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-               editor: {
-                    type: 'select', valueIndx: 'value', labelIndx: 'text',
-                    options: function (ui) {
-                        return COMPANY_STAFF.filter(function (value) {
-                            return value.compCd === ui.rowData.ORDER_COMP_CD;
-                        });
-                    }
-                },
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    if (cellData === '' || cellData === undefined) {
-                        return '';
-                    } else {
-                        let index = COMPANY_STAFF.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = COMPANY_STAFF.findIndex(function (element) {
-                                return element.value === Number(cellData);
-                            });
-                        }
-
-                        return (index < 0) ? cellData : COMPANY_STAFF[index].text;
-                    }
-                }
-            },
-            {title: '설계자', width: 70, dataIndx: 'DESIGNER_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '비고', width: 200, dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '프로젝트', width: 200, dataIndx: 'PROJECT_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '모듈', width: 100, dataIndx: 'MODULE_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '납품처', width: 100, dataIndx: 'DELIVERY_COMP_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '비고(라벨)', width: 100, dataIndx: 'LABEL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {
-                title: '주요 검사품', width: 70, dataIndx: 'MAIN_INSPECTION', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                title: '주요<br>검사', width: 50, dataIndx: 'MAIN_INSPECTION', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1059')
@@ -199,7 +166,7 @@
                 }
             },
             {
-                title: '긴<br>급', dataIndx: 'EMERGENCY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                title: '긴<br>급', minWidth: 30, dataIndx: 'EMERGENCY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select',
                     valueIndx: 'value',
                     labelIndx: 'text',
@@ -211,22 +178,29 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '총장', dataType: 'integer', dataIndx: 'TOTAL_SHEET', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
-                title: '관리번호', width: 200, dataIndx: 'CONTROL_NUM',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+                title: '대칭', minWidth: 30, dataIndx: 'SAME_SIDE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                editor: {
+                    type: 'select',
+                    valueIndx: 'value',
+                    labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1042')
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    return cellData === 'Y' ? cellData : '';
+                }
             },
-            {title: '파<br>트', dataIndx: 'PART_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '총<br>장', minWidth: 30, dataType: 'integer', dataIndx: 'TOTAL_SHEET', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
-                title: '도면번호', width: 200, dataIndx: 'DRAWING_NUM',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+                title: '관리번호', align: 'left', width: 180, dataIndx: 'CONTROL_NUM',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'red'},
+                style: {'font-weight': 'bold', 'color': 'black'},
             },
+            {title: '파<br>트', minWidth: 30, dataIndx: 'PART_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
-                title: '품명', width: 200, dataIndx: 'ITEM_NM',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
-            },
-            {
-                title: '작업<br>형태', width: 70, dataIndx: 'WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                title: '작업<br>형태', dataIndx: 'WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -255,7 +229,13 @@
                 }
             },
             {
-                title: '외<br>주', dataIndx: 'OUTSIDE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                title: '가공<br>납기', width: 70, dataIndx: 'INNER_DUE_DT',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editor: {type: 'textbox', init: dateEditor}
+            },
+            {title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
+            {
+                title: '외<br>주', minWidth: 30, dataIndx: 'OUTSIDE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -265,22 +245,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
 
-                    if (cellData === '' || cellData === undefined) {
-                        return '';
-                    } else {
-                        let yesOrNo = fnGetCommCodeGridSelectBox('1042');
-                        let index = yesOrNo.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = yesOrNo.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : yesOrNo[index].text;
-                    }
+                    return cellData === 'Y' ? cellData : '';
                 }
             },
             {
@@ -327,16 +292,74 @@
                 }
             },
             {
-                title: '가공납기', width: 70, dataIndx: 'INNER_DUE_DT',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                editor: {type: 'textbox', init: dateEditor}
+                title: '발주정보', align: 'center',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                colModel: [
+                    {title: '', minWidth: 25, styleHead: {'background':'#a9d3f5'}},
+                    {title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {
+                        title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+                    },
+                    {title: '', minWidth: 25, styleHead: {'background':'#a9d3f5'}},
+                    {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY',styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
+                    {title: '원', dataType: 'integer', format: '#,###', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {title: '대', dataType: 'integer', format: '#,###', dataIndx: 'OTHER_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {
+                        title: '발주납기', width: 70, dataIndx: 'ORDER_DUE_DT',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        editor: {type: 'textbox', init: dateEditor}
+                    },
+                    {
+                        title: '납품확인', width: 70, datatype: 'date', dataIndx: 'DELIVERY_DT',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        editor: {type: 'textbox', init: dateEditor}
+                    },
+                    {title: '견적단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {title: '공급단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {title: '품명', align: 'left', width: 150, dataIndx: 'ITEM_NM', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
+                    {title: '프로젝트', align: 'left', width: 200, dataIndx: 'PROJECT_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {title: '모듈', align: 'left', width: 100, dataIndx: 'MODULE_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {title: '납품처', align: 'left', width: 100, dataIndx: 'DELIVERY_COMP_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {title: '비고(라벨)', align: 'left', width: 100, dataIndx: 'LABEL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {
+                        title: '구매담당', dataIndx: 'ORDER_STAFF_SEQ',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        editor: {
+                            type: 'select', valueIndx: 'value', labelIndx: 'text',
+                            options: function (ui) {
+                                return COMPANY_STAFF.filter(function (value) {
+                                    return value.compCd === ui.rowData.ORDER_COMP_CD;
+                                });
+                            }
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            if (cellData === '' || cellData === undefined) {
+                                return '';
+                            } else {
+                                let index = COMPANY_STAFF.findIndex(function (element) {
+                                    return element.text === cellData;
+                                });
+
+                                if (index < 0) {
+                                    index = COMPANY_STAFF.findIndex(function (element) {
+                                        return element.value === Number(cellData);
+                                    });
+                                }
+
+                                return (index < 0) ? cellData : COMPANY_STAFF[index].text;
+                            }
+                        }
+                    },
+                    {title: '설계자', dataIndx: 'DESIGNER_NM', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
+                ]
             },
+            {title: '변경전 도면번호', align: 'left', width: 150, dataIndx: 'PREV_DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '규격', width: 110, dataIndx: 'SIZE_TXT',styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
-                title: '규격', width: 100, dataIndx: 'SIZE_TXT',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
-            },
-            {
-                title: '소재<br>종류', width: 70, dataIndx: 'MATERIAL_DETAIL', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                title: '소재종류', width: 80, dataIndx: 'MATERIAL_DETAIL', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -365,7 +388,7 @@
                 }
             },
             {
-                title: '소재<br>형태', width: 100, dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                title: '소재<br>형태', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -390,7 +413,7 @@
                 }
             },
             {
-                title: '표면<br>처리', width: 100, dataIndx: 'SURFACE_TREAT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                title: '표면<br>처리', width: 80, dataIndx: 'SURFACE_TREAT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1039')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -437,39 +460,64 @@
                     }
                 }
             },
-            {title: '소재비고', width: 200, dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {title: '소재비고', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
-                title: 'Part<br>Unit', dataIndx: 'PART_UNIT_QTY',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
-            },
-            {
-                title: '대칭', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, colModel: [
-                    {title: '원칭', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-                    {title: '대칭', dataIndx: 'OTHER_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
-                ]
-            },
-            {
-                title: '발주정보', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
-                    {title: '발주번호', width: 200, dataIndx: 'ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                title: '소재마감', align: 'center',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                colModel: [
                     {
-                        title: '수량', dataIndx: 'ORDER_QTY',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+                        title: 'TM각비', width: 70, dataIndx: 'MATERIAL_FINISH_TM',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            if (cellData === '' || cellData === undefined) {
+                                return '';
+                            } else {
+                                let materialFinishTm = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
+                                let index = materialFinishTm.findIndex(function (element) {
+                                    return element.text === cellData;
+                                });
+
+                                if (index < 0) {
+                                    index = materialFinishTm.findIndex(function (element) {
+                                        return element.value === cellData;
+                                    });
+                                }
+
+                                return (index < 0) ? cellData : materialFinishTm[index].text;
+                            }
+                        }
                     },
                     {
-                        title: '납기', width: 70, dataIndx: 'ORDER_DUE_DT',
+                        title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                        editor: {type: 'textbox', init: dateEditor}
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            if (cellData === '' || cellData === undefined) {
+                                return '';
+                            } else {
+                                let materialFinishGrind = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
+                                let index = materialFinishGrind.findIndex(function (element) {
+                                    return element.text === cellData;
+                                });
+
+                                if (index < 0) {
+                                    index = materialFinishGrind.findIndex(function (element) {
+                                        return element.value === cellData;
+                                    });
+                                }
+
+                                return (index < 0) ? cellData : materialFinishGrind[index].text;
+                            }
+                        }
                     },
-                    {
-                        title: '납품확인', width: 70, datatype: 'date', dataIndx: 'DELIVERY_DT',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                        editor: {type: 'textbox', init: dateEditor}
-                    }
+
                 ]
             },
-            {title: '최종<br>견적단가', width: 100, dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '최종<br>공급단가', width: 100, dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '변경전<br>도면번호', width: 150, dataIndx: 'PREV_DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
         ];
         const popupToolbar = {
             cls: 'pq-toolbar-crud',
@@ -586,6 +634,8 @@
                         let materialKind = null;
                         let surfaceTreat = null;
                         let materialFinishHeat = null;
+                        let materialFinishTm = null;
+                        let materialFinishGrind = null;
 
                         // 단가확인
                         if (newRowData.PRICE_CONFIRM !== undefined) {
@@ -674,6 +724,22 @@
 
                             if (index >= 0) materialFinishHeat = materialFinishHeatList[index].value;
                         }
+                        // TM각비
+                        if (newRowData.MATERIAL_FINISH_TM !== undefined) {
+                            let index = materialFinishTmList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_TM;
+                            });
+
+                            if (index >= 0) materialFinishTm = materialFinishTmList[index].value;
+                        }
+                        // 연마
+                        if (newRowData.MATERIAL_FINISH_GRIND !== undefined) {
+                            let index = materialFinishGrindList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_GRIND;
+                            });
+
+                            if (index >= 0) materialFinishGrind = materialFinishGrindList[index].value;
+                        }
 
                         ui.addList[i].newRow.PRICE_CONFIRM = priceConfirm;
                         ui.addList[i].newRow.COMP_CD = compCd;
@@ -686,6 +752,8 @@
                         ui.addList[i].newRow.MATERIAL_KIND = materialKind;
                         ui.addList[i].newRow.SURFACE_TREAT = surfaceTreat;
                         ui.addList[i].newRow.MATERIAL_FINISH_HEAT = materialFinishHeat;
+                        ui.addList[i].newRow.MATERIAL_FINISH_TM = materialFinishTm;
+                        ui.addList[i].newRow.MATERIAL_FINISH_GRIND = materialFinishGrind;
                     }
 
                     for (let i = 0, updateLength = ui.updateList.length; i < updateLength; i++) {
@@ -703,6 +771,8 @@
                         let materialKind = null;
                         let surfaceTreat = null;
                         let materialFinishHeat = null;
+                        let materialFinishTm = null;
+                        let materialFinishGrind = null;
 
                         // 단가확인
                         if (newRowData.PRICE_CONFIRM !== undefined) {
@@ -824,6 +894,28 @@
                                 tempNewRow.MATERIAL_FINISH_HEAT = materialFinishHeat;
                             }
                         }
+                        // TM각비
+                        if (newRowData.MATERIAL_FINISH_TM !== undefined) {
+                            let index = materialFinishTmList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_TM;
+                            });
+
+                            if (index >= 0) {
+                                materialFinishTm = materialFinishTmList[index].value;
+                                tempNewRow.MATERIAL_FINISH_TM = materialFinishTm;
+                            }
+                        }
+                        // 연마
+                        if (newRowData.MATERIAL_FINISH_GRIND !== undefined) {
+                            let index = materialFinishGrindList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_GRIND;
+                            });
+
+                            if (index >= 0) {
+                                materialFinishGrind = materialFinishGrindList[index].value;
+                                tempNewRow.MATERIAL_FINISH_GRIND = materialFinishGrind;
+                            }
+                        }
 
                         let tempObject = {
                             rowIndx: rowIndx,
@@ -833,6 +925,23 @@
                     }
 
                     $orderRegisterGrid.pqGrid('updateRow', {rowList: rowListConvert});
+                }
+            },
+            beforePaste: function (evt, ui) {
+                let CM = this.getColModel(),
+                    rows = ui.rows,
+                    area = ui.areas[0],
+                    //r1 = area.r1,
+                    c1 = area.c1;
+                for (let i = 0; i < rows.length; i++) {
+                    let row = rows[i];
+                    for (let j = 0; j < row.length; j++) {
+                        let column = CM[j + c1],
+                            dt = column.dataType;
+                        if (dt == 'integer' || dt == 'float') {
+                            row[j] = row[j].replace(/[^(\d|\.)]/g, '');
+                        }
+                    }
                 }
             }
         };
@@ -979,6 +1088,22 @@
                 });
 
                 if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_HEAT');
+            }
+            // TM각비
+            if (rowData.MATERIAL_FINISH_TM !== undefined && rowData.MATERIAL_FINISH_TM !== null && rowData.MATERIAL_FINISH_TM !== '') {
+                let index = materialFinishTmList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_FINISH_TM;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_TM');
+            }
+            // 연마
+            if (rowData.MATERIAL_FINISH_GRIND !== undefined && rowData.MATERIAL_FINISH_GRIND !== null && rowData.MATERIAL_FINISH_GRIND !== '') {
+                let index = materialFinishGrindList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_FINISH_GRIND;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_GRIND');
             }
         };
 

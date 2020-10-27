@@ -64,7 +64,7 @@
         SELECT
             DATE_FORMAT(CURDATE(), '%Y년 %m월 %d일') AS DATE,
             SF_GET_COMP_NM(#{COMP_CD}) AS COMP_NM,
-            ifnull(IF(#{ORDER_STAFF_SEQ} = 'undefined', SF_GET_STAFF_NM(NULL), SF_GET_STAFF_NM(#{ORDER_STAFF_SEQ})), SPACE(0)) AS ORDER_STAFF_NM, <!-- TODO: 확인 -->
+            IFNULL(IF(#{ORDER_STAFF_SEQ} = 'undefined', SF_GET_STAFF_NM(NULL), SF_GET_STAFF_NM(#{ORDER_STAFF_SEQ})), SPACE(0)) AS ORDER_STAFF_NM,
             SUM(X.CONTROL_PART_QTY) AS CONTROL_PART_QTY,
             SUM(X.TOTAL) AS TOTAL
         FROM (
@@ -94,9 +94,9 @@
             A.CONTROL_NUM, <!-- 관리번호 -->
             DATE_FORMAT(STR_TO_DATE(B.OUTSIDE_HOPE_DUE_DT, '%Y%m%d'), '%m월%d일') AS OUTSIDE_HOPE_DUE_DT, <!-- 요망납기 -->
             B.DRAWING_NUM, <!-- 도면번호 -->
-            B.ITEM_NM, <!-- 품명 -->
+            C.ITEM_NM, <!-- 품명 -->
             B.SIZE_TXT, <!-- 규격 -->
-            IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL, <!-- 소재 종류 -->
+            IFNULL(SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL, <!-- 소재 종류 -->
             SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 발주량 -->
             B.OUTSIDE_UNIT_AMT, <!-- 단가 -->
             B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS SUM_AMT, <!-- 합계 -->
@@ -104,11 +104,12 @@
             B.IMG_GFILE_SEQ
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND B.OUTSIDE_YN = 'Y'
+                AND B.CONTROL_SEQ IN (${CONTROL_SEQ})
+                AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
-            AND B.OUTSIDE_YN = 'Y'
-            AND B.CONTROL_SEQ IN (${CONTROL_SEQ})
-            AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
             AND NOT EXISTS (SELECT *
                             FROM TBL_OUTSIDE_CLOSE
                             WHERE CONTROL_SEQ = B.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
@@ -128,32 +129,33 @@
             B.BUSINESS_TYPE, <!-- 업태 -->
             B.BUSINESS_ITEM, <!-- 종목 -->
             CONCAT(B.BUSINESS_TYPE, ' / ', B.BUSINESS_ITEM) AS BUSINESS_TYPE_BUSINESS_ITEM,
-            (SELECT SUM(B.UNIT_FINAL_AMT * C.ORDER_QTY)
-            FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
-                                               AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-            WHERE 1 = 1
-                AND A.CONTROL_SEQ IN (${CONTROL_SEQ_STR})
-                AND A.COMP_CD = #{COMP_CD}
-                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-                AND B.WORK_TYPE NOT IN ('WTP050')
-            GROUP BY D.INVOICE_NUM) AS TOTAL_AMT, <!-- 금액 합계 -->
+            (   SELECT SUM(C.UNIT_FINAL_AMT * C.ORDER_QTY)
+                FROM TBL_CONTROL A
+                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                                                       AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
+                                                   AND C.ORDER_SEQ = D.ORDER_SEQ
+                WHERE 1 = 1
+                    AND A.DEL_YN = 'N'
+                    AND IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050'
+                    AND A.CONTROL_SEQ IN (${CONTROL_SEQ_STR})
+                    AND A.COMP_CD = #{COMP_CD}
+                    AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                GROUP BY D.INVOICE_NUM) AS TOTAL_AMT, <!-- 금액 합계 -->
             A.INVOICE_NUM, <!-- INV No. -->
             A.INVOICE_TITLE,
             DATE_FORMAT(NOW(), '%Y-%m-%d') AS DATE
         FROM TBL_INVOICE A
             INNER JOIN TBL_COMPANY B ON A.COMP_CD = B.COMP_CD
-        WHERE INVOICE_NUM IN (SELECT INVOICE_NUM
-                             FROM TBL_INVOICE_DETAIL
-                             WHERE CONTROL_SEQ IN (${CONTROL_SEQ_STR}));
+        WHERE INVOICE_NUM IN (  SELECT INVOICE_NUM
+                                FROM TBL_INVOICE_DETAIL
+                                WHERE CONTROL_SEQ IN (${CONTROL_SEQ_STR}));
     </select>
 
     <select id="selectTransactionStatementListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-           E.ROWNUM,
+            E.ROWNUM,
             MAX(CONTROL_NUM) AS CONTROL_NUM,
             MAX(ORDER_NUM) AS ORDER_NUM,
             MAX(DRAWING_NUM) AS DRAWING_NUM,
@@ -165,42 +167,40 @@
             MAX(TOTAL_AMT) AS TOTAL_AMT,
             MAX(NOTE) AS NOTE
         FROM (
-           SELECT
-               ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_NUM) AS ROWNUM,
-               A.CONTROL_NUM,
-               C.ORDER_NUM,
-               B.DRAWING_NUM,
-               B.ITEM_NM,
-               CONCAT(B.DRAWING_NUM, '\n', B.ITEM_NM) AS DRAWING_NUM_ITEM_NM,
-               B.SIZE_TXT,
-               SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
-               B.UNIT_FINAL_AMT,
-               B.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
-               D.NOTE
-           FROM TBL_CONTROL A
-              INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-              LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-              INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-           WHERE 1 = 1
-               AND D.INVOICE_NUM = #{INVOICE_NUM}
-               AND B.WORK_TYPE != 'WTP050'
-           UNION ALL
-           SELECT
-               A.SEQ AS ROWNUM,
-               NULL AS CONTROL_NUM,
-               NULL AS ORDER_NUM,
-               NULL AS DRAWING_NUM,
-               NULL AS ITEM_NM,
-               NULL AS  DRAWING_NUM_ITEM_NM,
-               NULL AS SIZE_TXT,
-               NULL AS CONTROL_ORDER_QTY,
-               NULL AS UNIT_FINAL_AMT,
-               NULL AS  TOTAL_AMT,
-               NULL AS NOTE
-           FROM TBL_YYYYMMDD A
-           WHERE
-               1 = 1
-               AND A.SEQ <![CDATA[ <= ]]> 25
+            SELECT
+                ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_NUM) AS ROWNUM,
+                A.CONTROL_NUM,
+                C.ORDER_NUM,
+                B.DRAWING_NUM,
+                C.ITEM_NM,
+                CONCAT(B.DRAWING_NUM, '\n', C.ITEM_NM) AS DRAWING_NUM_ITEM_NM,
+                B.SIZE_TXT,
+                SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
+                C.UNIT_FINAL_AMT,
+                C.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS TOTAL_AMT,
+                D.NOTE
+            FROM TBL_CONTROL A
+                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050'
+                INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND C.ORDER_SEQ = D.ORDER_SEQ
+                    AND D.INVOICE_NUM = #{INVOICE_NUM}
+            WHERE A.DEL_YN = 'N'
+            UNION ALL
+            SELECT
+                A.SEQ AS ROWNUM,
+                NULL AS CONTROL_NUM,
+                NULL AS ORDER_NUM,
+                NULL AS DRAWING_NUM,
+                NULL AS ITEM_NM,
+                NULL AS  DRAWING_NUM_ITEM_NM,
+                NULL AS SIZE_TXT,
+                NULL AS CONTROL_ORDER_QTY,
+                NULL AS UNIT_FINAL_AMT,
+                NULL AS  TOTAL_AMT,
+                NULL AS NOTE
+            FROM TBL_YYYYMMDD A
+            WHERE A.SEQ <![CDATA[ <= ]]> 25
         ) E
         GROUP BY E.ROWNUM
     </select>
@@ -212,15 +212,15 @@
             CONCAT('(', B.DRAWING_NUM, ')') AS DRAWING_NUM, <!-- 도면번호 -->
             IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
             B.SIZE_TXT, <!-- 규격 -->
-            IFNULL(SF_GET_CODE_NM(1029, B.MATERIAL_KIND, 'KR'), SPACE(0)) AS MATERIAL_KIND_NM, <!-- 소재 형태 -->
+            IFNULL(SF_GET_CODE_NM('1029', B.MATERIAL_KIND, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_KIND_NM, <!-- 소재 형태 -->
             '', <!-- 소재 형태 -->
             SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
-            IFNULL(SF_GET_CODE_NM(1033, B.WORK_TYPE, 'KR'), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 이름 -->
-            IFNULL(SF_GET_CODE_NM(1027, B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류  -->
+            IFNULL(SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 이름 -->
+            IFNULL(SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류  -->
             '', <!-- 소재 종류 -->
-            IFNULL(SF_GET_CODE_NM(1039, B.SURFACE_TREAT, 'KR'), SPACE(0)) AS SURFACE_TREAT_NM, <!-- 표면처리 -->
+            IFNULL(SF_GET_CODE_NM('1039', B.SURFACE_TREAT, #{LOGIN_LOCALE}), SPACE(0)) AS SURFACE_TREAT_NM, <!-- 표면처리 -->
             '', <!-- 표면 처리 -->
-            IFNULL(SF_GET_CODE_NM(1058, B.MATERIAL_FINISH_GRIND, 'KR'), SPACE(0)) AS MATERIAL_FINISH_GRIND_NM, <!-- 연마 -->
+            IFNULL(SF_GET_CODE_NM('1058', B.MATERIAL_FINISH_GRIND, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_FINISH_GRIND_NM, <!-- 연마 -->
             '', <!-- 연마 -->
             B.UNIT_TM_AMT, <!-- TM 각비 -->
             B.UNIT_HEAT_AMT, <!-- 열 처리 -->
@@ -231,22 +231,29 @@
                 WHEN 0 THEN SPACE(0)
                 ELSE IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)
             END AS CALC_EST_UNIT_COST, <!-- 계산 견적가 -->
-            B.UNIT_FINAL_EST_AMT, <!-- 최종 견적가 -->
-            (SELECT BB.UNIT_FINAL_AMT
-            FROM TBL_CONTROL AA
-            INNER JOIN TBL_CONTROL_PART BB ON AA.CONTROL_SEQ = BB.CONTROL_SEQ
-            WHERE 1 = 1
-                AND AA.DEL_YN = 'N'
-                AND AA.OUT_FINISH_DT IS NOT NULL
-                AND A.ORDER_COMP_CD = AA.COMP_CD AND B.SIZE_TXT = BB.SIZE_TXT
-                AND AA.OUT_FINISH_DT = (SELECT MAX(Q.OUT_FINISH_DT)
-                                        FROM TBL_CONTROL Q, TBL_CONTROL_PART R
-                                        WHERE 1 = 1
-                                        AND Q.CONTROL_SEQ = R.CONTROL_SEQ
-                                        AND AA.COMP_CD = Q.COMP_CD AND AA.ORDER_COMP_CD = Q.ORDER_COMP_CD AND BB.SIZE_TXT = B.SIZE_TXT
-                                        )) AS PREVIOUS_PRICE <!-- 종전가 -->
+            C.UNIT_FINAL_EST_AMT, <!-- 최종 견적가 -->
+            IFNULL( CASE
+                        WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.UNIT_FINAL_AMT
+                                                                    FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
+                                                                    WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                                                        AND N.CONTROL_STATUS = 'ORD003'
+                                                                        AND N.DEL_YN = 'N'
+                                                                        AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
+                                                                    ORDER BY M.CONTROL_SEQ DESC
+                                                                    LIMIT 1)
+                        ELSE (  SELECT M.UNIT_FINAL_AMT
+                                FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
+                                WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                    AND N.CONTROL_STATUS = 'ORD003'
+                                    AND N.DEL_YN = 'N'
+                                    AND N.CONTROL_SEQ != B.CONTROL_SEQ
+                                    AND M.DRAWING_NUM = B.DRAWING_NUM
+                                ORDER BY M.CONTROL_SEQ DESC
+                                LIMIT 1)
+                    END, SPACE(0)) AS PREV_UNIT_FINAL_AMT,    <!-- 종전가 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
         WHERE A.CONTROL_SEQ IN (${CONTROL_SEQ})
         ORDER BY A.CONTROL_NUM, B.PART_NUM
     </select>

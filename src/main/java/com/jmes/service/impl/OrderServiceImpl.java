@@ -1,12 +1,8 @@
 package com.jmes.service.impl;
 
-import java.sql.SQLException;
-import java.util.UUID;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.innodale.dao.InnodaleDao;
-import com.framework.innodale.entity.ActionType;
 import com.framework.innodale.entity.MessageType;
 import com.framework.innodale.entity.NotificationMessage;
 import com.jmes.dao.OrderDao;
@@ -16,7 +12,10 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -229,12 +228,12 @@ public class OrderServiceImpl implements OrderService {
                 hashMap.put("INVOICE_NUM", invoiceNum);
                 hashMap.put("queryId", "orderMapper.createInvoiceDetail");
                 this.innodaleDao.create(hashMap);
-                hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt1");
-                this.innodaleDao.update(hashMap);
-                hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt2");
-                this.innodaleDao.update(hashMap);
-                hashMap.put("queryId", "inspection.insertControlPartOrderPackingCnt3");
-                this.innodaleDao.create(hashMap);
+//                hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt1");
+//                this.innodaleDao.update(hashMap);
+//                hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt2");
+//                this.innodaleDao.update(hashMap);
+//                hashMap.put("queryId", "inspection.insertControlPartOrderPackingCnt3");
+//                this.innodaleDao.create(hashMap);
             }
         }
 
@@ -250,7 +249,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void processConfirmBarcodeInfo(Model model, Map<String, Object> map) throws SQLException {
+    public void processConfirmBarcodeInfo(Model model, Map<String, Object> map) throws Exception {
         String barcodeNum = (String) map.get("BARCODE_NUM");
         String type = (String) map.get("TYPE");
         boolean flag = false;
