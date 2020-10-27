@@ -209,7 +209,7 @@
             {title: '진행상태', width: 80, dataIndx: 'PART_STATUS_NM'},
             {title: '수행<br>공장', dataIndx: 'WORK_FACTORY_NM'},
             {title: '가공완료<br>일시', width: 80, dataIndx: 'INNER_WORK_FINISH_DT'},
-            {title: '가공시간', dataIndx: 'WORK_TIME'},
+            {title: '소요<br>시간(분)', align: 'right', dataIndx: 'WORK_TIME'},
             {title: '외주<br>업체', width:75, dataIndx: 'OUTSIDE_COMP_NM'},
             {title: '외주<br>입고일시', width: 80, dataIndx: 'OUTSIDE_IN_DT'},
             {title: '출고일시', width: 80, dataIndx: 'OUT_FINISH_DT'},
