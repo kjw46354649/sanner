@@ -563,6 +563,7 @@
                     AND P.CONTROL_DETAIL_SEQ = Y.CONTROL_DETAIL_SEQ
 					AND P.CONTROL_SEQ = M.CONTROL_SEQ
                     AND P.INSPECT_RNUM = 1
+                    AND 1 = 1
             ) Z
     </select>
 
