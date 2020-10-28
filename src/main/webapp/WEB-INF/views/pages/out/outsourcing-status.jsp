@@ -65,7 +65,7 @@
                             <label for="RANGE_SEARCH"> Range 검색</label>
                         </span>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="OUTSIDE_CLOSE_STATUS_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="OUTSIDE_CLOSE_STATUS_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="TAB1_SEARCH">검색</button>
                         </span>
                     </li>
@@ -107,7 +107,7 @@
                         </span>
                         <span class="chk_box"><input type="checkbox" name="ORIGINAL_ORDER_AMOUNT" id="ORIGINAL_ORDER_AMOUNT"><label for="ORIGINAL_ORDER_AMOUNT">원 발주 금액</label></span>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="MONTH_OUTSIDE_STATUS_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="MONTH_OUTSIDE_STATUS_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="TAB2_SEARCH">검색</button>
                         </span>
                     </li>

@@ -114,7 +114,7 @@
                             </span>
                         </div>--%>
                          <span class="ipu_wrap right_float">
-                            <button type="button" id="inspection_history_export_btn"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="inspection_history_export_btn"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue ml-10" id="inspection_history_search_btn">검색</button>
                         </span>
                     </li>

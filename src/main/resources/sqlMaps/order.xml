@@ -167,7 +167,7 @@
             IFNULL(SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1), SPACE(0)) AS EOCLD,
             IFNULL((SELECT INVOICE_NUM FROM TBL_INVOICE_DETAIL M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.ORDER_SEQ =  C.ORDER_SEQ), SPACE(0)) AS INVOICE_NUM, <!-- 인보이스 번호 -->
 <!--             IFNULL(C.UNIT_FINAL_EST_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), SPACE(0)) AS EST_TOTAL_AMT, 견적 합계 금액 -->
-            IFNULL(C.UNIT_FINAL_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), SPACE(0)) AS FINAL_TOTAL_AMT, <!-- 합계 금액 -->
+            IFNULL(C.UNIT_FINAL_AMT * C.ORDER_QTY, SPACE(0)) AS FINAL_TOTAL_AMT, <!-- 합계 금액 -->
             IFNULL(B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), SPACE(0)) AS OUTSIDE_FINAL_AMT, <!-- 외주 합계 금액 --> <!-- 외주가 아닌 대상은 OUTSIDE_UNIT_AMT가 없다고 가정 -->
             (SELECT SUM(OUT_QTY) FROM TBL_OUT WHERE CONTROL_SEQ = C.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY, <!-- 출고 -->
             SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION_NM,  <!-- 현재 위치 -->
@@ -1980,13 +1980,19 @@
                 A.CONTROL_SEQ,
                 B.CONTROL_DETAIL_SEQ,
                 C.ORDER_SEQ,
+                SF_GET_CODE_NM('1038', A.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
                 A.CONTROL_NUM, <!-- 관리번호 -->
-                B.PART_NUM,
                 C.ORDER_NUM, <!-- 발주번호 -->
                 C.DRAWING_NUM, <!-- 도면번호 -->
+                B.SIZE_TXT, <!-- 규격 -->
                 IFNULL(SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
+                C.UNIT_FINAL_AMT, <!-- 최종공급단가 -->
                 SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
-                '' AS NOTE <!-- 비고 -->
+                SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
+                SF_GET_CONTROL_FINAL_AMT(A.CONTROL_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
+                C.PACKING_CNT, <!-- 포장수량 -->
+                '' AS NOTE, <!-- 비고 -->
+                B.IMG_GFILE_SEQ
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050' <!-- Part 부속은 제외(작업형태 파트) -->
@@ -2002,13 +2008,19 @@
                 A.CONTROL_SEQ,
                 B.CONTROL_DETAIL_SEQ,
                 C.ORDER_SEQ,
+                SF_GET_CODE_NM('1038', A.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
                 A.CONTROL_NUM, <!-- 관리번호 -->
-                B.PART_NUM,
                 C.ORDER_NUM, <!-- 발주번호 -->
                 C.DRAWING_NUM, <!-- 도면번호 -->
+                B.SIZE_TXT, <!-- 규격 -->
                 IFNULL(SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
+                C.UNIT_FINAL_AMT, <!-- 최종공급단가 -->
                 SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
-                D.NOTE
+                SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
+                SF_GET_CONTROL_FINAL_AMT(A.CONTROL_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
+                C.PACKING_CNT, <!-- 포장수량 -->
+                D.NOTE, <!-- 비고 -->
+                B.IMG_GFILE_SEQ
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050' <!-- Part 부속은 제외(작업형태 파트) -->
@@ -2019,7 +2031,7 @@
             WHERE 1 = 1
                 AND A.DEL_YN = 'N'
         ) X
-        ORDER BY X.CONTROL_NUM, X.PART_NUM, X.ORDER_NUM
+        ORDER BY X.CONTROL_NUM, X.ORDER_NUM
     </select>
 
     <insert id="createInvoice" parameterType="java.util.HashMap" >
@@ -2349,6 +2361,18 @@
         </foreach>
     </insert>
 
+    <select id="selectBeforeInsertDuplicationControlList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.CONTROL_NUM
+        FROM TBL_CONTROL_EXCEL X
+            INNER JOIN (SELECT A.CONTROL_NUM, C.ORDER_NUM, C.DRAWING_NUM
+                        FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C
+                        WHERE C.CONTROL_SEQ = A.CONTROL_SEQ
+                            AND B.CONTROL_SEQ = A.CONTROL_SEQ
+                            AND A.DEL_YN = 'N') Y ON Y.CONTROL_NUM = X.CONTROL_NUM AND Y.ORDER_NUM = X.ORDER_NUM AND Y.DRAWING_NUM = X.DRAWING_NUM
+        WHERE X.JOB_SEQ_KEY = #{IN_UID}
+        GROUP BY X.CONTROL_NUM
+    </select>
+
     <select id="businessOutgoingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER() OVER() AS ROW_NUM,
@@ -2383,7 +2407,7 @@
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
-        ORDER BY C.ORDER_DUE_DT, A.ORDER_COMP_CD
+        ORDER BY A.CONTROL_NUM, C.ORDER_NUM, C.DRAWING_NUM
     </select>
 
     <select id="businessMonthOutgoingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -2542,6 +2566,7 @@
 
     <select id="selectControlCadBarcodeListList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
+            B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
             (SELECT MAX(G.BARCODE_NUM) FROM TBL_CONTROL_BARCODE G WHERE B.CONTROL_SEQ = G.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ AND G.DEL_YN = 'N') AS BARCODE_NUM,
             IFNULL(A.CONTROL_VER, SPACE(0)) AS CONTROL_VER, <!-- 관리번호 버전 -->
             IFNULL(B.DRAWING_VER, SPACE(0)) AS DRAWING_VER, <!-- 도면번호 버전 -->
@@ -2568,7 +2593,8 @@
             jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
             jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
             IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'MM', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
-            (SELECT M.FILE_PATH FROM TBL_FILE M WHERE M.GFILE_SEQ = B.IMG_GFILE_SEQ) AS IMAGE_PATH
+            (SELECT M.FILE_PATH FROM TBL_FILE M WHERE M.GFILE_SEQ = B.IMG_GFILE_SEQ) AS IMAGE_PATH,
+            IFNULL((SELECT CASE WHEN COUNT(*) > 1 THEN 'Y' ELSE 'N' END FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ), 'N') AS MULTI_ORDER_YN
         FROM TBL_CONTROL A, TBL_CONTROL_PART B
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
@@ -2704,6 +2730,7 @@
             UNIT_ETC_AMT = #{UNIT_ETC_AMT},
             UNIT_AMT_NOTE = #{UNIT_AMT_NOTE},
             ETC_GFILE_SEQ = #{ETC_GFILE_SEQ},
+            OUTSIDE_HOPE_DUE_DT = CASE WHEN OUTSIDE_YN = 'Y' AND OUTSIDE_HOPE_DUE_DT IS NULL THEN DATE_FORMAT(DATE_SUB(INNER_DUE_DT, INTERVAL 1 DAY), '%Y%m%d') ELSE OUTSIDE_HOPE_DUE_DT END,
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE 1 = 1
@@ -2829,6 +2856,45 @@
 <!--                     AND B.INNER_DUE_DT > DATE_ADD(NOW(), INTERVAL -3 DAY) -->
             ) X
         ORDER BY X.ORDER_DUE_DT, <!-- CASE WHEN X.OUT_FINISH_DT IS NULL THEN 1 ELSE 2 END, --> X.CONTROL_PART_INFO
+    </select>
+
+    <select id="selectImgGfileSeq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            C.IMG_GFILE_SEQ
+        FROM
+            TBL_CONTROL A,
+            TBL_CONTROL_PART B,
+            TBL_CONTROL_PART_ORDER C
+        WHERE 1 = 1
+            AND C.CONTROL_SEQ = B.CONTROL_SEQ
+            AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            AND B.CONTROL_SEQ = A.CONTROL_SEQ
+            AND A.DEL_YN = 'N'
+            AND C.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND C.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </select>
+
+    <select id="selectControlDrawingInfoList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.FILE_PATH
+        FROM
+            (
+            SELECT A.GFILE_SEQ, B.FILE_PATH
+            FROM TBL_FILE_GROUP A
+                INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
+            WHERE A.GFILE_SEQ ) X,
+            (
+            SELECT
+                CASE WHEN B.PART_NUM IS NULL THEN C.DRAWING_NUM ELSE B.DRAWING_NUM END AS DRAWING_NUM,
+                CASE WHEN B.PART_NUM IS NULL THEN C.IMG_GFILE_SEQ ELSE B.IMG_GFILE_SEQ END AS IMG_GFILE_SEQ
+            FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
+                AND CONCAT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN
+                <foreach collection="selectControlLists" item="bean" index="index"  open="(" close=")" separator=",">
+                    #{bean}
+                </foreach>
+            LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            WHERE A.DEL_YN = 'N' ) Y
+        WHERE X.GFILE_SEQ = Y.IMG_GFILE_SEQ
     </select>
 
 </mapper>

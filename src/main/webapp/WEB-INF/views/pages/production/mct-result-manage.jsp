@@ -389,7 +389,7 @@
                         <span class="chk_box"><input id="SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox"><label for="SEL_OUTSIDE_YN">외주포함</label></span>
                         <span class="chk_box"><input id="SEL_COMPLETED_YN" name="SEL_COMPLETED_YN" type="checkbox" checked><label for="SEL_COMPLETED_YN">가공완료제외</label></span>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="MCT_RESULT_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="MCT_RESULT_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="mctCamManageSearchBtn">검색</button>
                         </span>
                     </li>
@@ -615,6 +615,7 @@
                 }
             },
             {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
+            {title: '도면번호', align: 'left', width: 150, dataIndx: 'CONCAT_DRAWING_NUM', hidden: true},
             {title: '규격', dataIndx: 'STANDARD_SIZE', minWidth: 40, width: 80},
             {title: '소재 Size', dataIndx: 'MATERAIL_ORDER_SIZE', minWidth: 40, width: 80},
             {title: '가공납기', dataIndx: 'INNER_DUE_DT', minWidth: 15, width: 60},
@@ -857,10 +858,10 @@
             let dueOutDt = rowData.INNER_DUE_DT;
             if(rowData.EMERGENCY_YN === "Y") dueOutDt += " <input type='button' class='smallBtn red' value='긴급'></input>";
             $("#cam_work_manage_pop_form").find("#DUE_OUT_DT").html(dueOutDt);
-            let drawingNum = rowData.DRAWING_NUM;
-            if(rowData.DRAWING_VER === "Y") drawingNum += " <span> ( " + rowData.DRAWING_VER + ") </span>";
-            $("#cam_work_manage_pop_form").find("#DRAWING_NUM").html(drawingNum);
-            $("#cam_work_manage_pop_form").find("#WORK_TYPE").html(rowData.MCT_WORK_TYPE_NM);
+            let concatDrawingNum = rowData.CONCAT_DRAWING_NUM;
+            if(rowData.DRAWING_VER === "Y") concatDrawingNum += " <span> ( " + rowData.DRAWING_VER + ") </span>";
+            $("#cam_work_manage_pop_form").find("#DRAWING_NUM").html(concatDrawingNum);
+            $("#cam_work_manage_pop_form").find("#WORK_TYPE").html(rowData.WORK_TYPE_NM);
             let drawingFile = "";
             if(rowData.CAM_STATUS === "CWS020") drawingFile = "<a href='/downloadGfile/" + rowData.DXF_GFILE_SEQ + "' download><input type='button' class='smallBtn blue' value='다운로드'/></a>";
             $("#cam_work_manage_pop_form").find("#DXF_DOWNLOAD").html(drawingFile);

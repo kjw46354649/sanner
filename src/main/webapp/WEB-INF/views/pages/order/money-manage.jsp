@@ -38,7 +38,7 @@
                             <select class="wd_150" name="MONEY_MANAGE_STATUS_YEAR" id="MONEY_MANAGE_STATUS_YEAR"></select>
                         </span>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="MONEY_MANAGE_STATUS_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="MONEY_MANAGE_STATUS_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="moneyManageStatusSearchBtn">검색</button>
                         </span>
                     </li>

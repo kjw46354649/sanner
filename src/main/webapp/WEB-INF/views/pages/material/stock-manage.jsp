@@ -105,7 +105,7 @@
                             <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_6" id="SEL_SIZE_SEARCH_TYPE_R_6">
                         </span>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="STOCK_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="STOCK_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="stock_manage_search_btn">검색</button>
                         </span>
                         <%--<span class="txt_span pd-right20">조회 Option</span>

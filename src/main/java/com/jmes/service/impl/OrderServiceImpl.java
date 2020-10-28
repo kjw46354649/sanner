@@ -12,10 +12,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -27,12 +24,13 @@ public class OrderServiceImpl implements OrderService {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
-    public void createNewOrder(Map<String, Object> map) throws Exception {
+    public void createNewOrder(Model model, Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Map<String, Object>> jsonMap = null;
         Map<String, Object> hashMap = new HashMap<String, Object>();
         String uuid = UUID.randomUUID().toString();
+        List<Map<String, Object>> duplicationList;
 
         if (jsonObject != null) {
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {});
@@ -43,8 +41,14 @@ public class OrderServiceImpl implements OrderService {
 
         hashMap.put("queryId", "orderMapper.createControlExcel");
         this.innodaleDao.create(hashMap);
-        hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
-        this.innodaleDao.create(hashMap);
+        hashMap.put("queryId", "orderMapper.selectBeforeInsertDuplicationControlList");
+        duplicationList = this.innodaleDao.getList(hashMap);
+        if (duplicationList.size() > 0) {
+            model.addAttribute("list", duplicationList);
+        } else {
+            hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
+            this.innodaleDao.create(hashMap);
+        }
     }
 
     @Override

@@ -69,7 +69,7 @@
                     WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                         AND A.CONTROL_SEQ = C.CONTROL_SEQ
                         AND A.DEL_YN = 'N'
-                        AND A.CONTROL_STATUS IN ('ORD001', 'ORD003') <!-- TODO: 컬럼 -->
+                        AND A.CONTROL_STATUS IN ('ORD001', 'ORD003')
                         AND (EXISTS (SELECT *
                                     FROM TBL_CONTROL_PART_PROGRESS
                                     WHERE 1 = 1
@@ -619,7 +619,7 @@
         <if test="SEL_PART_NUM_VIEW_YN == null">
             AND T.PART_NUM IS NULL    <!-- Part 단위표시가 체크가 안되어 있는 경우 -->
         </if>
-        ORDER BY T.ORDER_NUM
+        ORDER BY T.CONTROL_NUM, T.ORDER_NUM, T.DRAWING_NUM
     </select>
 
     <select id="selectOutgoingOutType1" parameterType="java.util.HashMap" resultType="java.util.HashMap">

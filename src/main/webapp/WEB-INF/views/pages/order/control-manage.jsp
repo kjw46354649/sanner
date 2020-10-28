@@ -21,7 +21,7 @@
                     <li>
                         <span class="ipu_wrap">
                             <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="label_200"name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                            <input type="text" class="label_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -41,7 +41,7 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="CONTROL_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="CONTROL_MANAGE_EXCEL_EXPORT"><img src="${pageContext.request.contextPath}/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="CONTROL_MANAGE_SEARCH">검색</button>
                         </span>
                     </li>
@@ -53,7 +53,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="ITEM_NM">품명</label>
-                            <input type="text" class="label_200"name="ITEM_NM" id="ITEM_NM" title="품명">
+                            <input type="text" class="label_200" name="ITEM_NM" id="ITEM_NM" title="품명">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -161,7 +161,7 @@
                 <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_INPUT_MODE">입력필드</button>
                 <button type="button" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_NORMAL_MODE">일반모드</button>
                 <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_CLOSE_MODE">마감모드</button>
-                <button type=" button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_ALL_MODE">전체모드</button>
+                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_ALL_MODE">전체모드</button>
                 <div class="rightSpan">
                     <span class="slt_wrap namePlusSlt">
                         <label for="SUPPLY_UNIT_COST_APPLY">공급단가적용</label>
@@ -561,8 +561,9 @@
 
                         let GfileKey = ui.rowData.ETC_GFILE_SEQ;
                         $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
-                        $('#ATTACHMENT_BUTTON').data('rowIndx', ui.rowIndx);
-                        $('#ATTACHMENT_BUTTON').data('GfileKey', GfileKey);
+                        const $attachmentButton = $('#ATTACHMENT_BUTTON');
+                        $attachmentButton.data('rowIndx', ui.rowIndx);
+                        $attachmentButton.data('GfileKey', GfileKey);
                         if (rowData.ETC_GFILE_SEQ) {
                             $("#common_file_download_form #deleteYn").val(true);
                         } else {
@@ -669,55 +670,48 @@
                             return {cls: cls, text: text};
                         },
                         postRender: function (ui) {
-                            let grid = this;
-                            let $cell = grid.getCell(ui);
+                            const grid = this;
+                            const $cell = grid.getCell(ui);
 
-                            $cell.find('[name=ORDER_NUM_PLUS_BUTTON]').on('click', function (event) {
+                            $cell.find('[name=ORDER_NUM_PLUS_BUTTON]').on('click', function () {
+                                const data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+                                const totalRecords = data.length;
+                                const groupedControlNum = fnGroupBy(data, 'CONTROL_NUM');
+                                let assembleCount = 0;
                                 let newRowData = fnCloneObj(ui.rowData);
-                                let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-                                let totalRecords = data.length;
                                 newRowData.ROW_NUM = totalRecords + 1;
                                 newRowData.ORDER_SEQ = null;
                                 newRowData.ORDER_NUM = null;
-                                newRowData.ORDER_QTY = null;
-                                newRowData.ORDER_DUE_DT = null;
-                                newRowData.DELIVERY_DT = null;
-                                // newRowData.OUT_FINISH_DT = null;
-                                newRowData.PROJECT_NM = null;
-                                newRowData.MODULE_NM = null;
-                                newRowData.DELIVERY_COMP_NM = null;
-                                newRowData.LABEL_NOTE = null;
-                                newRowData.ORDER_STAFF_SEQ = null;
-                                newRowData.DESIGNER_NM = null;
                                 newRowData.ORDER_DRAWING_NUM = null;
+                                newRowData.ORDER_QTY = null;
+                                newRowData.ORIGINAL_SIDE_QTY = null;
+                                newRowData.OTHER_SIDE_QTY = null;
+                                newRowData.ORDER_DUE_DT = null;
+                                newRowData.OUT_QTY = null;
+                                newRowData.ORDER_OUT_FINISH_DT = null;
+                                newRowData.INVOICE_NUM = null;
+                                newRowData.DELIVERY_DT = null;
                                 // newRowData.DWG_GFILE_SEQ = null; // 확인 필요
                                 // newRowData.DXF_GFILE_SEQ = null; // 확인 필요
                                 // newRowData.PDF_GFILE_SEQ = null; // 확인 필요
                                 // newRowData.IMG_GFILE_SEQ = null; // 확인 필요
                                 // newRowData.VIEW_GFILE_SEQ = null; // 확인 필요
-                                newRowData.ITEM_NM = null;
-                                newRowData.ORIGINAL_SIDE_QTY = null;
-                                newRowData.OTHER_SIDE_QTY = null;
-                                newRowData.UNIT_FINAL_EST_AMT = null;
-                                newRowData.UNIT_FINAL_AMT = null;
-                                newRowData.PREV_DRAWING_NUM = null;
-                                /*
-                                newRowData.ORDER_SEQ = null;
-                                newRowData.ORDER_NUM = null;
-                                newRowData.ORDER_QTY = null;
-                                newRowData.ORDER_DUE_DT = null;
-                                newRowData.OUT_QTY = null;
-                                newRowData.ORDER_OUT_FINISH_DT = null;
-                                newRowData.DELIVERY_DT = null;
-                                */
+
+                                for (let i = 0; i < groupedControlNum[newRowData.CONTROL_NUM].length; i++) {
+                                    if (groupedControlNum[newRowData.CONTROL_NUM][i].WORK_TYPE === newRowData.WORK_TYPE) {
+                                        assembleCount++;
+                                    }
+                                }
 
                                 $orderManagementGrid.pqGrid('addRow', {
                                     newRow: newRowData,
-                                    rowIndx: ui.rowIndx + 1,
+                                    rowIndx: ui.rowIndx + assembleCount,
                                     checkEditable: false
                                 });
-                                $orderManagementGrid.pqGrid('setSelection', {rowIndx: ui.rowIndx + 1});
-                                event.preventDefault();
+                                $orderManagementGrid.pqGrid('setSelection', {rowIndx: ui.rowIndx + assembleCount});
+
+                                autoMerge($orderManagementGrid.pqGrid('getInstance').grid, true);
+                                // event.preventDefault();
                             });
                         }
                     },
@@ -772,7 +766,6 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
                             let cls = null;
 
@@ -792,7 +785,6 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
                             let cls = null;
 
@@ -812,7 +804,6 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
                             let cls = null;
 
@@ -985,7 +976,7 @@
                         }
                     },
                     {
-                        title: '프로젝트', align: 'left', width: 200, align: 'left', dataIndx: 'PROJECT_NM', hidden: true,
+                        title: '프로젝트', align: 'left', width: 200, dataIndx: 'PROJECT_NM', hidden: true,
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1004,7 +995,7 @@
                         }
                     },
                     {
-                        title: '모듈', align: 'left', width: 70, align: 'left', dataIndx: 'MODULE_NM', hidden: true,
+                        title: '모듈', align: 'left', width: 70, dataIndx: 'MODULE_NM', hidden: true,
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1042,7 +1033,7 @@
                         }
                     },
                     {
-                        title: '비고(라벨)', align: 'left', width: 100, align: 'left', dataIndx: 'LABEL_NOTE', hidden: true,
+                        title: '비고(라벨)', align: 'left', width: 100, dataIndx: 'LABEL_NOTE', hidden: true,
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1312,9 +1303,8 @@
                     {
                         title: '@', dataIndx: 'RKFH',
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1326,9 +1316,8 @@
                     {
                         title: '가로', dataIndx: 'SIZE_W_M',
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1339,9 +1328,8 @@
                     },
                     {title: '세로', dataIndx: 'SIZE_H_M',
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1352,9 +1340,8 @@
                     },
                     {title: '높이', dataIndx: 'SIZE_T_M',
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1365,9 +1352,8 @@
                     {
                         title: '중량', dataIndx: 'SIZE_D_M',
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1379,9 +1365,8 @@
                     {
                         title: '부피', dataIndx: 'SIZE_L_M',
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1753,9 +1738,7 @@
                         frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
                     }
                 });
-                $('#controlManageFilterColumn').empty();
                 $('#controlManageFilterColumn').html(filterOpts);
-                $('#controlManageFrozen').empty();
                 $('#controlManageFrozen').html(frozenOts);
             },
             change: function (evt, ui) {
@@ -1809,7 +1792,7 @@
                         let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT === '' ? 0 : Number(data.UNIT_SURFACE_AMT); // 표면처리
                         let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT === '' ? 0 : Number(data.UNIT_PROCESS_AMT); // 가공비
                         let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT === '' ? 0 : Number(data.UNIT_ETC_AMT); // 기타추가
-                        let CONTROL_PART_QTY = data.CONTROL_PART_QTY == null || data.CONTROL_PART_QTY === '' ? 0 : Number(data.CONTROL_PART_QTY); //발주 수량
+                        const ORDER_QTY = data.ORDER_QTY == null || data.ORDER_QTY === '' ? 0 : Number(data.ORDER_QTY); //발주 수량
                         let calculateEstimateAmount = 0; // 견적금액(계산 견적단가)
                         calculateEstimateAmount += UNIT_MATERIAL_AMT;
                         calculateEstimateAmount += UNIT_TM_AMT;
@@ -1820,10 +1803,10 @@
                         calculateEstimateAmount += UNIT_ETC_AMT;
 
                         // let unitFinalEstimateAmount = ui.updateList[0].newRow.UNIT_FINAL_EST_AMT || calculateEstimateAmount; // 최종 견적단가
-                        // let estimatedTotalAmount = unitFinalEstimateAmount * CONTROL_PART_QTY; // 견적 합계 금액
+                        // let estimatedTotalAmount = unitFinalEstimateAmount * ORDER_QTY; // 견적 합계 금액
                         let unitFinalAmount = ui.updateList[0].newRow.UNIT_FINAL_AMT || 0; // 최종 공급단가
                         // let unitFinalAmount = ui.updateList[0].newRow.UNIT_FINAL_AMT || unitFinalEstimateAmount; // 최종 공급단가
-                        let finalAmount = unitFinalAmount * CONTROL_PART_QTY;// 합계 금액
+                        let finalAmount = unitFinalAmount * ORDER_QTY;// 합계 금액
 
                         if (ui.updateList[0].newRow.UNIT_FINAL_AMT) {
                             row = {
@@ -1854,7 +1837,6 @@
                             }
                         }
 
-
                         $orderManagementGrid.pqGrid('updateRow', {
                             rowIndx: rowIndx,
                             row: row,
@@ -1880,8 +1862,8 @@
                     for (let j = 0; j < row.length; j++) {
                         let column = CM[j + c1],
                             dt = column.dataType;
-                        if (dt == "integer" || dt == "float") {
-                            row[j] = row[j].replace(/[^(\d|\.)]/g, "");
+                        if (dt === 'integer' || dt === 'float') {
+                            row[j] = row[j].replace(/[^(\d|.)]/g, '');
                         }
                     }
                 }
@@ -2252,6 +2234,23 @@
             let addList = gridInstance.getChanges().addList;
             let updateList = gridInstance.getChanges().updateList;
         };
+
+        const changeColumnFilter = function () {
+            // 필터 옵션 변경
+            let filterOpts = '<option value=\"\">All Fields</option>';
+            let frozenOts = '<option value="0">Selected</option>';
+
+            $orderManagementGrid.pqGrid('getInstance').grid.getColModel().forEach(function (column) {
+                let hiddenYn = column.hidden === false || column.hidden === undefined;
+                if (hiddenYn && column.title) {
+                    filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
+                    frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
+                }
+            });
+
+            $('#controlManageFilterColumn').html(filterOpts);
+            $('#controlManageFrozen').html(frozenOts);
+        };
         /* function */
 
         /* event */
@@ -2441,8 +2440,8 @@
                     return false;
                 }
 
-                if (!fnIsEmpty(rowData.ORIGINAL_SIDE_QTY) || !fnIsEmpty(rowData.OTHER_SIDE_QTY)) {
-                    if (!(Number(rowData.ORIGINAL_SIDE_QTY) === Number(rowData.OTHER_SIDE_QTY))) {
+                if (!fnIsEmpty(rowData.DNJSCLD) || !fnIsEmpty(rowData.EOCLD)) {
+                    if(Number(rowData.CONTROL_PART_QTY) !== (Number(rowData.DNJSCLD) + Number(rowData.EOCLD))) {
                         fnAlert(null, rowData.CONTROL_NUM + '<br>대칭 수량을 확인해주시기 바랍니다');
                         return false;
                     }
@@ -2489,22 +2488,9 @@
         $('[name=CONTROL_MANAGE_VIEW]').on('click', function (event) {
             // column
             changeViewColumn(event.target.id);
-            // 필터 옵션 변경
-            let filterOpts = '<option value=\"\">All Fields</option>';
-            let frozenOts = '<option value="0">Selected</option>';
-
-            $orderManagementGrid.pqGrid('getInstance').grid.getColModel().forEach(function (column) {
-                let hiddenYn = column.hidden === false || column.hidden === undefined;
-                if (hiddenYn && column.title) {
-                    filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
-                    frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
-                }
-            });
-            $('#controlManageFilterColumn').empty();
-            $('#controlManageFilterColumn').html(filterOpts);
-            $('#controlManageFrozen').empty();
-            $('#controlManageFrozen').html(frozenOts);
-            //css 변경
+            // 필터 컬럼 변경
+            changeColumnFilter();
+            // css 변경
             $(this).removeClass('virtual-disable').siblings('[name=CONTROL_MANAGE_VIEW]').addClass('virtual-disable');
             $orderManagementGrid.pqGrid('refreshView');
         });
@@ -2614,33 +2600,41 @@
         // 바코드도면출력
         $('#CONTROL_MANAGE_BARCODE_DRAWING_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
-            let selectedRowCount = selectedOrderManagementRowIndex.length;
-            let selectControlPartCount = 0;
-            let selectControlPartInfo = '';
+            const gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+            const groupedControlSeq = fnGroupBy(gridData, 'CONTROL_SEQ');
+            let controlSeqList = []; // 선택 된 row 관리번호
             let selectControlList = '';
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                let curControlPartInfo = rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ;
-                if (!(rowData.CONTROL_STATUS === 'ORD001')) {
-                    fnAlert(null, '주문상태 확정 이후 출력 가능합니다');
-                    return false;
-                }
-                if (!rowData.IMG_GFILE_SEQ) {
-                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
-                    return;
-                // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
-                } else if(selectControlPartInfo !== curControlPartInfo){
-                    selectControlList += rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ + '^';
-                    selectControlPartCount++;
-                    selectControlPartInfo = curControlPartInfo;
+            let selectControlPartCount = 0;
+
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                const rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                controlSeqList[i] = rowData.CONTROL_SEQ;
+            }
+            // 중복제거
+            controlSeqList = [...new Set(controlSeqList)];
+            // 관리번호
+            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
+                // 발주 개수 + 파트 개수
+                for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH =  groupedControlSeq[controlSeqList[i]].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
+                    if (groupedControlSeq[controlSeqList[i]][j].CONTROL_STATUS !== 'ORD001') {
+                        fnAlert(null, '주문상태 확정 이후 출력 가능합니다');
+                        return false;
+                    }
+                    if (fnIsEmpty(groupedControlSeq[controlSeqList[i]][j].IMG_GFILE_SEQ)) {
+                        fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
+                        return;
+                    } else {
+                        selectControlList += String(groupedControlSeq[controlSeqList[i]][j].CONTROL_SEQ) + String(groupedControlSeq[controlSeqList[i]][j].CONTROL_DETAIL_SEQ) + '|';
+                        selectControlPartCount++;
+                    }
                 }
             }
 
-                let message = '<h4>' +
-                    '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-                    '               <span>' + selectControlPartCount + ' 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
-                    '       </h4>';
-
+            const message =
+                '<h4>' +
+                '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                '   <span>' + selectControlPartCount + ' 건의 바코드도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                '</h4>';
             fnConfirm(null, message, function () {
                 printJS({printable:'/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList), type:'pdf', showModal:true});
             });
@@ -2648,7 +2642,6 @@
         // 바코드 출력
         $('#CONTROL_MANAGE_BARCODE_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
-            let bodyHtml;
             let selectedRowCount = selectedOrderManagementRowIndex.length;
             let selectControlPartCount = 0;
             let selectControlPartInfo = '';
@@ -2743,25 +2736,40 @@
         });
         // 도면출력
         $('#CONTROL_MANAGE_DRAWING_PRINT').on('click', function () {
-            let selectedRowCount = selectedOrderManagementRowIndex.length;
-            let imgGfileSeq = '';
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                if (!rowData.IMG_GFILE_SEQ) {
-                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
-                    return;
-                } else {
-                    imgGfileSeq += rowData.IMG_GFILE_SEQ + '^';
+            if (noSelectedRowAlert()) return false;
+            const gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+            const groupedControlSeq = fnGroupBy(gridData, 'CONTROL_SEQ');
+            let controlSeqList = []; // 선택 된 row 관리번호
+            let selectControlList = '';
+            let count = 0;
+
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                const rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                controlSeqList[i] = rowData.CONTROL_SEQ;
+            }
+            // 중복제거
+            controlSeqList = [...new Set(controlSeqList)];
+            // 관리번호
+            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
+                // 발주 개수 + 파트 개수
+                for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH =  groupedControlSeq[controlSeqList[i]].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
+                    if (fnIsEmpty(groupedControlSeq[controlSeqList[i]][j].IMG_GFILE_SEQ)) {
+                        fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
+                        return;
+                    } else {
+                        selectControlList += String(groupedControlSeq[controlSeqList[i]][j].CONTROL_SEQ) + String(groupedControlSeq[controlSeqList[i]][j].CONTROL_DETAIL_SEQ) + '|';
+                        count++;
+                    }
                 }
             }
 
-            // let drawingPrintModalConfirm = function(callback){
-            let message = '<h4>' +
-                '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-                '               <span>' + selectedRowCount + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
-                '       </h4>';
+            const message =
+                '<h4>' +
+                '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                '   <span>' + count + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                '</h4>';
             fnConfirm(null, message, function () {
-                printJS({printable: '/makeCadPrint?imgGfileSeq=' + encodeURI(imgGfileSeq), type: 'pdf', showModal: true});
+                printJS({printable: '/makeCadPrint?selectControlList=' + encodeURI(selectControlList), type: 'pdf', showModal: true});
             });
         });
 
@@ -2797,10 +2805,12 @@
 
         /* init */
         // changeDate();
-        $('#CONTROL_MANAGE_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#CONTROL_MANAGE_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#CONTROL_MANAGE_START_DATE').datepicker('setDate', 'today');
-        $('#CONTROL_MANAGE_END_DATE').datepicker('setDate', 'today');
+        const $controlManageStartDate = $('#CONTROL_MANAGE_START_DATE');
+        const $controlManageEndDate = $('#CONTROL_MANAGE_END_DATE');
+        $controlManageStartDate.datepicker({dateFormat: 'yy/mm/dd'});
+        $controlManageEndDate.datepicker({dateFormat: 'yy/mm/dd'});
+        $controlManageStartDate.datepicker('setDate', 'today');
+        $controlManageEndDate.datepicker('setDate', 'today');
         // 발주사
         (function () {
             let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getOrderCompanyList'}};
@@ -2957,14 +2967,17 @@
         });
 
         $('#CONTROL_SEARCH_CONDITION').on('change', function () {
-            $(this).val() === '' ? $('[id^=CONTROL_MANAGE][id$=DATE]').prop('disabled', true) : $('[id^=CONTROL_MANAGE][id$=DATE]').prop('disabled', false);
+            const $controlManageDates = $('[id^=CONTROL_MANAGE][id$=DATE]');
+
+            $(this).val() === '' ? $controlManageDates.prop('disabled', true) : $controlManageDates.prop('disabled', false);
         });
 
         $('#ATTACHMENT_BUTTON').on('click', function () {
+            let $attachmentButton = $('#ATTACHMENT_BUTTON');
             let GfileKey = $('#common_file_download_form').find('#GFILE_SEQ').val();
-            let rowIndx = $('#ATTACHMENT_BUTTON').data('rowIndx');
+            let rowIndx = $attachmentButton.data('rowIndx');
 
-            if (GfileKey !== '' && GfileKey !== $('#ATTACHMENT_BUTTON').data('GfileKey')) {
+            if (GfileKey !== '' && GfileKey !== $attachmentButton.data('GfileKey')) {
                 $orderManagementGrid.pqGrid('updateRow', {rowIndx: rowIndx, row: {'ETC_GFILE_SEQ': GfileKey}, checkEditable: false});
                 $('#CONTROL_MANAGE_SAVE').click();
             }
@@ -2975,10 +2988,11 @@
         });
 
         function amountSummaryHtml() {
-            $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_html').html("공급 금액 합계 : 0");
-            $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_area').removeClass("controlAmountSummaryActive");
-            $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_area').addClass("controlAmountSummaryUnActive");
-            let amountSummaryChk = $('#CONTROL_MANAGE_SEARCH_FORM').find('#AMOUNT_SUMMARY').is(":checked");
+            const $controlManageSearchForm = $('#CONTROL_MANAGE_SEARCH_FORM');
+            $controlManageSearchForm.find('#amount_summary_html').html("공급 금액 합계 : 0");
+            $controlManageSearchForm.find('#amount_summary_area').removeClass("controlAmountSummaryActive");
+            $controlManageSearchForm.find('#amount_summary_area').addClass("controlAmountSummaryUnActive");
+            let amountSummaryChk = $controlManageSearchForm.find('#AMOUNT_SUMMARY').is(":checked");
             if (amountSummaryChk) {
                 let totalAmount = 0;
                 let gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
@@ -2988,8 +3002,8 @@
                     }
                 });
                 let totalAmountCurrency = pq.formatNumber(totalAmount, "#,###,###");
-                $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_area').addClass("controlAmountSummaryActive");
-                $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_html').html("공급 금액 합계 : " + totalAmountCurrency);
+                $controlManageSearchForm.find('#amount_summary_area').addClass("controlAmountSummaryActive");
+                $controlManageSearchForm.find('#amount_summary_html').html("공급 금액 합계 : " + totalAmountCurrency);
             }
         }
 
