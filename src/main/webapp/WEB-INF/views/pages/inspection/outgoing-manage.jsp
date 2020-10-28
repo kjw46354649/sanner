@@ -75,7 +75,7 @@
                             </select>
                         </span>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="OUTGOING_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="OUTGOING_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="outgoing_manage_search_btn">검색</button>
                         </span>
                     </li>

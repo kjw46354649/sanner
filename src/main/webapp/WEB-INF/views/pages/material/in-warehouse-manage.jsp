@@ -183,7 +183,7 @@
                                 </select>
                             </span>
                             <span class="ipu_wrap right_float">
-<%--                                <button type="button" id="IN_WAREHOUSE_MANAGE_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>--%>
+<%--                                <button type="button" id="IN_WAREHOUSE_MANAGE_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>--%>
                                 <button type="button" class="defaultBtn radius blue" id="btnInWarehouseManageManageSearch">검색</button>
                             </span>
                         </li>
@@ -244,7 +244,7 @@
                                 </select>
                             </span>
                             <span class="ipu_wrap right_float">
-                                <button type="button" id="IN_WAREHOUSE_MANAGE_OUT_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                                <button type="button" id="IN_WAREHOUSE_MANAGE_OUT_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                                 <button type="button" class="defaultBtn radius blue" id="btnInWarehouseManageOutSearch">검색</button>
                             </span>
                         </li>

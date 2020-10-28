@@ -422,7 +422,7 @@
                             <%--<span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
                         </div>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="CAM_WORK_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="CAM_WORK_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="CAM_WORK_HISTORY_SEARCH">검색</button>
                         </span>
                     </li>
@@ -514,7 +514,7 @@
 <%--                            <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
                         </div>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="NC_PERFORMANCE_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="NC_PERFORMANCE_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="NC_PERFORMANCE_HISTORY_SEARCH">검색</button>
                         </span>
                     </li>

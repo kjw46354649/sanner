@@ -155,7 +155,7 @@
                             <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="IN_YN" value="MST004,MST005"><label for="IN_YN"> 입고완료</label></span>
                         </span>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="ITEM_ORDER_REGISTER_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="ITEM_ORDER_REGISTER_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="btnItemOrderRegisterSearch">검색</button>
                         </span>
                     </li>
