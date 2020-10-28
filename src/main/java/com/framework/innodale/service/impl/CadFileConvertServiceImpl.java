@@ -74,7 +74,6 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
                             hashMap.put("queryId", queryCommonId + "_order");
                             this.innodaleDao.insertGrid(hashMap);
 
-                            currentControlNum = (String) hashMap.get("CONTROL_NUM");
                             if (!beforeControlNum.equals(currentControlNum)) {
 
                                 hashMap.put("queryId", queryCommonId + "_revDelete");     // 데이터 저장 파일 등록
