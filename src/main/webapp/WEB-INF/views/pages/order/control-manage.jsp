@@ -21,7 +21,7 @@
                     <li>
                         <span class="ipu_wrap">
                             <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="label_200"name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                            <input type="text" class="label_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -53,7 +53,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="ITEM_NM">품명</label>
-                            <input type="text" class="label_200"name="ITEM_NM" id="ITEM_NM" title="품명">
+                            <input type="text" class="label_200" name="ITEM_NM" id="ITEM_NM" title="품명">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -161,7 +161,7 @@
                 <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_INPUT_MODE">입력필드</button>
                 <button type="button" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_NORMAL_MODE">일반모드</button>
                 <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_CLOSE_MODE">마감모드</button>
-                <button type=" button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_ALL_MODE">전체모드</button>
+                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_ALL_MODE">전체모드</button>
                 <div class="rightSpan">
                     <span class="slt_wrap namePlusSlt">
                         <label for="SUPPLY_UNIT_COST_APPLY">공급단가적용</label>
@@ -561,8 +561,9 @@
 
                         let GfileKey = ui.rowData.ETC_GFILE_SEQ;
                         $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
-                        $('#ATTACHMENT_BUTTON').data('rowIndx', ui.rowIndx);
-                        $('#ATTACHMENT_BUTTON').data('GfileKey', GfileKey);
+                        const $attachmentButton = $('#ATTACHMENT_BUTTON');
+                        $attachmentButton.data('rowIndx', ui.rowIndx);
+                        $attachmentButton.data('GfileKey', GfileKey);
                         if (rowData.ETC_GFILE_SEQ) {
                             $("#common_file_download_form #deleteYn").val(true);
                         } else {
@@ -672,7 +673,7 @@
                             const grid = this;
                             const $cell = grid.getCell(ui);
 
-                            $cell.find('[name=ORDER_NUM_PLUS_BUTTON]').on('click', function (event) {
+                            $cell.find('[name=ORDER_NUM_PLUS_BUTTON]').on('click', function () {
                                 const data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
                                 const totalRecords = data.length;
                                 const groupedControlNum = fnGroupBy(data, 'CONTROL_NUM');
@@ -765,7 +766,6 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
                             let cls = null;
 
@@ -785,7 +785,6 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
                             let cls = null;
 
@@ -805,7 +804,6 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
                             let cls = null;
 
@@ -978,7 +976,7 @@
                         }
                     },
                     {
-                        title: '프로젝트', align: 'left', width: 200, align: 'left', dataIndx: 'PROJECT_NM', hidden: true,
+                        title: '프로젝트', align: 'left', width: 200, dataIndx: 'PROJECT_NM', hidden: true,
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -997,7 +995,7 @@
                         }
                     },
                     {
-                        title: '모듈', align: 'left', width: 70, align: 'left', dataIndx: 'MODULE_NM', hidden: true,
+                        title: '모듈', align: 'left', width: 70, dataIndx: 'MODULE_NM', hidden: true,
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1035,7 +1033,7 @@
                         }
                     },
                     {
-                        title: '비고(라벨)', align: 'left', width: 100, align: 'left', dataIndx: 'LABEL_NOTE', hidden: true,
+                        title: '비고(라벨)', align: 'left', width: 100, dataIndx: 'LABEL_NOTE', hidden: true,
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1305,9 +1303,8 @@
                     {
                         title: '@', dataIndx: 'RKFH',
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1319,9 +1316,8 @@
                     {
                         title: '가로', dataIndx: 'SIZE_W_M',
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1332,9 +1328,8 @@
                     },
                     {title: '세로', dataIndx: 'SIZE_H_M',
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1345,9 +1340,8 @@
                     },
                     {title: '높이', dataIndx: 'SIZE_T_M',
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1358,9 +1352,8 @@
                     {
                         title: '중량', dataIndx: 'SIZE_D_M',
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1372,9 +1365,8 @@
                     {
                         title: '부피', dataIndx: 'SIZE_L_M',
                         render: function (ui) {
-                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
-                            let cls = null, text = cellData;
+                            let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                                 cls = 'bg-lightgray';
@@ -1746,9 +1738,7 @@
                         frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
                     }
                 });
-                $('#controlManageFilterColumn').empty();
                 $('#controlManageFilterColumn').html(filterOpts);
-                $('#controlManageFrozen').empty();
                 $('#controlManageFrozen').html(frozenOts);
             },
             change: function (evt, ui) {
@@ -1872,8 +1862,8 @@
                     for (let j = 0; j < row.length; j++) {
                         let column = CM[j + c1],
                             dt = column.dataType;
-                        if (dt == "integer" || dt == "float") {
-                            row[j] = row[j].replace(/[^(\d|\.)]/g, "");
+                        if (dt === 'integer' || dt === 'float') {
+                            row[j] = row[j].replace(/[^(\d|.)]/g, '');
                         }
                     }
                 }
@@ -2244,6 +2234,23 @@
             let addList = gridInstance.getChanges().addList;
             let updateList = gridInstance.getChanges().updateList;
         };
+
+        const changeColumnFilter = function () {
+            // 필터 옵션 변경
+            let filterOpts = '<option value=\"\">All Fields</option>';
+            let frozenOts = '<option value="0">Selected</option>';
+
+            $orderManagementGrid.pqGrid('getInstance').grid.getColModel().forEach(function (column) {
+                let hiddenYn = column.hidden === false || column.hidden === undefined;
+                if (hiddenYn && column.title) {
+                    filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
+                    frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
+                }
+            });
+
+            $('#controlManageFilterColumn').html(filterOpts);
+            $('#controlManageFrozen').html(frozenOts);
+        };
         /* function */
 
         /* event */
@@ -2481,22 +2488,9 @@
         $('[name=CONTROL_MANAGE_VIEW]').on('click', function (event) {
             // column
             changeViewColumn(event.target.id);
-            // 필터 옵션 변경
-            let filterOpts = '<option value=\"\">All Fields</option>';
-            let frozenOts = '<option value="0">Selected</option>';
-
-            $orderManagementGrid.pqGrid('getInstance').grid.getColModel().forEach(function (column) {
-                let hiddenYn = column.hidden === false || column.hidden === undefined;
-                if (hiddenYn && column.title) {
-                    filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
-                    frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
-                }
-            });
-            $('#controlManageFilterColumn').empty();
-            $('#controlManageFilterColumn').html(filterOpts);
-            $('#controlManageFrozen').empty();
-            $('#controlManageFrozen').html(frozenOts);
-            //css 변경
+            // 필터 컬럼 변경
+            changeColumnFilter();
+            // css 변경
             $(this).removeClass('virtual-disable').siblings('[name=CONTROL_MANAGE_VIEW]').addClass('virtual-disable');
             $orderManagementGrid.pqGrid('refreshView');
         });
@@ -2789,10 +2783,12 @@
 
         /* init */
         // changeDate();
-        $('#CONTROL_MANAGE_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#CONTROL_MANAGE_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#CONTROL_MANAGE_START_DATE').datepicker('setDate', 'today');
-        $('#CONTROL_MANAGE_END_DATE').datepicker('setDate', 'today');
+        const $controlManageStartDate = $('#CONTROL_MANAGE_START_DATE');
+        const $controlManageEndDate = $('#CONTROL_MANAGE_END_DATE');
+        $controlManageStartDate.datepicker({dateFormat: 'yy/mm/dd'});
+        $controlManageEndDate.datepicker({dateFormat: 'yy/mm/dd'});
+        $controlManageStartDate.datepicker('setDate', 'today');
+        $controlManageEndDate.datepicker('setDate', 'today');
         // 발주사
         (function () {
             let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getOrderCompanyList'}};
@@ -2949,14 +2945,17 @@
         });
 
         $('#CONTROL_SEARCH_CONDITION').on('change', function () {
-            $(this).val() === '' ? $('[id^=CONTROL_MANAGE][id$=DATE]').prop('disabled', true) : $('[id^=CONTROL_MANAGE][id$=DATE]').prop('disabled', false);
+            const $controlManageDates = $('[id^=CONTROL_MANAGE][id$=DATE]');
+
+            $(this).val() === '' ? $controlManageDates.prop('disabled', true) : $controlManageDates.prop('disabled', false);
         });
 
         $('#ATTACHMENT_BUTTON').on('click', function () {
+            let $attachmentButton = $('#ATTACHMENT_BUTTON');
             let GfileKey = $('#common_file_download_form').find('#GFILE_SEQ').val();
-            let rowIndx = $('#ATTACHMENT_BUTTON').data('rowIndx');
+            let rowIndx = $attachmentButton.data('rowIndx');
 
-            if (GfileKey !== '' && GfileKey !== $('#ATTACHMENT_BUTTON').data('GfileKey')) {
+            if (GfileKey !== '' && GfileKey !== $attachmentButton.data('GfileKey')) {
                 $orderManagementGrid.pqGrid('updateRow', {rowIndx: rowIndx, row: {'ETC_GFILE_SEQ': GfileKey}, checkEditable: false});
                 $('#CONTROL_MANAGE_SAVE').click();
             }
@@ -2967,10 +2966,11 @@
         });
 
         function amountSummaryHtml() {
-            $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_html').html("공급 금액 합계 : 0");
-            $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_area').removeClass("controlAmountSummaryActive");
-            $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_area').addClass("controlAmountSummaryUnActive");
-            let amountSummaryChk = $('#CONTROL_MANAGE_SEARCH_FORM').find('#AMOUNT_SUMMARY').is(":checked");
+            const $controlManageSearchForm = $('#CONTROL_MANAGE_SEARCH_FORM');
+            $controlManageSearchForm.find('#amount_summary_html').html("공급 금액 합계 : 0");
+            $controlManageSearchForm.find('#amount_summary_area').removeClass("controlAmountSummaryActive");
+            $controlManageSearchForm.find('#amount_summary_area').addClass("controlAmountSummaryUnActive");
+            let amountSummaryChk = $controlManageSearchForm.find('#AMOUNT_SUMMARY').is(":checked");
             if (amountSummaryChk) {
                 let totalAmount = 0;
                 let gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
@@ -2980,8 +2980,8 @@
                     }
                 });
                 let totalAmountCurrency = pq.formatNumber(totalAmount, "#,###,###");
-                $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_area').addClass("controlAmountSummaryActive");
-                $('#CONTROL_MANAGE_SEARCH_FORM').find('#amount_summary_html').html("공급 금액 합계 : " + totalAmountCurrency);
+                $controlManageSearchForm.find('#amount_summary_area').addClass("controlAmountSummaryActive");
+                $controlManageSearchForm.find('#amount_summary_html').html("공급 금액 합계 : " + totalAmountCurrency);
             }
         }
 
