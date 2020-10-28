@@ -132,13 +132,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 
         if(itr.hasNext()) {
 
-            String paramQueryId = (String) hashMap.get("queryId");
             List<MultipartFile> fileList = request.getFiles(itr.next());
-
-            HashMap<String, Object> dxfGfileKeyHashMap = new HashMap();
-            HashMap<String, Object> pdfGfileKeyHashMap = new HashMap();
-            HashMap<String, Object> pngGfileKeyHashMap = new HashMap();
-            ArrayList<String> mappingNumList = new ArrayList();
 
             /**
              * PDF 파일을 Image 파일로 변환하고 먼저 저장하여 정보를 가지고 있는다.
@@ -189,8 +183,6 @@ public class FileUploadServiceImpl implements FileUploadService {
                         hashMap.put("GFILE_SEQ", fileInfo.get("PDF_GFILE_SEQ"));
                         hashMap.put("PDF_GFILE_SEQ", fileInfo.get("PDF_GFILE_SEQ"));
 
-                        pdfGfileKeyHashMap.put(mappingDrawingNum, fileInfo.get("PDF_GFILE_SEQ"));
-
                         // 이미지 처리
                         String targetImageFullpath = uploadFilePath + File.separator + serverFullFileName + ".png";
                         int convertResult = MakePDFImageConvert(targetFilePath, targetImageFullpath);
@@ -212,8 +204,6 @@ public class FileUploadServiceImpl implements FileUploadService {
                             managerFileInformationInsert(imageFileInfo);
                             // 확장자에 따른 컬럼 정의
                             settingFileInfoColumn(imageFileInfo, ImageFile.length(), "png");
-                            // 각 파일의 GKEY 값을 셋팅한다.
-                            pngGfileKeyHashMap.put(mappingDrawingNum, imageFileInfo.get("IMG_GFILE_SEQ"));
 
                             fileInfo.put("SUCCESS", "Y");
                             fileInfo.put("MESSAGE", "");
@@ -267,6 +257,15 @@ public class FileUploadServiceImpl implements FileUploadService {
                 // 업로드 도면 기준 프로시저 적용 대상 작업 처리
                 hashMap.put("queryId", "drawingUploadMapper.insertDrawingUpload");
                 innodaleDao.create(hashMap);
+
+                hashMap.remove("SUCCESS");
+                hashMap.remove("MAPPING_STR");
+                hashMap.remove("MESSAGE");
+                hashMap.remove("GFILE_SEQ");
+                hashMap.remove("DXF_GFILE_SEQ");
+                hashMap.remove("PDF_GFILE_SEQ");
+                hashMap.remove("IMG_GFILE_SEQ");
+
             }
 
             // 도면 대상 업로드 리스트 및 적둉 대상 작업 리스트 조회
