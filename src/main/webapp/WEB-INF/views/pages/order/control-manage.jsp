@@ -2600,33 +2600,41 @@
         // 바코드도면출력
         $('#CONTROL_MANAGE_BARCODE_DRAWING_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
-            let selectedRowCount = selectedOrderManagementRowIndex.length;
-            let selectControlPartCount = 0;
-            let selectControlPartInfo = '';
+            const gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+            const groupedControlSeq = fnGroupBy(gridData, 'CONTROL_SEQ');
+            let controlSeqList = []; // 선택 된 row 관리번호
             let selectControlList = '';
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                let curControlPartInfo = rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ;
-                if (!(rowData.CONTROL_STATUS === 'ORD001')) {
-                    fnAlert(null, '주문상태 확정 이후 출력 가능합니다');
-                    return false;
-                }
-                if (!rowData.IMG_GFILE_SEQ) {
-                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
-                    return;
-                // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
-                } else if(selectControlPartInfo !== curControlPartInfo){
-                    selectControlList += rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ + '^';
-                    selectControlPartCount++;
-                    selectControlPartInfo = curControlPartInfo;
+            let selectControlPartCount = 0;
+
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                const rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                controlSeqList[i] = rowData.CONTROL_SEQ;
+            }
+            // 중복제거
+            controlSeqList = [...new Set(controlSeqList)];
+            // 관리번호
+            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
+                // 발주 개수 + 파트 개수
+                for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH =  groupedControlSeq[controlSeqList[i]].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
+                    if (groupedControlSeq[controlSeqList[i]][j].CONTROL_STATUS !== 'ORD001') {
+                        fnAlert(null, '주문상태 확정 이후 출력 가능합니다');
+                        return false;
+                    }
+                    if (fnIsEmpty(groupedControlSeq[controlSeqList[i]][j].IMG_GFILE_SEQ)) {
+                        fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
+                        return;
+                    } else {
+                        selectControlList += String(groupedControlSeq[controlSeqList[i]][j].CONTROL_SEQ) + String(groupedControlSeq[controlSeqList[i]][j].CONTROL_DETAIL_SEQ) + '|';
+                        selectControlPartCount++;
+                    }
                 }
             }
 
-                let message = '<h4>' +
-                    '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-                    '               <span>' + selectControlPartCount + ' 건의 바코드 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
-                    '       </h4>';
-
+            const message =
+                '<h4>' +
+                '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                '   <span>' + selectControlPartCount + ' 건의 바코드도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                '</h4>';
             fnConfirm(null, message, function () {
                 printJS({printable:'/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList), type:'pdf', showModal:true});
             });
@@ -2634,7 +2642,6 @@
         // 바코드 출력
         $('#CONTROL_MANAGE_BARCODE_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
-            let bodyHtml;
             let selectedRowCount = selectedOrderManagementRowIndex.length;
             let selectControlPartCount = 0;
             let selectControlPartInfo = '';
@@ -2729,25 +2736,40 @@
         });
         // 도면출력
         $('#CONTROL_MANAGE_DRAWING_PRINT').on('click', function () {
-            let selectedRowCount = selectedOrderManagementRowIndex.length;
-            let imgGfileSeq = '';
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                if (!rowData.IMG_GFILE_SEQ) {
-                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
-                    return;
-                } else {
-                    imgGfileSeq += rowData.IMG_GFILE_SEQ + '^';
+            if (noSelectedRowAlert()) return false;
+            const gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+            const groupedControlSeq = fnGroupBy(gridData, 'CONTROL_SEQ');
+            let controlSeqList = []; // 선택 된 row 관리번호
+            let selectControlList = '';
+            let count = 0;
+
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                const rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                controlSeqList[i] = rowData.CONTROL_SEQ;
+            }
+            // 중복제거
+            controlSeqList = [...new Set(controlSeqList)];
+            // 관리번호
+            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
+                // 발주 개수 + 파트 개수
+                for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH =  groupedControlSeq[controlSeqList[i]].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
+                    if (fnIsEmpty(groupedControlSeq[controlSeqList[i]][j].IMG_GFILE_SEQ)) {
+                        fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
+                        return;
+                    } else {
+                        selectControlList += String(groupedControlSeq[controlSeqList[i]][j].CONTROL_SEQ) + String(groupedControlSeq[controlSeqList[i]][j].CONTROL_DETAIL_SEQ) + '|';
+                        count++;
+                    }
                 }
             }
 
-            // let drawingPrintModalConfirm = function(callback){
-            let message = '<h4>' +
-                '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-                '               <span>' + selectedRowCount + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
-                '       </h4>';
+            const message =
+                '<h4>' +
+                '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                '   <span>' + count + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                '</h4>';
             fnConfirm(null, message, function () {
-                printJS({printable: '/makeCadPrint?imgGfileSeq=' + encodeURI(imgGfileSeq), type: 'pdf', showModal: true});
+                printJS({printable: '/makeCadPrint?selectControlList=' + encodeURI(selectControlList), type: 'pdf', showModal: true});
             });
         });
 

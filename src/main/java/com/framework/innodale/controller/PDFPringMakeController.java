@@ -49,36 +49,34 @@ public class PDFPringMakeController {
 
     /**
      * 클라이언트에서 출력 리스트를 받아서 PDF 작성이후 파일 URL 을 넘긴다.
-     * @param model
-     * @param session
+     *
      * @param request
-     * @return
+     * @param response
      * @throws Exception
      */
-    @RequestMapping(value="/makeCadPrint", method = RequestMethod.GET)
+    @RequestMapping(value = "/makeCadPrint", method = RequestMethod.GET)
     public void makeCadPrint(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
-        String[] dxfGfileSeqList = ((String)hashMap.get("imgGfileSeq")).split("\\^");
+        String[] selectControlLists = ((String) hashMap.get("selectControlList")).split("\\|");
 
-        hashMap.put("dxfGfileSeqList", dxfGfileSeqList);
-        hashMap.put("queryId", "common.selectGfileFileList");
+        hashMap.put("selectControlLists", selectControlLists);
+        hashMap.put("queryId", "orderMapper.selectControlDrawingInfoList");
         List<Map<String, Object>> imageList = innodaleService.getList(hashMap);
 
         // 문서 만들기
         PDDocument document = new PDDocument();
 
         // Add Page
-        for(Map<String, Object> fileInfo : imageList) {
+        for (Map<String, Object> fileInfo : imageList) {
             //Creating a blank page
             PDPage addPage = new PDPage(PDRectangle.A4);
             //Adding the blank page to the document
-            PDImageXObject pdImageXObject = PDImageXObject.createFromFile((String)fileInfo.get("FILE_PATH") + ".print.png", document);
+            PDImageXObject pdImageXObject = PDImageXObject.createFromFile((String) fileInfo.get("FILE_PATH") + ".print.png", document);
             PDPageContentStream contentStream = new PDPageContentStream(document, addPage);
             contentStream.drawImage(pdImageXObject, 0, 0, PDRectangle.A4.getWidth(), PDRectangle.A4.getHeight());
             // contentStream.drawImage(pdImageXObject, 0f, -10f, pdImageXObject.getWidth() / 300f * 72, pdImageXObject.getHeight() / 300f * 72);
             contentStream.close();
-            document.addPage( addPage );
+            document.addPage(addPage);
         }
 
         response.setContentType("application/pdf");
@@ -91,22 +89,20 @@ public class PDFPringMakeController {
 
     /**
      * 클라이언트에서 출력 리스트를 받아서 PDF 작성이후 파일 URL 을 넘긴다.
-     * @param model
-     * @param session
+     *
      * @param request
-     * @return
+     * @param response
      * @throws Exception
      */
-    @RequestMapping(value="/makeCadBarcodePrint", method = RequestMethod.GET)
+    @RequestMapping(value = "/makeCadBarcodePrint", method = RequestMethod.GET)
     public void makeCadBarcodePrint(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
         response.setContentType("application/pdf");
         OutputStream out = response.getOutputStream();
 
         Document document = new Document();
-        document.setMargins(15,15,15,15);
+        document.setMargins(15, 15, 15, 15);
 
         // 한글 처리를 위한 글꼴 설정 추가
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
@@ -123,7 +119,7 @@ public class PDFPringMakeController {
 
         PdfWriter.getInstance(document, out);
 
-        String[] selectControlLists = ((String) hashMap.get("selectControlList")).split("\\^");
+        String[] selectControlLists = ((String) hashMap.get("selectControlList")).split("\\|");
 
         hashMap.put("selectControlLists", selectControlLists);
         hashMap.put("queryId", "orderMapper.selectControlCadBarcodeListList");
@@ -133,17 +129,16 @@ public class PDFPringMakeController {
 
         document.open();
 
-        for(Map<String, Object> controlInfo : controlImageList) {
-
-            if(iCount > 0) document.newPage();
+        for (Map<String, Object> controlInfo : controlImageList) {
+            if (iCount > 0) document.newPage();
 
             PdfPTable table = new PdfPTable(13);
             table.init();
 
             table.setWidthPercentage(100);
-            table.setWidths(new int[] {22, 2, 15, 15, 5, 9, 9, 8, 5, 3, 4, 4, 7});
+            table.setWidths(new int[]{22, 2, 15, 15, 5, 9, 9, 8, 5, 3, 4, 4, 7});
 
-            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String)controlInfo.get("BARCODE_NUM"), 90, 35);
+            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) controlInfo.get("BARCODE_NUM"), 90, 35);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
             // Converting BitMatrix to Buffered Image
@@ -163,56 +158,82 @@ public class PDFPringMakeController {
             //barcodeImage.scaleAbsolute(120, 70);
             //document.add(barcodeImage);
             table.addCell(createImageCell(barcodeImage, 1, 2, headFont));
-            table.addCell(createCell((String)controlInfo.get("CONTROL_VER"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("ORDER_COMP_NM"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("SIZE_TXT"), 1, 1, headFont));
+            table.addCell(createCell((String) controlInfo.get("CONTROL_VER"), 1, 1, headFont));
+            table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, headFont));
+            table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, headFont));
 //            table.addCell(createCell("Part", 1, 1, titleFont));
-            table.addCell(createCell((String)controlInfo.get("SURFACE_TREAT_NM"), 2, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("WORK_TYPE_NM"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, headFont));
-            table.addCell(createQtyCell((String)controlInfo.get("CONTROL_ORDER_QTY"), 1, 2, qtyFont));
+            table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 2, 1, headFont));
+            table.addCell(createCell((String) controlInfo.get("WORK_TYPE_NM"), 1, 1, headFont));
+            table.addCell(createCell((String) controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, headFont));
+            table.addCell(createQtyCell((String) controlInfo.get("CONTROL_ORDER_QTY"), 1, 2, qtyFont));
             table.addCell(createEACell("EA", 1, 2, qtySmallFont));
             table.addCell(createCell("원칭", 1, 1, titleFont));
             table.addCell(createCell("대칭", 1, 1, titleFont));
             table.addCell(createCell("가공납기", 1, 1, titleFont));
 
-            table.addCell(createCell((String)controlInfo.get("DRAWING_VER"), 1, 1, headFont));
-            String controlNumPart = (String)controlInfo.get("CONTROL_NUM_PART");
-            if(controlNumPart.length() <= 22){
-                table.addCell(createCell((String)controlInfo.get("CONTROL_NUM_PART"), 2, 1, boldFont));
-            }else{
-                table.addCell(createCell((String)controlInfo.get("CONTROL_NUM_PART"), 2, 1, bigBoldFont));
+            table.addCell(createCell((String) controlInfo.get("DRAWING_VER"), 1, 1, headFont));
+            String controlNumPart = (String) controlInfo.get("CONTROL_NUM_PART");
+            if (controlNumPart.length() <= 22) {
+                table.addCell(createCell((String) controlInfo.get("CONTROL_NUM_PART"), 2, 1, boldFont));
+            } else {
+                table.addCell(createCell((String) controlInfo.get("CONTROL_NUM_PART"), 2, 1, bigBoldFont));
             }
-            table.addCell(createCell((String)controlInfo.get("TOTAL_SHEET"), 1, 1, bodyFont));
-            table.addCell(createCell((String)controlInfo.get("MATERIAL_TYPE_NM"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("MAIN_INSPECTION_NM"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("ORIGINAL_SIDE_QTY"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("OTHER_SIDE_QTY"), 1, 1, headFont));
-            table.addCell(createCell((String)controlInfo.get("INNER_DUE_DT"), 1, 1, headBoldFont));
+            table.addCell(createCell((String) controlInfo.get("TOTAL_SHEET"), 1, 1, bodyFont));
+            table.addCell(createCell((String) controlInfo.get("MATERIAL_TYPE_NM"), 1, 1, headFont));
+            table.addCell(createCell((String) controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, headFont));
+            table.addCell(createCell((String) controlInfo.get("MAIN_INSPECTION_NM"), 1, 1, headFont));
+            table.addCell(createCell(String.valueOf(controlInfo.get("ORIGINAL_SIDE_QTY")), 1, 1, headFont));
+            table.addCell(createCell(String.valueOf(controlInfo.get("OTHER_SIDE_QTY")), 1, 1, headFont));
+            table.addCell(createCell((String) controlInfo.get("INNER_DUE_DT"), 1, 1, headBoldFont));
 
             document.add(table);
 
             table.flushContent();
 
-            if(controlInfo.get("IMAGE_PATH") != null && !"".equals(controlInfo.get("IMAGE_PATH"))) {
+            if (controlInfo.get("IMAGE_PATH") != null && !"".equals(controlInfo.get("IMAGE_PATH"))) {
                 Image pngImage = Image.getInstance((String) controlInfo.get("IMAGE_PATH") + ".print.png");
                 pngImage.setAbsolutePosition(15, 10);
                 pngImage.scaleAbsolute(PageSize.A4.getWidth() - 30, PageSize.A4.getHeight() - 70);
                 document.add(pngImage);
             }
             iCount++;
+
+            if (controlInfo.get("MULTI_ORDER_YN").equals("Y")) {
+                controlInfo.put("queryId", "orderMapper.selectImgGfileSeq");
+                List<Map<String, Object>> ddd = innodaleService.getList(controlInfo);
+                String[] dxfGfileSeqList = new String[ddd.size()];
+
+                for (int i = 0; i < ddd.size(); i++) {
+                    dxfGfileSeqList[i] = ddd.get(i).get("IMG_GFILE_SEQ").toString();
+                }
+
+                controlInfo.put("dxfGfileSeqList", dxfGfileSeqList);
+                controlInfo.put("queryId", "common.selectGfileFileList");
+                List<Map<String, Object>> imageList = innodaleService.getList(controlInfo);
+
+                for (Map<String, Object> fileInfo : imageList) {
+                    document.newPage();
+
+                    if (fileInfo.get("FILE_PATH") != null && !"".equals(fileInfo.get("FILE_PATH"))) {
+                        Image pngImage = Image.getInstance((String) fileInfo.get("FILE_PATH") + ".print.png");
+                        pngImage.setAbsolutePosition(0, 0);
+                        pngImage.scaleAbsolute(PageSize.A4.getWidth(), PageSize.A4.getHeight());
+                        document.add(pngImage);
+                    }
+                }
+            }
         }
         document.close();
     }
 
     /**
      * 클라이언트에서 출력 리스트를 받아서 PDF 작성이후 파일 URL 을 넘긴다.
+     *
      * @param request
-     * @return
+     * @param response
      * @throws Exception
      */
-    @RequestMapping(value="/makeItemOrderSheetPrint", method = RequestMethod.GET)
+    @RequestMapping(value = "/makeItemOrderSheetPrint", method = RequestMethod.GET)
     public void makeItemOrderSheetPrint(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
@@ -249,8 +270,10 @@ public class PDFPringMakeController {
             hashMap.put("CONCAT_SEQ", infoList.get(j).get("CONCAT_SEQ"));
             dataList = innodaleService.getList(hashMap);
 
-            if (infoList.get(0).get("POSITION_NM") != null && !"".equals(infoList.get(0).get("POSITION_NM"))) userPositionNm =  " " + infoList.get(0).get("POSITION_NM");
-            if (infoList.get(0).get("USER_TEL") != null && !"".equals(infoList.get(0).get("USER_TEL"))) userTel = " / " + infoList.get(0).get("USER_TEL");
+            if (infoList.get(0).get("POSITION_NM") != null && !"".equals(infoList.get(0).get("POSITION_NM")))
+                userPositionNm = " " + infoList.get(0).get("POSITION_NM");
+            if (infoList.get(0).get("USER_TEL") != null && !"".equals(infoList.get(0).get("USER_TEL")))
+                userTel = " / " + infoList.get(0).get("USER_TEL");
             if (iCount > 0) document.newPage();
 
             PdfPTable table = new PdfPTable(9);
@@ -308,16 +331,16 @@ public class PDFPringMakeController {
     }
 
     private static PdfPCell createCell(String content, int colspan, int rowspan, Font font) {
-    	PdfPCell cell = new PdfPCell(new Phrase(content, font));
-    	cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-    	cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-    	cell.setColspan(colspan);
-    	cell.setRowspan(rowspan);
-    	cell.setFixedHeight(20f);
+        PdfPCell cell = new PdfPCell(new Phrase(content, font));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setFixedHeight(20f);
         cell.setPaddingTop(0);
-    	cell.setPaddingBottom(0);
-    	cell.setUseAscender(true);
-    	return cell;
+        cell.setPaddingBottom(0);
+        cell.setUseAscender(true);
+        return cell;
     }
 
     private static PdfPCell createQtyCell(String content, int colspan, int rowspan, Font font) {
@@ -331,7 +354,7 @@ public class PDFPringMakeController {
         cell.setRowspan(rowspan);
         cell.setFixedHeight(20f);
         cell.setPaddingTop(0);
-    	cell.setPaddingBottom(0);
+        cell.setPaddingBottom(0);
         cell.setUseAscender(true);
         return cell;
     }
@@ -359,8 +382,8 @@ public class PDFPringMakeController {
         cell.setFixedHeight(20f);
         cell.setBackgroundColor(color);
         cell.setPaddingTop(0);
-    	cell.setPaddingBottom(0);
-    	cell.setUseAscender(true);
+        cell.setPaddingBottom(0);
+        cell.setUseAscender(true);
         return cell;
     }
 
@@ -377,4 +400,3 @@ public class PDFPringMakeController {
     }
 
 }
-

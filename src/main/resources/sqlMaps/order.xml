@@ -2566,6 +2566,7 @@
 
     <select id="selectControlCadBarcodeListList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
+            B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
             (SELECT MAX(G.BARCODE_NUM) FROM TBL_CONTROL_BARCODE G WHERE B.CONTROL_SEQ = G.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ AND G.DEL_YN = 'N') AS BARCODE_NUM,
             IFNULL(A.CONTROL_VER, SPACE(0)) AS CONTROL_VER, <!-- 관리번호 버전 -->
             IFNULL(B.DRAWING_VER, SPACE(0)) AS DRAWING_VER, <!-- 도면번호 버전 -->
@@ -2592,7 +2593,8 @@
             jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
             jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
             IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'MM', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
-            (SELECT M.FILE_PATH FROM TBL_FILE M WHERE M.GFILE_SEQ = B.IMG_GFILE_SEQ) AS IMAGE_PATH
+            (SELECT M.FILE_PATH FROM TBL_FILE M WHERE M.GFILE_SEQ = B.IMG_GFILE_SEQ) AS IMAGE_PATH,
+            IFNULL((SELECT CASE WHEN COUNT(*) > 1 THEN 'Y' ELSE 'N' END FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ), 'N') AS MULTI_ORDER_YN
         FROM TBL_CONTROL A, TBL_CONTROL_PART B
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
@@ -2854,6 +2856,45 @@
 <!--                     AND B.INNER_DUE_DT > DATE_ADD(NOW(), INTERVAL -3 DAY) -->
             ) X
         ORDER BY X.ORDER_DUE_DT, <!-- CASE WHEN X.OUT_FINISH_DT IS NULL THEN 1 ELSE 2 END, --> X.CONTROL_PART_INFO
+    </select>
+
+    <select id="selectImgGfileSeq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            C.IMG_GFILE_SEQ
+        FROM
+            TBL_CONTROL A,
+            TBL_CONTROL_PART B,
+            TBL_CONTROL_PART_ORDER C
+        WHERE 1 = 1
+            AND C.CONTROL_SEQ = B.CONTROL_SEQ
+            AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            AND B.CONTROL_SEQ = A.CONTROL_SEQ
+            AND A.DEL_YN = 'N'
+            AND C.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND C.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </select>
+
+    <select id="selectControlDrawingInfoList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.FILE_PATH
+        FROM
+            (
+            SELECT A.GFILE_SEQ, B.FILE_PATH
+            FROM TBL_FILE_GROUP A
+                INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
+            WHERE A.GFILE_SEQ ) X,
+            (
+            SELECT
+                CASE WHEN B.PART_NUM IS NULL THEN C.DRAWING_NUM ELSE B.DRAWING_NUM END AS DRAWING_NUM,
+                CASE WHEN B.PART_NUM IS NULL THEN C.IMG_GFILE_SEQ ELSE B.IMG_GFILE_SEQ END AS IMG_GFILE_SEQ
+            FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
+                AND CONCAT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN
+                <foreach collection="selectControlLists" item="bean" index="index"  open="(" close=")" separator=",">
+                    #{bean}
+                </foreach>
+            LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            WHERE A.DEL_YN = 'N' ) Y
+        WHERE X.GFILE_SEQ = Y.IMG_GFILE_SEQ
     </select>
 
 </mapper>
