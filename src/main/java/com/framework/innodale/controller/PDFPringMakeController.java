@@ -115,7 +115,7 @@ public class PDFPringMakeController {
         Font bigBoldFont = new Font(bf, 11, Font.BOLD);
         Font bodyFont = new Font(bf, 12, Font.NORMAL);
         Font qtyFont = new Font(bf, 13, Font.BOLD);
-        Font qtySmallFont = new Font(bf, 8, Font.BOLD);
+        Font qtySmallFont = new Font(bf, 7, Font.BOLD);
 
         PdfWriter.getInstance(document, out);
 
@@ -165,8 +165,16 @@ public class PDFPringMakeController {
             table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 2, 1, headFont));
             table.addCell(createCell((String) controlInfo.get("WORK_TYPE_NM"), 1, 1, headFont));
             table.addCell(createCell((String) controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, headFont));
-            table.addCell(createQtyCell((String) controlInfo.get("CONTROL_ORDER_QTY"), 1, 2, qtyFont));
-            table.addCell(createEACell("EA", 1, 2, qtySmallFont));
+            if (controlInfo.get("WORK_TYPE_NM").equals("조립")) {
+                table.addCell(createQtyCell((String) controlInfo.get("CONTROL_ORDER_QTY"), 1, 2, qtyFont));
+                table.addCell(createEACell("SET", 1, 2, qtySmallFont));
+            } else if (controlInfo.get("WORK_TYPE_NM").equals("파트")) {
+                table.addCell(createQtyCell1((String) controlInfo.get("CONTROL_ORDER_QTY"), 1, 1, qtyFont));
+                table.addCell(createEACell1("EA", 1, 1, qtySmallFont));
+            } else {
+                table.addCell(createQtyCell((String) controlInfo.get("CONTROL_ORDER_QTY"), 1,2, qtyFont));
+                table.addCell(createEACell("EA", 1, 2, qtySmallFont));
+            }
             table.addCell(createCell("원칭", 1, 1, titleFont));
             table.addCell(createCell("대칭", 1, 1, titleFont));
             table.addCell(createCell("가공납기", 1, 1, titleFont));
@@ -182,6 +190,12 @@ public class PDFPringMakeController {
             table.addCell(createCell((String) controlInfo.get("MATERIAL_TYPE_NM"), 1, 1, headFont));
             table.addCell(createCell((String) controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, headFont));
             table.addCell(createCell((String) controlInfo.get("MAIN_INSPECTION_NM"), 1, 1, headFont));
+            if (controlInfo.get("WORK_TYPE_NM").equals("파트")) {
+                String partUnit = String.valueOf(controlInfo.get("PART_UNIT"));
+                String orderQty = String.valueOf(controlInfo.get("ORDER_QTY"));
+
+                table.addCell(createCellPartUnit(partUnit + " × " + orderQty, 2, 1, titleFont));
+            }
             table.addCell(createCell(String.valueOf(controlInfo.get("ORIGINAL_SIDE_QTY")), 1, 1, headFont));
             table.addCell(createCell(String.valueOf(controlInfo.get("OTHER_SIDE_QTY")), 1, 1, headFont));
             table.addCell(createCell((String) controlInfo.get("INNER_DUE_DT"), 1, 1, headBoldFont));
@@ -347,15 +361,13 @@ public class PDFPringMakeController {
         PdfPCell cell = new PdfPCell(new Phrase(content, font));
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        // cell.setBorder(PdfPCell.NO_BORDER);
-        cell.setBorder(Rectangle.BOTTOM | Rectangle.TOP);
-        // cell.setBorderColorLeft();
         cell.setColspan(colspan);
         cell.setRowspan(rowspan);
         cell.setFixedHeight(20f);
         cell.setPaddingTop(0);
         cell.setPaddingBottom(0);
         cell.setUseAscender(true);
+        cell.setBorder(Rectangle.BOTTOM | Rectangle.TOP);
         return cell;
     }
 
@@ -363,13 +375,49 @@ public class PDFPringMakeController {
         PdfPCell cell = new PdfPCell(new Phrase(content, font));
         cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setPaddingBottom(14);
-        // cell.setBorder(PdfPCell.NO_BORDER);
-        cell.setBorder(Rectangle.BOTTOM | Rectangle.TOP);
-        // cell.setBorderColorLeft();
         cell.setColspan(colspan);
         cell.setRowspan(rowspan);
         cell.setFixedHeight(20f);
+        cell.setPaddingBottom(14);
+        cell.setBorder(Rectangle.BOTTOM | Rectangle.TOP);
+        return cell;
+    }
+    // 조립
+    private static PdfPCell createQtyCell1(String content, int colspan, int rowspan, Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase(content, font));
+        cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
+        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setFixedHeight(20f);
+        cell.setPaddingTop(0);
+        cell.setPaddingBottom(0);
+        cell.setUseAscender(true);
+        cell.setBorder(Rectangle.TOP);
+        return cell;
+    }
+    // 조립
+    private static PdfPCell createEACell1(String content, int colspan, int rowspan, Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase(content, font));
+        cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setFixedHeight(20f);
+        cell.setBorder(Rectangle.TOP);
+        return cell;
+    }
+    // 조립
+    private static PdfPCell createCellPartUnit(String content, int colspan, int rowspan, Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase(content, font));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setPaddingTop(0);
+        cell.setPaddingBottom(0);
+        cell.setUseAscender(true);
+        cell.setBorder(Rectangle.BOTTOM);
         return cell;
     }
 

@@ -453,9 +453,9 @@
                         newRowData.UNIT_FINAL_EST_AMT = null;
                         newRowData.UNIT_FINAL_AMT = null;
                         newRowData.DWG_GFILE_SEQ = null;
-                        newRowData.DXF_GFILE_SEQ = null;
-                        newRowData.PDF_GFILE_SEQ = null;
-                        newRowData.IMG_GFILE_SEQ = null;
+                        newRowData.ORDER_DXF_GFILE_SEQ = null;
+                        newRowData.ORDER_PDF_GFILE_SEQ = null;
+                        newRowData.ORDER_IMG_GFILE_SEQ = null;
                         newRowData.VIEW_GFILE_SEQ = null;
                         newRowData.ETC_GFILE_SEQ = null;
                         newRowData.PART_STATUS = null;
@@ -494,9 +494,9 @@
                         newRowData.DESIGNER_NM = null;
                         newRowData.ORDER_DRAWING_NUM = null;
                         // newRowData.DWG_GFILE_SEQ = null; // 확인 필요
-                        // newRowData.DXF_GFILE_SEQ = null; // 확인 필요
-                        // newRowData.PDF_GFILE_SEQ = null; // 확인 필요
-                        // newRowData.IMG_GFILE_SEQ = null; // 확인 필요
+                        // newRowData.ORDER_DXF_GFILE_SEQ = null; // 확인 필요
+                        // newRowData.ORDER_PDF_GFILE_SEQ = null; // 확인 필요
+                        // newRowData.ORDER_IMG_GFILE_SEQ = null; // 확인 필요
                         // newRowData.VIEW_GFILE_SEQ = null; // 확인 필요
                         newRowData.ITEM_NM = null;
                         newRowData.ORIGINAL_SIDE_QTY = null;
@@ -692,9 +692,9 @@
                                 newRowData.INVOICE_NUM = null;
                                 newRowData.DELIVERY_DT = null;
                                 // newRowData.DWG_GFILE_SEQ = null; // 확인 필요
-                                // newRowData.DXF_GFILE_SEQ = null; // 확인 필요
-                                // newRowData.PDF_GFILE_SEQ = null; // 확인 필요
-                                // newRowData.IMG_GFILE_SEQ = null; // 확인 필요
+                                // newRowData.ORDER_DXF_GFILE_SEQ = null; // 확인 필요
+                                // newRowData.ORDER_PDF_GFILE_SEQ = null; // 확인 필요
+                                // newRowData.ORDER_IMG_GFILE_SEQ = null; // 확인 필요
                                 // newRowData.VIEW_GFILE_SEQ = null; // 확인 필요
 
                                 for (let i = 0; i < groupedControlNum[newRowData.CONTROL_NUM].length; i++) {
@@ -745,7 +745,7 @@
                     },
                     {title: '', minWidth: 25, dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
                         render: function (ui) {
-                            if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>';
+                            if (ui.rowData.ORDER_IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>';
                             else return '';
                         },
                         postRender: function (ui) {
@@ -753,7 +753,7 @@
                                 $cell = grid.getCell(ui);
                             $cell.find('#imageView').bind('click', function () {
                                 let rowData = ui.rowData;
-                                callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                                callWindowImageViewer(rowData.ORDER_IMG_GFILE_SEQ);
                             });
                         }
                     },
@@ -1611,7 +1611,7 @@
             },
             {title: '현재 위치', width: 80, dataIndx: 'POP_POSITION_NM'},
             {
-                title: 'DXF', minWidth: 35, dataIndx: 'DXF_GFILE_SEQ',
+                title: 'DXF', minWidth: 35, dataIndx: 'ORDER_DXF_GFILE_SEQ',
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -1620,12 +1620,12 @@
                         $cell = grid.getCell(ui);
                     $cell.find('#downloadView').bind('click', function () {
                         let rowData = ui.rowData;
-                        fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
+                        fnFileDownloadFormPageAction(rowData.ORDER_DXF_GFILE_SEQ);
                     });
                 }
             },
             {
-                title: 'PDF', minWidth: 35, dataIndx: 'PDF_GFILE_SEQ',
+                title: 'PDF', minWidth: 35, dataIndx: 'ORDER_PDF_GFILE_SEQ',
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="redFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -1634,7 +1634,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('#downloadView').bind('click', function () {
                         let rowData = ui.rowData;
-                        fnFileDownloadFormPageAction(rowData.PDF_GFILE_SEQ);
+                        fnFileDownloadFormPageAction(rowData.ORDER_PDF_GFILE_SEQ);
                     });
                 }
             },
@@ -1711,7 +1711,7 @@
             },
             cellClick: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화
-                if(ui.rowData.IMG_GFILE_SEQ && typeof(windowImageViewer) != 'undefined' && !windowImageViewer.closed) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                if(ui.rowData.ORDER_IMG_GFILE_SEQ && typeof(windowImageViewer) != 'undefined' && !windowImageViewer.closed) callWindowImageViewer(ui.rowData.ORDER_IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
             selectChange: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화
@@ -1899,9 +1899,9 @@
                 'PART_STATUS_NM', 'SIZE_TXT', 'INNER_WORK_FINISH_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT',
                 'PREV_UNIT_FINAL_AMT', 'ITEM_NM', 'DETAIL_MACHINE_REQUIREMENT',
                 'PREV_DRAWING_NUM', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT',
-                'MATERIAL_FINISH_HEAT', 'MATERIAL_NOTE', 'CALC_EST_UNIT_COST', 'POP_POSITION_NM', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
+                'MATERIAL_FINISH_HEAT', 'MATERIAL_NOTE', 'CALC_EST_UNIT_COST', 'POP_POSITION_NM', 'ORDER_DXF_GFILE_SEQ', 'ORDER_PDF_GFILE_SEQ', 'DRAWING_VER',
                 'DRAWING_UP_DT', 'INSPECT_NUM', 'INSPECT_GRADE_NM', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
-                'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT', 'DELIVERY_DT', 'IMG_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT',
+                'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT', 'DELIVERY_DT', 'ORDER_IMG_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT',
                 'EOCLD', 'DNJSCLD', 'SAME_SIDE_YN',
             ];
             const closeModeArray = [
@@ -1917,7 +1917,7 @@
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE',
                 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PROJECT_NM', 'ITEM_NM',
                 'ORDER_STAFF_NM', 'PREV_DRAWING_NUM',
-                'IMG_GFILE_SEQ', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT'
+                'ORDER_IMG_GFILE_SEQ', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT'
             ];
             const allModeArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'ORDER_STAFF_SEQ',
@@ -1931,7 +1931,7 @@
                 'MATERIAL_FINISH_HEAT', 'RKFH', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT',
-                'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
+                'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM', 'ORDER_DXF_GFILE_SEQ', 'ORDER_IMG_GFILE_SEQ', 'ORDER_PDF_GFILE_SEQ', 'DRAWING_VER',
                 'DRAWING_UP_DT', 'ETC_GFILE_SEQ', 'INSPECT_NUM', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
                 'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
                 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT', 'OUTSIDE_NOTE', 'OUTSIDE_INSPECT_RESULT_NM', 'OUTSIDE_ERROR_NOTE',
@@ -2158,7 +2158,7 @@
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT',
                 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'DETAIL_MACHINE_REQUIREMENT',
                 'POP_POSITION_NM', 'UNIT_AMT_NOTE',
-                'DWG_GFILE_SEQ', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'VIEW_GFILE_SEQ', 'ETC_GFILE_SEQ',
+                'DWG_GFILE_SEQ', 'ORDER_DXF_GFILE_SEQ', 'ORDER_PDF_GFILE_SEQ', 'ORDER_IMG_GFILE_SEQ', 'VIEW_GFILE_SEQ', 'ETC_GFILE_SEQ',
                 'PART_STATUS_NM', 'MCT_NOTE', 'MCT_WORK_TYPE',
                 'OUTSIDE_COMP_CD', 'OUTSIDE_COMP_NM', 'OUTSIDE_ORDER_NUM', 'OUTSIDE_NOTE', 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 'OUTSIDE_REQUEST_FINISH_YN', 'OUTSIDE_REQUEST_PROCESS_YN', 'OUTSIDE_REQUEST_GRIND_YN',
@@ -2435,7 +2435,7 @@
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 // TODO: 필수데이터가 입력되어 있어야만 확정 가능
-                if (fnIsEmpty(rowData.PDF_GFILE_SEQ)) {
+                if (fnIsEmpty(rowData.ORDER_PDF_GFILE_SEQ)) {
                     fnAlert(null, 'PDF확장자 파일 도면을 등록 후 다시 시도해주세요.');
                     return false;
                 }
@@ -2620,7 +2620,7 @@
                         fnAlert(null, '주문상태 확정 이후 출력 가능합니다');
                         return false;
                     }
-                    if (fnIsEmpty(groupedControlSeq[controlSeqList[i]][j].IMG_GFILE_SEQ)) {
+                    if (fnIsEmpty(groupedControlSeq[controlSeqList[i]][j].ORDER_IMG_GFILE_SEQ)) {
                         fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
                         return;
                     } else {
@@ -2653,7 +2653,7 @@
                     fnAlert(null, '주문상태 확정 이후 출력 가능합니다');
                     return false;
                 }
-                if (!rowData.IMG_GFILE_SEQ) {
+                if (!rowData.ORDER_IMG_GFILE_SEQ) {
                     fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
                     return;
                 // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
@@ -2732,7 +2732,7 @@
         $('#CONTROL_MANAGE_DRAWING_VIEW').on('click', function () {
             let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[0]});
 
-            callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+            callWindowImageViewer(rowData.ORDER_IMG_GFILE_SEQ);
         });
         // 도면출력
         $('#CONTROL_MANAGE_DRAWING_PRINT').on('click', function () {
@@ -2753,7 +2753,7 @@
             for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
                 // 발주 개수 + 파트 개수
                 for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH =  groupedControlSeq[controlSeqList[i]].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
-                    if (fnIsEmpty(groupedControlSeq[controlSeqList[i]][j].IMG_GFILE_SEQ)) {
+                    if (fnIsEmpty(groupedControlSeq[controlSeqList[i]][j].ORDER_IMG_GFILE_SEQ)) {
                         fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
                         return;
                     } else {
