@@ -493,6 +493,20 @@
     </form>
 </div>
 <!-- 창고 공통 팝업 : E -->
+<!-- 이미지 미리보기 : S -->
+<div id="common_image_popup" title="Drawing Information">
+    <div class="modal-body">
+        <div id="commonImageBodyHtml">
+            <h4>
+                <img style='width: 32px; height: 32px;' src="/resource/asset/images/work/alert.png">
+                <span></span>
+            </h4>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="defaultBtn radius blue" name="commonAlertYesBtn" id="commonAlertYesBtn">상세보기</button>
+    </div>
+</div>
 
 <script type="text/javascript">
 
@@ -534,6 +548,15 @@
 
     $(function() {
         'use strict';
+
+        $("#common_image_popup").dialog({
+            autoOpen:false, //자동으로 열리지않게
+            position:[100,200], //x,y  값을 지정
+            //"center", "left", "right", "top", "bottom"
+            modal:true, //모달대화상자
+            resizable:false //크기 조절 못하게
+        });
+
 
         $("#user_info_pop").on('hide.bs.modal', function(){
             fnResetFrom("user_info_pop_form");

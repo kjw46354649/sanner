@@ -754,6 +754,10 @@
                             $cell.find('#imageView').bind('click', function () {
                                 let rowData = ui.rowData;
                                 callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+
+                                // $('#common_image_popup').modal({backdrop: 'static'});
+                                // $('#common_image_popup').modal('show');
+                                // $( "#common_image_popup" ).dialog("open");
                             });
                         }
                     },
