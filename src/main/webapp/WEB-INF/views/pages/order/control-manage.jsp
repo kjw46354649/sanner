@@ -453,9 +453,9 @@
                         newRowData.UNIT_FINAL_EST_AMT = null;
                         newRowData.UNIT_FINAL_AMT = null;
                         newRowData.DWG_GFILE_SEQ = null;
-                        newRowData.DXF_GFILE_SEQ = null;
-                        newRowData.PDF_GFILE_SEQ = null;
-                        newRowData.IMG_GFILE_SEQ = null;
+                        newRowData.ORDER_DXF_GFILE_SEQ = null;
+                        newRowData.ORDER_PDF_GFILE_SEQ = null;
+                        newRowData.ORDER_IMG_GFILE_SEQ = null;
                         newRowData.VIEW_GFILE_SEQ = null;
                         newRowData.ETC_GFILE_SEQ = null;
                         newRowData.PART_STATUS = null;
@@ -494,9 +494,9 @@
                         newRowData.DESIGNER_NM = null;
                         newRowData.ORDER_DRAWING_NUM = null;
                         // newRowData.DWG_GFILE_SEQ = null; // 확인 필요
-                        // newRowData.DXF_GFILE_SEQ = null; // 확인 필요
-                        // newRowData.PDF_GFILE_SEQ = null; // 확인 필요
-                        // newRowData.IMG_GFILE_SEQ = null; // 확인 필요
+                        // newRowData.ORDER_DXF_GFILE_SEQ = null; // 확인 필요
+                        // newRowData.ORDER_PDF_GFILE_SEQ = null; // 확인 필요
+                        // newRowData.ORDER_IMG_GFILE_SEQ = null; // 확인 필요
                         // newRowData.VIEW_GFILE_SEQ = null; // 확인 필요
                         newRowData.ITEM_NM = null;
                         newRowData.ORIGINAL_SIDE_QTY = null;
@@ -692,9 +692,9 @@
                                 newRowData.INVOICE_NUM = null;
                                 newRowData.DELIVERY_DT = null;
                                 // newRowData.DWG_GFILE_SEQ = null; // 확인 필요
-                                // newRowData.DXF_GFILE_SEQ = null; // 확인 필요
-                                // newRowData.PDF_GFILE_SEQ = null; // 확인 필요
-                                // newRowData.IMG_GFILE_SEQ = null; // 확인 필요
+                                // newRowData.ORDER_DXF_GFILE_SEQ = null; // 확인 필요
+                                // newRowData.ORDER_PDF_GFILE_SEQ = null; // 확인 필요
+                                // newRowData.ORDER_IMG_GFILE_SEQ = null; // 확인 필요
                                 // newRowData.VIEW_GFILE_SEQ = null; // 확인 필요
 
                                 for (let i = 0; i < groupedControlNum[newRowData.CONTROL_NUM].length; i++) {
@@ -745,7 +745,7 @@
                     },
                     {title: '', minWidth: 25, dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
                         render: function (ui) {
-                            if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>';
+                            if (ui.rowData.ORDER_IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>';
                             else return '';
                         },
                         postRender: function (ui) {
@@ -753,11 +753,7 @@
                                 $cell = grid.getCell(ui);
                             $cell.find('#imageView').bind('click', function () {
                                 let rowData = ui.rowData;
-                                callWindowImageViewer(rowData.IMG_GFILE_SEQ);
-
-                                // $('#common_image_popup').modal({backdrop: 'static'});
-                                // $('#common_image_popup').modal('show');
-                                // $( "#common_image_popup" ).dialog("open");
+                                callWindowImageViewer(rowData.ORDER_IMG_GFILE_SEQ);
                             });
                         }
                     },
