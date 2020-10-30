@@ -165,7 +165,6 @@
                     }
                 }
             },
-            {title: '비고', align: 'left', width: 100, dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '긴<br>급', minWidth: 30, dataIndx: 'EMERGENCY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select',
@@ -229,7 +228,6 @@
                     }
                 }
             },
-            {title: '총<br>장', minWidth: 30, dataType: 'integer', dataIndx: 'TOTAL_SHEET', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '가공<br>납기', width: 70, dataIndx: 'INNER_DUE_DT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
@@ -250,7 +248,6 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '파<br>트', minWidth: 30, dataIndx: 'PART_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '수행<br>공장', dataIndx: 'WORK_FACTORY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
@@ -410,8 +407,6 @@
                     }
                 }
             },
-            {title: '변경전 도면번호', align: 'left', width: 150, dataIndx: 'PREV_DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '규격', width: 110, dataIndx: 'SIZE_TXT',styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '소재<br>형태', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029')},
