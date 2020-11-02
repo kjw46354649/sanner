@@ -128,20 +128,11 @@
 </form>
 <!-- 주문상세정보 layer popup : S -->
 <div class="popup_container g_item_detail_pop" id="g_item_detail_pop" style="display: none;">
-    <form class="form-inline" id="g_item_detail_pop_form" name="g_item_detail_pop_form" role="form" onsubmit="return false;">
-        <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailInfo"/>
-        <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
-        <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
-<%--        <input type="hidden" id="CAM_INFO_YN" name="CAM_INFO_YN" value=""/>--%>
-        <div class="layerPopup">
-            <h3>주문상세정보</h3>
-            <button type="button" class="pop_close mt-10 mr-8" id="popClose2">닫기</button>
-<%--            <span class="right">--%>
-<%--                <span class="barCode" ><img src="/resource/asset/images/common/img_barcode.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>--%>
-<%--                <span class="barCodeTxt" >&nbsp;<input type="text" class="wd_270_barcode" style="height: 39px;" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>--%>
-<%--            </span>--%>
-            <div class="qualityWrap">
-                <div class="h_area">
+    <div class="layerPopup">
+        <h3>주문상세정보</h3>
+        <button type="button" class="pop_close mt-10 mr-8" id="popClose2">닫기</button>
+        <div class="qualityWrap">
+            <div class="h_area">
                     <span class="buttonWrap" id="inspect_method_btn">
                         <span style="height: 30px;float: left;">&nbsp;</span>
 <%--                        <span class="work_info_area">--%>
@@ -149,11 +140,15 @@
 <%--                            <select id="CAM_WORK_USER_ID" name="CAM_WORK_USER_ID" title="견적 담당자" class="wd_200"></select>--%>
 <%--                        </span>--%>
                     </span>
-                    <ul class="listWrap right_float">
-                       <span class="barCode" ><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
-                      <span class="barCodeTxt" >&nbsp;<input type="text" class="wd_270_barcode hg_30"  name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
-                    </ul>
-                 </div>
+                <ul class="listWrap right_float">
+                    <span class="barCode"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
+                    <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode hg_30" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
+                </ul>
+            </div>
+            <form class="form-inline" id="g_item_detail_pop_form" name="g_item_detail_pop_form" role="form" onsubmit="return false;">
+                <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailInfo"/>
+                <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
+                <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
                 <div class="d-flex align-items-center">
                     <h4>기본정보</h4>
                     <div class="btnWrap ml-auto mb-10">
@@ -236,7 +231,7 @@
                             <th class="antiquewhite blueviolet">가공완료 일시</th>
                             <td id="PROCESS_FINISH_DT" class="blueviolet"></td>
                             <%--<th>과거수행경험</th>--%>
-                                <%--<td id="WORK_HISTORY_INFO"></td>--%>
+                            <%--<td id="WORK_HISTORY_INFO"></td>--%>
                         </tr>
                         <tr>
                             <th class="palegoldenrod">주요 검사</th>
@@ -251,10 +246,10 @@
                 </div>
 
                 <div class="listdiv">
-                    <div class="tableWrap" >
+                    <div class="tableWrap">
                         <ul class="conWrapPop60">
                             <h4>가공이력</h4>
-                            <span class="slt_wrap namePlusSlt rightName" >
+                            <span class="slt_wrap namePlusSlt rightName">
                                 <label for="g_item_detail_pop_grid_01_info_1">총시간</label>
                                 <input type="text" id="g_item_detail_pop_grid_01_info_1" class="wd_50" style="text-align: right;" title="총시간">
                                 <label for="g_item_detail_pop_grid_01_info_2">선반</label>
@@ -275,10 +270,10 @@
                     </div>
                 </div>
                 <div class="listdiv">
-                    <div class="tableWrap" >
+                    <div class="tableWrap">
                         <ul class="conWrapPop60">
                             <h4>CAM작업이력 <span style="color:#7d1919" id="g_item_detail_pop_grid_04_info1"></span></h4>
-                            <span class="slt_wrap namePlusSlt rightName" >
+                            <span class="slt_wrap namePlusSlt rightName">
                                 <label id="g_item_detail_pop_grid_04_info2">Update </label>
                             </span>
                             <div id="g_item_detail_pop_grid_04" class="jqx-refresh"></div>
@@ -293,13 +288,13 @@
                 <div class="list4">
                     <div id="g_item_detail_pop_grid_05" class="jqx-refresh"></div>
                 </div>
-            </div>
-            <div class="btnWrap">
-<%--                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn" style="display: none;">CAM 작업시작</button>--%>
-                <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close">닫기</button>
-            </div>
+            </form>
         </div>
-    </form>
+        <div class="btnWrap">
+            <%--                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn" style="display: none;">CAM 작업시작</button>--%>
+            <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close">닫기</button>
+        </div>
+    </div>
 </div>
 <!-- 주문상세정보 layer popup : E -->
 <!-- CAM 상세정보 layer popup : S -->
@@ -1345,17 +1340,20 @@
     // }
 
     let g_item_detail_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
-
         // 작업 worker 지정은 협의 필요
         // fnCommCodeDatasourceSelectBoxCreate($("#g_item_detail_pop_form").find("#CAM_WORK_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
 
-        $("#g_item_detail_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
-        $("#g_item_detail_pop_form").find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
+        const $itemDetailPop = $('#g_item_detail_pop');
+        const $itemDetailPopForm = $("#g_item_detail_pop_form");
 
-        $('#g_item_detail_pop').modal('show');
+        $itemDetailPopForm.find("#CONTROL_SEQ").val(CONTROL_SEQ);
+        $itemDetailPopForm.find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
 
+        if ($itemDetailPop.css('display') === 'none') {
+            $itemDetailPop.modal('show');
+        }
         //기본정보
-        $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfo');
+        $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfo');
         let parameters = {
             'url': '/json-info',
             'data': fnFormToJsonArrayData('g_item_detail_pop_form')
@@ -1363,81 +1361,81 @@
         fnPostAjax(function (data, callFunctionParam) {
             let dxfFileDownloadYn = '${authUserInfo.DXF_FILE_DOWNLOAD_YN}';
             fnResetFrom("g_item_detail_pop_form");
-            $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").addClass('d-none');
-            $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeAttr('onClick');
-            $("#g_item_detail_pop_form").find("#DRAWING_VIEW").removeAttr('onClick');
-            $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").removeAttr('onClick');
+            $itemDetailPopForm.find("#CAD_DOWNLOAD").addClass('d-none');
+            $itemDetailPopForm.find("#CAD_DOWNLOAD").removeAttr('onClick');
+            $itemDetailPopForm.find("#DRAWING_VIEW").removeAttr('onClick');
+            $itemDetailPopForm.find("#WORK_HISTORY_INFO").removeAttr('onClick');
             let dataInfo = data.info;
 
-            $("#g_item_detail_pop_form").find(".list1").find(".rowStyle").find("td").html('');
-            if(dataInfo) {
+            $itemDetailPopForm.find(".list1").find(".rowStyle").find("td").html('');
+            if (dataInfo) {
                 const emergencySpanElement = dataInfo.EMERGENCY_YN === 'Y' ? '<span class="mark">긴급</span>' : '';
                 const materialFinishHeatSpanElement = dataInfo.MATERIAL_FINISH_HEAT === '열처리' ? '<span class="mark">열처리</span>' : '';
 
                 //fnJsonDataToForm("stock_manage_pop_form", dataInfo);
-                $("#g_item_detail_pop_form").find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
-                $("#g_item_detail_pop_form").find("#WORK_TYPE_NM_ORDER_QTY_INFO").html(dataInfo.WORK_TYPE_NM_ORDER_QTY_INFO);
-                $("#g_item_detail_pop_form").find("#INNER_DUE_DT").html(dataInfo.INNER_DUE_DT + emergencySpanElement);
+                $itemDetailPopForm.find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
+                $itemDetailPopForm.find("#WORK_TYPE_NM_ORDER_QTY_INFO").html(dataInfo.WORK_TYPE_NM_ORDER_QTY_INFO);
+                $itemDetailPopForm.find("#INNER_DUE_DT").html(dataInfo.INNER_DUE_DT + emergencySpanElement);
 
-                $("#g_item_detail_pop_form").find("#DRAWING_NUM").html(dataInfo.DRAWING_NUM);
-                $("#g_item_detail_pop_form").find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
-                $("#g_item_detail_pop_form").find("#PART_STATUS_NM").html(dataInfo.PART_STATUS_NM);
+                $itemDetailPopForm.find("#DRAWING_NUM").html(dataInfo.DRAWING_NUM);
+                $itemDetailPopForm.find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
+                $itemDetailPopForm.find("#PART_STATUS_NM").html(dataInfo.PART_STATUS_NM);
 
-                $("#g_item_detail_pop_form").find("#ITEM_NM").html(dataInfo.ITEM_NM);
-                $("#g_item_detail_pop_form").find("#MATERIAL_DETAIL_NM").html(dataInfo.MATERIAL_DETAIL_NM || '' + materialFinishHeatSpanElement);
-                $("#g_item_detail_pop_form").find("#POP_POSITION_NM").html(dataInfo.POP_POSITION_NM);
+                $itemDetailPopForm.find("#ITEM_NM").html(dataInfo.ITEM_NM);
+                $itemDetailPopForm.find("#MATERIAL_DETAIL_NM").html(dataInfo.MATERIAL_DETAIL_NM || '' + materialFinishHeatSpanElement);
+                $itemDetailPopForm.find("#POP_POSITION_NM").html(dataInfo.POP_POSITION_NM);
 
-                $("#g_item_detail_pop_form").find("#MODULE_NM").html(dataInfo.MODULE_NM);
-                $("#g_item_detail_pop_form").find("#SURFACE_TREAT_NM").html(dataInfo.SURFACE_TREAT_NM);
-                $("#g_item_detail_pop_form").find("#PROCESS_CONFIRM_DT").html(dataInfo.PROCESS_CONFIRM_DT);
+                $itemDetailPopForm.find("#MODULE_NM").html(dataInfo.MODULE_NM);
+                $itemDetailPopForm.find("#SURFACE_TREAT_NM").html(dataInfo.SURFACE_TREAT_NM);
+                $itemDetailPopForm.find("#PROCESS_CONFIRM_DT").html(dataInfo.PROCESS_CONFIRM_DT);
 
-                $("#g_item_detail_pop_form").find("#PROJECT_NM").html(dataInfo.PROJECT_NM);
-                $("#g_item_detail_pop_form").find("#OUTSIDE_CONFIRM_DT").html(dataInfo.OUTSIDE_CONFIRM_DT);
-                $("#g_item_detail_pop_form").find("#MATERIAL_ORDER_DT").html(dataInfo.MATERIAL_ORDER_DT);
+                $itemDetailPopForm.find("#PROJECT_NM").html(dataInfo.PROJECT_NM);
+                $itemDetailPopForm.find("#OUTSIDE_CONFIRM_DT").html(dataInfo.OUTSIDE_CONFIRM_DT);
+                $itemDetailPopForm.find("#MATERIAL_ORDER_DT").html(dataInfo.MATERIAL_ORDER_DT);
 
-                // $("#g_item_detail_pop_form").find("#MATERIAL_ORDER_STATUS_NM").html(dataInfo.MATERIAL_ORDER_STATUS_NM);
-                // $("#g_item_detail_pop_form").find("#DRAWING_VER").html(dataInfo.DRAWING_VER);
-                // $("#g_item_detail_pop_form").find("#MATERIAL_SIZE_TXT").html(dataInfo.MATERIAL_SIZE_TXT);
+                // $itemDetailPopForm.find("#MATERIAL_ORDER_STATUS_NM").html(dataInfo.MATERIAL_ORDER_STATUS_NM);
+                // $itemDetailPopForm.find("#DRAWING_VER").html(dataInfo.DRAWING_VER);
+                // $itemDetailPopForm.find("#MATERIAL_SIZE_TXT").html(dataInfo.MATERIAL_SIZE_TXT);
 
                 // let filedownlod = "";
                 // if (dataInfo.DXF_GFILE_SEQ != "" && dataInfo.DXF_GFILE_SEQ != undefined) {
                 //     filedownlod = "<button type='button' class='smallBtn red' onclick=\"javascript:fnFileDownloadFormPageAction('" + dataInfo.DXF_GFILE_SEQ + "');\"><i class='fa fa-trash'></i><span >다운로드</span></button>";
                 // }
-                // $("#g_item_detail_pop_form").find("#DXF_GFILE_SEQ").html(filedownlod);
+                // $itemDetailPopForm.find("#DXF_GFILE_SEQ").html(filedownlod);
 
-                $("#g_item_detail_pop_form").find("#ORDER_COMP_NM_DESIGNER_NM").html(dataInfo.ORDER_COMP_NM_DESIGNER_NM);
-                $("#g_item_detail_pop_form").find("#OUTSIDE_COMP_NM").html(dataInfo.OUTSIDE_COMP_NM);
-                $("#g_item_detail_pop_form").find("#MATERIAL_IN_DT").html(dataInfo.MATERIAL_IN_DT);
+                $itemDetailPopForm.find("#ORDER_COMP_NM_DESIGNER_NM").html(dataInfo.ORDER_COMP_NM_DESIGNER_NM);
+                $itemDetailPopForm.find("#OUTSIDE_COMP_NM").html(dataInfo.OUTSIDE_COMP_NM);
+                $itemDetailPopForm.find("#MATERIAL_IN_DT").html(dataInfo.MATERIAL_IN_DT);
 
-                // $("#g_item_detail_pop_form").find("#DESIGNER_NM").html(dataInfo.DESIGNER_NM);
-                $("#g_item_detail_pop_form").find("#CONTROL_CONFIRM_DT").html(dataInfo.CONTROL_CONFIRM_DT);
-                $("#g_item_detail_pop_form").find("#OUTSIDE_PROCESS_CONFIRM_DT").html(dataInfo.OUTSIDE_PROCESS_CONFIRM_DT);
-                $("#g_item_detail_pop_form").find("#PROCESS_FINISH_DT").html(dataInfo.PROCESS_FINISH_DT);
+                // $itemDetailPopForm.find("#DESIGNER_NM").html(dataInfo.DESIGNER_NM);
+                $itemDetailPopForm.find("#CONTROL_CONFIRM_DT").html(dataInfo.CONTROL_CONFIRM_DT);
+                $itemDetailPopForm.find("#OUTSIDE_PROCESS_CONFIRM_DT").html(dataInfo.OUTSIDE_PROCESS_CONFIRM_DT);
+                $itemDetailPopForm.find("#PROCESS_FINISH_DT").html(dataInfo.PROCESS_FINISH_DT);
 
-                $("#g_item_detail_pop_form").find("#MAIN_INSPECTION_NM").html(dataInfo.MAIN_INSPECTION_NM);
-                $("#g_item_detail_pop_form").find("#OUTSIDE_IN_DT").html(dataInfo.OUTSIDE_IN_DT);
-                $("#g_item_detail_pop_form").find("#OUT_FINISH_DT").html(dataInfo.OUT_FINISH_DT);
+                $itemDetailPopForm.find("#MAIN_INSPECTION_NM").html(dataInfo.MAIN_INSPECTION_NM);
+                $itemDetailPopForm.find("#OUTSIDE_IN_DT").html(dataInfo.OUTSIDE_IN_DT);
+                $itemDetailPopForm.find("#OUT_FINISH_DT").html(dataInfo.OUT_FINISH_DT);
 
                 if (dxfFileDownloadYn === 'Y') {
                     if (fnIsEmpty(dataInfo.DXF_GFILE_SEQ)) {
-                        $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
-                        $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeClass('d-none');
+                        $itemDetailPopForm.find("#CAD_DOWNLOAD").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
+                        $itemDetailPopForm.find("#CAD_DOWNLOAD").removeClass('d-none');
                     } else {
-                        $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").attr('onClick', 'fnFileDownloadFormPageAction(' + dataInfo.DXF_GFILE_SEQ + ');');
-                        $("#g_item_detail_pop_form").find("#CAD_DOWNLOAD").removeClass('d-none');
+                        $itemDetailPopForm.find("#CAD_DOWNLOAD").attr('onClick', 'fnFileDownloadFormPageAction(' + dataInfo.DXF_GFILE_SEQ + ');');
+                        $itemDetailPopForm.find("#CAD_DOWNLOAD").removeClass('d-none');
                     }
                 }
 
                 if (fnIsEmpty(dataInfo.IMG_GFILE_SEQ)) {
-                    $("#g_item_detail_pop_form").find("#DRAWING_VIEW").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
+                    $itemDetailPopForm.find("#DRAWING_VIEW").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
                 } else {
-                    $("#g_item_detail_pop_form").find("#DRAWING_VIEW").attr('onClick', 'callWindowImageViewer(' + dataInfo.IMG_GFILE_SEQ + ');');
+                    $itemDetailPopForm.find("#DRAWING_VIEW").attr('onClick', 'callWindowImageViewer(' + dataInfo.IMG_GFILE_SEQ + ');');
                 }
 
                 if (fnIsEmpty(dataInfo.WORK_HISTORY_INFO)) {
-                    $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").attr('onClick', 'fnAlert(null, "유사주문 수행기록이 없습니다.");');
+                    $itemDetailPopForm.find("#WORK_HISTORY_INFO").attr('onClick', 'fnAlert(null, "유사주문 수행기록이 없습니다.");');
                 } else {
-                    $("#g_item_detail_pop_form").find("#WORK_HISTORY_INFO").attr('onClick', "g_item_detail_pop_cam_pop('" + dataInfo.CONTROL_SEQ + "','" + dataInfo.CONTROL_DETAIL_SEQ + "');");
+                    $itemDetailPopForm.find("#WORK_HISTORY_INFO").attr('onClick', "g_item_detail_pop_cam_pop('" + dataInfo.CONTROL_SEQ + "','" + dataInfo.CONTROL_DETAIL_SEQ + "');");
                 }
 
                 /** CAM 작업 여부에 따른 버튼 표시 **/
@@ -1450,7 +1448,7 @@
         }, parameters, '');
 
         //가공이력 정보
-        $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfo2');
+        $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfo2');
         let parameters2 = {
             'url': '/json-info',
             'data': fnFormToJsonArrayData('g_item_detail_pop_form')
@@ -1458,44 +1456,42 @@
         fnPostAjax(function (data, callFunctionParam) {
             let dataInfo = data.info;
 
-            console.log(dataInfo);
-
-            if(dataInfo == null ) {
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_1").val('');
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_2").val('');
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_3").val('');
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_4").val('');
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_5").val('');
-            }else{
+            if (dataInfo == null) {
+                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_1").val('');
+                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_2").val('');
+                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_3").val('');
+                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_4").val('');
+                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_5").val('');
+            } else {
                 //fnJsonDataToForm("stock_manage_pop_form", dataInfo);
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_1").val(dataInfo.WORK_TIME_TOTAL);
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_2").val(dataInfo.WORK_TIME_MPR040);
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_3").val(dataInfo.WORK_TIME_MPR010);
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_4").val(dataInfo.WORK_TIME_MPR020);
-                $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_01_info_5").val(dataInfo.WORK_TIME_MPR030);
+                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_1").val(dataInfo.WORK_TIME_TOTAL);
+                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_2").val(dataInfo.WORK_TIME_MPR040);
+                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_3").val(dataInfo.WORK_TIME_MPR010);
+                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_4").val(dataInfo.WORK_TIME_MPR020);
+                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_5").val(dataInfo.WORK_TIME_MPR030);
             }
         }, parameters2, '');
 
-        $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfoGrid1');
+        $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid1');
         g_ItemDetailPopObj01.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
         g_ItemDetailPopGridId01.pqGrid(g_ItemDetailPopObj01);
 
-        $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfoGrid2');
+        $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid2');
         g_ItemDetailPopObj02.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
         g_ItemDetailPopGridId02.pqGrid(g_ItemDetailPopObj02);
 
-        $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfoGrid3');
+        $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid3');
         g_ItemDetailPopObj03.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
         g_ItemDetailPopGridId03.pqGrid(g_ItemDetailPopObj03);
 
-        $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfoGrid4');
+        $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid4');
         g_ItemDetailPopObj04.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
         g_ItemDetailPopGrid04 = g_ItemDetailPopGridId04.pqGrid(g_ItemDetailPopObj04);
 
-        $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfoGrid5');
+        $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid5');
         g_ItemDetailPopObj05.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
         g_ItemDetailPopGridId05.pqGrid(g_ItemDetailPopObj05);
-        $("#g_item_detail_pop_form").find("#g_item_detail_pop_barcode_num").focus();
+        $itemDetailPopForm.find("#g_item_detail_pop_barcode_num").focus();
     };
 
     $("#g_item_detail_pop").on('hide.bs.modal', function(){
