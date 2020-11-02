@@ -462,9 +462,13 @@ public class DrawingBoardController {
         notificationMessage.setEquipPosition((int) alarmInfo.get("LAYOUT_SORT"));
         notificationMessage.setFactoryArea((String) alarmInfo.get("FACTORY_AREA"));
 
-        if(alarmInfo.containsKey("WORK_MINUTE"))
-            notificationMessage.setsMinute((int) alarmInfo.get("WORK_MINUTE"));
-
+        if(alarmInfo.containsKey("WORK_MINUTE")){
+            if(alarmInfo.get("WORK_MINUTE") instanceof String){
+                notificationMessage.setsMinute(Integer.parseInt((String)alarmInfo.get("WORK_MINUTE")));
+            }else if(alarmInfo.get("WORK_MINUTE") instanceof Integer){
+                notificationMessage.setsMinute((int)alarmInfo.get("WORK_MINUTE"));
+            }
+        }
     }
 
 }
