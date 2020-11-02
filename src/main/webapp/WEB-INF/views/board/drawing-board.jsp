@@ -368,7 +368,7 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td><div><c:if test="${not empty workInfo}">${workInfo.CONTROL_NUM}</c:if></div></td>
+                                    <td><div><c:if test="${not empty workInfo}">${workInfo.CONTROL_NUM_NM}</c:if></div></td>
 <%--                                    <td><div><c:if test="${not empty workInfo}">${workInfo.PART_NUM}</c:if></div></td>--%>
                                     <td><div><c:if test="${not empty workInfo}">${workInfo.ORDER_QTY_INFO}</c:if></div></td>
                                     <td><div><c:if test="${not empty workInfo}">${workInfo.INNER_DUE_DT}</c:if></div></td>

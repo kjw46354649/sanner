@@ -12,7 +12,7 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <jsp:include page="/WEB-INF/views/attr/tabs/header.jsp"/>
-<jsp:include page="/WEB-INF/views/attr/tabs/body-script.jsp"/>
+<jsp:include page="/WEB-INF/views/attr/common/body-script.jsp"/>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -363,7 +363,7 @@
                 $transactionStatementGrid.pqGrid('refreshDataAndView');
                 opener.$orderManagementGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
-        }, 500));
+        }, 1000));
         // 엑셀 출력
         $('#TRANSACTION_STATEMENT_EXPORT').on('click', function () {
             let controlSeqList = [];

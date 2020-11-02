@@ -726,8 +726,18 @@
      * @description 레퍼런스 참조 없는 배열 복사(deep copy)
      * @param obj
      */
-    let fnCloneObj = function (obj) {
-        return {...obj}
+    const fnCloneObj = function (obj) {
+        if (obj === null || typeof obj !== 'object') {
+            return obj;
+        }
+
+        const result = Array.isArray(obj) ? [] : {};
+
+        for (let key of Object.keys(obj)) {
+            result[key] = fnCloneObj(obj[key])
+        }
+
+        return result;
     };
 
     /**
