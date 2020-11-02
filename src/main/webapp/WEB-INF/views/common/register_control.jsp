@@ -331,7 +331,7 @@
                         }
                     },
                     {
-                        title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND',
+                        title: '납품확인', width: 70, datatype: 'date', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                         editor: {type: 'textbox', init: dateEditor}
                     },
