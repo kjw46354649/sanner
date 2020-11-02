@@ -148,7 +148,7 @@
             INNER JOIN TBL_COMPANY B ON A.COMP_CD = B.COMP_CD
         WHERE INVOICE_NUM IN (SELECT INVOICE_NUM
                              FROM TBL_INVOICE_DETAIL
-                             WHERE CONTROL_SEQ IN (${CONTROL_SEQ_STR}));
+                             WHERE CONTROL_SEQ IN (${CONTROL_SEQ_STR}))
     </select>
 
     <select id="selectTransactionStatementListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">

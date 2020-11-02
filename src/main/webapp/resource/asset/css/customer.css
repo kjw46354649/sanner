@@ -420,6 +420,12 @@ button:disabled {
 #common_alert_popup .modal-body { position: relative;  padding: 15px 15px 25px 15px;}
 #common_alert_popup .modal-body h4{ font-size: 1.5em; }
 
+.popupTableDiv table.materialSupply { border: 1px solid #CECECE; color: #444; }
+.popupTableDiv table.materialSupply tr td { height: 20px; padding: 5px 10px; text-align: center; font-family: 'NotoKrM'; font-size: 1.4rem; }
+.popupTableDiv table.materialSupply .text-right { text-align: right; }
+.popupTableDiv table.materialSupply .bg-title { border: 1px solid #CECECE; background-color: #F3FEFF; }
+.popupTableDiv table.materialSupply .bg-sum { border-width: 1px; border-style: solid none; border-color:#CECECE; background-color: #FFFBEF; }
+
 [name="CONTROL_MANAGE_VIEW"] { overflow: hidden; width: 80px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #FFE29B; color: black; font-family: 'NotoKrM'; font-size: 1.2rem; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 .virtual-disable { background: #dddddd; color: #212121; border: 1px solid #e5e5e5; }
 

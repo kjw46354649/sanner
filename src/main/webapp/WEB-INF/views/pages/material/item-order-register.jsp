@@ -57,7 +57,7 @@
                         전체 조회 건수 (Total : <span id="item_order_register_popup_top_grid_records" style="color: #00b3ee">0</span>)
                     </div>
                 </div>
-                <div class="ml-auto" style="display: none; width: 518px;">
+                <div class="ml-auto" style="display: none; width: 518px; height: 500px; overflow: auto;">
                     <div class="gridWrap popupTableDiv list1" style="height: 500px; overflow: auto"></div>
                 </div>
             </div>
@@ -1651,8 +1651,7 @@
                 const LIST_LENGTH = list.length;
 
                 if (LIST_LENGTH > 0) {
-                    table = '<table class="rowStyle" style="border-spacing:0; width:100%; height: 500px; overflow-y: auto;">';
-                    table +=    '<tbody>';
+                    table = '<table class="materialSupply">';
 
                     for (let i = 0; i < LIST_LENGTH; i++) {
                         const rowData = list[i];
@@ -1666,28 +1665,28 @@
                                 const ROWSPAN_LENGTH = groupedMaterialCompCd[rowData.MATERIAL_COMP_CD].length + 1;
 
                                 table += '<tr>';
-                                table += '<td rowspan="' + ROWSPAN_LENGTH + '" style="max-width: 125px; max-height: 27px; background-color: #F3FEFF">' + rowData.MATERIAL_COMP_NM + '</td>';
-                                table += '<td colspan="3" style="max-height: 27px; background-color: #F3FEFF">' + rowData.COMP_EMAIL + '</td>';
+                                table += '<td class="bg-title" rowspan="' + ROWSPAN_LENGTH + '" style="max-width: 125px;">' + rowData.MATERIAL_COMP_NM + '</td>';
+                                table += '<td class="bg-title" colspan="3">' + rowData.COMP_EMAIL + '</td>';
                                 table += '</tr>';
                             }
                             table += '<tr>';
-                            table += '<td style="max-width: 110px; max-height: 27px;">' + rowData.MATERIAL_DETAIL_NM + '</td>';
-                            table += '<td style="max-width: 150px; max-height: 27px; text-align: right;">' + rowData.SIZE_TXT + '</td>';
-                            table += '<td style="max-width: 55px; max-height: 27px; text-align: right;">' + rowData.ORDER_QTY_INFO + '</td>';
+                            table += '<td style="max-width: 110px;">' + rowData.MATERIAL_DETAIL_NM + '</td>';
+                            table += '<td class="text-right" style="max-width: 150px;">' + rowData.SIZE_TXT + '</td>';
+                            table += '<td class="text-right" style="max-width: 55px;">' + rowData.ORDER_QTY_INFO + '</td>';
                             table += '</tr>';
                         } else {
-                            table += '<tr style="max-height: 27px;">';
-                            table +=    '<td colspan="2" style="max-height: 27px; background-color: #FFFBEF ">합계</td>';
-                            table +=    '<td style="max-height: 27px; background-color: #FFFBEF; text-align: right;">' + rowData.ORDER_QTY_INFO + '</td>';
+                            table += '<tr style="">';
+                            table +=    '<td class="bg-sum" colspan="2">합계</td>';
+                            table +=    '<td class="bg-sum text-right">' + rowData.ORDER_QTY_INFO + '</td>';
                             table += '</tr>';
                         }
                     }
-                    table +=    '</tbody>';
                     table += '</table>';
-                    $(".popupTableDiv").parent().prev().width(1200);
+                    const $popupTableDiv = $(".popupTableDiv")
+                    $popupTableDiv.parent().prev().width(1200);
                     itemOrderRegisterPopTopGrid.pqGrid('option', 'width', '100%').pqGrid('refresh');
-                    $(".popupTableDiv").parent().show();
-                    $(".popupTableDiv").html(table);
+                    $popupTableDiv.parent().show();
+                    $popupTableDiv.html(table);
                 }
             }, parameters, '');
         }
