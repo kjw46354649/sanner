@@ -753,7 +753,8 @@
                                 $cell = grid.getCell(ui);
                             $cell.find('#imageView').bind('click', function () {
                                 let rowData = ui.rowData;
-                                callWindowImageViewer(rowData.ORDER_IMG_GFILE_SEQ);
+                                // callWindowImageViewer(rowData.ORDER_IMG_GFILE_SEQ);
+                                $("#common_image_popup").dialog("open");
                             });
                         }
                     },

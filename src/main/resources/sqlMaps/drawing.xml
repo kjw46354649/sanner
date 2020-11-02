@@ -38,7 +38,7 @@
         SELECT
             A.CODE_CD, B.CODE_NM
         FROM TBL_CODE A
-            INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_LOCALE}) = #{LOGIN_LOCALE} THEN #{LOGIN_LOCALE} ELSE 'KR' END
+            INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'EN' ELSE 'KR' END
         WHERE 1 = 1
             AND A.HIGH_CD = '1061'
         ORDER BY A.SORT_NUM
@@ -48,7 +48,7 @@
         SELECT
             A.CODE_CD, B.CODE_NM
         FROM TBL_CODE A
-            INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_LOCALE}) = #{LOGIN_LOCALE} THEN #{LOGIN_LOCALE} ELSE 'KR' END
+            INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'EN' ELSE 'KR' END
         WHERE 1 = 1
             AND A.HIGH_CD = '1015'
         ORDER BY A.SORT_NUM
@@ -67,7 +67,7 @@
         ORDER BY A.USER_NM
     </select>
 
-<select id="selectDrawingBoardLastWork" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="selectDrawingBoardLastWork" parameterType="java.util.HashMap" resultType="java.util.HashMap">
 	    <!-- 최근 작업 내용 -->
         SELECT
             'LAST' AS DATA_TYPE, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.MCT_WORK_SEQ,
@@ -118,6 +118,7 @@
             IFNULL(jmes.SF_GET_DATE_F(A.WORK_START_DT, '', 'M'), SPACE(0)) AS WORK_START_DT,
             IFNULL(jmes.SF_GET_DATE_F(A.WORK_FINISH_DT, '', 'M'), SPACE(0)) AS WORK_FINISH_DT,
             D.CONTROL_NUM,
+            CASE WHEN C.PART_NUM IS NULL THEN D.CONTROL_NUM ELSE CONCAT(D.CONTROL_NUM, ' #', C.PART_NUM) END AS CONTROL_NUM_NM, <!-- 관리번호 -->
             IFNULL(C.PART_NUM, SPACE(0)) AS PART_NUM, <!-- PART 번호 -->
             jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS ORDER_QTY, <!-- 수량 -->
             CASE WHEN D.SAME_SIDE_YN = 'Y'
