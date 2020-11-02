@@ -330,11 +330,6 @@
                             }
                         }
                     },
-                    {
-                        title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                        editor: {type: 'textbox', init: dateEditor}
-                    },
                     {title: '견적단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
                     {title: '공급단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
                     {title: '품명', align: 'left', width: 150, dataIndx: 'ITEM_NM', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
