@@ -191,7 +191,7 @@ public class PDFPringMakeController {
             table.addCell(createCell((String) controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, headFont));
             table.addCell(createCell((String) controlInfo.get("MAIN_INSPECTION_NM"), 1, 1, headFont));
             if (controlInfo.get("WORK_TYPE_NM").equals("파트")) {
-                String partUnit = String.valueOf(controlInfo.get("PART_UNIT"));
+                String partUnit = String.valueOf(controlInfo.get("PART_UNIT_QTY"));
                 String orderQty = String.valueOf(controlInfo.get("ORDER_QTY"));
 
                 table.addCell(createCellPartUnit(partUnit + " × " + orderQty, 2, 1, titleFont));
@@ -214,15 +214,6 @@ public class PDFPringMakeController {
 
             if (controlInfo.get("MULTI_ORDER_YN").equals("Y")) {
                 controlInfo.put("queryId", "orderMapper.selectImgGfileSeq");
-                List<Map<String, Object>> ddd = innodaleService.getList(controlInfo);
-                String[] dxfGfileSeqList = new String[ddd.size()];
-
-                for (int i = 0; i < ddd.size(); i++) {
-                    dxfGfileSeqList[i] = ddd.get(i).get("IMG_GFILE_SEQ").toString();
-                }
-
-                controlInfo.put("dxfGfileSeqList", dxfGfileSeqList);
-                controlInfo.put("queryId", "common.selectGfileFileList");
                 List<Map<String, Object>> imageList = innodaleService.getList(controlInfo);
 
                 for (Map<String, Object> fileInfo : imageList) {

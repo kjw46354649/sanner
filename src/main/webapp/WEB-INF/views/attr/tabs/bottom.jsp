@@ -1481,7 +1481,7 @@
         g_ItemDetailPopGridId05.pqGrid('destroy');
     });
 
-    $("#g_item_detail_pop_form").find('#g_item_detail_pop_grid_05_pop_close, #popClose2').on('click', function () {
+    $("#g_item_detail_pop").find('#g_item_detail_pop_grid_05_pop_close, #popClose2').on('click', function () {
         $('#g_item_detail_pop').modal('hide');
     });
 

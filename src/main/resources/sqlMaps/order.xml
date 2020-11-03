@@ -1210,7 +1210,7 @@
             LABEL_NOTE = #{LABEL_NOTE},
             ORDER_STAFF_SEQ = #{ORDER_STAFF_SEQ},
             DESIGNER_NM = #{DESIGNER_NM},
-<!--             DRAWING_NUM = #{ORDER_DRAWING_NUM}, -->
+            DRAWING_NUM = #{ORDER_DRAWING_NUM},
 <!--             DWG_GFILE_SEQ = #{DWG_GFILE_SEQ}, -->
 <!--             DXF_GFILE_SEQ = #{ORDER_DXF_GFILE_SEQ}, -->
 <!--             PDF_GFILE_SEQ = #{ORDER_PDF_GFILE_SEQ}, -->
@@ -2596,8 +2596,8 @@
             IFNULL(B.PART_UNIT_QTY, 0) AS PART_UNIT_QTY,
             (SELECT IFNULL(SUM(M.ORDER_QTY), 0) FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ) AS ORDER_QTY,
             CONCAT(IFNULL(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0), SPACE(0)) AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
-            jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
-            jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
+            IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1), SPACE(0))AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
+            IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1), SPACE(0)) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
             IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'MM', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
             (SELECT M.FILE_PATH FROM TBL_FILE M WHERE M.GFILE_SEQ = B.IMG_GFILE_SEQ) AS IMAGE_PATH,
             IFNULL((SELECT CASE WHEN COUNT(*) > 1 THEN 'Y' ELSE 'N' END FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ), 'N') AS MULTI_ORDER_YN
@@ -2865,19 +2865,33 @@
     </select>
 
     <select id="selectImgGfileSeq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            C.IMG_GFILE_SEQ
+        SELECT IMG_GFILE_SEQ
+            , DXF_GFILE_SEQ
+            , FILE_SEQ
+            , TIME_PATH
+            , FILE_PATH
+            , ORGINAL_FILE_NM
+            , FILE_NM
+            , FILE_SIZE
+            , INSERT_DT
         FROM
-            TBL_CONTROL A,
-            TBL_CONTROL_PART B,
-            TBL_CONTROL_PART_ORDER C
-        WHERE 1 = 1
-            AND C.CONTROL_SEQ = B.CONTROL_SEQ
-            AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-            AND B.CONTROL_SEQ = A.CONTROL_SEQ
-            AND A.DEL_YN = 'N'
-            AND C.CONTROL_SEQ = #{CONTROL_SEQ}
-            AND C.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            (
+            SELECT C.IMG_GFILE_SEQ
+            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C
+            WHERE 1 = 1
+                AND C.CONTROL_SEQ = B.CONTROL_SEQ
+                AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                AND B.CONTROL_SEQ = A.CONTROL_SEQ
+                AND A.DEL_YN = 'N'
+                AND C.CONTROL_SEQ = #{CONTROL_SEQ}
+                AND C.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}) X
+        LEFT OUTER JOIN (
+            SELECT
+                A.GFILE_SEQ AS DXF_GFILE_SEQ, B.FILE_SEQ, B.TIME_PATH, B.FILE_PATH, REPLACE(B.ORGINAL_FILE_NM, CONCAT('.', B.FILE_EXT), SPACE(0)) AS ORGINAL_FILE_NM,
+                REPLACE(B.FILE_NM, CONCAT('.', B.FILE_EXT), SPACE(0)) AS FILE_NM, B.FILE_SIZE, SF_GET_DATE_F(B.INSERT_DT, 'YYYY', '') AS INSERT_DT
+            FROM TBL_FILE_GROUP A, TBL_FILE B
+            WHERE A.GFILE_SEQ = B.GFILE_SEQ) Y ON Y.DXF_GFILE_SEQ = X.IMG_GFILE_SEQ
+
     </select>
 
     <select id="selectControlDrawingInfoList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
