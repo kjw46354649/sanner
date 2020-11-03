@@ -239,8 +239,8 @@
             LEFT OUTER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND D.DEL_YN = 'N'
         WHERE 1 = 1
-            AND A.EQUIP_SEQ = TRIM(#{EQUIP_SEQ})
             AND A.DEL_YN = 'N'
+            AND A.EQUIP_SEQ = TRIM(#{EQUIP_SEQ})
     </select>
     <select id="selectProcessPlanGridList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
@@ -450,13 +450,13 @@
             CASE WHEN IFNULL(B.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN, <!-- 긴급 -->
             CASE WHEN IFNULL(B.MAIN_INSPECTION, 'N') = 'Y' THEN '주' ELSE SPACE(0) END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
             CASE WHEN A.WORK_TYPE = 'WTP030' THEN '수' WHEN A.WORK_TYPE = 'WTP040' THEN '재' ELSE SPACE(0) END AS WORK_NM, <!-- 형태 -->
-            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 'MCT_PLAN_SEQ') AS MCT_PLAN_SEQ,
-            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 'EQUIP_SEQ') AS EQUIP_SEQ,
-            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 'EQUIP_ID') AS EQUIP_NM,
-            SF_GET_MCT_PLAN(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 'WORKING_TIME') AS WORKING_TIME,  <!-- MCT 계획 시간 -->
-            <!-- C.POP_POSITION_NM AS POP_POSITION,  현재위치 -->
-            SF_GET_CODE_NM('1009', C.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION, <!-- 현재위치 -->
+            C.MCT_PLAN_SEQ,
+            C.EQUIP_SEQ, <!-- NC No. -->
+            C.WORKING_TIME, <!-- E/T -->
+            SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION, <!-- 현재위치 -->
             SF_GET_CODE_NM('1013', A.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS, <!-- 진행상태 -->
+            Z.EQUIP_NM, Z.WORKING_TIME, Z.NC_WORK_TYPE,
+            (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Z.WORK_USER_ID) AS NC_WORK_USER_NM, <!-- CAM 작업자 -->
             B.CONTROL_NUM, <!-- 관리번호 -->
             A.PART_NUM, <!-- Part -->
             A.MATERIAL_DETAIL, <!-- 소재종류 상세 -->
@@ -470,7 +470,6 @@
             IFNULL(SF_GET_CODE_NM('1011', A.MCT_WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS MCT_WORK_TYPE_NM, <!-- MCT 작업 구분 이름 -->
             <!-- N.POP_POSITION_NM AS POP_PREV_POSITION, 이전 위치 -->
             SF_GET_CODE_NM('1009', N.POP_POSITION, #{LOGIN_LOCALE}) AS POP_PREV_POSITION, <!-- 이전 위치 -->
-            <!-- SF_GET_POP_PREV_POSITION(2, 'NM', A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS POP_PREV_POSITION,  이전 위치 -->
             (
                 SELECT CONCAT(CEILING(SF_GET_MCT_WORK_TIME(I.CONTROL_SEQ, I.CONTROL_DETAIL_SEQ) / SF_GET_CONTROL_PART_QTY(I.CONTROL_SEQ, I.CONTROL_DETAIL_SEQ)), '분')
                 FROM jmes.TBL_CONTROL H, jmes.TBL_CONTROL_PART I, jmes.TBL_MCT_WORK J
@@ -513,22 +512,23 @@
             jmes.SF_GET_DATE_F(A.STATUS_DT, '', '') AS CONTROL_STATUS_DT, <!-- 확정 일시 -->
             jmes.SF_GET_MATERIAL_RECEIPT_DT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT <!-- 소재 입고 일시 -->
         FROM jmes.TBL_CONTROL_PART A
-            INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN jmes.TBL_CONTROL B ON B.CONTROL_SEQ = A.CONTROL_SEQ
                  AND B.DEL_YN = 'N' AND B.CONTROL_STATUS = 'ORD001' AND B.OUT_FINISH_DT IS NULL
-            LEFT OUTER JOIN jmes.TBL_POP C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN jmes.TBL_MCT_PLAN C ON C.CONTROL_SEQ = A.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND C.DEL_YN = 'N'
+            LEFT OUTER JOIN jmes.TBL_POP D ON D.CONTROL_SEQ = A.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
                 <if test="POP_POSITION != null and POP_POSITION != ''">
-                    AND C.POP_POSITION = #{POP_POSITION}
+                    AND D.POP_POSITION = #{POP_POSITION}
                 </if>
-                AND C.POP_SEQ = (SELECT MAX(K.POP_SEQ) FROM jmes.TBL_POP K WHERE K.CONTROL_SEQ = C.CONTROL_SEQ
-                                   AND K.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ
+                AND D.POP_SEQ = (SELECT MAX(K.POP_SEQ) FROM jmes.TBL_POP K WHERE K.CONTROL_SEQ = D.CONTROL_SEQ
+                                   AND K.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ
                 )
-             LEFT OUTER JOIN jmes.TBL_POP N ON A.CONTROL_SEQ = N.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = N.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN jmes.TBL_POP N ON A.CONTROL_SEQ = N.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = N.CONTROL_DETAIL_SEQ
                                                 AND N.POP_SEQ = (   SELECT LAG(O.POP_SEQ, 1) OVER(PARTITION BY O.CONTROL_SEQ, O.CONTROL_DETAIL_SEQ ORDER BY O.POP_SEQ) AS POP_SEQ
                                                                     FROM jmes.TBL_POP O
-                                                				    WHERE N.CONTROL_SEQ = O.CONTROL_SEQ
-                                                                        AND N.CONTROL_DETAIL_SEQ = O.CONTROL_DETAIL_SEQ ORDER BY O.POP_SEQ DESC LIMIT 1
+                                                				    WHERE O.CONTROL_SEQ = N.CONTROL_SEQ
+                                                                        AND O.CONTROL_DETAIL_SEQ = N.CONTROL_DETAIL_SEQ ORDER BY O.POP_SEQ DESC LIMIT 1
                                                                 )
-             LEFT OUTER JOIN (
+            LEFT OUTER JOIN (
                 SELECT
                     A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, C.EQUIP_NM, A.WORK_USER_ID,
                     IFNULL(SF_GET_CODE_NM('1010', C.PROCESS_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS NC_WORK_TYPE,
@@ -541,7 +541,7 @@
                     AND A.MCT_WORK_SEQ IN (SELECT MAX(X.MCT_WORK_SEQ) FROM TBL_MCT_WORK X
                                            WHERE  X.DEL_YN = 'N' AND X.WORK_FINISH_DT IS NOT NULL
                                            GROUP BY X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ)
-             ) Z ON A.CONTROL_SEQ = Z.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ
+            ) Z ON A.CONTROL_SEQ = Z.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ
         WHERE 1 = 1
             AND IFNULL(A.WORK_TYPE, SPACE(0)) != 'WTP020' <!-- 조립이 아닌경우 -->
             <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">

@@ -405,37 +405,16 @@
                     {title: 'E/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
-            // {title: 'MCT Actual', align: 'center',
-            //     colModel: [
-            //         {title: '1', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_1'},
-            //         {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_1'},
-            //         {title: '2', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_2'},
-            //         {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_2'},
-            //         {title: '3', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_3'},
-            //         {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_3'},
-            //         {title: '4', minWidth: 15, width: 40, datatype: 'string', dataIndx: 'EQUIP_NM_4'},
-            //         {title: 'R/T', minWidth: 15, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORKING_TIME_4'},
-            //     ]
-            // },
-            // {title: '총 가공<br>시간(분)', dataType: 'integer', align: 'right', dataIndx: 'MCT_WORK_TIME'},
             {title: '현재위치', minWidth: 40, width: 100, dataType: 'string', dataIndx: 'POP_POSITION'},
             {title: '진행상태', minWidth: 40, width: 100, dataType: 'string', dataIndx: 'PART_STATUS'},
             {title: 'NC 가공 현황', align: 'center',
                 colModel: [
                     {title: '공정', dataIndx: 'NC_WORK_TYPE'},
-                    {title: '기기명', dataIndx: 'EQUIP_NM_1'},
+                    {title: '기기명', dataIndx: 'EQUIP_NM'},
                     {title: '작업자', dataIndx: 'NC_WORK_USER_NM'},
-                    {title: 'R/t', datatype: 'integer', dataIndx: 'WORKING_TIME_1'},
+                    {title: 'R/T', datatype: 'integer', dataIndx: 'WORKING_TIME'},
                 ]
             },
-            // {title: '가공진행 현황', align: 'center',
-            //     colModel: [
-            //         {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_NC'},
-            //         {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_MILLING'},
-            //         {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK'},
-            //         {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING'},
-            //     ]
-            // },
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
@@ -450,7 +429,6 @@
                 }
             },
             {title: '관리번호', width: 160, dataType: 'string', dataIndx: 'CONTROL_NUM_PART_NUM'},
-            // {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM'},
             {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {
                 title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
@@ -519,34 +497,11 @@
                     }
                 }
             },
-            // {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-            //     editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')},
-            //     render: function (ui) {
-            //         let cellData = ui.cellData;
-            //
-            //         if (cellData === '' || cellData === undefined) {
-            //             return '';
-            //         } else {
-            //             let workType = fnGetCommCodeGridSelectBox('1033');
-            //             let index = workType.findIndex(function (element) {
-            //                 return element.text === cellData;
-            //             });
-            //
-            //             if (index < 0) {
-            //                 index = workType.findIndex(function (element) {
-            //                     return element.value === cellData;
-            //                 });
-            //
-            //             }
-            //             return (index < 0) ? cellData : workType[index].text;
-            //         }
-            //     }
-            // },
             {title: '이전위치', dataType: 'string', minWidth: 40, width: 100, dataIndx: 'POP_PREV_POSITION'},
             {
                 title: '과거 경험', align: 'center', colModel: [
-                    {title: '총 L/T', dataType: 'string', minWidth: 40, width: 40, dataIndx: 'LAST_UNIT_LEAD_TIME'},
-                    {title: '실행일자', dataType: 'string', minWidth: 40, width: 100, dataIndx: 'LAST_MCT_START_DT'},
+                    {title: '총 L/T', dataType: 'string', width: 50, dataIndx: 'LAST_UNIT_LEAD_TIME'},
+                    {title: '실행일자', dataType: 'string', width: 100, dataIndx: 'LAST_MCT_START_DT'},
                     {title: '작업자', dataType: 'string', width: 65, dataIndx: 'LAST_MCT_WORK_USER'}
                 ]
             },
