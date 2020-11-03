@@ -489,12 +489,12 @@
 </div>
 <!-- 창고 공통 팝업 : E -->
 <!-- 이미지 미리보기 : S -->
-<div id="common_quick_drawing_popup" title="Drawing Information">
+<div id="common_quick_drawing_popup" title="Drawing Information" style="display: none;">
     <form class="form-inline" id="common_quick_drawing_form" name="common_quick_drawing_form" role="form" >
         <input type="hidden" id="gFileSeq" name="gFileSeq" value="">
         <div>
             <div>
-                <img id="drawingImage" style='width: 475px;height: 410px;' src="/resource/asset/images/common/drawing_blank.png">
+                <img id="drawingImage" style='width: 475px;height: 410px;' src="/resource/main/blank.jpg">
             </div>
             <div style="padding: 10px 2px 5px 0px; float: right;">
                 <button type="button" class="defaultBtn greenPopGra" id="common_quick_drawing_detail_view">상세보기</button>
@@ -552,6 +552,12 @@
             height : "500",        // dialog 높이 지정
             modal:false, //모달대화상자
             resizable:false, //크기 조절 못하게
+            open: function( event, ui ) {
+                $("#common_quick_drawing_popup").show();
+            },
+            close: function( event, ui ) {
+                $("#common_quick_drawing_popup").hide();
+            }
         });
 
         $('#common_quick_drawing_form').find('#common_quick_drawing_detail_view').on('click', function (e) {
