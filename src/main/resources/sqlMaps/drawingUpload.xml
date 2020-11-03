@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="drawingUploadMapper">
+
+    <insert id="insertDrawingUpload" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_DRAWING_UPLOAD
+            (WORK_KEY, GFILE_SEQ, FILE_TYPE, MAPPING_STR, DXF_GFILE_SEQ, PDF_GFILE_SEQ, IMG_GFILE_SEQ, SUCCESS, MESSAGE)
+        VALUES
+            (#{WORK_KEY}, #{GFILE_SEQ}, #{FILE_TYPE}, #{MAPPING_STR}, #{DXF_GFILE_SEQ}, #{PDF_GFILE_SEQ}, #{IMG_GFILE_SEQ}, #{SUCCESS}, #{MESSAGE})
+    </insert>
+
+    <select id="selectDrawingUploadFileList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            UUID() AS ROW_NUM,
+           	C.ORGINAL_FILE_NM, C.FILE_EXT, C.FILE_SIZE, A.MAPPING_STR, A.MESSAGE, A.SUCCESS,
+            A.DXF_GFILE_SEQ, A.DXF_GFILE_SEQ, A.IMG_GFILE_SEQ
+        FROM jmes.TBL_DRAWING_UPLOAD A
+            INNER JOIN jmes.TBL_FILE_GROUP B ON A.GFILE_SEQ = B.GFILE_SEQ
+            INNER JOIN jmes.TBL_FILE C ON B.GFILE_SEQ = C.GFILE_SEQ
+         WHERE A.WORK_KEY = #{WORK_KEY}
+         ORDER BY A.UPLOAD_SEQ
+    </select>
+
+    <select id="selectDrawingUploadControlDataList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            UUID() AS ROW_NUM,
+            A.CONTROL_SEQ, A.CONTROL_NUM, A.CONTROL_DETAIL_SEQ, A.ITEM_NM, A.PART_NUM, A.ORDER_SEQ, A.ORDER_NUM,
+            A.DRAWING_NUM, A.DRAWING_VER, A.DRAWING_UP_DT,
+            A.DXF_GFILE_SEQ, A.PDF_GFILE_SEQ, A.IMG_GFILE_SEQ
+        FROM jmes.TBL_DRAWING_UPLOAD_CONTROL A
+        WHERE 1 = 1
+            AND A.WORK_KEY = #{WORK_KEY}
+        ORDER BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.ORDER_SEQ
+    </select>
+
+    <update id="manageControlCadFiles" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            DRAWING_UP_DT = NOW(),
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+    <update id="manageControlCadFiles_order" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART_ORDER
+        SET
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND ORDER_SEQ = #{ORDER_SEQ}
+    </update>
+
+    <update id="manageControlCadRevFiles" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            DRAWING_VER = IFNULL(DRAWING_VER, 0) + 1,
+            DRAWING_UP_DT = NOW(),
+            PREV_DRAWING_NUM = DRAWING_NUM,
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+    <update id="manageControlCadRevFiles_order" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART_ORDER
+        SET
+            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
+            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
+            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND ORDER_SEQ = #{ORDER_SEQ}
+    </update>
+
+    <update id="manageControlCadRevFiles_revDelete" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_BARCODE
+        SET
+            DEL_YN = 'Y',
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND DEL_YN = 'N'
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+    <update id="manageControlCadRevFiles_revInsert" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_CONTROL_BARCODE (BARCODE_NUM, CONTROL_SEQ, CONTROL_DETAIL_SEQ, CONTROL_VER, DRAWING_VER, DEL_YN, INSERT_ID)
+        SELECT
+            CONCAT('C', LPAD(NEXTVAL(SEQ_BARCODE), 9, '0')) as BARCODE_NUM, A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.CONTROL_VER, IFNULL(B.DRAWING_VER, 1), 'N' AS DEL_YN, #{LOGIN_USER_ID} AS INSERT_ID
+        FROM jmes.TBL_CONTROL A
+            INNER JOIN jmes.TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+                AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        WHERE 1 = 1
+            AND A.DEL_YN = 'N'
+    </update>
+
+
+</mapper>

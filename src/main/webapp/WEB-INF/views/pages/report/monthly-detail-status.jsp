@@ -97,7 +97,7 @@
                             <button class="triangle right ml-10" id="next"></button>
                         </div>
                         <div class="ml-auto">
-                            <button type="button" id="STATUS_BY_CLIENT_EXPORT_EXCEL"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="STATUS_BY_CLIENT_EXPORT_EXCEL"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                         </div>
                     </div>
                     <div class="mt-10" id="STATUS_BY_CLIENT_GRID"></div>

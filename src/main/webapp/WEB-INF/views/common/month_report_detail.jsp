@@ -197,7 +197,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('#imageView').bind('click', function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },

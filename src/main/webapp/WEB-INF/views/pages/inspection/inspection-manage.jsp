@@ -53,7 +53,7 @@
                         <span class="chk_box"><input id="INSPECTION_MANAGE_SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox" checked><label for="INSPECTION_MANAGE_SEL_OUTSIDE_YN">외주제외</label></span>
                         <span class="chk_box"><input id="INSPECTION_MANAGE_SEL_INNER_WORK_FINISH_YN" name="SEL_INNER_WORK_FINISH_YN" type="checkbox" checked><label for="INSPECTION_MANAGE_SEL_INNER_WORK_FINISH_YN">가공완료</label></span>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="INSPECTION_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="INSPECTION_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="inspection_manage_search_btn">검색</button>
                         </span>
                     </li>
@@ -134,10 +134,11 @@
                 <div class="m_area">
                     <div class="numWrap">
                         <span><b>&#9900; 수량 :</b><i id="ORDER_QTY_VIEW" style="padding-left: 0px;width: 100px;" class="center_sort">0</i></span>
-                        <span><b>&#9900; 불량수량 :</b><i id="ERROR_QTY_VIEW" style="padding-left: 0px;width: 100px;margin-right: 10px;" class="center_sort">0</i>
-                        <button type="button" id="inspection_manage_pop_plus_btn" class="btn_plus" style="display: none;margin-right: 10px;">더하기</button>
-                        <button type="button" id="inspection_manage_pop_plus_minus" class="btn_minus" style="display: none">빼기</button>
-                    </span>
+                        <span style="width: 270px">
+                            <b>&#9900; 불량수량 :</b><i id="ERROR_QTY_VIEW" style="padding-left: 0px;width: 100px;margin-right: 10px;" class="center_sort">0</i>
+                            <button type="button" id="inspection_manage_pop_plus_btn" class="btn_plus" style="display: none;margin-right: 10px;">더하기</button>
+                            <button type="button" id="inspection_manage_pop_plus_minus" class="btn_minus" style="display: none">빼기</button>
+                        </span>
                     </div>
                     <div class="buttonWrap" id="inspect_grade_btn">
                         <button type="button" class="gradeBtn green" id="inspect_grade_GRD010"><span>A</span></button>
@@ -352,7 +353,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
@@ -370,7 +371,7 @@
                     if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
-                        return ui.rowData.SYMMETRY ? cellData + '&nbsp;<span style="background-color: #C00000; color: white; font-size: 1.2rem; text-align: center; vertical-align: middle;">대</span>' : cellData;
+                        return ui.rowData.SAME_SIDE_YN === 'Y' ? cellData + '&nbsp;<span style="background-color: #C00000; color: white; font-size: 1.2rem; text-align: center; vertical-align: middle;">대</span>' : cellData;
                     }
                 }
             },

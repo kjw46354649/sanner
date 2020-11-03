@@ -218,6 +218,7 @@
         let $btnEstimateRegisterDrawAdd = $("#btnEstimateRegisterDrawAdd");
 
         let estimateRegisterTopColModel= [
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
@@ -230,13 +231,13 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 100, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {
-                title: '파<br>트', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM', editable: false,
+                title: '파<br>트', dataType: 'integer', dataIndx: 'PART_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
                 render: function (ui) {
                     if (ui.rowData.WORK_TYPE === 'WTP020') {
                         return '<span class="ui-icon ui-icon-circle-plus" id="estimateListPartNumPlus" style="cursor: pointer"></span>';
@@ -261,7 +262,7 @@
                             }
                         }
 
-                        newRowData.ROWNUM = totalRecords + 1;
+                        newRowData.ROW_NUM = totalRecords + 1;
                         newRowData.SEQ = "";
                         newRowData.PART_NUM = newPartNum;
                         newRowData.WORK_TYPE = 'WTP050';
@@ -666,7 +667,7 @@
         estimateRegisterTopGrid.pqGrid({
             height: 383,
             dataModel: {
-                location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
+                location: "remote", dataType: "json", method: "POST", recIndx: 'ROW_NUM',
                 url: "/paramQueryGridSelect",
                 postData: fnFormToJsonArrayData('#estimate_register_hidden_form'),
                 getData: function (dataJSON) {
@@ -698,8 +699,11 @@
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
                     let firstRow = ui.selection._areas[i].r1;
                     let lastRow = ui.selection._areas[i].r2;
-
                     for (let i = firstRow; i <= lastRow; i++) estimateRegisterSelectedRowIndex.push(i);
+                    if(firstRow === lastRow){
+                        let selRowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: firstRow});
+                        callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
                 }
             },
             change: function( event, ui ) {
@@ -903,9 +907,9 @@
                     }
                 }
             },
-            cellClick: function (event, ui) {
-                if(ui.rowData.IMG_GFILE_SEQ && typeof(windowImageViewer) != 'undefined' && !windowImageViewer.closed) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
-            },
+            // cellClick: function (event, ui) {
+            //     if(ui.rowData.IMG_GFILE_SEQ && typeof(windowImageViewer) != 'undefined' && !windowImageViewer.closed) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+            // },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     estimateRegisterTopGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});

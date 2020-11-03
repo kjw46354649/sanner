@@ -165,6 +165,7 @@
             ,COMP_NM AS `text`, CAST(COMP_CD AS CHAR) AS `value`
         FROM TBL_COMPANY A
         WHERE 1 = 1
+            AND A.ACTIVE_YN = 'Y'
             AND A.DEL_YN = 'N'
             AND A.CO_COMPANY_YN = 'Y'
             AND EXISTS(SELECT *

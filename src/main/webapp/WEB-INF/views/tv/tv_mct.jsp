@@ -720,8 +720,8 @@
 												</div>
 											</li>
 										</ul>
-										<ul class="p_row"  id="ARE02_2_1" style="padding:21px 20px 0;">
-											<li class="p_col">
+										<ul class="p_row"  style="padding:21px 20px 0;">
+											<li class="p_col" id="ARE02_2_1" >
 												<div class="statusWrap">
 													<div class="statusBar">
 														<div class="inBox"></div>

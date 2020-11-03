@@ -394,10 +394,10 @@
                         <c:if test="${not empty workInfo && workInfo.EMERGENCY_YN eq 'Y'}">
                             <span class="alertBox"><srping:message key='drawing.board.label.10'/></span>
                         </c:if>
-                        <c:if test="${not empty workInfo && workInfo.SIDE_YN eq 'Y'}">
+                        <c:if test="${not empty workInfo && workInfo.SAME_SIDE_YN eq 'Y'}">
                             <span class="alertBox"><srping:message key='drawing.board.label.18'/></span>
                         </c:if>
-                        <c:if test="${(empty workInfo || (workInfo.MAIN_INSPECTION eq '' &&  orkInfo.EMERGENCY_YN ne 'Y' && workInfo.SIDE_YN ne 'Y'))}">
+                        <c:if test="${(empty workInfo || (workInfo.MAIN_INSPECTION eq '' &&  orkInfo.EMERGENCY_YN ne 'Y' && workInfo.SAME_SIDE_YN ne 'Y'))}">
                             <span style="height: 35px; line-height: 35px;">&nbsp; &nbsp;</span>
                         </c:if>
                     </div>

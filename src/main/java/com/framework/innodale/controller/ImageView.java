@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +32,7 @@ public class ImageView extends AbstractView {
 
         String fileName = (String)model.get("blank_image");
 
-        if(fileInfo != null && fileInfo.containsKey("FILE_PATH")){
+        if(fileInfo != null && fileInfo.containsKey("FILE_PATH") && Files.exists(Paths.get((String)fileInfo.get("FILE_PATH"))) ){
             fileName = (String)fileInfo.get("FILE_PATH");
         }
         // InputStream in = getClass().getResourceAsStream(fileName);

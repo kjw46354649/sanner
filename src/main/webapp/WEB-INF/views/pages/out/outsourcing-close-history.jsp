@@ -37,11 +37,6 @@
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
                             <input type="text" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
                         </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="ITEM_NM">품명</label>
-                            <input type="text" class="wd_200" name="ITEM_NM" id="ITEM_NM">
-                        </span>
                     </li>
                     <li>
                         <span class="ipu_wrap">
@@ -60,11 +55,6 @@
                             <select class="wd_200" id="STANDARD">
                                 <option></option>
                             </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="MODULE_NM">모듈명</label>
-                            <input type="text" class="wd_200" name="MODULE_NM" id="MODULE_NM">
                         </span>
                     </li>
                     <li>
@@ -87,7 +77,7 @@
                             <input type="text" class="wd_200" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
                         </span>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="OUTSIDE_CLOSE_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="OUTSIDE_CLOSE_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="OUTSIDE_CLOSE_HISTORY_SEARCH">검색</button>
                         </span>
                     </li>
@@ -221,7 +211,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },

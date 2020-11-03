@@ -422,7 +422,7 @@
                             <%--<span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
                         </div>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="CAM_WORK_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="CAM_WORK_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="CAM_WORK_HISTORY_SEARCH">검색</button>
                         </span>
                     </li>
@@ -514,7 +514,7 @@
 <%--                            <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
                         </div>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="NC_PERFORMANCE_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="NC_PERFORMANCE_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="NC_PERFORMANCE_HISTORY_SEARCH">검색</button>
                         </span>
                     </li>
@@ -676,7 +676,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
@@ -839,7 +839,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
@@ -1151,7 +1151,7 @@
             let drawingNum = rowData.DRAWING_NUM;
             if(rowData.DRAWING_VER === "Y") drawingNum += " <span> ( " + rowData.DRAWING_VER + ") </span>";
             $("#cam_work_history_pop_form").find("#DRAWING_NUM").html(drawingNum);
-            $("#cam_work_history_pop_form").find("#WORK_TYPE").html(rowData.MCT_WORK_TYPE_NM);
+            $("#cam_work_history_pop_form").find("#WORK_TYPE").html(rowData.WORK_TYPE_NM);
             let drawingFile = "";
             if(rowData.CAM_STATUS === "CWS020") drawingFile = "<a href='/downloadGfile/" + rowData.DXF_GFILE_SEQ + "' download><input type='button' class='smallBtn blue' value='다운로드'/></a>";
             $("#cam_work_history_pop_form").find("#DXF_DOWNLOAD").html(drawingFile);

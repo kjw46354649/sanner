@@ -471,8 +471,8 @@
 										</ul>
 									</div>
 									<div class="page tab1" style="width: 880px">
-										<ul class="p_row" id="ARE04_1">
-											<li class="p_col">
+										<ul class="p_row" >
+											<li class="p_col" id="ARE04_1">
 												<div class="thumb thb_blue">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -854,8 +854,8 @@
 										</ul>
 									</div>
 									<div class="page tab1">
-										<ul class="p_row" id="ARE06_1">
-											<li class="p_col">
+										<ul class="p_row" >
+											<li class="p_col" id="ARE06_1">
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">

@@ -272,7 +272,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('[name=imageView]').bind('click', function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
@@ -386,7 +386,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('[name=imageView]').bind('click', function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
@@ -501,7 +501,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('[name=imageView]').bind('click', function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
@@ -608,7 +608,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('[name=imageView]').bind('click', function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
@@ -888,7 +888,6 @@
         $('#PROCESS_CONFIRM_DRAWING_VIEW').on('click', function () {
             if (selectedGrid !== undefined && selectedRowIndex.length !== 0) {
                 let rowData = selectedGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex});
-
                 callWindowImageViewer(rowData.IMG_GFILE_SEQ);
             }
         });

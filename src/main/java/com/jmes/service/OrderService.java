@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface OrderService {
 
-    void createNewOrder(Map<String, Object> map) throws Exception;
+    void createNewOrder(Model model, Map<String, Object> map) throws Exception;
 
     void createNewOrderConfirm(Map<String, Object> map) throws Exception;
 

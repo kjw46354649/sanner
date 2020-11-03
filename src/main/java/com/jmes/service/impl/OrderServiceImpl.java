@@ -1,12 +1,8 @@
 package com.jmes.service.impl;
 
-import java.sql.SQLException;
-import java.util.UUID;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.innodale.dao.InnodaleDao;
-import com.framework.innodale.entity.ActionType;
 import com.framework.innodale.entity.MessageType;
 import com.framework.innodale.entity.NotificationMessage;
 import com.jmes.dao.OrderDao;
@@ -28,12 +24,13 @@ public class OrderServiceImpl implements OrderService {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
-    public void createNewOrder(Map<String, Object> map) throws Exception {
+    public void createNewOrder(Model model, Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Map<String, Object>> jsonMap = null;
         Map<String, Object> hashMap = new HashMap<String, Object>();
         String uuid = UUID.randomUUID().toString();
+        List<Map<String, Object>> duplicationList;
 
         if (jsonObject != null) {
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {});
@@ -44,8 +41,14 @@ public class OrderServiceImpl implements OrderService {
 
         hashMap.put("queryId", "orderMapper.createControlExcel");
         this.innodaleDao.create(hashMap);
-        hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
-        this.innodaleDao.create(hashMap);
+        hashMap.put("queryId", "orderMapper.selectBeforeInsertDuplicationControlList");
+        duplicationList = this.innodaleDao.getList(hashMap);
+        if (duplicationList.size() > 0) {
+            model.addAttribute("list", duplicationList);
+        } else {
+            hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
+            this.innodaleDao.create(hashMap);
+        }
     }
 
     @Override
@@ -229,12 +232,12 @@ public class OrderServiceImpl implements OrderService {
                 hashMap.put("INVOICE_NUM", invoiceNum);
                 hashMap.put("queryId", "orderMapper.createInvoiceDetail");
                 this.innodaleDao.create(hashMap);
-                hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt1");
-                this.innodaleDao.update(hashMap);
-                hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt2");
-                this.innodaleDao.update(hashMap);
-                hashMap.put("queryId", "inspection.insertControlPartOrderPackingCnt3");
-                this.innodaleDao.create(hashMap);
+//                hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt1");
+//                this.innodaleDao.update(hashMap);
+//                hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt2");
+//                this.innodaleDao.update(hashMap);
+//                hashMap.put("queryId", "inspection.insertControlPartOrderPackingCnt3");
+//                this.innodaleDao.create(hashMap);
             }
         }
 
@@ -250,7 +253,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void processConfirmBarcodeInfo(Model model, Map<String, Object> map) throws SQLException {
+    public void processConfirmBarcodeInfo(Model model, Map<String, Object> map) throws Exception {
         String barcodeNum = (String) map.get("BARCODE_NUM");
         String type = (String) map.get("TYPE");
         boolean flag = false;

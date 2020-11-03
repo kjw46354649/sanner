@@ -70,8 +70,8 @@
                 }
             },
             {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', dataType: 'integer', dataIndx: 'PART_NUM'},
-            {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
+            {title: '파<br>트', minWidth: 25, dataType: 'integer', dataIndx: 'PART_NUM'},
+            {title: '', minWidth: 25, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
                     if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>'
                 },
@@ -80,30 +80,30 @@
                         $cell = grid.getCell(ui);
                     $cell.find('#imageView').bind('click', function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
-            {title: '도면번호', width: 120, dataIndx: 'DRAWING_NUM'},
+            {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {title: '품명', width: 110, dataIndx: 'ITEM_NM'},
-            {title: '작업<br>형태', width: 110, dataIndx: 'WORK_NM'},
+            {title: '작업<br>형태', minWidth: 40, dataIndx: 'WORK_TYPE_NM'},
             {title: '외주', dataIndx: 'OUTSIDE_YN'},
             {title: '자재<br>사급', dataIndx: 'OUTSIDE_YN'},
             {title: '규격', width: 110, dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL'},
             {title: '표면<br>처리', width: 80, dataIndx: 'SURFACE_TREAT'},
-            {title: 'Part<br>Unit', dataType: 'integer', dataIndx: 'PART_UNIT_QTY'},
-            {title: '발주번호', width: 90, dataIndx: 'ORDER_NUM'},
+            {title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY'},
+            {title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM'},
             {title: '수량', dataIndx: 'ORDER_QTY'},
             {
                 title: '대칭', align: 'center', colModel: [
-                    {title: '원칭', align: 'right', dataType: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
-                    {title: '대칭', align: 'right', dataType: 'integer', dataIndx: 'OTHER_SIDE_QTY'}
+                    {title: '원칭', dataType: 'integer', dataIndx: 'ORIGINAL_SIDE_QTY'},
+                    {title: '대칭', dataType: 'integer', dataIndx: 'OTHER_SIDE_QTY'}
                 ]
             },
-            {title: '견적단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT'},
-            {title: '공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '합계금액', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'}
+            {title: '견적단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT'},
+            {title: '공급단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '합계금액', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'}
         ];
         const detailListViewObj = {
             height: 650,

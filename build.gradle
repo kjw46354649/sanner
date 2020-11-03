@@ -66,12 +66,11 @@ dependencies {
 
     // cat to pdf convert
     // https://mvnrepository.com/artifact/com.aspose/aspose-cad
-    compile group: 'com.aspose', name: 'aspose-cad', version: '20.4'
+    compile group: 'com.aspose', name: 'aspose-cad', version: '20.9'
     // https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor
     // compile group: 'com.drewnoakes', name: 'metadata-extractor', version: '2.13.0'
     // https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib
     // compile group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
-
 
     // pdf to image convert
     // https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox

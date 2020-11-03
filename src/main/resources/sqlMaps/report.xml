@@ -24,7 +24,7 @@
             , Z.PART_QTY
             , Z.FORECAST_AMT
             , Z.DT_GOAL_AMT
-            , CASE WHEN IFNULL(Z.DT_GOAL_AMT,0) = 0 THEN NULL ELSE CONCAT(FORMAT(IFNULL(Z.FORECAST_AMT,0) / IFNULL(Z.DT_GOAL_AMT,0) * 100,1),'%') END AS GOAL_RATIO
+            , CASE WHEN IFNULL(Z.DT_GOAL_AMT,0) = 0 THEN NULL ELSE FORMAT(IFNULL(Z.FORECAST_AMT,0) / IFNULL(Z.DT_GOAL_AMT,0) * 100,1) END AS GOAL_RATIO
             , Z.WORKING_TIME
             , Z.ERROR_CNT
             , Z.ERROR_QTY
@@ -107,12 +107,12 @@
             , Z.INNER_DUE_DT
             , Z.PART_QTY
             , Z.INNER_WORK_FINISH_DT
-            , ROUND(Z.WORK_TIME / 60,1) AS WORK_TIME
+            , FORMAT(Z.WORK_TIME / 60,1) AS WORK_TIME
             , Z.FORECAST_UNIT_AMT
             , Z.PART_QTY * Z.FORECAST_UNIT_AMT AS TOTAL_AMT
-            , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE Z.PART_QTY * Z.FORECAST_UNIT_AMT / (Z.WORK_TIME / 60 / 60) END AS PRICE_PER_HOUR
+            , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE FORMAT(Z.PART_QTY * Z.UNIT_FINAL_AMT / (Z.WORK_TIME / 60 / 60),0) END AS PRICE_PER_HOUR
             , CASE WHEN Z.PREV_DRAWING_NUM IS NOT NULL THEN (   SELECT M.UNIT_FINAL_AMT
-                                                                FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                                                                FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                                                                 WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                                                     AND N.CONTROL_STATUS = 'ORD003'
                                                                     AND N.DEL_YN = 'N'
@@ -120,7 +120,7 @@
                                                                 ORDER BY M.CONTROL_SEQ DESC
                                                                 LIMIT 1)
                    ELSE (   SELECT M.UNIT_FINAL_AMT
-                            FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                            FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                             WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                 AND N.CONTROL_STATUS = 'ORD003'
                                 AND N.DEL_YN = 'N'
@@ -147,8 +147,8 @@
                     , jmes.SF_GET_DATE_F(Y.INNER_WORK_FINISH_DT,'','M') AS INNER_WORK_FINISH_DT
                     , (SELECT ROUND(SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)),0) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = P.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ) AS WORK_TIME
                     , Y.FORECAST_UNIT_AMT
-                    , Y.UNIT_FINAL_EST_AMT
-                    , Y.UNIT_FINAL_AMT
+                    , M.UNIT_FINAL_EST_AMT
+                    , M.UNIT_FINAL_AMT
                     , jmes.SF_GET_CODE_NM('1040',P.INSPECT_GRADE,#{LOGIN_LOCALE}) AS INSPECT_GRADE_NM   <!-- 언어조건 -->
                     , jmes.SF_GET_CODE_NM('1020',P.INSPECT_RESULT,#{LOGIN_LOCALE}) AS INSPECT_RESULT_NM   <!-- 언어조건 -->
                     , P.ERROR_QTY
@@ -156,7 +156,7 @@
                     , Y.DRAWING_NUM
                     , Y.PREV_DRAWING_NUM
                 FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.IMG_GFILE_SEQ
-                            , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
+                            , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
                             , jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS PART_QTY
                             , IFNULL(A.FORECAST_UNIT_AMT,0) AS FORECAST_UNIT_AMT
                             , ROW_NUMBER() OVER (PARTITION BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ ORDER BY B.INSPECT_SEQ) AS INSPECT_RNUM
@@ -167,10 +167,11 @@
                         WHERE A.INNER_WORK_FINISH_DT IS NOT NULL
                             AND A.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(#{DT},'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE)                        <!-- 고정조건 -->
                             AND A.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(#{DT},'%Y%m%d'), INTERVAL 1 DAY), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE)   <!-- 고정조건 -->
-                      ) P, jmes.TBL_CONTROL X, jmes.TBL_CONTROL_PART Y
+                      ) P, jmes.TBL_CONTROL X, jmes.TBL_CONTROL_PART Y, jmes.TBL_CONTROL_PART_ORDER_MAIN M
                 WHERE P.CONTROL_SEQ = X.CONTROL_SEQ
                     AND P.CONTROL_SEQ = Y.CONTROL_SEQ
                     AND P.CONTROL_DETAIL_SEQ = Y.CONTROL_DETAIL_SEQ
+					AND P.CONTROL_SEQ = M.CONTROL_SEQ
                     AND P.INSPECT_RNUM = 1
                     AND X.DEL_YN = 'N'
                     AND Y.WORK_TYPE != 'WTP020'
@@ -424,15 +425,15 @@
             , Z.PART_STATUS_NM
             , Z.WORK_FACTORY_NM
             , Z.INNER_WORK_FINISH_DT
-	        , ROUND(Z.WORK_TIME / 60,1) AS WORK_TIME
+	        , FORMAT(Z.WORK_TIME / 60,1) AS WORK_TIME
             , Z.OUTSIDE_COMP_NM
             , Z.OUTSIDE_IN_DT
             , Z.OUT_FINISH_DT
             , Z.FORECAST_UNIT_AMT
             , Z.PART_QTY * Z.FORECAST_UNIT_AMT AS TOTAL_AMT
-            , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE Z.PART_QTY * Z.FORECAST_UNIT_AMT / (Z.WORK_TIME / 60 / 60) END AS PRICE_PER_HOUR
+            , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE FORMAT(Z.PART_QTY * Z.UNIT_FINAL_AMT / (Z.WORK_TIME / 60 / 60),0) END AS PRICE_PER_HOUR
             , CASE WHEN Z.PREV_DRAWING_NUM IS NOT NULL THEN (   SELECT M.UNIT_FINAL_AMT
-                                                                FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                                                                FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                                                                 WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                                                     AND N.CONTROL_STATUS = 'ORD003'
                                                                     AND N.DEL_YN = 'N'
@@ -440,7 +441,7 @@
                                                                 ORDER BY M.CONTROL_SEQ DESC
                                                                 LIMIT 1)
                    ELSE (   SELECT M.UNIT_FINAL_AMT
-                            FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                            FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                             WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                 AND N.CONTROL_STATUS = 'ORD003'
                                 AND N.DEL_YN = 'N'
@@ -474,8 +475,8 @@
                     , CASE WHEN P.OUTSIDE_YN = 'Y' THEN jmes.SF_GET_DATE_F(Y.OUTSIDE_IN_DT,'','M') END AS OUTSIDE_IN_DT
                     , jmes.SF_GET_DATE_F(P.OUT_FINISH_DT,'','M') AS OUT_FINISH_DT
                     , Y.FORECAST_UNIT_AMT
-                    , Y.UNIT_FINAL_EST_AMT
-                    , Y.UNIT_FINAL_AMT
+                    , M.UNIT_FINAL_EST_AMT
+                    , M.UNIT_FINAL_AMT
                     , jmes.SF_GET_CODE_NM('1040',P.INSPECT_GRADE,#{LOGIN_LOCALE}) AS INSPECT_GRADE_NM   <!-- 언어조건 -->
                     , jmes.SF_GET_CODE_NM('1020',P.INSPECT_RESULT,#{LOGIN_LOCALE}) AS INSPECT_RESULT_NM   <!-- 언어조건 -->
                     , P.ERROR_QTY
@@ -556,10 +557,11 @@
                                 AND B.OUT_FINISH_DT <![CDATA[ < ]]> A.ORDER_DUE_DT
                             </when>
                         </choose>
-                    ) P, jmes.TBL_CONTROL X, jmes.TBL_CONTROL_PART Y
+                    ) P, jmes.TBL_CONTROL X, jmes.TBL_CONTROL_PART Y, jmes.TBL_CONTROL_PART_ORDER_MAIN M
                 WHERE P.CONTROL_SEQ = X.CONTROL_SEQ
                     AND P.CONTROL_SEQ = Y.CONTROL_SEQ
                     AND P.CONTROL_DETAIL_SEQ = Y.CONTROL_DETAIL_SEQ
+					AND P.CONTROL_SEQ = M.CONTROL_SEQ
                     AND P.INSPECT_RNUM = 1
             ) Z
     </select>

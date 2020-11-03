@@ -134,23 +134,18 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
-            {title: '도면번호', dataIndx: 'DRAWING_NUM'},
+            {title: '도면번호', align: 'left', dataIndx: 'DRAWING_NUM'},
             {title: '규격', dataIndx: 'SIZE_TXT'},
             {title: '작업형태', dataIndx: 'WORK_TYPE_NM'},
-            {title: '수량', align: 'right', dataType: 'integer', dataIndx: 'CONTROL_ORDER_QTY'},
+            {title: '수량', dataType: 'integer', dataIndx: 'CONTROL_ORDER_QTY'},
             {title: '공급단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
             {title: '금액 계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
-                title: '포장수량',
-                align: 'right',
-                dataType: 'integer',
-                format: '#,###',
-                dataIndx: 'PACKING_CNT',
-                editable: true,
+                title: '포장수량', dataType: 'integer', format: '#,###', dataIndx: 'PACKING_CNT', editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
             {
@@ -390,7 +385,7 @@
                 return array.indexOf(element) === index;
             });
 
-            if (invoiceNumList[0] === undefined) {
+            if (fnIsEmpty(invoiceNumList[0])) {
                 fnAlert(null, '저장 후 엑셀 출력해주세요.');
                 return false;
             }

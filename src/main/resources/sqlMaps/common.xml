@@ -83,6 +83,15 @@
         WHERE A.GFILE_SEQ  = #{GFILE_SEQ}
     </select>
 
+    <select id="selectQuickGfileFileImageInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, CONCAT(B.FILE_PATH, '.thumbnail.png') AS FILE_PATH,
+            TIME_PATH, B.FILE_SIZE, SF_GET_DATE_F(B.INSERT_DT,'YYYY','') AS INSERT_DT
+        FROM jmes.TBL_FILE_GROUP A
+            INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
+        WHERE A.GFILE_SEQ  = #{GFILE_SEQ}
+    </select>
+
     <select id="selectGfileFileSingleInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH, B.FILE_SIZE,
@@ -165,11 +174,11 @@
             ELSE IF(B.TOTAL_SHEET IS NULL, CONCAT(B.CONTROL_NUM, ' #', C.PART_NUM), CONCAT(B.CONTROL_NUM, ' #', C.PART_NUM, ' /', B.TOTAL_SHEET))
         END AS CONTROL_NUM_INFO
         , B.CONTROL_VER
-        , C.DRAWING_NUM
+        , C.DRAWING_NUM <!-- FIXME: 확인필요 -->
         , IFNULL(C.DRAWING_VER, SPACE(0)) AS DRAWING_VER
         , CONCAT(IFNULL(jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ), 0), ' EA') AS ORDER_QTY
-        , IFNULL(C.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY
-        , IFNULL(C.OTHER_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY
+        , jmes.SF_GET_SIDE_QTY(B.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1) AS ORIGINAL_SIDE_QTY <!-- 대칭_원칭 -->
+        , jmes.SF_GET_SIDE_QTY(B.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1) AS OTHER_SIDE_QTY <!-- 대칭_대칭 -->
         , jmes.SF_GET_DATE_F(C.INNER_DUE_DT,'','') AS INNER_DUE_DT
         , C.SIZE_TXT
         , jmes.SF_GET_CODE_NM('1039', C.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM
@@ -181,12 +190,14 @@
         , jmes.SF_GET_CODE_NM('1059', B.MAIN_INSPECTION, #{LOGIN_LOCALE}) AS  MAIN_INSPECTION_NM
         , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = B.COMP_CD) AS COMP_NM
         , A.BARCODE_NUM
-        , C.IMG_GFILE_SEQ
-        FROM jmes.TBL_CONTROL_BARCODE A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
+        , C.IMG_GFILE_SEQ <!-- FIXME: 확인필요 -->
+        FROM jmes.TBL_CONTROL_BARCODE A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C, jmes.TBL_CONTROL_PART_ORDER_MAIN D
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
             AND A.CONTROL_SEQ = C.CONTROL_SEQ
             AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            AND C.CONTROL_SEQ = D.CONTROL_SEQ
             AND A.DEL_YN = 'N'
+            AND B.DEL_YN = 'N'
             AND A.BARCODE_NUM = #{BARCODE_NUM}
     </select>
 
@@ -196,18 +207,18 @@
             , A.PACKING_NUM
             , D.PACKING_CNT
             , (SELECT IFNULL(M.COMP_NM2, M.COMP_NM)  FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = B.COMP_CD) AS COMP_NM
-            , C.ITEM_NM
+            , D.ITEM_NM
             , (SELECT IFNULL(M.COMP_NM2, M.COMP_NM) FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = B.ORDER_COMP_CD) AS ORDER_COMP_NM
-            , C.DRAWING_NUM
-            , C.IMG_GFILE_SEQ
+            , D.DRAWING_NUM
+            , D.IMG_GFILE_SEQ
             , D.ORDER_NUM
-            , B.MODULE_NM
+            , D.MODULE_NM
             , jmes.SF_GET_DATE_F(D.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT
             , B.CONTROL_NUM
-            , B.DELIVERY_COMP_NM
-            , B.PROJECT_NM
+            , D.DELIVERY_COMP_NM
+            , D.PROJECT_NM
             , CONCAT(C.SIZE_TXT, ' / ', IFNULL(D.ORDER_QTY, 0), 'EA') AS SIZE_QTY_INFO
-            , B.LABEL_NOTE
+            , D.LABEL_NOTE
         FROM jmes.TBL_OUT_BARCODE A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C, jmes.TBL_CONTROL_PART_ORDER D
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
             AND A.CONTROL_SEQ = C.CONTROL_SEQ
@@ -216,6 +227,7 @@
             AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
             AND A.ORDER_SEQ = D.ORDER_SEQ
             AND A.DEL_YN = 'N'
+            AND B.DEL_YN = 'N'
             AND A.BARCODE_NUM = #{BARCODE_NUM}
     </select>
 

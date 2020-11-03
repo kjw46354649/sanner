@@ -488,6 +488,20 @@
     </form>
 </div>
 <!-- 창고 공통 팝업 : E -->
+<!-- 이미지 미리보기 : S -->
+<div id="common_quick_drawing_popup" title="Drawing Information">
+    <form class="form-inline" id="common_quick_drawing_form" name="common_quick_drawing_form" role="form" >
+        <input type="hidden" id="gFileSeq" name="gFileSeq" value="">
+        <div>
+            <div>
+                <img id="drawingImage" style='width: 475px;height: 410px;' src="/resource/asset/images/common/drawing_blank.png">
+            </div>
+            <div style="padding: 10px 2px 5px 0px; float: right;">
+                <button type="button" class="defaultBtn greenPopGra" id="common_quick_drawing_detail_view">상세보기</button>
+            </div>
+        </div>
+    </form>
+</div>
 
 <script type="text/javascript">
 
@@ -529,6 +543,22 @@
 
     $(function() {
         'use strict';
+
+        $("#common_quick_drawing_popup").dialog({
+            autoOpen:false, //자동으로 열리지않게
+            position:[100,200], //x,y  값을 지정
+            //"center", "left", "right", "top", "bottom"
+            width : "500",            // dialog 넓이 지정
+            height : "500",        // dialog 높이 지정
+            modal:false, //모달대화상자
+            resizable:false, //크기 조절 못하게
+        });
+
+        $('#common_quick_drawing_form').find('#common_quick_drawing_detail_view').on('click', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            callWindowImageViewer($('#common_quick_drawing_form').find('#gFileSeq').val());
+        });
 
         $("#user_info_pop").on('hide.bs.modal', function(){
             fnResetFrom("user_info_pop_form");
@@ -583,10 +613,9 @@
         let estimateCadFileColModel =  [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 1, minWidth: 70},
             {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ', hidden: true, width: 1, minWidth: 70},
-            {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 1, minWidth: 70},
+            // {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 1, minWidth: 70},
             {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ', hidden: true, width: 1, minWidth: 70},
             {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
-            // {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 150, minWidth: 100},
             {title: '견적번호', datatype: 'string', dataIndx: 'EST_NUM', width: 205, minWidth: 100},
             {title: '차수', align: 'center', dataType: 'string', dataIndx: 'EST_VER', width: 50, minWidth: 50},
             {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM', width: 255, minWidth: 100},
@@ -608,12 +637,12 @@
         let controlCadFileColModel =  [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70},
             {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 70, minWidth: 70},
-            {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 70, minWidth: 70},
             {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
-            {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 150, minWidth: 100},
+            // {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 150, minWidth: 100},
             {title: '관리번호', datatype: 'string', dataIndx: 'CONTROL_NUM', width: 155, minWidth: 100},
-            {title: '파<br>트', align: 'center', dataType: 'string', dataIndx: 'PART_NUM', width: 50, minWidth: 50},
+            {title: '파트', align: 'center', dataType: 'string', dataIndx: 'PART_NUM', width: 50, minWidth: 50},
             {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM', width: 155, minWidth: 100},
+            {title: '발주번호', align: 'center', dataType: 'string', dataIndx: 'ORDER_NUM', width: 155, minWidth: 50},
             {title: '도면번호', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 155, minWidth: 100},
             {title: 'Rev', align: 'center', dataType: 'string', dataIndx: 'DRAWING_VER', width: 50, minWidth: 50},
             {
@@ -633,14 +662,14 @@
         let controlCadRevFileColModel =  [
             {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70},
             {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 1, minWidth: 1},
-            {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 1, minWidth: 1},
             {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
-            {title: 'VER_UP', dataType: 'string', dataIndx: 'VER_UP', hidden: true, width: 1, minWidth: 1},
-            {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 150, minWidth: 100},
-            {title: '관리번호', datatype: 'string', dataIndx: 'CONTROL_NUM', width: 125, minWidth: 100},
-            {title: '파<br>트', align: 'center', dataType: 'string', dataIndx: 'PART_NUM', width: 50, minWidth: 50},
+            // {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 150, minWidth: 100},
+            {title: '관리번호', datatype: 'string', dataIndx: 'CONTROL_NUM', width: 155, minWidth: 100},
+            {title: '파트', align: 'center', dataType: 'string', dataIndx: 'PART_NUM', width: 50, minWidth: 50},
+            {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM', width: 155, minWidth: 100},
+            {title: '발주번호', align: 'center', dataType: 'string', dataIndx: 'ORDER_NUM', width: 155, minWidth: 100},
             {title: '도면번호', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 155, minWidth: 100},
-            {title: '규격', align: 'center', dataType: 'string', dataIndx: 'SIZE_TXT', width: 155, minWidth: 100},
+            // {title: '규격', align: 'center', dataType: 'string', dataIndx: 'SIZE_TXT', width: 155, minWidth: 100},
             {title: 'Rev', align: 'center', dataType: 'string', dataIndx: 'DRAWING_VER', width: 50, minWidth: 50},
             {title: '최근 변경일자', align: 'center', dataType: 'string', dataIndx: 'DRAWING_UP_DT', width: 100, minWidth: 50},
             {
@@ -662,7 +691,7 @@
             {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 70, minWidth: 70},
             {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 70, minWidth: 70},
             {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
-            {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 250, minWidth: 100},
+            // {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 250, minWidth: 100},
             {title: '재고번호', datatype: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 155, minWidth: 100},
             {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM', width: 155, minWidth: 100},
             {title: '도면번호', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 155, minWidth: 100},
@@ -816,6 +845,7 @@
                         formData.append('file', file, file.name);
                 });
                 formData.append('queryId', $('#common_cad_file_attach_form').find("#queryId").val() + "_select");
+                formData.append('actionType', $('#common_cad_file_attach_form').find('#actionType').val());
                 uploadControlFiles = [];    // 파일 업로드 정보 초기화
                 $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
                 $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
@@ -1481,7 +1511,7 @@
         g_ItemDetailPopGridId05.pqGrid('destroy');
     });
 
-    $("#g_item_detail_pop_form").find('#g_item_detail_pop_grid_05_pop_close, #popClose2').on('click', function () {
+    $("#g_item_detail_pop").find('#g_item_detail_pop_grid_05_pop_close, #popClose2').on('click', function () {
         $('#g_item_detail_pop').modal('hide');
     });
 

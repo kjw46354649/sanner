@@ -37,21 +37,7 @@
 </div>
 <script type="text/javascript">
 
-    // window.addEventListener('DOMContentLoaded', function () {
-    //     $('#dynamic').on('click', function(e) {
-    //         let image = new Image();
-    //         image.src = "/image/" + $("#image_seq").val();
-    //         let viewer = new Viewer(image, {
-    //             hidden: function () {
-    //                 viewer.destroy();
-    //             },
-    //         });
-    //         viewer.show();
-    //     });
-    // });
-
     let $viewer;
-
     $(document).ready(function() {
         $('#dynamic').on('click', function(e) {
             let image = new Image();

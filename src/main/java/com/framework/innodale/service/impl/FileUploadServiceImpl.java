@@ -114,6 +114,176 @@ public class FileUploadServiceImpl implements FileUploadService {
 
     /** 임시로 PDF 파일 업로드 하여 이미지 처리 하는 부분 적용 **/
     @Override
+    public void uploadDxfAndPdfCadFilesControlOrder(MultipartHttpServletRequest request, Model model) throws Exception {
+
+        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        // Demon Key 생성
+        hashMap.put("WORK_KEY", CommonUtility.getUUIDString("drawing"));
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", new Locale("ko", "KR"));
+        String uploadDatePath = formatter.format(new Date()).substring(0, 8) + File.separator + formatter.format(new Date());
+        String uploadTimePath = File.separator + formatter.format(new Date());
+        String uploadFilePath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.upload.cad.path") + File.separator + uploadDatePath;
+
+        ArrayList<HashMap<String, Object>> fileUploadList = new ArrayList<HashMap<String, Object>>();
+        ArrayList<HashMap<String, Object>> fileUploadDataList = new ArrayList<HashMap<String, Object>>();
+        Iterator<String> itr = (Iterator<String>)request.getFileNames();
+
+        if(itr.hasNext()) {
+
+            List<MultipartFile> fileList = request.getFiles(itr.next());
+
+            /**
+             * PDF 파일을 Image 파일로 변환하고 먼저 저장하여 정보를 가지고 있는다.
+             */
+            for (MultipartFile multipartFile : fileList) {
+
+                String serverFileName = CommonUtility.getUUIDString();
+                String serverFullFileName = "file-" + serverFileName;
+
+                HashMap<String, Object> fileInfo = new HashMap<String, Object>();
+
+                // String originalFullName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"), "utf-8");
+                String originalFullName = multipartFile.getOriginalFilename();
+                String mappingDrawingNum = originalFullName.substring(0, originalFullName.lastIndexOf(".")).toUpperCase();
+                if (mappingDrawingNum.indexOf("_") > 0)
+                    mappingDrawingNum = mappingDrawingNum.substring(0, mappingDrawingNum.indexOf("_")).toUpperCase();
+
+                String originalExtName = originalFullName.substring(originalFullName.lastIndexOf(".") + 1).toLowerCase();
+
+                if ("PDF".equalsIgnoreCase(originalExtName) || "DXF".equalsIgnoreCase(originalExtName)) {
+                    // 업로드 파일 경로
+                    String targetFilePath = uploadFilePath + File.separator + serverFullFileName + "." + originalExtName;
+
+                    CommonUtility.createFileDirectory(new File(uploadFilePath));
+
+                    fileInfo.put("FILE_NM", serverFullFileName + "." + originalExtName);
+                    fileInfo.put("MAPPING_STR", mappingDrawingNum);
+                    fileInfo.put("FILE_PATH", targetFilePath);
+                    fileInfo.put("TIME_PATH", uploadTimePath);
+                    fileInfo.put("UPLOAD_FILE_NM", originalFullName);
+                    fileInfo.put("ORGINAL_FILE_NM", originalFullName);
+                    fileInfo.put("FILE_TYPE", multipartFile.getContentType());
+                    fileInfo.put("FILE_EXT", originalExtName);
+                    fileInfo.put("FILE_SIZE", multipartFile.getSize());
+
+                    // 원본 파일 DB 저장 처리
+                    managerFileInformationInsert(fileInfo);
+                    // 확장자에 따른 컬럼 정의
+                    settingFileInfoColumn(fileInfo, multipartFile.getSize(), originalExtName);
+                    // 파일 업로드 원본 파일
+                    multipartFile.transferTo(new File(targetFilePath));
+
+                    // 업로드 파일 정보를 저장한다.
+
+                    if ("PDF".equalsIgnoreCase(originalExtName)) {
+
+                        hashMap.put("FILE_TYPE", "PDF_GFILE_SEQ");
+                        hashMap.put("GFILE_SEQ", fileInfo.get("PDF_GFILE_SEQ"));
+                        hashMap.put("PDF_GFILE_SEQ", fileInfo.get("PDF_GFILE_SEQ"));
+
+                        // 이미지 처리
+                        String targetImageFullpath = uploadFilePath + File.separator + serverFullFileName + ".png";
+                        int convertResult = MakePDFImageConvert(targetFilePath, targetImageFullpath);
+
+                        if (convertResult == 1) {
+
+                            File ImageFile = new File(targetImageFullpath);
+                            HashMap<String, Object> imageFileInfo = new HashMap<String, Object>();
+                            imageFileInfo.put("FILE_NM", serverFullFileName + ".png");
+                            imageFileInfo.put("MAPPING_STR", mappingDrawingNum);
+                            imageFileInfo.put("FILE_PATH", targetImageFullpath);
+                            imageFileInfo.put("TIME_PATH", uploadTimePath);
+                            imageFileInfo.put("UPLOAD_FILE_NM", originalFullName);
+                            imageFileInfo.put("ORGINAL_FILE_NM", originalFullName);
+                            imageFileInfo.put("FILE_TYPE", "image");
+                            imageFileInfo.put("FILE_EXT", "png");
+                            imageFileInfo.put("FILE_SIZE", ImageFile.length());
+                            // 원본 파일 DB 저장 처리
+                            managerFileInformationInsert(imageFileInfo);
+                            // 확장자에 따른 컬럼 정의
+                            settingFileInfoColumn(imageFileInfo, ImageFile.length(), "png");
+
+                            fileInfo.put("SUCCESS", "Y");
+                            fileInfo.put("MESSAGE", "");
+
+                            hashMap.put("SUCCESS", fileInfo.get("SUCCESS"));
+                            hashMap.put("MESSAGE", fileInfo.get("MESSAGE"));
+                            hashMap.put("IMG_GFILE_SEQ", imageFileInfo.get("IMG_GFILE_SEQ"));
+
+                        } else {
+                            fileInfo.put("SUCCESS", "N");
+                            fileInfo.put("MESSAGE", "PDF 이미지 변환 오류");
+
+                            hashMap.put("SUCCESS", fileInfo.get("SUCCESS"));
+                            hashMap.put("MESSAGE", fileInfo.get("MESSAGE"));
+                            hashMap.put("IMG_GFILE_SEQ", "");
+                        }
+
+                    } else {
+
+                        hashMap.put("FILE_TYPE", "DXF_GFILE_SEQ");
+                        hashMap.put("SUCCESS", "Y");
+                        hashMap.put("GFILE_SEQ", fileInfo.get("DXF_GFILE_SEQ"));
+                        hashMap.put("DXF_GFILE_SEQ", fileInfo.get("DXF_GFILE_SEQ"));
+                    }
+
+                    hashMap.put("MAPPING_STR", mappingDrawingNum);
+
+                } else {
+
+                    fileInfo.put("FILE_NM", serverFullFileName + "." + originalExtName);
+                    fileInfo.put("TIME_PATH", uploadTimePath);
+                    fileInfo.put("MAPPING_STR", mappingDrawingNum);
+                    fileInfo.put("UPLOAD_FILE_NM", originalFullName);
+                    fileInfo.put("ORGINAL_FILE_NM", originalFullName);
+                    fileInfo.put("FILE_TYPE", multipartFile.getContentType());
+                    fileInfo.put("FILE_EXT", originalExtName);
+                    fileInfo.put("FILE_SIZE", multipartFile.getSize());
+                    fileInfo.put("MESSAGE", "업로드 확장자 불가");
+                    fileInfo.put("SUCCESS", "N");
+
+                    // 원본 파일 DB 저장 처리
+                    managerFileInformationInsert(fileInfo);
+
+                    hashMap.put("GFILE_SEQ", fileInfo.get("GFILE_SEQ"));
+                    hashMap.put("MAPPING_STR", mappingDrawingNum);
+                    hashMap.put("SUCCESS", "N");
+                    hashMap.put("MESSAGE", "파일 형식이 맞지 않습니다.");
+
+                }
+
+                // 업로드 도면 기준 프로시저 적용 대상 작업 처리
+                hashMap.put("queryId", "drawingUploadMapper.insertDrawingUpload");
+                innodaleDao.create(hashMap);
+
+                hashMap.remove("SUCCESS");
+                hashMap.remove("MAPPING_STR");
+                hashMap.remove("MESSAGE");
+                hashMap.remove("GFILE_SEQ");
+                hashMap.remove("DXF_GFILE_SEQ");
+                hashMap.remove("PDF_GFILE_SEQ");
+                hashMap.remove("IMG_GFILE_SEQ");
+
+            }
+
+            // 도면 대상 업로드 리스트 및 적둉 대상 작업 리스트 조회
+            hashMap.put("queryId", "procedure.SP_CONTROL_DRAWING_UPLOAD");
+            innodaleDao.callProcedureMethod(hashMap);
+        }
+        model.addAttribute("result",       "success");
+        model.addAttribute("message",      "업로드를 완료 하였습니다.");
+
+        hashMap.put("queryId", "drawingUploadMapper.selectDrawingUploadFileList");
+        model.addAttribute("fileUploadList",     innodaleDao.getList(hashMap));
+
+        hashMap.put("queryId", "drawingUploadMapper.selectDrawingUploadControlDataList");
+        model.addAttribute("fileUploadDataList", innodaleDao.getList(hashMap));
+    }
+
+    /** 임시로 PDF 파일 업로드 하여 이미지 처리 하는 부분 적용 **/
+    @Override
     public void uploadDxfAndPdfCadFiles(MultipartHttpServletRequest request, Model model) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);

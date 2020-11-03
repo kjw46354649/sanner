@@ -37,22 +37,11 @@
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
                             <input type="text" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
                         </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="ITEM_NM">품명</label>
-                            <input type="text" class="wd_200" name="ITEM_NM" id="ITEM_NM">
-                        </span>
-
                     </li>
                     <li>
                         <span class="ipu_wrap">
                             <label class="label_100" for="CONTROL_NUM">관리번호</label>
                             <input type="text" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="MODULE_NM">모듈명</label>
-                            <input type="text" class="wd_200" name="MODULE_NM" id="MODULE_NM">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -122,7 +111,7 @@
                             </span>
                         </span>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="OUTSIDE_ORDER_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="OUTSIDE_ORDER_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="OUTSIDE_ORDER_SEARCH">검색</button>
                         </span>
                     </li>
@@ -445,7 +434,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
@@ -551,13 +540,14 @@
                         let date = ui.cellData;
 
                         return date.substring(5);
-                    } else {
-                        if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
-                            let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
-                            visibleDate.setDate(visibleDate.getDate() - 1);
-                            return visibleDate.mmdd();
-                        }
                     }
+                    // else {
+                        // if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
+                        //     let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
+                        //     visibleDate.setDate(visibleDate.getDate() - 1);
+                        //     return visibleDate.mmdd();
+                        // }
+                    // }
                 }
             },
             {
@@ -587,7 +577,7 @@
                 editable: true
             },
             {title: '금액<br>합계', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_TOTAL_AMT'},
-            {title: '외주<br>종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
+            {title: '외주<br>종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PREV_OUTSIDE_UNIT_AMT'},
             {
                 title: '품질결과', align: 'center', colModel: [
                     {title: 'Seq.', minWidth: 30, width: 35, datatype: 'integer', dataIndx: 'INSPECT_NUM'},
@@ -853,7 +843,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
@@ -948,13 +938,14 @@
                         let date = ui.cellData;
 
                         return date.substring(5);
-                    } else {
-                        if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
-                            let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
-                            visibleDate.setDate(visibleDate.getDate() - 1);
-                            return visibleDate.mmdd();
-                        }
                     }
+                    // else {
+                    //     if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
+                    //         let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
+                    //         visibleDate.setDate(visibleDate.getDate() - 1);
+                    //         return visibleDate.mmdd();
+                    //     }
+                    // }
                 }
             },
             {title: '비고', dataIndx: 'OUTSIDE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
@@ -1130,7 +1121,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },

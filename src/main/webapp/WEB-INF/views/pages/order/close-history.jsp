@@ -109,11 +109,11 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100">항목 Option</label></span>
                         <span class="wd_200" style="display: inline-block;">
-                            <span class="chk_box"><input type="checkbox" name="PART_NUM" id="PART_NUM"><label for="PART_NUM">Part</label></span>
+                            <span class="chk_box"><input type="checkbox" name="VISIBLE_PART" id="VISIBLE_PART"><label for="VISIBLE_PART">Part</label></span>
                             <span class="chk_box"><input type="checkbox" name="ORDER_NUM" id="ORDER_NUM"><label for="ORDER_NUM">발주번호</label></span>
                         </span>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="CLOSE_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="CLOSE_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="CLOSE_HISTORY_SEARCH">검색</button>
                         </span>
                     </li>
@@ -293,7 +293,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },

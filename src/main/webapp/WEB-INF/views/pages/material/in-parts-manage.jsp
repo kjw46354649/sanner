@@ -100,7 +100,7 @@
                         </div>
 <%--                        <span class="chk_box ml-20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>--%>
                         <span class="ipu_wrap right_float">
-                            <button type="button" id="CONTROL_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png"></button>
+                            <button type="button" id="CONTROL_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="searchBtn">검색</button>
                         </span>
 

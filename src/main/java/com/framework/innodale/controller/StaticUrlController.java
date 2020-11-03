@@ -107,6 +107,32 @@ public class StaticUrlController {
     }
 
     /**
+     * 도면의 경우 용량 적은 내용을 표시 한다.
+     * @param GFILE_SEQ
+     * @param req
+     * @param res
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/qimage/{gfileSeq}")
+    public ModelAndView quickImageFileView(@PathVariable("gfileSeq") String GFILE_SEQ, HttpServletRequest req, HttpServletResponse res) throws Exception {
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        HashMap<String, Object> fileInfo = new HashMap<String, Object>();
+        fileInfo.put("GFILE_SEQ", GFILE_SEQ);
+        fileInfo.put("queryId", "common.selectQuickGfileFileImageInfo");
+
+        modelAndView.addObject("imageInfo", innodaleService.getInfo(fileInfo));
+        String rootPath = req.getSession().getServletContext().getRealPath("/");
+
+        modelAndView.setViewName("imageView");
+        modelAndView.addObject("blank_image", rootPath + File.separator + "resource" + File.separator + "main" + File.separator + "blank.jpg");
+
+        return modelAndView;
+    }
+
+    /**
      * 하나의 Gfile로 구성되면 다운로드 처리
      * @param GFILE_SEQ
      * @param req

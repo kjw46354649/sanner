@@ -242,7 +242,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 180},
+            {title: '관리번호', align: 'left', width: 150, dataIndx: 'CONTROL_NUM'},
             {
                 title: '', minWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
@@ -259,6 +259,7 @@
             },
             {title: '수량', dataIndx: 'ORDER_QTY', minWidth: 40},
             {title: '발주번호', dataIndx: 'ORDER_NUM', width: 120},
+            {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {title: '진행상태', dataIndx: 'PART_STATUS', width: '10%'},
             {title: '현재위치', dataIndx: 'LAST_POP_POSITION', width: 80},
             {title: '검사', dataIndx: 'INSPECT_GRADE_NM', minWidth: 30}
