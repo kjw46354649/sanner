@@ -754,7 +754,7 @@
                             $cell.find('#imageView').bind('click', function () {
                                 let rowData = ui.rowData;
                                 // callWindowImageViewer(rowData.ORDER_IMG_GFILE_SEQ);
-                                $("#common_image_popup").dialog("open");
+                                callQuickDrawingImageViewer(rowData.ORDER_IMG_GFILE_SEQ);
                             });
                         }
                     },
@@ -1712,17 +1712,28 @@
             },
             cellClick: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화
-                if(ui.rowData.IMG_GFILE_SEQ && typeof(windowImageViewer) != 'undefined' && !windowImageViewer.closed) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                // if(ui.rowData.IMG_GFILE_SEQ && typeof(windowImageViewer) != 'undefined' && !windowImageViewer.closed) callQuickRowChangeDrawingImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
             selectChange: function (event, ui) {
+                // alert("selectChange");
                 supplyUnitCostInit(); // 공급단가적용 초기화
-
                 selectedOrderManagementRowIndex = [];
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
                     let firstRow = ui.selection._areas[i].r1;
                     let lastRow = ui.selection._areas[i].r2;
 
                     for (let i = firstRow; i <= lastRow; i++) selectedOrderManagementRowIndex.push(i);
+
+                    // if(firstRow === lastRow){
+                    //     let rows = ui.rows;
+                    //     console.log(firstRow);
+                    //     console.log(lastRow);
+                    //     console.log(ui.selection);
+                    //     console.log(event);
+                    //     let selRowData = rows[firstRow].rowData;
+                    //     console.log(rows[firstRow].rowData);
+                    //     callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    // }
                 }
             },
             render: function () {
@@ -1743,6 +1754,7 @@
                 $('#controlManageFrozen').html(frozenOts);
             },
             change: function (evt, ui) {
+                alert("change");
                 if (ui.source === 'paste') {
                     let updateListLength = ui.updateList.length;
 
