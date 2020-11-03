@@ -150,9 +150,9 @@
                         <span class="gubun"></span>
                         <span>
                             <span class="ipu_wrap"><label class="label_100">Option</label></span>
-                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_WAIT_YN" value="NULL,MST003" checked><label for="ORDER_WAIT_YN"> 주문대기</label></span>
-                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_YN" value="MST001,MST002" checked><label for="ORDER_YN"> 주문완료</label></span>
-                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="IN_YN" value="MST004,MST005"><label for="IN_YN"> 입고완료</label></span>
+                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_WAIT_YN" value="NULL,MST001,MST003" checked><label for="ORDER_WAIT_YN"> 주문대기</label></span>
+                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_YN" value="MST002" checked><label for="ORDER_YN"> 주문완료</label></span>
+                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="IN_YN" value="MST004"><label for="IN_YN"> 입고완료</label></span>
                         </span>
                         <span class="ipu_wrap right_float">
                             <button type="button" id="ITEM_ORDER_REGISTER_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
@@ -210,18 +210,24 @@
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
-                            <select id="itemOrderRegisterAreaSelectBox" name="itemOrderRegisterAreaSelectBox" title="넓이조건">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1050}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                            <select id="itemOrderRegisterTconditionSelectBox" name="itemOrderRegisterTconditionSelectBox" title="T 조건">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1050}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
+                            <span class="slt_wrap">
+                                <label for="itemOrderRegisterAreaSelectBox">가로세로</label>
+                                <select id="itemOrderRegisterAreaSelectBox" name="itemOrderRegisterAreaSelectBox" class="wd_70" title="넓이조건">
+                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                    <c:forEach var="code" items="${HighCode.H_1050}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
+                                </select>
+                            </span>
+                            <span class="slt_wrap">
+                                <label for="itemOrderRegisterAreaSelectBox">두께(T)</label>
+                                <select id="itemOrderRegisterTconditionSelectBox" name="itemOrderRegisterTconditionSelectBox" class="wd_70" title="T 조건">
+                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                    <c:forEach var="code" items="${HighCode.H_1050}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
+                                </select>
+                            </span>
                             <span class="slt_wrap namePlusSlt right_float">
                                 <button type="button" class="defaultBtn radius green" id="btnItemOrderRegisterOutSave">저장</button>
                             </span>
@@ -240,7 +246,7 @@
 </div>
 
 <form id="item_order_register_hidden_form" name="item_order_register_hidden_form">
-    <input type="hidden" id="queryId" name="queryId" value="selectItemOrderRegisterDetail"/>
+    <input type="hidden" id="queryId" name="queryId" value="material.selectItemOrderRegisterDetail"/>
     <input type="hidden" id="AUTO_SEARCH" name="AUTO_SEARCH" value="N"/>
     <input type="hidden" id="MATERIAL_ORDER_SEQ" name="MATERIAL_ORDER_SEQ"/>
     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ"/>
@@ -249,6 +255,9 @@
     <input type="hidden" id="MATERIAL_DETAIL" name="MATERIAL_DETAIL"/>
     <input type="hidden" id="AREA" name="AREA"/>
     <input type="hidden" id="CONDITION" name="CONDITION"/>
+    <input type="hidden" id="SIZE_W" name="SIZE_W"/>
+    <input type="hidden" id="SIZE_H" name="SIZE_H"/>
+    <input type="hidden" id="SIZE_T" name="SIZE_T"/>
 </form>
 
 <script type="text/javascript">
@@ -274,6 +283,8 @@
         $('#ITEM_ORDER_REGISTER_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
         $('#ITEM_ORDER_REGISTER_START_DATE').datepicker('setDate', 'today');
         $('#ITEM_ORDER_REGISTER_END_DATE').datepicker('setDate', 'today');
+
+        $('#ORDER_STATUS').val("'NULL','MST001','MST003','MST002'");
 
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_register_search_form").find("#ORDER_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOrderCompanyList'}});
@@ -363,7 +374,10 @@
                     }
                 }
             },
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 90, width: 90, editable: false } ,
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 90, width: 90, editable: false },
+            {title: '규격_가로', dataType: 'string', dataIndx: 'SIZE_W', minWidth: 90, width: 90, editable: false, hidden: true },
+            {title: '규격_세로', dataType: 'string', dataIndx: 'SIZE_H', minWidth: 90, width: 90, editable: false, hidden: true },
+            {title: '규격_두께', dataType: 'string', dataIndx: 'SIZE_T', minWidth: 90, width: 90, editable: false, hidden: true },
             {title: '발주량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 50, width: 50, editable: false},
             {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', minWidth: 60, width: 60, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029') },
@@ -1012,6 +1026,9 @@
                 $("#item_order_register_hidden_form #MATERIAL_ORDER_SEQ").val(MATERIAL_ORDER_SEQ);
                 $("#item_order_register_hidden_form #CONTROL_SEQ").val(ui.rowData.CONTROL_SEQ);
                 $("#item_order_register_hidden_form #CONTROL_DETAIL_SEQ").val(ui.rowData.CONTROL_DETAIL_SEQ);
+                $("#item_order_register_hidden_form #SIZE_W").val(ui.rowData.SIZE_W);
+                $("#item_order_register_hidden_form #SIZE_H").val(ui.rowData.SIZE_H);
+                $("#item_order_register_hidden_form #SIZE_T").val(ui.rowData.SIZE_T);
 
                 let hiddenYn = $("#item_order_register_hidden_form #AUTO_SEARCH").val();
                 if(hiddenYn == 'Y') {
@@ -1955,7 +1972,7 @@
                 checkedValue += ', ';
             }
 
-            checkedValue += '\'' + $(this).val().replace(',', '\', \'') + '\'';
+            checkedValue += '\'' + $(this).val().replace(/,/g, "','") + '\'';
         });
         $('#ORDER_STATUS').val(checkedValue);
     });

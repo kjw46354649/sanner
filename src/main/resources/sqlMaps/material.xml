@@ -122,6 +122,22 @@
                                 WHERE K.CONTROL_SEQ = X.CONTROL_SEQ AND K.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
                                 GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ)
 		WHERE 1 = 1
+        <choose>
+            <when test="ORDER_STATUS != '' and ORDER_STATUS != null">
+                AND IFNULL(Z.ORDER_STATUS, 'NULL') IN (${ORDER_STATUS})
+            </when>
+            <otherwise>
+                AND Z.ORDER_STATUS = '' <!-- 아무것도 표시 안 하기 위함 -->
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="ITEM_ORDER_REGISTER_CONDITION =='IOM010'">
+                AND DATE_FORMAT(Z.STATUS_DT_CONDITION, '%Y/%m/%d') BETWEEN #{ITEM_ORDER_REGISTER_START_DATE} AND #{ITEM_ORDER_REGISTER_END_DATE}
+            </when>
+            <when test="ITEM_ORDER_REGISTER_CONDITION =='IOM020'">
+                AND DATE_FORMAT(Z.M_ORDER_DT, '%Y/%m/%d') BETWEEN #{ITEM_ORDER_REGISTER_START_DATE} AND #{ITEM_ORDER_REGISTER_END_DATE}
+            </when>
+        </choose>
         <if test="COMP_CD !='' and COMP_CD != null">
             AND Z.COMP_CD = #{COMP_CD}
         </if>
@@ -146,17 +162,6 @@
         <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
 		    AND Z.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
         </if>
-        <if test="ORDER_STATUS != '' and ORDER_STATUS != null">
-            AND IFNULL(Z.ORDER_STATUS, 'NULL') IN (${ORDER_STATUS})
-        </if>
-        <choose>
-            <when test="ITEM_ORDER_REGISTER_CONDITION =='IOM010'">
-                AND DATE_FORMAT(Z.STATUS_DT_CONDITION, '%Y/%m/%d') BETWEEN #{ITEM_ORDER_REGISTER_START_DATE} AND #{ITEM_ORDER_REGISTER_END_DATE}
-            </when>
-            <when test="ITEM_ORDER_REGISTER_CONDITION =='IOM020'">
-                AND DATE_FORMAT(Z.M_ORDER_DT, '%Y/%m/%d') BETWEEN #{ITEM_ORDER_REGISTER_START_DATE} AND #{ITEM_ORDER_REGISTER_END_DATE}
-            </when>
-        </choose>
         ORDER BY
             CASE Z.ORDER_STATUS WHEN 'MST001' THEN 3    WHEN 'MST002' THEN 4    WHEN 'MST003' THEN 2    WHEN 'MST004' THEN 6    WHEN 'MST005' THEN 5    ELSE 1 <!-- NULL --> END,
             Z.STATUS_DT DESC, Z.MATERIAL_ORDER_NUM, Z.M_COMP_CD, Z.CONTROL_NUM, Z.PART_NUM
@@ -170,7 +175,7 @@
                 A.MATERIAL_TYPE, SF_GET_CODE_NM( '1035', A.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM,
                 A.MATERIAL_DETAIL, SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM,
                 A.MATERIAL_KIND, SF_GET_CODE_NM('1029', A.MATERIAL_KIND, #{LOGIN_LOCALE}) AS MATERIAL_KIND_NM,
-                A.SIZE_TXT, A.LOC_SEQ, B.LOC_NM,
+                A.SIZE_TXT, A.SIZE_W, A.SIZE_H, A.SIZE_T, A.LOC_SEQ, B.LOC_NM,
                 IFNULL(C.IN_QTY, 0)
                     - IFNULL((SELECT SUM(OUT_QTY) FROM TBL_MY_MATERIAL_OUT WHERE A.MY_MAT_STOCK_SEQ = MY_MAT_STOCK_SEQ), 0)
                 AS STOCK_QTY,
@@ -189,16 +194,34 @@
             <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
                 AND A.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
             </if>
-            <if test="AREA !='' and AREA != null">
-                AND A.AREA = #{AREA}
-            </if>
-            <if test="CONDITION !='' and CONDITION != null">
-                AND A.CONDITION = #{CONDITION}
-            </if>
+            <choose>
+                <when test="AREA == '10'">
+                    AND A.SIZE_W BETWEEN #{SIZE_W} AND #{SIZE_W} + 10
+                    AND A.SIZE_H BETWEEN #{SIZE_H} AND #{SIZE_H} + 10
+                </when>
+                <when test="AREA == '20'">
+                    AND A.SIZE_W BETWEEN #{SIZE_W} AND #{SIZE_W} + 20
+                    AND A.SIZE_H BETWEEN #{SIZE_H} AND #{SIZE_H} + 20
+                </when>
+                <when test="AREA == '00'">
+                    AND A.SIZE_W = #{SIZE_W}
+                    AND A.SIZE_H = #{SIZE_H}
+                </when>
+            </choose>
+            <choose>
+                <when test="CONDITION == '10'">
+                    AND A.SIZE_T BETWEEN #{SIZE_T} AND #{SIZE_T} + 10
+                </when>
+                <when test="CONDITION == '20'">
+                    AND A.SIZE_T BETWEEN #{SIZE_T} AND #{SIZE_T} + 20
+                </when>
+                <when test="CONDITION == '00'">
+                    AND A.SIZE_T = #{SIZE_T}
+                </when>
+            </choose>
             GROUP BY A.WAREHOUSE_CD, A.MATERIAL_KIND, A.MATERIAL_DETAIL, A.SIZE_TXT
             ) Z
-        WHERE 1=1
-            AND Z.STOCK_QTY > 0
+        WHERE Z.STOCK_QTY > 0
         ORDER BY Z.WAREHOUSE_CD, Z.LOC_SEQ
     </select>
 

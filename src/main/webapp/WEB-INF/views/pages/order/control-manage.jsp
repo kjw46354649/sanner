@@ -759,6 +759,25 @@
                         }
                     },
                     {
+                        title: '품명', align: 'left', width: 150, dataIndx: 'ITEM_NM',
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                        },
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    },
+                    {
                         title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
@@ -958,25 +977,6 @@
                         }
                     },
                     {
-                        title: '품명', align: 'left', width: 150, dataIndx: 'ITEM_NM',
-                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
-                        editable: function (ui) {
-                            let rowData = ui.rowData;
-
-                            return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
-                        },
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
-                    },
-                    {
                         title: '프로젝트', align: 'left', width: 200, dataIndx: 'PROJECT_NM', hidden: true,
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
@@ -1116,25 +1116,6 @@
                 ]
             },
             {
-                title: '변경전 도면번호', align: 'left', width: 120, dataIndx: 'PREV_DRAWING_NUM',
-                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
-                },
-                render: function (ui) {
-                    let rowData = ui.rowData;
-                    let cls = null;
-
-                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
-                        cls = 'bg-lightgray';
-                    }
-
-                    return {cls: cls, text: controlManageFilterRender(ui)};
-                }
-            },
-            {
                 title: '규격', width: 110, dataIndx: 'SIZE_TXT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
@@ -1241,6 +1222,25 @@
                     let cls = null;
 
                     if (rowData.WORK_TYPE === 'WTP020') {
+                        cls = 'bg-lightgray';
+                    }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
+                }
+            },
+            {
+                title: '변경전 도면번호', align: 'left', width: 120, dataIndx: 'PREV_DRAWING_NUM',
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                         cls = 'bg-lightgray';
                     }
 
