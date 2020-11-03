@@ -231,7 +231,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
@@ -699,8 +699,11 @@
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
                     let firstRow = ui.selection._areas[i].r1;
                     let lastRow = ui.selection._areas[i].r2;
-
                     for (let i = firstRow; i <= lastRow; i++) estimateRegisterSelectedRowIndex.push(i);
+                    if(firstRow === lastRow){
+                        let selRowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: firstRow});
+                        callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
                 }
             },
             change: function( event, ui ) {
@@ -904,9 +907,9 @@
                     }
                 }
             },
-            cellClick: function (event, ui) {
-                if(ui.rowData.IMG_GFILE_SEQ && typeof(windowImageViewer) != 'undefined' && !windowImageViewer.closed) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
-            },
+            // cellClick: function (event, ui) {
+            //     if(ui.rowData.IMG_GFILE_SEQ && typeof(windowImageViewer) != 'undefined' && !windowImageViewer.closed) callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+            // },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     estimateRegisterTopGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});

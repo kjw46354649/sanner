@@ -753,7 +753,6 @@
                                 $cell = grid.getCell(ui);
                             $cell.find('#imageView').bind('click', function () {
                                 let rowData = ui.rowData;
-                                // callWindowImageViewer(rowData.ORDER_IMG_GFILE_SEQ);
                                 callQuickDrawingImageViewer(rowData.ORDER_IMG_GFILE_SEQ);
                             });
                         }
@@ -1721,19 +1720,11 @@
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
                     let firstRow = ui.selection._areas[i].r1;
                     let lastRow = ui.selection._areas[i].r2;
-
                     for (let i = firstRow; i <= lastRow; i++) selectedOrderManagementRowIndex.push(i);
-
-                    // if(firstRow === lastRow){
-                    //     let rows = ui.rows;
-                    //     console.log(firstRow);
-                    //     console.log(lastRow);
-                    //     console.log(ui.selection);
-                    //     console.log(event);
-                    //     let selRowData = rows[firstRow].rowData;
-                    //     console.log(rows[firstRow].rowData);
-                    //     callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
-                    // }
+                    if(firstRow === lastRow){
+                        let selRowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: firstRow});
+                        callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
                 }
             },
             render: function () {
@@ -2744,7 +2735,6 @@
         /** 도면 보기 팝업 호출 */
         $('#CONTROL_MANAGE_DRAWING_VIEW').on('click', function () {
             let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[0]});
-
             callWindowImageViewer(rowData.IMG_GFILE_SEQ);
         });
         // 도면출력
