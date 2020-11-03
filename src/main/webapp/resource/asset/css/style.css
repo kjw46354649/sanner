@@ -535,3 +535,7 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
 #STATUS_BY_CLIENT_GRID [id^=pq-head-cell] {
     background-color: #E0F1FC
 }
+
+.ui-dialog .ui-dialog-titlebar-close {
+    margin: -12px 0 0 0 !important;
+}
