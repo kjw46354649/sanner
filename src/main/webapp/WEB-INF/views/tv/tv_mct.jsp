@@ -1426,7 +1426,7 @@
 		};
 
 		/** DRAWING BOARD 정보 실시간 처리 **/
-		let getReLoadDrawingData = function (equipSeq, factoryArea,  equipRow, equipCol) {
+		let getReLoadDrawingData = function (equipSeq, factoryArea, equipRow, equipCol) {
 			'use strict';
 			$.ajax({
 				type: 'POST', url: "/tv/mct/machineDrawingData", dataType: 'json',
