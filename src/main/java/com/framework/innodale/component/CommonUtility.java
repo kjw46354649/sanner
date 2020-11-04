@@ -402,7 +402,7 @@ public class CommonUtility {
         try{
             InetAddress local = InetAddress.getLocalHost();
             String ip = local.getHostAddress();
-            System.out.println("local.getHostAddress=[" + ip + "]");
+            // System.out.println("local.getHostAddress=[" + ip + "]");
 //            if("106.240.243.250".equals(ip) || "172.16.0.83".equals(ip) || "192.168.122.1".equals(ip)){
             if("106.240.243.250".equals(ip) || "172.16.0.83".equals(ip)){
                 isRunning = true;
