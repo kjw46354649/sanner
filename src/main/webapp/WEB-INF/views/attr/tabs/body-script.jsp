@@ -1110,7 +1110,6 @@
         return (char + text.substring(1)).toUpperCase();
     };
 
-
     /**
      * @title {String or DOMElement} The dialog title.
      * @message {String or DOMElement} The dialog contents.

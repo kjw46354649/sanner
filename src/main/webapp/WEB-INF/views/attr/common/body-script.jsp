@@ -1117,4 +1117,28 @@
         }
     };
 
+    /**
+     * 문자열이 빈 문자열인지 체크하여 결과값을 리턴한다.
+     * @param str {String} 체크할 문자열
+     */
+    const fnIsEmpty =  function(str){
+        return str === undefined || str === null || str === '';
+    };
+
+    /**
+     * @description 속성으로 객체 분류하기
+     * @param objectArray
+     * @param property
+     * @returns {*}
+     */
+    const fnGroupBy = function (objectArray, property) {
+        return objectArray.reduce(function (acc, obj) {
+            var key = obj[property];
+            if (!acc[key]) {
+                acc[key] = [];
+            }
+            acc[key].push(obj);
+            return acc;
+        }, {});
+    };
 </script>

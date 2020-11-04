@@ -8,6 +8,8 @@
             ROW_NUMBER () OVER () AS ROW_NUM,
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
+            (SELECT M.UNIT_FINAL_EST_AMT FROM TBL_CONTROL_PART_ORDER_MAIN M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ) AS UNIT_FINAL_EST_AMT,
+            (SELECT M.UNIT_FINAL_AMT FROM TBL_CONTROL_PART_ORDER_MAIN M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ) AS UNIT_FINAL_AMT,
             SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', 'M') AS OUTSIDE_IN_DT2,
             B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS OUTSIDE_TOTAL_AMT,
             CASE
@@ -427,11 +429,33 @@
             ROW_NUMBER () OVER () AS ROW_NUM,
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
+            (SELECT M.UNIT_FINAL_AMT FROM TBL_CONTROL_PART_ORDER_MAIN M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ) AS UNIT_FINAL_AMT,
             SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', 'M') AS OUTSIDE_IN_DT2,
             DATE_FORMAT(STR_TO_DATE(C.CLOSE_MONTH, '%Y%m'), '%Y.%m') AS OUTSIDE_CLOSE_MONTH,
             C.CLOSE_VER AS OUTSIDE_CLOSE_VER,
             SF_GET_DATE_F(C.CLOSE_DT, 'YY', 'M') AS OUTSIDE_CLOSE_DT,
             SF_GET_COMP_NM(D.COMP_CD) AS OUTSIDE_CLOSE_COMP_NM,
+            IFNULL( CASE
+                        WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.OUTSIDE_UNIT_AMT
+                                                                    FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                                                                    WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                                                        AND M.OUTSIDE_YN = 'Y'
+                                                                        AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
+                                                                        AND N.CONTROL_STATUS = 'ORD003'
+                                                                        AND N.DEL_YN = 'N'
+                                                                    ORDER BY M.CONTROL_SEQ DESC
+                                                                    LIMIT 1)
+                        ELSE (  SELECT M.OUTSIDE_UNIT_AMT
+                                FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                                WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                    AND M.OUTSIDE_YN = 'Y'
+                                    AND M.DRAWING_NUM = B.DRAWING_NUM
+                                    AND N.CONTROL_STATUS = 'ORD003'
+                                    AND N.DEL_YN = 'N'
+                                    AND N.CONTROL_SEQ != B.CONTROL_SEQ
+                                ORDER BY M.CONTROL_SEQ DESC
+                                LIMIT 1)
+            END, SPACE(0)) AS PREV_OUTSIDE_UNIT_AMT, <!-- 외주 종전가 -->
             E.INSPECT_NUM, <!-- SEQ -->
             E.INSPECT_GRADE, <!-- 등급 -->
             SF_GET_CODE_NM('1040', E.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 -->
