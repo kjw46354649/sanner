@@ -180,7 +180,7 @@
             {title: '원발주<br>상태', width: 70, dataIndx: 'PART_STATUS_NM'},
             {title: '외주<br>발주상태', dataIndx: 'OUTSIDE_STATUS', hidden: true},
             {title: '외주<br>발주상태', width: 70, dataIndx: 'OUTSIDE_STATUS_NM'},
-            {title: '상태변경<br>일시', width: 70, dataIndx: 'PART_STATUS_DT'},
+            {title: '상태변경<br>일시', width: 80, dataIndx: 'PART_STATUS_DT'},
             {title: '외주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
             {title: '외주업체', width: 70, dataIndx: 'OUTSIDE_COMP_NM'},
             {title: '비고(주문)', width: 150, dataIndx: 'CONTROL_NOTE'},
@@ -199,7 +199,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
+            {title: '관리번호', width: 180, align: 'left', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', dataIndx: 'PART_NUM'},
             {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
@@ -263,15 +263,15 @@
                 title: '원발주 정보', align: 'center', colModel: [
                     {title: '납기', width: 70, dataIndx: 'INNER_DUE_DT'},
                     // {title: '견적단가', dataIndx: 'UNIT_FINAL_EST_AMT'},
-                    {title: '공급단가', dataIndx: 'UNIT_FINAL_AMT'},
+                    {title: '공급단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
                     {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
                     {title: '발주처', dataIndx: 'ORDER_COMP_NM'}
                 ]
             },
-            {title: '외주<br>발주번호', dataIndx: 'OUTSIDE_ORDER_NUM'},
-            {title: '외주<br>확정단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_UNIT_AMT'},
-            {title: '금액<br>합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
-            {title: '외주<br>종전가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DHLWNWHDWJSRK'},
+            {title: '외주<br>발주번호', width: 90, dataIndx: 'OUTSIDE_ORDER_NUM'},
+            {title: '외주<br>확정단가', width: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_UNIT_AMT'},
+            {title: '금액<br>합계', width: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: ''},
+            {title: '외주<br>종전가', width: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PREV_OUTSIDE_UNIT_AMT'},
             {title: 'DXF', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
