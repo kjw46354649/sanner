@@ -2913,7 +2913,8 @@
                     #{bean}
                 </foreach>
             LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-            WHERE A.DEL_YN = 'N' ) Y
+            WHERE A.DEL_YN = 'N'
+            GROUP BY DRAWING_NUM) Y
         WHERE X.GFILE_SEQ = Y.IMG_GFILE_SEQ
     </select>
 
