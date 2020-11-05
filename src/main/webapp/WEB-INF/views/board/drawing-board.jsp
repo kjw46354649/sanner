@@ -51,6 +51,20 @@
 </head>
 <body onresize="parent.resizeTo(1024,600)" onload="parent.resizeTo(1024,600)" >
 
+<!-- 대칭 주의 팝업 Start -->
+<div class="modal" id="drawing_worker_sider_alram_popup" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div>
+                    <span>대칭 주의</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 대칭 주의 팝업 End -->
+
 <!-- Target Modal Start -->
 <div class="modal" id="drawing_worker_target_list_popup" style="display: none;">
     <div class="modal-dialog">
@@ -132,7 +146,7 @@
 </div>
 <!-- Scan Modal End -->
 
-<!-- Stop Modal Start -->
+<!-- Stop Modal Re Start -->
 <div class="modal-scan" id="drawing_worker_stop_popup" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-stop-content">
@@ -156,7 +170,7 @@
 </div>
 <!-- Stop Modal End -->
 
-<!-- Cancel Modal Start -->
+<!-- Cancel Modal Cancel -->
 <div class="modal-scan" id="drawing_worker_cancel_popup" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-stop-content">
@@ -178,7 +192,8 @@
     </div>
 </div>
 <!-- Cancel Modal End -->
-<!-- End Modal Start -->
+
+<!-- Complete modal start -->
 <div class="modal-scan" id="drawing_worker_end_popup" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-stop-content">
@@ -242,7 +257,9 @@
         </div>
     </div>
 </div>
-<!-- End Modal End -->
+<!-- Complete modal end -->
+
+
 <div class="bodyWrap work" id="bodyWrap">
     <div id="waitMeContainerDiv">
         <c:set var="workInfo" value="${drawingInfo.lastWork}" />
@@ -268,6 +285,7 @@
                 <input id="RE_BARCODE_NUM" name="RE_BARCODE_NUM" type="hidden" value="">
                 <input id="WORK_MINUTE" name="WORK_MINUTE" type="hidden" value="${workInfo.WORK_MINUTE}">
                 <input id="WORK_SECOND" name="WORK_SECOND" type="hidden" value="${workInfo.WORK_SECOND}">
+                <input id="SAME_SIDE_YN" name="SAME_SIDE_YN" type="hidden" value="${workInfo.SAME_SIDE_YN}">
             </form>
             <form id="re_start_work_info_form" name="re_start_work_info_form" method="POST" onsubmit="return false;">
                 <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${reStartWorkinfo.CONTROL_SEQ}">
@@ -276,6 +294,7 @@
                 <input id="PART_NUM" name="PART_NUM" type="hidden" value="${reStartWorkinfo.PART_NUM}">
                 <input id="ORDER_QTY" name="ORDER_QTY" type="hidden" value="${reStartWorkinfo.ORDER_QTY}">
                 <input id="INNER_DUE_DT" name="INNER_DUE_DT" type="hidden" value="${reStartWorkinfo.INNER_DUE_DT}">
+                <input id="SAME_SIDE_YN" name="SAME_SIDE_YN" type="hidden" value="${reStartWorkinfo.SAME_SIDE_YN}">
             </form>
             <form id="drawing_log_out_form" name="drawing_log_out_form" method="POST" action="/drawing-worker">
                 <input id="EQUIP_NM" name="EQUIP_NM" type="hidden" value="${drawingInfo.machineInfo.EQUIP_NM}">
@@ -454,11 +473,11 @@
                     let returnCode = data.returnCode;
                     let curStatus = $("#curStatus").val();
                     if(returnCode == "RET00") {
-                        if(curStatus == "stop"){
+                        if(curStatus == "stop"){    // 현재 상태가 종료 일때 시작 처리 한다.
                             startWork(data.info);
-                        }else if(curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()){
+                        }else if(curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()){ // 현재 작업중인 바코드를 스캔 했을 경우 완료 처리 한다.
                             $("#workCompletelBtn").trigger('click');
-                        }else {
+                        }else {     // 현재 작업중이면서 현재 작업 내용과 다른 바코드 클릭 한 경우 처리 한다.
                             $("#singleComplete").hide();
                             $("#continueComplete").show();
                             $("#drawing_action_form").find("#RE_BARCODE_NUM").val(barcodeNum);
@@ -562,7 +581,7 @@
                 innerHtmlObj.html("");
                 if(data.list.length > 0 ) {
                     for (let i = 0; i < data.list.length; i++) {
-                        workerListHtml += '<tr class="workListAction" stype="'+sType+'" sControlSeq="' + data.list[i].CONTROL_SEQ + '" sControlDetailSeq="' + data.list[i].CONTROL_DETAIL_SEQ + '">';
+                        workerListHtml += '<tr class="workListAction" stype="'+sType+'" sControlSeq="' + data.list[i].CONTROL_SEQ + '" sControlDetailSeq="' + data.list[i].CONTROL_DETAIL_SEQ + '" sSameSideYn="' + data.list[i].SAME_SIDE_YN + '"  >';
                         workerListHtml += '    <td class="modal-table-contents" style="width:283px;">' + data.list[i].CONTROL_NUM + '</td>';
                         workerListHtml += '    <td class="modal-table-contents" style="width:87px;">' + data.list[i].PART_NUM + '</td>';
                         workerListHtml += '    <td class="modal-table-contents" style="width:87px;">' + data.list[i].ORDER_QTY + '</td>';
@@ -595,31 +614,12 @@
             $(".areaWrap").css('display', 'block');
         });
 
-        $(document).on("click", '#drawing_worker_target_list_popup .workListAction', function() {
-            let controlSeq = $(this).attr("sControlSeq");
-            let controlDetailSeq = $(this).attr("sControlDetailSeq");
-
-            // if(!checkDoubleWorkControl(controlSeq, controlDetailSeq)){
-            //     return false;
-            // }
-
-            var tr = $(this);
-            var td = tr.children();
-
-            $("#drawing_worker_scan_popup").find("#scanControlNumHtml").html(td.eq(0).text());
-            $("#drawing_worker_scan_popup").find("#scanControlPartHtml").html(td.eq(1).text());
-            $("#drawing_worker_scan_popup").find("#scanControlOrderQtyHtml").html(td.eq(2).text());
-            $("#drawing_worker_scan_popup").find("#scanControlInnerOutDtHtml").html(td.eq(3).text());
-
-            $("#drawing_action_form").find("#CONTROL_SEQ").val(controlSeq);
-            $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val(controlDetailSeq);
-
-            $("#drawing_worker_target_list_popup").css("display", "none");
-            $("#drawing_worker_scan_popup").css("display", "block");
-        });
-
-        //Scan Popup
+        // 시작 팝업 호출 하여 처리 한다.
         $("#drawing_worker_scan_popup").bind('style', function(e) {
+            // 대칭인 경우 대칭 주의 팝업 호출
+            let sameSideYn = $("#drawing_action_form").find("#SAME_SIDE_YN").val();
+
+            // 시작 팝업 호출 처리
             let style =  $(this).attr('style');
             let display = style.split(":")[1];
             let seconds = 10;
@@ -738,70 +738,45 @@
         $("#complete_success_qty_pop_plus_btn").on('click', function(){
             clearTimeout(stopInterval);
             $("#drawing_worker_end_popup .scan-time").html("");
-            let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let afterQty = parseInt(finishQty) + 1;
-            let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
             $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
             $("#completeControlCompleteQtyHtml").html(afterQty);
-            // if((afterQty + errorParseQty) <= orderQty){
-            //     $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
-            //     $("#completeControlCompleteQtyHtml").html(afterQty);
-            // }
         });
 
         /** 작업 완료 마이너스 처리 **/
         $("#complete_success_qty_pop_minus_btn").on('click', function(){
             clearTimeout(stopInterval);
             $("#drawing_worker_end_popup .scan-time").html("");
-            let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let afterQty = parseInt(finishQty) - 1;
-            let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
             $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
             $("#completeControlCompleteQtyHtml").html(afterQty);
-            // if((afterQty + errorParseQty) <= orderQty && afterQty >= 0 ){
-            //     $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
-            //     $("#completeControlCompleteQtyHtml").html(afterQty);
-            // }
         });
 
         /** 불량 수량 플러스 처리 **/
         $("#complete_fail_qty_pop_plus_btn").on('click', function(){
             clearTimeout(stopInterval);
             $("#drawing_worker_end_popup .scan-time").html("");
-            let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
             let afterQty = 0;
-            let finishParseQty = isNaN(parseInt(finishQty)) ? 0 : parseInt(finishQty);
             if(errorQty) afterQty = parseInt(errorQty) + 1
             $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
             $("#completeControlFailQtyHtml").html(afterQty);
-            // if((afterQty + finishParseQty) <= orderQty){
-            //     $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
-            //     $("#completeControlFailQtyHtml").html(afterQty);
-            // }
         });
 
         /** 불량 수량 마이너스 처리 **/
         $("#complete_fail_qty_pop_minus_btn").on('click', function(){
             clearTimeout(stopInterval);
             $("#drawing_worker_end_popup .scan-time").html("");
-            let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
-            let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
             let afterQty = 0;
-            let finishParseQty = isNaN(parseInt(finishQty)) ? 0 : parseInt(finishQty);
             if(errorQty) afterQty = parseInt(errorQty) - 1;
             $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
             $("#completeControlFailQtyHtml").html(afterQty);
-            // if((afterQty + finishParseQty) <= orderQty && afterQty >= 0) {
-            //     $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
-            //     $("#completeControlFailQtyHtml").html(afterQty);
-            // }
         });
 
         $("#ERROR_REASON").on('change', function(){
@@ -815,6 +790,7 @@
             $("#drawing_action_form").submit();
         };
 
+        // 작업 시작 처리 함수
         function fnDrawingBoardSave(){
             /** todo 최신 작업과 같은 Part 작업인 경우 진행 안되도록 처리 **/
             let parameters = {
@@ -857,30 +833,6 @@
             }
             $("#bodyWrap").focus();
         }
-
-        let startWork = function(dataInfo){
-            $("#drawing_worker_scan_popup").find("#scanControlNumHtml").html(dataInfo.CONTROL_NUM);
-            $("#drawing_worker_scan_popup").find("#scanControlPartHtml").html(dataInfo.PART_NUM);
-            $("#drawing_worker_scan_popup").find("#scanControlOrderQtyHtml").html(dataInfo.ORDER_QTY);
-            $("#drawing_worker_scan_popup").find("#scanControlInnerOutDtHtml").html(dataInfo.INNER_DUE_DT);
-
-            $("#drawing_action_form").find("#CONTROL_SEQ").val(dataInfo.CONTROL_SEQ);
-            $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val(dataInfo.CONTROL_DETAIL_SEQ);
-
-            $("#drawing_worker_target_list_popup").css("display", "none");
-            $("#drawing_worker_scan_popup").css("display", "block");
-        }
-
-        <%--let checkDoubleWorkControl = function(controlSeq, controlDetailSeq){--%>
-        <%--    let beforeControlSeq = $("#drawing_action_form").find("#CONTROL_SEQ").val();--%>
-        <%--    let beforeControlDetailSeq = $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val();--%>
-        <%--    if(beforeControlSeq == controlSeq && beforeControlDetailSeq == controlDetailSeq){--%>
-        <%--        alert("<srping:message key='drawing.board.alert.03'/>");--%>
-        <%--        return false;--%>
-        <%--    }else{--%>
-        <%--        return true;--%>
-        <%--    }--%>
-        <%--}--%>
 
         let showMessage = function(message){
             dhx.message({
@@ -948,16 +900,56 @@
            });
        }
 
+
+        // 대상 팝업에서 하나의 관리 번호 클릭하여 시작 팝업 호출 한다.
+        $(document).on("click", '#drawing_worker_target_list_popup .workListAction', function() {
+            let controlSeq = $(this).attr("sControlSeq");
+            let controlDetailSeq = $(this).attr("sControlDetailSeq");
+            let sameSideYn = $(this).attr("sSameSideYn");
+
+            var tr = $(this);
+            var td = tr.children();
+
+            $("#drawing_worker_scan_popup").find("#scanControlNumHtml").html(td.eq(0).text());
+            $("#drawing_worker_scan_popup").find("#scanControlPartHtml").html(td.eq(1).text());
+            $("#drawing_worker_scan_popup").find("#scanControlOrderQtyHtml").html(td.eq(2).text());
+            $("#drawing_worker_scan_popup").find("#scanControlInnerOutDtHtml").html(td.eq(3).text());
+
+            $("#drawing_action_form").find("#CONTROL_SEQ").val(controlSeq);
+            $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val(controlDetailSeq);
+            $("#drawing_action_form").find("#SAME_SIDE_YN").val(sameSideYn);
+
+            $("#drawing_worker_target_list_popup").css("display", "none");
+            $("#drawing_worker_scan_popup").css("display", "block");
+        });
+
+        // 바코드 스캔으로 시작 처리
+        let startWork = function(dataInfo){
+            $("#drawing_worker_scan_popup").find("#scanControlNumHtml").html(dataInfo.CONTROL_NUM);
+            $("#drawing_worker_scan_popup").find("#scanControlPartHtml").html(dataInfo.PART_NUM);
+            $("#drawing_worker_scan_popup").find("#scanControlOrderQtyHtml").html(dataInfo.ORDER_QTY);
+            $("#drawing_worker_scan_popup").find("#scanControlInnerOutDtHtml").html(dataInfo.INNER_DUE_DT);
+
+            $("#drawing_action_form").find("#CONTROL_SEQ").val(dataInfo.CONTROL_SEQ);
+            $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val(dataInfo.CONTROL_DETAIL_SEQ);
+            $("#drawing_action_form").find("#SAME_SIDE_YN").val(dataInfo.SAME_SIDE_YN);
+
+            $("#drawing_worker_target_list_popup").css("display", "none");
+            $("#drawing_worker_scan_popup").css("display", "block");
+        }
+
        /** Main 페이지 로딩시 Body 기본으로 Focus 되도록 처리 **/
        setFocusBody();
 
        let reStartWorkControlNum = $("#re_start_work_info_form").find("#CONTROL_NUM").val();
        if(reStartWorkControlNum){
+           // 팝업 화면의 표시 내용
            $("#drawing_worker_scan_popup").find("#scanControlNumHtml").html($("#re_start_work_info_form").find("#CONTROL_NUM").val());
            $("#drawing_worker_scan_popup").find("#scanControlPartHtml").html($("#re_start_work_info_form").find("#PART_NUM").val());
            $("#drawing_worker_scan_popup").find("#scanControlOrderQtyHtml").html($("#re_start_work_info_form").find("#ORDER_QTY").val());
            $("#drawing_worker_scan_popup").find("#scanControlInnerOutDtHtml").html($("#re_start_work_info_form").find("#INNER_DUE_DT").val());
 
+           // action 처리시 사용할 정보 저장
            $("#drawing_action_form").find("#CONTROL_SEQ").val($("#re_start_work_info_form").find("#CONTROL_SEQ").val());
            $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val($("#re_start_work_info_form").find("#CONTROL_DETAIL_SEQ").val());
 
