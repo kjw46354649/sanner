@@ -58,7 +58,7 @@
 
     <!-- Root Logger -->
     <root>
-        <priority value="INFO" />
+<!--        <priority value="INFO" />-->
         <priority value="ERROR" />
         <appender-ref ref="console" />
     </root>
