@@ -24,7 +24,7 @@
         IFNULL(A.PRICE_CONFIRM, SPACE(0)) AS PRICE_CONFIRM, <!-- 단가확인 -->
         IFNULL(SF_GET_CODE_NM('1017', PRICE_CONFIRM, #{LOGIN_LOCALE}), SPACE(0)) AS PRICE_CONFIRM_NM, <!-- 단가확인 -->
         IFNULL(A.OUT_FINISH_DT, SPACE(0)) AS CONTROL_OUT_FINISH_DT, <!-- 주문관리 출고완료일 -->
-        A.SAME_SIDE_YN <!-- 대칭여부 -->
+        IFNULL(A.SAME_SIDE_YN, SPACE(0)) AS SAME_SIDE_YN <!-- 대칭여부 -->
     </sql>
 
     <sql id="controlPart">
