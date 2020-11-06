@@ -108,7 +108,7 @@
     <select id="selectDrawingBoardCurrentWork" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <!-- 현재 작업 진행 중 내용 -->
         SELECT
-            'CUR' AS DATA_TYPE, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.MCT_WORK_SEQ, D.SAME_SIDE_YN,
+            'CUR' AS DATA_TYPE, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.MCT_WORK_SEQ,
             SF_GET_DRAWING_WORK_TIME('W_MINUTE', A.MCT_WORK_SEQ) AS WORK_MINUTE,
             SF_GET_DRAWING_WORK_TIME('W_SECOND', A.MCT_WORK_SEQ) AS WORK_SECOND,
             SF_GET_DRAWING_WORK_TIME('S_MINUTE', A.MCT_WORK_SEQ) AS STOP_MINUTE,
@@ -351,7 +351,7 @@
             CASE WHEN Z.CONTROL_STATUS = 'ORD002' THEN 'X' ELSE '' END AS CHE_CANCEL_YN <!-- 주문 취소가 된 경우  -->
         FROM (
             SELECT
-                A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, H.CONTROL_NUM, A.PART_NUM, A.INNER_DUE_DT, A.SAME_SIDE_YN,
+                A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, H.CONTROL_NUM, A.PART_NUM, A.INNER_DUE_DT, H.SAME_SIDE_YN,
                 IFNULL(H.CONTROL_STATUS, SPACE(0)) AS CONTROL_STATUS, <!-- CONTROL 상태 -->
                 IFNULL(A.PART_STATUS, SPACE(0)) AS PART_STATUS, <!-- CONTROL PART 현재 상태  -->
                 A.INNER_WORK_FINISH_DT, <!-- 가공 완료 일시  -->
