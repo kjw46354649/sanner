@@ -1454,13 +1454,13 @@
 			}
 
 			getPopLocationData(popPosition, limit);
-			if(prePopPosition) $("#" + prePopPosition).addClass("animated flash");
-			$("#" + popPosition).addClass("animated flash");
+			if(prePopPosition) $("#" + prePopPosition).addClass("animated bounceOut pop_hit");
+			$("#" + popPosition).addClass("animated bounceOut pop_hit");
 
 			setInterval(function() {
-				if(prePopPosition) $("#" + prePopPosition).removeClass("animated flash");
-				$("#" + popPosition).removeClass("animated flash");
-			}, 500);
+				if(prePopPosition) $("#" + prePopPosition).removeClass("animated bounceOut pop_hit");
+				$("#" + popPosition).removeClass("animated bounceOut pop_hit");
+			}, 2000);
 		};
 
 		/** DRAWING BOARD 정보 실시간 처리 **/
