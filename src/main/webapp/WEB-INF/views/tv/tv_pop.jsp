@@ -1614,6 +1614,11 @@
 			});
 		}
 
+		function reloadPage(){
+			console.log("reloadPage");
+			// location.reload();
+		};
+
 		let setIntervalTimer;
 		let timer = function(){
 			let selVal = 60;//1분

@@ -567,7 +567,7 @@
                 ]
             },
             {
-                title: '외주<br>발주번호', width:90, dataIndx: 'OUTSIDE_ORDER_NUM',
+                title: '외주<br>발주번호', width: 90, dataIndx: 'OUTSIDE_ORDER_NUM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: true
             },

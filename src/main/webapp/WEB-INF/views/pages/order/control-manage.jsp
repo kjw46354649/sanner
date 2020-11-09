@@ -1745,7 +1745,6 @@
                 $('#controlManageFrozen').html(frozenOts);
             },
             change: function (evt, ui) {
-                alert("change");
                 if (ui.source === 'paste') {
                     let updateListLength = ui.updateList.length;
 
