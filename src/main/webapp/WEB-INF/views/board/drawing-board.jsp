@@ -32,6 +32,11 @@
     <script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
 
     <style type="text/css">
+
+        html {
+            cursor: none;
+       	}
+
         .dhx_message__icon{
             color:#ffffff !important;
         }

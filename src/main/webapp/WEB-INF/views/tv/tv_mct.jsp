@@ -30,6 +30,11 @@
 	<!-- socket -->
 	<script type="text/javascript" src='/resource/plugins/socket/sockjs.min.js'></script>
 	<script type="text/javascript" src='/resource/plugins/stomp/stomp.min.js'></script>
+	<style type="text/css">
+	        html {
+	            cursor: none;
+	       	}
+	</style>
 </head>
 <body>
 	<div class="bodyWrap mct">
@@ -630,11 +635,11 @@
 											</li>
 										</ul>
 									</div>
-									<div class="percentWrap">
-										<span class="txtB">0%</span>
-										<span class="txtR">&nbsp;</span>
-										<span>&nbsp;</span>
-									</div>
+<%--									<div class="percentWrap">--%>
+<%--										<span class="txtB"> </span>--%>
+<%--										<span class="txtR">&nbsp;</span>--%>
+<%--										<span>&nbsp;</span>--%>
+<%--									</div>--%>
 								</div>
 							</li>
 						</ul>
@@ -785,11 +790,11 @@
 											</li>
 										</ul>
 									</div>
-									<div class="percentWrap">
-										<span class="txtB">0%</span>
-										<span class="txtR">&nbsp;</span>
-										<span>&nbsp;</span>
-									</div>
+<%--									<div class="percentWrap">--%>
+<%--										<span class="txtB"> </span>--%>
+<%--										<span class="txtR">&nbsp;</span>--%>
+<%--										<span>&nbsp;</span>--%>
+<%--									</div>--%>
 								</div>
 							</li>
 							<li class="twoDepthIB pro16">
@@ -870,11 +875,11 @@
 											</li>
 										</ul>
 									</div>
-									<div class="percentWrap">
-										<span class="txtB">0%</span>
-										<span class="txtR">&nbsp;</span>
-										<span>&nbsp;</span>
-									</div>
+<%--									<div class="percentWrap">--%>
+<%--										<span class="txtB"> </span>--%>
+<%--										<span class="txtR">&nbsp;</span>--%>
+<%--										<span>&nbsp;</span>--%>
+<%--									</div>--%>
 								</div>
 							</li>
 							<li class="twoDepthIB pro16">
@@ -955,11 +960,11 @@
 											</li>
 										</ul>
 									</div>
-									<div class="percentWrap">
-										<span class="txtB">0%</span>
-										<span class="txtR">&nbsp;</span>
-										<span>&nbsp;</span>
-									</div>
+<%--									<div class="percentWrap">--%>
+<%--										<span class="txtB"> </span>--%>
+<%--										<span class="txtR">&nbsp;</span>--%>
+<%--										<span>&nbsp;</span>--%>
+<%--									</div>--%>
 								</div>
 							</li>
 							<li class="twoDepthIB pro30">
@@ -1149,11 +1154,11 @@
 											</li>
 										</ul>
 									</div>
-									<div class="percentWrap">
-										<span class="txtB">0%</span>
-										<span class="txtR">&nbsp;</span>
-										<span>&nbsp;</span>
-									</div>
+<%--									<div class="percentWrap">--%>
+<%--										<span class="txtB"> </span>--%>
+<%--										<span class="txtR">&nbsp;</span>--%>
+<%--										<span>&nbsp;</span>--%>
+<%--									</div>--%>
 								</div>
 							</li>
 						</ul>
