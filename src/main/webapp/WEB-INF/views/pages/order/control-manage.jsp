@@ -2791,8 +2791,6 @@
             // 관리번호
             for(let controlSeq of controlSeqList) {
                 // 발주 개수 + 파트 개수
-                                    console.log(groupedControlSeq[controlSeq]);
-
                 for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH =  groupedControlSeq[controlSeq].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
                     const rowData = groupedControlSeq[controlSeq][j];
                     if (fnIsEmpty(rowData.ORDER_IMG_GFILE_SEQ)) {

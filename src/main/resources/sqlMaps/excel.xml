@@ -87,7 +87,7 @@
 
     <select id="selectOutsourcingOrderExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
+            ROW_NUMBER () OVER (ORDER BY A.COMP_CD, B.OUTSIDE_COMP_CD, B.OUTSIDE_ORDER_NUM, A.CONTROL_NUM) AS ROW_NUM,
             B.OUTSIDE_COMP_CD, <!-- 업체 -->
             SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,<!-- 업체 -->
             B.OUTSIDE_ORDER_NUM, <!-- 발주번호 -->
@@ -103,11 +103,11 @@
             B.OUTSIDE_NOTE, <!-- 비고 -->
             B.IMG_GFILE_SEQ
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
                 AND B.OUTSIDE_YN = 'Y'
                 AND B.CONTROL_SEQ IN (${CONTROL_SEQ})
                 AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
-            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = A.CONTROL_SEQ
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
             AND NOT EXISTS (SELECT *
