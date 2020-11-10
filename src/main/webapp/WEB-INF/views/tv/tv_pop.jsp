@@ -32,6 +32,27 @@
 	<!-- socket -->
 	<script type="text/javascript" src='/resource/plugins/socket/sockjs.min.js'></script>
 	<script type="text/javascript" src='/resource/plugins/stomp/stomp.min.js'></script>
+	<style type="text/css">
+	        html {
+	            cursor: none;
+	       	}
+
+			@keyframes border-pulse {
+				0% { border-color: orangered; }
+			}
+
+			.blink_box {
+			    animation: border-pulse 1s infinite linear;
+			}
+
+			@keyframes key-background {
+				0% { background-color: orange; color: white }
+			}
+
+			.blink_background {
+			    animation: key-background 1s infinite linear;
+			}
+	</style>
 </head>
 <body>
 	<div class="bodyWrap">
@@ -54,7 +75,7 @@
 									</div>
 									<div class="page tab1" style="width: 880px">
 										<ul class="p_row">
-											<li class="p_col" id="ARE02_1">
+											<li class="p_col" id="ARE02_1" >
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
@@ -92,7 +113,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" style="height: 380px;position: absolute;left: 630px;width:25.1%;">
+											<li class="p_col" style="height: 398px;position: absolute;left: 630px;width:25.1%;">
 												<div class="list" style="height: 100%">
 													<div class="titleWrap">
 														<span class="f_txt">POP</span>
@@ -216,7 +237,7 @@
 												</div>
 											</li>
 
-											<li class="p_col" style="height: 380px;position: absolute;left: 966px;width:240px;">
+											<li class="p_col" style="height: 400px;position: absolute;left: 966px;width:240px;">
 												<div class="list" style="height: 100%">
 													<div class="titleWrap">
 														<span class="f_txt">POP</span>
@@ -289,7 +310,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" style="height: 380px;position: absolute;left: 2150px;width:240px;">
+											<li class="p_col" style="height: 400px;position: absolute;left: 2150px;width:240px;">
 												<div class="list" style="height: 100%">
 													<div class="titleWrap">
 														<span class="f_txt">POP</span>
@@ -410,14 +431,14 @@
 
 							<!--1줄  3단 시작 -->
 							<li class="twoDepthIB pro10" style="position: absolute;left: 3470px;">
-								<div class="conWrap" style="width: 86%;height: 1980px;">
+								<div class="conWrap" style="width: 86%;height: 2034px;">
 									<div class="tabmenu">
 										<ul>
 											<li><a href="#a;">외부</a></li>
 										</ul>
 									</div>
-									<div class="page tab1">
-										<ul class="p_row" style="margin-bottom: 42.5px;">
+									<div class="page tab1" style="height: 1934px;">
+										<ul class="p_row" style="margin-bottom: 42.5px; padding-left: 20px;">
 											<li class="p_col">
 												<div class="list" style="height: 572px">
 													<div class="titleWrap">
@@ -428,7 +449,7 @@
 												</div>
 											</li>
 										</ul>
-										<ul class="p_row" style="margin-bottom: 42.5px;">
+										<ul class="p_row" style="margin-bottom: 42.5px; padding-left: 20px;">
 											<li class="p_col">
 												<div class="list" style="height: 572px">
 													<div class="titleWrap">
@@ -439,7 +460,7 @@
 												</div>
 											</li>
 										</ul>
-										<ul class="p_row">
+										<ul class="p_row" style="padding-left: 20px;">
 											<li class="p_col">
 												<div class="list" style="height: 572px">
 													<div class="titleWrap">
@@ -510,7 +531,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" style="height: 580px;position: absolute;left: 630px;width:24.1%;">
+											<li class="p_col" style="height: 600px;position: absolute;left: 630px;width:24.1%;">
 												<div class="list" style="height: 100%">
 													<div class="titleWrap">
 														<span class="f_txt">POP</span>
@@ -673,7 +694,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" style="height: 580px;position: absolute;left: 880px;width: 240px">
+											<li class="p_col" style="height: 605px;position: absolute;left: 870px;width: 240px">
 												<div class="list" style="height: 100%;">
 													<div class="titleWrap">
 														<span class="f_txt">POP</span>
@@ -722,8 +743,8 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" style="height: 380px;position: absolute;left: 605px;width: 267px">
-												<div class="list" style="height: 100%;width: 265px;">
+											<li class="p_col" style="height: 396px;position: absolute;left: 605px;width: 267px">
+												<div class="list" style="height: 100%;width: 252px;">
 													<div class="titleWrap">
 														<span class="f_txt">POP</span>
 														<span class="s_txt" >밀링(<sapn id="CNT_POP040">0</sapn>)</span>
@@ -893,7 +914,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" style="height: 580px;position: absolute;left: 600px;width: 240px;">
+											<li class="p_col" style="height: 605px;position: absolute;left: 600px;width: 240px;">
 												<div class="list" style="height: 100%">
 													<div class="titleWrap">
 														<span class="f_txt">POP</span>
@@ -1063,8 +1084,8 @@
 											<li><a href="#a;">교정/마감실</a></li>
 										</ul>
 									</div>
-									<div class="page tab1">
-										<ul class="p_row">
+									<div class="page tab1" style="padding-bottom: 0px;">
+										<ul class="p_row" style="padding: 15px;">
 											<li class="p_col">
 												<div class="list" style="height: 209px;">
 													<div class="titleWrap">
@@ -1092,8 +1113,8 @@
 											<li><a href="#a;">기타</a></li>
 										</ul>
 									</div>
-									<div class="page tab1">
-										<ul class="p_row">
+									<div class="page tab1" style="padding-bottom: 3px;">
+										<ul class="p_row" style="padding: 14px;">
 											<li class="p_col">
 												<div class="list" style="height: 153px;">
 													<div class="titleWrap">
@@ -1393,10 +1414,11 @@
 						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
+					$("#" + popLocation).empty();
+
 					let pop_list = data.pop_list; //pop
-					if (pop_list) {//pop
+					if (pop_list[0]) {//pop
 						let pop_position = pop_list[0].POP_POSITION;
-						$("#" + pop_position).empty();
 						for (let i = 0; i < pop_list.length; i++) {
 							let control_part_info = pop_list[i].CONTROL_PART_INFO;
 							let total_cnt = pop_list[i].TOTAL_CNT;
@@ -1410,12 +1432,45 @@
 			});
 		};
 
+		let getPopLocationBackgroundData = function (popLocation, limit, controlNum) {
+			'use strict';
+			$.ajax({
+				type: 'POST', url: "/tv/pop/popLocationData", dataType: 'json',
+				data: {"POP_POSITION":popLocation, "LIMIT":limit},
+				success: function (data, textStatus, jqXHR) {
+					if (textStatus !== 'success' || data == null) {
+						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+						return;
+					}
+					$("#" + popLocation).empty();
+
+					let pop_list = data.pop_list; //pop
+					if (pop_list[0]) {//pop
+						let pop_position = pop_list[0].POP_POSITION;
+						for (let i = 0; i < pop_list.length; i++) {
+							let control_part_info = pop_list[i].CONTROL_PART_INFO;
+							let total_cnt = pop_list[i].TOTAL_CNT;
+							setPopData(pop_position, control_part_info, total_cnt);
+						}
+
+						$("#" + controlNum).addClass("blink_background");
+						setTimeout(function() {
+							$("#" + controlNum).removeClass("blink_background");
+						}, 5000);
+					}
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+				}
+			});
+		};
+
 		let setPopData = function (popPosition, liInfo, totalCnt) {
 			if (popPosition != "") {
 				let maxCnt = $("#" + popPosition).attr("data-cnt");
 				let targetCnt = $("#" + popPosition).find("li").length;
 				if (maxCnt > targetCnt) {
-					$("#" + popPosition).append("<li class=\"ellipsis\" >" + liInfo + "</li>");
+					$("#" + popPosition).append('<li id="' + popPosition + "_" + liInfo + '" class="ellipsis" >' + liInfo + '</li>');
 				}
 				$("#CNT_" + popPosition).html(totalCnt);
 			}
@@ -1425,15 +1480,20 @@
 		let alarmMessageProcess = function(messageData){
 			let maxCnt = 8;
 			if (messageData) {
+				let messageKey = "alarm_" + messageData.content02;
 				let messBody = messageData.content02 + " -> " + messageData.content03;
 				if(messageData.content04) messBody += "     (" + messageData.content04 + ")";
 				if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
-				let alarmMsg  = '<li class="alarmList">';
+				let alarmMsg  = '<li id=' + messageKey + ' class="alarmList blink_background">';
 					alarmMsg += '	<span class="dateTxt">'+ messageData.content01 +'</span>';
 					alarmMsg += '	<span class="progressTxt ellipsis"><b>' + messBody + ' </b></span>';
 					alarmMsg += '</li>';
 				// $("#alarm_list").prepend($(alarmMsg).fadeIn(2000));
 				$("#alarm_list").prepend($(alarmMsg));
+
+				setTimeout(function() {
+					$("#" + messageKey).removeClass("blink_background");
+				}, 5000);
 			}
 		};
 
@@ -1443,6 +1503,7 @@
 
 			let popPosition = messageData.popPosition;
 			let prePopPosition = messageData.prePopPosition;
+			let controlNum = popPosition + "_" + messageData.content02;
 
 			// $("#" + popPosition).removeClass("animated flash");
 			let limit = $("#" + popPosition).attr("data-cnt");
@@ -1452,15 +1513,7 @@
 				// $("#" + prePopPosition).removeClass("animated flash");
 				getPopLocationData(prePopPosition, preLimit);
 			}
-
-			getPopLocationData(popPosition, limit);
-			if(prePopPosition) $("#" + prePopPosition).addClass("animated bounceOut pop_hit");
-			$("#" + popPosition).addClass("animated bounceOut pop_hit");
-
-			setInterval(function() {
-				if(prePopPosition) $("#" + prePopPosition).removeClass("animated bounceOut pop_hit");
-				$("#" + popPosition).removeClass("animated bounceOut pop_hit");
-			}, 2000);
+			getPopLocationBackgroundData(popPosition, limit, controlNum);
 		};
 
 		/** DRAWING BOARD 정보 실시간 처리 **/
@@ -1468,13 +1521,12 @@
 			alarmMessageProcess(messageData);
 			let actionType = messageData.actionType;
 			let $target = $("#" + messageData.factoryArea + "_" + messageData.equipPosition);
-
 			switch (actionType){
 				case 'DB_CANCEL' :
 			    case 'DB_COMPLETE' :
 					$target.find(".proName").html('');
 					$target.find(".proNum").html('');
-					$target.find(".proName").removeClass("ellipsis animated fadeInLeft");
+					// $target.find(".proName").removeClass("animated fadeInLeft");
 					$target.find(".leftWrap").removeClass("machine-run-background machine-pause-background");
 			        break;
 				case 'DB_PAUSE' :
@@ -1484,13 +1536,16 @@
 				case 'DB_START' :
 					$target.find(".proName").html(messageData.content02);
 					$target.find(".proNum").html(messageData.sMinute + "'");
-					$target.find(".proName").addClass("ellipsis animated fadeInLeft ");
+					// $target.find(".proName").addClass("animated fadeInLeft ");
 				case 'DB_RESTART' :
 					$target.find(".leftWrap").removeClass("machine-pause-background");
 					$target.find(".leftWrap").addClass("machine-run-background");
 					break;
 			}
-
+			$target.addClass("blink_box");
+			setTimeout(function() {
+				$target.removeClass("blink_box");
+			}, 5000);
 			// if(actionType === 'DB_COMPLETE') {
 			// 	$target.find(".proName").html('');
 			// 	$target.find(".proNum").html('');
@@ -1514,6 +1569,10 @@
 					if (messageData.userNm != undefined) $target.find(".rightWrap").find(".nameWrap").html('Log off');
 					if (messageData.userImageSeq != undefined) $target.find(".rightWrap").find("img").attr("src", "/resource/asset/images/tv/img_logoff.png");
 				}
+				$target.addClass("blink_box");
+				setTimeout(function() {
+					$target.removeClass("blink_box");
+				}, 5000);
 			}
 		};
 
