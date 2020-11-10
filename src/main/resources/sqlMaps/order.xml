@@ -1136,7 +1136,7 @@
             ETC_GFILE_SEQ = #{ETC_GFILE_SEQ},
         </if>
         <if test="PART_STATUS != null and PART_STATUS != ''">
-            PART_STATUS = #{PART_STATUS},
+            PART_STATUS = CASE WHEN #{PART_STATUS} = 'null' THEN NULL ELSE #{PART_STATUS} END,
             STATUS_DT = NOW(),
         </if>
         <if test="MCT_NOTE != null and MCT_NOTE != ''">
