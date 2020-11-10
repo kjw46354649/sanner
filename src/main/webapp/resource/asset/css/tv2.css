@@ -233,3 +233,8 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=1, Direction=135, Colo
   --animate-duration: 800ms;
   --animate-delay: 0.9s;
 }
+
+.pop_hit {
+    border: 5px solid red;
+    background-color: #ffebeb;
+}

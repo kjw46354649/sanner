@@ -1711,7 +1711,7 @@
             },
             cellClick: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화
-                // if(ui.rowData.IMG_GFILE_SEQ && typeof(windowImageViewer) != 'undefined' && !windowImageViewer.closed) callQuickRowChangeDrawingImageViewer(ui.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                // if(ui.rowData.ORDER_IMG_GFILE_SEQ && typeof(windowImageViewer) != 'undefined' && !windowImageViewer.closed) callQuickRowChangeDrawingImageViewer(ui.rowData.ORDER_IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
             selectChange: function (event, ui) {
                 // alert("selectChange");
@@ -1723,7 +1723,7 @@
                     for (let i = firstRow; i <= lastRow; i++) selectedOrderManagementRowIndex.push(i);
                     if(firstRow === lastRow){
                         let selRowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: firstRow});
-                        callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                        callQuickRowChangeDrawingImageViewer(selRowData.ORDER_IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
                     }
                 }
             },
@@ -1904,7 +1904,7 @@
                 'PREV_DRAWING_NUM', 'MATERIAL_DETAIL', 'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT',
                 'MATERIAL_FINISH_HEAT', 'MATERIAL_NOTE', 'CALC_EST_UNIT_COST', 'POP_POSITION_NM', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
                 'DRAWING_UP_DT', 'INSPECT_NUM', 'INSPECT_GRADE_NM', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
-                'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT', 'DELIVERY_DT', 'IMG_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT',
+                'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT', 'DELIVERY_DT', 'ORDER_IMG_GFILE_SEQ', 'CONTROL_PART_INSERT_UPDATE_DT',
                 'EOCLD', 'DNJSCLD', 'SAME_SIDE_YN',
             ];
             const closeModeArray = [
@@ -1920,7 +1920,7 @@
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE',
                 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PROJECT_NM', 'ITEM_NM',
                 'ORDER_STAFF_NM', 'PREV_DRAWING_NUM',
-                'IMG_GFILE_SEQ', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT'
+                'ORDER_IMG_GFILE_SEQ', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT'
             ];
             const allModeArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'ORDER_STAFF_SEQ',
@@ -1934,7 +1934,7 @@
                 'MATERIAL_FINISH_HEAT', 'RKFH', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT',
-                'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
+                'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'ORDER_IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
                 'DRAWING_UP_DT', 'ETC_GFILE_SEQ', 'INSPECT_NUM', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
                 'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
                 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT', 'OUTSIDE_NOTE', 'OUTSIDE_INSPECT_RESULT_NM', 'OUTSIDE_ERROR_NOTE',
@@ -2161,7 +2161,7 @@
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT',
                 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'DETAIL_MACHINE_REQUIREMENT',
                 'POP_POSITION_NM', 'UNIT_AMT_NOTE',
-                'DWG_GFILE_SEQ', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'IMG_GFILE_SEQ', 'VIEW_GFILE_SEQ', 'ETC_GFILE_SEQ',
+                'DWG_GFILE_SEQ', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'ORDER_IMG_GFILE_SEQ', 'VIEW_GFILE_SEQ', 'ETC_GFILE_SEQ',
                 'PART_STATUS_NM', 'MCT_NOTE', 'MCT_WORK_TYPE',
                 'OUTSIDE_COMP_CD', 'OUTSIDE_COMP_NM', 'OUTSIDE_ORDER_NUM', 'OUTSIDE_NOTE', 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 'OUTSIDE_REQUEST_FINISH_YN', 'OUTSIDE_REQUEST_PROCESS_YN', 'OUTSIDE_REQUEST_GRIND_YN',
@@ -2433,23 +2433,32 @@
          * @description 확정버튼 클릭
          */
         $('#CONFIRMATION').on('click', function (event) {
+            if (fnIsGridEditing($orderManagementGrid)) {
+                return false;
+            }
+
             let selectedRowCount = selectedOrderManagementRowIndex.length;
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 // TODO: 필수데이터가 입력되어 있어야만 확정 가능
-                if (fnIsEmpty(rowData.PDF_GFILE_SEQ)) {
-                    fnAlert(null, 'PDF확장자 파일 도면을 등록 후 다시 시도해주세요.');
+                if (fnIsEmpty(rowData.CONTROL_PART_QTY)) {
+                    fnAlert(null, '주문수량을 확인해주시기 바랍니다');
                     return false;
                 }
 
-                if (!fnIsEmpty(rowData.DNJSCLD) || !fnIsEmpty(rowData.EOCLD)) {
+                if (fnIsEmpty(rowData.PDF_GFILE_SEQ)) {
+                    fnAlert(null, 'PDF확장자 파일 도면을 등록 후 다시 시도해주세요');
+                    return false;
+                }
+
+                if (rowData.SAME_SIDE_YN === 'Y' || !fnIsEmpty(rowData.DNJSCLD) || !fnIsEmpty(rowData.EOCLD)) {
                     if(Number(rowData.CONTROL_PART_QTY) !== (Number(rowData.DNJSCLD) + Number(rowData.EOCLD))) {
                         fnAlert(null, rowData.CONTROL_NUM + '<br>대칭 수량을 확인해주시기 바랍니다');
                         return false;
                     }
                     if (!(rowData.SAME_SIDE_YN === 'Y')) {
-                        fnAlert(null, rowData.CONTROL_NUM + '<br>대칭 수량을 확인해주시기 바랍니다');
+                        fnAlert(null, rowData.CONTROL_NUM + '<br>대칭을 확인해주시기 바랍니다');
                         return false;
                     }
                 }
@@ -2600,47 +2609,75 @@
             $('#control_estimate_list_excel_download #paramData').val(controlSeqStr);
             fnReportFormToHiddenFormPageAction('control_estimate_list_excel_download', '/downloadExcel');
         });
-        // 바코드도면출력
+        // 바코드도면 출력
         $('#CONTROL_MANAGE_BARCODE_DRAWING_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
             const gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
             const groupedControlSeq = fnGroupBy(gridData, 'CONTROL_SEQ');
-            let controlSeqList = []; // 선택 된 row 관리번호
+            let controlSeqList = new Set(); // 선택 된 row 관리번호
+            let controlDetailList = new Set();
+            let multiOrderControlNumList = new Set();
             let selectControlList = '';
-            let selectControlPartCount = 0;
+            let message = '';
 
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 const rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                controlSeqList[i] = rowData.CONTROL_SEQ;
+
+                controlSeqList.add(rowData.CONTROL_SEQ);
             }
-            // 중복제거
-            controlSeqList = [...new Set(controlSeqList)];
+
             // 관리번호
-            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
+            for(let controlSeq of controlSeqList) {
                 // 발주 개수 + 파트 개수
-                for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH =  groupedControlSeq[controlSeqList[i]].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
-                    if (groupedControlSeq[controlSeqList[i]][j].CONTROL_STATUS !== 'ORD001') {
+                for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH =  groupedControlSeq[controlSeq].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
+                    const rowData = groupedControlSeq[controlSeq][j];
+                    const rowDataNext = groupedControlSeq[controlSeq][j + 1] ? groupedControlSeq[controlSeq][j + 1] : undefined;
+
+                    if (rowData.CONTROL_STATUS !== 'ORD001') {
                         fnAlert(null, '주문상태 확정 이후 출력 가능합니다');
                         return false;
                     }
-                    if (fnIsEmpty(groupedControlSeq[controlSeqList[i]][j].IMG_GFILE_SEQ)) {
+                    if (fnIsEmpty(rowData.ORDER_IMG_GFILE_SEQ)) {
                         fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
                         return;
                     } else {
-                        selectControlList += String(groupedControlSeq[controlSeqList[i]][j].CONTROL_SEQ) + String(groupedControlSeq[controlSeqList[i]][j].CONTROL_DETAIL_SEQ) + '|';
-                        selectControlPartCount++;
+                        let controlDetailSeq = rowData.CONTROL_DETAIL_SEQ;
+                        let controlDetailSeqNext = rowDataNext ? rowDataNext.CONTROL_DETAIL_SEQ : undefined;
+
+                        if (controlDetailSeq === controlDetailSeqNext) {
+                            if (rowData.ORDER_DRAWING_NUM !== rowDataNext.ORDER_DRAWING_NUM) {
+                                multiOrderControlNumList.add(rowData.CONTROL_NUM);
+                            }
+                        }
+                        controlDetailList.add(controlDetailSeq);
+                        selectControlList += String(rowData.CONTROL_SEQ) + String(controlDetailSeq) + '|';
                     }
                 }
             }
 
-            const message =
-                '<h4>' +
-                '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-                '   <span>' + selectControlPartCount + ' 건의 바코드도면이 출력 됩니다.</span> 진행하시겠습니까?' +
-                '</h4>';
-            fnConfirm(null, message, function () {
-                printJS({printable:'/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList), type:'pdf', showModal:true});
-            });
+            if (multiOrderControlNumList.size > 0) {
+                // 중복제거
+                message = '동일 관리번호에 도면번호가 다른 대상이 있습니다. 포함하여 출력할까요?<br>';
+                message += '<span class="text-blue">대상관리번호</span><br>';
+                for (let value of multiOrderControlNumList) {
+                    message += '<span class="text-blue">' + value + '</span><br>';
+                }
+
+                fnConfirm(null, message, function () {
+                    printJS({printable: '/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList) + '&flag=Y', type: 'pdf', showModal: true}); // 기존
+                }, function () {
+                    printJS({printable: '/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList) + '&flag=N', type: 'pdf', showModal: true});
+                });
+            } else {
+                message =
+                    '<h4>' +
+                    '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                    '   <span>' + controlDetailList.size + ' 건의 바코드도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                    '</h4>';
+                fnConfirm(null, message, function () {
+                    printJS({printable: '/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList) + '&flag=N', type: 'pdf', showModal: true});
+                });
+            }
         });
         // 바코드 출력
         $('#CONTROL_MANAGE_BARCODE_PRINT').on('click', function () {
@@ -2656,7 +2693,7 @@
                     fnAlert(null, '주문상태 확정 이후 출력 가능합니다');
                     return false;
                 }
-                if (!rowData.IMG_GFILE_SEQ) {
+                if (!rowData.ORDER_IMG_GFILE_SEQ) {
                     fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
                     return;
                 // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
@@ -2734,33 +2771,34 @@
         /** 도면 보기 팝업 호출 */
         $('#CONTROL_MANAGE_DRAWING_VIEW').on('click', function () {
             let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[0]});
-            callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+            callWindowImageViewer(rowData.ORDER_IMG_GFILE_SEQ);
         });
-        // 도면출력
+        // 도면 출력
         $('#CONTROL_MANAGE_DRAWING_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
             const gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
             const groupedControlSeq = fnGroupBy(gridData, 'CONTROL_SEQ');
-            let controlSeqList = []; // 선택 된 row 관리번호
+            let controlSeqList = new Set(); // 선택 된 row 관리번호
+            let drawingNumList = new Set();
             let selectControlList = '';
             let count = 0;
 
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 const rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                controlSeqList[i] = rowData.CONTROL_SEQ;
+
+                controlSeqList.add(rowData.CONTROL_SEQ);
             }
-            // 중복제거
-            controlSeqList = [...new Set(controlSeqList)];
             // 관리번호
-            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
+            for(let controlSeq of controlSeqList) {
                 // 발주 개수 + 파트 개수
-                for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH =  groupedControlSeq[controlSeqList[i]].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
-                    if (fnIsEmpty(groupedControlSeq[controlSeqList[i]][j].IMG_GFILE_SEQ)) {
+                for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH =  groupedControlSeq[controlSeq].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
+                    const rowData = groupedControlSeq[controlSeq][j];
+                    if (fnIsEmpty(rowData.ORDER_IMG_GFILE_SEQ)) {
                         fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
                         return;
                     } else {
-                        selectControlList += String(groupedControlSeq[controlSeqList[i]][j].CONTROL_SEQ) + String(groupedControlSeq[controlSeqList[i]][j].CONTROL_DETAIL_SEQ) + '|';
-                        count++;
+                        selectControlList += String(rowData.CONTROL_SEQ) + String(rowData.CONTROL_DETAIL_SEQ) + '|';
+                        drawingNumList.add(rowData.ORDER_DRAWING_NUM);
                     }
                 }
             }
@@ -2768,7 +2806,7 @@
             const message =
                 '<h4>' +
                 '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-                '   <span>' + count + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                '   <span>' + drawingNumList.size + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
                 '</h4>';
             fnConfirm(null, message, function () {
                 printJS({printable: '/makeCadPrint?selectControlList=' + encodeURI(selectControlList), type: 'pdf', showModal: true});

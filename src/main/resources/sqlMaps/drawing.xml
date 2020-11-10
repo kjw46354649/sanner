@@ -205,6 +205,7 @@
         SELECT
         	A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
         	C.CONTROL_NUM, <!--관리 번호 -->
+            C.SAME_SIDE_YN, -- 대칭 여부 -->
         	IFNULL(D.PART_NUM, SPACE(0)) AS PART_NUM, <!--PART 번호 -->
             jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS ORDER_QTY, <!--수량 -->
             IFNULL(jmes.SF_GET_DATE_F(D.INNER_DUE_DT, '', ''), SPACE(0)) AS INNER_DUE_DT, <!--내부가공납기 -->
@@ -225,6 +226,7 @@
         SELECT
             A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
             B.CONTROL_NUM,<!--관리 번호 -->
+            B.SAME_SIDE_YN, -- 대칭 여부 -->
             IFNULL(A.PART_NUM, SPACE(0)) AS PART_NUM,<!--PART 번호 -->
             jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS ORDER_QTY,<!--수량 -->
             IFNULL(jmes.SF_GET_DATE_F(A.INNER_DUE_DT, '', ''), SPACE(0)) AS INNER_DUE_DT, <!--내부가공납기 -->

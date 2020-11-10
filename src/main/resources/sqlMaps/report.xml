@@ -72,7 +72,7 @@
                                                 , SUM(P.ERROR_CNT) AS ERROR_CNT
                                                 , SUM(P.ERROR_QTY) AS ERROR_QTY
                                             FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
-                                                        , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
+                                                        , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
                                                         , 1 AS PART_CNT
                                                         , jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS PART_QTY
                                                         , IFNULL(A.FORECAST_UNIT_AMT,0) AS FORECAST_UNIT_AMT
@@ -84,8 +84,8 @@
                                                     <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
                                                         AND WORK_FACTORY = #{WORK_FACTORY}   <!-- 가변조건 -->
                                                     </if>
-                                                        AND A.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE)     <!-- 고정조건 -->
-                                                        AND A.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL 1 MONTH), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE)      <!-- 고정조건 -->
+                                                        AND A.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)     <!-- 고정조건 -->
+                                                        AND A.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL 1 MONTH), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)      <!-- 고정조건 -->
                                                         AND NOT EXISTS (SELECT 1 FROM jmes.TBL_CONTROL M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.DEL_YN = 'Y')
                                                   ) P
                                             WHERE P.INSPECT_RNUM = 1
@@ -156,7 +156,7 @@
                     , Y.DRAWING_NUM
                     , Y.PREV_DRAWING_NUM
                 FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.IMG_GFILE_SEQ
-                            , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
+                            , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
                             , jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS PART_QTY
                             , IFNULL(A.FORECAST_UNIT_AMT,0) AS FORECAST_UNIT_AMT
                             , ROW_NUMBER() OVER (PARTITION BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ ORDER BY B.INSPECT_SEQ) AS INSPECT_RNUM
@@ -165,8 +165,8 @@
                             , CASE WHEN B.INSPECT_GRADE = 'GRD040' THEN B.ERROR_QTY ELSE 0 END AS ERROR_QTY
                         FROM jmes.TBL_CONTROL_PART A LEFT OUTER JOIN jmes.TBL_INSPECT B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND B.INSPECT_TYPE = '1'
                         WHERE A.INNER_WORK_FINISH_DT IS NOT NULL
-                            AND A.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(#{DT},'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE)                        <!-- 고정조건 -->
-                            AND A.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(#{DT},'%Y%m%d'), INTERVAL 1 DAY), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1','KR'),3,2) AS INT) MINUTE)   <!-- 고정조건 -->
+                            AND A.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(#{DT},'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)                        <!-- 고정조건 -->
+                            AND A.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(#{DT},'%Y%m%d'), INTERVAL 1 DAY), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)   <!-- 고정조건 -->
                       ) P, jmes.TBL_CONTROL X, jmes.TBL_CONTROL_PART Y, jmes.TBL_CONTROL_PART_ORDER_MAIN M
                 WHERE P.CONTROL_SEQ = X.CONTROL_SEQ
                     AND P.CONTROL_SEQ = Y.CONTROL_SEQ
@@ -979,6 +979,408 @@
             </if>
         GROUP BY M.COMP_CD, M.COMP_NM, N.SUB_TYPE
         ORDER BY M.COMP_CD, N.SUB_TYPE
+    </select>
+
+    <select id="selectInnerDueDtComplianceRate" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT Z.YYYYMM
+            , Z.PART_CNT
+            , Z.OK_CNT
+            , Z.OK_RATIO
+            , CASE WHEN IFNULL(Z.OK_RATIO,0) > IFNULL(Z.PREV_OK_RATIO,0) THEN '+'
+                   WHEN IFNULL(Z.OK_RATIO,0) <![CDATA[ < ]]> IFNULL(Z.PREV_OK_RATIO,0) THEN '-'
+                   ELSE ''
+              END AS RATIO_SIGN
+            , ABS(IFNULL(Z.OK_RATIO,0) - IFNULL(Z.PREV_OK_RATIO,0)) AS RATIO_GAP
+        FROM (  SELECT MAX(CASE WHEN X.RNUM = 1 THEN X.YYYYMM END) AS YYYYMM
+                    , MAX(CASE WHEN X.RNUM = 1 THEN Y.PART_CNT END) AS PART_CNT
+                    , MAX(CASE WHEN X.RNUM = 1 THEN Y.OK_CNT END) AS OK_CNT
+                    , MAX(CASE WHEN X.RNUM = 1 THEN CASE WHEN IFNULL(Y.PART_CNT,0) = 0 THEN 0 ELSE ROUND(Y.OK_CNT / Y.PART_CNT * 100,0) END END) AS OK_RATIO
+                    , MAX(CASE WHEN X.RNUM = 2 THEN Y.PART_CNT END) AS PREV_PART_CNT
+                    , MAX(CASE WHEN X.RNUM = 2 THEN Y.OK_CNT END) AS PREV_OK_CNT
+                    , MAX(CASE WHEN X.RNUM = 2 THEN CASE WHEN IFNULL(Y.PART_CNT,0) = 0 THEN 0 ELSE ROUND(Y.OK_CNT / Y.PART_CNT * 100,0) END END) AS PREV_OK_RATIO
+                FROM (  SELECT ROW_NUMBER() OVER(ORDER BY M.YYYYMM DESC) AS RNUM
+                            , M.YYYYMM
+                        FROM (  SELECT SUBSTRING(DT,1,6) AS YYYYMM
+                                FROM jmes.TBL_YYYYMMDD
+                                WHERE DT >= DATE_FORMAT(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL -1 MONTH),'%Y%m%d')      <!-- 고정조건 -->
+                                    AND DT <![CDATA[ < ]]> DATE_FORMAT(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL 1 MONTH),'%Y%m%d')      <!-- 고정조건 -->
+                                GROUP BY SUBSTRING(DT,1,6)
+                              ) M
+                     ) X LEFT OUTER JOIN (  SELECT SUBSTRING(P.WORKING_FINISH_DT,1,6) AS YYYYMM
+                                                , SUM(1) AS PART_CNT
+                                                , SUM(CASE WHEN P.WORKING_FINISH_DT <![CDATA[ <= ]]> P.INNER_DUE_DT THEN 1 ELSE 0 END) AS OK_CNT
+                                            FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                                                        , DATE_FORMAT(DATE_ADD(B.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
+                                                        , B.INNER_DUE_DT
+                                                    FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+                                                    WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                        AND A.DEL_YN = 'N'
+                                                        AND B.WORK_TYPE != 'WTP020'
+                                                        AND B.INNER_WORK_FINISH_DT >= DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE), INTERVAL -1 MONTH)    <!-- 고정조건 -->
+                                                        AND B.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL 1 MONTH), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)      <!-- 고정조건 -->
+                                                        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                                                        AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}   <!-- 가변조건 -->
+                                                        </if>
+                                                        <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                                                        AND B.WORK_FACTORY = #{WORK_FACTORY}   <!-- 가변조건 -->
+                                                        </if>
+                                                  ) P
+                                            GROUP BY SUBSTRING(P.WORKING_FINISH_DT,1,6)
+                                          ) Y
+                                        ON X.YYYYMM = Y.YYYYMM
+              ) Z
+    </select>
+
+    <select id="selectProcessingPerformance" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.YYYYMM
+            , FORMAT(IFNULL(Y.SALES_AMT,0) / 100000000,1) AS SALES_AMT
+            , IFNULL(Y.OUTSIDE_CNT,0) AS OUTSIDE_CNT
+            , IFNULL(Y.INSIDE_CNT,0) AS INSIDE_CNT
+        FROM (  SELECT SUBSTRING(DT,1,6) AS YYYYMM
+                FROM jmes.TBL_YYYYMMDD
+                WHERE DT LIKE CONCAT(#{YEAR}, #{MONTH},'%')      <!-- 고정조건 -->
+                GROUP BY SUBSTRING(DT,1,6)
+             ) X LEFT OUTER JOIN (  SELECT SUBSTRING(P.WORKING_FINISH_DT,1,6) AS YYYYMM
+                                        , SUM(1) AS PART_CNT
+                                        , SUM(CASE WHEN P.OUTSIDE_YN = 'Y' THEN 1 ELSE 0 END) AS OUTSIDE_CNT
+                                        , SUM(CASE WHEN P.OUTSIDE_YN = 'Y' THEN 0 ELSE 1 END) AS INSIDE_CNT
+                                        , SUM(P.FINAL_AMT) AS SALES_AMT
+                                    FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                                                , DATE_FORMAT(DATE_ADD(B.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
+                                                , B.OUTSIDE_YN
+                                                , jmes.SF_GET_CONTROL_FINAL_AMT(B.CONTROL_SEQ) AS FINAL_AMT
+                                            FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+                                            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                AND A.DEL_YN = 'N'
+                                                AND B.WORK_TYPE != 'WTP020'
+                                                AND B.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)    <!-- 고정조건 -->
+                                                AND B.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL 1 MONTH), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)      <!-- 고정조건 -->
+                                                <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                                                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}   <!-- 가변조건 -->
+                                                </if>
+                                                <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                                                AND B.WORK_FACTORY = #{WORK_FACTORY}   <!-- 가변조건 -->
+                                                </if>
+                                          ) P
+                                    GROUP BY SUBSTRING(P.WORKING_FINISH_DT,1,6)
+                                  ) Y
+                                ON X.YYYYMM = Y.YYYYMM
+    </select>
+
+    <select id="selectMonthlyStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.YYYYMM
+            , SUBSTR(X.YYYYMM,5,2) AS MM
+            , IFNULL(Y.GOAL_AMT,0) / 100000000 AS GOAL_AMT
+            , IFNULL(Z.SALES_AMT,0) / 100000000 AS SALES_AMT
+            , IFNULL(Z.OK_RATIO,0) AS OK_RATIO
+        FROM (  SELECT SUBSTRING(DT,1,6) AS YYYYMM
+                FROM jmes.TBL_YYYYMMDD
+                WHERE DT LIKE CONCAT(#{YEAR},'%')      <!-- 고정조건 -->    
+                GROUP BY SUBSTRING(DT,1,6)
+             ) X LEFT OUTER JOIN (  SELECT YYYYMM, SUM(GOAL_AMT) AS GOAL_AMT
+                                    FROM jmes.TBL_SALES_GOAL
+                                    WHERE YYYYMM LIKE CONCAT(#{YEAR},'%')      <!-- 고정조건 -->
+                                        <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                                        AND WORK_FACTORY = #{WORK_FACTORY}           <!-- 가변조건 -->
+                                        </if>
+                                    GROUP BY YYYYMM                                
+                                  ) Y ON X.YYYYMM = Y.YYYYMM
+                 LEFT OUTER JOIN (  SELECT Q.YYYYMM
+                                        , Q.PART_CNT
+                                        , Q.OK_CNT
+                                        , CASE WHEN IFNULL(Q.PART_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Q.OK_CNT,0) / IFNULL(Q.PART_CNT,0) * 100,0) END AS OK_RATIO
+                                        , Q.SALES_AMT
+                                    FROM (  SELECT SUBSTRING(P.WORKING_FINISH_DT,1,6) AS YYYYMM
+                                                , SUM(1) AS PART_CNT    
+                                                , SUM(CASE WHEN P.WORKING_FINISH_DT <![CDATA[ <= ]]> P.INNER_DUE_DT THEN 1 ELSE 0 END) AS OK_CNT    
+                                                , SUM(P.FINAL_AMT) AS SALES_AMT
+                                            FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ                                                
+                                                        , DATE_FORMAT(DATE_ADD(B.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT 
+                                                        , B.INNER_DUE_DT
+                                                        , jmes.SF_GET_CONTROL_FINAL_AMT(B.CONTROL_SEQ) AS FINAL_AMT
+                                                    FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+                                                    WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                        AND A.DEL_YN = 'N'
+                                                        AND B.WORK_TYPE != 'WTP020'                                                                                                
+                                                        AND B.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, '01','01'),'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)    <!-- 고정조건 --> 
+                                                        AND B.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, '12','01'),'%Y%m%d'), INTERVAL 1 MONTH), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)      <!-- 고정조건 --> 
+                                                        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                                                        AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}   <!-- 가변조건 -->
+                                                        </if>
+                                                        <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                                                        AND B.WORK_FACTORY = #{WORK_FACTORY}   <!-- 가변조건 -->
+                                                        </if>
+                                                  ) P
+                                            GROUP BY SUBSTRING(P.WORKING_FINISH_DT,1,6)
+                                          ) Q
+                                ) Z ON X.YYYYMM = Z.YYYYMM
+        ORDER BY X.YYYYMM
+    </select>
+
+    <select id="selectMaterialProductionTableList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT Z.MATERIAL_TYPE
+            , CASE WHEN Z.MATERIAL_TYPE IS NULL THEN '합계'
+                   WHEN Z.MATERIAL_TYPE = 'MTP999' THEN '기타'
+                   ELSE jmes.SF_GET_CODE_NM('1035', Z.MATERIAL_TYPE, #{LOGIN_LOCALE})      <!-- 언어조건 -->
+              END AS MATERIAL_TYPE_NM
+            , FORMAT(IFNULL(Z.PART_CNT,0),0) AS PART_CNT
+            , FORMAT(IFNULL(Z.PART_QTY,0),0) AS PART_QTY
+            , CASE WHEN Z.MATERIAL_TYPE IS NULL THEN 100
+                   ELSE CASE WHEN IFNULL(Z.TOTAL_PART_QTY,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.PART_QTY,0) / Z.TOTAL_PART_QTY * 100,0) END
+              END AS PART_QTY_RATIO
+            , CONCAT(TRUNCATE(IFNULL(Z.WORK_TIME,0)/3600,0),'h ',TRUNCATE((IFNULL(Z.WORK_TIME,0)%3600)/60,0),'m') AS WORK_TIME
+            , CASE WHEN Z.MATERIAL_TYPE IS NULL THEN 100
+                   ELSE CASE WHEN IFNULL(Z.TOTAL_WORK_TIME,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.WORK_TIME,0) / Z.TOTAL_WORK_TIME * 100,0) END
+              END AS WORK_TIME_RATIO
+        FROM (  SELECT X.MATERIAL_TYPE
+                    , SUM(X.PART_CNT) AS PART_CNT
+                    , SUM(X.PART_QTY) AS PART_QTY
+                    , SUM(X.WORK_TIME) AS WORK_TIME
+                    , MAX(X.TOTAL_PART_CNT) AS TOTAL_PART_CNT
+                    , MAX(X.TOTAL_PART_QTY) AS TOTAL_PART_QTY
+                    , MAX(X.TOTAL_WORK_TIME) AS TOTAL_WORK_TIME
+                FROM (  SELECT SUBSTRING(P.WORKING_FINISH_DT,1,6) AS YYYYMM
+                            , P.MATERIAL_TYPE
+                            , SUM(1) AS PART_CNT
+                            , SUM(P.PART_QTY) AS PART_QTY
+                            , SUM(P.WORK_TIME) AS WORK_TIME
+                            , MAX(P.TOTAL_PART_CNT) AS TOTAL_PART_CNT
+                            , MAX(P.TOTAL_PART_QTY) AS TOTAL_PART_QTY
+                            , MAX(P.TOTAL_WORK_TIME) AS TOTAL_WORK_TIME
+                        FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                                    , DATE_FORMAT(DATE_ADD(B.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
+                                    , CASE WHEN B.MATERIAL_TYPE IN ('MTP010','MTP020','MTP030') THEN B.MATERIAL_TYPE ELSE 'MTP999' END AS MATERIAL_TYPE
+                                    , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY
+                                    , (SELECT SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS WORK_TIME
+                                    , SUM(1) OVER () AS TOTAL_PART_CNT
+                                    , SUM(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ)) OVER () AS TOTAL_PART_QTY
+                                    , SUM((SELECT SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)) OVER () AS TOTAL_WORK_TIME
+                                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+                                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                    AND A.DEL_YN = 'N'
+                                    AND B.WORK_TYPE != 'WTP020'
+                                    AND B.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)    <!-- 고정조건 -->
+                                    AND B.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL 1 MONTH), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)      <!-- 고정조건 -->
+                                    <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                                    AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}   <!-- 가변조건 -->
+                                    </if>
+                                    <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                                    AND B.WORK_FACTORY = #{WORK_FACTORY}   <!-- 가변조건 -->
+                                    </if>
+                              ) P
+                        GROUP BY SUBSTRING(P.WORKING_FINISH_DT,1,6), P.MATERIAL_TYPE
+                      ) X
+                GROUP BY X.MATERIAL_TYPE WITH ROLLUP
+            ) Z
+        ORDER BY Z.MATERIAL_TYPE IS NULL ASC, Z.MATERIAL_TYPE
+    </select>
+
+    <select id="selectMaterialRankInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT P.MATERIAL_TYPE
+            , FORMAT(CASE WHEN Q.MATERIAL_TYPE IS NULL THEN P.PART_QTY ELSE Q.PART_QTY END,0) AS PART_QTY
+            , FORMAT(CASE WHEN Q.MATERIAL_TYPE IS NULL THEN P.WORK_TIME ELSE Q.WORK_TIME END,0) AS WORK_TIME
+            , FORMAT(CASE WHEN Q.MATERIAL_TYPE IS NULL THEN P.TOTAL_EC_AMT ELSE Q.TOTAL_EC_AMT END,0) AS TOTAL_EC_AMT
+            , FORMAT(CASE WHEN Q.MATERIAL_TYPE IS NULL THEN P.TOTAL_AP_AMT ELSE Q.TOTAL_AP_AMT END,0) AS TOTAL_AP_AMT
+            , FORMAT(CASE WHEN Q.MATERIAL_TYPE IS NULL THEN P.MARGIN_RATIO ELSE Q.MARGIN_RATIO END,1) AS MARGIN_RATIO    
+        FROM (  SELECT CASE WHEN CODE_CD IN ('MTP010','MTP020','MTP030') THEN CODE_CD ELSE 'MTP999' END AS MATERIAL_TYPE
+                    , 0 AS PART_QTY
+                    , '0h 0m' AS WORK_TIME
+                    , 0 AS TOTAL_EC_AMT
+                    , 0 AS TOTAL_AP_AMT
+                    , 0 AS MARGIN_RATIO
+                FROM TBL_CODE WHERE HIGH_CD = '1035' AND CODE_CD IN ('MTP010','MTP020','MTP030','MTP040')
+             ) P LEFT OUTER JOIN (  SELECT Z.MATERIAL_TYPE
+                                        , Z.PART_QTY
+                                        , Z.WORK_TIME
+                                        , Z.TOTAL_EC_AMT
+                                        , Z.TOTAL_AP_AMT
+                                        , CASE WHEN Z.TOTAL_EC_AMT = 0 THEN 0 ELSE (Z.TOTAL_AP_AMT - Z.TOTAL_EC_AMT) / Z.TOTAL_EC_AMT * 100 END AS MARGIN_RATIO
+                                    FROM (  SELECT X.MATERIAL_TYPE
+                                                , IFNULL(SUM(X.PART_QTY),0) AS PART_QTY
+                                                , CONCAT(TRUNCATE(IFNULL(SUM(X.WORK_TIME),0)/3600,0),'h ',TRUNCATE((IFNULL(SUM(X.WORK_TIME),0)%3600)/60,0),'m') AS WORK_TIME
+                                                , TRUNCATE(SUM(IFNULL(X.UNIT_EC_AMT,0) * X.PART_QTY),0) AS TOTAL_EC_AMT
+                                                , TRUNCATE(SUM(IFNULL(X.UNIT_AP_AMT,0) * X.PART_QTY),0) AS TOTAL_AP_AMT    
+                                            FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                                                        , CASE WHEN B.MATERIAL_TYPE IN ('MTP010','MTP020','MTP030') THEN B.MATERIAL_TYPE ELSE 'MTP999' END AS MATERIAL_TYPE
+                                                        , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY
+                                                        , (SELECT SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS WORK_TIME
+                                                        , ( SELECT SUM(IFNULL(N.COST_PER_HOUR,0) * jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ) / 3600 / jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ)) AS UNIT_EC_AMT
+                                                            FROM jmes.TBL_MCT_WORK M, jmes.TBL_EQUIP N
+                                                            WHERE M.EQUIP_SEQ = N.EQUIP_SEQ
+                                                                AND M.CONTROL_SEQ = B.CONTROL_SEQ
+                                                                AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ        
+                                                          ) AS UNIT_EC_AMT
+                                                        , (IFNULL(D.UNIT_FINAL_AMT,0) - (IFNULL(B.UNIT_MATERIAL_AMT,0) + IFNULL(B.UNIT_TM_AMT,0) + IFNULL(B.UNIT_GRIND_AMT,0) + IFNULL(B.UNIT_HEAT_AMT,0) + IFNULL(B.UNIT_SURFACE_AMT,0) + IFNULL(B.UNIT_PROCESS_AMT,0) + IFNULL(B.UNIT_ETC_AMT,0))) AS UNIT_AP_AMT
+                                                        , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
+                                                        , C.INSPECT_GRADE
+                                                    FROM jmes.TBL_CONTROL A
+                                                        , jmes.TBL_CONTROL_PART B LEFT OUTER JOIN jmes.TBL_INSPECT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND C.INSPECT_TYPE = '1'
+                                                        , jmes.TBL_CONTROL_PART_ORDER_MAIN D
+                                                    WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                        AND A.CONTROL_SEQ = D.CONTROL_SEQ
+                                                        AND A.DEL_YN = 'N'
+                                                        AND B.WORK_TYPE != 'WTP020'                        
+                                                        AND B.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)    <!-- 고정조건 -->
+                                                        AND B.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL 1 MONTH), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)      <!-- 고정조건 -->
+                                                        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                                                        AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}   <!-- 가변조건 -->
+                                                        </if>
+                                                        <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                                                        AND B.WORK_FACTORY = #{WORK_FACTORY}   <!-- 가변조건 -->
+                                                        </if>
+<!--                                                        &#45;&#45; 규격 가변조건 START &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+<!--                                                        &#45;&#45; SIZE_TYPE = 'XYZ010'        &lt;!&ndash; 가변조건 &ndash;&gt;-->
+<!--                                                        AND B.SIZE_TYPE = 'XYZ010'      -->
+<!--                                                        AND SIZE_W >= 1-->
+<!--                                                        AND SIZE_W <![CDATA[ <= ]]> 100-->
+<!--                                                        AND SIZE_H >= 1-->
+<!--                                                        AND SIZE_H <![CDATA[ <= ]]> 100-->
+<!--                                                        AND SIZE_T >= 1-->
+<!--                                                        AND SIZE_T <![CDATA[ <= ]]> 100-->
+<!--                                                        -->
+<!--                                                       &#45;&#45; SIZE_TYPE IN ('XYZ020','XYZ030','XYZ040','XYZ050')        &lt;!&ndash; 가변조건 &ndash;&gt;-->
+<!--                                                       &#45;&#45; AND B.SIZE_TYPE = 'XYZ020'      &#45;&#45; 'XYZ030','XYZ040','XYZ050'-->
+<!--                                                       &#45;&#45; AND SIZE_D >= 1-->
+<!--                                                       &#45;&#45; AND SIZE_D <![CDATA[ <= ]]> 100-->
+<!--                                                       &#45;&#45; AND SIZE_L >= 1-->
+<!--                                                       &#45;&#45; AND SIZE_L <![CDATA[ <= ]]> 100                    -->
+<!--                                                        &#45;&#45; -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+<!--                                                        &#45;&#45; 규격 가변조건 END &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+                                                 ) X
+                                            WHERE INSPECT_RNUM = 1
+                                                <if test="YY1 != null and YY1 != ''">
+                                                AND X.PART_QTY >= ${YY1}     <!-- 가변조건 -->
+                                                </if>
+                                                <if test="YY2 != null and YY2 != ''">
+                                                AND X.PART_QTY <![CDATA[ <= ]]> ${YY2}     <!-- 가변조건 -->
+                                                </if>
+                                                <if test="HIDDEN_INSPECT_GRADE != null and HIDDEN_INSPECT_GRADE != ''">
+                                                AND X.INSPECT_GRADE IN (${HIDDEN_INSPECT_GRADE})   <!-- 가변조건 -->
+                                                </if>
+                                            GROUP BY X.MATERIAL_TYPE
+                                        ) Z
+                                 ) Q ON P.MATERIAL_TYPE = Q.MATERIAL_TYPE                         
+        ORDER BY P.MATERIAL_TYPE
+    </select>
+
+    <select id="selectMaterialRankList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ    
+            , CASE WHEN X.PART_NUM IS NULL THEN X.CONTROL_NUM ELSE CONCAT(X.CONTROL_NUM, ' #', X.PART_NUM) END AS CONTROL_NUM
+            , X.PART_QTY
+            , CONCAT(TRUNCATE(IFNULL(X.WORK_TIME,0)/3600,0),'h ',TRUNCATE((IFNULL(X.WORK_TIME,0)%3600)/60,0),'m') AS WORK_TIME
+            , CONCAT(TRUNCATE(IFNULL(X.WORK_TIME_NC,0)/3600,0),'h ',TRUNCATE((IFNULL(X.WORK_TIME_NC,0)%3600)/60,0),'m') AS WORK_TIME_NC
+            , CONCAT(TRUNCATE(IFNULL(X.WORK_TIME_MILLING,0)/3600,0),'h ',TRUNCATE((IFNULL(X.WORK_TIME_MILLING,0)%3600)/60,0),'m') AS WORK_TIME_MILLING
+            , CONCAT(TRUNCATE(IFNULL(X.WORK_TIME_GRINDING,0)/3600,0),'h ',TRUNCATE((IFNULL(X.WORK_TIME_GRINDING,0)%3600)/60,0),'m') AS WORK_TIME_GRINDING
+            , CONCAT(TRUNCATE(IFNULL(X.WORK_TIME_TURNNING,0)/3600,0),'h ',TRUNCATE((IFNULL(X.WORK_TIME_TURNNING,0)%3600)/60,0),'m') AS WORK_TIME_TURNNING
+            , X.UNIT_EC_AMT, FORMAT(X.UNIT_EC_AMT,0) AS UNIT_EC_AMT_FMT
+            , X.UNIT_AP_AMT, FORMAT(X.UNIT_AP_AMT,0) AS UNIT_AP_AMT_FMT
+            , FORMAT(CASE WHEN IFNULL(X.UNIT_EC_AMT,0) = 0 THEN NULL ELSE (IFNULL(X.UNIT_AP_AMT,0) - X.UNIT_EC_AMT) / X.UNIT_EC_AMT * 100 END,1) AS MARGIN_RATIO
+            , X.SIZE_TXT
+            , jmes.SF_GET_CODE_NM('1027',X.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM     -- 언어조건
+            , jmes.SF_GET_CODE_NM('1040',X.INSPECT_GRADE,#{LOGIN_LOCALE}) AS INSPECT_GRADE_NM
+            , CASE WHEN X.INSPECT_GRADE = 'GRD040' THEN jmes.SF_GET_CODE_NM('1020',X.INSPECT_RESULT,#{LOGIN_LOCALE}) ELSE jmes.SF_GET_CODE_NM('1019',X.INSPECT_RESULT,#{LOGIN_LOCALE}) END AS INSPECT_RESULT_NM
+            , jmes.SF_GET_CODE_NM('1032',X.ERROR_REASON,#{LOGIN_LOCALE}) AS ERROR_REASON_NM
+            , jmes.SF_GET_CODE_NM('1025',X.ERROR_ACTION,#{LOGIN_LOCALE}) AS ERROR_ACTION_NM    
+            , ( SELECT jmes.SF_GET_USER_NM(B.WORK_USER_ID)
+                FROM jmes.TBL_CAM A, jmes.TBL_CAM_DETAIL B
+                WHERE A.CAM_SEQ = B.CAM_SEQ
+                    AND A.CONTROL_SEQ = X.CONTROL_SEQ
+                    AND A.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+                ORDER BY B.CAM_SEQ DESC, B.SEQ DESC    
+                LIMIT 1) AS CAM_USER_NM
+<!--             , (SELECT M.FILE_PATH FROM jmes.TBL_FILE M WHERE M.GFILE_SEQ = X.IMG_GFILE_SEQ) AS FILE_PATH -->
+            , X.IMG_GFILE_SEQ
+        FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                    , B.PART_NUM, A.CONTROL_NUM, B.SIZE_TXT, B.MATERIAL_DETAIL, B.IMG_GFILE_SEQ
+                    , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY
+                    , (SELECT SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS WORK_TIME
+                    , (SELECT SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)) FROM jmes.TBL_MCT_WORK M, jmes.TBL_EQUIP N WHERE M.EQUIP_SEQ = N.EQUIP_SEQ AND M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND N.PROCESS_TYPE = 'MPR010') AS WORK_TIME_NC
+                    , (SELECT SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)) FROM jmes.TBL_MCT_WORK M, jmes.TBL_EQUIP N WHERE M.EQUIP_SEQ = N.EQUIP_SEQ AND M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND N.PROCESS_TYPE = 'MPR020') AS WORK_TIME_MILLING
+                    , (SELECT SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)) FROM jmes.TBL_MCT_WORK M, jmes.TBL_EQUIP N WHERE M.EQUIP_SEQ = N.EQUIP_SEQ AND M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND N.PROCESS_TYPE = 'MPR030') AS WORK_TIME_GRINDING
+                    , (SELECT SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)) FROM jmes.TBL_MCT_WORK M, jmes.TBL_EQUIP N WHERE M.EQUIP_SEQ = N.EQUIP_SEQ AND M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND N.PROCESS_TYPE = 'MPR040') AS WORK_TIME_TURNNING
+                    , ( SELECT TRUNCATE(SUM(IFNULL(N.COST_PER_HOUR,0) * jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ) / 3600 / jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ)),0)
+                        FROM jmes.TBL_MCT_WORK M, jmes.TBL_EQUIP N
+                        WHERE M.EQUIP_SEQ = N.EQUIP_SEQ
+                            AND M.CONTROL_SEQ = B.CONTROL_SEQ
+                            AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ        
+                      ) AS UNIT_EC_AMT
+                    , (IFNULL(D.UNIT_FINAL_AMT,0) - (IFNULL(B.UNIT_MATERIAL_AMT,0) + IFNULL(B.UNIT_TM_AMT,0) + IFNULL(B.UNIT_GRIND_AMT,0) + IFNULL(B.UNIT_HEAT_AMT,0) + IFNULL(B.UNIT_SURFACE_AMT,0) + IFNULL(B.UNIT_PROCESS_AMT,0) + IFNULL(B.UNIT_ETC_AMT,0))) AS UNIT_AP_AMT
+                    , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
+                    , C.INSPECT_GRADE
+                    , C.INSPECT_RESULT
+                    , C.ERROR_REASON
+                    , C.ERROR_ACTION
+                FROM jmes.TBL_CONTROL A
+                    , jmes.TBL_CONTROL_PART B LEFT OUTER JOIN jmes.TBL_INSPECT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND C.INSPECT_TYPE = '1'
+                    , jmes.TBL_CONTROL_PART_ORDER_MAIN D
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND A.CONTROL_SEQ = D.CONTROL_SEQ
+                    AND A.DEL_YN = 'N'
+                    AND B.WORK_TYPE != 'WTP020'            
+                    <choose>
+                        <when test="FLAG == 1">
+                            AND B.MATERIAL_TYPE = #{MATERIAL_TYPE}  <!-- 가변조건 -->
+                        </when>
+                        <otherwise>
+                            AND B.MATERIAL_TYPE NOT IN (${MATERIAL_TYPE})    <!-- ETC -->
+                        </otherwise>
+                    </choose>
+                    AND B.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)    <!-- 고정조건 -->
+                    AND B.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL 1 MONTH), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)      <!-- 고정조건 -->
+                    <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                    AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}   <!-- 가변조건 -->
+                    </if>
+                    <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                    AND B.WORK_FACTORY = #{WORK_FACTORY}   <!-- 가변조건 -->
+                    </if>
+<!--                                                        &#45;&#45; 규격 가변조건 START &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+<!--                                                        &#45;&#45; SIZE_TYPE = 'XYZ010'        &lt;!&ndash; 가변조건 &ndash;&gt;-->
+<!--                                                        AND B.SIZE_TYPE = 'XYZ010'      -->
+<!--                                                        AND SIZE_W >= 1-->
+<!--                                                        AND SIZE_W <![CDATA[ <= ]]> 100-->
+<!--                                                        AND SIZE_H >= 1-->
+<!--                                                        AND SIZE_H <![CDATA[ <= ]]> 100-->
+<!--                                                        AND SIZE_T >= 1-->
+<!--                                                        AND SIZE_T <![CDATA[ <= ]]> 100-->
+<!--                                                        -->
+<!--                                                       &#45;&#45; SIZE_TYPE IN ('XYZ020','XYZ030','XYZ040','XYZ050')        &lt;!&ndash; 가변조건 &ndash;&gt;-->
+<!--                                                       &#45;&#45; AND B.SIZE_TYPE = 'XYZ020'      &#45;&#45; 'XYZ030','XYZ040','XYZ050'-->
+<!--                                                       &#45;&#45; AND SIZE_D >= 1-->
+<!--                                                       &#45;&#45; AND SIZE_D <![CDATA[ <= ]]> 100-->
+<!--                                                       &#45;&#45; AND SIZE_L >= 1-->
+<!--                                                       &#45;&#45; AND SIZE_L <![CDATA[ <= ]]> 100                    -->
+<!--                                                        &#45;&#45; -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+<!--                                                        &#45;&#45; 규격 가변조건 END &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+             ) X
+        WHERE INSPECT_RNUM = 1
+            <if test="YY1 != null and YY1 != ''">
+            AND X.PART_QTY >= ${YY1}     <!-- 가변조건 -->
+            </if>
+            <if test="YY2 != null and YY2 != ''">
+            AND X.PART_QTY <![CDATA[ <= ]]> ${YY2}     <!-- 가변조건 -->
+            </if>
+            <if test="HIDDEN_INSPECT_GRADE != null and HIDDEN_INSPECT_GRADE != ''">
+            AND X.INSPECT_GRADE IN (${HIDDEN_INSPECT_GRADE})   <!-- 가변조건 -->
+            </if>
+        ORDER BY ${ANALYSIS_TARGET} ${SORT}, X.CONTROL_SEQ DESC
+        LIMIT 20
+    </select>
+
+    <select id="selectProcessingRecordByDeviceList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER(ORDER BY A.MCT_WORK_SEQ) AS RNUM
+            , B.EQUIP_NM
+            , jmes.SF_GET_USER_NM(A.WORK_USER_ID) AS WORK_USER_NM
+            , A.FINISH_QTY
+            , CASE WHEN A.ERROR_QTY = 0 THEN NULL ELSE A.ERROR_QTY END AS ERROR_QTY
+            , CONCAT(TRUNCATE(IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK',A.MCT_WORK_SEQ),0)/3600,0),'h ',TRUNCATE((IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK',A.MCT_WORK_SEQ),0)%3600)/60,0),'m') AS WORK_TIME
+        FROM jmes.TBL_MCT_WORK A, jmes.TBL_EQUIP B
+        WHERE A.EQUIP_SEQ = B.EQUIP_SEQ
+            AND A.CONTROL_SEQ = #{CONTROL_SEQ}          <!-- 고정조건 -->
+            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}   <!-- 고정조건 -->
+            AND A.DEL_YN = 'N'
+            AND A.WORK_FINISH_DT IS NOT NULL
+        ORDER BY A.MCT_WORK_SEQ
+        LIMIT 6
     </select>
 
 </mapper>

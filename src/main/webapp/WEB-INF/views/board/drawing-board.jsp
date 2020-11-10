@@ -33,9 +33,9 @@
 
     <style type="text/css">
 
-        /*html {*/
-        /*    cursor: none;*/
-       	/*}*/
+        html {
+            cursor: none;
+       	}
 
         .dhx_message__icon{
             color:#ffffff !important;

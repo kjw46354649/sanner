@@ -120,7 +120,7 @@ public class PDFPringMakeController {
         PdfWriter.getInstance(document, out);
 
         String[] selectControlLists = ((String) hashMap.get("selectControlList")).split("\\|");
-
+        String sameDrawingPrint = ((String) hashMap.get("flag"));
         hashMap.put("selectControlLists", selectControlLists);
         hashMap.put("queryId", "orderMapper.selectControlCadBarcodeListList");
         List<Map<String, Object>> controlImageList = innodaleService.getList(hashMap);
@@ -212,18 +212,20 @@ public class PDFPringMakeController {
             }
             iCount++;
 
-            if (controlInfo.get("MULTI_ORDER_YN").equals("Y")) {
-                controlInfo.put("queryId", "orderMapper.selectImgGfileSeq");
-                List<Map<String, Object>> imageList = innodaleService.getList(controlInfo);
+            if (sameDrawingPrint.equals("Y")) {
+                if (controlInfo.get("MULTI_ORDER_YN").equals("Y")) {
+                    controlInfo.put("queryId", "orderMapper.selectImgGfileSeq");
+                    List<Map<String, Object>> imageList = innodaleService.getList(controlInfo);
 
-                for (Map<String, Object> fileInfo : imageList) {
-                    document.newPage();
+                    for (Map<String, Object> fileInfo : imageList) {
+                        document.newPage();
 
-                    if (fileInfo.get("FILE_PATH") != null && !"".equals(fileInfo.get("FILE_PATH"))) {
-                        Image pngImage = Image.getInstance((String) fileInfo.get("FILE_PATH") + ".print.png");
-                        pngImage.setAbsolutePosition(0, 0);
-                        pngImage.scaleAbsolute(PageSize.A4.getWidth(), PageSize.A4.getHeight());
-                        document.add(pngImage);
+                        if (fileInfo.get("FILE_PATH") != null && !"".equals(fileInfo.get("FILE_PATH"))) {
+                            Image pngImage = Image.getInstance((String) fileInfo.get("FILE_PATH") + ".print.png");
+                            pngImage.setAbsolutePosition(0, 0);
+                            pngImage.scaleAbsolute(PageSize.A4.getWidth(), PageSize.A4.getHeight());
+                            document.add(pngImage);
+                        }
                     }
                 }
             }

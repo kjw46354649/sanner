@@ -130,7 +130,7 @@ public class OutServiceImpl implements OutService {
                     this.innodaleDao.create(hashMap);
 
                 } else {
-                    hashMap.put("PART_STATUS", null);
+                    hashMap.put("PART_STATUS", "null");
                     hashMap.put("OUTSIDE_STATUS", "OST002");
                 }
                 hashMap.put("queryId", "orderMapper.createControlPartProgress");

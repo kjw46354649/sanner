@@ -295,13 +295,11 @@
                 title: '발주정보', align: 'center',
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 colModel: [
-                    {title: '', minWidth: 25, styleHead: {'background':'#a9d3f5'}},
                     {title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
                     {
                         title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
                     },
-                    {title: '', minWidth: 25, styleHead: {'background':'#a9d3f5'}},
                     {title: '품명', align: 'left', width: 150, dataIndx: 'ITEM_NM', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
                     {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY',styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
                     {title: '원', dataType: 'integer', format: '#,###', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
