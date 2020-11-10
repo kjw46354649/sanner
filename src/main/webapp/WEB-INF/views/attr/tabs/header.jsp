@@ -51,3 +51,6 @@
 
 <link rel="stylesheet" type="text/css" href="/resource/main/js/jquery-ui-timepicker-addon.css" />
 <link rel="stylesheet" type="text/css" href="/resource/main/js/combotree/style.css" />
+<!-- highcharts -->
+<link rel="stylesheet" href="/resource/plugins/Highcharts-8.2.2/css/highcharts.css" type="text/css"/>
+<link rel="stylesheet" href="/resource/plugins/Highcharts-8.2.2/css/themes/grid-light.css" type="text/css"/>

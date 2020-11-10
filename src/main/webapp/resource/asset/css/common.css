@@ -257,7 +257,7 @@ option { font-size: 12px; }
 .gubun{width:22px;height: 25px; background: url(../images/common/line_gubun.png)no-repeat 50% 50%; display: inline-block;vertical-align:middle;}
 
 /* radius */
-.radius{ border-radius: 3px !important; }
+.radius{ border-radius: 3px }
 /* table */
 /* row */
 table.rowStyle th, table.rowStyle td { padding: 12px 13px; font-size: 14px; }
