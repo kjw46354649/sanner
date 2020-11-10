@@ -1365,4 +1365,22 @@
         ORDER BY ${ANALYSIS_TARGET} ${SORT}, X.CONTROL_SEQ DESC
         LIMIT 20
     </select>
+
+    <select id="selectProcessingRecordByDeviceList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER(ORDER BY A.MCT_WORK_SEQ) AS RNUM
+            , B.EQUIP_NM
+            , jmes.SF_GET_USER_NM(A.WORK_USER_ID) AS WORK_USER_NM
+            , A.FINISH_QTY
+            , CASE WHEN A.ERROR_QTY = 0 THEN NULL ELSE A.ERROR_QTY END AS ERROR_QTY
+            , CONCAT(TRUNCATE(IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK',A.MCT_WORK_SEQ),0)/3600,0),'h ',TRUNCATE((IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK',A.MCT_WORK_SEQ),0)%3600)/60,0),'m') AS WORK_TIME
+        FROM jmes.TBL_MCT_WORK A, jmes.TBL_EQUIP B
+        WHERE A.EQUIP_SEQ = B.EQUIP_SEQ
+            AND A.CONTROL_SEQ = #{CONTROL_SEQ}          <!-- 고정조건 -->
+            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}   <!-- 고정조건 -->
+            AND A.DEL_YN = 'N'
+            AND A.WORK_FINISH_DT IS NOT NULL
+        ORDER BY A.MCT_WORK_SEQ
+        LIMIT 6
+    </select>
+
 </mapper>

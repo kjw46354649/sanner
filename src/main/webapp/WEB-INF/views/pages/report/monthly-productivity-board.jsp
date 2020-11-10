@@ -111,39 +111,39 @@
                     <td class="header" colspan="5">관리번호</td>
                 </tr>
                 <tr>
-                    <td colspan="5">관리번호 value</td>
+                    <td colspan="5"></td>
                 </tr>
                 <tr>
                     <td class="header" colspan="3">규격</td>
-                    <td colspan="2">규격 value</td>
+                    <td colspan="2"></td>
                 </tr>
                 <tr>
                     <td class="header" colspan="3">소재종류</td>
-                    <td colspan="2">소재종류 value</td>
+                    <td colspan="2"></td>
                 </tr>
                 <tr>
                     <td class="header" colspan="3">수량</td>
-                    <td colspan="2">수량 value</td>
+                    <td colspan="2"></td>
                 </tr>
                 <tr>
                     <td class="header" colspan="3">CAM 설계</td>
-                    <td colspan="2">CAM 설계 value</td>
+                    <td colspan="2"></td>
                 </tr>
                 <tr>
                     <td class="header" colspan="3">E/C</td>
-                    <td colspan="2">E/C value</td>
+                    <td colspan="2"></td>
                 </tr>
                 <tr>
                     <td class="header" colspan="3">A/P</td>
-                    <td colspan="2">A/P value</td>
+                    <td colspan="2"></td>
                 </tr>
                 <tr>
                     <td class="header" colspan="3">마진율</td>
-                    <td colspan="2">마진율 value</td>
+                    <td colspan="2"></td>
                 </tr>
                 <tr>
                     <td class="header" colspan="3">총 가공시간</td>
-                    <td colspan="2">총 가공시간 value</td>
+                    <td colspan="2"></td>
                 </tr>
                 <tr>
                     <td colspan="2">밀링</td>
@@ -160,42 +160,42 @@
                 <tr>
                     <td class="header" colspan="5">기기별 가공기록</td>
                 </tr>
-                <tr>
+                <tr id="processing_record_1">
                     <td>1</td>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
                 </tr>
-                <tr>
+                <tr id="processing_record_2">
                     <td>2</td>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
                 </tr>
-                <tr>
+                <tr id="processing_record_3">
                     <td>3</td>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
                 </tr>
-                <tr>
+                <tr id="processing_record_4">
                     <td>4</td>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
                 </tr>
-                <tr>
+                <tr id="processing_record_5">
                     <td>5</td>
                     <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
                 </tr>
-                <tr>
+                <tr id="processing_record_6">
                     <td>6</td>
                     <td></td>
                     <td></td>
@@ -217,7 +217,7 @@
             </table>
         </div>
         <div>
-            <img id="drawing_image" src="/image/577642" alt="도면">
+            <img id="drawing_image" src="/image/20201224" alt="도면">
         </div>
     </div>
 
@@ -913,13 +913,13 @@
         const materialColModel = [
             {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
             {title: '수량', dataIndx: 'PART_QTY'},
-            {title: '가공시간', dataIndx: 'WORK_TIME'},
+            {title: '가공시간', minWidth:60, dataIndx: 'WORK_TIME'},
             {title: 'E/C', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_EC_AMT'},
             {title: 'A/P', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AP_AMT'},
             {
                 title: '마진율', dataIndx: 'MARGIN_RATIO',
                 render: function (ui) {
-                    return ui.cellData + '%';
+                    return ui.cellData || 0 + '%';
                 }
             },
             {title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
@@ -964,8 +964,11 @@
                 }
             },
             rowSelect: function (event, ui) {
-                changeDrawingInformationTable(ui.addList[0].rowData);
-                changedrawingImage(ui.addList[0].rowData.IMG_GFILE_SEQ);
+                const rowData = ui.addList[0].rowData;
+
+                changeDrawingInformationTable(rowData);
+                changedrawingImage(rowData.IMG_GFILE_SEQ);
+                changeProcessingRecordByDevice(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
             }
         };
         const $steelGrid = $('#' + steelGridId).pqGrid(materialObj);
@@ -1296,7 +1299,7 @@
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += '    <td class="header" colspan="3">마진율</td>';
-                htmlString += '    <td colspan="2">' + data.MARGIN_RATIO + '%</td>';
+                htmlString += data.MARGIN_RATIO ? '<td colspan="2">' + data.MARGIN_RATIO + '%</td>' : '<td colspan="2">0%</td>';
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += '    <td class="header" colspan="3">총 가공시간</td>';
@@ -1317,42 +1320,42 @@
                 htmlString += '<tr>';
                 htmlString += '    <td class="header" colspan="5">기기별 가공기록</td>';
                 htmlString += '</tr>';
-                htmlString += '<tr>';
+                htmlString += '<tr id="processing_record_1">';
                 htmlString += '    <td>1</td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '</tr>';
-                htmlString += '<tr>';
+                htmlString += '<tr id="processing_record_2">';
                 htmlString += '    <td>2</td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '</tr>';
-                htmlString += '<tr>';
+                htmlString += '<tr id="processing_record_3">';
                 htmlString += '    <td>3</td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '</tr>';
-                htmlString += '<tr>';
+                htmlString += '<tr id="processing_record_4">';
                 htmlString += '    <td>4</td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '</tr>';
-                htmlString += '<tr>';
+                htmlString += '<tr id="processing_record_5">';
                 htmlString += '    <td>5</td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
                 htmlString += '</tr>';
-                htmlString += '<tr>';
+                htmlString += '<tr id="processing_record_6">';
                 htmlString += '    <td>6</td>';
                 htmlString += '    <td></td>';
                 htmlString += '    <td></td>';
@@ -1378,6 +1381,38 @@
 
         const changedrawingImage = function (IMG_GFILE_SEQ) {
             $("#drawing_image").attr('src', /image/ + IMG_GFILE_SEQ);
+        };
+
+        const changeProcessingRecordByDevice = function (CONTROL_SEQ, CONTROL_DETAIL_SEQ) {
+            let postData = {
+             'queryId': 'reportMapper.selectProcessingRecordByDeviceList',
+             'CONTROL_SEQ': CONTROL_SEQ,
+             'CONTROL_DETAIL_SEQ': CONTROL_DETAIL_SEQ
+            }
+            let parameters = {
+                'url': '/json-list',
+                'data': postData
+            };
+
+            fnPostAjax(function (data) {
+                if (data.list) {
+                    for (let i = 0; i < data.list.length; i++) {
+                        let htmlString ='';
+
+                        htmlString += '    <td>' + data.list[i].RNUM + '</td>';
+                        htmlString += '    <td>' + data.list[i].EQUIP_NM + '</td>';
+                        htmlString += '    <td>' + data.list[i].WORK_USER_NM + '</td>';
+                        if (fnIsEmpty(data.list[i].ERROR_QTY)) {
+                            htmlString += '<td>' + data.list[i].FINISH_QTY + '</td>';
+                        } else {
+                            htmlString += '<td>' + data.list[i].FINISH_QTY + '(' + data.list[i].ERROR_QTY + ')</td>';
+                        }
+                        htmlString += '    <td>' + data.list[i].WORK_TIME + '</td>';
+
+                        $('#processing_record_' + data.list[i].RNUM).html(htmlString);
+                    }
+                }
+            }, parameters, '');
         };
         /* function */
 
