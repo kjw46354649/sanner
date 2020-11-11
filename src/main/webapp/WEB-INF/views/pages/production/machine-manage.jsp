@@ -235,13 +235,13 @@
                             </tr>
                             <tr>
                                 <th scope="row">장비명</th>
-                                <td ><input type="text" name="EQUIP_NM" id="EQUIP_NM" placeholder="장비명" value="" title="장비명" class="wd_150"></td>
+                                <td><input type="text" name="EQUIP_NM" id="EQUIP_NM" placeholder="장비명" value="" title="장비명" class="wd_150"></td>
                                 <th scope="row">공정</th>
                                 <td>
                                     <select id="PROCESS_TYPE" name="PROCESS_TYPE" data-required="true" class="wd_150">
-                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                         <c:forEach var="vlocale" items="${HighCode.H_1010}">
-                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                            <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                         </c:forEach>
                                     </select>
                                 </td>
@@ -250,9 +250,9 @@
                                 <th scope="row">장비종류</th>
                                 <td>
                                     <select id="EQUIP_TYPE" name="EQUIP_TYPE" data-required="true" class="wd_150">
-                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                         <c:forEach var="vlocale" items="${HighCode.H_1012}">
-                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                            <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                         </c:forEach>
                                     </select>
                                 </td>
@@ -265,18 +265,18 @@
                                 <th scope="row">제조사</th>
                                 <td>
                                     <select id="EQUIP_COMP_CD" name="EQUIP_COMP_CD" data-required="true" class="wd_150">
-                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                         <c:forEach var="vlocale" items="${HighCode.H_1037}">
-                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                            <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                         </c:forEach>
                                     </select>
                                 </td>
                                 <th scope="row">설치위치</th>
                                 <td>
                                     <select id="FACTORY_AREA" name="FACTORY_AREA" data-required="true" class="wd_150">
-                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                         <c:forEach var="vlocale" items="${HighCode.H_1005}">
-                                            <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
+                                            <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                         </c:forEach>
                                     </select>
                                 </td>
@@ -285,31 +285,31 @@
                                 <th scope="row">담당자(정)</th>
                                 <td>
                                     <select id="MAIN_USER_ID" name="MAIN_USER_ID" data-required="true" class="wd_150">
-                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                     </select>
                                 </td>
                                 <th scope="row">담당자(부)</th>
                                 <td>
                                     <select id="SUB_USER_ID" name="SUB_USER_ID" data-required="true" class="wd_150">
-                                        <option value=""><spring:message code="com.form.top.sel.option" /></option>
+                                        <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
-                            <th scope="row">구입시기</th>
-                            <td>
-                                <input class="datepicker-input wd_150" type="text" name="PURCHASE_DT" id="PURCHASE_DT" placeholder="" value="" title="구입시기" readonly >
-                            </td>
-                            <th scope="row">리셀러</th>
-                            <td>
-                                <select id="RESELLER_CD" name="RESELLER_CD" data-required="true" class="wd_150">
-                                    <option value=""><spring:message code="com.form.top.sel.option" /></option>
-                                    <c:forEach var="vlocale" items="${HighCode.H_1022}">
-                                        <option value="${vlocale.CODE_CD}" >${vlocale.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </td>
-                        </tr>
+                                <th scope="row">구입시기</th>
+                                <td>
+                                    <input class="datepicker-input wd_150" type="text" name="PURCHASE_DT" id="PURCHASE_DT" placeholder="" value="" title="구입시기" readonly>
+                                </td>
+                                <th scope="row">리셀러</th>
+                                <td>
+                                    <select id="RESELLER_CD" name="RESELLER_CD" data-required="true" class="wd_150">
+                                        <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                                        <c:forEach var="vlocale" items="${HighCode.H_1022}">
+                                            <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                            </tr>
                             <tr>
                                 <th scope="row">Model No.</th>
                                 <td>
@@ -318,6 +318,12 @@
                                 <th scope="row">제조번호</th>
                                 <td>
                                     <input type="text" name="SERIAL_NUM" id="SERIAL_NUM" placeholder="제조번호" value="" title="제조번호" class="wd_150">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">시간당 원가</th>
+                                <td colspan="3">
+                                    <input type="text" name="COST_PER_HOUR" id="COST_PER_HOUR" placeholder="시간당 원가" value="" title="시간당 원가" style="width:98%;">
                                 </td>
                             </tr>
                             <tr>
@@ -332,7 +338,7 @@
                             <tr>
                                 <th scope="row">비고</th>
                                 <td colspan="3">
-                                    <input type="text" id="NOTE" name="NOTE"  placeholder="비고" style="width:98%;">
+                                    <input type="text" id="NOTE" name="NOTE" placeholder="비고" style="width:98%;">
                                 </td>
                             </tr>
 

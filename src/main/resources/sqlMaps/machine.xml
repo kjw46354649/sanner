@@ -88,7 +88,9 @@
             , A.ETC_GFILE_SEQ
             , jmes.SF_GET_FILE_ORGINAL_NM(A.ETC_GFILE_SEQ, '1') as ETC_GFILE_SEQ_NM
             , A.NOTE
-            , A.MODEL_NUM, A.SERIAL_NUM
+            , A.MODEL_NUM
+            , A.SERIAL_NUM
+            , A.COST_PER_HOUR
         FROM jmes.TBL_EQUIP A
         WHERE A.EQUIP_SEQ = #{EQUIP_SEQ}
     </select>
@@ -101,12 +103,12 @@
                               , PROCESS_TYPE, EQUIP_TYPE, EQUIP_SIZE
                               , EQUIP_COMP_CD, FACTORY_AREA
                               , MAIN_USER_ID, SUB_USER_ID, PURCHASE_DT, RESELLER_CD, NOTE
-                              , PHOTO_GFILE_SEQ, ETC_GFILE_SEQ, INSERT_ID, MODEL_NUM, SERIAL_NUM)
+                              , PHOTO_GFILE_SEQ, ETC_GFILE_SEQ, INSERT_ID, MODEL_NUM, SERIAL_NUM, COST_PER_HOUR)
         VALUES (  #{EQUIP_SEQ}, #{EQUIP_ID}, #{EQUIP_KIND}, #{EQUIP_NM}
                 , #{PROCESS_TYPE, jdbcType=VARCHAR}, #{EQUIP_TYPE}, #{EQUIP_SIZE}
                 , #{EQUIP_COMP_CD}, #{FACTORY_AREA}
                 , #{MAIN_USER_ID}, #{SUB_USER_ID}, REPLACE(#{PURCHASE_DT},'/',space(0)), #{RESELLER_CD}, #{NOTE}
-                , #{PHOTO_GFILE_SEQ}, #{ETC_GFILE_SEQ}, #{LOGIN_USER_ID}, #{MODEL_NUM}, #{SERIAL_NUM} )
+                , #{PHOTO_GFILE_SEQ}, #{ETC_GFILE_SEQ}, #{LOGIN_USER_ID}, #{MODEL_NUM}, #{SERIAL_NUM}, #{COST_PER_HOUR} )
     </insert>
     <update id="updateMachineMaster" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_EQUIP
@@ -124,6 +126,7 @@
               , NOTE = #{NOTE}
               , MODEL_NUM = #{MODEL_NUM}
               , SERIAL_NUM = #{SERIAL_NUM}
+              , COST_PER_HOUR = #{COST_PER_HOUR}
             <if test="PHOTO_GFILE_SEQ != null and PHOTO_GFILE_SEQ != ''">
                   , PHOTO_GFILE_SEQ = #{PHOTO_GFILE_SEQ}
             </if>
