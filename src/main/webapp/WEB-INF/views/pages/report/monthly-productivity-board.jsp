@@ -773,9 +773,8 @@
                 // valueSuffix: '%'
             },
             series: [{
-                // name: 'Versions',
                 data: [],
-                size: '100%',
+                size: '150%',
                 innerSize: '50%',
                 // dataLabels: {
                 //     formatter: function () {
@@ -1472,7 +1471,14 @@
         /*$('#drawing_image').on('click', function () {
             window.open(this.src);
         });*/
-        /* event */
+
+        $('.sideWrap a').on('click', function (e) {
+            setTimeout(function(){
+                chartSpeed.reflow();
+                pieChart.reflow();
+                monthlyStatus.reflow();
+            }, 300);
+        });
 
         /* init */
         changeInnerDueDtComplianceRate();
