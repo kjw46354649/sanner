@@ -741,8 +741,8 @@
         $("#drawing_worker_scan_popup").bind('style', function(e) {
             let style =  $(this).attr('style');
             let display = style.split(":")[1];
-            // let seconds = 10;
-            let seconds = 5000;
+            let seconds = 7;
+            // let seconds = 5000;
             if( display.indexOf("none") > 0){
                 $("#drawing_worker_scan_popup .scan-time").html(seconds);
                 stopInterval = setInterval(function() {
@@ -801,8 +801,8 @@
         $("#drawing_worker_end_popup").bind('style', function(e) {
             let style =  $(this).attr('style');
             let display = style.split(":")[1];
-            // let seconds = 10;
-            let seconds = 50000;
+            let seconds = 7;
+            // let seconds = 50000;
             if( display.indexOf("none") > 0){
                 $("#drawing_worker_end_popup .scan-time").html(seconds);
                 stopInterval = setInterval(function() {
