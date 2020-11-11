@@ -60,7 +60,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=5, Direction=135, Colo
 }
 .pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .topDiv .nameWrap{font-size: 22px; line-height: 30px; text-align: center; font-family: 'PTSansNarrow';color: #000;}
 .pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .bottomDiv{font-size: 0; height: 38px; box-sizing: border-box;border-radius: 0 0 5px 5px;}
-.pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .bottomDiv .proName{display: inline-block; line-height: 36px; font-size: 19px; color: #000; font-family: 'PTSansNarrow'; text-align: center;width: 212px; background: url(../images/tv/bg_nameLine.png)no-repeat 100% 50%;}
+.pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .bottomDiv .proName{display: inline-block; line-height: 36px; font-size: 19px; color: #000; font-family: 'PTSansNarrow'; text-align: center;width: 205px; background: url(../images/tv/bg_nameLine.png)no-repeat 100% 50%;}
 .pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .bottomDiv .proNum{display: inline-block; line-height: 36px; font-size: 19px; color: #bc0000;font-family: 'PTSansNarrow'; text-align: center;width: 55px;}
 
 .pop .popWrap .twoDepthIB .page .p_row .p_col .thumb .bottomDiv .proName_190{display: inline-block; line-height: 36px; font-size: 19px; color: #000; font-family: 'PTSansNarrow'; text-align: center;width: 190px; background: url(../images/tv/bg_nameLine.png)no-repeat 100% 50%;}
