@@ -93,7 +93,7 @@ public class DrawingBoardController {
                 model.addAttribute("returnCode", "RET99");
                 model.addAttribute("message", controlInfo + " 취소 주문입니다. (Order Canceled.)"); // 주문 취소 상태
             }else if("X".equals(chkVer)){
-                model.addAttribute("returnCode", "RET99");
+                model.addAttribute("returnCode", "RET97");
                 model.addAttribute("message", controlInfo + " Error, Check the Drawing Please."); // 도면 번호가 다른 경우 처리
             }else if("X".equals(chkPro002)){
                 model.addAttribute("returnCode", "RET98");

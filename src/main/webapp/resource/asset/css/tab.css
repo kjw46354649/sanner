@@ -61,13 +61,13 @@
 .timeWrap{float: left; background: url(../images/work/bg_st_1.png) no-repeat 0 0; width: 299px; height: 48px;line-height: 48px;padding: 0 30px;}
 .timeWrap~.timeWrap{margin-left: 5px;}
 .timeWrap:nth-child(2){}
-.timeWrap:nth-child(3){margin-left: 0; background: url(../images/work/bg_st_1_on.png) no-repeat 0 0;}
-.timeWrap:nth-child(3),.timeWrap:nth-child(4){margin-top:5px;}
+.timeWrap:nth-child(3){margin-left: 0; margin-top:5px; background: url(../images/work/bg_st_1_on.png) no-repeat 0 0;}
+.timeWrap:nth-child(4){margin-top:5px; background: none; border: 2px solid #dfd7d7; border-radius: 3px;}
 .timeTit{font-size: 22px; position: relative; padding-left: 36px;font-weight: bold;}
 .timeTit:before{content: ''; position: absolute; top: -3px; left: 0; background: url(../images/work/icon_1.png) no-repeat 0 0; width: 29px; height: 29px;}
 .timeWrap:nth-child(2) .timeTit:before{background: url(../images/work/icon_2.png) no-repeat 0 0;}
 .timeWrap:nth-child(3) .timeTit:before{background: url(../images/work/icon_3.png) no-repeat 0 0;}
-.timeWrap:nth-child(4) .timeTit:before{background: url(../images/work/icon_4.png) no-repeat 0 0;}
+.timeWrap:nth-child(4) .timeTit:before{background: none;}
 .time{font-size: 24px; color: #2d2d2d;margin-left: 15px;}
 .middleConts>div~div{margin-top:2px;}
 .tbl,.share,.qual{padding: 2px; text-align: center; color: #000; overflow: hidden; border: 1px solid #c2c2c2; border-radius: 5px; background: linear-gradient(to bottom, #fff, #f4f4f4);}
@@ -188,18 +188,58 @@ button.close {
     -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
     box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
 }
-.modal-end-content {
-    position: relative;
-    background-color: #fff;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    border: 1px solid #999;
-    border: 1px solid rgba(0, 0, 0, .2);
-    border-radius: 6px;
-    outline: 0;
-    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
-}
+
+/* drawing board complete popup*/
+.modal-end-dialog { width: 700px; margin: 30px auto;}
+.modal-end-dialog .buttonWrap { padding-bottom: 5px;}
+.modal-end-dialog .buttonCenterWrap { padding-bottom: 5px; text-align: center; }
+
+.modal-end-dialog .listGrnBtn { height: 40px; padding: 0 20px 0 40px; color: #fff; font-size: 20px; line-height: 40px; position: relative; border-radius: 3px; background: -webkit-gradient(linear, 90deg, color-stop(5%, 43934B), color-stop(5%, 4EAB57));/* Chrome,Safari4+ */ background: -webkit-linear-gradient(90deg, #43934B 5%, #4EAB57 5%);/* Chrome10+,Safari5.1+ */ }
+.modal-end-dialog .listBlueBtn { height: 40px; padding: 0 20px 0 40px; color: #fff; font-size: 20px; line-height: 40px; position: relative; border-radius: 3px; background: -webkit-gradient(linear, 90deg, color-stop(5%, 43934B), color-stop(5%, 4EAB57));/* Chrome,Safari4+ */ background: -webkit-linear-gradient(90deg, #333bff 5%, #777aff 5%);/* Chrome10+,Safari5.1+ */ }
+.modal-end-dialog .add:before { content: ''; width: 14px; height: 14px; position: absolute; top: 13px; left: 18px; display: block; background: url(../images/common/bg_addBtn.png)no-repeat 0 0; }
+.modal-end-dialog .save:before { content: ''; width: 18px; height: 14px; position: absolute; top: 13px; left: 15px; display: block; background: url(../images/common/ico_saveBtn.png)no-repeat 0 0; }
+.modal-end-dialog .closeBe:before { content: ''; width: 18px; height: 14px; position: absolute; top: 13px; left: 15px; display: block; background: url(../images/common/btn_tabmenu_close_off.png)no-repeat 0 0; }
+
+.modal-end-dialog .workList table{border-collapse:collapse; width:100%}
+.modal-end-dialog .workList table thead{float:left; width:568px;}
+.modal-end-dialog .workList table tbody{overflow-y:auto; overflow-x:hidden; float:left; width:568px; height: 300px;}
+.modal-end-dialog .workList table tbody tr{display:table; width:568px; line-height: 18px;}
+/*-.modal-dialog .workList table td{width:100px}*/
+.modal-end-content { position: relative; background-color: #fff; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid #999; border: 1px solid rgba(0, 0, 0, .2); border-radius: 6px;  -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5); box-shadow: 0 5px 15px rgba(0, 0, 0, .5); }
+.modal-end-body {position: relative; padding: 15px;}
+
+.modal-end-dialog-table-contents-end {border: 1px solid #6D90D0;padding: 5px;font-size: 18px;font-weight: 500;text-align: center;color: black;}
+.modal-end-dialog-table-header-end {border: 1px solid #818488;padding: 2px;font-size: 20px;font-weight: 600;text-align: center;color: #1d1d1d;height: 40px;background: #b4e4fa;}
+
+
+
+/* drawing board srt popup*/
+.modal-start-dialog { width: 700px; margin: 30px auto;}
+.modal-start-dialog .buttonWrap { padding-bottom: 5px;}
+.modal-start-dialog .buttonCenterWrap { padding-bottom: 5px; text-align: center; }
+
+.modal-start-dialog .listBlueBtn { height: 40px; padding: 0 30px 0 30px; color: #000000; font-size: 20px; line-height: 40px; position: relative;
+    border-radius: 3px; border-radius: 3px; background-color: #fffc91;}
+.modal-start-dialog .listGrnBtn { height: 40px; padding: 0 30px 0 30px; margin-left: 10px; color: #000000; font-size: 20px; line-height: 40px; position: relative;
+    border-radius: 3px; border-radius: 3px; background-color: #f1f1e3;}
+.modal-start-dialog .listAlertBtn { width: 178px; height: 40px; padding: 10px 30px 10px 30px; margin-left: 10px; color: #fd1300; font-size: 30px; font-weight: bold; line-height: 40px; position: relative;
+    border-radius: 3px; border-radius: 3px; background-color: #ffffff;}
+.modal-start-dialog .add:before { content: ''; width: 14px; height: 14px; position: absolute; top: 13px; left: 18px; display: block; background: url(../images/common/bg_addBtn.png)no-repeat 0 0; }
+.modal-start-dialog .save:before { content: ''; width: 18px; height: 14px; position: absolute; top: 13px; left: 15px; display: block; background: url(../images/common/ico_saveBtn.png)no-repeat 0 0; }
+.modal-start-dialog .closeBe:before { content: ''; width: 18px; height: 14px; position: absolute; top: 13px; left: 15px; display: block; background: url(../images/common/btn_tabmenu_close_off.png)no-repeat 0 0; }
+
+.modal-start-dialog .workList table{border-collapse:collapse; width:100%}
+.modal-start-dialog .workList table thead{float:left; width:568px;}
+.modal-start-dialog .workList table tbody{overflow-y:auto; overflow-x:hidden; float:left; width:568px; height: 300px;}
+.modal-start-dialog .workList table tbody tr{display:table; width:568px; line-height: 18px;}
+/*-.modal-dialog .workList table td{width:100px}*/
+.modal-start-content { position: relative; background-color: #000000; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid #999; border: 1px solid rgba(0, 0, 0, .2); border-radius: 6px;  -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5); box-shadow: 0 5px 15px rgba(0, 0, 0, .5); }
+.modal-start-body {position: relative; padding: 15px;}
+
+.modal-start-dialog-table-contents-end {border: 1px solid #6D90D0;padding: 5px;font-size: 18px;font-weight: 500;text-align: center;color: black;}
+.modal-start-dialog-table-header-end {border: 1px solid #818488;padding: 2px;font-size: 20px;font-weight: 600;text-align: center;color: #1d1d1d;height: 40px;background: #b4e4fa;}
+
+
 .modal-backdrop {
     position: fixed;
     top: 0;

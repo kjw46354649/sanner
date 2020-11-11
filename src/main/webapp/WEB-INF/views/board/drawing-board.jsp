@@ -52,24 +52,95 @@
             right: 380px;
             text-align: center;
         }
+        .yellowBackground {
+            background-color: rgba(255, 252, 145, 0.5) !important;
+        }
+
+        @keyframes key-sandglass {
+            0% { background: url(/resource/asset/images/work/icon_1.png) no-repeat 0 0; }
+            50% { background: url(/resource/asset/images/work/icon_2.png) no-repeat 0 0; }
+        }
+
+        .sandglass {
+            animation: key-sandglass 2s infinite linear;
+        }
+
+        .sandglass_stop {
+            background: url(/resource/asset/images/work/icon_4.png) no-repeat 0 0;
+        }
+
+        .ajs-cancel {
+          display: none;
+        }
+
     </style>
 </head>
 <body onresize="parent.resizeTo(1024,600)" onload="parent.resizeTo(1024,600)" >
-
-<!-- 대칭 주의 팝업 Start -->
-<div class="modal" id="drawing_worker_sider_alram_popup" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div>
-                    <span>대칭 주의</span>
-                </div>
-            </div>
-        </div>
+<div id="startDiv" style="display: none">
+    <div id="startDivHtml">
+        <table>
+            <tr>
+                <td width="15%">&nbsp;</td>
+                <td><h3 style="font-size: 30px;font-weight: bold; text-align: center;">시작 되었습니다.</h3></td>
+                <td width="15%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td width="15%">&nbsp;</td>
+                <td style="text-align: center;"><img src="/resource/asset/images/work/icon_4_1.png" width="40px"></td>
+                <td width="15%">&nbsp;</td>
+            </tr>
+        </table>
     </div>
 </div>
-<!-- 대칭 주의 팝업 End -->
-
+<div id="completeDiv" style="display: none">
+    <div id="completeDivHtml">
+        <table>
+            <tr>
+                <td width="15%">&nbsp;</td>
+                <td><h3 style="font-size: 30px;font-weight: bold; text-align: center;">완료 되었습니다.</h3></td>
+                <td width="15%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td width="15%">&nbsp;</td>
+                <td style="text-align: center;"><img src="/resource/asset/images/work/icon_4_1.png" width="40px"></td>
+                <td width="15%">&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="sameSideYnDiv" style="display: none">
+    <div id="sameSideYnDivHtml">
+        <table>
+            <tr>
+                <td width="15%">&nbsp;</td>
+                <td rowspan="2" width="25%"><img src="/resource/asset/images/work/alarm.png" width="90px"></td>
+                <td width="45%"><h3 style="font-size: 44px;font-weight: bold; text-align: center;">대칭주의</h3></td>
+                <td width="15%">&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="drawingVerErrorDiv" style="display: none">
+    <div id="drawingVerErrorHtml">
+        <table>
+            <tr>
+                <td width="10%">&nbsp;</td>
+                <td rowspan="2" width="25%"><img src="/resource/asset/images/work/alarm.png" width="90px"></td>
+                <td width="65%"><h3 style="font-size: 24px;font-weight: bold;">도면정보가 변경되었습니다.</h3></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td><h3 style="font-size: 24px;font-weight: bold;">사무실에 확인 바랍니다.</h3></td>
+            </tr>
+        </table>
+    </div>
+</div>
 <!-- Target Modal Start -->
 <div class="modal" id="drawing_worker_target_list_popup" style="display: none;">
     <div class="modal-dialog">
@@ -116,34 +187,21 @@
 </div>
 <!-- Target Modal End -->
 
-<!-- Scan Modal Start -->
+<!-- Drawing Start Modal Start -->
 <div class="modal-scan" id="drawing_worker_scan_popup" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-scan-content">
-            <div class="modal-scan-body">
+    <div class="modal-start-dialog">
+        <div class="modal-start-content">
+            <div class="modal-start-body">
                 <div class="tableWrap">
-                    <table>
-                        <tbody>
-                        <tr>
-                            <td class="modal-table-contents"><srping:message key="drawing.board.label.03"/></td>
-                            <td class="modal-table-contents"><srping:message key="drawing.board.label.04"/></td>
-                            <td class="modal-table-contents"><srping:message key="drawing.board.label.05"/></td>
-                            <td class="modal-table-contents"><srping:message key="drawing.board.label.06"/></td>
-                        </tr>
-                        <tr>
-                            <td class="modal-table-header" id="scanControlNumHtml"></td>
-                            <td class="modal-table-header" id="scanControlPartHtml"></td>
-                            <td class="modal-table-header" id="scanControlOrderQtyHtml"></td>
-                            <td class="modal-table-header" id="scanControlInnerOutDtHtml"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <div><p class="work-txt"><srping:message key="drawing.board.alert.06"/></p></div>
-                    <div class="buttonCenterWrap">
-                        <button type="button" id="scanBtnSave" class="listBlueBtn save"><srping:message key="drawing.board.button.05"/></button>
-                        <button type="button" id="scanBtnCancel" class="listGrnBtn closeBe"><srping:message key="drawing.board.button.12"/></button>
+                    <div><h1 class="stop-txt" style="background-color: white;" id="scanControlNumHtml"></h1></div>
+                    <div><h1 class="stop-txt" style="color: white; margin-top: 10px;" id="scanControlOrderQtyHtml"></h1></div>
+                    <div><div id="scanAlertMessageHtml" style="text-align: center; margin-top: 10px;"></div></div>
+                    <div><p class="work-txt" style="color: white;margin-top: 10px;" ><srping:message key="drawing.board.alert.06"/></p></div>
+                    <div style="text-align: right;" class="buttonCenterWrap">
+                        <h1 class="scan-time" style="font-size: 70px; font-weight: bold; color: white">10 <srping:message key="drawing.board.alert.04"/></h1>
+                        <button type="button" id="scanBtnSave" class="listBlueBtn"><srping:message key="drawing.board.button.01"/></button>
+                        <button type="button" id="scanBtnCancel" class="listGrnBtn"><srping:message key="drawing.board.button.06"/></button>
                     </div>
-                    <div><p class="scan-time">10 <srping:message key="drawing.board.alert.04"/></p></div>
                 </div>
             </div>
         </div>
@@ -151,7 +209,7 @@
 </div>
 <!-- Scan Modal End -->
 
-<!-- Stop Modal Re Start -->
+<!-- Stop Modal Start -->
 <div class="modal-scan" id="drawing_worker_stop_popup" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-stop-content">
@@ -175,7 +233,7 @@
 </div>
 <!-- Stop Modal End -->
 
-<!-- Cancel Modal Cancel -->
+<!-- Cancel Modal Start -->
 <div class="modal-scan" id="drawing_worker_cancel_popup" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-stop-content">
@@ -197,45 +255,33 @@
     </div>
 </div>
 <!-- Cancel Modal End -->
-
-<!-- Complete modal start -->
+<!-- End Modal Start -->
 <div class="modal-scan" id="drawing_worker_end_popup" style="display: none;">
-    <div class="modal-dialog">
-        <div class="modal-stop-content">
-            <div class="modal-stop-body">
+    <div class="modal-end-dialog">
+        <div class="modal-end-content">
+            <div class="modal-end-body">
                 <div class="tableWrap">
-                    <table>
-                        <tbody>
-                        <tr>
-                            <td class="modal-table-header" style="width:10%;"><srping:message key="drawing.board.label.03.01"/></td>
-                            <td class="modal-table-contents" id="completeControlNumHtml" style="width:50%;text-align: left"></td>
-                            <td class="modal-table-header" style="width:8%;"><srping:message key="drawing.board.label.04"/></td>
-                            <td class="modal-table-contents" id="completeControlPartNumHtml" style="width:7%;"></td>
-                            <td class="modal-table-header" style="width:10%;"><srping:message key="drawing.board.label.05"/></td>
-                            <td class="modal-table-contents" id="completeControlOrderQtyHtml" style="width:15%; text-align: right; padding-right: 5px;"></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div><h1 class="stop-txt" id="completeControlNumHtml"></h1></div>
                     <br/>
                     <table>
                         <tbody>
                         <tr>
-                            <td class="modal-table-header-end" style="width:30%;"><srping:message key="drawing.board.label.15"/></td>
-                            <td class="modal-table-header-end" style="width:30%;"><srping:message key="drawing.board.label.16"/></td>
-                            <td class="modal-table-header-end" style="width:40%;"><srping:message key="drawing.board.label.17"/></td>
+                            <td class="modal-end-dialog-table-header-end" style="width:30%;"><srping:message key="drawing.board.label.15"/></td>
+                            <td class="modal-end-dialog-table-header-end" style="width:30%; color: red"><srping:message key="drawing.board.label.16"/></td>
+                            <td class="modal-end-dialog-table-header-end" style="width:40%;"><srping:message key="drawing.board.label.17"/></td>
                         </tr>
                         <tr>
-                            <td class="modal-table-contents-end">
-                                <button type="button" style="padding-right: 0px; position: absolute; right: 525px; top: 157px;" class="btn_plus" id="complete_success_qty_pop_plus_btn">더하기</button>
-                                <span class="text" style="padding-right: 23px; font-size: 31px; position: absolute; right: 460px; top: 165px;" id="completeControlCompleteQtyHtml">0</span>
-                                <button type="button" style="position: absolute; right: 420px; top: 157px;" class="btn_minus" id="complete_success_qty_pop_minus_btn">빼기</button>
+                            <td class="modal-end-dialog-table-contents-end">
+                                <button type="button" style="padding-right: 0px; position: absolute; right: 625px; top: 144px;" class="btn_plus" id="complete_success_qty_pop_plus_btn">더하기</button>
+                                <span class="text" style="padding-right: 23px; font-size: 40px; position: absolute; right: 536px; top: 146px;" id="completeControlCompleteQtyHtml">0</span>
+                                <button type="button" style="position: absolute; right: 489px; top: 144px;" class="btn_minus" id="complete_success_qty_pop_minus_btn">빼기</button>
                             </td>
-                            <td class="modal-table-contents-end">
-                                <button type="button" style="position: absolute; right: 355px; top: 157px;" class="btn_plus" id="complete_fail_qty_pop_plus_btn">더하기</button>
-                                <span class="text" style="padding-right: 23px; font-size: 31px; position: absolute; right: 286px; top: 165px;" id="completeControlFailQtyHtml">1</span>
-                                <button type="button" class="btn_minus" style="position: absolute; right: 250px; top: 157px;" id="complete_fail_qty_pop_minus_btn">빼기</button>
+                            <td class="modal-end-dialog-table-contents-end">
+                                <button type="button" style="position: absolute; right: 424px; top: 144px;" class="btn_plus" id="complete_fail_qty_pop_plus_btn">더하기</button>
+                                <span class="text" style="padding-right: 23px; font-size: 40px; position: absolute; right: 337px; top: 146px;" id="completeControlFailQtyHtml">1</span>
+                                <button type="button" class="btn_minus" style="position: absolute; right: 289px; top: 144px;" id="complete_fail_qty_pop_minus_btn">빼기</button>
                             </td>
-                            <td class="modal-table-contents-end">
+                            <td class="modal-end-dialog-table-contents-end">
                                 <select id="ERROR_REASON" name="ERROR_REASON">
                                     <option value="" selected><srping:message key="com.frm.select.default.option"/></option>
                                     <c:forEach var="code" items="${errorReasonList}">
@@ -246,25 +292,20 @@
                         </tr>
                         </tbody>
                     </table>
+                    <br/>
                     <div id="singleComplete" style="display: block"><p class="end-txt"><srping:message key="drawing.board.message.01"/></p></div>
                     <div id="continueComplete" style="display: none"><p class="continue-end-txt"><srping:message key="drawing.board.message.02"/></p></div>
-                    <div style="text-align: center;">
+                    <div style="text-align: right;">
+                        <h1 class="scan-time" style="font-size: 70px; font-weight: bold;">10 <srping:message key="drawing.board.alert.04"/></h1>
                         <button type="button" id="endBtnSave" class="gradeMaxBtn red"><srping:message key="drawing.board.button.05"/></button>
                         <button type="button" id="endBtnCancel" class="gradeMaxBtn white"><srping:message key="drawing.board.button.12"/></button>
                     </div>
-<%--                    <div>--%>
-<%--                        <button id="endBtnSave">Yes</button>--%>
-<%--                        <button id="endBtnCancel">Cancel</button>--%>
-<%--                    </div>--%>
-                    <div><p class="scan-time">10 <srping:message key="drawing.board.alert.04"/></p></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- Complete modal end -->
-
-
+<!-- End Modal End -->
 <div class="bodyWrap work" id="bodyWrap">
     <div id="waitMeContainerDiv">
         <c:set var="workInfo" value="${drawingInfo.lastWork}" />
@@ -290,7 +331,6 @@
                 <input id="RE_BARCODE_NUM" name="RE_BARCODE_NUM" type="hidden" value="">
                 <input id="WORK_MINUTE" name="WORK_MINUTE" type="hidden" value="${workInfo.WORK_MINUTE}">
                 <input id="WORK_SECOND" name="WORK_SECOND" type="hidden" value="${workInfo.WORK_SECOND}">
-                <input id="SAME_SIDE_YN" name="SAME_SIDE_YN" type="hidden" value="${workInfo.SAME_SIDE_YN}">
             </form>
             <form id="re_start_work_info_form" name="re_start_work_info_form" method="POST" onsubmit="return false;">
                 <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${reStartWorkinfo.CONTROL_SEQ}">
@@ -299,7 +339,7 @@
                 <input id="PART_NUM" name="PART_NUM" type="hidden" value="${reStartWorkinfo.PART_NUM}">
                 <input id="ORDER_QTY" name="ORDER_QTY" type="hidden" value="${reStartWorkinfo.ORDER_QTY}">
                 <input id="INNER_DUE_DT" name="INNER_DUE_DT" type="hidden" value="${reStartWorkinfo.INNER_DUE_DT}">
-                <input id="SAME_SIDE_YN" name="SAME_SIDE_YN" type="hidden" value="${reStartWorkinfo.SAME_SIDE_YN}">
+                <input id="RE_BARCODE_NUM" name="RE_BARCODE_NUM" type="hidden" value="${reStartWorkinfo.BARCODE_NUM}">
             </form>
             <form id="drawing_log_out_form" name="drawing_log_out_form" method="POST" action="/drawing-worker">
                 <input id="EQUIP_NM" name="EQUIP_NM" type="hidden" value="${drawingInfo.machineInfo.EQUIP_NM}">
@@ -365,8 +405,9 @@
                                 <c:if test="${not empty workInfo}">${workInfo.STOP_SECOND}</c:if> &nbsp;<srping:message key='drawing.board.label.01'/>
                             </span>
                         </div>
-                        <div class="timeWrap">
-                            <span class="timeTit"><srping:message key='drawing.board.button.04'/></span>
+                        <div class="timeWrap <c:if test="${workInfo.DATA_TYPE eq 'CUR'}">yellowBackground</c:if>">
+                            <span style="padding-top: 3px;" class="timeTit <c:if test="${workInfo.DATA_TYPE eq 'CUR'}">sandglass</c:if><c:if test="${workInfo.DATA_TYPE ne 'CUR'}">sandglass_stop</c:if>">
+                                <srping:message key='drawing.board.button.04'/></span>
                             <span class="time" id="workTimeInfo">
                                 <c:if test="${not empty workInfo}">${workInfo.WORK_MINUTE}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/>
                                 <c:if test="${not empty workInfo}">${workInfo.WORK_SECOND}</c:if> &nbsp;<srping:message key='drawing.board.label.01'/>
@@ -402,12 +443,19 @@
                         </div>
                         <div class="share">
                             <div class="shareTit"><srping:message key='drawing.board.label.07'/></div>
-                            <div class="shareConts"><c:if test="${not empty workInfo}">${workInfo.NOTE}</c:if></div>
+                            <div class="shareConts">
+                                <c:if test="${not empty workInfo}">${workInfo.NOTE}</br></c:if>
+                                <c:if test="${not empty workInfo}">${workInfo.MCT_NOTE}</c:if>
+                            </div>
                         </div>
                         <div class="qual">
                             <div class="qualTit"><srping:message key='drawing.board.label.08'/></div>
                             <div class="qualConts">
-                                <span><%--<img src="/barcode/code128/C000003844">--%></span>
+                                <span>
+                                    <c:if test="${not empty workInfo.INSPECT_DT}">
+                                        ${workInfo.INSPECT_DT}&nbsp;${workInfo.INSPECT_GRADE_NM}&nbsp;${workInfo.INSPECT_RESULT_NM}&nbsp;${workInfo.ERROR_REASON_NM}
+                                    </c:if>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -421,7 +469,10 @@
                         <c:if test="${not empty workInfo && workInfo.SAME_SIDE_YN eq 'Y'}">
                             <span class="alertBox"><srping:message key='drawing.board.label.18'/></span>
                         </c:if>
-                        <c:if test="${(empty workInfo || (workInfo.MAIN_INSPECTION eq '' &&  orkInfo.EMERGENCY_YN ne 'Y' && workInfo.SAME_SIDE_YN ne 'Y'))}">
+                        <c:if test="${not empty workInfo && workInfo.MATERIAL_FINISH_HEAT ne ''}">
+                            <span class="alertBox">${workInfo.MATERIAL_FINISH_HEAT}</span>
+                        </c:if>
+                        <c:if test="${(empty workInfo || (workInfo.MATERIAL_FINISH_HEAT eq '' &&  workInfo.MAIN_INSPECTION eq '' &&  orkInfo.EMERGENCY_YN ne 'Y' && workInfo.SAME_SIDE_YN ne 'Y'))}">
                             <span style="height: 35px; line-height: 35px;">&nbsp; &nbsp;</span>
                         </c:if>
                     </div>
@@ -464,6 +515,9 @@
             return orig.apply(this, arguments);
         }
 
+
+
+
         /** 메인 창에서 바코드 스캔 된 경우 **/
         /** 진행중인 작업이 없는 경우는 신규 작업 시작 처리 **/
         /** 진행중인 작업이 있는 경우 작업중인 바코드인 경우 종료 처리 팝업 호출
@@ -475,19 +529,23 @@
                     'data': { 'queryId': 'drawingMapper.selectDrawingBarcodeScanInfo', 'BARCODE_NUM': barcodeNum}
                 };
                 fnPostAjax(function (data, callFunctionParam) {
+
                     let returnCode = data.returnCode;
                     let curStatus = $("#curStatus").val();
+
                     if(returnCode == "RET00") {
-                        if(curStatus == "stop"){    // 현재 상태가 종료 일때 시작 처리 한다.
+                        if (curStatus == "stop") {
                             startWork(data.info);
-                        }else if(curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()){ // 현재 작업중인 바코드를 스캔 했을 경우 완료 처리 한다.
+                        } else if (curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()) {
                             $("#workCompletelBtn").trigger('click');
-                        }else {     // 현재 작업중이면서 현재 작업 내용과 다른 바코드 클릭 한 경우 처리 한다.
+                        } else {
                             $("#singleComplete").hide();
                             $("#continueComplete").show();
                             $("#drawing_action_form").find("#RE_BARCODE_NUM").val(barcodeNum);
                             $("#workCompletelBtn").trigger('click');
                         }
+                    }else if(returnCode == "RET97"){
+                        fnDrawingDialogAlert('drawingVerErrorHtml', 3);
                     }else{
                         showMessage(data.message);
                         return false;
@@ -586,7 +644,7 @@
                 innerHtmlObj.html("");
                 if(data.list.length > 0 ) {
                     for (let i = 0; i < data.list.length; i++) {
-                        workerListHtml += '<tr class="workListAction" stype="'+sType+'" sControlSeq="' + data.list[i].CONTROL_SEQ + '" sControlDetailSeq="' + data.list[i].CONTROL_DETAIL_SEQ + '" sSameSideYn="' + data.list[i].SAME_SIDE_YN + '"  >';
+                        workerListHtml += '<tr class="workListAction" stype="'+sType+'" sBarcodeNum="' + data.list[i].BARCODE_NUM + '" >';
                         workerListHtml += '    <td class="modal-table-contents" style="width:283px;">' + data.list[i].CONTROL_NUM + '</td>';
                         workerListHtml += '    <td class="modal-table-contents" style="width:87px;">' + data.list[i].PART_NUM + '</td>';
                         workerListHtml += '    <td class="modal-table-contents" style="width:87px;">' + data.list[i].ORDER_QTY + '</td>';
@@ -619,21 +677,77 @@
             $(".areaWrap").css('display', 'block');
         });
 
-        // 시작 팝업 호출 하여 처리 한다.
-        $("#drawing_worker_scan_popup").bind('style', function(e) {
-            // 대칭인 경우 대칭 주의 팝업 호출
-            let sameSideYn = $("#drawing_action_form").find("#SAME_SIDE_YN").val();
+        $(document).on("click", '#drawing_worker_target_list_popup .workListAction', function() {
+            let barcodeNum = $(this).attr("sBarcodeNum");
+            let parameters = {
+                'url': '/drawing/barcode',
+                'data': { 'queryId': 'drawingMapper.selectDrawingBarcodeScanInfo', 'BARCODE_NUM': barcodeNum}
+            };
+            fnPostAjax(function (data, callFunctionParam) {
+                let returnCode = data.returnCode;
+                if(returnCode == "RET00") {
+                    startWork(data.info);
+                }else if(returnCode == "RET97"){
+                    fnDrawingDialogAlert('drawingVerErrorHtml', 3);
+                }else{
+                    showMessage(data.message);
+                    return false;
+                }
+            }, parameters, '');
+        });
 
-            // 시작 팝업 호출 처리
+        let reStartWorkControlNum = $("#re_start_work_info_form").find("#CONTROL_NUM").val();
+
+        if(reStartWorkControlNum){
+            let barcodeNum = $("#re_start_work_info_form").find("#RE_BARCODE_NUM").val();
+            let parameters = {
+                'url': '/drawing/barcode',
+                'data': { 'queryId': 'drawingMapper.selectDrawingBarcodeScanInfo', 'BARCODE_NUM': barcodeNum}
+            };
+            fnPostAjax(function (data, callFunctionParam) {
+                let returnCode = data.returnCode;
+                if(returnCode == "RET00") {
+                    startWork(data.info);
+                }else if(returnCode == "RET97"){
+                    fnDrawingDialogAlert('drawingVerErrorHtml', 3);
+                }else{
+                    showMessage(data.message);
+                    return false;
+                }
+            }, parameters, '');
+        };
+
+        let startWork = function(dataInfo){
+            if(dataInfo.SAME_SIDE_YN_NM){
+                fnDrawingDialogAlert('sameSideYnDivHtml', 1);
+            }
+            $("#drawing_worker_scan_popup").find("#scanControlNumHtml").html(dataInfo.CONTROL_INFO);
+            $("#drawing_worker_scan_popup").find("#scanControlOrderQtyHtml").html(dataInfo.ORDER_QTY_INFO);
+
+            let scanAlertMessage = "";
+            if(dataInfo.SAME_SIDE_YN_NM) scanAlertMessage += '<span class="listAlertBtn">'+dataInfo.SAME_SIDE_YN_NM+'</span>';
+            if(dataInfo.MAIN_INSPECTION_NM) scanAlertMessage += '<span class="listAlertBtn">'+dataInfo.MAIN_INSPECTION_NM+'</span>';
+            if(dataInfo.MATERIAL_FINISH_HEAT_NM) scanAlertMessage += '<span class="listAlertBtn">'+dataInfo.MATERIAL_FINISH_HEAT_NM+'</span>';
+
+            $("#drawing_worker_scan_popup").find("#scanAlertMessageHtml").html(scanAlertMessage);
+
+            $("#drawing_action_form").find("#CONTROL_SEQ").val(dataInfo.CONTROL_SEQ);
+            $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val(dataInfo.CONTROL_DETAIL_SEQ);
+            $("#drawing_worker_target_list_popup").css("display", "none");
+            $("#drawing_worker_scan_popup").css("display", "block");
+        }
+
+        //Scan Popup
+        $("#drawing_worker_scan_popup").bind('style', function(e) {
             let style =  $(this).attr('style');
             let display = style.split(":")[1];
-            let seconds = 10;
-            // let seconds = 5000;
+            // let seconds = 10;
+            let seconds = 5000;
             if( display.indexOf("none") > 0){
-                $("#drawing_worker_scan_popup .scan-time").html(fnRemainTimeSet(seconds));
+                $("#drawing_worker_scan_popup .scan-time").html(seconds);
                 stopInterval = setInterval(function() {
                     seconds--;
-                    $("#drawing_worker_scan_popup .scan-time").html(fnRemainTimeSet(seconds));
+                    $("#drawing_worker_scan_popup .scan-time").html(seconds);
                     $("#drawing_worker_scan_popup").bind('style', function(e) {
                         let style =  $(this).attr('style');
                         let display = style.split(":")[1];
@@ -678,8 +792,6 @@
         /** 종료 즉 완료하기 팝업창 자동 호출 **/
         $("#workCompletelBtn").on('click', function(){
             $("#drawing_worker_end_popup").find("#completeControlNumHtml").html($("#drawing_action_form").find("#CONTROL_NUM").val());
-            $("#drawing_worker_end_popup").find("#completeControlPartNumHtml").html($("#drawing_action_form").find("#PART_NUM").val());
-            $("#drawing_worker_end_popup").find("#completeControlOrderQtyHtml").html($("#drawing_action_form").find("#ORDER_QTY").val());
             $("#drawing_worker_end_popup").find("#completeControlCompleteQtyHtml").html($("#drawing_action_form").find("#FINISH_QTY").val());
             $("#drawing_worker_end_popup").find("#completeControlFailQtyHtml").html($("#drawing_action_form").find("#ERROR_QTY").val());
             $("#drawing_worker_end_popup").css("display", "block");
@@ -689,13 +801,13 @@
         $("#drawing_worker_end_popup").bind('style', function(e) {
             let style =  $(this).attr('style');
             let display = style.split(":")[1];
-            let seconds = 10;
-            // let seconds = 50000;
+            // let seconds = 10;
+            let seconds = 50000;
             if( display.indexOf("none") > 0){
-                $("#drawing_worker_end_popup .scan-time").html(fnRemainTimeSet(seconds));
+                $("#drawing_worker_end_popup .scan-time").html(seconds);
                 stopInterval = setInterval(function() {
                     seconds--;
-                    $("#drawing_worker_end_popup .scan-time").html(fnRemainTimeSet(seconds));
+                    $("#drawing_worker_end_popup .scan-time").html(seconds);
                     $("#drawing_worker_end_popup").bind('style', function(e) {
                         let style =  $(this).attr('style');
                         let display = style.split(":")[1];
@@ -710,6 +822,7 @@
                 }, 1000);
             }
         });
+
         /** 작업 완료 취소 처리 **/
         $("#endBtnCancel").on('click', function(){
             $("#singleComplete").show();
@@ -735,6 +848,7 @@
             };
             fnPostAjax(function (data, callFunctionParam) {
                 fnPopupClose("drawing_worker_end_popup");
+                fnDrawingAlertDialogAlert('completeDivHtml', 1);
                 reloadDrawingBoard();
             }, parameters, '');
         });
@@ -743,9 +857,12 @@
         $("#complete_success_qty_pop_plus_btn").on('click', function(){
             clearTimeout(stopInterval);
             $("#drawing_worker_end_popup .scan-time").html("");
+            let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let afterQty = parseInt(finishQty) + 1;
+            let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
+            if((afterQty + errorParseQty) > orderQty) return false;
             $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
             $("#completeControlCompleteQtyHtml").html(afterQty);
         });
@@ -754,34 +871,56 @@
         $("#complete_success_qty_pop_minus_btn").on('click', function(){
             clearTimeout(stopInterval);
             $("#drawing_worker_end_popup .scan-time").html("");
+            let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let afterQty = parseInt(finishQty) - 1;
+            let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
+            if(afterQty < 0) return false;
             $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
             $("#completeControlCompleteQtyHtml").html(afterQty);
+            // if((afterQty + errorParseQty) <= orderQty && afterQty >= 0 ){
+            //     $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
+            //     $("#completeControlCompleteQtyHtml").html(afterQty);
+            // }
         });
 
         /** 불량 수량 플러스 처리 **/
         $("#complete_fail_qty_pop_plus_btn").on('click', function(){
             clearTimeout(stopInterval);
             $("#drawing_worker_end_popup .scan-time").html("");
+            let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
-            let afterQty = 0;
-            if(errorQty) afterQty = parseInt(errorQty) + 1
+            let finishParseQty = isNaN(parseInt(finishQty)) ? 0 : parseInt(finishQty);
+            let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
+            let afterQty = parseInt(errorParseQty) + 1
+            if((finishParseQty + afterQty) > orderQty) return false;
             $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
             $("#completeControlFailQtyHtml").html(afterQty);
+            // if((afterQty + finishParseQty) <= orderQty){
+            //     $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
+            //     $("#completeControlFailQtyHtml").html(afterQty);
+            // }
         });
 
         /** 불량 수량 마이너스 처리 **/
         $("#complete_fail_qty_pop_minus_btn").on('click', function(){
             clearTimeout(stopInterval);
             $("#drawing_worker_end_popup .scan-time").html("");
+            let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
-            let afterQty = 0;
-            if(errorQty) afterQty = parseInt(errorQty) - 1;
+            let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
+            let finishParseQty = isNaN(parseInt(finishQty)) ? 0 : parseInt(finishQty);
+            let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
+            let afterQty = parseInt(errorQty) - 1;
+            if(afterQty < 0) return false;
             $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
             $("#completeControlFailQtyHtml").html(afterQty);
+            // if((afterQty + finishParseQty) <= orderQty && afterQty >= 0) {
+            //     $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
+            //     $("#completeControlFailQtyHtml").html(afterQty);
+            // }
         });
 
         $("#ERROR_REASON").on('change', function(){
@@ -795,7 +934,6 @@
             $("#drawing_action_form").submit();
         };
 
-        // 작업 시작 처리 함수
         function fnDrawingBoardSave(){
             /** todo 최신 작업과 같은 Part 작업인 경우 진행 안되도록 처리 **/
             let parameters = {
@@ -803,6 +941,7 @@
                 'data': $("#drawing_action_form").serialize()
             };
             fnPostAjax(function (data, callFunctionParam) {
+                fnDrawingAlertDialogAlert('startDivHtml', 1);
                 fnResetFrom("drawing_action_form");
                 fnPopupClose("drawing_worker_scan_popup");
                 reloadDrawingBoard();
@@ -905,117 +1044,61 @@
            });
        }
 
-
-        // 대상 팝업에서 하나의 관리 번호 클릭하여 시작 팝업 호출 한다.
-        $(document).on("click", '#drawing_worker_target_list_popup .workListAction', function() {
-            let controlSeq = $(this).attr("sControlSeq");
-            let controlDetailSeq = $(this).attr("sControlDetailSeq");
-            let sameSideYn = $(this).attr("sSameSideYn");
-
-            var tr = $(this);
-            var td = tr.children();
-
-            $("#drawing_worker_scan_popup").find("#scanControlNumHtml").html(td.eq(0).text());
-            $("#drawing_worker_scan_popup").find("#scanControlPartHtml").html(td.eq(1).text());
-            $("#drawing_worker_scan_popup").find("#scanControlOrderQtyHtml").html(td.eq(2).text());
-            $("#drawing_worker_scan_popup").find("#scanControlInnerOutDtHtml").html(td.eq(3).text());
-
-            $("#drawing_action_form").find("#CONTROL_SEQ").val(controlSeq);
-            $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val(controlDetailSeq);
-            $("#drawing_action_form").find("#SAME_SIDE_YN").val(sameSideYn);
-
-            $("#drawing_worker_target_list_popup").css("display", "none");
-            $("#drawing_worker_scan_popup").css("display", "block");
+        alertify.drawingDialog || alertify.dialog('drawingDialog',function(){
+            return {
+                main:function(content){ this.setContent(content); },
+                setup:function(){
+                    return { options:{ basic:true, maximizable:false, resizable:false, padding:false } };
+                },
+                settings:{ selector:undefined },
+                hooks: {
+                  onshow: function() {
+                    this.elements.dialog.style.maxWidth = 'none';
+                    this.elements.dialog.style.width = '80%';
+                  }
+                }
+            };
         });
 
-        // 바코드 스캔으로 시작 처리
-        let startWork = function(dataInfo){
-            $("#drawing_worker_scan_popup").find("#scanControlNumHtml").html(dataInfo.CONTROL_NUM);
-            $("#drawing_worker_scan_popup").find("#scanControlPartHtml").html(dataInfo.PART_NUM);
-            $("#drawing_worker_scan_popup").find("#scanControlOrderQtyHtml").html(dataInfo.ORDER_QTY);
-            $("#drawing_worker_scan_popup").find("#scanControlInnerOutDtHtml").html(dataInfo.INNER_DUE_DT);
-
-            $("#drawing_action_form").find("#CONTROL_SEQ").val(dataInfo.CONTROL_SEQ);
-            $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val(dataInfo.CONTROL_DETAIL_SEQ);
-            $("#drawing_action_form").find("#SAME_SIDE_YN").val(dataInfo.SAME_SIDE_YN);
-
-            $("#drawing_worker_target_list_popup").css("display", "none");
-            $("#drawing_worker_scan_popup").css("display", "block");
-        }
-
-       /** Main 페이지 로딩시 Body 기본으로 Focus 되도록 처리 **/
-       setFocusBody();
-
-       let reStartWorkControlNum = $("#re_start_work_info_form").find("#CONTROL_NUM").val();
-       if(reStartWorkControlNum){
-           // 팝업 화면의 표시 내용
-           $("#drawing_worker_scan_popup").find("#scanControlNumHtml").html($("#re_start_work_info_form").find("#CONTROL_NUM").val());
-           $("#drawing_worker_scan_popup").find("#scanControlPartHtml").html($("#re_start_work_info_form").find("#PART_NUM").val());
-           $("#drawing_worker_scan_popup").find("#scanControlOrderQtyHtml").html($("#re_start_work_info_form").find("#ORDER_QTY").val());
-           $("#drawing_worker_scan_popup").find("#scanControlInnerOutDtHtml").html($("#re_start_work_info_form").find("#INNER_DUE_DT").val());
-
-           // action 처리시 사용할 정보 저장
-           $("#drawing_action_form").find("#CONTROL_SEQ").val($("#re_start_work_info_form").find("#CONTROL_SEQ").val());
-           $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val($("#re_start_work_info_form").find("#CONTROL_DETAIL_SEQ").val());
-
-           $("#drawing_worker_target_list_popup").css("display", "none");
-           $("#drawing_worker_scan_popup").css("display", "block");
-       };
-
-        /**
-         * @title {String or DOMElement} The dialog title.
-         * @message {String or DOMElement} The dialog contents.
-         * @onok {Function} Invoked when the user clicks OK button or closes the dialog.
-         *
-         * fnAlert(null,"<h1>안녕하세요</h1>", function () {alert('확인 클릭')});
-         *
-         */
-        const fnAlert = function (title, message, onok) {
-            alertify.alert()
-                .setting({
-                    'title': title,
-                    'message': message,
-                    'onok': onok,
-                    'movable': false,
-                    'transitionOff': true
-                }).show();
-        };
-
-        /**
-         * @title {String or DOMElement} The dialog title.
-         * @message {String or DOMElement} The dialog contents.
-         * @onok {Function} Invoked when the user clicks OK button.
-         * @oncancel {Function} Invoked when the user clicks Cancel button or closes the dialog.
-         * @autoOk {number} Automatically confirms the dialog after n seconds.
-         *
-         * fnConfirm(null, 'message', function() {alert('확인 클릭')}, function() {alert('취소 클릭')}, 5);
-         *
-         */
-        const fnConfirm = function (title, message, onok, oncancel, autoOk) {
-            if (autoOk == undefined || autoOk == null) {
-                alertify.confirm()
-                    .setting({
-                        'title': title,
-                        'message': message,
-                        'onok': onok,
-                        'oncancel': oncancel,
-                        'movable': false,
-                        'transitionOff': true
-                    }).show();
-            } else {
-                alertify.confirm()
-                    .setting({
-                        'title': title,
-                        'message': message,
-                        'onok': onok,
-                        'oncancel': oncancel,
-                        'movable': false,
-                        'transitionOff': true
-                    }).show().autoOk(autoOk);
+        const fnDrawingDialogAlert = function (elementId, autoClose) {
+            let alertBox = alertify.drawingDialog($('#' + elementId)[0]);
+            if (autoClose) {
+                setTimeout(function() {
+                    alertBox.close();
+                }, autoClose * 1000);
             }
         };
 
-    });
+        alertify.drawingAlertDialog || alertify.dialog('drawingAlertDialog',function(){
+            return {
+                main:function(content){ this.setContent(content); },
+                setup:function(){
+                    return { options:{ basic:true, maximizable:false, resizable:false, padding:false } };
+                },
+                settings:{ selector:undefined },
+                hooks: {
+                  onshow: function() {
+                    this.elements.dialog.style.maxWidth = 'none';
+                    this.elements.dialog.style.width = '30%';
+                  }
+                }
+            };
+        });
 
+        const fnDrawingAlertDialogAlert = function (elementId, autoClose) {
+            let alertBox = alertify.drawingAlertDialog($('#' + elementId)[0]);
+            if (autoClose) {
+                setTimeout(function() {
+                    alertBox.close();
+                }, autoClose * 1000);
+            }
+        };
+
+        // fnDrawingAlertDialogAlert('completeDivHtml', 9999);
+
+        /** Main 페이지 로딩시 Body 기본으로 Focus 되도록 처리 **/
+        setFocusBody();
+
+    });
 </script>
 </body>
