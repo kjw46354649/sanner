@@ -38,7 +38,7 @@
     </div>
 
     <div class="middle-wrap left-wrap">
-        <div>가공률 및 가공납기 준수 현황</div>
+        <div><p class="title">가공률 및 가공납기 준수 현황</p></div>
         <div id="container-speed">가공납기 준수율</div>
         <div id="pieChart">가공실적 현황</div>
         <div id="months1">월간현황</div>
@@ -104,7 +104,7 @@
     </div>
 
     <div class="middle-wrap right-wrap">
-        <div>도면 view</div>
+        <div><p class="title">가공상세현황</p></div>
         <div>
             <table class="drawing-information-table" id="drawing_information_table">
                 <tr>
@@ -222,52 +222,55 @@
     </div>
 
     <div class="bottom-wrap">
-        <div>
-            <form id="monthly_productivity_bottom_form" role="form" onsubmit="return false;">
-                <span>rank list 조회</span>
-                <span class="slt_wrap">
-                    <label class="label_100" for="analysis_target">분석 대상</label>
-                    <select name="ANALYSIS_TARGET" id="analysis_target">
-                        <option value="PART_QTY">수량</option>
-                        <option value="WORK_TIME">시간</option>
-                        <option value="UNIT_AP_AMT">A/P</option>
-                        <option value="MARGIN_RATIO" selected>마진율</option>
-                    </select>
+        <form id="monthly_productivity_bottom_form" role="form" onsubmit="return false;">
+            <div>
+                <span class="title">rank list 조회</span>
+                <span>
+                    <span class="sub-title">> 분석대상</span>
+                    <span>
+                        <label for="analysis_target"></label>
+                        <select name="ANALYSIS_TARGET" id="analysis_target">
+                            <option value="PART_QTY">수량</option>
+                            <option value="WORK_TIME">시간</option>
+                            <option value="UNIT_AP_AMT">A/P</option>
+                            <option value="MARGIN_RATIO" selected>마진율</option>
+                        </select>
+                    </span>
+                    <span>
+                        <input type="radio" name="SORT" id="asc" value="ASC"><label for="asc">오름차순</label>
+                        <input type="radio" name="SORT" id="desc" value="DESC" checked><label for="desc">내림차순</label>
+                    </span>
                 </span>
-                <label>
-                    <input type="radio" name="SORT" value="ASC">
-                    오름차순
-                </label>
-                <label>
-                    <input type="radio" name="SORT" value="DESC" checked>
-                    내림차순
-                </label>
-                <span>필터조건</span>
-                <span class="slt_wrap">
-                    <label class="label_100" for="yy1">주문수량</label>
-                    <select name="YY1" id="yy1">
-                       <c:forEach var="i" begin="1" end="30">
-                           <option value="<c:out value='${i}'/>"><c:out value='${i}'/></option>
-                       </c:forEach>
-                    </select>
-                    <select name="YY2" id="yy2">
-                       <c:forEach var="i" begin="1" end="30">
-                           <option value="<c:out value='${i}'/>"><c:out value='${i}'/></option>
-                       </c:forEach>
-                    </select>
+
+
+                <span>
+                    <span class="sub-title">> 필터조건</span>
+                    <span>
+                        <label for="yy1">주문수량</label>
+                        <select name="YY1" id="yy1">
+                           <c:forEach var="i" begin="1" end="30">
+                               <option value="<c:out value='${i}'/>"><c:out value='${i}'/></option>
+                           </c:forEach>
+                        </select>
+                        <select name="YY2" id="yy2">
+                           <c:forEach var="i" begin="1" end="30">
+                               <option value="<c:out value='${i}'/>"><c:out value='${i}'/></option>
+                           </c:forEach>
+                      </select>
+                    </span>
+                    <span>
+                        <label for="INSPECT_GRADE">품질검사</label>
+                        <input type="text" class="wd_100" name="INSPECT_GRADE" id="INSPECT_GRADE" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" title="품질검사" readonly>
+                    </span>
+                    <span>
+                        <label for="RBRUR">규격</label>
+                        <select class="wd_100" name="RBRUR" id="RBRUR" title="규격">
+                            <option value=""><spring:message code="com.form.top.all.option"/></option>
+                        </select>
+                    </span>
                 </span>
-                <span class="slt_wrap">
-                    <label class="label_100" for="INSPECT_GRADE">품질검사</label>
-                    <input type="text" class="wd_100" name="INSPECT_GRADE" id="INSPECT_GRADE" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" title="품질검사" readonly>
-                </span>
-                <span class="slt_wrap">
-                    <label class="label_100" for="RBRUR">규격</label>
-                    <select class="wd_100" name="RBRUR" id="RBRUR" title="규격">
-                        <option value=""><spring:message code="com.form.top.all.option"/></option>
-                    </select>
-                </span>
-            </form>
-        </div>
+            </div>
+        </form>
         <div class="material-information" id="steel_info">
             <div>Steel</div>
             <div>수량</div>
@@ -915,11 +918,12 @@
             {title: '수량', dataIndx: 'PART_QTY'},
             {title: '가공시간', minWidth:60, dataIndx: 'WORK_TIME'},
             {title: 'E/C', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_EC_AMT'},
-            {title: 'A/P', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AP_AMT'},
             {
                 title: '마진율', dataIndx: 'MARGIN_RATIO',
                 render: function (ui) {
-                    return ui.cellData || 0 + '%';
+                    if (ui.cellData) {
+                        return ui.cellData + '%';
+                    }
                 }
             },
             {title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
@@ -1271,19 +1275,19 @@
                 htmlString += '    <td class="header" colspan="5">관리번호</td>';
                 htmlString += '</tr>';
                 htmlString += '<tr>';
-                htmlString += '    <td colspan="5">' + data.CONTROL_NUM + '</td>';
+                htmlString += data.CONTROL_NUM ? '<td colspan="5">' + data.CONTROL_NUM + '</td>' : '<td colspan="5"></td>';
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += '    <td class="header" colspan="3">규격</td>';
-                htmlString += '    <td colspan="2">' + data.SIZE_TXT + '</td>';
+                htmlString += data.SIZE_TXT ? '<td colspan="2">' + data.SIZE_TXT + '</td>' : '<td colspan="2"></td>';
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += '    <td class="header" colspan="3">소재종류</td>';
-                htmlString += '    <td colspan="2">' + data.MATERIAL_DETAIL_NM + '</td>';
+                htmlString += data.MATERIAL_DETAIL_NM ? '<td colspan="2">' + data.MATERIAL_DETAIL_NM + '</td>' : '<td colspan="2"></td>';
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += '    <td class="header" colspan="3">수량</td>';
-                htmlString += '    <td colspan="2">' + data.PART_QTY + 'EA</td>';
+                htmlString += data.PART_QTY ? '<td colspan="2">' + data.PART_QTY + 'EA</td>' : '<td colspan="2"></td>';
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += '    <td class="header" colspan="3">CAM 설계</td>';
@@ -1291,31 +1295,31 @@
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += '    <td class="header" colspan="3">E/C</td>';
-                htmlString += '    <td colspan="2">' + data.UNIT_EC_AMT_FMT + ' 원</td>';
+                htmlString += data.UNIT_EC_AMT_FMT ? '<td colspan="2">' + data.UNIT_EC_AMT_FMT + ' 원</td>' : '<td colspan="2"></td>';
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += '    <td class="header" colspan="3">A/P</td>';
-                htmlString += '    <td colspan="2">' + data.UNIT_AP_AMT_FMT + ' 원</td>';
+                htmlString += data.UNIT_AP_AMT_FMT ? '<td colspan="2">' + data.UNIT_AP_AMT_FMT + ' 원</td>' : '<td colspan="2"></td>';
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += '    <td class="header" colspan="3">마진율</td>';
-                htmlString += data.MARGIN_RATIO ? '<td colspan="2">' + data.MARGIN_RATIO + '%</td>' : '<td colspan="2">0%</td>';
+                htmlString += data.MARGIN_RATIO ? '<td colspan="2">' + data.MARGIN_RATIO + '%</td>' : '<td colspan="2"></td>';
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += '    <td class="header" colspan="3">총 가공시간</td>';
-                htmlString += '    <td colspan="2">' + data.WORK_TIME + '</td>';
+                htmlString += data.WORK_TIME ? '<td colspan="2">' + data.WORK_TIME + '</td>' : '<td colspan="2"></td>';
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += '    <td colspan="2">밀링</td>';
-                htmlString += '    <td>' + data.WORK_TIME_MILLING + '</td>';
+                htmlString += data.WORK_TIME_MILLING ? '<td>' + data.WORK_TIME_MILLING + '</td>' : '<td></td>';
                 htmlString += '    <td>NC</td>';
-                htmlString += '    <td>' + data.WORK_TIME_NC + '</td>';
+                htmlString += data.WORK_TIME_NC ? '<td>' + data.WORK_TIME_NC + '</td>' : '<td></td>';
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += '    <td colspan="2">선반</td>';
-                htmlString += '    <td>' + data.WORK_TIME_TURNNING + '</td>';
+                htmlString += data.WORK_TIME_TURNNING ? '<td>' + data.WORK_TIME_TURNNING + '</td>' : '<td></td>';
                 htmlString += '    <td>연마</td>';
-                htmlString += '    <td>' + data.WORK_TIME_GRINDING + '</td>';
+                htmlString += data.WORK_TIME_GRINDING ? '<td>' + data.WORK_TIME_GRINDING + '</td>' : '<td></td>';
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += '    <td class="header" colspan="5">기기별 가공기록</td>';
