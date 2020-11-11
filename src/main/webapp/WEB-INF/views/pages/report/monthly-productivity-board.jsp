@@ -1213,7 +1213,7 @@
                     htmlString += '<div>' + data[i].TOTAL_EC_AMT + '원</div>';
                     htmlString += '<div>마진율</div>';
                     htmlString += '<div>' + data[i].MARGIN_RATIO + '%</div>';
-                    htmlString += '<div>C/H</div>';
+                    htmlString += '<div>A/P</div>';
                     htmlString += '<div>' + data[i].TOTAL_AP_AMT + '원</div>';
 
                     $('#' + id).html(htmlString);
@@ -1234,7 +1234,7 @@
                     htmlString += '<div>0원</div>';
                     htmlString += '<div>마진율</div>';
                     htmlString += '<div>0.0%</div>';
-                    htmlString += '<div>C/H</div>';
+                    htmlString += '<div>A/P</div>';
                     htmlString += '<div>0원</div>';
 
                     $('#' + idList[i]).html(htmlString);
