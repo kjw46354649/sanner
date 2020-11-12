@@ -1131,16 +1131,35 @@
 
                     return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
                 },
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027')},
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: function (ui) {
+                        let rowData = ui.rowData;
+
+                        if (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') {
+                            return fnGetCommCodeGridSelectBox('1027');
+                        } else { // 확정
+                            return fnGetCommCodeGridSelectBoxEtc('1027', rowData.MATERIAL_TYPE);
+                        }
+                    }
+                },
                 render: function (ui) {
+                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
                     let cls = null;
+                    let index = -1;
+                    let options = fnGetCommCodeGridSelectBox('1027');
 
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    index = options.findIndex(function (element) {
+                        return element.value === cellData;
+                    });
+                    if (index > -1) cellData = options[index].text;
+
+                    return {cls: cls, text: cellData};
                 }
             },
             {
@@ -1585,6 +1604,7 @@
                     return {cls: cls, text: text};
                 }
             },
+            {title: '재질', dataIndx: 'MATERIAL_TYPE', hidden: true},
             {
                 title: '재질', dataIndx: 'MATERIAL_TYPE_NM',
                 render: function (ui) {
