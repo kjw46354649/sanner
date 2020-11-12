@@ -100,6 +100,7 @@
     <div class="d-flex align-items-center">
         <div></div>
         <div class="ml-auto">
+            <span class="chk_box"><input name="UNIT_PRICE_EXCLUDED" id="UNIT_PRICE_EXCLUDED" type="checkbox"><label for="UNIT_PRICE_EXCLUDED"> 有예상단가 제외</label></span>
             <span class="chk_box"><input name="VIEW_UNIT_PRICE_INFORMATION_1" id="VIEW_UNIT_PRICE_INFORMATION_1" type="checkbox"><label for="VIEW_UNIT_PRICE_INFORMATION_1"> 단가정보</label></span>
             <button type="button" class="defaultBtn btn-100w green" id="MONTH_REPORT_DETAIL_LIST_VIEW_SAVE">저장</button>
         </div>
@@ -310,6 +311,23 @@
            const updateQueryList = ['reportMapper.updateControlPartForecastUnitAmt', 'reportMapper.updateControlNote'];
 
             fnModifyPQGrid($monthReportDetailListViewGrid, [], updateQueryList);
+        });
+
+        $('#UNIT_PRICE_EXCLUDED').on('click', function () {
+            const checked = this.checked;
+            const data = $monthReportDetailListViewGrid.pqGrid('option', 'dataModel').data;
+
+            for (let i = 0, LENGTH = data.length; i < LENGTH; i++) {
+                let rowData = data[i];
+                if (checked) {
+                    if (rowData.FORECAST_UNIT_AMT) {
+                        rowData.pq_hidden = true;
+                    }
+                } else {
+                    rowData.pq_hidden = false;
+                }
+            }
+            $monthReportDetailListViewGrid.pqGrid("refreshView");
         });
 
         $('#VIEW_UNIT_PRICE_INFORMATION_1').on('click', function () {
