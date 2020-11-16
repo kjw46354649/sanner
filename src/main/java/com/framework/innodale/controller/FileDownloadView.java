@@ -15,7 +15,7 @@ import java.util.Map;
 public class FileDownloadView extends AbstractView {
 
     public FileDownloadView(){
-        setContentType("application/download; ccharset=utf-8");
+        setContentType("application/download; charset=utf-8");
     }
 
     @Override
@@ -29,15 +29,15 @@ public class FileDownloadView extends AbstractView {
 //        res.setContentLength(100);
 
         String userAgent = req.getHeader("User-Agent");
-        String fileName = null;
+        String fileName = (String) fileInfo.get("ORGINAL_FILE_NM");
 
         if(userAgent.indexOf("MSIE") > -1){
-            fileName = URLEncoder.encode(file.getName(), "utf-8");
+            fileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
         }else{
-            fileName = new String(file.getName().getBytes("utf-8"), "iso-8859-1");
+            fileName = new String(fileName.getBytes("utf-8"), "iso-8859-1");
         }
 
-        res.setHeader("Content-Disposition", "attachment; filename=\"" + fileInfo.get("ORGINAL_FILE_NM") + "\";");
+        res.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\";");
         res.setHeader("Content-Transfer-Encoding", "binary");
 
         OutputStream os = res.getOutputStream();
