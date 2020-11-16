@@ -663,12 +663,9 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
 }
 
 .page.monthly-productivity-board .middle-wrap.right-wrap > div:nth-child(3) > img {
-    display: block;
-    width: auto;
-    height: 100%;
-    margin: 0 auto;
-    /*max-width: inherit;*/
-    /*max-height: inherit;*/
+    width: 100%;
+    height: auto;
+    max-height: 445px;
     /*cursor: pointer;*/
 }
 

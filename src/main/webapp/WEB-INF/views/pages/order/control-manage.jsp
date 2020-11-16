@@ -574,7 +574,7 @@
                 }
             },
             {
-                title: '가공<br>납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT',
+                title: '가공<br>납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT', formatRaw: 'yy/mm/dd',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -1131,16 +1131,35 @@
 
                     return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020'
                 },
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027')},
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: function (ui) {
+                        let rowData = ui.rowData;
+
+                        if (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') {
+                            return fnGetCommCodeGridSelectBox('1027');
+                        } else { // 확정
+                            return fnGetCommCodeGridSelectBoxEtc('1027', rowData.MATERIAL_TYPE);
+                        }
+                    }
+                },
                 render: function (ui) {
+                    let cellData = ui.cellData;
                     let rowData = ui.rowData;
                     let cls = null;
+                    let index = -1;
+                    let options = fnGetCommCodeGridSelectBox('1027');
 
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    index = options.findIndex(function (element) {
+                        return element.value === cellData;
+                    });
+                    if (index > -1) cellData = options[index].text;
+
+                    return {cls: cls, text: cellData};
                 }
             },
             {
@@ -1301,7 +1320,7 @@
             {
                 title: '예상소재 Size (견적계산용)', align: 'center', hidden: true, colModel: [
                     {
-                        title: '@', dataIndx: 'RKFH',
+                        title: '@', dataIndx: 'MATERIAL_BUTTON',
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let cls = null;
@@ -1585,6 +1604,7 @@
                     return {cls: cls, text: text};
                 }
             },
+            {title: '재질', dataIndx: 'MATERIAL_TYPE', hidden: true},
             {
                 title: '재질', dataIndx: 'MATERIAL_TYPE_NM',
                 render: function (ui) {
@@ -1931,7 +1951,7 @@
                 'MATERIAL_TYPE_NM', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY',
                 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
                 'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND',
-                'MATERIAL_FINISH_HEAT', 'RKFH', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
+                'MATERIAL_FINISH_HEAT', 'MATERIAL_BUTTON', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT',
                 'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'ORDER_IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
@@ -2156,7 +2176,7 @@
                 'WORK_TYPE', 'CONTROL_PART_QTY', 'DNJSCLD', 'EOCLD', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT',
                 'SIZE_TXT', 'SIZE_TYPE', 'SIZE_W', 'SIZE_H', 'SIZE_T', 'SIZE_D', 'SIZE_L', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
                 'MATERIAL_TYPE_NM', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
-                'PART_UNIT_QTY', 'DETAIL_LATHE', 'DETAIL_SURFACE', 'DETAIL_CLAMPING', 'DETAIL_POCKET', 'DETAIL_DRILL',
+                'PART_UNIT_QTY', 'MATERIAL_BUTTON', 'DETAIL_LATHE', 'DETAIL_SURFACE', 'DETAIL_CLAMPING', 'DETAIL_POCKET', 'DETAIL_DRILL',
                 'DETAIL_DIFFICULTY', 'CALC_EST_UNIT_COST', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT',
                 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'DETAIL_MACHINE_REQUIREMENT',

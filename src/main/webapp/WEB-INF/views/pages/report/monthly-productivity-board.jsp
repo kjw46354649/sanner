@@ -758,6 +758,7 @@
             },
             plotOptions: {
                 pie: {
+                    size: 100,
                     shadow: false,
                     center: ['50%', '50%'],
                     showInLegend: true,
@@ -774,7 +775,7 @@
             },
             series: [{
                 data: [],
-                size: '150%',
+                // size: '100%',
                 innerSize: '50%',
                 // dataLabels: {
                 //     formatter: function () {
