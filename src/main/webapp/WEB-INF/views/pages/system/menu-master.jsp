@@ -50,7 +50,7 @@
 
 	$(document).ready(function() {
 		'use strict';
-		let click_seq;
+		let click_seq = 1;
 
 		let topColModel= [
 			{title: 'MENU_SEQ'			, dataType: 'string',  dataIndx: 'MENU_SEQ'			, hidden: true},
@@ -139,7 +139,7 @@
 			rowSelect: function( event, ui ) {
 				if(ui.addList.length > 0 ) {
 					let menu_seq = ui.addList[0].rowData.MENU_SEQ;
-					// click_seq=menu_seq;
+					click_seq = menu_seq;
 					$("#menu_detail_search_form").find("#PARENT_MENU_SEQ").val(menu_seq);
 					menuMasterBotGrid.pqGrid('option', 'dataModel.postData', function (ui) {
 						return fnFormToJsonArrayData('menu_detail_search_form');

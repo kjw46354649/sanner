@@ -209,9 +209,9 @@
 
                     $("#DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM").find("#DT").val(dt);
                     $("#DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM").find("#WORK_FACTORY").val(workFactory);
-                    $dailyProcessStatusRightGrid.pqGrid("option", "dataModel.postData", function(ui){
+                    $dailyProcessStatusRightGrid.pqGrid("option", "dataModel.postData", function (ui) {
                         return fnFormToJsonArrayData('DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM');
-                    } );
+                    });
                     $dailyProcessStatusRightGrid.pqGrid("refreshDataAndView");
                 }
             },
