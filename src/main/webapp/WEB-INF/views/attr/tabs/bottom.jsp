@@ -510,6 +510,30 @@
         </div>
     </form>
 </div>
+<!-- 도면파일 multi 다운로드 공통 팝업 : S -->
+<div class="popup_container" id="common_multi_download_pop" style="display: none;">
+    <form class="form-inline" name="common_multi_download_pop_form" id="common_multi_download_pop_form" role="form">
+        <input type="hidden" name="queryId" id="queryId" value="common.selectMultiDownloadList">
+        <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
+        <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ">
+        <div class="layerPopup" style="height: 490px;">
+            <h3>도면파일 다운로드</h3>
+            <button type="button" class="pop_close mt-10 mr-8" name="common_multi_download_pop_close">닫기
+            </button>
+            <div class="qualityWrap">
+                <div class="h_area"></div>
+                <h4></h4>
+                <div class="list4">
+                    <div id="common_multi_download_pop_grid"></div>
+                </div>
+            </div>
+            <div class="btnWrap">
+                <button type="button" class="defaultBtn grayPopGra" name="common_multi_download_pop_close">닫기</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- 도면파일 multi 다운로드 공통 팝업 : E -->
 
 <script type="text/javascript">
 
@@ -1890,4 +1914,61 @@
         commonAlertPopup.hide();
     });
 
+    let $multiDownloadGrid;
+
+    $('#common_multi_download_pop').on({
+        'show.bs.modal': function () {
+            const gridId = 'common_multi_download_pop_grid';
+            const postData = fnFormToJsonArrayData('common_multi_download_pop_form');
+            const colModel = [
+                {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+                {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+                {title: '관리번호', align: 'left', width: 180, dataIndx: 'CONTROL_PART_INFO'},
+                {title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM'},
+                {title: '작업형태', dataIndx: 'WORK_TYPE_NM'},
+                {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
+                {
+                    title: '', align: 'center', dataIndx: 'DXF_GFILE_SEQ', width: 25, minWidth: 25, editable: false,
+                    render: function (ui) {
+                        cellData = ui.cellData;
+                        if (cellData) {
+                            return "<a href='/downloadGfile/" + cellData + "' download><input type='button' class='smallBtn blue' value='다운로드'/></a>";
+                        }
+                    },
+                },
+            ];
+            const obj = {
+                height: 350,
+                collapsible: false,
+                // postRenderInterval: -1,
+                scrollModel: {autoFit: true},
+                showTitle: false,
+                numberCell: {show: false},
+                editable: false,
+                columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
+                colModel: colModel,
+                dataModel: {
+                    location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                    postData: postData,
+                    getData: function (dataJSON) {
+                        return {data: dataJSON.data};
+                    }
+                },
+            };
+            $multiDownloadGrid = $('#' + gridId).pqGrid(obj);
+        },
+        'hide.bs.modal': function () {
+            $multiDownloadGrid.pqGrid('destroy');
+        }
+    });
+
+    const commonMultiDownloadPop = function (controlSeq, controlDetailSeq) {
+        $('#common_multi_download_pop_form').find('#CONTROL_SEQ').val(controlSeq);
+        $('#common_multi_download_pop_form').find('#CONTROL_DETAIL_SEQ').val(controlDetailSeq);
+        $('#common_multi_download_pop').modal('show');
+    }
+
+    $('[name=common_multi_download_pop_close]').on('click', function () {
+        $('#common_multi_download_pop').modal('hide');
+    });
 </script>
