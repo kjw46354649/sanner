@@ -168,7 +168,15 @@
                             <col width="15%">
                         </colgroup>
                         <tr>
-                            <th>관리번호</th>
+                            <th>
+                                <span name="control_num_arrow" id="left_arrow" data-value="-1" style="cursor: pointer;">
+                                    <img src="/resource/asset/images/common/img_left_arrow.png" alt="왼쪽 화살표" style="width: 15px;">
+                                </span>
+                                <span>관리번호</span>
+                                <span name="control_num_arrow" id="right_arrow" data-value="1" style="cursor: pointer;">
+                                    <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표" style="width: 15px;">
+                                </span>
+                            </th>
                             <td id="CONTROL_NUM" class="red"></td>
                             <th>형태/수량(원,대)</th>
                             <td id="WORK_TYPE_NM_ORDER_QTY_INFO"></td>
@@ -1352,9 +1360,28 @@
     //     g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
     // }
 
-    let g_item_detail_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
+    let orderDetailGrid;
+    let orderDetailRowIndx;
+    const g_item_detail_pop_view = function (CONTROL_SEQ, CONTROL_DETAIL_SEQ, grid, rowIndx) {
         // 작업 worker 지정은 협의 필요
         // fnCommCodeDatasourceSelectBoxCreate($("#g_item_detail_pop_form").find("#CAM_WORK_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
+        orderDetailGrid = grid;
+        orderDetailRowIndx = rowIndx;
+        (function () {
+            let grid;
+            let rowDataPrev;
+            let rowDataNext;
+
+            if (!(fnIsEmpty(orderDetailGrid) && fnIsEmpty(orderDetailRowIndx))) {
+                grid = orderDetailGrid.getInstance().grid;
+                rowDataPrev = grid.getRowData({rowIndx: orderDetailRowIndx + -1});
+                rowDataNext = grid.getRowData({rowIndx: orderDetailRowIndx + 1});
+            }
+
+            rowDataPrev === undefined ? $('#g_item_detail_pop_form').find('#left_arrow').css('visibility', 'hidden') : $('#g_item_detail_pop_form').find('#left_arrow').css('visibility', 'visible');
+            rowDataNext === undefined ? $('#g_item_detail_pop_form').find('#right_arrow').css('visibility', 'hidden') : $('#g_item_detail_pop_form').find('#right_arrow').css('visibility', 'visible');
+        })();
+
 
         const $itemDetailPop = $('#g_item_detail_pop');
         const $itemDetailPopForm = $("#g_item_detail_pop_form");
@@ -1390,6 +1417,7 @@
                 $itemDetailPopForm.find("#WORK_TYPE_NM_ORDER_QTY_INFO").html(dataInfo.WORK_TYPE_NM_ORDER_QTY_INFO);
                 $itemDetailPopForm.find("#INNER_DUE_DT").html(dataInfo.INNER_DUE_DT + emergencySpanElement);
 
+                $itemDetailPopForm.find("#DRAWING_NUM").attr('title', dataInfo.DRAWING_NUM);
                 $itemDetailPopForm.find("#DRAWING_NUM").html(dataInfo.DRAWING_NUM);
                 $itemDetailPopForm.find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
                 $itemDetailPopForm.find("#PART_STATUS_NM").html(dataInfo.PART_STATUS_NM);
@@ -1434,7 +1462,15 @@
                         $itemDetailPopForm.find("#CAD_DOWNLOAD").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
                         $itemDetailPopForm.find("#CAD_DOWNLOAD").removeClass('d-none');
                     } else {
-                        $itemDetailPopForm.find("#CAD_DOWNLOAD").attr('onClick', 'fnFileDownloadFormPageAction(' + dataInfo.DXF_GFILE_SEQ + ');');
+                        let str = dataInfo.DRAWING_NUM;
+                        let arr = str.split(',');
+
+                        if (arr.length === 1) {
+                            $itemDetailPopForm.find("#CAD_DOWNLOAD").attr('onClick', 'fnFileDownloadFormPageAction(' + dataInfo.DXF_GFILE_SEQ + ');');
+                        } else if (arr.length > 1) {
+                            $itemDetailPopForm.find("#CAD_DOWNLOAD").attr('onClick', 'commonMultiDownloadPop(' + dataInfo.CONTROL_SEQ + ',' + dataInfo.CONTROL_DETAIL_SEQ + ');');
+                        }
+
                         $itemDetailPopForm.find("#CAD_DOWNLOAD").removeClass('d-none');
                     }
                 }
@@ -1485,25 +1521,67 @@
             }
         }, parameters2, '');
 
-        $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid1');
-        g_ItemDetailPopObj01.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
-        g_ItemDetailPopGridId01.pqGrid(g_ItemDetailPopObj01);
+        if ($("#g_item_detail_pop_grid_01").hasClass('pq-grid')) {
+            $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid1');
+            g_ItemDetailPopGridId01.pqGrid('option', 'dataModel.postData', function (ui) {
+                return (fnFormToJsonArrayData('#g_item_detail_pop_form'));
+            });
+            g_ItemDetailPopGridId01.pqGrid('refreshDataAndView');
+        } else {
+            $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid1');
+            g_ItemDetailPopObj01.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
+            g_ItemDetailPopGridId01.pqGrid(g_ItemDetailPopObj01);
+        }
 
-        $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid2');
-        g_ItemDetailPopObj02.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
-        g_ItemDetailPopGridId02.pqGrid(g_ItemDetailPopObj02);
+        if ($("#g_item_detail_pop_grid_02").hasClass('pq-grid')) {
+            $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid2');
+            g_ItemDetailPopGridId02.pqGrid('option', 'dataModel.postData', function (ui) {
+                return (fnFormToJsonArrayData('#g_item_detail_pop_form'));
+            });
+            g_ItemDetailPopGridId02.pqGrid('refreshDataAndView');
+        } else {
+            $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid2');
+            g_ItemDetailPopObj02.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
+            g_ItemDetailPopGridId02.pqGrid(g_ItemDetailPopObj02);
+        }
 
-        $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid3');
-        g_ItemDetailPopObj03.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
-        g_ItemDetailPopGridId03.pqGrid(g_ItemDetailPopObj03);
+        if ($("#g_item_detail_pop_grid_03").hasClass('pq-grid')) {
+            $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid3');
+            g_ItemDetailPopGridId03.pqGrid('option', 'dataModel.postData', function (ui) {
+                return (fnFormToJsonArrayData('#g_item_detail_pop_form'));
+            });
+            g_ItemDetailPopGridId03.pqGrid('refreshDataAndView');
+        } else {
+            $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid3');
+            g_ItemDetailPopObj03.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
+            g_ItemDetailPopGridId03.pqGrid(g_ItemDetailPopObj03);
+        }
 
-        $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid4');
-        g_ItemDetailPopObj04.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
-        g_ItemDetailPopGrid04 = g_ItemDetailPopGridId04.pqGrid(g_ItemDetailPopObj04);
 
-        $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid5');
-        g_ItemDetailPopObj05.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
-        g_ItemDetailPopGridId05.pqGrid(g_ItemDetailPopObj05);
+        if ($("#g_item_detail_pop_grid_04").hasClass('pq-grid')) {
+            $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid4');
+            g_ItemDetailPopGridId04.pqGrid('option', 'dataModel.postData', function (ui) {
+                return (fnFormToJsonArrayData('#g_item_detail_pop_form'));
+            });
+            g_ItemDetailPopGridId04.pqGrid('refreshDataAndView');
+        } else {
+            $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid4');
+            g_ItemDetailPopObj04.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
+            g_ItemDetailPopGrid04 = g_ItemDetailPopGridId04.pqGrid(g_ItemDetailPopObj04);
+        }
+
+
+        if ($("#g_item_detail_pop_grid_05").hasClass('pq-grid')) {
+            $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid5');
+            g_ItemDetailPopGridId05.pqGrid('option', 'dataModel.postData', function (ui) {
+                return (fnFormToJsonArrayData('#g_item_detail_pop_form'));
+            });
+            g_ItemDetailPopGridId05.pqGrid('refreshDataAndView');
+        } else {
+            $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid5');
+            g_ItemDetailPopObj05.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
+            g_ItemDetailPopGridId05.pqGrid(g_ItemDetailPopObj05);
+        }
         $itemDetailPopForm.find("#g_item_detail_pop_barcode_num").focus();
     };
 
@@ -1515,6 +1593,14 @@
         g_ItemDetailPopGridId03.pqGrid('destroy');
         g_ItemDetailPopGridId04.pqGrid('destroy');
         g_ItemDetailPopGridId05.pqGrid('destroy');
+    });
+
+    $('#g_item_detail_pop_form').find('[name=control_num_arrow]').on('click', function () {
+        const value = $(this).data('value');
+        const grid = orderDetailGrid.getInstance( ).grid;
+        const rowData = grid.getRowData({rowIndx: orderDetailRowIndx + value});
+
+        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, orderDetailGrid, orderDetailRowIndx + value);
     });
 
     $("#g_item_detail_pop").find('#g_item_detail_pop_grid_05_pop_close, #popClose2').on('click', function () {

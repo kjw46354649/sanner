@@ -931,7 +931,7 @@
               }else{
                   alert("그리드를 선택해 주십시오.");
               }*/
-            g_item_detail_pop_view('','');
+            g_item_detail_pop_view();
         });
 
         $("#inspectionManageFilterKeyword").on("keyup", function(e){
