@@ -692,7 +692,7 @@
                      {title: '공정', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'NC_WORK_TYPE'},
                      {title: '기기명', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_NM'},
                      {title: '작업자', minWidth: 40, width: 80, dataType: 'string', dataIndx: 'NC_WORK_USER_NM'},
-                     {title: 'R/T', minWidth: 40, width: 40, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME'},
+                     {title: 'R/T', minWidth: 50, width: 55, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME'},
             //         {title: '2', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_2'},
             //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_2'},
             //         {title: 'STATUS_2', dataType: 'string', dataIndx: 'WORK_STATUS_2', hidden: true},
@@ -857,9 +857,9 @@
             {title: '소재 Size', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'MATERAIL_ORDER_SIZE'},
             {title: '착수일시', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'WORK_START_DT'},
             {title: '완료일시', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'WORK_FINISH_DT'},
-            {title: '정지<br>시간', minWidth: 20, width: 70, align: 'right', dataType: 'string', dataIndx: 'WORK_STOP_MINUTE'},
-            {title: '소요<br>시간', minWidth: 20, width: 70, align: 'right', dataType: 'string', dataIndx: 'WORK_WORK_MINUTE'},
-            {title: '단위<br>소요', minWidth: 20, width: 70, align: 'right', dataType: 'string', dataIndx: 'LEAD_TIME'},
+            {title: '정지<br>시간', minWidth: 50, width: 55, align: 'right', dataType: 'string', dataIndx: 'WORK_STOP_MINUTE'},
+            {title: '소요<br>시간', minWidth: 50, width: 55, align: 'right', dataType: 'string', dataIndx: 'WORK_WORK_MINUTE'},
+            {title: '단위<br>소요', minWidth: 50, width: 55, align: 'right', dataType: 'string', dataIndx: 'LEAD_TIME'},
             {title: '작업자', minWidth: 20, width: 80, dataType: 'string', dataIndx: 'WORK_USER_ID'}
         ];
         let tab2Obj = {
