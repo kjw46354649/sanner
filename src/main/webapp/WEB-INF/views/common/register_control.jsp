@@ -527,36 +527,6 @@
                         }
                     }
                 },
-                /*{
-                    type: 'button', label: 'Save & 확정', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                        'click': function () {
-                            prevErrorList = errorList;
-                            errorList = [];
-                            let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
-
-                            validationCheck(data);
-                            changeCellColor(errorList, prevErrorList);
-                            if (errorList.length) {
-                                fnAlert(null, errorList.length + '건의 데이터가 올바르지 않습니다.');
-                                return false;
-                            }
-
-                            let parameters = {
-                                'url': '/createNewOrderConfirm',
-                                'data': {data: JSON.stringify(data)}
-                            };
-
-                            $(this).startWaitMe();
-                            fnPostAjax(function () {
-                                $(this).stopWaitMe();
-                                fnAlert(null, '<spring:message code="com.alert.default.save.success"/>', function () {
-                                    window.close();
-                                    opener.$orderManagementGrid.pqGrid('refreshDataAndView');
-                                });
-                            }, parameters, '');
-                        }
-                    }
-                },*/
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function () {
@@ -961,6 +931,8 @@
         $orderRegisterGrid = $('#' + popupGridId).pqGrid(popupObj);
 
         const validationCheck = function (dataList) {
+            sameControlNumCheck(dataList);
+
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 let rowData = dataList[i];
 
@@ -968,6 +940,43 @@
                     requiredCheck(rowData);
                     badCodeCheck(rowData);
                     inputErrorCheck(rowData);
+                }
+            }
+        };
+
+        // 같은 관리번호 체크
+        const sameControlNumCheck = function (dataList) {
+            let array = [];
+            let duplicateArray = [];
+
+            for (let i = 0; i < dataList.length; i++) {
+                let controlNum = dataList[i].CONTROL_NUM || '';
+                let partNum = dataList[i].PART_NUM || '';
+                let workType = dataList[i].WORK_TYPE || '';
+                let concatString = controlNum + partNum + workType;
+                array[i] = concatString;
+            }
+
+            let obj = fnCountInstance(array);
+
+            for (let property in obj) {
+                if (!fnIsEmpty(property)) {
+                    if (obj[property] > 1) {
+                        duplicateArray.push(property);
+                    }
+                }
+            }
+
+            for (let i = 0; i < dataList.length; i++) {
+                for (let j = 0; j < duplicateArray.length; j++) {
+                    let controlNum = dataList[i].CONTROL_NUM || '';
+                    let partNum = dataList[i].PART_NUM || '';
+                    let workType = dataList[i].WORK_TYPE || '';
+                    let concatString = controlNum + partNum + workType;
+
+                    if (duplicateArray[j] === concatString) {
+                        addErrorList(dataList[i].pq_ri, 'CONTROL_NUM');
+                    }
                 }
             }
         };
