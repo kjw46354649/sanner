@@ -19,6 +19,7 @@
         <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
         <input type="hidden" id="DXF_GFILE_SEQ" name="DXF_GFILE_SEQ" value=""/>
+        <input type="hidden" id="IMG_GFILE_SEQ" name="IMG_GFILE_SEQ" value=""/>
         <input type="hidden" id="CAM_SEQ" name="CAM_SEQ" value=""/>
         <input type="hidden" id="BARCODE_NUM" name="BARCODE_NUM" value=""/>
         <div class="layerPopup">
@@ -791,7 +792,8 @@
                     {title: '조치방안', dataIndx: 'ERROR_NOTE', minWidth: 30, width: 70},
                     {title: '작성일자', dataIndx: 'INSPECT_DT', minWidth: 75, width: 75}
                 ]
-            }
+            },
+            {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
         ];
 
         let machineResultManageObj = {
@@ -851,6 +853,7 @@
             $("#cam_work_manage_pop_form").find("#CONTROL_SEQ").val(rowData.CONTROL_SEQ);
             $("#cam_work_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ);
             $("#cam_work_manage_pop_form").find("#DXF_GFILE_SEQ").val(rowData.DXF_GFILE_SEQ);
+            $("#cam_work_manage_pop_form").find("#IMG_GFILE_SEQ").val(rowData.IMG_GFILE_SEQ);
             $("#cam_work_manage_pop_form").find("#CAM_SEQ").val(rowData.CAM_SEQ);
             let controlNum = rowData.CONTROL_NUM;
             if(rowData.PART_NUM) controlNum += " # " + rowData.PART_NUM;
@@ -1156,7 +1159,7 @@
         });
         /** 팝업 제품 도면 보기 **/
         $("#cam_work_manage_pop_form").find("#mctWorkPopMctResultDrawingViewBtn").click(function(event) {
-            callWindowImageViewer($("#cam_work_manage_pop_form").find("#DXF_GFILE_SEQ").val());
+            callWindowImageViewer($("#cam_work_manage_pop_form").find("#IMG_GFILE_SEQ").val());
         });
 
         $("#cam_work_manage_pop_form").find(".camworkChekbox").click(function(){
