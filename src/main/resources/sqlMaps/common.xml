@@ -297,5 +297,24 @@
             AND A.USER_ID = #{USER_ID}
     </select>
 
-
+    <select id="selectMultiDownloadList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.CONTROL_SEQ
+            , A.CONTROL_DETAIL_SEQ
+            , A.ORDER_NUM
+            , A.DRAWING_NUM
+            , SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+            , CASE
+                WHEN B.PART_NUM IS NULL THEN C.CONTROL_NUM
+                ELSE CONCAT(C.CONTROL_NUM, '#', B.PART_NUM)
+              END AS CONTROL_PART_INFO
+            , A.IMG_GFILE_SEQ
+            , A.DXF_GFILE_SEQ
+        FROM TBL_CONTROL_PART_ORDER A
+            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ  = B.CONTROL_SEQ AND C.DEL_YN = 'N'
+        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+            <if test="CONTROL_DETAIL_SEQ !='' and CONTROL_DETAIL_SEQ != null">
+                AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            </if>
+    </select>
 </mapper>

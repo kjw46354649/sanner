@@ -623,9 +623,12 @@
                 },
                 postRender: function (ui) {
                     let grid = this,
-                        $cell = grid.getCell(ui);
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
                     $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
                     });
                 }
             },
@@ -1003,9 +1006,12 @@
                 },
                 postRender: function (ui) {
                     let grid = this,
-                        $cell = grid.getCell(ui);
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
                     $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
                     });
                 }
             },
@@ -1306,7 +1312,7 @@
             // }else{
             //     alert("그리드를 선택해 주십시오.");
             // }
-            g_item_detail_pop_view('', '');
+            g_item_detail_pop_view();
         });
         $("#outgoing_manage_search_btn").on('click', function () {
             outgoingManageGridId01.pqGrid("option", "dataModel.postData", function () {

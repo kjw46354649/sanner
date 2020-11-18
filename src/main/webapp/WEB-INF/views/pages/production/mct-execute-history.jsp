@@ -658,10 +658,12 @@
                 },
                 postRender: function (ui) {
                     let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find('[name=detailView]').bind("click", function () {
-                        let rowData = ui.rowData;
-                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
+                    $cell.find('[name=detailView]').bind('click', function () {
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
                     });
                 }
             },
@@ -822,9 +824,12 @@
                 },
                 postRender: function(ui) {
                     let grid = this,
-                        $cell = grid.getCell(ui);
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
                     $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
                     });
                 }
             },
@@ -1148,12 +1153,21 @@
             let dueOutDt = rowData.INNER_DUE_DT;
             if(rowData.EMERGENCY_YN === "Y") dueOutDt += " <input type='button' class='smallBtn red' value='긴급'></input>";
             $("#cam_work_history_pop_form").find("#DUE_OUT_DT").html(dueOutDt);
-            let drawingNum = rowData.DRAWING_NUM;
+            let drawingNum = rowData.CONCAT_DRAWING_NUM;
             if(rowData.DRAWING_VER === "Y") drawingNum += " <span> ( " + rowData.DRAWING_VER + ") </span>";
             $("#cam_work_history_pop_form").find("#DRAWING_NUM").html(drawingNum);
             $("#cam_work_history_pop_form").find("#WORK_TYPE").html(rowData.WORK_TYPE_NM);
             let drawingFile = "";
-            if(rowData.CAM_STATUS === "CWS020") drawingFile = "<a href='/downloadGfile/" + rowData.DXF_GFILE_SEQ + "' download><input type='button' class='smallBtn blue' value='다운로드'/></a>";
+            if (rowData.CAM_STATUS === "CWS020") {
+                let str = rowData.CONCAT_DRAWING_NUM;
+                let arr = str.split(',');
+
+                if (arr.length === 1) {
+                    drawingFile = "<a href='/downloadGfile/" + rowData.DXF_GFILE_SEQ + "' download><input type='button' class='smallBtn blue' value='다운로드'/></a>";
+                } else if (arr.length > 1) {
+                    drawingFile = '<button type="button" class="smallBtn blue" onclick="commonMultiDownloadPop(' + rowData.CONTROL_SEQ + ')">다운로드</button>';
+                }
+            }
             $("#cam_work_history_pop_form").find("#DXF_DOWNLOAD").html(drawingFile);
             $("#cam_work_history_pop_form").find("#ITEM_NM").html(rowData.ITEM_NM);
             $("#cam_work_history_pop_form").find("#MATERIAL_DETAIL_NM").html(rowData.MATERIAL_DETAIL_NM);

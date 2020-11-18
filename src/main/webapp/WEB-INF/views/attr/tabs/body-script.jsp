@@ -296,6 +296,7 @@
             } else {
                 switch($ctrl.attr("type")) {
                     case "text":
+                    case "number":
                     case "date":
                     case "password":
                     case "hidden":
@@ -1195,7 +1196,7 @@
     };
 
     $(document).on('click', '#DETAIL_VIEW', function () {
-        g_item_detail_pop_view('', '');
+        g_item_detail_pop_view();
     });
 
 </script>
