@@ -81,7 +81,7 @@
         // console.log(opener.$orderManagementGrid);
         // console.log(opener.selectedOrderManagementRowIndex);
 
-        fnAppendSelectboxYear('CONTROL_MONTH_CLOSE_YEAR', 3);
+        fnAppendSelectboxYear('CONTROL_MONTH_CLOSE_YEAR', 4);
         fnAppendSelectboxMonth('CONTROL_MONTH_CLOSE_MONTH');
         $('#CONTROL_MONTH_CLOSE_MONTH').val(CURRENT_MONTH < 10 ? '0' + CURRENT_MONTH : CURRENT_MONTH).prop('selected', true);
 
