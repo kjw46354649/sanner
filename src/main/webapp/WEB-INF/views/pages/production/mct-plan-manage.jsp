@@ -402,7 +402,7 @@
                             }
                         }
                     },
-                    {title: 'E/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
+                    {title: 'E/T', minWidth: 50, width: 55, datatype: 'integer', dataIndx: 'WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
             {title: '현재위치', minWidth: 40, width: 100, dataType: 'string', dataIndx: 'POP_POSITION'},
@@ -410,9 +410,9 @@
             {title: 'NC 가공 현황', align: 'center',
                 colModel: [
                     {title: '공정', dataIndx: 'NC_WORK_TYPE'},
-                    {title: '기기명', dataIndx: 'EQUIP_NM'},
+                    {title: '기기명', dataIndx: 'NC_EQUIP_NM'},
                     {title: '작업자', dataIndx: 'NC_WORK_USER_NM'},
-                    {title: 'R/T', datatype: 'integer', dataIndx: 'WORKING_TIME'},
+                    {title: 'R/T', minWidth: 50, width: 55, datatype: 'integer', dataIndx: 'NC_WORKING_TIME'},
                 ]
             },
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
@@ -422,9 +422,12 @@
                 },
                 postRender: function(ui) {
                     let grid = this,
-                        $cell = grid.getCell(ui);
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
                     $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
                     });
                 }
             },

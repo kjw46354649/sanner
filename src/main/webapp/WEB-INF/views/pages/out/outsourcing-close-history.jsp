@@ -192,10 +192,12 @@
                 },
                 postRender: function (ui) {
                     let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find('[name=detailView]').bind("click", function () {
-                        let rowData = ui.rowData;
-                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
+                    $cell.find('[name=detailView]').bind('click', function () {
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
                     });
                 }
             },

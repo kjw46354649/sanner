@@ -527,36 +527,6 @@
                         }
                     }
                 },
-                /*{
-                    type: 'button', label: 'Save & 확정', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                        'click': function () {
-                            prevErrorList = errorList;
-                            errorList = [];
-                            let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
-
-                            validationCheck(data);
-                            changeCellColor(errorList, prevErrorList);
-                            if (errorList.length) {
-                                fnAlert(null, errorList.length + '건의 데이터가 올바르지 않습니다.');
-                                return false;
-                            }
-
-                            let parameters = {
-                                'url': '/createNewOrderConfirm',
-                                'data': {data: JSON.stringify(data)}
-                            };
-
-                            $(this).startWaitMe();
-                            fnPostAjax(function () {
-                                $(this).stopWaitMe();
-                                fnAlert(null, '<spring:message code="com.alert.default.save.success"/>', function () {
-                                    window.close();
-                                    opener.$orderManagementGrid.pqGrid('refreshDataAndView');
-                                });
-                            }, parameters, '');
-                        }
-                    }
-                },*/
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function () {

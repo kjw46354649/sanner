@@ -862,7 +862,7 @@
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let afterQty = parseInt(finishQty) + 1;
             let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
-            if((afterQty + errorParseQty) > orderQty) return false;
+            // if((afterQty + errorParseQty) > orderQty) return false;
             $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
             $("#completeControlCompleteQtyHtml").html(afterQty);
         });
@@ -892,12 +892,15 @@
             let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
+
             let finishParseQty = isNaN(parseInt(finishQty)) ? 0 : parseInt(finishQty);
             let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
-            let afterQty = parseInt(errorParseQty) + 1
-            if((finishParseQty + afterQty) > orderQty) return false;
-            $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
-            $("#completeControlFailQtyHtml").html(afterQty);
+
+            // let afterFinishQty = parseInt(finishParseQty) - 1;
+            let afterErrorQty = parseInt(errorParseQty) + 1;
+
+            $("#drawing_action_form").find("#ERROR_QTY").val(afterErrorQty);
+            $("#completeControlFailQtyHtml").html(afterErrorQty);
             // if((afterQty + finishParseQty) <= orderQty){
             //     $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
             //     $("#completeControlFailQtyHtml").html(afterQty);
@@ -913,10 +916,18 @@
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
             let finishParseQty = isNaN(parseInt(finishQty)) ? 0 : parseInt(finishQty);
             let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
-            let afterQty = parseInt(errorQty) - 1;
-            if(afterQty < 0) return false;
-            $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
-            $("#completeControlFailQtyHtml").html(afterQty);
+
+            // let afterFinishQty = parseInt(finishParseQty) + 1;
+            let afterErrorQty = parseInt(errorParseQty) - 1;
+
+            // console.log(afterQty);
+
+            if(afterErrorQty < 0) return false;
+            // $("#drawing_action_form").find("#FINISH_QTY").val(afterFinishQty);
+            $("#drawing_action_form").find("#ERROR_QTY").val(afterErrorQty);
+            $("#completeControlFailQtyHtml").html(afterErrorQty);
+
+
             // if((afterQty + finishParseQty) <= orderQty && afterQty >= 0) {
             //     $("#drawing_action_form").find("#ERROR_QTY").val(afterQty);
             //     $("#completeControlFailQtyHtml").html(afterQty);

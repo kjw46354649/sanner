@@ -323,7 +323,7 @@
                             <tr>
                                 <th scope="row">시간당 원가</th>
                                 <td colspan="3">
-                                    <input type="text" name="COST_PER_HOUR" id="COST_PER_HOUR" placeholder="시간당 원가" value="" title="시간당 원가" style="width:98%;">
+                                    <input type="number" name="COST_PER_HOUR" id="COST_PER_HOUR" placeholder="시간당 원가" value="" title="시간당 원가" style="width:98%;">
                                 </td>
                             </tr>
                             <tr>
@@ -332,7 +332,6 @@
                                     <input type="hidden" id="ETC_GFILE_SEQ" name="ETC_GFILE_SEQ" value="">
                                     <input type="text" id="ETC_GFILE_SEQ_NM" name="ETC_GFILE_SEQ_NM" placeholder="첨부파일" readonly style="width:75%;">
                                     <input type="button" id="etc_attach_file" name="etc_attach_file" value="fileUpload" class="smallBtn blue">
-
                                 </td>
                             </tr>
                             <tr>

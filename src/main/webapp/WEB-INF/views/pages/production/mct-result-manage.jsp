@@ -19,6 +19,7 @@
         <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
         <input type="hidden" id="DXF_GFILE_SEQ" name="DXF_GFILE_SEQ" value=""/>
+        <input type="hidden" id="IMG_GFILE_SEQ" name="IMG_GFILE_SEQ" value=""/>
         <input type="hidden" id="CAM_SEQ" name="CAM_SEQ" value=""/>
         <input type="hidden" id="BARCODE_NUM" name="BARCODE_NUM" value=""/>
         <div class="layerPopup">
@@ -592,9 +593,12 @@
                 },
                 postRender: function(ui) {
                     let grid = this,
-                        $cell = grid.getCell(ui);
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
                     $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
                     });
                 }
             },
@@ -652,7 +656,7 @@
                             }
                         }
                     },
-                    {title: 'E/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'PLAN_WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
+                    {title: 'E/T', minWidth: 50, width: 55, datatype: 'integer', dataIndx: 'PLAN_WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
             {title: '비고 기록사항', dataIndx: 'CONTROL_NOTE', minWidth: 40, width: 100},
@@ -709,7 +713,7 @@
                      {title: '공정', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'NC_WORK_TYPE'},
                      {title: '기기명', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_NM'},
                      {title: '작업자', minWidth: 40, width: 80, dataType: 'string', dataIndx: 'NC_WORK_USER_NM'},
-                     {title: 'R/T', minWidth: 40, width: 40, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME'},
+                     {title: 'R/T', minWidth: 50, width: 55, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME'},
                 ]
             },
             // {title: 'MCT Actual', align: 'center',
@@ -788,7 +792,8 @@
                     {title: '조치방안', dataIndx: 'ERROR_NOTE', minWidth: 30, width: 70},
                     {title: '작성일자', dataIndx: 'INSPECT_DT', minWidth: 75, width: 75}
                 ]
-            }
+            },
+            {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
         ];
 
         let machineResultManageObj = {
@@ -848,6 +853,7 @@
             $("#cam_work_manage_pop_form").find("#CONTROL_SEQ").val(rowData.CONTROL_SEQ);
             $("#cam_work_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ);
             $("#cam_work_manage_pop_form").find("#DXF_GFILE_SEQ").val(rowData.DXF_GFILE_SEQ);
+            $("#cam_work_manage_pop_form").find("#IMG_GFILE_SEQ").val(rowData.IMG_GFILE_SEQ);
             $("#cam_work_manage_pop_form").find("#CAM_SEQ").val(rowData.CAM_SEQ);
             let controlNum = rowData.CONTROL_NUM;
             if(rowData.PART_NUM) controlNum += " # " + rowData.PART_NUM;
@@ -863,7 +869,16 @@
             $("#cam_work_manage_pop_form").find("#DRAWING_NUM").html(concatDrawingNum);
             $("#cam_work_manage_pop_form").find("#WORK_TYPE").html(rowData.WORK_TYPE_NM);
             let drawingFile = "";
-            if(rowData.CAM_STATUS === "CWS020") drawingFile = "<a href='/downloadGfile/" + rowData.DXF_GFILE_SEQ + "' download><input type='button' class='smallBtn blue' value='다운로드'/></a>";
+            if (rowData.CAM_STATUS === "CWS020") {
+                let str = rowData.CONCAT_DRAWING_NUM;
+                let arr = str.split(',');
+
+                if (arr.length === 1) {
+                    drawingFile = "<a href='/downloadGfile/" + rowData.DXF_GFILE_SEQ + "' download><input type='button' class='smallBtn blue' value='다운로드'/></a>";
+                } else if (arr.length > 1) {
+                    drawingFile = '<button type="button" class="smallBtn blue" onclick="commonMultiDownloadPop(' + rowData.CONTROL_SEQ + ')">다운로드</button>';
+                }
+            }
             $("#cam_work_manage_pop_form").find("#DXF_DOWNLOAD").html(drawingFile);
             $("#cam_work_manage_pop_form").find("#ITEM_NM").html(rowData.ITEM_NM);
             $("#cam_work_manage_pop_form").find("#MATERIAL_DETAIL_NM").html(rowData.MATERIAL_DETAIL_NM);
@@ -1132,7 +1147,7 @@
 
         /** 제품 상세 보기 */
         $mctResultDetailViewBtn.click(function(event) {
-            g_item_detail_pop_view("", "");
+            g_item_detail_pop_view();
         });
         /** 도면 보기 **/
         $mctResultDrawingViewBtn.click(function(event) {
@@ -1144,7 +1159,7 @@
         });
         /** 팝업 제품 도면 보기 **/
         $("#cam_work_manage_pop_form").find("#mctWorkPopMctResultDrawingViewBtn").click(function(event) {
-            callWindowImageViewer($("#cam_work_manage_pop_form").find("#DXF_GFILE_SEQ").val());
+            callWindowImageViewer($("#cam_work_manage_pop_form").find("#IMG_GFILE_SEQ").val());
         });
 
         $("#cam_work_manage_pop_form").find(".camworkChekbox").click(function(){

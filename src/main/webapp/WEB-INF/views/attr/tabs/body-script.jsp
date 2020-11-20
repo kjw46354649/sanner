@@ -296,6 +296,7 @@
             } else {
                 switch($ctrl.attr("type")) {
                     case "text":
+                    case "number":
                     case "date":
                     case "password":
                     case "hidden":
@@ -1194,8 +1195,24 @@
         }, {});
     };
 
+    /**
+     * @description 객체 내의 값 인스턴스 개수 세기
+     * @param {array} array
+     */
+    const fnCountInstance = function (array) {
+        return array.reduce(function (acc, obj) {
+            if (obj in acc) {
+                acc[obj]++;
+            } else {
+                acc[obj] = 1;
+            }
+
+            return acc;
+        }, {});
+    };
+
     $(document).on('click', '#DETAIL_VIEW', function () {
-        g_item_detail_pop_view('', '');
+        g_item_detail_pop_view();
     });
 
 </script>
