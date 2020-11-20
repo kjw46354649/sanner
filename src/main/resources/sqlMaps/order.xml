@@ -772,7 +772,7 @@
             #{OUTSIDE_YN},
             #{WORK_FACTORY},
             #{MATERIAL_SUPPLY_YN},
-            REPLACE(#{INNER_DUE_DT}, '/', SPACE(0)),
+            DATE_FORMAT(#{INNER_DUE_DT}, '%Y%m%d'),
             #{SIZE_TXT},
             SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
@@ -891,8 +891,8 @@
             NEXTVAL(SEQ_CONTROL_PART_ORDER),
             #{ORDER_NUM},
             #{ORDER_QTY},
-            DATE_FORMAT(REPLACE(#{ORDER_DUE_DT}, '/', SPACE(0)), '%Y%m%d'),
-            DATE_FORMAT(REPLACE(#{DELIVERY_DT}, '/', SPACE(0)), '%Y%m%d'),
+            DATE_FORMAT(#{ORDER_DUE_DT}, '%Y%m%d'),
+            DATE_FORMAT(#{DELIVERY_DT}, '%Y%m%d'),
             #{PROJECT_NM},
             #{MODULE_NM},
             #{DELIVERY_COMP_NM},
@@ -1213,8 +1213,8 @@
         SET
             ORDER_NUM = #{ORDER_NUM},
             ORDER_QTY = #{ORDER_QTY},
-            ORDER_DUE_DT = DATE_FORMAT(REPLACE(#{ORDER_DUE_DT}, '/', SPACE(0)), '%Y%m%d'),
-            DELIVERY_DT = DATE_FORMAT(REPLACE(#{DELIVERY_DT}, '/', SPACE(0)), '%Y%m%d'),
+            DATE_FORMAT(#{ORDER_DUE_DT}, '%Y%m%d'),
+            DATE_FORMAT(#{DELIVERY_DT}, '%Y%m%d'),
             PROJECT_NM = #{PROJECT_NM},
             MODULE_NM = #{MODULE_NM},
             DELIVERY_COMP_NM = #{DELIVERY_COMP_NM},
@@ -2350,7 +2350,7 @@
             IFNULL(#{item.OUTSIDE_YN}, 'N'),
             #{item.WORK_FACTORY},
             IFNULL(#{item.MATERIAL_SUPPLY_YN}, 'N'),
-            #{item.INNER_DUE_DT},
+            DATE_FORMAT(#{item.INNER_DUE_DT}, '%Y%m%d'),
             #{item.SIZE_TXT},
             #{item.MATERIAL_DETAIL},
             #{item.MATERIAL_KIND},
@@ -2363,8 +2363,8 @@
             #{item.MATERIAL_FINISH_HEAT},
             #{item.ORDER_NUM},
             #{item.ORDER_QTY},
-            #{item.ORDER_DUE_DT},
-            #{item.DELIVERY_DT},
+            DATE_FORMAT(#{item.ORDER_DUE_DT}, '%Y%m%d'),
+            DATE_FORMAT(#{item.DELIVERY_DT}, '%Y%m%d'),
             CAST(REPLACE(#{item.UNIT_FINAL_EST_AMT}, ',' ,SPACE(0)) AS INTEGER),
             CAST(REPLACE(#{item.UNIT_FINAL_AMT}, ',' ,SPACE(0)) AS INTEGER),
             #{item.PREV_DRAWING_NUM},
@@ -2382,10 +2382,14 @@
                         FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C
                         WHERE C.CONTROL_SEQ = A.CONTROL_SEQ
                             AND B.CONTROL_SEQ = A.CONTROL_SEQ
-                            AND A.DEL_YN = 'N') Y ON Y.CONTROL_NUM = X.CONTROL_NUM AND Y.ORDER_NUM = X.ORDER_NUM AND Y.DRAWING_NUM = X.DRAWING_NUM
+                            AND A.DEL_YN = 'N') Y ON Y.CONTROL_NUM = X.CONTROL_NUM
         WHERE X.JOB_SEQ_KEY = #{IN_UID}
         GROUP BY X.CONTROL_NUM
     </select>
+
+    <delete id="deleteControlExcel" parameterType="java.util.HashMap">
+        DELETE FROM TBL_CONTROL_EXCEL WHERE JOB_SEQ_KEY = #{IN_UID}
+    </delete>
 
     <select id="businessOutgoingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
