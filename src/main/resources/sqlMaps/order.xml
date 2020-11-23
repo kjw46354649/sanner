@@ -2399,6 +2399,7 @@
             A.ORDER_COMP_CD, SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
             SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
             SF_GET_DATE_F(C.DELIVERY_DT, '', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
+            SF_GET_DATE_F(C.OUT_FINISH_DT, '', '') AS OUT_FINISH_DT, <!-- 출고완료일 -->
             A.CONTROL_NUM, C.ORDER_QTY, C.ORDER_NUM, C.DRAWING_NUM,
             SF_GET_CODE_NM('1013', B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS,
             SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION, <!-- 현재 등록된 위치 -->
@@ -2430,29 +2431,28 @@
     </select>
 
     <select id="businessMonthOutgoingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            DATE_FORMAT(STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS `start`,
-            CONCAT(E.COMP_NM, ' ', COUNT(C.OUT_FINISH_DT), ' / ', COUNT(*)) AS `title`,
-            CASE
-                WHEN SUM(IFNULL(D.OUT_QTY, 0)) = SUM(IFNULL(C.ORDER_QTY, 0)) THEN '#E1F7FF' <!-- 출고가 모두 완료되었을 때 -->
-                WHEN SUM(IFNULL(D.OUT_QTY, 0)) <![CDATA[ < ]]> SUM(IFNULL(C.ORDER_QTY, 0)) THEN '#FFFDA9' <!-- 아직 출고가 완료되지 않은상태 -->
-                WHEN (SUM(IFNULL(D.OUT_QTY, 0)) <![CDATA[ < ]]> SUM(IFNULL(C.ORDER_QTY, 0))) AND STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d') <![CDATA[ <= ]]> NOW()  THEN '#FFECDD' <!-- 오늘날짜가 지났는데 하나라도 출고완료되지 않은상태 -->
-            END AS 'color'
-        FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ AND B.PART_NUM IS NULL
-            INNER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                AND C.ORDER_DUE_DT BETWEEN #{SEL_START_DATE} AND #{SEL_END_DATE}
-<!--        <if test="ORDER_COMP_CHARGE != null and ORDER_COMP_CHARGE != ''">
-                AND C.ORDER_STAFF_SEQ = #{ORDER_COMP_CHARGE}
-            </if>-->
-            LEFT OUTER JOIN TBL_OUT D ON D.CONTROL_SEQ = C.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND D.ORDER_SEQ = C.ORDER_SEQ
-            LEFT OUTER JOIN TBL_COMPANY E ON E.COMP_CD = A.ORDER_COMP_CD AND E.DEL_YN = 'N'
-        WHERE 1 = 1
-            AND A.DEL_YN = 'N'
-        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-        </if>
-        GROUP BY C.ORDER_DUE_DT, A.ORDER_COMP_CD
+        SELECT DATE_FORMAT(STR_TO_DATE(X.ORDER_DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS `start`,
+            CONCAT(Y.COMP_NM, ' ', X.OUT_FINISH_CNT, ' / ', X.ORDER_CNT) AS `title`,
+            CASE WHEN X.OUT_FINISH_CNT = X.ORDER_CNT THEN '#E1F7FF'                                                                                 <!-- 출고가 모두 완료되었을 때 -->
+                 WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') <![CDATA[ <= ]]> X.ORDER_DUE_DT THEN '#FFFDA9'   <!-- 아직 출고가 완료되지 않은상태 이면서 납기 안지난 경우 -->
+                 WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') > X.ORDER_DUE_DT THEN '#FFECDD'                  <!-- 아직 출고가 완료되지 않은상태 이면서 납기 지난 경우 -->
+            END AS `color`
+        FROM (  SELECT C.ORDER_DUE_DT
+                    , A.ORDER_COMP_CD
+                    , SUM(CASE WHEN C.OUT_FINISH_DT IS NOT NULL THEN 1 ELSE 0 END) AS OUT_FINISH_CNT
+                    , COUNT(*) AS ORDER_CNT
+                FROM jmes.TBL_CONTROL A
+                    INNER JOIN jmes.TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ AND B.PART_NUM IS NULL
+                    INNER JOIN jmes.TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = A.CONTROL_SEQ
+                        AND C.ORDER_DUE_DT BETWEEN #{SEL_START_DATE} AND #{SEL_END_DATE}
+                WHERE 1 = 1
+                    AND A.DEL_YN = 'N'
+                    AND A.CONTROL_STATUS IN ('ORD001', 'ORD003')
+                    <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                        AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                    </if>
+                GROUP BY C.ORDER_DUE_DT, A.ORDER_COMP_CD
+             ) X LEFT OUTER JOIN TBL_COMPANY Y ON Y.COMP_CD = X.ORDER_COMP_CD
     </select>
 
     <select id="businessEmergencyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -2810,7 +2810,7 @@
                     AND B.CONTROL_SEQ = C.CONTROL_SEQ
                     AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.DEL_YN = 'N'
-                    <!-- AND A.CONTROL_STATUS IN ('ORD001','ORD003') -->
+                    AND A.CONTROL_STATUS IN ('ORD001','ORD003', 'ORD004')
                     AND A.EMERGENCY_YN = 'Y'
                     AND A.OUT_FINISH_DT IS NULL
                     AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
@@ -2858,7 +2858,7 @@
                     AND B.CONTROL_SEQ = C.CONTROL_SEQ
                     AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.DEL_YN = 'N'
-                    AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+                    AND A.CONTROL_STATUS IN ('ORD001','ORD003', 'ORD004')
                     AND A.OUT_FINISH_DT IS NULL
                     AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
 <!--                 UNION ALL -->
