@@ -1035,10 +1035,10 @@
             </if>
             <choose>
                 <when test='SEL_OUTSIDE_YN != null'>
-                    AND IFNULL(A.OUTSIDE_YN, 'N') = 'N'
                     AND A.PART_STATUS IN ('PRO001', 'PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018', 'PRO019')
                 </when>
                 <otherwise>
+                    AND IFNULL(A.OUTSIDE_YN, 'N') = 'N'
                     AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018')
                 </otherwise>
             </choose>
