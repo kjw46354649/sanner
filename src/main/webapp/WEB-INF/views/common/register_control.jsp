@@ -229,9 +229,9 @@
                 }
             },
             {
-                title: '가공<br>납기', width: 70, dataIndx: 'INNER_DUE_DT',
+                title: '가공<br>납기', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'INNER_DUE_DT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                editor: {type: 'textbox', init: dateEditor}
+                editor: {type: 'textbox', init: fnDateEditor}
             },
             {title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
@@ -305,14 +305,14 @@
                     {title: '원', dataType: 'integer', format: '#,###', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
                     {title: '대', dataType: 'integer', format: '#,###', dataIndx: 'OTHER_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
                     {
-                        title: '발주납기', width: 70, dataIndx: 'ORDER_DUE_DT',
+                        title: '발주납기', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'ORDER_DUE_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                        editor: {type: 'textbox', init: dateEditor}
+                        editor: {type: 'textbox', init: fnDateEditor}
                     },
                     {
-                        title: '납품확인', width: 70, datatype: 'date', dataIndx: 'DELIVERY_DT',
+                        title: '납품확인', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                        editor: {type: 'textbox', init: dateEditor}
+                        editor: {type: 'textbox', init: fnDateEditor}
                     },
                     {title: '견적단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
                     {title: '공급단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
@@ -1192,16 +1192,6 @@
                 }
             }
         };
-
-        function dateEditor (ui) {
-            let $inp = ui.$cell.find("input");
-            $inp.datepicker({
-                changeMonth: true, changeYear: true, showAnim: '', dateFormat: 'yymmdd',
-                onSelect: function () { this.firstOpen = true; },
-                beforeShow: function () {return !this.firstOpen; },
-                onClose: function () { this.focus(); }
-            });
-        }
         /* function */
 
         /* event */

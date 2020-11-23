@@ -575,7 +575,7 @@
                 }
             },
             {
-                title: '가공<br>납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT', formatRaw: 'yy/mm/dd',
+                title: '가공<br>납기', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'INNER_DUE_DT', formatRaw: 'yy/mm/dd',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -835,7 +835,7 @@
                         }
                     },
                     {
-                        title: '발주납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT',
+                        title: '발주납기', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'ORDER_DUE_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -893,7 +893,7 @@
                         }
                     },
                     {
-                        title: '납품확인', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'DELIVERY_DT',
+                        title: '납품확인', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editor: {type: 'textbox', init: fnDateEditor},
                         editable: function (ui) {
@@ -2630,6 +2630,39 @@
             $('#control_estimate_list_excel_download #paramData').val(controlSeqStr);
             fnReportFormToHiddenFormPageAction('control_estimate_list_excel_download', '/downloadExcel');
         });
+
+        alertify.dialog('barcodeDrawingConfirm', function () {
+            return {
+                setup: function () {
+                    var settings = alertify.confirm().settings;
+                    for (var prop in settings)
+                        this.settings[prop] = settings[prop];
+                    var setup = alertify.confirm().setup();
+                    setup.buttons.push({
+                        text: '취소',
+                        scope: 'primary'
+                    });
+                    return setup;
+                },
+                settings: {
+                    oncontinue: null
+                },
+                callback: function (closeEvent) {
+                    if (closeEvent.index == 2) {
+                        if (typeof this.get('oncontinue') === 'function') {
+                            let returnValue;
+                            returnValue = this.get('oncontinue').call(this, closeEvent);
+                            if (typeof returnValue !== 'undefined') {
+                                closeEvent.cancel = !returnValue;
+                            }
+                        }
+                    } else {
+                        alertify.confirm().callback.call(this, closeEvent);
+                    }
+                }
+            };
+        }, false, 'confirm');
+
         // 바코드도면 출력
         $('#CONTROL_MANAGE_BARCODE_DRAWING_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
@@ -2684,10 +2717,21 @@
                     message += '<span class="text-blue">' + value + '</span><br>';
                 }
 
-                fnConfirm(null, message, function () {
-                    printJS({printable: '/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList) + '&flag=Y', type: 'pdf', showModal: true}); // 기존
-                }, function () {
-                    printJS({printable: '/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList) + '&flag=N', type: 'pdf', showModal: true});
+                // invoke the custom dialog
+                alertify.barcodeDrawingConfirm(message).set({
+                    'onok': function () {
+                        printJS({printable: '/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList) + '&flag=Y', type: 'pdf', showModal: true});
+                    },
+                    'oncancel': function () {
+                        printJS({printable: '/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList) + '&flag=N', type: 'pdf', showModal: true});
+                    },
+                    'oncontinue': function () {
+
+                    },
+                    'labels': {
+                        'ok': '포함',
+                        'cancel': '미포함'
+                    }
                 });
             } else {
                 message =
