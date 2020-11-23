@@ -2003,7 +2003,7 @@
                 // }
 
                 fnAppendSelectboxYear('OUTSIDE_CLOSE_POP_YEAR', 3);
-                fnAppendSelectboxMonth('OUTSIDE_CLOSE_POP_MONTH', CURRENT_YEAR);
+                fnAppendSelectboxMonth('OUTSIDE_CLOSE_POP_MONTH');
 
                 $outsideCloseLeftGrid = $('#' + outsideCloseLeftGridId).pqGrid(outsideCloseLeftObj);
                 $outsideCloseRightGrid = $('#' + outsideCloseRightGridId).pqGrid(outsideCloseRightObj);
