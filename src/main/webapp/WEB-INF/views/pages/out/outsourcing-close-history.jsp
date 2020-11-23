@@ -272,7 +272,7 @@
             },
             {title: '외주<br>발주번호', width: 90, dataIndx: 'OUTSIDE_ORDER_NUM'},
             {title: '외주<br>확정단가', width: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_UNIT_AMT'},
-            {title: '금액<br>합계', width: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: ''},
+            {title: '금액<br>합계', width: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_TOTAL_AMT'},
             {title: '외주<br>종전가', width: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PREV_OUTSIDE_UNIT_AMT'},
             {title: 'DXF', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
