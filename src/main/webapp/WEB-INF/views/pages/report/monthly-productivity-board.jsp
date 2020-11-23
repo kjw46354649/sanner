@@ -229,7 +229,7 @@
                     <span class="sub-title">> 분석대상</span>
                     <span>
                         <label for="analysis_target"></label>
-                        <select name="ANALYSIS_TARGET" id="analysis_target">
+                        <select class="wd_100" name="ANALYSIS_TARGET" id="analysis_target">
                             <option value="PART_QTY">수량</option>
                             <option value="WORK_TIME">시간</option>
                             <option value="UNIT_AP_AMT">A/P</option>
@@ -247,12 +247,12 @@
                     <span class="sub-title">> 필터조건</span>
                     <span>
                         <label for="yy1">주문수량</label>
-                        <select name="YY1" id="yy1">
+                        <select class="wd_50" name="YY1" id="yy1">
                            <c:forEach var="i" begin="1" end="30">
                                <option value="<c:out value='${i}'/>"><c:out value='${i}'/></option>
                            </c:forEach>
                         </select>
-                        <select name="YY2" id="yy2">
+                        <select class="wd_50" name="YY2" id="yy2">
                            <c:forEach var="i" begin="1" end="30">
                                <option value="<c:out value='${i}'/>"><c:out value='${i}'/></option>
                            </c:forEach>
@@ -263,10 +263,38 @@
                         <input type="text" class="wd_100" name="INSPECT_GRADE" id="INSPECT_GRADE" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" title="품질검사" readonly>
                     </span>
                     <span>
-                        <label for="RBRUR">규격</label>
-                        <select class="wd_100" name="RBRUR" id="RBRUR" title="규격">
+                        <label for="SIZE_TYPE">규격</label>
+                        <select class="wd_100" name="SIZE_TYPE" id="SIZE_TYPE" title="규격">
                             <option value=""><spring:message code="com.form.top.all.option"/></option>
+                            <c:forEach var="vlocale" items="${HighCode.H_1016}">
+                                <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                            </c:forEach>
                         </select>
+                    </span>
+                    <span id="SIZE_W">
+                        <input class="wd_50" type="number" name="SIZE_W_F" id="SIZE_W_F">
+                        <span>~</span>
+                        <input class="wd_50" type="number" name="SIZE_W_T" id="SIZE_W_T">
+                    </span>
+                    <span id="SIZE_H">
+                        <input class="wd_50" type="number" name="SIZE_H_F" id="SIZE_H_F">
+                        <span>~</span>
+                        <input class="wd_50" type="number" name="SIZE_H_T" id="SIZE_H_T">
+                    </span>
+                    <span id="SIZE_T">
+                        <input class="wd_50" type="number" name="SIZE_T_F" id="SIZE_T_F">
+                        <span>~</span>
+                        <input class="wd_50" type="number" name="SIZE_T_T" id="SIZE_T_T">
+                    </span>
+                    <span id="SIZE_D">
+                        <input class="wd_50" type="number" name="SIZE_D_F" id="SIZE_D_F">
+                        <span>~</span>
+                        <input class="wd_50" type="number" name="SIZE_D_T" id="SIZE_D_T">
+                    </span>
+                    <span id="SIZE_L">
+                        <input class="wd_50" type="number" name="SIZE_L_F" id="SIZE_L_F">
+                        <span>~</span>
+                        <input class="wd_50" type="number" name="SIZE_L_T" id="SIZE_L_T">
                     </span>
                 </span>
             </div>
@@ -1433,6 +1461,46 @@
         $('#monthly_productivity_bottom_form').on('change', function () {
             changeMaterialRankInfo();
             changeMaterialRankList();
+        });
+
+        $('#monthly_productivity_bottom_form').find('#SIZE_TYPE').on('change', function () {
+            const $monthlyProductivityBottomForm = $('#monthly_productivity_bottom_form');
+
+            switch (this.value) {
+                case 'XYZ010':
+                    $monthlyProductivityBottomForm.find('#SIZE_W').css('visibility', 'visible');
+                    $monthlyProductivityBottomForm.find('#SIZE_H').css('visibility', 'visible');
+                    $monthlyProductivityBottomForm.find('#SIZE_T').css('visibility', 'visible');
+                    $monthlyProductivityBottomForm.find('#SIZE_D').css('visibility', 'hidden');
+                    $monthlyProductivityBottomForm.find('#SIZE_L').css('visibility', 'hidden');
+                    $monthlyProductivityBottomForm.find('#SIZE_D_F').val('');
+                    $monthlyProductivityBottomForm.find('#SIZE_D_T').val('');
+                    $monthlyProductivityBottomForm.find('#SIZE_L_F').val('');
+                    $monthlyProductivityBottomForm.find('#SIZE_L_T').val('');
+                    break;
+                case 'XYZ020':
+                case 'XYZ030':
+                case 'XYZ040':
+                case 'XYZ050':
+                    $monthlyProductivityBottomForm.find('#SIZE_W').css('visibility', 'hidden');
+                    $monthlyProductivityBottomForm.find('#SIZE_H').css('visibility', 'hidden');
+                    $monthlyProductivityBottomForm.find('#SIZE_T').css('visibility', 'hidden');
+                    $monthlyProductivityBottomForm.find('#SIZE_W_F').val('');
+                    $monthlyProductivityBottomForm.find('#SIZE_W_T').val('');
+                    $monthlyProductivityBottomForm.find('#SIZE_H_F').val('');
+                    $monthlyProductivityBottomForm.find('#SIZE_H_T').val('');
+                    $monthlyProductivityBottomForm.find('#SIZE_T_F').val('');
+                    $monthlyProductivityBottomForm.find('#SIZE_T_T').val('');
+                    $monthlyProductivityBottomForm.find('#SIZE_D').css('visibility', 'visible');
+                    $monthlyProductivityBottomForm.find('#SIZE_L').css('visibility', 'visible');
+                    break;
+                default:
+                    $monthlyProductivityBottomForm.find('#SIZE_W').css('visibility', 'visible');
+                    $monthlyProductivityBottomForm.find('#SIZE_H').css('visibility', 'visible');
+                    $monthlyProductivityBottomForm.find('#SIZE_T').css('visibility', 'visible');
+                    $monthlyProductivityBottomForm.find('#SIZE_D').css('visibility', 'visible');
+                    $monthlyProductivityBottomForm.find('#SIZE_L').css('visibility', 'visible');
+            }
         });
 
         /*$(document).on('click', '.page.monthly-productivity-board .bottom-wrap div table tr', function(){

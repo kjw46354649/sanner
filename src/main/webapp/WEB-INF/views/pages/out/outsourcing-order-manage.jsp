@@ -537,20 +537,22 @@
                     }
                 ]
             },
-            {title: '외주납기', width: 70, dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
+            {
+                title: '외주납기', width: 70, dataIndx: 'OUTSIDE_HOPE_DUE_DT',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.OUTSIDE_STATUS !== 'OST001';
+                },
                 render: function (ui) {
-                    if (ui.cellData) {
-                        let date = ui.cellData;
+                    const cellData = ui.cellData;
+
+                    if (cellData) {
+                        let date = cellData;
 
                         return date.substring(5);
                     }
-                    // else {
-                        // if (!fnIsEmpty(ui.rowData.INNER_DUE_DT)) {
-                        //     let visibleDate = new Date(ui.rowData.INNER_DUE_DT);
-                        //     visibleDate.setDate(visibleDate.getDate() - 1);
-                        //     return visibleDate.mmdd();
-                        // }
-                    // }
                 }
             },
             {
@@ -2003,7 +2005,7 @@
                 // }
 
                 fnAppendSelectboxYear('OUTSIDE_CLOSE_POP_YEAR', 3);
-                fnAppendSelectboxMonth('OUTSIDE_CLOSE_POP_MONTH', CURRENT_YEAR);
+                fnAppendSelectboxMonth('OUTSIDE_CLOSE_POP_MONTH');
 
                 $outsideCloseLeftGrid = $('#' + outsideCloseLeftGridId).pqGrid(outsideCloseLeftObj);
                 $outsideCloseRightGrid = $('#' + outsideCloseRightGridId).pqGrid(outsideCloseRightObj);

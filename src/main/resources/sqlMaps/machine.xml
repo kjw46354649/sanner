@@ -934,6 +934,7 @@
             jmes.SF_GET_CODE_NM('1013', A.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS, <!-- 진행상태 -->
             B.CONTROL_NUM, <!-- 관리번호 -->
             IFNULL(A.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
+            CONCAT(B.CONTROL_NUM, CASE WHEN A.PART_NUM IS NOT NULL THEN CONCAT(' #', A.PART_NUM) ELSE SPACE(0) END) AS CONTROL_PART_NUM,
             A.MATERIAL_DETAIL, <!-- 소재종류 상세 -->
             IFNULL(SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
             IFNULL(jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 0) AS ORDER_QTY, <!-- 수량 -->
@@ -968,7 +969,7 @@
             CONCAT(IFNULL(G.HISTORY_NOTE, SPACE(0)), IFNULL(G.NOTE, SPACE(0))) AS CAM_WORK_NOTE,    <!-- CAM 작업 기록 및 비고 공유 사항 -->
             jmes.SF_GET_DATE_F(G.START_DT, '', 'M') AS CAM_START_DT, <!-- CAM 시작 일시, -->
             jmes.SF_GET_DATE_F(G.FINISH_DT, '', 'M') AS CAM_FINISH_DT, <!-- CAM 종료 일시, -->
-            SF_GET_CODE_NM('1009', C.POP_PREV_POSITION, #{LOGIN_LOCALE}) AS POP_PREV_POSITION, <!-- 이전 위치 -->
+            <!-- SF_GET_CODE_NM('1009', C.POP_PREV_POSITION, #{LOGIN_LOCALE}) AS POP_PREV_POSITION, 이전 위치 -->
             jmes.SF_GET_DATE_F(A.STATUS_DT, '', 'M') AS SATAUS_DT, <!-- 확정 일시 -->
             jmes.SF_GET_MATERIAL_RECEIPT_DT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT, <!-- 소재 입고 일시 -->
             J.INSPECT_NUM AS INSPECT_STEP, <!-- 품질 스탭 -->
@@ -1035,10 +1036,10 @@
             </if>
             <choose>
                 <when test='SEL_OUTSIDE_YN != null'>
-                    AND IFNULL(A.OUTSIDE_YN, 'N') = 'N'
                     AND A.PART_STATUS IN ('PRO001', 'PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018', 'PRO019')
                 </when>
                 <otherwise>
+                    AND IFNULL(A.OUTSIDE_YN, 'N') = 'N'
                     AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018')
                 </otherwise>
             </choose>

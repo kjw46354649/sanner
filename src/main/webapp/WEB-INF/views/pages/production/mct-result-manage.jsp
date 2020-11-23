@@ -37,9 +37,9 @@
                     <table class="rowStyle">
                         <colgroup>
                             <col width="10%">
-                            <col width="*">
+                            <col width="30%">
                             <col width="10%">
-                            <col width="15%">
+                            <col width="20%">
                             <col width="10%">
                             <col width="20%">
                         </colgroup>
@@ -331,7 +331,7 @@
                     <button type="button" class="defaultBtn green afterStart" id="camWorkSaveAndCompleteBtn">저장 & 완료</button>
                     <button type="button" class="defaultBtn purple beforeStart" id="camWorkStartBtn" >작업시작</button>
                     <button type="button" class="defaultBtn red afterStart" id="camWorkCancelBtn">작업 취소</button>
-                    <button type="button" class="defaultBtn grayPopGra cam_work_manage_detail_pop_close">닫기</button>
+                    <button type="button" class="defaultBtn grayPopGra cam_work_manage_detail_pop_close" style="font-size: 12px;">닫기</button>
                 </div>
             </div>
         </div>
@@ -581,11 +581,9 @@
                     });
                 }
             },
-            {title: '가공확정<br>일시', dataIndx: 'SATAUS_DT', minWidth: 75, width: 100},
-            {title: '소재입고<br>일시', dataIndx: 'MATERIAL_RECEIPT_DT', minWidth: 75, width: 100},
-            {title: '긴<br>급', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 20},
-            {title: '주<br>요', dataIndx: 'MAIN_INSPECTION', minWidth: 15, width: 20},
-            {title: '형<br>태', dataIndx: 'WORK_NM', minWidth: 15, width: 20},
+            {title: '긴<br>급', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 40},
+            {title: '주<br>요', dataIndx: 'MAIN_INSPECTION_NM', minWidth: 15, width: 50},
+            // {title: '불량<br>반품', dataIndx: 'FAIL_STATUS', minWidth: 15, width: 20},
             {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
@@ -602,8 +600,12 @@
                     });
                 }
             },
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', minWidth: 50, width: 170},
-            {title: '파<br>트', dataIndx: 'PART_NUM', minWidth: 10, width: 30},
+            {title: '가공납기', dataIndx: 'INNER_DUE_DT', minWidth: 15, width: 60},
+            {title: '현재위치', dataIndx: 'POP_POSITION', minWidth: 20, width: 80},
+            {title: '관리번호', dataIndx: 'CONTROL_PART_NUM', minWidth: 50, width: 180},
+            {title: '관리번호', dataIndx: 'CONTROL_NUM', hidden: true},
+            {title: '파<br>트', dataIndx: 'PART_NUM', hidden: true},
+            {title: '형<br>태', dataIndx: 'WORK_NM', minWidth: 15, width: 20},
             {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
             {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
@@ -622,7 +624,6 @@
             {title: '도면번호', align: 'left', width: 150, dataIndx: 'CONCAT_DRAWING_NUM', hidden: true},
             {title: '규격', dataIndx: 'STANDARD_SIZE', minWidth: 40, width: 80},
             {title: '소재 Size', dataIndx: 'MATERAIL_ORDER_SIZE', minWidth: 40, width: 80},
-            {title: '가공납기', dataIndx: 'INNER_DUE_DT', minWidth: 15, width: 60},
             {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 50, editable: false,
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -632,7 +633,6 @@
                     }
                 }
             },
-            {title: '현재위치', dataIndx: 'POP_POSITION', minWidth: 20, width: 80},
             {title: '진행상태', dataIndx: 'PART_STATUS', minWidth: 20, width: 80},
             {title: 'NC Plan', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 colModel: [
@@ -660,6 +660,14 @@
                 ]
             },
             {title: '비고 기록사항', dataIndx: 'CONTROL_NOTE', minWidth: 40, width: 100},
+            {title: '최근 가공현황', align: 'center',
+                 colModel: [
+                     {title: '공정', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'NC_WORK_TYPE'},
+                     {title: '기기명', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_NM'},
+                     {title: '작업자', minWidth: 40, width: 80, dataType: 'string', dataIndx: 'NC_WORK_USER_NM'},
+                     {title: 'R/T', minWidth: 50, width: 55, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME'},
+                ]
+            },
             {
                 title: 'CAM 작업 실적', align: 'center', colModel: [
                     {title: 'step', datatype: 'integer', dataIndx: 'CAM_STEP', minWidth: 30, width: 35,
@@ -706,14 +714,6 @@
                     },*/
                     // {title: '비고 및 공유사항', dataIndx: 'NOTE', minWidth: 100, width: 150},
                     {title: '업데이트', dataIndx: 'CAM_FINISH_DT', minWidth: 75, width: 75}
-                ]
-            },
-            {title: 'MCT Actual', align: 'center',
-                 colModel: [
-                     {title: '공정', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'NC_WORK_TYPE'},
-                     {title: '기기명', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_NM'},
-                     {title: '작업자', minWidth: 40, width: 80, dataType: 'string', dataIndx: 'NC_WORK_USER_NM'},
-                     {title: 'R/T', minWidth: 50, width: 55, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME'},
                 ]
             },
             // {title: 'MCT Actual', align: 'center',
@@ -765,8 +765,10 @@
                 }
             },
             {title: '작업<br>구분', dataIndx: 'MCT_WORK_TYPE_NM', minWidth: 15, width: 50},
-            {title: '이전<br>위치', dataIndx: 'POP_PREV_POSITION', minWidth: 70, width: 70},
-            {title: '1ea L/T', dataIndx: '1ea L/T', minWidth: 60, width: 60},
+            {title: '가공확정<br>일시', dataIndx: 'SATAUS_DT', minWidth: 75, width: 100},
+            {title: '소재입고<br>일시', dataIndx: 'MATERIAL_RECEIPT_DT', minWidth: 75, width: 100},
+            // {title: '이전<br>위치', dataIndx: 'POP_PREV_POSITION', minWidth: 70, width: 70},
+            // {title: '1ea L/T', dataIndx: '1ea L/T', minWidth: 60, width: 60},
             /*{
                 title: '과거 경험(NC 기준)', align: 'center', colModel: [
                     {title: '1ea L/T', dataIndx: '1ea L/T', minWidth: 60, width: 60},

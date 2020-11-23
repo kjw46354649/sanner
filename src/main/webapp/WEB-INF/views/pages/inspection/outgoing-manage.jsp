@@ -1826,7 +1826,16 @@
         $('#SEL_OUTGOING_DATE_TYPE').val(4); // 확정일자 Default 검색조건
 
         $('#SEL_OUTGOING_DATE_TYPE').on('change', function () {
-            $(this).val() === '' ? $('[id^=SEL][id$=DT]').prop('disabled', true) : $('[id^=SEL][id$=DT]').prop('disabled', false);
+            const $selOutgoingTerm = $('[name=SEL_OUTGOING_TERM]');
+            const $selDt = $('[id^=SEL][id$=DT]');
+
+            if(this.value === '') {
+                $selOutgoingTerm.prop('disabled', true);
+                $selDt.prop('disabled', true);
+            } else {
+                $selOutgoingTerm.prop('disabled', false);
+                $selDt.prop('disabled', false);
+            }
         });
 
         $('#OUTGOING_MANAGE_EXCEL_EXPORT').on('click', function () {
