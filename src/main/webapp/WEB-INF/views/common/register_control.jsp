@@ -953,7 +953,8 @@
                 let controlNum = dataList[i].CONTROL_NUM || '';
                 let partNum = dataList[i].PART_NUM || '';
                 let workType = dataList[i].WORK_TYPE || '';
-                let concatString = controlNum + partNum + workType;
+                let orderNum = dataList[i].ORDER_NUM || '';
+                let concatString = controlNum + partNum + workType + orderNum;
                 array[i] = concatString;
             }
 
@@ -972,7 +973,8 @@
                     let controlNum = dataList[i].CONTROL_NUM || '';
                     let partNum = dataList[i].PART_NUM || '';
                     let workType = dataList[i].WORK_TYPE || '';
-                    let concatString = controlNum + partNum + workType;
+                    let orderNum = dataList[i].ORDER_NUM || '';
+                    let concatString = controlNum + partNum + workType + orderNum;
 
                     if (duplicateArray[j] === concatString) {
                         addErrorList(dataList[i].pq_ri, 'CONTROL_NUM');

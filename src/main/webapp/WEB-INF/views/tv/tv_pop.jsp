@@ -1480,7 +1480,7 @@
 		let alarmMessageProcess = function(messageData){
 			let maxCnt = 8;
 			if (messageData) {
-				let messageKey = "alarm_" + messageData.content02;
+				let messageKey = randomKey() + "_" + messageData.content02;
 				let messBody = messageData.content02 + " -> " + messageData.content03;
 				if(messageData.content04) messBody += "     (" + messageData.content04 + ")";
 				if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
@@ -1612,6 +1612,17 @@
 					iConnectCount++
 				}, 5000);
 			});
+		}
+
+		function randomKey() {
+			var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+			var string_length = 10;
+			var randomstring = '';
+			for (var i=0; i<string_length; i++) {
+				var rnum = Math.floor(Math.random() * chars.length);
+				randomstring += chars.substring(rnum,rnum+1);
+			}
+			return randomstring;
 		}
 
 		function reloadPage(){
