@@ -37,9 +37,9 @@
                     <table class="rowStyle">
                         <colgroup>
                             <col width="10%">
-                            <col width="*">
+                            <col width="30%">
                             <col width="10%">
-                            <col width="15%">
+                            <col width="20%">
                             <col width="10%">
                             <col width="20%">
                         </colgroup>
@@ -331,7 +331,7 @@
                     <button type="button" class="defaultBtn green afterStart" id="camWorkSaveAndCompleteBtn">저장 & 완료</button>
                     <button type="button" class="defaultBtn purple beforeStart" id="camWorkStartBtn" >작업시작</button>
                     <button type="button" class="defaultBtn red afterStart" id="camWorkCancelBtn">작업 취소</button>
-                    <button type="button" class="defaultBtn grayPopGra cam_work_manage_detail_pop_close">닫기</button>
+                    <button type="button" class="defaultBtn grayPopGra cam_work_manage_detail_pop_close" style="font-size: 12px;">닫기</button>
                 </div>
             </div>
         </div>
