@@ -2003,7 +2003,7 @@
                 C.UNIT_FINAL_AMT, <!-- 최종공급단가 -->
                 SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
                 SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
-                SF_GET_CONTROL_FINAL_AMT(A.CONTROL_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
+                C.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
                 C.PACKING_CNT, <!-- 포장수량 -->
                 '' AS NOTE, <!-- 비고 -->
                 B.IMG_GFILE_SEQ
@@ -2031,7 +2031,7 @@
                 C.UNIT_FINAL_AMT, <!-- 최종공급단가 -->
                 SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
                 SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
-                SF_GET_CONTROL_FINAL_AMT(A.CONTROL_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
+                C.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
                 C.PACKING_CNT, <!-- 포장수량 -->
                 D.NOTE, <!-- 비고 -->
                 B.IMG_GFILE_SEQ
