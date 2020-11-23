@@ -931,7 +931,7 @@
         $orderRegisterGrid = $('#' + popupGridId).pqGrid(popupObj);
 
         const validationCheck = function (dataList) {
-            sameControlNumCheck(dataList);
+            // sameControlNumCheck(dataList);
 
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 let rowData = dataList[i];
@@ -945,7 +945,7 @@
         };
 
         // 같은 관리번호 체크
-        const sameControlNumCheck = function (dataList) {
+        /*const sameControlNumCheck = function (dataList) {
             let array = [];
             let duplicateArray = [];
 
@@ -981,7 +981,7 @@
                     }
                 }
             }
-        };
+        };*/
 
         // required 체크
         const requiredCheck = function (rowData) {
