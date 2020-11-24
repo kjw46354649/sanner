@@ -161,7 +161,7 @@
                     <table class="rowStyle" style="table-layout: fixed;">
                         <colgroup>
                             <col width="10%">
-                            <col width="15%">
+                            <col width="20%">
                             <col width="10%">
                             <col width="15%">
                             <col width="10%">
@@ -1446,14 +1446,17 @@
                 $itemDetailPopForm.find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
                 $itemDetailPopForm.find("#PART_STATUS_NM").html(dataInfo.PART_STATUS_NM);
 
+                $itemDetailPopForm.find("#ITEM_NM").attr('title', dataInfo.ITEM_NM);
                 $itemDetailPopForm.find("#ITEM_NM").html(dataInfo.ITEM_NM);
                 $itemDetailPopForm.find("#MATERIAL_DETAIL_NM").html(dataInfo.MATERIAL_DETAIL_NM || '' + materialFinishHeatSpanElement);
                 $itemDetailPopForm.find("#POP_POSITION_NM").html(dataInfo.POP_POSITION_NM);
 
+                $itemDetailPopForm.find("#MODULE_NM").attr('title', dataInfo.MODULE_NM);
                 $itemDetailPopForm.find("#MODULE_NM").html(dataInfo.MODULE_NM);
                 $itemDetailPopForm.find("#SURFACE_TREAT_NM").html(dataInfo.SURFACE_TREAT_NM);
                 $itemDetailPopForm.find("#PROCESS_CONFIRM_DT").html(dataInfo.PROCESS_CONFIRM_DT);
 
+                $itemDetailPopForm.find("#PROJECT_NM").attr('title', dataInfo.PROJECT_NM);
                 $itemDetailPopForm.find("#PROJECT_NM").html(dataInfo.PROJECT_NM);
                 $itemDetailPopForm.find("#OUTSIDE_CONFIRM_DT").html(dataInfo.OUTSIDE_CONFIRM_DT);
                 $itemDetailPopForm.find("#MATERIAL_ORDER_DT").html(dataInfo.MATERIAL_ORDER_DT);
