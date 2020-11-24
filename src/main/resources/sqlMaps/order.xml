@@ -1213,8 +1213,8 @@
         SET
             ORDER_NUM = #{ORDER_NUM},
             ORDER_QTY = #{ORDER_QTY},
-            DATE_FORMAT(#{ORDER_DUE_DT}, '%Y%m%d'),
-            DATE_FORMAT(#{DELIVERY_DT}, '%Y%m%d'),
+            ORDER_DUE_DT = DATE_FORMAT(#{ORDER_DUE_DT}, '%Y%m%d'),
+            DELIVERY_DT = DATE_FORMAT(#{DELIVERY_DT}, '%Y%m%d'),
             PROJECT_NM = #{PROJECT_NM},
             MODULE_NM = #{MODULE_NM},
             DELIVERY_COMP_NM = #{DELIVERY_COMP_NM},
