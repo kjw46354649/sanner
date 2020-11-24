@@ -1021,13 +1021,12 @@
                     CONCAT(TRUNCATE(IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK',A.MCT_WORK_SEQ),0)/3600,0),'h ',TRUNCATE((IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK',A.MCT_WORK_SEQ),0)%3600)/60,0),'m') AS WORKING_TIME
                 FROM TBL_MCT_WORK A
                     INNER JOIN jmes.TBL_EQUIP C ON A.EQUIP_SEQ = C.EQUIP_SEQ
-                        AND C.PROCESS_TYPE = 'MPR010'
                 WHERE 1 = 1
                     AND A.WORK_FINISH_DT IS NOT NULL
                     AND A.DEL_YN = 'N'
                     AND A.MCT_WORK_SEQ IN (SELECT MAX(X.MCT_WORK_SEQ) FROM TBL_MCT_WORK X
-                                            WHERE  X.DEL_YN = 'N' AND X.WORK_FINISH_DT IS NOT NULL
-                                          GROUP BY X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+                                           WHERE  X.DEL_YN = 'N' AND X.WORK_FINISH_DT IS NOT NULL
+                                           GROUP BY X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
                     )
             ) Z ON A.CONTROL_SEQ = Z.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ
         WHERE 1 = 1

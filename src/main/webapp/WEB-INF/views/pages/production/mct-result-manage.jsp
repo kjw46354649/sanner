@@ -633,7 +633,14 @@
                     }
                 }
             },
-            {title: '진행상태', dataIndx: 'PART_STATUS', minWidth: 20, width: 80},
+            {
+                title: '진행상태', dataIndx: 'PART_STATUS', minWidth: 20, width: 80,
+                render: function (ui) {
+                    const cellData = ui.cellData;
+
+                    return cellData === '가공중' ? '<div class="blink">' + cellData + '</div>' : cellData;
+                }
+            },
             {title: 'NC Plan', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 colModel: [
                     {title: 'MCT_PLAN_SEQ', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
