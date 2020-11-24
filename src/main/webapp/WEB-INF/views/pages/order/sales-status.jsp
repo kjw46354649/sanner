@@ -296,7 +296,7 @@
                     {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '12_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
                 ]
             },
-            {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT', style: {'font-weight': 'bold'}}
+            {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
         ];
         const tab2GroupModel = {
             on: true, header:false,
