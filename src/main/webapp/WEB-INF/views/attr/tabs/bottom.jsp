@@ -141,7 +141,7 @@
 <%--                        </span>--%>
                     </span>
                 <ul class="listWrap right_float">
-                    <span class="barCode"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
+                    <span class="barCode" id="g_item_detail_pop_barcode_span"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
                     <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode hg_30" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
                 </ul>
             </div>
@@ -1644,9 +1644,13 @@
     <%--        g_ItemDetailPopGrid04.pqGrid('refreshDataAndView');--%>
     <%--    }, parameters, '');--%>
     <%--});--%>
+    $("#g_item_detail_pop_barcode_span").on('click', function (e) {
+        $("#g_item_detail_pop_barcode_num").focus();
+    });
 
     $("#g_item_detail_pop_barcode_num").on({
         focus: function () {
+            this.value = '';
             $("#g_item_detail_pop_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long_on.png");
         },
         blur: function () {
