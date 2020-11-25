@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="OUTSIDE_ORDER_MANAGE_SEARCH_FORM" role="form" onsubmit="return false;">
             <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideOrderManageList">
-            <div class="none_gubunWrap row4_topWrap">
+            <div class="none_gubunWrap row3_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -36,6 +36,16 @@
                         <span class="ipu_wrap">
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
                             <input type="text" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="WORK_TYPE">작업구분</label>
+                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1013}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
                         </span>
                     </li>
                     <li>
@@ -60,6 +70,16 @@
                                 </c:forEach>
                             </select>
                         </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="WORK_TYPE">품질현황</label>
+                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1040}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mr-10">
@@ -79,31 +99,10 @@
                             </span>
                         </div>
                         <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="WORK_TYPE">작업구분</label>
-                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1013}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="WORK_TYPE">품질현황</label>
-                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1040}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
-                    </li>
-                    <li>
                         <span>
                             <span class="ipu_wrap"><label class="label_100">Option</label></span>
-                            <span class="chk_box wd_100"><input name="INCLUDE_REQUEST_COMPLETE" id="INCLUDE_REQUEST_COMPLETE" type="checkbox"><label for="INCLUDE_REQUEST_COMPLETE"> 요청완료 포함</label></span>
-                            <span class="chk_box wd_100"><input name="INCLUDE_RECEIVED_COMPLETE" id="INCLUDE_RECEIVED_COMPLETE" type="checkbox"><label for="INCLUDE_RECEIVED_COMPLETE"> 입고완료 포함</label></span>
+                            <span class="chk_box" style="width: 90px;"><input name="INCLUDE_REQUEST_COMPLETE" id="INCLUDE_REQUEST_COMPLETE" type="checkbox"><label for="INCLUDE_REQUEST_COMPLETE"> 요청완료 포함</label></span>
+                            <span class="chk_box" style="width: 90px;"><input name="INCLUDE_RECEIVED_COMPLETE" id="INCLUDE_RECEIVED_COMPLETE" type="checkbox"><label for="INCLUDE_RECEIVED_COMPLETE"> 입고완료 포함</label></span>
                             <span class="gubun"></span>
                             <span class="ipu_wrap">
                                 <label class="label_100" for="AMOUNT_SUM">금액총합계</label>
@@ -119,7 +118,7 @@
             </div>
         </form>
     </div>
-    <div class="bottomWrap row4_bottomWrap">
+    <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
                 <label for="outsourcingOrderManageFilterKeyword"></label><input type="text" id="outsourcingOrderManageFilterKeyword" placeholder="Enter your keyword">
@@ -626,7 +625,7 @@
         ];
         const obj = {
             minHeight: '100%',
-            height: 680,
+            height: 700,
             collapsible: false,
             resizable: false,
             postRenderInterval: -1,
