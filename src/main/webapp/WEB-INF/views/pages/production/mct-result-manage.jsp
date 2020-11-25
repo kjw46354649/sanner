@@ -581,9 +581,30 @@
                     });
                 }
             },
-            {title: '긴<br>급', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 40},
-            {title: '주<br>요', dataIndx: 'MAIN_INSPECTION_NM', minWidth: 15, width: 50},
-            // {title: '불량<br>반품', dataIndx: 'FAIL_STATUS', minWidth: 15, width: 20},
+            {
+                title: '긴급', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 40,
+                render: function (ui) {
+                    if (ui.cellData) {
+                        return {style: 'background-color: #ff0000; color: #ffffff;'};
+                    }
+                }
+            },
+            {
+                title: '주요<br>검사', dataIndx: 'MAIN_INSPECTION_NM', minWidth: 15, width: 55,
+                render: function (ui) {
+                    if (ui.cellData) {
+                        return {style: 'background-color: #ffe699;'};
+                    }
+                }
+            },
+            {
+                title: '불량<br>반품', dataIndx: 'FAIL_STATUS', minWidth: 15, width: 55,
+                render: function (ui) {
+                    if (ui.cellData) {
+                        return {style: 'background-color: #ff0000; color: #ffffff;'};
+                    }
+                }
+            },
             {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
@@ -600,7 +621,18 @@
                     });
                 }
             },
-            {title: '가공납기', dataIndx: 'INNER_DUE_DT', minWidth: 15, width: 60},
+            {
+                title: '가공납기', dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT', minWidth: 15, width: 60,
+                render: function (ui) {
+                    const innerDueDt = new Date(ui.cellData);
+                    const innerWorkFinishDt = ui.rowData.INNER_WORK_FINISH_DT;
+
+                    if (!innerWorkFinishDt && innerDueDt.getTime() < TODAY.getTime()) {
+                        return {style: 'background-color: #ffe699; color: #ff0000;'};
+                    }
+                }
+            },
+            {title: '가공완료일시', dataIndx: 'INNER_WORK_FINISH_DT', hidden: true},
             {title: '현재위치', dataIndx: 'POP_POSITION', minWidth: 20, width: 80},
             {title: '관리번호', dataIndx: 'CONTROL_PART_NUM', minWidth: 50, width: 180},
             {title: '관리번호', dataIndx: 'CONTROL_NUM', hidden: true},
@@ -772,7 +804,7 @@
                 }
             },
             {title: '작업<br>구분', dataIndx: 'MCT_WORK_TYPE_NM', minWidth: 15, width: 50},
-            {title: '가공확정<br>일시', dataIndx: 'SATAUS_DT', minWidth: 75, width: 100},
+            {title: '가공확정<br>일시', dataIndx: 'STATUS_DT', minWidth: 75, width: 100},
             {title: '소재입고<br>일시', dataIndx: 'MATERIAL_RECEIPT_DT', minWidth: 75, width: 100},
             // {title: '이전<br>위치', dataIndx: 'POP_PREV_POSITION', minWidth: 70, width: 70},
             // {title: '1ea L/T', dataIndx: '1ea L/T', minWidth: 60, width: 60},
@@ -870,7 +902,7 @@
             let orderQty = numberWithCommas(rowData.ORDER_QTY);
             if(rowData.ORIGINAL_SIDE_QTY) orderQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.ORIGINAL_SIDE_QTY + ") </span>";
             $("#cam_work_manage_pop_form").find("#ORDER_QTY").html(orderQty);
-            let dueOutDt = rowData.INNER_DUE_DT;
+            let dueOutDt = rowData.INNER_DUE_DT.slice(5);
             if(rowData.EMERGENCY_YN === "Y") dueOutDt += " <input type='button' class='smallBtn red' value='긴급'></input>";
             $("#cam_work_manage_pop_form").find("#DUE_OUT_DT").html(dueOutDt);
             let concatDrawingNum = rowData.CONCAT_DRAWING_NUM;
