@@ -322,8 +322,12 @@
                             </tr>
                             <tr>
                                 <th scope="row">시간당 원가</th>
-                                <td colspan="3">
-                                    <input type="number" name="COST_PER_HOUR" id="COST_PER_HOUR" placeholder="시간당 원가" value="" title="시간당 원가" style="width:98%;">
+                                <td>
+                                    <input type="number" name="COST_PER_HOUR" id="COST_PER_HOUR" placeholder="시간당 원가" value="" title="시간당 원가" class="wd_150">
+                                </td>
+                                <th scope="row">Order</th>
+                                <td>
+                                    <input type="number" name="COMBO_BOX_SORT_NUM" id="COMBO_BOX_SORT_NUM" placeholder="Order" value="" title="Order" class="wd_150">
                                 </td>
                             </tr>
                             <tr>
@@ -451,7 +455,8 @@
             {title: '작동시간(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
             //{title: '최근<br>정비일시', dataType: 'string', dataIndx: ''},
             {title: '최근종료일시', dataType: 'string', dataIndx: 'LAST_REPAIR_DT'},
-            {title: '최근수행번호', dataType: 'string', dataIndx: 'LAST_CONTROL_NUM'}
+            {title: '최근수행번호', dataType: 'string', dataIndx: 'LAST_CONTROL_NUM'},
+            {title: 'Order', dataType: 'integer', dataIndx: 'COMBO_BOX_SORT_NUM'}
         ];
         currentObj = {
             width: "100%",

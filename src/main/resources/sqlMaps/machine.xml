@@ -37,6 +37,7 @@
                     LIMIT 1) AS LAST_CONTROL_NUM
                 , A.NOTE
                 , A.MODEL_NUM, A.SERIAL_NUM
+                , A.COMBO_BOX_SORT_NUM
             FROM jmes.TBL_EQUIP A
             WHERE A.EQUIP_KIND = #{SEL_EQUIP_KIND}
             AND A.DEL_YN = 'N'
@@ -91,6 +92,7 @@
             , A.MODEL_NUM
             , A.SERIAL_NUM
             , A.COST_PER_HOUR
+            , A.COMBO_BOX_SORT_NUM
         FROM jmes.TBL_EQUIP A
         WHERE A.EQUIP_SEQ = #{EQUIP_SEQ}
     </select>
@@ -103,12 +105,12 @@
                               , PROCESS_TYPE, EQUIP_TYPE, EQUIP_SIZE
                               , EQUIP_COMP_CD, FACTORY_AREA
                               , MAIN_USER_ID, SUB_USER_ID, PURCHASE_DT, RESELLER_CD, NOTE
-                              , PHOTO_GFILE_SEQ, ETC_GFILE_SEQ, INSERT_ID, MODEL_NUM, SERIAL_NUM, COST_PER_HOUR)
+                              , PHOTO_GFILE_SEQ, ETC_GFILE_SEQ, INSERT_ID, MODEL_NUM, SERIAL_NUM, COST_PER_HOUR, COMBO_BOX_SORT_NUM)
         VALUES (  #{EQUIP_SEQ}, #{EQUIP_ID}, #{EQUIP_KIND}, #{EQUIP_NM}
                 , #{PROCESS_TYPE, jdbcType=VARCHAR}, #{EQUIP_TYPE}, #{EQUIP_SIZE}
                 , #{EQUIP_COMP_CD}, #{FACTORY_AREA}
                 , #{MAIN_USER_ID}, #{SUB_USER_ID}, REPLACE(#{PURCHASE_DT},'/',space(0)), #{RESELLER_CD}, #{NOTE}
-                , #{PHOTO_GFILE_SEQ}, #{ETC_GFILE_SEQ}, #{LOGIN_USER_ID}, #{MODEL_NUM}, #{SERIAL_NUM}, #{COST_PER_HOUR} )
+                , #{PHOTO_GFILE_SEQ}, #{ETC_GFILE_SEQ}, #{LOGIN_USER_ID}, #{MODEL_NUM}, #{SERIAL_NUM}, #{COST_PER_HOUR}, #{COMBO_BOX_SORT_NUM})
     </insert>
     <update id="updateMachineMaster" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_EQUIP
@@ -127,6 +129,7 @@
               , MODEL_NUM = #{MODEL_NUM}
               , SERIAL_NUM = #{SERIAL_NUM}
               , COST_PER_HOUR = #{COST_PER_HOUR}
+              , COMBO_BOX_SORT_NUM = #{COMBO_BOX_SORT_NUM}
             <if test="PHOTO_GFILE_SEQ != null and PHOTO_GFILE_SEQ != ''">
                   , PHOTO_GFILE_SEQ = #{PHOTO_GFILE_SEQ}
             </if>
@@ -1390,7 +1393,7 @@
         WHERE 1 = 1
             AND FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE05', 'ARE06', 'ARE11')
             AND PROCESS_TYPE = 'MPR010'
-        ORDER BY LAYOUT_ROW, LAYOUT_COL
+        ORDER BY COMBO_BOX_SORT_NUM, LAYOUT_ROW, LAYOUT_COL
     </select>
 
 </mapper>
