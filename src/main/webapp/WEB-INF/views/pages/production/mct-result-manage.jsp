@@ -98,7 +98,7 @@
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_01" name="CAM_WORK_CHK_01" class="statusConfig camworkChekbox" ></th>
                                     <th colspan="2">Step 1
-                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('01');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('01');"><i class='fa fa-trash'></i><span >Reset</span></button></span>
                                     </th>
                                 </tr>
                                 <tr><th>위치</th>
@@ -142,7 +142,7 @@
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_02" name="CAM_WORK_CHK_02" class="statusConfig camworkChekbox" ></th>
                                     <th colspan="2">Step 2
-                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('02');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('02');"><i class='fa fa-trash'></i><span >Reset</span></button></span>
                                     </th>
                                 </tr>
                                 <tr><th>위치</th>
@@ -186,7 +186,7 @@
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_03" name="CAM_WORK_CHK_03" class="statusConfig camworkChekbox" ></th>
                                     <th colspan="2">Step 3
-                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('03');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('03');"><i class='fa fa-trash'></i><span >Reset</span></button></span>
                                     </th>
                                 </tr>
                                 <tr><th>위치</th>
@@ -230,7 +230,7 @@
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_04" name="CAM_WORK_CHK_04" class="statusConfig camworkChekbox" ></th>
                                     <th colspan="2">Step 4
-                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('04');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('04');"><i class='fa fa-trash'></i><span >Reset</span></button></span>
                                     </th>
                                 </tr>
                                 <tr><th>위치</th>
@@ -274,7 +274,7 @@
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_05" name="CAM_WORK_CHK_05" class="statusConfig camworkChekbox" ></th>
                                     <th colspan="2">Step 5
-                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('05');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('05');"><i class='fa fa-trash'></i><span >Reset</span></button></span>
                                     </th>
                                 </tr>
                                 <tr><th>위치</th>
@@ -857,7 +857,7 @@
         };
         /* function */
         /** 제품 시작 상세 표시 **/
-        let camWorkManagePop = function(rowData, popOpenFalg) {
+        let camWorkManagePop = function(rowData, popOpenFlag) {
             fnResetFrom('cam_work_manage_pop_form');
             $("#cam_work_manage_pop_form").find("#CONTROL_SEQ").val(rowData.CONTROL_SEQ);
             $("#cam_work_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ);
@@ -965,7 +965,7 @@
                 }
                 // 상태에 따른 Check box 처리
                 camWorkStatusConfig(rowData);
-                if(popOpenFalg) $('#cam_work_manage_detail_pop').modal('show');
+                if (popOpenFlag) $('#cam_work_manage_detail_pop').modal('show');
 
             }, parameters, '');
         };

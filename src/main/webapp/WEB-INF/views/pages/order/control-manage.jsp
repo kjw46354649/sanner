@@ -113,7 +113,7 @@
                             <span class="chk_box"><input name="HIDE_PART" id="HIDE_PART" type="checkbox"><label for="HIDE_PART"> part 숨기기</label></span>
                         </span>
                         <span class="gubun"></span>
-                        <span id="amount_summary_area" class="slt_wrap controlAmountSummaryUnActive" style="margin-left:150px; padding-left: 10px;">
+                        <span id="control_manage_amount_summary_area" class="slt_wrap amount_summary_inactive" style="margin-left:150px; padding-left: 10px;">
                             <span class="chk_box"><input name="AMOUNT_SUMMARY" id="AMOUNT_SUMMARY" type="checkbox"><label for="AMOUNT_SUMMARY" id="amount_summary_html"> 공급 금액 합계 : 0</label></span>
                         </span>
                     </li>
@@ -3095,8 +3095,8 @@
         function amountSummaryHtml() {
             const $controlManageSearchForm = $('#CONTROL_MANAGE_SEARCH_FORM');
             $controlManageSearchForm.find('#amount_summary_html').html("공급 금액 합계 : 0");
-            $controlManageSearchForm.find('#amount_summary_area').removeClass("controlAmountSummaryActive");
-            $controlManageSearchForm.find('#amount_summary_area').addClass("controlAmountSummaryUnActive");
+            $controlManageSearchForm.find('#control_manage_amount_summary_area').removeClass("amount_summary_active");
+            $controlManageSearchForm.find('#control_manage_amount_summary_area').addClass("amount_summary_inactive");
             let amountSummaryChk = $controlManageSearchForm.find('#AMOUNT_SUMMARY').is(":checked");
             if (amountSummaryChk) {
                 let totalAmount = 0;
@@ -3107,7 +3107,7 @@
                     }
                 });
                 let totalAmountCurrency = pq.formatNumber(totalAmount, "#,###,###");
-                $controlManageSearchForm.find('#amount_summary_area').addClass("controlAmountSummaryActive");
+                $controlManageSearchForm.find('#control_manage_amount_summary_area').addClass("amount_summary_active");
                 $controlManageSearchForm.find('#amount_summary_html').html("공급 금액 합계 : " + totalAmountCurrency);
             }
         }
