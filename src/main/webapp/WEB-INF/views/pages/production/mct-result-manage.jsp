@@ -22,6 +22,7 @@
         <input type="hidden" id="IMG_GFILE_SEQ" name="IMG_GFILE_SEQ" value=""/>
         <input type="hidden" id="CAM_SEQ" name="CAM_SEQ" value=""/>
         <input type="hidden" id="BARCODE_NUM" name="BARCODE_NUM" value=""/>
+        <input type="hidden" id="CAM_STATUS" name="CAM_STATUS" value=""/>
         <div class="layerPopup">
             <div class="h_area">
                 <h3>CAM 작업 관리</h3>
@@ -995,6 +996,7 @@
                     camWorkStepStatusConfig("0" + i, false);
                     $("#cam_work_manage_detail_pop").find("#CAM_WORK_FILE_0" + i).html("&nbsp;<br>&nbsp;");
                 }
+                $("#cam_work_manage_detail_pop").find("#CAM_STATUS").val(rowData.CAM_STATUS);
                 // 상태에 따른 Check box 처리
                 camWorkStatusConfig(rowData);
                 if (popOpenFlag) $('#cam_work_manage_detail_pop').modal('show');
@@ -1140,40 +1142,48 @@
         });
 
         /** 파일 업로드 스크립트 **/
-        $(".mctWorkStyle").on("dragenter", function(e) {  //드래그 요소가 들어왔을떄
+        $(".mctWorkStyle").on("dragenter", function (e) {  //드래그 요소가 들어왔을떄
             $(this).addClass('drag-over');
-        }).on("dragleave", function(e) {  //드래그 요소가 나갔을때
+        }).on("dragleave", function (e) {  //드래그 요소가 나갔을때
             $(this).removeClass('drag-over');
-        }).on("dragover", function(e) {
+        }).on("dragover", function (e) {
             e.stopPropagation();
             e.preventDefault();
-        }).on('drop', function(e) {  //드래그한 항목을 떨어뜨렸을때
+        }).on('drop', function (e) {  //드래그한 항목을 떨어뜨렸을때
             e.preventDefault();
-            $(this).removeClass('drag-over');
-            let idxNum = $(this).attr("idx");
-            let isCheckYn = $("#cam_work_manage_pop_form").find("#CAM_WORK_CHK_" + idxNum).prop('checked');
-            if(!isCheckYn){
-                $('#cam_work_manage_pop_form').find("input:checkbox[id='CAM_WORK_CHK_" + idxNum + "']").trigger("click");
-            }
-            let mctCamWorkUploadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
-            if (mctCamWorkUploadFiles.length > 0) { // file upload
-                let formData = new FormData();
-                for(let i = 0; i < mctCamWorkUploadFiles.length; i++) {
-                    let file = mctCamWorkUploadFiles[i];
-                    formData.append('file', file, file.name);
+
+            const camStatus = $("#cam_work_manage_detail_pop").find("#CAM_STATUS").val();
+
+            if (camStatus === 'CWS020') {
+                $(this).removeClass('drag-over');
+                let idxNum = $(this).attr("idx");
+                let isCheckYn = $("#cam_work_manage_pop_form").find("#CAM_WORK_CHK_" + idxNum).prop('checked');
+                if (!isCheckYn) {
+                    $('#cam_work_manage_pop_form').find("input:checkbox[id='CAM_WORK_CHK_" + idxNum + "']").trigger("click");
                 }
-                fnFormDataFileUploadAjax(function (data) {
-                    let fileUploadList = data.fileUploadList;
-                    let GFILE_SEQ = fileUploadList[0].GFILE_SEQ;
-                    let fileHtml = "";
-                    for(let j = 0;j < fileUploadList.length; j++){
-                        if(j>0) fileHtml +="<br>";
-                        fileHtml += "<a href='/downloadfile/" + fileUploadList[j].FILE_SEQ + "' download>" + fileUploadList[j].ORGINAL_FILE_NM + "</a>";
+                let mctCamWorkUploadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
+                if (mctCamWorkUploadFiles.length > 0) { // file upload
+                    let formData = new FormData();
+                    for (let i = 0; i < mctCamWorkUploadFiles.length; i++) {
+                        let file = mctCamWorkUploadFiles[i];
+                        formData.append('file', file, file.name);
                     }
-                    if(fileUploadList.length === 1) fileHtml +="<br>";
-                    $("#cam_work_manage_pop_form").find("#CAM_WORK_FILE_" + idxNum).html(fileHtml);
-                    $("#cam_work_manage_pop_form").find("#CAM_WORK_GFILE_SEQ_" + idxNum).val(GFILE_SEQ);
-                }, formData, '');
+                    fnFormDataFileUploadAjax(function (data) {
+                        let fileUploadList = data.fileUploadList;
+                        let GFILE_SEQ = fileUploadList[0].GFILE_SEQ;
+                        let fileHtml = "";
+                        for (let j = 0; j < fileUploadList.length; j++) {
+                            if (j > 0) fileHtml += "<br>";
+                            fileHtml += "<a href='/downloadfile/" + fileUploadList[j].FILE_SEQ + "' download>" + fileUploadList[j].ORGINAL_FILE_NM + "</a>";
+                            fileHtml += "<br>&nbsp";
+                        }
+                        if (fileUploadList.length === 1) fileHtml += "<br>";
+                        $("#cam_work_manage_pop_form").find("#CAM_WORK_FILE_" + idxNum).html(fileHtml);
+                        $("#cam_work_manage_pop_form").find("#CAM_WORK_GFILE_SEQ_" + idxNum).val(GFILE_SEQ);
+                    }, formData, '');
+                }
+            } else {
+                fnAlert('', '작업 시작후 저장 가능합니다');
             }
         });
         /** 파일 업로드 스크립트 종료 **/
@@ -1381,7 +1391,7 @@
         $("#cam_work_manage_pop_form").find("#CAM_WORK_DESC_" + index).val('');
         $("#cam_work_manage_pop_form").find("#CAM_WORK_DESIGN_QTY_" + index).val('');
         $("#cam_work_manage_pop_form").find("#CAM_WORK_USER_ID_" + index).val('${authUserInfo.USER_ID}');
-        $("#cam_work_manage_pop_form").find("#CAM_WORK_FILE_" + index).html('&nbsp;</br>&nbsp;');
+        $("#cam_work_manage_pop_form").find("#CAM_WORK_FILE_" + index).html('&nbsp;<br>&nbsp;');
     }
 
 
