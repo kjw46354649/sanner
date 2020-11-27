@@ -7,6 +7,7 @@
 /*.login .contents { width: 100%; height: 100%; background: url(../images/login/bg_img.png)no-repeat 0 0; }*/
 .login .contents { width: 100%; height: 100%; }
 .login .logWrap { width: 377px; height: 417px; background: url(../images/login/loginForm_bg.png) no-repeat 50% 50%; position: absolute; top: calc(50% - 80px); left: 50%; transform: translate(-50%, -50%); box-sizing: border-box; }
+/*.login .logWrap { width: 377px; height: 417px; background: url(../images/login/loginForm_bg.png) no-repeat 50% 50%; position: absolute; top: calc(50% - 80px); left: 50%; transform: translate(-50%, -50%); box-sizing: border-box; }
 /*.login .logWrap { width: 377px; height: 417px; background: url(../images/login/loginForm_bg_01.png) no-repeat 50% 50%; position: absolute; top: calc(50% - 80px); left: 50%; transform: translate(-50%, -50%); box-sizing: border-box; }*/
 .login .logWrap ul { position: relative; top: 116px; left: 31px; display: inline-block; }
 .login .logWrap li { padding-bottom: 23px }
@@ -318,11 +319,12 @@
 .layerPopup .t_area .colStyle tr td { text-align: center; border-right: 1px solid #ccc; padding: 5px; }
 .layerPopup h4 { font-size: 14px; font-family: 'NotoKrB'; color: #000; margin: 15px 0 5px; }
 .layerPopup .list1 { -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); }
+.layerPopup .list1 .rowStyle { table-layout: fixed; }
 .layerPopup .list1 .rowStyle tr th { border: 1px solid #acb9b9; background: #e8f0f0; color: #162f2f; text-align: center; padding: 5px; }
 .layerPopup .list1 .rowStyle tr th.palegoldenrod { background-color: palegoldenrod; }
 .layerPopup .list1 .rowStyle tr th.antiquewhite { background-color: antiquewhite; }
 .layerPopup .list1 .rowStyle tr th.blueviolet { color: blueviolet; }
-.layerPopup .list1 .rowStyle tr td { border: 1px solid #cecece; color: #444; padding: 5px; text-align: center; font-family: 'NotoKrR'; }
+.layerPopup .list1 .rowStyle tr td { width: 100%; border: 1px solid #cecece; color: #444; padding: 5px; text-align: center; font-family: 'NotoKrR'; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .layerPopup .list1 .rowStyle tr td.red { color: #e71b1b; }
 .layerPopup .list1 .rowStyle tr td.blueviolet { color: blueviolet; }
 .layerPopup .list2 { height: 91px; overflow-y: auto; }

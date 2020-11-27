@@ -218,7 +218,7 @@
     <select id="selectCommItemDetailInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
           , CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' # ', IFNULL(B.PART_NUM, SPACE(0))) END AS CONTROL_NUM
-          , CASE WHEN B.DRAWING_VER IS NULL THEN B.DRAWING_NUM ELSE CONCAT(B.DRAWING_NUM, ' (', B.DRAWING_VER, ')') END AS DRAWING_NUM
+          , jmes.SF_GET_DRAWING_NUMBERS(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, 'Y') AS DRAWING_NUM
           , jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT
           , IFNULL(A.EMERGENCY_YN, 'N') AS EMERGENCY_YN
           , C.ITEM_NM
@@ -260,8 +260,8 @@
             ) AS WORK_HISTORY_INFO <!-- 과거 경험 -->
             , (SELECT
                     CASE
-                        WHEN M.START_DT IS NOT NULL AND M.FINISH_DT IS NOT NULL THEN 'CWS030'  -- 완료 상태 -->
-                        WHEN M.START_DT IS NOT NULL AND M.FINISH_DT IS NULL THEN 'CWS020'   -- 진행중 상태 -->
+                        WHEN M.START_DT IS NOT NULL AND M.FINISH_DT IS NOT NULL THEN 'CWS030'  <!-- 완료 상태 -->
+                        WHEN M.START_DT IS NOT NULL AND M.FINISH_DT IS NULL THEN 'CWS020'   <!-- 진행중 상태 -->
                         ELSE 'CWS010'
                     END
                FROM TBL_CAM M

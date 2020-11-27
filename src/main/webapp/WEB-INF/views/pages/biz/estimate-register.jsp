@@ -975,7 +975,7 @@
 
         function estimateRegisterSaveCallBack(response, callMethodParam){
             estimateRegisterReloadPageData();
-        };
+        }
 
         function estimateRegisterReloadPageData(){
 
@@ -1028,13 +1028,26 @@
 
                 btnDisabled(status);
             }, parameter, '');
-        };
+        }
 
         $(document).on('click', '#estimateRegisterReloadBtn', function(){
             estimateRegisterReloadPageData();
         });
 
+        let errorList = [];
+        let prevErrorList = [];
         function fnEstimateRegisterSave(alertYn) {
+            prevErrorList = errorList;
+            errorList = [];
+            let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
+
+            validationCheck(data);
+            changeCellColor(errorList, prevErrorList);
+            if (errorList.length) {
+                fnAlert(null, errorList.length + '건의 데이터가 올바르지 않습니다.');
+                return false;
+            }
+
             $("#estimate_register_info_form #queryId").val('selectEstimateNextSequence');
             let parameters = {'url': '/json-list', 'data': $("#estimate_register_info_form").serialize()};
             let EST_SEQ = $("#estimate_register_info_form #EST_SEQ").val();
@@ -1057,14 +1070,133 @@
                 $("#estimate_version_up_sequence_form #hidden_est_seq").val(EST_SEQ);
                 $("#common_excel_form #paramData").val(EST_SEQ);
 
-                parameters = {
-                    'url': '/registerEstimateSave',
-                    'data': $("#estimate_register_info_form").serialize()
-                };
-                fnPostAjaxAsync(estimateRegisterSaveCallBack, parameters, '');
-                if(alertYn == 'Y') fnAlert(null,"저장 되었습니다.");
+                $.ajax({
+                    type: 'POST',
+                    url: '/registerEstimateSave',
+                    dataType: 'json',
+                    data: $("#estimate_register_info_form").serialize(),
+                    async: false,
+                    success: function (data, textStatus, jqXHR) {
+                        if (textStatus === 'success') {
+                            estimateRegisterSaveCallBack();
+                            if (alertYn == 'Y') {
+                                fnAlert(null, "저장 되었습니다.");
+                            }
+                        } else {
+                            // alert('fail=[' + json.msg + ']111');
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        fnAlert(null, '저장중 에러가 발생하였습니다.');
+                    }
+                });
             }, parameters, '');
         }
+
+        const validationCheck = function (dataList) {
+            for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
+                let rowData = dataList[i];
+
+                if (Object.keys(rowData).length > 5) {
+                    // requiredCheck(rowData);
+                    badCodeCheck(rowData);
+                    // inputErrorCheck(rowData);
+                }
+            }
+        }
+
+        // 잘못된 데이터(코드) 체크
+        const badCodeCheck = function (rowData) {
+            const workTypeList = fnGetCommCodeGridSelectBox('1033');
+            const materialDetailList = fnGetCommCodeGridSelectBox('1027');
+            const materialKindList = fnGetCommCodeGridSelectBox('1029');
+            const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
+            const materialFinishTmList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
+            const materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
+            const materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
+            let rowIndex = rowData.pq_ri;
+
+            // 작업형태
+            if (!fnIsEmpty(rowData.WORK_TYPE)) {
+                let index = workTypeList.findIndex(function (element) {
+                    return element.value === rowData.WORK_TYPE;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'WORK_TYPE');
+            }
+            //소재 상세
+            if (!fnIsEmpty(rowData.MATERIAL_DETAIL)) {
+                let index = materialDetailList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_DETAIL;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MATERIAL_DETAIL');
+            }
+            // 소재형태
+            if (!fnIsEmpty(rowData.MATERIAL_KIND)) {
+                let index = materialKindList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_KIND;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'ORDER_COMP_CD');
+            }
+            // 표면처리
+            if (!fnIsEmpty(rowData.SURFACE_TREAT)) {
+                let index = surfaceTreatList.findIndex(function (element) {
+                    return element.value === rowData.SURFACE_TREAT;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'SURFACE_TREAT');
+            }
+            // TM각비
+            if (!fnIsEmpty(rowData.MATERIAL_FINISH_TM)) {
+                let index = materialFinishTmList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_FINISH_TM;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_TM');
+            }
+            // 연마비
+            if (!fnIsEmpty(rowData.MATERIAL_FINISH_GRIND)) {
+                let index = materialFinishGrindList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_FINISH_GRIND;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_GRIND');
+            }
+            // 열처리
+            if (!fnIsEmpty(rowData.MATERIAL_FINISH_HEAT)) {
+                let index = materialFinishHeatList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_FINISH_HEAT;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_HEAT');
+            }
+        };
+
+        const addErrorList = function (rowIndex, dataIndex) {
+            let tempObject = {};
+            tempObject.rowIndx = rowIndex;
+            tempObject.dataIndx = dataIndex;
+            errorList.push(tempObject);
+        };
+
+        // cell 색 변경
+        const changeCellColor = function (list, prevList) {
+            for(let i in prevList) {
+                if (prevList.hasOwnProperty(i)) {
+                    estimateRegisterTopGrid.pqGrid('removeClass', {rowIndx: prevList[i].rowIndx, dataIndx: prevList[i].dataIndx, cls: 'bg-lightcoral'} );
+                }
+            }
+
+            if (list.length > 0) {
+                for(let i in list) {
+                    if (list.hasOwnProperty(i)) {
+                        estimateRegisterTopGrid.pqGrid('addClass', {rowIndx: list[i].rowIndx, dataIndx: list[i].dataIndx, cls: 'bg-lightcoral'} );
+                    }
+                }
+            }
+        };
 
         /** 버튼 처리 **/
         $("#btnEstimateRegisterNew").on('click', function(){

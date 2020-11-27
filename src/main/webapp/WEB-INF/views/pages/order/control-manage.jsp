@@ -113,7 +113,7 @@
                             <span class="chk_box"><input name="HIDE_PART" id="HIDE_PART" type="checkbox"><label for="HIDE_PART"> part 숨기기</label></span>
                         </span>
                         <span class="gubun"></span>
-                        <span id="amount_summary_area" class="slt_wrap controlAmountSummaryUnActive" style="margin-left:150px; padding-left: 10px;">
+                        <span id="control_manage_amount_summary_area" class="slt_wrap amount_summary_inactive" style="margin-left:150px; padding-left: 10px;">
                             <span class="chk_box"><input name="AMOUNT_SUMMARY" id="AMOUNT_SUMMARY" type="checkbox"><label for="AMOUNT_SUMMARY" id="amount_summary_html"> 공급 금액 합계 : 0</label></span>
                         </span>
                     </li>
@@ -523,11 +523,12 @@
                 },
                 postRender: function (ui) {
                     let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find('[name=detailView]').bind('click', function () {
-                        let rowData = ui.rowData;
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
 
-                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
+                    $cell.find('[name=detailView]').bind('click', function () {
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
                     });
                 }
             },
@@ -574,7 +575,7 @@
                 }
             },
             {
-                title: '가공<br>납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT', formatRaw: 'yy/mm/dd',
+                title: '가공<br>납기', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'INNER_DUE_DT', formatRaw: 'yy/mm/dd',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -834,7 +835,7 @@
                         }
                     },
                     {
-                        title: '발주납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT',
+                        title: '발주납기', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'ORDER_DUE_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -892,7 +893,7 @@
                         }
                     },
                     {
-                        title: '납품확인', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'DELIVERY_DT',
+                        title: '납품확인', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                         editor: {type: 'textbox', init: fnDateEditor},
                         editable: function (ui) {
@@ -2629,6 +2630,39 @@
             $('#control_estimate_list_excel_download #paramData').val(controlSeqStr);
             fnReportFormToHiddenFormPageAction('control_estimate_list_excel_download', '/downloadExcel');
         });
+
+        alertify.dialog('barcodeDrawingConfirm', function () {
+            return {
+                setup: function () {
+                    var settings = alertify.confirm().settings;
+                    for (var prop in settings)
+                        this.settings[prop] = settings[prop];
+                    var setup = alertify.confirm().setup();
+                    setup.buttons.push({
+                        text: '취소',
+                        scope: 'primary'
+                    });
+                    return setup;
+                },
+                settings: {
+                    oncontinue: null
+                },
+                callback: function (closeEvent) {
+                    if (closeEvent.index == 2) {
+                        if (typeof this.get('oncontinue') === 'function') {
+                            let returnValue;
+                            returnValue = this.get('oncontinue').call(this, closeEvent);
+                            if (typeof returnValue !== 'undefined') {
+                                closeEvent.cancel = !returnValue;
+                            }
+                        }
+                    } else {
+                        alertify.confirm().callback.call(this, closeEvent);
+                    }
+                }
+            };
+        }, false, 'confirm');
+
         // 바코드도면 출력
         $('#CONTROL_MANAGE_BARCODE_DRAWING_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
@@ -2683,10 +2717,21 @@
                     message += '<span class="text-blue">' + value + '</span><br>';
                 }
 
-                fnConfirm(null, message, function () {
-                    printJS({printable: '/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList) + '&flag=Y', type: 'pdf', showModal: true}); // 기존
-                }, function () {
-                    printJS({printable: '/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList) + '&flag=N', type: 'pdf', showModal: true});
+                // invoke the custom dialog
+                alertify.barcodeDrawingConfirm(message).set({
+                    'onok': function () {
+                        printJS({printable: '/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList) + '&flag=Y', type: 'pdf', showModal: true});
+                    },
+                    'oncancel': function () {
+                        printJS({printable: '/makeCadBarcodePrint?selectControlList=' + encodeURI(selectControlList) + '&flag=N', type: 'pdf', showModal: true});
+                    },
+                    'oncontinue': function () {
+
+                    },
+                    'labels': {
+                        'ok': '포함',
+                        'cancel': '미포함'
+                    }
                 });
             } else {
                 message =
@@ -3050,8 +3095,8 @@
         function amountSummaryHtml() {
             const $controlManageSearchForm = $('#CONTROL_MANAGE_SEARCH_FORM');
             $controlManageSearchForm.find('#amount_summary_html').html("공급 금액 합계 : 0");
-            $controlManageSearchForm.find('#amount_summary_area').removeClass("controlAmountSummaryActive");
-            $controlManageSearchForm.find('#amount_summary_area').addClass("controlAmountSummaryUnActive");
+            $controlManageSearchForm.find('#control_manage_amount_summary_area').removeClass("amount_summary_active");
+            $controlManageSearchForm.find('#control_manage_amount_summary_area').addClass("amount_summary_inactive");
             let amountSummaryChk = $controlManageSearchForm.find('#AMOUNT_SUMMARY').is(":checked");
             if (amountSummaryChk) {
                 let totalAmount = 0;
@@ -3062,7 +3107,7 @@
                     }
                 });
                 let totalAmountCurrency = pq.formatNumber(totalAmount, "#,###,###");
-                $controlManageSearchForm.find('#amount_summary_area').addClass("controlAmountSummaryActive");
+                $controlManageSearchForm.find('#control_manage_amount_summary_area').addClass("amount_summary_active");
                 $controlManageSearchForm.find('#amount_summary_html').html("공급 금액 합계 : " + totalAmountCurrency);
             }
         }

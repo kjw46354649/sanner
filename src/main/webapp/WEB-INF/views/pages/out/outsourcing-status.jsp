@@ -164,10 +164,10 @@
             {title: '년도', dataIndx: 'YEAR'},
             {title: '분기', dataIndx: 'QUARTER'},
             {title: '마감월', dataIndx: 'FINISH_MONTH'},
-            {title: '차수', dataIndx: 'VIEW_CLOSE_VER'},
             {title: '외주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
             {title: '외주업체', dataIndx: 'OUTSIDE_COMP_NM'},
-            {title: '품수', dataIndx: 'ITEM_NUMBER', summary: {type: 'sum', edit: true},
+            {title: '차수', dataIndx: 'VIEW_CLOSE_VER'},
+            {title: '품수', dataIndx: 'ITEM_NUMBER', summary: {type: 'sum'},
                 render: function (ui) {
                     if (ui.rowData.pq_grandsummary) {
                         return ui.cellData;
@@ -184,16 +184,16 @@
                     });
                 }
             },
-            {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_PART_QTY'},
-            {title: '원 발주<br>금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORIGINAL_ORDER_AMT', summary: {type: 'sum', edit: true}},
-            {title: '외주<br>발주 금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_ORDER_AMT', summary: {type: 'sum', edit: true}},
+            {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_PART_QTY', summary: {type: 'sum'}},
+            {title: '원 발주<br>금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORIGINAL_ORDER_AMT', summary: {type: 'sum'}},
+            {title: '외주<br>발주 금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_ORDER_AMT', summary: {type: 'sum'}},
             {
                 title: '외주<br>마감 금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
-                summary: {type: 'sum', edit: true}
+                summary: {type: 'sum'}
             },
-            {title: '부가세', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum', edit: true}},
-            {title: '부가세<br>합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMOUNT', summary: {type: 'sum', edit: true}},
+            {title: '부가세', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'VAT_AMOUNT', summary: {type: 'sum'}},
+            {title: '부가세<br>합계금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMOUNT', summary: {type: 'sum'}},
             {title: '업데이트<br>일시', dataIndx: 'OUTISDE_CLOSE_NOTE_INSERT_UPDATE_DT'},
             {title: '비고', dataIndx: 'CLOSE_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];

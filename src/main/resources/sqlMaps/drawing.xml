@@ -246,7 +246,7 @@
         INSERT INTO jmes.TBL_MCT_WORK
             (MCT_WORK_SEQ, EQUIP_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, WORK_USER_ID, WORK_STATUS, WORK_START_DT, WORK_RESTART_DT, DEL_YN, INSERT_ID)
         VALUES
-            (NEXTVAL(SEQ_MCT_WORK), #{machineInfo.EQUIP_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, #{userInfo.USER_ID}, #{WORK_STATUS}, NOW(), NOW(), 'N', #{userInfo.USER_ID})
+            (NEXTVAL(SEQ_MCT_WORK), #{machineInfo.EQUIP_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, #{userInfo.USER_ID}, 'DBS020', NOW(), NOW(), 'N', #{userInfo.USER_ID})
     </insert>
 
     <update id="updateEquipmentWorker"  parameterType="java.util.HashMap" >
@@ -270,10 +270,22 @@
     <update id="updateMctWork"  parameterType="java.util.HashMap" >
         UPDATE jmes.TBL_MCT_WORK
         SET
-            WORK_STATUS = #{WORK_STATUS},
+            WORK_STATUS = 'DBS040',
             <if test="DEL_YN != null and DEL_YN != ''">
                 DEL_YN = #{DEL_YN},
             </if>
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{userInfo.USER_ID}
+        WHERE 1 = 1
+            AND DEL_YN = 'N'
+            AND MCT_WORK_SEQ = #{MCT_WORK_SEQ}
+    </update>
+
+    <update id="updateMctCancelWork"  parameterType="java.util.HashMap" >
+        UPDATE jmes.TBL_MCT_WORK
+        SET
+            WORK_STATUS = 'DBS040',
+            DEL_YN = 'Y',
             UPDATE_DT = NOW(),
             UPDATE_ID = #{userInfo.USER_ID}
         WHERE 1 = 1

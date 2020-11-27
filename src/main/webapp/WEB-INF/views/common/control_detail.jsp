@@ -63,9 +63,12 @@
                 },
                 postRender: function(ui) {
                     let grid = this,
-                        $cell = grid.getCell(ui);
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
                     $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(ui.rowData['CONTROL_SEQ'], ui.rowData['CONTROL_DETAIL_SEQ']);
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
                     });
                 }
             },
@@ -90,8 +93,8 @@
             {title: '외주', dataIndx: 'OUTSIDE_YN'},
             {title: '자재<br>사급', dataIndx: 'OUTSIDE_YN'},
             {title: '규격', width: 110, dataIndx: 'SIZE_TXT'},
-            {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL'},
-            {title: '표면<br>처리', width: 80, dataIndx: 'SURFACE_TREAT'},
+            {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '표면<br>처리', width: 80, dataIndx: 'SURFACE_TREAT_NM'},
             {title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY'},
             {title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM'},
             {title: '수량', dataIndx: 'ORDER_QTY'},

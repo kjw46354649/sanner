@@ -478,12 +478,12 @@ table.boardList .txtP{color: #7030a0;}
 
 @-webkit-keyframes blink {
   0% { color: black; }
-  100% { color: red; font-weight: bold; }
+  100% { color: red; }
 }
 
 @keyframes blink {
   0% { color: black; }
-  100% { color: red; font-weight: bold; }
+  100% { color: red; }
 }
 
 /* Chrome, Safari, Edge, Opera */

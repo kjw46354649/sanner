@@ -21,9 +21,12 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
     @Override
     public void managerDrawingBoardStart(HashMap<String, Object> hashMap) throws Exception {
 
+        /** 이전 작업이 있을 경우 완료 처리 하고 MCT 작업을 추가 한다. **/
+//        hashMap.put("queryId", "drawingMapper.insertMctWorkStart");
+//        innodaleDao.create(hashMap);
+
         /** 신규 MCT 작업을 추가 한다. **/
         hashMap.put("queryId", "drawingMapper.insertMctWorkStart");
-        hashMap.put("WORK_STATUS", "DBS020");
         innodaleDao.create(hashMap);
 
         /** MCT PLAN 에서 우선순위가 높은 생산계획을 삭제 처리 한다. **/
@@ -57,7 +60,6 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
 
         /** MCT WORK 임시 중지 상태 업데이트 처리 한다. **/
         hashMap.put("queryId", "drawingMapper.updateStopMctWork");
-        hashMap.put("WORK_STATUS", "DBS010");
         innodaleDao.create(hashMap);
 
     }
@@ -72,7 +74,6 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
 
         /** MCT WORK 임시 중지 상태 업데이트 처리 한다. **/
         hashMap.put("queryId", "drawingMapper.updateRestartMctWork");
-        hashMap.put("WORK_STATUS", "DBS020");
         innodaleDao.create(hashMap);
 
     }
@@ -85,7 +86,6 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
 
         /** MCT WORK 완료 상태 업데이트 처리 한다. **/
         hashMap.put("queryId", "drawingMapper.updateCompleteMctWork");
-        hashMap.put("WORK_STATUS", "DBS030");
         innodaleDao.create(hashMap);
 
         /**
@@ -104,8 +104,8 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
     public void managerDrawingBoardCancel(HashMap<String, Object> hashMap) throws Exception {
 
         /** MCT WORK 취소 업데이트 처리 한다. **/
-        hashMap.put("queryId", "drawingMapper.updateMctWork");
-        hashMap.put("WORK_STATUS", "DBS040");
+//        hashMap.put("queryId", "drawingMapper.updateMctWork");
+        hashMap.put("queryId", "drawingMapper.updateMctCancelWork");
         hashMap.put("DEL_YN", "Y");
         innodaleDao.create(hashMap);
 

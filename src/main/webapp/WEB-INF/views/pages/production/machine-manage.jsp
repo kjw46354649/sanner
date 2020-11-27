@@ -322,8 +322,12 @@
                             </tr>
                             <tr>
                                 <th scope="row">시간당 원가</th>
-                                <td colspan="3">
-                                    <input type="text" name="COST_PER_HOUR" id="COST_PER_HOUR" placeholder="시간당 원가" value="" title="시간당 원가" style="width:98%;">
+                                <td>
+                                    <input type="number" name="COST_PER_HOUR" id="COST_PER_HOUR" placeholder="시간당 원가" value="" title="시간당 원가" class="wd_150">
+                                </td>
+                                <th scope="row">Order</th>
+                                <td>
+                                    <input type="number" name="COMBO_BOX_SORT_NUM" id="COMBO_BOX_SORT_NUM" placeholder="Order" value="" title="Order" class="wd_150">
                                 </td>
                             </tr>
                             <tr>
@@ -332,7 +336,6 @@
                                     <input type="hidden" id="ETC_GFILE_SEQ" name="ETC_GFILE_SEQ" value="">
                                     <input type="text" id="ETC_GFILE_SEQ_NM" name="ETC_GFILE_SEQ_NM" placeholder="첨부파일" readonly style="width:75%;">
                                     <input type="button" id="etc_attach_file" name="etc_attach_file" value="fileUpload" class="smallBtn blue">
-
                                 </td>
                             </tr>
                             <tr>
@@ -452,7 +455,8 @@
             {title: '작동시간(누적)', dataType: 'string', dataIndx: 'WORKING_TIME'},
             //{title: '최근<br>정비일시', dataType: 'string', dataIndx: ''},
             {title: '최근종료일시', dataType: 'string', dataIndx: 'LAST_REPAIR_DT'},
-            {title: '최근수행번호', dataType: 'string', dataIndx: 'LAST_CONTROL_NUM'}
+            {title: '최근수행번호', dataType: 'string', dataIndx: 'LAST_CONTROL_NUM'},
+            {title: 'Order', dataType: 'integer', dataIndx: 'COMBO_BOX_SORT_NUM'}
         ];
         currentObj = {
             width: "100%",

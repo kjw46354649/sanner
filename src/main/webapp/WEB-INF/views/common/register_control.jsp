@@ -229,9 +229,9 @@
                 }
             },
             {
-                title: '가공<br>납기', width: 70, dataIndx: 'INNER_DUE_DT',
+                title: '가공<br>납기', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'INNER_DUE_DT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                editor: {type: 'textbox', init: dateEditor}
+                editor: {type: 'textbox', init: fnDateEditor}
             },
             {title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
@@ -305,14 +305,14 @@
                     {title: '원', dataType: 'integer', format: '#,###', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
                     {title: '대', dataType: 'integer', format: '#,###', dataIndx: 'OTHER_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
                     {
-                        title: '발주납기', width: 70, dataIndx: 'ORDER_DUE_DT',
+                        title: '발주납기', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'ORDER_DUE_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                        editor: {type: 'textbox', init: dateEditor}
+                        editor: {type: 'textbox', init: fnDateEditor}
                     },
                     {
-                        title: '납품확인', width: 70, datatype: 'date', dataIndx: 'DELIVERY_DT',
+                        title: '납품확인', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                        editor: {type: 'textbox', init: dateEditor}
+                        editor: {type: 'textbox', init: fnDateEditor}
                     },
                     {title: '견적단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
                     {title: '공급단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
@@ -527,36 +527,6 @@
                         }
                     }
                 },
-                /*{
-                    type: 'button', label: 'Save & 확정', icon: 'ui-icon-disk', style: 'float: right;', listener: {
-                        'click': function () {
-                            prevErrorList = errorList;
-                            errorList = [];
-                            let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
-
-                            validationCheck(data);
-                            changeCellColor(errorList, prevErrorList);
-                            if (errorList.length) {
-                                fnAlert(null, errorList.length + '건의 데이터가 올바르지 않습니다.');
-                                return false;
-                            }
-
-                            let parameters = {
-                                'url': '/createNewOrderConfirm',
-                                'data': {data: JSON.stringify(data)}
-                            };
-
-                            $(this).startWaitMe();
-                            fnPostAjax(function () {
-                                $(this).stopWaitMe();
-                                fnAlert(null, '<spring:message code="com.alert.default.save.success"/>', function () {
-                                    window.close();
-                                    opener.$orderManagementGrid.pqGrid('refreshDataAndView');
-                                });
-                            }, parameters, '');
-                        }
-                    }
-                },*/
                 {
                     type: 'button', label: 'Save', icon: 'ui-icon-disk', style: 'float: right;', listener: {
                         'click': function () {
@@ -961,6 +931,8 @@
         $orderRegisterGrid = $('#' + popupGridId).pqGrid(popupObj);
 
         const validationCheck = function (dataList) {
+            // sameControlNumCheck(dataList);
+
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 let rowData = dataList[i];
 
@@ -971,6 +943,45 @@
                 }
             }
         };
+
+        // 같은 관리번호 체크
+        /*const sameControlNumCheck = function (dataList) {
+            let array = [];
+            let duplicateArray = [];
+
+            for (let i = 0; i < dataList.length; i++) {
+                let controlNum = dataList[i].CONTROL_NUM || '';
+                let partNum = dataList[i].PART_NUM || '';
+                let workType = dataList[i].WORK_TYPE || '';
+                let orderNum = dataList[i].ORDER_NUM || '';
+                let concatString = controlNum + partNum + workType + orderNum;
+                array[i] = concatString;
+            }
+
+            let obj = fnCountInstance(array);
+
+            for (let property in obj) {
+                if (!fnIsEmpty(property)) {
+                    if (obj[property] > 1) {
+                        duplicateArray.push(property);
+                    }
+                }
+            }
+
+            for (let i = 0; i < dataList.length; i++) {
+                for (let j = 0; j < duplicateArray.length; j++) {
+                    let controlNum = dataList[i].CONTROL_NUM || '';
+                    let partNum = dataList[i].PART_NUM || '';
+                    let workType = dataList[i].WORK_TYPE || '';
+                    let orderNum = dataList[i].ORDER_NUM || '';
+                    let concatString = controlNum + partNum + workType + orderNum;
+
+                    if (duplicateArray[j] === concatString) {
+                        addErrorList(dataList[i].pq_ri, 'CONTROL_NUM');
+                    }
+                }
+            }
+        };*/
 
         // required 체크
         const requiredCheck = function (rowData) {
@@ -1181,16 +1192,6 @@
                 }
             }
         };
-
-        function dateEditor (ui) {
-            let $inp = ui.$cell.find("input");
-            $inp.datepicker({
-                changeMonth: true, changeYear: true, showAnim: '', dateFormat: 'yymmdd',
-                onSelect: function () { this.firstOpen = true; },
-                beforeShow: function () {return !this.firstOpen; },
-                onClose: function () { this.focus(); }
-            });
-        }
         /* function */
 
         /* event */

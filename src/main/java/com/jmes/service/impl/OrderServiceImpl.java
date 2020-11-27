@@ -49,6 +49,9 @@ public class OrderServiceImpl implements OrderService {
             hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
             this.innodaleDao.create(hashMap);
         }
+
+        hashMap.put("queryId", "orderMapper.deleteControlExcel");
+        this.innodaleDao.remove(hashMap);
     }
 
     @Override
