@@ -1480,7 +1480,7 @@
 		let alarmMessageProcess = function(messageData){
 			let maxCnt = 8;
 			if (messageData) {
-				let messageKey = randomKey() + "_" + messageData.content02;
+				let messageKey = randomKey();
 				let messBody = messageData.content02 + " -> " + messageData.content03;
 				if(messageData.content04) messBody += "     (" + messageData.content04 + ")";
 				if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
