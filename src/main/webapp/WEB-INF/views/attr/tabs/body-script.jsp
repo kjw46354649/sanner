@@ -256,6 +256,12 @@
             contentType : false,
             processData: false,
             data: formData,
+            beforeSend: function (jqXHR, settings) {
+              $(this).startWaitMe();
+            },
+            complete: function (jqXHR, textStatus) {
+              $(this).stopWaitMe();
+            },
             success: function (data, textStatus, jqXHR) {
                 if (textStatus === 'success') {
                     // if (data.exception === null) {
