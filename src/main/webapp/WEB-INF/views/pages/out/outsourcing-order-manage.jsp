@@ -1351,7 +1351,16 @@
             {title: '품수', dataIndx: 'CNT'},
             {title: '검수', dataIndx: 'CONTROL_PART_QTY'},
             {title: '외주금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_TOTAL_AMT'},
-            {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
+            {
+                title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.STATUS === 2 || rowData.STATUS === 3;
+                }
+            },
+            {title: 'STATUS', dataType: 'integer', dataIndx: 'STATUS', hidden: true}
         ];
         const outsideCloseRightObj = {
             height: 475,
@@ -1371,9 +1380,9 @@
             rowInit: function (ui) {
                 switch (ui.rowData.STATUS) {
                     case 2:
-                        return {style: {'background': '#FFF2CC'}};
-                    case 3:
                         return {style: {'background': '#B9EDFF'}};
+                    case 3:
+                        return {style: {'background': '#FFF2CC'}};
                 }
             }
         };
