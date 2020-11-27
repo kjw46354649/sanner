@@ -454,10 +454,10 @@ button:disabled {
 .userLayerPopup .userResultWrap99 .rightWrap { height: 150px; width: 70%; float: right; }
 .userLayerPopup .userResultWrap99 .btnWrap {margin-top: 20px;text-align: center;}
 
-.controlAmountSummaryUnActive {
+.amount_summary_inactive {
     background-color: #dedede;
 }
 
-.controlAmountSummaryActive {
+.amount_summary_active {
     background-color: #ffffff;
 }

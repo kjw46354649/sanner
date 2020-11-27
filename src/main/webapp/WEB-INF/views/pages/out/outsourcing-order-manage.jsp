@@ -16,7 +16,7 @@
     <div class="topWrap">
         <form class="form-inline" id="OUTSIDE_ORDER_MANAGE_SEARCH_FORM" role="form" onsubmit="return false;">
             <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideOrderManageList">
-            <div class="none_gubunWrap row4_topWrap">
+            <div class="none_gubunWrap row3_topWrap">
                 <ul>
                     <li>
                         <span class="slt_wrap">
@@ -36,6 +36,16 @@
                         <span class="ipu_wrap">
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
                             <input type="text" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="WORK_TYPE">작업구분</label>
+                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1013}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
                         </span>
                     </li>
                     <li>
@@ -60,6 +70,16 @@
                                 </c:forEach>
                             </select>
                         </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="WORK_TYPE">품질현황</label>
+                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1040}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mr-10">
@@ -79,35 +99,13 @@
                             </span>
                         </div>
                         <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="WORK_TYPE">작업구분</label>
-                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1013}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="WORK_TYPE">품질현황</label>
-                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1040}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
-                    </li>
-                    <li>
                         <span>
                             <span class="ipu_wrap"><label class="label_100">Option</label></span>
-                            <span class="chk_box wd_100"><input name="INCLUDE_REQUEST_COMPLETE" id="INCLUDE_REQUEST_COMPLETE" type="checkbox"><label for="INCLUDE_REQUEST_COMPLETE"> 요청완료 포함</label></span>
-                            <span class="chk_box wd_100"><input name="INCLUDE_RECEIVED_COMPLETE" id="INCLUDE_RECEIVED_COMPLETE" type="checkbox"><label for="INCLUDE_RECEIVED_COMPLETE"> 입고완료 포함</label></span>
+                            <span class="chk_box" style="width: 90px;"><input name="INCLUDE_REQUEST_COMPLETE" id="INCLUDE_REQUEST_COMPLETE" type="checkbox"><label for="INCLUDE_REQUEST_COMPLETE"> 요청완료 포함</label></span>
+                            <span class="chk_box" style="width: 90px;"><input name="INCLUDE_RECEIVED_COMPLETE" id="INCLUDE_RECEIVED_COMPLETE" type="checkbox"><label for="INCLUDE_RECEIVED_COMPLETE"> 입고완료 포함</label></span>
                             <span class="gubun"></span>
-                            <span class="ipu_wrap">
-                                <label class="label_100" for="AMOUNT_SUM">금액총합계</label>
-                                <input type="text" class="wd_200" id="AMOUNT_SUM" readonly>
+                            <span id="control_manage_amount_summary_area" class="slt_wrap amount_summary_inactive" style="margin-left:150px; padding-left: 10px;">
+                                <span class="chk_box"><input name="AMOUNT_SUMMARY" id="AMOUNT_SUMMARY" type="checkbox"><label for="AMOUNT_SUMMARY" id="amount_summary_html"> 금액총합계 : 0</label></span>
                             </span>
                         </span>
                         <span class="ipu_wrap right_float">
@@ -119,7 +117,7 @@
             </div>
         </form>
     </div>
-    <div class="bottomWrap row4_bottomWrap">
+    <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
                 <label for="outsourcingOrderManageFilterKeyword"></label><input type="text" id="outsourcingOrderManageFilterKeyword" placeholder="Enter your keyword">
@@ -626,7 +624,7 @@
         ];
         const obj = {
             minHeight: '100%',
-            height: 680,
+            height: 700,
             collapsible: false,
             resizable: false,
             postRenderInterval: -1,
@@ -1353,7 +1351,16 @@
             {title: '품수', dataIndx: 'CNT'},
             {title: '검수', dataIndx: 'CONTROL_PART_QTY'},
             {title: '외주금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_TOTAL_AMT'},
-            {title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
+            {
+                title: '마감금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FINAL_NEGO_AMT',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.STATUS === 2 || rowData.STATUS === 3;
+                }
+            },
+            {title: 'STATUS', dataType: 'integer', dataIndx: 'STATUS', hidden: true}
         ];
         const outsideCloseRightObj = {
             height: 475,
@@ -1373,9 +1380,9 @@
             rowInit: function (ui) {
                 switch (ui.rowData.STATUS) {
                     case 2:
-                        return {style: {'background': '#FFF2CC'}};
-                    case 3:
                         return {style: {'background': '#B9EDFF'}};
+                    case 3:
+                        return {style: {'background': '#FFF2CC'}};
                 }
             }
         };
@@ -2413,8 +2420,31 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
         });
-
-
         /* init */
+
+        $('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#AMOUNT_SUMMARY').on('click', function () {
+            amountSummaryHtml();
+        });
+
+        const amountSummaryHtml = function () {
+            const $outsideOrderManageSearchForm = $('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM');
+            $outsideOrderManageSearchForm.find('#amount_summary_html').html('금액총합계 : 0');
+            $outsideOrderManageSearchForm.find('#control_manage_amount_summary_area').removeClass('amount_summary_active');
+            $outsideOrderManageSearchForm.find('#control_manage_amount_summary_area').addClass('amount_summary_inactive');
+            let amountSummaryChk = $outsideOrderManageSearchForm.find('#AMOUNT_SUMMARY').is(':checked');
+            if (amountSummaryChk) {
+                let totalAmount = 0;
+                let gridData = $outsideOrderManageGrid.pqGrid('option', 'dataModel.data');
+                $.each(gridData, function (key, rowData) {
+                    if (rowData.OUTSIDE_TOTAL_AMT) {
+                        totalAmount += parseFloat(rowData.OUTSIDE_TOTAL_AMT);
+                    }
+                });
+                let totalAmountCurrency = pq.formatNumber(totalAmount, '#,###,###');
+                $outsideOrderManageSearchForm.find('#control_manage_amount_summary_area').addClass('amount_summary_active');
+                $outsideOrderManageSearchForm.find('#amount_summary_html').html('금액총합계 : ' + totalAmountCurrency);
+            }
+        };
+
     });
 </script>

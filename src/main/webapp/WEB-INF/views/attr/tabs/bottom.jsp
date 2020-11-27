@@ -141,7 +141,7 @@
 <%--                        </span>--%>
                     </span>
                 <ul class="listWrap right_float">
-                    <span class="barCode"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
+                    <span class="barCode" id="g_item_detail_pop_barcode_span"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
                     <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode hg_30" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
                 </ul>
             </div>
@@ -161,7 +161,7 @@
                     <table class="rowStyle" style="table-layout: fixed;">
                         <colgroup>
                             <col width="10%">
-                            <col width="15%">
+                            <col width="20%">
                             <col width="10%">
                             <col width="15%">
                             <col width="10%">
@@ -1446,14 +1446,17 @@
                 $itemDetailPopForm.find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
                 $itemDetailPopForm.find("#PART_STATUS_NM").html(dataInfo.PART_STATUS_NM);
 
+                $itemDetailPopForm.find("#ITEM_NM").attr('title', dataInfo.ITEM_NM);
                 $itemDetailPopForm.find("#ITEM_NM").html(dataInfo.ITEM_NM);
                 $itemDetailPopForm.find("#MATERIAL_DETAIL_NM").html(dataInfo.MATERIAL_DETAIL_NM || '' + materialFinishHeatSpanElement);
                 $itemDetailPopForm.find("#POP_POSITION_NM").html(dataInfo.POP_POSITION_NM);
 
+                $itemDetailPopForm.find("#MODULE_NM").attr('title', dataInfo.MODULE_NM);
                 $itemDetailPopForm.find("#MODULE_NM").html(dataInfo.MODULE_NM);
                 $itemDetailPopForm.find("#SURFACE_TREAT_NM").html(dataInfo.SURFACE_TREAT_NM);
                 $itemDetailPopForm.find("#PROCESS_CONFIRM_DT").html(dataInfo.PROCESS_CONFIRM_DT);
 
+                $itemDetailPopForm.find("#PROJECT_NM").attr('title', dataInfo.PROJECT_NM);
                 $itemDetailPopForm.find("#PROJECT_NM").html(dataInfo.PROJECT_NM);
                 $itemDetailPopForm.find("#OUTSIDE_CONFIRM_DT").html(dataInfo.OUTSIDE_CONFIRM_DT);
                 $itemDetailPopForm.find("#MATERIAL_ORDER_DT").html(dataInfo.MATERIAL_ORDER_DT);
@@ -1641,9 +1644,13 @@
     <%--        g_ItemDetailPopGrid04.pqGrid('refreshDataAndView');--%>
     <%--    }, parameters, '');--%>
     <%--});--%>
+    $("#g_item_detail_pop_barcode_span").on('click', function (e) {
+        $("#g_item_detail_pop_barcode_num").focus();
+    });
 
     $("#g_item_detail_pop_barcode_num").on({
         focus: function () {
+            this.value = '';
             $("#g_item_detail_pop_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long_on.png");
         },
         blur: function () {

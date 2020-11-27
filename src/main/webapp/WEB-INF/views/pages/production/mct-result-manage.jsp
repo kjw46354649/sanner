@@ -22,6 +22,7 @@
         <input type="hidden" id="IMG_GFILE_SEQ" name="IMG_GFILE_SEQ" value=""/>
         <input type="hidden" id="CAM_SEQ" name="CAM_SEQ" value=""/>
         <input type="hidden" id="BARCODE_NUM" name="BARCODE_NUM" value=""/>
+        <input type="hidden" id="CAM_STATUS" name="CAM_STATUS" value=""/>
         <div class="layerPopup">
             <div class="h_area">
                 <h3>CAM 작업 관리</h3>
@@ -98,7 +99,7 @@
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_01" name="CAM_WORK_CHK_01" class="statusConfig camworkChekbox" ></th>
                                     <th colspan="2">Step 1
-                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('01');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('01');"><i class='fa fa-trash'></i><span >Reset</span></button></span>
                                     </th>
                                 </tr>
                                 <tr><th>위치</th>
@@ -142,7 +143,7 @@
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_02" name="CAM_WORK_CHK_02" class="statusConfig camworkChekbox" ></th>
                                     <th colspan="2">Step 2
-                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('02');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('02');"><i class='fa fa-trash'></i><span >Reset</span></button></span>
                                     </th>
                                 </tr>
                                 <tr><th>위치</th>
@@ -186,7 +187,7 @@
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_03" name="CAM_WORK_CHK_03" class="statusConfig camworkChekbox" ></th>
                                     <th colspan="2">Step 3
-                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('03');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('03');"><i class='fa fa-trash'></i><span >Reset</span></button></span>
                                     </th>
                                 </tr>
                                 <tr><th>위치</th>
@@ -230,7 +231,7 @@
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_04" name="CAM_WORK_CHK_04" class="statusConfig camworkChekbox" ></th>
                                     <th colspan="2">Step 4
-                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('04');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('04');"><i class='fa fa-trash'></i><span >Reset</span></button></span>
                                     </th>
                                 </tr>
                                 <tr><th>위치</th>
@@ -274,7 +275,7 @@
                                 <tr>
                                     <th><input type="checkbox" id="CAM_WORK_CHK_05" name="CAM_WORK_CHK_05" class="statusConfig camworkChekbox" ></th>
                                     <th colspan="2">Step 5
-                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('05');"><i class='fa fa-trash'></i><span >reset</span></button></span>
+                                        <span style="float: right"><button type='button' style="padding: 0px 5px !important;" class='smallBtn blue' onclick="javascript:resetMctResult('05');"><i class='fa fa-trash'></i><span >Reset</span></button></span>
                                     </th>
                                 </tr>
                                 <tr><th>위치</th>
@@ -581,9 +582,30 @@
                     });
                 }
             },
-            {title: '긴<br>급', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 40},
-            {title: '주<br>요', dataIndx: 'MAIN_INSPECTION_NM', minWidth: 15, width: 50},
-            // {title: '불량<br>반품', dataIndx: 'FAIL_STATUS', minWidth: 15, width: 20},
+            {
+                title: '긴급', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 40,
+                render: function (ui) {
+                    if (ui.cellData) {
+                        return {style: 'background-color: #ff0000; color: #ffffff;'};
+                    }
+                }
+            },
+            {
+                title: '주요<br>검사', dataIndx: 'MAIN_INSPECTION_NM', minWidth: 15, width: 55,
+                render: function (ui) {
+                    if (ui.cellData) {
+                        return {style: 'background-color: #ffe699;'};
+                    }
+                }
+            },
+            {
+                title: '불량<br>반품', dataIndx: 'FAIL_STATUS', minWidth: 15, width: 55,
+                render: function (ui) {
+                    if (ui.cellData) {
+                        return {style: 'background-color: #ff0000; color: #ffffff;'};
+                    }
+                }
+            },
             {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
@@ -600,7 +622,18 @@
                     });
                 }
             },
-            {title: '가공납기', dataIndx: 'INNER_DUE_DT', minWidth: 15, width: 60},
+            {
+                title: '가공납기', dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT', minWidth: 15, width: 60,
+                render: function (ui) {
+                    const innerDueDt = new Date(ui.cellData);
+                    const innerWorkFinishDt = ui.rowData.INNER_WORK_FINISH_DT;
+
+                    if (!innerWorkFinishDt && innerDueDt.getTime() < TODAY.getTime()) {
+                        return {style: 'background-color: #ffe699; color: #ff0000;'};
+                    }
+                }
+            },
+            {title: '가공완료일시', dataIndx: 'INNER_WORK_FINISH_DT', hidden: true},
             {title: '현재위치', dataIndx: 'POP_POSITION', minWidth: 20, width: 80},
             {title: '관리번호', dataIndx: 'CONTROL_PART_NUM', minWidth: 50, width: 180},
             {title: '관리번호', dataIndx: 'CONTROL_NUM', hidden: true},
@@ -633,7 +666,14 @@
                     }
                 }
             },
-            {title: '진행상태', dataIndx: 'PART_STATUS', minWidth: 20, width: 80},
+            {
+                title: '진행상태', dataIndx: 'PART_STATUS', minWidth: 20, width: 80,
+                render: function (ui) {
+                    const cellData = ui.cellData;
+
+                    return cellData === '가공중' ? '<div class="blink">' + cellData + '</div>' : cellData;
+                }
+            },
             {title: 'NC Plan', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 colModel: [
                     {title: 'MCT_PLAN_SEQ', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
@@ -765,7 +805,7 @@
                 }
             },
             {title: '작업<br>구분', dataIndx: 'MCT_WORK_TYPE_NM', minWidth: 15, width: 50},
-            {title: '가공확정<br>일시', dataIndx: 'SATAUS_DT', minWidth: 75, width: 100},
+            {title: '가공확정<br>일시', dataIndx: 'STATUS_DT', minWidth: 75, width: 100},
             {title: '소재입고<br>일시', dataIndx: 'MATERIAL_RECEIPT_DT', minWidth: 75, width: 100},
             // {title: '이전<br>위치', dataIndx: 'POP_PREV_POSITION', minWidth: 70, width: 70},
             // {title: '1ea L/T', dataIndx: '1ea L/T', minWidth: 60, width: 60},
@@ -850,7 +890,7 @@
         };
         /* function */
         /** 제품 시작 상세 표시 **/
-        let camWorkManagePop = function(rowData, popOpenFalg) {
+        let camWorkManagePop = function(rowData, popOpenFlag) {
             fnResetFrom('cam_work_manage_pop_form');
             $("#cam_work_manage_pop_form").find("#CONTROL_SEQ").val(rowData.CONTROL_SEQ);
             $("#cam_work_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ);
@@ -863,7 +903,7 @@
             let orderQty = numberWithCommas(rowData.ORDER_QTY);
             if(rowData.ORIGINAL_SIDE_QTY) orderQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.ORIGINAL_SIDE_QTY + ") </span>";
             $("#cam_work_manage_pop_form").find("#ORDER_QTY").html(orderQty);
-            let dueOutDt = rowData.INNER_DUE_DT;
+            let dueOutDt = rowData.INNER_DUE_DT.slice(5);
             if(rowData.EMERGENCY_YN === "Y") dueOutDt += " <input type='button' class='smallBtn red' value='긴급'></input>";
             $("#cam_work_manage_pop_form").find("#DUE_OUT_DT").html(dueOutDt);
             let concatDrawingNum = rowData.CONCAT_DRAWING_NUM;
@@ -956,9 +996,10 @@
                     camWorkStepStatusConfig("0" + i, false);
                     $("#cam_work_manage_detail_pop").find("#CAM_WORK_FILE_0" + i).html("&nbsp;<br>&nbsp;");
                 }
+                $("#cam_work_manage_detail_pop").find("#CAM_STATUS").val(rowData.CAM_STATUS);
                 // 상태에 따른 Check box 처리
                 camWorkStatusConfig(rowData);
-                if(popOpenFalg) $('#cam_work_manage_detail_pop').modal('show');
+                if (popOpenFlag) $('#cam_work_manage_detail_pop').modal('show');
 
             }, parameters, '');
         };
@@ -1101,40 +1142,48 @@
         });
 
         /** 파일 업로드 스크립트 **/
-        $(".mctWorkStyle").on("dragenter", function(e) {  //드래그 요소가 들어왔을떄
+        $(".mctWorkStyle").on("dragenter", function (e) {  //드래그 요소가 들어왔을떄
             $(this).addClass('drag-over');
-        }).on("dragleave", function(e) {  //드래그 요소가 나갔을때
+        }).on("dragleave", function (e) {  //드래그 요소가 나갔을때
             $(this).removeClass('drag-over');
-        }).on("dragover", function(e) {
+        }).on("dragover", function (e) {
             e.stopPropagation();
             e.preventDefault();
-        }).on('drop', function(e) {  //드래그한 항목을 떨어뜨렸을때
+        }).on('drop', function (e) {  //드래그한 항목을 떨어뜨렸을때
             e.preventDefault();
-            $(this).removeClass('drag-over');
-            let idxNum = $(this).attr("idx");
-            let isCheckYn = $("#cam_work_manage_pop_form").find("#CAM_WORK_CHK_" + idxNum).prop('checked');
-            if(!isCheckYn){
-                $('#cam_work_manage_pop_form').find("input:checkbox[id='CAM_WORK_CHK_" + idxNum + "']").trigger("click");
-            }
-            let mctCamWorkUploadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
-            if (mctCamWorkUploadFiles.length > 0) { // file upload
-                let formData = new FormData();
-                for(let i = 0; i < mctCamWorkUploadFiles.length; i++) {
-                    let file = mctCamWorkUploadFiles[i];
-                    formData.append('file', file, file.name);
+
+            const camStatus = $("#cam_work_manage_detail_pop").find("#CAM_STATUS").val();
+
+            if (camStatus === 'CWS020') {
+                $(this).removeClass('drag-over');
+                let idxNum = $(this).attr("idx");
+                let isCheckYn = $("#cam_work_manage_pop_form").find("#CAM_WORK_CHK_" + idxNum).prop('checked');
+                if (!isCheckYn) {
+                    $('#cam_work_manage_pop_form').find("input:checkbox[id='CAM_WORK_CHK_" + idxNum + "']").trigger("click");
                 }
-                fnFormDataFileUploadAjax(function (data) {
-                    let fileUploadList = data.fileUploadList;
-                    let GFILE_SEQ = fileUploadList[0].GFILE_SEQ;
-                    let fileHtml = "";
-                    for(let j = 0;j < fileUploadList.length; j++){
-                        if(j>0) fileHtml +="<br>";
-                        fileHtml += "<a href='/downloadfile/" + fileUploadList[j].FILE_SEQ + "' download>" + fileUploadList[j].ORGINAL_FILE_NM + "</a>";
+                let mctCamWorkUploadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
+                if (mctCamWorkUploadFiles.length > 0) { // file upload
+                    let formData = new FormData();
+                    for (let i = 0; i < mctCamWorkUploadFiles.length; i++) {
+                        let file = mctCamWorkUploadFiles[i];
+                        formData.append('file', file, file.name);
                     }
-                    if(fileUploadList.length === 1) fileHtml +="<br>";
-                    $("#cam_work_manage_pop_form").find("#CAM_WORK_FILE_" + idxNum).html(fileHtml);
-                    $("#cam_work_manage_pop_form").find("#CAM_WORK_GFILE_SEQ_" + idxNum).val(GFILE_SEQ);
-                }, formData, '');
+                    fnFormDataFileUploadAjax(function (data) {
+                        let fileUploadList = data.fileUploadList;
+                        let GFILE_SEQ = fileUploadList[0].GFILE_SEQ;
+                        let fileHtml = "";
+                        for (let j = 0; j < fileUploadList.length; j++) {
+                            if (j > 0) fileHtml += "<br>";
+                            fileHtml += "<a href='/downloadfile/" + fileUploadList[j].FILE_SEQ + "' download>" + fileUploadList[j].ORGINAL_FILE_NM + "</a>";
+                            fileHtml += "<br>&nbsp";
+                        }
+                        if (fileUploadList.length === 1) fileHtml += "<br>";
+                        $("#cam_work_manage_pop_form").find("#CAM_WORK_FILE_" + idxNum).html(fileHtml);
+                        $("#cam_work_manage_pop_form").find("#CAM_WORK_GFILE_SEQ_" + idxNum).val(GFILE_SEQ);
+                    }, formData, '');
+                }
+            } else {
+                fnAlert('', '작업 시작후 저장 가능합니다');
             }
         });
         /** 파일 업로드 스크립트 종료 **/
@@ -1342,7 +1391,7 @@
         $("#cam_work_manage_pop_form").find("#CAM_WORK_DESC_" + index).val('');
         $("#cam_work_manage_pop_form").find("#CAM_WORK_DESIGN_QTY_" + index).val('');
         $("#cam_work_manage_pop_form").find("#CAM_WORK_USER_ID_" + index).val('${authUserInfo.USER_ID}');
-        $("#cam_work_manage_pop_form").find("#CAM_WORK_FILE_" + index).html('&nbsp;</br>&nbsp;');
+        $("#cam_work_manage_pop_form").find("#CAM_WORK_FILE_" + index).html('&nbsp;<br>&nbsp;');
     }
 
 

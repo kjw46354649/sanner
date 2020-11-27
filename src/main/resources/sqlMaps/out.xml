@@ -513,12 +513,12 @@
 
     <select id="selectOutsideCloseStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT 1 AS GROUP_KEY
-            , ROW_NUMBER () OVER (ORDER BY SF_GET_COMP_NM(X.COMP_CD), X.CLOSE_MONTH) AS ROW_NUM
+            , ROW_NUMBER () OVER (ORDER BY COMP_NM, `YEAR`, `QUARTER`, FINISH_MONTH, OUTSIDE_COMP_NM, X.CLOSE_VER) AS ROW_NUM
             , X.COMP_CD
             , SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM
             , X.CLOSE_MONTH
             , SUBSTR(X.CLOSE_MONTH, 1, 4) AS `YEAR`
-            , CONCAT(QUARTER(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m')), '분기') AS QUARTER
+            , CONCAT(QUARTER(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m')), '분기') AS `QUARTER`
             , CONCAT(SUBSTR(X.CLOSE_MONTH, 5), '월') AS FINISH_MONTH
             , X.CLOSE_VER
             , CONCAT(X.CLOSE_VER, '차') AS VIEW_CLOSE_VER
@@ -586,10 +586,8 @@
                 WHERE 1 = 1
                     AND A.DEL_YN = 'N'
         ) X
-        GROUP BY
-            X.COMP_CD, X.OUTSIDE_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
-        ORDER BY
-            COMP_NM, OUTSIDE_COMP_NM, X.CLOSE_MONTH, X.CLOSE_VER
+        GROUP BY X.COMP_CD, X.OUTSIDE_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
+        ORDER BY COMP_NM, `YEAR`, `QUARTER`, FINISH_MONTH, OUTSIDE_COMP_NM, X.CLOSE_VER
     </select>
 
     <update id="updateOutsideCloseNote" parameterType="java.util.HashMap">
