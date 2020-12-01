@@ -296,7 +296,6 @@
             {dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: '납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
-            {title: '출고', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'OUT_FINISH_DT'},
             {title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 80},
             {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
@@ -321,9 +320,10 @@
 
         let businessEmergencyObj = {
             height: 228, width: 500, minHeight: "auto", rowHtHead: 15, numberCell: {title: 'No.'},
-            selectionModel: { type: 'row', mode: 'single'}, swipeModel: {on: false}, trackModel: {on: true},
+            selectionModel: {type: 'row', mode: 'single'}, swipeModel: {on: false}, scrollModel: {autoFit: true},
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
-            columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
+            postRenderInterval: -1, //call postRender synchronously.
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'}, //to vertically center align the header cells.
             colModel: businessEmergencyColModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -345,7 +345,6 @@
             {dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: '납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
-            {title: '출고', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'OUT_FINISH_DT'},
             {title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 80},
             {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
@@ -370,10 +369,10 @@
 
         let businessOverOrderObj = {
             height: 228, width: 500, minHeight: "auto", rowHtHead: 15, numberCell: {title: 'No.'},
-            selectionModel: { type: 'row', mode: 'single'}, swipeModel: {on: false}, trackModel: {on: true},
+            selectionModel: {type: 'row', mode: 'single'}, swipeModel: {on: false}, scrollModel: {autoFit: true},
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
             postRenderInterval: -1, //call postRender synchronously.
-            columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'}, //to vertically center align the header cells.
             colModel: businessOverOrderColModel,
             dataModel: {
                 recIndx: 'ROW_NUM', location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',

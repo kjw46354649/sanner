@@ -2830,7 +2830,6 @@
         <!-- 하단 그리드 2 (긴급주문 진행현황) -->
         SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
             , jmes.SF_GET_DATE_F(X.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT
-            , jmes.SF_GET_DATE_F(X.OUT_FINISH_DT,'YYYY','') AS OUT_FINISH_DT
             , X.ORDER_COMP_NM
             , X.CONTROL_PART_INFO
             , X.CONTROL_PART_QTY, CONCAT(X.CONTROL_PART_QTY,'ea') AS CONTROL_PART_QTY_INFO
@@ -2838,7 +2837,6 @@
         FROM (  <!-- 출고일 없는경우 -->
                 SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                     , C.ORDER_DUE_DT
-                    , A.OUT_FINISH_DT
                     , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
                     , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
                     , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
@@ -2852,31 +2850,14 @@
                     AND A.EMERGENCY_YN = 'Y'
                     AND A.OUT_FINISH_DT IS NULL
                     AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
-<!--                 UNION ALL -->
-<!--                 SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ -->
-<!--                     , B.INNER_DUE_DT -->
-<!--                     , A.OUT_FINISH_DT -->
-<!--                     , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM -->
-<!--                     , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO -->
-<!--                     , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY -->
-<!--                     , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS_NM -->
-<!--                 FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B -->
-<!--                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ -->
-<!--                     AND A.DEL_YN = 'N' -->
-<!--                     AND A.CONTROL_STATUS IN ('ORD001','ORD003') -->
-<!--                     AND A.EMERGENCY_YN = 'Y' -->
-<!--                     AND A.OUT_FINISH_DT IS NOT NULL -->
-<!--                     AND B.INNER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d') -->
-<!--                     AND B.INNER_DUE_DT > DATE_ADD(NOW(), INTERVAL -3 DAY) -->
             ) X
-        ORDER BY X.ORDER_DUE_DT, <!-- CASE WHEN X.OUT_FINISH_DT IS NULL THEN 1 ELSE 2 END, --> X.CONTROL_PART_INFO
+        ORDER BY X.ORDER_DUE_DT, X.CONTROL_PART_INFO
     </select>
 
     <select id="selectBusinessOverOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <!-- 하단 그리드 3 (납기지연목록) -->
         SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
             , jmes.SF_GET_DATE_F(X.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT
-            , jmes.SF_GET_DATE_F(X.OUT_FINISH_DT,'YYYY','') AS OUT_FINISH_DT
             , X.ORDER_COMP_NM
             , X.CONTROL_PART_INFO
             , X.CONTROL_PART_QTY, CONCAT(X.CONTROL_PART_QTY,'ea') AS CONTROL_PART_QTY_INFO
@@ -2885,7 +2866,6 @@
         FROM (  <!-- 출고일 없는경우 -->
                 SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                     , C.ORDER_DUE_DT
-                    , A.OUT_FINISH_DT
                     , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
                     , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
                     , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
@@ -2899,24 +2879,8 @@
                     AND A.CONTROL_STATUS IN ('ORD001','ORD003', 'ORD004')
                     AND A.OUT_FINISH_DT IS NULL
                     AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
-<!--                 UNION ALL -->
-<!--                 SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ -->
-<!--                     , B.INNER_DUE_DT -->
-<!--                     , A.OUT_FINISH_DT -->
-<!--                     , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM -->
-<!--                     , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO -->
-<!--                     , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY -->
-<!--                     , jmes.SF_GET_CODE_NM('1013', B.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS_NM -->
-<!--                     , (SELECT M.USER_NM FROM jmes.TBL_USER M, jmes.TBL_COMPANY N WHERE M.USER_ID = N.CHARGE_USER_ID AND N.COMP_CD = A.ORDER_COMP_CD) AS CHARGE_USER_NM -->
-<!--                 FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B -->
-<!--                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ -->
-<!--                     AND A.DEL_YN = 'N' -->
-<!--                     AND A.CONTROL_STATUS IN ('ORD001','ORD003') -->
-<!--                     AND A.OUT_FINISH_DT IS NOT NULL -->
-<!--                     AND B.INNER_DUE_DT  <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d') -->
-<!--                     AND B.INNER_DUE_DT > DATE_ADD(NOW(), INTERVAL -3 DAY) -->
             ) X
-        ORDER BY X.ORDER_DUE_DT, <!-- CASE WHEN X.OUT_FINISH_DT IS NULL THEN 1 ELSE 2 END, --> X.CONTROL_PART_INFO
+        ORDER BY X.ORDER_DUE_DT, X.CONTROL_PART_INFO
     </select>
 
     <select id="selectImgGfileSeq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
