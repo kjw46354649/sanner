@@ -264,16 +264,16 @@ public class OrderServiceImpl implements OrderService {
 
         if (barcodeNum != null) {
             // 유효한 바코드인지 확인
-            map.put("queryId", "orderMapper.selectIsbarcodeValid");
+            map.put("queryId", "orderMapper.selectIsBarcodeValid");
             if (this.orderDao.getFlag(map)) {
                 flag = true;
                 message = "최신 도면이 아닙니다.";
             }
             // 주문상태가 확정인지 확인
-            map.put("queryId", "orderMapper.selectHasControlStatusConfirm");
+            map.put("queryId", "orderMapper.selectHasControlStatusConfirmFromBarcode");
             if (this.orderDao.getFlag(map) && !flag) {
                 flag = true;
-                message = "먼저 가공확정을 해주세요.";
+                message = "먼저 주문확정을 해주세요.";
             }
 
             if (type.equals("confirm")) {
@@ -281,7 +281,7 @@ public class OrderServiceImpl implements OrderService {
                 map.put("queryId", "orderMapper.selectHasPartStatusConfirm");
                 if (this.orderDao.getFlag(map) && !flag) {
                     flag = true;
-                    message = "이미 확정된 도면입니다.";
+                    message = "이미 가공 확정된 도면입니다.";
                 }
                 // 외주인지 확인
                 map.put("queryId", "orderMapper.selectHasInOutside");
@@ -365,5 +365,92 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
         }
+    }
+
+    @Override
+    public void mergeControl(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        ArrayList<HashMap<String, Object>> controlPartList = null;
+
+        Integer standardControlSeq = null;
+        Integer standardControlDetailSeq = null;
+        boolean flag = false;
+        String message = "";
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("STANDARD_CONTROL_SEQ"))
+            standardControlSeq = (int) jsonMap.get("STANDARD_CONTROL_SEQ");
+
+        if (jsonMap.containsKey("STANDARD_CONTROL_DETAIL_SEQ"))
+            standardControlDetailSeq = (int) jsonMap.get("STANDARD_CONTROL_DETAIL_SEQ");
+
+        if (jsonMap.containsKey("list"))
+            controlPartList = (ArrayList<HashMap<String, Object>>) jsonMap.get("list");
+
+        // 주문관리 Part 저장
+        if (controlPartList != null && controlPartList.size() > 0) {
+            for (HashMap<String, Object> hashMap : controlPartList) {
+                hashMap.put("STANDARD_CONTROL_SEQ", standardControlSeq);
+                hashMap.put("STANDARD_CONTROL_DETAIL_SEQ", standardControlDetailSeq);
+
+                // 주문상태가 대기 또는 취소가 아닌지 확인
+                hashMap.put("queryId", "orderMapper.selectHasControlStatusConfirm");
+                if (this.orderDao.getFlag(hashMap)) {
+                    flag = true;
+                    message = "주문상태를 대기 또는 취소 상태로 변경해주세요";
+                    break;
+                }
+                // 외주
+                hashMap.put("queryId", "orderMapper.selectHasOutsideConfirmDt");
+                if (this.orderDao.getFlag(hashMap)) {
+                    flag = true;
+                    message = "이미 외주확정된 대상입니다";
+                    break;
+                }
+                // 소재주문
+                hashMap.put("queryId", "orderMapper.selectHasInStock");
+                if (this.orderDao.getFlag(hashMap)) {
+                    flag = true;
+                    message = "소재 주문완료된 대상입니다";
+                    break;
+                }
+                // mct
+                hashMap.put("queryId", "orderMapper.selectHasMctWork");
+                if (this.orderDao.getFlag(hashMap)) {
+                    flag = true;
+                    message = "MCT 작업이력이 있습니다";
+                    break;
+                }
+                // CAM
+                hashMap.put("queryId", "orderMapper.selectHasCam");
+                if (this.orderDao.getFlag(hashMap)) {
+                    flag = true;
+                    message = "CAM 작업이력이 있습니다";
+                    break;
+                }
+                // inspect
+                hashMap.put("queryId", "orderMapper.selectHasInspect");
+                if (this.orderDao.getFlag(hashMap)) {
+                    flag = true;
+                    message = "검사이력이 있습니다";
+                    break;
+                }
+
+                if (standardControlSeq != (int) hashMap.get("CONTROL_SEQ") && standardControlDetailSeq != (int) hashMap.get("CONTROL_DETAIL_SEQ")) {
+                    hashMap.put("queryId", "orderMapper.createPartOrderToMerge");
+                    this.innodaleDao.create(hashMap);
+                    hashMap.put("queryId", "orderMapper.removeControl");
+                    this.innodaleDao.remove(hashMap);
+                }
+            }
+        }
+
+        model.addAttribute("flag", flag);
+        model.addAttribute("message", message);
     }
 }

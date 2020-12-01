@@ -131,12 +131,10 @@
                 <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
                 <button type="button" class="defaultBtn btn-100w" id="TRANSACTION_STATEMENT">거래명세표</button>
-                <%--                <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#TRANSACTION_STATEMENT_POPUP">거래명세표</button>--%>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CONFIRMATION" data-control_status="ORD001" style="color: blue;">확정</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002" style="color: #FF0000;">취소</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="TERMINATION" data-control_status="ORD004">종료</button>
                 <button type="button" class="defaultBtn btn-50w" id="CONTROL_MONTH_CLOSE">마감</button>
-                <%--                <button type="button" class="defaultBtn btn-50w" data-toggle="modal" data-target="#CONTROL_CLOSE_POPUP">마감</button>--%>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>
                     <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_PRINT">도면 출력</button>
@@ -162,6 +160,7 @@
                 <button type="button" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_NORMAL_MODE">일반모드</button>
                 <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_CLOSE_MODE">마감모드</button>
                 <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_ALL_MODE">전체모드</button>
+                <button type="button" class="defaultBtn btn-100w" id="CONTROL_MERGE" style="background-color: #5b9bd5">Merge</button>
                 <div class="rightSpan">
                     <span class="slt_wrap namePlusSlt">
                         <label for="SUPPLY_UNIT_COST_APPLY">공급단가적용</label>
@@ -187,6 +186,36 @@
                     전체 조회 건수 (Total : <span id="CONTROL_MANAGE_RECORDS" style="color: #00b3ee">0</span>)
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="CONTROL_MERGE_POPUP" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width: 1152px; height: 648px">
+        <div class="modal-content" style="height: inherit;">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size: large; font-weight: bold">기준 관리번호를 선택해주세요</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -21.5px">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="d-flex align-items-center mt-10">
+                        <div class="ml-auto">
+                            <button type="button" class="defaultBtn btn-100w green" id="CONTROL_MERGE_SAVE">확인</button>
+                            <button type="button" class="defaultBtn btn-100w" data-dismiss="modal" style="background-color: #dbdbdb">취소</button>
+                        </div>
+                    </div>
+                    <div class="mt-10">
+                        <div id="CONTROL_MERGE_GRID"></div>
+                    </div>
+                </div>
+                <div></div>
+            </div>
+<%--            <div class="modal-footer" style="text-align: center !important">--%>
+<%--                <button type="button" class="defaultBtn grayPopGra" data-dismiss="modal">닫기</button>--%>
+<%--            </div>--%>
         </div>
     </div>
 </div>
@@ -1896,6 +1925,7 @@
         let newOrderRegistrationPopup;
         let controlMonthClosePopup;
         let transactionStatementPopup;
+        let $controlMergeGrid;
         /* variable */
 
         /* function */
@@ -2170,7 +2200,7 @@
             const controlList = [
                 'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'CONTROL_VER', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE',
                 'MAIN_INSPECTION', 'EMERGENCY_YN', 'TOTAL_SHEET', 'CONTROL_STATUS_NM', 'CONTROL_STATUS_DT',
-                'PRICE_CONFIRM', 'SAME_SIDE_YN'
+                'PRICE_CONFIRM', 'SAME_SIDE_YN', 'CONTROL_MERGE_CHECKBOX'
             ];
             const partList = [
                 'PART_NUM', 'ORDER_NUM_PLUS_BUTTON', 'DRAWING_VER', 'DRAWING_UP_DT', 'PREV_DRAWING_NUM',
@@ -2203,8 +2233,8 @@
                     while (j--) {
                         let controlNum = data[j]['CONTROL_NUM'],
                             controlNumPrev = data[j - 1] ? data[j - 1]['CONTROL_NUM'] : undefined,
-                            cellData = data[j][dataIndx],
-                            cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
+                            cellData = data[j][dataIndx] || '',
+                            cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] || '' : undefined;
 
                         if (controlList.includes(dataIndx)) {
                             if (controlNum === controlNumPrev) {
@@ -3085,6 +3115,118 @@
             if (GfileKey !== '' && GfileKey !== $attachmentButton.data('GfileKey')) {
                 $orderManagementGrid.pqGrid('updateRow', {rowIndx: rowIndx, row: {'ETC_GFILE_SEQ': GfileKey}, checkEditable: false});
                 $('#CONTROL_MANAGE_SAVE').click();
+            }
+        });
+
+        $('#CONTROL_MERGE').on({
+            'click': function () {
+                if (noSelectedRowAlert()) return false;
+                let dataList = [];
+
+                for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                    dataList[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                }
+
+                const groupedWorkType = fnGroupBy(dataList, 'WORK_TYPE');
+
+                if (groupedWorkType.hasOwnProperty('WTP020')) {
+                    const groupedControlSeq = fnGroupBy(dataList, 'CONTROL_SEQ');
+                    let prevCount = 0;
+
+                    for (let controlSeq in groupedControlSeq) {
+                        if (prevCount > 0) {
+                            if (prevCount === groupedControlSeq[controlSeq].length) {
+                                fnAlert(null, '조립품은 조립품끼리만 되면 파트개수가 동일해야만 가능합니다');
+                                return;
+                            }
+                        }
+                        prevCount = groupedControlSeq[controlSeq].length;
+                    }
+                }
+                $('#CONTROL_MERGE_POPUP').modal('show');
+            },
+        });
+
+        $('#CONTROL_MERGE_POPUP').on({
+            'show.bs.modal': function () {
+                let dataList = [];
+
+                for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                    dataList[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                }
+
+                const controlMergeGridId = 'CONTROL_MERGE_GRID';
+                const controlMergeColModel = [
+                    {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+                    {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+                    {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+                    {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
+                    {
+                        title: '', type: 'checkbox', dataIndx: 'CONTROL_MERGE_CHECKBOX', editable: true,
+                        cb: {check: 'Y', uncheck: 'N', maxCheck: 1},
+                    },
+                    {title: '관리번호', align: 'left', width: 180, dataIndx: 'CONTROL_NUM'},
+                    {title: '파<br>트', minWidth: 30, dataIndx: 'PART_NUM'},
+                    {title: '형태', dataIndx: 'WORK_TYPE_NM'},
+                    {title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM'},
+                    {title: '도면번호', align: 'left', width: 150, dataIndx: 'ORDER_DRAWING_NUM'},
+                    {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'}
+                ];
+                const controlMergeObj = {
+                    minHeight: '100%',
+                    height: 500,
+                    collapsible: false,
+                    showTitle: false,
+                    strNoRows: g_noData,
+                    rowHtHead: 15,
+                    copyModel: {render: true},
+                    numberCell: {title: 'No.'},
+                    trackModel: {on: true},
+                    editable: false,
+                    columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
+                    colModel: controlMergeColModel,
+                    dataModel: {data: dataList},
+                    sortModel: {on: false},
+                    complete: function () {
+                        autoMerge(this, true);
+                    }
+                };
+                $controlMergeGrid = $('#' + controlMergeGridId).pqGrid(controlMergeObj);
+
+                setTimeout(function () {
+                    $controlMergeGrid.pqGrid('refresh');
+                }, 100);
+            },
+            'hide.bs.modal': function () {
+                if ($('#CONTROL_MERGE_GRID').pqGrid('instance')) {
+                    $controlMergeGrid.pqGrid('destroy');
+                }
+            }
+        });
+
+        $('#CONTROL_MERGE_SAVE').on('click', function () {
+            const grid = $controlMergeGrid.pqGrid('getInstance').grid;
+            const node = grid.Checkbox('CONTROL_MERGE_CHECKBOX').getCheckedNodes();
+            const data = grid.option('dataModel.data');
+            const NODE_LENGTH = node.length;
+            
+            if (NODE_LENGTH > 0) {
+                let postData = {
+                    'STANDARD_CONTROL_SEQ': node[0].CONTROL_SEQ,
+                    'STANDARD_CONTROL_DETAIL_SEQ': node[0].CONTROL_DETAIL_SEQ,
+                    'STANDARD_ORDER_SEQ': node[0].ORDER_SEQ,
+                    list: data
+                };
+                let parameter = {'url': '/mergeControl', 'data': {data: JSON.stringify(postData)}};
+                fnPostAjaxAsync(function (data) {
+                    if (data.flag == true) {
+                        fnAlert(null, data.message);
+                    } else {
+                        fnAlert(null, '<spring:message code="com.alert.default.save.success"/>');
+                    }
+                }, parameter, '');
+            } else {
+                fnAlert(null, '<spring:message code="com.alert.default.need.checkedText"/>');
             }
         });
 
