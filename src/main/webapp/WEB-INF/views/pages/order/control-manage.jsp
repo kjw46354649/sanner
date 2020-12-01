@@ -3224,6 +3224,8 @@
                         fnAlert(null, data.message);
                     } else {
                         fnAlert(null, '<spring:message code="com.alert.default.save.success"/>');
+                        $('#CONTROL_MERGE_POPUP').modal('hide');
+                        $('#CONTROL_MANAGE_SEARCH').click();
                     }
                 }, parameter, '');
             } else {
