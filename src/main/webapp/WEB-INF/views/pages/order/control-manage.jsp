@@ -191,7 +191,7 @@
 </div>
 
 <div class="modal" id="CONTROL_MERGE_POPUP" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document" style="width: 1152px; height: 648px">
+    <div class="modal-dialog" role="document" style="width: 691px; height: 388px">
         <div class="modal-content" style="height: inherit;">
             <div class="modal-header">
                 <h5 class="modal-title" style="font-size: large; font-weight: bold">기준 관리번호를 선택해주세요</h5>
@@ -3174,13 +3174,14 @@
                 ];
                 const controlMergeObj = {
                     minHeight: '100%',
-                    height: 500,
+                    height: 260,
                     collapsible: false,
                     showTitle: false,
                     strNoRows: g_noData,
                     rowHtHead: 15,
                     copyModel: {render: true},
                     numberCell: {title: 'No.'},
+                    scrollModel: {autoFit: true},
                     trackModel: {on: true},
                     editable: false,
                     columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
@@ -3209,7 +3210,7 @@
             const node = grid.Checkbox('CONTROL_MERGE_CHECKBOX').getCheckedNodes();
             const data = grid.option('dataModel.data');
             const NODE_LENGTH = node.length;
-            
+
             if (NODE_LENGTH > 0) {
                 let postData = {
                     'STANDARD_CONTROL_SEQ': node[0].CONTROL_SEQ,

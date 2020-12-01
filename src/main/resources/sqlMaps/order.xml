@@ -1265,8 +1265,17 @@
             CONTROL_STATUS_DT DESC, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.PART_NUM
     </select>
 
-    <!-- 유효 도면(바코드 스캔) -->
-    <select id="selectIsBarcodeValid" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+    <select id="selectIsProcessAssembly" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT EXISTS (SELECT *
+               FROM TBL_CONTROL_PART
+               WHERE 1 = 1
+                   AND CONTROL_SEQ = #{CONTROL_SEQ}
+                   AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                   AND WORK_TYPE = 'WTP020') AS FLAG
+    </select>
+
+    <!-- 유효 도면 -->
+    <select id="selectIsbarcodeValid" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
         SELECT NOT EXISTS ( SELECT *
                             FROM TBL_CONTROL_BARCODE
                             WHERE 1 = 1
@@ -1274,18 +1283,8 @@
                                 AND DEL_YN = 'N' ) AS FLAG
     </select>
 
-    <!-- 주문상태가 대기 또는 취소가 아닌지 확인 -->
+    <!-- 주문상태 가공 확정 확인 -->
     <select id="selectHasControlStatusConfirm" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
-        SELECT NOT EXISTS ( SELECT *
-                            FROM TBL_CONTROL
-                            WHERE 1 = 1
-                                AND CONTROL_SEQ = #{CONTROL_SEQ}
-                                AND (CONTROL_STATUS IS NULL OR CONTROL_STATUS = 'ORD002')
-                          ) AS FLAG
-    </select>
-
-    <!-- 주문상태 확정 확인(바코드 스캔) -->
-    <select id="selectHasControlStatusConfirmFromBarcode" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
         SELECT NOT EXISTS ( SELECT *
                             FROM TBL_CONTROL
                             WHERE 1 = 1
@@ -1293,13 +1292,11 @@
                                                     FROM TBL_CONTROL_BARCODE
                                                     WHERE 1 = 1
                                                         AND BARCODE_NUM = #{BARCODE_NUM}
-                                                        AND DEL_YN = 'N'
-                                                  )
-                                AND CONTROL_STATUS = 'ORD001'
-                          ) AS FLAG
+                                                        AND DEL_YN = 'N')
+                                AND CONTROL_STATUS = 'ORD001') AS FLAG
     </select>
 
-    <!-- 파트 가공 확정(바코드 스캔) -->
+    <!-- 이미 확정 -->
     <select id="selectHasPartStatusConfirm" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
         SELECT EXISTS ( SELECT PART_STATUS
                         FROM TBL_CONTROL_PART
@@ -1308,13 +1305,11 @@
                                                                         FROM TBL_CONTROL_BARCODE
                                                                         WHERE 1 = 1
                                                                             AND BARCODE_NUM = #{BARCODE_NUM}
-                                                                            AND DEL_YN = 'N'
-                                                                     )
-                            AND PART_STATUS = 'PRO002'
-                      ) AS FLAG
+                                                                            AND DEL_YN = 'N')
+                            AND PART_STATUS = 'PRO002') AS FLAG
     </select>
 
-    <!-- 이미 외주 전환(바코드 스캔) -->
+    <!-- 이미 외주 전환 -->
     <select id="selectHasPartStatusConversion" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
         SELECT EXISTS ( SELECT PART_STATUS
                         FROM TBL_CONTROL_PART
@@ -1323,38 +1318,22 @@
                                                                         FROM TBL_CONTROL_BARCODE
                                                                         WHERE 1 = 1
                                                                             AND BARCODE_NUM = #{BARCODE_NUM}
-                                                                            AND DEL_YN = 'N'
-                                                                     )
-                            AND PART_STATUS = 'PRO001'
-                      ) AS FLAG
+                                                                            AND DEL_YN = 'N')
+                            AND PART_STATUS = 'PRO001') AS FLAG
     </select>
 
-    <!-- 외주 확정 -->
-    <select id="selectHasOutsideConfirmDt" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
-        SELECT EXISTS ( SELECT *
-                        FROM TBL_CONTROL_PART
-                        WHERE 1 = 1
-                            AND CONTROL_SEQ = #{CONTROL_SEQ}
-                            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-                            AND OUTSIDE_CONFIRM_DT IS NOT NULL
-                      ) AS FLAG
-    </select>
-
-    <!-- 외주(바코드 스캔) -->
+    <!-- 외주 입고 -->
     <select id="selectHasInOutside" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
-        SELECT EXISTS ( SELECT *
+        SELECT EXISTS ( SELECT PART_STATUS
                         FROM TBL_CONTROL_PART
                         WHERE 1 = 1
                             AND (CONTROL_SEQ, CONTROL_DETAIL_SEQ) IN (  SELECT CONTROL_SEQ, CONTROL_DETAIL_SEQ
                                                                         FROM TBL_CONTROL_BARCODE
                                                                         WHERE 1 = 1
                                                                             AND BARCODE_NUM = #{BARCODE_NUM}
-                                                                            AND DEL_YN = 'N'
-                                                                     )
-                            AND OUTSIDE_YN = 'Y'
-                      ) AS FLAG
+                                                                            AND DEL_YN = 'N')
+                            AND OUTSIDE_YN = 'Y') AS FLAG
     </select>
-
     <!-- 소재 입고 -->
     <select id="selectHasInStock" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
         SELECT EXISTS ( SELECT *
@@ -1362,7 +1341,6 @@
                         WHERE 1 = 1
                             AND CONTROL_SEQ = #{CONTROL_SEQ}
                             AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-                            AND ORDER_STATUS IN ('MST001', 'MST002', 'MST004')
                       ) AS FLAG
     </select>
 
@@ -1375,10 +1353,9 @@
                                                                         FROM TBL_CONTROL_BARCODE
                                                                         WHERE 1 = 1
                                                                             AND BARCODE_NUM = #{BARCODE_NUM}
-                                                                            AND DEL_YN = 'N'
-                                                                     )
-                            AND ORDER_STATUS IN ('MST001', 'MST002', 'MST004')
-                      ) AS FLAG
+                                                                            AND DEL_YN = 'N')
+                            AND ORDER_STATUS = 'MST002'    <!-- 소재 주문 취소 -->
+                        ) AS FLAG
     </select>
 
     <!-- 출고 확인 (바코드 스캔) -->
@@ -1390,43 +1367,11 @@
                                                                                 FROM TBL_CONTROL_BARCODE
                                                                                 WHERE 1 = 1
                                                                                     AND BARCODE_NUM = #{BARCODE_NUM}
-                                                                                    AND DEL_YN = 'N'
-                                                                             )
+                                                                                    AND DEL_YN = 'N')
                             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                                 AND C.OUT_FINISH_DT IS NOT NULL
                         WHERE 1 = 1
-                            AND A.DEL_YN = 'N'
-                      ) AS FLAG
-    </select>
-
-    <!-- MCT -->
-    <select id="selectHasMctWork" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
-    SELECT EXISTS ( SELECT *
-                    FROM TBL_MCT_WORK
-                    WHERE 1 = 1
-                        AND CONTROL_SEQ = #{CONTROL_SEQ}
-                        AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-                  ) AS FLAG
-    </select>
-
-    <!-- CAM -->
-    <select id="selectHasCam" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
-        SELECT EXISTS ( SELECT *
-                        FROM TBL_CAM
-                        WHERE 1 = 1
-                            AND CONTROL_SEQ = #{CONTROL_SEQ}
-                            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-                      ) AS FLAG
-    </select>
-
-    <!-- 검사 -->
-    <select id="selectHasInspect" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
-        SELECT EXISTS ( SELECT *
-                        FROM TBL_INSPECT
-                        WHERE 1 = 1
-                            AND CONTROL_SEQ =  #{CONTROL_SEQ}
-                            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-                      ) AS FLAG
+                            AND A.DEL_YN = 'N') AS FLAG
     </select>
 
     <update id="updateControlStatus" parameterType="java.util.HashMap">
@@ -2992,72 +2937,4 @@
         WHERE X.GFILE_SEQ = Y.IMG_GFILE_SEQ
     </select>
 
-    <insert id="createPartOrderToMerge" parameterType="java.util.HashMap" >
-        INSERT INTO TBL_CONTROL_PART_ORDER (
-            CONTROL_SEQ
-            , CONTROL_DETAIL_SEQ
-            , ORDER_SEQ
-            , ORDER_NUM
-            , ORDER_QTY
-            , ORDER_DUE_DT
-            , DELIVERY_DT
-            , PACKING_CNT
-            , OUT_FINISH_DT
-            , INSERT_DT
-            , INSERT_ID
-            , PROJECT_NM
-            , MODULE_NM
-            , DELIVERY_COMP_NM
-            , LABEL_NOTE
-            , ORDER_STAFF_SEQ
-            , DESIGNER_NM
-            , DRAWING_NUM
-            , DWG_GFILE_SEQ
-            , DXF_GFILE_SEQ
-            , PDF_GFILE_SEQ
-            , IMG_GFILE_SEQ
-            , VIEW_GFILE_SEQ
-            , ITEM_NM
-            , ORIGINAL_SIDE_QTY
-            , OTHER_SIDE_QTY
-            , UNIT_FINAL_EST_AMT
-            , UNIT_FINAL_AMT
-        )
-        SELECT #{STANDARD_CONTROL_SEQ}
-            , #{STANDARD_CONTROL_DETAIL_SEQ}
-            , NEXTVAL(SEQ_CONTROL_PART_ORDER)
-            , ORDER_NUM
-            , ORDER_QTY
-            , ORDER_DUE_DT
-            , DELIVERY_DT
-            , PACKING_CNT
-            , OUT_FINISH_DT
-            , NOW()
-            , #{LOGIN_USER_ID}
-            , PROJECT_NM
-            , MODULE_NM
-            , DELIVERY_COMP_NM
-            , LABEL_NOTE
-            , ORDER_STAFF_SEQ
-            , DESIGNER_NM
-            , DRAWING_NUM
-            , DWG_GFILE_SEQ
-            , DXF_GFILE_SEQ
-            , PDF_GFILE_SEQ
-            , IMG_GFILE_SEQ
-            , VIEW_GFILE_SEQ
-            , ITEM_NM
-            , ORIGINAL_SIDE_QTY
-            , OTHER_SIDE_QTY
-            , UNIT_FINAL_EST_AMT
-            , UNIT_FINAL_AMT
-        FROM TBL_CONTROL_PART_ORDER
-        WHERE ORDER_SEQ = #{ORDER_SEQ}
-        AND NOT EXISTS (SELECT *
-                        FROM TBL_CONTROL_PART_ORDER M
-                        WHERE M.CONTROL_SEQ = #{STANDARD_CONTROL_SEQ}
-                            AND M.CONTROL_DETAIL_SEQ = #{STANDARD_CONTROL_DETAIL_SEQ}
-                            AND M.ORDER_NUM = #{ORDER_NUM}
-                            AND M.DRAWING_NUM = #{ORDER_DRAWING_NUM})
-    </insert>
 </mapper>

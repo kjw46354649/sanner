@@ -130,21 +130,4 @@ public class OrderController {
         this.orderService.updateControlConfirmProcess(map);
         return "jsonView";
     }
-
-
-    /**
-     * @description 관리번호 병합
-     * @param model
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/mergeControl", method = RequestMethod.POST)
-    public String mergeControl(Model model, HttpServletRequest request) throws Exception {
-        Map<String, Object> map = CommonUtility.getParameterMap(request);
-
-        this.orderService.mergeControl(model, map);
-
-        return "jsonView";
-    }
 }
