@@ -474,7 +474,7 @@
                             return rowData.OUTSIDE_STATUS !== 'OST001';
                         },
                         type: 'checkbox',
-                        cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        cb: {check: 'Y', uncheck: 'N'},
                         render: function (ui) {
                             if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
                             return '<input type="checkbox">';
@@ -488,7 +488,7 @@
                             return rowData.OUTSIDE_STATUS !== 'OST001';
                         },
                         type: 'checkbox',
-                        cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        cb: {check: 'Y', uncheck: 'N'},
                         render: function (ui) {
                             if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
                             return '<input type="checkbox">';
@@ -503,7 +503,7 @@
                             return rowData.OUTSIDE_STATUS !== 'OST001';
                         },
                         type: 'checkbox',
-                        cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        cb: {check: 'Y', uncheck: 'N'},
                         render: function (ui) {
                             if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
                             return '<input type="checkbox">';
@@ -518,7 +518,7 @@
                             return rowData.OUTSIDE_STATUS !== 'OST001';
                         },
                         type: 'checkbox',
-                        cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        cb: {check: 'Y', uncheck: 'N'},
                         render: function (ui) {
                             if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
                             return '<input type="checkbox">';
@@ -693,11 +693,11 @@
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '수신', datatype: 'bool', dataIndx: 'RECEPTION', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                type: 'checkbox', cb: {all: false, header: false, select: false, check: 'true', uncheck: 'false'}
+                type: 'checkbox'
             },
             {
                 title: '참조', datatype: 'bool', dataIndx: 'REFERENCE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                type: 'checkbox', cb: {all: false, header: false, select: false, check: 'true', uncheck: 'false'}
+                type: 'checkbox'
             }
         ];
         const mailRecipientObj = {
@@ -921,19 +921,19 @@
                 title: '요청 가공 사항', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, colModel: [
                     {
                         title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
+                        type: 'checkbox', cb: {check: 'Y', uncheck: 'N'}
                     },
                     {
                         title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        type: 'checkbox', cb: {check: 'Y', uncheck: 'N'},
                     },
                     {
                         title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
+                        type: 'checkbox', cb: {check: 'Y', uncheck: 'N'}
                     },
                     {
                         title: '표면', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
+                        type: 'checkbox', cb: {check: 'Y', uncheck: 'N'}
                     },
                     {title: '기타사항', dataIndx: 'OUTSIDE_REQUEST_ETC', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
                 ]
@@ -1195,19 +1195,19 @@
                 title: '요청가공', align: 'center', colModel: [
                     {
                         title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN',
-                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
+                        type: 'checkbox', cb: {check: 'Y', uncheck: 'N'}
                     },
                     {
                         title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN',
-                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        type: 'checkbox', cb: {check: 'Y', uncheck: 'N'},
                     },
                     {
                         title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN',
-                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
+                        type: 'checkbox', cb: {check: 'Y', uncheck: 'N'}
                     },
                     {
                         title: '표면<br>처리', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN',
-                        type: 'checkbox', cb: {all: false, header: false, check: 'Y', uncheck: 'N'}
+                        type: 'checkbox', cb: {check: 'Y', uncheck: 'N'}
                     },
                     {title: '기타사항', dataIndx: 'OUTSIDE_REQUEST_ETC'}
                 ]
@@ -2259,14 +2259,14 @@
 
             for (let i in mailRecipientData) {
                 if (mailRecipientData.hasOwnProperty(i)) {
-                    if (mailRecipientData[i].RECEPTION === 'true') {
+                    if (mailRecipientData[i].RECEPTION === true) {
                         if(mailFlag) mailFlag = false;
                         if(!receiveEmail)
                             receiveEmail += mailRecipientData[i].STAFF_EMAIL;
                         else
                             receiveEmail += "," + mailRecipientData[i].STAFF_EMAIL;
                     }
-                    if(mailRecipientData[i].REFERENCE === 'true') {
+                    if(mailRecipientData[i].REFERENCE === true) {
                         if(!hccEmail)
                             hccEmail += mailRecipientData[i].STAFF_EMAIL;
                         else
@@ -2341,14 +2341,14 @@
                 let hccEmail = "";
                 for(let i in cancelMailRecipientData) {
                     if (cancelMailRecipientData.hasOwnProperty(i)) {
-                        if (cancelMailRecipientData[i].RECEPTION === 'true') {
+                        if (cancelMailRecipientData[i].RECEPTION === true) {
                             if (mailFlag) mailFlag = false;
                             if(!receiveEmail)
                                 receiveEmail += cancelMailRecipientData[i].STAFF_EMAIL;
                             else
                                 receiveEmail += "," + cancelMailRecipientData[i].STAFF_EMAIL;
                         }
-                        if (cancelMailRecipientData[i].REFERENCE === 'true') {
+                        if (cancelMailRecipientData[i].REFERENCE === true) {
                             if(!hccEmail)
                                 hccEmail += cancelMailRecipientData[i].STAFF_EMAIL;
                             else

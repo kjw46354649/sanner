@@ -430,13 +430,13 @@ table.boardList .txtP{color: #7030a0;}
 .label_500{width:500px !important; padding:0 10px !important; text-align: right; }
 
 /* background color*/
-.bg-skyblue { background-color: skyblue; }
+.bg-skyblue { background-color: #87ceeb; }
 .bg-green { background-color: #ffd966; }
-.bg-lightgray { background-color: lightgray; }
+.bg-lightgray { background-color: #d3d3d3; }
 .bg-yellow { background-color: #ffff00; }
 .bg-orange { background-color: #ffc000; }
-.bg-lightcoral { background-color: lightcoral; }
-.bg-moccasin {background-color: moccasin; }
+.bg-lightcoral { background-color: #f08080; }
+.bg-moccasin {background-color: #ffe4b5; }
 
 .pq-grid-col, .pq-grid-row>.pq-grid-cell {
   overflow: hidden;

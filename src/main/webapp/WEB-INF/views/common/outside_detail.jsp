@@ -124,7 +124,7 @@
                     {
                         title: '완제품', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_FINISH_YN',
                         type: 'checkbox',
-                        cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        cb: {check: 'Y', uncheck: 'N'},
                         render: function (ui) {
                             if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
                             return '<input type="checkbox">';
@@ -133,7 +133,7 @@
                     {
                         title: '가공', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_PROCESS_YN',
                         type: 'checkbox',
-                        cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        cb: {check: 'Y', uncheck: 'N'},
                         render: function (ui) {
                             if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
                             return '<input type="checkbox">';
@@ -142,7 +142,7 @@
                     {
                         title: '연마', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_GRIND_YN',
                         type: 'checkbox',
-                        cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        cb: {check: 'Y', uncheck: 'N'},
                         render: function (ui) {
                             if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
                             return '<input type="checkbox">';
@@ -151,7 +151,7 @@
                     {
                         title: '표면', datatype: 'bool', dataIndx: 'OUTSIDE_REQUEST_SURFACE_YN',
                         type: 'checkbox',
-                        cb: {all: false, header: false, check: 'Y', uncheck: 'N'},
+                        cb: {check: 'Y', uncheck: 'N'},
                         render: function (ui) {
                             if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
                             return '<input type="checkbox">';

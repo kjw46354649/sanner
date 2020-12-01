@@ -700,19 +700,6 @@
             $processCompleteGrid.pqGrid('refreshDataAndView');
         };
 
-        /*const isProcessAssembly = function (rowData) {
-            let flag = false;
-            let postData = {queryId: 'orderMapper.selectIsProcessAssembly'};
-            postData = $.extend(postData, rowData);
-            let parameters = {'url': '/json-list', 'data': postData};
-
-            fnPostAjaxAsync(function (data) {
-                flag = data.list[0].FLAG;
-            }, parameters, '');
-
-            return flag;
-        };*/
-
         const hasInStock = function (rowData) {
             let flag = false;
             let postData = {queryId: 'orderMapper.selectHasInStock'};
