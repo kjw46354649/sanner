@@ -67,26 +67,28 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
                             this.innodaleDao.insertGrid(hashMap);
                         }
                     } else if("drawingUploadMapper.manageControlCadRevFiles".equals(queryId.get(0))) {
-                        // 도면 리번젼 처리
+
+                        currentControlNum = (String) hashMap.get("CONTROL_NUM");
+
+                        // 발주 도면 리버전 처리
                         if (null != hashMap.get("ORDER_SEQ") && !"".equals(hashMap.get("ORDER_SEQ"))) {
-                            // order 업로드
-                            currentControlNum = (String) hashMap.get("CONTROL_NUM");
+
                             hashMap.put("queryId", queryCommonId + "_order");
                             this.innodaleDao.insertGrid(hashMap);
 
                             if (!beforeControlNum.equals(currentControlNum)) {
+                                // 업로드 및 리비전 처리
+                                hashMap.put("queryId", queryCommonId);
+                                this.innodaleDao.insertGrid(hashMap);
 
                                 hashMap.put("queryId", queryCommonId + "_revDelete");     // 데이터 저장 파일 등록
                                 innodaleDao.create(hashMap);
 
                                 hashMap.put("queryId", queryCommonId + "_revInsert");     // 데이터 저장 파일 등록
                                 innodaleDao.create(hashMap);
-
-                                beforeControlNum = currentControlNum;
                             }
-
-                        } else {
-                            // part 업로드
+                        }else{
+                            // Part 업로드
                             hashMap.put("queryId", queryCommonId);
                             this.innodaleDao.insertGrid(hashMap);
 
@@ -96,6 +98,8 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
                             hashMap.put("queryId", queryCommonId + "_revInsert");     // 데이터 저장 파일 등록
                             innodaleDao.create(hashMap);
                         }
+
+                        beforeControlNum = currentControlNum;
                     }else{
                         // 견적 & 재고 업로드
                         hashMap.put("queryId", queryCommonId);
