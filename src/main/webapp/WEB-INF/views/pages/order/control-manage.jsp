@@ -3121,30 +3121,53 @@
         $('#CONTROL_MERGE').on({
             'click': function () {
                 if (noSelectedRowAlert()) return false;
+                let flag = new Boolean();
                 let dataList = [];
 
                 for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                     dataList[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 }
 
-                const groupedWorkType = fnGroupBy(dataList, 'WORK_TYPE');
+                let postData = {'ACTION': 'CHECK', list: dataList};
+                let parameter = {'url': '/mergeControl', 'data': {data: JSON.stringify(postData)}};
+                fnPostAjaxAsync(function (data) {
+                    flag = data.flag;
 
-                if (groupedWorkType.hasOwnProperty('WTP020')) {
-                    const groupedControlSeq = fnGroupBy(dataList, 'CONTROL_SEQ');
-                    let prevCount = 0;
+                    if (flag) {
+                        fnAlert(null, data.message);
+                    }
+                }, parameter, '');
 
-                    for (let controlSeq in groupedControlSeq) {
-                        if (prevCount > 0) {
-                            if (prevCount === groupedControlSeq[controlSeq].length) {
-                                fnAlert(null, '조립품은 조립품끼리만 되면 파트개수가 동일해야만 가능합니다');
-                                return;
+                if (!flag) {
+                    const groupedWorkType = fnGroupBy(dataList, 'WORK_TYPE');
+                    if (groupedWorkType.hasOwnProperty('WTP020') && groupedWorkType.hasOwnProperty('WTP050')) {
+                        if (groupedWorkType.hasOwnProperty('WTP010') || groupedWorkType.hasOwnProperty('WTP030') || groupedWorkType.hasOwnProperty('WTP040') || groupedWorkType.hasOwnProperty('WTP060')) {
+                            fnAlert(null, '조립품은 조립품끼리만 되면 파트개수가 동일해야만 가능합니다');
+                            return;
+                        } else {
+                            const groupedControlSeq = fnGroupBy(dataList, 'CONTROL_SEQ');
+                            let prevPartNum = new Set();
+
+                            for (let controlSeq in groupedControlSeq) {
+                                let partNum = new Set();
+
+                                for (let i = 0; i < groupedControlSeq[controlSeq].length; i++) {
+                                    partNum.add(groupedControlSeq[controlSeq][i].PART_NUM);
+                                }
+
+                                if (prevPartNum.size > 0) {
+                                    if (prevPartNum.size !== partNum.size) {
+                                        fnAlert(null, '조립품은 조립품끼리만 되면 파트개수가 동일해야만 가능합니다');
+                                        return;
+                                    }
+                                }
+                                prevPartNum = partNum;
                             }
                         }
-                        prevCount = groupedControlSeq[controlSeq].length;
                     }
+                    $('#CONTROL_MERGE_POPUP').modal('show');
                 }
-                $('#CONTROL_MERGE_POPUP').modal('show');
-            },
+            }
         });
 
         $('#CONTROL_MERGE_POPUP').on({
@@ -3155,6 +3178,7 @@
                     dataList[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 }
 
+                dataList = fnCloneObj(dataList);
                 const controlMergeGridId = 'CONTROL_MERGE_GRID';
                 const controlMergeColModel = [
                     {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
@@ -3213,6 +3237,7 @@
 
             if (NODE_LENGTH > 0) {
                 let postData = {
+                    'ACTION': 'SAVE',
                     'STANDARD_CONTROL_SEQ': node[0].CONTROL_SEQ,
                     'STANDARD_CONTROL_DETAIL_SEQ': node[0].CONTROL_DETAIL_SEQ,
                     'STANDARD_ORDER_SEQ': node[0].ORDER_SEQ,
