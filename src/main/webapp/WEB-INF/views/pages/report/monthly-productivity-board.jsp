@@ -1468,11 +1468,11 @@
 
             switch (this.value) {
                 case 'XYZ010':
-                    $monthlyProductivityBottomForm.find('#SIZE_W').css('visibility', 'visible');
-                    $monthlyProductivityBottomForm.find('#SIZE_H').css('visibility', 'visible');
-                    $monthlyProductivityBottomForm.find('#SIZE_T').css('visibility', 'visible');
-                    $monthlyProductivityBottomForm.find('#SIZE_D').css('visibility', 'hidden');
-                    $monthlyProductivityBottomForm.find('#SIZE_L').css('visibility', 'hidden');
+                    $monthlyProductivityBottomForm.find('#SIZE_W').show();
+                    $monthlyProductivityBottomForm.find('#SIZE_H').show();
+                    $monthlyProductivityBottomForm.find('#SIZE_T').show();
+                    $monthlyProductivityBottomForm.find('#SIZE_D').hide();
+                    $monthlyProductivityBottomForm.find('#SIZE_L').hide();
                     $monthlyProductivityBottomForm.find('#SIZE_D_F').val('');
                     $monthlyProductivityBottomForm.find('#SIZE_D_T').val('');
                     $monthlyProductivityBottomForm.find('#SIZE_L_F').val('');
@@ -1482,24 +1482,24 @@
                 case 'XYZ030':
                 case 'XYZ040':
                 case 'XYZ050':
-                    $monthlyProductivityBottomForm.find('#SIZE_W').css('visibility', 'hidden');
-                    $monthlyProductivityBottomForm.find('#SIZE_H').css('visibility', 'hidden');
-                    $monthlyProductivityBottomForm.find('#SIZE_T').css('visibility', 'hidden');
+                    $monthlyProductivityBottomForm.find('#SIZE_W').hide();
+                    $monthlyProductivityBottomForm.find('#SIZE_H').hide();
+                    $monthlyProductivityBottomForm.find('#SIZE_T').hide();
                     $monthlyProductivityBottomForm.find('#SIZE_W_F').val('');
                     $monthlyProductivityBottomForm.find('#SIZE_W_T').val('');
                     $monthlyProductivityBottomForm.find('#SIZE_H_F').val('');
                     $monthlyProductivityBottomForm.find('#SIZE_H_T').val('');
                     $monthlyProductivityBottomForm.find('#SIZE_T_F').val('');
                     $monthlyProductivityBottomForm.find('#SIZE_T_T').val('');
-                    $monthlyProductivityBottomForm.find('#SIZE_D').css('visibility', 'visible');
-                    $monthlyProductivityBottomForm.find('#SIZE_L').css('visibility', 'visible');
+                    $monthlyProductivityBottomForm.find('#SIZE_D').show();
+                    $monthlyProductivityBottomForm.find('#SIZE_L').show();
                     break;
                 default:
-                    $monthlyProductivityBottomForm.find('#SIZE_W').css('visibility', 'visible');
-                    $monthlyProductivityBottomForm.find('#SIZE_H').css('visibility', 'visible');
-                    $monthlyProductivityBottomForm.find('#SIZE_T').css('visibility', 'visible');
-                    $monthlyProductivityBottomForm.find('#SIZE_D').css('visibility', 'visible');
-                    $monthlyProductivityBottomForm.find('#SIZE_L').css('visibility', 'visible');
+                    $monthlyProductivityBottomForm.find('#SIZE_W').show();
+                    $monthlyProductivityBottomForm.find('#SIZE_H').show();
+                    $monthlyProductivityBottomForm.find('#SIZE_T').show();
+                    $monthlyProductivityBottomForm.find('#SIZE_D').show();
+                    $monthlyProductivityBottomForm.find('#SIZE_L').show();
             }
         });
 
