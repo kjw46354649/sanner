@@ -348,16 +348,14 @@
                     <li>
                         <span class="slt_wrap">
                             <label class="label_100" for="EQUIP_SEQ">NC NO.</label>
-                            <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
+                            <input type="text" class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" readonly>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_50" for="MATERIAL_DETAIL">소재종류</label>
-                            <select class="wd_200" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL">
+                            <label class="label_50" for="MATERIAL_TYPE">재질</label>
+                            <select class="wd_200" name="MATERIAL_TYPE" id="MATERIAL_TYPE">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1027}">
+                                <c:forEach var="code" items="${HighCode.H_1035}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
@@ -494,9 +492,25 @@
         });
 
         /** function **/
-        fnCommCodeDatasourceSelectBoxCreate($('#mct_result_manage_search_form').find('#EQUIP_SEQ'), 'all', {
-            'url': '/json-list', 'data': {'queryId': 'dataSource.getMctEquipList'}
-        });
+        (function () {
+            let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getMctEquipList'}};
+
+            fnPostAjax(function (data) {
+                let comboData = [];
+
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    let obj = data.list[i];
+
+                    comboData.push({title: obj.CODE_NM, id: obj.CODE_CD});
+                }
+
+                $('#mct_result_manage_search_form').find('#EQUIP_SEQ').comboTree({
+                    source: comboData,
+                    isMultiple: true,
+                    cascadeSelect: false
+                });
+            }, parameters, '');
+        })();
         fnCommCodeDatasourceSelectBoxCreate($('#cam_work_manage_pop_form').find('#CAM_WORK_USER_ID_01'), 'sel', {
             'url': '/json-list', 'data': {'queryId': 'dataSource.getUserList'}
         });
