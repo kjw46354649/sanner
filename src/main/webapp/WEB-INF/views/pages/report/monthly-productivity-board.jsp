@@ -265,7 +265,7 @@
                     <span>
                         <label for="SIZE_TYPE">규격</label>
                         <select class="wd_100" name="SIZE_TYPE" id="SIZE_TYPE" title="규격">
-                            <option value=""><spring:message code="com.form.top.all.option"/></option>
+                            <option value=""><spring:message code="com.form.top.sel.option"/></option>
                             <c:forEach var="vlocale" items="${HighCode.H_1016}">
                                 <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                             </c:forEach>
