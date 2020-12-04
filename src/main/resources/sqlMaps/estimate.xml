@@ -57,7 +57,7 @@
                 AND UPPER(A.EST_TITLE) LIKE CONCAT('%', UPPER(#{EST_TITLE}), '%')
             </if>
             <if test="DRAWING_NUM !='' and DRAWING_NUM != null">
-                AND UPPER(A.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
+                AND UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
             </if>
             <if test="EST_NUM !='' and EST_NUM != null">
                 AND UPPER(A.EST_NUM) LIKE CONCAT('%', UPPER(#{EST_NUM}), '%')
@@ -737,5 +737,342 @@
         FROM  TBL_COMPANY_STAFF A
         WHERE A.STAFF_SEQ IN (SELECT M.ORDER_STAFF_SEQ FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ IN (${CONTROL_SEQ}))
     </select>
+
+    <select id="selectSurfaceTreatmentCostList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER () AS ROW_NUM
+            , CALC_SEQ
+            , MATERIAL_TYPE
+            <!-- , MATERIAL_TYPE AS MATERIAL_TYPE_NM -->
+            , SURFACE_TREAT
+            <!-- , SURFACE_TREAT AS SURFACE_TREAT_NM -->
+            , CALC_METHOD
+            , SPECIFIC_GRAVITY
+            , UNIT_AMT
+            , UNIT_MIN_AMT
+            , NOTE
+        FROM TBL_CALC_SURFACE
+        WHERE 1 = 1
+            <if test="MATERIAL_TYPE !='' and MATERIAL_TYPE != null">
+                AND MATERIAL_TYPE = #{MATERIAL_TYPE}
+            </if>
+            <!--<if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
+                AND MATERIAL_DETAIL = #{MATERIAL_DETAIL}
+            </if>-->
+    </select>
+
+    <insert id="insertSurfaceTreatmentCost" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_SURFACE (
+            CALC_SEQ, MATERIAL_TYPE, SURFACE_TREAT,
+            CALC_METHOD, SPECIFIC_GRAVITY, UNIT_AMT,
+            UNIT_MIN_AMT, NOTE, INSERT_DT, INSERT_ID
+        ) VALUES (
+            IFNULL(#{CALC_SEQ}, NEXTVAL(SEQ_DUMMY)), #{MATERIAL_TYPE}, #{SURFACE_TREAT},
+            #{CALC_METHOD}, #{SPECIFIC_GRAVITY}, #{UNIT_AMT},
+            #{UNIT_MIN_AMT}, #{NOTE}, NOW(), #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            MATERIAL_TYPE = #{MATERIAL_TYPE},
+            SURFACE_TREAT = #{SURFACE_TREAT},
+            CALC_METHOD = #{CALC_METHOD},
+            SPECIFIC_GRAVITY = #{SPECIFIC_GRAVITY},
+            UNIT_AMT = #{UNIT_AMT},
+            UNIT_MIN_AMT = #{UNIT_MIN_AMT},
+            NOTE = #{NOTE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <delete id="deleteSurfaceTreatmentCost"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_SURFACE
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+
+    <select id="selectMaterialCostList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT DENSE_RANK() OVER (ORDER BY A.CALC_SEQ) AS GROUP_KEY
+		    , ROW_NUMBER () OVER () AS ROW_NUM
+            , A.CALC_SEQ
+            , A.MATERIAL_KIND
+            , A.MATERIAL_TYPE
+            , A.MATERIAL_DETAIL
+            , A.SPECIFIC_GRAVITY
+            , A.CALC_METHOD
+            , A.UNIT_AMT
+            , A.UNIT_MIN_AMT
+            , A.NOTE
+            , B.RANGE_TYPE
+            , B.RANGE_1
+            , B.RANGE_2
+            , B.RANGE_3
+            , B.LOSS_1
+            , B.LOSS_2
+            , B.LOSS_3
+            , B.RANGE_SIZE_YN
+            , C.SIZE_NUM
+        FROM TBL_CALC_MATERIAL A, TBL_CALC_MATERIAL_RANGE B
+            LEFT OUTER JOIN (SELECT CALC_SEQ, RANGE_TYPE, GROUP_CONCAT(SIZE_NUM) AS SIZE_NUM FROM TBL_CALC_MATERIAL_RANGE_SIZE GROUP BY CALC_SEQ, RANGE_TYPE) C ON C.CALC_SEQ = B.CALC_SEQ AND C.RANGE_TYPE = B.RANGE_TYPE
+	    WHERE B.CALC_SEQ = A.CALC_SEQ
+            <if test="MATERIAL_KIND !='' and MATERIAL_KIND != null">
+                AND A.MATERIAL_KIND = #{MATERIAL_KIND}
+            </if>
+            <if test="MATERIAL_TYPE !='' and MATERIAL_TYPE != null">
+                AND A.MATERIAL_TYPE = #{MATERIAL_TYPE}
+            </if>
+            <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
+                AND A.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
+            </if>
+        ORDER BY A.MATERIAL_KIND IS NULL, A.MATERIAL_TYPE IS NULL, A.MATERIAL_DETAIL IS NULL
+    </select>
+
+    <insert id="insertMaterialCost" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_MATERIAL (
+            CALC_SEQ, MATERIAL_KIND, MATERIAL_TYPE,
+            MATERIAL_DETAIL, SPECIFIC_GRAVITY, CALC_METHOD,
+            UNIT_AMT, UNIT_MIN_AMT, NOTE, INSERT_DT, INSERT_ID
+        ) VALUES (
+            #{CALC_SEQ}, #{MATERIAL_KIND}, #{MATERIAL_TYPE},
+            #{MATERIAL_DETAIL}, #{SPECIFIC_GRAVITY}, #{CALC_METHOD},
+            #{UNIT_AMT}, #{UNIT_MIN_AMT}, #{NOTE}, NOW(), #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            MATERIAL_KIND = #{MATERIAL_KIND},
+            MATERIAL_TYPE = #{MATERIAL_TYPE},
+            MATERIAL_DETAIL = #{MATERIAL_DETAIL},
+            SPECIFIC_GRAVITY = #{SPECIFIC_GRAVITY},
+            CALC_METHOD = #{CALC_METHOD},
+            UNIT_AMT = #{UNIT_AMT},
+            UNIT_MIN_AMT = #{UNIT_MIN_AMT},
+            NOTE = #{NOTE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <insert id="insertMaterialCostRange" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_MATERIAL_RANGE (
+            CALC_SEQ
+            , RANGE_TYPE
+            , RANGE_1
+            , RANGE_2
+            , RANGE_3
+            , LOSS_1
+            , LOSS_2
+            , LOSS_3
+            , RANGE_SIZE_YN
+            , INSERT_DT
+            , INSERT_ID
+        ) VALUES(
+            #{CALC_SEQ}
+            , #{RANGE_TYPE}
+            , #{RANGE_1}
+            , #{RANGE_2}
+            , #{RANGE_3}
+            , #{LOSS_1}
+            , #{LOSS_2}
+            , #{LOSS_3}
+            , #{RANGE_SIZE_YN}
+            , NOW()
+            , #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            RANGE_1 = #{RANGE_1},
+            RANGE_2 = #{RANGE_2},
+            RANGE_3 = #{RANGE_3},
+            LOSS_1 = #{LOSS_1},
+            LOSS_2 = #{LOSS_2},
+            LOSS_3 = #{LOSS_3},
+            RANGE_SIZE_YN = #{RANGE_SIZE_YN},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <insert id="insertMaterialCostRangeSize" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_MATERIAL_RANGE_SIZE (
+            CALC_SEQ
+            , RANGE_TYPE
+            , SIZE_NUM
+            , INSERT_DT
+            , INSERT_ID
+        ) VALUES(
+            #{CALC_SEQ}
+            , #{RANGE_TYPE}
+            , CAST(#{SIZE_NUM} AS INTEGER)
+            , NOW()
+            , #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <delete id="deleteMaterialCost"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_MATERIAL
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+    <delete id="deleteMaterialCostRange"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_MATERIAL_RANGE
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+    <delete id="deleteMaterialCostRangeSize"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_MATERIAL_RANGE_SIZE
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+
+    <select id="selectMaterialCloseList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER() AS ROW_NUM
+            , CALC_SEQ
+            , FINISH_TYPE_1
+            , FINISH_TYPE_2
+            , MATERIAL_TYPE
+            , AMT_FACTOR_1
+            , AMT_FACTOR_2
+            , UNIT_MIN_AMT
+            , CALC_NOTE
+            , DEL_YN
+            , NOTE
+        FROM TBL_CALC_MATERIAL_FINISH
+        WHERE 1 = 1
+        <if test="FINISH_TYPE_1 !='' and FINISH_TYPE_1 != null">
+            AND FINISH_TYPE_1 = #{FINISH_TYPE_1}
+        </if>
+    </select>
+
+    <insert id="insertMaterialClose" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_MATERIAL_FINISH (
+            CALC_SEQ, FINISH_TYPE_1, FINISH_TYPE_2,
+            MATERIAL_TYPE, AMT_FACTOR_1, AMT_FACTOR_2,
+            UNIT_MIN_AMT, CALC_NOTE, DEL_YN, NOTE, INSERT_DT, INSERT_ID
+        ) VALUES(
+            IFNULL(#{CALC_SEQ}, NEXTVAL(SEQ_DUMMY)), #{FINISH_TYPE_1}, #{FINISH_TYPE_2},
+            #{MATERIAL_TYPE}, #{AMT_FACTOR_1}, #{AMT_FACTOR_2},
+            #{UNIT_MIN_AMT}, #{CALC_NOTE}, 'N', #{NOTE}, NOW(), #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            FINISH_TYPE_1 = #{FINISH_TYPE_1},
+            FINISH_TYPE_2 = #{FINISH_TYPE_2},
+            MATERIAL_TYPE = #{MATERIAL_TYPE},
+            AMT_FACTOR_1 = #{AMT_FACTOR_1},
+            AMT_FACTOR_2 = #{AMT_FACTOR_2},
+            UNIT_MIN_AMT = #{UNIT_MIN_AMT},
+            CALC_NOTE = #{CALC_NOTE},
+            DEL_YN = #{DEL_YN},
+            NOTE = #{NOTE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <delete id="deleteMaterialClose"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_MATERIAL_FINISH
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+
+    <select id="selectProcessCostList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER() AS ROW_NUM
+            , CALC_SEQ
+            , MATERIAL_KIND
+            , MATERIAL_TYPE
+            , SIZE_W
+            , SIZE_H
+            , SIZE_T
+            , SIZE_D
+            , SIZE_L
+            , SIZE_LEVEL
+            , UNIT_BASIC_AMT
+        FROM TBL_CALC_PROCESS
+        WHERE 1 = 1
+        <if test="MATERIAL_KIND !='' and MATERIAL_KIND != null">
+            AND MATERIAL_KIND = #{MATERIAL_KIND}
+        </if>
+        <if test="MATERIAL_TYPE !='' and MATERIAL_TYPE != null">
+            AND MATERIAL_TYPE = #{MATERIAL_TYPE}
+        </if>
+    </select>
+
+    <insert id="insertProcessCost" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_PROCESS (
+            CALC_SEQ, MATERIAL_KIND, MATERIAL_TYPE,
+            SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
+            SIZE_LEVEL, UNIT_BASIC_AMT, INSERT_DT, INSERT_ID
+        ) VALUES (
+            IFNULL(#{CALC_SEQ}, NEXTVAL(SEQ_DUMMY)), #{MATERIAL_KIND}, #{MATERIAL_TYPE},
+            #{SIZE_W}, #{SIZE_H}, #{SIZE_T}, #{SIZE_D}, #{SIZE_L}, #{SIZE_LEVEL},
+            #{UNIT_BASIC_AMT}, NOW(), #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            MATERIAL_KIND = #{MATERIAL_KIND},
+            MATERIAL_TYPE = #{MATERIAL_TYPE},
+            SIZE_W = #{SIZE_W},
+            SIZE_H = #{SIZE_H},
+            SIZE_T = #{SIZE_T},
+            SIZE_D = #{SIZE_D},
+            SIZE_L = #{SIZE_L},
+            SIZE_LEVEL = #{SIZE_LEVEL},
+            UNIT_BASIC_AMT = #{UNIT_BASIC_AMT},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <delete id="deleteProcessCost"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_PROCESS
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+
+    <select id="selectProcessCostFactorList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER(ORDER BY A.FACTOR_CD) AS ROW_NUM
+        , IFNULL(B.CALC_SEQ, #{CALC_SEQ}) AS CALC_SEQ
+        , A.FACTOR_CD
+        , B.UNIT_AMT
+        FROM TBL_PROCESS_FACTOR A
+        LEFT OUTER JOIN TBL_CALC_PROCESS_FACTOR B ON B.FACTOR_CD = A.FACTOR_CD
+            AND B.CALC_SEQ = #{CALC_SEQ}
+        WHERE 1 = 1
+        ORDER BY A.FACTOR_CD
+    </select>
+
+    <insert id="insertProcessCostFactor" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_PROCESS_FACTOR (
+            CALC_SEQ, FACTOR_CD, UNIT_AMT
+        ) VALUES (
+            #{CALC_SEQ}, #{FACTOR_CD}, #{UNIT_AMT}
+        )
+        ON DUPLICATE KEY UPDATE
+            FACTOR_CD = #{FACTOR_CD},
+            UNIT_AMT = #{UNIT_AMT}
+    </insert>
+
+    <delete id="deleteProcessCostFactor"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_PROCESS_FACTOR
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+
+    <select id="selectProcessCostFactorDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER(ORDER BY FACTOR_CD, LEVEL_1, LEVEL_2) AS ROW_NUM
+            , FACTOR_CD
+            , LEVEL_1
+            , LEVEL_2
+            , NOTE
+        FROM TBL_PROCESS_FACTOR
+        ORDER BY FACTOR_CD, LEVEL_1, LEVEL_2
+    </select>
+
+    <insert id="insertProcessCostFactorDetail" parameterType="java.util.HashMap">
+        INSERT INTO TBL_PROCESS_FACTOR (
+            FACTOR_CD, LEVEL_1, LEVEL_2,
+            NOTE, INSERT_DT, INSERT_ID
+        ) VALUES (
+            #{FACTOR_CD}, #{LEVEL_1}, #{LEVEL_2},
+            #{NOTE}, NOW(), #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            FACTOR_CD = #{FACTOR_CD},
+            LEVEL_1 = #{LEVEL_1},
+            LEVEL_2 = #{LEVEL_2},
+            NOTE = #{NOTE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <delete id="deleteProcessCostFactorDetail"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_PROCESS_FACTOR
+        WHERE FACTOR_CD = #{FACTOR_CD}
+    </delete>
 
 </mapper>
