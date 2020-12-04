@@ -135,7 +135,7 @@
         WHERE 1 = 1
         	AND DEL_YN = 'N'
         	AND PROCESS_TYPE = 'MPR010'
-        ORDER BY FACTORY_AREA, CAST(IFNULL(SUBSTRING_INDEX(EQUIP_ID, '-', -1), 0) AS UNSIGNED)
+        ORDER BY FACTORY_AREA, CAST(IFNULL(SUBSTRING_INDEX(EQUIP_NM, '-', -1), 0) AS UNSIGNED)
     </select>
 
     <select id="selectRoleCommonCode" parameterType="java.util.HashMap" resultType="java.util.HashMap">

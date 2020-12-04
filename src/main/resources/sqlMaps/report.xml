@@ -1333,24 +1333,42 @@
                     <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
                     AND B.WORK_FACTORY = #{WORK_FACTORY}   <!-- 가변조건 -->
                     </if>
-<!--                                                        &#45;&#45; 규격 가변조건 START &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-<!--                                                        &#45;&#45; SIZE_TYPE = 'XYZ010'        &lt;!&ndash; 가변조건 &ndash;&gt;-->
-<!--                                                        AND B.SIZE_TYPE = 'XYZ010'      -->
-<!--                                                        AND SIZE_W >= 1-->
-<!--                                                        AND SIZE_W <![CDATA[ <= ]]> 100-->
-<!--                                                        AND SIZE_H >= 1-->
-<!--                                                        AND SIZE_H <![CDATA[ <= ]]> 100-->
-<!--                                                        AND SIZE_T >= 1-->
-<!--                                                        AND SIZE_T <![CDATA[ <= ]]> 100-->
-<!--                                                        -->
-<!--                                                       &#45;&#45; SIZE_TYPE IN ('XYZ020','XYZ030','XYZ040','XYZ050')        &lt;!&ndash; 가변조건 &ndash;&gt;-->
-<!--                                                       &#45;&#45; AND B.SIZE_TYPE = 'XYZ020'      &#45;&#45; 'XYZ030','XYZ040','XYZ050'-->
-<!--                                                       &#45;&#45; AND SIZE_D >= 1-->
-<!--                                                       &#45;&#45; AND SIZE_D <![CDATA[ <= ]]> 100-->
-<!--                                                       &#45;&#45; AND SIZE_L >= 1-->
-<!--                                                       &#45;&#45; AND SIZE_L <![CDATA[ <= ]]> 100                    -->
-<!--                                                        &#45;&#45; -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-<!--                                                        &#45;&#45; 규격 가변조건 END &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+                    <choose>
+                        <when test="SIZE_TYPE == 'XYZ010'">
+                            <if test="SIZE_W_F != null and SIZE_W_F != ''">
+                                AND B.SIZE_W >= #{SIZE_W_F}
+                            </if>
+                            <if test="SIZE_W_T != null and SIZE_W_T != ''">
+                                AND B.SIZE_W <![CDATA[ <= ]]> #{SIZE_W_T}
+                            </if>
+                            <if test="SIZE_H_F != null and SIZE_H_F != ''">
+                                AND B.SIZE_H >= #{SIZE_H_F}
+                            </if>
+                            <if test="SIZE_H_T != null and SIZE_H_T != ''">
+                                AND B.SIZE_H <![CDATA[ <= ]]> #{SIZE_H_T}
+                            </if>
+                            <if test="SIZE_T_F != null and SIZE_T_F != ''">
+                                AND B.SIZE_T >= #{SIZE_T_F}
+                            </if>
+                            <if test="SIZE_T_T != null and SIZE_T_T != ''">
+                                AND B.SIZE_T <![CDATA[ <= ]]> #{SIZE_T_T}
+                            </if>
+                        </when>
+                        <when test="SIZE_TYPE == 'XYZ020' or SIZE_TYPE == 'XYZ030' or SIZE_TYPE == 'XYZ040' or SIZE_TYPE == 'XYZ050'">
+                            <if test="SIZE_D_F != null and SIZE_D_F != ''">
+                                AND B.SIZE_D >= #{SIZE_D_F}
+                            </if>
+                            <if test="SIZE_D_T != null and SIZE_D_T != ''">
+                                AND B.SIZE_D <![CDATA[ <= ]]> #{SIZE_D_T}
+                            </if>
+                            <if test="SIZE_L_F != null and SIZE_L_F != ''">
+                                AND B.SIZE_L >= #{SIZE_L_F}
+                            </if>
+                            <if test="SIZE_L_T != null and SIZE_L_T != ''">
+                                AND B.SIZE_L <![CDATA[ <= ]]> #{SIZE_L_T}
+                            </if>
+                        </when>
+                    </choose>
              ) X
         WHERE INSPECT_RNUM = 1
             <if test="YY1 != null and YY1 != ''">
