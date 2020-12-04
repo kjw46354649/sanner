@@ -255,7 +255,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('[name=imageView]').bind('click', function () {
                         let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
@@ -287,6 +287,21 @@
                 let data = $businessOutgoingListGrid.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
                 $('#business_status_total_records').html(totalRecords);
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                }
+
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
             toolbar: false,
         };

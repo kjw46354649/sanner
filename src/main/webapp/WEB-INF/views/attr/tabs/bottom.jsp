@@ -259,15 +259,15 @@
                             <h4>가공이력</h4>
                             <span class="slt_wrap namePlusSlt rightName">
                                 <label for="g_item_detail_pop_grid_01_info_1">총시간</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_1" class="wd_50" style="text-align: right;" title="총시간">
+                                <input type="text" id="g_item_detail_pop_grid_01_info_1" class="wd_60" style="text-align: right; padding: 0 5px;" title="총시간">
                                 <label for="g_item_detail_pop_grid_01_info_2">선반</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_2" class="wd_50" style="text-align: right;" title="선반">
+                                <input type="text" id="g_item_detail_pop_grid_01_info_2" class="wd_60" style="text-align: right; padding: 0 5px;" title="선반">
                                 <label for="g_item_detail_pop_grid_01_info_3">NC</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_3" class="wd_50" style="text-align: right;" title="NC">
+                                <input type="text" id="g_item_detail_pop_grid_01_info_3" class="wd_60" style="text-align: right; padding: 0 5px;" title="NC">
                                 <label for="g_item_detail_pop_grid_01_info_4">밀링</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_4" class="wd_50" style="text-align: right;" title="밀링">
+                                <input type="text" id="g_item_detail_pop_grid_01_info_4" class="wd_60" style="text-align: right; padding: 0 5px;" title="밀링">
                                 <label for="g_item_detail_pop_grid_01_info_5">연마</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_5" class="wd_50" style="text-align: right;" title="연마">
+                                <input type="text" id="g_item_detail_pop_grid_01_info_5" class="wd_60" style="text-align: right; padding: 0 5px;" title="연마">
                             </span>
                             <div id="g_item_detail_pop_grid_01" class="jqx-refresh"></div>
                         </ul>

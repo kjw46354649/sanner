@@ -348,16 +348,14 @@
                     <li>
                         <span class="slt_wrap">
                             <label class="label_100" for="EQUIP_SEQ">NC NO.</label>
-                            <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
+                            <input type="text" class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" readonly>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_50" for="MATERIAL_DETAIL">소재종류</label>
-                            <select class="wd_200" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL">
+                            <label class="label_50" for="MATERIAL_TYPE">재질</label>
+                            <select class="wd_200" name="MATERIAL_TYPE" id="MATERIAL_TYPE">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1027}">
+                                <c:forEach var="code" items="${HighCode.H_1035}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
@@ -414,8 +412,7 @@
                 <span class="barCode ml-10 mr-10" id="mctResultBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="mctResultBarcodeImg"></span>
                 <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode" name="MCT_RESULT_BARCODE_NUM" id="MCT_RESULT_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
                 <span class="rightSpan">
-                    <button type="button" class="defaultBtn btn-120w" id="mctResultDetailViewBtn" >상세정보 조회</button>
-                    <button type="button" class="defaultBtn btn-120w" id="mctResultDrawingViewBtn" >도면보기</button>
+                    <button type="button" class="defaultBtn btn-100w green" id="MCT_RESULT_MANAGE_SAVE">저장</button>
                 </span>
             </div>
         </div>
@@ -441,8 +438,6 @@
     let $camWorkSaveAndCompleteBtn = $("#camWorkSaveAndCompleteBtn");
     let $camWorkCancelBtn = $("#camWorkCancelBtn");
 
-    let $mctResultDrawingViewBtn = $("#mctResultDrawingViewBtn");
-    let $mctResultDetailViewBtn = $("#mctResultDetailViewBtn");
     let $mctCamManageSearchBtn = $("#mctCamManageSearchBtn");
 
     $(function () {
@@ -497,9 +492,25 @@
         });
 
         /** function **/
-        fnCommCodeDatasourceSelectBoxCreate($('#mct_result_manage_search_form').find('#EQUIP_SEQ'), 'all', {
-            'url': '/json-list', 'data': {'queryId': 'dataSource.getMctEquipList'}
-        });
+        (function () {
+            let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getMctEquipList'}};
+
+            fnPostAjax(function (data) {
+                let comboData = [];
+
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    let obj = data.list[i];
+
+                    comboData.push({title: obj.CODE_NM, id: obj.CODE_CD});
+                }
+
+                $('#mct_result_manage_search_form').find('#EQUIP_SEQ').comboTree({
+                    source: comboData,
+                    isMultiple: true,
+                    cascadeSelect: false
+                });
+            }, parameters, '');
+        })();
         fnCommCodeDatasourceSelectBoxCreate($('#cam_work_manage_pop_form').find('#CAM_WORK_USER_ID_01'), 'sel', {
             'url': '/json-list', 'data': {'queryId': 'dataSource.getUserList'}
         });
@@ -842,6 +853,7 @@
             minHeight: '100%', height: 730, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
             resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
             trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false, render: mctResultManageFilterRender}, filterModel: { mode: 'OR' },
+            editModel: {clicksToEdit: 1},
             colModel: machineResultManagecolModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -871,22 +883,21 @@
             render: function () {
                 this.option('freezeCols', 14);
             },
-            change: function (evt, ui) {
-                let updateList = ui.updateList;
-                if (updateList.length) {
-                    let gridInstance = $mctResultManageGrid.pqGrid('getInstance').grid;
-                    //추가 또는 수정된 값이 있으면 true
-                    if (gridInstance.isDirty()) {
-                        let changes = gridInstance.getChanges({format: 'byVal'});
-                        let QUERY_ID_ARRAY = { 'updateQueryId': ['machine.insertMctPlan'] };
-                        changes.queryIdList = QUERY_ID_ARRAY;
-                        let parameters = {'url': '/paramQueryCRUDGrid', 'data': {data: JSON.stringify(changes)}};
-                        fnPostAjax(function (data, callFunctionParam) {
-                            $mctResultManageGrid.pqGrid('refreshDataAndView');
-                        }, parameters, '');
-                    }
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
                 }
-            },
+
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+            }
         };
         /* function */
         /** 제품 시작 상세 표시 **/
@@ -1196,14 +1207,6 @@
             fnFrozenHandler($mctResultManageGrid, $(this).val());
         });
 
-        /** 제품 상세 보기 */
-        $mctResultDetailViewBtn.click(function(event) {
-            g_item_detail_pop_view();
-        });
-        /** 도면 보기 **/
-        $mctResultDrawingViewBtn.click(function(event) {
-            callWindowImageViewer(999);
-        });
         /** 팝업 제품 상세 보기 **/
         $("#cam_work_manage_pop_form").find("#mctWorkPopMctResultDetailViewBtn").click(function(event) {
             g_item_detail_pop_view($("#cam_work_manage_pop_form").find("#CONTROL_SEQ").val(), $("#cam_work_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val());
@@ -1384,6 +1387,13 @@
         });
 
         saveAs(blob, 'MCT 실적관리.xlsx');
+    });
+    
+    $('#MCT_RESULT_MANAGE_SAVE').on('click', function () {
+        const insertQueryList = ['machine.insertMctPlan'];
+        const updateQueryList = insertQueryList;
+
+        fnModifyPQGrid($mctResultManageGrid, insertQueryList, updateQueryList);
     });
     /* event */
     function resetMctResult(index){

@@ -1097,10 +1097,10 @@
                     AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018')
                 </otherwise>
             </choose>
-            <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+            <if test="HIDDEN_EQUIP_SEQ != null and HIDDEN_EQUIP_SEQ != ''">
                 AND EXISTS (SELECT * FROM jmes.TBL_MCT_PLAN MP
                             WHERE A.CONTROL_SEQ = MP.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = MP.CONTROL_DETAIL_SEQ AND MP.DEL_YN = 'N'
-                                AND MP.EQUIP_SEQ = #{EQUIP_SEQ}
+                                AND MP.EQUIP_SEQ IN (${HIDDEN_EQUIP_SEQ})
                             )
             </if>
             <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
@@ -1112,8 +1112,8 @@
             <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
                 AND UPPER(A.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
             </if>
-            <if test="MATERIAL_DETAIL != null and MATERIAL_DETAIL != ''">
-                AND A.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
+            <if test="MATERIAL_TYPE != null and MATERIAL_TYPE != ''">
+                AND A.MATERIAL_TYPE = #{MATERIAL_TYPE}
             </if>
             <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
                 AND A.WORK_FACTORY = #{WORK_FACTORY}
