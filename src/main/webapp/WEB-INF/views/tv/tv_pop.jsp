@@ -33,9 +33,6 @@
 	<script type="text/javascript" src='/resource/plugins/socket/sockjs.min.js'></script>
 	<script type="text/javascript" src='/resource/plugins/stomp/stomp.min.js'></script>
 	<style type="text/css">
-	        html {
-	            cursor: none;
-	       	}
 
 			@keyframes border-pulse {
 				0% { border-color: orangered; }

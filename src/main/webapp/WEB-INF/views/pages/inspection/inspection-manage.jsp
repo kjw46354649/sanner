@@ -212,10 +212,10 @@
                         <%--   <caption></caption>--%>
                         <colgroup>
                             <col width="10%">
-                            <col width="*">
+                            <col width="30%">
                             <col width="10%">
-                            <col width="*%">
-                            <col width="15%">
+                            <col width="20%">
+                            <col width="10%">
                             <col width="15%">
                         </colgroup>
                         <tr>

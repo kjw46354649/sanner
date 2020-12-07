@@ -2931,7 +2931,7 @@
                     AND B.CONTROL_SEQ = C.CONTROL_SEQ
                     AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.DEL_YN = 'N'
-                    AND A.CONTROL_STATUS IN ('ORD001','ORD003', 'ORD004')
+                    AND A.CONTROL_STATUS IN ('ORD001','ORD003')
                     AND A.OUT_FINISH_DT IS NULL
                     AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
             ) X
