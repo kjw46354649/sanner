@@ -343,9 +343,11 @@
                 } else {
                     switch($ctrl.attr("type")) {
                         case "text":
+                        case "number":
                         case "date":
                         case "password":
                         case "hidden":
+                        case "search":
                             value = $ctrl.val();
                             break;
                         case "checkbox":
@@ -454,11 +456,10 @@
         //추가 또는 수정된 값이 있으면 true
         if (gridInstance.isDirty()) {
             let changes = gridInstance.getChanges({format: 'byVal'});
-            let QUERY_ID_ARRAY = {
+            changes.queryIdList = {
                 'insertQueryId': insertQueryList,
                 'updateQueryId': updateQueryList,
             };
-            changes.queryIdList = QUERY_ID_ARRAY;
             parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
             // const replacer = function (key, value) {

@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: seongjun-innodale
-  Date: 2020-05-08
-  Time: 오전 9:09
+  Date: 2020-12-07
+  Time: 오전 11:55
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
@@ -11,6 +11,141 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
+<div class="page estimate mct_execute_history">
+    <div class="topWrap">
+        <form class="form-inline" id="CAM_WORK_HISTORY_GRID_SEARCH_FORM" role="form">
+            <input type="hidden" name="queryId" id="queryId" value="machine.selectCamWorkHistoryList">
+            <div class="none_gubunWrap row3_topWrap">
+                <ul>
+                    <li>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="FACTORY_AREA">MCT 공장 구분</label>
+                            <select class="wd_200" name="FACTORY_AREA" id="FACTORY_AREA">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1005}">
+                                    <c:if test="${code.ETC2 == 'W'}">
+                                       <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:if>
+                                </c:forEach>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="EQUIP_SEQ">NC NO.</label>
+                            <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
+                            <select class="wd_200" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1027}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="SURFACE_TREAT">표면처리</label>
+                             <select class="wd_200" name="SURFACE_TREAT" id="SURFACE_TREAT">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1039}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
+                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap">
+                            <label class="label_100" for="DRAWING_NUM">도면번호</label>
+                            <input type="search" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
+                        </span>
+                        <span class="gubun"></span>
+<%--                        <span class="slt_wrap">--%>
+<%--                            <label class="label_100" for="CLOSE_VER">규격</label>--%>
+<%--                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">--%>
+<%--                                <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
+<%--                            </select>--%>
+<%--                        </span>--%>
+<%--                        <span class="gubun"></span>--%>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="WORK_TYPE">형태</label>
+                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1033}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="WORK_USER_ID">작업자</label>
+                            <select class="wd_200" name="WORK_USER_ID" id="WORK_USER_ID">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                            </select>
+                        </span>
+                    </li>
+                    <li>
+                        <span class="slt_wrap trans_slt mr-10">
+                            <select name="CAM_WORK_HISTORY_CONDITION" id="CAM_WORK_HISTORY_CONDITION">
+                                <%--<option value=""><spring:message code="com.form.top.sel.option"/></option>--%>
+                                <option value="1">수정일시</option>
+                                <option value="2" selected>가공확정일시</option>
+                            </select>
+                        </span>
+                        <div class="calendar_wrap">
+                            <span class="calendar_span">
+                                <input type="text" name="mct_nc_execute_history_start_dt" id="mct_nc_execute_history_start_dt"><button type="button">달력선택</button>
+                            </span>
+                            <span class="nbsp">~</span>
+                            <span class="calendar_span">
+                                <input type="text" name="mct_nc_execute_history_end_dt" id="mct_nc_execute_history_end_dt" readonly><button type="button">달력선택</button>
+                            </span>
+                            <%--<span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
+                        </div>
+                        <span class="ipu_wrap right_float">
+                            <button type="button" id="CAM_WORK_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
+                            <button type="button" class="defaultBtn radius blue" id="CAM_WORK_HISTORY_SEARCH">검색</button>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+    <div class="bottomWrap">
+        <div class="hWrap">
+            <div class="d-inline">
+                <input type="search" id="camWorkHistoryFilterKeyword" placeholder="Enter your keyword">
+                <select id="camWorkHistoryFilterColumn"></select>
+                <select id="camWorkHistoryFilterCondition">
+                    <c:forEach var="code" items="${HighCode.H_1083}">
+                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    </c:forEach>
+                </select>
+                <label for="camWorkHistoryFrozen" class="label_50" style="font-size: 15px;">Fix</label>
+                <select id="camWorkHistoryFrozen" name="camWorkHistoryFrozen">
+                </select>
+            </div>
+        </div>
+        <div class="tableWrap" style="padding: 10px 0;">
+            <div class="conWrap">
+                <div id="CAM_WORK_HISTORY_GRID"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="CAM_WORK_HISTORY_RECORDS" style="color: #00b3ee">0</span>)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- cam 작업관리 popup -->
 <div class="popup_container cam_work_history_detail_pop" id="cam_work_history_detail_pop" style="display: none;">
     <form class="form-inline" id="cam_work_history_pop_form" name="cam_work_history_pop_form" role="form">
@@ -322,273 +457,16 @@
     </form>
 </div>
 <!-- cam 작업 관리 popup -->
-<div class="page estimate mct_execute_history">
-    <div class="topWrap">
-        <form class="form-inline" id="CAM_WORK_HISTORY_GRID_SEARCH_FORM" role="form">
-            <input type="hidden" name="queryId" id="queryId" value="machine.selectCamWorkHistoryList">
-            <div class="none_gubunWrap row3_topWrap">
-                <ul>
-                    <li>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="FACTORY_AREA">MCT 공장 구분</label>
-                            <select class="wd_200" name="FACTORY_AREA" id="FACTORY_AREA">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1005}">
-                                    <c:if test="${code.ETC2 == 'W'}">
-                                       <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:if>
-                                </c:forEach>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="EQUIP_SEQ">NC NO.</label>
-                            <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
-                            <select class="wd_200" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1027}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="SURFACE_TREAT">표면처리</label>
-                             <select class="wd_200" name="SURFACE_TREAT" id="SURFACE_TREAT">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1039}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="label_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="label_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
-                        </span>
-                        <span class="gubun"></span>
-<%--                        <span class="slt_wrap">--%>
-<%--                            <label class="label_100" for="CLOSE_VER">규격</label>--%>
-<%--                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">--%>
-<%--                                <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
-<%--                            </select>--%>
-<%--                        </span>--%>
-<%--                        <span class="gubun"></span>--%>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="WORK_TYPE">형태</label>
-                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1033}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="WORK_USER_ID">작업자</label>
-                            <select class="wd_200" name="WORK_USER_ID" id="WORK_USER_ID">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="slt_wrap trans_slt mr-10">
-                            <select name="CAM_WORK_HISTORY_CONDITION" id="CAM_WORK_HISTORY_CONDITION">
-                                <%--<option value=""><spring:message code="com.form.top.sel.option"/></option>--%>
-                                <option value="1">수정일시</option>
-                                <option value="2" selected>가공확정일시</option>
-                            </select>
-                        </span>
-                        <div class="calendar_wrap">
-                            <span class="calendar_span">
-                                <input type="text" name="mct_nc_execute_history_start_dt" id="mct_nc_execute_history_start_dt"><button type="button">달력선택</button>
-                            </span>
-                            <span class="nbsp">~</span>
-                            <span class="calendar_span">
-                                <input type="text" name="mct_nc_execute_history_end_dt" id="mct_nc_execute_history_end_dt" readonly><button type="button">달력선택</button>
-                            </span>
-                            <%--<span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
-                        </div>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" id="CAM_WORK_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
-                            <button type="button" class="defaultBtn radius blue" id="CAM_WORK_HISTORY_SEARCH">검색</button>
-                        </span>
-                    </li>
-                </ul>
-            </div>
-        </form>
-    </div>
-
-    <div class="topWrap" style="display: none;">
-        <form class="form-inline" id="NC_PERFORMANCE_HISTORY_SEARCH_FORM" role="form">
-            <input type="hidden" name="queryId" id="queryId" value="machine.selectNcPerformanceHistoryList">
-            <div class="none_gubunWrap row3_topWrap">
-                <ul>
-                    <li>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="FACTORY_AREA">MCT 공장 구분</label>
-                            <select class="wd_200" name="FACTORY_AREA" id="FACTORY_AREA" title="공장구분">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1005}">
-                                    <c:if test="${code.ETC2 == 'W'}">
-                                       <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:if>
-                                </c:forEach>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="EQUIP_SEQ">NC NO.</label>
-                            <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
-                            <select class="wd_200" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1027}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="WORK_TYPE">형태</label>
-                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1033}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="label_200"name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="label_200"name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="WORK_USER_ID">작업자</label>
-                            <select class="wd_200" name="WORK_USER_ID" id="WORK_USER_ID">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="slt_wrap trans_slt mr-10">
-                            <label class="label_100">작업일시</label>
-                            <%--<select id="daySltd" name="daySltd" title="등록일시">
-                                <option value="" selected="selected">등록일시</option>
-                                <option value="1">-ALL-</option>
-                                <option value="2">-ALL-</option>
-                            </select>--%>
-                        </span>
-                        <div class="calendar_wrap">
-                            <span class="calendar_span">
-                                <input type="text" name="mct_dw_execute_history_start_dt" id="mct_dw_execute_history_start_dt"><button type="button">달력선택</button>
-                            </span>
-                            <span class="nbsp">~</span>
-                            <span class="calendar_span">
-                                <input type="text" name="mct_dw_execute_history_end_dt" id="mct_dw_execute_history_end_dt" readonly><button type="button">달력선택</button>
-                            </span>
-<%--                            <span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
-                        </div>
-                        <span class="ipu_wrap right_float">
-                            <button type="button" id="NC_PERFORMANCE_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
-                            <button type="button" class="defaultBtn radius blue" id="NC_PERFORMANCE_HISTORY_SEARCH">검색</button>
-                        </span>
-                    </li>
-                </ul>
-            </div>
-        </form>
-    </div>
-    <div class="bottomWrap">
-        <div class="tableWrap jmestabs" id="MCT_EXECUTE_HISTORY_TAB" style="padding: 10px 0;">
-            <ul class="smallTabMenuTabs">
-                <li class="active">
-                    <a href="#CAM_WORK_HISTORY" data-toggle="tab" aria-expanded="true">CAM 작업이력</a>
-                </li>
-                <li>
-                    <a href="#NC_PERFORMANCE_HISTORY" data-toggle="tab" aria-expanded="false">NC수행 이력</a>
-                </li>
-                <div class="d-inline right_float" id="CAM_WORK_HISTORY_BOX" style="font-weight: normal;">
-                    <input type="text" id="camWorkHistoryFilterKeyword" placeholder="Enter your keyword">
-                    <select id="camWorkHistoryFilterColumn"></select>
-                    <select id="camWorkHistoryFilterCondition">
-                        <c:forEach var="code" items="${HighCode.H_1083}">
-                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                        </c:forEach>
-                    </select>
-                    <label for="camWorkHistoryFrozen" class="label_50" style="font-size: 15px;">Fix</label>
-                    <select id="camWorkHistoryFrozen" name="camWorkHistoryFrozen">
-                    </select>
-                </div>
-                <div class="d-inline right_float" id="NC_PERFORMANCE_HISTORY_BOX" style="display: none; font-weight: normal;">
-                    <input type="text" id="ncPerformanceHistoryFilterKeyword" placeholder="Enter your keyword">
-                    <select id="ncPerformanceHistoryFilterColumn"></select>
-                    <select id="ncPerformanceHistoryFilterCondition">
-                        <c:forEach var="code" items="${HighCode.H_1083}">
-                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                        </c:forEach>
-                    </select>
-                    <label for="ncPerformanceHistoryFrozen" class="label_50" style="font-size: 15px;">Fix</label>
-                    <select id="ncPerformanceHistoryFrozen" name="ncPerformanceHistoryFrozen">
-                    </select>
-                </div>
-            </ul>
-            <div class="tab-content">
-                <ul class="active conWrap" id="CAM_WORK_HISTORY">
-                    <div id="CAM_WORK_HISTORY_GRID"></div>
-                </ul>
-                <ul class="conWrap" id="NC_PERFORMANCE_HISTORY">
-                    <div id="NC_PERFORMANCE_HISTORY_GRID"></div>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     $(function () {
         'use strict';
-
         $('#mct_nc_execute_history_start_dt').datepicker({dateFormat: 'yy/mm/dd'});
         $('#mct_nc_execute_history_end_dt').datepicker({dateFormat: 'yy/mm/dd'});
         $('#mct_nc_execute_history_start_dt').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH, TODAY.getDate() - 30));
         $('#mct_nc_execute_history_end_dt').datepicker('setDate', 'today');
 
-        $('#mct_dw_execute_history_start_dt').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#mct_dw_execute_history_end_dt').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#mct_dw_execute_history_start_dt').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH, TODAY.getDate() - 7));
-        $('#mct_dw_execute_history_end_dt').datepicker('setDate', 'today');
-
         /** function **/
-        fnCommCodeDatasourceSelectBoxCreate($('#NC_PERFORMANCE_HISTORY_SEARCH_FORM').find('#EQUIP_SEQ'), 'all', {
-            'url': '/json-list', 'data': {'queryId': 'dataSource.getMctEquipList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#NC_PERFORMANCE_HISTORY_SEARCH_FORM').find('#WORK_USER_ID'), 'all', {
-            'url': '/json-list', 'data': {'queryId': 'dataSource.getMCTWorkerList'}
-        });
         fnCommCodeDatasourceSelectBoxCreate($('#CAM_WORK_HISTORY_GRID_SEARCH_FORM').find('#EQUIP_SEQ'), 'all', {
             'url': '/json-list', 'data': {'queryId': 'dataSource.getMctEquipList'}
         });
@@ -693,25 +571,8 @@
                      {title: '기기명', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_NM'},
                      {title: '작업자', minWidth: 40, width: 80, dataType: 'string', dataIndx: 'NC_WORK_USER_NM'},
                      {title: 'R/T', minWidth: 50, width: 55, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME'},
-            //         {title: '2', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_2'},
-            //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_2'},
-            //         {title: 'STATUS_2', dataType: 'string', dataIndx: 'WORK_STATUS_2', hidden: true},
-            //         {title: '3', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_3'},
-            //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_3'},
-            //         {title: 'STATUS_3', dataType: 'string', dataIndx: 'WORK_STATUS_3', hidden: true},
-            //         {title: '4', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'WORK_EQUIP_NM_4'},
-            //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', align: 'right', dataIndx: 'WORK_WORKING_TIME_4'},
-            //         {title: 'STATUS_4', dataType: 'string', dataIndx: 'WORK_STATUS_4', hidden: true},
                 ]
             },
-            // {
-            //     title: '가공진행 현황', align: 'center', colModel: [
-            //         {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_NC', minWidth: 20, width: 30},
-            //         {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_MILLING', minWidth: 20, width: 30},
-            //         {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK', minWidth: 20, width: 30},
-            //         {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING', minWidth: 20, width: 30},
-            //     ]
-            // },
             {
                 title: 'CAM 작업 실적', align: 'center', colModel: [
                     {title: 'step', minWidth: 30, width: 35, datatype: 'integer', dataIndx: 'CAM_STEP',
@@ -766,21 +627,10 @@
             }
         ];
         const tab1Obj = {
-            minHeight: '100%', height: 720, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
+            minHeight: '100%', height: 700, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
             resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
             trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false, render: camWorkHistoryFilterRender}, filterModel: { mode: 'OR' },
             colModel: tab1ColModel,
-            // height: 720,
-            // minHeight: '100%',
-            // collapsible: false,
-            // postRenderInterval: -1, //call postRender synchronously.
-            // resizable: false,
-            // showTitle: false,
-            // rowHtHead: 15,
-            // numberCell: {title: 'No.'},
-            // trackModel: {on: true},
-            // columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center',  editable: false, render: camWorkHistoryFilterRender}, filterModel: { mode: 'OR' },
-            // colModel: tab1ColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: tab1PostData, recIndx: 'ROWNUM',
@@ -788,7 +638,7 @@
                     return {data: dataJSON.data};
                 }
             },
-            load: function( event, ui ) {
+            load: function() {
                 var filterOpts = '<option value=\"\">All Fields</option>';
                 var frozenOts = '<option value="0">Selected</option>';
                 this.getColModel().forEach(function(column){
@@ -803,123 +653,15 @@
                 $("#camWorkHistoryFrozen").empty();
                 $("#camWorkHistoryFrozen").html(frozenOts);
             },
-            complete: function () {
-                // this.flex();
-            }
-        };
-        let $ncPerformanceHistoryGrid;
-        const tab2GridId = 'NC_PERFORMANCE_HISTORY_GRID';
-        let tab2PostData = fnFormToJsonArrayData('#NC_PERFORMANCE_HISTORY_SEARCH_FORM');
-        tab2PostData.YEAR = YEAR;
-        const tab2ColModel = [
-            {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: 'MCT<br>공장 구분', minWidth: 20, width: 80, dataType: 'string', dataIndx: 'FACTORY_NM'},
-            {title: 'NC명', minWidth: 20, width: 80, dataType: 'string', dataIndx: 'EQUIP_NM'},
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
-                render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
-                    return '';
-                },
-                postRender: function(ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui),
-                        rowIndx = ui.rowIndx,
-                        rowData = ui.rowData;
+            complete: function (event, ui) {
+                let data = this.option('dataModel.data');
 
-                    $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
-                    });
-                }
-            },
-            {title: '관리번호', minWidth: 20, width: 180, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', minWidth: 20, width: 20, dataType: 'integer', dataIndx: 'PART_NUM'},
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
-                render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#imageView").bind("click", function () {
-                        let rowData = ui.rowData;
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
-                    });
-                }
-            },
-            {title: '도면번호', minWidth: 20, width: 170, dataType: 'string', dataIndx: 'DRAWING_NUM'},
-            {title: '품명', minWidth: 20, width: 170, dataType: 'string', dataIndx: 'ITEM_NM'},
-            {title: '형태', minWidth: 20, width: 50, dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
-            {title: '소재종류', minWidth: 20, width: 60, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
-            {title: '수량', minWidth: 20, width: 50, align: 'right', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '규격', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'STANDARD_SIZE'},
-            {title: '소재 Size', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'MATERAIL_ORDER_SIZE'},
-            {title: '착수일시', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'WORK_START_DT'},
-            {title: '완료일시', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'WORK_FINISH_DT'},
-            {title: '정지<br>시간', minWidth: 50, width: 55, align: 'right', dataType: 'string', dataIndx: 'WORK_STOP_MINUTE'},
-            {title: '소요<br>시간', minWidth: 50, width: 55, align: 'right', dataType: 'string', dataIndx: 'WORK_WORK_MINUTE'},
-            {title: '단위<br>소요', minWidth: 50, width: 55, align: 'right', dataType: 'string', dataIndx: 'LEAD_TIME'},
-            {title: '작업자', minWidth: 20, width: 80, dataType: 'string', dataIndx: 'WORK_USER_ID'}
-        ];
-        let tab2Obj = {
-            height: 720,
-            collapsible: false,
-            postRenderInterval: -1, //call postRender synchronously.
-            resizable: false,
-            showTitle: false,
-            rowHtHead: 15,
-            numberCell: {title: 'No.'},
-            scrollModel: {autoFit: false},
-            // trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false, render: ncPerformanceHistoryFilterRender}, filterModel: { mode: 'OR' },
-            colModel: tab2ColModel,
-            toolPanel: {show: false},
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: tab2PostData, recIndx: 'ROWNUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            load: function( event, ui ) {
-                var filterOpts = '<option value=\"\">All Fields</option>';
-                var frozenOts = '<option value="0">Selected</option>';
-                this.getColModel().forEach(function(column){
-                    let hiddenYn = column.hidden == undefined ? true : false;
-                    if(hiddenYn && column.title){
-                        filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
-                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
-                    }
-                });
-                $("#ncPerformanceHistoryFilterColumn").empty();
-                $("#ncPerformanceHistoryFilterColumn").html(filterOpts);
-                $("#ncPerformanceHistoryFrozen").empty();
-                $("#ncPerformanceHistoryFrozen").html(frozenOts);
+                $('#CAM_WORK_HISTORY_RECORDS').html(data.length);
             }
         };
         /* variable */
 
         /* function */
-        const colorClassification = function (status) {
-            let backgroundColor = '';
-            switch (status) {
-                case '가동중':
-                    backgroundColor = 'bg-green';
-                    break;
-                case '완료':
-                    backgroundColor = 'bg-light_blue';
-                    break;
-                case '비가동상태':
-                    backgroundColor = 'bg-yellow';
-                    break;
-                case '일시정지상태':
-                    backgroundColor = 'bg-orange';
-                    break;
-            }
-            return backgroundColor;
-        };
-
         function camWorkHistoryFilterRender(ui) {
             let val = ui.cellData == undefined ? "" : ui.cellData,
                 options = ui.column.editor == undefined ? "" : ui.column.editor.options;
@@ -966,53 +708,6 @@
                 return val;
             }
         }
-
-        function ncPerformanceHistoryFilterRender(ui) {
-            let val = ui.cellData == undefined ? "" : ui.cellData,
-                options = ui.column.editor == undefined ? "" : ui.column.editor.options;
-            let index = -1;
-            if(options) {
-                index = options.findIndex(function (element) {
-                    return element.value == val;
-                });
-                if(index > -1) val = options[index].text;
-            }
-            if (val) {
-                var condition = $("#ncPerformanceHistoryFilterCondition :selected").val(),
-                    valUpper = val.toString().toUpperCase(),
-                    txt = $("#ncPerformanceHistoryFilterKeyword").val(),
-                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
-                    indx = -1;
-
-                if (condition == "end") {
-                    indx = valUpper.lastIndexOf(txtUpper);
-                    if (indx + txtUpper.length != valUpper.length) {
-                        indx = -1;
-                    }
-                }
-                else if (condition == "contain") {
-                    indx = valUpper.indexOf(txtUpper);
-                }
-                else if (condition == "begin") {
-                    indx = valUpper.indexOf(txtUpper);
-                    if (indx > 0) {
-                        indx = -1;
-                    }
-                }
-                if (indx >= 0 && txt) {
-                    var txt1 = val.toString().substring(0, indx);
-                    var txt2 = val.toString().substring(indx, indx + txtUpper.length);
-                    var txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
-                }
-                else {
-                    return val;
-                }
-            }
-            else {
-                return val;
-            }
-        }
         /* function */
 
 
@@ -1024,13 +719,6 @@
             $camWorkHistoryGrid.pqGrid('refreshDataAndView');
         });
 
-        $('#NC_PERFORMANCE_HISTORY_SEARCH').on('click', function () {
-            $ncPerformanceHistoryGrid.pqGrid('option', 'dataModel.postData', function (ui) {
-                return fnFormToJsonArrayData('#NC_PERFORMANCE_HISTORY_SEARCH_FORM');
-            });
-            $ncPerformanceHistoryGrid.pqGrid('refreshDataAndView');
-        });
-
         $('#CAM_WORK_HISTORY_EXCEL_EXPORT').on('click', function () {
             const blob = $camWorkHistoryGrid.pqGrid('getInstance').grid.exportData({
                 format: 'xlsx',
@@ -1040,21 +728,10 @@
 
             saveAs(blob, 'CAM 작업이력.xlsx');
         });
-
-        $('#NC_PERFORMANCE_HISTORY_EXCEL_EXPORT').on('click', function () {
-            const blob = $ncPerformanceHistoryGrid.pqGrid('getInstance').grid.exportData({
-                format: 'xlsx',
-                render: true,
-                type: 'blob'
-            });
-
-            saveAs(blob, 'NC 수행 이력.xlsx');
-        });
         /* event */
 
         /* init */
         $camWorkHistoryGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
-        $ncPerformanceHistoryGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
 
         fnAppendSelectboxYear('CLOSE_YEAR_LEFT', 10);
         fnAppendSelectboxMonth('CLOSE_MONTH_LEFT');
@@ -1078,22 +755,25 @@
             }
         });
 
-        $("#camWorkHistoryFilterKeyword").on("keyup", function(e){
-            fnFilterHandler($camWorkHistoryGrid, 'camWorkHistoryFilterKeyword', 'camWorkHistoryFilterCondition', 'camWorkHistoryFilterColumn');
+        $('#camWorkHistoryFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler($camWorkHistoryGrid, 'camWorkHistoryFilterKeyword', 'camWorkHistoryFilterCondition', 'camWorkHistoryFilterColumn');
+
+                let data = $camWorkHistoryGrid.pqGrid('option', 'dataModel.data');
+                $('#CAM_WORK_HISTORY_RECORDS').html(data.length);
+            },
+            'search': function () {
+                fnFilterHandler($camWorkHistoryGrid, 'camWorkHistoryFilterKeyword', 'camWorkHistoryFilterCondition', 'camWorkHistoryFilterColumn');
+
+                let data = $camWorkHistoryGrid.pqGrid('option', 'dataModel.data');
+                $('#CAM_WORK_HISTORY_RECORDS').html(data.length);
+            }
         });
 
         $("#camWorkHistoryFrozen").on('change', function(e){
             fnFrozenHandler($camWorkHistoryGrid, $(this).val());
         });
 
-        $("#ncPerformanceHistoryFilterKeyword").on("keyup", function(e){
-            fnFilterHandler($ncPerformanceHistoryGrid, 'ncPerformanceHistoryFilterKeyword', 'ncPerformanceHistoryFilterCondition', 'ncPerformanceHistoryFilterColumn');
-        });
-
-        $("#ncPerformanceHistoryFrozen").on('change', function(e){
-            fnFrozenHandler($ncPerformanceHistoryGrid, $(this).val());
-        });
-        
         $('#MCT_EXECUTE_HISTORY_TAB').tabs({
             activate: function (event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
