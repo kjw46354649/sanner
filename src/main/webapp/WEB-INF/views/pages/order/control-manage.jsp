@@ -160,7 +160,6 @@
                 <button type="button" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_NORMAL_MODE">일반모드</button>
                 <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_CLOSE_MODE">마감모드</button>
                 <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_ALL_MODE">전체모드</button>
-                <button type="button" class="defaultBtn btn-100w" id="CONTROL_MERGE" style="background-color: #5b9bd5">Merge</button>
                 <div class="rightSpan">
                     <span class="slt_wrap namePlusSlt">
                         <label for="SUPPLY_UNIT_COST_APPLY">공급단가적용</label>
@@ -174,6 +173,7 @@
                             <option value="20">20%</option>
                         </select>
                     </span>
+                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MERGE" style="background-color: #5b9bd5">Merge</button>
                     <button type="button" class="defaultBtn btn-100w red" id="CONTROL_MANAGE_DELETE">삭제</button>
                     <button type="button" class="defaultBtn btn-100w green" id="CONTROL_MANAGE_SAVE">저장</button>
                 </div>
@@ -3142,7 +3142,7 @@
                     const groupedWorkType = fnGroupBy(dataList, 'WORK_TYPE');
                     if (groupedWorkType.hasOwnProperty('WTP020') && groupedWorkType.hasOwnProperty('WTP050')) {
                         if (groupedWorkType.hasOwnProperty('WTP010') || groupedWorkType.hasOwnProperty('WTP030') || groupedWorkType.hasOwnProperty('WTP040') || groupedWorkType.hasOwnProperty('WTP060')) {
-                            fnAlert(null, '조립품은 조립품끼리만 되면 파트개수가 동일해야만 가능합니다');
+                            fnAlert(null, '조립/파트 구성이 불일치 합니다.');
                             return;
                         } else {
                             const groupedControlSeq = fnGroupBy(dataList, 'CONTROL_SEQ');
@@ -3157,7 +3157,7 @@
 
                                 if (prevPartNum.size > 0) {
                                     if (prevPartNum.size !== partNum.size) {
-                                        fnAlert(null, '조립품은 조립품끼리만 되면 파트개수가 동일해야만 가능합니다');
+                                        fnAlert(null, '조립/파트 구성이 불일치 합니다.');
                                         return;
                                     }
                                 }
