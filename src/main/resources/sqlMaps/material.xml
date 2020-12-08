@@ -955,10 +955,10 @@
             LEFT OUTER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
         WHERE 1=1
             <if test="CONTROL_NUM !='' and CONTROL_NUM != null">
-                AND UPPER(C.CONTROL_NUM LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
+                AND UPPER(C.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
             </if>
             <if test="MATERIAL_ORDER_NUM !='' and MATERIAL_ORDER_NUM != null">
-                AND UPPER(Z.MATERIAL_ORDER_NUM LIKE CONCAT('%', UPPER(#{MATERIAL_ORDER_NUM}), '%')
+                AND UPPER(Z.MATERIAL_ORDER_NUM) LIKE CONCAT('%', UPPER(#{MATERIAL_ORDER_NUM}), '%')
             </if>
             <if test="MATERIAL_COMP_CD !='' and MATERIAL_COMP_CD != null">
                 AND Z.MATERIAL_COMP_CD = #{MATERIAL_COMP_CD}
@@ -1628,7 +1628,7 @@
         <if test="SEL_ITEM_NM !='' and SEL_ITEM_NM != null">
             AND A.ITEM_NM LIKE CONCAT('%', #{SEL_ITEM_NM}, '%')
         </if>
-        <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
+        <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null"> <!-- FIXME -->
             AND A.CONTROL_SEQ IN (SELECT CONTROL_SEQ FROM jmes.TBL_CONTROL B WHERE B.CONTROL_NUM LIKE CONCAT('%', #{SEL_CONTROL_NUM}, '%'))
         </if>
         <if test="SEL_MATERIAL_DETAIL !='' and SEL_MATERIAL_DETAIL != null">
