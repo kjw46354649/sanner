@@ -73,7 +73,7 @@
                             <td id="SIZE_TXT"></td>
                             <th>표면처리</th>
                             <td id="SURFACE_TREAT_NM"></td>
-                            <th>과거수행경험</th>
+                            <th>최근유사가공</th>
                             <td id="WORK_HISTORY_INFO"></td>
                         </tr>
                         <tr>
