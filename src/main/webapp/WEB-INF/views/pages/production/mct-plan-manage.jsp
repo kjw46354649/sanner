@@ -369,18 +369,18 @@
         const processTargetGridId = 'PROCESS_TARGET_GRID';
         let processTargetGridPostData = fnFormToJsonArrayData('#MCT_PROCESS_TARGET_FORM');
         const processTargetGridColModel = [
-            {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROWNUM', dataIndx: 'ROWNUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
-            {title: '납기', minWidth: 50, width: 50, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
-            {title: '긴<br>급', minWidth: 20, width: 20, dataType: 'string', dataIndx: 'EMERGENCY_YN'},
-            {title: '주<br>요', minWidth: 20, width: 20, dataType: 'string', dataIndx: 'MAIN_INSPECTION'},
-            {title: '형<br>태', minWidth: 20, width: 20, dataType: 'string', dataIndx: 'WORK_NM'},
+            {title: '납기', minWidth: 50, width: 50, dataIndx: 'INNER_DUE_DT'},
+            {title: '긴<br>급', minWidth: 20, width: 20, dataIndx: 'EMERGENCY_YN'},
+            {title: '주<br>요', minWidth: 20, width: 20, dataIndx: 'MAIN_INSPECTION'},
+            {title: '형<br>태', minWidth: 20, width: 20, dataIndx: 'WORK_NM'},
             {title: 'NC Plan', align: 'center', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 colModel: [
-                    {title: 'MCT_PLAN_SEQ', dataType: 'string', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
-                    {title: 'NC No.', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_SEQ', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                    {title: 'MCT_PLAN_SEQ', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
+                    {title: 'NC No.', minWidth: 40, width: 60, dataIndx: 'EQUIP_SEQ', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: NC_MACHINE},
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -405,17 +405,17 @@
                     {title: 'E/T', minWidth: 50, width: 55, datatype: 'integer', dataIndx: 'WORKING_TIME', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
                 ]
             },
-            {title: '현재위치', minWidth: 40, width: 100, dataType: 'string', dataIndx: 'POP_POSITION'},
-            {title: '진행상태', minWidth: 40, width: 100, dataType: 'string', dataIndx: 'PART_STATUS'},
-            {title: 'NC 가공 현황', align: 'center',
+            {title: '현재위치', width: 80, dataIndx: 'POP_POSITION'},
+            {title: '진행상태', width: 80, dataIndx: 'PART_STATUS'},
+            {title: '최근 가공현황', align: 'center',
                 colModel: [
                     {title: '공정', dataIndx: 'NC_WORK_TYPE'},
-                    {title: '기기명', dataIndx: 'NC_EQUIP_NM'},
-                    {title: '작업자', dataIndx: 'NC_WORK_USER_NM'},
-                    {title: 'R/T', minWidth: 50, width: 55, datatype: 'integer', dataIndx: 'NC_WORKING_TIME'},
+                    {title: '기기명', width: 60, dataIndx: 'NC_EQUIP_NM'},
+                    {title: '작업자', width: 80, dataIndx: 'NC_WORK_USER_NM'},
+                    {title: 'R/T', width: 55, datatype: 'integer', align: 'right', dataIndx: 'NC_WORKING_TIME'},
                 ]
             },
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+            {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
                     return '';
@@ -431,7 +431,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: 160, dataType: 'string', dataIndx: 'CONTROL_NUM_PART_NUM'},
+            {title: '관리번호', align: 'left', width: 160, dataIndx: 'CONTROL_NUM_PART_NUM'},
             {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {
                 title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
@@ -448,7 +448,7 @@
                     });
                 }
             },
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+            {title: '소재종류', dataIndx: 'MATERIAL_DETAIL',
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -471,13 +471,13 @@
                     }
                 }
             },
-            {title: '수량', dataType: 'integer', dataIndx: 'ORDER_QTY'},
-            {title: '규격', width: 100, dataType: 'string', dataIndx: 'STANDARD_SIZE'},
-            {title: '주문소재 Size', width: 100, dataType: 'string', dataIndx: 'MATERIAL_SIZE'},
-            {title: '비고<br>기록사항', minWidth: 20, width: 100, dataType: 'string', dataIndx: 'NOTE'},
-            {title: '가공계획<br>비고', minWidth: 20, width: 150, dataType: 'string', dataIndx: 'MCT_NOTE',
+            {title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '규격', width: 100, dataIndx: 'STANDARD_SIZE'},
+            {title: '주문소재 Size', width: 100, dataIndx: 'MATERAIL_ORDER_SIZE'},
+            {title: '비고<br>기록사항', minWidth: 20, width: 100, dataIndx: 'CONTROL_NOTE_AND_MATERIAL_NOTE'},
+            {title: '가공계획<br>비고', minWidth: 20, width: 150, dataIndx: 'MCT_NOTE',
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true},
-            {title: '작업구분', dataType: 'string', dataIndx: 'MCT_WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
+            {title: '작업구분', dataIndx: 'MCT_WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1011')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -500,16 +500,15 @@
                     }
                 }
             },
-            {title: '이전위치', dataType: 'string', minWidth: 40, width: 100, dataIndx: 'POP_PREV_POSITION'},
             {
-                title: '과거 경험', align: 'center', colModel: [
-                    {title: '총 L/T', dataType: 'string', width: 50, dataIndx: 'LAST_UNIT_LEAD_TIME'},
-                    {title: '실행일자', dataType: 'string', width: 100, dataIndx: 'LAST_MCT_START_DT'},
-                    {title: '작업자', dataType: 'string', width: 65, dataIndx: 'LAST_MCT_WORK_USER'}
+                title: '과거유사 최근기록', align: 'center', colModel: [
+                    {title: 'L/T', width: 50, dataIndx: 'LAST_UNIT_LEAD_TIME'},
+                    {title: '실행일자', width: 60, dataIndx: 'LAST_MCT_START_DT'},
+                    {title: '작업자', width: 65, dataIndx: 'LAST_MCT_WORK_USER'}
                 ]
             },
-            {title: '확정<br>일시', minWidth: 40, width: 40, dataType: 'string', dataIndx: 'CONTROL_STATUS_DT'},
-            {title: '소재<br>입고일시', width: 75, dataType: 'string', dataIndx: 'MATERIAL_RECEIPT_DT'}
+            {title: '가공확정', minWidth: 40, width: 60, dataIndx: 'PROCESS_CONFIRM_DT'},
+            {title: '소재<br>입고일시', width: 75, dataIndx: 'MATERIAL_RECEIPT_DT'}
         ];
         const processTargetGridObj = {
             height: '100%',
@@ -540,21 +539,21 @@
                 beforeDrop: function () {},
                 afterDrop: function (evt, uiDrop) {}
             },
-            load: function (event, ui) {
-                let filterOpts = '<option value=\"\">All Fields</option>';
-                let frozenOts = '<option value="0">Selected</option>';
-                this.getColModel().forEach(function (column) {
-                    let hiddenYn = column.hidden === undefined ? true : false;
-                    if (hiddenYn && column.title) {
-                        filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
-                        frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
-                    }
-                });
-                $("#mctPlanManageFilterColumn").empty();
-                $("#mctPlanManageFilterColumn").html(filterOpts);
-                $("#mctPlanManageFrozen").empty();
-                $("#mctPlanManageFrozen").html(frozenOts);
-            },
+            // load: function () {
+            //     let filterOpts = '<option value=\"\">All Fields</option>';
+            //     let frozenOts = '<option value="0">Selected</option>';
+            //     this.getColModel().forEach(function (column) {
+            //         let hiddenYn = column.hidden === undefined;
+            //         if (hiddenYn && column.title) {
+            //             filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
+            //             frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
+            //         }
+            //     });
+            //     $("#mctPlanManageFilterColumn").empty();
+            //     $("#mctPlanManageFilterColumn").html(filterOpts);
+            //     $("#mctPlanManageFrozen").empty();
+            //     $("#mctPlanManageFrozen").html(frozenOts);
+            // },
             // complete: function () {
             //     // this.flex();
             // },
@@ -870,6 +869,24 @@
                 return (fnFormToJsonArrayData('#MCT_PROCESS_TARGET_FORM'));
             });
             $processTargetGrid.pqGrid('refreshDataAndView');
+        });
+
+        $('#MCT_TARGET_SAVE').on('click', function () {
+            // console.count();
+            fnModifyPQGrid($processTargetGrid, [], ['machine.updateMctTarget', 'machine.insertMctPlanFromTarget']);
+            setTimeout(refreshMctPlanGrids, 1000);
+        });
+
+        $('#MCT_PROCESS_TARGET_FORM').find('#OPTION').on('change', function () {
+           const str = this.value;
+           const outsourcingProcessing = str.includes('외주가공');
+           const NcComplete = str.includes('NC완료');
+           const finishedProcessing = str.includes('가공완료');
+           const $MCT_PROCESS_TARGET_FORM = $('#MCT_PROCESS_TARGET_FORM');
+
+           $MCT_PROCESS_TARGET_FORM.find('#OUTSOURCING_PROCESSING').val(outsourcingProcessing);
+           $MCT_PROCESS_TARGET_FORM.find('#NC_COMPLETE').val(NcComplete);
+           $MCT_PROCESS_TARGET_FORM.find('#FINISHED_PROCESSING').val(finishedProcessing);
         });
         /* event */
 
