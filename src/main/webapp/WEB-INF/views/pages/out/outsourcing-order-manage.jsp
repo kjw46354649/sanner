@@ -693,11 +693,11 @@
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '수신', datatype: 'bool', dataIndx: 'RECEPTION', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                type: 'checkbox'
+                type: 'checkbox', cb: {check: 'true', uncheck: 'false'}
             },
             {
                 title: '참조', datatype: 'bool', dataIndx: 'REFERENCE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                type: 'checkbox'
+                type: 'checkbox', cb: {check: 'true', uncheck: 'false'}
             }
         ];
         const mailRecipientObj = {
@@ -1611,9 +1611,18 @@
             let parameters = {'url': '/json-list', 'data': postData};
 
             fnPostAjaxAsync(function (data) {
+                let rowList = [];
                 let grid = $('#' + mailFormElement).find('[id$=REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID]');
                 grid.pqGrid('option', 'dataModel.data', data.list);
                 grid.pqGrid('refreshView');
+
+                for (let i = 0; i < data.list.length; i++) {
+                    if (data.list[i].MAIN_YN === 'Y') {
+                        rowList.push({rowIndx: i, newRow: {RECEPTION: 'true'}});
+                    }
+                }
+
+                grid.pqGrid('updateRow', {rowList: rowList});
             }, parameters, '');
         };
 
@@ -2259,14 +2268,14 @@
 
             for (let i in mailRecipientData) {
                 if (mailRecipientData.hasOwnProperty(i)) {
-                    if (mailRecipientData[i].RECEPTION === true) {
+                    if (mailRecipientData[i].RECEPTION === 'true') {
                         if(mailFlag) mailFlag = false;
                         if(!receiveEmail)
                             receiveEmail += mailRecipientData[i].STAFF_EMAIL;
                         else
                             receiveEmail += "," + mailRecipientData[i].STAFF_EMAIL;
                     }
-                    if(mailRecipientData[i].REFERENCE === true) {
+                    if(mailRecipientData[i].REFERENCE === 'true') {
                         if(!hccEmail)
                             hccEmail += mailRecipientData[i].STAFF_EMAIL;
                         else
@@ -2341,14 +2350,14 @@
                 let hccEmail = "";
                 for(let i in cancelMailRecipientData) {
                     if (cancelMailRecipientData.hasOwnProperty(i)) {
-                        if (cancelMailRecipientData[i].RECEPTION === true) {
+                        if (cancelMailRecipientData[i].RECEPTION === 'true') {
                             if (mailFlag) mailFlag = false;
                             if(!receiveEmail)
                                 receiveEmail += cancelMailRecipientData[i].STAFF_EMAIL;
                             else
                                 receiveEmail += "," + cancelMailRecipientData[i].STAFF_EMAIL;
                         }
-                        if (cancelMailRecipientData[i].REFERENCE === true) {
+                        if (cancelMailRecipientData[i].REFERENCE === 'true') {
                             if(!hccEmail)
                                 hccEmail += cancelMailRecipientData[i].STAFF_EMAIL;
                             else
