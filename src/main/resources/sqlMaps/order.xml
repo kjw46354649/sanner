@@ -2981,6 +2981,9 @@
     </select>
 
     <insert id="createPartOrderToMerge" parameterType="java.util.HashMap" >
+        <selectKey keyProperty="NEXT_ORDER_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_CONTROL_PART_ORDER) FROM DUAL
+        </selectKey>
         INSERT INTO TBL_CONTROL_PART_ORDER (
             CONTROL_SEQ
             , CONTROL_DETAIL_SEQ
@@ -3013,7 +3016,7 @@
         )
         SELECT #{STANDARD_CONTROL_SEQ}
             , #{STANDARD_CONTROL_DETAIL_SEQ}
-            , NEXTVAL(SEQ_CONTROL_PART_ORDER)
+            , #{NEXT_ORDER_SEQ}
             , ORDER_NUM
             , ORDER_QTY
             , ORDER_DUE_DT
@@ -3047,5 +3050,28 @@
                             AND M.CONTROL_DETAIL_SEQ = #{STANDARD_CONTROL_DETAIL_SEQ}
                             AND M.ORDER_NUM = #{ORDER_NUM}
                             AND M.DRAWING_NUM = #{ORDER_DRAWING_NUM})
+    </insert>
+
+    <insert id="createOutBarcodeToMerge" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_OUT_BARCODE (
+            BARCODE_NUM
+            , CONTROL_SEQ
+            , CONTROL_DETAIL_SEQ
+            , ORDER_SEQ
+            , PACKING_NUM
+            , INSERT_ID
+        )
+        SELECT
+            CONCAT('L', LPAD(NEXTVAL(SEQ_BARCODE), 9, '0')) AS BARCODE_NUM
+            , B.CONTROL_SEQ
+            , B.CONTROL_DETAIL_SEQ
+            , B.ORDER_SEQ
+            , B.PACKING_CNT
+            , #{LOGIN_USER_ID}
+        FROM TBL_CONTROL A
+            , TBL_CONTROL_PART_ORDER B
+        WHERE B.CONTROL_SEQ = A.CONTROL_SEQ
+            AND A.DEL_YN = 'N'
+            AND B.ORDER_SEQ = #{NEXT_ORDER_SEQ}
     </insert>
 </mapper>

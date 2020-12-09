@@ -732,10 +732,13 @@
     </update>
     <update id="updateControlPartOrderPackingCnt2" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_OUT_BARCODE
-        SET DEL_YN = 'Y'
+        SET
+            DEL_YN = 'Y'
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-        AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-        AND ORDER_SEQ = #{ORDER_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND ORDER_SEQ = #{ORDER_SEQ}
     </update>
     <insert id="insertControlPartOrderPackingCnt3" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_OUT_BARCODE (BARCODE_NUM, CONTROL_SEQ, CONTROL_DETAIL_SEQ, ORDER_SEQ, PACKING_NUM)
