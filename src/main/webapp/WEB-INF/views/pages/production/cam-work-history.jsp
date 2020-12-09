@@ -20,41 +20,29 @@
                 <ul>
                     <li>
                         <span class="slt_wrap">
-                            <label class="label_100" for="FACTORY_AREA">MCT 공장 구분</label>
-                            <select class="wd_200" name="FACTORY_AREA" id="FACTORY_AREA">
+                            <label class="label_100" for="WORK_FACTORY">수행공장</label>
+                            <select class="wd_200" name="WORK_FACTORY" id="WORK_FACTORY">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1005}">
-                                    <c:if test="${code.ETC2 == 'W'}">
-                                       <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:if>
+                                <c:forEach var="code" items="${HighCode.H_1014}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="EQUIP_SEQ">NC NO.</label>
-                            <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
+                            <label class="label_100" for="ORDER_COMP_CD">발주처</label>
+                            <select class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" title="발주처"></select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
-                            <select class="wd_200" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1027}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
+                            <input type="text" class="wd_200" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" readonly>
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="SURFACE_TREAT">표면처리</label>
-                             <select class="wd_200" name="SURFACE_TREAT" id="SURFACE_TREAT">
+                        <span class="slt_wrap">
+                            <label class="label_100" for="WORK_USER_ID">작업자</label>
+                            <select class="wd_200" name="WORK_USER_ID" id="WORK_USER_ID">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1039}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
                             </select>
                         </span>
                     </li>
@@ -69,47 +57,70 @@
                             <input type="search" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
                         </span>
                         <span class="gubun"></span>
-<%--                        <span class="slt_wrap">--%>
-<%--                            <label class="label_100" for="CLOSE_VER">규격</label>--%>
-<%--                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">--%>
-<%--                                <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
-<%--                            </select>--%>
-<%--                        </span>--%>
-<%--                        <span class="gubun"></span>--%>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="WORK_TYPE">형태</label>
-                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1033}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                        <span>
+                            <label for="SIZE_TYPE">규격</label>
+                            <select class="wd_100" name="SIZE_TYPE" id="SIZE_TYPE" title="규격">
+                                <c:forEach var="vlocale" items="${HighCode.H_1016}">
+                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="WORK_USER_ID">작업자</label>
-                            <select class="wd_200" name="WORK_USER_ID" id="WORK_USER_ID">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
+                        <span class="slt_wrap" id="SIZE_W">
+                            <label class="label_50">W</label>
+                            <input class="wd_50" type="number" name="SIZE_W_F" id="SIZE_W_F" placeholder="From">
+                            <span>~</span>
+                            <input class="wd_50" type="number" name="SIZE_W_T" id="SIZE_W_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_H">
+                            <label class="label_50">H</label>
+                            <input class="wd_50" type="number" name="SIZE_H_F" id="SIZE_H_F" placeholder="From">
+                            <span>~</span>
+                            <input class="wd_50" type="number" name="SIZE_H_T" id="SIZE_H_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_T">
+                            <label class="label_50">T</label>
+                            <input class="wd_50" type="number" name="SIZE_T_F" id="SIZE_T_F" placeholder="From">
+                            <span>~</span>
+                            <input class="wd_50" type="number" name="SIZE_T_T" id="SIZE_T_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_D" style="display: none;">
+                            <label class="label_50">D</label>
+                            <input class="wd_50" type="number" name="SIZE_D_F" id="SIZE_D_F" placeholder="From">
+                            <span>~</span>
+                            <input class="wd_50" type="number" name="SIZE_D_T" id="SIZE_D_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_L" style="display: none;">
+                            <label class="label_50">L</label>
+                            <input class="wd_50" type="number" name="SIZE_L_F" id="SIZE_L_F" placeholder="From">
+                            <span>~</span>
+                            <input class="wd_50" type="number" name="SIZE_L_T" id="SIZE_L_T" placeholder="To">
                         </span>
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mr-10">
                             <select name="CAM_WORK_HISTORY_CONDITION" id="CAM_WORK_HISTORY_CONDITION">
                                 <%--<option value=""><spring:message code="com.form.top.sel.option"/></option>--%>
-                                <option value="1">수정일시</option>
+                                <option value="1">업데이트일시</option>
                                 <option value="2" selected>가공확정일시</option>
                             </select>
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
-                                <input type="text" name="mct_nc_execute_history_start_dt" id="mct_nc_execute_history_start_dt"><button type="button">달력선택</button>
+                                <input type="text" name="CAM_WORK_HISTORY_START_DT" id="CAM_WORK_HISTORY_START_DT"><button type="button">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" name="mct_nc_execute_history_end_dt" id="mct_nc_execute_history_end_dt" readonly><button type="button">달력선택</button>
+                                <input type="text" name="CAM_WORK_HISTORY_END_DT" id="CAM_WORK_HISTORY_END_DT" readonly><button type="button">달력선택</button>
                             </span>
-                            <%--<span class="chk_box"><input id="CONTROL_MANAGE_DATE" type="checkbox"><label for="CONTROL_MANAGE_DATE">선택</label></span>--%>
+                            <span class="radio_box" style="margin-left:10px;">
+                                <input reqcd="R" type="radio" name="CAM_WORK_HISTORY_TERM" id="CAM_WORK_HISTORY_TERM_DAY" value="today" ><label for="CAM_WORK_HISTORY_TERM_DAY">오늘</label>
+                            </span>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="CAM_WORK_HISTORY_TERM" id="CAM_WORK_HISTORY_TERM_WEEK" value="week" checked><label for="CAM_WORK_HISTORY_TERM_WEEK">-1주</label>
+                            </span>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="CAM_WORK_HISTORY_TERM" id="CAM_WORK_HISTORY_TERM_MONTH" value="month"><label for="CAM_WORK_HISTORY_TERM_MONTH">-1개월</label>
+                            </span>
                         </div>
                         <span class="ipu_wrap right_float">
                             <button type="button" id="CAM_WORK_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
@@ -170,9 +181,9 @@
                     <table class="rowStyle">
                         <colgroup>
                             <col width="10%">
-                            <col width="*">
+                            <col width="30%">
                             <col width="10%">
-                            <col width="15%">
+                            <col width="20%">
                             <col width="10%">
                             <col width="20%">
                         </colgroup>
@@ -180,7 +191,7 @@
                             <th>관리번호</th>
                             <td id="CONTROL_NUM"></td>
                             <th>수량 (원, 대)</th>
-                            <td id="ORDER_QTY"></td>
+                            <td id="CONTROL_PART_QTY"></td>
                             <th>가공납기</th>
                             <td id="DUE_OUT_DT"></td>
                         </tr>
@@ -461,14 +472,28 @@
 <script>
     $(function () {
         'use strict';
-        $('#mct_nc_execute_history_start_dt').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#mct_nc_execute_history_end_dt').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#mct_nc_execute_history_start_dt').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH, TODAY.getDate() - 30));
-        $('#mct_nc_execute_history_end_dt').datepicker('setDate', 'today');
+        $('#CAM_WORK_HISTORY_START_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#CAM_WORK_HISTORY_END_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#CAM_WORK_HISTORY_START_DT').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH, TODAY.getDate() - 6));
+        $('#CAM_WORK_HISTORY_END_DT').datepicker('setDate', 'today');
 
         /** function **/
-        fnCommCodeDatasourceSelectBoxCreate($('#CAM_WORK_HISTORY_GRID_SEARCH_FORM').find('#EQUIP_SEQ'), 'all', {
-            'url': '/json-list', 'data': {'queryId': 'dataSource.getMctEquipList'}
+        // 소재종류
+        (function () {
+            let comboData = [];
+
+            <c:forEach var="vlocale" items="${HighCode.H_1027}">
+            comboData.push({title: '${vlocale.CODE_NM_KR}', id: '${vlocale.CODE_CD}'});
+            </c:forEach>
+
+            $('#CAM_WORK_HISTORY_GRID_SEARCH_FORM').find('#MATERIAL_DETAIL').comboTree({
+                source: comboData,
+                isMultiple: true,
+                cascadeSelect: false
+            });
+        })();
+        fnCommCodeDatasourceSelectBoxCreate($('#CAM_WORK_HISTORY_GRID_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
+            'url': '/json-list', 'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
         fnCommCodeDatasourceSelectBoxCreate($('#CAM_WORK_HISTORY_GRID_SEARCH_FORM').find('#WORK_USER_ID'), 'all', {
             'url': '/json-list', 'data': {'queryId': 'dataSource.getMCTWorkerList'}
@@ -500,36 +525,35 @@
         tab1PostData.CLOSE_MONTH_LEFT = MONTH;
 
         const tab1ColModel = [
-            {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: 'CAM<br>진행', dataType: 'string', dataIndx: 'CAM_STATUS',
+            {
+                title: '실적등록일시', width: 90, dataIndx: 'CAM_INSERT_DT',
                 render: function (ui) {
-                    let rowData = ui.rowData;
-                    let cls, text;
-                    switch (rowData.CAM_STATUS) {
-                        case 'CWS030':  // 완료
-                            cls = 'bg-skyblue';
-                            text = '완료';
-                            break;
-                        case 'CWS020':  // 진행중
-                            cls = 'bg-green blink';
-                            text = '진행중';
-                            break;
-                        case 'CWS010':  // 대기
-                            cls = '';
-                            text = '대기';
-                            break;
+                    const cellData = ui.cellData;
+
+                    if (cellData) {
+                        return '<span name="CAM_WORK_HISTORY_ACTION" <!--style="text-decoration: underline; cursor: pointer;-->">' + cellData + '</span>';
                     }
-                    return { cls: cls, text: text };
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    let rowData = ui.rowData;
+                    $cell.find('[name=CAM_WORK_HISTORY_ACTION]').bind('click', function (e) {
+                        e.preventDefault();
+                        camWorkHistoryCallPop(rowData);
+                    });
                 }
             },
-            {title: '가공<br>납기', width: 70, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
-            {title: '가공<br>완료', width: 70, dataType: 'string', dataIndx: 'INNER_WORK_FINISH_DT'},
-            {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 20},
-            {title: '주<br>요', dataType: 'string', dataIndx: 'MAIN_INSPECTION', minWidth: 15, width: 20},
-            {title: '형<br>태', dataType: 'string', dataIndx: 'WORK_NM', minWidth: 15, width: 20},
-            {title: '', dataType: 'string', dataIndx: 'CONTROL_NUM_BUTTON', width: 25, minWidth: 25, editable: false,
+            {title: '가공<br>완료', width: 70, dataIndx: 'INNER_WORK_FINISH_DT'},
+            {title: '외<br>주', minWidth: 30, dataIndx: 'OUTSIDE_YN'},
+            {title: '수행<br>공장', minWidth: 40, dataIndx: 'WORK_FACTORY_NM'},
+            {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
+            {title: '관리번호', align: 'left', width: 160, dataIndx: 'CONTROL_NUM'},
+            {
+                title: '', width: 25, minWidth: 25, dataIndx: 'CONTROL_NUM_BUTTON', editable: false,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_NUM)
                         return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
@@ -545,63 +569,73 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 50, width: 160},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 10, width: 30},
-            {title: '', minWidth: 25, width: 25, dataType: 'string', dataIndx: 'DRAWING_NUM_BUTTON',
+            {title: '작업<br>형태', minWidth: 40, dataIndx: 'WORK_TYPE_NM'},
+            {title: '규격', width: 110, dataIndx: 'SIZE_TXT'},
+            {title: '재질', width: 95, dataIndx: 'MATERIAL_TYPE_NM'},
+            {title: '도면번호', halign: 'center', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
+            {
+                title: '', minWidth: 25, dataIndx: 'IMG_GFILE_SEQ',
                 render: function (ui) {
-                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>'
+                    if (ui.cellData)
+                        return '<span class="fileSearchIcon" name="imageView" style="cursor: pointer"></span>';
                 },
                 postRender: function (ui) {
                     let grid = this,
                         $cell = grid.getCell(ui);
-                    $cell.find("#imageView").bind("click", function () {
+                    $cell.find('[name=imageView]').bind('click', function () {
                         let rowData = ui.rowData;
                         callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
-            {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 100},
-            {title: '수량', align: 'right', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 50},
-            {title: '규격', dataType: 'string', dataIndx: 'STANDARD_SIZE', minWidth: 40, width: 100},
-            {title: '소재 Size', dataType: 'string', dataIndx: 'MATERAIL_ORDER_SIZE', minWidth: 40, width: 120},
-            {title: 'MCT Actual', align: 'center',
-                 colModel: [
-                     {title: '공정', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'NC_WORK_TYPE'},
-                     {title: '기기명', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_NM'},
-                     {title: '작업자', minWidth: 40, width: 80, dataType: 'string', dataIndx: 'NC_WORK_USER_NM'},
-                     {title: 'R/T', minWidth: 50, width: 55, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME'},
+            {title: '주문<br>수량', width: 50, dataIndx: 'CONTROL_PART_QTY'},
+            {
+                title: 'CAD 파일', align: 'center',
+                colModel: [
+                    {title: 'Size', width: 95, dataIndx: 'CAD_FILE_SIZE'},
+                    {
+                        title: '', minWidth: 35, dataIndx: 'DXF_GFILE_SEQ',
+                        render: function (ui) {
+                            if (ui.cellData)
+                                return '<span class="blueFileImageICon" name="downloadView" style="cursor: pointer"></span>';
+                        },
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            $cell.find('[name=downloadView]').bind('click', function () {
+                                let rowData = ui.rowData;
+                                fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
+                            });
+                        }
+                    },
+                ]
+            },
+            {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '소재<br>형태',  width: 80, dataIndx: 'MATERIAL_KIND_NM'},
+            {title: '주문 소재<br>Size', width: 110, dataIndx: 'MATERAIL_ORDER_SIZE'},
+            {
+                title: '1EA 가공시간', align: 'center',
+                colModel: [
+                    {title: 'CNC', dataIndx: 'NC_WORK_TIME'},
+                    {title: '전공정', dataIndx: 'TOTAL_WORK_TIME'}
                 ]
             },
             {
                 title: 'CAM 작업 실적', align: 'center', colModel: [
-                    {title: 'step', minWidth: 30, width: 35, datatype: 'integer', dataIndx: 'CAM_STEP',
+                    {title: 'Steps', width: 50, datatype: 'integer', dataIndx: 'CAM_STEP'},
+                    {title: '위치', dataIndx: 'WORK_DIRECTION'},
+                    {title: '작업내용', width: 100, dataIndx: 'WORK_DESC'},
+                    {title: '단위수량', width: 100, datatype: 'integer', dataIndx: 'DESIGN_QTY'},
+                    {
+                        title: 'File', width: 70, dataIndx: '',
                         render: function (ui) {
                             let rowData = ui.rowData;
-                            if(rowData.CAM_STEP)
-                                return '<span id="CAM_WORK_HISTORY_ACTION" style="text-decoration: underline; cursor: pointer;">' + rowData.CAM_STEP + '</span>';
-                            else
-                                return ''
-                        },
-                        postRender: function (ui) {
-                            let grid = this;
-                            let $cell = grid.getCell(ui);
-                            let rowData = ui.rowData;
-                            $cell.find('#CAM_WORK_HISTORY_ACTION').bind('click', function(e) {
-                                e.preventDefault();
-                                camWorkHistoryCallPop(rowData);
-                            });
-                        }
-                    },
-                    {title: '위치', datatype: 'string', dataIndx: 'WORK_DIRECTION'},
-                    {title: '작업내용', width: 100, datatype: 'string', dataIndx: 'WORK_DESC'},
-                    {title: '작업자', width: 110, datatype: 'string', dataIndx: 'WORK_USER_NM'},
-                    {title: '파일', width: 100, datatype: 'string', dataIndx: '',
-                        render: function (ui) {
-                            let rowData = ui.rowData;
+                            let camVisibility = fnIsEmpty(rowData.CAM_FILE_SEQ) ? 'hidden' : 'visible';
+                            let ncVisibility = fnIsEmpty(rowData.NC_FILE_SEQ) ? 'hidden' : 'visible';
                             let iconFiles = '';
-                            if(rowData.CAM_FILE_SEQ) iconFiles += '<span id="downloadCAMFIle" class="greenFileImageICon" style="cursor: pointer; margin-left:3px;"></span>&nbsp;&nbsp;';
-                            if(rowData.NC_FILE_SEQ) iconFiles += '<span id="downloadNCFile" class="purpleFileImageICon" style="cursor: pointer; margin-left:25px;"></span>';
+                            iconFiles += '<span id="downloadCAMFIle" class="greenFileImageICon" style="visibility: ' + camVisibility + '; cursor: pointer;"></span>&nbsp;&nbsp;';
+                            iconFiles += '<span id="downloadNCFile" class="purpleFileImageICon" style="visibility: ' + ncVisibility + '; cursor: pointer; margin-left: 10px;"></span>';
+
                             return iconFiles;
                         },
                         postRender: function (ui) {
@@ -621,8 +655,9 @@
                             });
                         }
                     },
-                    {title: '비고 및 공유사항',  width: 180, datatype: 'string', dataIndx: 'NOTE'},
-                    {title: 'Update', minWidth: 75, width: 75, datatype: 'string', dataIndx: 'CAM_FINISH_DT'}
+                    {title: '작업자', width: 110, dataIndx: 'WORK_USER_NM'},
+                    {title: '경험 기록사항',  width: 180, dataIndx: 'CAM_EXPERIENCE_NOTE'},
+                    {title: '비고 및 공유사항',  width: 180, dataIndx: 'CAM_WORK_NOTE'},
                 ]
             }
         ];
@@ -657,6 +692,21 @@
                 let data = this.option('dataModel.data');
 
                 $('#CAM_WORK_HISTORY_RECORDS').html(data.length);
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                }
+
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
         /* variable */
@@ -727,6 +777,65 @@
             });
 
             saveAs(blob, 'CAM 작업이력.xlsx');
+        });
+
+        $("#CAM_WORK_HISTORY_GRID_SEARCH_FORM").find('[name=CAM_WORK_HISTORY_TERM]').change(function () {
+            let value = $(this).val();
+            let today = TODAY;
+            let newDate = new Date();
+
+            switch (value) {
+                case 'today':
+                    break;
+                case 'week':
+                    newDate.setDate(newDate.getDate() - 6);
+                    break;
+                case 'month':
+                    newDate.setMonth(newDate.getMonth() - 1);
+                    break;
+            }
+            $("#CAM_WORK_HISTORY_GRID_SEARCH_FORM").find('#CAM_WORK_HISTORY_START_DT').val(newDate.yyyymmdd());
+            $("#CAM_WORK_HISTORY_GRID_SEARCH_FORM").find('#CAM_WORK_HISTORY_END_DT').val(today.yyyymmdd());
+        });
+
+        $('#CAM_WORK_HISTORY_GRID_SEARCH_FORM').find('#SIZE_TYPE').on('change', function () {
+            const $camWorkHistoryGridSearchForm = $('#CAM_WORK_HISTORY_GRID_SEARCH_FORM');
+
+            switch (this.value) {
+                case 'XYZ010':
+                    $camWorkHistoryGridSearchForm.find('#SIZE_W').show();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_H').show();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_T').show();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_D').hide();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_L').hide();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_D_F').val('');
+                    $camWorkHistoryGridSearchForm.find('#SIZE_D_T').val('');
+                    $camWorkHistoryGridSearchForm.find('#SIZE_L_F').val('');
+                    $camWorkHistoryGridSearchForm.find('#SIZE_L_T').val('');
+                    break;
+                case 'XYZ020':
+                case 'XYZ030':
+                case 'XYZ040':
+                case 'XYZ050':
+                    $camWorkHistoryGridSearchForm.find('#SIZE_W').hide();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_H').hide();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_T').hide();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_W_F').val('');
+                    $camWorkHistoryGridSearchForm.find('#SIZE_W_T').val('');
+                    $camWorkHistoryGridSearchForm.find('#SIZE_H_F').val('');
+                    $camWorkHistoryGridSearchForm.find('#SIZE_H_T').val('');
+                    $camWorkHistoryGridSearchForm.find('#SIZE_T_F').val('');
+                    $camWorkHistoryGridSearchForm.find('#SIZE_T_T').val('');
+                    $camWorkHistoryGridSearchForm.find('#SIZE_D').show();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_L').show();
+                    break;
+                default:
+                    $camWorkHistoryGridSearchForm.find('#SIZE_W').show();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_H').show();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_T').show();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_D').show();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_L').show();
+            }
         });
         /* event */
 
@@ -818,24 +927,22 @@
             }, infoParameters, '');
         }
 
-        let camWorkHistoryPop = function(rowData) {
+        let camWorkHistoryPop = function (rowData) {
             fnResetFrom('cam_work_history_pop_form');
             $("#cam_work_history_pop_form").find("#CONTROL_SEQ").val(rowData.CONTROL_SEQ);
             $("#cam_work_history_pop_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ);
             $("#cam_work_history_pop_form").find("#DXF_GFILE_SEQ").val(rowData.DXF_GFILE_SEQ);
             $("#cam_work_history_pop_form").find("#CAM_SEQ").val(rowData.CAM_SEQ);
             let controlNum = rowData.CONTROL_NUM;
-            if(rowData.PART_NUM) controlNum += " # " + rowData.PART_NUM;
+            if (rowData.PART_NUM) controlNum += " # " + rowData.PART_NUM;
             $("#cam_work_history_pop_form").find("#CONTROL_NUM").html("<p style='color:blue;'>" + controlNum + "<p/>");
-            let orderQty = numberWithCommas(rowData.ORDER_QTY);
-            if(rowData.ORIGINAL_SIDE_QTY) orderQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.ORIGINAL_SIDE_QTY + ") </span>";
-            $("#cam_work_history_pop_form").find("#ORDER_QTY").html(orderQty);
+            let controlPartQty = numberWithCommas(rowData.CONTROL_PART_QTY);
+            if (rowData.ORIGINAL_SIDE_QTY) controlPartQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.ORIGINAL_SIDE_QTY + ") </span>";
+            $("#cam_work_history_pop_form").find("#CONTROL_PART_QTY").html(controlPartQty);
             let dueOutDt = rowData.INNER_DUE_DT;
-            if(rowData.EMERGENCY_YN === "Y") dueOutDt += " <input type='button' class='smallBtn red' value='긴급'></input>";
+            if (rowData.EMERGENCY_YN === "Y" || rowData.EMERGENCY_YN === "긴") dueOutDt += " <input type='button' class='smallBtn red' value='긴급'>";
             $("#cam_work_history_pop_form").find("#DUE_OUT_DT").html(dueOutDt);
-            let drawingNum = rowData.CONCAT_DRAWING_NUM;
-            if(rowData.DRAWING_VER === "Y") drawingNum += " <span> ( " + rowData.DRAWING_VER + ") </span>";
-            $("#cam_work_history_pop_form").find("#DRAWING_NUM").html(drawingNum);
+            $("#cam_work_history_pop_form").find("#DRAWING_NUM").html(rowData.CONCAT_DRAWING_NUM);
             $("#cam_work_history_pop_form").find("#WORK_TYPE").html(rowData.WORK_TYPE_NM);
             let drawingFile = "";
             if (rowData.CAM_STATUS === "CWS020") {
@@ -852,19 +959,19 @@
             $("#cam_work_history_pop_form").find("#ITEM_NM").html(rowData.ITEM_NM);
             $("#cam_work_history_pop_form").find("#MATERIAL_DETAIL_NM").html(rowData.MATERIAL_DETAIL_NM);
             let camWorkDate = rowData.CAM_START_DT;
-            if(rowData.CAM_STATUS === "CWS030") camWorkDate = rowData.CAM_FINISH_DT;
+            if (rowData.CAM_STATUS === "CWS030") camWorkDate = rowData.CAM_FINISH_DT;
             $("#cam_work_history_pop_form").find("#LAST_WORK_DT").html(camWorkDate);
-            $("#cam_work_history_pop_form").find("#SIZE_TXT").html(rowData.STANDARD_SIZE);
+            $("#cam_work_history_pop_form").find("#SIZE_TXT").html(rowData.SIZE_TXT);
             $("#cam_work_history_pop_form").find("#SURFACE_TREAT_NM").html(rowData.SURFACE_TREAT_NM);
             $("#cam_work_history_pop_form").find("#MCT_PLAN_NOTE").html(rowData.MCT_NOTE);
             $("#cam_work_history_pop_form").find("#MCT_PLAN_NC").html(rowData.EQUIP_ID);
             let lastWorkEquipId = rowData.WORK_EQUIP_ID_1;
-            if(rowData.WORK_EQUIP_ID_2) lastWorkEquipId = rowData.WORK_EQUIP_ID_2;
-            if(rowData.WORK_EQUIP_ID_3) lastWorkEquipId = rowData.WORK_EQUIP_ID_3;
-            if(rowData.WORK_EQUIP_ID_4) lastWorkEquipId = rowData.WORK_EQUIP_ID_4;
+            if (rowData.WORK_EQUIP_ID_2) lastWorkEquipId = rowData.WORK_EQUIP_ID_2;
+            if (rowData.WORK_EQUIP_ID_3) lastWorkEquipId = rowData.WORK_EQUIP_ID_3;
+            if (rowData.WORK_EQUIP_ID_4) lastWorkEquipId = rowData.WORK_EQUIP_ID_4;
             $("#cam_work_history_pop_form").find("#LAST_WORK_NC").html(lastWorkEquipId);
             let camPopHtml = "";
-            if(rowData.WORK_HISTORY_INFO){
+            if (rowData.WORK_HISTORY_INFO) {
                 camPopHtml = rowData.WORK_HISTORY_INFO + "  ";
                 camPopHtml += "<button type='button' class='smallBtn yellow' onclick=\"javascript:g_item_detail_pop_cam_pop('" + rowData.CONTROL_SEQ + "','" + rowData.CONTROL_DETAIL_SEQ + "');\"><i class='fa fa-trash'></i><span >조회</span></button>";
             }
@@ -877,7 +984,7 @@
                 'data': $('#cam_work_history_pop_form').serialize()
             };
             fnPostAjax(function (data, callFunctionParam) {
-                for(let i=0; i < data.list.length; i++){
+                for (let i = 0; i < data.list.length; i++) {
                     $('#cam_work_history_detail_pop').find("input:checkbox[id='CAM_WORK_CHK_" + data.list[i].ROWNUM + "']").prop('checked', true);
                     $('#cam_work_history_detail_pop').find("#CAM_WORK_SEQ_" + data.list[i].ROWNUM).val(data.list[i].SEQ);
                     $('#cam_work_history_detail_pop').find("#CAM_WORK_GFILE_SEQ_" + data.list[i].ROWNUM).val(data.list[i].CAM_GFILE_SEQ);

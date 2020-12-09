@@ -523,40 +523,73 @@
     </update>
 
     <select id="selectCamWorkHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-	<!-- Group by 확인필요 !!!-->
         SELECT
-            ROW_NUMBER () OVER () AS ROWNUM,
-            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.DXF_GFILE_SEQ, A.PDF_GFILE_SEQ, A.IMG_GFILE_SEQ,
-            jmes.SF_GET_DATE_F(A.INNER_DUE_DT, 'YY', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
-            jmes.SF_GET_DATE_F(A.INNER_WORK_FINISH_DT, 'YY', '') AS INNER_WORK_FINISH_DT, <!-- 가공납기 -->
-            CASE WHEN IFNULL(B.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN, <!-- 긴급 -->
-            CASE WHEN IFNULL(B.MAIN_INSPECTION, 'N') = 'Y' THEN '주' ELSE SPACE(0) END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
-            CASE WHEN A.WORK_TYPE = 'WTP030' THEN '수' WHEN A.WORK_TYPE = 'WTP040' THEN '재' END AS WORK_NM, <!-- 형태 -->
-            R.ITEM_NM, <!-- 품명 -->
-            jmes.SF_GET_CODE_NM('1009', C.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION, <!-- 현재위치 -->
-            jmes.SF_GET_CODE_NM('1013', A.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS, <!-- 진행상태 -->
-            B.CONTROL_NUM, <!-- 관리번호 -->
-            IFNULL(A.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
-            A.MATERIAL_DETAIL, <!-- 소재종류 상세 -->
-            IFNULL(SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
-            IFNULL(jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 0) AS ORDER_QTY, <!-- 수량 -->
-            IFNULL(A.DRAWING_NUM, SPACE(0)) AS DRAWING_NUM, <!-- 도면번호 -->
-            IFNULL(A.DRAWING_VER, SPACE(0)) AS DRAWING_VER, <!-- 도면번호 버전 -->
-            A.SIZE_TXT AS STANDARD_SIZE, <!-- 규격 -->
-            jmes.SF_GET_MATERIAL_SIZE_TXT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERAIL_ORDER_SIZE,	<!-- 소재 주문 규격 -->
-            IFNULL(H.SEQ, SPACE(0)) AS CAM_STEP, <!-- CAM 스탭 -->
-            SF_GET_CODE_NM('1080', H.WORK_DIRECTION, #{LOGIN_LOCALE}) AS WORK_DIRECTION, <!-- CAM 가공위치 -->
-            H.WORK_DESC, -- CAM 작업 내용 -->
-            CASE WHEN G.START_DT IS NOT NULL AND G.FINISH_DT IS NOT NULL THEN 'CWS030'
-                WHEN G.START_DT IS NOT NULL AND G.FINISH_DT IS NULL THEN 'CWS020'
-                ELSE 'CWS010'
-            END CAM_STATUS, <!-- CAM 상태 -->
-            (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = H.WORK_USER_ID) AS WORK_USER_NM, <!-- CAM 작업자 -->
-            CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE H.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_KIND = 'EXC') ELSE SPACE(0) END CAM_FILE_SEQ, -- CAM FILE -->
-            CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE H.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_KIND = 'EXN') ELSE SPACE(0) END NC_FILE_SEQ, -- NC FILE -->
-            CONCAT(IFNULL(G.HISTORY_NOTE, SPACE(0)), IFNULL(G.NOTE, SPACE(0))) AS CAM_WORK_NOTE,    <!-- CAM 작업 기록 및 비고 공유 사항 -->
-            Z.EQUIP_NM, Z.WORKING_TIME, Z.NC_WORK_TYPE,
-            (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Z.WORK_USER_ID) AS NC_WORK_USER_NM <!-- CAM 작업자 -->
+            ROW_NUMBER () OVER (ORDER BY H.INSERT_DT, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0)) AS ROW_NUM
+            , A.CONTROL_SEQ
+            , A.CONTROL_DETAIL_SEQ
+            , jmes.SF_GET_DATE_F(H.INSERT_DT, 'YY', 'M') AS CAM_INSERT_DT <!-- 실적등록일시 -->
+            , jmes.SF_GET_DATE_F(A.INNER_DUE_DT, 'YY', '') AS INNER_DUE_DT <!-- 내부가공납기 -->
+            , jmes.SF_GET_DATE_F(A.INNER_WORK_FINISH_DT, 'YY', '') AS INNER_WORK_FINISH_DT <!-- 가공완료-->
+            , CASE WHEN A.OUTSIDE_YN = 'Y' THEN A.OUTSIDE_YN END AS OUTSIDE_YN
+            , jmes.SF_GET_CODE_NM('1014', A.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
+            , jmes.SF_GET_COMP_NM(B.ORDER_COMP_CD) AS ORDER_COMP_NM <!-- 발주처 -->
+            , B.CONTROL_NUM
+            , jmes.SF_GET_CODE_NM('1033', A.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+            , A.SIZE_TXT
+            , jmes.SF_GET_CODE_NM('1035', A.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM
+            , A.DRAWING_NUM
+            , IFNULL(jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 0) AS CONTROL_PART_QTY <!-- 주문수량 -->
+            , (SELECT M.FILE_SIZE FROM jmes.TBL_FILE M WHERE M.GFILE_SEQ = A.DXF_GFILE_SEQ) AS CAD_FILE_SIZE
+            , jmes.SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL <!-- 소재 종류 -->
+            , jmes.SF_GET_CODE_NM('1029', A.MATERIAL_KIND, #{LOGIN_LOCALE}) AS MATERIAL_KIND_NM <!-- 소재 형태 -->
+            , jmes.SF_GET_MATERIAL_SIZE_TXT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERAIL_ORDER_SIZE	<!-- 소재 주문 규격 -->
+            , ( SELECT CONCAT(TRUNCATE(SUM(TIMESTAMPDIFF(MINUTE, M.WORK_START_DT, M.WORK_FINISH_DT)) / jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 1), '''')
+                FROM TBL_MCT_WORK M
+                    , TBL_MCT_WORK_TIME N
+                WHERE N.MCT_WORK_SEQ = M.MCT_WORK_SEQ
+                    AND M.CONTROL_SEQ = A.CONTROL_SEQ
+                    AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                    AND M.EQUIP_SEQ IN (SELECT EQUIP_SEQ FROM TBL_EQUIP WHERE PROCESS_TYPE = 'MPR010')
+                GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
+              ) AS NC_WORK_TIME <!-- CNC -->
+            , ( SELECT CONCAT(TRUNCATE(SUM(TIMESTAMPDIFF(MINUTE, M.WORK_START_DT, M.WORK_FINISH_DT)) / jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 1), '''')
+                FROM TBL_MCT_WORK M
+                    , TBL_MCT_WORK_TIME N
+                WHERE N.MCT_WORK_SEQ = M.MCT_WORK_SEQ
+                    AND M.CONTROL_SEQ = A.CONTROL_SEQ
+                    AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
+              ) AS TOTAL_WORK_TIME <!-- 전공정 -->
+            , H.SEQ AS CAM_STEP <!-- CAM 스탭 -->
+            , H.WORK_DESC <!-- CAM 작업 내용 -->
+            , H.DESIGN_QTY <!-- 단위 수량 -->
+            , jmes.SF_GET_USER_NM(Z.WORK_USER_ID) AS NC_WORK_USER_NM <!-- CAM 작업자 -->
+            , (	SELECT CONCAT(IFNULL(M.HISTORY_NOTE, SPACE(0)), IFNULL(M.NOTE, SPACE(0)))
+                FROM jmes.TBL_CAM M
+                    , jmes.TBL_CONTROL_PART N
+                    , jmes.TBL_CONTROL O
+                WHERE O.CONTROL_SEQ = N.CONTROL_SEQ
+                    AND N.CONTROL_SEQ = M.CONTROL_SEQ
+                    AND N.CONTROL_DETAIL_SEQ  = M.CONTROL_DETAIL_SEQ
+                    AND M.CONTROL_SEQ = A.CONTROL_SEQ
+                    AND (M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ) IN ( SELECT
+                                                                        P.CONTROL_SEQ
+                                                                        , P.CONTROL_DETAIL_SEQ
+                                                                    FROM TBL_CONTROL_PART P
+                                                                        , TBL_CONTROL Q
+                                                                    WHERE Q.CONTROL_SEQ = P.CONTROL_SEQ
+                                                                        AND Q.DEL_YN = 'N'
+                                                                        AND Q.ORDER_COMP_CD = O.ORDER_COMP_CD
+                                                                        AND P.SIZE_TXT = N.SIZE_TXT
+                                                                        AND P.CONTROL_SEQ = A.CONTROL_SEQ
+                                                                        AND P.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                                                                 )
+               ) AS CAM_EXPERIENCE_NOTE <!-- 경험 기록사항 -->
+            , CONCAT(IFNULL(G.HISTORY_NOTE, SPACE(0)), IFNULL(G.NOTE, SPACE(0))) AS CAM_WORK_NOTE <!-- CAM 작업 기록 및 비고 공유 사항 -->
+            , A.DXF_GFILE_SEQ
+            , A.IMG_GFILE_SEQ
+            , CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT M.FILE_SEQ FROM TBL_FILE M WHERE M.GFILE_SEQ = H.CAM_GFILE_SEQ AND M.FILE_KIND = 'EXC') END CAM_FILE_SEQ <!-- CAM FILE -->
+            , CASE WHEN H.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT M.FILE_SEQ FROM TBL_FILE M WHERE M.GFILE_SEQ = H.CAM_GFILE_SEQ AND M.FILE_KIND = 'EXN') END NC_FILE_SEQ <!-- NC FILE -->
         FROM jmes.TBL_CONTROL_PART A
             INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.CONTROL_STATUS = 'ORD001' <!-- 주문확정 -->
 			INNER JOIN jmes.TBL_CONTROL_PART_ORDER_MAIN R ON B.CONTROL_SEQ = R.CONTROL_SEQ
@@ -583,17 +616,14 @@
                     )
             ) Z ON A.CONTROL_SEQ = Z.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ
         WHERE 1 = 1
-            <if test="FACTORY_AREA != null and FACTORY_AREA != ''">
-                AND E.FACTORY_AREA = #{FACTORY_AREA}
+            <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                AND A.WORK_FACTORY = #{WORK_FACTORY}
             </if>
-            <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
-                AND E.EQUIP_SEQ = #{EQUIP_SEQ}
+            <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                AND B.ORDER_COMP_CD = #{ORDER_COMP_CD}
             </if>
-            <if test="MATERIAL_DETAIL != null and MATERIAL_DETAIL != ''">
-                AND A.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
-            </if>
-            <if test="SURFACE_TREAT != null and SURFACE_TREAT != ''">
-                AND A.SURFACE_TREAT = #{SURFACE_TREAT}
+            <if test="HIDDEN_MATERIAL_DETAIL != null and HIDDEN_MATERIAL_DETAIL != ''">
+                AND A.MATERIAL_DETAIL IN (${HIDDEN_MATERIAL_DETAIL})
             </if>
             <if test="MATERIAL_TYPE != null and MATERIAL_TYPE != ''">
                 AND A.MATERIAL_TYPE = #{MATERIAL_TYPE}
@@ -607,20 +637,17 @@
             <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
                 AND A.MATERIAL_KIND = #{MATERIAL_KIND}
             </if>
-            <if test="WORK_TYPE != null and WORK_TYPE != ''">
-                AND A.WORK_TYPE = #{WORK_TYPE}
-            </if>
             <if test="WORK_USER_ID != null and WORK_USER_ID != ''">
-                AND D.WORK_USER_ID = #{WORK_USER_ID}
+                AND H.WORK_USER_ID = #{WORK_USER_ID}
             </if>
             <choose>
                 <when test="CAM_WORK_HISTORY_CONDITION == 1">
-                    AND A.UPDATE_DT BETWEEN STR_TO_DATE(#{mct_nc_execute_history_start_dt}, '%Y/%m/%d') AND STR_TO_DATE(#{mct_nc_execute_history_end_dt}, '%Y/%m/%d')
+                    AND A.UPDATE_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
                 </when>
                 <when test="CAM_WORK_HISTORY_CONDITION == 2">
                     AND EXISTS (SELECT 1 FROM TBL_CONTROL_PART_PROGRESS P
                         WHERE A.CONTROL_SEQ = P.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ AND P.PART_STATUS = 'PRO002' <!-- 가공 확정 존재 유무 주문 -->
-                            AND P.STATUS_DT BETWEEN STR_TO_DATE(#{mct_nc_execute_history_start_dt}, '%Y/%m/%d') AND STR_TO_DATE(#{mct_nc_execute_history_end_dt}, '%Y/%m/%d')
+                            AND P.STATUS_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
                             AND P.SEQ > IFNULL((SELECT MAX(E.SEQ) FROM TBL_CONTROL_PART_PROGRESS E
                                 WHERE P.CONTROL_SEQ = E.CONTROL_SEQ AND P.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND E.PART_STATUS IS NULL), 0
                             )
@@ -628,7 +655,7 @@
                 </when>
             </choose>
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
-        ORDER BY B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
+        ORDER BY H.INSERT_DT, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0)
     </select>
 
     <select id="selectCamWorkHistoryList_BACKUP" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -754,12 +781,12 @@
             </if>
             <choose>
                 <when test="CAM_WORK_HISTORY_CONDITION == 1">
-                    AND A.UPDATE_DT BETWEEN STR_TO_DATE(#{mct_nc_execute_history_start_dt}, '%Y/%m/%d') AND STR_TO_DATE(#{mct_nc_execute_history_end_dt}, '%Y/%m/%d')
+                    AND A.UPDATE_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
                 </when>
                 <when test="CAM_WORK_HISTORY_CONDITION == 2">
                     AND EXISTS (SELECT 1 FROM TBL_CONTROL_PART_PROGRESS P
                         WHERE A.CONTROL_SEQ = P.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ AND P.PART_STATUS = 'PRO002' -- 가공 확정 존재 유무 주문 -->
-                            AND P.STATUS_DT BETWEEN STR_TO_DATE(#{mct_nc_execute_history_start_dt}, '%Y/%m/%d') AND STR_TO_DATE(#{mct_nc_execute_history_end_dt}, '%Y/%m/%d')
+                            AND P.STATUS_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
                             AND P.SEQ > IFNULL((SELECT MAX(E.SEQ) FROM TBL_CONTROL_PART_PROGRESS E
                                 WHERE P.CONTROL_SEQ = E.CONTROL_SEQ AND P.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND E.PART_STATUS IS NULL), 0
                             )
@@ -1060,7 +1087,7 @@
             IFNULL(jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 0) AS ORDER_QTY, <!-- 수량 -->
             jmes.SF_GET_SIDE_QTY(B.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(A.PART_UNIT_QTY, 1) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
             jmes.SF_GET_SIDE_QTY(B.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(A.PART_UNIT_QTY, 1) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
-            jmes.SF_GET_DRAWING_NUMBERS(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 'N') AS CONCAT_DRAWING_NUM, <!-- 도면번호 -->
+            jmes.SF_GET_DRAWING_NUMBERS(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 'Y') AS CONCAT_DRAWING_NUM, <!-- 도면번호 -->
             IFNULL(A.DRAWING_VER, SPACE(0)) AS DRAWING_VER, <!-- 도면번호 버전 -->
             A.SIZE_TXT AS STANDARD_SIZE, <!-- 규격 -->
             jmes.SF_GET_MATERIAL_SIZE_TXT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERAIL_ORDER_SIZE,	<!-- 소재 주문 규격 -->
