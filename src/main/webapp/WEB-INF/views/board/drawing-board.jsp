@@ -696,25 +696,25 @@
             }, parameters, '');
         });
 
-        let reStartWorkControlNum = $("#re_start_work_info_form").find("#CONTROL_NUM").val();
-
-        if(reStartWorkControlNum){
-            let barcodeNum = $("#re_start_work_info_form").find("#RE_BARCODE_NUM").val();
-            let parameters = {
-                'url': '/drawing/barcode',
-                'data': { 'queryId': 'drawingMapper.selectDrawingBarcodeScanInfo', 'BARCODE_NUM': barcodeNum}
+        let restartWorkControlNumFn = function(reStartWorkControlNum){
+            if(reStartWorkControlNum){
+                let barcodeNum = $("#re_start_work_info_form").find("#RE_BARCODE_NUM").val();
+                let parameters = {
+                    'url': '/drawing/barcode',
+                    'data': { 'queryId': 'drawingMapper.selectDrawingBarcodeScanInfo', 'BARCODE_NUM': barcodeNum}
+                };
+                fnPostAjax(function (data, callFunctionParam) {
+                    let returnCode = data.returnCode;
+                    if(returnCode == "RET00") {
+                        startWork(data.info);
+                    }else if(returnCode == "RET97"){
+                        fnDrawingDialogAlert('drawingVerErrorHtml', 3);
+                    }else{
+                        showMessage(data.message);
+                        return false;
+                    }
+                }, parameters, '');
             };
-            fnPostAjax(function (data, callFunctionParam) {
-                let returnCode = data.returnCode;
-                if(returnCode == "RET00") {
-                    startWork(data.info);
-                }else if(returnCode == "RET97"){
-                    fnDrawingDialogAlert('drawingVerErrorHtml', 3);
-                }else{
-                    showMessage(data.message);
-                    return false;
-                }
-            }, parameters, '');
         };
 
         let startWork = function(dataInfo){
@@ -735,7 +735,7 @@
             $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val(dataInfo.CONTROL_DETAIL_SEQ);
             $("#drawing_worker_target_list_popup").css("display", "none");
             $("#drawing_worker_scan_popup").css("display", "block");
-        }
+        };
 
         //Scan Popup
         $("#drawing_worker_scan_popup").bind('style', function(e) {
@@ -1109,6 +1109,8 @@
 
         /** Main 페이지 로딩시 Body 기본으로 Focus 되도록 처리 **/
         setFocusBody();
+
+        restartWorkControlNumFn($("#re_start_work_info_form").find("#CONTROL_NUM").val());
 
     });
 </script>
