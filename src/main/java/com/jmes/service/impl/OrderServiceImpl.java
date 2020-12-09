@@ -449,6 +449,10 @@ public class OrderServiceImpl implements OrderService {
                     if (standardControlSeq != (int) hashMap.get("CONTROL_SEQ") && standardControlDetailSeq != (int) hashMap.get("CONTROL_DETAIL_SEQ")) {
                         hashMap.put("queryId", "orderMapper.createPartOrderToMerge");
                         this.innodaleDao.create(hashMap);
+                        hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt2");
+                        this.innodaleDao.remove(hashMap);
+                        hashMap.put("queryId", "orderMapper.createOutBarcodeToMerge");
+                        this.innodaleDao.create(hashMap);
                         hashMap.put("queryId", "orderMapper.removeControl");
                         this.innodaleDao.remove(hashMap);
                     }

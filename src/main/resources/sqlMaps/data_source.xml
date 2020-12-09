@@ -13,11 +13,12 @@
 
     <select id="getMCTWorkerList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            USER_ID AS CODE_CD, USER_NM AS CODE_NM
+            USER_ID AS CODE_CD
+            , USER_NM AS CODE_NM
         FROM jmes.TBL_USER
-        WHERE 1 = 1
-            AND DEL_YN = 'N'
+        WHERE DEL_YN = 'N'
             AND ROLE_SEQ IN ('3000')
+        ORDER BY USER_NM DESC
     </select>
 
 
