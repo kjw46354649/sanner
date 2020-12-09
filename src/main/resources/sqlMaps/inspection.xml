@@ -1036,12 +1036,12 @@
         ORDER BY PACKING_NUM
     </select>
     <select id="selectOutgoingLabelType2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT BARCODE_NUM FROM jmes.TBL_OUT_BARCODE
-        WHERE 1=1
-        AND CONTROL_SEQ = #{CONTROL_SEQ}
-        AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-        AND ORDER_SEQ = #{ORDER_SEQ}
-        AND DEL_YN = 'N'
+        SELECT BARCODE_NUM
+        FROM jmes.TBL_OUT_BARCODE
+        WHERE DEL_YN = 'N'
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND ORDER_SEQ = #{ORDER_SEQ}
     </select>
     <select id="selectOutgoingLabelType3" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.BARCODE_NUM

@@ -1746,7 +1746,6 @@
                 });
             }
         },
-        {title: 'IMG_GFILE_SEQ', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
         {
             title: 'CAD 파일', align: 'center',
             colModel: [
