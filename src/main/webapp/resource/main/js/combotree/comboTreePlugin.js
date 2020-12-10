@@ -242,6 +242,7 @@
             $("#" + this.comboTreeId + 'DropDownContainer').find("#check" + this._selectedItems[i].title).prop('checked', false);
         }
         this._selectedItems = [];
+        this._hiddenElemInput.val('');
         this.refreshInputVal();
     };
 
@@ -307,9 +308,6 @@
     };
     ComboTree.prototype.multiItemClick = function (ctItem) {
         this.selectMultipleItem(ctItem);
-        console.group('multiItemClick');
-        console.log(ctItem);
-        console.groupEnd();
         if (this.options.cascadeSelect) {
             if ($(ctItem).parent('li').hasClass('ComboTreeItemParent')) {
                 var subMenu = $(ctItem).parent('li').children('ul').first().find('input[type="checkbox"]');
