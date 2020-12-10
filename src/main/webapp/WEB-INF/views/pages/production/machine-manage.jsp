@@ -30,7 +30,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label for="SEL_EQUIP_SIZE" class="label_100">장비규격</label>
-                            <input type="text" name="SEL_EQUIP_SIZE" id="SEL_EQUIP_SIZE" placeholder="장비규격" value="" title="장비규격" class="wd_200">
+                            <input type="search" name="SEL_EQUIP_SIZE" id="SEL_EQUIP_SIZE" placeholder="장비규격" value="" title="장비규격" class="wd_200">
 <%--                            <select id="SEL_EQUIP_SIZE" name="SEL_EQUIP_SIZE" title="장비규격" data-required="true"  class="wd_200">--%>
 <%--                                <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
 <%--                                <c:forEach var="vlocale" items="${HighCode.H_1034}">--%>

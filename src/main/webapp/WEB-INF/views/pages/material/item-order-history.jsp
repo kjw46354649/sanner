@@ -17,9 +17,9 @@
             <div class="none_gubunWrap row2_topWrap">
                 <ul>
                     <li>
-                        <span class="ipu_wrap"><label class="label_100" for="CONTROL_NUM">관리번호</label><input type="text" name="CONTROL_NUM" id="CONTROL_NUM" class="wd_200" value="" title="관리번호"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="CONTROL_NUM">관리번호</label><input type="search" name="CONTROL_NUM" id="CONTROL_NUM" class="wd_200" value="" title="관리번호"></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="MATERIAL_ORDER_NUM">소재주문번호</label><input type="text" name="MATERIAL_ORDER_NUM" id="MATERIAL_ORDER_NUM" class="wd_200" value="" title="소재주문번호"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="MATERIAL_ORDER_NUM">소재주문번호</label><input type="search" name="MATERIAL_ORDER_NUM" id="MATERIAL_ORDER_NUM" class="wd_200" value="" title="소재주문번호"></span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_COMP_CD">소재주문업체</label>

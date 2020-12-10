@@ -88,7 +88,7 @@
                             </select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="DRAWING_NUM">도면번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" class="wd_200" value="" title="도면번호"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="DRAWING_NUM">도면번호</label><input type="search" name="DRAWING_NUM" id="DRAWING_NUM" class="wd_200" value="" title="도면번호"></span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_TYPE">작업형태</label>
@@ -101,9 +101,9 @@
                         </span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label class="label_100" for="CONTROL_NUM">관리번호</label><input type="text" name="CONTROL_NUM" id="CONTROL_NUM" class="wd_200" value="" title="관리번호"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="CONTROL_NUM">관리번호</label><input type="search" name="CONTROL_NUM" id="CONTROL_NUM" class="wd_200" value="" title="관리번호"></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="MATERIAL_ORDER_NUM">소재주문번호</label><input type="text" name="MATERIAL_ORDER_NUM" id="MATERIAL_ORDER_NUM" class="wd_200" value="" title="소재주문번호"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="MATERIAL_ORDER_NUM">소재주문번호</label><input type="search" name="MATERIAL_ORDER_NUM" id="MATERIAL_ORDER_NUM" class="wd_200" value="" title="소재주문번호"></span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="M_COMP_CD">소재주문업체</label>
@@ -170,7 +170,7 @@
                 <div class="left_60Wrap" id="dynamic_left_div"  style="width: 100%;">
                     <div class="buttonWrap">
                         <div class="d-inline">
-                            <input type="text" id="itemOrderRegisterFilterKeyword" placeholder="Enter your keyword">
+                            <input type="search" id="itemOrderRegisterFilterKeyword" placeholder="Enter your keyword">
                             <select id="itemOrderRegisterFilterColumn"></select>
                             <select id="itemOrderRegisterFilterCondition">
                                 <c:forEach var="code" items="${HighCode.H_1083}">
@@ -1288,8 +1288,19 @@
          * fnFilterHandler
          * @Parameter
          * */
-        $("#itemOrderRegisterFilterKeyword").on("keyup", function(e){
-            fnFilterHandler(itemOrderRegisterLeftGrid, 'itemOrderRegisterFilterKeyword', 'itemOrderRegisterFilterCondition', 'itemOrderRegisterFilterColumn');
+        $('#itemOrderRegisterFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler(itemOrderRegisterLeftGrid, 'itemOrderRegisterFilterKeyword', 'itemOrderRegisterFilterCondition', 'itemOrderRegisterFilterColumn');
+
+                let data = itemOrderRegisterLeftGrid.pqGrid('option', 'dataModel.data');
+                $('#item_order_register_left_grid_records').html(data.length);
+            },
+            'search': function () {
+                fnFilterHandler(itemOrderRegisterLeftGrid, 'itemOrderRegisterFilterKeyword', 'itemOrderRegisterFilterCondition', 'itemOrderRegisterFilterColumn');
+
+                let data = itemOrderRegisterLeftGrid.pqGrid('option', 'dataModel.data');
+                $('#item_order_register_left_grid_records').html(data.length);
+            }
         });
 
         $("#itemOrderRegisterFilterCondition").on('change', function(e){
