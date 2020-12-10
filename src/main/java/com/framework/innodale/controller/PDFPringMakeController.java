@@ -108,14 +108,16 @@ public class PDFPringMakeController {
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
         BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
-        Font headFont = new Font(bf, 10, Font.NORMAL);
-        Font headBoldFont = new Font(bf, 10, Font.BOLD);
-        Font titleFont = new Font(bf, 7, Font.NORMAL);
-        Font boldFont = new Font(bf, 12, Font.BOLD);
-        Font bigBoldFont = new Font(bf, 11, Font.BOLD);
-        Font bodyFont = new Font(bf, 12, Font.NORMAL);
-        Font qtyFont = new Font(bf, 13, Font.BOLD);
-        Font qtySmallFont = new Font(bf, 7, Font.BOLD);
+        float small = 7.0f;
+        float medium = 10.0f;
+        float large = 12.0f;
+
+        Font smallNormalFont = new Font(bf, small, Font.NORMAL);
+        Font smallBoldFont = new Font(bf, small, Font.BOLD);
+        Font mediumNormalFont = new Font(bf, medium, Font.NORMAL);
+        Font mediumBoldFont = new Font(bf, medium, Font.BOLD);
+        Font largeNormalFont = new Font(bf, large, Font.NORMAL);
+        Font largeBoldFont = new Font(bf, large, Font.BOLD);
 
         PdfWriter.getInstance(document, out);
 
@@ -157,48 +159,47 @@ public class PDFPringMakeController {
             //barcodeImage.setAbsolutePosition(2, 700);
             //barcodeImage.scaleAbsolute(120, 70);
             //document.add(barcodeImage);
-            table.addCell(createImageCell(barcodeImage, 1, 2, headFont));
-            table.addCell(createCell((String) controlInfo.get("CONTROL_VER"), 1, 1, headFont));
-            table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, headFont));
-            table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, headFont));
-//            table.addCell(createCell("Part", 1, 1, titleFont));
-            table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 2, 1, headFont));
-            table.addCell(createCell((String) controlInfo.get("WORK_TYPE_NM"), 1, 1, headFont));
-            table.addCell(createCell((String) controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, headFont));
+            table.addCell(createImageCell(barcodeImage, 1, 2, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("CONTROL_VER"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 2, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("WORK_TYPE_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, mediumNormalFont));
             if (controlInfo.get("WORK_TYPE_NM").equals("조립")) {
-                table.addCell(createQtyCell((String) controlInfo.get("CONTROL_ORDER_QTY"), 1, 2, qtyFont));
-                table.addCell(createEACell("SET", 1, 2, qtySmallFont));
+                table.addCell(createQtyCell((String) controlInfo.get("CONTROL_ORDER_QTY"), 1, 2, largeBoldFont));
+                table.addCell(createEACell("SET", 1, 2, smallBoldFont));
             } else if (controlInfo.get("WORK_TYPE_NM").equals("파트")) {
-                table.addCell(createQtyCell1((String) controlInfo.get("CONTROL_ORDER_QTY"), 1, 1, qtyFont));
-                table.addCell(createEACell1("EA", 1, 1, qtySmallFont));
+                table.addCell(createQtyCell1((String) controlInfo.get("CONTROL_ORDER_QTY"), 1, 1, largeBoldFont));
+                table.addCell(createEACell1("EA", 1, 1, smallBoldFont));
             } else {
-                table.addCell(createQtyCell((String) controlInfo.get("CONTROL_ORDER_QTY"), 1,2, qtyFont));
-                table.addCell(createEACell("EA", 1, 2, qtySmallFont));
+                table.addCell(createQtyCell((String) controlInfo.get("CONTROL_ORDER_QTY"), 1,2, largeBoldFont));
+                table.addCell(createEACell("EA", 1, 2, smallBoldFont));
             }
-            table.addCell(createCell("원칭", 1, 1, titleFont));
-            table.addCell(createCell("대칭", 1, 1, titleFont));
-            table.addCell(createCell("가공납기", 1, 1, titleFont));
+            table.addCell(createCell("원칭", 1, 1, smallNormalFont));
+            table.addCell(createCell("대칭", 1, 1, smallNormalFont));
+            table.addCell(createCell("가공납기", 1, 1, smallNormalFont));
 
-            table.addCell(createCell((String) controlInfo.get("DRAWING_VER"), 1, 1, headFont));
+            table.addCell(createCell((String) controlInfo.get("DRAWING_VER"), 1, 1, mediumNormalFont));
             String controlNumPart = (String) controlInfo.get("CONTROL_NUM_PART");
             if (controlNumPart.length() <= 22) {
-                table.addCell(createCell((String) controlInfo.get("CONTROL_NUM_PART"), 2, 1, boldFont));
+                table.addCell(createCell((String) controlInfo.get("CONTROL_NUM_PART"), 2, 1, largeBoldFont));
             } else {
-                table.addCell(createCell((String) controlInfo.get("CONTROL_NUM_PART"), 2, 1, bigBoldFont));
+                table.addCell(createCell((String) controlInfo.get("CONTROL_NUM_PART"), 2, 1, mediumBoldFont));
             }
-            table.addCell(createCell((String) controlInfo.get("TOTAL_SHEET"), 1, 1, bodyFont));
-            table.addCell(createCell((String) controlInfo.get("MATERIAL_TYPE_NM"), 1, 1, headFont));
-            table.addCell(createCell((String) controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, headFont));
-            table.addCell(createCell((String) controlInfo.get("MAIN_INSPECTION_NM"), 1, 1, headFont));
+            table.addCell(createCell((String) controlInfo.get("TOTAL_SHEET"), 1, 1, largeNormalFont));
+            table.addCell(createCell((String) controlInfo.get("MATERIAL_TYPE_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("MAIN_INSPECTION_NM"), 1, 1, mediumNormalFont));
             if (controlInfo.get("WORK_TYPE_NM").equals("파트")) {
                 String partUnit = String.valueOf(controlInfo.get("PART_UNIT_QTY"));
                 String orderQty = String.valueOf(controlInfo.get("ORDER_QTY"));
 
-                table.addCell(createCellPartUnit(partUnit + " × " + orderQty, 2, 1, titleFont));
+                table.addCell(createCellPartUnit(partUnit + " × " + orderQty, 2, 1, smallNormalFont));
             }
-            table.addCell(createCell(String.valueOf(controlInfo.get("ORIGINAL_SIDE_QTY")), 1, 1, headFont));
-            table.addCell(createCell(String.valueOf(controlInfo.get("OTHER_SIDE_QTY")), 1, 1, headFont));
-            table.addCell(createCell((String) controlInfo.get("INNER_DUE_DT"), 1, 1, headBoldFont));
+            table.addCell(createCell(String.valueOf(controlInfo.get("ORIGINAL_SIDE_QTY")), 1, 1, mediumNormalFont));
+            table.addCell(createCell(String.valueOf(controlInfo.get("OTHER_SIDE_QTY")), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("INNER_DUE_DT"), 1, 1, mediumBoldFont));
 
             document.add(table);
 
