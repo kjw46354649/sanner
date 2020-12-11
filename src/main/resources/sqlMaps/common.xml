@@ -317,8 +317,4 @@
                 AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
             </if>
     </select>
-
-    <select id="selectDummyNextSequence" parameterType="java.util.HashMap" resultType="integer">
-        SELECT NEXTVAL(SEQ_DUMMY) AS SEQ_DUMMY FROM DUAL
-    </select>
 </mapper>

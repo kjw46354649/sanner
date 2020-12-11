@@ -57,7 +57,7 @@
                 AND UPPER(A.EST_TITLE) LIKE CONCAT('%', UPPER(#{EST_TITLE}), '%')
             </if>
             <if test="DRAWING_NUM !='' and DRAWING_NUM != null">
-                AND UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
+                AND UPPER(A.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
             </if>
             <if test="EST_NUM !='' and EST_NUM != null">
                 AND UPPER(A.EST_NUM) LIKE CONCAT('%', UPPER(#{EST_NUM}), '%')
