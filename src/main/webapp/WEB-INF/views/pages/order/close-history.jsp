@@ -387,9 +387,6 @@
             {
                 title: '항목별 계산견적 단가 (10원단위 반올림)', align: 'center', colModel: [
                     {title: '소재비', dataIndx: 'UNIT_MATERIAL_AMT'},
-                    {title: 'TM각비', dataIndx: 'UNIT_TM_AMT'},
-                    {title: '연마비', dataIndx: 'UNIT_GRIND_AMT'},
-                    {title: '열처리', dataIndx: 'UNIT_HEAT_AMT'},
                     {title: '표면처리', dataIndx: 'UNIT_SURFACE_AMT'},
                     {title: '가공비', dataIndx: 'UNIT_PROCESS_AMT'},
                     {title: '기타추가', dataIndx: 'UNIT_ETC_AMT'},
@@ -400,13 +397,10 @@
                 render: function (ui) {
                     let rowData = ui.rowData;
                     let UNIT_MATERIAL_AMT = rowData.UNIT_MATERIAL_AMT || 0;
-                    let UNIT_TM_AMT = rowData.UNIT_TM_AMT || 0;
-                    let UNIT_GRIND_AMT = rowData.UNIT_GRIND_AMT || 0;
-                    let UNIT_HEAT_AMT = rowData.UNIT_HEAT_AMT || 0;
                     let UNIT_SURFACE_AMT = rowData.UNIT_SURFACE_AMT || 0;
                     let UNIT_PROCESS_AMT = rowData.UNIT_PROCESS_AMT || 0;
                     let UNIT_ETC_AMT = rowData.UNIT_ETC_AMT || 0;
-                    let CALCUL_EST_UNIT_COST = UNIT_MATERIAL_AMT + UNIT_TM_AMT + UNIT_GRIND_AMT + UNIT_HEAT_AMT + UNIT_SURFACE_AMT + UNIT_PROCESS_AMT + UNIT_ETC_AMT;
+                    let CALCUL_EST_UNIT_COST = UNIT_MATERIAL_AMT + UNIT_SURFACE_AMT + UNIT_PROCESS_AMT + UNIT_ETC_AMT;
 
                     if (CALCUL_EST_UNIT_COST > 0) {
                         return CALCUL_EST_UNIT_COST.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');

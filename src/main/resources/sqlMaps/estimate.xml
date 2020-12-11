@@ -894,7 +894,7 @@
         ) VALUES(
             #{CALC_SEQ}
             , #{RANGE_TYPE}
-            , CAST(#{SIZE_NUM} AS INTEGER)
+            , CAST(#{SIZE_NUM} AS FLOAT)
             , NOW()
             , #{LOGIN_USER_ID}
         )
