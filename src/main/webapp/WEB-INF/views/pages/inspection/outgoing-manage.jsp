@@ -275,9 +275,9 @@
                     <%--   <caption></caption>--%>
                     <colgroup>
                         <col width="10%">
-                        <col width="*">
+                        <col width="25%">
                         <col width="10%">
-                        <col width="*%">
+                        <col width="25%">
                         <col width="15%">
                         <col width="15%">
                     </colgroup>
