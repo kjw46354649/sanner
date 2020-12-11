@@ -238,7 +238,7 @@
                             <td id="OUTSIDE_PROCESS_CONFIRM_DT"></td>
                             <th class="antiquewhite blueviolet">가공완료 일시</th>
                             <td id="PROCESS_FINISH_DT" class="blueviolet"></td>
-                            <%--<th>과거수행경험</th>--%>
+                            <%--<th>최근유사가공</th>--%>
                             <%--<td id="WORK_HISTORY_INFO"></td>--%>
                         </tr>
                         <tr>
@@ -928,21 +928,43 @@
             }
         });
 
-        $cadFileConvertUploadCompletedBtn.on('click', function(){
-            let gridInstance = $commonCadFileAttachGrid.pqGrid('getInstance').grid;
-            let changes = gridInstance.getChanges({format: 'byVal'});
-            changes.queryIdList = {
-                'insertQueryId': [$('#common_cad_file_attach_form').find("#queryId").val()]
-            };
-            $("#common_cad_file_attach_form").find("#fileGrid").val(JSON.stringify(changes));
-            let parameters = { 'url': '/cadFileConvert', 'data': {data: JSON.stringify(changes)}};
-            fnPostAjax(function (data, callFunctionParam) {
-                fnAlertMessageAutoClose('save');
-                $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
-                $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
-                commonCadFileAttachPopup.modal('hide');
-            }, parameters, '');
-        });
+        $cadFileConvertUploadCompletedBtn.on('click', function () {
+            const actionType = $('#common_cad_file_attach_form').find('#actionType').val();
+            // 주문 도면 차수 변경
+            if (actionType === 'controlRev') {
+                const message = '도면 변경시 바코드가 변경되며,<br>이미 배포된 바코드 출력도면은 교체해야 합니다.<br><br>진행하시겠습니까?';
+
+                fnConfirm(null, message, function () {
+                    let gridInstance = $commonCadFileAttachGrid.pqGrid('getInstance').grid;
+                    let changes = gridInstance.getChanges({format: 'byVal'});
+                    changes.queryIdList = {
+                        'insertQueryId': [$('#common_cad_file_attach_form').find("#queryId").val()]
+                    };
+                    $("#common_cad_file_attach_form").find("#fileGrid").val(JSON.stringify(changes));
+                    let parameters = {'url': '/cadFileConvert', 'data': {data: JSON.stringify(changes)}};
+                    fnPostAjax(function (data, callFunctionParam) {
+                        fnAlertMessageAutoClose('save');
+                        $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
+                        $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
+                        commonCadFileAttachPopup.modal('hide');
+                    }, parameters, '');
+                });
+            } else {
+                let gridInstance = $commonCadFileAttachGrid.pqGrid('getInstance').grid;
+                let changes = gridInstance.getChanges({format: 'byVal'});
+                changes.queryIdList = {
+                    'insertQueryId': [$('#common_cad_file_attach_form').find("#queryId").val()]
+                };
+                $("#common_cad_file_attach_form").find("#fileGrid").val(JSON.stringify(changes));
+                let parameters = {'url': '/cadFileConvert', 'data': {data: JSON.stringify(changes)}};
+                fnPostAjax(function (data, callFunctionParam) {
+                    fnAlertMessageAutoClose('save');
+                    $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
+                    $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
+                    commonCadFileAttachPopup.modal('hide');
+                }, parameters, '');
+            }
+        })
 
         commonCadFileAttachPopup.on('show.bs.modal',function(e) {
             var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
@@ -953,7 +975,7 @@
             }else if(actionType == 'control') {     // 주문 도면 등록
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadFileColModel);
             }else if(actionType == 'controlRev') {  // 주문 도면 차수 변경
-                $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면 차수 변경');
+                $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면변경(Revision up)');
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadRevFileColModel);
             }else if(actionType == 'inside') {      // 자재 도면 등록
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', insideStockCadFileColModel);
@@ -1509,8 +1531,11 @@
                 }
 
                 if (fnIsEmpty(dataInfo.WORK_HISTORY_INFO)) {
-                    $itemDetailPopForm.find("#WORK_HISTORY_INFO").attr('onClick', 'fnAlert(null, "유사주문 수행기록이 없습니다.");');
+                    $itemDetailPopForm.find("#WORK_HISTORY_INFO").attr('disabled', true);
+                    $itemDetailPopForm.find("#WORK_HISTORY_INFO").removeClass('bg-lightyellow');
                 } else {
+                    $itemDetailPopForm.find("#WORK_HISTORY_INFO").attr('disabled', false);
+                    $itemDetailPopForm.find("#WORK_HISTORY_INFO").addClass('bg-lightyellow');
                     $itemDetailPopForm.find("#WORK_HISTORY_INFO").attr('onClick', "g_item_detail_pop_cam_pop('" + dataInfo.CONTROL_SEQ + "','" + dataInfo.CONTROL_DETAIL_SEQ + "');");
                 }
 
@@ -1690,93 +1715,125 @@
     /** cam popup */
     let g_ItemDetailPopCamPopGridId01 =  $("#g_item_detail_pop_camp_pop_grid_01");
     let g_ItemDetailPopCamPopColModel01 = [
-        {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden:true},
-        {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
-        {title: 'CAM_SEQ', dataType: 'string', dataIndx: 'CAM_SEQ', hidden:true},
-        {title: '', align: 'center', dataType: 'string', dataIndx: 'DETAIL_INFO', width: 40, minWidth: 40, editable: false,
-                   render: function (ui) {
-                       let rowIndx = ui.rowIndx, grid = this;
-                       if (ui.rowData['CONTROL_SEQ'] > 0) return "<span class=\"ui-icon ui-icon-circle-zoomin\"></span>";
-                       return '';
-                   }
-         },
-        {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 95, editable: false},
-        {title: 'Parts', dataType: 'string', dataIndx: 'PART_NUM', width: 95, editable: false},
-        {title: '눈', dataType: 'string', dataIndx: '눈', width: 95, editable: false},
-        {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 95, editable: false},
-        {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 95, editable: false},
-        {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 95, editable: false},
-        {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', width: 95, editable: false},
-        {title: '캐드파일Size', dataType: 'string', dataIndx: 'CAD_FILE_SIZE', width: 95, editable: false},
-        {title: 'Step', dataType: 'string', dataIndx: 'SEQ', width: 95, editable: false},
-        {title: '가공위치', dataType: 'string', dataIndx: 'WORK_DIRECTION_NM', width: 95, editable: false},
-        {title: '작업내용', dataType: 'string', dataIndx: 'WORK_DESC', width: 95, editable: false},
-        {title: '단위수량', dataType: 'string', dataIndx: 'DESIGN_QTY', width: 95, editable: false},
-        {title: '계산시간', dataType: 'string', dataIndx: 'WORK_TIME', width: 95, editable: false},
-        {title: 'CAM', align: 'center', dataType: 'string', dataIndx: 'CAM_FILE_SEQ', width: 40, minWidth: 40, editable: false,
-                   render: function (ui) {
-                       let rowIndx = ui.rowIndx, grid = this;
-                       if (ui.rowData['CAM_FILE_SEQ'] > 0) return "<span id=\"downloadSingleFile\" class=\"ui-icon ui-icon-search\" style=\"cursor: pointer\"></span>";
-                       return '';
-                   }
-         },
-        {title: 'NC', align: 'center', dataType: 'string', dataIndx: 'NC_FILE_SEQ', width: 40, minWidth: 40, editable: false,
-                   render: function (ui) {
-                       let rowIndx = ui.rowIndx, grid = this;
-                       if (ui.rowData['NC_FILE_SEQ'] > 0) return "<span id=\"downloadSingleFile\" class=\"ui-icon ui-icon-search\" style=\"cursor: pointer\"></span>";
-                       return '';
-                   }
-         },
-        {title: '작업자', dataType: 'string', dataIndx: 'WORK_USER_NM', width: 95, editable: false},
-        {title: '작업일자', dataType: 'string', dataIndx: 'CAM_WORK_DT', width: 95, editable: false},
-        {title: '경험기록사항<BR>(Lessons Learned)', dataType: 'string', dataIndx: 'HISTORY_NOTE', width: 120, editable: false}
+        {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+        {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+        {title: 'CAM_SEQ', dataType: 'integer', dataIndx: 'CAM_SEQ', hidden: true},
+        // {
+        //     title: '', align: 'center', dataIndx: 'DETAIL_INFO', width: 40, minWidth: 40,
+        //     render: function (ui) {
+        //         let rowIndx = ui.rowIndx, grid = this;
+        //         if (ui.rowData['CONTROL_SEQ'] > 0) return "<span class=\"ui-icon ui-icon-circle-zoomin\"></span>";
+        //         return '';
+        //     }
+        // },
+        {title: '주문확정<br>일자', dataIndx: 'ORDER_CONFIRM_DT', width: 95},
+        {title: '외<br>주', minWidth: 30, dataIndx: 'OUTSIDE_YN'},
+        {title: '관리번호', halign: 'center', align: 'left', dataIndx: 'CONTROL_NUM', width: 180},
+        {
+            title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
+            render: function (ui) {
+                if (ui.rowData.CONTROL_NUM)
+                    return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
+            },
+            postRender: function (ui) {
+                let grid = this,
+                    $cell = grid.getCell(ui),
+                    rowIndx = ui.rowIndx,
+                    rowData = ui.rowData;
+
+                $cell.find('[name=detailView]').bind('click', function () {
+                    $('#g_item_detail_pop').modal('hide');
+                    g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
+                    $('#g_item_detail_pop_cam_pop').modal('hide');
+                });
+            }
+        },
+        {title: '작업<br>형태', dataIndx: 'WORK_TYPE'},
+        {title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 95},
+        {title: '규격', dataIndx: 'SIZE_TXT', width: 95},
+        {title: '재질', dataIndx: 'MATERIAL_TYPE_NM', width: 95},
+        {title: '도면번호', halign: 'center', align: 'left', dataIndx: 'DRAWING_NUM', width: 150},
+        {
+            title: '', minWidth: 25, dataIndx: 'IMG_GFILE_SEQ',
+            render: function (ui) {
+                if (ui.cellData)
+                    return '<span class="fileSearchIcon" name="imageView" style="cursor: pointer"></span>';
+            },
+            postRender: function (ui) {
+                let grid = this,
+                    $cell = grid.getCell(ui);
+                $cell.find('[name=imageView]').bind('click', function () {
+                    let rowData = ui.rowData;
+                    callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                });
+            }
+        },
+        {
+            title: 'CAD 파일', align: 'center',
+            colModel: [
+                {title: 'Size', dataIndx: 'CAD_FILE_SIZE', width: 95},
+                {
+                    title: '', minWidth: 35, dataIndx: 'DXF_GFILE_SEQ',
+                    render: function (ui) {
+                        if (ui.cellData)
+                            return '<span class="blueFileImageICon" name="downloadView" style="cursor: pointer"></span>';
+                    },
+                    postRender: function (ui) {
+                        let grid = this,
+                            $cell = grid.getCell(ui);
+                        $cell.find('[name=downloadView]').bind('click', function () {
+                            let rowData = ui.rowData;
+                            fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
+                        });
+                    }
+                },
+            ]
+        },
+        {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', width: 80},
+        {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
+        {
+            title: '1EA 가공시간', align: 'center',
+            colModel: [
+                {title: 'NC', dataIndx: 'NC_WORK_TIME'},
+                {title: 'Total', dataIndx: 'TOTAL_WORK_TIME'}
+            ]
+        },
+        {
+            title: 'CAM 작업 실적', align: 'center',
+            colModel: [
+                {title: 'Steps', dataIndx: 'SEQ'},
+                {title: '작업자', dataIndx: 'WORK_USER_NM', width: 95},
+                {title: '업데이트', dataIndx: 'CAM_WORK_DT', width: 95},
+                {title: '경험 기록사항', halign: 'center', align: 'left', dataIndx: 'HISTORY_NOTE', width: 120}
+            ]
+        }
     ];
     let g_ItemDetailPopCamPopObj01 = {
-        width: "100%", height: 320,
+        height: 320,
         dataModel: {
-           location: "remote", dataType: "json", method: "POST", recIndx: 'RNUM',
-           url: "/paramQueryGridSelect",
-           postData: fnFormToJsonArrayData('g_item_detail_pop_cam_pop_form'),
-           //postData: {queryId: 'inspection.selectCommItemDetailGridCamPop', 'V_PARAM': ''},
-           getData: function (dataJSON) {
-               return {data: dataJSON.data};
-           }
+            location: "remote", dataType: "json", method: "POST", recIndx: 'RNUM',
+            url: "/paramQueryGridSelect",
+            postData: fnFormToJsonArrayData('g_item_detail_pop_cam_pop_form'),
+            getData: function (dataJSON) {
+                return {data: dataJSON.data};
+            }
         },
         strNoRows: g_noData,
+        editable: false,
+        postRenderInterval: -1,
         columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
         //scrollModel: {autoFit: true},
-        numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
-        selectionModel: { type: 'row', mode: 'single'} ,
+        numberCell: {width: 30, title: "No", show: true, styleHead: {'vertical-align': 'middle'}},
+        selectionModel: {type: 'row', mode: 'single'},
         swipeModel: {on: false},
         showTitle: false,
         collapsible: false,
         resizable: false,
         trackModel: {on: true},
         colModel: g_ItemDetailPopCamPopColModel01,
-        cellClick: function (event, ui) {
-            let rowIndx = ui.rowIndx, $grid = this;
-            if (ui.rowData['CONTROL_SEQ'] != undefined && ui.rowData['CONTROL_SEQ'] >0) {
-                if (ui.dataIndx == 'DETAIL_INFO') {
-                    let CONTROL_SEQ = ui.rowData['CONTROL_SEQ'];
-                    let CONTROL_DETAIL_SEQ = ui.rowData['CONTROL_DETAIL_SEQ'];
-
-                    $('#g_item_detail_pop').modal('hide');
-                    g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
-                    $('#g_item_detail_pop_cam_pop').modal('hide');
-
-                }
-                if (ui.dataIndx == 'CAM_FILE_SEQ') {
-                    if (ui.rowData['CAM_FILE_SEQ'] > 0){
-                        fnSingleFileDownloadFormPageAction(ui.rowData['CAM_FILE_SEQ']);
-                    }
-                }
-                if (ui.dataIndx == 'NC_FILE_SEQ') {
-                    if (ui.rowData['NC_FILE_SEQ'] > 0){
-                        fnSingleFileDownloadFormPageAction(ui.rowData['NC_FILE_SEQ']);
-                    }
-
-                }
-
+        rowInit: function (ui) {
+            if (ui.rowIndx === 0) {
+                return {style: {'background': '#FFFF00'}};
             }
         }
     };

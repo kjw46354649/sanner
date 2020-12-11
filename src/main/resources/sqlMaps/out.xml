@@ -798,14 +798,16 @@
     <select id="selectOutsideMailDestination" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER () AS ROW_NUM,
-            B.STAFF_SEQ,
-            B.COMP_CD,
-            B.STAFF_NM,
-            B.STAFF_EMAIL,
-            B.STAFF_TEL
-        FROM TBL_COMPANY A
-            INNER JOIN TBL_COMPANY_STAFF B ON A.COMP_CD = B.COMP_CD AND B.DEL_YN = 'N'
-        WHERE A.COMP_CD = #{OUTSIDE_COMP_CD} AND A.DEL_YN = 'N'
+            A.STAFF_SEQ,
+            A.COMP_CD,
+            A.STAFF_NM,
+            A.STAFF_EMAIL,
+            A.STAFF_TEL,
+            A.MAIN_YN
+        FROM TBL_COMPANY_STAFF A
+            INNER JOIN TBL_COMPANY B ON B.COMP_CD = A.COMP_CD AND B.DEL_YN = 'N'
+            	AND B.COMP_CD = #{OUTSIDE_COMP_CD}
+        WHERE A.DEL_YN = 'N'
     </select>
 
     <insert id="createOutsideRequest" parameterType="java.util.HashMap" >

@@ -74,18 +74,6 @@
         IFNULL(B.MATERIAL_FINISH_GRIND, SPACE(0)) AS MATERIAL_FINISH_GRIND, <!-- 소재마감_연마 -->
         IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 소재마감_열처리 -->
         IFNULL(B.UNIT_MATERIAL_AMT, SPACE(0)) AS UNIT_MATERIAL_AMT, <!-- 항목별단가_소재비 -->
-        IFNULL(B.UNIT_TM_AMT, SPACE(0)) AS UNIT_TM_AMT, <!-- 항목별단가_TM각비 -->
-        IFNULL(B.UNIT_GRIND_AMT, SPACE(0)) AS UNIT_GRIND_AMT, <!-- 항목별단가_연마비 -->
-        IFNULL(B.UNIT_HEAT_AMT, SPACE(0)) AS UNIT_HEAT_AMT, <!-- 항목별단가_열처리 -->
-        IFNULL(B.UNIT_SURFACE_AMT, SPACE(0)) AS UNIT_SURFACE_AMT, <!-- 항목별단가_표면처리 -->
-        IFNULL(B.UNIT_PROCESS_AMT, SPACE(0)) AS UNIT_PROCESS_AMT, <!-- 항목별단가_가공비 -->
-        IFNULL(B.UNIT_ETC_AMT, SPACE(0)) AS UNIT_ETC_AMT, <!-- 항목별단가_기타추가 -->
-        IFNULL(B.UNIT_MATERIAL_AUTO_YN, SPACE(0)) AS UNIT_MATERIAL_AUTO_YN, <!-- 항목별단가 소재비 자동여부 -->
-        IFNULL(B.UNIT_TM_AUTO_YN, SPACE(0)) AS UNIT_TM_AUTO_YN, <!-- 항목별단가 TM각비 자동여부 -->
-        IFNULL(B.UNIT_GRIND_AUTO_YN, SPACE(0)) AS UNIT_GRIND_AUTO_YN, <!-- 항목별단가 연마비 자동여부 -->
-        IFNULL(B.UNIT_HEAT_AUTO_YN, SPACE(0)) AS UNIT_HEAT_AUTO_YN, <!-- 항목별단가 열처리 자동여부 -->
-        IFNULL(B.UNIT_SURFACE_AUTO_YN, SPACE(0)) AS UNIT_SURFACE_AUTO_YN, <!-- 항목별단가 표면처리 자동여부 -->
-        IFNULL(B.UNIT_PROCESS_AUTO_YN, SPACE(0)) AS UNIT_PROCESS_AUTO_YN, <!-- 항목별단가 가공비 자동여부 -->
         IFNULL(B.UNIT_AMT_NOTE, SPACE(0)) AS UNIT_AMT_NOTE, <!-- 항목별단가_견적비고 -->
         IFNULL(B.DWG_GFILE_SEQ, SPACE(0)) AS DWG_GFILE_SEQ, <!-- DWG 파일그룹번호 -->
         IFNULL(B.DXF_GFILE_SEQ, SPACE(0)) AS DXF_GFILE_SEQ, <!-- DXF 파일그룹번호 -->
@@ -2993,6 +2981,9 @@
     </select>
 
     <insert id="createPartOrderToMerge" parameterType="java.util.HashMap" >
+        <selectKey keyProperty="NEXT_ORDER_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_CONTROL_PART_ORDER) FROM DUAL
+        </selectKey>
         INSERT INTO TBL_CONTROL_PART_ORDER (
             CONTROL_SEQ
             , CONTROL_DETAIL_SEQ
@@ -3025,7 +3016,7 @@
         )
         SELECT #{STANDARD_CONTROL_SEQ}
             , #{STANDARD_CONTROL_DETAIL_SEQ}
-            , NEXTVAL(SEQ_CONTROL_PART_ORDER)
+            , #{NEXT_ORDER_SEQ}
             , ORDER_NUM
             , ORDER_QTY
             , ORDER_DUE_DT
@@ -3059,5 +3050,28 @@
                             AND M.CONTROL_DETAIL_SEQ = #{STANDARD_CONTROL_DETAIL_SEQ}
                             AND M.ORDER_NUM = #{ORDER_NUM}
                             AND M.DRAWING_NUM = #{ORDER_DRAWING_NUM})
+    </insert>
+
+    <insert id="createOutBarcodeToMerge" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_OUT_BARCODE (
+            BARCODE_NUM
+            , CONTROL_SEQ
+            , CONTROL_DETAIL_SEQ
+            , ORDER_SEQ
+            , PACKING_NUM
+            , INSERT_ID
+        )
+        SELECT
+            CONCAT('L', LPAD(NEXTVAL(SEQ_BARCODE), 9, '0')) AS BARCODE_NUM
+            , B.CONTROL_SEQ
+            , B.CONTROL_DETAIL_SEQ
+            , B.ORDER_SEQ
+            , B.PACKING_CNT
+            , #{LOGIN_USER_ID}
+        FROM TBL_CONTROL A
+            , TBL_CONTROL_PART_ORDER B
+        WHERE B.CONTROL_SEQ = A.CONTROL_SEQ
+            AND A.DEL_YN = 'N'
+            AND B.ORDER_SEQ = #{NEXT_ORDER_SEQ}
     </insert>
 </mapper>

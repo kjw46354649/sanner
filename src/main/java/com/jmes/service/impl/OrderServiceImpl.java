@@ -404,14 +404,14 @@ public class OrderServiceImpl implements OrderService {
                     hashMap.put("queryId", "orderMapper.selectHasControlStatusConfirm");
                     if (this.orderDao.getFlag(hashMap)) {
                         flag = true;
-                        message = "주문상태를 대기 또는 취소 상태로 변경해주세요";
+                        message = "확정상태에서는 Merge 가 불가합니다.";
                         break;
                     }
                     // 외주
                     hashMap.put("queryId", "orderMapper.selectHasOutsideConfirmDt");
                     if (this.orderDao.getFlag(hashMap)) {
                         flag = true;
-                        message = "이미 외주확정된 대상입니다";
+                        message = "확정상태에서는 Merge 가 불가합니다.";
                         break;
                     }
                     // 소재주문
@@ -448,6 +448,10 @@ public class OrderServiceImpl implements OrderService {
 
                     if (standardControlSeq != (int) hashMap.get("CONTROL_SEQ") && standardControlDetailSeq != (int) hashMap.get("CONTROL_DETAIL_SEQ")) {
                         hashMap.put("queryId", "orderMapper.createPartOrderToMerge");
+                        this.innodaleDao.create(hashMap);
+                        hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt2");
+                        this.innodaleDao.remove(hashMap);
+                        hashMap.put("queryId", "orderMapper.createOutBarcodeToMerge");
                         this.innodaleDao.create(hashMap);
                         hashMap.put("queryId", "orderMapper.removeControl");
                         this.innodaleDao.remove(hashMap);

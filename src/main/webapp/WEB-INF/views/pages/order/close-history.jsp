@@ -22,7 +22,7 @@
                     <li>
                         <span class="ipu_wrap">
                             <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -34,12 +34,12 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="ORDER_NUM">발주번호</label>
-                            <input type="text" class="wd_200" name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
+                            <input type="search" class="wd_200" name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
+                            <input type="search" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
                         </span>
                     </li>
                     <li>
@@ -52,7 +52,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="ITEM_NM">품명</label>
-                            <input type="text" class="wd_200" name="ITEM_NM" id="ITEM_NM" title="품명">
+                            <input type="search" class="wd_200" name="ITEM_NM" id="ITEM_NM" title="품명">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -64,7 +64,7 @@
                         <span class="gubun"></span>
                         <div class="ipu_wrap">
                             <label class="label_100" for="MODULE_NM">모듈명</label>
-                            <input type="text" class="wd_200" name="MODULE_NM" id="MODULE_NM">
+                            <input type="search" class="wd_200" name="MODULE_NM" id="MODULE_NM">
                         </div>
                     </li>
                     <li>
@@ -77,7 +77,7 @@
                         <span class="gubun"></span>
                         <div class="ipu_wrap">
                             <label class="label_100" for="ORDER_NUMBER">INV No.</label>
-                            <input type="text" class="wd_200" name="ORDER_NUMBER" id="ORDER_NUMBER">
+                            <input type="search" class="wd_200" name="ORDER_NUMBER" id="ORDER_NUMBER">
                         </div>
                         <span class="gubun"></span>
                         <div class="slt_wrap">
@@ -91,7 +91,7 @@
                         <span class="gubun"></span>
                         <div class="ipu_wrap">
                             <label class="label_100" for="AMOUNT_SUM">금액합산</label>
-                            <input type="text" class="wd_200" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
+                            <input type="search" class="wd_200" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
                         </div>
                     </li>
                     <li>
@@ -124,7 +124,7 @@
     <div class="bottomWrap row4_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
-                <input type="text" id="closeHistoryFilterKeyword" placeholder="Enter your keyword">
+                <input type="search" id="closeHistoryFilterKeyword" placeholder="Enter your keyword">
                 <select id="closeHistoryFilterColumn"></select>
                 <select id="closeHistoryFilterCondition">
                     <c:forEach var="code" items="${HighCode.H_1083}">
@@ -875,8 +875,19 @@
             updateControlStatus();
         });
 
-        $("#closeHistoryFilterKeyword").on("keyup", function(e){
-            fnFilterHandler($closeHistoryGrid, 'closeHistoryFilterKeyword', 'closeHistoryFilterCondition', 'closeHistoryFilterColumn');
+        $('#closeHistoryFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler($closeHistoryGrid, 'closeHistoryFilterKeyword', 'closeHistoryFilterCondition', 'closeHistoryFilterColumn');
+
+                let data = $closeHistoryGrid.pqGrid('option', 'dataModel.data');
+                $('#CLOSE_HISTORY_RECORDS').html(data.length);
+            },
+            'search': function () {
+                fnFilterHandler($closeHistoryGrid, 'closeHistoryFilterKeyword', 'closeHistoryFilterCondition', 'closeHistoryFilterColumn');
+
+                let data = $closeHistoryGrid.pqGrid('option', 'dataModel.data');
+                $('#CLOSE_HISTORY_RECORDS').html(data.length);
+            }
         });
 
         $("#closeHistoryFrozen").on('change', function(e){

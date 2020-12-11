@@ -54,11 +54,11 @@
                     </li>
                     <li>
                         <span class="ipu_wrap"><label for="SEL_CONSUMABLE_NUM" class="label_100">자재 관리번호</label>
-                            <input type="text" name="SEL_CONSUMABLE_NUM" id="SEL_CONSUMABLE_NUM" placeholder="자재 관리번호" value="" title="자재 관리번호" class="wd_200">
+                            <input type="search" name="SEL_CONSUMABLE_NUM" id="SEL_CONSUMABLE_NUM" placeholder="자재 관리번호" value="" title="자재 관리번호" class="wd_200">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label for="SEL_CONSUMABLE_NM" class="label_100">자재명</label>
-                            <input type="text" name="SEL_CONSUMABLE_NM" id="SEL_CONSUMABLE_NM" placeholder="자재명" value="" title="자재명" class="wd_200">
+                            <input type="search" name="SEL_CONSUMABLE_NM" id="SEL_CONSUMABLE_NM" placeholder="자재명" value="" title="자재명" class="wd_200">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -129,7 +129,7 @@
                 <li class="active"><a href="#_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a></li>
                 <li><a href="#_TAB2" data-toggle="tab" aria-expanded="false">수불이력</a></li>
                 <div class="inline right_sort" id="IN_PARTS_MANAGE_BOX" style="font-weight: normal;">
-                    <input type="text" id="inPartsManageFilterKeyword" placeholder="Enter your keyword">
+                    <input type="search" id="inPartsManageFilterKeyword" placeholder="Enter your keyword">
                     <select id="inPartsManageFilterColumn"></select>
                     <select id="inPartsManageFilterCondition">
                         <c:forEach var="code" items="${HighCode.H_1083}">
@@ -145,7 +145,7 @@
                     <button type="button" id="mainLocBtn" class="defaultBtn radius black ">위치정보관리</button>
                 </div>
                 <div class="inline right_sort" id="IN_PARTS_MANAGE_IN_OUT_BOX" style="display: none; font-weight: normal;">
-                    <input type="text" id="inPartsManageInOutFilterKeyword" placeholder="Enter your keyword">
+                    <input type="search" id="inPartsManageInOutFilterKeyword" placeholder="Enter your keyword">
                     <select id="inPartsManageInOutFilterColumn"></select>
                     <select id="inPartsManageInOutFilterCondition">
                         <c:forEach var="code" items="${HighCode.H_1083}">
@@ -865,19 +865,45 @@
             });
         });
 
-        $("#inPartsManageFilterKeyword").on("keyup", function(e){
-            fnFilterHandler(mainGridId01, 'inPartsManageFilterKeyword', 'inPartsManageFilterCondition', 'inPartsManageFilterColumn');
+        $('#inPartsManageFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler(mainGridId01, 'inPartsManageFilterKeyword', 'inPartsManageFilterCondition', 'inPartsManageFilterColumn');
+
+                let data = mainGridId01.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#MAIN_GRID_01_TOTAL_RECORDS').html(totalRecords);
+            },
+            'search': function () {
+                fnFilterHandler(mainGridId01, 'inPartsManageFilterKeyword', 'inPartsManageFilterCondition', 'inPartsManageFilterColumn');
+
+                let data = mainGridId01.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#MAIN_GRID_01_TOTAL_RECORDS').html(totalRecords);
+            }
         });
 
-        $("#inPartsManageFrozen").on('change', function(e){
+        $("#inPartsManageFrozen").on('change', function (e) {
             fnFrozenHandler(mainGridId01, $(this).val());
         });
 
-        $("#inPartsManageInOutFilterKeyword").on("keyup", function(e){
-            fnFilterHandler(mainGridId02, 'inPartsManageInOutFilterKeyword', 'inPartsManageInOutFilterCondition', 'inPartsManageInOutFilterColumn');
+        $('#inPartsManageInOutFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler(mainGridId02, 'inPartsManageInOutFilterKeyword', 'inPartsManageInOutFilterCondition', 'inPartsManageInOutFilterColumn');
+
+                let data = mainGridId02.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#MAIN_GRID_02_TOTAL_RECORDS').html(totalRecords);
+            },
+            'search': function () {
+                fnFilterHandler(mainGridId02, 'inPartsManageInOutFilterKeyword', 'inPartsManageInOutFilterCondition', 'inPartsManageInOutFilterColumn');
+
+                let data = mainGridId02.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#MAIN_GRID_02_TOTAL_RECORDS').html(totalRecords);
+            }
         });
 
-        $("#inPartsManageInOutFrozen").on('change', function(e){
+        $("#inPartsManageInOutFrozen").on('change', function (e) {
             fnFrozenHandler(mainGridId02, $(this).val());
         });
 

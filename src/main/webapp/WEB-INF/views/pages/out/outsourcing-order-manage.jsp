@@ -35,7 +35,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
+                            <input type="search" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -51,7 +51,7 @@
                     <li>
                         <span class="ipu_wrap">
                             <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM">
+                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -120,7 +120,7 @@
     <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
-                <label for="outsourcingOrderManageFilterKeyword"></label><input type="text" id="outsourcingOrderManageFilterKeyword" placeholder="Enter your keyword">
+                <label for="outsourcingOrderManageFilterKeyword"></label><input type="search" id="outsourcingOrderManageFilterKeyword" placeholder="Enter your keyword">
                 <label for="outsourcingOrderManageFilterColumn"></label><select id="outsourcingOrderManageFilterColumn"></select>
                 <label for="outsourcingOrderManageFilterCondition"></label><select id="outsourcingOrderManageFilterCondition">
                     <c:forEach var="code" items="${HighCode.H_1083}">
@@ -693,11 +693,11 @@
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
             {
                 title: '수신', datatype: 'bool', dataIndx: 'RECEPTION', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                type: 'checkbox'
+                type: 'checkbox', cb: {check: 'true', uncheck: 'false'}
             },
             {
                 title: '참조', datatype: 'bool', dataIndx: 'REFERENCE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, editable: true,
-                type: 'checkbox'
+                type: 'checkbox', cb: {check: 'true', uncheck: 'false'}
             }
         ];
         const mailRecipientObj = {
@@ -1611,9 +1611,18 @@
             let parameters = {'url': '/json-list', 'data': postData};
 
             fnPostAjaxAsync(function (data) {
+                let rowList = [];
                 let grid = $('#' + mailFormElement).find('[id$=REQUEST_OUTSIDE_MAIL_RECIPIENT_GRID]');
                 grid.pqGrid('option', 'dataModel.data', data.list);
                 grid.pqGrid('refreshView');
+
+                for (let i = 0; i < data.list.length; i++) {
+                    if (data.list[i].MAIN_YN === 'Y') {
+                        rowList.push({rowIndx: i, newRow: {RECEPTION: 'true'}});
+                    }
+                }
+
+                grid.pqGrid('updateRow', {rowList: rowList});
             }, parameters, '');
         };
 
@@ -2155,8 +2164,19 @@
         });
         /* 가공요청 취소 파일 업로드 */
 
-        $("#outsourcingOrderManageFilterKeyword").on("keyup", function(e){
-            fnFilterHandler($outsideOrderManageGrid, 'outsourcingOrderManageFilterKeyword', 'outsourcingOrderManageFilterCondition', 'outsourcingOrderManageFilterColumn');
+        $('#outsourcingOrderManageFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler($outsideOrderManageGrid, 'outsourcingOrderManageFilterKeyword', 'outsourcingOrderManageFilterCondition', 'outsourcingOrderManageFilterColumn');
+
+                let data = $outsideOrderManageGrid.pqGrid('option', 'dataModel.data');
+                $('#OUTSIDE_ORDER_MANAGE_RECORDS').html(data.length);
+            },
+            'search': function () {
+                fnFilterHandler($outsideOrderManageGrid, 'outsourcingOrderManageFilterKeyword', 'outsourcingOrderManageFilterCondition', 'outsourcingOrderManageFilterColumn');
+
+                let data = $outsideOrderManageGrid.pqGrid('option', 'dataModel.data');
+                $('#OUTSIDE_ORDER_MANAGE_RECORDS').html(data.length);
+            }
         });
 
         $("#outsourcingOrderManageFrozen").on('change', function(e){
@@ -2259,14 +2279,14 @@
 
             for (let i in mailRecipientData) {
                 if (mailRecipientData.hasOwnProperty(i)) {
-                    if (mailRecipientData[i].RECEPTION === true) {
+                    if (mailRecipientData[i].RECEPTION === 'true') {
                         if(mailFlag) mailFlag = false;
                         if(!receiveEmail)
                             receiveEmail += mailRecipientData[i].STAFF_EMAIL;
                         else
                             receiveEmail += "," + mailRecipientData[i].STAFF_EMAIL;
                     }
-                    if(mailRecipientData[i].REFERENCE === true) {
+                    if(mailRecipientData[i].REFERENCE === 'true') {
                         if(!hccEmail)
                             hccEmail += mailRecipientData[i].STAFF_EMAIL;
                         else
@@ -2341,14 +2361,14 @@
                 let hccEmail = "";
                 for(let i in cancelMailRecipientData) {
                     if (cancelMailRecipientData.hasOwnProperty(i)) {
-                        if (cancelMailRecipientData[i].RECEPTION === true) {
+                        if (cancelMailRecipientData[i].RECEPTION === 'true') {
                             if (mailFlag) mailFlag = false;
                             if(!receiveEmail)
                                 receiveEmail += cancelMailRecipientData[i].STAFF_EMAIL;
                             else
                                 receiveEmail += "," + cancelMailRecipientData[i].STAFF_EMAIL;
                         }
-                        if (cancelMailRecipientData[i].REFERENCE === true) {
+                        if (cancelMailRecipientData[i].REFERENCE === 'true') {
                             if(!hccEmail)
                                 hccEmail += cancelMailRecipientData[i].STAFF_EMAIL;
                             else

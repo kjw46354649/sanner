@@ -14,8 +14,8 @@
             SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM, <!-- 작업 형태 -->
             (SELECT EQUIP_ID FROM TBL_EQUIP WHERE EQUIP_SEQ = F.EQUIP_SEQ AND DEL_YN = 'N') AS LAST_MCT_PLAN, <!-- NC 계획 -->
             A.CONTROL_NUM, <!-- 관리번호 -->
-            B.PART_NUM,  <!-- 파트 -->
-            SF_GET_CODE_NM('1035', B.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM, <!-- 소재 종류 -->
+            B.PART_NUM, <!-- 파트 -->
+            SF_GET_CODE_NM('1035', B.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM,
             B.SIZE_TXT, <!-- 규격 -->
             CASE WHEN B.PART_NUM IS NOT NULL THEN B.PART_UNIT_QTY * SF_GET_CONTROL_ORDER_QTY(A.CONTROL_SEQ, '') ELSE C.ORDER_QTY END AS ORDER_QTY, <!-- 수량 -->
             A.SAME_SIDE_YN, <!-- 대칭 -->

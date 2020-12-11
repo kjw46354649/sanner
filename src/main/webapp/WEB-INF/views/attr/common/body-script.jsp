@@ -315,9 +315,11 @@
                 } else {
                     switch($ctrl.attr("type")) {
                         case "text":
+                        case "number":
                         case "date":
                         case "password":
                         case "hidden":
+                        case "search":
                             value = $ctrl.val();
                             break;
                         case "checkbox":

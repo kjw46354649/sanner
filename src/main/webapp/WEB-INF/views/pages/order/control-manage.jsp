@@ -21,23 +21,22 @@
                     <li>
                         <span class="ipu_wrap">
                             <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="label_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="ORDER_COMP_CD">발주사</label>
                             <input type="text" class="wd_200" name="ORDER_COMP_CD" id="ORDER_COMP_CD" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" title="발주사" readonly>
-                            <input type="hidden" name="SEL_INSPECT_GRADE" id="SEL_INSPECT_GRADE">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="ORDER_NUM">발주번호</label>
-                            <input type="text" class="label_200" name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
+                            <input type="search" class="wd_200" name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="label_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
+                            <input type="search" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap right_float">
@@ -53,12 +52,12 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="ITEM_NM">품명</label>
-                            <input type="text" class="label_200" name="ITEM_NM" id="ITEM_NM" title="품명">
+                            <input type="search" class="wd_200" name="ITEM_NM" id="ITEM_NM" title="품명">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="RBRUR">규격</label>
-                            <select class="label_200" name="RBRUR" id="RBRUR" title="규격">
+                            <select class="wd_200" name="RBRUR" id="RBRUR" title="규격">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
@@ -71,12 +70,12 @@
                     <li>
                         <span class="slt_wrap trans_slt" style="width: 120px;">
                             <label for="CONTROL_SEARCH_CONDITION"></label>
-                                <select name="CONTROL_SEARCH_CONDITION" id="CONTROL_SEARCH_CONDITION" style="width: inherit; text-align-last: center;">
-                                    <option value=""><spring:message code="com.form.top.sel.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1047}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                                </select>
+                            <select name="CONTROL_SEARCH_CONDITION" id="CONTROL_SEARCH_CONDITION" style="width: inherit; text-align-last: center;">
+                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                            <c:forEach var="code" items="${HighCode.H_1047}">
+                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                            </c:forEach>
+                            </select>
                         </span>
                         <div class="d-inline-block" style="width:542px">
                             <span class="calendar_span">
@@ -90,7 +89,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="UNIT_PRICE_CONFIRM">단가확인</label>
-                            <select class="label_200" name="UNIT_PRICE_CONFIRM" id="UNIT_PRICE_CONFIRM" title="단가확인">
+                            <select class="wd_200" name="UNIT_PRICE_CONFIRM" id="UNIT_PRICE_CONFIRM" title="단가확인">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1017}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -145,7 +144,7 @@
             </div>
             <div class="mt-10">
                 <div class="d-inline">
-                    <label for="controlManageFilterKeyword"></label><input type="text" id="controlManageFilterKeyword" placeholder="Enter your keyword">
+                    <label for="controlManageFilterKeyword"></label><input type="search" id="controlManageFilterKeyword" placeholder="Enter your keyword">
                     <label for="controlManageFilterColumn"></label><select id="controlManageFilterColumn"></select>
                     <label for="controlManageFilterCondition"></label><select id="controlManageFilterCondition">
                         <c:forEach var="code" items="${HighCode.H_1083}">
@@ -160,7 +159,6 @@
                 <button type="button" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_NORMAL_MODE">일반모드</button>
                 <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_CLOSE_MODE">마감모드</button>
                 <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_ALL_MODE">전체모드</button>
-                <button type="button" class="defaultBtn btn-100w" id="CONTROL_MERGE" style="background-color: #5b9bd5">Merge</button>
                 <div class="rightSpan">
                     <span class="slt_wrap namePlusSlt">
                         <label for="SUPPLY_UNIT_COST_APPLY">공급단가적용</label>
@@ -174,6 +172,7 @@
                             <option value="20">20%</option>
                         </select>
                     </span>
+                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MERGE" style="background-color: #5b9bd5">Merge</button>
                     <button type="button" class="defaultBtn btn-100w red" id="CONTROL_MANAGE_DELETE">삭제</button>
                     <button type="button" class="defaultBtn btn-100w green" id="CONTROL_MANAGE_SAVE">저장</button>
                 </div>
@@ -3082,12 +3081,21 @@
             event.preventDefault();
         });
 
-        $('#controlManageFilterKeyword').on('keyup', function(){
-            fnFilterHandler($orderManagementGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
-            autoMerge($orderManagementGrid.pqGrid('getInstance').grid, true);
+        $('#controlManageFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler($orderManagementGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
+                autoMerge($orderManagementGrid.pqGrid('getInstance').grid, true);
 
-            let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-            $('#CONTROL_MANAGE_RECORDS').html(data.length);
+                let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+                $('#CONTROL_MANAGE_RECORDS').html(data.length);
+            },
+            'search': function () {
+                fnFilterHandler($orderManagementGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
+                autoMerge($orderManagementGrid.pqGrid('getInstance').grid, true);
+
+                let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+                $('#CONTROL_MANAGE_RECORDS').html(data.length);
+            }
         });
 
         $('#controlManageFrozen').on('change', function(){
@@ -3142,7 +3150,7 @@
                     const groupedWorkType = fnGroupBy(dataList, 'WORK_TYPE');
                     if (groupedWorkType.hasOwnProperty('WTP020') && groupedWorkType.hasOwnProperty('WTP050')) {
                         if (groupedWorkType.hasOwnProperty('WTP010') || groupedWorkType.hasOwnProperty('WTP030') || groupedWorkType.hasOwnProperty('WTP040') || groupedWorkType.hasOwnProperty('WTP060')) {
-                            fnAlert(null, '조립품은 조립품끼리만 되면 파트개수가 동일해야만 가능합니다');
+                            fnAlert(null, '조립/파트 구성이 불일치 합니다.');
                             return;
                         } else {
                             const groupedControlSeq = fnGroupBy(dataList, 'CONTROL_SEQ');
@@ -3157,7 +3165,7 @@
 
                                 if (prevPartNum.size > 0) {
                                     if (prevPartNum.size !== partNum.size) {
-                                        fnAlert(null, '조립품은 조립품끼리만 되면 파트개수가 동일해야만 가능합니다');
+                                        fnAlert(null, '조립/파트 구성이 불일치 합니다.');
                                         return;
                                     }
                                 }
