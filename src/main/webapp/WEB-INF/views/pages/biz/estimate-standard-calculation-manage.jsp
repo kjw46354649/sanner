@@ -513,11 +513,11 @@
 
                 if (includeList.includes(dataIndx)) {
                     while (j--) {
-                        let calcSeq = data[j]['CALC_SEQ'],
-                            calcSeqPrev = data[j - 1] ? data[j - 1]['CALC_SEQ'] : undefined,
+                        let groupKey = data[j]['GROUP_KEY'],
+                            groupKeyPrev = data[j - 1] ? data[j - 1]['GROUP_KEY'] : undefined,
                             cd = data[j][dataIndx] || '',
                             cdPrev = data[j - 1] ? data[j - 1][dataIndx] || '' : undefined;
-                        if (calcSeq === calcSeqPrev) {
+                        if (groupKey === groupKeyPrev) {
                             if (cdPrev !== undefined && cd == cdPrev) {
                                 rc++;
                             }
@@ -560,6 +560,7 @@
                 rowList: rowList,
                 checkEditable: false
             });
+            autoMerge($materialCostGrid.pqGrid('getInstance').grid, true);
         });
 
         $('#material_cost_delete').on('click', function () {
