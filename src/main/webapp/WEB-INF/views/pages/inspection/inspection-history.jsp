@@ -450,7 +450,7 @@
                     return;
                     // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
                 } else if (selectControlPartInfo !== curControlPartInfo) {
-                    selectControlList += rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ + '^';
+                    selectControlList += String(rowData.CONTROL_SEQ) + String(rowData.CONTROL_DETAIL_SEQ) + '|';
                     selectControlPartCount++;
                     selectControlPartInfo = curControlPartInfo;
                 }
