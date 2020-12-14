@@ -1031,10 +1031,7 @@
                 </otherwise>
             </choose>
             <if test="HIDDEN_EQUIP_SEQ != null and HIDDEN_EQUIP_SEQ != ''">
-                AND EXISTS (SELECT * FROM jmes.TBL_MCT_PLAN MP
-                            WHERE A.CONTROL_SEQ = MP.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = MP.CONTROL_DETAIL_SEQ AND MP.DEL_YN = 'N'
-                                AND MP.EQUIP_SEQ IN (${HIDDEN_EQUIP_SEQ})
-                            )
+                AND (I.EQUIP_SEQ IN (${HIDDEN_EQUIP_SEQ}) <if test="INCLUDE_UNALLOCATED_WAIT != null and INCLUDE_UNALLOCATED_WAIT != ''">OR I.EQUIP_SEQ IS NULL</if>)
             </if>
             <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
                 AND UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')

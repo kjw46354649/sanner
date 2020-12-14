@@ -388,6 +388,7 @@
                         <span class="chk_box"><input id="SEL_ASSEMBLY" name="SEL_ASSEMBLY" type="checkbox"><label for="SEL_ASSEMBLY">조립포함</label></span>
                         <span class="chk_box"><input id="SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox"><label for="SEL_OUTSIDE_YN">외주포함</label></span>
                         <span class="chk_box"><input id="SEL_COMPLETED_YN" name="SEL_COMPLETED_YN" type="checkbox" checked><label for="SEL_COMPLETED_YN">가공완료제외</label></span>
+                        <span class="chk_box"><input id="INCLUDE_UNALLOCATED_WAIT" name="INCLUDE_UNALLOCATED_WAIT" type="checkbox"><label for="INCLUDE_UNALLOCATED_WAIT">미할당 대기 포함</label></span>
                         <span class="ipu_wrap right_float">
                             <button type="button" id="MCT_RESULT_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="mctCamManageSearchBtn">검색</button>
@@ -1406,6 +1407,14 @@
         const updateQueryList = insertQueryList;
 
         fnModifyPQGrid($mctResultManageGrid, insertQueryList, updateQueryList);
+    });
+
+    $('#mct_result_manage_search_form').find('#EQUIP_SEQ').on('change', function () {
+        if (fnIsEmpty(this.value)) {
+            $('#mct_result_manage_search_form').find('#INCLUDE_UNALLOCATED_WAIT').parent().hide();
+        } else {
+            $('#mct_result_manage_search_form').find('#INCLUDE_UNALLOCATED_WAIT').parent().show();
+        }
     });
     /* event */
     function resetMctResult(index){
