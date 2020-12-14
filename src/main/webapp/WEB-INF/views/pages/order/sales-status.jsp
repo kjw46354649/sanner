@@ -42,7 +42,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="NOTE">비고</label>
-                            <input type="text" class="wd_200" name="NOTE" id="NOTE">
+                            <input type="search" class="wd_200" name="NOTE" id="NOTE">
                         </span>
                     </li>
                     <li>
@@ -93,7 +93,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="NOTE">비고</label>
-                            <input type="text" class="wd_200" name="NOTE" id="NOTE">
+                            <input type="search" class="wd_200" name="NOTE" id="NOTE">
                         </span>
                         <span class="gubun"></span>
                     </li>

@@ -26,16 +26,16 @@
                             <select id="ORDER_COMP_CD" name="ORDER_COMP_CD" title="발주사" class="wd_200"></select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="EST_TITLE">제목</label><input type="text" name="EST_TITLE" id="EST_TITLE" class="wd_200" title="제목"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="EST_TITLE">제목</label><input type="search" name="EST_TITLE" id="EST_TITLE" class="wd_200" title="제목"></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="DRAWING_NUM">도면번호</label><input type="text" name="DRAWING_NUM" id="DRAWING_NUM" class="wd_200" value="" title="도면번호"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="DRAWING_NUM">도면번호</label><input type="search" name="DRAWING_NUM" id="DRAWING_NUM" class="wd_200" value="" title="도면번호"></span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap right_float"><button type="button" class="defaultBtn radius blue" id="btnEstimateListSearch">검색</button></span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label class="label_100" for="EST_NUM">견적번호</label><input type="text" name="EST_NUM" id="EST_NUM" class="wd_200" value="" title="견적번호"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="EST_NUM">견적번호</label><input type="search" name="EST_NUM" id="EST_NUM" class="wd_200" value="" title="견적번호"></span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="text" name="ITEM_NM" id="ITEM_NM" class="wd_200 " value="" title="품명"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="ITEM_NM">품명</label><input type="search" name="ITEM_NM" id="ITEM_NM" class="wd_200 " value="" title="품명"></span>
                         <span class="gubun"></span>
                     </li>
                     <li class="">
@@ -84,7 +84,7 @@
                 <div class="d-inline">
                     <%--<button type="button" class="smallBtn yellow">견적정보</button>
                     <button type="button" class="smallBtn yellow">금액정보</button>--%>
-                    <input type="text" id="estimateListFilterKeyword" placeholder="Enter your keyword">
+                    <input type="search" id="estimateListFilterKeyword" placeholder="Enter your keyword">
                     <select id="estimateListFilterColumn"></select>
                     <select id="estimateListFilterCondition">
                         <c:forEach var="code" items="${HighCode.H_1083}">
@@ -908,8 +908,19 @@
             estimateMasterBotGrid.pqGrid("refresh");
         });
 
-        $("#estimateListFilterKeyword").on("keyup", function(e){
-            fnFilterHandler(estimateMasterTopGrid, 'estimateListFilterKeyword', 'estimateListFilterCondition', 'estimateListFilterColumn');
+        $("#estimateListFilterKeyword").on({
+            'keyup': function () {
+                fnFilterHandler(estimateMasterTopGrid, 'estimateListFilterKeyword', 'estimateListFilterCondition', 'estimateListFilterColumn');
+
+                let data = estimateMasterTopGrid.pqGrid('option', 'dataModel.data');
+                $('#estimate_master_top_grid_records').html(data.length);
+            },
+            'search': function () {
+                fnFilterHandler(estimateMasterTopGrid, 'estimateListFilterKeyword', 'estimateListFilterCondition', 'estimateListFilterColumn');
+
+                let data = estimateMasterTopGrid.pqGrid('option', 'dataModel.data');
+                $('#estimate_master_top_grid_records').html(data.length);
+            }
         });
 
         $("#estimateListFrozen").on('change', function(e){

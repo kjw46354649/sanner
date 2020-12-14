@@ -29,18 +29,18 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="SEL_DRAWING_NUM">도면번호</label>
-                            <input type="text" class="wd_200" name="SEL_DRAWING_NUM" id="SEL_DRAWING_NUM" title="도면번호">
+                            <input type="search" class="wd_200" name="SEL_DRAWING_NUM" id="SEL_DRAWING_NUM" title="도면번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="SEL_ITEM_NM">품명</label>
-                            <input type="text" class="wd_200" name="SEL_ITEM_NM" id="SEL_ITEM_NM" title="품명">
+                            <input type="search" class="wd_200" name="SEL_ITEM_NM" id="SEL_ITEM_NM" title="품명">
                         </span>
                     </li>
                     <li>
                         <span class="ipu_wrap">
                             <label class="label_100" for="SEL_CONTROL_NUM">관리번호</label>
-                            <input type="text" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="관리번호">
+                            <input type="search" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
@@ -123,7 +123,7 @@
     <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
-                <input type="text" id="stockManageFilterKeyword" placeholder="Enter your keyword">
+                <input type="search" id="stockManageFilterKeyword" placeholder="Enter your keyword">
                 <select id="stockManageFilterColumn"></select>
                 <select id="stockManageFilterCondition">
                     <c:forEach var="code" items="${HighCode.H_1083}">
@@ -1145,8 +1145,24 @@
         });
 
         /** 그리드 필터 **/
+        $('#stockManageFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler(stockManageGridId01, 'stockManageFilterKeyword', 'stockManageFilterCondition', 'stockManageFilterColumn');
+
+                let data = stockManageGridId01.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#stock_manage_grid_records').html(totalRecords);
+            },
+            'search': function () {
+                fnFilterHandler(stockManageGridId01, 'stockManageFilterKeyword', 'stockManageFilterCondition', 'stockManageFilterColumn');
+
+                let data = stockManageGridId01.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#stock_manage_grid_records').html(totalRecords);
+            }
+        });
+
         $("#stockManageFilterKeyword").on("keyup", function(e){
-            fnFilterHandler(stockManageGridId01, 'stockManageFilterKeyword', 'stockManageFilterCondition', 'stockManageFilterColumn');
         });
 
         $("#stockManageFrozen").on('change', function(e){

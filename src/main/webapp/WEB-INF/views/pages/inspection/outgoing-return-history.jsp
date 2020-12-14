@@ -20,17 +20,17 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="SEL_CONTROL_NUM">관리번호</label>
-                            <input type="text" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="관리번호">
+                            <input type="search" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="SEL_DRAWING_NUM">도면번호</label>
-                            <input type="text" class="wd_200" name="SEL_DRAWING_NUM" id="SEL_DRAWING_NUM" title="도면번호">
+                            <input type="search" class="wd_200" name="SEL_DRAWING_NUM" id="SEL_DRAWING_NUM" title="도면번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="SEL_ORDER_NUM">발주번호</label>
-                            <input type="text" class="wd_200" name="SEL_ORDER_NUM" id="SEL_ORDER_NUM" title="발주번호">
+                            <input type="search" class="wd_200" name="SEL_ORDER_NUM" id="SEL_ORDER_NUM" title="발주번호">
                         </span>
                     </li>
                     <li>
@@ -73,7 +73,7 @@
     <div class="bottomWrap inspectionBWrap row2_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
-                <input type="text" id="outgoingReturnHistoryFilterKeyword" placeholder="Enter your keyword">
+                <input type="search" id="outgoingReturnHistoryFilterKeyword" placeholder="Enter your keyword">
                 <select id="outgoingReturnHistoryFilterColumn"></select>
                 <select id="outgoingReturnHistoryFilterCondition">
                     <c:forEach var="code" items="${HighCode.H_1083}">
@@ -293,8 +293,21 @@
 
         });
 
-        $("#outgoingReturnHistoryFilterKeyword").on("keyup", function(e){
-            fnFilterHandler(outgoingHistoryGridId01, 'outgoingReturnHistoryFilterKeyword', 'outgoingReturnHistoryFilterCondition', 'outgoingReturnHistoryFilterColumn');
+        $('#outgoingReturnHistoryFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler(outgoingHistoryGridId01, 'outgoingReturnHistoryFilterKeyword', 'outgoingReturnHistoryFilterCondition', 'outgoingReturnHistoryFilterColumn');
+
+                let data = outgoingHistoryGridId01.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#outgoing_history_grid_records').html(totalRecords);
+            },
+            'search': function () {
+                fnFilterHandler(outgoingHistoryGridId01, 'outgoingReturnHistoryFilterKeyword', 'outgoingReturnHistoryFilterCondition', 'outgoingReturnHistoryFilterColumn');
+
+                let data = outgoingHistoryGridId01.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#outgoing_history_grid_records').html(totalRecords);
+            }
         });
 
         $("#outgoingReturnHistoryFrozen").on('change', function(e){

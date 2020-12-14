@@ -20,17 +20,17 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="SEL_CONTROL_NUM">관리번호</label>
-                            <input type="text" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="관리번호">
+                            <input type="search" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="SEL_DRAWING_NUM">도면번호</label>
-                            <input type="text" class="wd_200" name="SEL_DRAWING_NUM" id="SEL_DRAWING_NUM" title="도면번호">
+                            <input type="search" class="wd_200" name="SEL_DRAWING_NUM" id="SEL_DRAWING_NUM" title="도면번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="SEL_ORDER_NUM">발주번호</label>
-                            <input type="text" class="wd_200" name="SEL_ORDER_NUM" id="SEL_ORDER_NUM" title="발주번호">
+                            <input type="search" class="wd_200" name="SEL_ORDER_NUM" id="SEL_ORDER_NUM" title="발주번호">
                         </span>
                     </li>
                     <li>
@@ -86,7 +86,7 @@
     <div class="bottomWrap inspectionBWrap row2_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
-                <input type="text" id="outgoingManageFilterKeyword" placeholder="Enter your keyword">
+                <input type="search" id="outgoingManageFilterKeyword" placeholder="Enter your keyword">
                 <select id="outgoingManageFilterColumn"></select>
                 <select id="outgoingManageFilterCondition">
                     <c:forEach var="code" items="${HighCode.H_1083}">
@@ -275,9 +275,9 @@
                     <%--   <caption></caption>--%>
                     <colgroup>
                         <col width="10%">
-                        <col width="*">
+                        <col width="25%">
                         <col width="10%">
-                        <col width="*%">
+                        <col width="25%">
                         <col width="15%">
                         <col width="15%">
                     </colgroup>
@@ -1756,8 +1756,21 @@
             $('#outgoing_manage_pop_label_type_1').modal('show');
         });
 
-        $("#outgoingManageFilterKeyword").on("keyup", function () {
-            fnFilterHandler(outgoingManageGridId01, 'outgoingManageFilterKeyword', 'outgoingManageFilterCondition', 'outgoingManageFilterColumn');
+        $('#outgoingManageFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler(outgoingManageGridId01, 'outgoingManageFilterKeyword', 'outgoingManageFilterCondition', 'outgoingManageFilterColumn');
+
+                let data = outgoingManageGridId01.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#outgoing_manage_grid_records').html(totalRecords);
+            },
+            'search': function () {
+                fnFilterHandler(outgoingManageGridId01, 'outgoingManageFilterKeyword', 'outgoingManageFilterCondition', 'outgoingManageFilterColumn');
+
+                let data = outgoingManageGridId01.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#outgoing_manage_grid_records').html(totalRecords);
+            }
         });
 
         $("#outgoingManageFrozen").on('change', function () {

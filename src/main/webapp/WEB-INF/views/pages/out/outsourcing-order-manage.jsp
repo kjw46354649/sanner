@@ -35,7 +35,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
+                            <input type="search" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -51,7 +51,7 @@
                     <li>
                         <span class="ipu_wrap">
                             <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM">
+                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -120,7 +120,7 @@
     <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
-                <label for="outsourcingOrderManageFilterKeyword"></label><input type="text" id="outsourcingOrderManageFilterKeyword" placeholder="Enter your keyword">
+                <label for="outsourcingOrderManageFilterKeyword"></label><input type="search" id="outsourcingOrderManageFilterKeyword" placeholder="Enter your keyword">
                 <label for="outsourcingOrderManageFilterColumn"></label><select id="outsourcingOrderManageFilterColumn"></select>
                 <label for="outsourcingOrderManageFilterCondition"></label><select id="outsourcingOrderManageFilterCondition">
                     <c:forEach var="code" items="${HighCode.H_1083}">
@@ -2164,8 +2164,19 @@
         });
         /* 가공요청 취소 파일 업로드 */
 
-        $("#outsourcingOrderManageFilterKeyword").on("keyup", function(e){
-            fnFilterHandler($outsideOrderManageGrid, 'outsourcingOrderManageFilterKeyword', 'outsourcingOrderManageFilterCondition', 'outsourcingOrderManageFilterColumn');
+        $('#outsourcingOrderManageFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler($outsideOrderManageGrid, 'outsourcingOrderManageFilterKeyword', 'outsourcingOrderManageFilterCondition', 'outsourcingOrderManageFilterColumn');
+
+                let data = $outsideOrderManageGrid.pqGrid('option', 'dataModel.data');
+                $('#OUTSIDE_ORDER_MANAGE_RECORDS').html(data.length);
+            },
+            'search': function () {
+                fnFilterHandler($outsideOrderManageGrid, 'outsourcingOrderManageFilterKeyword', 'outsourcingOrderManageFilterCondition', 'outsourcingOrderManageFilterColumn');
+
+                let data = $outsideOrderManageGrid.pqGrid('option', 'dataModel.data');
+                $('#OUTSIDE_ORDER_MANAGE_RECORDS').html(data.length);
+            }
         });
 
         $("#outsourcingOrderManageFrozen").on('change', function(e){

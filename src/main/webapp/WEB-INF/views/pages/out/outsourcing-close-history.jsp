@@ -35,18 +35,18 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
+                            <input type="search" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
                         </span>
                     </li>
                     <li>
                         <span class="ipu_wrap">
                             <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM">
+                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="ORDER_NUM">발주번호</label>
-                            <input type="text" class="wd_200" name="ORDER_NUM" id="ORDER_NUM">
+                            <input type="search" class="wd_200" name="ORDER_NUM" id="ORDER_NUM">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -88,7 +88,7 @@
     <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
-                <input type="text" id="outsourcingCloseHistoryFilterKeyword" placeholder="Enter your keyword">
+                <input type="search" id="outsourcingCloseHistoryFilterKeyword" placeholder="Enter your keyword">
                 <select id="outsourcingCloseHistoryFilterColumn"></select>
                 <select id="outsourcingCloseHistoryFilterCondition">
                     <c:forEach var="code" items="${HighCode.H_1083}">
@@ -725,8 +725,13 @@
             $('#OUTSIDE_CLOSE_CANCEL_POPUP').modal('hide');
         });
 
-        $("#outsourcingCloseHistoryFilterKeyword").on("keyup", function(e){
-            fnFilterHandler($outsideCloseHistoryGrid, 'outsourcingCloseHistoryFilterKeyword', 'outsourcingCloseHistoryFilterCondition', 'outsourcingCloseHistoryFilterColumn');
+        $('#outsourcingCloseHistoryFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler($outsideCloseHistoryGrid, 'outsourcingCloseHistoryFilterKeyword', 'outsourcingCloseHistoryFilterCondition', 'outsourcingCloseHistoryFilterColumn');
+            },
+            'search': function () {
+                fnFilterHandler($outsideCloseHistoryGrid, 'outsourcingCloseHistoryFilterKeyword', 'outsourcingCloseHistoryFilterCondition', 'outsourcingCloseHistoryFilterColumn');
+            }
         });
 
         $("#outsourcingCloseHistoryFrozen").on('change', function(e){

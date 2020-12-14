@@ -1747,7 +1747,8 @@
                                     AND M.DRAWING_NUM = B.DRAWING_NUM
                                 ORDER BY M.CONTROL_SEQ DESC
                                 LIMIT 1)
-                    END, SPACE(0)) AS PREV_UNIT_FINAL_AMT <!-- 종전가 -->
+                    END, SPACE(0)) AS PREV_UNIT_FINAL_AMT, <!-- 종전가 -->
+            (SELECT M.BARCODE_NUM FROM TBL_CONTROL_BARCODE M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N') AS CONTROL_BARCODE_NUM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             <if test="VISIBLE_PART == null">

@@ -47,7 +47,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="CLOSE_NOTE">비고</label>
-                            <input type="text" class="wd_200" name="CLOSE_NOTE" id="CLOSE_NOTE">
+                            <input type="search" class="wd_200" name="CLOSE_NOTE" id="CLOSE_NOTE">
                         </span>
                         <span class="gubun"></span>
                     </li>

@@ -22,7 +22,7 @@
                     <li>
                         <span class="ipu_wrap">
                             <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -34,12 +34,12 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="ORDER_NUM">발주번호</label>
-                            <input type="text" class="wd_200" name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
+                            <input type="search" class="wd_200" name="ORDER_NUM" id="ORDER_NUM" title="발주번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
+                            <input type="search" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
                         </span>
                     </li>
                     <li>
@@ -52,7 +52,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="ITEM_NM">품명</label>
-                            <input type="text" class="wd_200" name="ITEM_NM" id="ITEM_NM" title="품명">
+                            <input type="search" class="wd_200" name="ITEM_NM" id="ITEM_NM" title="품명">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -64,7 +64,7 @@
                         <span class="gubun"></span>
                         <div class="ipu_wrap">
                             <label class="label_100" for="MODULE_NM">모듈명</label>
-                            <input type="text" class="wd_200" name="MODULE_NM" id="MODULE_NM">
+                            <input type="search" class="wd_200" name="MODULE_NM" id="MODULE_NM">
                         </div>
                     </li>
                     <li>
@@ -77,7 +77,7 @@
                         <span class="gubun"></span>
                         <div class="ipu_wrap">
                             <label class="label_100" for="ORDER_NUMBER">INV No.</label>
-                            <input type="text" class="wd_200" name="ORDER_NUMBER" id="ORDER_NUMBER">
+                            <input type="search" class="wd_200" name="ORDER_NUMBER" id="ORDER_NUMBER">
                         </div>
                         <span class="gubun"></span>
                         <div class="slt_wrap">
@@ -91,7 +91,7 @@
                         <span class="gubun"></span>
                         <div class="ipu_wrap">
                             <label class="label_100" for="AMOUNT_SUM">금액합산</label>
-                            <input type="text" class="wd_200" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
+                            <input type="search" class="wd_200" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
                         </div>
                     </li>
                     <li>
@@ -124,7 +124,7 @@
     <div class="bottomWrap row4_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
-                <input type="text" id="closeHistoryFilterKeyword" placeholder="Enter your keyword">
+                <input type="search" id="closeHistoryFilterKeyword" placeholder="Enter your keyword">
                 <select id="closeHistoryFilterColumn"></select>
                 <select id="closeHistoryFilterCondition">
                     <c:forEach var="code" items="${HighCode.H_1083}">
@@ -875,8 +875,19 @@
             updateControlStatus();
         });
 
-        $("#closeHistoryFilterKeyword").on("keyup", function(e){
-            fnFilterHandler($closeHistoryGrid, 'closeHistoryFilterKeyword', 'closeHistoryFilterCondition', 'closeHistoryFilterColumn');
+        $('#closeHistoryFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler($closeHistoryGrid, 'closeHistoryFilterKeyword', 'closeHistoryFilterCondition', 'closeHistoryFilterColumn');
+
+                let data = $closeHistoryGrid.pqGrid('option', 'dataModel.data');
+                $('#CLOSE_HISTORY_RECORDS').html(data.length);
+            },
+            'search': function () {
+                fnFilterHandler($closeHistoryGrid, 'closeHistoryFilterKeyword', 'closeHistoryFilterCondition', 'closeHistoryFilterColumn');
+
+                let data = $closeHistoryGrid.pqGrid('option', 'dataModel.data');
+                $('#CLOSE_HISTORY_RECORDS').html(data.length);
+            }
         });
 
         $("#closeHistoryFrozen").on('change', function(e){
@@ -884,25 +895,25 @@
         });
         // 도면출력
         $('#CLOSE_HISTORY_DRAWING_PRINT').on('click', function () {
-            let selectedRowCount = selectedRowIndex.length;
-            let imgGfileSeq = '';
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $closeHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-                if (!rowData.IMG_GFILE_SEQ) {
-                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
-                    return;
-                } else {
-                    imgGfileSeq += rowData.IMG_GFILE_SEQ + '^';
-                }
+            if (noSelectedRowAlert()) return false;
+
+            let selectControlList = '';
+            let drawingNumList = new Set();
+
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                const rowData = $closeHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                selectControlList += String(rowData.CONTROL_SEQ) + String(rowData.CONTROL_DETAIL_SEQ) + '|';
+                drawingNumList.add(rowData.DRAWING_NUM);
             }
 
-            // let drawingPrintModalConfirm = function(callback){
-            let message = '<h4>' +
-                '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-                '               <span>' + selectedRowCount + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
-                '       </h4>';
+            const message =
+                '<h4>' +
+                '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                '   <span>' + drawingNumList.size + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                '</h4>';
             fnConfirm(null, message, function () {
-                printJS({printable: '/makeCadPrint?imgGfileSeq=' + encodeURI(imgGfileSeq), type: 'pdf', showModal: true});
+                printJS({printable: '/makeCadPrint?selectControlList=' + encodeURI(selectControlList), type: 'pdf', showModal: true});
             });
         });
         // 바코드도면출력
@@ -920,7 +931,7 @@
                     return;
                 // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
                 } else if(selectControlPartInfo !== curControlPartInfo){
-                    selectControlList += rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ + '^';
+                    selectControlList += String(rowData.CONTROL_SEQ) + String(rowData.CONTROL_DETAIL_SEQ) + '|';
                     selectControlPartCount++;
                     selectControlPartInfo = curControlPartInfo;
                 }

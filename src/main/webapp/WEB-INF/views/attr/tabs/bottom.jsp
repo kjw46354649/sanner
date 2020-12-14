@@ -928,21 +928,43 @@
             }
         });
 
-        $cadFileConvertUploadCompletedBtn.on('click', function(){
-            let gridInstance = $commonCadFileAttachGrid.pqGrid('getInstance').grid;
-            let changes = gridInstance.getChanges({format: 'byVal'});
-            changes.queryIdList = {
-                'insertQueryId': [$('#common_cad_file_attach_form').find("#queryId").val()]
-            };
-            $("#common_cad_file_attach_form").find("#fileGrid").val(JSON.stringify(changes));
-            let parameters = { 'url': '/cadFileConvert', 'data': {data: JSON.stringify(changes)}};
-            fnPostAjax(function (data, callFunctionParam) {
-                fnAlertMessageAutoClose('save');
-                $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
-                $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
-                commonCadFileAttachPopup.modal('hide');
-            }, parameters, '');
-        });
+        $cadFileConvertUploadCompletedBtn.on('click', function () {
+            const actionType = $('#common_cad_file_attach_form').find('#actionType').val();
+            // 주문 도면 차수 변경
+            if (actionType === 'controlRev') {
+                const message = '도면 변경시 바코드가 변경되며,<br>이미 배포된 바코드 출력도면은 교체해야 합니다.<br><br>진행하시겠습니까?';
+
+                fnConfirm(null, message, function () {
+                    let gridInstance = $commonCadFileAttachGrid.pqGrid('getInstance').grid;
+                    let changes = gridInstance.getChanges({format: 'byVal'});
+                    changes.queryIdList = {
+                        'insertQueryId': [$('#common_cad_file_attach_form').find("#queryId").val()]
+                    };
+                    $("#common_cad_file_attach_form").find("#fileGrid").val(JSON.stringify(changes));
+                    let parameters = {'url': '/cadFileConvert', 'data': {data: JSON.stringify(changes)}};
+                    fnPostAjax(function (data, callFunctionParam) {
+                        fnAlertMessageAutoClose('save');
+                        $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
+                        $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
+                        commonCadFileAttachPopup.modal('hide');
+                    }, parameters, '');
+                });
+            } else {
+                let gridInstance = $commonCadFileAttachGrid.pqGrid('getInstance').grid;
+                let changes = gridInstance.getChanges({format: 'byVal'});
+                changes.queryIdList = {
+                    'insertQueryId': [$('#common_cad_file_attach_form').find("#queryId").val()]
+                };
+                $("#common_cad_file_attach_form").find("#fileGrid").val(JSON.stringify(changes));
+                let parameters = {'url': '/cadFileConvert', 'data': {data: JSON.stringify(changes)}};
+                fnPostAjax(function (data, callFunctionParam) {
+                    fnAlertMessageAutoClose('save');
+                    $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
+                    $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
+                    commonCadFileAttachPopup.modal('hide');
+                }, parameters, '');
+            }
+        })
 
         commonCadFileAttachPopup.on('show.bs.modal',function(e) {
             var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
@@ -953,7 +975,7 @@
             }else if(actionType == 'control') {     // 주문 도면 등록
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadFileColModel);
             }else if(actionType == 'controlRev') {  // 주문 도면 차수 변경
-                $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면 차수 변경');
+                $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면변경(Revision up)');
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadRevFileColModel);
             }else if(actionType == 'inside') {      // 자재 도면 등록
                 $commonCadFileAttachGrid.pqGrid('option', 'colModel', insideStockCadFileColModel);

@@ -188,13 +188,13 @@
                             </span>
                         </li>
                         <li>
-                            <span class="ipu_wrap"><label class="label_100" for="SIZE">소재규격</label><input type="text" name="SIZE" id="SIZE" class="wd_200" value="" title="소재규격"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="SIZE">소재규격</label><input type="search" name="SIZE" id="SIZE" class="wd_200" value="" title="소재규격"></span>
                             <span class="ipu_wrap"><label class="label_100" for="SIZE_W">가로</label>
-                                <input type="text" name="SIZE_W" id="SIZE_W" class="wd_200" value="" title="가로">
-                                <input type="text" name="SIZE_W" id="SIZE_W" class="wd_200" value="" title="가로">
+                                <input type="search" name="SIZE_W" id="SIZE_W" class="wd_200" value="" title="가로">
+                                <input type="search" name="SIZE_W" id="SIZE_W" class="wd_200" value="" title="가로">
                             </span>
-                            <span class="ipu_wrap"><label class="label_100" for="SIZE_H">세로</label><input type="text" name="SIZE_H" id="SIZE_H" class="wd_200" value="" title="세로"></span>
-                            <span class="ipu_wrap"><label class="label_100" for="SIZE_D">두께</label><input type="text" name="SIZE_D" id="SIZE_D" class="wd_200" value="" title="두께"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="SIZE_H">세로</label><input type="search" name="SIZE_H" id="SIZE_H" class="wd_200" value="" title="세로"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="SIZE_D">두께</label><input type="search" name="SIZE_D" id="SIZE_D" class="wd_200" value="" title="두께"></span>
                         </li>
 <%--                        <li>--%>
 <%--                            <span class="ipu_wrap"><label class="label_100" for="M_ORDER_COMP_CD">소재주문업체</label><input type="text" name="M_ORDER_COMP_CD" id="M_ORDER_COMP_CD" class="wd_200" value="" title="소재주문업체"></span>--%>
@@ -249,13 +249,13 @@
                             </span>
                         </li>
                         <li>
-                            <span class="ipu_wrap"><label class="label_100" for="SIZE">소재규격</label><input type="text" name="SIZE" id="SIZE" class="wd_200" value="" title="소재규격"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="SIZE">소재규격</label><input type="search" name="SIZE" id="SIZE" class="wd_200" value="" title="소재규격"></span>
                             <span class="ipu_wrap"><label class="label_100" for="SIZE_W">가로</label>
-                                <input type="text" name="SIZE_W" id="SIZE_W" class="wd_200" value="" title="가로">
-                                <input type="text" name="SIZE_W" id="SIZE_W" class="wd_200" value="" title="가로">
+                                <input type="search" name="SIZE_W" id="SIZE_W" class="wd_200" value="" title="가로">
+                                <input type="search" name="SIZE_W" id="SIZE_W" class="wd_200" value="" title="가로">
                             </span>
-                            <span class="ipu_wrap"><label class="label_100" for="SIZE_H">세로</label><input type="text" name="SIZE_H" id="SIZE_H" class="wd_200" value="" title="세로"></span>
-                            <span class="ipu_wrap"><label class="label_100" for="SIZE_D">두께</label><input type="text" name="SIZE_D" id="SIZE_D" class="wd_200" value="" title="두께"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="SIZE_H">세로</label><input type="search" name="SIZE_H" id="SIZE_H" class="wd_200" value="" title="세로"></span>
+                            <span class="ipu_wrap"><label class="label_100" for="SIZE_D">두께</label><input type="search" name="SIZE_D" id="SIZE_D" class="wd_200" value="" title="두께"></span>
                         </li>
                         <li>
                             <span class="ipu_wrap"><label class="label_100" for="IN_OUT_NM">수불 구분</label>
@@ -278,7 +278,7 @@
                 <li class="active"><a href="#IN_WAREHOUSE_MANAGE_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a></li>
                 <li><a href="#IN_WAREHOUSE_MANAGE_TAB2" data-toggle="tab" aria-expanded="false">불출이력</a></li>
                 <div class="d-inline right_float" id="IN_WAREHOUSE_MANAGE_BUTTON" style="font-weight: normal;">
-                    <input type="text" id="inWarehouseManageFilterKeyword" placeholder="Enter your keyword">
+                    <input type="search" id="inWarehouseManageFilterKeyword" placeholder="Enter your keyword">
                     <select id="inWarehouseManageFilterColumn"></select>
                     <select id="inWarehouseManageFilterCondition">
                         <c:forEach var="code" items="${HighCode.H_1083}">
@@ -295,7 +295,7 @@
                     <button type="button" class="defaultBtn radius green" id="btnInWarehouseManageSave">저장</button>
                 </div>
                 <div class="d-inline right_float" id="IN_WAREHOUSE_MANAGE_OUT_BUTTON" style="display: none; font-weight: normal;">
-                    <input type="text" id="inWarehouseManageOutFilterKeyword" placeholder="Enter your keyword">
+                    <input type="search" id="inWarehouseManageOutFilterKeyword" placeholder="Enter your keyword">
                     <select id="inWarehouseManageOutFilterColumn"></select>
                     <select id="inWarehouseManageOutFilterCondition">
                         <c:forEach var="code" items="${HighCode.H_1083}">
@@ -1068,16 +1068,44 @@
             }
         });
 
+        $('#inWarehouseManageFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler(inWarehouseManageManageGrid01, 'inWarehouseManageFilterKeyword', 'inWarehouseManageFilterCondition', 'inWarehouseManageFilterColumn');
+
+                let data = inWarehouseManageManageGrid01.pqGrid('option', 'dataModel.data');
+                $('#in_warehouse_manage_manage_grid01_records').html(data.length);
+            },
+            'search': function () {
+                fnFilterHandler(inWarehouseManageManageGrid01, 'inWarehouseManageFilterKeyword', 'inWarehouseManageFilterCondition', 'inWarehouseManageFilterColumn');
+
+                let data = inWarehouseManageManageGrid01.pqGrid('option', 'dataModel.data');
+                $('#in_warehouse_manage_manage_grid01_records').html(data.length);
+            }
+        });
+
         $("#inWarehouseManageFilterKeyword").on("keyup", function(e){
-            fnFilterHandler(inWarehouseManageManageGrid01, 'inWarehouseManageFilterKeyword', 'inWarehouseManageFilterCondition', 'inWarehouseManageFilterColumn');
         });
 
         $("#inWarehouseManageFrozen").on('change', function(e){
             fnFrozenHandler(inWarehouseManageManageGrid01, $(this).val());
         });
 
+        $('#closeHistoryFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler(inWarehouseManageOutGrid, 'inWarehouseManageOutFilterKeyword', 'inWarehouseManageOutFilterCondition', 'inWarehouseManageOutFilterColumn');
+
+                let data = inWarehouseManageOutGrid.pqGrid('option', 'dataModel.data');
+                $('#in_warehouse_manage_out_grid01_records').html(data.length);
+            },
+            'search': function () {
+                fnFilterHandler(inWarehouseManageOutGrid, 'inWarehouseManageOutFilterKeyword', 'inWarehouseManageOutFilterCondition', 'inWarehouseManageOutFilterColumn');
+
+                let data = inWarehouseManageOutGrid.pqGrid('option', 'dataModel.data');
+                $('#in_warehouse_manage_out_grid01_records').html(data.length);
+            }
+        });
+
         $("#inWarehouseManageOutFilterKeyword").on("keyup", function(e){
-            fnFilterHandler(inWarehouseManageOutGrid, 'inWarehouseManageOutFilterKeyword', 'inWarehouseManageOutFilterCondition', 'inWarehouseManageOutFilterColumn');
         });
 
         $("#inWarehouseManageOutFrozen").on('change', function(e){

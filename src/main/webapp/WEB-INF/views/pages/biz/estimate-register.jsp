@@ -84,7 +84,7 @@
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label for="EST_TITLE" class="label_65">제목</label>
 <%--                            <input type="text" name="EST_TITLE" id="EST_TITLE" class="wd_542" value="" title="제목">--%>
-                            <input type="text" name="EST_TITLE" id="EST_TITLE" class="wd_200" value="" title="제목">
+                            <input type="search" name="EST_TITLE" id="EST_TITLE" class="wd_200" value="" title="제목">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">

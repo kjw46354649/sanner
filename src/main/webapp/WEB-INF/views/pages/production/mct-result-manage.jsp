@@ -363,12 +363,12 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="text" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM">
+                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="text" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
+                            <input type="search" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"></span>
@@ -400,7 +400,7 @@
     <div class="bottomWrap row2_bottomWrap">
         <div class="hWrap">
             <div class="d-inline">
-                <input type="text" id="mctResultManageFilterKeyword" placeholder="Enter your keyword">
+                <input type="search" id="mctResultManageFilterKeyword" placeholder="Enter your keyword">
                 <select id="mctResultManageFilterColumn"></select>
                 <select id="mctResultManageFilterCondition">
                     <c:forEach var="code" items="${HighCode.H_1083}">
@@ -1199,8 +1199,20 @@
         });
         /** 파일 업로드 스크립트 종료 **/
 
-        $("#mctResultManageFilterKeyword").on("keyup", function(e){
-            fnFilterHandler($mctResultManageGrid, 'mctResultManageFilterKeyword', 'mctResultManageFilterCondition', 'mctResultManageFilterColumn');
+
+        $('#mctResultManageFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler($mctResultManageGrid, 'mctResultManageFilterKeyword', 'mctResultManageFilterCondition', 'mctResultManageFilterColumn');
+
+                let data = $mctResultManageGrid.pqGrid('option', 'dataModel.data');
+                $('#machine_result_manage_grid-total-records').html(data.length);
+            },
+            'search': function () {
+                fnFilterHandler($mctResultManageGrid, 'mctResultManageFilterKeyword', 'mctResultManageFilterCondition', 'mctResultManageFilterColumn');
+
+                let data = $mctResultManageGrid.pqGrid('option', 'dataModel.data');
+                $('#machine_result_manage_grid-total-records').html(data.length);
+            }
         });
 
         $("#mctResultManageFrozen").on('change', function(e){
