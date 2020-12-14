@@ -602,16 +602,9 @@
                     }
                 }
             },
+            {title: '주요<br>검사', dataIndx: 'MAIN_INSPECTION_NM', minWidth: 45},
             {
-                title: '주요<br>검사', dataIndx: 'MAIN_INSPECTION_NM', minWidth: 15, width: 55,
-                render: function (ui) {
-                    if (ui.cellData) {
-                        return {style: 'background-color: #ffe699;'};
-                    }
-                }
-            },
-            {
-                title: '불량<br>반품', dataIndx: 'FAIL_STATUS', minWidth: 15, width: 55,
+                title: '불량<br>반품', dataIndx: 'FAIL_STATUS', minWidth: 45,
                 render: function (ui) {
                     if (ui.cellData) {
                         return {style: 'background-color: #ff0000; color: #ffffff;'};
@@ -647,10 +640,10 @@
             },
             {title: '가공완료일시', dataIndx: 'INNER_WORK_FINISH_DT', hidden: true},
             {title: '현재위치', dataIndx: 'POP_POSITION', minWidth: 20, width: 80},
-            {title: '관리번호', dataIndx: 'CONTROL_PART_NUM', minWidth: 50, width: 180},
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', hidden: true},
+            {title: '관리번호', align: 'left', dataIndx: 'CONTROL_PART_NUM', width: 180},
+            {title: '관리번호', align: 'left', dataIndx: 'CONTROL_NUM', hidden: true},
             {title: '파<br>트', dataIndx: 'PART_NUM', hidden: true},
-            {title: '형<br>태', dataIndx: 'WORK_NM', minWidth: 15, width: 20},
+            {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM', width: 50},
             {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
             {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {

@@ -874,18 +874,15 @@
               END AS EMERGENCY_YN <!-- 긴급 -->
             , jmes.SF_GET_CODE_NM('1059', B.MAIN_INSPECTION, 'KR') AS MAIN_INSPECTION_NM <!-- 주요 검사품 -->
             , H.FAIL_STATUS
-            , CASE
-                WHEN A.WORK_TYPE = 'WTP030' THEN '수'
-                WHEN A.WORK_TYPE = 'WTP040' THEN '재'
-              END AS WORK_NM <!-- 형태 -->
+            , jmes.SF_GET_CODE_NM('1033', A.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM <!-- 형태 -->
             , C.ITEM_NM <!-- 품명 -->
-            , jmes.SF_GET_CODE_NM('1009', D.POP_POSITION, 'KR') AS POP_POSITION <!-- 현재위치 -->
-            , jmes.SF_GET_CODE_NM('1013', A.PART_STATUS, 'KR') AS PART_STATUS 	<!-- 진행상태 -->
+            , jmes.SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION <!-- 현재위치 -->
+            , jmes.SF_GET_CODE_NM('1013', A.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS 	<!-- 진행상태 -->
             , B.CONTROL_NUM <!-- 관리번호 -->
             , IFNULL(A.PART_NUM, SPACE(0)) AS PART_NUM <!-- Part -->
             , CONCAT(B.CONTROL_NUM, CASE WHEN A.PART_NUM IS NOT NULL THEN CONCAT(' #', A.PART_NUM) ELSE SPACE(0) END) AS CONTROL_PART_NUM
             , A.MATERIAL_DETAIL <!-- 소재종류 상세 -->
-            , IFNULL(SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM <!-- 소재 종류 -->
+            , IFNULL(SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM <!-- 소재 종류 -->
             , IFNULL(jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 0) AS ORDER_QTY <!-- 수량 -->
             , jmes.SF_GET_SIDE_QTY(B.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(A.PART_UNIT_QTY, 1) AS ORIGINAL_SIDE_QTY <!-- 대칭_원칭 -->
             , jmes.SF_GET_SIDE_QTY(B.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(A.PART_UNIT_QTY, 1) AS OTHER_SIDE_QTY <!-- 대칭_대칭 -->
@@ -896,12 +893,12 @@
             , A.SIZE_TXT AS STANDARD_SIZE <!-- 규격 -->
             , jmes.SF_GET_MATERIAL_SIZE_TXT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERAIL_ORDER_SIZE <!-- 소재 주문 규격 -->
             , A.SURFACE_TREAT <!-- 표면처리 -->
-            , SF_GET_CODE_NM('1039', A.SURFACE_TREAT, 'KR') AS SURFACE_TREAT_NM <!-- 표면 처리 -->
+            , SF_GET_CODE_NM('1039', A.SURFACE_TREAT, #{LOGIN_LOCALE}) AS SURFACE_TREAT_NM <!-- 표면 처리 -->
             , B.NOTE AS CONTROL_NOTE <!-- 주문 확정 비고 -->
             , jmes.SF_GET_MCT_WORK_TIME(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MCT_WORK_TIME <!-- 작업 시간 (계획 + 실행) -->
             , A.MCT_WORK_TYPE <!-- MCT 작업 구분 -->
             , A.MCT_NOTE 	<!-- MCT 가공계획 비고 -->
-            , IFNULL(SF_GET_CODE_NM('1011', A.MCT_WORK_TYPE, 'KR'), SPACE(0)) AS MCT_WORK_TYPE_NM <!-- MCT 작업 구분 이름 -->
+            , IFNULL(SF_GET_CODE_NM('1011', A.MCT_WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS MCT_WORK_TYPE_NM <!-- MCT 작업 구분 이름 -->
             ,  	CASE WHEN H.FAIL_STATUS IS NULL THEN CASE
                                                         WHEN E.START_DT IS NOT NULL AND E.FINISH_DT IS NOT NULL THEN 'CWS030'
                                                         WHEN E.START_DT IS NOT NULL AND E.FINISH_DT IS NULL THEN 'CWS020'
@@ -916,7 +913,7 @@
                 END CAM_STATUS <!-- CAM 상태 -->
             , E.CAM_SEQ <!-- CAM 마스터 번호 -->
             , F.SEQ AS CAM_STEP <!-- CAM 스탭 -->
-            , SF_GET_CODE_NM('1080', F.WORK_DIRECTION, 'KR') AS WORK_DIRECTION <!-- CAM 가공위치 -->
+            , SF_GET_CODE_NM('1080', F.WORK_DIRECTION, #{LOGIN_LOCALE}) AS WORK_DIRECTION <!-- CAM 가공위치 -->
             , F.WORK_DESC 	<!-- CAM 작업 내용 -->
             , (SELECT M.USER_NM
                 FROM jmes.TBL_USER M
@@ -944,14 +941,14 @@
             , jmes.SF_GET_DATE_F(A.STATUS_DT, '', 'M') AS STATUS_DT <!-- 확정 일시 -->
             , jmes.SF_GET_MATERIAL_RECEIPT_DT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT <!-- 소재 입고 일시 -->
             , G.INSPECT_NUM AS INSPECT_STEP <!-- 품질 스탭 -->
-            , SF_GET_CODE_NM('1040', G.INSPECT_GRADE, 'KR') AS INSPECT_GRADE
+            , SF_GET_CODE_NM('1040', G.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE
             , CASE
-                WHEN G.INSPECT_RESULT LIKE 'QCC%' THEN SF_GET_CODE_NM('1019', G.INSPECT_RESULT, 'KR')
-                WHEN G.INSPECT_RESULT LIKE 'QCD%' THEN SF_GET_CODE_NM('1020', G.INSPECT_RESULT, 'KR')
+                WHEN G.INSPECT_RESULT LIKE 'QCC%' THEN SF_GET_CODE_NM('1019', G.INSPECT_RESULT, #{LOGIN_LOCALE})
+                WHEN G.INSPECT_RESULT LIKE 'QCD%' THEN SF_GET_CODE_NM('1020', G.INSPECT_RESULT, #{LOGIN_LOCALE})
                 ELSE SPACE(0)
               END AS INSPECT_RESULT <!-- 불량 코드 -->
             , G.ERROR_QTY <!-- 불량 수량 -->
-            , SF_GET_CODE_NM('1032', G.ERROR_REASON, 'KR') AS ERROR_REASON <!-- 불량 원인 -->
+            , SF_GET_CODE_NM('1032', G.ERROR_REASON, #{LOGIN_LOCALE}) AS ERROR_REASON <!-- 불량 원인 -->
             , G.ERROR_NOTE <!-- 불량 조치방안 -->
             , jmes.SF_GET_DATE_F(G.INSERT_DT, '', '') AS INSPECT_DT <!-- 품질현황 -->
             , I.MCT_PLAN_SEQ
