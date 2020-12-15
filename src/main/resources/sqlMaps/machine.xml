@@ -502,6 +502,7 @@
             <if test="POP_POSITION != null and POP_POSITION != ''">
                 AND Y.POP_POSITION = #{POP_POSITION}
             </if>
+        GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
         ORDER BY B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
     </select>
 
