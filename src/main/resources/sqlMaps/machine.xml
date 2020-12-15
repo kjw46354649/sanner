@@ -968,7 +968,15 @@
             , B.SAME_SIDE_YN <!-- 대칭 -->
             , A.IMG_GFILE_SEQ <!-- IMG 파일그룹번호 -->
             , K.EQUIP_NM
-            , K.WORKING_TIME
+            , CASE
+            	WHEN K.WORKING_TIME IS NOT NULL THEN
+            											CASE
+	            											WHEN K.WORKING_TIME > 3600 THEN CONCAT(TRUNCATE(IFNULL(K.WORKING_TIME, 0)/ 3600, 0), 'h ', TRUNCATE((IFNULL(K.WORKING_TIME, 0)%3600)/ 60, 0), 'm')
+	        												ELSE CONCAT(TRUNCATE((IFNULL(K.WORKING_TIME, 0)%3600)/ 60, 0), 'm')
+														END
+            END AS WORKING_TIME
+            , K.WORK_STATUS
+            , K.WORK_STATUS_NM
             , K.NC_WORK_TYPE
             , (	SELECT M.USER_NM
                 FROM jmes.TBL_USER M
@@ -1002,10 +1010,14 @@
             LEFT OUTER JOIN jmes.TBL_MCT_PLAN I ON I.CONTROL_SEQ = A.CONTROL_SEQ AND I.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND I.DEL_YN = 'N'
             LEFT OUTER JOIN jmes.TBL_EQUIP J ON J.EQUIP_SEQ = I.EQUIP_SEQ
             LEFT OUTER JOIN (
-                SELECT
-                    A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, C.EQUIP_NM, A.WORK_USER_ID,
-                    IFNULL(SF_GET_CODE_NM('1010', C.PROCESS_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS NC_WORK_TYPE,
-                    CONCAT(TRUNCATE(IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK',A.MCT_WORK_SEQ),0)/3600,0),'h ',TRUNCATE((IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK',A.MCT_WORK_SEQ),0)%3600)/60,0),'m') AS WORKING_TIME
+                SELECT A.CONTROL_SEQ
+					, A.CONTROL_DETAIL_SEQ
+					, A.WORK_USER_ID
+					, A.WORK_STATUS
+					, jmes.SF_GET_CODE_NM('1079', A.WORK_STATUS, #{LOGIN_LOCALE}) AS WORK_STATUS_NM
+					, jmes.SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) AS WORKING_TIME
+                    , B.EQUIP_NM
+                    , IFNULL(jmes.SF_GET_CODE_NM('1010', B.PROCESS_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS NC_WORK_TYPE
                 FROM TBL_MCT_WORK A
                     INNER JOIN jmes.TBL_EQUIP C ON A.EQUIP_SEQ = C.EQUIP_SEQ
                 WHERE 1 = 1

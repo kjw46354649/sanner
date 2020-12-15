@@ -479,8 +479,8 @@ table.boardList .txtP{color: #7030a0;}
 .floppyDiskDisable { display: inline-block; width: 17px;height: 17px; background: url(../images/common/floppy_disk_disalbe.png) no-repeat; background-size: 17px; }
 
 .blink {
-  -webkit-animation: blink 1s linear infinite alternate;
-  animation: blink 1s linear infinite alternate;
+  -webkit-animation: blink 1s linear 1s infinite normal;
+  animation: blink 1s linear 1s infinite normal;
 }
 
 @-webkit-keyframes blink {
