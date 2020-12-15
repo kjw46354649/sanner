@@ -241,8 +241,12 @@
             },
             {
                 title: '', width: '7.5%', dataIndx: 'PROCESS_CONFIRM_BUTTON',
-                render: function () {
-                    return '<button class="miniBtn green" name="PROCESS_CONFIRM_BUTTON">가공확정</button>';
+                render: function (ui) {
+                    if (ui.rowData.CONTROL_STATUS !== 'ORD005') {
+                        return '<button class="miniBtn green" name="PROCESS_CONFIRM_BUTTON">가공확정</button>';
+                    } else {
+                        return '<button class="miniBtn green" name="PROCESS_CONFIRM_BUTTON" disabled>가공확정</button>';
+                    }
                 },
                 postRender: function (ui) {
                     let grid = this;

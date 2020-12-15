@@ -243,7 +243,7 @@
                                                                                 AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
                 WHERE 1 = 1
                     AND A.DEL_YN = 'N'
-                    AND (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002'))
+                    AND (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002', 'ORD005'))
                 <choose>
                     <!-- 주문 상태 -->
                     <when test="CONTROL_SEARCH_CONDITION == 'OCM00'">
@@ -255,7 +255,7 @@
                     </when>
                     <!-- 가공 납기 -->
                     <when test="CONTROL_SEARCH_CONDITION == 'OCM02'">
-                        AND DATE_FORMAT(B.INNER_DUE_DT, '%Y%m%d') BETWEEN #{CONTROL_MANAGE_START_DATE} AND #{CONTROL_MANAGE_END_DATE}
+                        AND DATE_FORMAT(B.INNER_DUE_DT, '%Y/%m/%d') BETWEEN #{CONTROL_MANAGE_START_DATE} AND #{CONTROL_MANAGE_END_DATE}
                     </when>
                     <!-- Update일시 -->
                     <when test="CONTROL_SEARCH_CONDITION == 'OCM03'">

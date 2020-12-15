@@ -605,6 +605,7 @@
             {title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'INSPECT_SEQ', dataIndx: 'INSPECT_SEQ', hidden: true},
+            {title: '주문<br>상태', minWidth: 30, dataIndx: 'CONTROL_STATUS_NM'},
             {
                 title: '확정<br>일자', dataIndx: 'CONTROL_CONFIRM_DT', width: 60,
                 render: function (ui) {
@@ -680,40 +681,22 @@
                     let labelBtn = '';
                     // console.log("ui.rowData['PART_NUM']",ui.rowData['PART_NUM']);
                     if (ui.rowData['PART_NUM'] === undefined) {//part 있음 모든 버튼 안보이게
-                        // console.log("ui.rowData['OUT_FINISH_DT']",ui.rowData['OUT_FINISH_DT']);
-                        // console.log("ui.rowData['ORDER_SEQ']",ui.rowData['ORDER_SEQ']);
-                        // console.log("ui.rowData['ORDER_QTY']",ui.rowData['ORDER_QTY']);
                         if (ui.rowData['ORDER_SEQ'] !== undefined) {
                             if (ui.rowData['OUT_FINISH_DT'] !== undefined || ui.rowData['ORDER_PACKING_NUM_CNT'] > 0) {// 출고완료
-                                outBtn = '<button type=\"button\" class=\"miniBtn gray\" style=\"color: #777 !important;\">출고</button>' + '&nbsp;';
-                                returnBtn = '<button type=\"button\" class=\"miniBtn orange\" id=\"returnBtn\"  data-control_seq=\"' + rowData.CONTROL_SEQ + '\" data-control_detail_seq=\"' + rowData.CONTROL_DETAIL_SEQ + '\" data-order_seq=\"' + rowData.ORDER_SEQ + '\">반품</button>' + '&nbsp;';
+                                outBtn = '<button type="button" class="miniBtn gray" style="color: #777777 !important;">출고</button>' + '&nbsp;';
+                                returnBtn = '<button type="button" class="miniBtn orange" id="returnBtn"  data-control_seq=\"' + rowData.CONTROL_SEQ + '\" data-control_detail_seq=\"' + rowData.CONTROL_DETAIL_SEQ + '\" data-order_seq=\"' + rowData.ORDER_SEQ + '\">반품</button>' + '&nbsp;';
                             } else {
-                                outBtn = '<button type=\"button\" class=\"miniBtn black\" id=\"outBtn\"  data-control_seq=\"' + rowData.CONTROL_SEQ + '\" data-control_detail_seq=\"' + rowData.CONTROL_DETAIL_SEQ + '\" data-order_seq=\"' + rowData.ORDER_SEQ + '\">출고</button>' + '&nbsp;';
-                                returnBtn = '<button type=\"button\" class=\"miniBtn gray\" style=\"color: #777 !important;\">반품</button>' + '&nbsp;';
+                                if (ui.rowData['CONTROL_STATUS_NM'] === '보류') {
+                                    outBtn = '<button type="button" class="miniBtn gray" style="color: #777777 !important;">출고</button>' + '&nbsp;';
+                                } else {
+                                    outBtn = '<button type="button" class="miniBtn black" id="outBtn"  data-control_seq=\"' + rowData.CONTROL_SEQ + '\" data-control_detail_seq=\"' + rowData.CONTROL_DETAIL_SEQ + '\" data-order_seq=\"' + rowData.ORDER_SEQ + '\">출고</button>' + '&nbsp;';
+                                }
+                                returnBtn = '<button type="button" class="miniBtn gray" style="color: #777777 !important;">반품</button>' + '&nbsp;';
                             }
                         }
-
-                        /*if (ui.rowData['OUT_FINISH_DT'] !== undefined){
-                            if (ui.rowData['ORDER_SEQ'] !== undefined){
-                                outBtn = '<button type=\"button\" class=\"miniBtn gray\">출고</button>' + '&nbsp;';
-                            }
-                        }else{
-                            if (ui.rowData['ORDER_SEQ'] !== undefined){
-                                outBtn = '<button type=\"button\" class=\"miniBtn black\" id=\"outBtn\"  data-control_seq=\"'+ rowData.CONTROL_SEQ +'\" data-control_detail_seq=\"'+ rowData.CONTROL_DETAIL_SEQ +'\" data-order_seq=\"'+ rowData.ORDER_SEQ +'\">출고</button>' + '&nbsp;';
-                            }
-                        }
-
-
-                        if (ui.rowData['ORDER_SEQ'] !== undefined){
-                            if (ui.rowData['ORDER_QTY'] !== undefined){
-                                returnBtn = '<button type=\"button\" class=\"miniBtn blue\" id=\"returnBtn\"  data-control_seq=\"'+ rowData.CONTROL_SEQ +'\" data-control_detail_seq=\"'+ rowData.CONTROL_DETAIL_SEQ +'\" data-order_seq=\"'+ rowData.ORDER_SEQ +'\">반품</button>' + '&nbsp;';
-                            }else{
-                                returnBtn = '<button type=\"button\" class=\"miniBtn gray\">반품</button>' + '&nbsp;';
-                            }
-                        }*/
 
                         if (ui.rowData['ORDER_SEQ'] !== undefined) {
-                            labelBtn = '<button type=\"button\" class=\"miniBtn blue\" id=\"labelBtn\"  data-control_seq=\"' + rowData.CONTROL_SEQ + '\" data-control_detail_seq=\"' + rowData.CONTROL_DETAIL_SEQ + '\" data-order_seq=\"' + rowData.ORDER_SEQ + '\">라벨</button>';
+                            labelBtn = '<button type="button" class="miniBtn blue" id="labelBtn"  data-control_seq="' + rowData.CONTROL_SEQ + '" data-control_detail_seq="' + rowData.CONTROL_DETAIL_SEQ + '" data-order_seq="' + rowData.ORDER_SEQ + '">라벨</button>';
                         }
                     }
 
@@ -803,7 +786,7 @@
             // {title: '', align: 'center', dataIndx: 'MANUAL_LABEL', width: 70, minWidth: 70,
             //     render: function (ui) {
             //         let rowIndx = ui.rowIndx, grid = this;
-            //         if (ui.rowData['ORDER_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn orange\">라벨</button>";
+            //         if (ui.rowData['ORDER_SEQ'] > 0) return "<button type=\"button\" class="miniBtn orange">라벨</button>";
             //         return '';
             //     }
             // },
@@ -1442,13 +1425,21 @@
             if (outgoingManageSelectedRowIndex.length === 0) {
                 fnAlert(null, "출고등록할 항목을 선택하여 주십시오.");
             } else {
-                fnConfirm(null, "선택항목을 출고등록 하시겠습니까?", function () {
-                    let list = [];
-                    for (let i = 0; i < outgoingManageSelectedRowIndex.length; i++) {
-                        let rowData = outgoingManageGridId01.pqGrid('getRowData', {rowIndx: outgoingManageSelectedRowIndex[i]});
-                        list.push(rowData);
-                    }
+                let list = [];
+                let controlStatusNmObj = new Set();
 
+                for (let i = 0; i < outgoingManageSelectedRowIndex.length; i++) {
+                    let rowData = outgoingManageGridId01.pqGrid('getRowData', {rowIndx: outgoingManageSelectedRowIndex[i]});
+                    controlStatusNmObj.add(rowData.CONTROL_STATUS_NM);
+                    list.push(rowData);
+                }
+
+                if (controlStatusNmObj.has('보류')) {
+                    fnAlert(null, '보류상태에서는 출고 불가');
+                    return;
+                }
+
+                fnConfirm(null, "선택항목을 출고등록 하시겠습니까?", function () {
                     let changes = {
                         'addList': list,
                         'updateList': list

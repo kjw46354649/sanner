@@ -869,10 +869,10 @@
             , jmes.SF_GET_DATE_F(A.INNER_DUE_DT, 'YYYY', '') AS INNER_DUE_DT <!-- 내부가공납기 -->
             , jmes.SF_GET_DATE_F(A.INNER_WORK_FINISH_DT, 'YYYY', '') AS INNER_WORK_FINISH_DT <!-- 내부 가공완료일시 -->
             , CASE
-                WHEN IFNULL(B.EMERGENCY_YN, 'N') = 'Y' THEN '긴급'
-                ELSE SPACE(0)
-              END AS EMERGENCY_YN <!-- 긴급 -->
-            , jmes.SF_GET_CODE_NM('1059', B.MAIN_INSPECTION, 'KR') AS MAIN_INSPECTION_NM <!-- 주요 검사품 -->
+                WHEN B.CONTROL_STATUS = 'ORD005' THEN '보류'
+                WHEN B.EMERGENCY_YN = 'Y' THEN '긴급'
+              END AS EMERGENCY_HOLD <!-- 긴급 보류 -->
+            , jmes.SF_GET_CODE_NM('1059', B.MAIN_INSPECTION, #{LOGIN_LOCALE}) AS MAIN_INSPECTION_NM <!-- 주요 검사품 -->
             , H.FAIL_STATUS
             , jmes.SF_GET_CODE_NM('1033', A.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM <!-- 형태 -->
             , C.ITEM_NM <!-- 품명 -->
@@ -1019,9 +1019,8 @@
                     , B.EQUIP_NM
                     , IFNULL(jmes.SF_GET_CODE_NM('1010', B.PROCESS_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS NC_WORK_TYPE
                 FROM TBL_MCT_WORK A
-                    INNER JOIN jmes.TBL_EQUIP C ON A.EQUIP_SEQ = C.EQUIP_SEQ
+                    INNER JOIN jmes.TBL_EQUIP B ON B.EQUIP_SEQ = A.EQUIP_SEQ
                 WHERE 1 = 1
-                    AND A.WORK_FINISH_DT IS NOT NULL
                     AND A.DEL_YN = 'N'
                     AND A.MCT_WORK_SEQ IN (SELECT MAX(M.MCT_WORK_SEQ) FROM TBL_MCT_WORK M
                                            WHERE  M.DEL_YN = 'N' AND M.WORK_FINISH_DT IS NOT NULL
@@ -1083,7 +1082,10 @@
         SELECT
             A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.DXF_GFILE_SEQ, A.PDF_GFILE_SEQ, A.IMG_GFILE_SEQ,
             jmes.SF_GET_DATE_F(A.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
-            CASE WHEN IFNULL(B.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN, <!-- 긴급 -->
+            CASE
+                WHEN B.CONTROL_STATUS = 'ORD005' THEN '보류'
+                WHEN B.EMERGENCY_YN = 'Y' THEN '긴급'
+            END AS EMERGENCY_HOLD, <!-- 긴급 보류 -->
             CASE WHEN IFNULL(B.MAIN_INSPECTION, 'N') = 'Y' THEN '주' ELSE SPACE(0) END AS MAIN_INSPECTION, <!-- 주요 검사품 -->
             CASE WHEN A.WORK_TYPE = 'WTP030' THEN '수' WHEN A.WORK_TYPE = 'WTP040' THEN '재' END AS WORK_NM, <!-- 형태 -->
             R.ITEM_NM, <!-- 품명 -->

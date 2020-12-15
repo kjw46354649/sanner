@@ -595,10 +595,13 @@
                 }
             },
             {
-                title: '긴급', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 40,
+                title: '긴급<br>보류', dataIndx: 'EMERGENCY_HOLD', minWidth: 45,
                 render: function (ui) {
-                    if (ui.cellData) {
-                        return {style: 'background-color: #ff0000; color: #ffffff;'};
+                    switch (ui.cellData) {
+                        case '긴급':
+                            return {style: 'background-color: #ff0000; color: #ffffff;'};
+                        case '보류':
+                            return {style: 'background-color: #ffa500; color: #ff0000;'};
                     }
                 }
             },
@@ -921,7 +924,14 @@
             if(rowData.ORIGINAL_SIDE_QTY) orderQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.ORIGINAL_SIDE_QTY + ") </span>";
             $("#cam_work_manage_pop_form").find("#ORDER_QTY").html(orderQty);
             let dueOutDt = rowData.INNER_DUE_DT.slice(5);
-            if(rowData.EMERGENCY_YN === "Y") dueOutDt += " <input type='button' class='smallBtn red' value='긴급'></input>";
+            switch (rowData.EMERGENCY_HOLD) {
+                case '보류':
+                    dueOutDt = " <input type='button' class='smallBtn red' value='보류'>";
+                    break;
+                case '긴급':
+                    dueOutDt += " <input type='button' class='smallBtn red' value='긴급'>";
+                    break;
+            }
             $("#cam_work_manage_pop_form").find("#DUE_OUT_DT").html(dueOutDt);
             let concatDrawingNum = rowData.CONCAT_DRAWING_NUM;
             if(rowData.DRAWING_VER === "Y") concatDrawingNum += " <span> ( " + rowData.DRAWING_VER + ") </span>";

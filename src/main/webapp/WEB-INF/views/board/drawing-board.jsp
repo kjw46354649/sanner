@@ -533,7 +533,7 @@
                     let returnCode = data.returnCode;
                     let curStatus = $("#curStatus").val();
 
-                    if(returnCode == "RET00") {
+                    if (returnCode == "RET00") {
                         if (curStatus == "stop") {
                             startWork(data.info);
                         } else if (curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()) {
@@ -544,9 +544,13 @@
                             $("#drawing_action_form").find("#RE_BARCODE_NUM").val(barcodeNum);
                             $("#workCompletelBtn").trigger('click');
                         }
-                    }else if(returnCode == "RET97"){
+                    } else if (returnCode == "RET97") {
                         fnDrawingDialogAlert('drawingVerErrorHtml', 3);
-                    }else{
+                    } else if (returnCode == "RET96") {
+                        fnConfirm(null, data.message, function () {
+                            startWork(data.info);
+                        });
+                    } else {
                         showMessage(data.message);
                         return false;
                     }
@@ -1105,8 +1109,29 @@
             }
         };
 
-        // fnDrawingAlertDialogAlert('completeDivHtml', 9999);
-
+        const fnConfirm = function (title, message, onok, oncancel, autoOk) {
+            if (autoOk == undefined || autoOk == null) {
+                alertify.confirm()
+                    .setting({
+                        'title': title,
+                        'message': message,
+                        'onok': onok,
+                        'oncancel': oncancel,
+                        'movable': false,
+                        'transitionOff': true
+                    }).show();
+            } else {
+                alertify.confirm()
+                    .setting({
+                        'title': title,
+                        'message': message,
+                        'onok': onok,
+                        'oncancel': oncancel,
+                        'movable': false,
+                        'transitionOff': true
+                    }).show().autoOk(autoOk);
+            }
+        };
         /** Main 페이지 로딩시 Body 기본으로 Focus 되도록 처리 **/
         setFocusBody();
 
