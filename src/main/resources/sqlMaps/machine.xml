@@ -453,7 +453,6 @@
                     INNER JOIN jmes.TBL_EQUIP C ON A.EQUIP_SEQ = C.EQUIP_SEQ AND C.PROCESS_TYPE = 'MPR010'
                 WHERE 1 = 1
                     AND A.DEL_YN = 'N'
-                    AND A.WORK_FINISH_DT IS NOT NULL
                     AND A.MCT_WORK_SEQ IN (SELECT MAX(X.MCT_WORK_SEQ) FROM TBL_MCT_WORK X
                                            WHERE  X.DEL_YN = 'N' AND X.WORK_FINISH_DT IS NOT NULL
                                            GROUP BY X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
