@@ -55,31 +55,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void createNewOrderConfirm(Map<String, Object> map) throws Exception {
-        String jsonObject = (String) map.get("data");
-        ObjectMapper objectMapper = new ObjectMapper();
-        ArrayList<Map<String, Object>> jsonMap = null;
-        Map<String, Object> hashMap = new HashMap<String, Object>();
-        String uuid = UUID.randomUUID().toString();
-
-        if (jsonObject != null) {
-            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {});
-        }
-
-        for (Map<String, Object> tempMap : jsonMap) {
-            tempMap.put("CONTROL_STATUS", "ORD001");
-        }
-
-        hashMap.put("list", jsonMap);
-        hashMap.put("IN_UID", uuid);
-
-        hashMap.put("queryId", "orderMapper.createControlExcel");
-        this.innodaleDao.create(hashMap);
-        hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
-        this.innodaleDao.create(hashMap);
-    }
-
-    @Override
     public void removeControl(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();

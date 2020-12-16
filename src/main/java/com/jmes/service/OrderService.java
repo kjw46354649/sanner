@@ -8,8 +8,6 @@ public interface OrderService {
 
     void createNewOrder(Model model, Map<String, Object> map) throws Exception;
 
-    void createNewOrderConfirm(Map<String, Object> map) throws Exception;
-
     void removeControl(Map<String, Object> map) throws Exception;
 
     void managerControlStatus(Map<String, Object> map) throws Exception;

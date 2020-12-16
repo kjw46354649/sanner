@@ -30,18 +30,6 @@ public class OrderController {
     }
 
     /**
-     * @description 신규 주문 등록 & 확정
-     */
-    @RequestMapping(value = "/createNewOrderConfirm", method = RequestMethod.POST)
-    public String createNewOrderConfirm(HttpServletRequest request) throws Exception {
-        Map<String, Object> map = CommonUtility.getParameterMap(request);
-
-        this.orderService.createNewOrderConfirm(map);
-
-        return "jsonView";
-    }
-
-    /**
      * @description 주문 삭제
      */
     @RequestMapping(value = "/removeControl", method = RequestMethod.POST)
