@@ -103,7 +103,7 @@
                                 </select>
                             </span>
                             <span class="ipu_wrap right_float">
-                                <button type="button" class="defaultBtn radius blue" id="btnEstimateListSearch">검색</button>
+                                <button type="button" class="defaultBtn radius blue" id="material_close_search">검색</button>
                             </span>
                         </li>
                     </ul>
