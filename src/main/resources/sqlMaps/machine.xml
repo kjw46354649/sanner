@@ -1015,8 +1015,8 @@
 					, A.WORK_STATUS
 					, jmes.SF_GET_CODE_NM('1079', A.WORK_STATUS, #{LOGIN_LOCALE}) AS WORK_STATUS_NM
 					, jmes.SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) AS WORKING_TIME
-                    , B.EQUIP_NM
-                    , IFNULL(jmes.SF_GET_CODE_NM('1010', B.PROCESS_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS NC_WORK_TYPE
+                    , C.EQUIP_NM
+                    , IFNULL(jmes.SF_GET_CODE_NM('1010', C.PROCESS_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS NC_WORK_TYPE
                 FROM TBL_MCT_WORK A
                     INNER JOIN jmes.TBL_EQUIP C ON A.EQUIP_SEQ = C.EQUIP_SEQ
                 WHERE 1 = 1
