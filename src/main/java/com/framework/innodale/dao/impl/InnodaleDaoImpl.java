@@ -17,7 +17,7 @@ public class InnodaleDaoImpl implements InnodaleDao {
     SqlSessionTemplate sqlSessionTemplate;
 
     public int createKeyReturn(Map<String, Object> hashMap) throws SQLException {
-        return sqlSessionTemplate.insert((String)hashMap.get("queryId"), hashMap);
+        return sqlSessionTemplate.selectOne((String)hashMap.get("queryId"), hashMap);
     }
 
     public void create(Map<String, Object> hashMap) throws SQLException {
