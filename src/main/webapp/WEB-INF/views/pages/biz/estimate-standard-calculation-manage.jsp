@@ -455,7 +455,9 @@
                     {title: 'loss', maxWidth: 55, /*align: 'right',*/ dataType: 'integer', /*format: '#,###',*/ dataIndx: 'LOSS_3'}
                 ]
             },
-            {title: '규격<br>소재<br>여부',/* align: 'left',*/ dataIndx: 'RANGE_SIZE_YN'},
+            {
+                title: '규격<br>소재<br>여부', dataIndx: 'RANGE_SIZE_YN',
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')}},
             {title: '규격 Size', align: 'left', dataIndx: 'SIZE_NUM'},
             {title: '비고',/* align: 'left',*/ dataIndx: 'NOTE'}
         ];

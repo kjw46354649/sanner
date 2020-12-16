@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class EstimateController {
@@ -36,6 +37,36 @@ public class EstimateController {
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
         this.estimateService.registerEstimateOrder(hashMap);
+
+        return "jsonView";
+    }
+
+    /**
+     * @description 소재비 등록
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/insertMaterialCost", method = RequestMethod.POST)
+    public String insertMaterialCost(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.estimateService.insertMaterialCost(map);
+
+        return "jsonView";
+    }
+
+    /**
+     * @description 소재비 삭제
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/deleteMaterialCost", method = RequestMethod.POST)
+    public String deleteMaterialCost(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.estimateService.deleteMaterialCost(map);
 
         return "jsonView";
     }

@@ -820,7 +820,8 @@
             <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
                 AND A.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
             </if>
-        ORDER BY A.MATERIAL_KIND IS NULL, A.MATERIAL_TYPE IS NULL, A.MATERIAL_DETAIL IS NULL
+        ORDER BY A.MATERIAL_KIND, A.MATERIAL_TYPE, A.MATERIAL_DETAIL,
+            CASE B.RANGE_TYPE WHEN 'W' THEN 0 WHEN  'H' THEN 1 WHEN  'T' THEN 2 WHEN  'D' THEN 3 WHEN  'L' THEN 4 END
     </select>
 
     <insert id="insertMaterialCost" parameterType="java.util.HashMap">
@@ -868,7 +869,7 @@
             , #{LOSS_1}
             , #{LOSS_2}
             , #{LOSS_3}
-            , #{RANGE_SIZE_YN}
+            , IFNULL(#{RANGE_SIZE_YN}, 'N')
             , NOW()
             , #{LOGIN_USER_ID}
         )
@@ -879,7 +880,7 @@
             LOSS_1 = #{LOSS_1},
             LOSS_2 = #{LOSS_2},
             LOSS_3 = #{LOSS_3},
-            RANGE_SIZE_YN = #{RANGE_SIZE_YN},
+            RANGE_SIZE_YN = IFNULL(#{RANGE_SIZE_YN}, 'N'),
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
