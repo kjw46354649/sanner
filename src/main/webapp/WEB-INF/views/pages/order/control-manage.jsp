@@ -2322,6 +2322,22 @@
         });
 
         $('#CONTROL_MANAGE_SAVE').on('click', function () {
+            // 관리번호 수정 여부 확인
+            let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
+            let changes = gridInstance.getChanges({format: 'byVal'});
+            let parameters = {'url': '/validationCheckBeforeSaveFromControl', 'data': {data: JSON.stringify(changes)}};
+
+            fnPostAjax(function (data) {
+                let flag = data.flag;
+                let message = data.message;
+
+                if (flag) {
+                    fnAlert(null, message);
+                    return false;
+                }
+            }, parameters, '');
+
+            // TODO: 소재비 저장 && 트랜잭션 하나로
             const insertQueryList = ['orderMapper.createControlPart', 'orderMapper.createControlPartOrder', 'orderMapper.createControlBarcode', 'orderMapper.createOutBarcode'];
             const updateQueryList = ['orderMapper.updateControlFromControlManage', 'orderMapper.updateControlPartFromControlManage', 'orderMapper.updateControlPartOrderFromControlManage'];
 

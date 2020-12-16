@@ -3075,4 +3075,12 @@
             AND A.DEL_YN = 'N'
             AND B.ORDER_SEQ = #{NEXT_ORDER_SEQ}
     </insert>
+
+    <select id="selectCheckControlDuplicate" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+        SELECT EXISTS (	SELECT *
+                        FROM TBL_CONTROL
+                        WHERE DEL_YN = 'N'
+                            AND CONTROL_NUM = #{CONTROL_NUM}
+                      )
+    </select>
 </mapper>

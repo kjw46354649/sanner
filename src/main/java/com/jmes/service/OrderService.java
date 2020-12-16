@@ -25,4 +25,6 @@ public interface OrderService {
     void updateControlConfirmProcess(Map<String, Object> map) throws Exception;
 
     void mergeControl(Model model, Map<String, Object> map) throws Exception;
+
+    void validationCheckBeforeSaveFromControl(Model model, Map<String, Object> map) throws Exception;
 }

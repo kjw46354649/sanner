@@ -134,4 +134,20 @@ public class OrderController {
 
         return "jsonView";
     }
+
+    /**
+     * @description 주문관리 저장 검사
+     * @param model
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/validationCheckBeforeSaveFromControl", method = RequestMethod.POST)
+    public String validationCheckBeforeSaveFromControl(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.validationCheckBeforeSaveFromControl(model, map);
+
+        return "jsonView";
+    }
 }

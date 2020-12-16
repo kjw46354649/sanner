@@ -438,4 +438,60 @@ public class OrderServiceImpl implements OrderService {
         model.addAttribute("flag", flag);
         model.addAttribute("message", message);
     }
+
+    @Override
+    public void validationCheckBeforeSaveFromControl(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        ArrayList<HashMap<String, Object>> oldList = null;
+        ArrayList<HashMap<String, Object>> addList = null;
+        ArrayList<HashMap<String, Object>> updateList = null;
+
+        boolean flag = false;
+        String message = "";
+        String action = "";
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("ACTION"))
+            action = (String) jsonMap.get("ACTION");
+
+        if (jsonMap.containsKey("oldList"))
+            oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
+
+        if (jsonMap.containsKey("addList"))
+            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
+
+        if (jsonMap.containsKey("updateList"))
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+        /*if (addList != null && addList.size() > 0) {
+            for (HashMap<String, Object> hashMap : addList) {
+
+            }
+        }*/
+
+        if (updateList != null && updateList.size() > 0 && !flag) {
+            for(int i = 0; i < updateList.size(); i++) {
+                HashMap<String, Object> hashMap = updateList.get(i);
+
+                if (oldList.get(i).containsKey("CONTROL_NUM")) {
+                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
+                    if (this.orderDao.getFlag(hashMap)) {
+                        flag = true;
+                        //TODO: 문구수정
+                        message = "관리번호 수정시 기존에 존재하는 관리번호가 있으면 저장시 에러가 나도록 해야함";
+                        break;
+                    }
+                }
+
+            }
+        }
+
+        model.addAttribute("flag", flag);
+        model.addAttribute("message", message);
+    }
 }
