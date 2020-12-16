@@ -424,7 +424,29 @@
                 }
             },
             {title: '비중', dataType: 'float', format: '#,###.0', dataIndx: 'SPECIFIC_GRAVITY'},
-            {title: '계산방식', dataIndx: 'CALC_METHOD'},
+            {
+                title: '계산방식',dataIndx: 'CALC_METHOD', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1087')},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '' || cellData === undefined) {
+                        return '';
+                    } else {
+                        let data = fnGetCommCodeGridSelectBox('1087');
+                        let index = data.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = data.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : data[index].text;
+                    }
+                }
+            },
             {title: '단가(원)', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT'},
             {title: '최소금액(원)', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MIN_AMT'},
             {
@@ -733,6 +755,13 @@
         /* function */
 
         /* event */
+        $('#material_close_search').on('click', function () {
+            $materialCloseGrid.pqGrid('option', 'dataModel.postData', function () {
+                return fnFormToJsonArrayData('#material_close_form');
+            });
+            $materialCloseGrid.pqGrid('refreshDataAndView');
+        });
+
         $("#material_close_add").on('click', function () {
             const totalRecords = $materialCloseGrid.pqGrid('option', 'dataModel.data').length;
 
