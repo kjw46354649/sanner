@@ -940,7 +940,14 @@
             if (rowData.ORIGINAL_SIDE_QTY) controlPartQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.ORIGINAL_SIDE_QTY + ") </span>";
             $("#cam_work_history_pop_form").find("#CONTROL_PART_QTY").html(controlPartQty);
             let dueOutDt = rowData.INNER_DUE_DT;
-            if (rowData.EMERGENCY_YN === "Y" || rowData.EMERGENCY_YN === "긴") dueOutDt += " <input type='button' class='smallBtn red' value='긴급'>";
+            switch (rowData.EMERGENCY_HOLD) {
+                case '보류':
+                    dueOutDt = " <input type='button' class='smallBtn red' value='보류'>";
+                    break;
+                case '긴급':
+                    dueOutDt += " <input type='button' class='smallBtn red' value='긴급'>";
+                    break;
+            }
             $("#cam_work_history_pop_form").find("#DUE_OUT_DT").html(dueOutDt);
             $("#cam_work_history_pop_form").find("#DRAWING_NUM").html(rowData.CONCAT_DRAWING_NUM);
             $("#cam_work_history_pop_form").find("#WORK_TYPE").html(rowData.WORK_TYPE_NM);

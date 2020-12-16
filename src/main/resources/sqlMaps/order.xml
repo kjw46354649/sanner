@@ -243,7 +243,7 @@
                                                                                 AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
                 WHERE 1 = 1
                     AND A.DEL_YN = 'N'
-                    AND (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002'))
+                    AND (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002', 'ORD005'))
                 <choose>
                     <!-- 주문 상태 -->
                     <when test="CONTROL_SEARCH_CONDITION == 'OCM00'">
@@ -255,7 +255,7 @@
                     </when>
                     <!-- 가공 납기 -->
                     <when test="CONTROL_SEARCH_CONDITION == 'OCM02'">
-                        AND DATE_FORMAT(B.INNER_DUE_DT, '%Y%m%d') BETWEEN #{CONTROL_MANAGE_START_DATE} AND #{CONTROL_MANAGE_END_DATE}
+                        AND DATE_FORMAT(B.INNER_DUE_DT, '%Y/%m/%d') BETWEEN #{CONTROL_MANAGE_START_DATE} AND #{CONTROL_MANAGE_END_DATE}
                     </when>
                     <!-- Update일시 -->
                     <when test="CONTROL_SEARCH_CONDITION == 'OCM03'">
@@ -1732,7 +1732,8 @@
                                     AND M.DRAWING_NUM = B.DRAWING_NUM
                                 ORDER BY M.CONTROL_SEQ DESC
                                 LIMIT 1)
-                    END, SPACE(0)) AS PREV_UNIT_FINAL_AMT <!-- 종전가 -->
+                    END, SPACE(0)) AS PREV_UNIT_FINAL_AMT, <!-- 종전가 -->
+            (SELECT M.BARCODE_NUM FROM TBL_CONTROL_BARCODE M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N') AS CONTROL_BARCODE_NUM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             <if test="VISIBLE_PART == null">
@@ -3056,4 +3057,12 @@
             AND A.DEL_YN = 'N'
             AND B.ORDER_SEQ = #{NEXT_ORDER_SEQ}
     </insert>
+
+    <select id="selectCheckControlDuplicate" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+        SELECT EXISTS (	SELECT *
+                        FROM TBL_CONTROL
+                        WHERE DEL_YN = 'N'
+                            AND CONTROL_NUM = #{CONTROL_NUM}
+                      )
+    </select>
 </mapper>

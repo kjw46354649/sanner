@@ -8,8 +8,6 @@ public interface OrderService {
 
     void createNewOrder(Model model, Map<String, Object> map) throws Exception;
 
-    void createNewOrderConfirm(Map<String, Object> map) throws Exception;
-
     void removeControl(Map<String, Object> map) throws Exception;
 
     void managerControlStatus(Map<String, Object> map) throws Exception;
@@ -27,4 +25,6 @@ public interface OrderService {
     void updateControlConfirmProcess(Map<String, Object> map) throws Exception;
 
     void mergeControl(Model model, Map<String, Object> map) throws Exception;
+
+    void validationCheckBeforeSaveFromControl(Model model, Map<String, Object> map) throws Exception;
 }

@@ -889,25 +889,25 @@
         });
         // 도면출력
         $('#CLOSE_HISTORY_DRAWING_PRINT').on('click', function () {
-            let selectedRowCount = selectedRowIndex.length;
-            let imgGfileSeq = '';
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $closeHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-                if (!rowData.IMG_GFILE_SEQ) {
-                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
-                    return;
-                } else {
-                    imgGfileSeq += rowData.IMG_GFILE_SEQ + '^';
-                }
+            if (noSelectedRowAlert()) return false;
+
+            let selectControlList = '';
+            let drawingNumList = new Set();
+
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                const rowData = $closeHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
+                selectControlList += String(rowData.CONTROL_SEQ) + String(rowData.CONTROL_DETAIL_SEQ) + '|';
+                drawingNumList.add(rowData.DRAWING_NUM);
             }
 
-            // let drawingPrintModalConfirm = function(callback){
-            let message = '<h4>' +
-                '           <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-                '               <span>' + selectedRowCount + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
-                '       </h4>';
+            const message =
+                '<h4>' +
+                '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                '   <span>' + drawingNumList.size + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                '</h4>';
             fnConfirm(null, message, function () {
-                printJS({printable: '/makeCadPrint?imgGfileSeq=' + encodeURI(imgGfileSeq), type: 'pdf', showModal: true});
+                printJS({printable: '/makeCadPrint?selectControlList=' + encodeURI(selectControlList), type: 'pdf', showModal: true});
             });
         });
         // 바코드도면출력
@@ -925,7 +925,7 @@
                     return;
                 // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
                 } else if(selectControlPartInfo !== curControlPartInfo){
-                    selectControlList += rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ + '^';
+                    selectControlList += String(rowData.CONTROL_SEQ) + String(rowData.CONTROL_DETAIL_SEQ) + '|';
                     selectControlPartCount++;
                     selectControlPartInfo = curControlPartInfo;
                 }

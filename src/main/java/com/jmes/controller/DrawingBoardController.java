@@ -6,7 +6,6 @@ import com.framework.innodale.entity.MessageType;
 import com.framework.innodale.entity.NotificationMessage;
 import com.framework.innodale.service.InnodaleService;
 import com.jmes.service.DrawingBoardService;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 @Controller
@@ -83,8 +81,10 @@ public class DrawingBoardController {
             String chkVer = (String) controlPartInfo.get("CHE_VER");      // 최선 바코드 정보와 스캔 바코드의 DRAWING_NUM 가 다른경우
             String chkDelYn = (String) controlPartInfo.get("CHE_DEL_YN");   // 주문 정보가 삭제된 경우
             String chkCancelYn = (String) controlPartInfo.get("CHE_CANCEL_YN");// 주문 취소가 된 경우
+            String chkHoldYn = (String) controlPartInfo.get("CHE_HOLD_YN");// 주문 보류 된 경우
 
             String controlInfo = (String) controlPartInfo.get("CONTROL_INFO"); // 일자
+            System.out.println(controlInfo);
 
             if("X".equals(chkDelYn)){
                 model.addAttribute("returnCode", "RET99");
@@ -101,6 +101,9 @@ public class DrawingBoardController {
             }else if("X".equals(chkPop)) {
                 model.addAttribute("returnCode", "RET99");
                 model.addAttribute("message", controlInfo + " POP를 먼저 찍어 주세요. (Scan POP First)"); // 현재와 같은 Location 스캔 처리
+            }else if("X".equals(chkHoldYn)) {
+                model.addAttribute("returnCode", "RET96");
+                model.addAttribute("message", controlInfo + "<br><br>현재 <span style=\"color: red;\">'보류'</span>상태입니다.<br>계속 진행하시겠습니까?");
             }else {
 
                 model.addAttribute("info", controlPartInfo);

@@ -216,7 +216,7 @@
 
 
     <select id="selectCommItemDetailInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+        SELECT A.CONTROL_STATUS, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
           , CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' # ', IFNULL(B.PART_NUM, SPACE(0))) END AS CONTROL_NUM
           , jmes.SF_GET_DRAWING_NUMBERS(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, 'Y') AS DRAWING_NUM
           , jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT
@@ -433,6 +433,7 @@
     <select id="selectOutgoingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
               T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ, T.INSPECT_SEQ
+            , T.CONTROL_STATUS_NM
             , T.ORDER_COMP_NM
             , T.ORDER_NUM
             , jmes.SF_GET_DATE_F(T.ORDER_DUE_DT,'YY','') AS ORDER_DUE_DT
@@ -476,6 +477,7 @@
         FROM (
             SELECT
                   X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ, X.INSPECT_SEQ
+                , jmes.SF_GET_CODE_NM('1038', X.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM
                 , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
                 , X.ORDER_NUM
                 , X.ORDER_DUE_DT
@@ -545,6 +547,7 @@
             FROM (
                 SELECT
                     C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
+                    , A.CONTROL_STATUS
                     , (SELECT MAX(M.MCT_WORK_SEQ) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N') AS MCT_WORK_SEQ
                     , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ) AS INSPECT_SEQ
                     , ( SELECT MAX(M.POP_SEQ) FROM jmes.TBL_POP M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ) AS POP_SEQ

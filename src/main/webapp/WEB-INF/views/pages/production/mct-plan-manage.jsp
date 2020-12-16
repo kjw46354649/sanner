@@ -38,22 +38,22 @@
         <div class="conWrap">
             <div class="tableWrap">
                 <ul>
-                    <li id="layout_1_1" style="min-width: 500px;"></li>
-                    <li id="layout_1_2" style="min-width: 500px;"></li>
-                    <li id="layout_1_3" style="min-width: 500px;"></li>
-                    <li id="layout_1_4" style="min-width: 500px;"></li>
-                    <li id="layout_1_5" style="min-width: 500px;"></li>
-                    <li id="layout_1_6" style="min-width: 500px;"></li>
-                    <li id="layout_1_7" style="min-width: 500px;"></li>
+                    <li id="layout_1_1" style="min-width: 400px;"></li>
+                    <li id="layout_1_2" style="min-width: 400px;"></li>
+                    <li id="layout_1_3" style="min-width: 400px;"></li>
+                    <li id="layout_1_4" style="min-width: 400px;"></li>
+                    <li id="layout_1_5" style="min-width: 400px;"></li>
+                    <li id="layout_1_6" style="min-width: 400px;"></li>
+                    <li id="layout_1_7" style="min-width: 400px;"></li>
                 </ul>
                 <ul>
-                    <li id="layout_2_1" style="min-width: 500px;"></li>
-                    <li id="layout_2_2" style="min-width: 500px;"></li>
-                    <li id="layout_2_3" style="min-width: 500px;"></li>
-                    <li id="layout_2_4" style="min-width: 500px;"></li>
-                    <li id="layout_2_5" style="min-width: 500px;"></li>
-                    <li id="layout_2_6" style="min-width: 500px;"></li>
-                    <li id="layout_2_7" style="min-width: 500px;"></li>
+                    <li id="layout_2_1" style="min-width: 400px;"></li>
+                    <li id="layout_2_2" style="min-width: 400px;"></li>
+                    <li id="layout_2_3" style="min-width: 400px;"></li>
+                    <li id="layout_2_4" style="min-width: 400px;"></li>
+                    <li id="layout_2_5" style="min-width: 400px;"></li>
+                    <li id="layout_2_6" style="min-width: 400px;"></li>
+                    <li id="layout_2_7" style="min-width: 400px;"></li>
                 </ul>
             </div>
         </div>
@@ -207,7 +207,7 @@
             str += '                <span id="NC' + order + '_WORK_USER_ID"></span>';
             str += '            </span>';
             str += '            <p class="listTxt" style="display: none;">';
-            str += '                <span id="NC' + order + '_CONTROL_NUM"></span>';
+            str += '                <span id="NC' + order + '_CONTROL_NUM" style="text-decoration: underline; cursor: pointer;"></span>';
             str += '                <span id="NC' + order + '_PART_UNIT_QTY"></span>';
             str += '                <span id="NC' + order + '_MATERIAL_TYPE"></span>';
             str += '                <span id="NC' + order + '_WORK_TIME"></span>';
@@ -269,22 +269,37 @@
         const processPlanColModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
-            {title: 'EQUIP_SEQ', dataType: 'string', dataIndx: 'EQUIP_SEQ', hidden: true},
+            {title: 'EQUIP_SEQ', dataIndx: 'EQUIP_SEQ', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'MCT_PLAN_SEQ', dataType: 'integer', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
-            // {title: 'WORK_USER_ID', dataType: 'string', dataIndx: 'WORK_USER_ID', hidden: true},
-            // {title: 'WORK_STATUS', dataType: 'string', dataIndx: 'WORK_STATUS', hidden: true},
+            // {title: 'WORK_USER_ID', dataIndx: 'WORK_USER_ID', hidden: true},
+            // {title: 'WORK_STATUS', dataIndx: 'WORK_STATUS', hidden: true},
             {title: 'SORT_NUM', dataType: 'integer', dataIndx: 'SORT_NUM', hidden: true},
-            {title: '납기', width: 50, dataType: 'string', dataIndx: 'INNER_DUE_DT'},
-            {title: '관리번호', width: 175, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '수량', width: 75, dataType: 'string', dataIndx: 'CONTROL_PART_QTY'},
-            {title: '재질', width: 75, dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden: true},
-            {title: '재질', width: 75, dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM_SUBSTR'},
-            {title: '예상', width: 75, dataType: 'string', dataIndx: 'WORKING_TIME'},
+            {title: '납기', minWidth: 40, dataIndx: 'INNER_DUE_DT'},
+            {title: '관리번호', width: 175, dataIndx: 'CONTROL_NUM'},
             {
-                title: '', minWidth: 30, dataType: 'string', dataIndx: 'DELETE_BUTTON', editable: false,
+                title: '', minWidth: 25, dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background': '#a9d3f5'},
                 render: function (ui) {
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>';
+                    else return '';
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('#imageView').bind('click', function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
+            {title: '수량', minWidth: 30, width: 30, dataIndx: 'CONTROL_PART_QTY'},
+            {title: '재질', width: 50, dataIndx: 'MATERIAL_TYPE', hidden: true},
+            {title: '재질', width: 50, dataIndx: 'MATERIAL_TYPE_NM_SUBSTR'},
+            {title: '예상', width: 50, dataIndx: 'WORKING_TIME'},
+            {
+                title: '', minWidth: 30, dataIndx: 'DELETE_BUTTON', editable: false,
+                render: function () {
                     return '<span class="ui-icon ui-icon-circle-minus" name="MCT_PLAN_DELETE_BUTTON" style="cursor: pointer"></span>'
                 },
                 postRender: function (ui) {
@@ -331,12 +346,12 @@
             },
             complete: function () {
                 let data = this.options.dataModel.data;
-                let totalRecords = data.length;
+                // let totalRecords = data.length;
                 let tableElement = this.element.closest('.table');
                 let equipSeq = tableElement.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
                 let parameters = {'url': '/json-list', 'data': {'queryId': 'machine.selectProcessPlanGridInfo', 'EQUIP_SEQ': equipSeq}};
 
-                fnPostAjax(function (data, callFunctionParam) {
+                fnPostAjax(function (data) {
                     let rowData = data.list[0];
                     changeTitleColor(rowData.EQUIP_STATUS, tableElement);
                     rowData.EQUIP_STATUS === undefined ? showTitle(null, tableElement) : showTitle(rowData, tableElement);
@@ -671,6 +686,7 @@
 
         /**
          * @description
+         * @param thisObject
          * @param {object | jQuery} grid
          */
         const changeSortNum = function (thisObject, grid) {
@@ -727,6 +743,10 @@
                 equipNmElement.html(data.EQUIP_NM);
                 workUserIdElement.html(data.WORK_USER_NM);
                 controlNumElement.html(data.CONTROL_NUM);
+                controlNumElement.removeAttr('onClick');
+                if (data.CONTROL_SEQ && data.CONTROL_DETAIL_SEQ) {
+                    controlNumElement.attr('onClick', 'g_item_detail_pop_view(' + data.CONTROL_SEQ + ',' + data.CONTROL_DETAIL_SEQ + ');');
+                }
                 materialTypeElement.html(data.MATERIAL_TYPE_NM_SUBSTR);
                 partUnitQtyElement.html(data.CONTROL_PART_QTY);
                 workTimeElement.html(data.WORK_TIME);
@@ -782,10 +802,8 @@
         const gridChange = function (thisObject, ui) {
             if(ui.source === 'addNodes') {
                 let $grid = $(thisObject.element.context);
-                let ROWNUM = $grid.pqGrid('option', 'dataModel.data').length;
-                let equipSeq = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
-                ui.addList[0].newRow.EQUIP_SEQ = equipSeq;
-                ui.addList[0].newRow.ROWNUM = ROWNUM;
+                ui.addList[0].newRow.EQUIP_SEQ = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
+                ui.addList[0].newRow.ROWNUM = $grid.pqGrid('option', 'dataModel.data').length;
                 // changeSortNum(thisObject, $grid);
                 modifyPQGrid($(thisObject.element.context), insertQueryList, [], []);
             } else if (ui.source === 'edit' || ui.source === 'update') {

@@ -55,31 +55,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void createNewOrderConfirm(Map<String, Object> map) throws Exception {
-        String jsonObject = (String) map.get("data");
-        ObjectMapper objectMapper = new ObjectMapper();
-        ArrayList<Map<String, Object>> jsonMap = null;
-        Map<String, Object> hashMap = new HashMap<String, Object>();
-        String uuid = UUID.randomUUID().toString();
-
-        if (jsonObject != null) {
-            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {});
-        }
-
-        for (Map<String, Object> tempMap : jsonMap) {
-            tempMap.put("CONTROL_STATUS", "ORD001");
-        }
-
-        hashMap.put("list", jsonMap);
-        hashMap.put("IN_UID", uuid);
-
-        hashMap.put("queryId", "orderMapper.createControlExcel");
-        this.innodaleDao.create(hashMap);
-        hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
-        this.innodaleDao.create(hashMap);
-    }
-
-    @Override
     public void removeControl(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -457,6 +432,62 @@ public class OrderServiceImpl implements OrderService {
                         this.innodaleDao.remove(hashMap);
                     }
                 }
+            }
+        }
+
+        model.addAttribute("flag", flag);
+        model.addAttribute("message", message);
+    }
+
+    @Override
+    public void validationCheckBeforeSaveFromControl(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        ArrayList<HashMap<String, Object>> oldList = null;
+        ArrayList<HashMap<String, Object>> addList = null;
+        ArrayList<HashMap<String, Object>> updateList = null;
+
+        boolean flag = false;
+        String message = "";
+        String action = "";
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("ACTION"))
+            action = (String) jsonMap.get("ACTION");
+
+        if (jsonMap.containsKey("oldList"))
+            oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
+
+        if (jsonMap.containsKey("addList"))
+            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
+
+        if (jsonMap.containsKey("updateList"))
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+        /*if (addList != null && addList.size() > 0) {
+            for (HashMap<String, Object> hashMap : addList) {
+
+            }
+        }*/
+
+        if (updateList != null && updateList.size() > 0 && !flag) {
+            for(int i = 0; i < updateList.size(); i++) {
+                HashMap<String, Object> hashMap = updateList.get(i);
+
+                if (oldList.get(i).containsKey("CONTROL_NUM")) {
+                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
+                    if (this.orderDao.getFlag(hashMap)) {
+                        flag = true;
+                        //TODO: 문구수정
+                        message = "관리번호 수정시 기존에 존재하는 관리번호가 있으면 저장시 에러가 나도록 해야함";
+                        break;
+                    }
+                }
+
             }
         }
 

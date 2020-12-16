@@ -233,8 +233,10 @@ option { font-size: 12px; }
 .radio_box input[type="radio"] { position: absolute; top: 0px; left: 0; }
 .radio_box label:before { content: ""; position: absolute; top: 5px; left: 0px; width: 16px; height: 16px; background: url(../images/common/ico_radio.png) no-repeat 0 0 }
 .radio_box input[type="radio"]:checked + label::before { background: url(../images/common/ico_radio_on.png) no-repeat 0 0 }
+.radio_box input[type="radio"]:disabled + label::before { background: url(../images/common/ico_radio_di.png) no-repeat 0 0 }
+.radio_box input[type="radio"]:disabled:checked + label::before { background: url(../images/common/ico_radio_di.png) no-repeat 0 0 }
 .radio_box input:disabled + label:before { background: url(../images/common/ico_radio_di.png) no-repeat 0 0 }
-.radio_box input:disabled:checked + label:before { background: url(../images/common/ico_radio_on_di.png) no-repeat 0 0 }
+.radio_box input:disabled:checked + label:before { background: url(../images/common/ico_radio_di.png) no-repeat 0 0 }
 .radio_box.type label { width: 16px; height: 16px; padding-left: 0; font-size: 0 }
 .radio_box~.radio_box { margin-left: 20px; }
 
@@ -477,8 +479,8 @@ table.boardList .txtP{color: #7030a0;}
 .floppyDiskDisable { display: inline-block; width: 17px;height: 17px; background: url(../images/common/floppy_disk_disalbe.png) no-repeat; background-size: 17px; }
 
 .blink {
-  -webkit-animation: blink 1s linear infinite alternate;
-  animation: blink 1s linear infinite alternate;
+  -webkit-animation: blink 1s linear 1s infinite normal;
+  animation: blink 1s linear 1s infinite normal;
 }
 
 @-webkit-keyframes blink {

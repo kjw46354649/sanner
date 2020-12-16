@@ -388,6 +388,7 @@
                         <span class="chk_box"><input id="SEL_ASSEMBLY" name="SEL_ASSEMBLY" type="checkbox"><label for="SEL_ASSEMBLY">조립포함</label></span>
                         <span class="chk_box"><input id="SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox"><label for="SEL_OUTSIDE_YN">외주포함</label></span>
                         <span class="chk_box"><input id="SEL_COMPLETED_YN" name="SEL_COMPLETED_YN" type="checkbox" checked><label for="SEL_COMPLETED_YN">가공완료제외</label></span>
+                        <span class="chk_box"><input id="INCLUDE_UNALLOCATED_WAIT" name="INCLUDE_UNALLOCATED_WAIT" type="checkbox"><label for="INCLUDE_UNALLOCATED_WAIT">미할당 대기 포함</label></span>
                         <span class="ipu_wrap right_float">
                             <button type="button" id="MCT_RESULT_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="mctCamManageSearchBtn">검색</button>
@@ -594,23 +595,19 @@
                 }
             },
             {
-                title: '긴급', dataIndx: 'EMERGENCY_YN', minWidth: 15, width: 40,
+                title: '긴급<br>보류', dataIndx: 'EMERGENCY_HOLD', minWidth: 45,
                 render: function (ui) {
-                    if (ui.cellData) {
-                        return {style: 'background-color: #ff0000; color: #ffffff;'};
+                    switch (ui.cellData) {
+                        case '긴급':
+                            return {style: 'background-color: #ff0000; color: #ffffff;'};
+                        case '보류':
+                            return {style: 'background-color: #ffa500; color: #ff0000;'};
                     }
                 }
             },
+            {title: '주요<br>검사', dataIndx: 'MAIN_INSPECTION_NM', minWidth: 45},
             {
-                title: '주요<br>검사', dataIndx: 'MAIN_INSPECTION_NM', minWidth: 15, width: 55,
-                render: function (ui) {
-                    if (ui.cellData) {
-                        return {style: 'background-color: #ffe699;'};
-                    }
-                }
-            },
-            {
-                title: '불량<br>반품', dataIndx: 'FAIL_STATUS', minWidth: 15, width: 55,
+                title: '불량<br>반품', dataIndx: 'FAIL_STATUS', minWidth: 45,
                 render: function (ui) {
                     if (ui.cellData) {
                         return {style: 'background-color: #ff0000; color: #ffffff;'};
@@ -646,10 +643,10 @@
             },
             {title: '가공완료일시', dataIndx: 'INNER_WORK_FINISH_DT', hidden: true},
             {title: '현재위치', dataIndx: 'POP_POSITION', minWidth: 20, width: 80},
-            {title: '관리번호', dataIndx: 'CONTROL_PART_NUM', minWidth: 50, width: 180},
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', hidden: true},
+            {title: '관리번호', align: 'left', dataIndx: 'CONTROL_PART_NUM', width: 180},
+            {title: '관리번호', align: 'left', dataIndx: 'CONTROL_NUM', hidden: true},
             {title: '파<br>트', dataIndx: 'PART_NUM', hidden: true},
-            {title: '형<br>태', dataIndx: 'WORK_NM', minWidth: 15, width: 20},
+            {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM', width: 50},
             {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
             {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
@@ -716,7 +713,19 @@
                      {title: '공정', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'NC_WORK_TYPE'},
                      {title: '기기명', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_NM'},
                      {title: '작업자', minWidth: 40, width: 80, dataType: 'string', dataIndx: 'NC_WORK_USER_NM'},
-                     {title: 'R/T', minWidth: 50, width: 55, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME'},
+                     {
+                         title: 'R/T', minWidth: 50, width: 55, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME',
+                         render: function (ui) {
+                            const cellData = ui.cellData;
+                            const rowData = ui.rowData;
+
+                             if (rowData.WORK_STATUS === 'DBS020') {
+                                 return {cls: 'blink'};
+                             }
+                         }
+                     },
+                     {title: 'WORK_STATUS', dataIndx: 'WORK_STATUS', hidden: true},
+                     {title: 'WORK_STATUS_NM', dataIndx: 'WORK_STATUS_NM', hidden: true}
                 ]
             },
             {
@@ -915,7 +924,14 @@
             if(rowData.ORIGINAL_SIDE_QTY) orderQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.ORIGINAL_SIDE_QTY + ") </span>";
             $("#cam_work_manage_pop_form").find("#ORDER_QTY").html(orderQty);
             let dueOutDt = rowData.INNER_DUE_DT.slice(5);
-            if(rowData.EMERGENCY_YN === "Y") dueOutDt += " <input type='button' class='smallBtn red' value='긴급'></input>";
+            switch (rowData.EMERGENCY_HOLD) {
+                case '보류':
+                    dueOutDt = " <input type='button' class='smallBtn red' value='보류'>";
+                    break;
+                case '긴급':
+                    dueOutDt += " <input type='button' class='smallBtn red' value='긴급'>";
+                    break;
+            }
             $("#cam_work_manage_pop_form").find("#DUE_OUT_DT").html(dueOutDt);
             let concatDrawingNum = rowData.CONCAT_DRAWING_NUM;
             if(rowData.DRAWING_VER === "Y") concatDrawingNum += " <span> ( " + rowData.DRAWING_VER + ") </span>";
@@ -1406,6 +1422,14 @@
         const updateQueryList = insertQueryList;
 
         fnModifyPQGrid($mctResultManageGrid, insertQueryList, updateQueryList);
+    });
+
+    $('#mct_result_manage_search_form').find('#EQUIP_SEQ').on('change', function () {
+        if (fnIsEmpty(this.value)) {
+            $('#mct_result_manage_search_form').find('#INCLUDE_UNALLOCATED_WAIT').parent().hide();
+        } else {
+            $('#mct_result_manage_search_form').find('#INCLUDE_UNALLOCATED_WAIT').parent().show();
+        }
     });
     /* event */
     function resetMctResult(index){
