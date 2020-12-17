@@ -758,6 +758,7 @@
             <!--<if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
                 AND MATERIAL_DETAIL = #{MATERIAL_DETAIL}
             </if>-->
+        ORDER BY MATERIAL_TYPE, SURFACE_TREAT, CALC_METHOD
     </select>
 
     <insert id="insertSurfaceTreatmentCost" parameterType="java.util.HashMap">
@@ -934,6 +935,7 @@
         <if test="FINISH_TYPE_1 !='' and FINISH_TYPE_1 != null">
             AND FINISH_TYPE_1 = #{FINISH_TYPE_1}
         </if>
+        ORDER BY FINISH_TYPE_1, FINISH_TYPE_2, MATERIAL_TYPE
     </select>
 
     <insert id="insertMaterialClose" parameterType="java.util.HashMap">
@@ -985,6 +987,7 @@
         <if test="MATERIAL_TYPE !='' and MATERIAL_TYPE != null">
             AND MATERIAL_TYPE = #{MATERIAL_TYPE}
         </if>
+        ORDER BY MATERIAL_KIND, MATERIAL_TYPE, SIZE_LEVEL
     </select>
 
     <insert id="insertProcessCost" parameterType="java.util.HashMap">
@@ -1020,6 +1023,8 @@
         SELECT ROW_NUMBER () OVER(ORDER BY A.FACTOR_CD) AS ROW_NUM
         , IFNULL(B.CALC_SEQ, #{CALC_SEQ}) AS CALC_SEQ
         , A.FACTOR_CD
+        , A.LEVEL_1
+        , A.LEVEL_2
         , B.UNIT_AMT
         FROM TBL_PROCESS_FACTOR A
         LEFT OUTER JOIN TBL_CALC_PROCESS_FACTOR B ON B.FACTOR_CD = A.FACTOR_CD

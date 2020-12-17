@@ -355,7 +355,7 @@
             {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true, editable: false},
             {title: 'CALC_SEQ', dataIndx: 'CALC_SEQ', hidden: true, editable: false},
             {
-                title: '소재형태', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                title: '소재형태', dataIndx: 'MATERIAL_KIND', maxWidth: 60, styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -378,7 +378,7 @@
                 }
             },
             {
-                title: '재질', dataIndx: 'MATERIAL_TYPE', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                title: '재질', dataIndx: 'MATERIAL_TYPE', maxWidth: 50, styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1035')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -401,8 +401,15 @@
                 }
             },
             {
-                title: '소재종류', dataIndx: 'MATERIAL_DETAIL', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                editor: {type: 'select',valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027')},
+                title: '소재종류', dataIndx: 'MATERIAL_DETAIL', maxWidth: 100, styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: function (ui) {
+                        let rowData = ui.rowData;
+
+                        return fnGetCommCodeGridSelectBoxEtc('1027', rowData.MATERIAL_TYPE);
+                    }
+                },
                 render: function (ui) {
                     let cellData = ui.cellData;
                     if (cellData === '' || cellData === undefined) {
@@ -423,14 +430,14 @@
                     }
                 }
             },
-            {title: '비중', dataType: 'float', format: '#,###.0', dataIndx: 'SPECIFIC_GRAVITY'},
+            {title: '비중', dataType: 'float', format: '#,###.0', dataIndx: 'SPECIFIC_GRAVITY', maxWidth: 50},
             {
-                title: '계산방식',dataIndx: 'CALC_METHOD', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                title: '계산방식', dataIndx: 'CALC_METHOD', maxWidth: 80, styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1087')},
                 render: function (ui) {
                     let cellData = ui.cellData;
                     if (cellData === '' || cellData === undefined) {
-                        return '';
+                        return '';estimate.selectMaterialCloseList
                     } else {
                         let data = fnGetCommCodeGridSelectBox('1087');
                         let index = data.findIndex(function (element) {
@@ -447,10 +454,10 @@
                     }
                 }
             },
-            {title: '단가(원)', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT'},
-            {title: '최소금액(원)', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MIN_AMT'},
+            {title: '단가(원)', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT', maxWidth: 70},
+            {title: '최소금액(원)', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MIN_AMT', maxWidth: 70},
             {
-                title: '규격요소', dataIndx: 'RANGE_TYPE', editable: false,
+                title: '규격요소', dataIndx: 'RANGE_TYPE', maxWidth: 50, editable: false,
                 styleHead: {'font-weight': 'bold', 'background': '#D8D8D8'},
             },
             {
@@ -478,7 +485,7 @@
                 ]
             },
             {
-                title: '규격<br>소재<br>여부', dataIndx: 'RANGE_SIZE_YN',
+                title: '규격<br>소재<br>여부', dataIndx: 'RANGE_SIZE_YN', maxWidth: 50,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')}},
             {title: '규격 Size', align: 'left', dataIndx: 'SIZE_NUM'},
             {title: '비고',/* align: 'left',*/ dataIndx: 'NOTE'}
@@ -649,7 +656,14 @@
             },
             {
                 title: '소재마감<br>항목', dataIndx: 'FINISH_TYPE_2',
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1058')},
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: function (ui) {
+                        let rowData = ui.rowData;
+
+                        return fnGetCommCodeGridSelectBoxEtc('1058', rowData.FINISH_TYPE_1);
+                    }
+                },
                 render: function (ui) {
                     let cellData = ui.cellData;
                     if (cellData === '' || cellData === undefined) {
@@ -836,8 +850,30 @@
                     }
                 }
             },
-            {title: '계산방식', dataIndx: 'CALC_METHOD'},
             {title: '비중', dataType: 'float', format: '#,###.0', dataIndx: 'SPECIFIC_GRAVITY'},
+            {
+                title: '계산방식', dataIndx: 'CALC_METHOD',
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1087')},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '' || cellData === undefined) {
+                        return '';estimate.selectMaterialCloseList
+                    } else {
+                        let data = fnGetCommCodeGridSelectBox('1087');
+                        let index = data.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = data.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : data[index].text;
+                    }
+                }
+            },
             {title: '단가(원)', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT'},
             {title: '최소금액(원)', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MIN_AMT'},
             {title: '비고',/* align: 'left',*/ dataIndx: 'NOTE'}
@@ -1069,8 +1105,13 @@
         const processCostFactorColModel = [
             {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true, editable: false},
             {title: 'CALC_SEQ', dataIndx: 'CALC_SEQ', hidden: true},
-            {title: 'FACTOR_CD', dataIndx: 'FACTOR_CD'},
-            {title: '단가', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT'}
+            {title: 'Code', dataIndx: 'FACTOR_CD'},
+            {title: 'Level1', dataIndx: 'LEVEL_1'},
+            {title: 'Level2', dataIndx: 'LEVEL_2'},
+            {
+                title: '단가', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#000000'}, editable: true
+            }
         ];
         const processCostFactorObj = {
             height: 350,
@@ -1082,11 +1123,8 @@
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
-            // editable: false,
-            columnTemplate: {
-                align: 'center', halign: 'center', hvalign: 'center', valign: 'center',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#000000'}
-            },
+            editable: false,
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             colModel: processCostFactorColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -1096,7 +1134,6 @@
                     return {data: dataJSON.data};
                 }
             },
-
             rowSelect: function (event, ui) {
                 processCostFactorSelectedRowIndex[0] = ui.addList[0].rowIndx;
             }
