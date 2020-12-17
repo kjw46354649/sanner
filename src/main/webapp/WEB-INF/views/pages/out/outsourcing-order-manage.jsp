@@ -2454,12 +2454,14 @@
             let amountSummaryChk = $outsideOrderManageSearchForm.find('#AMOUNT_SUMMARY').is(':checked');
             if (amountSummaryChk) {
                 let totalAmount = 0;
-                let gridData = $outsideOrderManageGrid.pqGrid('option', 'dataModel.data');
-                $.each(gridData, function (key, rowData) {
+
+                for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                    let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+
                     if (rowData.OUTSIDE_TOTAL_AMT) {
                         totalAmount += parseFloat(rowData.OUTSIDE_TOTAL_AMT);
                     }
-                });
+                }
                 let totalAmountCurrency = pq.formatNumber(totalAmount, '#,###,###');
                 $outsideOrderManageSearchForm.find('#control_manage_amount_summary_area').addClass('amount_summary_active');
                 $outsideOrderManageSearchForm.find('#amount_summary_html').html('금액총합계 : ' + totalAmountCurrency);

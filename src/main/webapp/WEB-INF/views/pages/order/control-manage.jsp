@@ -3318,12 +3318,14 @@
             let amountSummaryChk = $controlManageSearchForm.find('#AMOUNT_SUMMARY').is(":checked");
             if (amountSummaryChk) {
                 let totalAmount = 0;
-                let gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-                $.each(gridData, function (key, rowData) {
+
+                for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                    let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+
                     if (rowData.FINAL_TOTAL_AMT) {
                         totalAmount += parseFloat(rowData.FINAL_TOTAL_AMT);
                     }
-                });
+                }
                 let totalAmountCurrency = pq.formatNumber(totalAmount, "#,###,###");
                 $controlManageSearchForm.find('#control_manage_amount_summary_area').addClass("amount_summary_active");
                 $controlManageSearchForm.find('#amount_summary_html').html("공급 금액 합계 : " + totalAmountCurrency);
