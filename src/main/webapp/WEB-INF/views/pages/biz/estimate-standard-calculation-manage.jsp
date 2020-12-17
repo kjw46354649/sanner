@@ -960,11 +960,11 @@
                     }
                 }
             },
-            {title: '가로', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'SIZE_W'},
-            {title: '세로', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'SIZE_H'},
-            {title: '두께', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'SIZE_T'},
-            {title: '길이', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'SIZE_D'},
-            {title: '지름', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'SIZE_L'},
+            {title: '가로', /*align: 'right',*/ dataType: 'float', /*format: '#,###.##',*/ dataIndx: 'SIZE_W'},
+            {title: '세로', /*align: 'right',*/ dataType: 'float', /*format: '#,###.##',*/ dataIndx: 'SIZE_H'},
+            {title: '두께', /*align: 'right',*/ dataType: 'float', /*format: '#,###.##',*/ dataIndx: 'SIZE_T'},
+            {title: '길이', /*align: 'right',*/ dataType: 'float', /*format: '#,###.##',*/ dataIndx: 'SIZE_D'},
+            {title: '지름', /*align: 'right',*/ dataType: 'float', /*format: '#,###.##',*/ dataIndx: 'SIZE_L'},
             {title: '규격레벨', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'SIZE_LEVEL'},
             {title: '기본가공비', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'UNIT_BASIC_AMT'},
         ];
