@@ -2322,10 +2322,35 @@
         });
 
         $('#CONTROL_MANAGE_SAVE').on('click', function () {
-            const insertQueryList = ['orderMapper.createControlPart', 'orderMapper.createControlPartOrder', 'orderMapper.createControlBarcode', 'orderMapper.createOutBarcode'];
-            const updateQueryList = ['orderMapper.updateControlFromControlManage', 'orderMapper.updateControlPartFromControlManage', 'orderMapper.updateControlPartOrderFromControlManage'];
+            // 관리번호 수정 여부 확인
+            let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
+            let changes = gridInstance.getChanges({format: 'byVal'});
+            let parameters = {'url': '/validationCheckBeforeSaveFromControl', 'data': {data: JSON.stringify(changes)}};
 
-            fnModifyPQGrid($orderManagementGrid, insertQueryList, updateQueryList);
+            fnPostAjaxAsync(function (data) {
+                let flag = data.flag;
+                let message = data.message;
+
+                if (flag) {
+                    fnAlert(null, message);
+                    return false;
+                }
+            }, parameters, '');
+
+            parameters = {'url': '/saveFromControlManage', 'data': {data: JSON.stringify(changes)}};
+
+            fnPostAjaxAsync(function (data) {
+                let flag = data.flag;
+                let message = data.message;
+
+                if (flag) {
+                    fnAlert(null, message);
+                    return false;
+                } else {
+                    fnAlert(null, '<spring:message code="com.alert.default.save.success"/>');
+                    $orderManagementGrid.pqGrid('refreshDataAndView');
+                }
+            }, parameters, '');
         });
 
         $('#CONTROL_MANAGE_DELETE').on('click', function () {
