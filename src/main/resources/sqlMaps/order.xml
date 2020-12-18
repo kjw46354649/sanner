@@ -2477,6 +2477,7 @@
         SELECT
             ROW_NUMBER() OVER() AS ROW_NUM,
             A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.IMG_GFILE_SEQ,
+            SF_GET_CODE_NM('1038', A.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
             CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END EMERGENCY_YN_NM,
             A.ORDER_COMP_CD, SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
             SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
@@ -2505,7 +2506,7 @@
                AND H.INSPECT_SEQ = (SELECT MAX(X.INSPECT_SEQ) FROM TBL_INSPECT X WHERE H.CONTROL_SEQ = X.CONTROL_SEQ AND H.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ  AND H.INSPECT_TYPE =  '1')
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
-            AND A.CONTROL_STATUS IN ('ORD001', 'ORD003')
+            AND A.CONTROL_STATUS IN ('ORD001', 'ORD002', 'ORD005')
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
@@ -2529,7 +2530,7 @@
                         AND C.ORDER_DUE_DT BETWEEN #{SEL_START_DATE} AND #{SEL_END_DATE}
                 WHERE 1 = 1
                     AND A.DEL_YN = 'N'
-                    AND A.CONTROL_STATUS IN ('ORD001', 'ORD003')
+                    AND A.CONTROL_STATUS IN ('ORD001', 'ORD002', 'ORD005')
                     <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
                         AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
                     </if>
@@ -2891,6 +2892,7 @@
                     AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.DEL_YN = 'N'
                     AND A.CONTROL_STATUS IN ('ORD001','ORD003', 'ORD004')
+                    AND B.PART_STATUS NOT IN ('PRO020') <!-- 폐기 제외 -->
                     AND A.EMERGENCY_YN = 'Y'
                     AND A.OUT_FINISH_DT IS NULL
                     AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
@@ -2921,6 +2923,7 @@
                     AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.DEL_YN = 'N'
                     AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+                    AND B.PART_STATUS NOT IN ('PRO020') <!-- 폐기 제외 -->
                     AND A.OUT_FINISH_DT IS NULL
                     AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
             ) X

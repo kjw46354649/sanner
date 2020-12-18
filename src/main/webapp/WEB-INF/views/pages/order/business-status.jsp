@@ -12,23 +12,28 @@
         <div class="tableNotSearchOneGridWrap">
             <div class="conWrap">
                 <div class="left-40Warp">
-                    <div class="buttonWrap right_sort">
+                    <div class="buttonWrap">
                         <form class="form-inline" id="business_status_search_form" name="business_status_search_form" role="form">
                             <input type="hidden" name="queryId" id="queryId" value="orderMapper.businessOutgoingList">
-                            <span class="ipu_wrap left_float">
-                                <label for="BUSINESS_STATUS_INNER_DUE_DT">조회납기일자</label>
-                                <input type="text" class="wd_100" name="INNER_DUE_DT" id="BUSINESS_STATUS_INNER_DUE_DT">
-                            </span>
-                            <span class="slt_wrap ml-10">
-                                <label class="label_50" for="ORDER_COMP_CD">발주처</label>
-                                <select class="wd_100" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                </select>
-<%--                                <label class="label_50" for="ORDER_STAFF_SEQ">담당자</label>--%>
-<%--                                <select class="wd_100 ml-10" name="ORDER_STAFF_SEQ" id="ORDER_STAFF_SEQ">--%>
-<%--                                    <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
-<%--                                </select>--%>
-                            </span>
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <span class="ipu_wrap">
+                                        <label for="BUSINESS_STATUS_INNER_DUE_DT">조회납기일자</label>
+                                        <input type="text" class="wd_100" name="INNER_DUE_DT" id="BUSINESS_STATUS_INNER_DUE_DT">
+                                    </span>
+                                </div>
+                                <div class="ml-auto">
+                                    <span class="refresh">
+                                        <button type="button" id="business_status_refresh"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button>
+                                    </span>
+                                    <span class="slt_wrap ml-10">
+                                        <label for="ORDER_COMP_CD">발주처</label>
+                                        <select class="wd_100" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
+                                            <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                        </select>
+                                    </span>
+                                </div>
+                            </div>
                         </form>
                     </div>
                     <div id="business_status_grid"></div>
@@ -224,6 +229,7 @@
 
         let businessStatusColModel = [
             {dataIndx: 'IMG_GFILE_SEQ', hidden: true},
+            {title: '주문', dataIndx: 'CONTROL_STATUS_NM', minWidth: 40},
             {title: '긴', dataIndx: 'EMERGENCY_YN_NM', minWidth: 30, styleHead: {'color': 'red'}},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: '10%'},
             {title: '납기', minWidth: 40, dataIndx: 'ORDER_DUE_DT'},
@@ -260,7 +266,7 @@
                 }
             },
             {title: '수량', dataIndx: 'ORDER_QTY', minWidth: 40},
-            {title: '발주번호', dataIndx: 'ORDER_NUM', width: 120},
+            {title: '발주번호', dataIndx: 'ORDER_NUM', width: 80},
             {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {title: '진행상태', dataIndx: 'PART_STATUS', width: '10%'},
             {title: '현재위치', dataIndx: 'LAST_POP_POSITION', width: 80},
@@ -442,6 +448,11 @@
             $businessOutgoingListGrid.pqGrid('option', 'dataModel.postData', function () {
                 return (fnFormToJsonArrayData('#business_status_search_form'));
             });
+            $businessOutgoingListGrid.pqGrid('refreshDataAndView');
+            businessCalendar.refetchEvents();
+        });
+
+        $('#business_status_refresh').on('click', function () {
             $businessOutgoingListGrid.pqGrid('refreshDataAndView');
             businessCalendar.refetchEvents();
         });
