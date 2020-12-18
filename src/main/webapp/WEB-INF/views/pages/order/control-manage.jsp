@@ -2327,7 +2327,7 @@
             let changes = gridInstance.getChanges({format: 'byVal'});
             let parameters = {'url': '/validationCheckBeforeSaveFromControl', 'data': {data: JSON.stringify(changes)}};
 
-            fnPostAjax(function (data) {
+            fnPostAjaxAsync(function (data) {
                 let flag = data.flag;
                 let message = data.message;
 
@@ -2337,11 +2337,20 @@
                 }
             }, parameters, '');
 
-            // TODO: 소재비 저장 && 트랜잭션 하나로
-            const insertQueryList = ['orderMapper.createControlPart', 'orderMapper.createControlPartOrder', 'orderMapper.createControlBarcode', 'orderMapper.createOutBarcode'];
-            const updateQueryList = ['orderMapper.updateControlFromControlManage', 'orderMapper.updateControlPartFromControlManage', 'orderMapper.updateControlPartOrderFromControlManage'];
+            parameters = {'url': '/saveFromControlManage', 'data': {data: JSON.stringify(changes)}};
 
-            fnModifyPQGrid($orderManagementGrid, insertQueryList, updateQueryList);
+            fnPostAjaxAsync(function (data) {
+                let flag = data.flag;
+                let message = data.message;
+
+                if (flag) {
+                    fnAlert(null, message);
+                    return false;
+                } else {
+                    fnAlert(null, '<spring:message code="com.alert.default.save.success"/>');
+                    $orderManagementGrid.pqGrid('refreshDataAndView');
+                }
+            }, parameters, '');
         });
 
         $('#CONTROL_MANAGE_DELETE').on('click', function () {
