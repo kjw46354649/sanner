@@ -2190,7 +2190,7 @@
                 0 AS CASH_AMT, 0 AS PAPER_AMT, 0 AS DEPOSIT_TOTAL_AMT, 0 AS NOT_DEPOSIT_AMT
             FROM (
                 SELECT
-                    A.COMP_CD, A.ORDER_COMP_CD, DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y') as CLOSE_YEAR, E.FINAL_NEGO_AMT AS SALE_AMT
+                    A.COMP_CD, A.ORDER_COMP_CD, DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y') as CLOSE_YEAR, E.FINAL_NEGO_AMT + E.FINAL_NEGO_AMT * 0.1 AS SALE_AMT
                 FROM jmes.TBL_CONTROL A
                     INNER JOIN jmes.TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND IFNULL(B.PART_NUM, '0') = '0'
                     INNER JOIN jmes.TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
@@ -2215,7 +2215,7 @@
                 0 as SALE_AMT,
                 SUM(CASE WHEN A.DEPOSIT_TYPE IN ('1') THEN A.DEPOSIT_AMT ELSE 0 END) AS CASH_AMT,
                 SUM(CASE WHEN A.DEPOSIT_TYPE IN ('2', '3') THEN A.DEPOSIT_AMT ELSE 0 END) AS PAPER_AMT,
-                SUM(A.DEPOSIT_AMT) AS DEPOSIT_TOTAL_AMT, 0 AS NOT_DEPOSIT_AMT
+                SUM(A.DEPOSIT_AMT + A.DEPOSIT_AMT * 0.1) AS DEPOSIT_TOTAL_AMT, 0 AS NOT_DEPOSIT_AMT
             FROM jmes.TBL_MONEY_DEPOSIT A
             WHERE DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y') = #{MONEY_MANAGE_STATUS_YEAR}
                 <if test="COMP_CD != null and COMP_CD != ''">
@@ -2226,11 +2226,11 @@
                 </if>
             GROUP BY A.COMP_CD, A.ORDER_COMP_CD, DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y')
             UNION ALL
-            <!-- 전년동 미수 금액 -->
+            <!-- 전년도 미수 금액 -->
             SELECT
                 A.COMP_CD, A.ORDER_COMP_CD,
                 #{MONEY_MANAGE_STATUS_YEAR} as CLOSE_YEAR,
-                0 as SALE_AMT, 0 AS CASH_AMT, 0 AS PAPER_AMT, 0 AS DEPOSIT_TOTAL_AMT, SUM(A.DEPOSIT_AMT) AS NOT_DEPOSIT_AMT
+                0 as SALE_AMT, 0 AS CASH_AMT, 0 AS PAPER_AMT, 0 AS DEPOSIT_TOTAL_AMT, SUM(A.DEPOSIT_AMT + A.DEPOSIT_AMT * 0.1) AS NOT_DEPOSIT_AMT
             FROM jmes.TBL_MONEY_DEPOSIT A
             WHERE DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y') <![CDATA[ < ]]> #{MONEY_MANAGE_STATUS_YEAR}
                 <if test="COMP_CD != null and COMP_CD != ''">
@@ -2263,7 +2263,7 @@
     <select id="moneyManageSalesList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER() OVER () AS ROW_NUM,
-            Z.COMP_CD, Z.COMP_NM, Z.ORDER_COMP_CD, Z.ORDER_COMP_NM, Z.CLOSE_MONTH, SUM(Z.ORDER_AMT) AS ORDER_AMT, Z.CLOSE_MONTH_NM, E.NOTE
+            Z.COMP_CD, Z.COMP_NM, Z.ORDER_COMP_CD, Z.ORDER_COMP_NM, Z.CLOSE_MONTH, SUM(Z.ORDER_AMT) AS ORDER_AMT, SUM(Z.ORDER_AMT + Z.ORDER_AMT * 0.1) AS VAT_INCLUDED_AMOUNT, Z.CLOSE_MONTH_NM, E.NOTE
         FROM (
             SELECT
                 A.COMP_CD,
