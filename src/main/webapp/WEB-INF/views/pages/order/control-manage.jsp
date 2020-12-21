@@ -1238,24 +1238,82 @@
                 }
             },
             {
-                title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT',
+                title: '소재마감', align: 'center',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
+                colModel: [
+                    {
+                        title: 'TM각비', width: 70, dataIndx: 'MATERIAL_FINISH_TM', hidden: true,
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
-                },
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
-                render: function (ui) {
-                    let rowData = ui.rowData;
-                    let cls = null;
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                        },
+                        editor: {
+                            type: 'select',
+                            valueIndx: 'value',
+                            labelIndx: 'text',
+                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')
+                        },
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
 
-                    if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                        cls = 'bg-lightgray';
-                    }
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
-                }
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    },
+                ]
+            },
+            {
+                title: '후가공', align: 'center', hidden: true,
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                colModel: [
+                    {
+                        title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT',
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                        },
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    },
+                    {
+                        title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND', hidden: true,
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                        },
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    },
+
+                ]
             },
             {
                 title: '소재비고', dataIndx: 'MATERIAL_NOTE',
@@ -1294,58 +1352,6 @@
 
                     return {cls: cls, text: controlManageFilterRender(ui)};
                 }
-            },
-            {
-                title: '소재마감', align: 'center', hidden: true,
-                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                colModel: [
-                    {
-                        title: 'TM각비', width: 70, dataIndx: 'MATERIAL_FINISH_TM', hidden: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                        editable: function (ui) {
-                            let rowData = ui.rowData;
-
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
-                        },
-                        editor: {
-                            type: 'select',
-                            valueIndx: 'value',
-                            labelIndx: 'text',
-                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')
-                        },
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
-                    },
-                    {
-                        title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND', hidden: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                        editable: function (ui) {
-                            let rowData = ui.rowData;
-
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
-                        },
-                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
-                    },
-
-                ]
             },
             {
                 title: '예상소재 Size (견적계산용)', align: 'center', hidden: true, colModel: [
