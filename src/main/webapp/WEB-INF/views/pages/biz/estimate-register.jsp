@@ -195,6 +195,8 @@
 
 <script type="text/javascript">
     let estimateRegisterFileGrid;
+    window.estimateRegisterTopGrid = $("#estimate_register_top_grid");
+    window.estimateRegisterSelectedRowIndex = [];
 
     $(function () {
         /** 공통 코드 이외의 처리 부분 **/
@@ -210,15 +212,15 @@
             "<p style=\"text-align:left\"><strong><span style=\"font-size:11.0pt\"><span style=\"font-family:&quot;맑은 고딕&quot;\"><span style=\"color:black\">수신처</span></span></span> <span style=\"font-size:11.0pt\"><span style=\"font-family:Calibri\"><span style=\"color:black\">:&nbsp;</span></span></span></strong></p>\n";
 
         'use strict';
-        let estimateRegisterSelectedRowIndex;
         estimateRegisterFileGrid = $("#estimate_register_file_grid");
-        let estimateRegisterTopGrid = $("#estimate_register_top_grid");
         let estimateRegisterBotGrid = $("#estimate_register_bot_grid");
         let $btnEstimateRegisterDrawView = $("#btnEstimateRegisterDrawView");
         let $btnEstimateRegisterDrawAdd = $("#btnEstimateRegisterDrawAdd");
 
         let estimateRegisterTopColModel= [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+            {title: 'EST_SEQ', dataType: 'integer', dataIndx: 'EST_SEQ', hidden: true},
+            {title: 'SEQ', dataType: 'integer', dataIndx: 'SEQ', hidden: true},
             {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
@@ -487,14 +489,25 @@
                     },
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '상세 가공요건', align: "center", colModel:[
-                    {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
-                    {title:'가공', dataType: 'string', dataIndx: 'DETAIL_SURFACE'},
-                    {title:'클램', dataType: 'string', dataIndx: 'DETAIL_CLAMPING'},
-                    {title:'포켓', dataType: 'string', dataIndx: 'DETAIL_POCKET'},
-                    {title:'드릴', dataType: 'string', dataIndx: 'DETAIL_DRILL'},
-                    {title:'난도', dataType: 'string', dataIndx: 'DETAIL_DIFFICULTY'}
-                ], hidden: true},
+            {
+                title: '상세 가공요건',
+                render: function (ui) {
+                    const rowData = ui.rowData;
+
+                    if (rowData.EST_SEQ && rowData.SEQ) {
+                        return '<button name="processing_requirements">가공요건</button>';
+                    }
+                },
+                postRender(ui) {
+                    const grid = this,
+                        $cell = grid.getCell(ui);
+                    const rowData = ui.rowData;
+
+                    $cell.find("[name=processing_requirements]").bind("click", function () {
+                        processingRequirementsPop('estimate');
+                    });
+                }
+            },
             {title: '소재사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
                 editor: {
                     type: 'select',

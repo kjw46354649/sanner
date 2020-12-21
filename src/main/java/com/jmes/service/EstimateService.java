@@ -1,5 +1,7 @@
 package com.jmes.service;
 
+import org.springframework.ui.Model;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,4 +14,6 @@ public interface EstimateService {
     void insertMaterialCost(Map<String, Object> map) throws Exception;
 
     void deleteMaterialCost(Map<String, Object> map) throws Exception;
+
+    void processingRequirementsEstimateSave(Model model, Map<String, Object> map) throws Exception;
 }

@@ -494,4 +494,46 @@ public class OrderServiceImpl implements OrderService {
         model.addAttribute("flag", flag);
         model.addAttribute("message", message);
     }
+
+    @Override
+    public void processingRequirementsControlSave(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        boolean flag = false;
+
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        Set set = jsonMap.entrySet();
+        Iterator iterator = set.iterator();
+
+        try {
+            while (iterator.hasNext()) {
+                Map.Entry entry = (Map.Entry) iterator.next();
+                String key = (String) entry.getKey();
+                String value = (String) entry.getValue();
+
+                if (key.contains("PROCESS_CNT")) {
+                    HashMap<String, Object> hashMap = new HashMap<String, Object>();
+                    String factorCd = key.substring(key.length() - 6, key.length());
+                    hashMap.put("TYPE", jsonMap.get("TYPE"));
+                    hashMap.put("SEQ1", jsonMap.get("SEQ1"));
+                    hashMap.put("SEQ2", jsonMap.get("SEQ2"));
+                    hashMap.put("FACTOR_CD", factorCd);
+                    hashMap.put("PROCESS_CNT", value);
+                    hashMap.put("queryId", "orderMapper.insertControlPartProcess");
+                    this.innodaleDao.create(hashMap);
+                    hashMap.put("queryId", "orderMapper.updateControlAutomaticQuote");
+                    this.innodaleDao.update(hashMap);
+                }
+            }
+        } catch (Exception e) {
+            flag = true;
+        }
+
+        model.addAttribute("flag", flag);
+    }
 }

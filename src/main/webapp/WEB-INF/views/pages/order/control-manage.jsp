@@ -1451,13 +1451,23 @@
                 render: function (ui) {
                     let rowData = ui.rowData;
                     let cls = null;
-                    //TODO: button
+                    let text = '';
 
                     if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
                         cls = 'bg-lightgray';
+                        text = '<button name="processing_requirements">가공요건</button>';
                     }
 
-                    return {cls: cls, text: ''};
+                    return {cls: cls, text: text};
+                },
+                postRender(ui) {
+                    const grid = this,
+                        $cell = grid.getCell(ui);
+                    const rowData = ui.rowData;
+
+                    $cell.find("[name=processing_requirements]").bind("click", function () {
+                        processingRequirementsPop('control');
+                    });
                 }
             },
             {

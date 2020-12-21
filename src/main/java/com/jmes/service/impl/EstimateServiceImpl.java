@@ -7,10 +7,9 @@ import com.jmes.dao.EstimateDao;
 import com.jmes.service.EstimateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class EstimateServiceImpl implements EstimateService {
@@ -180,5 +179,47 @@ public class EstimateServiceImpl implements EstimateService {
             hashMap.put("queryId", "estimate.deleteMaterialCost");
             this.innodaleDao.deleteGrid(hashMap);
         }
+    }
+
+    @Override
+    public void processingRequirementsEstimateSave(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        boolean flag = false;
+
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        Set set = jsonMap.entrySet();
+        Iterator iterator = set.iterator();
+
+        try {
+            while (iterator.hasNext()) {
+                Map.Entry entry = (Map.Entry) iterator.next();
+                String key = (String) entry.getKey();
+                String value = (String) entry.getValue();
+
+                if (key.contains("PROCESS_CNT")) {
+                    HashMap<String, Object> hashMap = new HashMap<String, Object>();
+                    String factorCd = key.substring(key.length() - 6, key.length());
+                    hashMap.put("TYPE", jsonMap.get("TYPE"));
+                    hashMap.put("SEQ1", jsonMap.get("SEQ1"));
+                    hashMap.put("SEQ2", jsonMap.get("SEQ2"));
+                    hashMap.put("FACTOR_CD", factorCd);
+                    hashMap.put("PROCESS_CNT", value);
+                    hashMap.put("queryId", "estimate.insertEstimateDetailProcess");
+                    this.innodaleDao.create(hashMap);
+                    hashMap.put("queryId", "estimate.updateEstimateAutomaticQuote");
+                    this.innodaleDao.update(hashMap);
+                }
+            }
+        } catch (Exception e) {
+            flag = true;
+        }
+
+        model.addAttribute("flag", flag);
     }
 }

@@ -4,6 +4,7 @@ import com.framework.innodale.component.CommonUtility;
 import com.jmes.service.EstimateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -67,6 +68,21 @@ public class EstimateController {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
 
         this.estimateService.deleteMaterialCost(map);
+
+        return "jsonView";
+    }
+
+    /**
+     * @description
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/processingRequirementsEstimateSave", method = RequestMethod.POST)
+    public String processingRequirementsEstimateSave(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.estimateService.processingRequirementsEstimateSave(model, map);
 
         return "jsonView";
     }

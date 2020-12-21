@@ -150,4 +150,20 @@ public class OrderController {
 
         return "jsonView";
     }
+    
+    
+    /**
+     * @description 
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/processingRequirementsControlSave", method = RequestMethod.POST)
+    public String processingRequirementsControlSave(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.processingRequirementsControlSave(model, map);
+
+        return "jsonView";
+    }
 }

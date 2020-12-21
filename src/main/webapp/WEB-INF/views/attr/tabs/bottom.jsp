@@ -1929,6 +1929,38 @@
         commonWarehouseManageGrid.pqGrid(commonWarehouseManageObj);
         commonWarehouseManageGrid.pqGrid('refreshDataAndView');
     }
+
+    let ProcessingRequirementsPopup;
+    /**
+     * @description 가공요건 팝업
+     * @param {string} path
+     */
+    const processingRequirementsPop = function (path) {
+        const url = '/processingRequirements/' + path;
+        // 팝업 사이즈
+        const nWidth = 480;
+        const nHeight = 770;
+        const winWidth = document.body.clientWidth;
+        const winHeight = document.body.clientHeight;
+        const winX = window.screenX || window.screenLeft || 0;
+        const winY = window.screenY || window.screenTop || 0;
+        const nLeft = winX + (winWidth - nWidth) / 2;
+        const nTop = winY + (winHeight - nHeight) / 2;
+
+        let strOption = '';
+        strOption += 'left=' + nLeft + 'px,';
+        strOption += 'top=' + nTop + 'px,';
+        strOption += 'width=' + nWidth + 'px,';
+        strOption += 'height=' + nHeight + 'px,';
+        strOption += 'toolbar=no,menubar=no,location=no,resizable=no,status=yes';
+
+        // 최초 클릭이면 팝업을 띄운다.
+        if (ProcessingRequirementsPopup === undefined || ProcessingRequirementsPopup.closed) {
+            ProcessingRequirementsPopup = window.open(url, '', strOption);
+        } else {
+            ProcessingRequirementsPopup.focus();
+        }
+    };
     
     $("#common_warehouse_manage_popup_form #WAREHOUSE_CD").on('change', function(){
         commonWarehouseManageGrid.pqGrid('option', "dataModel.postData", function (ui) {
