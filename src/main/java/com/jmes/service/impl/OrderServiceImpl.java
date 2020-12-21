@@ -496,6 +496,66 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void saveFromControlManage(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        ArrayList<HashMap<String, Object>> addList = null;
+        ArrayList<HashMap<String, Object>> updateList = null;
+
+        Boolean flag = false;
+        String message = "";
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("addList"))
+            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
+
+        if (jsonMap.containsKey("updateList"))
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+        if (addList != null && addList.size() > 0) {
+            for (HashMap<String, Object> hashMap : addList) {
+                try {
+                    hashMap.put("queryId", "orderMapper.createControlPart");
+                    this.innodaleDao.insertGrid(hashMap);
+                    hashMap.put("queryId", "orderMapper.createControlPartOrder");
+                    this.innodaleDao.insertGrid(hashMap);
+                    hashMap.put("queryId", "orderMapper.createControlBarcode");
+                    this.innodaleDao.insertGrid(hashMap);
+                    hashMap.put("queryId", "orderMapper.createOutBarcode");
+                    this.innodaleDao.insertGrid(hashMap);
+                } catch (Exception e) {
+                    flag = true;
+                    message = "에러가 발생하였습니다";
+                }
+            }
+        }
+        if (updateList != null && updateList.size() > 0) {
+            for (HashMap<String, Object> hashMap : updateList) {
+                try {
+                    hashMap.put("queryId", "orderMapper.updateControlFromControlManage");
+                    this.innodaleDao.updateGrid(hashMap);
+                    hashMap.put("queryId", "orderMapper.updateControlPartFromControlManage");
+                    this.innodaleDao.updateGrid(hashMap);
+                    hashMap.put("queryId", "orderMapper.updateControlPartOrderFromControlManage");
+                    this.innodaleDao.updateGrid(hashMap);
+//                hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
+//                this.innodaleDao.create(hashMap);
+                } catch (Exception e) {
+                    flag = true;
+                    message = "에러가 발생하였습니다";
+                }
+            }
+        }
+
+        model.addAttribute("flag", flag);
+        model.addAttribute("message", message);
+    }
+
+    @Override
     public void processingRequirementsControlSave(Model model, Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();

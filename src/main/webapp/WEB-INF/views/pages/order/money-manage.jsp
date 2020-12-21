@@ -76,7 +76,7 @@
                         <select name="MONEY_RECEIVE_CLOSE_MONTH_ED" id="MONEY_RECEIVE_CLOSE_MONTH_ED"></select></span>
                         <%--<span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH">
                         <label for="RANGE_SEARCH"> Range 검색</label></span>--%>
-                        <button type="button" class="right_float defaultBtn radius blue" id="moneyReceiveStatusSearchBtn">검색</button>
+<%--                        <button type="button" class="right_float defaultBtn radius blue" id="moneyReceiveStatusSearchBtn">검색</button>--%>
                     </li>
                 </ul>
             </div>
@@ -177,7 +177,7 @@
     let $moneyReceiveStatusGrid;
 
     let $moneyManageStatusSearchBtn = $("#moneyManageStatusSearchBtn");
-    let $moneyReceiveStatusSearchBtn = $("#moneyReceiveStatusSearchBtn");
+    // let $moneyReceiveStatusSearchBtn = $("#moneyReceiveStatusSearchBtn");
 
     let $moneyReceiveAddBtn = $("#moneyReceiveAddBtn");
     let $moneyReceiveDelBtn = $("#moneyReceiveDelBtn");
@@ -186,7 +186,7 @@
     let $moneyYearNoteSaveBtn = $("#moneyYearNoteSaveBtn");
 
     let moneyReceiveSelectedRowIndex = [];
-    let money_today = new Date();
+    // let money_today = new Date();
 
     $(function () {
         'use strict';
@@ -222,9 +222,9 @@
         fnAppendSelectboxYear('MONEY_RECEIVE_CLOSE_YEAR_ED', 10);
         fnAppendSelectboxMonth('MONEY_RECEIVE_CLOSE_MONTH_ED');
 
-        $('#MONEY_RECEIVE_CLOSE_MONTH_ED').val(((money_today.getMonth() + 1) < 10 ? '0' : '') + (money_today.getMonth() + 1)).prop('selected', true);
-        money_today.setMonth(money_today.getMonth() - 1);   // before 1 month
-        $('#MONEY_RECEIVE_CLOSE_MONTH_ST').val(((money_today.getMonth() + 1) < 10 ? '0' : '') + (money_today.getMonth() + 1)).prop('selected', true);
+        $('#MONEY_RECEIVE_CLOSE_MONTH_ST').val('01').prop('selected', true);
+        $('#MONEY_RECEIVE_CLOSE_MONTH_ED').val('12').prop('selected', true);
+        // money_today.setMonth(money_today.getMonth() - 1);   // before 1 month
 
         let moneyManageStatusModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
@@ -234,7 +234,7 @@
             {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '사업자', minWidth: 30, width: 120, dataIndx: 'COMP_CD_NM'},
             {title: '발주처', minWidth: 30, width: 200, dataIndx: 'ORDER_COMP_NM'},
-            {title: '2020년<br>매출현황', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'SALE_AMT',
+            {title: '2020년<br>매출현황(VAT 포함)', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'SALE_AMT',
                 summary: {
                     type: "sum",
                     edit: true
@@ -315,7 +315,7 @@
                 $moneyManageStatusGrid.pqGrid({
                     refresh: function( event, ui ) {
                         let searchYear = $("#money_manage_status_search_form").find("#MONEY_MANAGE_STATUS_YEAR").val();
-                        $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=7] span.pq-title-span").html(searchYear + "년<br>매출현황");
+                        $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=7] span.pq-title-span").html(searchYear + "년<br>매출현황(VAT 포함)");
                         $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-row-indx=0][pq-col-indx=8] span.pq-title-span").html(searchYear + "년 수금현황");
                         $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=11] span.pq-title-span").html("전년도(" + (searchYear - 1) + "년)<br>" + "이월 미수금액");
                         $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=12] span.pq-title-span").html("총 미수금 현황<br>" + searchYear + "년");
@@ -345,6 +345,7 @@
             {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
             {title: '매출년월', dataIndx: 'CLOSE_MONTH_NM'},
             {title: '매출금액', dataIndx: 'ORDER_AMT', halign: 'center', align: 'right', dataType: 'integer', format: '#,###'},
+            {title: 'VAT 포함 금액', dataIndx: 'VAT_INCLUDED_AMOUNT', width:80, halign: 'center', align: 'right', dataType: 'integer', format: '#,###'},
             {title: '비고', dataIndx: 'NOTE', editable: true}
         ];
 
@@ -557,7 +558,7 @@
             fnModifyPQGrid($moneyReceiveStatusGrid, moneyReceiveStatusInsertQueryList, moneyReceiveStatusUpdateQueryList);
         });
 
-        $moneyReceiveStatusSearchBtn.click(function(){
+        $('#money_receive_manage_search_form').on('change', function () {
             $moneySalesMonthGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return fnFormToJsonArrayData('money_receive_manage_search_form');
             });

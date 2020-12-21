@@ -1238,24 +1238,82 @@
                 }
             },
             {
-                title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT',
+                title: '소재마감', align: 'center',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
+                colModel: [
+                    {
+                        title: 'TM각비', width: 70, dataIndx: 'MATERIAL_FINISH_TM', hidden: true,
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
-                },
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
-                render: function (ui) {
-                    let rowData = ui.rowData;
-                    let cls = null;
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                        },
+                        editor: {
+                            type: 'select',
+                            valueIndx: 'value',
+                            labelIndx: 'text',
+                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')
+                        },
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
 
-                    if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                        cls = 'bg-lightgray';
-                    }
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
-                }
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    },
+                ]
+            },
+            {
+                title: '후가공', align: 'center', hidden: true,
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                colModel: [
+                    {
+                        title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT',
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                        },
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    },
+                    {
+                        title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND', hidden: true,
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                        },
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    },
+
+                ]
             },
             {
                 title: '소재비고', dataIndx: 'MATERIAL_NOTE',
@@ -1294,58 +1352,6 @@
 
                     return {cls: cls, text: controlManageFilterRender(ui)};
                 }
-            },
-            {
-                title: '소재마감', align: 'center', hidden: true,
-                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                colModel: [
-                    {
-                        title: 'TM각비', width: 70, dataIndx: 'MATERIAL_FINISH_TM', hidden: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                        editable: function (ui) {
-                            let rowData = ui.rowData;
-
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
-                        },
-                        editor: {
-                            type: 'select',
-                            valueIndx: 'value',
-                            labelIndx: 'text',
-                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')
-                        },
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
-                    },
-                    {
-                        title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND', hidden: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                        editable: function (ui) {
-                            let rowData = ui.rowData;
-
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
-                        },
-                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
-                    },
-
-                ]
             },
             {
                 title: '예상소재 Size (견적계산용)', align: 'center', hidden: true, colModel: [
@@ -2330,7 +2336,7 @@
             let changes = gridInstance.getChanges({format: 'byVal'});
             let parameters = {'url': '/validationCheckBeforeSaveFromControl', 'data': {data: JSON.stringify(changes)}};
 
-            fnPostAjax(function (data) {
+            fnPostAjaxAsync(function (data) {
                 let flag = data.flag;
                 let message = data.message;
 
@@ -2340,11 +2346,20 @@
                 }
             }, parameters, '');
 
-            // TODO: 소재비 저장 && 트랜잭션 하나로
-            const insertQueryList = ['orderMapper.createControlPart', 'orderMapper.createControlPartOrder', 'orderMapper.createControlBarcode', 'orderMapper.createOutBarcode'];
-            const updateQueryList = ['orderMapper.updateControlFromControlManage', 'orderMapper.updateControlPartFromControlManage', 'orderMapper.updateControlPartOrderFromControlManage'];
+            parameters = {'url': '/saveFromControlManage', 'data': {data: JSON.stringify(changes)}};
 
-            fnModifyPQGrid($orderManagementGrid, insertQueryList, updateQueryList);
+            fnPostAjaxAsync(function (data) {
+                let flag = data.flag;
+                let message = data.message;
+
+                if (flag) {
+                    fnAlert(null, message);
+                    return false;
+                } else {
+                    fnAlert(null, '<spring:message code="com.alert.default.save.success"/>');
+                    $orderManagementGrid.pqGrid('refreshDataAndView');
+                }
+            }, parameters, '');
         });
 
         $('#CONTROL_MANAGE_DELETE').on('click', function () {
@@ -3312,12 +3327,14 @@
             let amountSummaryChk = $controlManageSearchForm.find('#AMOUNT_SUMMARY').is(":checked");
             if (amountSummaryChk) {
                 let totalAmount = 0;
-                let gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-                $.each(gridData, function (key, rowData) {
+
+                for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                    let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+
                     if (rowData.FINAL_TOTAL_AMT) {
                         totalAmount += parseFloat(rowData.FINAL_TOTAL_AMT);
                     }
-                });
+                }
                 let totalAmountCurrency = pq.formatNumber(totalAmount, "#,###,###");
                 $controlManageSearchForm.find('#control_manage_amount_summary_area').addClass("amount_summary_active");
                 $controlManageSearchForm.find('#amount_summary_html').html("공급 금액 합계 : " + totalAmountCurrency);

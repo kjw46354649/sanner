@@ -150,10 +150,26 @@ public class OrderController {
 
         return "jsonView";
     }
-    
-    
+
+
     /**
-     * @description 
+     * @description 주문관리 저장
+     * @param model
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/saveFromControlManage", method = RequestMethod.POST)
+    public String saveFromControlManage(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.saveFromControlManage(model, map);
+
+        return "jsonView";
+    }
+
+    /**
+     * @description
      * @param request
      * @return
      * @throws Exception
