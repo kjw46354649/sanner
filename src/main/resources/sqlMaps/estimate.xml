@@ -931,7 +931,7 @@
             , DEL_YN
             , NOTE
         FROM TBL_CALC_MATERIAL_FINISH
-        WHERE 1 = 1
+        WHERE FINISH_TYPE_1 = 'MFN010'
         <if test="FINISH_TYPE_1 !='' and FINISH_TYPE_1 != null">
             AND FINISH_TYPE_1 = #{FINISH_TYPE_1}
         </if>
@@ -963,6 +963,55 @@
     </insert>
 
     <delete id="deleteMaterialClose"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_MATERIAL_FINISH
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+
+    <select id="selectPostProcessingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER() AS ROW_NUM
+            , CALC_SEQ
+            , FINISH_TYPE_1
+            , FINISH_TYPE_2
+            , MATERIAL_TYPE
+            , AMT_FACTOR_1
+            , AMT_FACTOR_2
+            , UNIT_MIN_AMT
+            , CALC_NOTE
+            , DEL_YN
+            , NOTE
+        FROM TBL_CALC_MATERIAL_FINISH
+        WHERE FINISH_TYPE_1 IN ('MFN020', 'MFN030')
+        <if test="FINISH_TYPE_1 !='' and FINISH_TYPE_1 != null">
+            AND FINISH_TYPE_1 = #{FINISH_TYPE_1}
+        </if>
+        ORDER BY FINISH_TYPE_1, FINISH_TYPE_2, MATERIAL_TYPE
+    </select>
+
+    <insert id="insertPostProcessing" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_MATERIAL_FINISH (
+            CALC_SEQ, FINISH_TYPE_1, FINISH_TYPE_2,
+            MATERIAL_TYPE, AMT_FACTOR_1, AMT_FACTOR_2,
+            UNIT_MIN_AMT, CALC_NOTE, DEL_YN, NOTE, INSERT_DT, INSERT_ID
+        ) VALUES(
+            IFNULL(#{CALC_SEQ}, NEXTVAL(SEQ_DUMMY)), #{FINISH_TYPE_1}, #{FINISH_TYPE_2},
+            #{MATERIAL_TYPE}, #{AMT_FACTOR_1}, #{AMT_FACTOR_2},
+            #{UNIT_MIN_AMT}, #{CALC_NOTE}, 'N', #{NOTE}, NOW(), #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            FINISH_TYPE_1 = #{FINISH_TYPE_1},
+            FINISH_TYPE_2 = #{FINISH_TYPE_2},
+            MATERIAL_TYPE = #{MATERIAL_TYPE},
+            AMT_FACTOR_1 = #{AMT_FACTOR_1},
+            AMT_FACTOR_2 = #{AMT_FACTOR_2},
+            UNIT_MIN_AMT = #{UNIT_MIN_AMT},
+            CALC_NOTE = #{CALC_NOTE},
+            DEL_YN = #{DEL_YN},
+            NOTE = #{NOTE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <delete id="deletePostProcessing"  parameterType="java.util.HashMap">
         DELETE FROM TBL_CALC_MATERIAL_FINISH
         WHERE CALC_SEQ = #{CALC_SEQ}
     </delete>

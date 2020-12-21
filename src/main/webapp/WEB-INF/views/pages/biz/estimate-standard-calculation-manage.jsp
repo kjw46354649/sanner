@@ -13,8 +13,9 @@
     <select name="estimate_standard" id="estimate_standard">
         <option value="0">소재비</option>
         <option value="1">소재마감</option>
-        <option value="2">표면처리비</option>
-        <option value="3">가공비</option>
+        <option value="2">후가공</option>
+        <option value="3">표면처리비</option>
+        <option value="4">가공비</option>
     </select>
 
     <!-- 소재비 -->
@@ -84,7 +85,6 @@
         </div>
     </div>
 
-
     <!-- 소재마감 -->
     <div id="escm1" style="display: none;">
         <div class="topWrap">
@@ -132,8 +132,55 @@
         </div>
     </div>
 
-    <!-- 표면처리비 -->
+    <!-- 후가공 -->
     <div id="escm2" style="display: none;">
+        <div class="topWrap">
+            <form id="post_processing_form" role="form" onsubmit="return false;">
+                <input type="hidden" name="queryId" id="queryId" value="estimate.selectPostProcessingList">
+                <div class="none_gubunWrap">
+                    <ul>
+                        <li>
+                            <span class="slt_wrap">
+                                <label class="label_100" for="finish_type_1">반영항목</label>
+                                <select class="wd_200" name="FINISH_TYPE_1" id="finish_type_1" title="반영항목">
+                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                    <c:forEach var="code" items="${HighCode.H_1057}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
+                                </select>
+                            </span>
+                            <span class="ipu_wrap right_float">
+                                <button type="button" class="defaultBtn radius blue" id="post_processing_search">검색</button>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        <div class="bottomWrap row1_bottomWrap">
+            <div class="tableWrap">
+                <div class="hWrap">
+                    <div class="buttonWrap">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <button class="defaultBtn btn-100w" id="post_processing_add">Add</button>
+                                <button class="defaultBtn btn-100w red" id="post_processing_delete">Delete</button>
+                            </div>
+                            <div class="ml-auto">
+                                <button class="defaultBtn btn-100w green" id="post_processing_save">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="conWrap">
+                    <div id="post_processing_grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 표면처리비 -->
+    <div id="escm3" style="display: none;">
         <div class="topWrap">
             <form id="surface_treatment_cost_form" role="form" onsubmit="return false;">
                 <input type="hidden" name="queryId" id="queryId" value="estimate.selectSurfaceTreatmentCostList">
@@ -189,7 +236,7 @@
     </div>
 
     <!-- 가공비 -->
-    <div id="escm3" style="display: none;">
+    <div id="escm4" style="display: none;">
         <div class="topWrap">
             <form id="process_cost_form" role="form" onsubmit="return false;">
                 <input type="hidden" name="queryId" id="queryId" value="estimate.selectProcessCostList">
@@ -318,34 +365,22 @@
                     $('#escm1').show();
                     $materialCloseGrid.pqGrid('refreshDataAndView');
                     break;
-                case 2: // 표면처리비
+                case 2: // 후가공
                     $('#escm2').show();
+                    $postProcessingGrid.pqGrid('refreshDataAndView');
+                    break;
+                case 3: // 표면처리비
+                    $('#escm3').show();
                     $surfaceTreatmentCostGrid.pqGrid('refreshDataAndView');
                     break;
-                case 3: // 가공비
-                    $('#escm3').show();
+                case 4: // 가공비
+                    $('#escm4').show();
                     $processCostGrid.pqGrid('refreshDataAndView');
                     $processCostFactorGrid.pqGrid('refreshDataAndView');
                     break;
             }
         });
         /* event */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         /* init */
@@ -437,7 +472,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
                     if (cellData === '' || cellData === undefined) {
-                        return '';estimate.selectMaterialCloseList
+                        return '';
                     } else {
                         let data = fnGetCommCodeGridSelectBox('1087');
                         let index = data.findIndex(function (element) {
@@ -627,19 +662,22 @@
         
         
         /* init */
+        const materialCloseReflectedItems = fnGetCommCodeGridSelectBox('1057').filter(function (element, index) {
+           return element.value === 'MFN010';
+        });
         const materialCloseGridId = 'material_close_grid';
         const materialCloseColModel = [
             {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true, editable: false},
             {title: 'CALC_SEQ', dataIndx: 'CALC_SEQ', hidden: true, editable: false},
             {
                 title: '반영항목', dataIndx: 'FINISH_TYPE_1',
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1057')},
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: materialCloseReflectedItems},
                 render: function (ui) {
                     let cellData = ui.cellData;
                     if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
-                        let data = fnGetCommCodeGridSelectBox('1057');
+                        let data = materialCloseReflectedItems;
                         let index = data.findIndex(function (element) {
                             return element.text === cellData;
                         });
@@ -798,6 +836,182 @@
         })
         /* event */
         
+        /* init */
+        const postProcessingReflectedItems = fnGetCommCodeGridSelectBox('1057').filter(function (element, index) {
+           return element.value === 'MFN020' || element.value === 'MFN030';
+        });
+        const postProcessingGridId = 'post_processing_grid';
+        const postProcessingColModel = [
+            {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true, editable: false},
+            {title: 'CALC_SEQ', dataIndx: 'CALC_SEQ', hidden: true, editable: false},
+            {
+                title: '반영항목', dataIndx: 'FINISH_TYPE_1',
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: postProcessingReflectedItems},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '' || cellData === undefined) {
+                        return '';
+                    } else {
+                        let data = postProcessingReflectedItems;
+                        console.log(data);
+                        let index = data.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = data.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : data[index].text;
+                    }
+                }
+            },
+            {
+                title: '소재마감<br>항목', dataIndx: 'FINISH_TYPE_2',
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: function (ui) {
+                        let rowData = ui.rowData;
+
+                        return fnGetCommCodeGridSelectBoxEtc('1058', rowData.FINISH_TYPE_1);
+                    }
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '' || cellData === undefined) {
+                        return '';
+                    } else {
+                        let data = fnGetCommCodeGridSelectBox('1058');
+                        let index = data.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = data.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : data[index].text;
+                    }
+                }
+            },
+            {
+                title: '재질', dataIndx: 'MATERIAL_TYPE',
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1035')},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    if (cellData === '' || cellData === undefined) {
+                        return '';
+                    } else {
+                        let data = fnGetCommCodeGridSelectBox('1035');
+                        let index = data.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = data.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : data[index].text;
+                    }
+                }
+            },
+            {
+                title: '단가단위A<br>(cm기준)', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'AMT_FACTOR_1',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+            },
+            {
+                title: '단가단위B<br>(cm기준)', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'AMT_FACTOR_2',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+            },
+            {
+                title: '최소금액', dataIndx: 'UNIT_MIN_AMT',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+            },
+            {
+                title: '단가금액 계산식 (제품 규격 기준)', align: 'left', dataIndx: 'CALC_NOTE',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+            },
+            {
+                title: '삭제<br>여부', dataIndx: 'DEL_YN', type: 'checkbox',
+                cb: {check: 'Y', uncheck: 'N'},
+                render: function (ui) {
+                    if (ui.cellData === 'Y') return '<input type="checkbox" checked>';
+                    return '<input type="checkbox">';
+                }
+            },
+            {title: '비고', dataIndx: 'NOTE'}
+        ];
+        const postProcessingObj = {
+            height: 760,
+            collapsible: false,
+            resizable: false,
+            showTitle: false,
+            // rowHtHead: 15,
+            numberCell: {show: false},
+            scrollModel: {autoFit: true},
+            trackModel: {on: true},
+            selectionModel: {type: 'row', mode: 'single'},
+            // editable: false,
+            columnTemplate: {
+                align: 'center', halign: 'center', hvalign: 'center', valign: 'center',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#000000'}
+            },
+            colModel: postProcessingColModel,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: {'queryId': 'estimate.selectPostProcessingList'},
+                recIndx: 'ROW_NUM',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            rowSelect: function (event, ui) {
+                postProcessingSelectedRowIndex[0] = ui.addList[0].rowIndx;
+            }
+        };
+        const $postProcessingGrid = $('#' + postProcessingGridId).pqGrid(postProcessingObj);
+        let postProcessingSelectedRowIndex = [];
+        /* init */
+
+        /* function */
+        /* function */
+
+        /* event */
+        $('#post_processing_search').on('click', function () {
+            $postProcessingGrid.pqGrid('option', 'dataModel.postData', function () {
+                return fnFormToJsonArrayData('#post_processing_form');
+            });
+            $postProcessingGrid.pqGrid('refreshDataAndView');
+        });
+
+        $("#post_processing_add").on('click', function () {
+            const totalRecords = $postProcessingGrid.pqGrid('option', 'dataModel.data').length;
+
+            $postProcessingGrid.pqGrid('addNodes', [{}], totalRecords + 1);
+        });
+
+        $("#post_processing_delete").on('click', function () {
+            fnConfirm(null, '<spring:message code="com.alert.default.removeText"/>', function () {
+                const deleteQuery = 'estimate.deletePostProcessing'
+
+                fnDeletePQGrid($postProcessingGrid, postProcessingSelectedRowIndex, deleteQuery);
+            });
+        });
+
+        $('#post_processing_save').on('click', function () {
+            const insertQueryList = ['estimate.insertPostProcessing'];
+            const updateQueryList = insertQueryList;
+
+            fnModifyPQGrid($postProcessingGrid, insertQueryList, updateQueryList);
+        });
+        /* event */        
+        
         
         /* init */
         const surfaceTreatmentCostGridId = 'surface_treatment_cost_grid';
@@ -857,7 +1071,7 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
                     if (cellData === '' || cellData === undefined) {
-                        return '';estimate.selectMaterialCloseList
+                        return '';
                     } else {
                         let data = fnGetCommCodeGridSelectBox('1087');
                         let index = data.findIndex(function (element) {
@@ -1087,18 +1301,8 @@
             const updateQueryList = insertQueryList;
 
             fnModifyPQGrid($processCostGrid, insertQueryList, updateQueryList);
-        })
+        });
         /* event */
-
-
-
-
-
-
-
-
-
-
 
         /* init */
         const processCostFactorGridId = 'process_cost_factor_grid';
@@ -1245,7 +1449,7 @@
             const updateQueryList = insertQueryList;
 
             fnModifyPQGrid($processCostFactorDetailGrid, insertQueryList, updateQueryList);
-        })
+        });
         /* event */
     });
 </script>
