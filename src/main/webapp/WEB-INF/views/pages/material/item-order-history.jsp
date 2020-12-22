@@ -62,6 +62,7 @@
                 <div class="left_30Wrap">
                     <div class="buttonWrap right_sort">
                         <span class="d-inline">
+                            <button type="button" id="item_order_history_left_excel_export"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius" id="btnItemOrderHistoryExcel">주문서 출력</button>
                             <button type="button" class="defaultBtn radius red" id="btnItemOrderHistoryCancel">주문취소</button>
                         </span>
@@ -76,6 +77,8 @@
                 <div class="right_60Wrap">
                     <div class="buttonWrap">
                         <div class="right_sort">
+                            <span class="chk_box"><input name="VIEW_AMOUNT_INFORMATION" id="VIEW_AMOUNT_INFORMATION" type="checkbox"><label for="VIEW_AMOUNT_INFORMATION"> 금액정보</label></span>
+                            <button type="button" id="item_order_history_right_excel_export"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius green" id="btnItemOrderHistorySave">검사 입고</button>
                         </div>
                     </div>
@@ -110,12 +113,13 @@
 
     $(function () {
         let itemOrderHistoryLeftColModel= [
-            {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, sortable: false } ,
-            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', width: 100, sortable: false } ,
-            {title: '총수량', dataType: 'string', dataIndx: 'ORDER_QTY', sortable: false } ,
-            {title: '주문일시', dataType: 'date', dataIndx: 'ORDER_DT', width: 120, sortable: false },
-            {title: '작성자', dataIndx: 'ORDER_USER_NM', width: 120, sortable: false },
-            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_CD' , hidden: true, sortable: false }
+            {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, sortable: false},
+            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', width: 85, sortable: false},
+            {title: '총수량', dataType: 'string', dataIndx: 'ORDER_QTY', sortable: false},
+            {title: '입고<br>수량', dataType: 'string', dataIndx: 'IN_QTY', sortable: false},
+            {title: '주문일시', dataType: 'date', dataIndx: 'ORDER_DT', width: 90, sortable: false},
+            {title: '작성자', dataIndx: 'ORDER_USER_NM', width: 65, sortable: false},
+            {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_CD', hidden: true, sortable: false}
         ];
 
         let itemOrderHistoryRightColModel= [
@@ -253,6 +257,14 @@
                 }
             },
             {title: '입고 일시', dataType: 'string', dataIndx: 'IN_DT', width: 120, editable: false},
+            {
+                title: '매입 금액', align: 'center', colModel: [
+                    {title: '단가', dataType: 'integer', format: '#,###', dataIndx: 'IN_UNIT_AMT', width: 55, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {title: '금액합계', dataType: 'integer', format: '#,###', dataIndx: 'IN_SUM_AMT', width: 55, editable: false},
+                    {title: '비고', dataIndx: 'IN_NOTE', width: 100, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}
+            },
+            {title: '자동계산<br>소재비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', width: 55, editable: false},
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
@@ -364,10 +376,11 @@
                 showTitle: false,
                 title: false,
                 complete: function(event, ui) {
-                    //this.flex();
                     let data = itemOrderHistoryRightGrid.pqGrid('option', 'dataModel.data');
 
                     $('#item_order_history_right_grid_records').html(data.length);
+
+                    changeViewColumn($('#VIEW_AMOUNT_INFORMATION').prop('checked'));
                 },
                 rowSelect: function( event, ui ) {
                     //if(ui.addList.length > 0 ) {
@@ -385,7 +398,7 @@
             });
 
             itemOrderHistoryRightGrid.pqGrid("refreshDataAndView");
-        };
+        }
 
         $("#btnItemOrderHistorySearch").on('click', function(){
             itemOrderHistoryLeftGrid.pqGrid('option', "dataModel.postData", function (ui) {
@@ -410,7 +423,7 @@
 
         $('#ITEM_ORDER_HISTORY_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
         $('#ITEM_ORDER_HISTORY_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#ITEM_ORDER_HISTORY_START_DATE').datepicker('setDate', 'today');
+        $('#ITEM_ORDER_HISTORY_START_DATE').datepicker('setDate', -1);
         $('#ITEM_ORDER_HISTORY_END_DATE').datepicker('setDate', 'today');
 
         /** 공통 코드 이외의 처리 부분 **/
@@ -452,7 +465,7 @@
                     }, parameters, '');
                 }, parameters, '');
             }, parameters, '');
-        };
+        }
 
         /**
          * 검사 입고
@@ -476,7 +489,7 @@
                     itemOrderHistoryRightGrid.pqGrid('refreshDataAndView');
                 }, parameters, '');
             }, parameters, '');
-        };
+        }
 
         /**
          * 주문 취소
@@ -513,12 +526,44 @@
             });
         }
 
+        const changeViewColumn = function (checked) {
+            const itemOrderHistoryRightGridInstance = itemOrderHistoryRightGrid.pqGrid('getInstance').grid;
+            const Cols = itemOrderHistoryRightGridInstance.Columns();
+            const array = ['IN_UNIT_AMT', 'IN_SUM_AMT', 'IN_NOTE', 'UNIT_MATERIAL_AUTO_AMT'];
+            const parameter = checked ? 'diShow' : 'diHide';
+            Cols.hide({[parameter]: array});
+        };
+
         $('#ITEM_ORDER_HISTORY_START_DATE_BUTTON').on('click', function () {
             $('#ITEM_ORDER_HISTORY_START_DATE').focus();
         });
 
         $('#ITEM_ORDER_HISTORY_END_DATE_BUTTON').on('click', function () {
             $('#ITEM_ORDER_HISTORY_END_DATE').focus();
+        });
+
+        $('#item_order_history_left_excel_export').on('click', function () {
+            const blob = itemOrderHistoryLeftGrid.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, '소재 주문이력_1.xlsx');
+        });
+
+        $('#item_order_history_right_excel_export').on('click', function () {
+            const blob = itemOrderHistoryRightGrid.pqGrid('getInstance').grid.exportData({
+                format: 'xlsx',
+                render: true,
+                type: 'blob'
+            });
+
+            saveAs(blob, '소재 주문이력_2.xlsx');
+        });
+
+        $('#VIEW_AMOUNT_INFORMATION').on('click', function () {
+           changeViewColumn(this.checked);
         });
 
     });
