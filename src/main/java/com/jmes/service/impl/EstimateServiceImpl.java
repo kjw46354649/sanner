@@ -36,11 +36,13 @@ public class EstimateServiceImpl implements EstimateService {
             jsonMap = objectMapper.readValue(jsonDetail, new TypeReference<ArrayList<Map<String, Object>>>() {});
         }
 
-        for(int i=0; i<jsonMap.size(); i++) {
+        for (int i = 0; i < jsonMap.size(); i++) {
             data = jsonMap.get(i);
             //if(data.get("DRAWING_NUM") != null && !"".equals(data.get("DRAWING_NUM")) && data.containsValue("DRAWING_NUM")){
-                data.put("EST_SEQ",EST_SEQ);
-                estimateDao.insertEstimateDetail(data);
+            data.put("EST_SEQ", EST_SEQ);
+            estimateDao.insertEstimateDetail(data);
+            data.put("queryId", "estimate.updateEstimateAutomaticQuote");
+            this.innodaleDao.update(data);
             //}
         }
 
@@ -48,9 +50,9 @@ public class EstimateServiceImpl implements EstimateService {
             jsonMap = objectMapper.readValue(jsonReceive, new TypeReference<ArrayList<Map<String, Object>>>() {});
         }
 
-        for(int i=0; i<jsonMap.size(); i++) {
+        for (int i = 0; i < jsonMap.size(); i++) {
             data = jsonMap.get(i);
-            data.put("EST_SEQ",EST_SEQ);
+            data.put("EST_SEQ", EST_SEQ);
 
             estimateDao.insertEstimateReceiver(data);
         }
@@ -206,8 +208,8 @@ public class EstimateServiceImpl implements EstimateService {
                     HashMap<String, Object> hashMap = new HashMap<String, Object>();
                     String factorCd = key.substring(key.length() - 6, key.length());
                     hashMap.put("TYPE", jsonMap.get("TYPE"));
-                    hashMap.put("SEQ1", jsonMap.get("SEQ1"));
-                    hashMap.put("SEQ2", jsonMap.get("SEQ2"));
+                    hashMap.put("EST_SEQ", jsonMap.get("SEQ1"));
+                    hashMap.put("SEQ", jsonMap.get("SEQ2"));
                     hashMap.put("FACTOR_CD", factorCd);
                     hashMap.put("PROCESS_CNT", value);
                     hashMap.put("queryId", "estimate.insertEstimateDetailProcess");

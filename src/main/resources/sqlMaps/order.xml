@@ -3072,8 +3072,8 @@
     <select id="selectProcessingRequirementsBasicInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             A.CONTROL_NUM
-            , B.CONTROL_SEQ AS SEQ1
-            , B.CONTROL_DETAIL_SEQ AS SEQ2
+            , B.CONTROL_SEQ AS CONTROL_SEQ
+            , B.CONTROL_DETAIL_SEQ AS CONTROL_DETAIL_SEQ
             , B.DRAWING_NUM
             , SF_GET_CODE_NM('1035', B.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM
             , B.SIZE_TXT
@@ -3184,15 +3184,15 @@
             , INSERT_DT
             , INSERT_ID
         ) VALUES (
-            #{SEQ1}
-            , #{SEQ2}
+            #{CONTROL_SEQ}
+            , #{CONTROL_DETAIL_SEQ}
             , #{FACTOR_CD}
             , #{PROCESS_CNT}
             , NOW()
             , NULL
         )
         ON DUPLICATE KEY UPDATE
-            PROCESS_CNT = NULL
+            PROCESS_CNT = #{PROCESS_CNT}
 	        , UPDATE_DT = NOW()
 	        , UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
@@ -3200,14 +3200,14 @@
     <update id="updateControlAutomaticQuote" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
-            UNIT_MATERIAL_AUTO_AMT = SF_GET_CALC_MATERIAL_AMT(#{TYPE}, #{SEQ1}, #{SEQ2})
-            , UNIT_MATERIAL_FINISH_TM_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('TM', #{TYPE}, #{SEQ1}, #{SEQ2})
-            , UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('GRIND', #{TYPE}, #{SEQ1}, #{SEQ2})
-            , UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('HEAT', #{TYPE}, #{SEQ1}, #{SEQ2})
-            , UNIT_SURFACE_AUTO_AMT = SF_GET_CALC_SURFACE_AMT(#{TYPE}, #{SEQ1}, #{SEQ2})
-            , UNIT_PROCESS_AUTO_AMT = SF_GET_CALC_PROCESS_AMT(#{TYPE}, #{SEQ1}, #{SEQ2})
-        WHERE CONTROL_SEQ = #{SEQ1}
-            AND CONTROL_DETAIL_SEQ = #{SEQ2}
+            UNIT_MATERIAL_AUTO_AMT = SF_GET_CALC_MATERIAL_AMT('CONTROL', #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ})
+            , UNIT_MATERIAL_FINISH_TM_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('TM', 'CONTROL', #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ})
+            , UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('GRIND', 'CONTROL', #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ})
+            , UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('HEAT', 'CONTROL', #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ})
+            , UNIT_SURFACE_AUTO_AMT = SF_GET_CALC_SURFACE_AMT('CONTROL', #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ})
+            , UNIT_PROCESS_AUTO_AMT = SF_GET_CALC_PROCESS_AMT('CONTROL', #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ})
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
 
 </mapper>

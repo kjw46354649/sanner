@@ -273,6 +273,16 @@
     </insert>
 
     <insert id="insertEstimateDetail" parameterType="java.util.HashMap">
+        <selectKey keyProperty="SEQ" resultType="int" order="BEFORE">
+            <choose>
+                <when test="SEQ == null">
+                    SELECT NEXTVAL(SEQ_ESTIMATE_DETAIL) FROM DUAL
+                </when>
+                <otherwise>
+                    SELECT #{SEQ} FROM DUAL
+                </otherwise>
+            </choose>
+        </selectKey>
         INSERT INTO TBL_ESTIMATE_DETAIL
         (
             EST_SEQ, SEQ,
@@ -292,7 +302,7 @@
         )
         VALUES
         (
-            #{EST_SEQ}, CASE WHEN #{SEQ} IS NOT NULL THEN #{SEQ} ELSE NEXTVAL(SEQ_ESTIMATE_DETAIL) END ,
+            #{EST_SEQ}, #{SEQ},
             #{PROJECT_NM}, #{MODULE_NM}, #{ITEM_NM}, #{DRAWING_NUM}, #{PART_NUM}, #{PARENT_SEQ},
             #{MATERIAL_SUPPLY_YN}, #{ITEM_QTY}, #{SIZE_TXT},
             SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
@@ -1244,15 +1254,15 @@
             , INSERT_DT
             , INSERT_ID
         ) VALUES (
-            #{SEQ1}
-            , #{SEQ2}
+            #{EST_SEQ}
+            , #{SEQ}
             , #{FACTOR_CD}
             , #{PROCESS_CNT}
             , NOW()
             , NULL
         )
         ON DUPLICATE KEY UPDATE
-            PROCESS_CNT = NULL
+            PROCESS_CNT = #{PROCESS_CNT}
 	        , UPDATE_DT = NOW()
 	        , UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
@@ -1260,14 +1270,14 @@
     <update id="updateEstimateAutomaticQuote" parameterType="java.util.HashMap">
         UPDATE TBL_ESTIMATE_DETAIL
         SET
-            UNIT_MATERIAL_AUTO_AMT = SF_GET_CALC_MATERIAL_AMT(#{TYPE}, #{SEQ1}, #{SEQ2})
-            , UNIT_MATERIAL_FINISH_TM_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('TM', #{TYPE}, #{SEQ1}, #{SEQ2})
-            , UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('GRIND', #{TYPE}, #{SEQ1}, #{SEQ2})
-            , UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('HEAT', #{TYPE}, #{SEQ1}, #{SEQ2})
-            , UNIT_SURFACE_AUTO_AMT = SF_GET_CALC_SURFACE_AMT(#{TYPE}, #{SEQ1}, #{SEQ2})
-            , UNIT_PROCESS_AUTO_AMT = SF_GET_CALC_PROCESS_AMT(#{TYPE}, #{SEQ1}, #{SEQ2})
-        WHERE EST_SEQ = #{SEQ1}
-            AND SEQ = #{SEQ2}
+            UNIT_MATERIAL_AUTO_AMT = SF_GET_CALC_MATERIAL_AMT('ESTIMATE', #{EST_SEQ}, #{SEQ})
+            , UNIT_MATERIAL_FINISH_TM_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('TM', 'ESTIMATE', #{EST_SEQ}, #{SEQ})
+            , UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('GRIND', 'ESTIMATE', #{EST_SEQ}, #{SEQ})
+            , UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('HEAT', 'ESTIMATE', #{EST_SEQ}, #{SEQ})
+            , UNIT_SURFACE_AUTO_AMT = SF_GET_CALC_SURFACE_AMT('ESTIMATE', #{EST_SEQ}, #{SEQ})
+            , UNIT_PROCESS_AUTO_AMT = SF_GET_CALC_PROCESS_AMT('ESTIMATE', #{EST_SEQ}, #{SEQ})
+        WHERE EST_SEQ = #{EST_SEQ}
+            AND SEQ = #{SEQ}
     </update>
 
 </mapper>

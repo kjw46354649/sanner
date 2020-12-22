@@ -521,6 +521,8 @@ public class OrderServiceImpl implements OrderService {
                 try {
                     hashMap.put("queryId", "orderMapper.createControlPart");
                     this.innodaleDao.insertGrid(hashMap);
+                    hashMap.put("queryId", "orderMapper.updateControlAutomaticQuote");
+                    this.innodaleDao.updateGrid(hashMap);
                     hashMap.put("queryId", "orderMapper.createControlPartOrder");
                     this.innodaleDao.insertGrid(hashMap);
                     hashMap.put("queryId", "orderMapper.createControlBarcode");
@@ -539,6 +541,8 @@ public class OrderServiceImpl implements OrderService {
                     hashMap.put("queryId", "orderMapper.updateControlFromControlManage");
                     this.innodaleDao.updateGrid(hashMap);
                     hashMap.put("queryId", "orderMapper.updateControlPartFromControlManage");
+                    this.innodaleDao.updateGrid(hashMap);
+                    hashMap.put("queryId", "orderMapper.updateControlAutomaticQuote");
                     this.innodaleDao.updateGrid(hashMap);
                     hashMap.put("queryId", "orderMapper.updateControlPartOrderFromControlManage");
                     this.innodaleDao.updateGrid(hashMap);
@@ -580,8 +584,8 @@ public class OrderServiceImpl implements OrderService {
                     HashMap<String, Object> hashMap = new HashMap<String, Object>();
                     String factorCd = key.substring(key.length() - 6, key.length());
                     hashMap.put("TYPE", jsonMap.get("TYPE"));
-                    hashMap.put("SEQ1", jsonMap.get("SEQ1"));
-                    hashMap.put("SEQ2", jsonMap.get("SEQ2"));
+                    hashMap.put("CONTROL_SEQ", jsonMap.get("SEQ1"));
+                    hashMap.put("CONTROL_DETAIL_SEQ", jsonMap.get("SEQ2"));
                     hashMap.put("FACTOR_CD", factorCd);
                     hashMap.put("PROCESS_CNT", value);
                     hashMap.put("queryId", "orderMapper.insertControlPartProcess");
