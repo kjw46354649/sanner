@@ -327,7 +327,7 @@
                         $cell = grid.getCell(ui);
                     if($cell.hasClass("underlinePoint")){
                         $cell.bind("click", function () {
-                            itemOrder();
+                            itemOrder('cell');
                         });
                     }
                 }
@@ -579,8 +579,12 @@
         ];
 
         let itemOrderRegisterPopTopColModel= [
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80, editable: false},
-            {title: '발주량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
+            {
+                title: '발주 주문정보', align: 'center', colModel: [
+                    {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80, editable: false},
+                    {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false}
+                ]
+            },
             {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029') },
                 render: function (ui) {
@@ -705,6 +709,12 @@
                     },
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
+            {
+                title: '완료 소재주문 정보', align: 'center', colModel: [
+                    {title: '주문번호', dataIndx: 'MATERIAL_ORDER_NUM'},
+                    {title: '수량', dataIndx: 'M_ORDER_COMPLETED_QTY'},
+                ]
+            },
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
@@ -787,8 +797,12 @@
         ];
 
         let itemOrderRegisterPopTopColModel_enabled= [
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80, editable: false},
-            {title: '발주량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
+            {
+                title: '발주 주문정보', align: 'center', colModel: [
+                    {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80, editable: false},
+                    {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false}
+                ]
+            },
             {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND' , editable: false,
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029') },
                 render: function (ui) {
@@ -1233,7 +1247,7 @@
         });
 
         $("#btnItemOrderRegisterOrder").on('click', function(){
-            itemOrder();
+            itemOrder('button');
         });
 
         $("#btnItemOrderRegisterCancel").on('click', function(){
@@ -1485,12 +1499,12 @@
             orderCancel('pop');
         });
 
-        function itemOrder() {
+        function itemOrder(target) {
             let rowDataArray = "";
             let orderList = [];
             let MATERIAL_ORDER_NUM = "";
             // let ORDER_USER_ID = "";
-            if(itemOrderRegisterSelectedRowIndex) {
+            if (itemOrderRegisterSelectedRowIndex) {
                 let selectedRowCount = itemOrderRegisterSelectedRowIndex.length;
                 for (let i = 0; i < selectedRowCount; i++) {
                     let CONTROL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_SEQ;
@@ -1508,7 +1522,7 @@
                 orderList = [...new Set(orderList)];
 
                 if (orderList.length > 1) {
-                    fnAlert(null,"주문번호를 확인 해 주세요.");
+                    fnAlert(null, "주문번호를 확인 해 주세요.");
                     return false;
                 }
 
@@ -1517,16 +1531,20 @@
                     $("#item_order_register_popup_form #CONCAT_SEQ").val(CONCAT_SEQ);
                     $("#item_order_register_popup_form #MATERIAL_ORDER_NUM").val("");
                 } else {
+                    if(target === 'button') {
+                        fnAlert(null, '이미 소재주문정보가 존재합니다.');
+                        return;
+                    }
+
                     $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListNum");
                     $("#item_order_register_popup_form #CONCAT_SEQ").val("");
                     $("#item_order_register_popup_form #MATERIAL_ORDER_NUM").val(MATERIAL_ORDER_NUM);
-                    //$("#item_order_register_popup").find("#ORDER_USER_ID").val(ORDER_USER_ID);
                 }
             } else {
                 $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListSeq");
                 $("#item_order_register_popup_form #CONCAT_SEQ").val(0);
             }
-            $("#item_order_register_popup").modal('toggle');
+            $("#item_order_register_popup").modal('show');
         }
 
         function orderCancel(type) {
