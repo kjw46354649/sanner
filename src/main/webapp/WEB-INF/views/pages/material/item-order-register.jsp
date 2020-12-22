@@ -316,6 +316,23 @@
             {title: '가공 확정일시', dataType: 'date', dataIndx: 'STATUS_DT', width: 75, editable: false},
             {title: '가공 확정일시(조회 조건용)', dataType: 'date', dataIndx: 'STATUS_DT_CONDITION', width: 75, editable: false, hidden: true},
             {title: '소재주문<br>상태', dataType: 'string', dataIndx: 'M_STATUS_NM', width: 60, editable: false},
+            {title: '소재 주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false,
+                render: function (ui) {
+                    let cls = null;
+                    if (ui.cellData) cls = 'underlinePoint';
+                    return {cls: cls, text: itemOrderRegisterFilterRender(ui)};
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    if($cell.hasClass("underlinePoint")){
+                        $cell.bind("click", function () {
+                            itemOrder();
+                        });
+                    }
+                }
+            },
+            {title: '주문<br>요청 일시', dataType: 'date', dataIndx: 'M_ORDER_DT',  width: 120, editable: false},
             {title: '현재위치', dataIndx: 'POP_POSITION_NM', width: 80, editable: false},
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
@@ -507,23 +524,6 @@
                     },
                 ]
             },
-            {title: '소재 주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false,
-                render: function (ui) {
-                    let cls = null;
-                    if (ui.cellData) cls = 'underlinePoint';
-                    return {cls: cls, text: itemOrderRegisterFilterRender(ui)};
-                },
-                postRender: function(ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    if($cell.hasClass("underlinePoint")){
-                        $cell.bind("click", function () {
-                            itemOrder();
-                        });
-                    }
-                }
-            },
-            {title: '주문<br>요청 일시', dataType: 'date', dataIndx: 'M_ORDER_DT',  width: 120, editable: false},
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 120, editable: false},
             {title: '.', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: '.', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
