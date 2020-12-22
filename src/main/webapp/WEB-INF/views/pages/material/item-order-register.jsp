@@ -579,8 +579,12 @@
         ];
 
         let itemOrderRegisterPopTopColModel= [
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80, editable: false},
-            {title: '발주량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
+            {
+                title: '발주 주문정보', align: 'center', colModel: [
+                    {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80, editable: false},
+                    {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false}
+                ]
+            },
             {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029') },
                 render: function (ui) {
@@ -705,6 +709,12 @@
                     },
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
+            {
+                title: '완료 소재주문 정보', align: 'center', colModel: [
+                    {title: '주문번호', dataIndx: 'MATERIAL_ORDER_NUM'},
+                    {title: '수량', dataIndx: 'M_ORDER_COMPLETED_QTY'},
+                ]
+            },
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
@@ -787,8 +797,12 @@
         ];
 
         let itemOrderRegisterPopTopColModel_enabled= [
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80, editable: false},
-            {title: '발주량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
+            {
+                title: '발주 주문정보', align: 'center', colModel: [
+                    {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80, editable: false},
+                    {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false}
+                ]
+            },
             {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND' , editable: false,
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029') },
                 render: function (ui) {
