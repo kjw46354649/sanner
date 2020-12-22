@@ -327,7 +327,7 @@
                         $cell = grid.getCell(ui);
                     if($cell.hasClass("underlinePoint")){
                         $cell.bind("click", function () {
-                            itemOrder();
+                            itemOrder('cell');
                         });
                     }
                 }
@@ -1247,7 +1247,7 @@
         });
 
         $("#btnItemOrderRegisterOrder").on('click', function(){
-            itemOrder();
+            itemOrder('button');
         });
 
         $("#btnItemOrderRegisterCancel").on('click', function(){
@@ -1499,12 +1499,12 @@
             orderCancel('pop');
         });
 
-        function itemOrder() {
+        function itemOrder(target) {
             let rowDataArray = "";
             let orderList = [];
             let MATERIAL_ORDER_NUM = "";
             // let ORDER_USER_ID = "";
-            if(itemOrderRegisterSelectedRowIndex) {
+            if (itemOrderRegisterSelectedRowIndex) {
                 let selectedRowCount = itemOrderRegisterSelectedRowIndex.length;
                 for (let i = 0; i < selectedRowCount; i++) {
                     let CONTROL_SEQ = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_SEQ;
@@ -1522,7 +1522,7 @@
                 orderList = [...new Set(orderList)];
 
                 if (orderList.length > 1) {
-                    fnAlert(null,"주문번호를 확인 해 주세요.");
+                    fnAlert(null, "주문번호를 확인 해 주세요.");
                     return false;
                 }
 
@@ -1531,16 +1531,20 @@
                     $("#item_order_register_popup_form #CONCAT_SEQ").val(CONCAT_SEQ);
                     $("#item_order_register_popup_form #MATERIAL_ORDER_NUM").val("");
                 } else {
+                    if(target === 'button') {
+                        fnAlert(null, '이미 소재주문정보가 존재합니다.');
+                        return;
+                    }
+
                     $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListNum");
                     $("#item_order_register_popup_form #CONCAT_SEQ").val("");
                     $("#item_order_register_popup_form #MATERIAL_ORDER_NUM").val(MATERIAL_ORDER_NUM);
-                    //$("#item_order_register_popup").find("#ORDER_USER_ID").val(ORDER_USER_ID);
                 }
             } else {
                 $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListSeq");
                 $("#item_order_register_popup_form #CONCAT_SEQ").val(0);
             }
-            $("#item_order_register_popup").modal('toggle');
+            $("#item_order_register_popup").modal('show');
         }
 
         function orderCancel(type) {
