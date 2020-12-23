@@ -557,7 +557,7 @@
                                                             AND (D.CLOSE_MONTH BETWEEN  DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m') AND DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_RIGHT}, #{CLOSE_MONTH_RIGHT}), '%Y%m'), '%Y%m'))
                                                         </when>
                                                         <otherwise>
-                                                            AND D.CLOSE_MONTH <![CDATA[ > ]]> DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m')
+                                                            AND D.CLOSE_MONTH <![CDATA[ >= ]]> DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m')
                                                         </otherwise>
                                                     </choose>
                                                     <choose>
