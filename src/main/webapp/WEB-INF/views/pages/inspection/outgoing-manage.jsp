@@ -339,13 +339,16 @@
         <input type="hidden" id="ORG_NEW_OUT_QTY" name="ORG_NEW_OUT_QTY" value="">
 
         <div class="miniPopup">
-<%--            <div class="headWrap2">--%>
-<%--                <h4 id="pop_title">출고실적 등록</h4>--%>
-<%--                <button class="pop_close">닫기</button>--%>
-<%--            </div>--%>
-
             <div class="contentWrap">
-                <h3>출고 실적 등록</h3>
+                <div class="d-flex align-items-center">
+                    <div>
+                        <h3>출고 실적 등록</h3>
+                        <h2 id="subtitle" style="display: none">(폐기)</h2>
+                    </div>
+                    <div class="ml-auto mr-30">
+                        <span class="chk_box"><input name="DISPOSAL_YN" id="DISPOSAL_YN" type="checkbox"><label for="DISPOSAL_YN" style="font-size: small"> 폐기처리</label></span>
+                    </div>
+                </div>
                 <button type="button" class="pop_close" id="popClose2">닫기</button>
                 <table>
                     <caption></caption>
@@ -375,7 +378,7 @@
                         <td colspan="2" id="outgoing_manage_pop_type_1_form_view_2"></td>
                     </tr>
                     <tr>
-                        <th>출고</th>
+                        <th id="out">출고</th>
                         <td colspan="4" class="bg_green">
                             <button type="button" class="btn_plus" id="outgoing_manage_mini_pop_plus_btn">더하기</button>
                             <input type="number" class="text" id="NEW_OUT_QTY_VIEW" value="0" min="0" autocomplete="off" pattern="\d*">
@@ -387,9 +390,9 @@
             </div>
             <div class="footerWrap">
                 <div class="process">
-                    <span class="pr_txt"><b>출고</b>를 진행하시겠습니까?</span>
+                    <span class="pr_txt"><span style="display: none;">폐기</span><b>출고</b>를 진행하시겠습니까?</span>
                     <div class="btnWrap">
-                        <button type="button" class="defaultBtn greenPopGra" id="outgoing_manage_mini_pop_save_btn">저장</button>
+                        <button type="button" class="defaultBtn greenPopGra" id="outgoing_manage_mini_pop_save_btn" data-target="release">저장</button>
                         <button type="button" class="defaultBtn grayPopGra" id="outgoing_manage_mini_pop_close_btn">닫기</button>
                     </div>
                 </div>
@@ -601,9 +604,9 @@
         // outgoingManagePostData01 = fnFormToJsonArrayData('#outgoing_manage_form');
         outgoingManageColModel01 = [
             // {title: 'BARCODE_NUM', dataIndx: 'BARCODE_NUM', hidden:true},
-            {title: 'ORDER_SEQ', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: 'ORDER_SEQ', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: 'INSPECT_SEQ', dataIndx: 'INSPECT_SEQ', hidden: true},
             {title: '주문<br>상태', minWidth: 30, dataIndx: 'CONTROL_STATUS_NM'},
             {
@@ -680,8 +683,12 @@
                     let returnBtn = '';
                     let labelBtn = '';
                     // console.log("ui.rowData['PART_NUM']",ui.rowData['PART_NUM']);
-                    if (ui.rowData['PART_NUM'] === undefined) {//part 있음 모든 버튼 안보이게
-                        if (ui.rowData['ORDER_SEQ'] !== undefined) {
+                    if (ui.rowData['PART_NUM'] === undefined && ui.rowData['ORDER_SEQ'] !== undefined) {//part 있음 모든 버튼 안보이게
+                        if (ui.rowData['SCRAP_YN'] === 'Y') {
+                            outBtn = '<button type="button" class="miniBtn gray" style="color: #777777 !important;">출고</button>' + '&nbsp;';
+                            returnBtn = '<button type="button" class="miniBtn gray" style="color: #777777 !important;">반품</button>' + '&nbsp;';
+                            labelBtn = '<button type="button" class="miniBtn gray" style="color: #777777 !important;">라벨</button>';
+                        } else {
                             if (ui.rowData['OUT_FINISH_DT'] !== undefined || ui.rowData['ORDER_PACKING_NUM_CNT'] > 0) {// 출고완료
                                 outBtn = '<button type="button" class="miniBtn gray" style="color: #777777 !important;">출고</button>' + '&nbsp;';
                                 returnBtn = '<button type="button" class="miniBtn orange" id="returnBtn"  data-control_seq=\"' + rowData.CONTROL_SEQ + '\" data-control_detail_seq=\"' + rowData.CONTROL_DETAIL_SEQ + '\" data-order_seq=\"' + rowData.ORDER_SEQ + '\">반품</button>' + '&nbsp;';
@@ -693,9 +700,7 @@
                                 }
                                 returnBtn = '<button type="button" class="miniBtn gray" style="color: #777777 !important;">반품</button>' + '&nbsp;';
                             }
-                        }
 
-                        if (ui.rowData['ORDER_SEQ'] !== undefined) {
                             labelBtn = '<button type="button" class="miniBtn blue" id="labelBtn"  data-control_seq="' + rowData.CONTROL_SEQ + '" data-control_detail_seq="' + rowData.CONTROL_DETAIL_SEQ + '" data-order_seq="' + rowData.ORDER_SEQ + '">라벨</button>';
                         }
                     }
@@ -807,7 +812,7 @@
 
         $("#outgoing_manage_form").find('[name=SEL_OUTGOING_TERM]').change(function () {
             let value = $(this).val(), today = new Date(), newDate = new Date();
-            console.log(value);
+
             switch (value) {
                 case "today":
                     break;
@@ -1175,7 +1180,6 @@
                             // $("#outgoing_manage_return_form").find("#ORDER_COMP_NM" + "_VIEW_T").html(dataInfo.ORDER_COMP_NM);
                             // $("#outgoing_manage_return_form").find("#OUTSIDE_COMP_NM" + "_VIEW_T").html(dataInfo.OUTSIDE_COMP_NM);
 
-                            console.log(dataInfo);
 
                             $("#outgoing_manage_return_form").find("#CONTROL_NUM" + "_VIEW_T").html(dataInfo.CONTROL_NUM);
                             $("#outgoing_manage_return_form").find("#DRAWING_NUM" + "_VIEW_T").html(dataInfo.DRAWING_NUM);
@@ -1206,13 +1210,15 @@
         });
 
         $("#outgoing_manage_pop_type_1").on('hide.bs.modal', function () {
+            if ($("#DISPOSAL_YN").is(":checked")) {
+                $("#DISPOSAL_YN").trigger("click");
+            }
             fnResetFrom("outgoing_manage_pop_type_1_form");
             $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
             $("#outgoing_manage_search_btn").trigger("click");
         });
 
         $("#outgoing_manage_pop_type_1").on('show.bs.modal', function () {
-
             $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.selectOutgoingOutType1");
             let parameters = {
                 'url': '/json-info',
@@ -1378,7 +1384,15 @@
             if ($("#outgoing_manage_pop_type_1_form").find("#NEW_OUT_QTY_VIEW").val() === 0) {
                 fnAlert(null, "출고수량은 1개 이상이어야 합니다.");
             } else {
-                $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2");
+                let target = $('#outgoing_manage_mini_pop_save_btn').data('target');
+                console.log(target);
+                switch (target) {
+                    case 'disposal':
+                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.updateOutgoingDisposal,inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2");
+                        break;
+                    default:
+                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2");
+                }
 
                 let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_pop_type_1_form").serialize()};
                 fnPostAjax(function () {
@@ -1850,6 +1864,26 @@
             });
 
             saveAs(blob, '출하관리.xlsx');
+        });
+
+        $('#DISPOSAL_YN').on('click', function () {
+            const $miniPopup = $('#outgoing_manage_pop_type_1').find('.miniPopup');
+
+            if (this.checked) {
+                $miniPopup.css('background-color', '#ffeed9');
+                $miniPopup.find('#out').html('폐기<br>출고');
+                $('#outgoing_manage_mini_pop_save_btn').data('target', 'disposal');
+            } else {
+                $miniPopup.css('background-color', '');
+                $miniPopup.find('#out').html('출고');
+                $('#outgoing_manage_mini_pop_save_btn').data('target', 'release');
+            }
+            $miniPopup.find('#subtitle').toggle();
+            $miniPopup.find('.process > .pr_txt > span:first').toggle();
+            $miniPopup.find('#outgoing_manage_mini_pop_plus_btn').toggle();
+            $miniPopup.find('#outgoing_manage_mini_pop_minus_btn').toggle();
+            $miniPopup.find('#outgoing_manage_mini_pop_all_btn').toggle();
+            $miniPopup.find('#outgoing_manage_mini_pop_all_btn').click();
         });
     });
 

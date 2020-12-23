@@ -462,7 +462,7 @@
             , T.Q_ERROR_ACTION_NM
             , T.Q_ERROR_NOTE
             , T.PART_STATUS_NM
-            , T.POP_NM
+            , CASE WHEN T.SCRAP_YN = 'Y' THEN NULL ELSE T.POP_NM END AS POP_NM
             , T.IMG_GFILE_SEQ
             , T.WORK_FINISH_DT
             , T.ORIGINAL_SIDE_QTY
@@ -474,6 +474,7 @@
             , T.Q_DT
             , T.CONTROL_CONFIRM_DT
             , T.CONTROL_CLOSE_DT
+            , T.SCRAP_YN
         FROM (
             SELECT
                   X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ, X.INSPECT_SEQ
@@ -512,7 +513,7 @@
                 , Z.INSPECT_DESC AS Q_INSPECT_DESC
                 , jmes.SF_GET_CODE_NM('1025', Z.ERROR_ACTION, #{LOGIN_LOCALE}) AS Q_ERROR_ACTION_NM
                 , Z.ERROR_NOTE AS Q_ERROR_NOTE
-                , jmes.SF_GET_CODE_NM('1013', X.PART_STATUS, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+                , jmes.SF_GET_PART_STATUS_NM(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
                 , (SELECT SF_GET_CODE_NM('1009', M.POP_POSITION, #{LOGIN_LOCALE}) FROM jmes.TBL_POP M WHERE M.POP_SEQ = X.POP_SEQ) AS POP_NM
                 , X.OUT_FINISH_DT
                 , (SELECT SUM(M.ERROR_QTY) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = X.ORDER_SEQ AND M.INSPECT_TYPE = '2') AS RETURN_QTY
@@ -544,6 +545,7 @@
                 , jmes.SF_GET_DATE_F(Z.INSERT_DT,'','M') AS Q_DT
                 , X.CONTROL_CONFIRM_DT
                 , X.CONTROL_CLOSE_DT
+                , X.SCRAP_YN
             FROM (
                 SELECT
                     C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
@@ -597,6 +599,7 @@
                                             WHERE 1 = 1
                                                 AND AA.CONTROL_SEQ = BB.CONTROL_SEQ
                                                 AND BB.ORDER_STATUS = 'ORD003')) AS CONTROL_CLOSE_DT <!-- 확정 일자 -->
+                    , C.SCRAP_YN
                 FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND A.CONTROL_SEQ = C.CONTROL_SEQ
@@ -1159,7 +1162,7 @@
             , X.CONTROL_DETAIL_SEQ
             , X.ORDER_SEQ
             , X.OUT_RETURN_TYPE
-            , CASE WHEN X.OUT_RETURN_TYPE = '1' THEN '출고' ELSE '반품' END AS OUT_RETURN_TYPE_NM
+            , CASE X.OUT_RETURN_TYPE WHEN '1' THEN '출고' WHEN '2' THEN '반품' ELSE '폐기' END AS OUT_RETURN_TYPE_NM
             , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.ORDER_COMP_CD) AS ORDER_COMP_NM
             , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
             , X.ORDER_NUM
@@ -1203,6 +1206,7 @@
                     AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.CONTROL_SEQ = D.CONTROL_SEQ
                     AND A.ORDER_SEQ = D.ORDER_SEQ
+                    AND IFNULL(D.SCRAP_YN, 'N') = 'N'
                     AND A.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_ST_DT},'/',space(0)),'%Y%m%d') AND DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY)
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND B.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
@@ -1247,6 +1251,49 @@
                     AND A.ORDER_SEQ = D.ORDER_SEQ
                     AND A.INSPECT_TYPE = '2'
                     AND A.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_ST_DT},'/',space(0)),'%Y%m%d') AND DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY) <!-- 인덱스 고려 -->
+                    <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
+                        AND B.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
+                    </if>
+                    <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
+                        AND UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
+                    </if>
+                    <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
+                        AND UPPER(C.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
+                    </if>
+                    <if test="SEL_ORDER_NUM !='' and SEL_ORDER_NUM != null">
+                        AND UPPER(D.ORDER_NUM) LIKE CONCAT('%', UPPER(#{SEL_ORDER_NUM}), '%')
+                    </if>
+                UNION ALL
+                SELECT A.OUT_SEQ AS KEY_SEQ
+                    , '3' AS OUT_RETURN_TYPE
+                    , A.CONTROL_SEQ
+                    , A.CONTROL_DETAIL_SEQ
+                    , A.ORDER_SEQ
+                    , C.OUTSIDE_COMP_CD
+                    , D.ORDER_NUM
+                    , B.CONTROL_NUM
+                    , B.ORDER_COMP_CD
+                    , CASE WHEN C.PART_NUM IS NULL THEN D.DRAWING_NUM ELSE C.DRAWING_NUM END AS DRAWING_NUM
+                    , C.MATERIAL_DETAIL
+                    , C.SIZE_TXT
+                    , D.ORDER_QTY
+                    , A.OUT_QTY
+                    , D.PACKING_CNT
+                    , A.PACKING_NUM
+                    , NULL AS RETURN_QTY
+                    , A.INSERT_DT
+                    , '' AS RETURN_SETTLEMENT_DT
+                FROM jmes.TBL_OUT A
+                    , jmes.TBL_CONTROL B
+                    , jmes.TBL_CONTROL_PART C
+                    , jmes.TBL_CONTROL_PART_ORDER D
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND A.CONTROL_SEQ = D.CONTROL_SEQ
+                    AND A.ORDER_SEQ = D.ORDER_SEQ
+                    AND IFNULL(D.SCRAP_YN, 'N') = 'Y'
+                    AND A.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_ST_DT},'/',space(0)),'%Y%m%d') AND DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY)
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND B.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
@@ -1382,6 +1429,31 @@
         DELETE FROM jmes.TBL_INSPECT WHERE INSPECT_SEQ = #{INSPECT_SEQ}
     </delete>
 
+    <update id="updateOutgoingDisposal" parameterType="java.util.HashMap">
+        UPDATE
+            jmes.TBL_CONTROL_PART_ORDER
+        SET
+            SCRAP_YN = 'Y'
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND ORDER_SEQ = #{ORDER_SEQ}
+    </update>
+
+    <update id="updateOutgoingCancelDisposal" parameterType="java.util.HashMap">
+        UPDATE
+            jmes.TBL_CONTROL_PART_ORDER
+        SET
+            SCRAP_YN = 'N'
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND ORDER_SEQ = #{ORDER_SEQ}
+    </update>
 
 <!--    <update id="updateOutgoingReturnAfter1" parameterType="java.util.HashMap">-->
 <!--        UPDATE jmes.TBL_CONTROL_PART_ORDER-->
