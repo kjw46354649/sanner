@@ -557,7 +557,7 @@
                                                             AND (D.CLOSE_MONTH BETWEEN  DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m') AND DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_RIGHT}, #{CLOSE_MONTH_RIGHT}), '%Y%m'), '%Y%m'))
                                                         </when>
                                                         <otherwise>
-                                                            AND D.CLOSE_MONTH <![CDATA[ > ]]> DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m')
+                                                            AND D.CLOSE_MONTH <![CDATA[ >= ]]> DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m')
                                                         </otherwise>
                                                     </choose>
                                                     <choose>
@@ -603,74 +603,129 @@
 
     <select id="selectOutsideYearCloseStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            1 AS GROUP_KEY,
-            ROW_NUMBER () OVER (ORDER BY Z.CLOSE_MONTH, Z.COMP_CD, Z.OUTSIDE_COMP_CD, Z.STATUS_TYPE) AS ROW_NUM,
-            Z.CLOSE_MONTH,
-            Z.COMP_CD,
-            (SELECT A.COMP_NM FORM FROM jmes.TBL_COMPANY A WHERE A.COMP_CD = Z.COMP_CD) AS COMP_NM,
-            Z.OUTSIDE_COMP_CD,
-            (SELECT A.COMP_NM FORM FROM jmes.TBL_COMPANY A WHERE A.COMP_CD = Z.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_CD_NM,
-            CASE WHEN STATUS_TYPE = '1' THEN '외주금액' ELSE '원발주 금액' END STATUS_TYPE,
-            CASE WHEN Z.MM = '01' THEN Z.ORDER_AMT ELSE 0 END AS ORDER_01_AMT,
-            CASE WHEN Z.MM = '02' THEN Z.ORDER_AMT ELSE 0 END AS ORDER_02_AMT,
-            CASE WHEN Z.MM = '03' THEN Z.ORDER_AMT ELSE 0 END AS ORDER_03_AMT,
-            CASE WHEN Z.MM IN ('01', '02', '03') THEN Z.ORDER_AMT ELSE 0 END ORDER_03_SUM_AMT,
-            CASE WHEN Z.MM = '04' THEN Z.ORDER_AMT ELSE 0 END AS ORDER_04_AMT,
-            CASE WHEN Z.MM = '05' THEN Z.ORDER_AMT ELSE 0 END AS ORDER_05_AMT,
-            CASE WHEN Z.MM = '06' THEN Z.ORDER_AMT ELSE 0 END AS ORDER_06_AMT,
-            CASE WHEN Z.MM IN ('04', '05', '06') THEN Z.ORDER_AMT ELSE 0 END ORDER_06_SUM_AMT,
-            CASE WHEN Z.MM = '07' THEN Z.ORDER_AMT ELSE 0 END AS ORDER_07_AMT,
-            CASE WHEN Z.MM = '08' THEN Z.ORDER_AMT ELSE 0 END AS ORDER_08_AMT,
-            CASE WHEN Z.MM = '09' THEN Z.ORDER_AMT ELSE 0 END AS ORDER_09_AMT,
-            CASE WHEN Z.MM IN ('07', '08', '09') THEN Z.ORDER_AMT ELSE 0 END ORDER_09_SUM_AMT,
-            CASE WHEN Z.MM = '10' THEN Z.ORDER_AMT ELSE 0 END AS ORDER_10_AMT,
-            CASE WHEN Z.MM = '11' THEN Z.ORDER_AMT ELSE 0 END AS ORDER_11_AMT,
-            CASE WHEN Z.MM = '12' THEN Z.ORDER_AMT ELSE 0 END AS ORDER_12_AMT,
-            CASE WHEN Z.MM IN ('10', '11', '12') THEN Z.ORDER_AMT ELSE 0 END ORDER_12_SUM_AMT,
-            Z.ORDER_AMT AS TOTAL_AMT
+            1 AS GROUP_KEY
+            , ROW_NUMBER () OVER (ORDER BY X.YYYY, X.COMP_CD, X.OUTSIDE_COMP_CD, X.STATUS_TYPE) AS ROW_NUM
+            , X.YYYY
+            , X.MM
+            , X.COMP_CD
+            , X.COMP_NM
+            , X.OUTSIDE_COMP_CD
+            , X.OUTSIDE_COMP_NM
+            , X.STATUS_TYPE
+            , SUM(X.`01_AMT`) AS `01_AMT`
+            , SUM(X.`02_AMT`) AS `02_AMT`
+            , SUM(X.`03_AMT`) AS `03_AMT`
+            , SUM(X.`03_SUM_AMT`) AS `03_SUM_AMT`
+            , SUM(X.`04_AMT`) AS `04_AMT`
+            , SUM(X.`05_AMT`) AS `05_AMT`
+            , SUM(X.`06_AMT`) AS `06_AMT`
+            , SUM(X.`06_SUM_AMT`) AS `06_SUM_AMT`
+            , SUM(X.`07_AMT`) AS `07_AMT`
+            , SUM(X.`08_AMT`) AS `08_AMT`
+            , SUM(X.`09_AMT`) AS `09_AMT`
+            , SUM(X.`09_SUM_AMT`) AS `09_SUM_AMT`
+            , SUM(X.`10_AMT`) AS `10_AMT`
+            , SUM(X.`11_AMT`) AS `11_AMT`
+            , SUM(X.`12_AMT`) AS `12_AMT`
+            , SUM(X.`12_SUM_AMT`) AS `12_SUM_AMT`
+            , SUM(X.TOTAL_AMT) AS TOTAL_AMT
         FROM (
             SELECT
-                G.CLOSE_MONTH, F.MM, G.COMP_CD, G.STATUS_TYPE, G.OUTSIDE_COMP_CD, G.ORDER_AMT
-            FROM TBL_YYYYMMDD F
-                INNER JOIN (
-                    SELECT
-                        K.STATUS_TYPE, K.COMP_CD, K.OUTSIDE_COMP_CD, K.CLOSE_MONTH, K.ORDER_AMT
-                    FROM (
+                H.YYYY
+                , H.MM
+                , H.COMP_CD
+                , SF_GET_COMP_NM(H.COMP_CD) AS COMP_NM
+                , H.OUTSIDE_COMP_CD
+                , SF_GET_COMP_NM(H.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
+                , CASE WHEN STATUS_TYPE = '1' THEN '외주금액' ELSE '원발주 금액' END STATUS_TYPE
+                , CASE WHEN H.MM = '01' THEN H.ORDER_AMT ELSE 0 END AS `01_AMT`
+                , CASE WHEN H.MM = '02' THEN H.ORDER_AMT ELSE 0 END AS `02_AMT`
+                , CASE WHEN H.MM = '03' THEN H.ORDER_AMT ELSE 0 END AS `03_AMT`
+                , CASE WHEN H.MM IN ('01', '02', '03') THEN H.ORDER_AMT ELSE 0 END AS `03_SUM_AMT`
+                , CASE WHEN H.MM = '04' THEN H.ORDER_AMT ELSE 0 END AS `04_AMT`
+                , CASE WHEN H.MM = '05' THEN H.ORDER_AMT ELSE 0 END AS `05_AMT`
+                , CASE WHEN H.MM = '06' THEN H.ORDER_AMT ELSE 0 END AS `06_AMT`
+                , CASE WHEN H.MM IN ('04', '05', '06') THEN H.ORDER_AMT ELSE 0 END AS `06_SUM_AMT`
+                , CASE WHEN H.MM = '07' THEN H.ORDER_AMT ELSE 0 END AS `07_AMT`
+                , CASE WHEN H.MM = '08' THEN H.ORDER_AMT ELSE 0 END AS `08_AMT`
+                , CASE WHEN H.MM = '09' THEN H.ORDER_AMT ELSE 0 END AS `09_AMT`
+                , CASE WHEN H.MM IN ('07', '08', '09') THEN H.ORDER_AMT ELSE 0 END AS `09_SUM_AMT`
+                , CASE WHEN H.MM = '10' THEN H.ORDER_AMT ELSE 0 END AS `10_AMT`
+                , CASE WHEN H.MM = '11' THEN H.ORDER_AMT ELSE 0 END AS `11_AMT`
+                , CASE WHEN H.MM = '12' THEN H.ORDER_AMT ELSE 0 END AS `12_AMT`
+                , CASE WHEN H.MM IN ('10', '11', '12') THEN H.ORDER_AMT ELSE 0 END AS `12_SUM_AMT`
+                , H.ORDER_AMT AS TOTAL_AMT
+            FROM (
+                SELECT
+                    F.YYYY
+                    , F.MM
+                    , G.COMP_CD
+                    , G.STATUS_TYPE
+                    , G.OUTSIDE_COMP_CD
+                    , G.ORDER_AMT
+                FROM TBL_YYYYMMDD F
+                    INNER JOIN (
                         SELECT
-                            '1' AS STATUS_TYPE, A.COMP_CD, B.OUTSIDE_COMP_CD, D.CLOSE_MONTH, SUM(C.UNIT_FINAL_AMT * C.ORDER_QTY) AS ORDER_AMT
-                        FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_OUTSIDE_CLOSE D
-                        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ AND A.DEL_YN = 'N' AND IFNULL(B.PART_NUM, '0') = '0'
-                            AND B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                            AND B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-                            AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{YEAR}
-                            <if test="COMP_CD != null and COMP_CD != ''">
-                                AND A.COMP_CD = #{COMP_CD}
-                            </if>
-                            <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
-                                AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
-                            </if>
-                        GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
-                        UNION ALL
-                        SELECT
-                            '2' AS STATUS_TYPE, A.COMP_CD, B.OUTSIDE_COMP_CD, D.CLOSE_MONTH, SUM(B.OUTSIDE_UNIT_AMT * C.ORDER_QTY) AS ORDER_AMT
-                        FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_OUTSIDE_CLOSE D
-                        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ AND A.DEL_YN = 'N' AND IFNULL(B.PART_NUM, '0') = '0'
-                            AND B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                            AND B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-                            AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{YEAR}
-                            <if test="COMP_CD != null and COMP_CD != ''">
-                                AND A.COMP_CD = #{COMP_CD}
-                            </if>
-                            <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
-                                AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
-                            </if>
-                        GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
-                    ) K
-                ) G ON CONCAT(F.YYYY, F.MM) = G.CLOSE_MONTH
-            WHERE F.YYYY = #{YEAR}
-        ) Z
-        GROUP BY Z.CLOSE_MONTH, Z.COMP_CD, Z.OUTSIDE_COMP_CD, Z.STATUS_TYPE
-        ORDER BY Z.CLOSE_MONTH, Z.COMP_CD, Z.OUTSIDE_COMP_CD, Z.STATUS_TYPE
+                            K.STATUS_TYPE
+                            , K.COMP_CD
+                            , K.OUTSIDE_COMP_CD
+                            , K.CLOSE_MONTH
+                            , K.ORDER_AMT
+                        FROM (
+                            SELECT
+                                '1' AS STATUS_TYPE
+                                , A.COMP_CD
+                                , B.OUTSIDE_COMP_CD
+                                , D.CLOSE_MONTH
+                                , SUM(C.UNIT_FINAL_AMT * C.ORDER_QTY) AS ORDER_AMT
+                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_OUTSIDE_CLOSE D
+                            WHERE 1 = 1
+                                AND D.CONTROL_SEQ = B.CONTROL_SEQ
+                                AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                AND C.CONTROL_SEQ = B.CONTROL_SEQ
+                                AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                AND B.CONTROL_SEQ = A.CONTROL_SEQ
+                                AND A.DEL_YN = 'N'
+                                AND IFNULL(B.PART_NUM, '0') = '0'
+                                AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{YEAR}
+                                <if test="COMP_CD != null and COMP_CD != ''">
+                                    AND A.COMP_CD = #{COMP_CD}
+                                </if>
+                                <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
+                                    AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
+                                </if>
+                            GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
+                            UNION ALL
+                            SELECT
+                                '2' AS STATUS_TYPE
+                                , A.COMP_CD
+                                , B.OUTSIDE_COMP_CD
+                                , D.CLOSE_MONTH
+                                , SUM(B.OUTSIDE_UNIT_AMT * C.ORDER_QTY) AS ORDER_AMT
+                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_OUTSIDE_CLOSE D
+                            WHERE 1 = 1
+                                AND D.CONTROL_SEQ = B.CONTROL_SEQ
+                                AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                AND C.CONTROL_SEQ = B.CONTROL_SEQ
+                                AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                AND B.CONTROL_SEQ = A.CONTROL_SEQ
+                                AND A.DEL_YN = 'N'
+                                AND IFNULL(B.PART_NUM, '0') = '0'
+                                AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{YEAR}
+                                <if test="COMP_CD != null and COMP_CD != ''">
+                                    AND A.COMP_CD = #{COMP_CD}
+                                </if>
+                                <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
+                                    AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
+                                </if>
+                            GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
+                        ) K
+                    ) G ON CONCAT(F.YYYY, F.MM) = G.CLOSE_MONTH
+                WHERE F.YYYY = #{YEAR}
+            ) H
+        ) X
+        GROUP BY X.YYYY, X.COMP_CD, X.OUTSIDE_COMP_CD, X.STATUS_TYPE
+        ORDER BY X.YYYY, X.COMP_CD, X.OUTSIDE_COMP_CD, X.STATUS_TYPE
     </select>
 
     <select id="selectOutsideCloseCancelLeftList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -980,6 +1035,7 @@
         SELECT
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
+            (SELECT M.UNIT_FINAL_AMT FROM TBL_CONTROL_PART_ORDER_MAIN M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ) AS UNIT_FINAL_AMT,
             DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y.%m') AS OUTSIDE_CLOSE_MONTH, <!-- 마감 월 -->
             D.CLOSE_VER AS OUTSIDE_CLOSE_VER,
             SF_GET_COMP_NM(E.COMP_CD) AS OUTSIDE_CLOSE_COMP_NM, <!-- 매입 사업자 -->

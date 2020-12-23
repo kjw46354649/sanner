@@ -184,7 +184,7 @@
             {title: '주문<br>수량', dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: '원발주 정보', align: 'center', colModel: [
-                    {title: '납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT', render: function (ui) {}},
+                    {title: '납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT'},
                     {title: '공급단가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
                     {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
                     {title: '발주처', width: 70, dataIndx: 'ORDER_COMP_NM'}
