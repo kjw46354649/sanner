@@ -29,4 +29,6 @@ public interface OrderService {
     void validationCheckBeforeSaveFromControl(Model model, Map<String, Object> map) throws Exception;
 
     void saveFromControlManage(Model model, Map<String, Object> map) throws Exception;
+
+    void processingRequirementsControlSave(Model model, Map<String, Object> map)  throws Exception;
 }

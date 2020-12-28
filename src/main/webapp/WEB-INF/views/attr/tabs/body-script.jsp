@@ -371,8 +371,8 @@
      **/
     let fnResetFrom = function (formid){
         if(formid.indexOf("#") == -1) formid = $("#"+formid);
-        formid.find('input:text, input:password, input:file, textarea').val('');
-        formid.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+        formid.find('input[type=text], input[type=number], input[type=password], input[type=file], textarea').val('');
+        formid.find('input[type=radio], input[type=checkbox]').removeAttr('checked').removeAttr('selected');
         // select box 첫번째 값이 공백이 아니면 첫번째 값으로 셋팅
         $('select', formid).each(function() {
             $(this).val($(this).prop('defaultSelected'));
