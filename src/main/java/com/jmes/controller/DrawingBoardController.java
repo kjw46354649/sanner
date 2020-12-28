@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -115,26 +116,51 @@ public class DrawingBoardController {
     }
 
     @RequestMapping(value="/drawing/{equipNm}")
-    public String drawingTargetEquip(@PathVariable("equipNm") String equipNm, Model model) throws Exception {
+    public String drawingTargetEquip(@PathVariable("equipNm") String equipNm, HttpServletRequest request, HttpSession session) throws Exception {
         logger.info("pop page submit");
 
         Map<String, Object> hashMap = new HashMap<String, Object>();
+        HashMap<String, Object> drawingInfo = new HashMap<String, Object>();
 
-        hashMap.put("queryId", "drawingMapper.selectDrawingAreaList");
-        model.addAttribute("areaList", this.innodaleService.getList(hashMap));
-
+        /** 장비 조회 **/
         hashMap.put("EQUIP_NM", equipNm);
         hashMap.put("queryId", "drawingMapper.selectDrawingEquipmentInfo");
-        Map<String, Object> machineInfo = this.innodaleService.getInfo(hashMap);
+        Map<String, Object> searchMachineInfo = this.innodaleService.getInfo(hashMap);
 
-        hashMap.put("queryId", "drawingMapper.selectDrawingEquipment");
-        hashMap.put("FACTORY_AREA", machineInfo.get("FACTORY_AREA"));
-        model.addAttribute("equipList", this.innodaleService.getList(hashMap));
+        /** 장비 선택 정보 **/
+        HashMap<String, Object> machineInfo = new HashMap<String, Object>();
 
-        model.addAttribute("FACTORY_AREA", machineInfo.get("FACTORY_AREA"));
-        model.addAttribute("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
+        machineInfo.put("EQUIP_SEQ", searchMachineInfo.get("EQUIP_SEQ"));
+        machineInfo.put("EQUIP_NM", searchMachineInfo.get("EQUIP_NM"));
+        machineInfo.put("FACTORY_AREA", searchMachineInfo.get("FACTORY_AREA"));
 
-        return "board/login";
+        drawingInfo.put("machineInfo", machineInfo);
+
+        String searchUserId = String.valueOf(searchMachineInfo.get("USER_ID"));
+
+        if(searchMachineInfo.get("USER_ID") == null || "".equals(searchMachineInfo.get("USER_ID"))){
+
+            WebUtils.setSessionAttribute(request, "drawingInfo", drawingInfo);
+            session.setMaxInactiveInterval(-1);
+
+            return "redirect:/drawing-worker";
+
+        }else{
+
+            HashMap<String, Object> userInfo = new HashMap<String, Object>();
+
+            userInfo.put("USER_ID", searchMachineInfo.get("USER_ID"));
+            userInfo.put("USER_NM", searchMachineInfo.get("USER_NM"));
+            userInfo.put("USER_GFILE_SEQ", searchMachineInfo.get("PHOTO_GFILE_SEQ"));
+
+            /** 최종 Session 에 저장되는 정보 **/
+            drawingInfo.put("userInfo", userInfo);
+
+            WebUtils.setSessionAttribute(request, "drawingInfo", drawingInfo);
+            session.setMaxInactiveInterval(-1);
+
+            return "redirect:/drawing-board";
+        }
     }
 
     @RequestMapping(value="/drawing")
@@ -181,36 +207,41 @@ public class DrawingBoardController {
     public String drawingWorker(Model model, HttpSession session, HttpServletRequest request) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        /** 장비 선택 정보 **/
+        HashMap<String, Object> machineInfo = new HashMap<String, Object>();
 
         /** 사용자 선택에서 장비 정보가 없고 세션 정보도 없는 경우 장비 선택 화면으로 이동 **/
         if(session.getAttribute("drawingInfo") == null && (!hashMap.containsKey("EQUIP_SEQ") || "".equals(hashMap.get("EQUIP_SEQ")))){
             return "redirect:/drawing";
         }
-        HashMap<String, Object> drawingInfo = new HashMap<String, Object>();
+
+        HashMap<String, Object> drawingInfo = (HashMap<String, Object>)(session.getAttribute("drawingInfo"));
 
         if(hashMap.containsKey("EQUIP_SEQ") && !"".equals(hashMap.get("EQUIP_SEQ"))) {
-            /** 장비 선택 정보 **/
-            HashMap<String, Object> machineInfo = new HashMap<String, Object>();
 
             machineInfo.put("EQUIP_SEQ", hashMap.get("EQUIP_SEQ"));
             machineInfo.put("EQUIP_NM", hashMap.get("EQUIP_NM"));
             machineInfo.put("FACTORY_AREA", hashMap.get("FACTORY_AREA"));
+
             /** 최종 Session 에 저장되는 정보 **/
             drawingInfo.put("machineInfo", machineInfo);
 
-            /** 사용자 정보가 있는 경우 장비의 사용자 정보를 로그아웃 처리 한다. **/
-            if(hashMap.containsKey("USER_ID") && !"".equals(hashMap.get("USER_ID"))) {
-                hashMap.put("queryId", "drawingMapper.updateRemoveEquipmentWorker");
-                this.innodaleService.update(hashMap);
+        }else{
+            machineInfo = (HashMap<String, Object>)drawingInfo.get("machineInfo");
+        }
 
-                /** 로그인 정보를 알람 처리한다. **/
-                HashMap<String, Object> alarmHashMap = new HashMap<String, Object>();
-                alarmHashMap.put("USER_ID", hashMap.get("USER_ID"));
-                alarmHashMap.put("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
-                simpMessagingTemplate.convertAndSend("/topic/worker", getNotificationUserMessage(alarmHashMap, ActionType.WK_LOGOUT));
+        /** 사용자 정보가 있는 경우 장비의 사용자 정보를 로그아웃 처리 한다. **/
+        if(hashMap.containsKey("USER_ID") && !"".equals(hashMap.get("USER_ID"))) {
+            hashMap.put("queryId", "drawingMapper.updateRemoveEquipmentWorker");
+            this.innodaleService.update(hashMap);
 
-                session.removeAttribute("userInfo");
-            }
+            /** 로그인 정보를 알람 처리한다. **/
+            HashMap<String, Object> alarmHashMap = new HashMap<String, Object>();
+            alarmHashMap.put("USER_ID", hashMap.get("USER_ID"));
+            alarmHashMap.put("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
+            simpMessagingTemplate.convertAndSend("/topic/worker", getNotificationUserMessage(alarmHashMap, ActionType.WK_LOGOUT));
+
+            session.removeAttribute("userInfo");
         }
 
         session.setAttribute("drawingInfo", drawingInfo);
