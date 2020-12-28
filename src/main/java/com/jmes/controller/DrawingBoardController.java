@@ -215,7 +215,8 @@ public class DrawingBoardController {
             return "redirect:/drawing";
         }
 
-        HashMap<String, Object> drawingInfo = (HashMap<String, Object>)(session.getAttribute("drawingInfo"));
+        HashMap<String, Object> drawingInfo = new HashMap<String, Object>();
+
 
         if(hashMap.containsKey("EQUIP_SEQ") && !"".equals(hashMap.get("EQUIP_SEQ"))) {
 
@@ -227,6 +228,7 @@ public class DrawingBoardController {
             drawingInfo.put("machineInfo", machineInfo);
 
         }else{
+            drawingInfo = (HashMap<String, Object>)WebUtils.getSessionAttribute(request, "drawingInfo");
             machineInfo = (HashMap<String, Object>)drawingInfo.get("machineInfo");
         }
 
