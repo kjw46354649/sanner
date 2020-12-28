@@ -1458,11 +1458,13 @@
                     let rowData = ui.rowData;
                     let cls = null;
                     let text = '';
+                    let isDisabled = rowData.WORK_TYPE === 'WTP020' ? 'disabled' : '';
 
-                    if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                    if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
-                        text = '<button name="processing_requirements">가공요건</button>';
                     }
+
+                    text = '<button name="processing_requirements' + isDisabled + '">가공요건</button>';
 
                     return {cls: cls, text: text};
                 },
@@ -1472,9 +1474,20 @@
                     const rowData = ui.rowData;
 
                     $cell.find("[name=processing_requirements]").bind("click", function () {
-                        processingRequirementsPop('control');
+                        processingRequirementsPop('CONTROL');
                     });
                 }
+            },
+            {
+                title: '자동 계산견적 단가', align: 'center', hidden: true,
+                colModel: [
+                    {title: '소재비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AUTO_AMT'},
+                    {title: '연마비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT'},
+                    {title: '열처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT'},
+                    {title: '표면처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AUTO_AMT'},
+                    {title: '가공비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_PROCESS_AUTO_AMT'},
+                    {title: '합계', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SUM_AUTO_AMT'},
+                ]
             },
             {
                 title: '항목별 계산견적 단가 (10원단위 반올림)',
@@ -1998,7 +2011,13 @@
                 'DRAWING_UP_DT', 'ETC_GFILE_SEQ', 'INSPECT_NUM', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
                 'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
                 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT', 'OUTSIDE_NOTE', 'OUTSIDE_INSPECT_RESULT_NM', 'OUTSIDE_ERROR_NOTE',
-                'CONTROL_PART_INSERT_UPDATE_DT'
+                'CONTROL_PART_INSERT_UPDATE_DT',
+                'UNIT_MATERIAL_AUTO_AMT',
+                'UNIT_MATERIAL_FINISH_GRIND_AMT',
+                'UNIT_MATERIAL_FINISH_HEAT_AMT',
+                'UNIT_SURFACE_AUTO_AMT',
+                'UNIT_PROCESS_AUTO_AMT',
+                'UNIT_SUM_AUTO_AMT'
             ];
 
             switch (elementId) {
