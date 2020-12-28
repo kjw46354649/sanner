@@ -12,6 +12,24 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<style>
+    #MONTHLY_OUTSIDE_STATUS_SUMMARY {
+        width: 100%;
+        height: 100%;
+        table-layout: fixed;
+        border: 1px solid ##d7d7d7;
+        border-collapse: collapse;
+    }
+
+    #MONTHLY_OUTSIDE_STATUS_SUMMARY td {
+        border: 1px solid #d7d7d7;
+        text-align: right;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 5px;
+    }
+</style>
 <div class="page estimate">
     <div class="topWrap">
         <form class="form-inline" id="OUTSIDE_CLOSE_STATUS_SEARCH_FORM" role="form">
@@ -124,7 +142,7 @@
                 <li>
                     <a href="#MONTHLY_OUTSIDE_STATUS" data-toggle="tab" aria-expanded="false">월별 현황</a>
                 </li>
-                <div class="right_float out_status_save_id">
+                <div class="right_float" id="out_status_save_id">
                     <button type="button" class="defaultBtn green" style="font-weight:normal;" id="OUTSIDE_CLOSE_STATUS_SAVE">저장</button>
                 </div>
             </ul>
@@ -134,6 +152,73 @@
                 </ul>
                 <ul class="conWrap" id="MONTHLY_OUTSIDE_STATUS">
                     <div id="MONTHLY_OUTSIDE_STATUS_GRID"></div>
+                    <div>
+                        <table id="MONTHLY_OUTSIDE_STATUS_SUMMARY">
+                            <colgroup>
+                                <col style="width: 261px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                                <col style="width: 75px;">
+                            </colgroup>
+                            <tbody>
+                                <tr style="line-height: 27px;">
+                                    <td style="background-color: #fff2cc;">외주금액</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="line-height: 27px;">
+                                    <td style="background-color: #fff2cc;">원발주금액</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </ul>
             </div>
         </div>
@@ -245,44 +330,44 @@
         const tab2ColModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
             {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
-            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', dataIndx: 'COMP_NM'},
-            {title: '발주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
-            {title: '대상외주업체', dataIndx: 'OUTSIDE_COMP_CD_NM'},
-            {title: '구분', dataIndx: 'STATUS_TYPE',},
+            {title: '사업자', width: 75, dataIndx: 'COMP_CD', hidden: true},
+            {title: '사업자', width: 75, dataIndx: 'COMP_NM'},
+            {title: '발주업체', width: 75, dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
+            {title: '대상외주업체', width: 75, dataIndx: 'OUTSIDE_COMP_NM'},
+            {title: '구분', width: 75, dataIndx: 'STATUS_TYPE'},
             {
                 title: '1분기', align: 'center', colModel: [
-                    {title: '1월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_01_AMT', summary: {type: 'sum'}},
-                    {title: '2월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_02_AMT', summary: {type: 'sum'}},
-                    {title: '3월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_03_AMT', summary: {type: 'sum'}},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_03_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
+                    {title: '1월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '01_AMT', summary: {type: 'sum'}},
+                    {title: '2월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '02_AMT', summary: {type: 'sum'}},
+                    {title: '3월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '03_AMT', summary: {type: 'sum'}},
+                    {title: '합계', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '03_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
                 ]
             },
             {
                 title: '2분기', align: 'center', colModel: [
-                    {title: '4월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_04_AMT', summary: {type: 'sum'}},
-                    {title: '5월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_05_AMT', summary: {type: 'sum'}},
-                    {title: '6월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_06_AMT', summary: {type: 'sum'}},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_06_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
+                    {title: '4월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '04_AMT', summary: {type: 'sum'}},
+                    {title: '5월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '05_AMT', summary: {type: 'sum'}},
+                    {title: '6월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '06_AMT', summary: {type: 'sum'}},
+                    {title: '합계', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '06_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
                 ]
             },
             {
                 title: '3분기', align: 'center', colModel: [
-                    {title: '7월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_07_AMT', summary: {type: 'sum'}},
-                    {title: '8월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_08_AMT', summary: {type: 'sum'}},
-                    {title: '9월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_09_AMT', summary: {type: 'sum'}},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_09_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
+                    {title: '7월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '07_AMT', summary: {type: 'sum'}},
+                    {title: '8월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '08_AMT', summary: {type: 'sum'}},
+                    {title: '9월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '09_AMT', summary: {type: 'sum'}},
+                    {title: '합계', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '09_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
                 ]
             },
             {
                 title: '4분기', align: 'center', colModel: [
-                    {title: '10월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_10_AMT', summary: {type: 'sum'}},
-                    {title: '11월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_11_AMT', summary: {type: 'sum'}},
-                    {title: '12월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_12_AMT', summary: {type: 'sum'}},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_12_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
+                    {title: '10월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '10_AMT', summary: {type: 'sum'}},
+                    {title: '11월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '11_AMT', summary: {type: 'sum'}},
+                    {title: '12월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '12_AMT', summary: {type: 'sum'}},
+                    {title: '합계', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '12_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
                 ]
             },
-            {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT', style: {'font-weight': 'bold'}}
+            {title: '합계', width:75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT', style: {'font-weight': 'bold'}}
         ];
         const tab2GroupModel = {
             on: true, header:false,
@@ -293,12 +378,12 @@
             summaryEdit: false,
             // showSummary: [true], //to display summary at end of every group.
             collapsed: [false],
-            grandSummary: true,
+            // grandSummary: true,
             merge: true,
             nodeClose: false,
         };
         const tab2Obj = {
-            height: 745,
+            height: 680,
             collapsible: false,
             resizable: false,
             showTitle: false,
@@ -308,7 +393,7 @@
             // trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: tab2ColModel,
-            groupModel: tab2GroupModel,
+            // groupModel: tab2GroupModel,
             toolPanel: {show: false},
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -317,7 +402,42 @@
                     return {data: dataJSON.data};
                 }
             },
-            summaryTitle: {sum: '{0}'}
+            summaryTitle: {sum: '{0}'},
+            complete: function() {
+                const merge = function (grid, refresh) {
+                    let mc = [],
+                        CM = ['COMP_NM', 'OUTSIDE_COMP_NM'],
+                        i = CM.length,
+                        data = grid.option('dataModel.data');
+
+                    while (i--) {
+                        let dataIndx = CM[i],
+                            rc = 1,
+                            j = data.length,
+                            k = dataIndx === 'COMP_NM' ? 3 : 5; // hard coding
+
+                        while (j--) {
+                            let cd = data[j][dataIndx],
+                                cd_prev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
+
+                            if (cd_prev !== undefined && cd == cd_prev) {
+                                rc++;
+                            } else if (rc > 1) {
+                                mc.push({r1: j, c1: k, rc: rc, cc: 1});
+                                rc = 1;
+                            }
+                        }
+                    }
+                    grid.option('mergeCells', mc);
+                    if (refresh) {
+                        grid.refreshView();
+                    }
+                };
+
+                merge(this, true);
+                createSummary();
+                changeSummarySize();
+            }
         };
 
         let controlDetailPopup;
@@ -349,6 +469,126 @@
             } else {
                 controlDetailPopup.focus();
             }
+        };
+
+        const getSummary = function () {
+            let postData = fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM');
+            postData.queryId = 'outMapper.selectOutsideYearCloseStatusSummary';
+            let parameters = {'url': '/json-list', 'data': postData};
+            let dataList = [];
+
+            fnPostAjaxAsync(function (data) {
+                dataList = data.list;
+            }, parameters, '');
+
+            return dataList;
+        };
+
+        const createSummary = function () {
+            const dataList = getSummary();
+            let htmlString = '';
+
+            if (Array.isArray(dataList) && dataList.length > 0) {
+                for (let i = 0; i < dataList.length; i++) {
+                    htmlString += '<tr style="line-height: 27px;">';
+                    htmlString += '    <td class="center_sort" style="background-color: #fff2cc; text-align: center;">' + dataList[i].STATUS_TYPE || '외주금액' + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_01 || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_02 || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_03 || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_03_SUM || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_04 || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_05 || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_06 || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_06_SUM || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_07 || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_08 || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_09 || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_09_SUM || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_10 || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_11 || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_12 || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_12_SUM || 0 + '</td>';
+                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].TOTAL_AMT || 0 + '</td>';
+                    htmlString += '</tr>';
+                }
+            } else {
+                htmlString += '<tr style="line-height: 27px;">';
+                htmlString += '    <td class="center_sort" style="background-color: #fff2cc; text-align: center;">' + '외주금액' + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '</tr>';
+                htmlString += '<tr style="line-height: 27px;">';
+                htmlString += '    <td class="center_sort" style="background-color: #fff2cc; text-align: center;">' + '원발주 금액' + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
+                htmlString += '</tr>';
+            }
+
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > tbody').html(htmlString);
+        };
+
+        const changeSummarySize = function () {
+            const PADDING = 2;
+            let width = [];
+            $('#MONTHLY_OUTSIDE_STATUS_GRID').find('div#pq-head-row-u8-0-right.pq-grid-row').children().each(function (index, element) {
+                width.push($(element).width() + PADDING);
+            });
+
+            const a = width[0] + width[1] + width[2] + width[3];
+            const b = width[4];
+            const c = width[5];
+            const d = width[6];
+            const e = width[7];
+            const f = width[8];
+
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(0)').width(a);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(1)').width(b / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(2)').width(b / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(3)').width(b / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(4)').width(b / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(5)').width(c / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(6)').width(c / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(7)').width(c / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(8)').width(c / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(9)').width(d / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(10)').width(d / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(11)').width(d / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(12)').width(d / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(13)').width(e / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(14)').width(e / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(15)').width(e / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(16)').width(e / 4);
+            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(17)').width(f);
         };
         /* funciton */
 
@@ -395,7 +635,7 @@
             activate: function (event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
                 $('#view_tab_10000303 .topWrap').toggle();
-                $('.out_status_save_id').toggle();
+                $('#out_status_save_id').toggle();
             }
         });
 
@@ -417,6 +657,12 @@
             });
 
             saveAs(blob, '외주 월별 현황.xlsx');
+        });
+
+        $('.sideWrap a').on('click', function (e) {
+            setTimeout(function() {
+                changeSummarySize();
+            }, 500);
         });
         /* event */
 
