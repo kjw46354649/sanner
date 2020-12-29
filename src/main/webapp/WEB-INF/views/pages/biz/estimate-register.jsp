@@ -531,6 +531,7 @@
                 ], hidden: true},
             {title: '자동계산 견적가', align: "center", colModel:[
                     {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', format: '#,###'},
+                    {title: 'TM각비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AUTO_AMT', format: '#,###'},
                     {title: '연마비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###'},
                     {title: '열처리', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###'},
                     {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AUTO_AMT', format: '#,###'},
