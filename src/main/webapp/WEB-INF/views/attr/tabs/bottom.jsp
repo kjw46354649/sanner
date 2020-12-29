@@ -2140,7 +2140,7 @@
         let inWarehouseManageInsertUpdateQueryList = ['material.insertUpdateCommonWarehouseManage'];
         fnModifyPQGrid(commonWarehouseManageGrid, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
     });
-    
+
     /** 공통 창고 팝업 end **/
     function estimateListFileUploadCallback(GfileSeq) {
         if(!GfileSeq) {
@@ -2238,7 +2238,7 @@
             changeData();
         },
         'hide.bs.modal': function () {
-
+            isProcessingRequirementsDirty = false;
         }
     });
 
@@ -2258,7 +2258,7 @@
         postData.SEQ1 = $('.basic_information').find('#seq1').html();
         postData.SEQ2 = $('.basic_information').find('#seq2').html();
         let parameter = {'url': '/json-info', 'data': postData};
-        
+
         fnPostAjax(function (data) {
             createTopTable(data);
         }, parameter, '');
@@ -2283,6 +2283,32 @@
         fnPostAjax(function (data) {
             createBotTable(data);
         }, parameter, '');
+    };
+
+    const isAssembly = function (rowData) {
+        return rowData.WORK_TYPE === 'WTP020';
+    }
+
+    const readOnlyProcessingRequirementsInformation = function () {
+        for (let i = 1; i <= 15; i++) {
+            let str = String(i).padStart(2, '0') + '0';
+
+            $('#PROCESS_CNT_CST' + str).prop('readonly', true);
+        }
+    };
+
+    const changeBackgroundColor = function (rowData) {
+        const flag = isAssembly(rowData.WORK_TYPE);
+
+        for (let i = 1; i <= 15; i++) {
+            let str = String(i).padStart(2, '0') + '0';
+
+            $('#PROCESS_CNT_CST' + str).parent().removeClass('readonly');
+
+            if (flag) {
+                $('#PROCESS_CNT_CST' + str).parent().addClass('readonly')
+            }
+        }
     };
 
     const createTopTable = function (data) {
@@ -2397,6 +2423,10 @@
         visibilityButton();
         changeProcessingRequirementsBasicInformation(rowData);
         changeProcessingRequirementsInformation(rowData);
+        if (isAssembly(rowData)) {
+            readOnlyProcessingRequirementsInformation(rowData);
+        }
+        changeBackgroundColor(rowData);
         changeImageView(rowData);
     };
     /* function */

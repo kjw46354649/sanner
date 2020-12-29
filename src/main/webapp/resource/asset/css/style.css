@@ -954,6 +954,10 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
     font-weight: bold;
 }
 
+#processingRequirementsModal table.processing_requirements_information > tbody > tr > td.readonly {
+    background-color: rgb(219, 219, 219);
+}
+
 #processingRequirementsModal table.processing_requirements_information > tbody > tr > td:last-child {
     background-color: rgb(219, 219, 219);
 }
