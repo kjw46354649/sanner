@@ -1069,12 +1069,13 @@
             </if>
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
         ORDER BY
-            <if test="INCLUDE_UNALLOCATED_WAIT != null and INCLUDE_UNALLOCATED_WAIT != ''">
-            I.EQUIP_SEQ IS NULL,
-            </if>
             CASE CAM_STATUS WHEN 'CWS020' THEN 0 WHEN 'CWS010' THEN 1 WHEN 'CWS030' THEN 2 END,
-            STATUS_DT DESC, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT,
-            H.FAIL_STATUS, EMERGENCY_YN DESC
+        	CASE H.FAIL_STATUS WHEN '반품' THEN 0 WHEN '불량' THEN 1 ELSE 2 END,
+        	CASE EMERGENCY_HOLD WHEN '긴급' THEN 0 WHEN '보류' THEN 1 ELSE 2 END,
+            STATUS_DT DESC, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
+            <if test="INCLUDE_UNALLOCATED_WAIT != null and INCLUDE_UNALLOCATED_WAIT != ''">
+            , I.EQUIP_SEQ IS NULL
+            </if>
     </select>
 
     <select id="selectResultManagePopInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
