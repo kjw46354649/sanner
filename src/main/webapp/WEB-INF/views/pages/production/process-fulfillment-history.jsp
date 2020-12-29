@@ -20,53 +20,42 @@
                 <ul>
                     <li>
                         <span class="slt_wrap">
-                            <label class="label_100" for="FACTORY_AREA">MCT 공장 구분</label>
-                            <select class="wd_200" name="FACTORY_AREA" id="FACTORY_AREA" title="공장구분">
+                            <label class="label_100" for="FACTORY_AREA">Area 구분</label>
+                            <select class="wd_200" name="FACTORY_AREA" id="FACTORY_AREA" title="Area 구분">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1005}">
-                                    <c:if test="${code.ETC2 == 'W'}">
+<%--                                    <c:if test="${code.ETC2 == 'W'}">--%>
                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:if>
+<%--                                    </c:if>--%>
                                 </c:forEach>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="EQUIP_SEQ">NC NO.</label>
-                            <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ">
+                            <label class="label_100" for="ERROR_PROCESS">공정</label>
+                            <select  class="wd_200" name="ERROR_PROCESS" id="ERROR_PROCESS" title="공정">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
-                            <select class="wd_200" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1027}">
+                                <c:forEach var="code" items="${HighCode.H_1010}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="WORK_TYPE">형태</label>
-                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE">
+                            <label class="label_100" for="">가공기기</label>
+                            <select class="wd_200" name="" id="">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1033}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
+<%--                                <c:forEach var="code" items="${HighCode.H_1027}">--%>
+<%--                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
+<%--                                </c:forEach>--%>
                             </select>
                         </span>
+                        <span class="gubun"></span>
                     </li>
                     <li>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
-                        </span>
-                        <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="DRAWING_NUM">도면번호</label>
-                            <input type="search" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
+                            <label class="label_100" for="CONTROL_NUM_OR_DRAWING_NUM">관리/도면 번호</label>
+                            <input type="search" class="wd_200" name="CONTROL_NUM_OR_DRAWING_NUM" id="CONTROL_NUM_OR_DRAWING_NUM" title="관리번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -74,6 +63,44 @@
                             <select class="wd_200" name="WORK_USER_ID" id="WORK_USER_ID">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
+                        </span>
+                        <span>
+                            <label for="SIZE_TYPE">규격</label>
+                            <select class="wd_100" name="SIZE_TYPE" id="SIZE_TYPE" title="규격">
+                                <c:forEach var="vlocale" items="${HighCode.H_1016}">
+                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
+                        <span class="slt_wrap" id="SIZE_W">
+                            <label class="label_50">W</label>
+                            <input class="wd_50" type="number" name="SIZE_W_F" id="SIZE_W_F" placeholder="From">
+                            <span>~</span>
+                            <input class="wd_50" type="number" name="SIZE_W_T" id="SIZE_W_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_H">
+                            <label class="label_50">H</label>
+                            <input class="wd_50" type="number" name="SIZE_H_F" id="SIZE_H_F" placeholder="From">
+                            <span>~</span>
+                            <input class="wd_50" type="number" name="SIZE_H_T" id="SIZE_H_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_T">
+                            <label class="label_50">T</label>
+                            <input class="wd_50" type="number" name="SIZE_T_F" id="SIZE_T_F" placeholder="From">
+                            <span>~</span>
+                            <input class="wd_50" type="number" name="SIZE_T_T" id="SIZE_T_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_D" style="display: none;">
+                            <label class="label_50">D</label>
+                            <input class="wd_50" type="number" name="SIZE_D_F" id="SIZE_D_F" placeholder="From">
+                            <span>~</span>
+                            <input class="wd_50" type="number" name="SIZE_D_T" id="SIZE_D_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_L" style="display: none;">
+                            <label class="label_50">L</label>
+                            <input class="wd_50" type="number" name="SIZE_L_F" id="SIZE_L_F" placeholder="From">
+                            <span>~</span>
+                            <input class="wd_50" type="number" name="SIZE_L_T" id="SIZE_L_T" placeholder="To">
                         </span>
                     </li>
                     <li>
@@ -87,6 +114,15 @@
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
                                 <input type="text" name="process_fulfillment_history_end_dt" id="process_fulfillment_history_end_dt" readonly><button type="button">달력선택</button>
+                            </span>
+                            <span class="radio_box" style="margin-left:10px;">
+                                <input reqcd="R" type="radio" name="PROCESS_FULFILLMENT_HISTORY_TERM" id="PROCESS_FULFILLMENT_HISTORY_TERM_DAY" value="today" ><label for="PROCESS_FULFILLMENT_HISTORY_TERM_DAY">오늘</label>
+                            </span>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="PROCESS_FULFILLMENT_HISTORY_TERM" id="PROCESS_FULFILLMENT_HISTORY_TERM_WEEK" value="week" checked><label for="PROCESS_FULFILLMENT_HISTORY_TERM_WEEK">-1주</label>
+                            </span>
+                            <span class="radio_box">
+                                <input reqcd="R" type="radio" name="PROCESS_FULFILLMENT_HISTORY_TERM" id="PROCESS_FULFILLMENT_HISTORY_TERM_MONTH" value="month"><label for="PROCESS_FULFILLMENT_HISTORY_TERM_MONTH">-1개월</label>
                             </span>
                         </div>
                         <span class="ipu_wrap right_float">
@@ -133,9 +169,6 @@
         $('#process_fulfillment_history_end_dt').datepicker('setDate', 'today');
 
         /** function **/
-        fnCommCodeDatasourceSelectBoxCreate($('#PROCESS_FULFILLMENT_HISTORY_SEARCH_FORM').find('#EQUIP_SEQ'), 'all', {
-            'url': '/json-list', 'data': {'queryId': 'dataSource.getMctEquipList'}
-        });
         fnCommCodeDatasourceSelectBoxCreate($('#PROCESS_FULFILLMENT_HISTORY_SEARCH_FORM').find('#WORK_USER_ID'), 'all', {
             'url': '/json-list', 'data': {'queryId': 'dataSource.getMCTWorkerList'}
         });
@@ -149,17 +182,34 @@
         let tab2PostData = fnFormToJsonArrayData('#PROCESS_FULFILLMENT_HISTORY_SEARCH_FORM');
         tab2PostData.YEAR = YEAR;
         const tab2ColModel = [
-            {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: 'MCT<br>공장 구분', minWidth: 20, width: 80, dataType: 'string', dataIndx: 'FACTORY_NM'},
-            {title: 'NC명', minWidth: 20, width: 80, dataType: 'string', dataIndx: 'EQUIP_NM'},
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+            {title: 'Area 구분', width: 80, dataIndx: 'FACTORY_AREA_NM'},
+            {title: '공정', width: 50, dataIndx: 'PROCESS_TYPE_NM'},
+            {title: '장비명', width: 50, dataIndx: 'EQUIP_NM'},
+            {title: '작업자', width: 65, dataIndx: 'WORK_USER_ID'},
+            {
+                title: '가공 수행 실적', align: 'center',
+                colModel: [
+                    {title: '착수일시', width: 90, dataIndx: 'WORK_START_DT'},
+                    {title: '완료일시', width: 90, dataIndx: 'WORK_FINISH_DT'},
+                    {title: '정지시간', width: 60, dataIndx: 'WORK_STOP_MINUTE'},
+                    {title: '총 R/T', width: 60, dataIndx: 'WORK_WORK_MINUTE'},
+                    {title: '1EA R/T', width: 60, dataIndx: 'LEAD_TIME'},
+                    {title: '완료수량', width: 60, dataIndx: 'FINISH_QTY'},
+                    {title: '불량', width: 60, dataIndx: 'ERROR_QTY'},
+                    {title: '불량원인', width: 100, dataIndx: 'ERROR_REASON'},
+                ]
+            },
+            {title: '관리번호', width: 180, align: 'left', dataIndx: 'CONTROL_NUM'},
+            {
+                title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
                     return '';
                 },
-                postRender: function(ui) {
+                postRender: function (ui) {
                     let grid = this,
                         $cell = grid.getCell(ui),
                         rowIndx = ui.rowIndx,
@@ -170,9 +220,11 @@
                     });
                 }
             },
-            {title: '관리번호', minWidth: 20, width: 180, dataType: 'string', dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', minWidth: 20, width: 20, dataType: 'integer', dataIndx: 'PART_NUM'},
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
+            {title: '형태', width: 50, dataIndx: 'WORK_TYPE_NM'},
+            {title: '가공<br>납기', minWidth: 40, dataIndx: 'INNER_DUE_DT'},
+            {title: '도면번호', width: 170, align: 'left', dataIndx: 'DRAWING_NUM'},
+            {
+                title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
                 },
@@ -185,19 +237,12 @@
                     });
                 }
             },
-            {title: '도면번호', minWidth: 20, width: 170, dataType: 'string', dataIndx: 'DRAWING_NUM'},
-            {title: '품명', minWidth: 20, width: 170, dataType: 'string', dataIndx: 'ITEM_NM'},
-            {title: '형태', minWidth: 20, width: 50, dataType: 'string', dataIndx: 'WORK_TYPE_NM'},
-            {title: '소재종류', minWidth: 20, width: 60, dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM'},
-            {title: '수량', minWidth: 20, width: 50, align: 'right', dataType: 'string', dataIndx: 'ORDER_QTY'},
-            {title: '규격', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'STANDARD_SIZE'},
-            {title: '소재 Size', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'MATERAIL_ORDER_SIZE'},
-            {title: '착수일시', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'WORK_START_DT'},
-            {title: '완료일시', minWidth: 20, width: 120, dataType: 'string', dataIndx: 'WORK_FINISH_DT'},
-            {title: '정지<br>시간', minWidth: 50, width: 55, align: 'right', dataType: 'string', dataIndx: 'WORK_STOP_MINUTE'},
-            {title: '소요<br>시간', minWidth: 50, width: 55, align: 'right', dataType: 'string', dataIndx: 'WORK_WORK_MINUTE'},
-            {title: '단위<br>소요', minWidth: 50, width: 55, align: 'right', dataType: 'string', dataIndx: 'LEAD_TIME'},
-            {title: '작업자', minWidth: 20, width: 80, dataType: 'string', dataIndx: 'WORK_USER_ID'}
+            {title: '품명', width: 170, align: 'left', dataIndx: 'ITEM_NM'},
+            {title: '재질', width: 50, dataIndx: 'MATERIAL_TYPE_NM'},
+            {title: '소재종류', width: 75, dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '수량', width: 50, dataIndx: 'CONTROL_PART_QTY'},
+            {title: '규격', width: 120, align: 'right', dataIndx: 'SIZE_TXT'},
+            {title: '소재 Size', width: 120, align: 'right', dataIndx: 'MATERAIL_ORDER_SIZE'}
         ];
         let tab2Obj = {
             height: 700,
@@ -209,7 +254,8 @@
             numberCell: {title: 'No.'},
             scrollModel: {autoFit: false},
             // trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false, render: processFulfillmentHistoryFilterRender}, filterModel: { mode: 'OR' },
+            editable: false,
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: processFulfillmentHistoryFilterRender}, filterModel: { mode: 'OR' },
             colModel: tab2ColModel,
             toolPanel: {show: false},
             dataModel: {
@@ -238,6 +284,21 @@
                 let data = this.option('dataModel.data');
 
                 $('#PROCESS_FULFILLMENT_HISTORY_RECORDS').html(data.length);
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                }
+
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
         /* variable */
@@ -307,6 +368,65 @@
             });
 
             saveAs(blob, 'NC 수행 이력.xlsx');
+        });
+
+        $("#PROCESS_FULFILLMENT_HISTORY_SEARCH_FORM").find('[name=PROCESS_FULFILLMENT_HISTORY_TERM]').change(function () {
+            let value = $(this).val();
+            let today = TODAY;
+            let newDate = new Date();
+
+            switch (value) {
+                case 'today':
+                    break;
+                case 'week':
+                    newDate.setDate(newDate.getDate() - 6);
+                    break;
+                case 'month':
+                    newDate.setMonth(newDate.getMonth() - 1);
+                    break;
+            }
+            $("#PROCESS_FULFILLMENT_HISTORY_SEARCH_FORM").find('#process_fulfillment_history_start_dt').val(newDate.yyyymmdd());
+            $("#PROCESS_FULFILLMENT_HISTORY_SEARCH_FORM").find('#process_fulfillment_history_end_dt').val(today.yyyymmdd());
+        });
+
+        $('#PROCESS_FULFILLMENT_HISTORY_SEARCH_FORM').find('#SIZE_TYPE').on('change', function () {
+            const $processFulfillmentHistorySearchForm = $('#PROCESS_FULFILLMENT_HISTORY_SEARCH_FORM');
+
+            switch (this.value) {
+                case 'XYZ010':
+                    $processFulfillmentHistorySearchForm.find('#SIZE_W').show();
+                    $processFulfillmentHistorySearchForm.find('#SIZE_H').show();
+                    $processFulfillmentHistorySearchForm.find('#SIZE_T').show();
+                    $processFulfillmentHistorySearchForm.find('#SIZE_D').hide();
+                    $processFulfillmentHistorySearchForm.find('#SIZE_L').hide();
+                    $processFulfillmentHistorySearchForm.find('#SIZE_D_F').val('');
+                    $processFulfillmentHistorySearchForm.find('#SIZE_D_T').val('');
+                    $processFulfillmentHistorySearchForm.find('#SIZE_L_F').val('');
+                    $processFulfillmentHistorySearchForm.find('#SIZE_L_T').val('');
+                    break;
+                case 'XYZ020':
+                case 'XYZ030':
+                case 'XYZ040':
+                case 'XYZ050':
+                    $processFulfillmentHistorySearchForm.find('#SIZE_W').hide();
+                    $processFulfillmentHistorySearchForm.find('#SIZE_H').hide();
+                    $processFulfillmentHistorySearchForm.find('#SIZE_T').hide();
+                    $processFulfillmentHistorySearchForm.find('#SIZE_W_F').val('');
+                    $processFulfillmentHistorySearchForm.find('#SIZE_W_T').val('');
+                    $processFulfillmentHistorySearchForm.find('#SIZE_H_F').val('');
+                    $processFulfillmentHistorySearchForm.find('#SIZE_H_T').val('');
+                    $processFulfillmentHistorySearchForm.find('#SIZE_T_F').val('');
+                    $processFulfillmentHistorySearchForm.find('#SIZE_T_T').val('');
+                    $processFulfillmentHistorySearchForm.find('#SIZE_D').show();
+                    $processFulfillmentHistorySearchForm.find('#SIZE_L').show();
+                    break;
+                default:
+                    $processFulfillmentHistorySearchForm.find('#SIZE_W').show();
+                    $processFulfillmentHistorySearchForm.find('#SIZE_H').show();
+                    $processFulfillmentHistorySearchForm.find('#SIZE_T').show();
+                    $processFulfillmentHistorySearchForm.find('#SIZE_D').show();
+                    $processFulfillmentHistorySearchForm.find('#SIZE_L').show();
+            }
         });
         /* event */
 
