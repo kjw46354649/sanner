@@ -141,6 +141,57 @@
         </table>
     </div>
 </div>
+<!-- reserve Modal Start -->
+<div class="modal-scan" id="drawing_reserve_time_popup" style="display: none;">
+    <div class="modal-end-dialog">
+        <div class="modal-end-content">
+            <div class="modal-end-body">
+                <div class="tableWrap">
+                    <br/>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="modal-reserve-dialog-table">
+                                    <img id="reserveHourUpBtn" src="/resource/asset/images/common/arrow_up.png">
+                                </td>
+                                <td class="modal-reserve-dialog-table">
+                                    <img id="reserveMinuteUpBtn" src="/resource/asset/images/common/arrow_up.png">
+                                </td>
+                                <td class="modal-reserve-dialog-table" rowspan="3">
+                                    <button type="button" id="reserveEndCheckBtn" class="graDbBtn gray"><input id="reserveEndChecked" type="checkbox" style="margin-right: 10px;" disabled="disabled" />종&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;료</button>
+                                    <br/>&nbsp;<br/>
+                                    <button type="button" id="reservePauseCheckBtn" class="graDbBtn gray"><input id="reservePauseChecked" type="checkbox" style="margin-right: 10px;" disabled="disabled" />일시정지</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="modal-reserve-dialog-text-table">
+                                    <span id="reserveHourHtml"></span> 시간
+                                </td>
+                                <td class="modal-reserve-dialog-text-table">
+                                    <span id="reserveMinuteHtml"></span> 분 후
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="modal-reserve-dialog-table">
+                                    <img id="reserveHourDownBtn" src="/resource/asset/images/common/arrow_down.png">
+                                </td>
+                                <td class="modal-reserve-dialog-table">
+                                    <img id="reserveMinuteDownBtn" src="/resource/asset/images/common/arrow_down.png">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <div style="text-align: center;">
+                        <button type="button" id="reserveSaveBtn" class="graDbBtn blue">저장</button>
+                        <button type="button" id="reserveCancelBtn" class="graDbBtn gray">예약취소</button>
+                        <button type="button" id="reserveCloseBtn" class="graDbBtn yellow">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Target Modal Start -->
 <div class="modal" id="drawing_worker_target_list_popup" style="display: none;">
     <div class="modal-dialog">
@@ -483,58 +534,6 @@
     </div>
 </div>
 
-
-<!-- reserve Modal Start -->
-<div class="modal-scan" id="drawing_reserve_time_popup" style="display: none;">
-    <div class="modal-end-dialog">
-        <div class="modal-end-content">
-            <div class="modal-end-body">
-                <div class="tableWrap">
-                    <br/>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td class="modal-reserve-dialog-table">
-                                    <img id="reserveHourUpBtn" src="/resource/asset/images/common/arrow_up.png">
-                                </td>
-                                <td class="modal-reserve-dialog-table">
-                                    <img id="reserveMinuteUpBtn" src="/resource/asset/images/common/arrow_up.png">
-                                </td>
-                                <td class="modal-reserve-dialog-table" rowspan="3">
-                                    <button type="button" id="reserveEndCheckBtn" class="graDbBtn gray"><input id="reserveEndChecked" type="checkbox" style="margin-right: 10px;" disabled="disabled" />종&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;료</button>
-                                    <br/>&nbsp;<br/>
-                                    <button type="button" id="reservePauseCheckBtn" class="graDbBtn gray"><input id="reservePauseChecked" type="checkbox" style="margin-right: 10px;" disabled="disabled" />일시정지</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="modal-reserve-dialog-text-table">
-                                    <span id="reserveHourHtml"></span> 시간
-                                </td>
-                                <td class="modal-reserve-dialog-text-table">
-                                    <span id="reserveMinuteHtml"></span> 분 후
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="modal-reserve-dialog-table">
-                                    <img id="reserveHourDownBtn" src="/resource/asset/images/common/arrow_down.png">
-                                </td>
-                                <td class="modal-reserve-dialog-table">
-                                    <img id="reserveMinuteDownBtn" src="/resource/asset/images/common/arrow_down.png">
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <br/>
-                    <div style="text-align: center;">
-                        <button type="button" id="reserveSaveBtn" class="graDbBtn blue">저장</button>
-                        <button type="button" id="reserveCancelBtn" class="graDbBtn gray">예약취소</button>
-                        <button type="button" id="reserveCloseBtn" class="graDbBtn yellow">닫기</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <!-- reserve Modal End -->
 <script type='text/javascript'>
 
@@ -571,7 +570,64 @@
             $(this).stopWaitMe();
         });
 
-        /** 작업 예약 처리 팝업 **/
+        // 스타일 변경 이벤트
+        var ev = new $.Event('style'),
+            orig = $.fn.css;
+        $.fn.css = function() {
+            $(this).trigger(ev);
+            return orig.apply(this, arguments);
+        }
+
+        /** 메인 창에서 바코드 스캔 된 경우 **/
+        /** 진행중인 작업이 없는 경우는 신규 작업 시작 처리 **/
+        /** 진행중인 작업이 있는 경우 작업중인 바코드인 경우 종료 처리 팝업 호출
+                                    신규 바코드 경우 현재 작업중인 내용 종료 처리 하고 자동으로 신규 작업 시작 처리 **/
+        onScan.attachTo(document, {
+            onScan: function(barcodeNum, iQty) {
+                let parameters = {
+                    'url': '/drawing/barcode',
+                    'data': { 'queryId': 'drawingMapper.selectDrawingBarcodeScanInfo', 'BARCODE_NUM': barcodeNum}
+                };
+                fnPostAjax(function (data, callFunctionParam) {
+
+                    let returnCode = data.returnCode;
+                    let curStatus = $("#curStatus").val();
+
+                    if (returnCode == "RET00") {
+                        if (curStatus == "stop") {
+                            startWork(data.info);
+                        } else if (curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()) {
+                            $("#workCompletelBtn").trigger('click');
+                        } else {
+                            $("#singleComplete").hide();
+                            $("#continueComplete").show();
+                            $("#drawing_action_form").find("#RE_BARCODE_NUM").val(barcodeNum);
+                            $("#workCompletelBtn").trigger('click');
+                        }
+                    } else if (returnCode == "RET97") {
+                        fnDrawingDialogAlert('drawingVerErrorHtml', 3);
+                    } else if (returnCode == "RET96") {
+                        fnConfirm(null, data.message, function () {
+                            startWork(data.info);
+                        });
+                    } else {
+                        showMessage(data.message);
+                        return false;
+                    }
+                }, parameters, '');
+            }
+        });
+
+        $(".slecBox").on('click', function(){
+            /** 대기 리스트와 plan 리스트를 조회한다. **/
+            /** 첫번째 plan 리스트를 조회한다.**/
+            // getWorkList("pop");
+            $("#drawing_worker_target_list_popup").css("display", "block");
+            $("#area_tab").trigger("click");
+            $(".bodyWrap").addClass("modal-open-body");
+        });
+
+/** 작업 예약 처리 팝업 **/
         $("#reserveBtn").on('click', function(){
 
             reserveDisplayTime();
@@ -621,7 +677,6 @@
                         }
                     }
                 }, 1000);
-
             }
         });
 
@@ -764,63 +819,6 @@
                     $("#reserveBtn").removeClass("reserveDbEnableBtn");
             }
         }
-
-        // 스타일 변경 이벤트
-        var ev = new $.Event('style'),
-            orig = $.fn.css;
-        $.fn.css = function() {
-            $(this).trigger(ev);
-            return orig.apply(this, arguments);
-        }
-
-        /** 메인 창에서 바코드 스캔 된 경우 **/
-        /** 진행중인 작업이 없는 경우는 신규 작업 시작 처리 **/
-        /** 진행중인 작업이 있는 경우 작업중인 바코드인 경우 종료 처리 팝업 호출
-                                    신규 바코드 경우 현재 작업중인 내용 종료 처리 하고 자동으로 신규 작업 시작 처리 **/
-        onScan.attachTo(document, {
-            onScan: function(barcodeNum, iQty) {
-                let parameters = {
-                    'url': '/drawing/barcode',
-                    'data': { 'queryId': 'drawingMapper.selectDrawingBarcodeScanInfo', 'BARCODE_NUM': barcodeNum}
-                };
-                fnPostAjax(function (data, callFunctionParam) {
-
-                    let returnCode = data.returnCode;
-                    let curStatus = $("#curStatus").val();
-
-                    if (returnCode == "RET00") {
-                        if (curStatus == "stop") {
-                            startWork(data.info);
-                        } else if (curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()) {
-                            $("#workCompletelBtn").trigger('click');
-                        } else {
-                            $("#singleComplete").hide();
-                            $("#continueComplete").show();
-                            $("#drawing_action_form").find("#RE_BARCODE_NUM").val(barcodeNum);
-                            $("#workCompletelBtn").trigger('click');
-                        }
-                    } else if (returnCode == "RET97") {
-                        fnDrawingDialogAlert('drawingVerErrorHtml', 3);
-                    } else if (returnCode == "RET96") {
-                        fnConfirm(null, data.message, function () {
-                            startWork(data.info);
-                        });
-                    } else {
-                        showMessage(data.message);
-                        return false;
-                    }
-                }, parameters, '');
-            }
-        });
-
-        $(".slecBox").on('click', function(){
-            /** 대기 리스트와 plan 리스트를 조회한다. **/
-            /** 첫번째 plan 리스트를 조회한다.**/
-            // getWorkList("pop");
-            $("#drawing_worker_target_list_popup").css("display", "block");
-            $("#area_tab").trigger("click");
-            $(".bodyWrap").addClass("modal-open-body");
-        });
 
         //Stop Popup
         $("#workPuaseBtn").on('click', function(){
