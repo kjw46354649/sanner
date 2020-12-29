@@ -496,6 +496,9 @@
             <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
                 AND A.MATERIAL_KIND = #{MATERIAL_KIND}
             </if>
+            <if test="COMP_CD != null and COMP_CD != ''">
+                AND B.COMP_CD = #{COMP_CD}
+            </if>
             <if test="ALLOCATION_COMPLETED_EXCLUDED != null and ALLOCATION_COMPLETED_EXCLUDED != ''">
                 AND C.EQUIP_SEQ IS NULL
             </if>
@@ -618,6 +621,20 @@
                     )
             ) Z ON A.CONTROL_SEQ = Z.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ
         WHERE 1 = 1
+            <choose>
+                <when test="CAM_WORK_HISTORY_CONDITION == 1">
+                    AND A.UPDATE_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
+                </when>
+                <when test="CAM_WORK_HISTORY_CONDITION == 2">
+                    AND EXISTS (SELECT 1 FROM TBL_CONTROL_PART_PROGRESS P
+                        WHERE A.CONTROL_SEQ = P.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ AND P.PART_STATUS = 'PRO002' <!-- 가공 확정 존재 유무 주문 -->
+                            AND P.STATUS_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
+                            AND P.SEQ > IFNULL((SELECT MAX(E.SEQ) FROM TBL_CONTROL_PART_PROGRESS E
+                                WHERE P.CONTROL_SEQ = E.CONTROL_SEQ AND P.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND E.PART_STATUS IS NULL), 0
+                            )
+                    )
+                </when>
+            </choose>
             <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
                 AND A.WORK_FACTORY = #{WORK_FACTORY}
             </if>
@@ -643,21 +660,43 @@
                 AND H.WORK_USER_ID = #{WORK_USER_ID}
             </if>
             <choose>
-                <when test="CAM_WORK_HISTORY_CONDITION == 1">
-                    AND A.UPDATE_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
+                <when test="SIZE_TYPE == 'XYZ010'">
+                    <if test="SIZE_W_F != null and SIZE_W_F != ''">
+                        AND A.SIZE_W >= #{SIZE_W_F}
+                    </if>
+                    <if test="SIZE_W_T != null and SIZE_W_T != ''">
+                        AND A.SIZE_W <![CDATA[ <= ]]> #{SIZE_W_T}
+                    </if>
+                    <if test="SIZE_H_F != null and SIZE_H_F != ''">
+                        AND A.SIZE_H >= #{SIZE_H_F}
+                    </if>
+                    <if test="SIZE_H_T != null and SIZE_H_T != ''">
+                        AND A.SIZE_H <![CDATA[ <= ]]> #{SIZE_H_T}
+                    </if>
+                    <if test="SIZE_T_F != null and SIZE_T_F != ''">
+                        AND A.SIZE_T >= #{SIZE_T_F}
+                    </if>
+                    <if test="SIZE_T_T != null and SIZE_T_T != ''">
+                        AND A.SIZE_T <![CDATA[ <= ]]> #{SIZE_T_T}
+                    </if>
                 </when>
-                <when test="CAM_WORK_HISTORY_CONDITION == 2">
-                    AND EXISTS (SELECT 1 FROM TBL_CONTROL_PART_PROGRESS P
-                        WHERE A.CONTROL_SEQ = P.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ AND P.PART_STATUS = 'PRO002' <!-- 가공 확정 존재 유무 주문 -->
-                            AND P.STATUS_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
-                            AND P.SEQ > IFNULL((SELECT MAX(E.SEQ) FROM TBL_CONTROL_PART_PROGRESS E
-                                WHERE P.CONTROL_SEQ = E.CONTROL_SEQ AND P.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND E.PART_STATUS IS NULL), 0
-                            )
-                    )
+                <when test="SIZE_TYPE == 'XYZ020' or SIZE_TYPE == 'XYZ030' or SIZE_TYPE == 'XYZ040' or SIZE_TYPE == 'XYZ050'">
+                    <if test="SIZE_D_F != null and SIZE_D_F != ''">
+                        AND A.SIZE_D >= #{SIZE_D_F}
+                    </if>
+                    <if test="SIZE_D_T != null and SIZE_D_T != ''">
+                        AND A.SIZE_D <![CDATA[ <= ]]> #{SIZE_D_T}
+                    </if>
+                    <if test="SIZE_L_F != null and SIZE_L_F != ''">
+                        AND A.SIZE_L >= #{SIZE_L_F}
+                    </if>
+                    <if test="SIZE_L_T != null and SIZE_L_T != ''">
+                        AND A.SIZE_L <![CDATA[ <= ]]> #{SIZE_L_T}
+                    </if>
                 </when>
             </choose>
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
-        ORDER BY H.INSERT_DT, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0)
+        ORDER BY B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
     </select>
 
     <select id="selectCamWorkHistoryList_BACKUP" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1069,12 +1108,13 @@
             </if>
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
         ORDER BY
-            <if test="INCLUDE_UNALLOCATED_WAIT != null and INCLUDE_UNALLOCATED_WAIT != ''">
-            I.EQUIP_SEQ IS NULL,
-            </if>
             CASE CAM_STATUS WHEN 'CWS020' THEN 0 WHEN 'CWS010' THEN 1 WHEN 'CWS030' THEN 2 END,
-            STATUS_DT DESC, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT,
-            H.FAIL_STATUS, EMERGENCY_YN DESC
+        	CASE H.FAIL_STATUS WHEN '반품' THEN 0 WHEN '불량' THEN 1 ELSE 2 END,
+        	CASE EMERGENCY_HOLD WHEN '긴급' THEN 0 WHEN '보류' THEN 1 ELSE 2 END,
+            STATUS_DT DESC, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
+            <if test="INCLUDE_UNALLOCATED_WAIT != null and INCLUDE_UNALLOCATED_WAIT != ''">
+            , I.EQUIP_SEQ IS NULL
+            </if>
     </select>
 
     <select id="selectResultManagePopInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">

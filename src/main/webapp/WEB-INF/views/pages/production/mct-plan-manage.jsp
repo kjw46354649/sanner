@@ -60,99 +60,80 @@
     </div>
     <div class="bottomWrap">
         <div class="hWrap" style="padding: 0;">
-            <h2 style="height: 42px; line-height: 42px;">가공 대상 List</h2>
             <form id="MCT_PROCESS_TARGET_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="machine.selectWorkPlanGridList">
+                <input type="hidden" name="OUTSOURCING_PROCESSING" id="OUTSOURCING_PROCESSING">
+                <input type="hidden" name="NC_COMPLETE" id="NC_COMPLETE">
+                <input type="hidden" name="FINISHED_PROCESSING" id="FINISHED_PROCESSING">
 
-                <span class="slt_wrap ml-20">
-                    <label class="label_50" for="FACTORY_CLASSIFY">공장구분</label>
-                    <select class="wd_70" name="FACTORY_CLASSIFY" id="FACTORY_CLASSIFY" title="공장구분">
-                        <option value=""><spring:message code="com.form.top.all.option"/></option>
-                        <c:forEach var="code" items="${HighCode.H_1014}">
-                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                        </c:forEach>
-                    </select>
-                </span>
-                <span class="gubun"></span>
-                <span class="slt_wrap">
-                    <label class="label_50" for="POP_POSITION">위치</label>
-                    <select class="wd_70" id="POP_POSITION" name="POP_POSITION" title="위치">
-                        <option value=""><spring:message code="com.form.top.all.option"/></option>
-                        <c:forEach var="code" items="${HighCode.H_1009}">
-                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                        </c:forEach>
-                    </select>
-                </span>
-                <span class="gubun"></span>
-                <span class="slt_wrap">
-                    <label class="label_50" for="MATERIAL_DETAIL">소재분류</label>
-                    <select class="wd_100" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" title="소재분류">
-                        <option value=""><spring:message code="com.form.top.all.option"/></option>
-                        <c:forEach var="code" items="${HighCode.H_1027}">
-                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                        </c:forEach>
-                    </select>
-                </span>
-                <span class="gubun"></span>
-                <span class="slt_wrap">
-                    <label class="label_50" for="PART_STATUS">진행상태</label>
-                    <select class="wd_100" name="PART_STATUS" id="PART_STATUS" title="진행상태">
-                        <option value=""><spring:message code="com.form.top.all.option"/></option>
-                        <c:forEach var="code" items="${HighCode.H_1013}">
-                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                        </c:forEach>
-                    </select>
-                </span>
-                <span class="gubun"></span>
-                <span class="slt_wrap">
-                    <label class="label_50" for="EQUIP_SEQ">MCT No.</label>
-                    <select class="wd_100" name="EQUIP_SEQ" id="EQUIP_SEQ" title="MCT No.">
-                        <option value=""><spring:message code="com.form.top.all.option"/></option>
-                    </select>
-                </span>
-                <span class="gubun"></span>
-                <span class="slt_wrap">
-                    <label class="label_50" for="MCT_WORK_TYPE">작업구분</label>
-                    <select class="wd_100" name="MCT_WORK_TYPE" id="MCT_WORK_TYPE" title="작업구분">
-                        <option value=""><spring:message code="com.form.top.all.option"/></option>
-                        <c:forEach var="code" items="${HighCode.H_1011}">
-                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                        </c:forEach>
-                    </select>
-                </span>
-                <span class="gubun"></span>
-                <span class="slt_wrap">
-                        <input type="checkbox" name="PLAN_ONLY" id="PLAN_ONLY">
-                        <label class="label_50" for="PLAN_ONLY">계획단계만</label>
-                    </span>
-                <span class="gubun"></span>
-                <span class="slt_wrap">
-                        <input type="checkbox" name="INCLUDE_OUTSIDE" id="INCLUDE_OUTSIDE">
-                        <label class="label_50" for="INCLUDE_OUTSIDE">외주 포함</label>
-                    </span>
-                <span class="gubun"></span>
-                <span class="slt_wrap">
-                        <input type="checkbox" name="INCLUDE_PROCESSING" id="INCLUDE_PROCESSING">
-                        <label class="label_80" for="INCLUDE_PROCESSING">가공 완료 포함</label>
-                    </span>
-                <span class="refresh ml-10"><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
-<%--                <div style="margin: 0 0 10px 20px;">--%>
-
-<%--                </div>--%>
+                <div class="d-flex align-items-center" style="padding: 0 20px;">
+                    <div>
+                        <h2 style="height: 42px; line-height: 42px;">가공 대상 List</h2>
+                        <span class="slt_wrap ml-20">
+                            <label class="label_50" for="COMP_CD">공장구분</label>
+                            <select class="wd_70" name="COMP_CD" id="COMP_CD" title="공장구분">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1014}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_50" for="POP_POSITION">현재위치</label>
+                            <select class="wd_70" id="POP_POSITION" name="POP_POSITION" title="현재위치">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1009}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_30" for="MATERIAL_TYPE">재질</label>
+                            <select class="wd_100" name="MATERIAL_TYPE" id="MATERIAL_TYPE" title="재질">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1035}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="chk_box"><input id="ALLOCATION_COMPLETED_EXCLUDED" name="ALLOCATION_COMPLETED_EXCLUDED" type="checkbox" checked><label for="ALLOCATION_COMPLETED_EXCLUDED">배정완료제외</label></span>
+                        <span class="gubun"></span>
+                        <span class="ipu_wrap">
+                            <label class="label_80" for="CONTROL_NUM_OR_DRAWING_NUM">관리/도면번호</label>
+                            <input type="search" class="wd_100" name="CONTROL_NUM_OR_DRAWING_NUM" id="CONTROL_NUM_OR_DRAWING_NUM" title="도면번호">
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_50" for="OPTION">Option</label>
+                            <input type="text" class="wd_100" name="OPTION" id="OPTION" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" title="발주사" readonly>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_50" for="MATERIAL_KIND">소재형태</label>
+                            <select class="wd_100" name="MATERIAL_KIND" id="MATERIAL_KIND" title="소재형태">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1029}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_50" for="">소재 Size</label>
+                            <select class="wd_100" name="" id="" title="소재 Size">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                            </select>
+                        </span>
+                    </div>
+                    <div class="ml-auto">
+                        <button class="defaultBtn btn-50w green" type="button" id="MCT_TARGET_SAVE">저장</button>
+                        <span class="refresh "><button type="button" id="MCT_TARGET_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
+                    </div>
+                </div>
             </form>
-<%--            <div style="display:flow-root; margin: 0 20px 10px 20px;">--%>
-<%--                <input type="text" id="mctPlanManageFilterKeyword" placeholder="Enter your keyword">--%>
-<%--                <select id="mctPlanManageFilterColumn"></select>--%>
-<%--                <select id="mctPlanManageFilterCondition">--%>
-<%--                    <c:forEach var="code" items="${HighCode.H_1083}">--%>
-<%--                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
-<%--                    </c:forEach>--%>
-<%--                </select>--%>
-<%--                <label for="mctPlanManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>--%>
-<%--                <select id="mctPlanManageFrozen" name="mctPlanManageFrozen">--%>
-<%--                </select>--%>
-<%--                <button type="button" class="right_float defaultBtn btn-100w green" id="MCT_TARGET_SAVE">저장</button>--%>
-<%--            </div>--%>
         </div>
         <div class="conWrap">
             <div class="tableWrap" style="background: #e1e1e1;">
@@ -316,6 +297,7 @@
         ];
 
         const planObj = {
+            width: 380,
             height: '100%',
             collapsible: false,
             postRenderInterval: -1,
@@ -363,7 +345,7 @@
                 selectedGrid = $(this.element.context);
                 selectedRowIndex = ui.addList[0].rowIndx;
             },
-            moveNode: function (event, ui) {
+            moveNode: function () {
                 changeSortNum(this, $(this.element.context));
                 modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
             },
@@ -587,11 +569,6 @@
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $processTargetGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                } else {
-                    fnModifyPQGrid($processTargetGrid, [], ['machine.updateMctTarget', 'machine.insertMctPlan']);
-                    setTimeout(function () {
-                        refreshMctPlanGrids();
-                    }, 1000);
                 }
             }
         };
@@ -646,14 +623,13 @@
             //추가 또는 수정된 값이 있으면 true
             if (gridInstance.isDirty()) {
                 let changes = gridInstance.getChanges({format: 'byVal'});
-                let QUERY_ID_ARRAY = {
+                changes.queryIdList = {
                     'insertQueryId': insertQueryList,
                     'updateQueryId': updateQueryList,
                     'deleteQueryId': deleteQueryList
                 };
-                changes.queryIdList = QUERY_ID_ARRAY;
                 parameters = {'url': '/paramQueryCRUDGrid', 'data': {data: JSON.stringify(changes)}};
-                fnPostAjax(function (data, callFunctionParam) {
+                fnPostAjax(function (data) {
                     grid.pqGrid('refreshDataAndView');
                 }, parameters, '');
             }
@@ -702,29 +678,29 @@
             grid.pqGrid('updateRow', {rowList: rowListConvert, checkEditable: false});
         };
 
-        const colorClassification = function (status) {
-            let backgroundColor = '';
-            switch (status) {
-                // 가동중
-                case 'PRO007':
-                    backgroundColor = 'bg-green';
-                    break;
-                // 완료
-                case 'PRO008':
-                    backgroundColor = 'bg-skyblue';
-                    break;
-                // 비가동상태
-                case '비가동상태':
-                    backgroundColor = 'bg-yellow';
-                    break;
-                // 일시정지상태
-                case '일시정지상태':
-                    backgroundColor = 'bg-orange';
-                    break;
-            }
-
-            return backgroundColor;
-        };
+        // const colorClassification = function (status) {
+        //     let backgroundColor = '';
+        //     switch (status) {
+        //         // 가동중
+        //         case 'PRO007':
+        //             backgroundColor = 'bg-green';
+        //             break;
+        //         // 완료
+        //         case 'PRO008':
+        //             backgroundColor = 'bg-skyblue';
+        //             break;
+        //         // 비가동상태
+        //         case '비가동상태':
+        //             backgroundColor = 'bg-yellow';
+        //             break;
+        //         // 일시정지상태
+        //         case '일시정지상태':
+        //             backgroundColor = 'bg-orange';
+        //             break;
+        //     }
+        //
+        //     return backgroundColor;
+        // };
 
         const showTitle = function (data, tableElement) {
             let equipLabelElement = $(tableElement).find('.equipLabel');
@@ -912,16 +888,20 @@
         createPlanGrid();
         $processTargetGrid = $('#' + processTargetGridId).pqGrid(processTargetGridObj);
 
-        fnCommCodeDatasourceSelectBoxCreate($('#MCT_PROCESS_TARGET_FORM').find('#EQUIP_SEQ'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'machine.selectNCMachineList'}
-        });
+        // 발주사
+        (function () {
+            let comboData = [
+                {title: '외주가공', id: 'obj.value', value: 'obj.value'},
+                {title: 'NC완료', id: 'obj.value', value: 'obj.value'},
+                {title: '가공완료', id: 'obj.value', value: 'obj.value'},
+            ];
 
-        $('#MCT_TARGET_SAVE').on('click', function () {
-            // console.count();
-            fnModifyPQGrid($processTargetGrid, [], ['machine.updateMctTarget', 'machine.insertMctPlan']);
-            setTimeout(refreshMctPlanGrids, 1000);
-        });
+            $('#MCT_PROCESS_TARGET_FORM').find('#OPTION').comboTree({
+                source: comboData,
+                isMultiple: true,
+                cascadeSelect: false
+            });
+        })();
 
         /*$('#mctPlanManageFilterKeyword').on('keyup', function(e){
             fnFilterHandler($processTargetGrid, 'mctPlanManageFilterKeyword', 'mctPlanManageFilterCondition', 'mctPlanManageFilterColumn');

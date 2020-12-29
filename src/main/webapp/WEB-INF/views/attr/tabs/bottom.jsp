@@ -2393,7 +2393,7 @@
     //TODO: 함수명 변경
     const changeData = function () {
         const rowData = processingRequirementsTargetGrid.pqGrid("getRowData", {rowIndx: processingRequirementsTargetRowIndex});
-        fnResetFrom('monthly_productivity_top_form');
+        // fnResetFrom('processing_requirements_form');
         visibilityButton();
         changeProcessingRequirementsBasicInformation(rowData);
         changeProcessingRequirementsInformation(rowData);
@@ -2424,7 +2424,7 @@
 
     $('#processing_requirements_save').on('click', function () {
         let $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
-        let postData = fnFormToJsonArrayData('#monthly_productivity_top_form');
+        let postData = fnFormToJsonArrayData('#processing_requirements_form');
         let url = '';
 
         if ($processingRequirementsType === 'ESTIMATE') {
@@ -2452,7 +2452,7 @@
         }, parameter, '');
     });
 
-    $('#monthly_productivity_top_form').on('change', function () {
+    $('#processing_requirements_form').on('change', function () {
         isProcessingRequirementsDirty = true;
     });
 
