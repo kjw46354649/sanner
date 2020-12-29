@@ -496,6 +496,9 @@
             <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
                 AND A.MATERIAL_KIND = #{MATERIAL_KIND}
             </if>
+            <if test="COMP_CD != null and COMP_CD != ''">
+                AND B.COMP_CD = #{COMP_CD}
+            </if>
             <if test="ALLOCATION_COMPLETED_EXCLUDED != null and ALLOCATION_COMPLETED_EXCLUDED != ''">
                 AND C.EQUIP_SEQ IS NULL
             </if>
