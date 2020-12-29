@@ -633,6 +633,7 @@
             $("#workReserveTimeInfo").html('<span class="timeTit"><srping:message key='drawing.board.button.02'/></span><span class="time"><span></span></span>');
             reserveDisplayTime();
             reserveTypeSwitch();
+            fnPopupClose("drawing_reserve_time_popup");
         });
 
         $("#reserveCloseBtn").on('click', function(){
