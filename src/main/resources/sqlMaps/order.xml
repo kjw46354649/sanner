@@ -64,12 +64,6 @@
         IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
         IFNULL(B.MATERIAL_NOTE, SPACE(0)) AS MATERIAL_NOTE, <!-- 소재비고 -->
         IFNULL(B.PART_UNIT_QTY, SPACE(0)) AS PART_UNIT_QTY, <!-- Part단위수량 -->
-        IFNULL(B.DETAIL_LATHE, SPACE(0)) AS DETAIL_LATHE, <!-- 상세가공요건_선반 -->
-        IFNULL(B.DETAIL_SURFACE, SPACE(0)) AS DETAIL_SURFACE, <!-- 상세가공요건_가공면 -->
-        IFNULL(B.DETAIL_CLAMPING, SPACE(0)) AS DETAIL_CLAMPING, <!-- 상세가공요건_클램핑 -->
-        IFNULL(B.DETAIL_POCKET, SPACE(0)) AS DETAIL_POCKET, <!-- 상세가공요건_포켓 -->
-        IFNULL(B.DETAIL_DRILL, SPACE(0)) AS DETAIL_DRILL, <!-- 상세가공요건_드릴 -->
-        IFNULL(B.DETAIL_DIFFICULTY, SPACE(0)) AS DETAIL_DIFFICULTY, <!-- 상세가공요건_난도 -->
         IFNULL(B.MATERIAL_FINISH_TM, SPACE(0)) AS MATERIAL_FINISH_TM, <!-- 소재마감_TM각비 -->
         IFNULL(B.MATERIAL_FINISH_GRIND, SPACE(0)) AS MATERIAL_FINISH_GRIND, <!-- 소재마감_연마 -->
         IFNULL(B.MATERIAL_FINISH_HEAT, SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 소재마감_열처리 -->
@@ -714,12 +708,6 @@
             SURFACE_TREAT,
             MATERIAL_NOTE,
             PART_UNIT_QTY,
-            DETAIL_LATHE,
-            DETAIL_SURFACE,
-            DETAIL_CLAMPING,
-            DETAIL_POCKET,
-            DETAIL_DRILL,
-            DETAIL_DIFFICULTY,
             MATERIAL_FINISH_TM,
             MATERIAL_FINISH_GRIND,
             MATERIAL_FINISH_HEAT,
@@ -727,12 +715,6 @@
             UNIT_SURFACE_AMT,
             UNIT_PROCESS_AMT,
             UNIT_ETC_AMT,
-            UNIT_MATERIAL_AUTO_YN,
-            UNIT_TM_AUTO_YN,
-            UNIT_GRIND_AUTO_YN,
-            UNIT_HEAT_AUTO_YN,
-            UNIT_SURFACE_AUTO_YN,
-            UNIT_PROCESS_AUTO_YN,
             UNIT_AMT_NOTE,
             DWG_GFILE_SEQ,
             DXF_GFILE_SEQ,
@@ -789,12 +771,6 @@
             #{SURFACE_TREAT},
             #{MATERIAL_NOTE},
             #{PART_UNIT_QTY},
-            #{DETAIL_LATHE},
-            #{DETAIL_SURFACE},
-            #{DETAIL_CLAMPING},
-            #{DETAIL_POCKET},
-            #{DETAIL_DRILL},
-            #{DETAIL_DIFFICULTY},
             #{MATERIAL_FINISH_TM},
             #{MATERIAL_FINISH_GRIND},
             #{MATERIAL_FINISH_HEAT},
@@ -802,12 +778,6 @@
             REPLACE(#{UNIT_SURFACE_AMT}, ',', SPACE(0)),
             REPLACE(#{UNIT_PROCESS_AMT}, ',', SPACE(0)),
             REPLACE(#{UNIT_ETC_AMT}, ',', SPACE(0)),
-            #{UNIT_MATERIAL_AUTO_YN},
-            #{UNIT_TM_AUTO_YN},
-            #{UNIT_GRIND_AUTO_YN},
-            #{UNIT_HEAT_AUTO_YN},
-            #{UNIT_SURFACE_AUTO_YN},
-            #{UNIT_PROCESS_AUTO_YN},
             #{UNIT_AMT_NOTE},
             #{DWG_GFILE_SEQ},
             #{DXF_GFILE_SEQ},
@@ -1097,24 +1067,6 @@
         </if>
         <if test="UNIT_ETC_AMT != null and UNIT_ETC_AMT != ''">
             UNIT_ETC_AMT = REPLACE(#{UNIT_ETC_AMT}, ',', SPACE(0)),
-        </if>
-        <if test="UNIT_MATERIAL_AUTO_YN != null and UNIT_MATERIAL_AUTO_YN != ''">
-            UNIT_MATERIAL_AUTO_YN = #{UNIT_MATERIAL_AUTO_YN},
-        </if>
-        <if test="UNIT_TM_AUTO_YN != null and UNIT_TM_AUTO_YN != ''">
-            UNIT_TM_AUTO_YN = #{UNIT_TM_AUTO_YN},
-        </if>
-        <if test="UNIT_GRIND_AUTO_YN != null and UNIT_GRIND_AUTO_YN != ''">
-            UNIT_GRIND_AUTO_YN = #{UNIT_GRIND_AUTO_YN},
-        </if>
-        <if test="UNIT_HEAT_AUTO_YN != null and UNIT_HEAT_AUTO_YN != ''">
-            UNIT_HEAT_AUTO_YN = #{UNIT_HEAT_AUTO_YN},
-        </if>
-        <if test="UNIT_SURFACE_AUTO_YN != null and UNIT_SURFACE_AUTO_YN != ''">
-            UNIT_SURFACE_AUTO_YN = #{UNIT_SURFACE_AUTO_YN},
-        </if>
-        <if test="UNIT_PROCESS_AUTO_YN != null and UNIT_PROCESS_AUTO_YN != ''">
-            UNIT_PROCESS_AUTO_YN = #{UNIT_PROCESS_AUTO_YN},
         </if>
         <if test="UNIT_AMT_NOTE != null and UNIT_AMT_NOTE != ''">
             UNIT_AMT_NOTE = #{UNIT_AMT_NOTE},

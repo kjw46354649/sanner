@@ -462,19 +462,13 @@
                         newRowData.PART_UNIT_QTY = null;
                         newRowData.ORIGINAL_SIDE_QTY = null;
                         newRowData.OTHER_SIDE_QTY = null;
-                        newRowData.DETAIL_LATHE = null;
-                        newRowData.DETAIL_SURFACE = null;
-                        newRowData.DETAIL_CLAMPING = null;
-                        newRowData.DETAIL_POCKET = null;
-                        newRowData.DETAIL_DRILL = null;
-                        newRowData.DETAIL_DIFFICULTY = null;
                         newRowData.MATERIAL_FINISH_TM = null;
                         newRowData.MATERIAL_FINISH_GRIND = null;
                         newRowData.MATERIAL_FINISH_HEAT = null;
                         newRowData.UNIT_MATERIAL_AMT = null;
-                        newRowData.UNIT_TM_AMT = null;
-                        newRowData.UNIT_GRIND_AMT = null;
-                        newRowData.UNIT_HEAT_AMT = null;
+                        newRowData.UNIT_MATERIAL_FINISH_TM_AMT = null;
+                        newRowData.UNIT_MATERIAL_FINISH_GRIND_AMT = null;
+                        newRowData.UNIT_MATERIAL_FINISH_HEAT_AMT = null;
                         newRowData.UNIT_SURFACE_AMT = null;
                         newRowData.UNIT_PROCESS_AMT = null;
                         newRowData.UNIT_ETC_AMT = null;
@@ -1515,7 +1509,7 @@
                         }
                     },
                     {
-                        title: 'TM각비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_TM_AMT',
+                        title: 'TM각비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1534,7 +1528,7 @@
                         }
                     },
                     {
-                        title: '연마비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_GRIND_AMT',
+                        title: '연마비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1553,7 +1547,7 @@
                         }
                     },
                     {
-                        title: '열처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_HEAT_AMT',
+                        title: '열처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1857,7 +1851,7 @@
                     let row;
 
                     // 항목별 계산견적 단가
-                    const estimateArray = ['UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'ORDER_QTY', 'UNIT_FINAL_AMT'];
+                    const estimateArray = ['UNIT_MATERIAL_AMT', 'UNIT_MATERIAL_FINISH_TM_AMT', 'UNIT_MATERIAL_FINISH_GRIND_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'ORDER_QTY', 'UNIT_FINAL_AMT'];
                     let estimateFlag = false;
                     for (let value of estimateArray) {
                         if (newRow.hasOwnProperty(value)) {
@@ -2238,8 +2232,7 @@
                 'WORK_TYPE', 'CONTROL_PART_QTY', 'DNJSCLD', 'EOCLD', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT',
                 'SIZE_TXT', 'SIZE_TYPE', 'SIZE_W', 'SIZE_H', 'SIZE_T', 'SIZE_D', 'SIZE_L', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
                 'MATERIAL_TYPE_NM', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
-                'PART_UNIT_QTY', 'MATERIAL_BUTTON', 'DETAIL_LATHE', 'DETAIL_SURFACE', 'DETAIL_CLAMPING', 'DETAIL_POCKET', 'DETAIL_DRILL',
-                'DETAIL_DIFFICULTY', 'CALC_EST_UNIT_COST', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
+                'PART_UNIT_QTY', 'MATERIAL_BUTTON', 'CALC_EST_UNIT_COST', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_MATERIAL_AMT', 'UNIT_SURFACE_AMT',
                 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'DETAIL_MACHINE_REQUIREMENT',
                 'POP_POSITION_NM', 'UNIT_AMT_NOTE',
