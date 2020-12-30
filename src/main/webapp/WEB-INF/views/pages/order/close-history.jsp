@@ -358,16 +358,6 @@
                 ]
             },
             {
-                title: '상세가공요건', align: 'center', hidden: true, colModel: [
-                    {title: '선반', dataIndx: 'DETAIL_LATHE'},
-                    {title: '가공면', dataIndx: 'DETAIL_SURFACE'},
-                    {title: '클램핑', dataIndx: 'DETAIL_CLAMPING'},
-                    {title: '포켓', dataIndx: 'DETAIL_POCKET'},
-                    {title: '드릴', dataIndx: 'DETAIL_DRILL'},
-                    {title: '난도', dataIndx: 'DETAIL_DIFFICULTY'}
-                ]
-            },
-            {
                 title: '소재마감', align: 'center', hidden: true, colModel: [
                     {title: 'TM각비', dataIndx: 'MATERIAL_FINISH_TM'},
                     {title: '연마', dataIndx: 'MATERIAL_FINISH_GRIND'},
