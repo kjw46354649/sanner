@@ -462,19 +462,13 @@
                         newRowData.PART_UNIT_QTY = null;
                         newRowData.ORIGINAL_SIDE_QTY = null;
                         newRowData.OTHER_SIDE_QTY = null;
-                        newRowData.DETAIL_LATHE = null;
-                        newRowData.DETAIL_SURFACE = null;
-                        newRowData.DETAIL_CLAMPING = null;
-                        newRowData.DETAIL_POCKET = null;
-                        newRowData.DETAIL_DRILL = null;
-                        newRowData.DETAIL_DIFFICULTY = null;
                         newRowData.MATERIAL_FINISH_TM = null;
                         newRowData.MATERIAL_FINISH_GRIND = null;
                         newRowData.MATERIAL_FINISH_HEAT = null;
                         newRowData.UNIT_MATERIAL_AMT = null;
-                        newRowData.UNIT_TM_AMT = null;
-                        newRowData.UNIT_GRIND_AMT = null;
-                        newRowData.UNIT_HEAT_AMT = null;
+                        newRowData.UNIT_MATERIAL_FINISH_TM_AMT = null;
+                        newRowData.UNIT_MATERIAL_FINISH_GRIND_AMT = null;
+                        newRowData.UNIT_MATERIAL_FINISH_HEAT_AMT = null;
                         newRowData.UNIT_SURFACE_AMT = null;
                         newRowData.UNIT_PROCESS_AMT = null;
                         newRowData.UNIT_ETC_AMT = null;
@@ -1457,14 +1451,37 @@
                 render: function (ui) {
                     let rowData = ui.rowData;
                     let cls = null;
-                    //TODO: button
+                    let text = '';
+                    let isDisabled = rowData.WORK_TYPE === 'WTP020' ? 'disabled' : '';
 
-                    if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                    if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls, text: ''};
+                    text = '<button name="processing_requirements' + isDisabled + '">가공요건</button>';
+
+                    return {cls: cls, text: text};
+                },
+                postRender(ui) {
+                    const grid = this,
+                        $cell = grid.getCell(ui);
+                    const rowData = ui.rowData;
+
+                    $cell.find("[name=processing_requirements]").bind("click", function () {
+                        processingRequirementsPop('CONTROL');
+                    });
                 }
+            },
+            {
+                title: '자동 계산견적 단가', align: 'center', hidden: true,
+                colModel: [
+                    {title: '소재비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AUTO_AMT'},
+                    {title: '연마비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT'},
+                    {title: '열처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT'},
+                    {title: '표면처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AUTO_AMT'},
+                    {title: '가공비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_PROCESS_AUTO_AMT'},
+                    {title: '합계', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SUM_AUTO_AMT'},
+                ]
             },
             {
                 title: '항목별 계산견적 단가 (10원단위 반올림)',
@@ -1492,7 +1509,7 @@
                         }
                     },
                     {
-                        title: 'TM각비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_TM_AMT',
+                        title: 'TM각비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1511,7 +1528,7 @@
                         }
                     },
                     {
-                        title: '연마비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_GRIND_AMT',
+                        title: '연마비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1530,7 +1547,7 @@
                         }
                     },
                     {
-                        title: '열처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_HEAT_AMT',
+                        title: '열처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1834,7 +1851,7 @@
                     let row;
 
                     // 항목별 계산견적 단가
-                    const estimateArray = ['UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'ORDER_QTY', 'UNIT_FINAL_AMT'];
+                    const estimateArray = ['UNIT_MATERIAL_AMT', 'UNIT_MATERIAL_FINISH_TM_AMT', 'UNIT_MATERIAL_FINISH_GRIND_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'ORDER_QTY', 'UNIT_FINAL_AMT'];
                     let estimateFlag = false;
                     for (let value of estimateArray) {
                         if (newRow.hasOwnProperty(value)) {
@@ -1845,19 +1862,13 @@
 
                     if (estimateFlag) {
                         let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT === '' ? 0 : Number(data.UNIT_MATERIAL_AMT); // 소재비
-                        let UNIT_TM_AMT = data.UNIT_TM_AMT == null || data.UNIT_TM_AMT === '' ? 0 : Number(data.UNIT_TM_AMT); //TM각비
-                        let UNIT_GRIND_AMT = data.UNIT_GRIND_AMT == null || data.UNIT_GRIND_AMT === '' ? 0 : Number(data.UNIT_GRIND_AMT); // 연마비
-                        let UNIT_HEAT_AMT = data.UNIT_HEAT_AMT == null || data.UNIT_HEAT_AMT === '' ? 0 : Number(data.UNIT_HEAT_AMT); // 열처리
                         let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT === '' ? 0 : Number(data.UNIT_SURFACE_AMT); // 표면처리
                         let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT === '' ? 0 : Number(data.UNIT_PROCESS_AMT); // 가공비
                         let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT === '' ? 0 : Number(data.UNIT_ETC_AMT); // 기타추가
                         const ORDER_QTY = data.ORDER_QTY == null || data.ORDER_QTY === '' ? 0 : Number(data.ORDER_QTY); //발주 수량
                         let calculateEstimateAmount = 0; // 견적금액(계산 견적단가)
                         calculateEstimateAmount += UNIT_MATERIAL_AMT;
-                        calculateEstimateAmount += UNIT_TM_AMT;
-                        calculateEstimateAmount += UNIT_GRIND_AMT;
-                        calculateEstimateAmount += UNIT_HEAT_AMT;
-                        calculateEstimateAmount += UNIT_SURFACE_AMT;
+                       calculateEstimateAmount += UNIT_SURFACE_AMT;
                         calculateEstimateAmount += UNIT_PROCESS_AMT;
                         calculateEstimateAmount += UNIT_ETC_AMT;
 
@@ -1945,8 +1956,7 @@
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'PART_UNIT_QTY',
                 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'SIZE_TXT', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN',
                 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
-                'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT', 'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT',
-                'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
+                'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT', 'UNIT_MATERIAL_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
                 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMT', 'UNIT_FINAL_AMT', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM',
                 'LABEL_NOTE', 'PREV_DRAWING_NUM', 'TOTAL_SHEET', 'SAME_SIDE_YN', 'DETAIL_MACHINE_REQUIREMENT'
             ];
@@ -1973,7 +1983,7 @@
                 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
                 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
-                'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
+                'UNIT_MATERIAL_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE',
                 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PROJECT_NM', 'ITEM_NM',
                 'ORDER_STAFF_NM', 'PREV_DRAWING_NUM',
@@ -1989,13 +1999,19 @@
                 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
                 'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND',
                 'MATERIAL_FINISH_HEAT', 'MATERIAL_BUTTON', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
-                'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
+                'UNIT_MATERIAL_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT',
                 'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'ORDER_IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
                 'DRAWING_UP_DT', 'ETC_GFILE_SEQ', 'INSPECT_NUM', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
                 'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
                 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT', 'OUTSIDE_NOTE', 'OUTSIDE_INSPECT_RESULT_NM', 'OUTSIDE_ERROR_NOTE',
-                'CONTROL_PART_INSERT_UPDATE_DT'
+                'CONTROL_PART_INSERT_UPDATE_DT',
+                'UNIT_MATERIAL_AUTO_AMT',
+                'UNIT_MATERIAL_FINISH_GRIND_AMT',
+                'UNIT_MATERIAL_FINISH_HEAT_AMT',
+                'UNIT_SURFACE_AUTO_AMT',
+                'UNIT_PROCESS_AUTO_AMT',
+                'UNIT_SUM_AUTO_AMT'
             ];
 
             switch (elementId) {
@@ -2216,9 +2232,8 @@
                 'WORK_TYPE', 'CONTROL_PART_QTY', 'DNJSCLD', 'EOCLD', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT',
                 'SIZE_TXT', 'SIZE_TYPE', 'SIZE_W', 'SIZE_H', 'SIZE_T', 'SIZE_D', 'SIZE_L', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
                 'MATERIAL_TYPE_NM', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
-                'PART_UNIT_QTY', 'MATERIAL_BUTTON', 'DETAIL_LATHE', 'DETAIL_SURFACE', 'DETAIL_CLAMPING', 'DETAIL_POCKET', 'DETAIL_DRILL',
-                'DETAIL_DIFFICULTY', 'CALC_EST_UNIT_COST', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
-                'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT',
+                'PART_UNIT_QTY', 'MATERIAL_BUTTON', 'CALC_EST_UNIT_COST', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
+                'UNIT_MATERIAL_AMT', 'UNIT_SURFACE_AMT',
                 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'DETAIL_MACHINE_REQUIREMENT',
                 'POP_POSITION_NM', 'UNIT_AMT_NOTE',
                 'DWG_GFILE_SEQ', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'ORDER_IMG_GFILE_SEQ', 'VIEW_GFILE_SEQ', 'ETC_GFILE_SEQ',
