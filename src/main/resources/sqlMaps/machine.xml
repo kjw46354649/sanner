@@ -497,10 +497,7 @@
                 AND A.MATERIAL_KIND = #{MATERIAL_KIND}
             </if>
             <if test="COMP_CD != null and COMP_CD != ''">
-                AND B.COMP_CD = #{COMP_CD}
-            </if>
-            <if test="ALLOCATION_COMPLETED_EXCLUDED != null and ALLOCATION_COMPLETED_EXCLUDED != ''">
-                AND C.EQUIP_SEQ IS NULL
+                AND B.COMP_CD = CASE WHEN 'FCT010' = #{COMP_CD} THEN 'CMP0003' WHEN 'FCT020' = #{COMP_CD} THEN 'CMP0002' WHEN 'FCT030' = #{COMP_CD} THEN 'CMP0001' END
             </if>
             <if test="POP_POSITION != null and POP_POSITION != ''">
                 AND Y.POP_POSITION = #{POP_POSITION}
@@ -841,50 +838,99 @@
     <!-- MCT 수행이력 관리  : NC 수행이력 -->
     <select id="selectNcPerformanceHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, IFNULL(C.PART_NUM, 0)) AS ROWNUM,
-        	A.MCT_WORK_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
-        	IFNULL(SF_GET_CODE_NM('1005', D.FACTORY_AREA, #{LOGIN_LOCALE}), SPACE(0)) AS FACTORY_NM,
-            D.EQUIP_SEQ, D.EQUIP_ID, D.EQUIP_NM,
-        	B.CONTROL_NUM, <!-- 관리번호 -->
-        	C.PART_NUM, <!-- Part -->
-        	C.DRAWING_NUM, <!-- 도면번호 -->
-        	C.IMG_GFILE_SEQ, <!-- 도면 이미지 번호 -->
-        	R.ITEM_NM, <!-- 품명 -->
-        	C.WORK_TYPE, <!-- 작업형태 -->
-            IFNULL(SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 이름 -->
-        	C.MATERIAL_DETAIL, <!-- 소재종류 상세 -->
-            IFNULL(SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
-            jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS ORDER_QTY, <!-- 수량 -->
-            C.SIZE_TXT AS STANDARD_SIZE, <!-- 규격 -->
-            jmes.SF_GET_MATERIAL_SIZE_TXT(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS MATERAIL_ORDER_SIZE,	<!-- 소재 주문 규격 -->
-            jmes.SF_GET_DATE_F(A.WORK_START_DT, 'YY', 'M') AS WORK_START_DT, <!-- 확정 일시 -->
-            jmes.SF_GET_DATE_F(A.WORK_FINISH_DT, 'YY', 'M') AS WORK_FINISH_DT, <!-- 확정 종료 일시 -->
-            CASE WHEN A.WORK_FINISH_DT IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('STOP',A.MCT_WORK_SEQ),0)/3600,0),'h ',TRUNCATE((IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('STOP',A.MCT_WORK_SEQ),0)%3600)/60,0),'m') ELSE SPACE(0) END AS WORK_STOP_MINUTE, <!-- 작업 중지 전체 분 -->
-            CASE WHEN A.WORK_FINISH_DT IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK',A.MCT_WORK_SEQ),0)/3600,0),'h ',TRUNCATE((IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK',A.MCT_WORK_SEQ),0)%3600)/60,0),'m') ELSE SPACE(0) END AS WORK_WORK_MINUTE, <!-- 작업 전체 분 -->
-            CASE WHEN A.WORK_FINISH_DT IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) / jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 0)/3600, 0),'h ', TRUNCATE((IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) / jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 0)%3600)/60,0),'m') ELSE SPACE(0) END AS LEAD_TIME,
-            jmes.SF_GET_USER_NM(A.WORK_USER_ID) AS WORK_USER_ID
+            ROW_NUMBER () OVER () AS ROW_NUM
+            , A.MCT_WORK_SEQ
+            , A.CONTROL_SEQ
+            , A.CONTROL_DETAIL_SEQ
+            , jmes.SF_GET_CODE_NM('1005', D.FACTORY_AREA, 'KO') AS FACTORY_AREA_NM <!-- AREA 구분 -->
+            , jmes.SF_GET_CODE_NM('1010', D.PROCESS_TYPE, 'KO') AS PROCESS_TYPE_NM <!-- 공정 -->
+            , D.EQUIP_SEQ
+            , D.EQUIP_ID
+            , D.EQUIP_NM <!-- 장비명 -->
+            , jmes.SF_GET_USER_NM(A.WORK_USER_ID) AS WORK_USER_NM <!-- 작업자 -->
+            , jmes.SF_GET_DATE_F(A.WORK_START_DT, 'YY', 'M') AS WORK_START_DT <!-- 착수일시 -->
+            , jmes.SF_GET_DATE_F(A.WORK_FINISH_DT, 'YY', 'M') AS WORK_FINISH_DT <!-- 완료일시 -->
+            , CASE
+                WHEN A.WORK_FINISH_DT IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('STOP', A.MCT_WORK_SEQ), 0)/ 3600, 0), 'h ', TRUNCATE((IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('STOP', A.MCT_WORK_SEQ), 0)%3600)/ 60, 0), 'm')
+            END AS WORK_STOP_MINUTE <!-- 작업 중지 전체 분 -->
+            , CASE
+                WHEN A.WORK_FINISH_DT IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ), 0)/ 3600, 0), 'h ', TRUNCATE((IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ), 0)%3600)/ 60, 0), 'm')
+            END AS WORK_WORK_MINUTE <!-- 작업 전체 분 -->
+            , CASE
+                WHEN A.WORK_FINISH_DT IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) / jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 0)/ 3600, 0), 'h ', TRUNCATE((IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) / jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 0)%3600)/ 60, 0), 'm')
+            END AS LEAD_TIME
+            , A.FINISH_QTY <!-- 완료 수량 -->
+            , A.ERROR_QTY <!-- 불량 -->
+            , A.ERROR_REASON <!-- 불량 원인 -->
+            , CASE
+                WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM
+                ELSE CONCAT(B.CONTROL_NUM, ' #', C.PART_NUM)
+            END AS CONTROL_NUM <!-- 관리번호 -->
+            , jmes.SF_GET_CODE_NM('1033', C.WORK_TYPE, 'KO') AS WORK_TYPE_NM <!-- 작업형태 -->
+            , jmes.SF_GET_DATE_F(C.INNER_DUE_DT, '', '') AS INNER_DUE_DT <!-- 가공납기 -->
+            , C.DRAWING_NUM <!-- 도면번호 -->
+            , C.IMG_GFILE_SEQ <!-- 도면 이미지 번호 -->
+            , R.ITEM_NM <!-- 품명 -->
+            , jmes.SF_GET_CODE_NM('1035', C.MATERIAL_TYPE, 'KO') AS MATERIAL_TYPE_NM <!-- 재질 -->
+            , jmes.SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, 'KO') AS MATERIAL_DETAIL_NM <!-- 소재종류 -->
+            , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY <!-- 수량 -->
+            , C.SIZE_TXT <!-- 규격 -->
+            , jmes.SF_GET_MATERIAL_SIZE_TXT(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS MATERAIL_ORDER_SIZE <!-- 소재 주문 규격 -->
         FROM TBL_MCT_WORK A
         	INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
 			INNER JOIN TBL_CONTROL_PART_ORDER_MAIN R ON B.CONTROL_SEQ = R.CONTROL_SEQ
-                <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
-                    AND UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
-                </if>
         	INNER JOIN TBL_CONTROL_PART C ON C.CONTROL_SEQ = A.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
                 <if test="MATERIAL_DETAIL != null and MATERIAL_DETAIL != ''">
                     AND C.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
                 </if>
-                <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-                    AND C.DRAWING_NUM LIKE CONCAT('%', #{DRAWING_NUM}, '%')
-                </if>
                 <if test="WORK_TYPE != null and WORK_TYPE != ''">
                     AND C.WORK_TYPE = #{WORK_TYPE}
                 </if>
+                <choose>
+                    <when test="SIZE_TYPE == 'XYZ010'">
+                        <if test="SIZE_W_F != null and SIZE_W_F != ''">
+                            AND C.SIZE_W >= #{SIZE_W_F}
+                        </if>
+                        <if test="SIZE_W_T != null and SIZE_W_T != ''">
+                            AND C.SIZE_W <![CDATA[ <= ]]> #{SIZE_W_T}
+                        </if>
+                        <if test="SIZE_H_F != null and SIZE_H_F != ''">
+                            AND C.SIZE_H >= #{SIZE_H_F}
+                        </if>
+                        <if test="SIZE_H_T != null and SIZE_H_T != ''">
+                            AND C.SIZE_H <![CDATA[ <= ]]> #{SIZE_H_T}
+                        </if>
+                        <if test="SIZE_T_F != null and SIZE_T_F != ''">
+                            AND C.SIZE_T >= #{SIZE_T_F}
+                        </if>
+                        <if test="SIZE_T_T != null and SIZE_T_T != ''">
+                            AND C.SIZE_T <![CDATA[ <= ]]> #{SIZE_T_T}
+                        </if>
+                    </when>
+                    <when test="SIZE_TYPE == 'XYZ020' or SIZE_TYPE == 'XYZ030' or SIZE_TYPE == 'XYZ040' or SIZE_TYPE == 'XYZ050'">
+                        <if test="SIZE_D_F != null and SIZE_D_F != ''">
+                            AND C.SIZE_D >= #{SIZE_D_F}
+                        </if>
+                        <if test="SIZE_D_T != null and SIZE_D_T != ''">
+                            AND C.SIZE_D <![CDATA[ <= ]]> #{SIZE_D_T}
+                        </if>
+                        <if test="SIZE_L_F != null and SIZE_L_F != ''">
+                            AND C.SIZE_L >= #{SIZE_L_F}
+                        </if>
+                        <if test="SIZE_L_T != null and SIZE_L_T != ''">
+                            AND C.SIZE_L <![CDATA[ <= ]]> #{SIZE_L_T}
+                        </if>
+                    </when>
+                </choose>
         	INNER JOIN TBL_EQUIP D ON A.EQUIP_SEQ = D.EQUIP_SEQ
                 <if test="FACTORY_AREA != null and FACTORY_AREA != ''">
                     AND D.FACTORY_AREA = #{FACTORY_AREA}
                 </if>
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
+            <if test="CONTROL_NUM_OR_DRAWING_NUM != null and CONTROL_NUM_OR_DRAWING_NUM != ''">
+                AND (UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM_OR_DRAWING_NUM}), '%') OR UPPER(C.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM_OR_DRAWING_NUM}), '%'))
+            </if>
             <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
                 AND A.EQUIP_SEQ = #{EQUIP_SEQ}
             </if>
@@ -1080,7 +1126,12 @@
                 </otherwise>
             </choose>
             <if test="HIDDEN_EQUIP_SEQ != null and HIDDEN_EQUIP_SEQ != ''">
-                AND (I.EQUIP_SEQ IN (${HIDDEN_EQUIP_SEQ}) <if test="INCLUDE_UNALLOCATED_WAIT != null and INCLUDE_UNALLOCATED_WAIT != ''">OR I.EQUIP_SEQ IS NULL</if>)
+                AND (
+                      EXISTS (SELECT 1 FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N' AND M.EQUIP_SEQ IN (${HIDDEN_EQUIP_SEQ}))
+                    <if test="INCLUDE_UNALLOCATED_WAIT == null">
+                        OR I.EQUIP_SEQ IN (${HIDDEN_EQUIP_SEQ})
+                    </if>
+                    )
             </if>
             <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
                 AND UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
