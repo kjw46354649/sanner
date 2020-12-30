@@ -129,7 +129,7 @@
                 <div class="slt_wrap namePlusSlt">
                     <label for="selEstimateRegisterCalculateApply">계산견적적용</label>
                     <select id="selEstimateRegisterCalculateApply" name="selEstimateRegisterCalculateApply" title="계산견적적용">
-                        <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                        <option value="0"><spring:message code="com.form.top.sel.option"/></option>
                         <c:forEach var="code" items="${HighCode.H_1088}">
                             <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                         </c:forEach>

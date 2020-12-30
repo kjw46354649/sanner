@@ -164,13 +164,10 @@
                     <span class="slt_wrap namePlusSlt">
                         <label for="SUPPLY_UNIT_COST_APPLY">공급단가적용</label>
                         <select id="SUPPLY_UNIT_COST_APPLY" title="공급단가적용">
-                            <option value="0">-Select-</option>
-                            <option value="1">1%</option>
-                            <option value="3">3%</option>
-                            <option value="5">5%</option>
-                            <option value="10">10%</option>
-                            <option value="15">15%</option>
-                            <option value="20">20%</option>
+                            <option value="0"><spring:message code="com.form.top.sel.option"/></option>
+                            <c:forEach var="code" items="${HighCode.H_1088}">
+                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                            </c:forEach>
                         </select>
                     </span>
                     <button type="button" class="defaultBtn btn-100w" id="CONTROL_MERGE" style="background-color: #5b9bd5">Merge</button>
@@ -2977,11 +2974,10 @@
             if (noSelectedRowAlert()) return false;
 
             let number = $('#SUPPLY_UNIT_COST_APPLY option:selected').val();
-            let rate = 100 - number;
 
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                let supplyUnitPrice = (Math.ceil(rowData.UNIT_FINAL_AMT * (rate / 100) / 100) * 100).toFixed(0) || null;
+                let supplyUnitPrice = (Math.ceil(rowData.UNIT_FINAL_AMT * (number / 100) / 100) * 100).toFixed(0) || null;
                 let finalAmount = (supplyUnitPrice * rowData.ORDER_QTY) || null; // 10의 자리 올림
 
                 $orderManagementGrid.pqGrid('updateRow', {'rowIndx': selectedOrderManagementRowIndex[i], row: {'UNIT_FINAL_AMT': supplyUnitPrice, 'FINAL_TOTAL_AMT': finalAmount}, checkEditable: false});
