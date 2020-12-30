@@ -129,9 +129,10 @@
                 <div class="slt_wrap namePlusSlt">
                     <label for="selEstimateRegisterCalculateApply">계산견적적용</label>
                     <select id="selEstimateRegisterCalculateApply" name="selEstimateRegisterCalculateApply" title="계산견적적용">
-                        <option>Select</option>
-                        <option>10%</option>
-                        <option>20%</option>
+                        <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                        <c:forEach var="code" items="${HighCode.H_1088}">
+                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                        </c:forEach>
                     </select>
                     <button type="button" class="defaultBtn radius authorizedBtn" id="btnEstimateRegisterAdd">추가</button>
                     <button type="button" class="defaultBtn radius red authorizedBtn" id="btnEstimateRegisterDelete">삭제</button>
@@ -541,9 +542,9 @@
             },
             {title: '항목별 계산 견적단가(10원단위 반올림)', align: "center", colModel: [
                     {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title: 'TM각비', datatype: 'string', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title: '연마비', datatype: 'string', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title: '열처리', datatype: 'string', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title: 'TM각비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
                     {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
                     {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
                     {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
@@ -1221,6 +1222,15 @@
             }
         };
 
+        const noSelectedRowAlert = function () {
+            if (estimateRegisterSelectedRowIndex.length > 0) {
+                return false;
+            } else {
+                fnAlert(null, '하나 이상 선택해주세요');
+                return true;
+            }
+        };
+
         /** 버튼 처리 **/
         $("#btnEstimateRegisterNew").on('click', function(){
             $("#estimate_version_up_sequence_form #hidden_est_seq").val('');
@@ -1298,8 +1308,40 @@
 
         });
 
-        $("#selEstimateRegisterCalculateApply").on('click', function(){
+        $("#selEstimateRegisterCalculateApply").on('change', function () {
+            if (noSelectedRowAlert()) return false;
 
+            let number = Number($('#selEstimateRegisterCalculateApply option:selected').val());
+
+            for (let i = 0, selectedRowCount = estimateRegisterSelectedRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = estimateRegisterTopGrid.pqGrid('getRowData', {rowIndx: estimateRegisterSelectedRowIndex[i]});
+                let unitMaterialAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_MATERIAL_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(Number(rowData.UNIT_MATERIAL_AUTO_AMT) * (number / 100) / 100) * 100) : null;
+                let unitTmAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_MATERIAL_FINISH_TM_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(Number(rowData.UNIT_MATERIAL_FINISH_TM_AUTO_AMT) * (number / 100) / 100) * 100) : null;
+                let unitGrindAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(rowData.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT * (number / 100) / 100) * 100) : null;
+                let unitHeatAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(Number(rowData.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT) * (number / 100) / 100) * 100) : null;
+                let unitSurfaceAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_SURFACE_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(Number(rowData.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT) * (number / 100) / 100) * 100) : null;
+                let unitProcessAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_PROCESS_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(rowData.UNIT_PROCESS_AUTO_AMT * (number / 100) / 100) * 100) : null;
+                let row = {};
+                row.UNIT_MATERIAL_AMT = unitMaterialAmt;
+                row.UNIT_MATERIAL_FINISH_TM_AMT = unitTmAmt;
+                row.UNIT_MATERIAL_FINISH_GRIND_AMT = unitGrindAmt;
+                row.UNIT_MATERIAL_FINISH_HEAT_AMT = unitHeatAmt;
+                row.UNIT_SURFACE_AMT = unitSurfaceAmt;
+                row.UNIT_PROCESS_AMT = unitProcessAmt;
+
+                estimateRegisterTopGrid.pqGrid('updateRow', {
+                    'rowIndx': estimateRegisterSelectedRowIndex[i],
+                    row: {
+                        'UNIT_MATERIAL_AMT': unitMaterialAmt,
+                        'UNIT_MATERIAL_FINISH_TM_AMT': unitTmAmt,
+                        'UNIT_MATERIAL_FINISH_GRIND_AMT': unitGrindAmt,
+                        'UNIT_MATERIAL_FINISH_HEAT_AMT': unitHeatAmt,
+                        'UNIT_SURFACE_AMT': unitSurfaceAmt,
+                        'UNIT_PROCESS_AMT': unitProcessAmt
+                    },
+                    checkEditable: false
+                });
+            }
         });
 
         $("#estimateRegisterFileUpload").on('click', function(){
