@@ -2458,7 +2458,7 @@
                AND H.INSPECT_SEQ = (SELECT MAX(X.INSPECT_SEQ) FROM TBL_INSPECT X WHERE H.CONTROL_SEQ = X.CONTROL_SEQ AND H.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ  AND H.INSPECT_TYPE =  '1')
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
-            AND A.CONTROL_STATUS IN ('ORD001', 'ORD002', 'ORD005')
+            AND A.CONTROL_STATUS IN ('ORD001', 'ORD003', 'ORD005')
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
@@ -2482,7 +2482,7 @@
                         AND C.ORDER_DUE_DT BETWEEN #{SEL_START_DATE} AND #{SEL_END_DATE}
                 WHERE 1 = 1
                     AND A.DEL_YN = 'N'
-                    AND A.CONTROL_STATUS IN ('ORD001', 'ORD002', 'ORD005')
+                    AND A.CONTROL_STATUS IN ('ORD001', 'ORD003', 'ORD005')
                     <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
                         AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
                     </if>
