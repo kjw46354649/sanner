@@ -1063,4 +1063,30 @@
             AND A.DEL_YN = 'N'
     </select>
 
+
+    <update id="removeOutside" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            OUTSIDE_YN = 'N'
+            , OUTSIDE_COMP_CD = NULL
+            , OUTSIDE_ORDER_NUM = NULL
+            , OUTSIDE_NOTE = NULL
+            , OUTSIDE_MATERIAL_SUPPLY_YN = 'N'
+            , OUTSIDE_REQUEST_FINISH_YN = 'N'
+            , OUTSIDE_REQUEST_PROCESS_YN = 'N'
+            , OUTSIDE_REQUEST_GRIND_YN = 'N'
+            , OUTSIDE_REQUEST_SURFACE_YN = 'N'
+            , OUTSIDE_REQUEST_ETC = NULL
+            , OUTSIDE_HOPE_DUE_DT = NULL
+            , OUTSIDE_UNIT_AMT = NULL
+            , OUTSIDE_CONFIRM_DT = NULL
+            , OUTSIDE_IN_DT = NULL
+            , OUTSIDE_STATUS = NULL
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
+
 </mapper>
