@@ -496,7 +496,7 @@
                     const rowData = ui.rowData;
 
                     if (rowData.EST_SEQ && rowData.SEQ) {
-                        return '<button name="processing_requirements">가공요건</button>';
+                        return '<button class="miniBtn" name="processing_requirements" style="background-color: #ffffd1">가공요건</button>';
                     }
                 },
                 postRender(ui) {

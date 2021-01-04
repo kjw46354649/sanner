@@ -1455,7 +1455,7 @@
                         cls = 'bg-lightgray';
                     }
 
-                    text = '<button name="processing_requirements' + isDisabled + '">가공요건</button>';
+                    text = '<button class="miniBtn" name="processing_requirements"' + isDisabled + ' style="background-color: #ffffd1">가공요건</button>';
 
                     return {cls: cls, text: text};
                 },
