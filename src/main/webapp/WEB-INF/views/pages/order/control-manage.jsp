@@ -164,10 +164,13 @@
                     <span class="slt_wrap namePlusSlt">
                         <label for="SUPPLY_UNIT_COST_APPLY">공급단가적용</label>
                         <select id="SUPPLY_UNIT_COST_APPLY" title="공급단가적용">
-                            <option value="0"><spring:message code="com.form.top.sel.option"/></option>
-                            <c:forEach var="code" items="${HighCode.H_1088}">
-                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                            </c:forEach>
+                            <option value="0">-Select-</option>
+                            <option value="1">1%</option>
+                            <option value="3">3%</option>
+                            <option value="5">5%</option>
+                            <option value="10">10%</option>
+                            <option value="15">15%</option>
+                            <option value="20">20%</option>
                         </select>
                     </span>
                     <button type="button" class="defaultBtn btn-100w" id="CONTROL_MERGE" style="background-color: #5b9bd5">Merge</button>
@@ -1988,6 +1991,8 @@
                 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
                 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
+                'UNIT_MATERIAL_AMT', 'UNIT_MATERIAL_FINISH_TM_AMT', 'UNIT_MATERIAL_FINISH_GRIND_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
+                'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE',
                 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIAL_FINISH_TM_AUTO_AMT', 'UNIT_MATERIA_FINISH_GRIND_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT', 'UNIT_PROCESS_AUTO_AMT',
                 'UNIT_SUM_AUTO_AMT',
@@ -2008,6 +2013,8 @@
                 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
                 'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND',
                 'MATERIAL_FINISH_HEAT', 'MATERIAL_BUTTON', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
+                'UNIT_MATERIAL_AMT', 'UNIT_MATERIAL_FINISH_TM_AMT', 'UNIT_MATERIAL_FINISH_GRIND_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
+                'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT',
                 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIAL_FINISH_TM_AUTO_AMT', 'UNIT_MATERIA_FINISH_GRIND_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT', 'UNIT_PROCESS_AUTO_AMT',
                 'UNIT_SUM_AUTO_AMT',
@@ -2993,10 +3000,11 @@
             if (noSelectedRowAlert()) return false;
 
             let number = $('#SUPPLY_UNIT_COST_APPLY option:selected').val();
+            let rate = 100 - number;
 
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                let supplyUnitPrice = (Math.ceil(rowData.UNIT_FINAL_AMT * (number / 100) / 100) * 100).toFixed(0) || null;
+                let supplyUnitPrice = (Math.ceil(rowData.UNIT_FINAL_AMT * (rate / 100) / 100) * 100).toFixed(0) || null;
                 let finalAmount = (supplyUnitPrice * rowData.ORDER_QTY) || null; // 10의 자리 올림
 
                 $orderManagementGrid.pqGrid('updateRow', {'rowIndx': selectedOrderManagementRowIndex[i], row: {'UNIT_FINAL_AMT': supplyUnitPrice, 'FINAL_TOTAL_AMT': finalAmount}, checkEditable: false});
@@ -3158,7 +3166,7 @@
             $("a[pid='" + $("#estimateNo").val() + "']").trigger('click');
             setTimeout(function () {
                 $('#updateFromControl').trigger('click');
-            }, 800);
+            }, 1000);
             event.preventDefault();
         });
 

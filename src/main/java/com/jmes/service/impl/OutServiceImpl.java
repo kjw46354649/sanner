@@ -18,7 +18,7 @@ public class OutServiceImpl implements OutService {
     private InnodaleDao innodaleDao;
 
     @Override
-    public void modifyOutsideOrder(Map<String, Object> map) throws Exception {
+    public void removeOutsideOrder(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<HashMap<String, Object>> jsonArray = null;
@@ -27,16 +27,12 @@ public class OutServiceImpl implements OutService {
             jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
 
         for (HashMap<String, Object> hashMap : jsonArray) {
-//            hashMap.put("CONTROL_STATUS", "ORD001");
-            hashMap.put("PART_STATUS", null);
-            hashMap.put("OUTSIDE_YN", "N");
-            hashMap.put("OUTSIDE_STATUS", null);
-            hashMap.put("queryId", "orderMapper.updateControlPart");
+            hashMap.put("queryId", "outMapper.removeOutside");
             this.innodaleDao.update(hashMap);
             hashMap.put("queryId", "outMapper.updateOutsideRequestDetailDelete");
             this.innodaleDao.update(hashMap);
-            hashMap.put("queryId", "orderMapper.updateOutsideConfirmDt");
-            this.innodaleDao.update(hashMap);
+//            hashMap.put("queryId", "orderMapper.updateOutsideConfirmDt");
+//            this.innodaleDao.update(hashMap);
         }
     }
 
