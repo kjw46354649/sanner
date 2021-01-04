@@ -196,6 +196,8 @@ option { font-size: 12px; }
 
 .graDbBtn { height: 40px; padding: 0 20px 0 20px; color: #fff; font-size: 20px; font-weight:bold; line-height: 40px; position: relative; border-radius: 3px; background: -webkit-gradient(linear, 90deg, color-stop(5%, 43934B), color-stop(5%, 4EAB57));/* Chrome,Safari4+ */ background: -webkit-linear-gradient(90deg, #43934B 5%, #4EAB57 5%);/* Chrome10+,Safari5.1+ */ }
 
+.reservePopBtn { width: 110px; height: 40px; padding: 0 20px 0 20px; color: #fff; font-size: 20px; font-weight:bold; line-height: 40px; position: relative; border-radius: 3px; background: -webkit-gradient(linear, 90deg, color-stop(5%, 43934B), color-stop(5%, 4EAB57));/* Chrome,Safari4+ */ background: -webkit-linear-gradient(90deg, #43934B 5%, #4EAB57 5%);/* Chrome10+,Safari5.1+ */ }
+
 .reserveDbDisableBtn { height: 40px; padding: 0 20px 0 20px; color: #383838; font-size: 20px; font-weight:bold; line-height: 40px; position: relative; border-radius: 3px; background: -webkit-gradient(linear, 90deg, color-stop(5%, 43934B), color-stop(5%, 4EAB57));/* Chrome,Safari4+ */ background: -webkit-linear-gradient(90deg, #d9eada 5%, #d9eada 5%);/* Chrome10+,Safari5.1+ */ }
 .reserveDbEnableBtn { height: 40px; padding: 0 20px 0 20px; color: #383838; font-size: 20px; font-weight:bold; line-height: 40px; position: relative; border-radius: 3px; background: -webkit-gradient(linear, 90deg, color-stop(5%, 43934B), color-stop(5%, 4EAB57));/* Chrome,Safari4+ */ background: -webkit-linear-gradient(90deg, #a6ff72 5%, #a6ff72 5%);/* Chrome10+,Safari5.1+ */ }
 
@@ -512,19 +514,3 @@ input[type=number] {
 /* color */
 .text-blue { color: blue; }
 .text-red { color: red; }
-
-
-.blink-blue {
-  -webkit-animation: blink-blue 2s linear 2s infinite normal;
-  animation: blink-blue 2s linear 2s infinite normal;
-}
-
-@-webkit-keyframes blink-blue {
-  0% { color: rgb(255, 255, 255); }
-  100% { color: blue; }
-}
-
-@keyframes blink-blue {
-  0% { color: #ffffff; }
-  100% { color: blue; }
-}

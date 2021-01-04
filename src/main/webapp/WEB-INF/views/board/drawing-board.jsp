@@ -34,7 +34,7 @@
     <style type="text/css">
 
         html {
-            /*cursor: none;*/
+            cursor: none;
        	}
 
         .dhx_message__icon{
@@ -139,57 +139,6 @@
                 <td><h3 style="font-size: 24px;font-weight: bold;">사무실에 확인 바랍니다.</h3></td>
             </tr>
         </table>
-    </div>
-</div>
-<!-- reserve Modal Start -->
-<div class="modal-scan" id="drawing_reserve_time_popup" style="display: none;">
-    <div class="modal-end-dialog">
-        <div class="modal-end-content">
-            <div class="modal-end-body">
-                <div class="tableWrap">
-                    <br/>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td class="modal-reserve-dialog-table">
-                                    <img id="reserveHourUpBtn" src="/resource/asset/images/common/arrow_up.png">
-                                </td>
-                                <td class="modal-reserve-dialog-table">
-                                    <img id="reserveMinuteUpBtn" src="/resource/asset/images/common/arrow_up.png">
-                                </td>
-                                <td class="modal-reserve-dialog-table" rowspan="3">
-                                    <button type="button" id="reserveEndCheckBtn" class="graDbBtn gray"><input id="reserveEndChecked" type="checkbox" style="margin-right: 10px;" disabled="disabled" />종&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;료</button>
-                                    <br/>&nbsp;<br/>
-                                    <button type="button" id="reservePauseCheckBtn" class="graDbBtn gray"><input id="reservePauseChecked" type="checkbox" style="margin-right: 10px;" disabled="disabled" />일시정지</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="modal-reserve-dialog-text-table">
-                                    <span id="reserveHourHtml"></span> 시간
-                                </td>
-                                <td class="modal-reserve-dialog-text-table">
-                                    <span id="reserveMinuteHtml"></span> 분 후
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="modal-reserve-dialog-table">
-                                    <img id="reserveHourDownBtn" src="/resource/asset/images/common/arrow_down.png">
-                                </td>
-                                <td class="modal-reserve-dialog-table">
-                                    <img id="reserveMinuteDownBtn" src="/resource/asset/images/common/arrow_down.png">
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <br/>
-                    <div style="text-align: center;">
-                        <button type="button" id="reserveSaveBtn" class="graDbBtn blue">저장</button>
-                        <button type="button" id="reserveCancelBtn" class="graDbBtn gray">예약취소</button>
-                        <button type="button" id="reserveCloseBtn" class="graDbBtn yellow">닫기</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <!-- Target Modal Start -->
@@ -430,7 +379,7 @@
                     <div class="contsTitWrap" id="workMainProgressConts" style="">
                         <div class="contsTit blink-blue"><srping:message key='drawing.board.label.13'/></div>
                         <div class="right_sort">
-                            <button type="button" id="reserveBtn" class="reserveDbDisableBtn"><input id="reserveChecked" type="checkbox" style="margin-right: 10px;" disabled="disabled" />예약</button>&nbsp;
+                            <button type="button" id="reserveBtn" class="reserveDbDisableBtn"><input id="reserveChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;" disabled="disabled" />예약</button>&nbsp;
                             <button type="button" id="workCancelBtn" class="graDbBtn red"><srping:message key='drawing.board.button.06'/></button>&nbsp;
                             <button type="button" id="workPuaseBtn" class="graDbBtn yellow"><srping:message key='drawing.board.button.07'/></button>&nbsp;
                             <button type="button" id="workCompletelBtn" class="graDbBtn purple"><srping:message key='drawing.board.button.08'/></button>
@@ -534,6 +483,58 @@
     </div>
 </div>
 
+
+<!-- reserve Modal Start -->
+<div class="modal-scan" id="drawing_reserve_time_popup" style="display: none;">
+    <div class="modal-end-dialog">
+        <div class="modal-end-content">
+            <div class="modal-end-body">
+                <div class="tableWrap">
+                    <br/>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="modal-reserve-dialog-table">
+                                    <img id="reserveHourUpBtn" src="/resource/asset/images/common/arrow_up.png">
+                                </td>
+                                <td class="modal-reserve-dialog-table">
+                                    <img id="reserveMinuteUpBtn" src="/resource/asset/images/common/arrow_up.png">
+                                </td>
+                                <td class="modal-reserve-dialog-table" rowspan="3">
+                                    <button type="button" id="reserveEndCheckBtn" class="graDbBtn gray"><input id="reserveEndChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;" disabled="disabled" />종&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;료</button>
+                                    <br/>&nbsp;<br/>
+                                    <button type="button" id="reservePauseCheckBtn" class="graDbBtn gray"><input id="reservePauseChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;" disabled="disabled" />일시정지</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="modal-reserve-dialog-text-table">
+                                    <span id="reserveHourHtml"></span> 시간
+                                </td>
+                                <td class="modal-reserve-dialog-text-table">
+                                    <span id="reserveMinuteHtml"></span> 분 후
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="modal-reserve-dialog-table">
+                                    <img id="reserveHourDownBtn" src="/resource/asset/images/common/arrow_down.png">
+                                </td>
+                                <td class="modal-reserve-dialog-table">
+                                    <img id="reserveMinuteDownBtn" src="/resource/asset/images/common/arrow_down.png">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <div style="text-align: center;">
+                        <button type="button" id="reserveSaveBtn" class="reservePopBtn blue">저장</button>
+                        <button type="button" id="reserveCloseBtn" class="reservePopBtn yellow" >닫기</button>
+                        <button type="button" id="reserveCancelBtn" class="reservePopBtn gray" style="display: none;">예약취소</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- reserve Modal End -->
 <script type='text/javascript'>
 
@@ -543,10 +544,15 @@
     let reserveHour = 0;
     let reserveMinute = 0;
 
+    let beforeReserveType = 0;
+    let beforeReserveHour = 0;
+    let beforeReserveMinute = 0;
+
     // 공통 SetTimeOut 변수
     let reserveInterval;
     let stopInterval;
     let workTimeInterval;
+    let workTimeIntervalIsPause = false;
 
     var reserveHourHtml = 0;
     var reserveMinuteHtml = 0;
@@ -570,67 +576,20 @@
             $(this).stopWaitMe();
         });
 
-        // 스타일 변경 이벤트
-        var ev = new $.Event('style'),
-            orig = $.fn.css;
-        $.fn.css = function() {
-            $(this).trigger(ev);
-            return orig.apply(this, arguments);
-        }
-
-        /** 메인 창에서 바코드 스캔 된 경우 **/
-        /** 진행중인 작업이 없는 경우는 신규 작업 시작 처리 **/
-        /** 진행중인 작업이 있는 경우 작업중인 바코드인 경우 종료 처리 팝업 호출
-                                    신규 바코드 경우 현재 작업중인 내용 종료 처리 하고 자동으로 신규 작업 시작 처리 **/
-        onScan.attachTo(document, {
-            onScan: function(barcodeNum, iQty) {
-                let parameters = {
-                    'url': '/drawing/barcode',
-                    'data': { 'queryId': 'drawingMapper.selectDrawingBarcodeScanInfo', 'BARCODE_NUM': barcodeNum}
-                };
-                fnPostAjax(function (data, callFunctionParam) {
-
-                    let returnCode = data.returnCode;
-                    let curStatus = $("#curStatus").val();
-
-                    if (returnCode == "RET00") {
-                        if (curStatus == "stop") {
-                            startWork(data.info);
-                        } else if (curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()) {
-                            $("#workCompletelBtn").trigger('click');
-                        } else {
-                            $("#singleComplete").hide();
-                            $("#continueComplete").show();
-                            $("#drawing_action_form").find("#RE_BARCODE_NUM").val(barcodeNum);
-                            $("#workCompletelBtn").trigger('click');
-                        }
-                    } else if (returnCode == "RET97") {
-                        fnDrawingDialogAlert('drawingVerErrorHtml', 3);
-                    } else if (returnCode == "RET96") {
-                        fnConfirm(null, data.message, function () {
-                            startWork(data.info);
-                        });
-                    } else {
-                        showMessage(data.message);
-                        return false;
-                    }
-                }, parameters, '');
-            }
-        });
-
-        $(".slecBox").on('click', function(){
-            /** 대기 리스트와 plan 리스트를 조회한다. **/
-            /** 첫번째 plan 리스트를 조회한다.**/
-            // getWorkList("pop");
-            $("#drawing_worker_target_list_popup").css("display", "block");
-            $("#area_tab").trigger("click");
-            $(".bodyWrap").addClass("modal-open-body");
-        });
-
-/** 작업 예약 처리 팝업 **/
+        /** 작업 예약 처리 팝업 **/
         $("#reserveBtn").on('click', function(){
 
+            beforeReserveType = reserveType;
+            beforeReserveHour = reserveHour;
+            beforeReserveMinute = reserveMinute;
+
             reserveDisplayTime();
+            reserveButtonSwitch();
+
+            if(reserveType == 0){
+                reserveType = 2;
+            }
+
             reserveTypeSwitch();
 
             $("#drawing_reserve_time_popup").css("display", "block");
@@ -638,6 +597,8 @@
         });
 
         $("#reserveSaveBtn").on('click', function(){
+            clearTimeout(reserveInterval);
+
             var reserveSec = (reserveHour * 60 * 60 * 1000) + (reserveMinute * 60 * 1000);
             if(reserveSec <= 0){
                 showMessage("<srping:message key='drawing.board.alert.09'/>");
@@ -677,6 +638,7 @@
                         }
                     }
                 }, 1000);
+
             }
         });
 
@@ -688,13 +650,15 @@
             $("#workReserveTimeInfo").html('<span class="timeTit"><srping:message key='drawing.board.button.02'/></span><span class="time"><span></span></span>');
             reserveDisplayTime();
             reserveTypeSwitch();
-            fnPopupClose("drawing_reserve_time_popup");
+            fnPopupCloseNotReload("drawing_reserve_time_popup");
         });
 
         $("#reserveCloseBtn").on('click', function(){
+            reserveType = beforeReserveType;
+            reserveHour = beforeReserveHour;
+            reserveMinute = beforeReserveMinute;
             reserveTypeSwitch();
-            setFocusBody();
-            fnPopupClose("drawing_reserve_time_popup");
+            fnPopupCloseNotReload("drawing_reserve_time_popup");
         });
 
         $("#reserveEndCheckBtn").on('click', function(){
@@ -776,6 +740,20 @@
             $("#drawing_reserve_time_popup").find("#reserveMinuteHtml").html(reserveMinute);
         }
 
+        /** 예약 타입에 따른 버튼 표시 **/
+        let reserveButtonSwitch = function() {
+            switch (reserveType) {
+                case 1:
+                    $("#reserveCancelBtn").show();
+                    break;
+                case 2:
+                    $("#reserveCancelBtn").show();
+                    break;
+                default:
+                    $("#reserveCancelBtn").hide();
+            }
+        }
+
         /** 예약 타입에 따른 표시 **/
         let reserveTypeSwitch = function(){
             switch (reserveType) {
@@ -820,6 +798,63 @@
             }
         }
 
+        // 스타일 변경 이벤트
+        var ev = new $.Event('style'),
+            orig = $.fn.css;
+        $.fn.css = function() {
+            $(this).trigger(ev);
+            return orig.apply(this, arguments);
+        }
+
+        /** 메인 창에서 바코드 스캔 된 경우 **/
+        /** 진행중인 작업이 없는 경우는 신규 작업 시작 처리 **/
+        /** 진행중인 작업이 있는 경우 작업중인 바코드인 경우 종료 처리 팝업 호출
+                                    신규 바코드 경우 현재 작업중인 내용 종료 처리 하고 자동으로 신규 작업 시작 처리 **/
+        onScan.attachTo(document, {
+            onScan: function(barcodeNum, iQty) {
+                let parameters = {
+                    'url': '/drawing/barcode',
+                    'data': { 'queryId': 'drawingMapper.selectDrawingBarcodeScanInfo', 'BARCODE_NUM': barcodeNum}
+                };
+                fnPostAjax(function (data, callFunctionParam) {
+
+                    let returnCode = data.returnCode;
+                    let curStatus = $("#curStatus").val();
+
+                    if (returnCode == "RET00") {
+                        if (curStatus == "stop") {
+                            startWork(data.info);
+                        } else if (curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()) {
+                            $("#workCompletelBtn").trigger('click');
+                        } else {
+                            $("#singleComplete").hide();
+                            $("#continueComplete").show();
+                            $("#drawing_action_form").find("#RE_BARCODE_NUM").val(barcodeNum);
+                            $("#workCompletelBtn").trigger('click');
+                        }
+                    } else if (returnCode == "RET97") {
+                        fnDrawingDialogAlert('drawingVerErrorHtml', 3);
+                    } else if (returnCode == "RET96") {
+                        fnConfirm(null, data.message, function () {
+                            startWork(data.info);
+                        });
+                    } else {
+                        showMessage(data.message);
+                        return false;
+                    }
+                }, parameters, '');
+            }
+        });
+
+        $(".slecBox").on('click', function(){
+            /** 대기 리스트와 plan 리스트를 조회한다. **/
+            /** 첫번째 plan 리스트를 조회한다.**/
+            // getWorkList("pop");
+            $("#drawing_worker_target_list_popup").css("display", "block");
+            $("#area_tab").trigger("click");
+            $(".bodyWrap").addClass("modal-open-body");
+        });
+
         //Stop Popup
         $("#workPuaseBtn").on('click', function(){
             let parameters = {
@@ -829,6 +864,7 @@
             fnPostAjax(function (data, callFunctionParam) {
                 $("#drawing_worker_stop_popup").css("display", "block");
                 $(".bodyWrap").addClass("modal-open-body");
+                workTimeIntervalIsPause = true;
             }, parameters, '');
         });
 
@@ -871,7 +907,6 @@
             };
             fnPostAjax(function (data, callFunctionParam) {
                 fnPopupClose("drawing_worker_stop_popup");
-                reloadDrawingBoard();
             }, parameters, '');
         });
 
@@ -1026,13 +1061,11 @@
 
         $("#scanBtnCancel").on('click', function(){
             fnPopupClose("drawing_worker_scan_popup");
-            setFocusBody();
         });
 
         //Cancel Popup
         $("#cancelBtnCancel").on('click', function(){
             fnPopupClose("drawing_worker_cancel_popup");
-            setFocusBody();
         });
 
         $("#cancelBtnSave").on('click', function(){
@@ -1042,7 +1075,6 @@
             };
             fnPostAjax(function (data, callFunctionParam) {
                 fnPopupClose("drawing_worker_cancel_popup");
-                reloadDrawingBoard();
             }, parameters, '');
         });
 
@@ -1086,7 +1118,6 @@
             $("#continueComplete").hide();
             $("#drawing_action_form").find("#RE_BARCODE_NUM").val('');
             fnPopupClose("drawing_worker_end_popup");
-            reloadDrawingBoard();
         });
 
         /** 작업 완료 처리 **/
@@ -1106,7 +1137,6 @@
             fnPostAjax(function (data, callFunctionParam) {
                 fnPopupClose("drawing_worker_end_popup");
                 fnDrawingAlertDialogAlert('completeDivHtml', 1);
-                reloadDrawingBoard();
             }, parameters, '');
         });
 
@@ -1212,7 +1242,6 @@
                 fnDrawingAlertDialogAlert('startDivHtml', 1);
                 fnResetFrom("drawing_action_form");
                 fnPopupClose("drawing_worker_scan_popup");
-                reloadDrawingBoard();
             }, parameters, '');
         }
 
@@ -1225,6 +1254,7 @@
         function fnPopupCloseNotReload(popId){
             $("#"+popId).css("display", "none");
             $(".bodyWrap").removeClass("modal-open-body");
+            $("#bodyWrap").focus();
         }
 
         function fnRemainTimeSet(seconds){
@@ -1239,13 +1269,15 @@
             let dataType = $("#drawing_action_form").find("#DATA_TYPE").val();
             if( dataType === "CUR"){
                 workTimeInterval = setInterval(function() {
-                    seconds++;
-                    if(seconds == 60){
-                        seconds = 0;
-                        minutes++;
+                    if (!workTimeIntervalIsPause){
+                        seconds++;
+                        if (seconds == 60) {
+                            seconds = 0;
+                            minutes++;
+                        }
+                        let workTimeHtml = minutes + '<srping:message key='drawing.board.label.02'/>' + '&nbsp;' + seconds + '<srping:message key='drawing.board.label.01'/>'
+                        $("#workTimeInfo").html(workTimeHtml);
                     }
-                    let workTimeHtml = minutes + '<srping:message key='drawing.board.label.02'/>' + '&nbsp;' + seconds + '<srping:message key='drawing.board.label.01'/>'
-                    $("#workTimeInfo").html(workTimeHtml);
                 }, 1000);
             }
             $("#bodyWrap").focus();
