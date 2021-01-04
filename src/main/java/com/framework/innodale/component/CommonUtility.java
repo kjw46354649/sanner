@@ -427,6 +427,7 @@ public class CommonUtility {
         }
         return "Firefox";
     }
+
     public static String getDisposition(String filename, String browser) throws UnsupportedEncodingException {
         String dispositionPrefix = "attachment;filename=";
         String encodedFilename = null;
