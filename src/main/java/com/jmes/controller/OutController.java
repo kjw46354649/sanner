@@ -2,7 +2,6 @@ package com.jmes.controller;
 
 import com.framework.innodale.component.CommonUtility;
 import com.jmes.service.OutService;
-import com.jmes.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +19,11 @@ public class OutController {
     /**
      * 외주주문 삭제
      */
-    @RequestMapping(value = "/modifyOutsideOrder", method = RequestMethod.POST)
-    public String modifyOutsideOrder(HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/removeOutsideOrder", method = RequestMethod.POST)
+    public String removeOutsideOrder(HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
 
-        this.outService.modifyOutsideOrder(map);
+        this.outService.removeOutsideOrder(map);
 
         return "jsonView";
     }

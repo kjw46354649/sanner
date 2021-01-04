@@ -3158,7 +3158,7 @@
             $("a[pid='" + $("#estimateNo").val() + "']").trigger('click');
             setTimeout(function () {
                 $('#updateFromControl').trigger('click');
-            }, 800);
+            }, 1000);
             event.preventDefault();
         });
 
