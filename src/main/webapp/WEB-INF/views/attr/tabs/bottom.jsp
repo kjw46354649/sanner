@@ -2422,7 +2422,11 @@
     //TODO: 함수명 변경
     const changeData = function () {
         const rowData = processingRequirementsTargetGrid.pqGrid("getRowData", {rowIndx: processingRequirementsTargetRowIndex});
-        // fnResetFrom('processing_requirements_form');
+        const $type = $('#processing_requirements_form').find('#TYPE');
+        const actionType = $type.val();
+
+        fnResetFrom('processing_requirements_form');
+        $type.val(actionType);
         visibilityButton();
         changeProcessingRequirementsBasicInformation(rowData);
         changeProcessingRequirementsInformation(rowData);
