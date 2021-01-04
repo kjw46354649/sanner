@@ -126,19 +126,18 @@
             {title: 'LAST_YN', dataType: 'string', dataIndx: 'LAST_YN', hidden:true},
             {title: '구분', dataType: 'string', dataIndx: 'OUT_RETURN_TYPE_NM', minWidth: 60, width: 60, editable: false,
                 render: function (ui) {
-                   let cellData = ui.cellData;
-                   //let status = ui.rowData.STATUS_1;
-                   if (cellData == "출고") {
-                   }else{
-                       outgoingHistoryGridId01.pqGrid('addClass', {
-                           rowIndx: ui.rowIndx,
-                           dataIndx: ui.dataIndx,
-                           cls: 'gridBg-Red'
-                       });
-                       //return (index < 0) ? cellData : EQUIP_LIST[index].text;
-                   }
+                    let cellData = ui.cellData;
+                    //let status = ui.rowData.STATUS_1;
+                    if (cellData != "출고") {
+                        outgoingHistoryGridId01.pqGrid('addClass', {
+                            rowIndx: ui.rowIndx,
+                            dataIndx: ui.dataIndx,
+                            cls: 'gridBg-Red'
+                        });
+                        //return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                    }
                     //return cellData;
-               }
+                }
             },
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 80, width: 120, editable: false},
             {title: '외주가공', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 80, width: 80, editable: false},
@@ -241,8 +240,7 @@
                 let rowIndx = ui.rowIndx, $grid = this;
                 if (ui.rowData['LAST_YN'] == 'Y') {
                     if (ui.dataIndx == 'BTN_CANCEL') {
-                        if (ui.rowData['OUT_RETURN_TYPE'] == '1')//출고
-                        {
+                        if (ui.rowData['OUT_RETURN_TYPE'] == '1') {//출고
                             let data = {
                                 'queryId': 'inspection.deleteOutgoingHistoryInspectionCancelStep1,inspection.updateOutgoingHistoryInspectionCancelStep2,inspection.updateOutgoingHistoryInspectionCancelStep3',
                                 'OUT_SEQ': ui.rowData['KEY_SEQ'],
@@ -262,6 +260,20 @@
                                 'INSPECT_SEQ': ui.rowData['KEY_SEQ']
                             };
                             let parameters = {'url': '/json-remove', 'data': data};
+                            fnPostAjax(function (data, callFunctionParam) {
+                                fnAlert(null, "취소가 완료되었습니다.");
+                                $("#outgoing_history_form").find("#queryId").val("inspection.selectOutgoingHistoryList");
+                                $("#outgoing_history_search_btn").trigger("click");
+                            }, parameters, '');
+                        } else if (ui.rowData['OUT_RETURN_TYPE'] == '3') {//폐기
+                            let data = {
+                                'queryId': 'inspection.updateOutgoingCancelDisposal,inspection.deleteOutgoingHistoryInspectionCancelStep1,inspection.updateOutgoingHistoryInspectionCancelStep2,inspection.updateOutgoingHistoryInspectionCancelStep3',
+                                'OUT_SEQ': ui.rowData['KEY_SEQ'],
+                                'CONTROL_SEQ': ui.rowData['CONTROL_SEQ'],
+                                'CONTROL_DETAIL_SEQ': ui.rowData['CONTROL_DETAIL_SEQ'],
+                                'ORDER_SEQ': ui.rowData['ORDER_SEQ']
+                            };
+                            let parameters = {'url': '/json-manager', 'data': data};
                             fnPostAjax(function (data, callFunctionParam) {
                                 fnAlert(null, "취소가 완료되었습니다.");
                                 $("#outgoing_history_form").find("#queryId").val("inspection.selectOutgoingHistoryList");

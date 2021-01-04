@@ -376,10 +376,11 @@
                 showTitle: false,
                 title: false,
                 complete: function(event, ui) {
-                    //this.flex();
                     let data = itemOrderHistoryRightGrid.pqGrid('option', 'dataModel.data');
 
                     $('#item_order_history_right_grid_records').html(data.length);
+
+                    changeViewColumn($('#VIEW_AMOUNT_INFORMATION').prop('checked'));
                 },
                 rowSelect: function( event, ui ) {
                     //if(ui.addList.length > 0 ) {
@@ -397,7 +398,7 @@
             });
 
             itemOrderHistoryRightGrid.pqGrid("refreshDataAndView");
-        };
+        }
 
         $("#btnItemOrderHistorySearch").on('click', function(){
             itemOrderHistoryLeftGrid.pqGrid('option', "dataModel.postData", function (ui) {

@@ -138,8 +138,7 @@
     -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);
     box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);
     filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); }
-/*.estimate .bottomWrap .hWrap { position: relative; overflow: auto; padding: 10px; border-bottom: 1px solid #e2e2e2; font-size: 0; }*/
-.estimate .bottomWrap .hWrap { position: relative; overflow: auto; padding: 5px; border-bottom: 1px solid #e2e2e2; font-size: 0; }
+.estimate .bottomWrap .hWrap { overflow: auto; padding: 5px; border-bottom: 1px solid #e2e2e2; font-size: 0; }
 .estimate .bottomWrap .hWrap .buttonWrap { display: inline-block; }
 .estimate .bottomWrap .hWrap .chk_box { }
 .estimate .bottomWrap .hWrap .rightSpan { float: right; display: inline-block; }
@@ -166,27 +165,24 @@
 .mct .tableWrap ul li .table { width: 500px; height: 200px; box-sizing: border-box; border: 1px solid #9b9b9b; }
 .mct .tableWrap ul li .table .titleWrap { height: 18px; border-bottom: 1px solid #9b9b9b; background: #e7eef7; }
 .mct .tableWrap ul li .table .titleWrap .equipLabel { display: inline-block; padding: 0 10px; }
-.mct .tableWrap ul li .table .titleWrap .equipLabel > span { /*text-align: center;*/ font-size: 12px; font-weight: bold; font-family: 'NotoKrR'; }
+.mct .tableWrap ul li .table .titleWrap .equipLabel > span { display: inline-block; width: 30px; font-size: 12px; font-weight: bold; font-family: 'NotoKrR'; }
 .mct .tableWrap ul li .table .titleWrap .equipLabel > span + span { margin-left: 10px; }
 .mct .tableWrap ul li .table .titleWrap .data_ipt { margin-left: 10px; }
 .mct .tableWrap ul li .table .titleWrap .listTxt { display: inline-block; }
-.mct .tableWrap ul li .table .titleWrap .listTxt span { font-size: 12px; color: #000; font-family: 'NotoKrR'; padding: 0 14px; border-right: 1px solid #ababab; }
+.mct .tableWrap ul li .table .titleWrap .listTxt span { font-size: 12px; color: #000; font-family: 'NotoKrR'; padding: 0 5px; border-right: 1px solid #ababab; }
 .mct .tableWrap ul li .table .titleWrap .listTxt span:last-child { border: 0; }
 .mct .tableWrap ul li .table .titleWrap .totalNumber { float: right; display: inline-block; font-family: 'NotoKrB'; font-size: 12px; color: #003389; line-height: inherit; margin-right: 10px }
 .mct .table .listWrap { position: relative; }
 .mct .table .miniLeft { width: 20px; height: 182px; font-size: 12px; box-sizing: border-box; display: inline-block; text-align: center; border-right: 1px solid #b4b4b4; background: #dee4ea; position: relative; }
 .mct .table .miniLeft span { writing-mode: tb; display: inline-block; position: absolute; top: 50%; transform: translate(-50%, -50%); left: 50%; }
-.mct .table .miniRight { display: inline-block; width: 480px; height: 182px; position: absolute; top: 0; left: 20px; }
+.mct .table .miniRight { display: inline-block; width: 380px; height: 182px; position: absolute; top: 0; left: 20px; }
 .mct .table .miniRight .scrollWrap { width: 100%; height: 164px; /*font-size: 12px; text-align: center; box-sizing: border-box; overflow-y: auto;*/ }
 .mct .table .miniRight .footerWrap { height: 18px; background: #e9e9e9; color: #000; font-size: 12px; text-align: right; padding-right: 10px; /*line-height: 20px*/ }
 .mct .table .miniRight .footerWrap span { color: #002159; font-weight: bold; padding-right: 5px; display: inline-block; }
-.mct .bottomWrap .hWrap { border-bottom: 1px solid #e2e2e2; font-size: 0; position: relative; }
+.mct .bottomWrap .hWrap { border-bottom: 1px solid #e2e2e2; font-size: 0; }
 .mct .bottomWrap .hWrap * { vertical-align: middle;}
-.mct .bottomWrap .hWrap h2 { height: 50px; line-height: 48px; padding-left: 20px; font-size: 16px; font-family: 'NotoKrB'; color: #000; display: inline-block; }
-.mct .bottomWrap .hWrap .slt_wrap { }
-.mct .bottomWrap .hWrap label { }
-.mct .bottomWrap .hWrap select { }
-.mct .bottomWrap .conWrap { height: 335px; padding: 10px 0; box-sizing: border-box; }
+.mct .bottomWrap .hWrap h2 { height: 50px; line-height: 48px; font-size: 16px; font-family: 'NotoKrB'; color: #000; display: inline-block; }
+.mct .bottomWrap .conWrap { height: 370px; padding: 10px 0; box-sizing: border-box; }
 .mct .bottomWrap .conWrap .tableWrap {margin: 0 20px; position: relative;height: 100%; }
 
 /* 일보조회 */
@@ -339,7 +335,7 @@
 .miniPopup .headWrap:before{content: '';width: 33px; height: 25px; display: block; position: absolute; top:6px; left:7px; background:url(../images/common/ico_minipop.png)no-repeat 0 0;}
 .miniPopup .headWrap h4{padding-left: 55px; font-size: 18px; color:#fefefe; line-height: 37px}
 .miniPopup .headWrap .closeBtn{font-size: 0; width: 23px; height: 19px; background: url(../images/common/btn_minipop_close.png)no-repeat 0 0; position: absolute; top:10px; right:10px;}
-.miniPopup .contentWrap{padding:15px;background:#f1efef;}
+.miniPopup .contentWrap{padding:15px;}
 .miniPopup .contentWrap table{background:#fff;border:1px solid #cecece;}
 .miniPopup .contentWrap table th , .miniPopup .contentWrap table td{ padding:14px; font-size: 13px; color:#000; border-right:1px solid #cecece; border-bottom:1px solid #cecece;}
 .miniPopup .contentWrap table th{background:#e7eef7;}
@@ -352,7 +348,6 @@
 .miniPopup .contentWrap .btn_allPlus{ width: 60px; height: 30px; line-height: 25px; background: #880000; color: #fff; border-radius: 5px; border: 1px solid #b10000; box-sizing: border-box; font-size: 14px; float: right;-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#000000)";/*IE 8*/
 text-shadow: 1px 1px 3px rgba(0,0,0,0.5);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */
 filter: progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color=#000000); /*IE 5.5-7*/}
-.miniPopup .footerWrap{background: #f1efef;}
 .miniPopup .footerWrap .barcode{ margin: 0 15px; height: 58px; border: 1px solid #dedcdc; position: relative;;}
 .miniPopup .footerWrap .barcode .barCodeTxt{font-size: 14px; color: #634747;line-height: 54px;display: inline-block;padding-left: 15px;}
 .miniPopup .footerWrap .barcode .barCode{ display: inline-block; float: right; margin: 9px 15px 0 0;}
@@ -913,4 +908,78 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
 
 .ui-dialog .ui-dialog-titlebar-close {
     margin: -12px 0 0 0 !important;
+}
+
+#processingRequirementsModal table {
+    width: 100%;
+    height: 100%;
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
+#processingRequirementsModal table th, #processingRequirementsModal table td {
+    border: 1px solid black;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 2px;
+    font-size: small;
+}
+
+#processingRequirementsModal table td input {
+    width: 100% !important;
+    border: 0 !important;
+    box-sizing: border-box;
+    background-color: unset;
+    text-align: center;
+}
+
+#processingRequirementsModal table.basic_information > thead > tr > td {
+    background-color: rgb(155, 194, 230);
+    font-weight: bold;
+}
+
+#processingRequirementsModal table.basic_information > tbody > tr > td:first-child {
+    background-color: rgb(221, 235, 247);
+    font-weight: bold;
+}
+
+#processingRequirementsModal table.basic_information > tbody > tr > td:last-child {
+    background-color: rgb(219, 219, 219);
+}
+
+#processingRequirementsModal table.processing_requirements_information > thead > tr > th {
+    background-color: rgb(255, 217, 102);
+    font-weight: bold;
+}
+
+#processingRequirementsModal table.processing_requirements_information > tbody > tr > td.readonly {
+    background-color: rgb(219, 219, 219);
+}
+
+#processingRequirementsModal table.processing_requirements_information > tbody > tr > td:last-child {
+    background-color: rgb(219, 219, 219);
+}
+
+#processingRequirementsModal table.processing_requirements_information > tfoot > tr > td:first-child {
+    background-color: rgb(255, 217, 102);
+    font-weight: bold;
+}
+
+#processingRequirementsModal table.processing_requirements_information > tfoot > tr > td:last-child {
+    background-color: rgb(237, 237, 237);
+    font-weight: bold;
+}
+
+#processingRequirementsModal .ta-l {
+    text-align: left;
+}
+
+#processingRequirementsModal .fw-bold {
+    font-weight: bold;
+}
+
+#processingRequirementsModal .e {
+    background-color: rgb(255, 242, 204);
 }

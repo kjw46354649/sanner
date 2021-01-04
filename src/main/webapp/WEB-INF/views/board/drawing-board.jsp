@@ -954,7 +954,6 @@
 
         $(".targetListClose").on('click', function(){
             fnPopupClose("drawing_worker_target_list_popup");
-            setFocusBody();
         });
 
         $("#equip_tab").on('click', function(){
