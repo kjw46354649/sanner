@@ -2008,6 +2008,8 @@
                 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
                 'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND',
                 'MATERIAL_FINISH_HEAT', 'MATERIAL_BUTTON', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
+                'UNIT_MATERIAL_AMT', 'UNIT_MATERIAL_FINISH_TM_AMT', 'UNIT_MATERIAL_FINISH_GRIND_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT',
+                'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT',
                 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIAL_FINISH_TM_AUTO_AMT', 'UNIT_MATERIA_FINISH_GRIND_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT', 'UNIT_PROCESS_AUTO_AMT',
                 'UNIT_SUM_AUTO_AMT',
@@ -3158,7 +3160,7 @@
             $("a[pid='" + $("#estimateNo").val() + "']").trigger('click');
             setTimeout(function () {
                 $('#updateFromControl').trigger('click');
-            }, 800);
+            }, 1000);
             event.preventDefault();
         });
 

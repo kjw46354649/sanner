@@ -2108,7 +2108,7 @@
             }
 
             fnConfirm(null, '<spring:message code="com.alert.default.removeText"/>', function () {
-                let parameters = {'url': '/modifyOutsideOrder', 'data': {data: JSON.stringify(list)}};
+                let parameters = {'url': '/removeOutsideOrder', 'data': {data: JSON.stringify(list)}};
 
                 fnPostAjax(function (data) {
                     fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");

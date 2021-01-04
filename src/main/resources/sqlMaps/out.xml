@@ -480,8 +480,10 @@
             </if>
             LEFT OUTER JOIN TBL_OUTSIDE_CLOSE C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                 AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_OUTSIDE_CLOSE_NOTE D ON C.CLOSE_MONTH = D.CLOSE_MONTH
-                                AND C.CLOSE_VER = D.CLOSE_VER AND A.COMP_CD = D.COMP_CD AND A.ORDER_COMP_CD = D.OUTSIDE_COMP_CD
+            LEFT OUTER JOIN TBL_OUTSIDE_CLOSE_NOTE D ON  D.CLOSE_MONTH = C.CLOSE_MONTH
+                                AND D.CLOSE_VER = C.CLOSE_VER
+     							<!-- AND D.COMP_CD = A.COMP_CD -->
+                                AND D.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD
             LEFT OUTER JOIN TBL_INSPECT E ON B.CONTROL_SEQ = E.CONTROL_SEQ
                                                      AND B.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
                                                      AND E.INSPECT_SEQ = (SELECT MAX(INSPECT_SEQ)
@@ -1194,5 +1196,31 @@
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
     </select>
+
+
+    <update id="removeOutside" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            OUTSIDE_YN = 'N'
+            , OUTSIDE_COMP_CD = NULL
+            , OUTSIDE_ORDER_NUM = NULL
+            , OUTSIDE_NOTE = NULL
+            , OUTSIDE_MATERIAL_SUPPLY_YN = 'N'
+            , OUTSIDE_REQUEST_FINISH_YN = 'N'
+            , OUTSIDE_REQUEST_PROCESS_YN = 'N'
+            , OUTSIDE_REQUEST_GRIND_YN = 'N'
+            , OUTSIDE_REQUEST_SURFACE_YN = 'N'
+            , OUTSIDE_REQUEST_ETC = NULL
+            , OUTSIDE_HOPE_DUE_DT = NULL
+            , OUTSIDE_UNIT_AMT = NULL
+            , OUTSIDE_CONFIRM_DT = NULL
+            , OUTSIDE_IN_DT = NULL
+            , OUTSIDE_STATUS = NULL
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
 
 </mapper>
