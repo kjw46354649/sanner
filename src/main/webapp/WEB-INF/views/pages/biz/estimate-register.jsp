@@ -195,6 +195,8 @@
 
 <script type="text/javascript">
     let estimateRegisterFileGrid;
+    window.estimateRegisterTopGrid = $("#estimate_register_top_grid");
+    window.estimateRegisterSelectedRowIndex = [];
 
     $(function () {
         /** 공통 코드 이외의 처리 부분 **/
@@ -210,15 +212,15 @@
             "<p style=\"text-align:left\"><strong><span style=\"font-size:11.0pt\"><span style=\"font-family:&quot;맑은 고딕&quot;\"><span style=\"color:black\">수신처</span></span></span> <span style=\"font-size:11.0pt\"><span style=\"font-family:Calibri\"><span style=\"color:black\">:&nbsp;</span></span></span></strong></p>\n";
 
         'use strict';
-        let estimateRegisterSelectedRowIndex;
         estimateRegisterFileGrid = $("#estimate_register_file_grid");
-        let estimateRegisterTopGrid = $("#estimate_register_top_grid");
         let estimateRegisterBotGrid = $("#estimate_register_bot_grid");
         let $btnEstimateRegisterDrawView = $("#btnEstimateRegisterDrawView");
         let $btnEstimateRegisterDrawAdd = $("#btnEstimateRegisterDrawAdd");
 
         let estimateRegisterTopColModel= [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+            {title: 'EST_SEQ', dataType: 'integer', dataIndx: 'EST_SEQ', hidden: true},
+            {title: 'SEQ', dataType: 'integer', dataIndx: 'SEQ', hidden: true},
             {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
@@ -487,14 +489,25 @@
                     },
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '상세 가공요건', align: "center", colModel:[
-                    {title:'선반', dataType: 'string', dataIndx: 'DETAIL_LATHE'},
-                    {title:'가공', dataType: 'string', dataIndx: 'DETAIL_SURFACE'},
-                    {title:'클램', dataType: 'string', dataIndx: 'DETAIL_CLAMPING'},
-                    {title:'포켓', dataType: 'string', dataIndx: 'DETAIL_POCKET'},
-                    {title:'드릴', dataType: 'string', dataIndx: 'DETAIL_DRILL'},
-                    {title:'난도', dataType: 'string', dataIndx: 'DETAIL_DIFFICULTY'}
-                ], hidden: true},
+            {
+                title: '상세 가공요건', width: 85,
+                render: function (ui) {
+                    const rowData = ui.rowData;
+
+                    if (rowData.EST_SEQ && rowData.SEQ) {
+                        return '<button name="processing_requirements">가공요건</button>';
+                    }
+                },
+                postRender(ui) {
+                    const grid = this,
+                        $cell = grid.getCell(ui);
+                    const rowData = ui.rowData;
+
+                    $cell.find("[name=processing_requirements]").bind("click", function () {
+                        processingRequirementsPop('ESTIMATE');
+                    });
+                }
+            },
             {title: '소재사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
                 editor: {
                     type: 'select',
@@ -516,11 +529,21 @@
                     {title:'지름', dataType: 'float', dataIndx: 'SIZE_D_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
                     {title:'길이', dataType: 'float', dataIndx: 'SIZE_L_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} }
                 ], hidden: true},
-            {title: '항목별 견적정보', align: "center", colModel: [
+            {title: '자동계산 견적가', align: "center", colModel:[
+                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', format: '#,###'},
+                    {title: 'TM각비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AUTO_AMT', format: '#,###'},
+                    {title: '연마비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###'},
+                    {title: '열처리', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###'},
+                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AUTO_AMT', format: '#,###'},
+                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AUTO_AMT', format: '#,###'},
+                    {title: '합계', dataType: 'integer', dataIndx: 'UNIT_SUM_AUTO_AMT', format: '#,###'},
+                ]
+            },
+            {title: '항목별 계산 견적단가(10원단위 반올림)', align: "center", colModel: [
                     {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title: 'TM각비', datatype: 'string', dataIndx: 'UNIT_TM_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title: '연마비', datatype: 'string', dataIndx: 'UNIT_GRIND_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title: '열처리', datatype: 'string', dataIndx: 'UNIT_HEAT_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title: 'TM각비', datatype: 'string', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title: '연마비', datatype: 'string', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                    {title: '열처리', datatype: 'string', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
                     {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
                     {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
                     {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
@@ -876,18 +899,18 @@
                         let calculateEstimateAmt = 0;
                         let data = ui.updateList[iTmp].rowData;
                         let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_AMT);
-                        let UNIT_TM_AMT = data.UNIT_TM_AMT == null || data.UNIT_TM_AMT == '' ? 0 : parseFloat(data.UNIT_TM_AMT);
-                        let UNIT_GRIND_AMT = data.UNIT_GRIND_AMT == null || data.UNIT_GRIND_AMT == '' ? 0 : parseFloat(data.UNIT_GRIND_AMT);
-                        let UNIT_HEAT_AMT = data.UNIT_HEAT_AMT == null || data.UNIT_HEAT_AMT == '' ? 0 : parseFloat(data.UNIT_HEAT_AMT);
+                        let UNIT_MATERIAL_FINISH_TM_AMT = data.UNIT_MATERIAL_FINISH_TM_AMT == null || data.UNIT_MATERIAL_FINISH_TM_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_FINISH_TM_AMT);
+                        let UNIT_MATERIAL_FINISH_GRIND_AMT = data.UNIT_MATERIAL_FINISH_GRIND_AMT == null || data.UNIT_MATERIAL_FINISH_GRIND_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_FINISH_GRIND_AMT);
+                        let UNIT_MATERIAL_FINISH_HEAT_AMT = data.UNIT_MATERIAL_FINISH_HEAT_AMT == null || data.UNIT_MATERIAL_FINISH_HEAT_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_FINISH_HEAT_AMT);
                         let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT == '' ? 0 : parseFloat(data.UNIT_SURFACE_AMT);
                         let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT == '' ? 0 : parseFloat(data.UNIT_PROCESS_AMT);
                         let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT == '' ? 0 : parseFloat(data.UNIT_ETC_AMT);
                         let ITEM_QTY = data.ITEM_QTY == null || data.ITEM_QTY == '' ? 0 : parseFloat(data.ITEM_QTY);
 
                         calculateEstimateAmt += UNIT_MATERIAL_AMT;
-                        calculateEstimateAmt += UNIT_TM_AMT;
-                        calculateEstimateAmt += UNIT_GRIND_AMT;
-                        calculateEstimateAmt += UNIT_HEAT_AMT;
+                        calculateEstimateAmt += UNIT_MATERIAL_FINISH_TM_AMT;
+                        calculateEstimateAmt += UNIT_MATERIAL_FINISH_GRIND_AMT;
+                        calculateEstimateAmt += UNIT_MATERIAL_FINISH_HEAT_AMT;
                         calculateEstimateAmt += UNIT_SURFACE_AMT;
                         calculateEstimateAmt += UNIT_PROCESS_AMT;
                         calculateEstimateAmt += UNIT_ETC_AMT;
