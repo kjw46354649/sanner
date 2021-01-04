@@ -862,6 +862,12 @@
             UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
 
+    <delete id="deleteMaterialCostRangeSizeIntoType" parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_MATERIAL_RANGE_SIZE
+        WHERE CALC_SEQ = #{CALC_SEQ}
+            AND RANGE_TYPE=#{RANGE_TYPE}
+    </delete>
+
     <insert id="insertMaterialCostRangeSize" parameterType="java.util.HashMap">
         INSERT INTO TBL_CALC_MATERIAL_RANGE_SIZE (
             CALC_SEQ

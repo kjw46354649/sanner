@@ -125,6 +125,8 @@ public class EstimateServiceImpl implements EstimateService {
 
                 hashMap.put("queryId", "estimate.insertMaterialCostRange");
                 this.innodaleDao.insertGrid(hashMap);
+                hashMap.put("queryId", "estimate.deleteMaterialCostRangeSizeIntoType");
+                this.innodaleDao.deleteGrid(hashMap);
                 String str = (String) hashMap.get("SIZE_NUM");
                 String[] arr;
                 if (str != null) {
@@ -149,6 +151,8 @@ public class EstimateServiceImpl implements EstimateService {
 
                 hashMap.put("queryId", "estimate.insertMaterialCostRange");
                 this.innodaleDao.insertGrid(hashMap);
+                hashMap.put("queryId", "estimate.deleteMaterialCostRangeSizeIntoType");
+                this.innodaleDao.deleteGrid(hashMap);
                 String str = (String) hashMap.get("SIZE_NUM");
                 String[] arr;
                 if (str != null) {
