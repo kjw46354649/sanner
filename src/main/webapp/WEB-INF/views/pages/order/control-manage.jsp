@@ -1860,13 +1860,19 @@
 
                     if (estimateFlag) {
                         let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT === '' ? 0 : Number(data.UNIT_MATERIAL_AMT); // 소재비
+                        let UNIT_MATERIAL_FINISH_TM_AMT = data.UNIT_MATERIAL_FINISH_TM_AMT == null || data.UNIT_MATERIAL_FINISH_TM_AMT === '' ? 0 : Number(data.UNIT_MATERIAL_FINISH_TM_AMT); //TM각비
+                        let UNIT_MATERIAL_FINISH_GRIND_AMT = data.UNIT_MATERIAL_FINISH_GRIND_AMT == null || data.UNIT_MATERIAL_FINISH_GRIND_AMT === '' ? 0 : Number(data.UNIT_MATERIAL_FINISH_GRIND_AMT); // 연마비
+                        let UNIT_MATERIAL_FINISH_HEAT_AMT = data.UNIT_MATERIAL_FINISH_HEAT_AMT == null || data.UNIT_MATERIAL_FINISH_HEAT_AMT === '' ? 0 : Number(data.UNIT_MATERIAL_FINISH_HEAT_AMT); // 열처리
                         let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT === '' ? 0 : Number(data.UNIT_SURFACE_AMT); // 표면처리
                         let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT === '' ? 0 : Number(data.UNIT_PROCESS_AMT); // 가공비
                         let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT === '' ? 0 : Number(data.UNIT_ETC_AMT); // 기타추가
                         const ORDER_QTY = data.ORDER_QTY == null || data.ORDER_QTY === '' ? 0 : Number(data.ORDER_QTY); //발주 수량
                         let calculateEstimateAmount = 0; // 견적금액(계산 견적단가)
                         calculateEstimateAmount += UNIT_MATERIAL_AMT;
-                       calculateEstimateAmount += UNIT_SURFACE_AMT;
+                        calculateEstimateAmount += UNIT_MATERIAL_FINISH_TM_AMT;
+                        calculateEstimateAmount += UNIT_MATERIAL_FINISH_GRIND_AMT;
+                        calculateEstimateAmount += UNIT_MATERIAL_FINISH_HEAT_AMT;
+                        calculateEstimateAmount += UNIT_SURFACE_AMT;
                         calculateEstimateAmount += UNIT_PROCESS_AMT;
                         calculateEstimateAmount += UNIT_ETC_AMT;
 
@@ -1954,9 +1960,8 @@
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'PART_UNIT_QTY',
                 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'SIZE_TXT', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN',
                 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
-                'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
-                'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT',
-                'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
+                'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT', 'UNIT_MATERIAL_AMT', 'UNIT_MATERIAL_FINISH_TM_AMT',
+                'UNIT_MATERIAL_FINISH_GRIND_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AMT', 'UNIT_SURFACE_AMT', 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
                 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMT', 'UNIT_FINAL_AMT', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM',
                 'LABEL_NOTE', 'PREV_DRAWING_NUM', 'TOTAL_SHEET', 'SAME_SIDE_YN', 'DETAIL_MACHINE_REQUIREMENT'
             ];
@@ -1986,7 +1991,7 @@
                 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIAL_FINISH_TM_AUTO_AMT', 'UNIT_MATERIA_FINISH_GRIND_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT', 'UNIT_PROCESS_AUTO_AMT',
                 'UNIT_SUM_AUTO_AMT',
-                'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT',
+                'UNIT_MATERIAL_AMT', 'UNIT_MATERIAL_FINISH_TM_AMT', 'UNIT_MATERIAL_FINISH_GRIND_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AMT', 'UNIT_SURFACE_AMT',
                 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
                 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE',
                 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PROJECT_NM', 'ITEM_NM',
@@ -2006,14 +2011,21 @@
                 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIAL_FINISH_TM_AUTO_AMT', 'UNIT_MATERIA_FINISH_GRIND_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT', 'UNIT_PROCESS_AUTO_AMT',
                 'UNIT_SUM_AUTO_AMT',
-                'UNIT_MATERIAL_AMT', 'UNIT_TM_AMT', 'UNIT_GRIND_AMT', 'UNIT_HEAT_AMT', 'UNIT_SURFACE_AMT',
+                'UNIT_MATERIAL_AMT', 'UNIT_MATERIAL_FINISH_TM_AMT', 'UNIT_MATERIAL_FINISH_GRIND_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AMT', 'UNIT_SURFACE_AMT',
                 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
                 'CALC_EST_UNIT_COST', 'UNIT_FINAL_EST_AMT',
                 'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PREV_DRAWING_NUM', 'POP_POSITION_NM', 'PART_STATUS_NM', 'DXF_GFILE_SEQ', 'ORDER_IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
                 'DRAWING_UP_DT', 'ETC_GFILE_SEQ', 'INSPECT_NUM', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
                 'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT',
                 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT', 'OUTSIDE_NOTE', 'OUTSIDE_INSPECT_RESULT_NM', 'OUTSIDE_ERROR_NOTE',
-                'CONTROL_PART_INSERT_UPDATE_DT'
+                'CONTROL_PART_INSERT_UPDATE_DT',
+                'UNIT_MATERIAL_AUTO_AMT',
+                'UNIT_MATERIAL_FINISH_TM_AUTO_AMT',
+                'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT',
+                'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT',
+                'UNIT_SURFACE_AUTO_AMT',
+                'UNIT_PROCESS_AUTO_AMT',
+                'UNIT_SUM_AUTO_AMT'
             ];
 
             switch (elementId) {
@@ -2235,7 +2247,7 @@
                 'SIZE_TXT', 'SIZE_TYPE', 'SIZE_W', 'SIZE_H', 'SIZE_T', 'SIZE_D', 'SIZE_L', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
                 'MATERIAL_TYPE_NM', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
                 'PART_UNIT_QTY', 'MATERIAL_BUTTON', 'CALC_EST_UNIT_COST', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
-                'UNIT_MATERIAL_AMT', 'UNIT_SURFACE_AMT',
+                'UNIT_MATERIAL_AMT', 'UNIT_MATERIAL_FINISH_TM_AMT', 'UNIT_MATERIAL_FINISH_GRIND_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AMT', 'UNIT_SURFACE_AMT',
                 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'DETAIL_MACHINE_REQUIREMENT',
                 'POP_POSITION_NM', 'UNIT_AMT_NOTE',
                 'DWG_GFILE_SEQ', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'ORDER_IMG_GFILE_SEQ', 'VIEW_GFILE_SEQ', 'ETC_GFILE_SEQ',
@@ -2246,7 +2258,14 @@
                 'OUTSIDE_FINAL_AMT', 'OUTSIDE_IN_DT', 'OUTSIDE_STATUS', 'OUTSIDE_STATUS_DT', 'INNER_WORK_FINISH_DT',
                 'INSPECT_NUM', 'INSPECT_GRADE_NM', 'INSPECT_TYPE_NM', 'INSPECT_RESULT_NM', 'INSPECT_DESC',
                 'ERROR_ACTION_NM', 'ERROR_NOTE', 'OUTSIDE_INSPECT_RESULT_NM', 'OUTSIDE_ERROR_NOTE',
-                'CONTROL_PART_INSERT_UPDATE_DT'
+                'CONTROL_PART_INSERT_UPDATE_DT',
+                'UNIT_MATERIAL_AUTO_AMT',
+                'UNIT_MATERIAL_FINISH_TM_AUTO_AMT',
+                'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT',
+                'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT',
+                'UNIT_SURFACE_AUTO_AMT',
+                'UNIT_PROCESS_AUTO_AMT',
+                'UNIT_SUM_AUTO_AMT'
             ];
             const includeList = controlList.concat(partList);
 
@@ -2308,12 +2327,12 @@
             }
         };
 
-        const valiiiiiiiiiiiiiiiiiidationnnnnnnnnnnnnnnnn = function () {
+        /*const valiiiiiiiiiiiiiiiiiidationnnnnnnnnnnnnnnnn = function () {
             let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
             let addList = gridInstance.getChanges().addList;
             let updateList = gridInstance.getChanges().updateList;
-        };
+        };*/
 
         const changeColumnFilter = function () {
             // 필터 옵션 변경
