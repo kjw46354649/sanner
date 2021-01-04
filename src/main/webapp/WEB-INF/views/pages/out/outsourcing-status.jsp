@@ -415,10 +415,12 @@
                             k = dataIndx === 'COMP_NM' ? 3 : 5; // hard coding
 
                         while (j--) {
-                            let cd = data[j][dataIndx],
+                            let outsideComp = data[j]['OUTSIDE_COMP_CD'],
+                                outsideCompPrev = data[j - 1] ? data[j - 1]['OUTSIDE_COMP_CD'] : undefined,
+                                cd = data[j][dataIndx],
                                 cd_prev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
 
-                            if (cd_prev !== undefined && cd == cd_prev) {
+                            if (cd_prev !== undefined && outsideComp === outsideCompPrev && cd === cd_prev) {
                                 rc++;
                             } else if (rc > 1) {
                                 mc.push({r1: j, c1: k, rc: rc, cc: 1});
