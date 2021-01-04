@@ -1438,7 +1438,7 @@
                 }
             },*/
             {
-                title: '가공요건', width: 60, dataIndx: 'DETAIL_MACHINE_REQUIREMENT',
+                title: '가공요건', width: 85, dataIndx: 'DETAIL_MACHINE_REQUIREMENT',
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -1455,7 +1455,7 @@
                         cls = 'bg-lightgray';
                     }
 
-                    text = '<button name="processing_requirements' + isDisabled + '">가공요건</button>';
+                    text = '<button class="miniBtn" name="processing_requirements"' + isDisabled + ' style="background-color: #ffffd1">가공요건</button>';
 
                     return {cls: cls, text: text};
                 },

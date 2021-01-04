@@ -26,7 +26,7 @@
             A.ETC_GFILE_SEQ, A.DEL_YN, A.INSERT_ID, A.UPDATE_DT, A.UPDATE_ID,
             COUNT(B.SEQ) AS DTL_CNT, A.EST_USER_ID, SF_GET_USER_NM(A.EST_USER_ID) AS EST_USER,
             SUM(CASE WHEN B.UNIT_FINAL_EST_AMT IS NOT NULL THEN IFNULL(B.UNIT_FINAL_EST_AMT, 0) * IFNULL(B.ITEM_QTY, 0)
-            ELSE ((IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) +
+            ELSE ((IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_TM_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT, 0) +
             IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)) * IFNULL(B.ITEM_QTY, 0))
             END) AS DTL_AMOUNT,
             SF_GET_DATE_F(A.INSERT_DT,'YY','') AS INSERT_DT,
@@ -98,7 +98,7 @@
             A.ETC_GFILE_SEQ, A.DEL_YN, A.INSERT_ID, A.UPDATE_DT, A.UPDATE_ID,
             COUNT(B.SEQ) AS DTL_CNT, A.EST_USER_ID, SF_GET_USER_NM(A.EST_USER_ID) AS EST_USER,
             SUM(CASE WHEN B.UNIT_FINAL_EST_AMT IS NOT NULL THEN IFNULL(B.UNIT_FINAL_EST_AMT, 0) * IFNULL(B.ITEM_QTY, 0)
-            ELSE ((IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) +
+            ELSE ((IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_TM_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT, 0) +
             IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)) * IFNULL(B.ITEM_QTY, 0))
             END) AS DTL_AMOUNT,
             SF_GET_DATE_F(A.INSERT_DT,'YY','M') AS INSERT_DT,
@@ -134,23 +134,28 @@
             MATERIAL_KIND AS MATERIAL_KIND, SF_GET_CODE_NM('1029', MATERIAL_KIND, #{LOGIN_LOCALE}) AS MATERIAL_KIND_NM,
             SURFACE_TREAT AS SURFACE_TREAT, SF_GET_CODE_NM('1039', SURFACE_TREAT, #{LOGIN_LOCALE}) AS SURFACE_TREAT_NM,
             MATERIAL_NOTE AS MATERIAL_NOTE,
-            DETAIL_LATHE AS DETAIL_LATHE, DETAIL_SURFACE AS DETAIL_SURFACE, DETAIL_CLAMPING AS DETAIL_CLAMPING,
-            DETAIL_POCKET AS DETAIL_POCKET, DETAIL_DRILL AS DETAIL_DRILL, DETAIL_DIFFICULTY AS DETAIL_DIFFICULTY,
             MATERIAL_FINISH_TM AS MATERIAL_FINISH_TM, MATERIAL_FINISH_GRIND AS MATERIAL_FINISH_GRIND, MATERIAL_FINISH_HEAT AS MATERIAL_FINISH_HEAT,
-            UNIT_MATERIAL_AMT AS UNIT_MATERIAL_AMT, UNIT_TM_AMT AS UNIT_TM_AMT,
-            UNIT_GRIND_AMT AS UNIT_GRIND_AMT, UNIT_HEAT_AMT AS UNIT_HEAT_AMT,
+            UNIT_MATERIAL_AMT AS UNIT_MATERIAL_AMT, UNIT_MATERIAL_FINISH_TM_AMT,
+            UNIT_MATERIAL_FINISH_GRIND_AMT, UNIT_MATERIAL_FINISH_HEAT_AMT,
             UNIT_SURFACE_AMT AS UNIT_SURFACE_AMT, UNIT_PROCESS_AMT AS UNIT_PROCESS_AMT,
             UNIT_ETC_AMT AS UNIT_ETC_AMT,
-            UNIT_MATERIAL_AUTO_YN, UNIT_TM_AUTO_YN, UNIT_GRIND_AUTO_YN, UNIT_HEAT_AUTO_YN,
-            UNIT_SURFACE_AUTO_YN, UNIT_PROCESS_AUTO_YN,
             UNIT_AMT_NOTE AS UNIT_AMT_NOTE, UNIT_FINAL_EST_AMT,
             NOTE AS NOTE, DWG_GFILE_SEQ, DXF_GFILE_SEQ, PDF_GFILE_SEQ, IMG_GFILE_SEQ,
-            IFNULL(UNIT_MATERIAL_AMT, 0) + IFNULL(UNIT_TM_AMT, 0) + IFNULL(UNIT_GRIND_AMT, 0) + IFNULL(UNIT_HEAT_AMT, 0) +
+            IFNULL(UNIT_MATERIAL_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_TM_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_HEAT_AMT, 0) +
             IFNULL(UNIT_SURFACE_AMT, 0) + IFNULL(UNIT_PROCESS_AMT, 0) + IFNULL(UNIT_ETC_AMT, 0) AS CALCUL_EST_UNIT_COST,
             CASE WHEN UNIT_FINAL_EST_AMT IS NOT NULL THEN IFNULL(UNIT_FINAL_EST_AMT, 0) * IFNULL(ITEM_QTY, 0)
-                ELSE (IFNULL(UNIT_MATERIAL_AMT, 0) + IFNULL(UNIT_TM_AMT, 0) + IFNULL(UNIT_GRIND_AMT, 0) + IFNULL(UNIT_HEAT_AMT, 0) +
+                ELSE (IFNULL(UNIT_MATERIAL_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_TM_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_HEAT_AMT, 0) +
                         IFNULL(UNIT_SURFACE_AMT, 0) + IFNULL(UNIT_PROCESS_AMT, 0) + IFNULL(UNIT_ETC_AMT, 0)) * IFNULL(ITEM_QTY, 0)
-            END AS DTL_AMOUNT
+            END AS DTL_AMOUNT,
+            UNIT_MATERIAL_AUTO_AMT,
+            UNIT_MATERIAL_FINISH_TM_AUTO_AMT,
+            UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT,
+            UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT,
+            UNIT_SURFACE_AUTO_AMT,
+            UNIT_PROCESS_AUTO_AMT,
+            CASE
+            	WHEN IFNULL(UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, 0) + IFNULL(UNIT_SURFACE_AUTO_AMT, 0) + IFNULL(UNIT_PROCESS_AUTO_AMT, 0) > 0 THEN IFNULL(UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, 0) + IFNULL(UNIT_SURFACE_AUTO_AMT, 0) + IFNULL(UNIT_PROCESS_AUTO_AMT, 0)
+        	END AS UNIT_SUM_AUTO_AMT
         FROM TBL_ESTIMATE_DETAIL
         WHERE 1=1
             AND EST_SEQ = #{EST_SEQ}
@@ -273,6 +278,16 @@
     </insert>
 
     <insert id="insertEstimateDetail" parameterType="java.util.HashMap">
+        <selectKey keyProperty="SEQ" resultType="int" order="BEFORE">
+            <choose>
+                <when test="SEQ == null">
+                    SELECT NEXTVAL(SEQ_ESTIMATE_DETAIL) FROM DUAL
+                </when>
+                <otherwise>
+                    SELECT #{SEQ} FROM DUAL
+                </otherwise>
+            </choose>
+        </selectKey>
         INSERT INTO TBL_ESTIMATE_DETAIL
         (
             EST_SEQ, SEQ,
@@ -281,29 +296,24 @@
             SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
             SIZE_W_M, SIZE_H_M, SIZE_T_M, SIZE_D_M, SIZE_L_M,
             WORK_TYPE, MATERIAL_TYPE, MATERIAL_DETAIL, MATERIAL_KIND, SURFACE_TREAT, MATERIAL_NOTE,
-            DETAIL_LATHE, DETAIL_SURFACE, DETAIL_CLAMPING, DETAIL_POCKET, DETAIL_DRILL, DETAIL_DIFFICULTY,
             MATERIAL_FINISH_TM, MATERIAL_FINISH_GRIND, MATERIAL_FINISH_HEAT,
-            UNIT_MATERIAL_AMT, UNIT_TM_AMT, UNIT_GRIND_AMT, UNIT_HEAT_AMT, UNIT_SURFACE_AMT, UNIT_PROCESS_AMT, UNIT_ETC_AMT,
-            UNIT_MATERIAL_AUTO_YN, UNIT_TM_AUTO_YN, UNIT_GRIND_AUTO_YN, UNIT_HEAT_AUTO_YN,
-            UNIT_SURFACE_AUTO_YN, UNIT_PROCESS_AUTO_YN,
+            UNIT_MATERIAL_AMT, UNIT_MATERIAL_FINISH_TM_AMT, UNIT_MATERIAL_FINISH_GRIND_AMT, UNIT_MATERIAL_FINISH_HEAT_AMT, UNIT_SURFACE_AMT, UNIT_PROCESS_AMT, UNIT_ETC_AMT,
             UNIT_AMT_NOTE, UNIT_FINAL_EST_AMT,
             NOTE, DWG_GFILE_SEQ, DXF_GFILE_SEQ, PDF_GFILE_SEQ, IMG_GFILE_SEQ,
             INSERT_ID
         )
         VALUES
         (
-            #{EST_SEQ}, CASE WHEN #{SEQ} IS NOT NULL THEN #{SEQ} ELSE NEXTVAL(SEQ_ESTIMATE_DETAIL) END ,
+            #{EST_SEQ}, #{SEQ},
             #{PROJECT_NM}, #{MODULE_NM}, #{ITEM_NM}, #{DRAWING_NUM}, #{PART_NUM}, #{PARENT_SEQ},
             #{MATERIAL_SUPPLY_YN}, #{ITEM_QTY}, #{SIZE_TXT},
             SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_H', #{SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
             #{SIZE_W_M}, #{SIZE_H_M}, #{SIZE_T_M}, #{SIZE_D_M}, #{SIZE_L_M},
-            #{WORK_TYPE}, #{MATERIAL_TYPE}, #{MATERIAL_DETAIL}, #{MATERIAL_KIND}, #{SURFACE_TREAT}, #{MATERIAL_NOTE},
-            #{DETAIL_LATHE}, #{DETAIL_SURFACE}, #{DETAIL_CLAMPING}, #{DETAIL_POCKET}, #{DETAIL_DRILL}, #{DETAIL_DIFFICULTY},
+            #{WORK_TYPE}, SF_GET_ETC_CD('1027', #{MATERIAL_DETAIL}), #{MATERIAL_DETAIL}, #{MATERIAL_KIND}, #{SURFACE_TREAT}, #{MATERIAL_NOTE},
             #{MATERIAL_FINISH_TM}, #{MATERIAL_FINISH_GRIND}, #{MATERIAL_FINISH_HEAT},
-            #{UNIT_MATERIAL_AMT}, #{UNIT_TM_AMT}, #{UNIT_GRIND_AMT}, #{UNIT_HEAT_AMT}, #{UNIT_SURFACE_AMT}, #{UNIT_PROCESS_AMT}, #{UNIT_ETC_AMT},
-            'N','N','N','N','N','N',
+            #{UNIT_MATERIAL_AMT}, #{UNIT_MATERIAL_FINISH_TM_AMT}, #{UNIT_MATERIAL_FINISH_GRIND_AMT}, #{UNIT_MATERIAL_FINISH_HEAT_AMT}, #{UNIT_SURFACE_AMT}, #{UNIT_PROCESS_AMT}, #{UNIT_ETC_AMT},
             #{UNIT_AMT_NOTE}, #{UNIT_FINAL_EST_AMT},
             #{NOTE}, #{DWG_GFILE_SEQ}, #{DXF_GFILE_SEQ}, #{PDF_GFILE_SEQ}, #{IMG_GFILE_SEQ},
             NULL
@@ -322,20 +332,14 @@
             SIZE_W_M = #{SIZE_W_M},                             SIZE_H_M = #{SIZE_H_M},
             SIZE_T_M = #{SIZE_T_M},                             SIZE_D_M = #{SIZE_D_M},
             SIZE_L_M = #{SIZE_L_M},                             ITEM_QTY = #{ITEM_QTY},
-            WORK_TYPE = #{WORK_TYPE},                           MATERIAL_TYPE = #{MATERIAL_TYPE},
+            WORK_TYPE = #{WORK_TYPE},                           MATERIAL_TYPE = SF_GET_ETC_CD('1027', #{MATERIAL_DETAIL}),
             MATERIAL_DETAIL = #{MATERIAL_DETAIL},               MATERIAL_KIND = #{MATERIAL_KIND},
             SURFACE_TREAT = #{SURFACE_TREAT},                   MATERIAL_NOTE = #{MATERIAL_NOTE},
-            DETAIL_LATHE = #{DETAIL_LATHE},                     DETAIL_SURFACE = #{DETAIL_SURFACE},
-            DETAIL_CLAMPING = #{DETAIL_CLAMPING},               DETAIL_POCKET = #{DETAIL_POCKET},
-            DETAIL_DRILL = #{DETAIL_DRILL},                     DETAIL_DIFFICULTY = #{DETAIL_DIFFICULTY},
             MATERIAL_FINISH_TM = #{MATERIAL_FINISH_TM},         MATERIAL_FINISH_GRIND = #{MATERIAL_FINISH_GRIND},
             MATERIAL_FINISH_HEAT = #{MATERIAL_FINISH_HEAT},     UNIT_MATERIAL_AMT = #{UNIT_MATERIAL_AMT},
-            UNIT_TM_AMT = #{UNIT_TM_AMT},                       UNIT_GRIND_AMT = #{UNIT_GRIND_AMT},
-            UNIT_HEAT_AMT = #{UNIT_HEAT_AMT},                   UNIT_SURFACE_AMT = #{UNIT_SURFACE_AMT},
+            UNIT_MATERIAL_FINISH_TM_AMT = #{UNIT_MATERIAL_FINISH_TM_AMT},                       UNIT_MATERIAL_FINISH_GRIND_AMT = #{UNIT_MATERIAL_FINISH_GRIND_AMT},
+            UNIT_MATERIAL_FINISH_HEAT_AMT = #{UNIT_MATERIAL_FINISH_HEAT_AMT},                   UNIT_SURFACE_AMT = #{UNIT_SURFACE_AMT},
             UNIT_PROCESS_AMT = #{UNIT_PROCESS_AMT},             UNIT_ETC_AMT = #{UNIT_ETC_AMT},
-            UNIT_MATERIAL_AUTO_YN = #{UNIT_MATERIAL_AUTO_YN},   UNIT_TM_AUTO_YN = #{UNIT_TM_AUTO_YN},
-            UNIT_GRIND_AUTO_YN = #{UNIT_GRIND_AUTO_YN},         UNIT_HEAT_AUTO_YN = #{UNIT_HEAT_AUTO_YN},
-            UNIT_SURFACE_AUTO_YN = #{UNIT_SURFACE_AUTO_YN},     UNIT_PROCESS_AUTO_YN = #{UNIT_PROCESS_AUTO_YN},
             UNIT_AMT_NOTE = #{UNIT_AMT_NOTE},                   UNIT_FINAL_EST_AMT = #{UNIT_FINAL_EST_AMT},
             NOTE = #{NOTE},
             DWG_GFILE_SEQ = #{DWG_GFILE_SEQ},                   DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
@@ -390,20 +394,14 @@
             SIZE_W_M = #{SIZE_W_M},                             SIZE_H_M = #{SIZE_H_M},
             SIZE_T_M = #{SIZE_T_M},                             SIZE_D_M = #{SIZE_D_M},
             SIZE_L_M = #{SIZE_L_M},                             ITEM_QTY = #{ITEM_QTY},
-            WORK_TYPE = #{WORK_TYPE},                           MATERIAL_TYPE = #{MATERIAL_TYPE},
+            WORK_TYPE = #{WORK_TYPE},                           MATERIAL_TYPE = SF_GET_ETC_CD('1027', #{MATERIAL_DETAIL}),
             MATERIAL_DETAIL = #{MATERIAL_DETAIL},               MATERIAL_KIND = #{MATERIAL_KIND},
             SURFACE_TREAT = #{SURFACE_TREAT},                   MATERIAL_NOTE = #{MATERIAL_NOTE},
-            DETAIL_LATHE = #{DETAIL_LATHE},                     DETAIL_SURFACE = #{DETAIL_SURFACE},
-            DETAIL_CLAMPING = #{DETAIL_CLAMPING},               DETAIL_POCKET = #{DETAIL_POCKET},
-            DETAIL_DRILL = #{DETAIL_DRILL},                     DETAIL_DIFFICULTY = #{DETAIL_DIFFICULTY},
             MATERIAL_FINISH_TM = #{MATERIAL_FINISH_TM},         MATERIAL_FINISH_GRIND = #{MATERIAL_FINISH_GRIND},
             MATERIAL_FINISH_HEAT = #{MATERIAL_FINISH_HEAT},     UNIT_MATERIAL_AMT = #{UNIT_MATERIAL_AMT},
-            UNIT_TM_AMT = #{UNIT_TM_AMT},                       UNIT_GRIND_AMT = #{UNIT_GRIND_AMT},
-            UNIT_HEAT_AMT = #{UNIT_HEAT_AMT},                   UNIT_SURFACE_AMT = #{UNIT_SURFACE_AMT},
+            UNIT_MATERIAL_FINISH_TM_AMT = #{UNIT_MATERIAL_FINISH_TM_AMT},                       UNIT_MATERIAL_FINISH_GRIND_AMT = #{UNIT_MATERIAL_FINISH_GRIND_AMT},
+            UNIT_MATERIAL_FINISH_HEAT_AMT = #{UNIT_MATERIAL_FINISH_HEAT_AMT},                   UNIT_SURFACE_AMT = #{UNIT_SURFACE_AMT},
             UNIT_PROCESS_AMT = #{UNIT_PROCESS_AMT},             UNIT_ETC_AMT = #{UNIT_ETC_AMT},
-            UNIT_MATERIAL_AUTO_YN = #{UNIT_MATERIAL_AUTO_YN},   UNIT_TM_AUTO_YN = #{UNIT_TM_AUTO_YN},
-            UNIT_GRIND_AUTO_YN = #{UNIT_GRIND_AUTO_YN},         UNIT_HEAT_AUTO_YN = #{UNIT_HEAT_AUTO_YN},
-            UNIT_SURFACE_AUTO_YN = #{UNIT_SURFACE_AUTO_YN},     UNIT_PROCESS_AUTO_YN = #{UNIT_PROCESS_AUTO_YN},
             UNIT_AMT_NOTE = #{UNIT_AMT_NOTE},                   UNIT_FINAL_EST_AMT = #{UNIT_FINAL_EST_AMT},
             NOTE = #{NOTE},
             DWG_GFILE_SEQ = #{DWG_GFILE_SEQ},                   DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
@@ -468,11 +466,8 @@
             ITEM_QTY, SIZE_TXT, SIZE_TYPE, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
             SIZE_W_M, SIZE_H_M, SIZE_T_M, SIZE_D_M, SIZE_L_M,
             WORK_TYPE, MATERIAL_TYPE, MATERIAL_DETAIL, MATERIAL_KIND, SURFACE_TREAT, MATERIAL_NOTE,
-            DETAIL_LATHE, DETAIL_SURFACE, DETAIL_CLAMPING, DETAIL_POCKET, DETAIL_DRILL, DETAIL_DIFFICULTY,
             MATERIAL_FINISH_TM, MATERIAL_FINISH_GRIND, MATERIAL_FINISH_HEAT,
-            UNIT_MATERIAL_AMT, UNIT_TM_AMT, UNIT_GRIND_AMT, UNIT_HEAT_AMT, UNIT_SURFACE_AMT, UNIT_PROCESS_AMT, UNIT_ETC_AMT,
-            UNIT_MATERIAL_AUTO_YN, UNIT_TM_AUTO_YN, UNIT_GRIND_AUTO_YN, UNIT_HEAT_AUTO_YN,
-            UNIT_SURFACE_AUTO_YN, UNIT_PROCESS_AUTO_YN,
+            UNIT_MATERIAL_AMT, UNIT_MATERIAL_FINISH_TM_AMT, UNIT_MATERIAL_FINISH_GRIND_AMT, UNIT_MATERIAL_FINISH_HEAT_AMT, UNIT_SURFACE_AMT, UNIT_PROCESS_AMT, UNIT_ETC_AMT,
             UNIT_AMT_NOTE, UNIT_FINAL_EST_AMT,
             NOTE, DWG_GFILE_SEQ, DXF_GFILE_SEQ, PDF_GFILE_SEQ, IMG_GFILE_SEQ,
             INSERT_DT, INSERT_ID
@@ -482,11 +477,8 @@
             ITEM_QTY, SIZE_TXT, SIZE_TYPE, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
             SIZE_W_M, SIZE_H_M, SIZE_T_M, SIZE_D_M, SIZE_L_M,
             WORK_TYPE, MATERIAL_TYPE, MATERIAL_DETAIL, MATERIAL_KIND, SURFACE_TREAT, MATERIAL_NOTE,
-            DETAIL_LATHE, DETAIL_SURFACE, DETAIL_CLAMPING, DETAIL_POCKET, DETAIL_DRILL, DETAIL_DIFFICULTY,
             MATERIAL_FINISH_TM, MATERIAL_FINISH_GRIND, MATERIAL_FINISH_HEAT,
-            UNIT_MATERIAL_AMT, UNIT_TM_AMT, UNIT_GRIND_AMT, UNIT_HEAT_AMT, UNIT_SURFACE_AMT, UNIT_PROCESS_AMT, UNIT_ETC_AMT,
-            UNIT_MATERIAL_AUTO_YN, UNIT_TM_AUTO_YN, UNIT_GRIND_AUTO_YN, UNIT_HEAT_AUTO_YN,
-            UNIT_SURFACE_AUTO_YN, UNIT_PROCESS_AUTO_YN,
+            UNIT_MATERIAL_AMT, UNIT_MATERIAL_FINISH_TM_AMT, UNIT_MATERIAL_FINISH_GRIND_AMT, UNIT_MATERIAL_FINISH_HEAT_AMT, UNIT_SURFACE_AMT, UNIT_PROCESS_AMT, UNIT_ETC_AMT,
             UNIT_AMT_NOTE, UNIT_FINAL_EST_AMT,
             NOTE, DWG_GFILE_SEQ, DXF_GFILE_SEQ, PDF_GFILE_SEQ, IMG_GFILE_SEQ,
             INSERT_DT, INSERT_ID
@@ -535,10 +527,8 @@
             SIZE_TXT, SIZE_TYPE, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
             SIZE_W_M, SIZE_H_M, SIZE_T_M, SIZE_D_M, SIZE_L_M,
             MATERIAL_TYPE, MATERIAL_DETAIL, MATERIAL_KIND, SURFACE_TREAT, MATERIAL_NOTE,
-            DETAIL_LATHE, DETAIL_SURFACE, DETAIL_CLAMPING, DETAIL_POCKET, DETAIL_DRILL,DETAIL_DIFFICULTY,
             MATERIAL_FINISH_TM, MATERIAL_FINISH_GRIND, MATERIAL_FINISH_HEAT,
-            UNIT_MATERIAL_AMT, UNIT_TM_AMT, UNIT_GRIND_AMT, UNIT_HEAT_AMT, UNIT_SURFACE_AMT, UNIT_PROCESS_AMT, UNIT_ETC_AMT,
-            UNIT_MATERIAL_AUTO_YN, UNIT_TM_AUTO_YN, UNIT_GRIND_AUTO_YN, UNIT_HEAT_AUTO_YN, UNIT_SURFACE_AUTO_YN, UNIT_PROCESS_AUTO_YN,
+            UNIT_MATERIAL_AMT, UNIT_MATERIAL_FINISH_TM_AMT, UNIT_MATERIAL_FINISH_GRIND_AMT, UNIT_MATERIAL_FINISH_HEAT_AMT, UNIT_SURFACE_AMT, UNIT_PROCESS_AMT, UNIT_ETC_AMT,
             UNIT_AMT_NOTE,
             DWG_GFILE_SEQ, DXF_GFILE_SEQ, PDF_GFILE_SEQ, IMG_GFILE_SEQ,
             INSERT_ID)
@@ -548,10 +538,8 @@
             SIZE_TXT, SIZE_TYPE, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
             SIZE_W_M, SIZE_H_M, SIZE_T_M, SIZE_D_M, SIZE_L_M,
             MATERIAL_TYPE, MATERIAL_DETAIL, MATERIAL_KIND, SURFACE_TREAT, MATERIAL_NOTE,
-            DETAIL_LATHE, DETAIL_SURFACE, DETAIL_CLAMPING, DETAIL_POCKET, DETAIL_DRILL,DETAIL_DIFFICULTY,
             MATERIAL_FINISH_TM, MATERIAL_FINISH_GRIND, MATERIAL_FINISH_HEAT,
-            UNIT_MATERIAL_AMT, UNIT_TM_AMT, UNIT_GRIND_AMT, UNIT_HEAT_AMT, UNIT_SURFACE_AMT, UNIT_PROCESS_AMT, UNIT_ETC_AMT,
-            UNIT_MATERIAL_AUTO_YN, UNIT_TM_AUTO_YN, UNIT_GRIND_AUTO_YN, UNIT_HEAT_AUTO_YN, UNIT_SURFACE_AUTO_YN, UNIT_PROCESS_AUTO_YN,
+            UNIT_MATERIAL_AMT, UNIT_MATERIAL_FINISH_TM_AMT, UNIT_MATERIAL_FINISH_GRIND_AMT, UNIT_MATERIAL_FINISH_HEAT_AMT, UNIT_SURFACE_AMT, UNIT_PROCESS_AMT, UNIT_ETC_AMT,
             UNIT_AMT_NOTE,
             DWG_GFILE_SEQ, DXF_GFILE_SEQ, PDF_GFILE_SEQ, IMG_GFILE_SEQ,
             #{LOGIN_USER_ID}
@@ -687,28 +675,16 @@
             B.SURFACE_TREAT,
             SF_GET_CODE_NM('1039', B.SURFACE_TREAT, #{LOGIN_LOCALE}) AS SURFACE_TREAT_NM,
             B.MATERIAL_NOTE,
-            B.DETAIL_LATHE,
-            B.DETAIL_SURFACE,
-            B.DETAIL_CLAMPING,
-            B.DETAIL_POCKET,
-            B.DETAIL_DRILL,
-            B.DETAIL_DIFFICULTY,
             B.MATERIAL_FINISH_TM,
             B.MATERIAL_FINISH_GRIND,
             B.MATERIAL_FINISH_HEAT,
             B.UNIT_MATERIAL_AMT,
-            B.UNIT_TM_AMT,
-            B.UNIT_GRIND_AMT,
-            B.UNIT_HEAT_AMT,
+            B.UNIT_MATERIAL_FINISH_TM_AMT,
+            B.UNIT_MATERIAL_FINISH_GRIND_AMT,
+            B.UNIT_MATERIAL_FINISH_HEAT_AMT,
             B.UNIT_SURFACE_AMT,
             B.UNIT_PROCESS_AMT,
             B.UNIT_ETC_AMT,
-            B.UNIT_MATERIAL_AUTO_YN,
-            B.UNIT_TM_AUTO_YN,
-            B.UNIT_GRIND_AUTO_YN,
-            B.UNIT_HEAT_AUTO_YN,
-            B.UNIT_SURFACE_AUTO_YN,
-            B.UNIT_PROCESS_AUTO_YN,
             B.UNIT_AMT_NOTE,
             C.UNIT_FINAL_EST_AMT,
             A.NOTE, -- NOTE
@@ -716,10 +692,10 @@
             B.DXF_GFILE_SEQ,
             B.PDF_GFILE_SEQ,
             B.IMG_GFILE_SEQ,
-            IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0) AS CALCUL_EST_UNIT_COST,
+            IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_TM_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0) AS CALCUL_EST_UNIT_COST,
             CASE
                 WHEN C.UNIT_FINAL_EST_AMT IS NOT NULL THEN IFNULL(C.UNIT_FINAL_EST_AMT, 0) * IFNULL(C.ORDER_QTY, 0)
-                ELSE (IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_TM_AMT, 0) + IFNULL(B.UNIT_GRIND_AMT, 0) + IFNULL(B.UNIT_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)) * IFNULL(C.ORDER_QTY, 0)
+                ELSE (IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_TM_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)) * IFNULL(C.ORDER_QTY, 0)
             END AS DTL_AMOUNT
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
@@ -737,5 +713,547 @@
         FROM  TBL_COMPANY_STAFF A
         WHERE A.STAFF_SEQ IN (SELECT M.ORDER_STAFF_SEQ FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ IN (${CONTROL_SEQ}))
     </select>
+
+    <select id="selectSurfaceTreatmentCostList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER () AS ROW_NUM
+            , CALC_SEQ
+            , MATERIAL_TYPE
+            <!-- , MATERIAL_TYPE AS MATERIAL_TYPE_NM -->
+            , SURFACE_TREAT
+            <!-- , SURFACE_TREAT AS SURFACE_TREAT_NM -->
+            , CALC_METHOD
+            , SPECIFIC_GRAVITY
+            , UNIT_AMT
+            , UNIT_MIN_AMT
+            , NOTE
+        FROM TBL_CALC_SURFACE
+        WHERE 1 = 1
+            <if test="MATERIAL_TYPE !='' and MATERIAL_TYPE != null">
+                AND MATERIAL_TYPE = #{MATERIAL_TYPE}
+            </if>
+            <!--<if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
+                AND MATERIAL_DETAIL = #{MATERIAL_DETAIL}
+            </if>-->
+        ORDER BY MATERIAL_TYPE, SURFACE_TREAT, CALC_METHOD
+    </select>
+
+    <insert id="insertSurfaceTreatmentCost" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_SURFACE (
+            CALC_SEQ, MATERIAL_TYPE, SURFACE_TREAT,
+            CALC_METHOD, SPECIFIC_GRAVITY, UNIT_AMT,
+            UNIT_MIN_AMT, NOTE, INSERT_DT, INSERT_ID
+        ) VALUES (
+            IFNULL(#{CALC_SEQ}, NEXTVAL(SEQ_DUMMY)), #{MATERIAL_TYPE}, #{SURFACE_TREAT},
+            #{CALC_METHOD}, #{SPECIFIC_GRAVITY}, #{UNIT_AMT},
+            #{UNIT_MIN_AMT}, #{NOTE}, NOW(), #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            MATERIAL_TYPE = #{MATERIAL_TYPE},
+            SURFACE_TREAT = #{SURFACE_TREAT},
+            CALC_METHOD = #{CALC_METHOD},
+            SPECIFIC_GRAVITY = #{SPECIFIC_GRAVITY},
+            UNIT_AMT = #{UNIT_AMT},
+            UNIT_MIN_AMT = #{UNIT_MIN_AMT},
+            NOTE = #{NOTE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <delete id="deleteSurfaceTreatmentCost"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_SURFACE
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+
+    <select id="selectMaterialCostList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT DENSE_RANK() OVER (ORDER BY A.CALC_SEQ) AS GROUP_KEY
+		    , ROW_NUMBER () OVER () AS ROW_NUM
+            , A.CALC_SEQ
+            , A.MATERIAL_KIND
+            , A.MATERIAL_TYPE
+            , A.MATERIAL_DETAIL
+            , A.SPECIFIC_GRAVITY
+            , A.CALC_METHOD
+            , A.UNIT_AMT
+            , A.UNIT_MIN_AMT
+            , A.NOTE
+            , B.RANGE_TYPE
+            , B.RANGE_1
+            , B.RANGE_2
+            , B.RANGE_3
+            , B.LOSS_1
+            , B.LOSS_2
+            , B.LOSS_3
+            , B.RANGE_SIZE_YN
+            , C.SIZE_NUM
+        FROM TBL_CALC_MATERIAL A, TBL_CALC_MATERIAL_RANGE B
+            LEFT OUTER JOIN (SELECT CALC_SEQ, RANGE_TYPE, GROUP_CONCAT(SIZE_NUM) AS SIZE_NUM FROM TBL_CALC_MATERIAL_RANGE_SIZE GROUP BY CALC_SEQ, RANGE_TYPE) C ON C.CALC_SEQ = B.CALC_SEQ AND C.RANGE_TYPE = B.RANGE_TYPE
+	    WHERE B.CALC_SEQ = A.CALC_SEQ
+            <if test="MATERIAL_KIND !='' and MATERIAL_KIND != null">
+                AND A.MATERIAL_KIND = #{MATERIAL_KIND}
+            </if>
+            <if test="MATERIAL_TYPE !='' and MATERIAL_TYPE != null">
+                AND A.MATERIAL_TYPE = #{MATERIAL_TYPE}
+            </if>
+            <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
+                AND A.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
+            </if>
+        ORDER BY A.MATERIAL_KIND, A.MATERIAL_TYPE, A.MATERIAL_DETAIL,
+            CASE B.RANGE_TYPE WHEN 'W' THEN 0 WHEN  'H' THEN 1 WHEN  'T' THEN 2 WHEN  'D' THEN 3 WHEN  'L' THEN 4 END
+    </select>
+
+    <insert id="insertMaterialCost" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_MATERIAL (
+            CALC_SEQ, MATERIAL_KIND, MATERIAL_TYPE,
+            MATERIAL_DETAIL, SPECIFIC_GRAVITY, CALC_METHOD,
+            UNIT_AMT, UNIT_MIN_AMT, NOTE, INSERT_DT, INSERT_ID
+        ) VALUES (
+            #{CALC_SEQ}, #{MATERIAL_KIND}, #{MATERIAL_TYPE},
+            #{MATERIAL_DETAIL}, #{SPECIFIC_GRAVITY}, #{CALC_METHOD},
+            #{UNIT_AMT}, #{UNIT_MIN_AMT}, #{NOTE}, NOW(), #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            MATERIAL_KIND = #{MATERIAL_KIND},
+            MATERIAL_TYPE = #{MATERIAL_TYPE},
+            MATERIAL_DETAIL = #{MATERIAL_DETAIL},
+            SPECIFIC_GRAVITY = #{SPECIFIC_GRAVITY},
+            CALC_METHOD = #{CALC_METHOD},
+            UNIT_AMT = #{UNIT_AMT},
+            UNIT_MIN_AMT = #{UNIT_MIN_AMT},
+            NOTE = #{NOTE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <insert id="insertMaterialCostRange" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_MATERIAL_RANGE (
+            CALC_SEQ
+            , RANGE_TYPE
+            , RANGE_1
+            , RANGE_2
+            , RANGE_3
+            , LOSS_1
+            , LOSS_2
+            , LOSS_3
+            , RANGE_SIZE_YN
+            , INSERT_DT
+            , INSERT_ID
+        ) VALUES(
+            #{CALC_SEQ}
+            , #{RANGE_TYPE}
+            , #{RANGE_1}
+            , #{RANGE_2}
+            , #{RANGE_3}
+            , #{LOSS_1}
+            , #{LOSS_2}
+            , #{LOSS_3}
+            , IFNULL(#{RANGE_SIZE_YN}, 'N')
+            , NOW()
+            , #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            RANGE_1 = #{RANGE_1},
+            RANGE_2 = #{RANGE_2},
+            RANGE_3 = #{RANGE_3},
+            LOSS_1 = #{LOSS_1},
+            LOSS_2 = #{LOSS_2},
+            LOSS_3 = #{LOSS_3},
+            RANGE_SIZE_YN = IFNULL(#{RANGE_SIZE_YN}, 'N'),
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <delete id="deleteMaterialCostRangeSizeIntoType" parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_MATERIAL_RANGE_SIZE
+        WHERE CALC_SEQ = #{CALC_SEQ}
+            AND RANGE_TYPE=#{RANGE_TYPE}
+    </delete>
+
+    <insert id="insertMaterialCostRangeSize" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_MATERIAL_RANGE_SIZE (
+            CALC_SEQ
+            , RANGE_TYPE
+            , SIZE_NUM
+            , INSERT_DT
+            , INSERT_ID
+        ) VALUES(
+            #{CALC_SEQ}
+            , #{RANGE_TYPE}
+            , CAST(#{SIZE_NUM} AS FLOAT)
+            , NOW()
+            , #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <delete id="deleteMaterialCost"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_MATERIAL
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+    <delete id="deleteMaterialCostRange"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_MATERIAL_RANGE
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+    <delete id="deleteMaterialCostRangeSize"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_MATERIAL_RANGE_SIZE
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+
+    <select id="selectMaterialCloseList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER() AS ROW_NUM
+            , CALC_SEQ
+            , FINISH_TYPE_1
+            , FINISH_TYPE_2
+            , MATERIAL_TYPE
+            , AMT_FACTOR_1
+            , AMT_FACTOR_2
+            , UNIT_MIN_AMT
+            , CALC_NOTE
+            , DEL_YN
+            , NOTE
+        FROM TBL_CALC_MATERIAL_FINISH
+        WHERE FINISH_TYPE_1 = 'MFN010'
+        <if test="FINISH_TYPE_1 !='' and FINISH_TYPE_1 != null">
+            AND FINISH_TYPE_1 = #{FINISH_TYPE_1}
+        </if>
+        ORDER BY FINISH_TYPE_1, FINISH_TYPE_2, MATERIAL_TYPE
+    </select>
+
+    <insert id="insertMaterialClose" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_MATERIAL_FINISH (
+            CALC_SEQ, FINISH_TYPE_1, FINISH_TYPE_2,
+            MATERIAL_TYPE, AMT_FACTOR_1, AMT_FACTOR_2,
+            UNIT_MIN_AMT, CALC_NOTE, DEL_YN, NOTE, INSERT_DT, INSERT_ID
+        ) VALUES(
+            IFNULL(#{CALC_SEQ}, NEXTVAL(SEQ_DUMMY)), #{FINISH_TYPE_1}, #{FINISH_TYPE_2},
+            #{MATERIAL_TYPE}, #{AMT_FACTOR_1}, #{AMT_FACTOR_2},
+            #{UNIT_MIN_AMT}, #{CALC_NOTE}, 'N', #{NOTE}, NOW(), #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            FINISH_TYPE_1 = #{FINISH_TYPE_1},
+            FINISH_TYPE_2 = #{FINISH_TYPE_2},
+            MATERIAL_TYPE = #{MATERIAL_TYPE},
+            AMT_FACTOR_1 = #{AMT_FACTOR_1},
+            AMT_FACTOR_2 = #{AMT_FACTOR_2},
+            UNIT_MIN_AMT = #{UNIT_MIN_AMT},
+            CALC_NOTE = #{CALC_NOTE},
+            DEL_YN = #{DEL_YN},
+            NOTE = #{NOTE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <delete id="deleteMaterialClose"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_MATERIAL_FINISH
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+
+    <select id="selectPostProcessingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER() AS ROW_NUM
+            , CALC_SEQ
+            , FINISH_TYPE_1
+            , FINISH_TYPE_2
+            , MATERIAL_TYPE
+            , AMT_FACTOR_1
+            , AMT_FACTOR_2
+            , UNIT_MIN_AMT
+            , CALC_NOTE
+            , DEL_YN
+            , NOTE
+        FROM TBL_CALC_MATERIAL_FINISH
+        WHERE FINISH_TYPE_1 IN ('MFN020', 'MFN030')
+        <if test="FINISH_TYPE_1 !='' and FINISH_TYPE_1 != null">
+            AND FINISH_TYPE_1 = #{FINISH_TYPE_1}
+        </if>
+        ORDER BY FINISH_TYPE_1, FINISH_TYPE_2, MATERIAL_TYPE
+    </select>
+
+    <insert id="insertPostProcessing" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_MATERIAL_FINISH (
+            CALC_SEQ, FINISH_TYPE_1, FINISH_TYPE_2,
+            MATERIAL_TYPE, AMT_FACTOR_1, AMT_FACTOR_2,
+            UNIT_MIN_AMT, CALC_NOTE, DEL_YN, NOTE, INSERT_DT, INSERT_ID
+        ) VALUES(
+            IFNULL(#{CALC_SEQ}, NEXTVAL(SEQ_DUMMY)), #{FINISH_TYPE_1}, #{FINISH_TYPE_2},
+            #{MATERIAL_TYPE}, #{AMT_FACTOR_1}, #{AMT_FACTOR_2},
+            #{UNIT_MIN_AMT}, #{CALC_NOTE}, 'N', #{NOTE}, NOW(), #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            FINISH_TYPE_1 = #{FINISH_TYPE_1},
+            FINISH_TYPE_2 = #{FINISH_TYPE_2},
+            MATERIAL_TYPE = #{MATERIAL_TYPE},
+            AMT_FACTOR_1 = #{AMT_FACTOR_1},
+            AMT_FACTOR_2 = #{AMT_FACTOR_2},
+            UNIT_MIN_AMT = #{UNIT_MIN_AMT},
+            CALC_NOTE = #{CALC_NOTE},
+            DEL_YN = #{DEL_YN},
+            NOTE = #{NOTE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <delete id="deletePostProcessing"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_MATERIAL_FINISH
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+
+    <select id="selectProcessCostList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER() AS ROW_NUM
+            , CALC_SEQ
+            , MATERIAL_KIND
+            , MATERIAL_TYPE
+            , SIZE_W
+            , SIZE_H
+            , SIZE_T
+            , SIZE_D
+            , SIZE_L
+            , SIZE_LEVEL
+            , UNIT_BASIC_AMT
+        FROM TBL_CALC_PROCESS
+        WHERE 1 = 1
+        <if test="MATERIAL_KIND !='' and MATERIAL_KIND != null">
+            AND MATERIAL_KIND = #{MATERIAL_KIND}
+        </if>
+        <if test="MATERIAL_TYPE !='' and MATERIAL_TYPE != null">
+            AND MATERIAL_TYPE = #{MATERIAL_TYPE}
+        </if>
+        ORDER BY MATERIAL_KIND, MATERIAL_TYPE, SIZE_LEVEL
+    </select>
+
+    <insert id="insertProcessCost" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_PROCESS (
+            CALC_SEQ, MATERIAL_KIND, MATERIAL_TYPE,
+            SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
+            SIZE_LEVEL, UNIT_BASIC_AMT, INSERT_DT, INSERT_ID
+        ) VALUES (
+            IFNULL(#{CALC_SEQ}, NEXTVAL(SEQ_DUMMY)), #{MATERIAL_KIND}, #{MATERIAL_TYPE},
+            #{SIZE_W}, #{SIZE_H}, #{SIZE_T}, #{SIZE_D}, #{SIZE_L}, #{SIZE_LEVEL},
+            #{UNIT_BASIC_AMT}, NOW(), #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            MATERIAL_KIND = #{MATERIAL_KIND},
+            MATERIAL_TYPE = #{MATERIAL_TYPE},
+            SIZE_W = #{SIZE_W},
+            SIZE_H = #{SIZE_H},
+            SIZE_T = #{SIZE_T},
+            SIZE_D = #{SIZE_D},
+            SIZE_L = #{SIZE_L},
+            SIZE_LEVEL = #{SIZE_LEVEL},
+            UNIT_BASIC_AMT = #{UNIT_BASIC_AMT},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <delete id="deleteProcessCost"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_PROCESS
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+
+    <select id="selectProcessCostFactorList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER(ORDER BY A.FACTOR_CD) AS ROW_NUM
+        , IFNULL(B.CALC_SEQ, #{CALC_SEQ}) AS CALC_SEQ
+        , A.FACTOR_CD
+        , A.LEVEL_1
+        , A.LEVEL_2
+        , B.UNIT_AMT
+        FROM TBL_PROCESS_FACTOR A
+        LEFT OUTER JOIN TBL_CALC_PROCESS_FACTOR B ON B.FACTOR_CD = A.FACTOR_CD
+            AND B.CALC_SEQ = #{CALC_SEQ}
+        WHERE 1 = 1
+        ORDER BY A.FACTOR_CD
+    </select>
+
+    <insert id="insertProcessCostFactor" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_PROCESS_FACTOR (
+            CALC_SEQ, FACTOR_CD, UNIT_AMT
+        ) VALUES (
+            #{CALC_SEQ}, #{FACTOR_CD}, #{UNIT_AMT}
+        )
+        ON DUPLICATE KEY UPDATE
+            FACTOR_CD = #{FACTOR_CD},
+            UNIT_AMT = #{UNIT_AMT}
+    </insert>
+
+    <delete id="deleteProcessCostFactor"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_PROCESS_FACTOR
+        WHERE CALC_SEQ = #{CALC_SEQ}
+    </delete>
+
+    <select id="selectProcessCostFactorDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER(ORDER BY FACTOR_CD, LEVEL_1, LEVEL_2) AS ROW_NUM
+            , FACTOR_CD
+            , LEVEL_1
+            , LEVEL_2
+            , NOTE
+        FROM TBL_PROCESS_FACTOR
+        ORDER BY FACTOR_CD, LEVEL_1, LEVEL_2
+    </select>
+
+    <insert id="insertProcessCostFactorDetail" parameterType="java.util.HashMap">
+        INSERT INTO TBL_PROCESS_FACTOR (
+            FACTOR_CD, LEVEL_1, LEVEL_2,
+            NOTE, INSERT_DT, INSERT_ID
+        ) VALUES (
+            #{FACTOR_CD}, #{LEVEL_1}, #{LEVEL_2},
+            #{NOTE}, NOW(), #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            FACTOR_CD = #{FACTOR_CD},
+            LEVEL_1 = #{LEVEL_1},
+            LEVEL_2 = #{LEVEL_2},
+            NOTE = #{NOTE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <delete id="deleteProcessCostFactorDetail"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_PROCESS_FACTOR
+        WHERE FACTOR_CD = #{FACTOR_CD}
+    </delete>
+
+    <select id="selectProcessingRequirementsBasicInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.EST_NUM
+            , B.EST_SEQ AS SEQ1
+            , B.SEQ AS SEQ2
+            , B.DRAWING_NUM
+            , B.IMG_GFILE_SEQ
+            , SF_GET_CODE_NM('1035', B.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM
+            , B.SIZE_TXT
+            , (SELECT M.SIZE_LEVEL FROM TBL_CALC_PROCESS M WHERE CALC_SEQ = SF_GET_CALC_PROCESS_SEQ('ESTIMATE', B.EST_SEQ, B.SEQ)) AS LEVEL <!-- 규격 Level -->
+            , (SELECT FORMAT(M.UNIT_BASIC_AMT, 0) FROM TBL_CALC_PROCESS M WHERE CALC_SEQ = SF_GET_CALC_PROCESS_SEQ('ESTIMATE', B.EST_SEQ, B.SEQ)) AS UNIT_BASIC_AMT <!-- 기본가공비 -->
+        FROM TBL_ESTIMATE A
+            INNER JOIN TBL_ESTIMATE_DETAIL B ON B.EST_SEQ = A.EST_SEQ
+                AND B.EST_SEQ = #{EST_SEQ}
+                AND B.SEQ = #{SEQ}
+        WHERE A.DEL_YN = 'N'
+    </select>
+
+    <select id="selectProcessingRequirementsInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            MAX(CALC_SEQ) AS CALC_SEQ
+            , MAX(EST_SEQ) AS EST_SEQ
+            , MAX(SEQ) AS SEQ
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST010' THEN X.LEVEL_1 END) AS LEVEL_1_CST010
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST020' THEN X.LEVEL_1 END) AS LEVEL_1_CST020
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST030' THEN X.LEVEL_1 END) AS LEVEL_1_CST030
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST040' THEN X.LEVEL_1 END) AS LEVEL_1_CST040
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST050' THEN X.LEVEL_1 END) AS LEVEL_1_CST050
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST060' THEN X.LEVEL_1 END) AS LEVEL_1_CST060
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST070' THEN X.LEVEL_1 END) AS LEVEL_1_CST070
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST080' THEN X.LEVEL_1 END) AS LEVEL_1_CST080
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST090' THEN X.LEVEL_1 END) AS LEVEL_1_CST090
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST100' THEN X.LEVEL_1 END) AS LEVEL_1_CST100
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST101' THEN X.LEVEL_1 END) AS LEVEL_1_CST101
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST110' THEN X.LEVEL_1 END) AS LEVEL_1_CST110
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST120' THEN X.LEVEL_1 END) AS LEVEL_1_CST120
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST130' THEN X.LEVEL_1 END) AS LEVEL_1_CST130
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST140' THEN X.LEVEL_1 END) AS LEVEL_1_CST140
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST150' THEN X.LEVEL_1 END) AS LEVEL_1_CST150
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST010' THEN X.LEVEL_2 END) AS LEVEL_2_CST010
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST020' THEN X.LEVEL_2 END) AS LEVEL_2_CST020
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST030' THEN X.LEVEL_2 END) AS LEVEL_2_CST030
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST040' THEN X.LEVEL_2 END) AS LEVEL_2_CST040
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST050' THEN X.LEVEL_2 END) AS LEVEL_2_CST050
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST060' THEN X.LEVEL_2 END) AS LEVEL_2_CST060
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST070' THEN X.LEVEL_2 END) AS LEVEL_2_CST070
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST080' THEN X.LEVEL_2 END) AS LEVEL_2_CST080
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST090' THEN X.LEVEL_2 END) AS LEVEL_2_CST090
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST100' THEN X.LEVEL_2 END) AS LEVEL_2_CST100
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST101' THEN X.LEVEL_2 END) AS LEVEL_2_CST101
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST110' THEN X.LEVEL_2 END) AS LEVEL_2_CST110
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST120' THEN X.LEVEL_2 END) AS LEVEL_2_CST120
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST130' THEN X.LEVEL_2 END) AS LEVEL_2_CST130
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST140' THEN X.LEVEL_2 END) AS LEVEL_2_CST140
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST150' THEN X.LEVEL_2 END) AS LEVEL_2_CST150
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST150' THEN X.LEVEL_1 END) AS LEVEL_1_CST150
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST010' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST010
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST020' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST020
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST030' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST030
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST040' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST040
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST050' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST050
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST060' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST060
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST070' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST070
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST080' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST080
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST090' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST090
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST100' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST100
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST101' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST101
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST110' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST110
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST120' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST120
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST130' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST130
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST140' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST140
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST150' THEN X.PROCESS_CNT END) AS PROCESS_CNT_CST150
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST010' THEN X.UNIT_AMT END) AS UNIT_AMT_CST010
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST020' THEN X.UNIT_AMT END) AS UNIT_AMT_CST020
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST030' THEN X.UNIT_AMT END) AS UNIT_AMT_CST030
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST040' THEN X.UNIT_AMT END) AS UNIT_AMT_CST040
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST050' THEN X.UNIT_AMT END) AS UNIT_AMT_CST050
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST060' THEN X.UNIT_AMT END) AS UNIT_AMT_CST060
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST070' THEN X.UNIT_AMT END) AS UNIT_AMT_CST070
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST080' THEN X.UNIT_AMT END) AS UNIT_AMT_CST080
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST090' THEN X.UNIT_AMT END) AS UNIT_AMT_CST090
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST100' THEN X.UNIT_AMT END) AS UNIT_AMT_CST100
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST101' THEN X.UNIT_AMT END) AS UNIT_AMT_CST101
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST110' THEN X.UNIT_AMT END) AS UNIT_AMT_CST110
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST120' THEN X.UNIT_AMT END) AS UNIT_AMT_CST120
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST130' THEN X.UNIT_AMT END) AS UNIT_AMT_CST130
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST140' THEN X.UNIT_AMT END) AS UNIT_AMT_CST140
+            , MAX(CASE WHEN X.FACTOR_CD = 'CST150' THEN X.UNIT_AMT END) AS UNIT_AMT_CST150
+            , SUM(X.PROCESS_CNT * X.UNIT_AMT) AS TOTAL
+        FROM (
+                SELECT
+                    A.FACTOR_CD
+                    , B.CALC_SEQ
+                    , A.LEVEL_1
+                    , A.LEVEL_2
+                    , A.NOTE
+                    , FORMAT(B.UNIT_AMT, 0) AS UNIT_AMT
+                    , C.EST_SEQ
+                    , C.SEQ
+                    , FORMAT(C.PROCESS_CNT, 0) AS PROCESS_CNT
+                FROM TBL_PROCESS_FACTOR A
+                        LEFT OUTER JOIN TBL_CALC_PROCESS_FACTOR B ON B.FACTOR_CD = A.FACTOR_CD
+                        	AND CALC_SEQ = SF_GET_CALC_PROCESS_SEQ(#{TYPE}, #{EST_SEQ}, #{SEQ})
+                        LEFT OUTER JOIN TBL_ESTIMATE_DETAIL_PROCESS C ON C.FACTOR_CD = A.FACTOR_CD
+                            AND EST_SEQ = #{EST_SEQ}
+                        	AND SEQ = #{SEQ}
+        ) X
+    </select>
+
+    <insert id="insertEstimateDetailProcess" parameterType="java.util.HashMap">
+        INSERT INTO TBL_ESTIMATE_DETAIL_PROCESS (
+            EST_SEQ
+            , SEQ
+            , FACTOR_CD
+            , PROCESS_CNT
+            , INSERT_DT
+            , INSERT_ID
+        ) VALUES (
+            #{EST_SEQ}
+            , #{SEQ}
+            , #{FACTOR_CD}
+            , #{PROCESS_CNT}
+            , NOW()
+            , NULL
+        )
+        ON DUPLICATE KEY UPDATE
+            PROCESS_CNT = #{PROCESS_CNT}
+	        , UPDATE_DT = NOW()
+	        , UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <update id="updateEstimateAutomaticQuote" parameterType="java.util.HashMap">
+        UPDATE TBL_ESTIMATE_DETAIL
+        SET
+            UNIT_MATERIAL_AUTO_AMT = SF_GET_CALC_MATERIAL_AMT('ESTIMATE', #{EST_SEQ}, #{SEQ})
+            , UNIT_MATERIAL_FINISH_TM_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('TM', 'ESTIMATE', #{EST_SEQ}, #{SEQ})
+            , UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('GRIND', 'ESTIMATE', #{EST_SEQ}, #{SEQ})
+            , UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT = SF_GET_CALC_MATERIAL_FINISH_AMT('HEAT', 'ESTIMATE', #{EST_SEQ}, #{SEQ})
+            , UNIT_SURFACE_AUTO_AMT = SF_GET_CALC_SURFACE_AMT('ESTIMATE', #{EST_SEQ}, #{SEQ})
+            , UNIT_PROCESS_AUTO_AMT = SF_GET_CALC_PROCESS_AMT('ESTIMATE', #{EST_SEQ}, #{SEQ})
+        WHERE EST_SEQ = #{EST_SEQ}
+            AND SEQ = #{SEQ}
+    </update>
 
 </mapper>

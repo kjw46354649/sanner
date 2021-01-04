@@ -535,6 +535,185 @@
 </div>
 <!-- 도면파일 multi 다운로드 공통 팝업 : E -->
 
+<div class="modal" id="processingRequirementsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width: 500px">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-size: large; font-weight: bold">가공요건 입력 / 가공비 계산</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -21.5px">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-center">
+                    <div>
+                        <button id="prev">이전</button>
+                        <button id="next">다음</button>
+                    </div>
+                    <div class="ml-auto">
+                        <button type="button" class="defaultBtn btn-100w green" id="processing_requirements_save">저장
+                        </button>
+                    </div>
+                </div>
+                <hr style="display: block; border: 1px solid #e2e2e2; margin: 7px;">
+                <div>
+                    <table class="basic_information">
+                        <colgroup>
+                            <col width="15">
+                            <col width="85">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <td colspan="2">기본정보</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr style="display: none;">
+                            <td id="seq1"></td>
+                            <td id="seq2"></td>
+                        </tr>
+                        <tr>
+                            <td scope="row">관리번호</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td scope="row">도면번호</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td scope="row">재질</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td scope="row">규격</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td scope="row">규격 Level</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td scope="row">기본가공비</td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <div>
+                    <form id="processing_requirements_form" role="form" onsubmit="return false;">
+                        <input type="hidden" name="TYPE" id="TYPE">
+                        <input type="hidden" name="SEQ1" id="SEQ1">
+                        <input type="hidden" name="SEQ2" id="SEQ2">
+                        <table class="processing_requirements_information">
+                            <thead>
+                            <tr>
+                                <th colspan="4">가공요건정보</th>
+                            </tr>
+                            <tr>
+                                <th colspan="2">항목</th>
+                                <th>Count</th>
+                                <th>Cost</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="e fw-bold" colspan="2">밀링가공 면수</td>
+                                <td><input type="number" name="PROCESS_CNT_CST010" id="PROCESS_CNT_CST010"></td>
+                                <td><input type="number" name="UNIT_AMT_CST010" id="UNIT_AMT_CST010" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="e fw-bold" colspan="2">TAP 면수</td>
+                                <td><input type="number" name="PROCESS_CNT_CST020" id="PROCESS_CNT_CST020"></td>
+                                <td><input type="number" name="UNIT_AMT_CST020" id="UNIT_AMT_CST020" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="e fw-bold" rowspan="2">치수 공차</td>
+                                <td class="e ta-l">일반</td>
+                                <td><input type="number" name="PROCESS_CNT_CST030" id="PROCESS_CNT_CST030"></td>
+                                <td><input type="number" name="UNIT_AMT_CST030" id="UNIT_AMT_CST030" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="e ta-l">정밀(~0.02)</td>
+                                <td><input type="number" name="PROCESS_CNT_CST040" id="PROCESS_CNT_CST040"></td>
+                                <td><input type="number" name="UNIT_AMT_CST040" id="UNIT_AMT_CST040" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="e fw-bold" rowspan="2">외곽가공</td>
+                                <td class="e ta-l">15T 이하</td>
+                                <td><input type="number" name="PROCESS_CNT_CST050" id="PROCESS_CNT_CST050"></td>
+                                <td><input type="number" name="UNIT_AMT_CST050" id="UNIT_AMT_CST050" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="e ta-l">15T 초과</td>
+                                <td><input type="number" name="PROCESS_CNT_CST060" id="PROCESS_CNT_CST060"></td>
+                                <td><input type="number" name="UNIT_AMT_CST060" id="UNIT_AMT_CST060" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="e fw-bold" rowspan="2">일반포켓</td>
+                                <td class="e ta-l">15T 이하</td>
+                                <td><input type="number" name="PROCESS_CNT_CST070" id="PROCESS_CNT_CST070"></td>
+                                <td><input type="number" name="UNIT_AMT_CST070" id="UNIT_AMT_CST070" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="e ta-l">15T 초과</td>
+                                <td><input type="number" name="PROCESS_CNT_CST080" id="PROCESS_CNT_CST080"></td>
+                                <td><input type="number" name="UNIT_AMT_CST080" id="UNIT_AMT_CST080" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="e fw-bold" rowspan="2">관통포켓</td>
+                                <td class="e ta-l">15T 이하</td>
+                                <td><input type="number" name="PROCESS_CNT_CST090" id="PROCESS_CNT_CST090"></td>
+                                <td><input type="number" name="UNIT_AMT_CST090" id="UNIT_AMT_CST090" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="e ta-l">15T 초과</td>
+                                <td><input type="number" name="PROCESS_CNT_CST100" id="PROCESS_CNT_CST100"></td>
+                                <td><input type="number" name="UNIT_AMT_CST100" id="UNIT_AMT_CST100" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="e fw-bold" colspan="2">Hole</td>
+                                <td><input type="number" name="PROCESS_CNT_CST110" id="PROCESS_CNT_CST110"></td>
+                                <td><input type="number" name="UNIT_AMT_CST110" id="UNIT_AMT_CST110" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="e fw-bold" colspan="2">TAP</td>
+                                <td><input type="number" name="PROCESS_CNT_CST120" id="PROCESS_CNT_CST120"></td>
+                                <td><input type="number" name="UNIT_AMT_CST120" id="UNIT_AMT_CST120" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="e fw-bold" colspan="2">공차 Hole</td>
+                                <td><input type="number" name="PROCESS_CNT_CST130" id="PROCESS_CNT_CST130"></td>
+                                <td><input type="number" name="UNIT_AMT_CST130" id="UNIT_AMT_CST130" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="e fw-bold" colspan="2">특수 Hole</td>
+                                <td><input type="number" name="PROCESS_CNT_CST140" id="PROCESS_CNT_CST140"></td>
+                                <td><input type="number" name="UNIT_AMT_CST140" id="UNIT_AMT_CST140" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="e fw-bold" colspan="2">C/B</td>
+                                <td><input type="number" name="PROCESS_CNT_CST150" id="PROCESS_CNT_CST150"></td>
+                                <td><input type="number" name="UNIT_AMT_CST150" id="UNIT_AMT_CST150" readonly></td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="3">Total</td>
+                                <td><input type="number" id="TOTAL"></td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center !important">
+                <button type="button" class="defaultBtn grayPopGra" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
 
     let $cadFileConvertUploadCompletedBtn = $("#cadFileConvertUploadCompletedBtn");
@@ -555,7 +734,9 @@
 
     let g_ItemDetailPopGrid04;
     // let $camWorkManagePopGrid;
-
+    let isProcessingRequirementsDirty = Boolean(false);
+    let processingRequirementsTargetGrid;
+    let processingRequirementsTargetRowIndex = [];
 
     function failPlay() {
         let audio = document.getElementById('fail_play');
@@ -1929,7 +2110,7 @@
         commonWarehouseManageGrid.pqGrid(commonWarehouseManageObj);
         commonWarehouseManageGrid.pqGrid('refreshDataAndView');
     }
-    
+
     $("#common_warehouse_manage_popup_form #WAREHOUSE_CD").on('change', function(){
         commonWarehouseManageGrid.pqGrid('option', "dataModel.postData", function (ui) {
             return (fnFormToJsonArrayData('#common_warehouse_manage_popup_form'));
@@ -1959,7 +2140,7 @@
         let inWarehouseManageInsertUpdateQueryList = ['material.insertUpdateCommonWarehouseManage'];
         fnModifyPQGrid(commonWarehouseManageGrid, inWarehouseManageInsertUpdateQueryList, inWarehouseManageInsertUpdateQueryList);
     });
-    
+
     /** 공통 창고 팝업 end **/
     function estimateListFileUploadCallback(GfileSeq) {
         if(!GfileSeq) {
@@ -2035,4 +2216,284 @@
     $('[name=common_multi_download_pop_close]').on('click', function () {
         $('#common_multi_download_pop').modal('hide');
     });
+
+    const processingRequirementsPop = function (actionType) {
+        $('#processing_requirements_form').find('#TYPE').val(actionType);
+
+        $('#processingRequirementsModal').modal('show');
+    };
+
+    $('#processingRequirementsModal').on({
+        'show.bs.modal': function () {
+            let $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
+
+            if ($processingRequirementsType === 'ESTIMATE') {
+                processingRequirementsTargetGrid = estimateRegisterTopGrid;
+                processingRequirementsTargetRowIndex = Number(estimateRegisterSelectedRowIndex);
+            } else if ($processingRequirementsType === 'CONTROL') {
+                processingRequirementsTargetGrid = $orderManagementGrid;
+                processingRequirementsTargetRowIndex = Number(selectedOrderManagementRowIndex[0]);
+            }
+
+            changeData();
+        },
+        'hide.bs.modal': function () {
+            isProcessingRequirementsDirty = false;
+        }
+    });
+
+    /* function */
+    const changeProcessingRequirementsBasicInformation = function (rowData) {
+        let $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
+        let queryId = '';
+
+        if ($processingRequirementsType === 'ESTIMATE') {
+            queryId = 'estimate.selectProcessingRequirementsBasicInfo';
+        } else if ($processingRequirementsType === 'CONTROL') {
+            queryId = 'orderMapper.selectProcessingRequirementsBasicInfo';
+        }
+
+        let postData = $.extend({queryId: queryId}, rowData);
+        postData.TYPE = $processingRequirementsType;
+        postData.SEQ1 = $('.basic_information').find('#seq1').html();
+        postData.SEQ2 = $('.basic_information').find('#seq2').html();
+        let parameter = {'url': '/json-info', 'data': postData};
+
+        fnPostAjax(function (data) {
+            createTopTable(data);
+        }, parameter, '');
+    };
+
+    const changeProcessingRequirementsInformation = function (rowData) {
+        let $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
+        let queryId = '';
+
+        if ($processingRequirementsType === 'ESTIMATE') {
+            queryId = 'estimate.selectProcessingRequirementsInfo';
+        } else if ($processingRequirementsType === 'CONTROL') {
+            queryId = 'orderMapper.selectProcessingRequirementsInfo';
+        }
+
+        let postData = $.extend({queryId: queryId}, rowData);
+        postData.TYPE = $processingRequirementsType;
+        postData.SEQ1 = $('.basic_information').find('#seq1').html();
+        postData.SEQ2 = $('.basic_information').find('#seq2').html();
+        let parameter = {'url': '/json-info', 'data': postData};
+
+        fnPostAjax(function (data) {
+            createBotTable(data);
+        }, parameter, '');
+    };
+
+    const isAssembly = function (rowData) {
+        return rowData.WORK_TYPE === 'WTP020';
+    }
+
+    const readOnlyProcessingRequirementsInformation = function () {
+        for (let i = 1; i <= 15; i++) {
+            let str = String(i).padStart(2, '0') + '0';
+
+            $('#PROCESS_CNT_CST' + str).prop('readonly', true);
+        }
+    };
+
+    const changeBackgroundColor = function (rowData) {
+        const flag = isAssembly(rowData.WORK_TYPE);
+
+        for (let i = 1; i <= 15; i++) {
+            let str = String(i).padStart(2, '0') + '0';
+
+            $('#PROCESS_CNT_CST' + str).parent().removeClass('readonly');
+
+            if (flag) {
+                $('#PROCESS_CNT_CST' + str).parent().addClass('readonly')
+            }
+        }
+    };
+
+    const createTopTable = function (data) {
+        let seq1 = '';
+        let seq2 = '';
+        let controlNum = '';
+        let drawingNum = '';
+        let materialTypeNm = '';
+        let sizeTxt = '';
+        let level = '';
+        let unitBasicAmt = '';
+        let img = '';
+        let htmlString = '';
+
+        if (data) {
+            const info = data.info;
+            seq1 = info.SEQ1 || '';
+            seq2 = info.SEQ2 || '';
+            controlNum = info.EST_NUM || info.CONTROL_NUM || '';
+            drawingNum = info.DRAWING_NUM || '';
+            materialTypeNm = info.MATERIAL_TYPE_NM || '';
+            sizeTxt = info.SIZE_TXT || '';
+            level = info.LEVEL || '';
+            unitBasicAmt = info.UNIT_BASIC_AMT || '';
+            img = info.IMG_GFILE_SEQ ? '<span class="fileSearchIcon" id="imageView" data-value="' + info.IMG_GFILE_SEQ + '" style="margin-left: 10px; vertical-align: middle; cursor: pointer"></span>' : '';
+            info.IMG_GFILE_SEQ
+            '<span class="fileSearchIcon" id="imageView" data-value="' + info.IMG_GFILE_SEQ + '" style="margin-left: 10px; vertical-align: middle; cursor: pointer"></span>'
+            // TODO: display : none;
+        }
+
+        htmlString += '<tr style="display: none;">';
+        htmlString += '    <td id="seq1">' + seq1 + '</td>';
+        htmlString += '    <td id="seq2">' + seq2 + '</td>';
+        htmlString += '</tr>';
+        htmlString += '<tr>';
+        htmlString += '    <td scope="row">관리번호</td>';
+        htmlString += '    <td>' + controlNum + '</td>';
+        htmlString += '</tr>';
+        htmlString += '<tr>';
+        htmlString += '    <td scope="row">도면번호</td>';
+        htmlString += '    <td>' + drawingNum + img + '</td>';
+        htmlString += '</tr>';
+        htmlString += '<tr>';
+        htmlString += '    <td scope="row">재질</td>';
+        htmlString += '    <td>' + materialTypeNm + '</td>';
+        htmlString += '</tr>';
+        htmlString += '<tr>';
+        htmlString += '    <td scope="row">규격</td>';
+        htmlString += '    <td>' + sizeTxt + '</td>';
+        htmlString += '</tr>';
+        htmlString += '<tr>';
+        htmlString += '    <td scope="row">규격 Level</td>';
+        htmlString += '    <td>' + level + '</td>';
+        htmlString += '</tr>';
+        htmlString += '<tr>';
+        htmlString += '    <td scope="row">기본가공비</td>';
+        htmlString += '    <td>' + unitBasicAmt + '</td>';
+        htmlString += '</tr>';
+
+        $('.basic_information > tbody').html(htmlString);
+    };
+
+    const createBotTable = function (data) {
+        // TODO: undefined 처리
+        if (data) {
+            const info = data.info;
+            for (let i = 1; i <= 15; i++) {
+                let str = String(i).padStart(2, '0') + '0';
+
+                $('#PROCESS_CNT_CST' + str).val(info['PROCESS_CNT_CST' + str] || ''); // TODO: input type number일 떄 undefined 들어가면 ?
+                $('#UNIT_AMT_CST' + str).val(info['UNIT_AMT_CST' + str] || '');
+            }
+
+            $('#TOTAL').val(info.TOTAL || '');
+        } else {
+            for (let i = 1; i <= 15; i++) {
+                let str = String(i).padStart(2, '0') + '0';
+
+                $('#PROCESS_CNT_CST' + str).val('');
+                $('#UNIT_AMT_CST' + str).val('');
+            }
+        }
+    };
+
+    const visibilityButton = function () {
+        let gridInstance;
+        let rowDataPrev;
+        let rowDataNext;
+
+        if (!(fnIsEmpty(processingRequirementsTargetGrid) && fnIsEmpty(processingRequirementsTargetRowIndex))) {
+            gridInstance = processingRequirementsTargetGrid.pqGrid('getInstance').grid;
+            rowDataPrev = gridInstance.getRowData({rowIndx: processingRequirementsTargetRowIndex + -1});
+            rowDataNext = gridInstance.getRowData({rowIndx: processingRequirementsTargetRowIndex + 1});
+        }
+
+        rowDataPrev === undefined ? $('#prev').css('visibility', 'hidden') : $('#prev').css('visibility', 'visible');
+        rowDataNext === undefined ? $('#next').css('visibility', 'hidden') : $('#next').css('visibility', 'visible');
+    };
+
+    const changeImageView = function (rowData) {
+        const imgGfileSeq = rowData.ORDER_IMG_GFILE_SEQ || rowData.IMG_GFILE_SEQ || '';
+
+        if (!(windowImageViewer === undefined || windowImageViewer.closed) && imgGfileSeq) {
+            $('.basic_information #imageView').trigger('click');
+        }
+    };
+
+    //TODO: 함수명 변경
+    const changeData = function () {
+        const rowData = processingRequirementsTargetGrid.pqGrid("getRowData", {rowIndx: processingRequirementsTargetRowIndex});
+        const $type = $('#processing_requirements_form').find('#TYPE');
+        const actionType = $type.val();
+
+        fnResetFrom('processing_requirements_form');
+        $type.val(actionType);
+        visibilityButton();
+        changeProcessingRequirementsBasicInformation(rowData);
+        changeProcessingRequirementsInformation(rowData);
+        if (isAssembly(rowData)) {
+            readOnlyProcessingRequirementsInformation(rowData);
+        }
+        changeBackgroundColor(rowData);
+        changeImageView(rowData);
+    };
+    /* function */
+
+    /* event */
+    $('#processingRequirementsModal #prev').on('click', function () {
+        if (isProcessingRequirementsDirty) {
+            fnAlert(null, '현재 수정중인 작업을 완료 후 다시 실행해 주세요.');
+            return
+        }
+
+        processingRequirementsTargetRowIndex--;
+        changeData();
+    });
+
+    $('#processingRequirementsModal #next').on('click', function () {
+        if (isProcessingRequirementsDirty) {
+            fnAlert(null, '현재 수정중인 작업을 완료 후 다시 실행해 주세요.');
+            return
+        }
+
+        processingRequirementsTargetRowIndex++;
+        changeData();
+    });
+
+    $('#processing_requirements_save').on('click', function () {
+        let $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
+        let postData = fnFormToJsonArrayData('#processing_requirements_form');
+        let url = '';
+
+        if ($processingRequirementsType === 'ESTIMATE') {
+            url = 'processingRequirementsEstimateSave';
+        } else if ($processingRequirementsType === 'CONTROL') {
+            url = 'processingRequirementsControlSave';
+        }
+
+        postData.TYPE = $processingRequirementsType;
+        postData.SEQ1 = $('.basic_information').find('#seq1').html();
+        postData.SEQ2 = $('.basic_information').find('#seq2').html();
+
+        let parameter = {'url': '/' + url, 'data': {data: JSON.stringify(postData)}};
+
+        fnPostAjax(function (data) {
+            const flag = data.flag;
+
+            if (flag) {
+                fnAlert(null, '<srping:message code="error.common"/>');
+                return;
+            }
+
+            fnAlert(null, "<spring:message code='com.alert.default.save.success' />");
+            isProcessingRequirementsDirty = false;
+        }, parameter, '');
+    });
+
+    $('#processing_requirements_form').on('change', function () {
+        isProcessingRequirementsDirty = true;
+    });
+
+    $(document).on('click', '.basic_information #imageView', function () {
+        const imgGfileSeq = $(this).data('value');
+
+        callWindowImageViewer(imgGfileSeq);
+    });
+    /* event */
 </script>
