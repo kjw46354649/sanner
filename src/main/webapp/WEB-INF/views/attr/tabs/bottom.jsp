@@ -1662,6 +1662,9 @@
 
                 $itemDetailPopForm.find("#PROJECT_NM").attr('title', dataInfo.PROJECT_NM);
                 $itemDetailPopForm.find("#PROJECT_NM").html(dataInfo.PROJECT_NM);
+
+                console.log(dataInfo);
+
                 $itemDetailPopForm.find("#OUTSIDE_CONFIRM_DT").html(dataInfo.OUTSIDE_CONFIRM_DT);
                 $itemDetailPopForm.find("#MATERIAL_ORDER_DT").html(dataInfo.MATERIAL_ORDER_DT);
 

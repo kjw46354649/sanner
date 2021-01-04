@@ -69,6 +69,7 @@
 .timeWrap:nth-child(3) .timeTit:before{background: url(../images/work/icon_3.png) no-repeat 0 0;}
 .timeWrap:nth-child(4) .timeTit:before{background: none;}
 .time{font-size: 24px; color: #2d2d2d;margin-left: 15px;}
+.time{font-size: 22px; color: #2d2d2d;margin-left: 15px;}
 .middleConts>div~div{margin-top:2px;}
 .tbl,.share,.qual{padding: 2px; text-align: center; color: #000; overflow: hidden; border: 1px solid #c2c2c2; border-radius: 5px; background: linear-gradient(to bottom, #fff, #f4f4f4);}
 /*.tbl table th{background: url(../images/work/bg_th.png) no-repeat 0 0; height: 44px; line-height: 44px; font-size: 20px; color: #000;font-weight: bold;}*/
@@ -208,9 +209,11 @@ button.close {
 .modal-end-content { position: relative; background-color: #fff; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid #999; border: 1px solid rgba(0, 0, 0, .2); border-radius: 6px;  -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5); box-shadow: 0 5px 15px rgba(0, 0, 0, .5); }
 .modal-end-body {position: relative; padding: 15px;}
 
-.modal-end-dialog-table-contents-end {border: 1px solid #6D90D0;padding: 5px;font-size: 18px;font-weight: 500;text-align: center;color: black;}
 .modal-end-dialog-table-header-end {border: 1px solid #818488;padding: 2px;font-size: 20px;font-weight: 600;text-align: center;color: #1d1d1d;height: 40px;background: #b4e4fa;}
+.modal-end-dialog-table-contents-end {border: 1px solid #6D90D0;padding: 5px;font-size: 18px;font-weight: 500;text-align: center;color: black;}
 
+.modal-reserve-dialog-table {padding: 5px;font-size: 18px;font-weight: 500;text-align: center;color: black;}
+.modal-reserve-dialog-text-table {padding: 5px;font-size: 30px;font-weight: bold;text-align: center;color: black;}
 
 
 /* drawing board srt popup*/

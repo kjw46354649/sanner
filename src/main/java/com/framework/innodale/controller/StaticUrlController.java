@@ -266,22 +266,4 @@ public class StaticUrlController {
     public String outsideDetailController(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return "/common/outside_detail";
     }
-
-    /**
-     * 외주현황 상세 List
-     * @param model
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/processingRequirements/{path}")
-    public ModelAndView processingRequirementsController(@PathVariable("path") String path, HttpServletRequest req, HttpServletResponse res) throws Exception {
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.setViewName("/common/processing_requirements");
-        modelAndView.addObject("path", path);
-
-        return modelAndView;
-    }
 }

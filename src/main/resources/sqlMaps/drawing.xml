@@ -4,13 +4,14 @@
 <mapper namespace="drawingMapper">
 
     <select id="selectDrawingEquipmentInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT EQUIP_SEQ, EQUIP_NM, FACTORY_AREA
-        FROM TBL_EQUIP
+        SELECT A.EQUIP_SEQ, A.EQUIP_NM, A.FACTORY_AREA, B.USER_ID, B.USER_NM, B.PHOTO_GFILE_SEQ
+        FROM TBL_EQUIP A
+        	LEFT OUTER JOIN TBL_USER B ON A.LOGIN_USER_ID = B.USER_ID
         WHERE 1 = 1
-            AND EQUIP_KIND = '1'
-          	AND PROCESS_TYPE IN ('MPR010', 'MPR020', 'MPR030', 'MPR040')
-            AND DEL_YN ='N'
-            AND EQUIP_NM = #{EQUIP_NM}
+            AND A.EQUIP_KIND = '1'
+          	AND A.PROCESS_TYPE IN ('MPR010', 'MPR020', 'MPR030', 'MPR040')
+            AND A.DEL_YN ='N'
+            AND A.EQUIP_NM = #{EQUIP_NM}
     </select>
 
     <select id="selectDrawingAreaList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
