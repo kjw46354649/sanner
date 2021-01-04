@@ -1438,7 +1438,7 @@
                 }
             },*/
             {
-                title: '가공요건', width: 60, dataIndx: 'DETAIL_MACHINE_REQUIREMENT',
+                title: '가공요건', width: 85, dataIndx: 'DETAIL_MACHINE_REQUIREMENT',
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
