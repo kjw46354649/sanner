@@ -480,8 +480,10 @@
             </if>
             LEFT OUTER JOIN TBL_OUTSIDE_CLOSE C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                 AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_OUTSIDE_CLOSE_NOTE D ON C.CLOSE_MONTH = D.CLOSE_MONTH
-                                AND C.CLOSE_VER = D.CLOSE_VER AND A.COMP_CD = D.COMP_CD AND A.ORDER_COMP_CD = D.OUTSIDE_COMP_CD
+            LEFT OUTER JOIN TBL_OUTSIDE_CLOSE_NOTE D ON  D.CLOSE_MONTH = C.CLOSE_MONTH
+                                AND D.CLOSE_VER = C.CLOSE_VER
+     							<!-- AND D.COMP_CD = A.COMP_CD -->
+                                AND D.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD
             LEFT OUTER JOIN TBL_INSPECT E ON B.CONTROL_SEQ = E.CONTROL_SEQ
                                                      AND B.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
                                                      AND E.INSPECT_SEQ = (SELECT MAX(INSPECT_SEQ)
