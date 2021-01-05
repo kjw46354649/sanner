@@ -34,7 +34,7 @@
     <style type="text/css">
 
         html {
-            cursor: none;
+            /*cursor: none;*/
        	}
 
         .dhx_message__icon{
@@ -379,7 +379,7 @@
                     <div class="contsTitWrap" id="workMainProgressConts" style="">
                         <div class="contsTit blink-blue"><srping:message key='drawing.board.label.13'/></div>
                         <div class="right_sort">
-                            <button type="button" id="reserveBtn" class="reserveDbDisableBtn"><input id="reserveChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;" disabled="disabled" />예약</button>&nbsp;
+                            <button type="button" id="reserveBtn" class="reserveDbDisableBtn"><input id="reserveChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;"  />예약</button>&nbsp;
                             <button type="button" id="workCancelBtn" class="graDbBtn red"><srping:message key='drawing.board.button.06'/></button>&nbsp;
                             <button type="button" id="workPuaseBtn" class="graDbBtn yellow"><srping:message key='drawing.board.button.07'/></button>&nbsp;
                             <button type="button" id="workCompletelBtn" class="graDbBtn purple"><srping:message key='drawing.board.button.08'/></button>
@@ -402,16 +402,16 @@
                         <div class="timeWrap">
                             <span class="timeTit"><srping:message key='drawing.board.button.03'/></span>
                             <span class="time" id="stopTimeInfo">
-                                <c:if test="${not empty workInfo}">${workInfo.STOP_MINUTE}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/>
-                                <c:if test="${not empty workInfo}">${workInfo.STOP_SECOND}</c:if> &nbsp;<srping:message key='drawing.board.label.01'/>
+                                <c:if test="${not empty workInfo}">${workInfo.STOP_MINUTE}</c:if>&nbsp;<srping:message key='drawing.board.label.02'/>
+                                <c:if test="${not empty workInfo}">${workInfo.STOP_SECOND}</c:if>&nbsp;<srping:message key='drawing.board.label.01'/>
                             </span>
                         </div>
                         <div class="timeWrap <c:if test="${workInfo.DATA_TYPE eq 'CUR'}">yellowBackground</c:if>">
                             <span style="padding-top: 3px;" class="timeTit <c:if test="${workInfo.DATA_TYPE eq 'CUR'}">sandglass</c:if><c:if test="${workInfo.DATA_TYPE ne 'CUR'}">sandglass_stop</c:if>">
                                 <srping:message key='drawing.board.button.04'/></span>
                             <span class="time" id="workTimeInfo">
-                                <c:if test="${not empty workInfo}">${workInfo.WORK_MINUTE}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/>
-                                <c:if test="${not empty workInfo}">${workInfo.WORK_SECOND}</c:if> &nbsp;<srping:message key='drawing.board.label.01'/>
+                                <c:if test="${not empty workInfo}">${workInfo.WORK_MINUTE}</c:if>&nbsp;<srping:message key='drawing.board.label.02'/>
+                                <c:if test="${not empty workInfo}">${workInfo.WORK_SECOND}</c:if>&nbsp;<srping:message key='drawing.board.label.01'/>
                             </span>
                         </div>
                     </div>
@@ -501,9 +501,9 @@
                                     <img id="reserveMinuteUpBtn" src="/resource/asset/images/common/arrow_up.png">
                                 </td>
                                 <td class="modal-reserve-dialog-table" rowspan="3">
-                                    <button type="button" id="reserveEndCheckBtn" class="graDbBtn gray"><input id="reserveEndChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;" disabled="disabled" />종&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;료</button>
+                                    <button type="button" id="reserveEndCheckBtn" class="graDbBtn gray"><input id="reserveEndChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;"  />종&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;료</button>
                                     <br/>&nbsp;<br/>
-                                    <button type="button" id="reservePauseCheckBtn" class="graDbBtn gray"><input id="reservePauseChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;" disabled="disabled" />일시정지</button>
+                                    <button type="button" id="reservePauseCheckBtn" class="graDbBtn gray"><input id="reservePauseChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;" />일시정지</button>
                                 </td>
                             </tr>
                             <tr>
@@ -528,7 +528,7 @@
                     <div style="text-align: center;">
                         <button type="button" id="reserveSaveBtn" class="reservePopBtn blue">저장</button>
                         <button type="button" id="reserveCloseBtn" class="reservePopBtn yellow" >닫기</button>
-                        <button type="button" id="reserveCancelBtn" class="reservePopBtn gray" style="display: none;">예약취소</button>
+                        <button type="button" id="reserveCancelBtn" class="reservePopBtn red" style="display: none;">예약취소</button>
                     </div>
                 </div>
             </div>
@@ -886,8 +886,8 @@
                         minutes = 0;
                         hours++;
                     }
-                    $("#stopSeconds").html(seconds + '<srping:message key='drawing.board.label.01'/>');
-                    $("#stopMinutes").html(minutes + '<srping:message key='drawing.board.label.02'/>');
+                    $("#stopSeconds").html(seconds + '&nbsp;<srping:message key='drawing.board.label.01'/>');
+                    $("#stopMinutes").html(minutes + '&nbsp;<srping:message key='drawing.board.label.02'/>');
                 }, 1000);
                 $("#drawing_worker_stop_popup").bind('style', function(e) {
                     let style =  $(this).attr('style');
@@ -1274,7 +1274,7 @@
                             seconds = 0;
                             minutes++;
                         }
-                        let workTimeHtml = minutes + '<srping:message key='drawing.board.label.02'/>' + '&nbsp;' + seconds + '<srping:message key='drawing.board.label.01'/>'
+                        let workTimeHtml = minutes + '&nbsp;<srping:message key='drawing.board.label.02'/>&nbsp;' + seconds + '&nbsp;<srping:message key='drawing.board.label.01'/>'
                         $("#workTimeInfo").html(workTimeHtml);
                     }
                 }, 1000);
