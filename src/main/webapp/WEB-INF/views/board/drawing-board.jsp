@@ -331,6 +331,7 @@
                 <input id="RE_BARCODE_NUM" name="RE_BARCODE_NUM" type="hidden" value="">
                 <input id="WORK_MINUTE" name="WORK_MINUTE" type="hidden" value="${workInfo.WORK_MINUTE}">
                 <input id="WORK_SECOND" name="WORK_SECOND" type="hidden" value="${workInfo.WORK_SECOND}">
+                <input id="WORK_STATUS" name="WORK_STATUS" type="hidden" value="${workInfo.WORK_STATUS}">
             </form>
             <form id="re_start_work_info_form" name="re_start_work_info_form" method="POST" onsubmit="return false;">
                 <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${reStartWorkinfo.CONTROL_SEQ}">
@@ -1263,23 +1264,31 @@
 
         let setFocusBody = function(){
             $("#bodyWrap").focus();
+            let workStatus = $("#drawing_action_form").find("#WORK_STATUS").val();
             let minutes = $("#drawing_action_form").find("#WORK_MINUTE").val();
             let seconds = $("#drawing_action_form").find("#WORK_SECOND").val();
             let dataType = $("#drawing_action_form").find("#DATA_TYPE").val();
-            if( dataType === "CUR"){
-                workTimeInterval = setInterval(function() {
-                    if (!workTimeIntervalIsPause){
-                        seconds++;
-                        if (seconds == 60) {
-                            seconds = 0;
-                            minutes++;
+
+            if (dataType === "CUR") {
+                if(workStatus == 'DBS010'){
+                    $("#drawing_worker_stop_popup").css("display", "block");
+                    $(".bodyWrap").addClass("modal-open-body");
+                    workTimeIntervalIsPause = true;
+                }else{
+                    workTimeInterval = setInterval(function () {
+                        if (!workTimeIntervalIsPause) {
+                            seconds++;
+                            if (seconds == 60) {
+                                seconds = 0;
+                                minutes++;
+                            }
+                            let workTimeHtml = minutes + '&nbsp;<srping:message key='drawing.board.label.02'/>&nbsp;' + seconds + '&nbsp;<srping:message key='drawing.board.label.01'/>'
+                            $("#workTimeInfo").html(workTimeHtml);
                         }
-                        let workTimeHtml = minutes + '&nbsp;<srping:message key='drawing.board.label.02'/>&nbsp;' + seconds + '&nbsp;<srping:message key='drawing.board.label.01'/>'
-                        $("#workTimeInfo").html(workTimeHtml);
-                    }
-                }, 1000);
+                    }, 1000);
+                    $("#bodyWrap").focus();
+                }
             }
-            $("#bodyWrap").focus();
         }
 
         let showMessage = function(message){
