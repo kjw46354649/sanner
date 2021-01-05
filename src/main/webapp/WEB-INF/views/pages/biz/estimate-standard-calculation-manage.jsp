@@ -388,7 +388,7 @@
         const materialCostColModel = [
             {title: 'GROUP_KEY', dataIndx: 'GROUP_KEY', hidden: true, editable: false},
             {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true, editable: false},
-            {title: 'CALC_SEQ', dataIndx: 'CALC_SEQ', hidden: true, editable: false},
+            {title: 'SEQ', dataIndx: 'CALC_SEQ', maxWidth: 55, hidden: false, editable: false},
             {
                 title: '소재형태', dataIndx: 'MATERIAL_KIND', maxWidth: 60, styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029')},
@@ -668,7 +668,7 @@
         const materialCloseGridId = 'material_close_grid';
         const materialCloseColModel = [
             {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true, editable: false},
-            {title: 'CALC_SEQ', dataIndx: 'CALC_SEQ', hidden: true, editable: false},
+            {title: 'SEQ', dataIndx: 'CALC_SEQ', maxWidth: 55, hidden: false, editable: false},
             {
                 title: '반영항목', dataIndx: 'FINISH_TYPE_1',
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: materialCloseReflectedItems},
@@ -843,7 +843,7 @@
         const postProcessingGridId = 'post_processing_grid';
         const postProcessingColModel = [
             {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true, editable: false},
-            {title: 'CALC_SEQ', dataIndx: 'CALC_SEQ', hidden: true, editable: false},
+            {title: 'SEQ', dataIndx: 'CALC_SEQ', maxWidth: 55, hidden: false, editable: false},
             {
                 title: '반영항목', dataIndx: 'FINISH_TYPE_1',
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: postProcessingReflectedItems},
@@ -1017,7 +1017,7 @@
         const surfaceTreatmentCostGridId = 'surface_treatment_cost_grid';
         const surfaceTreatmentCostColModel = [
             {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true, editable: false},
-            {title: 'CALC_SEQ', dataIndx: 'CALC_SEQ', hidden: true, editable: false},
+            {title: 'SEQ', dataIndx: 'CALC_SEQ', maxWidth: 55, hidden: false, editable: false},
             {
                 title: '재질', dataIndx: 'MATERIAL_TYPE',
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1035')},
@@ -1163,7 +1163,7 @@
         let processCostPostData = fnFormToJsonArrayData('#process_cost_form');
         const processCostColModel = [
             {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true, editable: false},
-            {title: 'CALC_SEQ', dataIndx: 'CALC_SEQ', hidden: true, editable: false},
+            {title: 'SEQ', dataIndx: 'CALC_SEQ', maxWidth: 55, hidden: false, editable: false},
             {
                 title: '소재형태', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029')},
@@ -1308,7 +1308,7 @@
         const processCostFactorGridId = 'process_cost_factor_grid';
         const processCostFactorColModel = [
             {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true, editable: false},
-            {title: 'CALC_SEQ', dataIndx: 'CALC_SEQ', hidden: true},
+            {title: 'SEQ', dataIndx: 'CALC_SEQ', maxWidth: 55, hidden: false},
             {title: 'Code', dataIndx: 'FACTOR_CD'},
             {title: 'Level1', dataIndx: 'LEVEL_1'},
             {title: 'Level2', dataIndx: 'LEVEL_2'},
