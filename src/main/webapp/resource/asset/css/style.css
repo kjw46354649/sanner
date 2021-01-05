@@ -169,7 +169,7 @@
 .mct .tableWrap ul li .table .titleWrap .equipLabel > span + span { margin-left: 10px; }
 .mct .tableWrap ul li .table .titleWrap .data_ipt { margin-left: 10px; }
 .mct .tableWrap ul li .table .titleWrap .listTxt { display: inline-block; }
-.mct .tableWrap ul li .table .titleWrap .listTxt span { font-size: 12px; color: #000; font-family: 'NotoKrR'; padding: 0 5px; border-right: 1px solid #ababab; }
+.mct .tableWrap ul li .table .titleWrap .listTxt span { display: inline-block; font-size: 12px; color: #000; font-family: 'NotoKrR'; padding: 0 5px; border-right: 1px solid #ababab; text-align: center; }
 .mct .tableWrap ul li .table .titleWrap .listTxt span:last-child { border: 0; }
 .mct .tableWrap ul li .table .titleWrap .totalNumber { float: right; display: inline-block; font-family: 'NotoKrB'; font-size: 12px; color: #003389; line-height: inherit; margin-right: 10px }
 .mct .table .listWrap { position: relative; }

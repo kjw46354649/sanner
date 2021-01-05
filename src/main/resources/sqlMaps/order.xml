@@ -3089,6 +3089,7 @@
         SELECT
             ROW_NUMBER () OVER() AS ROW_NUM
             , B.CALC_SEQ
+            , A.GROUP_CD
             , A.FACTOR_CD
             , A.LEVEL_1
             , A.LEVEL_2
