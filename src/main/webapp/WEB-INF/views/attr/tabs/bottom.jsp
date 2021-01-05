@@ -596,6 +596,10 @@
                             <td scope="row">기본가공비</td>
                             <td></td>
                         </tr>
+                        <tr>
+                            <td scope="row">총가공비</td>
+                            <td></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -603,108 +607,11 @@
                 <div>
                     <form id="processing_requirements_form" role="form" onsubmit="return false;">
                         <input type="hidden" name="TYPE" id="TYPE">
+                        <input type="hidden" name="WORK_TYPE" id="WORK_TYPE">
                         <input type="hidden" name="SEQ1" id="SEQ1">
                         <input type="hidden" name="SEQ2" id="SEQ2">
-                        <table class="processing_requirements_information">
-                            <thead>
-                            <tr>
-                                <th colspan="4">가공요건정보</th>
-                            </tr>
-                            <tr>
-                                <th colspan="2">항목</th>
-                                <th>Count</th>
-                                <th>Cost</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td class="e fw-bold" colspan="2">밀링가공 면수</td>
-                                <td><input type="number" name="PROCESS_CNT_CST010" id="PROCESS_CNT_CST010"></td>
-                                <td><input type="number" name="UNIT_AMT_CST010" id="UNIT_AMT_CST010" readonly></td>
-                            </tr>
-                            <tr>
-                                <td class="e fw-bold" colspan="2">TAP 면수</td>
-                                <td><input type="number" name="PROCESS_CNT_CST020" id="PROCESS_CNT_CST020"></td>
-                                <td><input type="number" name="UNIT_AMT_CST020" id="UNIT_AMT_CST020" readonly></td>
-                            </tr>
-                            <tr>
-                                <td class="e fw-bold" rowspan="2">치수 공차</td>
-                                <td class="e ta-l">일반</td>
-                                <td><input type="number" name="PROCESS_CNT_CST030" id="PROCESS_CNT_CST030"></td>
-                                <td><input type="number" name="UNIT_AMT_CST030" id="UNIT_AMT_CST030" readonly></td>
-                            </tr>
-                            <tr>
-                                <td class="e ta-l">정밀(~0.02)</td>
-                                <td><input type="number" name="PROCESS_CNT_CST040" id="PROCESS_CNT_CST040"></td>
-                                <td><input type="number" name="UNIT_AMT_CST040" id="UNIT_AMT_CST040" readonly></td>
-                            </tr>
-                            <tr>
-                                <td class="e fw-bold" rowspan="2">외곽가공</td>
-                                <td class="e ta-l">15T 이하</td>
-                                <td><input type="number" name="PROCESS_CNT_CST050" id="PROCESS_CNT_CST050"></td>
-                                <td><input type="number" name="UNIT_AMT_CST050" id="UNIT_AMT_CST050" readonly></td>
-                            </tr>
-                            <tr>
-                                <td class="e ta-l">15T 초과</td>
-                                <td><input type="number" name="PROCESS_CNT_CST060" id="PROCESS_CNT_CST060"></td>
-                                <td><input type="number" name="UNIT_AMT_CST060" id="UNIT_AMT_CST060" readonly></td>
-                            </tr>
-                            <tr>
-                                <td class="e fw-bold" rowspan="2">일반포켓</td>
-                                <td class="e ta-l">15T 이하</td>
-                                <td><input type="number" name="PROCESS_CNT_CST070" id="PROCESS_CNT_CST070"></td>
-                                <td><input type="number" name="UNIT_AMT_CST070" id="UNIT_AMT_CST070" readonly></td>
-                            </tr>
-                            <tr>
-                                <td class="e ta-l">15T 초과</td>
-                                <td><input type="number" name="PROCESS_CNT_CST080" id="PROCESS_CNT_CST080"></td>
-                                <td><input type="number" name="UNIT_AMT_CST080" id="UNIT_AMT_CST080" readonly></td>
-                            </tr>
-                            <tr>
-                                <td class="e fw-bold" rowspan="2">관통포켓</td>
-                                <td class="e ta-l">15T 이하</td>
-                                <td><input type="number" name="PROCESS_CNT_CST090" id="PROCESS_CNT_CST090"></td>
-                                <td><input type="number" name="UNIT_AMT_CST090" id="UNIT_AMT_CST090" readonly></td>
-                            </tr>
-                            <tr>
-                                <td class="e ta-l">15T 초과</td>
-                                <td><input type="number" name="PROCESS_CNT_CST100" id="PROCESS_CNT_CST100"></td>
-                                <td><input type="number" name="UNIT_AMT_CST100" id="UNIT_AMT_CST100" readonly></td>
-                            </tr>
-                            <tr>
-                                <td class="e fw-bold" colspan="2">Hole</td>
-                                <td><input type="number" name="PROCESS_CNT_CST110" id="PROCESS_CNT_CST110"></td>
-                                <td><input type="number" name="UNIT_AMT_CST110" id="UNIT_AMT_CST110" readonly></td>
-                            </tr>
-                            <tr>
-                                <td class="e fw-bold" colspan="2">TAP</td>
-                                <td><input type="number" name="PROCESS_CNT_CST120" id="PROCESS_CNT_CST120"></td>
-                                <td><input type="number" name="UNIT_AMT_CST120" id="UNIT_AMT_CST120" readonly></td>
-                            </tr>
-                            <tr>
-                                <td class="e fw-bold" colspan="2">공차 Hole</td>
-                                <td><input type="number" name="PROCESS_CNT_CST130" id="PROCESS_CNT_CST130"></td>
-                                <td><input type="number" name="UNIT_AMT_CST130" id="UNIT_AMT_CST130" readonly></td>
-                            </tr>
-                            <tr>
-                                <td class="e fw-bold" colspan="2">특수 Hole</td>
-                                <td><input type="number" name="PROCESS_CNT_CST140" id="PROCESS_CNT_CST140"></td>
-                                <td><input type="number" name="UNIT_AMT_CST140" id="UNIT_AMT_CST140" readonly></td>
-                            </tr>
-                            <tr>
-                                <td class="e fw-bold" colspan="2">C/B</td>
-                                <td><input type="number" name="PROCESS_CNT_CST150" id="PROCESS_CNT_CST150"></td>
-                                <td><input type="number" name="UNIT_AMT_CST150" id="UNIT_AMT_CST150" readonly></td>
-                            </tr>
-                            </tbody>
-                            <tfoot>
-                            <tr>
-                                <td colspan="3">Total</td>
-                                <td><input type="number" id="TOTAL"></td>
-                            </tr>
-                            </tfoot>
-                        </table>
                     </form>
+                    <div id="processing_requirements_grid"></div>
                 </div>
             </div>
             <div class="modal-footer" style="text-align: center !important">
@@ -734,7 +641,8 @@
 
     let g_ItemDetailPopGrid04;
     // let $camWorkManagePopGrid;
-    let isProcessingRequirementsDirty = Boolean(false);
+
+    let $processingRequirementsGrid;
     let processingRequirementsTargetGrid;
     let processingRequirementsTargetRowIndex = [];
 
@@ -2238,10 +2146,99 @@
                 processingRequirementsTargetRowIndex = Number(selectedOrderManagementRowIndex[0]);
             }
 
+            const processingRequirementsGridId = 'processing_requirements_grid';
+            const processingRequirementsColModel = [
+                {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+                {title: 'CALC_SEQ', dataType: 'integer', dataIndx: 'CALC_SEQ', hidden: true},
+                {title: 'FACTOR_CD', dataIndx: 'FACTOR_CD', hidden: true},
+                {
+                    title: '가공요건정보', align: 'center', styleHead: {'background':'#ffd966'}, colModel: [
+                        {title: '항목1', dataIndx: 'LEVEL_1', style: {'background': '#fff2cc', 'font-weight': 'bold'}},
+                        {title: '항목2', dataIndx: 'LEVEL_2', align: 'left', style: {'background': '#fff2cc', 'font-weight': 'bold'}},
+                        {
+                            title: 'Count', dataType: 'integer', format: '#,###', dataIndx: 'PROCESS_CNT',
+                            editable: function () {
+                                return $('#processing_requirements_form').find('#WORK_TYPE').val() !== 'WTP020';
+                            },
+                            render: function () {
+                                let style = null;
+
+                                if ($('#processing_requirements_form').find('#WORK_TYPE').val() === 'WTP020'){
+                                    style = 'background: #dbdbdb';
+                                }
+
+                                return {style: style};
+                            }
+                        },
+                        {
+                            title: 'Cost', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT',
+                            style: {'background': '#dbdbdb'}
+                        },
+                    ]
+                },
+            ];
+            const processingRequirementsObj = {
+                height: 500,
+                collapsible: false,
+                showTitle: false,
+                strNoRows: g_noData,
+                // rowHtHead: 15,
+                sortModel: {on: false},
+                copyModel: {render: true},
+                numberCell: {show: false},
+                trackModel: {on: true},
+                editable: false,
+                columnTemplate: {
+                    align: 'center', halign: 'center', hvalign: 'center', valign: 'center',
+                    styleHead: {'background':'#ffd966'}
+                },
+                editModel: {clicksToEdit: 1},
+                colModel: processingRequirementsColModel,
+                scrollModel: {autoFit: true},
+                dataModel: {
+                    location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                    postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
+                    getData: function (dataJSON) {
+                        return {data: dataJSON.data};
+                    }
+                },
+                editorKeyDown: function (evt, ui) {
+                    if (evt.keyCode === 9 || evt.keyCode === 13) {
+                        evt.originalEvent.keyCode = 40; //disguise down key.
+                    }
+                },
+                cellSave: function (evt, ui) {
+                    if (ui.newVal === null || ui.newVal === '') {
+                        this.updateRow({
+                            rowIndx: ui.rowIndx,
+                            row: {[ui.dataIndx]: undefined}
+                        });
+                    }
+                },
+                beforePaste: function (evt, ui) {
+                    let CM = this.getColModel(),
+                        rows = ui.rows,
+                        area = ui.areas[0],
+                        //r1 = area.r1,
+                        c1 = area.c1;
+                    for (let i = 0; i < rows.length; i++) {
+                        let row = rows[i];
+                        for (let j = 0; j < row.length; j++) {
+                            let column = CM[j + c1],
+                                dt = column.dataType;
+                            if (dt === 'integer' || dt === 'float') {
+                                row[j] = row[j].replace(/[^(\d|.)]/g, '');
+                            }
+                        }
+                    }
+                }
+            };
+
+            $processingRequirementsGrid = $('#' + processingRequirementsGridId).pqGrid(processingRequirementsObj);
             changeData();
         },
         'hide.bs.modal': function () {
-            isProcessingRequirementsDirty = false;
+            $processingRequirementsGrid.pqGrid('destroy');
         }
     });
 
@@ -2281,37 +2278,11 @@
         postData.TYPE = $processingRequirementsType;
         postData.SEQ1 = $('.basic_information').find('#seq1').html();
         postData.SEQ2 = $('.basic_information').find('#seq2').html();
-        let parameter = {'url': '/json-info', 'data': postData};
 
-        fnPostAjax(function (data) {
-            createBotTable(data);
-        }, parameter, '');
-    };
-
-    const isAssembly = function (rowData) {
-        return rowData.WORK_TYPE === 'WTP020';
-    }
-
-    const readOnlyProcessingRequirementsInformation = function () {
-        for (let i = 1; i <= 15; i++) {
-            let str = String(i).padStart(2, '0') + '0';
-
-            $('#PROCESS_CNT_CST' + str).prop('readonly', true);
-        }
-    };
-
-    const changeBackgroundColor = function (rowData) {
-        const flag = isAssembly(rowData.WORK_TYPE);
-
-        for (let i = 1; i <= 15; i++) {
-            let str = String(i).padStart(2, '0') + '0';
-
-            $('#PROCESS_CNT_CST' + str).parent().removeClass('readonly');
-
-            if (flag) {
-                $('#PROCESS_CNT_CST' + str).parent().addClass('readonly')
-            }
-        }
+        $processingRequirementsGrid.pqGrid('option', 'dataModel.postData', function () {
+            return postData;
+        });
+        $processingRequirementsGrid.pqGrid('refreshDataAndView');
     };
 
     const createTopTable = function (data) {
@@ -2323,6 +2294,7 @@
         let sizeTxt = '';
         let level = '';
         let unitBasicAmt = '';
+        let totalProcessingCost = '';
         let img = '';
         let htmlString = '';
 
@@ -2334,12 +2306,10 @@
             drawingNum = info.DRAWING_NUM || '';
             materialTypeNm = info.MATERIAL_TYPE_NM || '';
             sizeTxt = info.SIZE_TXT || '';
-            level = info.LEVEL || '';
+            level = info.SIZE_LEVEL || '';
             unitBasicAmt = info.UNIT_BASIC_AMT || '';
+            totalProcessingCost = info.TOTAL_PROCESSING_COST || '';
             img = info.IMG_GFILE_SEQ ? '<span class="fileSearchIcon" id="imageView" data-value="' + info.IMG_GFILE_SEQ + '" style="margin-left: 10px; vertical-align: middle; cursor: pointer"></span>' : '';
-            info.IMG_GFILE_SEQ
-            '<span class="fileSearchIcon" id="imageView" data-value="' + info.IMG_GFILE_SEQ + '" style="margin-left: 10px; vertical-align: middle; cursor: pointer"></span>'
-            // TODO: display : none;
         }
 
         htmlString += '<tr style="display: none;">';
@@ -2370,30 +2340,12 @@
         htmlString += '    <td scope="row">기본가공비</td>';
         htmlString += '    <td>' + unitBasicAmt + '</td>';
         htmlString += '</tr>';
+        htmlString += '<tr>';
+        htmlString += '    <td scope="row">총가공비</td>';
+        htmlString += '    <td>' + totalProcessingCost + '</td>'; //FIXME:
+        htmlString += '</tr>';
 
         $('.basic_information > tbody').html(htmlString);
-    };
-
-    const createBotTable = function (data) {
-        // TODO: undefined 처리
-        if (data) {
-            const info = data.info;
-            for (let i = 1; i <= 15; i++) {
-                let str = String(i).padStart(2, '0') + '0';
-
-                $('#PROCESS_CNT_CST' + str).val(info['PROCESS_CNT_CST' + str] || ''); // TODO: input type number일 떄 undefined 들어가면 ?
-                $('#UNIT_AMT_CST' + str).val(info['UNIT_AMT_CST' + str] || '');
-            }
-
-            $('#TOTAL').val(info.TOTAL || '');
-        } else {
-            for (let i = 1; i <= 15; i++) {
-                let str = String(i).padStart(2, '0') + '0';
-
-                $('#PROCESS_CNT_CST' + str).val('');
-                $('#UNIT_AMT_CST' + str).val('');
-            }
-        }
     };
 
     const visibilityButton = function () {
@@ -2419,28 +2371,27 @@
         }
     };
 
+    const isProcessingRequirementsGridDirty = function () {
+        let gridInstance = $processingRequirementsGrid.pqGrid('getInstance').grid;
+
+        return gridInstance.isDirty();
+    };
+
     //TODO: 함수명 변경
     const changeData = function () {
-        const rowData = processingRequirementsTargetGrid.pqGrid("getRowData", {rowIndx: processingRequirementsTargetRowIndex});
-        const $type = $('#processing_requirements_form').find('#TYPE');
-        const actionType = $type.val();
+        const rowData = processingRequirementsTargetGrid.pqGrid('getRowData', {rowIndx: processingRequirementsTargetRowIndex});
+        $('#processing_requirements_form').find('#WORK_TYPE').val(rowData.WORK_TYPE);
 
-        fnResetFrom('processing_requirements_form');
-        $type.val(actionType);
         visibilityButton();
         changeProcessingRequirementsBasicInformation(rowData);
         changeProcessingRequirementsInformation(rowData);
-        if (isAssembly(rowData)) {
-            readOnlyProcessingRequirementsInformation(rowData);
-        }
-        changeBackgroundColor(rowData);
         changeImageView(rowData);
     };
     /* function */
 
     /* event */
     $('#processingRequirementsModal #prev').on('click', function () {
-        if (isProcessingRequirementsDirty) {
+        if (isProcessingRequirementsGridDirty()) {
             fnAlert(null, '현재 수정중인 작업을 완료 후 다시 실행해 주세요.');
             return
         }
@@ -2450,7 +2401,7 @@
     });
 
     $('#processingRequirementsModal #next').on('click', function () {
-        if (isProcessingRequirementsDirty) {
+        if (isProcessingRequirementsGridDirty()) {
             fnAlert(null, '현재 수정중인 작업을 완료 후 다시 실행해 주세요.');
             return
         }
@@ -2460,37 +2411,37 @@
     });
 
     $('#processing_requirements_save').on('click', function () {
-        let $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
-        let postData = fnFormToJsonArrayData('#processing_requirements_form');
-        let url = '';
+        if (isProcessingRequirementsGridDirty()) {
+            let $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
+            let $basicInformation = $('.basic_information');
+            let gridInstance = $processingRequirementsGrid.pqGrid('getInstance').grid;
+            let changes = gridInstance.getChanges({format: 'byVal'});
+            changes.TYPE = $processingRequirementsType;
+            changes.SEQ1 = $basicInformation.find('#seq1').html();
+            changes.SEQ2 = $basicInformation.find('#seq2').html();
+            let url = '';
 
-        if ($processingRequirementsType === 'ESTIMATE') {
-            url = 'processingRequirementsEstimateSave';
-        } else if ($processingRequirementsType === 'CONTROL') {
-            url = 'processingRequirementsControlSave';
-        }
-
-        postData.TYPE = $processingRequirementsType;
-        postData.SEQ1 = $('.basic_information').find('#seq1').html();
-        postData.SEQ2 = $('.basic_information').find('#seq2').html();
-
-        let parameter = {'url': '/' + url, 'data': {data: JSON.stringify(postData)}};
-
-        fnPostAjax(function (data) {
-            const flag = data.flag;
-
-            if (flag) {
-                fnAlert(null, '<srping:message code="error.common"/>');
-                return;
+            if ($processingRequirementsType === 'ESTIMATE') {
+                url = 'processingRequirementsEstimateSave';
+            } else if ($processingRequirementsType === 'CONTROL') {
+                url = 'processingRequirementsControlSave';
             }
 
-            fnAlert(null, "<spring:message code='com.alert.default.save.success' />");
-            isProcessingRequirementsDirty = false;
-        }, parameter, '');
-    });
+            let parameter = {'url': '/' + url, 'data': {data: JSON.stringify(changes)}};
 
-    $('#processing_requirements_form').on('change', function () {
-        isProcessingRequirementsDirty = true;
+            fnPostAjax(function (data) {
+                const flag = data.flag;
+
+                if (flag) {
+                    fnAlert(null, '<srping:message code="error.common"/>');
+                    return;
+                }
+
+                fnAlert(null, "<spring:message code='com.alert.default.save.success' />");
+                $processingRequirementsGrid.pqGrid('refreshDataAndView');
+                // isProcessingRequirementsDirty = false;
+            }, parameter, '');
+        }
     });
 
     $(document).on('click', '.basic_information #imageView', function () {

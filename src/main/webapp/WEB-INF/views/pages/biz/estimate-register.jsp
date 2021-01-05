@@ -403,14 +403,14 @@
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-            {title: '소재마감', align: "center", colModel:[
-                    {title: 'TM각비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', width: 70, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        editor: {
-                            type: 'select',
-                            valueIndx: "value",
-                            labelIndx: "text",
-                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010'),
-                        },
+            {
+                title: '소재마감', align: 'center',
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                colModel: [
+                    {
+                        title: 'TM각비', width: 70, dataIndx: 'MATERIAL_FINISH_TM',
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')},
                         render: function (ui) {
                             let cellData = ui.cellData;
 
@@ -432,13 +432,18 @@
                             }
                         }
                     },
-                    {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', width: 70, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        editor: {
-                            type: 'select',
-                            valueIndx: "value",
-                            labelIndx: "text",
-                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020'),
-                        },
+                ]
+            },
+
+
+            {
+                title: '후가공', align: 'center',
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                colModel: [
+                    {
+                        title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND',
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
                         render: function (ui) {
                             let cellData = ui.cellData;
 
@@ -460,13 +465,10 @@
                             }
                         }
                     },
-                    {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', width: 70, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                        editor: {
-                            type: 'select',
-                            valueIndx: "value",
-                            labelIndx: "text",
-                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030'),
-                        },
+                    {
+                        title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT',
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
                         render: function (ui) {
                             let cellData = ui.cellData;
 
@@ -487,8 +489,8 @@
                                 return (index < 0) ? cellData : workFactory[index].text;
                             }
                         }
-                    },
-                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
+                    }
+                ]
             },
             {
                 title: '상세 가공요건', width: 85,
@@ -531,24 +533,24 @@
                     {title:'길이', dataType: 'float', dataIndx: 'SIZE_L_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} }
                 ], hidden: true},
             {title: '자동계산 견적가', align: "center", colModel:[
-                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', format: '#,###'},
-                    {title: 'TM각비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AUTO_AMT', format: '#,###'},
-                    {title: '연마비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###'},
-                    {title: '열처리', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###'},
-                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AUTO_AMT', format: '#,###'},
-                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AUTO_AMT', format: '#,###'},
-                    {title: '합계', dataType: 'integer', dataIndx: 'UNIT_SUM_AUTO_AMT', format: '#,###'},
+                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', format: '#,###', align: 'right'},
+                    {title: 'TM각비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AUTO_AMT', format: '#,###', align: 'right'},
+                    {title: '연마비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###', align: 'right'},
+                    {title: '열처리', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###', align: 'right'},
+                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AUTO_AMT', format: '#,###', align: 'right'},
+                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AUTO_AMT', format: '#,###', align: 'right'},
+                    {title: '합계', dataType: 'integer', dataIndx: 'UNIT_SUM_AUTO_AMT', format: '#,###', align: 'right'},
                 ]
             },
             {title: '항목별 계산 견적단가(10원단위 반올림)', align: "center", colModel: [
-                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title: 'TM각비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title: '견적비고', dataType: 'string', dataIndx: 'UNIT_AMT_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} }
+                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
+                    {title: 'TM각비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
+                    {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
+                    {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
+                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
+                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
+                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
+                    {title: '견적비고', dataType: 'string', dataIndx: 'UNIT_AMT_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'left'}
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST', format: '#,###', width: 80, editable: false},
             {title: '최종견적가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
@@ -701,7 +703,7 @@
             },
             postRenderInterval: -1, //call postRender synchronously.
             scrollModel: { autoFit: false },
-            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             numberCell: {width: 30, title: "No", show: true },
             //selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},

@@ -949,29 +949,6 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
     background-color: rgb(219, 219, 219);
 }
 
-#processingRequirementsModal table.processing_requirements_information > thead > tr > th {
-    background-color: rgb(255, 217, 102);
-    font-weight: bold;
-}
-
-#processingRequirementsModal table.processing_requirements_information > tbody > tr > td.readonly {
-    background-color: rgb(219, 219, 219);
-}
-
-#processingRequirementsModal table.processing_requirements_information > tbody > tr > td:last-child {
-    background-color: rgb(219, 219, 219);
-}
-
-#processingRequirementsModal table.processing_requirements_information > tfoot > tr > td:first-child {
-    background-color: rgb(255, 217, 102);
-    font-weight: bold;
-}
-
-#processingRequirementsModal table.processing_requirements_information > tfoot > tr > td:last-child {
-    background-color: rgb(237, 237, 237);
-    font-weight: bold;
-}
-
 #processingRequirementsModal .ta-l {
     text-align: left;
 }

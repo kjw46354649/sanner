@@ -564,34 +564,46 @@ public class OrderServiceImpl implements OrderService {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
-
+        ArrayList<HashMap<String, Object>> addList = null;
+        ArrayList<HashMap<String, Object>> updateList = null;
         boolean flag = false;
-
+        Integer seq1 = null;
+        Integer seq2 = null;
 
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-        Set set = jsonMap.entrySet();
-        Iterator iterator = set.iterator();
+        if (jsonMap.containsKey("addList"))
+            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
+
+        if (jsonMap.containsKey("updateList"))
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+        if (jsonMap.containsKey("SEQ1"))
+            seq1 = Integer.parseInt(String.valueOf(jsonMap.get("SEQ1")));
+
+        if (jsonMap.containsKey("SEQ2"))
+            seq2 = Integer.parseInt(String.valueOf(jsonMap.get("SEQ2")));
 
         try {
-            while (iterator.hasNext()) {
-                Map.Entry entry = (Map.Entry) iterator.next();
-                String key = (String) entry.getKey();
-                String value = (String) entry.getValue();
-
-                if (key.contains("PROCESS_CNT")) {
-                    HashMap<String, Object> hashMap = new HashMap<String, Object>();
-                    String factorCd = key.substring(key.length() - 6, key.length());
-                    hashMap.put("TYPE", jsonMap.get("TYPE"));
-                    hashMap.put("CONTROL_SEQ", jsonMap.get("SEQ1"));
-                    hashMap.put("CONTROL_DETAIL_SEQ", jsonMap.get("SEQ2"));
-                    hashMap.put("FACTOR_CD", factorCd);
-                    hashMap.put("PROCESS_CNT", value);
+            if (addList != null && addList.size() > 0) {
+                for (HashMap<String, Object> hashMap : addList) {
+                    hashMap.put("CONTROL_SEQ", seq1);
+                    hashMap.put("CONTROL_DETAIL_SEQ", seq2);
                     hashMap.put("queryId", "orderMapper.insertControlPartProcess");
-                    this.innodaleDao.create(hashMap);
+                    this.innodaleDao.insertGrid(hashMap);
                     hashMap.put("queryId", "orderMapper.updateControlAutomaticQuote");
-                    this.innodaleDao.update(hashMap);
+                    this.innodaleDao.updateGrid(hashMap);
+                }
+            }
+            if (updateList != null && updateList.size() > 0) {
+                for (HashMap<String, Object> hashMap : updateList) {
+                    hashMap.put("CONTROL_SEQ", seq1);
+                    hashMap.put("CONTROL_DETAIL_SEQ", seq2);
+                    hashMap.put("queryId", "orderMapper.insertControlPartProcess");
+                    this.innodaleDao.insertGrid(hashMap);
+                    hashMap.put("queryId", "orderMapper.updateControlAutomaticQuote");
+                    this.innodaleDao.updateGrid(hashMap);
                 }
             }
         } catch (Exception e) {
