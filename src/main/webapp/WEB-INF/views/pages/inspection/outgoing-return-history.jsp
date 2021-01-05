@@ -126,17 +126,13 @@
             {title: 'LAST_YN', dataType: 'string', dataIndx: 'LAST_YN', hidden:true},
             {title: '구분', dataType: 'string', dataIndx: 'OUT_RETURN_TYPE_NM', minWidth: 60, width: 60, editable: false,
                 render: function (ui) {
-                    let cellData = ui.cellData;
-                    //let status = ui.rowData.STATUS_1;
-                    if (cellData != "출고") {
-                        outgoingHistoryGridId01.pqGrid('addClass', {
-                            rowIndx: ui.rowIndx,
-                            dataIndx: ui.dataIndx,
-                            cls: 'gridBg-Red'
-                        });
-                        //return (index < 0) ? cellData : EQUIP_LIST[index].text;
+                    let cls = null;
+
+                    if (ui.cellData === '반품') {
+                        cls = 'gridBg-Red';
                     }
-                    //return cellData;
+
+                    return {cls: cls};
                 }
             },
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 80, width: 120, editable: false},
@@ -195,7 +191,7 @@
             },
         ];
         outgoingHistoryGridId01.pqGrid({
-            width: "100%", height: 740,
+            height: 730,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'ORDER_SEQ',
                 url: "/paramQueryGridSelect",

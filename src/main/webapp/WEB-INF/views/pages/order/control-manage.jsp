@@ -1264,26 +1264,6 @@
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 colModel: [
                     {
-                        title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT',
-                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                        editable: function (ui) {
-                            let rowData = ui.rowData;
-
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
-                        },
-                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
-                    },
-                    {
                         title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND', hidden: true,
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                         editable: function (ui) {
@@ -1303,7 +1283,26 @@
                             return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
+                    {
+                        title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT',
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
 
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                        },
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    }
                 ]
             },
             {
@@ -1472,13 +1471,13 @@
             {
                 title: '자동 계산견적 단가', align: 'center', hidden: true,
                 colModel: [
-                    {title: '소재비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AUTO_AMT'},
-                    {title: 'TM각비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AUTO_AMT'},
-                    {title: '연마비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT'},
-                    {title: '열처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT'},
-                    {title: '표면처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AUTO_AMT'},
-                    {title: '가공비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_PROCESS_AUTO_AMT'},
-                    {title: '합계', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SUM_AUTO_AMT'},
+                    {title: '소재비', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_AUTO_AMT'},
+                    {title: 'TM각비', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AUTO_AMT'},
+                    {title: '연마비', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT'},
+                    {title: '열처리', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT'},
+                    {title: '표면처리', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_SURFACE_AUTO_AMT'},
+                    {title: '가공비', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_PROCESS_AUTO_AMT'},
+                    {title: '합계', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_SUM_AUTO_AMT'},
                 ]
             },
             {
@@ -1488,7 +1487,7 @@
                 hidden: true,
                 colModel: [
                     {
-                        title: '소재비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AMT',
+                        title: '소재비', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1507,7 +1506,7 @@
                         }
                     },
                     {
-                        title: 'TM각비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AMT',
+                        title: 'TM각비', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1526,7 +1525,7 @@
                         }
                     },
                     {
-                        title: '연마비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT',
+                        title: '연마비', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1545,7 +1544,7 @@
                         }
                     },
                     {
-                        title: '열처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT',
+                        title: '열처리', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1564,7 +1563,7 @@
                         }
                     },
                     {
-                        title: '표면처리', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AMT',
+                        title: '표면처리', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_SURFACE_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1583,7 +1582,7 @@
                         }
                     },
                     {
-                        title: '가공비', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_PROCESS_AMT',
+                        title: '가공비', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_PROCESS_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1602,7 +1601,7 @@
                         }
                     },
                     {
-                        title: '기타추가', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_ETC_AMT',
+                        title: '기타추가', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_ETC_AMT',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
@@ -1621,7 +1620,7 @@
                         }
                     },
                     {
-                        title: '견적비고', dataIndx: 'UNIT_AMT_NOTE',
+                        title: '견적비고', align: 'left', dataIndx: 'UNIT_AMT_NOTE',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
                             let rowData = ui.rowData;
