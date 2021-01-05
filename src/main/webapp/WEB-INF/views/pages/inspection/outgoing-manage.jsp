@@ -833,7 +833,7 @@
         $('#SEL_OUTGOING_TERM_2').click();
 
         outgoingManageGridId01.pqGrid({
-            width: "100%", height: 740,
+            height: 730,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'ORDER_SEQ',
                 url: "/paramQueryGridSelect",
@@ -1873,10 +1873,12 @@
                 $miniPopup.css('background-color', '#ffeed9');
                 $miniPopup.find('#out').html('폐기<br>출고');
                 $('#outgoing_manage_mini_pop_save_btn').data('target', 'disposal');
+                $('#NEW_OUT_QTY_VIEW').prop('readonly', true);
             } else {
                 $miniPopup.css('background-color', '');
                 $miniPopup.find('#out').html('출고');
                 $('#outgoing_manage_mini_pop_save_btn').data('target', 'release');
+                $('#NEW_OUT_QTY_VIEW').prop('readonly', false);
             }
             $miniPopup.find('#subtitle').toggle();
             $miniPopup.find('.process > .pr_txt > span:first').toggle();
