@@ -184,14 +184,14 @@
             str += '    <div class="table">';
             str += '        <div class="titleWrap">';
             str += '            <span class="equipLabel">';
-            str += '                <span id="NC' + order + '_EQUIP_NM">' + equipNm + '</span>';
-            str += '                <span id="NC' + order + '_WORK_USER_ID"></span>';
+            str += '                <span class="ellipsis" id="NC' + order + '_EQUIP_NM" style="width: 25px;">' + equipNm + '</span>';
+            str += '                <span class="ellipsis" id="NC' + order + '_WORK_USER_ID" style="width: 35px;"></span>';
             str += '            </span>';
             str += '            <p class="listTxt" style="display: none;">';
-            str += '                <span id="NC' + order + '_CONTROL_NUM" style="text-decoration: underline; cursor: pointer;"></span>';
-            str += '                <span id="NC' + order + '_PART_UNIT_QTY"></span>';
-            str += '                <span id="NC' + order + '_MATERIAL_TYPE"></span>';
-            str += '                <span id="NC' + order + '_WORK_TIME"></span>';
+            str += '                <span class="ellipsis" id="NC' + order + '_CONTROL_NUM" style="width: 125px; text-decoration: underline; cursor: pointer;"></span>';
+            str += '                <span class="ellipsis" id="NC' + order + '_PART_UNIT_QTY" style="width: 17px;"></span>';
+            str += '                <span class="ellipsis" id="NC' + order + '_MATERIAL_TYPE" style="width: 37px;"></span>';
+            str += '                <span class="ellipsis" id="NC' + order + '_WORK_TIME" style="width: 77px;"></span>';
             str += '            </p>';
             str += '        </div>';
             str += '        <div class="listWrap">';
@@ -717,15 +717,21 @@
                 let workTimeElement = listTxtElement.children('[id$=WORK_TIME]');
 
                 equipNmElement.html(data.EQUIP_NM);
+                equipNmElement.prop('title', data.EQUIP_NM);
                 workUserIdElement.html(data.WORK_USER_NM);
+                workUserIdElement.prop('title', data.WORK_USER_NM);
                 controlNumElement.html(data.CONTROL_NUM);
+                controlNumElement.prop('title', data.CONTROL_NUM);
                 controlNumElement.removeAttr('onClick');
                 if (data.CONTROL_SEQ && data.CONTROL_DETAIL_SEQ) {
                     controlNumElement.attr('onClick', 'g_item_detail_pop_view(' + data.CONTROL_SEQ + ',' + data.CONTROL_DETAIL_SEQ + ');');
                 }
                 materialTypeElement.html(data.MATERIAL_TYPE_NM_SUBSTR);
+                materialTypeElement.prop('title', data.MATERIAL_TYPE_NM_SUBSTR);
                 partUnitQtyElement.html(data.CONTROL_PART_QTY);
+                partUnitQtyElement.prop('title', data.CONTROL_PART_QTY);
                 workTimeElement.html(data.WORK_TIME);
+                workTimeElement.prop('title', data.WORK_TIME);
 
                 listTxtElement.show();
             }
