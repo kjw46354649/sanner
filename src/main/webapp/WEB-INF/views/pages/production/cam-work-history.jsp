@@ -57,8 +57,8 @@
                             <input type="search" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM" title="도면번호">
                         </span>
                         <span class="gubun"></span>
-                        <span>
-                            <label for="SIZE_TYPE">규격</label>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="SIZE_TYPE">규격</label>
                             <select class="wd_100" name="SIZE_TYPE" id="SIZE_TYPE" title="규격">
                                 <c:forEach var="vlocale" items="${HighCode.H_1016}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
@@ -66,31 +66,31 @@
                             </select>
                         </span>
                         <span class="slt_wrap" id="SIZE_W">
-                            <label class="label_50">W</label>
+                            <label class="label_30">W</label>
                             <input class="wd_50" type="number" name="SIZE_W_F" id="SIZE_W_F" placeholder="From">
                             <span>~</span>
                             <input class="wd_50" type="number" name="SIZE_W_T" id="SIZE_W_T" placeholder="To">
                         </span>
                         <span class="slt_wrap" id="SIZE_H">
-                            <label class="label_50">H</label>
+                            <label class="label_30">H</label>
                             <input class="wd_50" type="number" name="SIZE_H_F" id="SIZE_H_F" placeholder="From">
                             <span>~</span>
                             <input class="wd_50" type="number" name="SIZE_H_T" id="SIZE_H_T" placeholder="To">
                         </span>
                         <span class="slt_wrap" id="SIZE_T">
-                            <label class="label_50">T</label>
+                            <label class="label_30">T</label>
                             <input class="wd_50" type="number" name="SIZE_T_F" id="SIZE_T_F" placeholder="From">
                             <span>~</span>
                             <input class="wd_50" type="number" name="SIZE_T_T" id="SIZE_T_T" placeholder="To">
                         </span>
                         <span class="slt_wrap" id="SIZE_D" style="display: none;">
-                            <label class="label_50">D</label>
+                            <label class="label_30">D</label>
                             <input class="wd_50" type="number" name="SIZE_D_F" id="SIZE_D_F" placeholder="From">
                             <span>~</span>
                             <input class="wd_50" type="number" name="SIZE_D_T" id="SIZE_D_T" placeholder="To">
                         </span>
                         <span class="slt_wrap" id="SIZE_L" style="display: none;">
-                            <label class="label_50">L</label>
+                            <label class="label_30">L</label>
                             <input class="wd_50" type="number" name="SIZE_L_F" id="SIZE_L_F" placeholder="From">
                             <span>~</span>
                             <input class="wd_50" type="number" name="SIZE_L_T" id="SIZE_L_T" placeholder="To">
@@ -101,7 +101,7 @@
                             <select name="CAM_WORK_HISTORY_CONDITION" id="CAM_WORK_HISTORY_CONDITION">
                                 <%--<option value=""><spring:message code="com.form.top.sel.option"/></option>--%>
                                 <option value="1">업데이트일시</option>
-                                <option value="2" selected>가공확정일시</option>
+                                <option value="2">가공확정일시</option>
                             </select>
                         </span>
                         <div class="calendar_wrap">
@@ -547,7 +547,7 @@
                     });
                 }
             },
-            {title: '가공<br>완료', width: 70, dataIndx: 'INNER_WORK_FINISH_DT'},
+            {title: '가공완료', width: 70, dataIndx: 'INNER_WORK_FINISH_DT'},
             {title: '외<br>주', minWidth: 30, dataIndx: 'OUTSIDE_YN'},
             {title: '수행<br>공장', minWidth: 40, dataIndx: 'WORK_FACTORY_NM'},
             {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
@@ -674,6 +674,8 @@
                 }
             },
             load: function() {
+                autoMerge(this, true);
+
                 var filterOpts = '<option value=\"\">All Fields</option>';
                 var frozenOts = '<option value="0">Selected</option>';
                 this.getColModel().forEach(function(column){
@@ -758,8 +760,83 @@
                 return val;
             }
         }
-        /* function */
 
+         const autoMerge = function (grid, refresh) {
+            let mergeCellList = [],
+                colModelList = grid.getColModel(),
+                i = colModelList.length,
+                data = grid.option('dataModel.data');
+
+            const controlList = [
+                'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'ORDER_COMP_NM',
+            ];
+             const partList = [
+                 'CAM_INSERT_DT', 'INNER_WORK_FINISH_DT', 'OUTSIDE_YN', 'WORK_FACTORY_NM',  'WORK_TYPE_NM', 'SIZE_TXT',
+                 'MATERIAL_TYPE_NM', 'DRAWING_NUM', 'IMG_GFILE_SEQ', 'CONTROL_PART_QTY', 'CAD_FILE_SIZE', 'DXF_GFILE_SEQ',
+                 'MATERIAL_DETAIL_NM', 'MATERIAL_KIND_NM', 'MATERAIL_ORDER_SIZE', 'NC_WORK_TIME', 'TOTAL_WORK_TIME',
+                 // 'CAM_STEP', 'WORK_DIRECTION', 'WORK_DESC', 'DESIGN_QTY', '', 'WORK_USER_NM', 'CAM_EXPERIENCE_NOTE',
+                 // 'CAM_WORK_NOTE'
+             ];
+            const includeList = controlList.concat(partList);
+
+            while (i--) {
+                let dataIndx = colModelList[i].dataIndx,
+                    rc = 1,
+                    j = data.length;
+
+                if (includeList.includes(dataIndx)) {
+                    while (j--) {
+                        let controlNum = data[j]['CONTROL_NUM'],
+                            controlNumPrev = data[j - 1] ? data[j - 1]['CONTROL_NUM'] : undefined,
+                            cellData = data[j][dataIndx] || '',
+                            cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] || '' : undefined;
+
+                        if (controlList.includes(dataIndx)) {
+                            if (controlNum === controlNumPrev) {
+                                // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
+                                if (cellDataPrev !== undefined && cellData === cellDataPrev) {
+                                    rc++;
+                                }
+                            } else if (rc > 1) {
+                                /**
+                                 * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
+                                 * c1: colIndx of first column. 첫 번째 열의 colIndx.
+                                 * rc: number of rows in the range. 범위 내 행 수.
+                                 * cc: number of columns in the range. 범위 내 열 수.
+                                 */
+                                mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
+                                rc = 1;
+                            }
+                        } else if (partList.includes(dataIndx)) {
+                            let cellData = data[j][dataIndx],
+                                cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
+
+                            if (controlNum === controlNumPrev && cellData === cellDataPrev) {
+                                // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
+                                if (cellDataPrev !== undefined && cellData === cellDataPrev) {
+                                    rc++;
+                                }
+                            } else if (rc > 1) {
+                                /**
+                                 * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
+                                 * c1: colIndx of first column. 첫 번째 열의 colIndx.
+                                 * rc: number of rows in the range. 범위 내 행 수.
+                                 * cc: number of columns in the range. 범위 내 열 수.
+                                 */
+                                mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
+                                rc = 1;
+                            }
+                        }
+                    }
+                }
+            }
+
+            grid.option('mergeCells', mergeCellList);
+            if (refresh) {
+                grid.refreshView();
+            }
+        };
+        /* function */
 
         /* event */
         $('#CAM_WORK_HISTORY_SEARCH').on('click', function () {
