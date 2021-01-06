@@ -70,7 +70,7 @@
                             </select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="material_size ellipsis"></span>
+                        <span class="material_size ellipsis">&nbsp;</span>
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mr-10">
