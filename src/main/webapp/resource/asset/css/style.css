@@ -960,3 +960,14 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
 #processingRequirementsModal .e {
     background-color: rgb(255, 242, 204);
 }
+
+.material_size {
+    display: inline-block;
+    width: 310px;
+    max-width: 310px;
+    line-height: 23px;
+    padding: 0 5px;
+    vertical-align: middle;
+    background: #f2f2f2;
+    font-size: 12px;
+}

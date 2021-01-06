@@ -58,43 +58,19 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="SIZE_TYPE">규격</label>
-                            <select class="wd_100" name="SIZE_TYPE" id="SIZE_TYPE" title="규격">
-                                <c:forEach var="vlocale" items="${HighCode.H_1016}">
-                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                            <label class="label_100" for="WORK_USER_ID">소재형태/Size</label>
+                            <select class="wd_100" name="WORK_US3ER_ID" id="WORK_US3ER_ID">
+                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1029}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
+                            <select class="wd_100" name="WORK_US3ER_2ID4" id="WORK_US3ER_2ID4">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                            </select>
                         </span>
-                        <span class="slt_wrap" id="SIZE_W">
-                            <label class="label_30">W</label>
-                            <input class="wd_50" type="number" name="SIZE_W_F" id="SIZE_W_F" placeholder="From">
-                            <span>~</span>
-                            <input class="wd_50" type="number" name="SIZE_W_T" id="SIZE_W_T" placeholder="To">
-                        </span>
-                        <span class="slt_wrap" id="SIZE_H">
-                            <label class="label_30">H</label>
-                            <input class="wd_50" type="number" name="SIZE_H_F" id="SIZE_H_F" placeholder="From">
-                            <span>~</span>
-                            <input class="wd_50" type="number" name="SIZE_H_T" id="SIZE_H_T" placeholder="To">
-                        </span>
-                        <span class="slt_wrap" id="SIZE_T">
-                            <label class="label_30">T</label>
-                            <input class="wd_50" type="number" name="SIZE_T_F" id="SIZE_T_F" placeholder="From">
-                            <span>~</span>
-                            <input class="wd_50" type="number" name="SIZE_T_T" id="SIZE_T_T" placeholder="To">
-                        </span>
-                        <span class="slt_wrap" id="SIZE_D" style="display: none;">
-                            <label class="label_30">D</label>
-                            <input class="wd_50" type="number" name="SIZE_D_F" id="SIZE_D_F" placeholder="From">
-                            <span>~</span>
-                            <input class="wd_50" type="number" name="SIZE_D_T" id="SIZE_D_T" placeholder="To">
-                        </span>
-                        <span class="slt_wrap" id="SIZE_L" style="display: none;">
-                            <label class="label_30">L</label>
-                            <input class="wd_50" type="number" name="SIZE_L_F" id="SIZE_L_F" placeholder="From">
-                            <span>~</span>
-                            <input class="wd_50" type="number" name="SIZE_L_T" id="SIZE_L_T" placeholder="To">
-                        </span>
+                        <span class="gubun"></span>
+                        <span class="material_size ellipsis"></span>
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mr-10">
@@ -122,6 +98,45 @@
                                 <input reqcd="R" type="radio" name="CAM_WORK_HISTORY_TERM" id="CAM_WORK_HISTORY_TERM_MONTH" value="month"><label for="CAM_WORK_HISTORY_TERM_MONTH">-1개월</label>
                             </span>
                         </div>
+                        <span class="gubun" style="margin-left: 16px;"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="SIZE_TYPE">규격</label>
+                            <select class="wd_100" name="SIZE_TYPE" id="SIZE_TYPE" title="규격">
+                                <c:forEach var="vlocale" items="${HighCode.H_1016}">
+                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
+                        <span class="slt_wrap" id="SIZE_W">
+                            <label class="label_8">W</label>
+                            <input class="wd_50" type="number" name="SIZE_W_F" id="SIZE_W_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_W_T" id="SIZE_W_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_H">
+                            <label class="label_8">H</label>
+                            <input class="wd_50" type="number" name="SIZE_H_F" id="SIZE_H_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_H_T" id="SIZE_H_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_T">
+                            <label class="label_8">T</label>
+                            <input class="wd_50" type="number" name="SIZE_T_F" id="SIZE_T_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_T_T" id="SIZE_T_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_D" style="display: none;">
+                            <label class="label_8">D</label>
+                            <input class="wd_50" type="number" name="SIZE_D_F" id="SIZE_D_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_D_T" id="SIZE_D_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_L" style="display: none;">
+                            <label class="label_8">L</label>
+                            <input class="wd_50" type="number" name="SIZE_L_F" id="SIZE_L_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_L_T" id="SIZE_L_T" placeholder="To">
+                        </span>
                         <span class="ipu_wrap right_float">
                             <button type="button" id="CAM_WORK_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="CAM_WORK_HISTORY_SEARCH">검색</button>
