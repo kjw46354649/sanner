@@ -2150,6 +2150,7 @@
             const processingRequirementsColModel = [
                 {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
                 {title: 'CALC_SEQ', dataType: 'integer', dataIndx: 'CALC_SEQ', hidden: true},
+                {title: 'GROUP_CD', dataIndx: 'GROUP_CD', hidden: true},
                 {title: 'FACTOR_CD', dataIndx: 'FACTOR_CD', hidden: true},
                 {
                     title: '가공요건정보', align: 'center', styleHead: {'background':'#ffd966'}, colModel: [
@@ -2201,6 +2202,33 @@
                     getData: function (dataJSON) {
                         return {data: dataJSON.data};
                     }
+                },
+                load: function () {
+                    const merge = function (grid, refresh) {
+                        let mc = [],
+                            // CM = grid.option('colModel'),
+                            // i = CM.length,
+                            data = grid.option('dataModel.data'),
+                            rc = 1,
+                            j = data.length;
+
+                        while (j--) {
+                            let cd = data[j]['LEVEL_1'],
+                                cd_prev = data[j - 1] ? data[j - 1]['LEVEL_1'] : undefined;
+                            if (cd_prev !== undefined && cd == cd_prev) {
+                                rc++;
+                            } else if (rc > 1) {
+                                mc.push({r1: j, c1: 4, rc: rc, cc: 1});
+                                rc = 1;
+                            }
+                        }
+                        grid.option('mergeCells', mc);
+                        if (refresh) {
+                            grid.refreshView();
+                        }
+                    };
+
+                    merge(this, true);
                 },
                 editorKeyDown: function (evt, ui) {
                     if (evt.keyCode === 9 || evt.keyCode === 13) {

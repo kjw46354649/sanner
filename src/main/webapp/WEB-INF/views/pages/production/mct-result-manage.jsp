@@ -716,10 +716,7 @@
                      {
                          title: 'R/T', minWidth: 50, width: 55, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME',
                          render: function (ui) {
-                            const cellData = ui.cellData;
-                            const rowData = ui.rowData;
-
-                             if (rowData.WORK_STATUS === 'DBS020') {
+                             if (ui.rowData.PART_STATUS === '가공중') {
                                  return {cls: 'blink'};
                              }
                          }
