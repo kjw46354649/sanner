@@ -1423,7 +1423,7 @@
             $("#btnItemOrderRegisterPopSubmit").attr("disabled", true);
         });
 
-        $("#btnItemOrderRegisterPopSave").on('click', function(){
+        $("#btnItemOrderRegisterPopSave").on('click', _.debounce(function(){
             $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListNum");
 
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num_temp").val();
@@ -1439,7 +1439,7 @@
             if (gridInstance.isDirty()) {
                 let changes = gridInstance.getChanges({format: 'byVal'});
                 let QUERY_ID_ARRAY = {
-                    'insertQueryId': itemOrderRegisterInsertUpdateQueryList,
+                    'insertQueryId': [],
                     'updateQueryId': itemOrderRegisterInsertUpdateQueryList,
                 };
                 changes.queryIdList = QUERY_ID_ARRAY;
@@ -1459,7 +1459,7 @@
                 //Popup table 생성
                 makeInnerTable();
             }, 900)
-        });
+        }, 1000));
 
         $("#btnItemOrderRegisterPopSubmit").on('click', function(){
             //메일 여부
