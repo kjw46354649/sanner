@@ -37,7 +37,7 @@ public class PopServiceImpl implements PopService {
      *         // PRO001	외주발송
      *         // PRO003	가공확정취소
      *         // PRO004	소재주문
-     *         // PRO005	소재입고        -- 자동 추가(조건은 소재 주문 이후에 조재 입고 없이 모든 POP 에서 스캔 된 경우 상태 추가)
+     *         // PRO005	소재입고        -- 자동 추가(조건은 소재 주문 이후에 자재 입고 없이 모든 POP 에서 스캔 된 경우 상태 추가)
      *         // PRO006	CAM 설계
      *         // PRO007	가공중
      *         // PRO008	공정완료
@@ -50,7 +50,7 @@ public class PopServiceImpl implements PopService {
      *         // PRO015	표면처리 완료
      *         // PRO016	출하완료
      *         // PRO017	반품
-     *         // PRO018	조립전환        --
+     *         // PRO018	조립전환        -- 조립 & part 에서 조립이 POP 에 스캔 된 경우 Part 상태를 조림전환으로 분리함
      *
      *          // POP010  소형MCT1
      *          // POP020  소형MCT2

@@ -331,6 +331,7 @@
                 <input id="RE_BARCODE_NUM" name="RE_BARCODE_NUM" type="hidden" value="">
                 <input id="WORK_MINUTE" name="WORK_MINUTE" type="hidden" value="${workInfo.WORK_MINUTE}">
                 <input id="WORK_SECOND" name="WORK_SECOND" type="hidden" value="${workInfo.WORK_SECOND}">
+                <input id="WORK_STATUS" name="WORK_STATUS" type="hidden" value="${workInfo.WORK_STATUS}">
             </form>
             <form id="re_start_work_info_form" name="re_start_work_info_form" method="POST" onsubmit="return false;">
                 <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${reStartWorkinfo.CONTROL_SEQ}">
@@ -379,7 +380,7 @@
                     <div class="contsTitWrap" id="workMainProgressConts" style="">
                         <div class="contsTit blink-blue"><srping:message key='drawing.board.label.13'/></div>
                         <div class="right_sort">
-                            <button type="button" id="reserveBtn" class="reserveDbDisableBtn"><input id="reserveChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;" disabled="disabled" />예약</button>&nbsp;
+                            <button type="button" id="reserveBtn" class="reserveDbDisableBtn"><input id="reserveChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;"  />예약</button>&nbsp;
                             <button type="button" id="workCancelBtn" class="graDbBtn red"><srping:message key='drawing.board.button.06'/></button>&nbsp;
                             <button type="button" id="workPuaseBtn" class="graDbBtn yellow"><srping:message key='drawing.board.button.07'/></button>&nbsp;
                             <button type="button" id="workCompletelBtn" class="graDbBtn purple"><srping:message key='drawing.board.button.08'/></button>
@@ -402,16 +403,16 @@
                         <div class="timeWrap">
                             <span class="timeTit"><srping:message key='drawing.board.button.03'/></span>
                             <span class="time" id="stopTimeInfo">
-                                <c:if test="${not empty workInfo}">${workInfo.STOP_MINUTE}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/>
-                                <c:if test="${not empty workInfo}">${workInfo.STOP_SECOND}</c:if> &nbsp;<srping:message key='drawing.board.label.01'/>
+                                <c:if test="${not empty workInfo}">${workInfo.STOP_MINUTE}</c:if>&nbsp;<srping:message key='drawing.board.label.02'/>
+                                <c:if test="${not empty workInfo}">${workInfo.STOP_SECOND}</c:if>&nbsp;<srping:message key='drawing.board.label.01'/>
                             </span>
                         </div>
                         <div class="timeWrap <c:if test="${workInfo.DATA_TYPE eq 'CUR'}">yellowBackground</c:if>">
                             <span style="padding-top: 3px;" class="timeTit <c:if test="${workInfo.DATA_TYPE eq 'CUR'}">sandglass</c:if><c:if test="${workInfo.DATA_TYPE ne 'CUR'}">sandglass_stop</c:if>">
                                 <srping:message key='drawing.board.button.04'/></span>
                             <span class="time" id="workTimeInfo">
-                                <c:if test="${not empty workInfo}">${workInfo.WORK_MINUTE}</c:if> &nbsp;<srping:message key='drawing.board.label.02'/>
-                                <c:if test="${not empty workInfo}">${workInfo.WORK_SECOND}</c:if> &nbsp;<srping:message key='drawing.board.label.01'/>
+                                <c:if test="${not empty workInfo}">${workInfo.WORK_MINUTE}</c:if>&nbsp;<srping:message key='drawing.board.label.02'/>
+                                <c:if test="${not empty workInfo}">${workInfo.WORK_SECOND}</c:if>&nbsp;<srping:message key='drawing.board.label.01'/>
                             </span>
                         </div>
                     </div>
@@ -501,9 +502,9 @@
                                     <img id="reserveMinuteUpBtn" src="/resource/asset/images/common/arrow_up.png">
                                 </td>
                                 <td class="modal-reserve-dialog-table" rowspan="3">
-                                    <button type="button" id="reserveEndCheckBtn" class="graDbBtn gray"><input id="reserveEndChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;" disabled="disabled" />종&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;료</button>
+                                    <button type="button" id="reserveEndCheckBtn" class="graDbBtn gray"><input id="reserveEndChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;"  />종&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;료</button>
                                     <br/>&nbsp;<br/>
-                                    <button type="button" id="reservePauseCheckBtn" class="graDbBtn gray"><input id="reservePauseChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;" disabled="disabled" />일시정지</button>
+                                    <button type="button" id="reservePauseCheckBtn" class="graDbBtn gray"><input id="reservePauseChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;" />일시정지</button>
                                 </td>
                             </tr>
                             <tr>
@@ -528,7 +529,7 @@
                     <div style="text-align: center;">
                         <button type="button" id="reserveSaveBtn" class="reservePopBtn blue">저장</button>
                         <button type="button" id="reserveCloseBtn" class="reservePopBtn yellow" >닫기</button>
-                        <button type="button" id="reserveCancelBtn" class="reservePopBtn gray" style="display: none;">예약취소</button>
+                        <button type="button" id="reserveCancelBtn" class="reservePopBtn red" style="display: none;">예약취소</button>
                     </div>
                 </div>
             </div>
@@ -683,11 +684,11 @@
         });
         $("#reserveMinuteUpBtn").on('click', function(){
             if(reserveMinute >= 60) return;
-            reserveMinute++;
+            reserveMinute+=5;
             reserveDisplayTime();
         });
         $("#reserveMinuteDownBtn").on('click', function(){
-            if(reserveMinute > 0) reserveMinute--;
+            if(reserveMinute > 0) reserveMinute-=5;
             reserveDisplayTime();
         });
 
@@ -886,8 +887,8 @@
                         minutes = 0;
                         hours++;
                     }
-                    $("#stopSeconds").html(seconds + '<srping:message key='drawing.board.label.01'/>');
-                    $("#stopMinutes").html(minutes + '<srping:message key='drawing.board.label.02'/>');
+                    $("#stopSeconds").html(seconds + '&nbsp;<srping:message key='drawing.board.label.01'/>');
+                    $("#stopMinutes").html(minutes + '&nbsp;<srping:message key='drawing.board.label.02'/>');
                 }, 1000);
                 $("#drawing_worker_stop_popup").bind('style', function(e) {
                     let style =  $(this).attr('style');
@@ -1263,23 +1264,31 @@
 
         let setFocusBody = function(){
             $("#bodyWrap").focus();
+            let workStatus = $("#drawing_action_form").find("#WORK_STATUS").val();
             let minutes = $("#drawing_action_form").find("#WORK_MINUTE").val();
             let seconds = $("#drawing_action_form").find("#WORK_SECOND").val();
             let dataType = $("#drawing_action_form").find("#DATA_TYPE").val();
-            if( dataType === "CUR"){
-                workTimeInterval = setInterval(function() {
-                    if (!workTimeIntervalIsPause){
-                        seconds++;
-                        if (seconds == 60) {
-                            seconds = 0;
-                            minutes++;
+
+            if (dataType === "CUR") {
+                if(workStatus == 'DBS010'){
+                    $("#drawing_worker_stop_popup").css("display", "block");
+                    $(".bodyWrap").addClass("modal-open-body");
+                    workTimeIntervalIsPause = true;
+                }else{
+                    workTimeInterval = setInterval(function () {
+                        if (!workTimeIntervalIsPause) {
+                            seconds++;
+                            if (seconds == 60) {
+                                seconds = 0;
+                                minutes++;
+                            }
+                            let workTimeHtml = minutes + '&nbsp;<srping:message key='drawing.board.label.02'/>&nbsp;' + seconds + '&nbsp;<srping:message key='drawing.board.label.01'/>'
+                            $("#workTimeInfo").html(workTimeHtml);
                         }
-                        let workTimeHtml = minutes + '<srping:message key='drawing.board.label.02'/>' + '&nbsp;' + seconds + '<srping:message key='drawing.board.label.01'/>'
-                        $("#workTimeInfo").html(workTimeHtml);
-                    }
-                }, 1000);
+                    }, 1000);
+                    $("#bodyWrap").focus();
+                }
             }
-            $("#bodyWrap").focus();
         }
 
         let showMessage = function(message){
