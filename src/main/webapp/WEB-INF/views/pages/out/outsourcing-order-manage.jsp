@@ -2023,6 +2023,12 @@
                 fnAppendSelectboxYear('OUTSIDE_CLOSE_POP_YEAR', 3);
                 fnAppendSelectboxMonth('OUTSIDE_CLOSE_POP_MONTH');
 
+                let settingDate = new Date();
+                settingDate.setMonth(settingDate.getMonth() - 1); //한달 전
+                let month = String(settingDate.getMonth() + 1).padStart(2, '0');
+                $('#OUTSIDE_CLOSE_POP_YEAR').val(settingDate.getFullYear()).prop('selected', true);
+                $('#OUTSIDE_CLOSE_POP_MONTH').val(month).prop('selected', true);
+
                 $outsideCloseLeftGrid = $('#' + outsideCloseLeftGridId).pqGrid(outsideCloseLeftObj);
                 $outsideCloseRightGrid = $('#' + outsideCloseRightGridId).pqGrid(outsideCloseRightObj);
 
