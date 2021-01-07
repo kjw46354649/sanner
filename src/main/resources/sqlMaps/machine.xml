@@ -600,7 +600,7 @@
                                                                              AND K.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ
             )
             INNER JOIN jmes.TBL_CAM G ON G.CONTROL_SEQ = A.CONTROL_SEQ AND G.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND G.FINISH_DT IS NOT NULL
-            INNER JOIN jmes.TBL_CAM_DETAIL H ON G.CAM_SEQ = H.CAM_SEQ AND H.SEQ = (SELECT MAX(I.SEQ) FROM jmes.TBL_CAM_DETAIL I WHERE H.CAM_SEQ = I.CAM_SEQ GROUP BY I.CAM_SEQ)
+            INNER JOIN jmes.TBL_CAM_DETAIL H ON H.CAM_SEQ = G.CAM_SEQ
             LEFT OUTER JOIN (
                 SELECT
                     A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, C.EQUIP_NM, A.WORK_USER_ID,
@@ -692,8 +692,7 @@
                     </if>
                 </when>
             </choose>
-        GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
-        ORDER BY B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), A.INNER_DUE_DT
+        ORDER BY A.INNER_DUE_DT, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), H.CAM_SEQ
     </select>
 
     <select id="selectCamWorkHistoryList_BACKUP" parameterType="java.util.HashMap" resultType="java.util.HashMap">

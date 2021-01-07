@@ -680,6 +680,7 @@
             minHeight: '100%', height: 700, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
             resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
             trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false, render: camWorkHistoryFilterRender}, filterModel: { mode: 'OR' },
+            editModel: {clicksToEdit: 1},
             colModel: tab1ColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -789,8 +790,8 @@
                  'CAM_INSERT_DT', 'INNER_WORK_FINISH_DT', 'OUTSIDE_YN', 'WORK_FACTORY_NM',  'WORK_TYPE_NM', 'SIZE_TXT',
                  'MATERIAL_TYPE_NM', 'DRAWING_NUM', 'IMG_GFILE_SEQ', 'CONTROL_PART_QTY', 'CAD_FILE_SIZE', 'DXF_GFILE_SEQ',
                  'MATERIAL_DETAIL_NM', 'MATERIAL_KIND_NM', 'MATERAIL_ORDER_SIZE', 'NC_WORK_TIME', 'TOTAL_WORK_TIME',
-                 // 'CAM_STEP', 'WORK_DIRECTION', 'WORK_DESC', 'DESIGN_QTY', '', 'WORK_USER_NM', 'CAM_EXPERIENCE_NOTE',
-                 // 'CAM_WORK_NOTE'
+                 // 'CAM_STEP', 'WORK_DIRECTION', 'WORK_DESC', 'DESIGN_QTY', '', 'WORK_USER_NM',
+                 'CAM_EXPERIENCE_NOTE', 'CAM_WORK_NOTE'
              ];
             const includeList = controlList.concat(partList);
 
@@ -803,13 +804,13 @@
                     while (j--) {
                         let controlNum = data[j]['CONTROL_NUM'],
                             controlNumPrev = data[j - 1] ? data[j - 1]['CONTROL_NUM'] : undefined,
-                            cellData = data[j][dataIndx] || '',
-                            cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] || '' : undefined;
+                            cellData = data[j][dataIndx],
+                            cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
 
                         if (controlList.includes(dataIndx)) {
                             if (controlNum === controlNumPrev) {
                                 // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
-                                if (cellDataPrev !== undefined && cellData === cellDataPrev) {
+                                if (cellData === cellDataPrev) {
                                     rc++;
                                 }
                             } else if (rc > 1) {
@@ -826,9 +827,9 @@
                             let cellData = data[j][dataIndx],
                                 cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
 
-                            if (controlNum === controlNumPrev && cellData === cellDataPrev) {
+                            if (controlNum === controlNumPrev) {
                                 // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
-                                if (cellDataPrev !== undefined && cellData === cellDataPrev) {
+                                if (cellData === cellDataPrev) {
                                     rc++;
                                 }
                             } else if (rc > 1) {
