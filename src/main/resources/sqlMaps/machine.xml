@@ -936,8 +936,8 @@
             <if test="WORK_USER_ID != null and WORK_USER_ID != ''">
                 AND A.WORK_USER_ID = #{WORK_USER_ID}
             </if>
-            <if test="mct_dw_execute_history_start_dt != null and mct_dw_execute_history_start_dt != ''">
-                AND A.WORK_FINISH_DT BETWEEN STR_TO_DATE(#{mct_dw_execute_history_start_dt}, '%Y/%m/%d') AND STR_TO_DATE(#{mct_dw_execute_history_end_dt}, '%Y/%m/%d')
+            <if test="process_fulfillment_history_start_dt != null and process_fulfillment_history_start_dt != '' and process_fulfillment_history_end_dt != null and process_fulfillment_history_end_dt != ''">
+                AND A.WORK_FINISH_DT BETWEEN STR_TO_DATE(#{process_fulfillment_history_start_dt}, '%Y/%m/%d') AND STR_TO_DATE(#{process_fulfillment_history_end_dt}, '%Y/%m/%d')
             </if>
         ORDER BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, IFNULL(C.PART_NUM, 0)
     </select>
