@@ -81,7 +81,7 @@
 				LEFT OUTER JOIN TBL_MATERIAL_ORDER F ON B.CONTROL_SEQ = F.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
 				    AND IFNULL(F.ORDER_STATUS, SPACE(0) ) IN (SPACE(0), 'MST002', 'MST003', 'MST004')
 			WHERE A.CONTROL_STATUS = 'ORD001'
-			GROUP BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+			GROUP BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, F.MATERIAL_ORDER_SEQ
 			UNION ALL
 			SELECT
 				'' AS CONTROL_SEQ, '' AS CONTROL_DETAIL_SEQ, F.MATERIAL_ORDER_SEQ, F.MATERIAL_ORDER_NUM,
@@ -227,7 +227,7 @@
         FROM
 		(
 			SELECT
-				A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, F.MATERIAL_ORDER_SEQ, IFNULL(F.MATERIAL_ORDER_NUM, SPACE(0)) MATERIAL_ORDER_NUM,
+				A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, NULL AS MATERIAL_ORDER_SEQ, IFNULL(F.MATERIAL_ORDER_NUM, SPACE(0)) MATERIAL_ORDER_NUM,
 				A.CONTROL_NUM, A.CONTROL_VER,
 				A.ORDER_COMP_CD, SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
 				A.COMP_CD, SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
@@ -275,7 +275,7 @@
 			GROUP BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
 			UNION ALL
 			SELECT
-				A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, F.MATERIAL_ORDER_SEQ, IFNULL(F.MATERIAL_ORDER_NUM, SPACE(0)) MATERIAL_ORDER_NUM,
+				A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, NULL AS MATERIAL_ORDER_SEQ, IFNULL(F.MATERIAL_ORDER_NUM, SPACE(0)) MATERIAL_ORDER_NUM,
 				A.CONTROL_NUM, A.CONTROL_VER,
 				A.ORDER_COMP_CD, SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
 				A.COMP_CD, SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM,
@@ -583,14 +583,14 @@
         VALUES
         (
             <choose>
-                <when  test="MATERIAL_ORDER_SEQ !='' and MATERIAL_ORDER_SEQ != null">
+                <when  test="MATERIAL_ORDER_SEQ != '' and MATERIAL_ORDER_SEQ != null">
                     #{MATERIAL_ORDER_SEQ},
                 </when>
                 <otherwise>
                     NEXTVAL(SEQ_MATERIAL_ORDER),
                 </otherwise>
             </choose>
-             #{MATERIAL_ORDER_NUM}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
+            #{MATERIAL_ORDER_NUM}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
             #{M_COMP_CD}, REPLACE(#{HOPE_DUE_DT}, '-', SPACE(0)), #{M_SIZE_TXT},
             SF_GET_SIZE_TXT('SIZE_TYPE', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_W', #{M_SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_H', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_T', #{M_SIZE_TXT}),
@@ -732,10 +732,45 @@
     <insert id="insertItemOrderRegisterMasterOrderHistory" parameterType="java.util.HashMap" >
         INSERT INTO TBL_MATERIAL_ORDER_HIST
         SELECT
-            NEXTVAL(SEQ_MATERIAL_ORDER_HIST), A.*
-		FROM TBL_MATERIAL_ORDER A
-		WHERE A.MATERIAL_ORDER_SEQ IN(${MATERIAL_ORDER_SEQ})
-		    AND A.ORDER_STATUS = 'MST002'
+            NEXTVAL(SEQ_MATERIAL_ORDER_HIST)
+            , MATERIAL_ORDER_SEQ
+            , MATERIAL_ORDER_NUM
+            , CONTROL_SEQ
+            , CONTROL_DETAIL_SEQ
+            , MATERIAL_COMP_CD
+            , HOPE_DUE_DT
+            , SIZE_TXT
+            , SIZE_TYPE
+            , SIZE_W
+            , SIZE_H
+            , SIZE_T
+            , SIZE_D
+            , SIZE_L
+            , REQUEST_NOTE
+            , ORDER_NOTE
+            , ORDER_QTY
+            , ORDER_AMT
+            , INSPECT_MATERIAL_YN
+            , INSPECT_SURFACE_YN
+            , INSPECT_SIZE_YN
+            , INSPECT_NOTE
+            , ORDER_STATUS
+            , ORDER_DT
+            , IN_DT
+            , CANCEL_DT
+            , CANCEL_USER_ID
+            , SEND_DT
+            , MATERIAL_KIND
+            , MATERIAL_TYPE
+            , MATERIAL_DETAIL
+            , NOTE
+            , NOW() <!-- INSERT_DT -->
+            , #{LOGIN_USER_ID} <!-- INSERT_ID -->
+            , NULL <!-- UPDATE_DT -->
+            , NULL <!-- UPDATE_ID -->
+        FROM TBL_MATERIAL_ORDER A
+        WHERE A.MATERIAL_ORDER_SEQ IN(${MATERIAL_ORDER_SEQ})
+            AND A.ORDER_STATUS = 'MST002'
     </insert>
 
     <select id="selectItemOrderRegisterPopMailTable" parameterType="java.util.HashMap" resultType="java.util.HashMap">
