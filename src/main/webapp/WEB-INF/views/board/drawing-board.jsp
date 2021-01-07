@@ -34,7 +34,7 @@
     <style type="text/css">
 
         html {
-            /*cursor: none;*/
+            cursor: none;
        	}
 
         .dhx_message__icon{
@@ -684,11 +684,11 @@
         });
         $("#reserveMinuteUpBtn").on('click', function(){
             if(reserveMinute >= 60) return;
-            reserveMinute++;
+            reserveMinute+=5;
             reserveDisplayTime();
         });
         $("#reserveMinuteDownBtn").on('click', function(){
-            if(reserveMinute > 0) reserveMinute--;
+            if(reserveMinute > 0) reserveMinute-=5;
             reserveDisplayTime();
         });
 
