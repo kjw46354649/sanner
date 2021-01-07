@@ -713,14 +713,7 @@
                      {title: '공정', minWidth: 50, width: 50, datatype: 'string', dataIndx: 'NC_WORK_TYPE'},
                      {title: '기기명', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_NM'},
                      {title: '작업자', minWidth: 40, width: 80, dataType: 'string', dataIndx: 'NC_WORK_USER_NM'},
-                     {
-                         title: 'R/T', minWidth: 50, width: 55, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME',
-                         render: function (ui) {
-                             if (ui.rowData.PART_STATUS === '가공중') {
-                                 return {cls: 'blink'};
-                             }
-                         }
-                     },
+                     {title: 'R/T', minWidth: 50, width: 55, dataType: 'string', align: 'right', dataIndx: 'WORKING_TIME'},
                      {title: 'WORK_STATUS', dataIndx: 'WORK_STATUS', hidden: true},
                      {title: 'WORK_STATUS_NM', dataIndx: 'WORK_STATUS_NM', hidden: true}
                 ]

@@ -1053,7 +1053,7 @@
             , A.IMG_GFILE_SEQ <!-- IMG 파일그룹번호 -->
             , K.EQUIP_NM
             , CASE
-            	WHEN K.WORKING_TIME IS NOT NULL THEN
+            	WHEN A.PART_STATUS != 'PRO007' AND K.WORKING_TIME IS NOT NULL THEN
             											CASE
 	            											WHEN K.WORKING_TIME > 3600 THEN CONCAT(TRUNCATE(IFNULL(K.WORKING_TIME, 0)/ 3600, 0), 'h ', TRUNCATE((IFNULL(K.WORKING_TIME, 0)%3600)/ 60, 0), 'm')
 	        												ELSE CONCAT(TRUNCATE((IFNULL(K.WORKING_TIME, 0)%3600)/ 60, 0), 'm')
@@ -1107,7 +1107,7 @@
                 WHERE 1 = 1
                     AND A.DEL_YN = 'N'
                     AND A.MCT_WORK_SEQ IN (SELECT MAX(M.MCT_WORK_SEQ) FROM TBL_MCT_WORK M
-                                           WHERE  M.DEL_YN = 'N' AND M.WORK_FINISH_DT IS NOT NULL
+                                           WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N'
                                            GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
                     )
             ) K ON K.CONTROL_SEQ = A.CONTROL_SEQ AND K.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
@@ -1153,7 +1153,7 @@
                                 AND M.DEL_YN = 'N' AND M.BARCODE_NUM = #{BARCODE_NUM}
                 )
             </if>
-             <if test='SEL_COMPLETED_YN != null'>
+            <if test='SEL_COMPLETED_YN != null'>
                 AND A.INNER_WORK_FINISH_DT IS NULL
             </if>
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
