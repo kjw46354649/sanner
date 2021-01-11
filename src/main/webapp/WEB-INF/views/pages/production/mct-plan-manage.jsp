@@ -258,7 +258,17 @@
             // {title: 'WORK_STATUS', dataIndx: 'WORK_STATUS', hidden: true},
             {title: 'SORT_NUM', dataType: 'integer', dataIndx: 'SORT_NUM', hidden: true},
             {title: '납기', minWidth: 40, dataIndx: 'INNER_DUE_DT'},
-            {title: '관리번호', width: 175, dataIndx: 'CONTROL_NUM'},
+            {
+                title: '관리번호', width: 175, dataIndx: 'CONTROL_NUM',
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.bind('click', function () {
+                        let rowData = ui.rowData;
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
+                    });
+                }
+            },
             {
                 title: '', minWidth: 25, dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background': '#a9d3f5'},
                 render: function (ui) {
