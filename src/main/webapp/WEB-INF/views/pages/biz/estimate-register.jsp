@@ -1126,6 +1126,7 @@
                 if (Object.keys(rowData).length > 5) {
                     // requiredCheck(rowData);
                     badCodeCheck(rowData);
+                    standardCheck(rowData);
                     // inputErrorCheck(rowData);
                 }
             }
@@ -1197,6 +1198,33 @@
                 });
 
                 if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_HEAT');
+            }
+        };
+
+        const standardCheck = function (rowData) {
+            if (!fnIsEmpty(rowData.SIZE_TXT)) {
+                const sizeTxt = String(rowData.SIZE_TXT).toUpperCase();
+                let expression;
+
+                if (sizeTxt.includes('@')) {
+                    expression = /^@\d+(\.\d+)?\*\d+(\.\d+)?$/;
+                } else if (sizeTxt.includes('R')) {
+                    expression = /^R\d+(\.\d+)?\*\d+(\.\d+)?$/;
+                } else if (sizeTxt.includes('H')) {
+                    expression = /^H\d+(\.\d+)?\*\d+(\.\d+)?$/;
+                } else if (sizeTxt.includes('M')) {
+                    expression = /^M\d+(\.\d+)?\*\d+(\.\d+)?$/;
+                } else {
+                    expression = /^(\d+(\.\d+)?\*\d+(\.\d+)?\*\d+(\.\d+)?)$/;
+                }
+
+                const regex = new RegExp(expression, 'gm');
+
+                if (!regex.test(sizeTxt)) {
+                    const rowIndex = rowData.pq_ri;
+
+                    addErrorList(rowIndex, 'SIZE_TXT');
+                }
             }
         };
 
