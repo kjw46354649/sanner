@@ -1841,12 +1841,53 @@
             }
         },
         {title: '작업<br>형태', dataIndx: 'WORK_TYPE'},
-        {title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 95},
-        {title: '규격', dataIndx: 'SIZE_TXT', width: 95},
-        {title: '재질', dataIndx: 'MATERIAL_TYPE_NM', width: 95},
-        {title: '도면번호', halign: 'center', align: 'left', dataIndx: 'DRAWING_NUM', width: 150},
+        {
+            title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 95,
+            styleHead: {'background': '#ffe699'},
+            render: function (ui) {
+                const firstRowData = this.getRowData({rowIndx: 0});
+
+                if (ui.rowIndx !== 0 && ui.cellData === firstRowData[ui.dataIndx]) {
+                    return {style: 'color: #0000ff'};
+                }
+            }
+        },
+        {
+            title: '규격', dataIndx: 'SIZE_TXT', width: 95,
+            styleHead: {'background': '#ffe699'},
+            render: function (ui) {
+                const firstRowData = this.getRowData({rowIndx: 0});
+
+                if (ui.rowIndx !== 0 && ui.cellData === firstRowData[ui.dataIndx]) {
+                    return {style: 'color: #0000ff'};
+                }
+            }
+        },
+        {
+            title: '재질', dataIndx: 'MATERIAL_TYPE_NM', width: 95,
+            styleHead: {'background': '#ffe699'},
+            render: function (ui) {
+                const firstRowData = this.getRowData({rowIndx: 0});
+
+                if (ui.rowIndx !== 0 && ui.cellData === firstRowData[ui.dataIndx]) {
+                    return {style: 'color: #0000ff'};
+                }
+            }
+        },
+        {
+            title: '도면번호', halign: 'center', align: 'left', dataIndx: 'DRAWING_NUM', width: 150,
+            styleHead: {'background': '#ffe699'},
+            render: function (ui) {
+                const firstRowData = this.getRowData({rowIndx: 0});
+
+                if (ui.rowIndx !== 0 && ui.cellData === firstRowData[ui.dataIndx]) {
+                    return {style: 'color: #0000ff'};
+                }
+            }
+        },
         {
             title: '', minWidth: 25, dataIndx: 'IMG_GFILE_SEQ',
+            styleHead: {'background': '#ffe699'},
             render: function (ui) {
                 if (ui.cellData)
                     return '<span class="fileSearchIcon" name="imageView" style="cursor: pointer"></span>';
@@ -1862,10 +1903,22 @@
         },
         {
             title: 'CAD 파일', align: 'center',
+            styleHead: {'background': '#ffe699'},
             colModel: [
-                {title: 'Size', dataIndx: 'CAD_FILE_SIZE', width: 95},
+                {
+                    title: 'Size', dataIndx: 'CAD_FILE_SIZE', width: 95,
+                    styleHead: {'background': '#ffe699'},
+                    render: function (ui) {
+                        const firstRowData = this.getRowData({rowIndx: 0});
+
+                        if (ui.rowIndx !== 0 && ui.cellData === firstRowData[ui.dataIndx]) {
+                            return {style: 'color: #0000ff'};
+                        }
+                    }
+                },
                 {
                     title: '', minWidth: 35, dataIndx: 'DXF_GFILE_SEQ',
+                    styleHead: {'background': '#ffe699'},
                     render: function (ui) {
                         if (ui.cellData)
                             return '<span class="blueFileImageICon" name="downloadView" style="cursor: pointer"></span>';

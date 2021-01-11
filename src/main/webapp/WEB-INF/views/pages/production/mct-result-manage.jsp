@@ -1421,6 +1421,10 @@
             $('#mct_result_manage_search_form').find('#INCLUDE_UNALLOCATED_WAIT').parent().show();
         }
     });
+
+    $('#INCLUDE_UNALLOCATED_WAIT').on('click', function () {
+        $('#mctCamManageSearchBtn').click();
+    });
     /* event */
     function resetMctResult(index){
         $("#cam_work_manage_pop_form").find("#CAM_WORK_DIRECTION_" + index).val($("#cam_work_manage_pop_form").find("#CAM_WORK_DIRECTION_" + index).find('option:first').val());

@@ -32,8 +32,8 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="ERROR_PROCESS">공정</label>
-                            <select  class="wd_200" name="ERROR_PROCESS" id="ERROR_PROCESS" title="공정">
+                            <label class="label_100" for="PROCESS_TYPE">공정</label>
+                            <select  class="wd_200" name="PROCESS_TYPE" id="PROCESS_TYPE" title="공정">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1010}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -42,12 +42,9 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="">가공기기</label>
-                            <select class="wd_200" name="" id="">
+                            <label class="label_100" for="EQUIP_SEQ">가공기기</label>
+                            <select class="wd_200" name="EQUIP_SEQ" id="EQUIP_SEQ">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
-<%--                                <c:forEach var="code" items="${HighCode.H_1027}">--%>
-<%--                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
-<%--                                </c:forEach>--%>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -64,8 +61,9 @@
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
-                        <span>
-                            <label for="SIZE_TYPE">규격</label>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="SIZE_TYPE">규격</label>
                             <select class="wd_100" name="SIZE_TYPE" id="SIZE_TYPE" title="규격">
                                 <c:forEach var="vlocale" items="${HighCode.H_1016}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
@@ -73,33 +71,33 @@
                             </select>
                         </span>
                         <span class="slt_wrap" id="SIZE_W">
-                            <label class="label_50">W</label>
+                            <label class="label_8">W</label>
                             <input class="wd_50" type="number" name="SIZE_W_F" id="SIZE_W_F" placeholder="From">
-                            <span>~</span>
+                            <span class="nbsp">~</span>
                             <input class="wd_50" type="number" name="SIZE_W_T" id="SIZE_W_T" placeholder="To">
                         </span>
                         <span class="slt_wrap" id="SIZE_H">
-                            <label class="label_50">H</label>
+                            <label class="label_8">H</label>
                             <input class="wd_50" type="number" name="SIZE_H_F" id="SIZE_H_F" placeholder="From">
-                            <span>~</span>
+                            <span class="nbsp">~</span>
                             <input class="wd_50" type="number" name="SIZE_H_T" id="SIZE_H_T" placeholder="To">
                         </span>
                         <span class="slt_wrap" id="SIZE_T">
-                            <label class="label_50">T</label>
+                            <label class="label_8">T</label>
                             <input class="wd_50" type="number" name="SIZE_T_F" id="SIZE_T_F" placeholder="From">
-                            <span>~</span>
+                            <span class="nbsp">~</span>
                             <input class="wd_50" type="number" name="SIZE_T_T" id="SIZE_T_T" placeholder="To">
                         </span>
                         <span class="slt_wrap" id="SIZE_D" style="display: none;">
-                            <label class="label_50">D</label>
+                            <label class="label_8">D</label>
                             <input class="wd_50" type="number" name="SIZE_D_F" id="SIZE_D_F" placeholder="From">
-                            <span>~</span>
+                            <span class="nbsp">~</span>
                             <input class="wd_50" type="number" name="SIZE_D_T" id="SIZE_D_T" placeholder="To">
                         </span>
                         <span class="slt_wrap" id="SIZE_L" style="display: none;">
-                            <label class="label_50">L</label>
+                            <label class="label_8">L</label>
                             <input class="wd_50" type="number" name="SIZE_L_F" id="SIZE_L_F" placeholder="From">
-                            <span>~</span>
+                            <span class="nbsp">~</span>
                             <input class="wd_50" type="number" name="SIZE_L_T" id="SIZE_L_T" placeholder="To">
                         </span>
                     </li>
@@ -172,10 +170,27 @@
         fnCommCodeDatasourceSelectBoxCreate($('#PROCESS_FULFILLMENT_HISTORY_SEARCH_FORM').find('#WORK_USER_ID'), 'all', {
             'url': '/json-list', 'data': {'queryId': 'dataSource.getMCTWorkerList'}
         });
+        fnCommCodeDatasourceSelectBoxCreate($('#PROCESS_FULFILLMENT_HISTORY_SEARCH_FORM').find('#EQUIP_SEQ'), 'all', {
+            'url': '/json-list', 'data': {'queryId': 'dataSource.getEquipList'}
+        });
+        const EQUIP = (function () {
+            let list = [];
+            let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getEquipList'}};
+
+            fnPostAjax(function (data) {
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    let obj = data.list[i];
+
+                    list.push({value: obj.CODE_CD, text: obj.CODE_NM, factoryArea: obj.FACTORY_AREA});
+                }
+            }, parameters, '');
+
+            return list;
+        })();
 
         /* variable */
         const YEAR = TODAY.getFullYear();
-        const MONTH = TODAY.getMonth() + 1;
+        // const MONTH = TODAY.getMonth() + 1;
 
         let $processFulfillmentHistoryGrid;
         const tab2GridId = 'NC_PERFORMANCE_HISTORY_GRID';
@@ -428,6 +443,21 @@
                     $processFulfillmentHistorySearchForm.find('#SIZE_L').show();
             }
         });
+
+        //TODO: 공정 콤보박스 변경하면 가공기기 변경
+        // $('#PROCESS_TYPE').on('change', function () {
+        //     console.log('change');
+        //     console.log(this.value);
+        //     const factoryArea = this.value;
+        //     console.log(EQUIP);
+        //     console.log(typeof EQUIP);
+        //     let k = EQUIP.filter(value => {
+        //         console.log('this.value', this.value);
+        //         return factoryArea === value.factoryArea;
+        //     });
+        //     console.log('k', k);
+        //     console.log('EQUIP', EQUIP);
+        // });
         /* event */
 
         /* init */

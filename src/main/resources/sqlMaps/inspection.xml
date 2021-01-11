@@ -1152,7 +1152,7 @@
                                                                          )
                     ) T LEFT OUTER JOIN jmes.TBL_CAM P ON T.CONTROL_SEQ = P.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ
             ) X LEFT OUTER JOIN jmes.TBL_CAM_DETAIL Q ON X.CAM_SEQ = Q.CAM_SEQ
-            ORDER BY CASE WHEN CONCAT(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ) = CONCAT(#{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}) THEN 0 ELSE 1 END, ORDER_CONFIRM_DT DESC
+            ORDER BY CASE WHEN CONCAT(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ) = CONCAT(#{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}) THEN 0 ELSE 1 END, POINT_SUM DESC, ORDER_CONFIRM_DT DESC, Q.SEQ
     </select>
     <select id="selectOutgoingHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <!-- 3. 출하 이력관리 쿼리 -->
