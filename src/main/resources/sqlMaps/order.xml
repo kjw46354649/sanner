@@ -805,7 +805,7 @@
             IFNULL(#{OUTSIDE_REQUEST_GRIND_YN}, 'N'),
             IFNULL(#{OUTSIDE_REQUEST_SURFACE_YN}, 'N'),
             #{OUTSIDE_REQUEST_ETC},
-            #{OUTSIDE_HOPE_DUE_DT},
+            CASE WHEN #{OUTSIDE_YN} = 'Y' THEN DATE_FORMAT(DATE_SUB(#{INNER_DUE_DT}, INTERVAL 1 DAY), '%Y%m%d') END, <!-- #{OUTSIDE_HOPE_DUE_DT} -->
             #{OUTSIDE_UNIT_AMT},
             #{OUTSIDE_IN_DT},
             #{OUTSIDE_STATUS},
@@ -1410,8 +1410,9 @@
     <update id="updateOutsideConversion" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
-            PART_STATUS = CASE WHEN #{PART_STATUS} = 'null' THEN NULL ELSE #{PART_STATUS} END,
-            OUTSIDE_YN = #{OUTSIDE_YN},
+            PART_STATUS = NULL,
+            OUTSIDE_YN = 'Y',
+            OUTSIDE_HOPE_DUE_DT = DATE_FORMAT(DATE_SUB(INNER_DUE_DT, INTERVAL 1 DAY), '%Y%m%d'),
             WORK_FACTORY = NULL,
             STATUS_DT = NOW(),
             UPDATE_DT = NOW(),

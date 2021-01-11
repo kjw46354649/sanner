@@ -542,15 +542,6 @@
                     let rowData = ui.rowData;
 
                     return rowData.OUTSIDE_STATUS !== 'OST001';
-                },
-                render: function (ui) {
-                    const cellData = ui.cellData;
-
-                    if (cellData) {
-                        let date = cellData;
-
-                        return date.substring(5);
-                    }
                 }
             },
             {
