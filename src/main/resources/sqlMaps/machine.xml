@@ -937,6 +937,12 @@
                 <if test="FACTORY_AREA != null and FACTORY_AREA != ''">
                     AND D.FACTORY_AREA = #{FACTORY_AREA}
                 </if>
+                <if test="PROCESS_TYPE != null and PROCESS_TYPE != ''">
+                    AND D.PROCESS_TYPE = #{PROCESS_TYPE}
+                </if>
+                <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                    AND D.EQUIP_SEQ = #{EQUIP_SEQ}
+                </if>
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
             <if test="CONTROL_NUM_OR_DRAWING_NUM != null and CONTROL_NUM_OR_DRAWING_NUM != ''">
