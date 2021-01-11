@@ -416,10 +416,10 @@
             {title: '진행상태', width: 80, dataIndx: 'PART_STATUS'},
             {title: '최근 가공현황', align: 'center',
                 colModel: [
-                    {title: '공정', dataIndx: 'NC_WORK_TYPE'},
-                    {title: '기기명', width: 60, dataIndx: 'NC_EQUIP_NM'},
-                    {title: '작업자', width: 80, dataIndx: 'NC_WORK_USER_NM'},
-                    {title: 'R/T', width: 55, datatype: 'integer', align: 'right', dataIndx: 'NC_WORKING_TIME'},
+                    {title: '공정', dataIndx: 'RECENTLY_WORK_TYPE'},
+                    {title: '기기명', width: 60, dataIndx: 'RECENTLY_EQUIP_NM'},
+                    {title: '작업자', width: 80, dataIndx: 'RECENTLY_WORK_USER_NM'},
+                    {title: 'R/T', width: 55, datatype: 'integer', align: 'right', dataIndx: 'RECENTLY_WORKING_TIME'},
                 ]
             },
             {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
