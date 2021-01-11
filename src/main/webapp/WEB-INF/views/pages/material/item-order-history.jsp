@@ -80,6 +80,7 @@
                             <span class="chk_box"><input name="VIEW_AMOUNT_INFORMATION" id="VIEW_AMOUNT_INFORMATION" type="checkbox"><label for="VIEW_AMOUNT_INFORMATION"> 금액정보</label></span>
                             <button type="button" id="item_order_history_right_excel_export"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius green" id="btnItemOrderHistorySave">검사 입고</button>
+                            <button type="button" class="defaultBtn radius green" id="btnSave" disabled>SAVE</button>
                         </div>
                     </div>
                     <div class="conMainWrap">
@@ -112,7 +113,7 @@
     let itemOrderHistoryRightGrid = $("#item_order_history_right_grid");
 
     $(function () {
-        let itemOrderHistoryLeftColModel= [
+        let itemOrderHistoryLeftColModel = [
             {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, sortable: false},
             {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', width: 85, sortable: false},
             {title: '총수량', dataType: 'string', dataIndx: 'ORDER_QTY', sortable: false},
@@ -127,8 +128,8 @@
             {title: '.', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: '.', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
             {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120 , editable: false, hidden: true} ,
-            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', width: 35, editable: false},
-            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', width: 65, editable: false},
+            {title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', minWidth: 35, editable: false},
+            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', width: 50, editable: false},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', width: 65, editable: false},
             {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'SIZE_TXT', width: 75, editable: false},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 30 , editable: false},
@@ -147,7 +148,7 @@
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}
             },*/
             {title: '수입검사', dataType: 'string', align: "center", colModel: [
-                    {title: '소재', dataType: 'string', dataIndx: 'INSPECT_MATERIAL_YN', editable: false,
+                    {title: '소재', dataType: 'string', dataIndx: 'INSPECT_MATERIAL_YN', minWidth: 35, editable: false,
                         render: function(ui){
                             let icon = ui.rowData.INSPECT_MATERIAL_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
                             let html = ui.rowData.IN_YN == 'N' ?
@@ -178,7 +179,7 @@
                             });
                         }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
                     },
-                    {title: '외관', dataType: 'string', dataIndx: 'INSPECT_SURFACE_YN', editable: false,
+                    {title: '외관', dataType: 'string', dataIndx: 'INSPECT_SURFACE_YN', minWidth: 35, editable: false,
                         render: function(ui){
                             let icon = ui.rowData.INSPECT_SURFACE_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
                             let html = ui.rowData.IN_YN == 'N' ?
@@ -209,7 +210,7 @@
                             });
                         }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
                     },
-                    {title: '치수', dataType: 'string', dataIndx: 'INSPECT_SIZE_YN', editable: false,
+                    {title: '치수', dataType: 'string', dataIndx: 'INSPECT_SIZE_YN', minWidth: 35, editable: false,
                         render: function(ui){
                             let icon = ui.rowData.INSPECT_SIZE_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
                             let html = ui.rowData.IN_YN == 'N' ?
@@ -242,21 +243,18 @@
                     },
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '검사 비고', dataType: 'string', dataIndx: 'INSPECT_NOTE', minWidth: 130,
+            {title: '검사 비고', dataType: 'string', dataIndx: 'INSPECT_NOTE', width: 100,
                 editable: function (ui) {
-                    if (ui.rowData.IN_YN == 'Y') {
-                        return false;
-                    }
-                    return true;
+                    return ui.rowData.IN_YN !== 'Y';
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}
             },
-            {title: '입고', dataType: 'string', dataIndx: 'IN_YN', width: 40, editable: false,
+            {title: '입고', dataType: 'string', dataIndx: 'IN_YN', minWidth: 35, editable: false,
                 render: function(ui){
                     let icon = ui.rowData.IN_YN == 'Y' ? 'ui-icon-check' : 'ui-icon-closethick';
                     return '<span class="ui-icon '+icon+'"></span>';
                 }
             },
-            {title: '입고 일시', dataType: 'string', dataIndx: 'IN_DT', width: 120, editable: false},
+            {title: '입고 일시', dataType: 'string', dataIndx: 'IN_DT', width: 90, editable: false},
             {
                 title: '매입 금액', align: 'center', colModel: [
                     {title: '단가', dataType: 'integer', format: '#,###', dataIndx: 'IN_UNIT_AMT', width: 55, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
@@ -281,8 +279,8 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 180, editable: false},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 30, width: 30, editable: false},
+            {title: '관리번호', align: 'left', dataType: 'string', dataIndx: 'CONTROL_PART_NUM', width: 150, editable: false},
+            // {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 30, width: 30, editable: false},
         ];
 
         itemOrderHistoryLeftGrid.pqGrid({
@@ -351,19 +349,22 @@
 
         selectItemOrderHistoryRightList();
         function selectItemOrderHistoryRightList() {
+            if (itemOrderHistoryRightGrid.hasClass('pq-grid')) {
+                itemOrderHistoryRightGrid.pqGrid('destroy');
+            }
             itemOrderHistoryRightGrid.pqGrid({
                 height: '100%', rowHtHead: 23,
                 dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'MATERIAL_ORDER_SEQ',
                     url: "/paramQueryGridSelect",
                     postData: fnFormToJsonArrayData('#item_order_history_hidden_form'),
                     getData: function (dataJSON) {
                         let data = dataJSON.data;
-                        return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
+                        return {totalRecords: data.length, data: data};
                     }
                 },
                 postRenderInterval: -1,
-                columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
+                columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
                 scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true },
                 selectionModel: { type: 'row', mode: 'single'} ,
@@ -394,6 +395,9 @@
                     }else {
                         $("#btnItemOrderHistorySave").attr("disabled", false);
                     }
+                },
+                change: function () {
+                    $('#btnSave').prop('disabled', false);
                 }
             });
 
@@ -564,6 +568,13 @@
 
         $('#VIEW_AMOUNT_INFORMATION').on('click', function () {
            changeViewColumn(this.checked);
+        });
+
+        $('#btnSave').on('click', function () {
+            const updateQueryList = ['material.updateItemOrderHistoryRight'];
+
+            fnModifyPQGrid(itemOrderHistoryRightGrid, [], updateQueryList);
+            $('#btnSave').prop('disabled', true);
         });
 
     });
