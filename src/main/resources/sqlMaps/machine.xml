@@ -1127,8 +1127,8 @@
             <if test="HIDDEN_EQUIP_SEQ != null and HIDDEN_EQUIP_SEQ != ''">
                 AND (
                       EXISTS (SELECT 1 FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N' AND M.EQUIP_SEQ IN (${HIDDEN_EQUIP_SEQ}))
-                    <if test="INCLUDE_UNALLOCATED_WAIT == null">
-                        OR I.EQUIP_SEQ IN (${HIDDEN_EQUIP_SEQ})
+                    <if test="INCLUDE_UNALLOCATED_WAIT != null">
+                        OR I.EQUIP_SEQ IS NULL
                     </if>
                     )
             </if>
