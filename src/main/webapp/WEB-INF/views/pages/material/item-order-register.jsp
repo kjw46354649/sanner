@@ -306,28 +306,8 @@
         $itemOrderRegisterSearchForm.find('#SEL_ITEM_ORDER_REGISTER_TERM_WEEK').click();
 
         let itemOrderRegisterLeftColModel= [
-            {title: '가공 확정일시', dataType: 'date', dataIndx: 'STATUS_DT', width: 75, editable: false},
-            {title: '가공 확정일시(조회 조건용)', dataType: 'date', dataIndx: 'STATUS_DT_CONDITION', width: 75, editable: false, hidden: true},
-            {title: '소재주문<br>상태', dataType: 'string', dataIndx: 'M_STATUS_NM', width: 60, editable: false},
-            {title: '소재 주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false,
-                render: function (ui) {
-                    let cls = null;
-                    if (ui.cellData) cls = 'underlinePoint';
-                    return {cls: cls, text: itemOrderRegisterFilterRender(ui)};
-                },
-                postRender: function(ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    if($cell.hasClass("underlinePoint")){
-                        $cell.bind("click", function () {
-                            itemOrder('cell');
-                        });
-                    }
-                }
-            },
-            {title: '주문<br>요청 일시', dataType: 'date', dataIndx: 'M_ORDER_DT',  width: 120, editable: false},
-            {title: '현재위치', dataIndx: 'POP_POSITION_NM', width: 80, editable: false},
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+            {title: '가공<br>확정일시', dataIndx: 'STATUS_DT', width: 75, editable: false},
+            {title: '', align: 'center', dataIndx: 'CONTROL_NUM_BUTTON', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
                     return '';
@@ -343,9 +323,9 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 140, editable: false,
-                render: function (ui) {
-                    let WORK_TYPE = ui.rowData.WORK_TYPE === undefined ? '' : ui.rowData.WORK_TYPE;
+            {title: '관리번호', align: 'left', dataIndx: 'CONTROL_PART_NUM', width: 150, editable: false,
+                render: function(ui){
+                    let WORK_TYPE = ui.rowData.WORK_TYPE == undefined ? '' : ui.rowData.WORK_TYPE;
                     let returnVal = ui.cellData;
                     if (WORK_TYPE === 'WTP020') {
                         returnVal = '';
@@ -353,8 +333,8 @@
                     return returnVal;
                 }
             },
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 25, width: 25, editable: false},
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
+            {title: '도면번호', dataIndx: 'DRAWING_NUM', width: 120, editable: false},
+            {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
                 },
@@ -367,11 +347,11 @@
                     });
                 }
             },
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', minWidth: 50, width: 50, editable: false,
+            {title: '작업<br>형태', dataIndx: 'WORK_TYPE', minWidth: 50, width: 50, editable: false,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')}
             },
-            {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 50, editable: false},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', width: 60, editable: false,
+            {title: '현재위치', dataIndx: 'POP_POSITION_NM', width: 80, editable: false},
+            {title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 60, editable: false,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "ORDER_COMP_NM", id: "ORDER_COMP_CD" },
@@ -387,26 +367,52 @@
                     }
                 }
             },
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 90, width: 90, editable: false },
-            {title: '규격_가로', dataType: 'string', dataIndx: 'SIZE_W', minWidth: 90, width: 90, editable: false, hidden: true },
-            {title: '규격_세로', dataType: 'string', dataIndx: 'SIZE_H', minWidth: 90, width: 90, editable: false, hidden: true },
-            {title: '규격_두께', dataType: 'string', dataIndx: 'SIZE_T', minWidth: 90, width: 90, editable: false, hidden: true },
-            {title: '발주량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 50, width: 50, editable: false},
-            {title: '소재<br>형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', minWidth: 60, width: 60, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+            {title: '규격', dataIndx: 'SIZE_TXT', minWidth: 90, width: 90, editable: false },
+            {title: '규격_가로', dataIndx: 'SIZE_W', minWidth: 90, width: 90, editable: false, hidden: true },
+            {title: '규격_세로', dataIndx: 'SIZE_H', minWidth: 90, width: 90, editable: false, hidden: true },
+            {title: '규격_두께', dataIndx: 'SIZE_T', minWidth: 90, width: 90, editable: false, hidden: true },
+            {title: '발주량', dataIndx: 'ORDER_QTY', minWidth: 50, width: 50, editable: false},
+            {title: '소재<br>주문상태', dataIndx: 'M_STATUS_NM', width: 60, editable: false},
+            {title: '소재 주문번호', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false,
+                render: function (ui) {
+                    let cls = null;
+                    if (ui.cellData) cls = 'underlinePoint';
+                    return {cls: cls, text: itemOrderRegisterFilterRender(ui)};
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    if($cell.hasClass("underlinePoint")){
+                        $cell.bind("click", function () {
+                            itemOrder('cell');
+                        });
+                    }
+                }
+            },
+            {title: '주문요청 일시', dataType: 'date', dataIndx: 'M_ORDER_DT',  width: 90, editable: false},
+            {
+                title: '비고', dataIndx: 'NOTE', minWidth: 120,
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    return itemOrderRegisterGridCellEditable(ui);
+                }
+            },
+            {title: '가공<br>납기', dataIndx: 'INNER_DUE_DT', width: 50, editable: false},
+            {title: '소재<br>형태', dataIndx: 'MATERIAL_KIND', minWidth: 60, width: 60, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029') },
                 editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
             },
-            {title: '소재<br>종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', minWidth: 70, width: 70, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+            {title: '소재<br>종류', dataIndx: 'MATERIAL_DETAIL', minWidth: 70, width: 70, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027') },
                 editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);},
             },
-            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', minWidth: 90, width: 120, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+            {title: '요청소재<br>Size(mm)', dataIndx: 'M_SIZE_TXT', minWidth: 90, width: 90, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 120,
                 editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
             },
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', minWidth: 50, width: 50, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+            {title: '주문<br>수량', dataIndx: 'M_ORDER_QTY', minWidth: 50, width: 50, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
             },
-            {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 70, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+            {title: '주문업체', dataIndx: 'M_COMP_CD', width: 70, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     valueIndx: "value",
@@ -462,19 +468,16 @@
                         },
                         editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
                     },
-                    {title: '비고', dataType: 'string', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, minWidth: 120,
+                    {title: '비고', dataIndx: 'M_ORDER_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, minWidth: 120,
                         editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
                     },
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, minWidth: 120,
-                editable: function (ui) {return itemOrderRegisterGridCellEditable(ui);}
-            },
             {title: '보유소재 충당수량', align: "center", colModel: [
-                    {title: '소재 Size', dataType: 'string', dataIndx: 'OUT_SIZE_TXT', editable: false},
-                    {title: '수량', dataType: 'string', dataIndx: 'OUT_QTY', editable: false},
-                    {title: '불출완료수량', dataType: 'string', dataIndx: 'COMPLETE_OUT_QTY', editable: false},
-                    {title: '', dataType: 'string', dataIndx: '', editable: false,
+                    {title: '소재 Size', dataIndx: 'OUT_SIZE_TXT', editable: false},
+                    {title: '수량', dataIndx: 'OUT_QTY', editable: false},
+                    {title: '불출완료수량', dataIndx: 'COMPLETE_OUT_QTY', editable: false},
+                    {title: '', dataIndx: 'RESET_BUTTON', editable: false,
                         render: function(ui){
                             let ORDER_STATUS = ui.rowData.M_STATUS == undefined ? '' : ui.rowData.M_STATUS;
                             let returnVal = '<button type="button" id="itemOrderRegisterOutReset" class="miniBtn gray">Reset</button>';
@@ -507,7 +510,7 @@
                             });
                         }
                     },
-                    {title: '불출', dataType: 'string', dataIndx: 'OUT_YN', editable: false,
+                    {title: '불출', dataIndx: 'OUT_YN', editable: false,
                         render: function (ui) {
                             let cellData = ui.cellData;
 
@@ -516,16 +519,15 @@
                     },
                 ]
             },
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 120, editable: false},
-            {title: '.', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true},
-            {title: '.', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: '.', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
+            {title: '.', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: '.', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: '.', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
             /*{title: '주문 발주 상태', align: "center", colModel: [
-                    {title: '상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', width: 70, editable: false},
+                    {title: '상태', dataIndx: 'PART_STATUS_NM', width: 70, editable: false},
                     {title: '확정/취소 일시', dataType: 'date', dataIndx: 'STATUS_DT', width: 120, editable: false}
                 ]},
-            {title: '도면Rev.', dataType: 'string', dataIndx: 'DRAWING_VER ', editable: false},
-            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+            {title: '도면Rev.', dataIndx: 'DRAWING_VER ', editable: false},
+            {title: 'DXF', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -539,7 +541,7 @@
                 }
             },
             {
-                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+                title: 'PDF', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -965,7 +967,7 @@
             },
             {title: '입고일시', dataIndx: 'IN_DT', width: 100, editable: false},
             {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
-            {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: false, width: 50},
+            {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'ORDER_USER_ID', hidden: true}
         ];
@@ -982,7 +984,7 @@
                 }
             },
             postRenderInterval: -1,
-            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: itemOrderRegisterFilterRender}, filterModel: { mode: 'OR' },
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: itemOrderRegisterFilterRender}, filterModel: { mode: 'OR' },
             scrollModel: {autoFit: false},
             numberCell: {width: 30, title: "No", show: true },
             swipeModel: {on: false},
@@ -1008,6 +1010,83 @@
                 let rollSeq = '${authUserInfo.ROLE_SEQ}';
                 let pqTheme = $('#view_tab_' + rollSeq + '0401 .pq-theme');
                 pqTheme.css('overflow', 'initial');
+
+                const autoMerge = function (grid, refresh) {
+                    let mergeCellList = [],
+                        colModelList = grid.getColModel(),
+                        i = colModelList.length,
+                        data = grid.option('dataModel.data');
+
+
+                    const controlList = [
+                        // 'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'ORDER_COMP_NM',
+                    ];
+                    const partList = [
+                        'STATUS_DT', 'CONTROL_NUM_BUTTON', 'CONTROL_PART_NUM', 'DRAWING_NUM','IMG_GFILE_SEQ',
+                        'WORK_TYPE', 'POP_POSITION_NM', 'ORDER_COMP_NM', 'SIZE_TXT', 'SIZE_W', 'SIZE_H', 'SIZE_T',
+                        'ORDER_QTY', 'OUT_SIZE_TXT', 'OUT_QTY', 'COMPLETE_OUT_QTY', 'RESET_BUTTON'
+                    ];
+                    const includeList = controlList.concat(partList);
+
+                    while (i--) {
+                        let dataIndx = colModelList[i].dataIndx,
+                            rc = 1,
+                            j = data.length;
+
+                        if (includeList.includes(dataIndx)) {
+                            while (j--) {
+                                let controlNum = data[j]['CONTROL_PART_NUM'],
+                                    controlNumPrev = data[j - 1] ? data[j - 1]['CONTROL_PART_NUM'] : undefined,
+                                    cellData = data[j][dataIndx],
+                                    cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
+
+                                if (controlList.includes(dataIndx)) {
+                                    if (controlNum === controlNumPrev) {
+                                        // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
+                                        if (cellData === cellDataPrev) {
+                                            rc++;
+                                        }
+                                    } else if (rc > 1) {
+                                        /**
+                                         * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
+                                         * c1: colIndx of first column. 첫 번째 열의 colIndx.
+                                         * rc: number of rows in the range. 범위 내 행 수.
+                                         * cc: number of columns in the range. 범위 내 열 수.
+                                         */
+                                        mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
+                                        rc = 1;
+                                    }
+                                } else if (partList.includes(dataIndx)) {
+                                    let cellData = data[j][dataIndx],
+                                        cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
+
+                                    if (controlNum === controlNumPrev) {
+                                        // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
+                                        if (cellData === cellDataPrev) {
+                                            rc++;
+                                        }
+                                    } else if (rc > 1) {
+                                        /**
+                                         * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
+                                         * c1: colIndx of first column. 첫 번째 열의 colIndx.
+                                         * rc: number of rows in the range. 범위 내 행 수.
+                                         * cc: number of columns in the range. 범위 내 열 수.
+                                         */
+                                        mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
+                                        rc = 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    grid.option('mergeCells', mergeCellList);
+                    if (refresh) {
+                        grid.refreshView();
+                    }
+                };
+
+                autoMerge(this, true);
             },
             complete: function () {
                 let data = itemOrderRegisterLeftGrid.pqGrid('option', 'dataModel.data');
