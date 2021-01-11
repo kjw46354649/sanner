@@ -544,12 +544,12 @@
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {
-                title: '실적등록일시', width: 90, dataIndx: 'CAM_INSERT_DT',
+                title: '실적등록일시', width: 90, dataIndx: 'CAM_RECENTLY_INSERT_DT',
                 render: function (ui) {
                     const cellData = ui.cellData;
 
                     if (cellData) {
-                        return '<span name="CAM_WORK_HISTORY_ACTION" <!--style="text-decoration: underline; cursor: pointer;-->">' + cellData + '</span>';
+                        return '<span name="CAM_WORK_HISTORY_ACTION" style="text-decoration: underline; cursor: pointer;">' + cellData + '</span>';
                     }
                 },
                 postRender: function (ui) {
@@ -562,7 +562,7 @@
                     });
                 }
             },
-            {title: '가공완료', width: 70, dataIndx: 'INNER_WORK_FINISH_DT'},
+            {title: '가공완료', width: 60, dataIndx: 'INNER_WORK_FINISH_DT'},
             {title: '외<br>주', minWidth: 30, dataIndx: 'OUTSIDE_YN'},
             {title: '수행<br>공장', minWidth: 40, dataIndx: 'WORK_FACTORY_NM'},
             {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
@@ -586,7 +586,7 @@
             },
             {title: '작업<br>형태', minWidth: 40, dataIndx: 'WORK_TYPE_NM'},
             {title: '규격', width: 110, dataIndx: 'SIZE_TXT'},
-            {title: '재질', width: 95, dataIndx: 'MATERIAL_TYPE_NM'},
+            {title: '재질', width: 50, dataIndx: 'MATERIAL_TYPE_NM'},
             {title: '도면번호', halign: 'center', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {
                 title: '', minWidth: 25, dataIndx: 'IMG_GFILE_SEQ',
@@ -626,7 +626,7 @@
                 ]
             },
             {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL_NM'},
-            {title: '소재<br>형태',  width: 80, dataIndx: 'MATERIAL_KIND_NM'},
+            {title: '소재<br>형태',  width: 60, dataIndx: 'MATERIAL_KIND_NM'},
             {title: '주문 소재<br>Size', width: 110, dataIndx: 'MATERAIL_ORDER_SIZE'},
             {
                 title: '1EA 가공시간', align: 'center',
@@ -639,8 +639,8 @@
                 title: 'CAM 작업 실적', align: 'center', colModel: [
                     {title: 'Steps', width: 50, datatype: 'integer', dataIndx: 'CAM_STEP'},
                     {title: '위치', dataIndx: 'WORK_DIRECTION'},
-                    {title: '작업내용', width: 100, dataIndx: 'WORK_DESC'},
-                    {title: '단위수량', width: 100, datatype: 'integer', dataIndx: 'DESIGN_QTY'},
+                    {title: '작업내용', width: 70, dataIndx: 'WORK_DESC'},
+                    {title: '단위수량', width: 50, datatype: 'integer', dataIndx: 'DESIGN_QTY'},
                     {
                         title: 'File', width: 70, dataIndx: '',
                         render: function (ui) {
@@ -670,9 +670,10 @@
                             });
                         }
                     },
-                    {title: '작업자', width: 110, dataIndx: 'WORK_USER_NM'},
-                    {title: '경험 기록사항',  width: 180, dataIndx: 'CAM_EXPERIENCE_NOTE'},
-                    {title: '비고 및 공유사항',  width: 180, dataIndx: 'CAM_WORK_NOTE'},
+                    {title: '작업자', width: 80, dataIndx: 'WORK_USER_NM'},
+                    {title: '실적등록일시', width: 90, dataIndx: 'CAM_INSERT_DT'},
+                    {title: '경험 기록사항',  width: 150, dataIndx: 'CAM_EXPERIENCE_NOTE'},
+                    {title: '비고 및 공유사항',  width: 150, dataIndx: 'CAM_WORK_NOTE'},
                 ]
             }
         ];
@@ -787,7 +788,7 @@
                 'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'ORDER_COMP_NM',
             ];
              const partList = [
-                 'CAM_INSERT_DT', 'INNER_WORK_FINISH_DT', 'OUTSIDE_YN', 'WORK_FACTORY_NM',  'WORK_TYPE_NM', 'SIZE_TXT',
+                 'CAM_RECENTLY_INSERT_DT', 'INNER_WORK_FINISH_DT', 'OUTSIDE_YN', 'WORK_FACTORY_NM',  'WORK_TYPE_NM', 'SIZE_TXT',
                  'MATERIAL_TYPE_NM', 'DRAWING_NUM', 'IMG_GFILE_SEQ', 'CONTROL_PART_QTY', 'CAD_FILE_SIZE', 'DXF_GFILE_SEQ',
                  'MATERIAL_DETAIL_NM', 'MATERIAL_KIND_NM', 'MATERAIL_ORDER_SIZE', 'NC_WORK_TIME', 'TOTAL_WORK_TIME',
                  // 'CAM_STEP', 'WORK_DIRECTION', 'WORK_DESC', 'DESIGN_QTY', '', 'WORK_USER_NM',
