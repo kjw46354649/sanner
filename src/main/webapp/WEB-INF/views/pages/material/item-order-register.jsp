@@ -1434,8 +1434,8 @@
             if (gridInstance.isDirty()) {
                 let changes = gridInstance.getChanges({format: 'byVal'});
                 changes.queryIdList = {
-                    'insertQueryId': [],
-                    'updateQueryId': itemOrderRegisterInsertUpdateQueryList,
+                    'insertQueryId': ['material.insertItemOrderRegisterPopSave'],
+                    'updateQueryId': ['material.updateItemOrderRegisterPopSave'],
                 };
                 let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
                 fnPostAjaxAsync(function () {
