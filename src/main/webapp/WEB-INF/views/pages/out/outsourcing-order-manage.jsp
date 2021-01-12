@@ -557,7 +557,17 @@
                 editable: true
             },
             {title: '입고일시', width: 100, dataIndx: 'OUTSIDE_IN_DT2'},
-            {title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY'},
+            {
+                title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY',
+                render: function (ui) {
+                    const cellData = ui.cellData || 0;
+
+                    if (cellData && ui.rowData.SAME_SIDE_YN === 'Y') {
+                        return cellData + '&nbsp;<span style="background-color: #C00000; color: white; font-size: 1.2rem; text-align: center; vertical-align: middle;">대</span>';
+                    }
+                }
+            },
+            {title: '', dataIndx: 'SAME_SIDE_YN', hidden: true},
             {
                 title: '원발주 정보', align: 'center', colModel: [
                     {title: '납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT', render: function (ui) {}},
