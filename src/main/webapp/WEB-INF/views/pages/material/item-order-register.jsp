@@ -795,7 +795,8 @@
             {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true},
-            {title: '', dataType: 'string', dataIndx: 'ORDER_USER_ID', hidden: true}
+            {title: '', dataType: 'string', dataIndx: 'ORDER_USER_ID', hidden: true},
+            {title: '', dataType: 'string', dataIndx: 'ORIGINAL_MATERIAL_ORDER_NUM', hidden: true}
         ];
 
         let itemOrderRegisterPopTopColModel_enabled= [
@@ -976,7 +977,8 @@
             {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true},
-            {title: '', dataType: 'string', dataIndx: 'ORDER_USER_ID', hidden: true}
+            {title: '', dataType: 'string', dataIndx: 'ORDER_USER_ID', hidden: true},
+            {title: '', dataType: 'string', dataIndx: 'ORIGINAL_MATERIAL_ORDER_NUM', hidden: true}
         ];
 
         itemOrderRegisterLeftGrid.pqGrid({
@@ -1518,7 +1520,7 @@
                 let changes = gridInstance.getChanges({format: 'byVal'});
                 let QUERY_ID_ARRAY = {
                     'insertQueryId': ['material.insertItemOrderRegisterPopSave'],
-                    'updateQueryId': ['material.updateItemOrderRegisterPopSave']
+                    'updateQueryId': ['material.insertItemOrderRegisterPopSave', 'material.updateItemOrderRegisterPopSave']
                 };
                 changes.queryIdList = QUERY_ID_ARRAY;
                 let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};

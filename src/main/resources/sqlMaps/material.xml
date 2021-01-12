@@ -226,7 +226,7 @@
     </select>
 
     <select id="selectItemOrderRegisterPopListSeq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT *, ROW_NUMBER() OVER() AS ROWNUM
+        SELECT *, ROW_NUMBER() OVER() AS ROWNUM, MATERIAL_ORDER_NUM AS ORIGINAL_MATERIAL_ORDER_NUM
         FROM
 		(
 			SELECT
@@ -328,7 +328,7 @@
     </select>
 
     <select id="selectItemOrderRegisterPopListNum" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT Z.*, ROW_NUMBER() OVER() AS ROWNUM
+        SELECT Z.*, ROW_NUMBER() OVER() AS ROWNUM, MATERIAL_ORDER_NUM AS ORIGINAL_MATERIAL_ORDER_NUM
         FROM
         (
             SELECT
@@ -583,18 +583,18 @@
             ORDER_NOTE, ORDER_QTY, ORDER_AMT, ORDER_USER_ID, NOTE,
             INSERT_DT, INSERT_ID
         )
-        VALUES
-        (
-            NEXTVAL(SEQ_MATERIAL_ORDER),
-            #{MATERIAL_ORDER_NUM}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
-            #{M_COMP_CD}, REPLACE(#{HOPE_DUE_DT}, '-', SPACE(0)), #{M_SIZE_TXT},
-            SF_GET_SIZE_TXT('SIZE_TYPE', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_W', #{M_SIZE_TXT}),
-            SF_GET_SIZE_TXT('SIZE_H', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_T', #{M_SIZE_TXT}),
-            SF_GET_SIZE_TXT('SIZE_D', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_L', #{M_SIZE_TXT}), #{REQUEST_NOTE},
-            #{MATERIAL_TYPE}, #{MATERIAL_DETAIL}, #{MATERIAL_KIND},
-            #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT}, #{ORDER_USER_ID}, #{NOTE},
-            NOW(), #{LOGIN_USER_ID}
-        )
+            SELECT
+                NEXTVAL(SEQ_MATERIAL_ORDER),
+                #{MATERIAL_ORDER_NUM}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
+                #{M_COMP_CD}, REPLACE(#{HOPE_DUE_DT}, '-', SPACE(0)), #{M_SIZE_TXT},
+                SF_GET_SIZE_TXT('SIZE_TYPE', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_W', #{M_SIZE_TXT}),
+                SF_GET_SIZE_TXT('SIZE_H', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_T', #{M_SIZE_TXT}),
+                SF_GET_SIZE_TXT('SIZE_D', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_L', #{M_SIZE_TXT}), #{REQUEST_NOTE},
+                #{MATERIAL_TYPE}, #{MATERIAL_DETAIL}, #{MATERIAL_KIND},
+                #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT}, #{ORDER_USER_ID}, #{NOTE},
+                NOW(), #{LOGIN_USER_ID}
+            FROM DUAL
+            WHERE NOT EXISTS (SELECT * FROM TBL_MATERIAL_ORDER M WHERE M.MATERIAL_ORDER_NUM = #{ORIGINAL_MATERIAL_ORDER_NUM})
     </insert>
 
     <update id="updateItemOrderRegisterPopSave" parameterType="java.util.HashMap">
