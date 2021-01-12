@@ -573,7 +573,7 @@
         WHERE MY_MAT_OUT_SEQ IN(${MY_MAT_OUT_SEQ})
     </delete>
 
-    <update id="insertUpdateItemOrderRegisterPopSave" parameterType="java.util.HashMap">
+    <insert id="insertItemOrderRegisterPopSave" parameterType="java.util.HashMap" >
         INSERT INTO TBL_MATERIAL_ORDER
         (
             MATERIAL_ORDER_SEQ, MATERIAL_ORDER_NUM, CONTROL_SEQ, CONTROL_DETAIL_SEQ,
@@ -585,14 +585,7 @@
         )
         VALUES
         (
-            <choose>
-                <when  test="MATERIAL_ORDER_SEQ != '' and MATERIAL_ORDER_SEQ != null">
-                    #{MATERIAL_ORDER_SEQ},
-                </when>
-                <otherwise>
-                    NEXTVAL(SEQ_MATERIAL_ORDER),
-                </otherwise>
-            </choose>
+            NEXTVAL(SEQ_MATERIAL_ORDER),
             #{MATERIAL_ORDER_NUM}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
             #{M_COMP_CD}, REPLACE(#{HOPE_DUE_DT}, '-', SPACE(0)), #{M_SIZE_TXT},
             SF_GET_SIZE_TXT('SIZE_TYPE', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_W', #{M_SIZE_TXT}),
@@ -602,30 +595,35 @@
             #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT}, #{ORDER_USER_ID}, #{NOTE},
             NOW(), #{LOGIN_USER_ID}
         )
-        ON DUPLICATE KEY UPDATE
-            MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM},
-            MATERIAL_COMP_CD = #{M_COMP_CD},
-            HOPE_DUE_DT = REPLACE(#{HOPE_DUE_DT}, '-', SPACE(0)),
-            SIZE_TXT = #{M_SIZE_TXT},
-            SIZE_TYPE = SF_GET_SIZE_TXT('SIZE_TYPE', #{M_SIZE_TXT}),
-            SIZE_W = SF_GET_SIZE_TXT('SIZE_W', #{M_SIZE_TXT}),
-            SIZE_H = SF_GET_SIZE_TXT('SIZE_H', #{M_SIZE_TXT}),
-            SIZE_T = SF_GET_SIZE_TXT('SIZE_T', #{M_SIZE_TXT}),
-            SIZE_D = SF_GET_SIZE_TXT('SIZE_D', #{M_SIZE_TXT}),
-            SIZE_L = SF_GET_SIZE_TXT('SIZE_L', #{M_SIZE_TXT}),
-            REQUEST_NOTE = #{REQUEST_NOTE},
-            MATERIAL_TYPE = #{MATERIAL_TYPE},
-            MATERIAL_DETAIL = #{MATERIAL_DETAIL},
-            MATERIAL_KIND = #{MATERIAL_KIND},
-            ORDER_NOTE = #{M_ORDER_NOTE},
-            ORDER_QTY = #{M_ORDER_QTY},
-            ORDER_USER_ID = #{ORDER_USER_ID},
-            ORDER_STATUS = NULL,
-            NOTE = #{NOTE},
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID},
-            CANCEL_DT = NULL,
-            CANCEL_USER_ID = NULL
+    </insert>
+
+    <update id="updateItemOrderRegisterPopSave" parameterType="java.util.HashMap">
+        UPDATE
+            TBL_MATERIAL_ORDER
+        SET
+            MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
+            , MATERIAL_COMP_CD = #{M_COMP_CD}
+            , HOPE_DUE_DT = DATE_FORMAT(#{HOPE_DUE_DT}, '%Y%m%d')
+            , SIZE_TXT = #{M_SIZE_TXT}
+            , SIZE_TYPE = SF_GET_SIZE_TXT('SIZE_TYPE', #{M_SIZE_TXT})
+            , SIZE_W = SF_GET_SIZE_TXT('SIZE_W', #{M_SIZE_TXT})
+            , SIZE_H = SF_GET_SIZE_TXT('SIZE_H', #{M_SIZE_TXT})
+            , SIZE_T = SF_GET_SIZE_TXT('SIZE_T', #{M_SIZE_TXT})
+            , SIZE_D = SF_GET_SIZE_TXT('SIZE_D', #{M_SIZE_TXT})
+            , SIZE_L = SF_GET_SIZE_TXT('SIZE_L', #{M_SIZE_TXT})
+            , REQUEST_NOTE = #{REQUEST_NOTE}
+            , ORDER_NOTE = #{M_ORDER_NOTE}
+            , ORDER_QTY = #{M_ORDER_QTY}
+            , ORDER_STATUS = NULL
+            , ORDER_USER_ID = #{ORDER_USER_ID}
+            , MATERIAL_KIND = #{MATERIAL_KIND}
+            , MATERIAL_TYPE = #{MATERIAL_TYPE}
+            , MATERIAL_DETAIL = #{MATERIAL_DETAIL}
+            , NOTE = #{NOTE}
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE
+            MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
     </update>
 
     <update id="insertUpdateItemOrderRegisterPopStatus" parameterType="java.util.HashMap">
