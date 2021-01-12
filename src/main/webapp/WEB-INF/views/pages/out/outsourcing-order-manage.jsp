@@ -542,15 +542,6 @@
                     let rowData = ui.rowData;
 
                     return rowData.OUTSIDE_STATUS !== 'OST001';
-                },
-                render: function (ui) {
-                    const cellData = ui.cellData;
-
-                    if (cellData) {
-                        let date = cellData;
-
-                        return date.substring(5);
-                    }
                 }
             },
             {
@@ -900,6 +891,8 @@
                     }
                 }
             },
+            {title: 'ORIGINAL_SIDE_QTY', dataIndx: 'ORIGINAL_SIDE_QTY', hidden: true},
+            {title: 'OTHER_SIDE_QTY', dataIndx: 'OTHER_SIDE_QTY', hidden: true},
             {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: '소재<br>제공', minWidth: 30, width: 40, dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
@@ -1181,7 +1174,9 @@
                     }
                 }
             },
-            {title: '수량', dataIndx: 'ITEM_QTY'},
+            {title: 'ORIGINAL_SIDE_QTY', dataIndx: 'ORIGINAL_SIDE_QTY', hidden: true},
+            {title: 'OTHER_SIDE_QTY', dataIndx: 'OTHER_SIDE_QTY', hidden: true},
+            {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 render: function (ui) {

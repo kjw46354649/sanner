@@ -137,12 +137,14 @@
             ROW_NUMBER () OVER () AS ROW_NUM,
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
-            C.OUTSIDE_REQUEST_SEQ
+            <include refid="orderMapper.controlPartOrder"/>,
+            D.OUTSIDE_REQUEST_SEQ
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                                            AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                                                            AND C.DEL_YN = 'N'
+            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = B.CONTROL_SEQ
+            LEFT OUTER JOIN TBL_OUTSIDE_REQUEST_DETAIL D ON D.CONTROL_SEQ = B.CONTROL_SEQ
+                                                            AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                                            AND D.DEL_YN = 'N'
         WHERE
             B.CONTROL_SEQ IN (${CONTROL_SEQ})
             AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
