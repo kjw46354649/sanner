@@ -608,7 +608,14 @@
             {title: 'CONTROL_DETAIL_SEQ', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'ORDER_SEQ', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: 'INSPECT_SEQ', dataIndx: 'INSPECT_SEQ', hidden: true},
-            {title: '주문<br>상태', minWidth: 30, dataIndx: 'CONTROL_STATUS_NM'},
+            {
+                title: '주문<br>상태', minWidth: 30, dataIndx: 'CONTROL_STATUS_NM',
+                render: function (ui) {
+                    if (ui.cellData === '보류') {
+                        return {style: 'color: #ff0000'};
+                    }
+                }
+            },
             {
                 title: '확정<br>일자', dataIndx: 'CONTROL_CONFIRM_DT', width: 60,
                 render: function (ui) {
