@@ -164,7 +164,7 @@
         </if>
         ORDER BY
             CASE Z.ORDER_STATUS WHEN 'MST001' THEN 3    WHEN 'MST002' THEN 4    WHEN 'MST003' THEN 2    WHEN 'MST004' THEN 6    WHEN 'MST005' THEN 5    ELSE 1 <!-- NULL --> END,
-            Z.STATUS_DT DESC, Z.MATERIAL_ORDER_NUM, Z.M_COMP_CD, Z.CONTROL_NUM, Z.PART_NUM
+            Z.STATUS_DT DESC, Z.CONTROL_NUM, Z.PART_NUM, Z.MATERIAL_ORDER_NUM, Z.M_COMP_CD
     </select>
 
     <select id="selectItemOrderRegisterDetail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
