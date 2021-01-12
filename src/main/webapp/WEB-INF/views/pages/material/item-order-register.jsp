@@ -1512,14 +1512,13 @@
             for(let tempI=0; tempI<totalRecords; tempI++){
                 itemOrderRegisterPopTopGrid.pqGrid("updateRow", { 'rowIndx': tempI , row: { 'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM, 'ORDER_USER_ID': ORDER_USER_ID } });
             }
-            let itemOrderRegisterInsertUpdateQueryList = ['material.insertUpdateItemOrderRegisterPopSave'];
 
             let gridInstance = itemOrderRegisterPopTopGrid.pqGrid('getInstance').grid;
             if (gridInstance.isDirty()) {
                 let changes = gridInstance.getChanges({format: 'byVal'});
                 let QUERY_ID_ARRAY = {
-                    'insertQueryId': [],
-                    'updateQueryId': itemOrderRegisterInsertUpdateQueryList,
+                    'insertQueryId': ['material.insertItemOrderRegisterPopSave'],
+                    'updateQueryId': ['material.updateItemOrderRegisterPopSave']
                 };
                 changes.queryIdList = QUERY_ID_ARRAY;
                 let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
