@@ -372,7 +372,14 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '원발주<br>상태', dataIndx: 'CONTROL_STATUS_NM'},
+            {
+                title: '원발주<br>상태', dataIndx: 'CONTROL_STATUS_NM',
+                render: function (ui) {
+                    if (ui.cellData === '보류') {
+                        return {style: 'color: #ff0000'};
+                    }
+                }
+            },
             {title: '외주<br>발주상태', dataIndx: 'OUTSIDE_STATUS', hidden: true},
             {title: '외주<br>발주상태', dataIndx: 'OUTSIDE_STATUS_NM'},
             {title: '상태변경<br>일시', width: 100, dataIndx: 'OUTSIDE_STATUS_DT'},
