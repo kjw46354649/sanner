@@ -916,7 +916,7 @@
             let dueOutDt = rowData.INNER_DUE_DT.slice(5);
             switch (rowData.EMERGENCY_HOLD) {
                 case '보류':
-                    dueOutDt = " <input type='button' class='smallBtn red' value='보류'>";
+                    dueOutDt = '<span class="text-red">보류</span>';
                     break;
                 case '긴급':
                     dueOutDt += " <input type='button' class='smallBtn red' value='긴급'>";
