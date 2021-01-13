@@ -453,6 +453,7 @@ table.boardList .txtP{color: #7030a0;}
 .bg-orange { background-color: #ffc000; }
 .bg-lightcoral { background-color: #f08080; }
 .bg-moccasin {background-color: #ffe4b5; }
+.bg-white {background-color: #ffffff; }
 
 .pq-grid-col, .pq-grid-row>.pq-grid-cell {
   overflow: hidden;

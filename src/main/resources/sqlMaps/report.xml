@@ -1401,4 +1401,323 @@
         LIMIT 6
     </select>
 
+    <select id="selectDailyActualOperateRate" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT IFNULL(ROUND(SUM(A.WORK_TIME) / (24 * 60 * 60),0),0) AS REAL_RATIO
+        FROM jmes.TBL_BATCH_MCT_WORK A
+        WHERE A.BATCH_DT = DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
+            <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+            AND A.WORK_FACTORY = #{WORK_FACTORY}
+            </if>
+            <if test="FACTORY_AREA != null and FACTORY_AREA != ''">
+            AND A.FACTORY_AREA = #{FACTORY_AREA}
+            </if>
+            <if test="PROCESS_TYPE != null and PROCESS_TYPE != ''">
+            AND A.PROCESS_TYPE = #{PROCESS_TYPE}
+            </if>
+            <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+            AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+            </if>
+    </select>
+
+    <select id="selectDailyOperateRateRank5" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.EQUIP_SEQ
+            , (SELECT M.EQUIP_NM FROM jmes.TBL_EQUIP M WHERE M.EQUIP_SEQ = X.EQUIP_SEQ) AS EQUIP_NM
+            , ROUND(X.ABS_RATIO,0) AS ABS_RATIO
+            , ROUND(X.REAL_RATIO,0) AS REAL_RATIO
+        FROM (  SELECT A.EQUIP_SEQ
+                    , IFNULL(A.WORK_TIME,0) AS WORK_TIME
+                    , IFNULL(A.DUTY_TIME,0) AS DUTY_TIME
+                    , 24 * 60 * 60 AS DAY_TIME
+                    , IFNULL(A.WORK_TIME,0) / (24 * 60 * 60) * 100 AS ABS_RATIO
+                    , CASE WHEN IFNULL(A.DUTY_TIME,0) = 0 THEN 0 ELSE IFNULL(A.WORK_TIME,0) / A.DUTY_TIME * 100 END AS REAL_RATIO
+                FROM jmes.TBL_BATCH_MCT_WORK A
+                WHERE A.BATCH_DT = DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
+                    <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                    AND A.WORK_FACTORY = #{WORK_FACTORY}
+                    </if>
+                    <if test="FACTORY_AREA != null and FACTORY_AREA != ''">
+                    AND A.FACTORY_AREA = #{FACTORY_AREA}
+                    </if>
+                    <if test="PROCESS_TYPE != null and PROCESS_TYPE != ''">
+                    AND A.PROCESS_TYPE = #{PROCESS_TYPE}
+                    </if>
+                    <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                    AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+                    </if>
+             ) X
+        ORDER BY (X.ABS_RATIO + X.REAL_RATIO) DESC
+        LIMIT 5
+    </select>
+
+    <select id="selectMonthlyOperateRateTrend" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.DATA_TYPE, X.DATA_TYPE_NM
+            , MAX(CASE WHEN X.MM = '01' THEN X.DATA_VALUE END) AS DATA_VALUE_01
+            , MAX(CASE WHEN X.MM = '02' THEN X.DATA_VALUE END) AS DATA_VALUE_02
+            , MAX(CASE WHEN X.MM = '03' THEN X.DATA_VALUE END) AS DATA_VALUE_03
+            , MAX(CASE WHEN X.MM = '04' THEN X.DATA_VALUE END) AS DATA_VALUE_04
+            , MAX(CASE WHEN X.MM = '05' THEN X.DATA_VALUE END) AS DATA_VALUE_05
+            , MAX(CASE WHEN X.MM = '06' THEN X.DATA_VALUE END) AS DATA_VALUE_06
+            , MAX(CASE WHEN X.MM = '07' THEN X.DATA_VALUE END) AS DATA_VALUE_07
+            , MAX(CASE WHEN X.MM = '08' THEN X.DATA_VALUE END) AS DATA_VALUE_08
+            , MAX(CASE WHEN X.MM = '09' THEN X.DATA_VALUE END) AS DATA_VALUE_09
+            , MAX(CASE WHEN X.MM = '10' THEN X.DATA_VALUE END) AS DATA_VALUE_10
+            , MAX(CASE WHEN X.MM = '11' THEN X.DATA_VALUE END) AS DATA_VALUE_11
+            , MAX(CASE WHEN X.MM = '12' THEN X.DATA_VALUE END) AS DATA_VALUE_12
+        FROM (  SELECT A.DATA_TYPE
+                    , A.DATA_TYPE_NM
+                    , A.MM
+                    , CASE WHEN A.DATA_TYPE = '1' THEN ROUND(B.ABS_MM_TIME / 60 / 60,0)
+                           WHEN A.DATA_TYPE = '2' THEN ROUND(B.DUTY_TIME / 60 / 60,0)
+                           WHEN A.DATA_TYPE = '3' THEN ROUND(B.WORK_TIME / 60 / 60,0)
+                           WHEN A.DATA_TYPE = '4' THEN ROUND(IFNULL(B.WORK_TIME,0) / B.ABS_MM_TIME * 100,0)
+                           WHEN A.DATA_TYPE = '5' THEN ROUND(CASE WHEN IFNULL(B.DUTY_TIME,0) = 0 THEN 0 ELSE IFNULL(B.WORK_TIME,0) / B.DUTY_TIME * 100 END,0)
+                      END AS DATA_VALUE
+                FROM (
+                        SELECT Q.DATA_TYPE, Q.DATA_TYPE_NM
+                            , P.MM
+                        FROM (  SELECT M.MM
+                                FROM jmes.TBL_YYYYMMDD M
+                                WHERE M.DT LIKE CONCAT(SUBSTRING(DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'),1,4),'%')
+                                GROUP BY M.MM
+                              ) P
+                            , ( SELECT '1' AS DATA_TYPE, '24시간' AS DATA_TYPE_NM FROM DUAL
+                                UNION ALL
+                                SELECT '2' AS DATA_TYPE, '근무시간' AS DATA_TYPE_NM FROM DUAL
+                                UNION ALL
+                                SELECT '3' AS DATA_TYPE, '가동시간' AS DATA_TYPE_NM FROM DUAL
+                                UNION ALL
+                                SELECT '4' AS DATA_TYPE, '절대가동률' AS DATA_TYPE_NM FROM DUAL
+                                UNION ALL
+                                SELECT '5' AS DATA_TYPE, '실가동률' AS DATA_TYPE_NM FROM DUAL
+                               ) Q
+                     ) A
+                    LEFT OUTER JOIN (   SELECT SUBSTRING(M.BATCH_DT,5,2) AS MM
+                                            , SUM(M.WORK_TIME) AS WORK_TIME
+                                            , SUM(M.DUTY_TIME) AS DUTY_TIME
+                                            , SUM(24 * 60 * 60) AS ABS_MM_TIME
+                                        FROM jmes.TBL_BATCH_MCT_WORK M
+                                        WHERE M.BATCH_DT LIKE CONCAT(SUBSTRING(DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'),1,4),'%')
+                                            <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                                            AND M.WORK_FACTORY = #{WORK_FACTORY}
+                                            </if>
+                                            <if test="FACTORY_AREA != null and FACTORY_AREA != ''">
+                                            AND M.FACTORY_AREA = #{FACTORY_AREA}
+                                            </if>
+                                            <if test="PROCESS_TYPE != null and PROCESS_TYPE != ''">
+                                            AND M.PROCESS_TYPE = #{PROCESS_TYPE}
+                                            </if>
+                                            <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                                            AND M.EQUIP_SEQ = #{EQUIP_SEQ}
+                                            </if>
+                                        GROUP BY SUBSTRING(M.BATCH_DT,5,2)
+                                    ) B ON A.MM = B.MM
+            ) X
+        GROUP BY X.DATA_TYPE, X.DATA_TYPE_NM
+        ORDER BY X.DATA_TYPE
+    </select>
+
+    <select id="selectDailyMCTOperateRateTrendSevenDays" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.DATA_TYPE, X.DATA_TYPE_NM
+            , MAX(CASE WHEN X.RNUM = 1 THEN CASE WHEN X.DATA_TYPE = '1' THEN X.ABS_RATIO ELSE X.REAL_RATIO END END) DATA_VALUE_1
+            , MAX(CASE WHEN X.RNUM = 2 THEN CASE WHEN X.DATA_TYPE = '1' THEN X.ABS_RATIO ELSE X.REAL_RATIO END END) DATA_VALUE_2
+            , MAX(CASE WHEN X.RNUM = 3 THEN CASE WHEN X.DATA_TYPE = '1' THEN X.ABS_RATIO ELSE X.REAL_RATIO END END) DATA_VALUE_3
+            , MAX(CASE WHEN X.RNUM = 4 THEN CASE WHEN X.DATA_TYPE = '1' THEN X.ABS_RATIO ELSE X.REAL_RATIO END END) DATA_VALUE_4
+            , MAX(CASE WHEN X.RNUM = 5 THEN CASE WHEN X.DATA_TYPE = '1' THEN X.ABS_RATIO ELSE X.REAL_RATIO END END) DATA_VALUE_5
+            , MAX(CASE WHEN X.RNUM = 6 THEN CASE WHEN X.DATA_TYPE = '1' THEN X.ABS_RATIO ELSE X.REAL_RATIO END END) DATA_VALUE_6
+            , MAX(CASE WHEN X.RNUM = 7 THEN CASE WHEN X.DATA_TYPE = '1' THEN X.ABS_RATIO ELSE X.REAL_RATIO END END) DATA_VALUE_7
+        FROM (  SELECT A.DATA_TYPE, A.DATA_TYPE_NM, A.RNUM, A.DT
+                    , IFNULL(ROUND(IFNULL(B.WORK_TIME,0) / B.ABS_TIME * 100,0),0) AS ABS_RATIO
+                    , IFNULL(ROUND(CASE WHEN IFNULL(B.DUTY_TIME,0) = 0 THEN 0 ELSE IFNULL(B.WORK_TIME,0) / B.DUTY_TIME * 100 END,0),0) AS REAL_RATIO
+                FROM (  SELECT ROW_NUMBER() OVER (PARTITION BY N.DATA_TYPE ORDER BY M.DT) AS RNUM
+                            , M.DT
+                            , N.DATA_TYPE, N.DATA_TYPE_NM
+                        FROM jmes.TBL_YYYYMMDD M
+                            , ( SELECT '1' AS DATA_TYPE, '절대가동률' AS DATA_TYPE_NM FROM DUAL
+                                UNION ALL
+                                SELECT '2' AS DATA_TYPE, '실가동률' AS DATA_TYPE_NM FROM DUAL
+                              ) N
+                        WHERE M.DT BETWEEN DATE_FORMAT(DATE_ADD(STR_TO_DATE(DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'),'%Y%m%d'), INTERVAL -6 DAY),'%Y%m%d') AND DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
+                     ) A LEFT OUTER JOIN (  SELECT M.BATCH_DT
+                                                , SUM(M.WORK_TIME) AS WORK_TIME
+                                                , SUM(M.DUTY_TIME) AS DUTY_TIME
+                                                , SUM(24 * 60 * 60) AS ABS_TIME
+                                            FROM jmes.TBL_BATCH_MCT_WORK M
+                                            WHERE M.BATCH_DT BETWEEN DATE_FORMAT(DATE_ADD(STR_TO_DATE(DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'),'%Y%m%d'), INTERVAL -6 DAY),'%Y%m%d') AND DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
+                                                <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                                                AND M.WORK_FACTORY = #{WORK_FACTORY}
+                                                </if>
+                                                <if test="FACTORY_AREA != null and FACTORY_AREA != ''">
+                                                AND M.FACTORY_AREA = #{FACTORY_AREA}
+                                                </if>
+                                                <if test="PROCESS_TYPE != null and PROCESS_TYPE != ''">
+                                                AND M.PROCESS_TYPE = #{PROCESS_TYPE}
+                                                </if>
+                                                <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                                                AND M.EQUIP_SEQ = #{EQUIP_SEQ}
+                                                </if>
+                                            GROUP BY M.BATCH_DT
+                                         ) B ON A.DT = B.BATCH_DT
+              ) X
+        GROUP BY X.DATA_TYPE, X.DATA_TYPE_NM
+    </select>
+
+    <select id="selectWeeklyMctOperateRateEightWeeks" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT Z.DATA_TYPE, Z.DATA_TYPE_NM
+            , MAX(CASE WHEN Z.WEEK_SEQ = 1 THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.ABS_RATIO ELSE Z.REAL_RATIO END END) DATA_VALUE_1
+            , MAX(CASE WHEN Z.WEEK_SEQ = 2 THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.ABS_RATIO ELSE Z.REAL_RATIO END END) DATA_VALUE_2
+            , MAX(CASE WHEN Z.WEEK_SEQ = 3 THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.ABS_RATIO ELSE Z.REAL_RATIO END END) DATA_VALUE_3
+            , MAX(CASE WHEN Z.WEEK_SEQ = 4 THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.ABS_RATIO ELSE Z.REAL_RATIO END END) DATA_VALUE_4
+            , MAX(CASE WHEN Z.WEEK_SEQ = 5 THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.ABS_RATIO ELSE Z.REAL_RATIO END END) DATA_VALUE_5
+            , MAX(CASE WHEN Z.WEEK_SEQ = 6 THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.ABS_RATIO ELSE Z.REAL_RATIO END END) DATA_VALUE_6
+            , MAX(CASE WHEN Z.WEEK_SEQ = 7 THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.ABS_RATIO ELSE Z.REAL_RATIO END END) DATA_VALUE_7
+            , MAX(CASE WHEN Z.WEEK_SEQ = 8 THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.ABS_RATIO ELSE Z.REAL_RATIO END END) DATA_VALUE_8
+        FROM (  SELECT X.DATA_TYPE, X.DATA_TYPE_NM, X.WEEK_SEQ
+                    , IFNULL(ROUND(IFNULL(X.WORK_TIME,0) / X.ABS_TIME * 100,0),0) AS ABS_RATIO
+                    , IFNULL(ROUND(CASE WHEN IFNULL(X.DUTY_TIME,0) = 0 THEN 0 ELSE IFNULL(X.WORK_TIME,0) / X.DUTY_TIME * 100 END,0),0) AS REAL_RATIO
+                FROM (  SELECT A.DATA_TYPE, A.DATA_TYPE_NM
+                            , (TRUNCATE((A.RNUM -1)/7,0)+1) AS WEEK_SEQ
+                            , SUM(B.WORK_TIME) AS WORK_TIME
+                            , SUM(B.DUTY_TIME) AS DUTY_TIME
+                            , SUM(B.ABS_TIME) AS ABS_TIME
+                        FROM (  SELECT M.DT
+                                    , ROW_NUMBER() OVER (PARTITION BY N.DATA_TYPE ORDER BY M.DT) AS RNUM
+                                    , N.DATA_TYPE, N.DATA_TYPE_NM
+                                FROM jmes.TBL_YYYYMMDD M
+                                    , ( SELECT '1' AS DATA_TYPE, '절대가동률' AS DATA_TYPE_NM FROM DUAL
+                                        UNION ALL
+                                        SELECT '2' AS DATA_TYPE, '실가동률' AS DATA_TYPE_NM FROM DUAL
+                                      ) N
+                                WHERE M.DT >=   (   SELECT DATE_FORMAT(DATE_ADD(STR_TO_DATE(MIN(M.DT),'%Y%m%d'), INTERVAL -55 DAY),'%Y%m%d') AS START_DT
+                                                    FROM jmes.TBL_YYYYMMDD M
+                                                    WHERE M.DT >= DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
+                                                        AND DAYOFWEEK(STR_TO_DATE(M.DT,'%Y%m%d')) = '1'
+                                                )
+                                    AND M.DT <![CDATA[ <= ]]> (   SELECT MIN(M.DT) AS END_DT
+                                                    FROM jmes.TBL_YYYYMMDD M
+                                                    WHERE M.DT >= DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
+                                                        AND DAYOFWEEK(STR_TO_DATE(M.DT,'%Y%m%d')) = '1'
+                                                )
+                             ) A LEFT OUTER JOIN (  SELECT M.BATCH_DT
+                                                        , SUM(M.WORK_TIME) AS WORK_TIME
+                                                        , SUM(M.DUTY_TIME) AS DUTY_TIME
+                                                        , SUM(24 * 60 * 60) AS ABS_TIME
+                                                    FROM jmes.TBL_BATCH_MCT_WORK M
+                                                    WHERE M.BATCH_DT BETWEEN DATE_FORMAT(DATE_ADD(STR_TO_DATE(DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'),'%Y%m%d'), INTERVAL -3 MONTH),'%Y%m%d') AND DATE_FORMAT(DATE_ADD(STR_TO_DATE(DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'),'%Y%m%d'), INTERVAL 1 WEEK),'%Y%m%d')
+                                                        <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                                                        AND M.WORK_FACTORY = #{WORK_FACTORY}
+                                                        </if>
+                                                        <if test="FACTORY_AREA != null and FACTORY_AREA != ''">
+                                                        AND M.FACTORY_AREA = #{FACTORY_AREA}
+                                                        </if>
+                                                        <if test="PROCESS_TYPE != null and PROCESS_TYPE != ''">
+                                                        AND M.PROCESS_TYPE = #{PROCESS_TYPE}
+                                                        </if>
+                                                        <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                                                        AND M.EQUIP_SEQ = #{EQUIP_SEQ}
+                                                        </if>
+                                                    GROUP BY M.BATCH_DT
+                                                 ) B ON A.DT = B.BATCH_DT
+                        GROUP BY A.DATA_TYPE, A.DATA_TYPE_NM, (TRUNCATE((A.RNUM -1)/7,0)+1)
+                    ) X
+            ) Z
+        GROUP BY Z.DATA_TYPE, Z.DATA_TYPE_NM
+    </select>
+
+    <select id="selectDFGSDFG123" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.EQUIP_SEQ
+            , SF_GET_CODE_NM('1014', X.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM
+            , jmes.SF_GET_CODE_NM('1005', X.FACTORY_AREA, 'KR') AS FACTORY_AREA_NM
+            , jmes.SF_GET_CODE_NM('1010', X.PROCESS_TYPE, 'KR') AS PROCESS_TYPE_NM
+            , (SELECT M.EQUIP_NM FROM jmes.TBL_EQUIP M WHERE M.EQUIP_SEQ = X.EQUIP_SEQ) AS EQUIP_NM
+            , X.EQUIP_SIZE
+            , REPLACE(CONCAT(TRUNCATE(IFNULL(X.WORK_TIME,0)/3600,0),'h ',TRUNCATE((IFNULL(X.WORK_TIME,0)%3600)/60,0),'m'),'0h ',space(0)) AS WORK_TIME
+            , REPLACE(CONCAT(TRUNCATE(IFNULL(X.PAUSE_TIME,0)/3600,0),'h ',TRUNCATE((IFNULL(X.PAUSE_TIME,0)%3600)/60,0),'m'),'0h ',space(0)) AS PAUSE_TIME
+            , REPLACE(CONCAT(TRUNCATE(IFNULL(X.REPAIR_TIME,0)/3600,0),'h ',TRUNCATE((IFNULL(X.REPAIR_TIME,0)%3600)/60,0),'m'),'0h ',space(0)) AS REPAIR_TIME
+            , IFNULL(ROUND(CASE WHEN IFNULL(X.DUTY_TIME,0) = 0 THEN 0 ELSE IFNULL(X.WORK_TIME,0) / X.DUTY_TIME * 100 END,0),0) AS REAL_RATIO
+            , Y.*
+        FROM jmes.TBL_BATCH_MCT_WORK X
+            , ( SELECT A.EQUIP_SEQ
+                    , MAX(CASE WHEN B.HHMM = '0800' THEN B.TIME_STATUS END) AS STATUS_0800
+                    , MAX(CASE WHEN B.HHMM = '0830' THEN B.TIME_STATUS END) AS STATUS_0830
+                    , MAX(CASE WHEN B.HHMM = '0900' THEN B.TIME_STATUS END) AS STATUS_0900
+                    , MAX(CASE WHEN B.HHMM = '0930' THEN B.TIME_STATUS END) AS STATUS_0930
+                    , MAX(CASE WHEN B.HHMM = '1000' THEN B.TIME_STATUS END) AS STATUS_1000
+                    , MAX(CASE WHEN B.HHMM = '1030' THEN B.TIME_STATUS END) AS STATUS_1030
+                    , MAX(CASE WHEN B.HHMM = '1100' THEN B.TIME_STATUS END) AS STATUS_1100
+                    , MAX(CASE WHEN B.HHMM = '1130' THEN B.TIME_STATUS END) AS STATUS_1130
+                    , MAX(CASE WHEN B.HHMM = '1200' THEN B.TIME_STATUS END) AS STATUS_1200
+                    , MAX(CASE WHEN B.HHMM = '1230' THEN B.TIME_STATUS END) AS STATUS_1230
+                    , MAX(CASE WHEN B.HHMM = '1300' THEN B.TIME_STATUS END) AS STATUS_1300
+                    , MAX(CASE WHEN B.HHMM = '1330' THEN B.TIME_STATUS END) AS STATUS_1330
+                    , MAX(CASE WHEN B.HHMM = '1400' THEN B.TIME_STATUS END) AS STATUS_1400
+                    , MAX(CASE WHEN B.HHMM = '1430' THEN B.TIME_STATUS END) AS STATUS_1430
+                    , MAX(CASE WHEN B.HHMM = '1500' THEN B.TIME_STATUS END) AS STATUS_1500
+                    , MAX(CASE WHEN B.HHMM = '1530' THEN B.TIME_STATUS END) AS STATUS_1530
+                    , MAX(CASE WHEN B.HHMM = '1600' THEN B.TIME_STATUS END) AS STATUS_1600
+                    , MAX(CASE WHEN B.HHMM = '1630' THEN B.TIME_STATUS END) AS STATUS_1630
+                    , MAX(CASE WHEN B.HHMM = '1700' THEN B.TIME_STATUS END) AS STATUS_1700
+                    , MAX(CASE WHEN B.HHMM = '1730' THEN B.TIME_STATUS END) AS STATUS_1730
+                    , MAX(CASE WHEN B.HHMM = '1800' THEN B.TIME_STATUS END) AS STATUS_1800
+                    , MAX(CASE WHEN B.HHMM = '1830' THEN B.TIME_STATUS END) AS STATUS_1830
+                    , MAX(CASE WHEN B.HHMM = '1900' THEN B.TIME_STATUS END) AS STATUS_1900
+                    , MAX(CASE WHEN B.HHMM = '1930' THEN B.TIME_STATUS END) AS STATUS_1930
+                    , MAX(CASE WHEN B.HHMM = '2000' THEN B.TIME_STATUS END) AS STATUS_2000
+                    , MAX(CASE WHEN B.HHMM = '2030' THEN B.TIME_STATUS END) AS STATUS_2030
+                    , MAX(CASE WHEN B.HHMM = '2100' THEN B.TIME_STATUS END) AS STATUS_2100
+                    , MAX(CASE WHEN B.HHMM = '2130' THEN B.TIME_STATUS END) AS STATUS_2130
+                    , MAX(CASE WHEN B.HHMM = '2200' THEN B.TIME_STATUS END) AS STATUS_2200
+                    , MAX(CASE WHEN B.HHMM = '2230' THEN B.TIME_STATUS END) AS STATUS_2230
+                    , MAX(CASE WHEN B.HHMM = '2300' THEN B.TIME_STATUS END) AS STATUS_2300
+                    , MAX(CASE WHEN B.HHMM = '2330' THEN B.TIME_STATUS END) AS STATUS_2330
+                    , MAX(CASE WHEN B.HHMM = '0000' THEN B.TIME_STATUS END) AS STATUS_0000
+                    , MAX(CASE WHEN B.HHMM = '0030' THEN B.TIME_STATUS END) AS STATUS_0030
+                    , MAX(CASE WHEN B.HHMM = '0100' THEN B.TIME_STATUS END) AS STATUS_0100
+                    , MAX(CASE WHEN B.HHMM = '0130' THEN B.TIME_STATUS END) AS STATUS_0130
+                    , MAX(CASE WHEN B.HHMM = '0200' THEN B.TIME_STATUS END) AS STATUS_0200
+                    , MAX(CASE WHEN B.HHMM = '0230' THEN B.TIME_STATUS END) AS STATUS_0230
+                    , MAX(CASE WHEN B.HHMM = '0300' THEN B.TIME_STATUS END) AS STATUS_0300
+                    , MAX(CASE WHEN B.HHMM = '0330' THEN B.TIME_STATUS END) AS STATUS_0330
+                    , MAX(CASE WHEN B.HHMM = '0400' THEN B.TIME_STATUS END) AS STATUS_0400
+                    , MAX(CASE WHEN B.HHMM = '0430' THEN B.TIME_STATUS END) AS STATUS_0430
+                    , MAX(CASE WHEN B.HHMM = '0500' THEN B.TIME_STATUS END) AS STATUS_0500
+                    , MAX(CASE WHEN B.HHMM = '0530' THEN B.TIME_STATUS END) AS STATUS_0530
+                    , MAX(CASE WHEN B.HHMM = '0600' THEN B.TIME_STATUS END) AS STATUS_0600
+                    , MAX(CASE WHEN B.HHMM = '0630' THEN B.TIME_STATUS END) AS STATUS_0630
+                    , MAX(CASE WHEN B.HHMM = '0700' THEN B.TIME_STATUS END) AS STATUS_0700
+                    , MAX(CASE WHEN B.HHMM = '0730' THEN B.TIME_STATUS END) AS STATUS_0730
+                FROM jmes.TBL_BATCH_MCT_WORK A, TBL_BATCH_MCT_WORK_TIME_STATUS B
+                WHERE A.BATCH_DT = B.BATCH_DT
+                    AND A.EQUIP_SEQ = B.EQUIP_SEQ
+                    AND A.BATCH_DT = DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
+                    <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                    AND A.WORK_FACTORY = #{WORK_FACTORY}
+                    </if>
+                    <if test="FACTORY_AREA != null and FACTORY_AREA != ''">
+                    AND A.FACTORY_AREA = #{FACTORY_AREA}
+                    </if>
+                    <if test="PROCESS_TYPE != null and PROCESS_TYPE != ''">
+                    AND A.PROCESS_TYPE = #{PROCESS_TYPE}
+                    </if>
+                    <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                    AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+                    </if>
+                GROUP BY A.EQUIP_SEQ
+              ) Y
+        WHERE X.EQUIP_SEQ = Y.EQUIP_SEQ
+            AND X.BATCH_DT = DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
+            <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+            AND X.WORK_FACTORY = #{WORK_FACTORY}
+            </if>
+            <if test="FACTORY_AREA != null and FACTORY_AREA != ''">
+            AND X.FACTORY_AREA = #{FACTORY_AREA}
+            </if>
+            <if test="PROCESS_TYPE != null and PROCESS_TYPE != ''">
+            AND X.PROCESS_TYPE = #{PROCESS_TYPE}
+            </if>
+            <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+            AND X.EQUIP_SEQ = #{EQUIP_SEQ}
+            </if>
+        ORDER BY X.EQUIP_SEQ
+    </select>
+
 </mapper>
