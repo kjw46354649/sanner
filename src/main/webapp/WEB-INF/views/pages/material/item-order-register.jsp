@@ -1502,41 +1502,42 @@
             $("#btnItemOrderRegisterPopSubmit").attr("disabled", true);
         });
 
-        $("#btnItemOrderRegisterPopSave").on('click', _.debounce(function(){
+        $("#btnItemOrderRegisterPopSave").on('click', _.debounce(function () {
             $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListNum");
 
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num_temp").val();
             let ORDER_USER_ID = $("#item_order_register_popup").find("#ORDER_USER_ID").val();
             let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
-            let totalRecords = data.length;
-            for(let tempI=0; tempI<totalRecords; tempI++){
-                itemOrderRegisterPopTopGrid.pqGrid("updateRow", { 'rowIndx': tempI , row: { 'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM, 'ORDER_USER_ID': ORDER_USER_ID } });
+            for (let tempI = 0, totalRecords = data.length; tempI < totalRecords; tempI++) {
+                itemOrderRegisterPopTopGrid.pqGrid("updateRow", {
+                    'rowIndx': tempI,
+                    row: {'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM, 'ORDER_USER_ID': ORDER_USER_ID}
+                });
             }
 
             let gridInstance = itemOrderRegisterPopTopGrid.pqGrid('getInstance').grid;
             if (gridInstance.isDirty()) {
-                let changes = gridInstance.getChanges({format: 'byVal'});
-                let QUERY_ID_ARRAY = {
-                    'insertQueryId': ['material.insertItemOrderRegisterPopSave'],
-                    'updateQueryId': ['material.updateItemOrderRegisterPopSave']
-                };
-                changes.queryIdList = QUERY_ID_ARRAY;
-                let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
-                fnPostAjaxAsync(function (data, callFunctionParam) {
+                let parameters = {'url': '/itemOrderRegisterPopSave', 'data': {data: JSON.stringify(data)}};
+                fnPostAjaxAsync(function (data) {
+                    if (data.flag === true) {
+                        fnAlert(null, '<srping:message key="error.common"/>');
+                        return false;
+                    }
+
                     $("#item_order_register_material_order_num").val(MATERIAL_ORDER_NUM);
                     $("#item_order_register_popup_form #MATERIAL_ORDER_NUM").val(MATERIAL_ORDER_NUM);
                     itemOrderRegisterPopTopGrid.pqGrid('option', "dataModel.postData", function (ui) {
                         return (fnFormToJsonArrayData('#item_order_register_popup_form'));
                     });
                     itemOrderRegisterPopTopGrid.pqGrid('refreshDataAndView');
+
+                    setTimeout(function () {
+                        btnDisabled();
+                        //Popup table 생성
+                        makeInnerTable();
+                    }, 1000)
                 }, parameters, '');
             }
-
-            setTimeout(function () {
-                btnDisabled();
-                //Popup table 생성
-                makeInnerTable();
-            }, 900)
         }, 1000));
 
         $("#btnItemOrderRegisterPopSubmit").on('click', function(){
