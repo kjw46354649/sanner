@@ -971,3 +971,102 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
     background: #f2f2f2;
     font-size: 12px;
 }
+
+.mct_execute_board {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 40px 44vh 44vh;
+    grid-gap: 10px;
+    gap: 10px;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.mct_execute_board > div {
+    margin: 0 1%;
+    padding: 5px 15px;
+    background: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 3px;
+    box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);
+}
+
+.mct_execute_board .middle_wrap {
+    display: inline-grid;
+    grid-template-columns: repeat(35, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-gap: 10px;
+    gap: 10px;
+    /*grid-column: 1 / 2;*/
+    /*grid-row: 2 / 3;*/
+    /*margin: 0 0.5% 0 2%;*/
+}
+
+.mct_execute_board .middle_wrap > div{
+    border: 1px solid
+}
+
+.mct_execute_board .middle_wrap > div:nth-child(1) {
+    grid-column: 1 / 6;
+    grid-row: 1 / 2;
+}
+
+.mct_execute_board .middle_wrap > div:nth-child(2) {
+    grid-column: 6 / 11;
+    grid-row: 1 / 2;
+}
+
+.mct_execute_board .middle_wrap > div:nth-child(3) {
+    grid-column: 1 / 11;
+    grid-row: 2 / 3;
+}
+
+.mct_execute_board .middle_wrap > div:nth-child(3) > table {
+    /*table-layout: fixed;*/
+    width: 100%;
+    height: 100%;
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
+.mct_execute_board .middle_wrap > div:nth-child(3) > table th, table td {
+    border: 1px solid black;
+    font-size: 1rem;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    /*padding: 5px;*/
+}
+
+.mct_execute_board .middle_wrap > div:nth-child(3) > table th {
+    background: rgb(189, 215, 238);
+}
+
+.mct_execute_board .middle_wrap > div:nth-child(3) > table tbody tr td:first-child {
+    background: rgb(192, 192, 192);
+}
+
+
+.mct_execute_board .middle_wrap > div:nth-child(3) > table tbody tr:last-child {
+    background: rgb(255, 242, 204);
+}
+
+.mct_execute_board .middle_wrap > div:nth-child(3) > table tbody tr:last-child td:first-child {
+    background: rgb(255, 217, 102);
+}
+
+.mct_execute_board .middle_wrap > div:nth-child(4) {
+    grid-column: 11 / 19;
+    grid-row: 1 / 3;
+}
+
+.mct_execute_board .middle_wrap > div:nth-child(5) {
+    grid-column: 19 / 27;
+    grid-row: 1 / 3;
+}
+
+.mct_execute_board .middle_wrap > div:nth-child(6) {
+    grid-column: 27 / 36;
+    grid-row: 1 / 3;
+}
