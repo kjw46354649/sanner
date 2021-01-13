@@ -705,7 +705,26 @@
             },
             {
                 title: '완료 소재주문 정보', align: 'center', colModel: [
-                    {title: '주문번호', dataIndx: 'MATERIAL_ORDER_NUM'},
+                    {
+                        title: '주문번호', dataIndx: 'FINISH_MATERIAL_ORDER_NUM',
+                        render: function (ui) {
+                            const cellData = ui.cellData;
+
+                            if (cellData) {
+                                const temp = cellData.split('&lt;br>');
+                                let str = '';
+
+                                for (let i = 0; i < temp.length; i++) {
+                                    str += temp[i];
+                                    if (i < temp.length) {
+                                        str += '<br>';
+                                    }
+                                }
+
+                                return str;
+                            }
+                        }
+                    },
                     {title: '수량', dataIndx: 'M_ORDER_COMPLETED_QTY'},
                 ]
             },
