@@ -18,6 +18,14 @@ public class MaterialController {
     @Autowired
     private MaterialService materialService;
 
+    @RequestMapping(value = "/itemOrderRegisterPopSave", method = RequestMethod.POST)
+    public String itemOrderRegisterPopSave(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.materialService.itemOrderRegisterPopSave(model, map);
+
+        return "jsonView";
+    }
 
     @RequestMapping(value = "/managerInsideStock", method = RequestMethod.POST)
     public String managerInsideStock(Model model, HttpServletRequest request) throws Exception {
