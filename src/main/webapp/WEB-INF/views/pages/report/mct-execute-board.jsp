@@ -531,15 +531,6 @@
                 }
             },
             series: [{
-                name: '24시간',
-                data: []
-            }, {
-                name: '근무시간',
-                data: []
-            }, {
-                name: '가동시간',
-                data: []
-            }, {
                 name: '절대가동률',
                 data: []
             }, {
@@ -567,146 +558,146 @@
                 colModel: [
                     {
                         title: '08', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0800', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0830', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_0800', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_0830', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '09', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0900', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0930', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_0900', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_0930', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '10', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1000', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1030', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_1000', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_1030', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '11', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1100', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_1100', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_1230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '12', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1200', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_1200', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_1230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '13', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1300', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1330', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_1300', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_1330', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '14', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1400', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1430', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_1400', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_1430', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '15', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1500', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1530', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_1500', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_1530', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '16', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1600', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1630', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_1600', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_1630', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '17', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1700', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1730', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_1700', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_1730', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '18', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1800', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1830', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_1800', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_1830', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '19', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1900', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1930', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_1900', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_1930', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '20', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_2000', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_2030', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_2000', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_2030', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '21', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_2100', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_2130', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_2100', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_2130', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '22', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_2200', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_2230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_2200', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_2230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '23', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_2300', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_2330', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_2300', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_2330', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '24', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0000', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0030', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_0000', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_0030', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '01', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0100', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0130', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_0100', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_0130', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '02', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0200', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_0200', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_0230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '03', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0300', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0330', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_0300', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_0330', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '04', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0400', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0430', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_0400', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_0430', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '05', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0500', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0530', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_0500', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_0530', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '06', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0600', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0630', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_0600', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_0630', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '07', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0700', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0730', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', dataIndx: 'STATUS_0700', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', dataIndx: 'STATUS_0730', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-originalgreen', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                 ]
@@ -904,13 +895,16 @@
         const changeMonthlyOperateRateTrend = function () {
             getJsonList('reportMapper.selectMonthlyOperateRateTrend', function (arg) {
                 const list = arg.list;
-                const dataArray = [[], [], [], [], []];
+                const dataArray = [[], []];
+                let k = -1;
 
                 for (let i = 0, LENGTH = list.length; i < LENGTH; i++) {
                     const obj = list[i];
-
-                    for (let j = 1; j <= 12; j++) {
-                        dataArray[i].push(obj['DATA_VALUE_' + j] || 0);
+                    if (obj.DATA_TYPE_NM === '절대가동률' || obj.DATA_TYPE_NM === '실가동률') {
+                        k++;
+                        for (let j = 1; j <= 12; j++) {
+                            dataArray[k].push(obj['DATA_VALUE_' + j] || 0);
+                        }
                     }
                 }
                 changeHighchartsTitle(chart5, '월별 가동률 추이 (' + mctExecuteBoardDateYear + '年)')
