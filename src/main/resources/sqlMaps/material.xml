@@ -722,12 +722,8 @@
     </delete>
 
     <delete id="deleteItemOrderRegisterDeleteOrderManual" parameterType="java.util.HashMap">
-        UPDATE TBL_MATERIAL_ORDER
-        SET MATERIAL_ORDER_NUM = NULL,
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE 1=1
-            AND MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
+        DELETE FROM TBL_MATERIAL_ORDER
+        WHERE MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
     </delete>
 
     <insert id="insertItemOrderRegisterMasterOrderHistory" parameterType="java.util.HashMap" >
