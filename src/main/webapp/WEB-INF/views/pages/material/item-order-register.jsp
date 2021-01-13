@@ -1463,8 +1463,8 @@
                 let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeNum};
                 let parameters = {'url': '/json-info', 'data': data};
                 fnPostAjax(function (data) {
-                    let BARCODE_YN = data.info.BARCODE_YN;
-                    if (BARCODE_YN == 'N') {
+                    let BARCODE_YN = data.info.DEL_YN || 'Y';
+                    if (BARCODE_YN === 'Y') {
                         fnAlert(null, "유효하지 않은 도면 바코드입니다.");
                     } else {
                         let CONCAT_SEQ = "'" + data.info.CONTROL_SEQ + data.info.CONTROL_DETAIL_SEQ + "'";
