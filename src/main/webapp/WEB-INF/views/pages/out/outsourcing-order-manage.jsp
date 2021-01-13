@@ -104,8 +104,8 @@
                             <span class="chk_box" style="width: 90px;"><input name="INCLUDE_REQUEST_COMPLETE" id="INCLUDE_REQUEST_COMPLETE" type="checkbox"><label for="INCLUDE_REQUEST_COMPLETE"> 요청완료 포함</label></span>
                             <span class="chk_box" style="width: 90px;"><input name="INCLUDE_RECEIVED_COMPLETE" id="INCLUDE_RECEIVED_COMPLETE" type="checkbox"><label for="INCLUDE_RECEIVED_COMPLETE"> 입고완료 포함</label></span>
                             <span class="gubun"></span>
-                            <span id="control_manage_amount_summary_area" class="slt_wrap amount_summary_inactive" style="margin-left:150px; padding-left: 10px;">
-                                <span class="chk_box"><input name="AMOUNT_SUMMARY" id="AMOUNT_SUMMARY" type="checkbox"><label for="AMOUNT_SUMMARY" id="amount_summary_html"> 금액총합계 : 0</label></span>
+                            <span id="outsourcing_order_manage_amount_summary_area" class="slt_wrap amount_summary_inactive" style="margin-left:150px; padding-left: 10px;">
+                                <span class="chk_box"><input name="outsourcing_order_manage_amount_summary" id="outsourcing_order_manage_amount_summary" type="checkbox"><label for="outsourcing_order_manage_amount_summary" id="outsourcing_order_manage_amount_summary_html"> 금액총합계 : 0</label></span>
                             </span>
                         </span>
                         <span class="ipu_wrap right_float">
@@ -372,7 +372,14 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '원발주<br>상태', dataIndx: 'CONTROL_STATUS_NM'},
+            {
+                title: '원발주<br>상태', dataIndx: 'CONTROL_STATUS_NM',
+                render: function (ui) {
+                    if (ui.cellData === '보류') {
+                        return {style: 'color: #ff0000'};
+                    }
+                }
+            },
             {title: '외주<br>발주상태', dataIndx: 'OUTSIDE_STATUS', hidden: true},
             {title: '외주<br>발주상태', dataIndx: 'OUTSIDE_STATUS_NM'},
             {title: '상태변경<br>일시', width: 100, dataIndx: 'OUTSIDE_STATUS_DT'},
@@ -550,7 +557,17 @@
                 editable: true
             },
             {title: '입고일시', width: 100, dataIndx: 'OUTSIDE_IN_DT2'},
-            {title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY'},
+            {
+                title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY',
+                render: function (ui) {
+                    const cellData = ui.cellData || 0;
+
+                    if (cellData && ui.rowData.SAME_SIDE_YN === 'Y') {
+                        return cellData + '&nbsp;<span style="background-color: #C00000; color: white; font-size: 1.2rem; text-align: center; vertical-align: middle;">대</span>';
+                    }
+                }
+            },
+            {title: '', dataIndx: 'SAME_SIDE_YN', hidden: true},
             {
                 title: '원발주 정보', align: 'center', colModel: [
                     {title: '납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT', render: function (ui) {}},
@@ -2443,16 +2460,16 @@
         });
         /* init */
 
-        $('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#AMOUNT_SUMMARY').on('click', function () {
+        $('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM').find('#outsourcing_order_manage_amount_summary').on('click', function () {
             amountSummaryHtml();
         });
 
         const amountSummaryHtml = function () {
             const $outsideOrderManageSearchForm = $('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM');
-            $outsideOrderManageSearchForm.find('#amount_summary_html').html('금액총합계 : 0');
-            $outsideOrderManageSearchForm.find('#control_manage_amount_summary_area').removeClass('amount_summary_active');
-            $outsideOrderManageSearchForm.find('#control_manage_amount_summary_area').addClass('amount_summary_inactive');
-            let amountSummaryChk = $outsideOrderManageSearchForm.find('#AMOUNT_SUMMARY').is(':checked');
+            $outsideOrderManageSearchForm.find('#outsourcing_order_manage_amount_summary_html').html('금액총합계 : 0');
+            $outsideOrderManageSearchForm.find('#outsourcing_order_manage_amount_summary_area').removeClass('amount_summary_active');
+            $outsideOrderManageSearchForm.find('#outsourcing_order_manage_amount_summary_area').addClass('amount_summary_inactive');
+            let amountSummaryChk = $outsideOrderManageSearchForm.find('#outsourcing_order_manage_amount_summary').is(':checked');
             if (amountSummaryChk) {
                 let totalAmount = 0;
 
@@ -2464,8 +2481,8 @@
                     }
                 }
                 let totalAmountCurrency = pq.formatNumber(totalAmount, '#,###,###');
-                $outsideOrderManageSearchForm.find('#control_manage_amount_summary_area').addClass('amount_summary_active');
-                $outsideOrderManageSearchForm.find('#amount_summary_html').html('금액총합계 : ' + totalAmountCurrency);
+                $outsideOrderManageSearchForm.find('#outsourcing_order_manage_amount_summary_area').addClass('amount_summary_active');
+                $outsideOrderManageSearchForm.find('#outsourcing_order_manage_amount_summary_html').html('금액총합계 : ' + totalAmountCurrency);
             }
         };
 

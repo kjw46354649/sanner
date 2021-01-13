@@ -164,7 +164,7 @@
         </if>
         ORDER BY
             CASE Z.ORDER_STATUS WHEN 'MST001' THEN 3    WHEN 'MST002' THEN 4    WHEN 'MST003' THEN 2    WHEN 'MST004' THEN 6    WHEN 'MST005' THEN 5    ELSE 1 <!-- NULL --> END,
-            Z.STATUS_DT DESC, Z.MATERIAL_ORDER_NUM, Z.M_COMP_CD, Z.CONTROL_NUM, Z.PART_NUM
+            Z.STATUS_DT DESC, Z.CONTROL_NUM, Z.PART_NUM, Z.MATERIAL_ORDER_NUM, Z.M_COMP_CD
     </select>
 
     <select id="selectItemOrderRegisterDetail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -583,8 +583,7 @@
             ORDER_NOTE, ORDER_QTY, ORDER_AMT, ORDER_USER_ID, NOTE,
             INSERT_DT, INSERT_ID
         )
-        VALUES
-        (
+        SELECT
             NEXTVAL(SEQ_MATERIAL_ORDER),
             #{MATERIAL_ORDER_NUM}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
             #{M_COMP_CD}, REPLACE(#{HOPE_DUE_DT}, '-', SPACE(0)), #{M_SIZE_TXT},
@@ -594,7 +593,8 @@
             #{MATERIAL_TYPE}, #{MATERIAL_DETAIL}, #{MATERIAL_KIND},
             #{M_ORDER_NOTE}, #{M_ORDER_QTY}, #{ORDER_AMT}, #{ORDER_USER_ID}, #{NOTE},
             NOW(), #{LOGIN_USER_ID}
-        )
+        FROM DUAL
+        WHERE NOT EXISTS (SELECT * FROM TBL_MATERIAL_ORDER M WHERE M.MATERIAL_ORDER_NUM = #{ORIGINAL_MATERIAL_ORDER_NUM})
     </insert>
 
     <update id="updateItemOrderRegisterPopSave" parameterType="java.util.HashMap">
@@ -722,12 +722,8 @@
     </delete>
 
     <delete id="deleteItemOrderRegisterDeleteOrderManual" parameterType="java.util.HashMap">
-        UPDATE TBL_MATERIAL_ORDER
-        SET MATERIAL_ORDER_NUM = NULL,
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE 1=1
-            AND MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
+        DELETE FROM TBL_MATERIAL_ORDER
+        WHERE MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
     </delete>
 
     <insert id="insertItemOrderRegisterMasterOrderHistory" parameterType="java.util.HashMap" >

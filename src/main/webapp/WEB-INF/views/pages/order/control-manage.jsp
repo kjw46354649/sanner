@@ -267,7 +267,14 @@
             {
                 title: '주문상태', align: 'center', colModel: [
                     {title: '상태', dataIndx: 'CONTROL_STATUS', hidden: true},
-                    {title: '상태', minWidth: 30, dataIndx: 'CONTROL_STATUS_NM'},
+                    {
+                        title: '상태', minWidth: 30, dataIndx: 'CONTROL_STATUS_NM',
+                        render: function (ui) {
+                            if (ui.cellData === '보류') {
+                                return {style: 'color: #ff0000'};
+                            }
+                        }
+                    },
                     {title: '', minWidth: 20, dataType: 'integer', dataIndx: 'CONTROL_VER'},
                     {title: '변경일', dataIndx: 'CONTROL_STATUS_DT',
                         render: function (ui) {

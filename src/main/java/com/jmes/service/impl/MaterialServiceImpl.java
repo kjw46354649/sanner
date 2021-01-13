@@ -19,6 +19,35 @@ public class MaterialServiceImpl implements MaterialService {
     @Autowired
     public InnodaleDao innodaleDao;
 
+    @Override
+    public void itemOrderRegisterPopSave(Model model, Map<String, Object> map) throws Exception {
+        String jsonArray = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Map<String, Object>> list = null;
+        boolean flag = false;
+
+        if (jsonArray != null)
+            list = objectMapper.readValue(jsonArray, new TypeReference<List<Map<String, Object>>>() {});
+
+        try {
+            for (Map<String, Object> hashMap : list) {
+                if (hashMap.get("MATERIAL_ORDER_SEQ") == null) {
+                    hashMap.put("LOGIN_USER_ID", map.get("LOGIN_USER_ID"));
+                    hashMap.put("queryId", "material.insertItemOrderRegisterPopSave");
+                    this.innodaleDao.create(hashMap);
+                } else {
+                    hashMap.put("LOGIN_USER_ID", map.get("LOGIN_USER_ID"));
+                    hashMap.put("queryId", "material.updateItemOrderRegisterPopSave");
+                    this.innodaleDao.update(hashMap);
+                }
+            }
+        } catch (Exception e) {
+            flag = true;
+        }
+
+        model.addAttribute("flag", flag);
+    }
+
     /**
      * 재고관리 그리드 관리(I,U,D)
      *

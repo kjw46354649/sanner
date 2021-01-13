@@ -7,8 +7,12 @@ import java.util.Map;
 
 public interface MaterialService {
 
-    public void managerInsideStock(Model model, Map<String, Object> map) throws Exception;
-    public void managerInsideStockPop(Model model, Map<String, Object> map) throws Exception;
-    public void inWarehouseManageSave(Model model, HashMap<String, Object> hashMap) throws Exception;
+    void itemOrderRegisterPopSave(Model model, Map<String, Object> map) throws Exception;
+
+    void managerInsideStock(Model model, Map<String, Object> map) throws Exception;
+
+    void managerInsideStockPop(Model model, Map<String, Object> map) throws Exception;
+
+    void inWarehouseManageSave(Model model, HashMap<String, Object> hashMap) throws Exception;
 
 }
