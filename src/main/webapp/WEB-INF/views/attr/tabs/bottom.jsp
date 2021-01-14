@@ -1732,11 +1732,11 @@
     $("#g_item_detail_pop").on('hide.bs.modal', function(){
         fnResetFrom("g_item_detail_pop_form");
         $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfo');
-        g_ItemDetailPopGridId01.pqGrid('destroy');
-        g_ItemDetailPopGridId02.pqGrid('destroy');
-        g_ItemDetailPopGridId03.pqGrid('destroy');
-        g_ItemDetailPopGridId04.pqGrid('destroy');
-        g_ItemDetailPopGridId05.pqGrid('destroy');
+        if (g_ItemDetailPopGridId01.hasClass('pq-grid')) g_ItemDetailPopGridId01.pqGrid('destroy');
+        if (g_ItemDetailPopGridId02.hasClass('pq-grid')) g_ItemDetailPopGridId02.pqGrid('destroy');
+        if (g_ItemDetailPopGridId03.hasClass('pq-grid')) g_ItemDetailPopGridId03.pqGrid('destroy');
+        if (g_ItemDetailPopGridId04.hasClass('pq-grid')) g_ItemDetailPopGridId04.pqGrid('destroy');
+        if (g_ItemDetailPopGridId05.hasClass('pq-grid')) g_ItemDetailPopGridId05.pqGrid('destroy');
     });
 
     $('#g_item_detail_pop_form').find('[name=control_num_arrow]').on('click', function () {
