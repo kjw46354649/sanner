@@ -543,6 +543,7 @@
             {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: 'No.', align: 'right', minWidth: 30, dataType: 'integer', dataIndx: 'NO'},
             {
                 title: '실적등록일시', width: 90, dataIndx: 'CAM_RECENTLY_INSERT_DT',
                 render: function (ui) {
@@ -679,7 +680,7 @@
         ];
         const tab1Obj = {
             minHeight: '100%', height: 700, collapsible: false, postRenderInterval: -1, //call postRender synchronously.
-            resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
+            resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.', show: false},
             trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false, render: camWorkHistoryFilterRender}, filterModel: { mode: 'OR' },
             editModel: {clicksToEdit: 1},
             colModel: tab1ColModel,
@@ -785,7 +786,7 @@
                 data = grid.option('dataModel.data');
 
             const controlList = [
-                'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'ORDER_COMP_NM',
+                'NO', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'ORDER_COMP_NM',
             ];
              const partList = [
                  'CAM_RECENTLY_INSERT_DT', 'INNER_WORK_FINISH_DT', 'OUTSIDE_YN', 'WORK_FACTORY_NM',  'WORK_TYPE_NM', 'SIZE_TXT',

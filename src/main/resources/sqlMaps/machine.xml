@@ -531,7 +531,8 @@
 
     <select id="selectCamWorkHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER (ORDER BY H.INSERT_DT, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0)) AS ROW_NUM
+            ROW_NUMBER () OVER (ORDER BY A.INNER_DUE_DT, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), H.CAM_SEQ) AS ROW_NUM
+	        , DENSE_RANK () OVER(ORDER BY A.INNER_DUE_DT, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), H.CAM_SEQ) AS `NO`
             , A.CONTROL_SEQ
             , A.CONTROL_DETAIL_SEQ
             , ( SELECT jmes.SF_GET_DATE_F(MAX(M.INSERT_DT), 'YY', 'M')
@@ -632,7 +633,7 @@
         WHERE 1 = 1
             <choose>
                 <when test="CAM_WORK_HISTORY_CONDITION == 1">
-                    AND A.UPDATE_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
+                    AND G.UPDATE_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
                 </when>
                 <when test="CAM_WORK_HISTORY_CONDITION == 2">
                     AND EXISTS (SELECT 1 FROM TBL_CONTROL_PART_PROGRESS P
