@@ -1980,6 +1980,83 @@
             if (ui.rowIndx === 0) {
                 return {style: {'background': '#FFFF00'}};
             }
+        },
+        load: function () {
+            const autoMerge = function (grid, refresh) {
+                let mergeCellList = [],
+                    colModelList = grid.getColModel(),
+                    i = colModelList.length,
+                    data = grid.option('dataModel.data');
+
+                const controlList = [
+                    'ORDER_COMP_NM'
+                ];
+                const partList = [
+                    'ORDER_CONFIRM_DT', 'OUTSIDE_YN', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'WORK_TYPE', 'SIZE_TXT',
+                    'MATERIAL_TYPE_NM', 'DRAWING_NUM', 'IMG_GFILE_SEQ', 'CAD_FILE_SIZE', 'DXF_GFILE_SEQ',
+                    'MATERIAL_DETAIL_NM', 'MATERIAL_DETAIL_NM', 'CONTROL_PART_QTY', 'NC_WORK_TIME', 'TOTAL_WORK_TIME'
+                ];
+                const includeList = controlList.concat(partList);
+
+                while (i--) {
+                    let dataIndx = colModelList[i].dataIndx,
+                        rc = 1,
+                        j = data.length;
+
+                    if (includeList.includes(dataIndx)) {
+                        while (j--) {
+                            let controlNum = data[j]['CONTROL_NUM'],
+                                controlNumPrev = data[j - 1] ? data[j - 1]['CONTROL_NUM'] : undefined,
+                                cellData = data[j][dataIndx],
+                                cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
+
+                            if (controlList.includes(dataIndx)) {
+                                if (controlNum === controlNumPrev) {
+                                    // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
+                                    if (cellData === cellDataPrev) {
+                                        rc++;
+                                    }
+                                } else if (rc > 1) {
+                                    /**
+                                     * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
+                                     * c1: colIndx of first column. 첫 번째 열의 colIndx.
+                                     * rc: number of rows in the range. 범위 내 행 수.
+                                     * cc: number of columns in the range. 범위 내 열 수.
+                                     */
+                                    mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
+                                    rc = 1;
+                                }
+                            } else if (partList.includes(dataIndx)) {
+                                let cellData = data[j][dataIndx],
+                                    cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
+
+                                if (controlNum === controlNumPrev) {
+                                    // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
+                                    if (cellData === cellDataPrev) {
+                                        rc++;
+                                    }
+                                } else if (rc > 1) {
+                                    /**
+                                     * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
+                                     * c1: colIndx of first column. 첫 번째 열의 colIndx.
+                                     * rc: number of rows in the range. 범위 내 행 수.
+                                     * cc: number of columns in the range. 범위 내 열 수.
+                                     */
+                                    mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
+                                    rc = 1;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                grid.option('mergeCells', mergeCellList);
+                if (refresh) {
+                    grid.refreshView();
+                }
+            };
+
+            autoMerge(this, true);
         }
     };
     let g_item_detail_pop_cam_pop = function(CONTROL_SEQ,CONTROL_DETAIL_SEQ){
