@@ -1561,6 +1561,14 @@
         GROUP BY X.DATA_TYPE, X.DATA_TYPE_NM
     </select>
 
+    <select id="selectDailyMCTOperateRateTrendSevenDaysLabels" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT jmes.SF_GET_DATE_F(A.DT, '', '') AS DT
+        FROM jmes.TBL_YYYYMMDD A
+        WHERE A.DT > DATE_ADD(STR_TO_DATE(DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'),'%Y%m%d'), INTERVAL -1 WEEK)
+            AND A.DT <![CDATA[ <= ]]> DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
+        ORDER BY A.DT
+    </select>
+
     <select id="selectWeeklyMctOperateRateEightWeeks" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT Z.DATA_TYPE, Z.DATA_TYPE_NM
             , MAX(CASE WHEN Z.WEEK_SEQ = 1 THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.ABS_RATIO ELSE Z.REAL_RATIO END END) DATA_VALUE_1
@@ -1623,7 +1631,7 @@
         GROUP BY Z.DATA_TYPE, Z.DATA_TYPE_NM
     </select>
 
-    <select id="selectDFGSDFG123" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="selectMctExecuteBoardGridList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.EQUIP_SEQ
             , SF_GET_CODE_NM('1014', X.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM
             , jmes.SF_GET_CODE_NM('1005', X.FACTORY_AREA, 'KR') AS FACTORY_AREA_NM
@@ -1685,10 +1693,8 @@
                     , MAX(CASE WHEN B.HHMM = '0630' THEN B.TIME_STATUS END) AS STATUS_0630
                     , MAX(CASE WHEN B.HHMM = '0700' THEN B.TIME_STATUS END) AS STATUS_0700
                     , MAX(CASE WHEN B.HHMM = '0730' THEN B.TIME_STATUS END) AS STATUS_0730
-                FROM jmes.TBL_BATCH_MCT_WORK A, TBL_BATCH_MCT_WORK_TIME_STATUS B
-                WHERE A.BATCH_DT = B.BATCH_DT
-                    AND A.EQUIP_SEQ = B.EQUIP_SEQ
-                    AND A.BATCH_DT = DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
+                FROM jmes.TBL_BATCH_MCT_WORK A LEFT OUTER JOIN TBL_BATCH_MCT_WORK_TIME_STATUS B ON A.BATCH_DT = B.BATCH_DT AND A.EQUIP_SEQ = B.EQUIP_SEQ
+                WHERE A.BATCH_DT = DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
                     <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
                     AND A.WORK_FACTORY = #{WORK_FACTORY}
                     </if>
