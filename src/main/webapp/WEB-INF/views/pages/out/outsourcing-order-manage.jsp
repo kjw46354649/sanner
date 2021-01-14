@@ -682,6 +682,7 @@
 
                     for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
                 }
+                amountSummaryHtml();
             },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
