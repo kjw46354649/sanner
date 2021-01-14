@@ -724,17 +724,10 @@
             },
             sortModel: {on: false},
             load: function (event, ui) {
-                // let date = $('#mct_execute_board_date').val().replaceAll('/', '.');
-                //
-                // console.log($('#mct_execute_board_grid #pq-head-cell-u5-0-11-right').find('.pq-title-span'));
-                // $('#mct_execute_board_grid #pq-head-cell-u5-0-11-right > div > span.pq-title-span').html('시간별 가동현황 (' + date + ')');
-                // this.refreshHeader();                 //TODO: refresh header
-
                 $mctExecuteBoardGrid.pqGrid({
                     refresh: function () {
                         let date = $('#mct_execute_board_date').val().replaceAll('/', '.');
 
-                        console.log($('#mct_execute_board_grid #pq-head-cell-u5-0-11-right').find('.pq-title-span'));
                         $('#mct_execute_board_grid #pq-head-cell-u5-0-11-right > div > span.pq-title-span').html('시간별 가동현황 (' + date + ')');
                     }
                 });
@@ -859,7 +852,7 @@
                     htmlString += '    <tr>';
                     htmlString += '        <td scope="row">' + dataTypeName + '</td>';
                     for(let j = 1; j <= 12; j++) {
-                        const value = obj['DATA_VALUE_' + j] || '';
+                        const value = obj['DATA_VALUE_' + String(j).padStart(2, '0')] || '';
                         htmlString += '        <td>' + value + '</td>';
                     }
                     htmlString += '    </tr>';
@@ -929,7 +922,8 @@
                     if (obj.DATA_TYPE_NM === '절대가동률' || obj.DATA_TYPE_NM === '실가동률') {
                         k++;
                         for (let j = 1; j <= 12; j++) {
-                            dataArray[k].push(obj['DATA_VALUE_' + j] || 0);
+                            const value = obj['DATA_VALUE_' + String(j).padStart(2, '0')] || 0;
+                            dataArray[k].push(value);
                         }
                     }
                 }
