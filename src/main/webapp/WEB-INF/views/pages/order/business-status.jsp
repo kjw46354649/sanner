@@ -454,6 +454,8 @@
 
         $('#business_status_refresh').on('click', function () {
             $businessOutgoingListGrid.pqGrid('refreshDataAndView');
+            $businessEmergencyListGrid.pqGrid('refreshDataAndView');
+            $businessOverOrderListGrid.pqGrid('refreshDataAndView');
             businessCalendar.refetchEvents();
         });
     });
