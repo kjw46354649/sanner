@@ -560,7 +560,7 @@
         const changeSummarySize = function () {
             const PADDING = 2;
             let width = [];
-            $('#MONTHLY_OUTSIDE_STATUS_GRID').find('div#pq-head-row-u8-0-right.pq-grid-row').children().each(function (index, element) {
+            $('#MONTHLY_OUTSIDE_STATUS_GRID').find('div.pq-table-right.pq-table.pq-grid-header-table div:first').children().each(function (index, element) {
                 width.push($(element).width() + PADDING);
             });
 
