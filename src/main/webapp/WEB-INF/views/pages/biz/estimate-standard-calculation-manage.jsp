@@ -9,15 +9,6 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="page estimate">
-    <label>견적 표준계산 관리</label>
-    <select name="estimate_standard" id="estimate_standard">
-        <option value="0">소재비</option>
-        <option value="1">소재마감</option>
-        <option value="2">후가공</option>
-        <option value="3">표면처리비</option>
-        <option value="4">가공비</option>
-    </select>
-
     <!-- 소재비 -->
     <div id="escm0">
         <div class="topWrap">
@@ -26,6 +17,16 @@
                 <div class="none_gubunWrap">
                     <ul>
                         <li>
+                            <span class="slt_wrap">
+                                <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
+                                <select class="wd_200" name="estimate_standard" id="estimate_standard">
+                                    <option value="0">소재비</option>
+                                    <option value="1">소재마감</option>
+                                    <option value="2">후가공</option>
+                                    <option value="3">표면처리비</option>
+                                    <option value="4">가공비</option>
+                                </select>
+                            </span>
                             <span class="slt_wrap">
                                 <label class="label_100" for="MATERIAL_TYPE">소재형태</label>
                                 <select class="wd_200" name="MATERIAL_KIND" id="material_kind" title="소재형태">
@@ -94,6 +95,16 @@
                     <ul>
                         <li>
                             <span class="slt_wrap">
+                                <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
+                                <select class="wd_200" name="estimate_standard" id="estimate_standard">
+                                    <option value="0">소재비</option>
+                                    <option value="1">소재마감</option>
+                                    <option value="2">후가공</option>
+                                    <option value="3">표면처리비</option>
+                                    <option value="4">가공비</option>
+                                </select>
+                            </span>
+                            <span class="slt_wrap">
                                 <label class="label_100" for="finish_type_1">반영항목</label>
                                 <select class="wd_200" name="FINISH_TYPE_1" id="finish_type_1" title="반영항목">
                                     <option value=""><spring:message code="com.form.top.all.option"/></option>
@@ -141,6 +152,16 @@
                     <ul>
                         <li>
                             <span class="slt_wrap">
+                                <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
+                                <select class="wd_200" name="estimate_standard" id="estimate_standard">
+                                    <option value="0">소재비</option>
+                                    <option value="1">소재마감</option>
+                                    <option value="2">후가공</option>
+                                    <option value="3">표면처리비</option>
+                                    <option value="4">가공비</option>
+                                </select>
+                            </span>
+                            <span class="slt_wrap">
                                 <label class="label_100" for="finish_type_1">반영항목</label>
                                 <select class="wd_200" name="FINISH_TYPE_1" id="finish_type_1" title="반영항목">
                                     <option value=""><spring:message code="com.form.top.all.option"/></option>
@@ -187,6 +208,16 @@
                 <div class="none_gubunWrap">
                     <ul>
                         <li>
+                            <span class="slt_wrap">
+                                <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
+                                <select class="wd_200" name="estimate_standard" id="estimate_standard">
+                                    <option value="0">소재비</option>
+                                    <option value="1">소재마감</option>
+                                    <option value="2">후가공</option>
+                                    <option value="3">표면처리비</option>
+                                    <option value="4">가공비</option>
+                                </select>
+                            </span>
                             <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_TYPE">재질</label>
                             <select class="wd_200" name="MATERIAL_TYPE" id="MATERIAL_TYPE" title="재질">
@@ -245,6 +276,16 @@
                     <ul>
                         <li>
                             <span class="slt_wrap">
+                                <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
+                                <select class="wd_200" name="estimate_standard" id="estimate_standard">
+                                    <option value="0">소재비</option>
+                                    <option value="1">소재마감</option>
+                                    <option value="2">후가공</option>
+                                    <option value="3">표면처리비</option>
+                                    <option value="4">가공비</option>
+                                </select>
+                            </span>
+                            <span class="slt_wrap">
                                 <label class="label_100" for="material_kind">소재형태</label>
                                 <select class="wd_200" name="MATERIAL_KIND" id="material_kind" title="소재형태">
                                     <option value=""><spring:message code="com.form.top.all.option"/></option>
@@ -293,8 +334,6 @@
                     <div class="buttonWrap">
                         <div class="d-flex align-items-center">
                             <div>
-<%--                                <button class="defaultBtn btn-100w" id="process_cost_factor_add">Add</button>--%>
-<%--                                <button class="defaultBtn btn-100w red" id="process_cost_factor_delete">Delete</button>--%>
                                 <button class="defaultBtn btn-100w orange" data-toggle="modal" data-target="#outsourcingConversionModal">견적 가공 Factor 상세설정</button>
                             </div>
                             <div class="ml-auto">
@@ -355,6 +394,7 @@
         /* event */
         $('[name=estimate_standard]').on('change', function () {
             $('#view_tab_10000103 > div.page > div').hide();
+            $('[name=estimate_standard]').val($(this).val()).prop('selected', true);
 
             switch (Number($(this).val())) {
                 case 0:
@@ -853,7 +893,7 @@
                         return '';
                     } else {
                         let data = postProcessingReflectedItems;
-                        console.log(data);
+
                         let index = data.findIndex(function (element) {
                             return element.text === cellData;
                         });
