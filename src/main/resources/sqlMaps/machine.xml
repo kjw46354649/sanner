@@ -276,6 +276,9 @@
     </select>
 
     <insert id="insertMctPlan"  parameterType="java.util.HashMap" >
+        <selectKey keyProperty="MCT_PLAN_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_MCT_PLAN) FROM DUAL
+        </selectKey>
         INSERT INTO TBL_MCT_PLAN (
             MCT_PLAN_SEQ,
             EQUIP_SEQ,
@@ -286,7 +289,7 @@
             INSERT_DT,
             INSERT_ID
         ) VALUES(
-            IFNULL(#{MCT_PLAN_SEQ}, NEXTVAL(SEQ_MCT_PLAN)),
+            #{MCT_PLAN_SEQ},
             #{EQUIP_SEQ},
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ},

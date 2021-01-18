@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -110,5 +109,39 @@ public class ProductionServiceImpl implements ProductionService {
                 innodaleDao.update(camWorkInfo);
             }
         }
+    }
+
+    @Override
+    public void modifyMctPlan(Model model, Map<String, Object> map) throws Exception {
+        String jsonArray = (String) map.get("data");
+        String actionType = (String) map.get("actionType");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> map1 = null;
+        boolean flag = false;
+
+        if (jsonArray != null && !jsonArray.equals(""))
+            map1 = objectMapper.readValue(jsonArray, new TypeReference<Map<String, Object>>() {});
+
+        try {
+            switch (actionType) {
+                case "add":
+                    map1.put("queryId", "machine.insertMctPlan");
+                    this.innodaleDao.create(map1);
+                    break;
+                case "update":
+                    map1.put("queryId", "machine.updateMctPlan");
+                    this.innodaleDao.update(map1);
+                    break;
+                case "delete":
+                    map1.put("queryId", "machine.deleteMctPlan");
+                    this.innodaleDao.remove(map1);
+                    break;
+            }
+        } catch (Exception e) {
+            flag = true;
+        }
+
+        model.addAttribute("flag", flag);
+        model.addAttribute("data", map1);
     }
 }
