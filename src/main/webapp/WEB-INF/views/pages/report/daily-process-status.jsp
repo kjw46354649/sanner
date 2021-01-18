@@ -43,7 +43,7 @@
                     <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#TARGET_AMOUNT_REGISTER_POPUP">목표금액 설정</button>
                 </div>
                 <div class="ml-auto">
-                    <button type="button" id="DAILY_PROCESS_STATUSLEFT_EXPORT_EXCEL"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
+                    <button type="button" id="DAILY_PROCESS_STATUS_LEFT_EXPORT_EXCEL"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                     <button type="button" class="defaultBtn btn-100w green" id="DAILY_PROCESS_STATUS_LEFT_SAVE">저장</button>
                 </div>
             </div>
@@ -462,7 +462,7 @@
             fnModifyPQGrid($targetAmountRegisterGrid, insertQueryList, updateQueryList);
         });
 
-        $('#DAILY_PROCESS_STATUSLEFT_EXPORT_EXCEL').on('click', function () {
+        $('#DAILY_PROCESS_STATUS_LEFT_EXPORT_EXCEL').on('click', function () {
             const blob = $dailyProcessStatusLeftGrid.pqGrid('getInstance').grid.exportData({
                 format: 'xlsx',
                 render: true,
