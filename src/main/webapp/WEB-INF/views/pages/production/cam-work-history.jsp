@@ -284,7 +284,7 @@
                                     </td>
                                 </tr>
                                 <tr><th colspan="3">CAM/NC 파일</th></tr>
-                                <tr><td colspan="3" id="CAM_WORK_FILE_01">&nbsp;<br>&nbsp;</td></tr>
+                                <tr><td colspan="3"><div id="CAM_WORK_FILE_01" style="width: 100%; max-width: 215px; height: 30px; max-height: 30px; overflow-x: hidden; overflow-y: auto;"></div></td></tr>
                             </table>
                             <input type="hidden" id="CAM_WORK_SEQ_01" name="CAM_WORK_SEQ_01" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_01" name="CAM_WORK_GFILE_SEQ_01" value="">
@@ -326,7 +326,7 @@
                                     </td>
                                 </tr>
                                 <tr><th colspan="3">CAM/NC 파일</th></tr>
-                                <tr><td colspan="3" id="CAM_WORK_FILE_02" name="CAM_WORK_FILE_02" >&nbsp;<br>&nbsp;</td></tr>
+                                <tr><td colspan="3"><div id="CAM_WORK_FILE_02" style="width: 100%; max-width: 215px; height: 30px; max-height: 30px; overflow-x: hidden; overflow-y: auto;"></div></td></tr>
                             </table>
                             <input type="hidden" id="CAM_WORK_SEQ_02" name="CAM_WORK_SEQ_02" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_02" name="CAM_WORK_GFILE_SEQ_02" value="">
@@ -368,7 +368,7 @@
                                     </td>
                                 </tr>
                                 <tr><th colspan="3">CAM/NC 파일</th></tr>
-                                <tr><td colspan="3" id="CAM_WORK_FILE_03" name="CAM_WORK_FILE_03" >&nbsp;<br>&nbsp;</td></tr>
+                                <tr><td colspan="3"><div id="CAM_WORK_FILE_03" style="width: 100%; max-width: 215px; height: 30px; max-height: 30px; overflow-x: hidden; overflow-y: auto;"></div></td></tr>
                             </table>
                             <input type="hidden" id="CAM_WORK_SEQ_03" name="CAM_WORK_SEQ_03" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_03" name="CAM_WORK_GFILE_SEQ_03" value="">
@@ -410,7 +410,7 @@
                                     </td>
                                 </tr>
                                 <tr><th colspan="3">CAM/NC 파일</th></tr>
-                                <tr><td colspan="3" id="CAM_WORK_FILE_04" name="CAM_WORK_FILE_04" >&nbsp;<br>&nbsp;</td></tr>
+                                <tr><td colspan="3"><div id="CAM_WORK_FILE_04" style="width: 100%; max-width: 215px; height: 30px; max-height: 30px; overflow-x: hidden; overflow-y: auto;"></div></td></tr>
                             </table>
                             <input type="hidden" id="CAM_WORK_SEQ_04" name="CAM_WORK_SEQ_04" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_04" name="CAM_WORK_GFILE_SEQ_04" value="">
@@ -452,7 +452,7 @@
                                     </td>
                                 </tr>
                                 <tr><th colspan="3">CAM/NC 파일</th></tr>
-                                <tr><td colspan="3" id="CAM_WORK_FILE_05" name="CAM_WORK_FILE_05" >&nbsp;<br>&nbsp;</td></tr>
+                                <tr><td colspan="3"><div id="CAM_WORK_FILE_05" style="width: 100%; max-width: 215px; height: 30px; max-height: 30px; overflow-x: hidden; overflow-y: auto;"></div></td></tr>
                             </table>
                             <input type="hidden" id="CAM_WORK_SEQ_05" name="CAM_WORK_SEQ_05" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_05" name="CAM_WORK_GFILE_SEQ_05" value="">
@@ -1087,6 +1087,7 @@
             };
             fnPostAjax(function (data, callFunctionParam) {
                 for (let i = 0; i < data.list.length; i++) {
+                    let fileHtml = '';
                     $('#cam_work_history_detail_pop').find("input:checkbox[id='CAM_WORK_CHK_" + data.list[i].ROWNUM + "']").prop('checked', true);
                     $('#cam_work_history_detail_pop').find("#CAM_WORK_SEQ_" + data.list[i].ROWNUM).val(data.list[i].SEQ);
                     $('#cam_work_history_detail_pop').find("#CAM_WORK_GFILE_SEQ_" + data.list[i].ROWNUM).val(data.list[i].CAM_GFILE_SEQ);
@@ -1094,8 +1095,8 @@
                     $('#cam_work_history_detail_pop').find("#CAM_WORK_DESC_" + data.list[i].ROWNUM).val(data.list[i].WORK_DESC);
                     $('#cam_work_history_detail_pop').find("#CAM_WORK_DESIGN_QTY_" + data.list[i].ROWNUM).val(data.list[i].DESIGN_QTY);
                     $('#cam_work_history_detail_pop').find("select[id='CAM_WORK_USER_ID_" + data.list[i].ROWNUM + "']").val(data.list[i].WORK_USER_ID);
-                    let fileHtml = "<a href='/downloadfile/" + data.list[i].CAM_FILE_SEQ + "' download>" + data.list[i].CAM_FILE_NM + "</a><br>" +
-                        "<a href='/downloadfile/" + data.list[i].NC_FILE_SEQ + "' download>" + data.list[i].NC_FILE_NM;
+                    fileHtml += data.list[i].CAM_FILE_SEQ ? "<a href='/downloadfile/" + data.list[i].CAM_FILE_SEQ + "' download style=\"overflow: hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;max-width:100%;vertical-align:top;\">" + data.list[i].CAM_FILE_NM + "</a>" : '';
+                    fileHtml += data.list[i].NC_FILE_SEQ ? "<a href='/downloadfile/" + data.list[i].NC_FILE_SEQ + "' download>" + data.list[i].NC_FILE_NM : '';
                     $("#cam_work_history_detail_pop").find("#CAM_WORK_FILE_" + data.list[i].ROWNUM).html(fileHtml);
                 }
                 $('#cam_work_history_detail_pop').modal('show');
