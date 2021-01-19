@@ -2563,31 +2563,30 @@
             let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
             let parameters = {'url': '/validationCheckBeforeSaveFromControl', 'data': {data: JSON.stringify(changes)}};
-
+            let flag = false;
+            
             fnPostAjaxAsync(function (data) {
-                let flag = data.flag;
-                let message = data.message;
+                flag = data.flag;
 
                 if (flag) {
-                    fnAlert(null, message);
+                    fnAlert(null, data.message);
                     return false;
                 }
             }, parameters, '');
 
-            parameters = {'url': '/saveFromControlManage', 'data': {data: JSON.stringify(changes)}};
+            if (!flag) {
+                parameters = {'url': '/saveFromControlManage', 'data': {data: JSON.stringify(changes)}};
 
-            fnPostAjaxAsync(function (data) {
-                let flag = data.flag;
-                let message = data.message;
+                fnPostAjaxAsync(function (data) {
+                    if (data.flag) {
+                        fnAlert(null, data.message);
+                        return false;
+                    }
 
-                if (flag) {
-                    fnAlert(null, message);
-                    return false;
-                } else {
                     fnAlert(null, '<spring:message code="com.alert.default.save.success"/>');
                     $orderManagementGrid.pqGrid('refreshDataAndView');
-                }
-            }, parameters, '');
+                }, parameters, '');
+            }
         });
 
         $('#CONTROL_MANAGE_DELETE').on('click', function () {
