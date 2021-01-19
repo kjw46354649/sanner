@@ -367,7 +367,7 @@
                 columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
                 scrollModel: {autoFit: false},
                 numberCell: {width: 30, title: "No", show: true },
-                selectionModel: { type: 'row', mode: 'single'} ,
+                // selectionModel: {type: 'row', mode: 'single'},
                 swipeModel: {on: false},
                 collapsible: false,
                 resizable: false,
@@ -383,21 +383,23 @@
 
                     changeViewColumn($('#VIEW_AMOUNT_INFORMATION').prop('checked'));
                 },
-                rowSelect: function( event, ui ) {
-                    //if(ui.addList.length > 0 ) {
-                    let MATERIAL_ORDER_SEQ = ui.addList[0].rowData.MATERIAL_ORDER_SEQ;
-                    let IN_YN = ui.addList[0].rowData.IN_YN;
+                cellClick: function (event, ui) {
+                    let MATERIAL_ORDER_SEQ = ui.rowData.MATERIAL_ORDER_SEQ;
+                    let IN_YN = ui.rowData.IN_YN;
 
-                    $("#item_order_history_hidden_form #MATERIAL_ORDER_SEQ").val(MATERIAL_ORDER_SEQ);
+                    $('#item_order_history_hidden_form #MATERIAL_ORDER_SEQ').val(MATERIAL_ORDER_SEQ);
 
-                    if(IN_YN == 'Y'){
-                        $("#btnItemOrderHistorySave").attr("disabled", true);
-                    }else {
-                        $("#btnItemOrderHistorySave").attr("disabled", false);
+                    if (IN_YN === 'Y') {
+                        $('#btnItemOrderHistorySave').attr('disabled', true);
+                    } else {
+                        $('#btnItemOrderHistorySave').attr('disabled', false);
                     }
                 },
                 change: function () {
                     $('#btnSave').prop('disabled', false);
+                },
+                beforeValidate(event, ui) {
+                    ui.addList = [];
                 }
             });
 
