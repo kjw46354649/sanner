@@ -1095,8 +1095,8 @@
                     $('#cam_work_history_detail_pop').find("#CAM_WORK_DESC_" + data.list[i].ROWNUM).val(data.list[i].WORK_DESC);
                     $('#cam_work_history_detail_pop').find("#CAM_WORK_DESIGN_QTY_" + data.list[i].ROWNUM).val(data.list[i].DESIGN_QTY);
                     $('#cam_work_history_detail_pop').find("select[id='CAM_WORK_USER_ID_" + data.list[i].ROWNUM + "']").val(data.list[i].WORK_USER_ID);
-                    fileHtml += data.list[i].CAM_FILE_SEQ ? "<a href='/downloadfile/" + data.list[i].CAM_FILE_SEQ + "' download style=\"overflow: hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;max-width:100%;vertical-align:top;\">" + data.list[i].CAM_FILE_NM + "</a>" : '';
-                    fileHtml += data.list[i].NC_FILE_SEQ ? "<a href='/downloadfile/" + data.list[i].NC_FILE_SEQ + "' download>" + data.list[i].NC_FILE_NM : '';
+                    fileHtml += data.list[i].CAM_FILE_SEQ ? '<a href="/downloadfile/' + data.list[i].CAM_FILE_SEQ + '" download style="overflow: hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;max-width:100%;vertical-align:top;">' + data.list[i].CAM_FILE_NM + '</a>' : '';
+                    fileHtml += data.list[i].NC_FILE_SEQ ? '<a href="/downloadfile/' + data.list[i].NC_FILE_SEQ + '" download style="overflow: hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;max-width:100%;vertical-align:top;">' + data.list[i].NC_FILE_NM : '';
                     $("#cam_work_history_detail_pop").find("#CAM_WORK_FILE_" + data.list[i].ROWNUM).html(fileHtml);
                 }
                 $('#cam_work_history_detail_pop').modal('show');
