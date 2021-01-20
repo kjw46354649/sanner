@@ -17,7 +17,7 @@
         <form id="MCT_PLAN_MANAGE_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="machine.selectEquipId">
             <div class="hWrap">
-                <h2 style="height: 42px; line-height: 42px;">MCT 가공 계획 현황</h2>
+                <h2 style="height: 42px; line-height: 42px;">MCT가공계획 관리</h2>
                 <span class="slt_wrap namePlusSlt ml-20">
                         <label for="FACTORY_AREA">MCT 센터</label>
                         <select name="FACTORY_AREA" id="FACTORY_AREA">
@@ -29,10 +29,6 @@
                         </select>
                 </span>
                 <span class="refresh ml-10"><button type="button" id="MCT_PLAN_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
-                <span class="buttonWrap" style="padding: 8px 0px 0px 0px;">
-                    <button type="button" class="defaultBtn black" id="MCT_PLAN_MANAGE_DRAWING_VIEW">도면보기</button>
-                    <!-- <button type="button" class="defaultBtn sky">레이아웃관리</button> -->
-                </span>
             </div>
         </form>
         <div class="conWrap">
@@ -91,7 +87,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_30" for="MATERIAL_TYPE">재질</label>
-                            <select class="wd_100" name="MATERIAL_TYPE" id="MATERIAL_TYPE" title="재질">
+                            <select class="wd_70" name="MATERIAL_TYPE" id="MATERIAL_TYPE" title="재질">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1035}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -108,7 +104,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_50" for="OPTION">Option</label>
-                            <input type="text" class="wd_100" name="OPTION" id="OPTION" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" title="발주사" readonly>
+                            <input type="text" class="wd_100" name="OPTION" id="OPTION" placeholder="<spring:message code='com.form.top.all.option' />" title="발주사" readonly>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -515,6 +511,17 @@
                 beforeDrop: function () {},
                 afterDrop: function (evt, uiDrop) {}
             },
+            load: function () {
+                if ($('#ALLOCATION_COMPLETED_EXCLUDED').prop('checked')) {
+                    $('#ALLOCATION_COMPLETED_EXCLUDED').click();
+                    $('#ALLOCATION_COMPLETED_EXCLUDED').click();
+                }
+            },
+            rowSelect: function (event, ui) {
+                const rowData = ui.addList[0].rowData;
+
+                setPlanSelection(rowData);
+            },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $processTargetGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
@@ -777,6 +784,21 @@
             $processPlanGrid13 = $('#' + processPlanGrid13Id).pqGrid(processPlanObj13);
             $processPlanGrid14 = $('#' + processPlanGrid14Id).pqGrid(processPlanObj14);
         };
+
+        const setPlanSelection = function (rowData) {
+            for (let i = 1; i <= 14; i++) {
+                if ($('#PROCESS_PLAN_GRID' + i).hasClass('pq-grid')) {
+                    //deselect everything.
+                    $('#PROCESS_PLAN_GRID' + i).pqGrid('setSelection', null);
+                    const data = $('#PROCESS_PLAN_GRID' + i).pqGrid('option', 'dataModel.data');
+                    const found = data.findIndex(element => Number(element.MCT_PLAN_SEQ) === Number(rowData.MCT_PLAN_SEQ));
+
+                    if (found !== -1){
+                        $('#PROCESS_PLAN_GRID' + i).pqGrid('setSelection', {rowIndx: found});
+                    }
+                }
+            }
+        };
         /* function */
 
         /* event */
@@ -794,12 +816,7 @@
             refreshTargetGrid();
         });
         
-        $('#MCT_PLAN_MANAGE_DRAWING_VIEW').on('click', function () {
-            let rowData = selectedGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex});
-            callWindowImageViewer(rowData.IMG_GFILE_SEQ);
-        });
-
-        $('#MCT_PROCESS_TARGET_FORM').on('change', function () {
+        $('#MCT_PROCESS_TARGET_FORM #COMP_CD,#MCT_PROCESS_TARGET_FORM #POP_POSITION,#MCT_PROCESS_TARGET_FORM #MATERIAL_TYPE,#MCT_PROCESS_TARGET_FORM #CONTROL_NUM_OR_DRAWING_NUM, #MCT_PROCESS_TARGET_FORM #OPTION, #MCT_PROCESS_TARGET_FORM #MATERIAL_KIND').on('change', function () {
             $processTargetGrid.pqGrid('option', 'dataModel.postData', function () {
                 return (fnFormToJsonArrayData('#MCT_PROCESS_TARGET_FORM'));
             });
