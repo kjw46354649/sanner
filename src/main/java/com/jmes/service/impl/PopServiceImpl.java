@@ -99,6 +99,7 @@ public class PopServiceImpl implements PopService {
             String context01 = (String) controlPartInfo.get("CONTEXT01"); // 일자
             String context02 = (String) controlPartInfo.get("CONTEXT02"); // CONTROL_NUM INFO
             String context03 = (String) controlPartInfo.get("CONTEXT03"); // 현재 pop 위치명
+            String workType = (String) controlPartInfo.get("WORK_TYPE"); // work Type
 
             if("X".equals(controlPartInfo.get("CHE_DEL_YN"))){
                 model.addAttribute("returnCode", "RET99");
@@ -130,11 +131,12 @@ public class PopServiceImpl implements PopService {
                 notificationMessage.setContent03(context03);
 
                 // 모도면이 POP 바코드 스캔 되면 조립전환 상태를 추가 한다.
-                if (createPRO018 != null && !"".equals(createPRO018)) {
-                    controlPartInfo.put("PART_STATUS", createPRO018);
-                    controlPartInfo.put("queryId", "popMapper.insertControlPartProgressStatus");
-                    innodaleDao.create(controlPartInfo);
-
+                if ("WTP020".equals(workType)) {
+                    controlPartInfo.put("PART_STATUS", "PRO018");
+                    if (createPRO018 != null && !"".equals(createPRO018)) {
+                        controlPartInfo.put("queryId", "popMapper.insertControlPartProgressStatus");
+                        innodaleDao.create(controlPartInfo);
+                    }
                     // TODO  Part 가 있는 경우 Part 상태를 조립전환으로 변경해야 한다.
                     //      -- PART 에서 가공 이력이 있는 경우 PART 가공 완료 일시를 업데이트 한다.
                     controlPartInfo.put("queryId", "popMapper.insertControlPartChildProgressStatus");
@@ -142,7 +144,6 @@ public class PopServiceImpl implements PopService {
 
                     controlPartInfo.put("queryId", "popMapper.updateControlPartChildProgressMappingStatus");
                     innodaleDao.create(controlPartInfo);
-
                 }
 
                 // 소재 주문 이후에 POP 바코드 스캔 되면 소재 입고 처리를 완료 한다.
