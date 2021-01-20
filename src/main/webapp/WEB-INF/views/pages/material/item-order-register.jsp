@@ -8,7 +8,7 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<div class="popup_container" id="item_order_register_popup" style="display: none;" data-backdrop="static">
+<div class="popup_container" id="item_order_register_popup" style="display: none;" data-keyboard="false" data-backdrop="static">
     <div class="layerPopup" style="width:1728px; height: fit-content;">
         <h3>소재 주문</h3>
         <span style="padding-left: 30px;">
