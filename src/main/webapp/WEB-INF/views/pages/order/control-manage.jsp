@@ -2563,31 +2563,30 @@
             let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
             let parameters = {'url': '/validationCheckBeforeSaveFromControl', 'data': {data: JSON.stringify(changes)}};
-
+            let flag = false;
+            
             fnPostAjaxAsync(function (data) {
-                let flag = data.flag;
-                let message = data.message;
+                flag = data.flag;
 
                 if (flag) {
-                    fnAlert(null, message);
+                    fnAlert(null, data.message);
                     return false;
                 }
             }, parameters, '');
 
-            parameters = {'url': '/saveFromControlManage', 'data': {data: JSON.stringify(changes)}};
+            if (!flag) {
+                parameters = {'url': '/saveFromControlManage', 'data': {data: JSON.stringify(changes)}};
 
-            fnPostAjaxAsync(function (data) {
-                let flag = data.flag;
-                let message = data.message;
+                fnPostAjaxAsync(function (data) {
+                    if (data.flag) {
+                        fnAlert(null, data.message);
+                        return false;
+                    }
 
-                if (flag) {
-                    fnAlert(null, message);
-                    return false;
-                } else {
                     fnAlert(null, '<spring:message code="com.alert.default.save.success"/>');
                     $orderManagementGrid.pqGrid('refreshDataAndView');
-                }
-            }, parameters, '');
+                }, parameters, '');
+            }
         });
 
         $('#CONTROL_MANAGE_DELETE').on('click', function () {
@@ -2937,37 +2936,39 @@
             fnReportFormToHiddenFormPageAction('control_estimate_list_excel_download', '/downloadExcel');
         });
 
-        alertify.dialog('barcodeDrawingConfirm', function () {
-            return {
-                setup: function () {
-                    var settings = alertify.confirm().settings;
-                    for (var prop in settings)
-                        this.settings[prop] = settings[prop];
-                    var setup = alertify.confirm().setup();
-                    setup.buttons.push({
-                        text: '취소',
-                        scope: 'primary'
-                    });
-                    return setup;
-                },
-                settings: {
-                    oncontinue: null
-                },
-                callback: function (closeEvent) {
-                    if (closeEvent.index == 2) {
-                        if (typeof this.get('oncontinue') === 'function') {
-                            let returnValue;
-                            returnValue = this.get('oncontinue').call(this, closeEvent);
-                            if (typeof returnValue !== 'undefined') {
-                                closeEvent.cancel = !returnValue;
+        if (!alertify.barcodeDrawingConfirm) {
+            alertify.dialog('barcodeDrawingConfirm', function () {
+                return {
+                    setup: function () {
+                        let settings = alertify.confirm().settings;
+                        for (let prop in settings)
+                            this.settings[prop] = settings[prop];
+                        let setup = alertify.confirm().setup();
+                        setup.buttons.push({
+                            text: '취소',
+                            scope: 'primary'
+                        });
+                        return setup;
+                    },
+                    settings: {
+                        oncontinue: null
+                    },
+                    callback: function (closeEvent) {
+                        if (closeEvent.index == 2) {
+                            if (typeof this.get('oncontinue') === 'function') {
+                                let returnValue;
+                                returnValue = this.get('oncontinue').call(this, closeEvent);
+                                if (typeof returnValue !== 'undefined') {
+                                    closeEvent.cancel = !returnValue;
+                                }
                             }
+                        } else {
+                            alertify.confirm().callback.call(this, closeEvent);
                         }
-                    } else {
-                        alertify.confirm().callback.call(this, closeEvent);
                     }
-                }
-            };
-        }, false, 'confirm');
+                };
+            }, false, 'confirm');
+        }
 
         // 바코드도면 출력
         $('#CONTROL_MANAGE_BARCODE_DRAWING_PRINT').on('click', function () {
@@ -3405,7 +3406,7 @@
         $('#CONTROL_MERGE').on({
             'click': function () {
                 if (noSelectedRowAlert()) return false;
-                let flag = new Boolean();
+                let flag = false;
                 let dataList = [];
 
                 for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {

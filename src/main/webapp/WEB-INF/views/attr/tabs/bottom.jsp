@@ -130,21 +130,13 @@
 <div class="popup_container g_item_detail_pop" id="g_item_detail_pop" style="display: none;">
     <div class="layerPopup">
         <h3>주문상세정보</h3>
+        <span class="right_float mr-30">
+            <span class="barCode" id="g_item_detail_pop_barcode_span"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
+            <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode hg_30" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
+        </span>
         <button type="button" class="pop_close mt-10 mr-8" id="popClose2">닫기</button>
         <div class="qualityWrap">
-            <div class="h_area">
-                    <span class="buttonWrap" id="inspect_method_btn">
-                        <span style="height: 30px;float: left;">&nbsp;</span>
-<%--                        <span class="work_info_area">--%>
-<%--                            <label for="CAM_WORK_USER_ID" class="wd_100 worker">CAM 작업자: </label>--%>
-<%--                            <select id="CAM_WORK_USER_ID" name="CAM_WORK_USER_ID" title="견적 담당자" class="wd_200"></select>--%>
-<%--                        </span>--%>
-                    </span>
-                <ul class="listWrap right_float">
-                    <span class="barCode" id="g_item_detail_pop_barcode_span"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
-                    <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode hg_30" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
-                </ul>
-            </div>
+            <div class="h_area"></div>
             <form class="form-inline" id="g_item_detail_pop_form" name="g_item_detail_pop_form" role="form" onsubmit="return false;">
                 <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailInfo"/>
                 <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
