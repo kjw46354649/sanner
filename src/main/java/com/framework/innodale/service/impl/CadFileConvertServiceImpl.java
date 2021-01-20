@@ -29,8 +29,6 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
         ArrayList<HashMap<String, Object>> addList = null;
         HashMap<String, Object> queryIdList = null;
 
-        ArrayList<HashMap<String, Object>> orderControlPartRevList = null;
-
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 

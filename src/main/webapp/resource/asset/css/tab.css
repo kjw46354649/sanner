@@ -235,12 +235,41 @@ button.close {
 .modal-start-dialog .workList table thead{float:left; width:568px;}
 .modal-start-dialog .workList table tbody{overflow-y:auto; overflow-x:hidden; float:left; width:568px; height: 300px;}
 .modal-start-dialog .workList table tbody tr{display:table; width:568px; line-height: 18px;}
+
 /*-.modal-dialog .workList table td{width:100px}*/
 .modal-start-content { position: relative; background-color: #000000; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid #999; border: 1px solid rgba(0, 0, 0, .2); border-radius: 6px;  -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5); box-shadow: 0 5px 15px rgba(0, 0, 0, .5); }
 .modal-start-body {position: relative; padding: 15px;}
 
 .modal-start-dialog-table-contents-end {border: 1px solid #6D90D0;padding: 5px;font-size: 18px;font-weight: 500;text-align: center;color: black;}
 .modal-start-dialog-table-header-end {border: 1px solid #818488;padding: 2px;font-size: 20px;font-weight: 600;text-align: center;color: #1d1d1d;height: 40px;background: #b4e4fa;}
+
+/* drawing board hold popup*/
+.modal-hold-dialog { width: 700px; margin: 30px auto;}
+.modal-hold-dialog .buttonWrap { padding-bottom: 5px;}
+.modal-hold-dialog .buttonCenterWrap { padding-bottom: 5px; text-align: center; }
+
+.modal-hold-dialog .listBlueBtn { height: 40px; padding: 0 30px 0 30px; color: #000000; font-size: 20px; line-height: 40px; position: relative;
+    border-radius: 3px; border-radius: 3px; background-color: #fffc91;}
+.modal-hold-dialog .listGrnBtn { height: 40px; padding: 0 30px 0 30px; margin-left: 10px; color: #000000; font-size: 20px; line-height: 40px; position: relative;
+    border-radius: 3px; border-radius: 3px; background-color: #f1f1e3;}
+.modal-hold-dialog .listAlertBtn { width: 178px; height: 40px; padding: 10px 30px 10px 30px; margin-left: 10px; color: #fd1300; font-size: 30px; font-weight: bold; line-height: 40px; position: relative;
+    border-radius: 3px; border-radius: 3px; background-color: #ffffff;}
+.modal-hold-dialog .add:before { content: ''; width: 14px; height: 14px; position: absolute; top: 13px; left: 18px; display: block; background: url(../images/common/bg_addBtn.png)no-repeat 0 0; }
+.modal-hold-dialog .save:before { content: ''; width: 18px; height: 14px; position: absolute; top: 13px; left: 15px; display: block; background: url(../images/common/ico_saveBtn.png)no-repeat 0 0; }
+.modal-hold-dialog .closeBe:before { content: ''; width: 18px; height: 14px; position: absolute; top: 13px; left: 15px; display: block; background: url(../images/common/btn_tabmenu_close_off.png)no-repeat 0 0; }
+
+.modal-hold-dialog .workList table{border-collapse:collapse; width:100%}
+.modal-hold-dialog .workList table thead{float:left; width:568px;}
+.modal-hold-dialog .workList table tbody{overflow-y:auto; overflow-x:hidden; float:left; width:568px; height: 300px;}
+.modal-hold-dialog .workList table tbody tr{display:table; width:568px; line-height: 18px;}
+
+/*-.modal-dialog .workList table td{width:100px}*/
+.modal-hold-content { position: relative; background-color: #fcfcec; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid #999; border: 1px solid rgba(0, 0, 0, .2); border-radius: 6px;  -webkit-box-shadow: 0 5px 15px rgb(252, 252, 236); box-shadow: 0 5px 15px rgba(0, 0, 0, .5); }
+.modal-hold-body {position: relative; padding: 15px;}
+
+.modal-hold-dialog-table-contents-end {border: 1px solid #6D90D0;padding: 5px;font-size: 18px;font-weight: 500;text-align: center;color: black;}
+.modal-hold-dialog-table-header-end {border: 1px solid #818488;padding: 2px;font-size: 20px;font-weight: 600;text-align: center;color: #1d1d1d;height: 40px;background: #b4e4fa;}
+
 
 
 .modal-backdrop {
@@ -332,6 +361,14 @@ button.close {
     text-align: center;
     background: yellow;
     color: black;
+}
+
+.hold-txt {
+    text-align: center;
+    padding: 10px;
+    font-size: 30px;
+    font-weight: 600;
+    color: #007AFF;
 }
 
 .work-txt {

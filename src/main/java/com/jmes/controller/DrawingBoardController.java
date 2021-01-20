@@ -103,10 +103,10 @@ public class DrawingBoardController {
                 model.addAttribute("returnCode", "RET99");
                 model.addAttribute("message", controlInfo + " POP를 먼저 찍어 주세요. (Scan POP First)"); // 현재와 같은 Location 스캔 처리
             }else if("X".equals(chkHoldYn)) {
+                model.addAttribute("info", controlPartInfo);
                 model.addAttribute("returnCode", "RET96");
                 model.addAttribute("message", controlInfo + "<br><br>현재 <span style=\"color: red;\">'보류'</span>상태입니다.<br>계속 진행하시겠습니까?");
             }else {
-
                 model.addAttribute("info", controlPartInfo);
                 model.addAttribute("returnCode", "RET00");
             }
