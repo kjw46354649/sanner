@@ -8,7 +8,7 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<div class="popup_container" id="item_order_register_popup" style="display: none;" data-backdrop="static">
+<div class="popup_container" id="item_order_register_popup" style="display: none;" data-keyboard="false" data-backdrop="static">
     <div class="layerPopup" style="width:1728px; height: fit-content;">
         <h3>소재 주문</h3>
         <span style="padding-left: 30px;">
@@ -51,13 +51,13 @@
             <input type="hidden" id="MATERIAL_ORDER_NUM" name="MATERIAL_ORDER_NUM"/>
             <input type="hidden" id="MATERIAL_ORDER_SEQ" name="MATERIAL_ORDER_SEQ"/>
             <div class="d-flex tableWrap">
-                <div class="mr-10" style="width: 100%;">
+                <div class="mr-10">
                     <div id="item_order_register_popup_top_grid"></div>
                     <div class="right_sort">
                         전체 조회 건수 (Total : <span id="item_order_register_popup_top_grid_records" style="color: #00b3ee">0</span>)
                     </div>
                 </div>
-                <div class="ml-auto" style="display: none; width: 518px; height: 500px; overflow: auto;">
+                <div class="ml-auto" style="display: none; width: 400px; height: 500px; overflow: auto;">
                     <div class="gridWrap popupTableDiv list1" style="height: 500px; overflow: auto"></div>
                 </div>
             </div>
@@ -582,8 +582,50 @@
 
         let itemOrderRegisterPopTopColModel= [
             {
-                title: '발주 주문정보', align: 'center', colModel: [
-                    {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80, editable: false},
+                title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
+                    });
+                }
+            },
+            {
+                title: '관리번호', halign: 'center', align: 'left', dataType: 'string', dataIndx: 'CONTROL_PART_NUM', width: 180, editable: false, styleHead: {'font-weight': 'bold','color': 'red'},
+                render: function (ui) {
+                    let WORK_TYPE = ui.rowData.WORK_TYPE == undefined ? '' : ui.rowData.WORK_TYPE;
+                    let returnVal = ui.cellData;
+                    if (WORK_TYPE == 'WTP020') {
+                        returnVal = '';
+                    }
+                    return returnVal;
+                }
+            },
+            // {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 30, editable: false, styleHead: {'font-weight': 'bold','color': 'red'}},
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
+            {
+                title: '주문대상 관리정보', align: 'center', colModel: [
+                    {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 110, editable: false},
                     {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false}
                 ]
             },
@@ -632,7 +674,7 @@
                     }
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 80, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
+            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 110, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', minWidth: 35, width: 35, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
             {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 95, validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: { type: 'select', valueIndx: "value", labelIndx: "text", options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}}), },
@@ -712,51 +754,12 @@
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {
-                title: '완료 소재주문 정보', align: 'center', colModel: [
+                title: '이전 완료주문 정보', align: 'center', colModel: [
                     {title: '주문번호', dataIndx: 'MATERIAL_ORDER_NUM'},
                     {title: '수량', dataIndx: 'M_ORDER_COMPLETED_QTY'},
                 ]
             },
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
-                render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
-                    return '';
-                },
-                postRender: function(ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui),
-                        rowIndx = ui.rowIndx,
-                        rowData = ui.rowData;
 
-                    $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
-                    });
-                }
-            },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 180, editable: false, styleHead: {'font-weight': 'bold','color': 'red'},
-                render: function(ui){
-                    let WORK_TYPE = ui.rowData.WORK_TYPE == undefined ? '' : ui.rowData.WORK_TYPE;
-                    let returnVal = ui.cellData;
-                    if(WORK_TYPE == 'WTP020') {
-                        returnVal = '';
-                    }
-                    return returnVal;
-                }
-            },
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 30, editable: false, styleHead: {'font-weight': 'bold','color': 'red'} },
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
-                render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#imageView").bind("click", function () {
-                        let rowData = ui.rowData;
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
-                    });
-                }
-            },
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 60},
             {title: '', dataType: 'string', dataIndx: '', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
@@ -799,9 +802,49 @@
         ];
 
         let itemOrderRegisterPopTopColModel_enabled= [
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
+                    });
+                }
+            },
+            {title: '관리번호', halign: 'center', align: 'left', dataType: 'string', dataIndx: 'CONTROL_PART_NUM', width: 180, editable: false,
+                render: function(ui){
+                    let WORK_TYPE = ui.rowData.WORK_TYPE == undefined ? '' : ui.rowData.WORK_TYPE;
+                    let returnVal = ui.cellData;
+                    if (WORK_TYPE == 'WTP020') {
+                        returnVal = '';
+                    }
+                    return returnVal;
+                }
+            },
+            // {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 30, width: 30, editable: false, styleHead: {'font-weight': 'bold','color': 'red'}},
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {
-                title: '발주 주문정보', align: 'center', colModel: [
-                    {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80, editable: false},
+                title: '주문대상 관리정보', align: 'center', colModel: [
+                    {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 110, editable: false},
                     {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false}
                 ]
             },
@@ -850,7 +893,7 @@
                     }
                 }
             },
-            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', editable: false, width: 80 },
+            {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', editable: false, width: 110},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', minWidth: 35, width: 35, editable: false },
             {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 95, editable: false,
                 editor: {
@@ -927,46 +970,6 @@
                     },
                     {title: '비고사항', dataType: 'string', dataIndx: 'M_ORDER_NOTE', minWidth: 120, width: 120, editable: false}
                 ]
-            },
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
-                render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
-                    return '';
-                },
-                postRender: function(ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui),
-                        rowIndx = ui.rowIndx,
-                        rowData = ui.rowData;
-
-                    $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
-                    });
-                }
-            },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 180, editable: false,
-                render: function(ui){
-                    let WORK_TYPE = ui.rowData.WORK_TYPE == undefined ? '' : ui.rowData.WORK_TYPE;
-                    let returnVal = ui.cellData;
-                    if(WORK_TYPE == 'WTP020') {
-                        returnVal = '';
-                    }
-                    return returnVal;
-                }
-            },
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 30, width: 30, editable: false, styleHead: {'font-weight': 'bold','color': 'red'}},
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
-                render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#imageView").bind("click", function () {
-                        let rowData = ui.rowData;
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
-                    });
-                }
             },
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', width: 60, editable: false},
             {title: '', dataType: 'string', dataIndx: '', minWidth: 25, width: 25, editable: false,
@@ -1224,6 +1227,7 @@
         });
 
         $('#item_order_register_popup').on('show.bs.modal',function() {
+            $(".popupTableDiv").parent().width('100%');
             $(".popupTableDiv").parent().prev().width('100%');
 
             itemOrderRegisterPopTopGrid.pqGrid({
@@ -1793,25 +1797,30 @@
                         const materialCompCdPrev = list[i - 1] ? list[i - 1].MATERIAL_COMP_CD : undefined;
                         const materialCompCdNext = list[i + 1] ? list[i + 1].MATERIAL_COMP_CD : undefined;
                         const groupedMaterialCompCd = fnGroupBy(list, 'MATERIAL_COMP_CD');
+                        const orderQtyInfo = rowData.ORDER_QTY_INFO || '0EA';
 
                         if (materialCompCd === materialCompCdNext) {
+                            const materialDetailNm = rowData.MATERIAL_DETAIL_NM || '';
+                            const sizeTxt = rowData.SIZE_TXT || '';
+
                             if (materialCompCd !== materialCompCdPrev) {
                                 const ROWSPAN_LENGTH = groupedMaterialCompCd[rowData.MATERIAL_COMP_CD].length + 1;
-
+                                const materialCompNm = rowData.MATERIAL_COMP_NM || '';
+                                const compEmail = rowData.COMP_EMAIL || '';
                                 table += '<tr>';
-                                table += '<td class="bg-title" rowspan="' + ROWSPAN_LENGTH + '" style="max-width: 125px;">' + rowData.MATERIAL_COMP_NM + '</td>';
-                                table += '<td class="bg-title" colspan="3">' + rowData.COMP_EMAIL + '</td>';
+                                table += '<td class="bg-title" rowspan="' + ROWSPAN_LENGTH + '" style="max-width: 110px;">' + materialCompNm + '</td>';
+                                table += '<td class="bg-title" colspan="3">' + compEmail + '</td>';
                                 table += '</tr>';
                             }
                             table += '<tr>';
-                            table += '<td style="max-width: 110px;">' + rowData.MATERIAL_DETAIL_NM + '</td>';
-                            table += '<td class="text-right" style="max-width: 150px;">' + rowData.SIZE_TXT + '</td>';
-                            table += '<td class="text-right" style="max-width: 55px;">' + rowData.ORDER_QTY_INFO + '</td>';
+                            table += '<td style="max-width: 110px;">' + materialDetailNm + '</td>';
+                            table += '<td class="text-right" style="max-width: 150px;">' + sizeTxt + '</td>';
+                            table += '<td class="text-right" style="max-width: 55px;">' + orderQtyInfo + '</td>';
                             table += '</tr>';
                         } else {
                             table += '<tr style="">';
                             table +=    '<td class="bg-sum" colspan="2">합계</td>';
-                            table +=    '<td class="bg-sum text-right">' + rowData.ORDER_QTY_INFO + '</td>';
+                            table +=    '<td class="bg-sum text-right">' + orderQtyInfo + '</td>';
                             table += '</tr>';
                         }
                     }
