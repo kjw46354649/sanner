@@ -536,6 +536,7 @@
 
                             validationCheck(data);
                             changeCellColor(errorList, prevErrorList);
+
                             if (errorList.length) {
                                 fnAlert(null, errorList.length + '건의 데이터가 올바르지 않습니다.');
                                 return false;
@@ -932,6 +933,7 @@
 
         const validationCheck = function (dataList) {
             // sameControlNumCheck(dataList);
+            workTypeCheck(dataList);
 
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 let rowData = dataList[i];
@@ -983,6 +985,24 @@
             }
         };*/
 
+        const workTypeCheck = function (dataList) {
+            let groupedControlNum = fnGroupBy(dataList, 'CONTROL_NUM');
+
+            for (let controlNum in groupedControlNum) {
+                if (groupedControlNum.hasOwnProperty(controlNum)) {
+                    let groupedWorkType = fnGroupBy(groupedControlNum[controlNum], 'WORK_TYPE');
+
+                    if (groupedWorkType.hasOwnProperty('WTP020')) {
+                        // 조립이 두개이상이거나 단품, 재고를 포함하고 있을 때
+                        if (groupedWorkType.WTP020.length > 1 || groupedWorkType.hasOwnProperty('WTP010') || groupedWorkType.hasOwnProperty('WTP040')) {
+                            for (let i = 0; i < groupedControlNum[controlNum].length; i++) {
+                                addErrorList(groupedControlNum[controlNum][i].pq_ri, 'WORK_TYPE');
+                            }
+                        }
+                    }
+                }
+            }
+        };
         // required 체크
         const requiredCheck = function (rowData) {
             let list;
@@ -1020,7 +1040,6 @@
                 }
             }
         };
-
         // 잘못된 데이터(코드) 체크
         const badCodeCheck = function (rowData) {
             let rowIndex = rowData.pq_ri;
@@ -1129,7 +1148,6 @@
                 if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_GRIND');
             }
         };
-
         // 잘못 입력된 데이터 체크
         const inputErrorCheck = function (rowData) {
             let list = [];
