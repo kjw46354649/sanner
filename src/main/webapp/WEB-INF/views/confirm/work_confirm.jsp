@@ -340,8 +340,23 @@
                 $('#CONFIRM_ORDER_TOTAL_ORDER_QUANTITY').html(totalOrderQuantity);
             },
             rowSelect: function (event, ui) {
-                selectedRowIndex[0] = ui.addList[0].rowIndx;
+                selectedRowIndex[0] = ui.addList[0] ? ui.addList[0].rowIndx : undefined;
                 selectedGrid = $(this.element.context);
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                }
+
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
         let $processConfirmGrid;
@@ -467,8 +482,23 @@
                 $('#PROCESS_CONFIRM_TOTAL_ORDER_QUANTITY').html(totalOrderQuantity);
             },
             rowSelect: function (event, ui) {
-                selectedRowIndex[0] = ui.addList[0].rowIndx;
+                selectedRowIndex[0] = ui.addList[0] ? ui.addList[0].rowIndx : undefined;
                 selectedGrid = $(this.element.context);
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                }
+
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
         let $outsideGrid;
@@ -581,8 +611,23 @@
                 $('#OUTSIDE_TOTAL_ORDER_QUANTITY').html(totalOrderQuantity);
             },
             rowSelect: function (event, ui) {
-                selectedRowIndex[0] = ui.addList[0].rowIndx;
+                selectedRowIndex[0] = ui.addList[0] ? ui.addList[0].rowIndx : undefined;
                 selectedGrid = $(this.element.context);
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                }
+
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
         let $processCompleteGrid;
@@ -692,8 +737,23 @@
                 $('#PROCESS_COMPLETE_TOTAL_ORDER_QUANTITY').html(totalOrderQuantity);
             },
             rowSelect: function (event, ui) {
-                selectedRowIndex[0] = ui.addList[0].rowIndx;
+                selectedRowIndex[0] = ui.addList[0] ? ui.addList[0].rowIndx : undefined;
                 selectedGrid = $(this.element.context);
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                }
+
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
 

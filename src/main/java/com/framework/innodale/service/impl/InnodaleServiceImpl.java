@@ -95,7 +95,7 @@ public class InnodaleServiceImpl implements InnodaleService {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
-
+        String userId = (String)map.get("LOGIN_USER_ID");
         ArrayList<HashMap<String, Object>> addList = null;
         ArrayList<HashMap<String, Object>> updateList = null;
         HashMap<String, Object> queryIdList = null;
@@ -117,6 +117,7 @@ public class InnodaleServiceImpl implements InnodaleService {
             for (HashMap<String, Object> hashMap : addList) {
                 for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
                     hashMap.put("queryId", queryId.get(i));
+                    hashMap.put("LOGIN_USER_ID", userId);
                     this.innodaleDao.insertGrid(hashMap);
                 }
             }
@@ -127,6 +128,7 @@ public class InnodaleServiceImpl implements InnodaleService {
             for (HashMap<String, Object> hashMap : updateList) {
                 for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
                     hashMap.put("queryId", queryId.get(i));
+                    hashMap.put("LOGIN_USER_ID", userId);
                     this.innodaleDao.updateGrid(hashMap);
                 }
             }

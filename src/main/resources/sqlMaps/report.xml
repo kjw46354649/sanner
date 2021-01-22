@@ -181,43 +181,6 @@
             ) Z
     </select>
 
-    <select id="selectTargetAmountRegisterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            ROW_NUMBER () OVER (ORDER BY A.YYYY, A.MM) AS ROW_NUM,
-            DATE_FORMAT(STR_TO_DATE(CONCAT(A.YYYY, A.MM), '%Y%m'), '%Y/%m') AS YYYYMM,
-            #{WORK_FACTORY} AS WORK_FACTORY,
-            SF_GET_CODE_NM('1014', #{WORK_FACTORY}, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM,
-            B.PRODUCTION_GOAL_AMT,
-            B.SALES_GOAL_AMT
-        FROM TBL_YYYYMMDD A
-            LEFT OUTER JOIN TBL_SALES_GOAL B ON CONCAT(A.YYYY, A.MM) = B.YYYYMM
-                AND B.WORK_FACTORY = #{WORK_FACTORY}
-        WHERE 1 = 1
-            AND A.YYYY = #{YEAR}
-        GROUP BY A.YYYY, A.MM, B.WORK_FACTORY
-    </select>
-
-    <insert id="createTargetAmount" parameterType="java.util.HashMap" >
-        INSERT INTO TBL_SALES_GOAL (
-            YYYYMM,
-            WORK_FACTORY,
-            PRODUCTION_GOAL_AMT,
-            SALES_GOAL_AMT,
-            INSERT_ID
-        ) VALUES (
-            REPLACE(#{YYYYMM}, '/', SPACE(0)),
-            #{WORK_FACTORY},
-            #{PRODUCTION_GOAL_AMT},
-            #{SALES_GOAL_AMT},
-            #{LOGIN_USER_ID}
-        ) ON DUPLICATE KEY
-	        UPDATE
-	            PRODUCTION_GOAL_AMT = #{PRODUCTION_GOAL_AMT},
-	            SALES_GOAL_AMT = #{SALES_GOAL_AMT},
-                UPDATE_DT = NOW(),
-	            UPDATE_ID = #{LOGIN_USER_ID}
-    </insert>
-
     <insert id="insertUpdateWorkingDayNote" parameterType="java.util.HashMap" >
         INSERT INTO TBL_WORKING_DAY_NOTE (
             WORKING_DT,
