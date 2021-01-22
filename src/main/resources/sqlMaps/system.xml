@@ -875,16 +875,29 @@
 
     <select id="selectProductionTargetAmountRegisterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER (ORDER BY A.YYYY, A.MM) AS ROW_NUM
-            , DATE_FORMAT(STR_TO_DATE(CONCAT(A.YYYY, A.MM), '%Y%m'), '%Y/%m') AS YYYYMM
-            , #{WORK_FACTORY} AS WORK_FACTORY
-            , SF_GET_CODE_NM('1014', #{WORK_FACTORY}, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
-            , B.GOAL_AMT
-        FROM TBL_YYYYMMDD A
-            LEFT OUTER JOIN TBL_XXX_PRODUCTION_GOAL B ON CONCAT(A.YYYY, A.MM) = B.YYYYMM
-                AND B.WORK_FACTORY = #{WORK_FACTORY}
-        WHERE A.YYYY = #{YEAR}
-        GROUP BY A.YYYY, A.MM, B.WORK_FACTORY
+            ROW_NUMBER () OVER (ORDER BY X.CODE_CD, X.YYYY, X.MM) AS ROW_NUM
+            , DATE_FORMAT(STR_TO_DATE(CONCAT(X.YYYY, X.MM), '%Y%m'), '%Y/%m') AS YYYYMM
+            , X.CODE_CD AS WORK_FACTORY
+            , SF_GET_CODE_NM('1014', X.CODE_CD, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
+            , Y.GOAL_AMT
+        FROM (
+            SELECT
+                A.YYYY
+                , A.MM
+                , B.CODE_CD
+            FROM TBL_YYYYMMDD A
+                CROSS JOIN TBL_CODE B
+            WHERE 1 = 1
+                AND A.YYYY = #{YEAR}
+                AND B.HIGH_CD = '1014'
+                AND B.DEL_YN = 'N'
+                <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                AND B.CODE_CD = #{WORK_FACTORY}
+                </if>
+            GROUP BY YYYY, MM, B.CODE_CD
+        ) X
+            LEFT OUTER JOIN TBL_XXX_PRODUCTION_GOAL Y ON Y.YYYYMM = CONCAT(X.YYYY, X.MM) AND Y.WORK_FACTORY = X.CODE_CD
+        ORDER BY X.CODE_CD, X.YYYY, X.MM
     </select>
 
     <insert id="createProductionTargetAmount" parameterType="java.util.HashMap" >
@@ -907,16 +920,29 @@
 
     <select id="selectSalesTargetAmountRegisterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER (ORDER BY A.YYYY, A.MM) AS ROW_NUM
-            , DATE_FORMAT(STR_TO_DATE(CONCAT(A.YYYY, A.MM), '%Y%m'), '%Y/%m') AS YYYYMM
-            , #{COMP_CD} AS COMP_CD
-            , jmes.SF_GET_COMP_NM(#{COMP_CD}) AS COMP_NM
-            , B.GOAL_AMT
-        FROM TBL_YYYYMMDD A
-            LEFT OUTER JOIN TBL_XXX_SALES_GOAL B ON CONCAT(A.YYYY, A.MM) = B.YYYYMM
-                AND B.COMP_CD = #{COMP_CD}
-        WHERE A.YYYY = #{YEAR}
-        GROUP BY A.YYYY, A.MM, B.COMP_CD
+            ROW_NUMBER () OVER (ORDER BY X.COMP_CD, X.YYYY, X.MM) AS ROW_NUM
+            , DATE_FORMAT(STR_TO_DATE(CONCAT(X.YYYY, X.MM), '%Y%m'), '%Y/%m') AS YYYYMM
+            , X.COMP_CD
+            , jmes.SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM
+            , Y.GOAL_AMT
+        FROM (
+            SELECT
+                A.YYYY
+                , A.MM
+                , B.COMP_CD
+            FROM TBL_YYYYMMDD A
+                CROSS JOIN TBL_COMPANY B
+            WHERE A.YYYY = #{YEAR}
+                AND B.FAMILY_COMPANY_YN = 'Y'
+                AND B.ACTIVE_YN = 'Y'
+                AND B.DEL_YN = 'N'
+                <if test="COMP_CD != null and COMP_CD != ''">
+        		AND B.COMP_CD = #{COMP_CD}
+                </if>
+            GROUP BY A.YYYY, A.MM, B.COMP_CD
+        ) X
+            LEFT OUTER JOIN TBL_XXX_SALES_GOAL Y ON Y.YYYYMM = CONCAT(X.YYYY, X.MM) AND Y.COMP_CD = X.COMP_CD
+        ORDER BY X.COMP_CD, X.YYYY, X.MM
     </select>
 
     <insert id="createSalesTargetAmount" parameterType="java.util.HashMap" >

@@ -1,5 +1,6 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="page onegrid">
     <div class="bottomWrap" style="margin-top: 20px;">
         <div class="col-sm-3">
@@ -54,6 +55,7 @@
                     <span class="slt_wrap">
                         <label class="label_100" for="WORK_FACTORY">대상공장</label>
                         <select class="wd_200" name="WORK_FACTORY" id="work_factory" title="대상공장">
+                            <option value=""><spring:message code="com.form.top.all.option"/></option>
                             <c:forEach var="code" items="${HighCode.H_1014}">
                                 <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                             </c:forEach>
@@ -223,7 +225,7 @@
         $('#' + id).val(year).prop('selected', true);
     })('sales_target_amount_register_year', 3);
     (function () {
-        fnCommCodeDatasourceSelectBoxCreate($('#sales_target_amount_register_form').find('#COMP_CD'), null, {
+        fnCommCodeDatasourceSelectBoxCreate($('#sales_target_amount_register_form').find('#COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
         });
