@@ -124,7 +124,7 @@ public class PDFPringMakeController {
         String[] selectControlLists = ((String) hashMap.get("selectControlList")).split("\\|");
         String sameDrawingPrint = ((String) hashMap.get("flag"));
         hashMap.put("selectControlLists", selectControlLists);
-        hashMap.put("queryId", "orderMapper.selectControlCadBarcodeListList");
+        hashMap.put("queryId", "orderMapper.selectControlCadBarcodeList");
         List<Map<String, Object>> controlImageList = innodaleService.getList(hashMap);
 
         int iCount = 0;
@@ -167,13 +167,13 @@ public class PDFPringMakeController {
             table.addCell(createCell((String) controlInfo.get("WORK_TYPE_NM"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, mediumNormalFont));
             if (controlInfo.get("WORK_TYPE_NM").equals("조립")) {
-                table.addCell(createQtyCell((String) controlInfo.get("CONTROL_ORDER_QTY"), 1, 2, largeBoldFont));
+                table.addCell(createQtyCell((String) controlInfo.get("CONTROL_ORDER_QTY"), 1, 2, mediumBoldFont));
                 table.addCell(createEACell("SET", 1, 2, smallBoldFont));
             } else if (controlInfo.get("WORK_TYPE_NM").equals("파트")) {
-                table.addCell(createQtyCell1((String) controlInfo.get("CONTROL_ORDER_QTY"), 1, 1, largeBoldFont));
+                table.addCell(createQtyCell1((String) controlInfo.get("CONTROL_ORDER_QTY"), 1, 1, mediumBoldFont));
                 table.addCell(createEACell1("EA", 1, 1, smallBoldFont));
             } else {
-                table.addCell(createQtyCell((String) controlInfo.get("CONTROL_ORDER_QTY"), 1,2, largeBoldFont));
+                table.addCell(createQtyCell((String) controlInfo.get("CONTROL_ORDER_QTY"), 1,2, mediumBoldFont));
                 table.addCell(createEACell("EA", 1, 2, smallBoldFont));
             }
             table.addCell(createCell("원칭", 1, 1, smallNormalFont));

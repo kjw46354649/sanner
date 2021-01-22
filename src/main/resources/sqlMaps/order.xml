@@ -2752,7 +2752,7 @@
                                 AND A.CONTROL_VER = C.CONTROL_VER AND IFNULL(B.DRAWING_VER, SPACE(0)) = IFNULL(C.DRAWING_VER, SPACE(0)))
     </insert>
 
-    <select id="selectControlCadBarcodeListList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="selectControlCadBarcodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
             (SELECT MAX(G.BARCODE_NUM) FROM TBL_CONTROL_BARCODE G WHERE B.CONTROL_SEQ = G.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ AND G.DEL_YN = 'N') AS BARCODE_NUM,
