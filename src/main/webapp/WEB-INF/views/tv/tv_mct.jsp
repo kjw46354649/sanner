@@ -54,7 +54,9 @@
 				<a href="/tv/mct" class="refresh">refresh</a>
 			</div>
 			<div class="right">
-<%--				<div class="infoTit"><img src="/resource/asset/images/common/logo-02.png"> &nbsp;&nbsp;진성정밀 & (주)제이에스하이테크</div>--%>
+				<form id="goMct" name="goMct" method="post" action="/tv/pop">
+					<button type="submit" id="reserveSaveBtn" class="tvReservePopBtn blue">MCT 가공현황</button>
+				</form>
 			</div>
 		</div>
 		<section class="contents pop ty2">
