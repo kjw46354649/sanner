@@ -103,10 +103,10 @@ public class DrawingBoardController {
                 model.addAttribute("returnCode", "RET99");
                 model.addAttribute("message", controlInfo + " POP를 먼저 찍어 주세요. (Scan POP First)"); // 현재와 같은 Location 스캔 처리
             }else if("X".equals(chkHoldYn)) {
+                model.addAttribute("info", controlPartInfo);
                 model.addAttribute("returnCode", "RET96");
                 model.addAttribute("message", controlInfo + "<br><br>현재 <span style=\"color: red;\">'보류'</span>상태입니다.<br>계속 진행하시겠습니까?");
             }else {
-
                 model.addAttribute("info", controlPartInfo);
                 model.addAttribute("returnCode", "RET00");
             }
@@ -343,7 +343,6 @@ public class DrawingBoardController {
         HashMap<String, Object> alarmHashMap = new HashMap<String, Object>();
         alarmHashMap.put("CONTROL_SEQ", hashMap.get("CONTROL_SEQ"));
         alarmHashMap.put("CONTROL_DETAIL_SEQ", hashMap.get("CONTROL_DETAIL_SEQ"));
-        // alarmHashMap.put("MCT_WORK_SEQ", hashMap.get("MCT_WORK_SEQ"));
         alarmHashMap.put("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
         simpMessagingTemplate.convertAndSend("/topic/drawing", getNotificationMessage(alarmHashMap, ActionType.DB_START, "가공시작"));
 
@@ -462,6 +461,7 @@ public class DrawingBoardController {
         notificationMessage.setContent01((String) alarmInfo.get("CONTEXT01"));
         notificationMessage.setContent02((String) alarmInfo.get("CONTEXT02"));
         notificationMessage.setContent03(CONTEXT03);
+        notificationMessage.setImageSeq((int) alarmInfo.get("IMG_GFILE_SEQ"));
 
         getNotificationEquipMessage(notificationMessage, alarmInfo);
 
@@ -488,6 +488,7 @@ public class DrawingBoardController {
     }
 
     private void getNotificationEquipMessage(NotificationMessage notificationMessage, Map<String, Object> alarmInfo) throws Exception{
+
         /** 머신 정보 셋팅 **/
         notificationMessage.setContent04((String) alarmInfo.get("EQUIP_NM"));
         notificationMessage.setEquipSeq((int) alarmInfo.get("EQUIP_SEQ"));

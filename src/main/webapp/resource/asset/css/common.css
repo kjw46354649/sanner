@@ -473,7 +473,8 @@ table.boardList .txtP{color: #7030a0;}
   transform: translateY(-50%);
   font-size: large !important;
 }
-  /** etc file **/
+
+/** etc file **/
 .blueFileImageICon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/file_icon_blue.png) no-repeat 0 0; background-size: 16px 16px}
 /** png, pdf file **/
 .redFileImageICon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/file_icon_red.png) no-repeat 0 0;  background-size: 16px 16px}

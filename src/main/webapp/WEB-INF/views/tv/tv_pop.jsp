@@ -54,7 +54,16 @@
 <body>
 	<div class="bodyWrap">
 		<div class="header">
-			<h1>Point Of Production</h1><a href="javascript:getAllData();" class="refresh">refresh</a>
+			<div>
+				<div style="">
+					<h1>Point Of Production</h1><a href="javascript:getAllData();" class="refresh">refresh</a>
+				</div>
+				<div style="float: right; margin: -50px; padding-right: 95px;">
+					<form id="goMct" name="goMct" method="post" action="/tv/mct">
+						<button type="submit" id="reserveSaveBtn" class="tvReservePopBtn blue">MCT 가공현황</button>
+					</form>
+				</div>
+			</div>
 		</div>
 		<section class="contents pop">
 			<div class="popWrap">
@@ -1234,6 +1243,29 @@
 		}).show().autoOk(60);
 	};
 
+	let windowImageViewer;
+	let machineListData;
+
+	function callWindowImageViewer(imageSeq)
+	{
+		// 팝업창 열려 있는지 확인
+		if(typeof(windowImageViewer)=='undefined' || windowImageViewer.closed) {
+			windowImageViewer = window.open("/imageViewer", "jmesImageViewChildForm", "width=1024, height=768, resizable = no, scrollbars = no");
+			windowImageViewer.onload = function () {
+				setTimeout(function () {
+					$(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
+					windowImageViewer.onImageViewStart();
+				}, 500);
+			};
+		}else {
+			windowImageViewer.focus();
+			setTimeout(function() {
+				$(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
+				windowImageViewer.onImageViewStart();
+			}, 500);
+		}
+	}
+
 	$(function () {
 
 		let getInitData = function () {
@@ -1275,8 +1307,9 @@
 							let pop_position = pop_list1[i].POP_POSITION;
 							let control_part_info = pop_list1[i].CONTROL_PART_INFO;
 							let total_cnt = pop_list1[i].TOTAL_CNT;
+							let image_seq = pop_list1[i].IMG_GFILE_SEQ;
 
-							setPopData(pop_position, control_part_info, total_cnt);
+							setPopData(pop_position, control_part_info, total_cnt, image_seq);
 						}
 					}
 					if (pop_list2 != '') {//소재대기
@@ -1284,8 +1317,9 @@
 							let pop_position = 'POP9992';
 							let control_part_info = pop_list2[i].CONTROL_PART_INFO;
 							let total_cnt = pop_list2[i].TOTAL_CNT;
+							let image_seq = pop_list2[i].IMG_GFILE_SEQ;
 
-							setPopData(pop_position, control_part_info, total_cnt);
+							setPopData(pop_position, control_part_info, total_cnt, image_seq);
 						}
 					}
 					if (pop_list3 != '') {//외주
@@ -1293,8 +1327,9 @@
 							let pop_position = 'POP9991';
 							let control_part_info = pop_list3[i].CONTROL_PART_INFO;
 							let total_cnt = pop_list3[i].TOTAL_CNT;
+							let image_seq = pop_list3[i].IMG_GFILE_SEQ;
 
-							setPopData(pop_position, control_part_info, total_cnt);
+							setPopData(pop_position, control_part_info, total_cnt, image_seq);
 						}
 					}
 					//2공장 MCT, 기타 진행해야 함.
@@ -1324,7 +1359,8 @@
 									$target.find(".rightWrap").find("img").attr("src", "/image/" + user_photo_gfile_seq);
 								}
 								if(control_part_info != undefined) {
-									$target.find(".proName").html(control_part_info);
+									var controlPartHtml = "<a href=\"javascript:callWindowImageViewer(\'"+m_list[i].IMG_GFILE_SEQ+"\');\" >" + control_part_info + "</a>";
+									$target.find(".proName").html(controlPartHtml);
 									$target.find(".proName").addClass("ellipsis");
 								}
 								if(working_time != undefined) {
@@ -1356,7 +1392,8 @@
 						for (let i = 0; i < pop_list2.length; i++) {
 							let control_part_info = pop_list2[i].CONTROL_PART_INFO;
 							let total_cnt = pop_list2[i].TOTAL_CNT;
-							setPopData(pop_position, control_part_info, total_cnt);
+							let image_seq = pop_list2[i].IMG_GFILE_SEQ;
+							setPopData(pop_position, control_part_info, total_cnt, image_seq);
 						}
 					}
 					let pop_list3 = data.pop_list3;//외주진행
@@ -1366,7 +1403,8 @@
 						for (let i = 0; i < pop_list3.length; i++) {
 							let control_part_info = pop_list3[i].CONTROL_PART_INFO;
 							let total_cnt = pop_list3[i].TOTAL_CNT;
-							setPopData(pop_position, control_part_info, total_cnt);
+							let image_seq = pop_list3[i].IMG_GFILE_SEQ;
+							setPopData(pop_position, control_part_info, total_cnt, image_seq);
 						}
 					}
 					let m_list = data.m_list;//장비
@@ -1385,8 +1423,9 @@
 							let $target = $("#" + factory_area+"_"+layout_sort);
 							if($target.length > 0){
 								if(control_part_info != undefined) {
+									var controlPartHtml = "<a href=\"javascript:callWindowImageViewer(\'"+m_list[i].IMG_GFILE_SEQ+"\');\" >" + control_part_info + "</a>";
 									$target.find(".proName").addClass("ellipsis");
-									$target.find(".proName").html(control_part_info);
+									$target.find(".proName").html(controlPartHtml);
 								}
 								if(working_time != undefined) {
 									$target.find(".proNum").html(working_time + "'");
@@ -1419,7 +1458,8 @@
 						for (let i = 0; i < pop_list.length; i++) {
 							let control_part_info = pop_list[i].CONTROL_PART_INFO;
 							let total_cnt = pop_list[i].TOTAL_CNT;
-							setPopData(pop_position, control_part_info, total_cnt);
+							let image_seq = pop_list[i].IMG_GFILE_SEQ;
+							setPopData(pop_position, control_part_info, total_cnt, image_seq);
 						}
 					}
 				},
@@ -1447,7 +1487,8 @@
 						for (let i = 0; i < pop_list.length; i++) {
 							let control_part_info = pop_list[i].CONTROL_PART_INFO;
 							let total_cnt = pop_list[i].TOTAL_CNT;
-							setPopData(pop_position, control_part_info, total_cnt);
+							let image_seq = pop_list[i].IMG_GFILE_SEQ;
+							setPopData(pop_position, control_part_info, total_cnt, image_seq);
 						}
 
 						$("#" + controlNum).addClass("blink_background");
@@ -1462,12 +1503,12 @@
 			});
 		};
 
-		let setPopData = function (popPosition, liInfo, totalCnt) {
+		let setPopData = function (popPosition, liInfo, totalCnt, imageSeq) {
 			if (popPosition != "") {
 				let maxCnt = $("#" + popPosition).attr("data-cnt");
 				let targetCnt = $("#" + popPosition).find("li").length;
 				if (maxCnt > targetCnt) {
-					$("#" + popPosition).append('<li id="' + popPosition + "_" + liInfo + '" class="ellipsis" >' + liInfo + '</li>');
+					$("#" + popPosition).append('<a href="javascript:callWindowImageViewer(' + imageSeq + ');"><li id="' + popPosition + "_" + liInfo + '" class="ellipsis" >' + liInfo + '</li></a>');
 				}
 				$("#CNT_" + popPosition).html(totalCnt);
 			}
@@ -1523,7 +1564,6 @@
 			    case 'DB_COMPLETE' :
 					$target.find(".proName").html('');
 					$target.find(".proNum").html('');
-					// $target.find(".proName").removeClass("animated fadeInLeft");
 					$target.find(".leftWrap").removeClass("machine-run-background machine-pause-background");
 			        break;
 				case 'DB_PAUSE' :
@@ -1531,9 +1571,9 @@
 					$target.find(".leftWrap").addClass("machine-pause-background");
 					break;
 				case 'DB_START' :
-					$target.find(".proName").html(messageData.content02);
+					var controlPartHtml = "<a href=\"javascript:callWindowImageViewer(\'"+messageData.imageSeq+"\');\" >" + messageData.content02 + "</a>";
+					$target.find(".proName").html(controlPartHtml);
 					$target.find(".proNum").html(messageData.sMinute + "'");
-					// $target.find(".proName").addClass("animated fadeInLeft ");
 				case 'DB_RESTART' :
 					$target.find(".leftWrap").removeClass("machine-pause-background");
 					$target.find(".leftWrap").addClass("machine-run-background");
@@ -1543,15 +1583,6 @@
 			setTimeout(function() {
 				$target.removeClass("blink_box");
 			}, 5000);
-			// if(actionType === 'DB_COMPLETE') {
-			// 	$target.find(".proName").html('');
-			// 	$target.find(".proNum").html('');
-			// 	$target.find(".proName").removeClass("ellipsis animated fadeInLeft ");
-			// }else{
-			// 	$target.find(".proName").html(messageData.content02);
-			// 	$target.find(".proNum").html(messageData.sMinute + "'");
-			// 	$target.find(".proName").addClass("ellipsis animated fadeInLeft ");
-			// }
 		};
 
 		/** 작업자 로그인 정보 실시간 처리 **/
@@ -1580,22 +1611,18 @@
 			stompClient.connect({}, (frame) => {
 		        stompClient.subscribe('/topic/pop', function (notificationMessage) {
 		            let messageData = JSON.parse(notificationMessage.body);
-		            //console.log(messageData);
 		            popMessageProcess(messageData);
 		        });
 				stompClient.subscribe('/topic/drawing', function (notificationMessage) {
 					let messageData = JSON.parse(notificationMessage.body);
-                    //console.log(messageData);
 					drawingMessageProcess(messageData);
 				});
 				stompClient.subscribe('/topic/worker', function (notificationMessage) {
 					let messageData = JSON.parse(notificationMessage.body);
-                    //console.log(messageData);
 					workerMessageProcess(messageData);
 				});
 				stompClient.subscribe('/topic/alarm', function (notificationMessage) {
 					let messageData = JSON.parse(notificationMessage.body);
-                    //console.log(messageData);
 					alarmMessageProcess(messageData);
 				});
 			}, () => {
@@ -1621,11 +1648,6 @@
 			}
 			return randomstring;
 		}
-
-		function reloadPage(){
-			console.log("reloadPage");
-			// location.reload();
-		};
 
 		let setIntervalTimer;
 		let timer = function(){

@@ -22,6 +22,8 @@ public class NotificationMessage {
     private String content04;
     private String content05;
 
+    private int imageSeq;   // 도면 파일 처리
+
     /** 사용자 관련 정보 **/
     private String userId;
     private String userNm;
@@ -174,5 +176,13 @@ public class NotificationMessage {
     public void setClientId(String clientId) {
         this.clientId = clientId;
     }
+
+    public int getImageSeq() {
+            return imageSeq;
+        }
+
+    public void setImageSeq(int imageSeq) {
+            this.imageSeq = imageSeq;
+        }
 
 }
