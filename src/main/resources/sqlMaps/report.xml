@@ -181,43 +181,6 @@
             ) Z
     </select>
 
-    <select id="selectTargetAmountRegisterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            ROW_NUMBER () OVER (ORDER BY A.YYYY, A.MM) AS ROW_NUM,
-            DATE_FORMAT(STR_TO_DATE(CONCAT(A.YYYY, A.MM), '%Y%m'), '%Y/%m') AS YYYYMM,
-            #{WORK_FACTORY} AS WORK_FACTORY,
-            SF_GET_CODE_NM('1014', #{WORK_FACTORY}, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM,
-            B.PRODUCTION_GOAL_AMT,
-            B.SALES_GOAL_AMT
-        FROM TBL_YYYYMMDD A
-            LEFT OUTER JOIN TBL_SALES_GOAL B ON CONCAT(A.YYYY, A.MM) = B.YYYYMM
-                AND B.WORK_FACTORY = #{WORK_FACTORY}
-        WHERE 1 = 1
-            AND A.YYYY = #{YEAR}
-        GROUP BY A.YYYY, A.MM, B.WORK_FACTORY
-    </select>
-
-    <insert id="createTargetAmount" parameterType="java.util.HashMap" >
-        INSERT INTO TBL_SALES_GOAL (
-            YYYYMM,
-            WORK_FACTORY,
-            PRODUCTION_GOAL_AMT,
-            SALES_GOAL_AMT,
-            INSERT_ID
-        ) VALUES (
-            REPLACE(#{YYYYMM}, '/', SPACE(0)),
-            #{WORK_FACTORY},
-            #{PRODUCTION_GOAL_AMT},
-            #{SALES_GOAL_AMT},
-            #{LOGIN_USER_ID}
-        ) ON DUPLICATE KEY
-	        UPDATE
-	            PRODUCTION_GOAL_AMT = #{PRODUCTION_GOAL_AMT},
-	            SALES_GOAL_AMT = #{SALES_GOAL_AMT},
-                UPDATE_DT = NOW(),
-	            UPDATE_ID = #{LOGIN_USER_ID}
-    </insert>
-
     <insert id="insertUpdateWorkingDayNote" parameterType="java.util.HashMap" >
         INSERT INTO TBL_WORKING_DAY_NOTE (
             WORKING_DT,
@@ -1561,6 +1524,14 @@
         GROUP BY X.DATA_TYPE, X.DATA_TYPE_NM
     </select>
 
+    <select id="selectDailyMCTOperateRateTrendSevenDaysLabels" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT jmes.SF_GET_DATE_F(A.DT, '', '') AS DT
+        FROM jmes.TBL_YYYYMMDD A
+        WHERE A.DT > DATE_ADD(STR_TO_DATE(DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'),'%Y%m%d'), INTERVAL -1 WEEK)
+            AND A.DT <![CDATA[ <= ]]> DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
+        ORDER BY A.DT
+    </select>
+
     <select id="selectWeeklyMctOperateRateEightWeeks" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT Z.DATA_TYPE, Z.DATA_TYPE_NM
             , MAX(CASE WHEN Z.WEEK_SEQ = 1 THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.ABS_RATIO ELSE Z.REAL_RATIO END END) DATA_VALUE_1
@@ -1623,11 +1594,11 @@
         GROUP BY Z.DATA_TYPE, Z.DATA_TYPE_NM
     </select>
 
-    <select id="selectDFGSDFG123" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="selectMctExecuteBoardGridList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.EQUIP_SEQ
-            , SF_GET_CODE_NM('1014', X.WORK_FACTORY, 'KR') AS WORK_FACTORY_NM
-            , jmes.SF_GET_CODE_NM('1005', X.FACTORY_AREA, 'KR') AS FACTORY_AREA_NM
-            , jmes.SF_GET_CODE_NM('1010', X.PROCESS_TYPE, 'KR') AS PROCESS_TYPE_NM
+            , SF_GET_CODE_NM('1014', X.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
+            , jmes.SF_GET_CODE_NM('1005', X.FACTORY_AREA, #{LOGIN_LOCALE}) AS FACTORY_AREA_NM
+            , jmes.SF_GET_CODE_NM('1010', X.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM
             , (SELECT M.EQUIP_NM FROM jmes.TBL_EQUIP M WHERE M.EQUIP_SEQ = X.EQUIP_SEQ) AS EQUIP_NM
             , X.EQUIP_SIZE
             , REPLACE(CONCAT(TRUNCATE(IFNULL(X.WORK_TIME,0)/3600,0),'h ',TRUNCATE((IFNULL(X.WORK_TIME,0)%3600)/60,0),'m'),'0h ',space(0)) AS WORK_TIME
@@ -1685,10 +1656,8 @@
                     , MAX(CASE WHEN B.HHMM = '0630' THEN B.TIME_STATUS END) AS STATUS_0630
                     , MAX(CASE WHEN B.HHMM = '0700' THEN B.TIME_STATUS END) AS STATUS_0700
                     , MAX(CASE WHEN B.HHMM = '0730' THEN B.TIME_STATUS END) AS STATUS_0730
-                FROM jmes.TBL_BATCH_MCT_WORK A, TBL_BATCH_MCT_WORK_TIME_STATUS B
-                WHERE A.BATCH_DT = B.BATCH_DT
-                    AND A.EQUIP_SEQ = B.EQUIP_SEQ
-                    AND A.BATCH_DT = DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
+                FROM jmes.TBL_BATCH_MCT_WORK A LEFT OUTER JOIN TBL_BATCH_MCT_WORK_TIME_STATUS B ON A.BATCH_DT = B.BATCH_DT AND A.EQUIP_SEQ = B.EQUIP_SEQ
+                WHERE A.BATCH_DT = DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
                     <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
                     AND A.WORK_FACTORY = #{WORK_FACTORY}
                     </if>
@@ -1718,6 +1687,565 @@
             AND X.EQUIP_SEQ = #{EQUIP_SEQ}
             </if>
         ORDER BY X.EQUIP_SEQ
+    </select>
+
+    <select id="selectMonthlyQualityBoardFromOrder" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT Z.ORDER_COMP_CD
+            , CASE WHEN Z.ORDER_COMP_CD IS NULL THEN 'Total' ELSE (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = Z.ORDER_COMP_CD) END AS ORDER_COMP_NM
+            , IFNULL(Z.PART_CNT,0) AS PART_CNT
+            , IFNULL(Z.INSPECT_CNT,0) AS INSPECT_CNT
+            , CASE WHEN IFNULL(Z.PART_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.INSPECT_CNT,0) / Z.PART_CNT * 100,1) END AS INSPECT_RATIO
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.PASS_CNT,0) / Z.INSPECT_CNT * 100,1) END AS PASS_RATIO
+            , IFNULL(Z.A_CNT,0) AS A_CNT
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.A_CNT,0) / Z.INSPECT_CNT * 100,1) END AS A_RATIO
+            , IFNULL(Z.B_CNT,0) AS B_CNT
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.B_CNT,0) / Z.INSPECT_CNT * 100,1) END AS B_RATIO
+            , IFNULL(Z.C_CNT,0) AS C_CNT
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.C_CNT,0) / Z.INSPECT_CNT * 100,1) END AS C_RATIO
+            , IFNULL(Z.D_CNT,0) AS D_CNT
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.D_CNT,0) / Z.INSPECT_CNT * 100,1) END AS D_RATIO
+            , IFNULL(Z.RETURN_CNT,0) AS RETURN_CNT
+            , CASE WHEN IFNULL(Z.PART_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.RETURN_CNT,0) / Z.PART_CNT * 100,1) END AS RETURN_RATIO
+        FROM (  SELECT Y.ORDER_COMP_CD
+                    , SUM(Y.PART_CNT) AS PART_CNT
+                    , SUM(Y.INSPECT_CNT) AS INSPECT_CNT
+                    , SUM(Y.PASS_CNT) AS PASS_CNT
+                    , SUM(Y.A_CNT) AS A_CNT
+                    , SUM(Y.B_CNT) AS B_CNT
+                    , SUM(Y.C_CNT) AS C_CNT
+                    , SUM(Y.D_CNT) AS D_CNT
+                    , SUM(Y.RETURN_CNT) AS RETURN_CNT
+                FROM (  SELECT X.ORDER_COMP_CD
+                            , X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.PART_CNT
+                            , X.INSPECT_CNT, X.PASS_CNT, A_CNT, B_CNT, C_CNT, D_CNT
+                            , ( SELECT COUNT(*) AS RETURN_CNT
+                                FROM jmes.TBL_INSPECT M
+                                WHERE M.CONTROL_SEQ = X.CONTROL_SEQ
+                                    AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+                                    AND M.INSPECT_TYPE = '2'
+                                    AND M.INSPECT_GRADE = 'GRD050'
+                               ) AS RETURN_CNT
+                        FROM (  SELECT A.ORDER_COMP_CD
+                                    , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, 1 AS PART_CNT
+                                    , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
+                                    , CASE WHEN C.INSPECT_SEQ IS NULL THEN 0 ELSE 1 END AS INSPECT_CNT
+                                    , CASE WHEN C.INSPECT_GRADE IN ('GRD010','GRD020','GRD030') THEN 1 ELSE 0 END AS PASS_CNT
+                                    , CASE WHEN C.INSPECT_GRADE = 'GRD010' THEN 1 ELSE 0 END AS A_CNT
+                                    , CASE WHEN C.INSPECT_GRADE = 'GRD020' THEN 1 ELSE 0 END AS B_CNT
+                                    , CASE WHEN C.INSPECT_GRADE = 'GRD030' THEN 1 ELSE 0 END AS C_CNT
+                                    , CASE WHEN C.INSPECT_GRADE = 'GRD040' THEN 1 ELSE 0 END AS D_CNT
+                                FROM jmes.TBL_CONTROL A
+                                    , jmes.TBL_CONTROL_PART B LEFT OUTER JOIN jmes.TBL_INSPECT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND C.INSPECT_TYPE = '1'
+                                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                    AND A.DEL_YN = 'N'
+                                    AND B.WORK_TYPE != 'WTP020'
+                                    AND A.OUT_FINISH_DT >= STR_TO_DATE(CONCAT(#{START_YEAR}, #{START_MONTH},'01'),'%Y%m%d')
+                                    <if test="END_YEAR != null and END_YEAR != '' and END_MONTH != null and END_MONTH != ''">
+                                    AND A.OUT_FINISH_DT <![CDATA[ < ]]> DATE_ADD(LAST_DAY(STR_TO_DATE(CONCAT(#{END_YEAR}, #{END_MONTH},'01'),'%Y%m%d')), INTERVAL 1 DAY)
+                                    </if>
+
+                              ) X
+                        WHERE X.INSPECT_RNUM = 1
+                     ) Y
+                GROUP BY Y.ORDER_COMP_CD WITH ROLLUP
+            ) Z
+        ORDER BY Z.ORDER_COMP_CD IS NULL DESC, ORDER_COMP_NM
+    </select>
+
+    <select id="selectMonthlyQualityBoardFromOutside" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT Z.OUTSIDE_COMP_CD
+            , CASE WHEN Z.OUTSIDE_COMP_CD IS NULL THEN 'Total' ELSE (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = Z.OUTSIDE_COMP_CD) END AS OUTSIDE_COMP_NM
+            , IFNULL(Z.PART_CNT,0) AS PART_CNT
+            , IFNULL(Z.INSPECT_CNT,0) AS INSPECT_CNT
+            , CASE WHEN IFNULL(Z.PART_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.INSPECT_CNT,0) / Z.PART_CNT * 100,1) END AS INSPECT_RATIO
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.PASS_CNT,0) / Z.INSPECT_CNT * 100,1) END AS PASS_RATIO
+            , IFNULL(Z.A_CNT,0) AS A_CNT
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.A_CNT,0) / Z.INSPECT_CNT * 100,1) END AS A_RATIO
+            , IFNULL(Z.B_CNT,0) AS B_CNT
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.B_CNT,0) / Z.INSPECT_CNT * 100,1) END AS B_RATIO
+            , IFNULL(Z.C_CNT,0) AS C_CNT
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.C_CNT,0) / Z.INSPECT_CNT * 100,1) END AS C_RATIO
+            , IFNULL(Z.D_CNT,0) AS D_CNT
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.D_CNT,0) / Z.INSPECT_CNT * 100,1) END AS D_RATIO
+            , IFNULL(Z.RETURN_CNT,0) AS RETURN_CNT
+            , CASE WHEN IFNULL(Z.PART_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.RETURN_CNT,0) / Z.PART_CNT * 100,1) END AS RETURN_RATIO
+        FROM (  SELECT Y.OUTSIDE_COMP_CD
+                    , SUM(Y.PART_CNT) AS PART_CNT
+                    , SUM(Y.INSPECT_CNT) AS INSPECT_CNT
+                    , SUM(Y.PASS_CNT) AS PASS_CNT
+                    , SUM(Y.A_CNT) AS A_CNT
+                    , SUM(Y.B_CNT) AS B_CNT
+                    , SUM(Y.C_CNT) AS C_CNT
+                    , SUM(Y.D_CNT) AS D_CNT
+                    , SUM(Y.RETURN_CNT) AS RETURN_CNT
+                FROM (  SELECT X.OUTSIDE_COMP_CD
+                            , X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.PART_CNT
+                            , X.INSPECT_CNT, X.PASS_CNT, A_CNT, B_CNT, C_CNT, D_CNT
+                            , ( SELECT COUNT(*) AS RETURN_CNT
+                                FROM jmes.TBL_INSPECT M
+                                WHERE M.CONTROL_SEQ = X.CONTROL_SEQ
+                                    AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+                                    AND M.INSPECT_TYPE = '2'
+                                    AND M.INSPECT_GRADE = 'GRD050'
+                               ) AS RETURN_CNT
+                        FROM (  SELECT B.OUTSIDE_COMP_CD
+                                    , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, 1 AS PART_CNT
+                                    , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
+                                    , CASE WHEN C.INSPECT_SEQ IS NULL THEN 0 ELSE 1 END AS INSPECT_CNT
+                                    , CASE WHEN C.INSPECT_GRADE IN ('GRD010','GRD020','GRD030') THEN 1 ELSE 0 END AS PASS_CNT
+                                    , CASE WHEN C.INSPECT_GRADE = 'GRD010' THEN 1 ELSE 0 END AS A_CNT
+                                    , CASE WHEN C.INSPECT_GRADE = 'GRD020' THEN 1 ELSE 0 END AS B_CNT
+                                    , CASE WHEN C.INSPECT_GRADE = 'GRD030' THEN 1 ELSE 0 END AS C_CNT
+                                    , CASE WHEN C.INSPECT_GRADE = 'GRD040' THEN 1 ELSE 0 END AS D_CNT
+                                FROM jmes.TBL_CONTROL A
+                                    , jmes.TBL_CONTROL_PART B LEFT OUTER JOIN jmes.TBL_INSPECT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND C.INSPECT_TYPE = '1'
+                                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                    AND A.DEL_YN = 'N'
+                                    AND B.WORK_TYPE != 'WTP020'
+                                    AND A.OUT_FINISH_DT >= STR_TO_DATE(CONCAT(#{START_YEAR}, #{START_MONTH},'01'),'%Y%m%d')
+                                    <if test="END_YEAR != null and END_YEAR != '' and END_MONTH != null and END_MONTH != ''">
+                                    AND A.OUT_FINISH_DT <![CDATA[ < ]]> DATE_ADD(LAST_DAY(STR_TO_DATE(CONCAT(#{END_YEAR}, #{END_MONTH},'01'),'%Y%m%d')), INTERVAL 1 DAY)
+                                    </if>
+                                    AND B.OUTSIDE_COMP_CD IS NOT NULL     <!-- 데이타 확인 -->
+                              ) X
+                        WHERE X.INSPECT_RNUM = 1
+                     ) Y
+                GROUP BY Y.OUTSIDE_COMP_CD WITH ROLLUP
+            ) Z
+        ORDER BY Z.OUTSIDE_COMP_CD IS NULL DESC, OUTSIDE_COMP_NM
+    </select>
+
+    <select id="selectMonthlyQualityBoardFromMaterialType" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT Z.MATERIAL_TYPE
+            , CASE WHEN Z.MATERIAL_TYPE IS NULL THEN 'Total' ELSE jmes.SF_GET_CODE_NM('1035', Z.MATERIAL_TYPE, #{LOGIN_LOCALE}) END AS MATERIAL_TYPE_NM    -- 언어조건
+            , IFNULL(Z.PART_CNT,0) AS PART_CNT
+            , IFNULL(Z.INSPECT_CNT,0) AS INSPECT_CNT
+            , CASE WHEN IFNULL(Z.PART_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.INSPECT_CNT,0) / Z.PART_CNT * 100,1) END AS INSPECT_RATIO
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.PASS_CNT,0) / Z.INSPECT_CNT * 100,1) END AS PASS_RATIO
+            , IFNULL(Z.A_CNT,0) AS A_CNT
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.A_CNT,0) / Z.INSPECT_CNT * 100,1) END AS A_RATIO
+            , IFNULL(Z.B_CNT,0) AS B_CNT
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.B_CNT,0) / Z.INSPECT_CNT * 100,1) END AS B_RATIO
+            , IFNULL(Z.C_CNT,0) AS C_CNT
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.C_CNT,0) / Z.INSPECT_CNT * 100,1) END AS C_RATIO
+            , IFNULL(Z.D_CNT,0) AS D_CNT
+            , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.D_CNT,0) / Z.INSPECT_CNT * 100,1) END AS D_RATIO
+            , IFNULL(Z.RETURN_CNT,0) AS RETURN_CNT
+            , CASE WHEN IFNULL(Z.PART_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.RETURN_CNT,0) / Z.PART_CNT * 100,1) END AS RETURN_RATIO
+        FROM (  SELECT Y.MATERIAL_TYPE
+                    , SUM(Y.PART_CNT) AS PART_CNT
+                    , SUM(Y.INSPECT_CNT) AS INSPECT_CNT
+                    , SUM(Y.PASS_CNT) AS PASS_CNT
+                    , SUM(Y.A_CNT) AS A_CNT
+                    , SUM(Y.B_CNT) AS B_CNT
+                    , SUM(Y.C_CNT) AS C_CNT
+                    , SUM(Y.D_CNT) AS D_CNT
+                    , SUM(Y.RETURN_CNT) AS RETURN_CNT
+                FROM (  SELECT X.MATERIAL_TYPE
+                            , X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.PART_CNT
+                            , X.INSPECT_CNT, X.PASS_CNT, A_CNT, B_CNT, C_CNT, D_CNT
+                            , ( SELECT COUNT(*) AS RETURN_CNT
+                                FROM jmes.TBL_INSPECT M
+                                WHERE M.CONTROL_SEQ = X.CONTROL_SEQ
+                                    AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+                                    AND M.INSPECT_TYPE = '2'
+                                    AND M.INSPECT_GRADE = 'GRD050'
+                               ) AS RETURN_CNT
+                        FROM (  SELECT B.MATERIAL_TYPE
+                                    , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, 1 AS PART_CNT
+                                    , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
+                                    , CASE WHEN C.INSPECT_SEQ IS NULL THEN 0 ELSE 1 END AS INSPECT_CNT
+                                    , CASE WHEN C.INSPECT_GRADE IN ('GRD010','GRD020','GRD030') THEN 1 ELSE 0 END AS PASS_CNT
+                                    , CASE WHEN C.INSPECT_GRADE = 'GRD010' THEN 1 ELSE 0 END AS A_CNT
+                                    , CASE WHEN C.INSPECT_GRADE = 'GRD020' THEN 1 ELSE 0 END AS B_CNT
+                                    , CASE WHEN C.INSPECT_GRADE = 'GRD030' THEN 1 ELSE 0 END AS C_CNT
+                                    , CASE WHEN C.INSPECT_GRADE = 'GRD040' THEN 1 ELSE 0 END AS D_CNT
+                                FROM jmes.TBL_CONTROL A
+                                    , jmes.TBL_CONTROL_PART B LEFT OUTER JOIN jmes.TBL_INSPECT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND C.INSPECT_TYPE = '1'
+                                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                    AND A.DEL_YN = 'N'
+                                    AND B.WORK_TYPE != 'WTP020'
+                                    AND A.OUT_FINISH_DT >= STR_TO_DATE(CONCAT(#{START_YEAR}, #{START_MONTH},'01'),'%Y%m%d')
+                                    <if test="END_YEAR != null and END_YEAR != '' and END_MONTH != null and END_MONTH != ''">
+                                    AND A.OUT_FINISH_DT <![CDATA[ < ]]> DATE_ADD(LAST_DAY(STR_TO_DATE(CONCAT(#{END_YEAR}, #{END_MONTH},'01'),'%Y%m%d')), INTERVAL 1 DAY)
+                                    </if>
+                                    AND B.MATERIAL_TYPE IS NOT NULL     <!-- 데이타 확인 -->
+                              ) X
+                        WHERE X.INSPECT_RNUM = 1
+                     ) Y
+                GROUP BY Y.MATERIAL_TYPE WITH ROLLUP
+            ) Z
+        ORDER BY Z.MATERIAL_TYPE IS NULL DESC, MATERIAL_TYPE_NM
+    </select>
+
+    <select id="selectBadTypeCD" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.BAD_TYPE
+            , IFNULL(jmes.SF_GET_CODE_NM('1089',X.BAD_TYPE,#{LOGIN_LOCALE}),'N/A') AS BAD_TYPE_NM    -- 언어조건
+            , COUNT(*) AS CNT
+        FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                    , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
+                    , C.INSPECT_GRADE
+                    , (SELECT M.REF_CD FROM TBL_CODE M WHERE M.HIGH_CD IN ('1019','1020','1021') AND M.CODE_CD = C.INSPECT_RESULT LIMIT 1) AS BAD_TYPE
+                FROM jmes.TBL_CONTROL A
+                    , jmes.TBL_CONTROL_PART B
+                    , jmes.TBL_INSPECT C
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND B.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND A.DEL_YN = 'N'
+                    AND B.WORK_TYPE != 'WTP020'
+                    AND A.OUT_FINISH_DT >= STR_TO_DATE(CONCAT(#{START_YEAR}, #{START_MONTH},'01'),'%Y%m%d')
+                    <if test="END_YEAR != null and END_YEAR != '' and END_MONTH != null and END_MONTH != ''">
+                    AND A.OUT_FINISH_DT <![CDATA[ < ]]> DATE_ADD(LAST_DAY(STR_TO_DATE(CONCAT(#{END_YEAR}, #{END_MONTH},'01'),'%Y%m%d')), INTERVAL 1 DAY)
+                    </if>
+                    <choose>
+                        <when test="asdfasdfasdf == 'OUTSIDE'">
+                            AND B.OUTSIDE_COMP_CD IS NOT NULL     <!-- 외주업체를 선택했을 경우 조건추가 -->
+                        </when>
+                    </choose>
+                    AND C.INSPECT_TYPE = '1'
+              ) X
+        WHERE X.INSPECT_RNUM = 1
+            <choose>
+                <when test="INSPECT_GRADE == 'GRD030'">
+                    AND X.INSPECT_GRADE = 'GRD030'      <!-- C등급 -->
+                </when>
+                <when test="INSPECT_GRADE == 'GRD040'">
+                    AND X.INSPECT_GRADE = 'GRD040'      <!-- D등급 -->
+                </when>
+            </choose>
+        GROUP BY X.BAD_TYPE
+    </select>
+
+    <select id="selectBadTypeReturn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.BAD_TYPE
+            , IFNULL(jmes.SF_GET_CODE_NM('1089',X.BAD_TYPE,#{LOGIN_LOCALE}),'N/A') AS BAD_TYPE_NM    -- 언어조건
+            , SUM(X.RETURN_CNT) AS CNT
+        FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                    , 1 AS RETURN_CNT
+                    , (SELECT M.REF_CD FROM TBL_CODE M WHERE M.HIGH_CD IN ('1019','1020','1021') AND M.CODE_CD = C.INSPECT_RESULT LIMIT 1) AS BAD_TYPE
+                FROM jmes.TBL_CONTROL A
+                    , jmes.TBL_CONTROL_PART B
+                    , jmes.TBL_INSPECT C
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND B.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND A.DEL_YN = 'N'
+                    AND B.WORK_TYPE != 'WTP020'
+                    AND A.OUT_FINISH_DT >= STR_TO_DATE(CONCAT(#{START_YEAR}, #{START_MONTH},'01'),'%Y%m%d')
+                    <if test="END_YEAR != null and END_YEAR != '' and END_MONTH != null and END_MONTH != ''">
+                    AND A.OUT_FINISH_DT <![CDATA[ < ]]> DATE_ADD(LAST_DAY(STR_TO_DATE(CONCAT(#{END_YEAR}, #{END_MONTH},'01'),'%Y%m%d')), INTERVAL 1 DAY)
+                    </if>
+                    <choose>
+                        <when test="asdfasdfasdf == 'OUTSIDE'">
+                            AND B.OUTSIDE_COMP_CD IS NOT NULL     <!-- 외주업체를 선택했을 경우 조건추가 -->
+                        </when>
+                    </choose>
+                    AND C.INSPECT_TYPE = '2'
+                    AND C.INSPECT_GRADE = 'GRD050'
+              ) X
+        GROUP BY X.BAD_TYPE
+    </select>
+
+    <select id="selectGenerationProcessCD" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.ERROR_PROCESS
+            , IFNULL(jmes.SF_GET_CODE_NM('1010', X.ERROR_PROCESS, #{LOGIN_LOCALE}),'N/A') AS ERROR_PROCESS_NM    -- 언어조건
+            , COUNT(*) AS CNT
+        FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                    , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
+                    , C.INSPECT_GRADE
+                    , C.ERROR_PROCESS
+                FROM jmes.TBL_CONTROL A
+                    , jmes.TBL_CONTROL_PART B
+                    , jmes.TBL_INSPECT C
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND B.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND A.DEL_YN = 'N'
+                    AND B.WORK_TYPE != 'WTP020'
+                    AND A.OUT_FINISH_DT >= STR_TO_DATE(CONCAT(#{START_YEAR}, #{START_MONTH},'01'),'%Y%m%d')
+                    <if test="END_YEAR != null and END_YEAR != '' and END_MONTH != null and END_MONTH != ''">
+                    AND A.OUT_FINISH_DT <![CDATA[ < ]]> DATE_ADD(LAST_DAY(STR_TO_DATE(CONCAT(#{END_YEAR}, #{END_MONTH},'01'),'%Y%m%d')), INTERVAL 1 DAY)
+                    </if>
+                    <choose>
+                        <when test="asdfasdfasdf == 'OUTSIDE'">
+                            AND B.OUTSIDE_COMP_CD IS NOT NULL     <!-- 외주업체를 선택했을 경우 조건추가 -->
+                        </when>
+                    </choose>
+                    AND C.INSPECT_TYPE = '1'
+              ) X
+        WHERE X.INSPECT_RNUM = 1
+            <choose>
+                <when test="INSPECT_GRADE == 'GRD030'">
+                    AND X.INSPECT_GRADE = 'GRD030'      <!-- C등급 -->
+                </when>
+                <when test="INSPECT_GRADE == 'GRD040'">
+                    AND X.INSPECT_GRADE = 'GRD040'      <!-- D등급 -->
+                </when>
+            </choose>
+        GROUP BY X.ERROR_PROCESS
+    </select>
+
+    <select id="selectGenerationProcessReturn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.ERROR_PROCESS
+            , IFNULL(jmes.SF_GET_CODE_NM('1010', X.ERROR_PROCESS, #{LOGIN_LOCALE}),'N/A') AS ERROR_PROCESS_NM    -- 언어조건
+            , SUM(X.RETURN_CNT) AS CNT
+        FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                    , 1 AS RETURN_CNT
+                    , C.ERROR_PROCESS
+                FROM jmes.TBL_CONTROL A
+                    , jmes.TBL_CONTROL_PART B
+                    , jmes.TBL_INSPECT C
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND B.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND A.DEL_YN = 'N'
+                    AND B.WORK_TYPE != 'WTP020'
+                    AND A.OUT_FINISH_DT >= STR_TO_DATE(CONCAT(#{START_YEAR}, #{START_MONTH},'01'),'%Y%m%d')
+                    <if test="END_YEAR != null and END_YEAR != '' and END_MONTH != null and END_MONTH != ''">
+                    AND A.OUT_FINISH_DT <![CDATA[ < ]]> DATE_ADD(LAST_DAY(STR_TO_DATE(CONCAT(#{END_YEAR}, #{END_MONTH},'01'),'%Y%m%d')), INTERVAL 1 DAY)
+                    </if>
+                    <choose>
+                        <when test="asdfasdfasdf == 'OUTSIDE'">
+                            AND B.OUTSIDE_COMP_CD IS NOT NULL     <!-- 외주업체를 선택했을 경우 조건추가 -->
+                        </when>
+                    </choose>
+                    AND C.INSPECT_TYPE = '2'
+                    AND C.INSPECT_GRADE = 'GRD050'
+              ) X
+        GROUP BY X.ERROR_PROCESS
+    </select>
+
+    <select id="selectCausesCD" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.ERROR_REASON
+            , IFNULL(jmes.SF_GET_CODE_NM('1032', X.ERROR_REASON, #{LOGIN_LOCALE}),'N/A') AS ERROR_PROCESS_NM    -- 언어조건
+            , COUNT(*) AS CNT
+        FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                    , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
+                    , C.INSPECT_GRADE
+                    , C.ERROR_REASON
+                FROM jmes.TBL_CONTROL A
+                    , jmes.TBL_CONTROL_PART B
+                    , jmes.TBL_INSPECT C
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND B.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND A.DEL_YN = 'N'
+                    AND B.WORK_TYPE != 'WTP020'
+                    AND A.OUT_FINISH_DT >= STR_TO_DATE(CONCAT(#{START_YEAR}, #{START_MONTH},'01'),'%Y%m%d')
+                    <if test="END_YEAR != null and END_YEAR != '' and END_MONTH != null and END_MONTH != ''">
+                    AND A.OUT_FINISH_DT <![CDATA[ < ]]> DATE_ADD(LAST_DAY(STR_TO_DATE(CONCAT(#{END_YEAR}, #{END_MONTH},'01'),'%Y%m%d')), INTERVAL 1 DAY)
+                    </if>
+                    <choose>
+                        <when test="asdfasdfasdf == 'OUTSIDE'">
+                            AND B.OUTSIDE_COMP_CD IS NOT NULL     <!-- 외주업체를 선택했을 경우 조건추가 -->
+                        </when>
+                    </choose>
+                    AND C.INSPECT_TYPE = '1'
+              ) X
+        WHERE X.INSPECT_RNUM = 1
+            <choose>
+                <when test="INSPECT_GRADE == 'GRD030'">
+                    AND X.INSPECT_GRADE = 'GRD030'      <!-- C등급 -->
+                </when>
+                <when test="INSPECT_GRADE == 'GRD040'">
+                    AND X.INSPECT_GRADE = 'GRD040'      <!-- D등급 -->
+                </when>
+            </choose>
+        GROUP BY X.ERROR_REASON
+    </select>
+
+    <select id="selectCausesReturn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.ERROR_REASON
+            , IFNULL(jmes.SF_GET_CODE_NM('1032', X.ERROR_REASON, #{LOGIN_LOCALE}),'N/A') AS ERROR_PROCESS_NM    -- 언어조건
+            , SUM(X.RETURN_CNT) AS CNT
+        FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                    , 1 AS RETURN_CNT
+                    , C.ERROR_REASON
+                FROM jmes.TBL_CONTROL A
+                    , jmes.TBL_CONTROL_PART B
+                    , jmes.TBL_INSPECT C
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND B.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND A.DEL_YN = 'N'
+                    AND B.WORK_TYPE != 'WTP020'
+                    AND A.OUT_FINISH_DT >= STR_TO_DATE(CONCAT(#{START_YEAR}, #{START_MONTH},'01'),'%Y%m%d')
+                    <if test="END_YEAR != null and END_YEAR != '' and END_MONTH != null and END_MONTH != ''">
+                    AND A.OUT_FINISH_DT <![CDATA[ < ]]> DATE_ADD(LAST_DAY(STR_TO_DATE(CONCAT(#{END_YEAR}, #{END_MONTH},'01'),'%Y%m%d')), INTERVAL 1 DAY)
+                    </if>
+                    <choose>
+                        <when test="asdfasdfasdf == 'OUTSIDE'">
+                            AND B.OUTSIDE_COMP_CD IS NOT NULL     <!-- 외주업체를 선택했을 경우 조건추가 -->
+                        </when>
+                    </choose>
+                    AND C.INSPECT_TYPE = '2'
+                    AND C.INSPECT_GRADE = 'GRD050'
+              ) X
+        GROUP BY X.ERROR_REASON
+    </select>
+
+    <select id="selectAnnualQualityStatus" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT Z.DATA_TYPE, Z.DATA_TYPE_NM
+            , IFNULL(MAX(CASE WHEN Z.MM = '01' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.CNT WHEN Z.DATA_TYPE = '2' THEN Z.RATIO END END),0) AS DATA_VALUE_01
+            , IFNULL(MAX(CASE WHEN Z.MM = '02' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.CNT WHEN Z.DATA_TYPE = '2' THEN Z.RATIO END END),0) AS DATA_VALUE_02
+            , IFNULL(MAX(CASE WHEN Z.MM = '03' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.CNT WHEN Z.DATA_TYPE = '2' THEN Z.RATIO END END),0) AS DATA_VALUE_03
+            , IFNULL(MAX(CASE WHEN Z.MM = '04' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.CNT WHEN Z.DATA_TYPE = '2' THEN Z.RATIO END END),0) AS DATA_VALUE_04
+            , IFNULL(MAX(CASE WHEN Z.MM = '05' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.CNT WHEN Z.DATA_TYPE = '2' THEN Z.RATIO END END),0) AS DATA_VALUE_05
+            , IFNULL(MAX(CASE WHEN Z.MM = '06' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.CNT WHEN Z.DATA_TYPE = '2' THEN Z.RATIO END END),0) AS DATA_VALUE_06
+            , IFNULL(MAX(CASE WHEN Z.MM = '07' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.CNT WHEN Z.DATA_TYPE = '2' THEN Z.RATIO END END),0) AS DATA_VALUE_07
+            , IFNULL(MAX(CASE WHEN Z.MM = '08' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.CNT WHEN Z.DATA_TYPE = '2' THEN Z.RATIO END END),0) AS DATA_VALUE_08
+            , IFNULL(MAX(CASE WHEN Z.MM = '09' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.CNT WHEN Z.DATA_TYPE = '2' THEN Z.RATIO END END),0) AS DATA_VALUE_09
+            , IFNULL(MAX(CASE WHEN Z.MM = '10' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.CNT WHEN Z.DATA_TYPE = '2' THEN Z.RATIO END END),0) AS DATA_VALUE_10
+            , IFNULL(MAX(CASE WHEN Z.MM = '11' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.CNT WHEN Z.DATA_TYPE = '2' THEN Z.RATIO END END),0) AS DATA_VALUE_11
+            , IFNULL(MAX(CASE WHEN Z.MM = '12' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.CNT WHEN Z.DATA_TYPE = '2' THEN Z.RATIO END END),0) AS DATA_VALUE_12
+        FROM (  SELECT P.MM, P.DATA_TYPE, P.DATA_TYPE_NM
+                    , CASE WHEN #{INSPECT_GRADE} = 'GRD030' THEN Q.C_CNT
+                           WHEN #{INSPECT_GRADE} = 'GRD040' THEN Q.D_CNT
+                           WHEN #{INSPECT_GRADE} = 'GRD050' THEN Q.RETURN_CNT
+                      END AS CNT
+                    , CASE WHEN #{INSPECT_GRADE} = 'GRD030' THEN CASE WHEN IFNULL(Q.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(Q.C_CNT / Q.INSPECT_CNT * 100,1) END
+                           WHEN #{INSPECT_GRADE} = 'GRD040' THEN CASE WHEN IFNULL(Q.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(Q.D_CNT / Q.INSPECT_CNT * 100,1) END
+                           WHEN #{INSPECT_GRADE} = 'GRD050' THEN CASE WHEN IFNULL(Q.PART_CNT,0) = 0 THEN 0 ELSE ROUND(Q.RETURN_CNT / Q.PART_CNT * 100,1) END
+                      END AS RATIO
+                FROM (  SELECT M.MM, N.DATA_TYPE, N.DATA_TYPE_NM
+                        FROM jmes.TBL_YYYYMMDD M
+                            , ( SELECT '1' AS DATA_TYPE, 'CNT' AS DATA_TYPE_NM FROM DUAL
+                                UNION ALL
+                                SELECT '2' AS DATA_TYPE, 'RATIO' AS DATA_TYPE_NM FROM DUAL
+                               ) N
+                        WHERE M.DT LIKE CONCAT(SUBSTRING('202010',1,4),'%')
+                        GROUP BY M.MM, N.DATA_TYPE, N.DATA_TYPE_NM
+                     ) P LEFT OUTER JOIN (  SELECT DATE_FORMAT(Y.OUT_FINISH_DT,'%m') AS MM
+                                                , SUM(Y.PART_CNT) AS PART_CNT
+                                                , SUM(Y.INSPECT_CNT) AS INSPECT_CNT
+                                                , SUM(Y.C_CNT) AS C_CNT
+                                                , SUM(Y.D_CNT) AS D_CNT
+                                                , SUM(Y.RETURN_CNT) AS RETURN_CNT
+                                            FROM (  SELECT X.OUT_FINISH_DT
+                                                        , X.PART_CNT
+                                                        , X.INSPECT_CNT, C_CNT, D_CNT
+                                                        , ( SELECT COUNT(*) AS RETURN_CNT
+                                                            FROM jmes.TBL_INSPECT M
+                                                            WHERE M.CONTROL_SEQ = X.CONTROL_SEQ
+                                                                AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+                                                                AND M.INSPECT_TYPE = '2'
+                                                                AND M.INSPECT_GRADE = 'GRD050'
+                                                           ) AS RETURN_CNT
+                                                    FROM (  SELECT A.OUT_FINISH_DT
+                                                                , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, 1 AS PART_CNT
+                                                                , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
+                                                                , CASE WHEN C.INSPECT_SEQ IS NULL THEN 0 ELSE 1 END AS INSPECT_CNT
+                                                                , CASE WHEN C.INSPECT_GRADE = 'GRD030' THEN 1 ELSE 0 END AS C_CNT
+                                                                , CASE WHEN C.INSPECT_GRADE = 'GRD040' THEN 1 ELSE 0 END AS D_CNT
+                                                            FROM jmes.TBL_CONTROL A
+                                                                , jmes.TBL_CONTROL_PART B LEFT OUTER JOIN jmes.TBL_INSPECT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND C.INSPECT_TYPE = '1'
+                                                            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                                AND A.DEL_YN = 'N'
+                                                                AND B.WORK_TYPE != 'WTP020'
+                                                                AND A.OUT_FINISH_DT >= STR_TO_DATE(CONCAT(#{START_YEAR},'0101'),'%Y%m%d')
+                                                                <if test="END_YEAR != null and END_YEAR != '' and END_MONTH != null and END_MONTH != ''">
+                                                                AND A.OUT_FINISH_DT <![CDATA[ < ]]> DATE_ADD(STR_TO_DATE(CONCAT(#{END_YEAR},'1231'),'%Y%m%d'), INTERVAL 1 DAY)
+                                                                </if>
+                                                                <choose>
+                                                                    <when test="asdfasdfasdf == 'OUTSIDE'">
+                                                                        AND B.OUTSIDE_COMP_CD IS NOT NULL     <!-- 외주업체를 선택했을 경우 조건추가 -->
+                                                                    </when>
+                                                                </choose>
+                                                          ) X
+                                                    WHERE X.INSPECT_RNUM = 1
+                                                ) Y
+                                            GROUP BY DATE_FORMAT(Y.OUT_FINISH_DT,'%m')
+                                        ) Q ON P.MM = Q.MM
+            ) Z
+        GROUP BY Z.DATA_TYPE, Z.DATA_TYPE_NM
+    </select>
+
+    <select id="selectMonthlyQualityBoardDetail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT Y.CONTROL_SEQ, Y.CONTROL_DETAIL_SEQ, Y.INSPECT_SEQ
+            , jmes.SF_GET_DATE_F(Y.OUT_FINISH_DT,'','') AS OUT_FINISH_DT
+            , jmes.SF_GET_DATE_F(Y.INNER_WORK_FINISH_DT,'','') AS INNER_WORK_FINISH_DT
+            , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = Y.ORDER_COMP_CD) AS ORDER_COMP_NM        
+            , CASE WHEN Y.PART_NUM IS NULL THEN Y.CONTROL_NUM ELSE CONCAT(Y.CONTROL_NUM, ' #', Y.PART_NUM) END AS CONTROL_NUM
+            , Y.DRAWING_NUM
+            , jmes.SF_GET_CODE_NM('1027', Y.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM    
+            , jmes.SF_GET_CODE_NM('1035', Y.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM    
+            , jmes.SF_GET_CONTROL_PART_QTY(Y.CONTROL_SEQ, Y.CONTROL_DETAIL_SEQ) AS PART_QTY
+            , SF_GET_CODE_NM('1014', Y.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM       
+            , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = Y.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM        
+            , CASE WHEN Y.INSPECT_SEQ IS NOT NULL THEN ROW_NUMBER() OVER (PARTITION BY Y.CONTROL_SEQ, Y.CONTROL_DETAIL_SEQ ORDER BY Y.INSPECT_SEQ) END AS INSPECT_RNUM
+            , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Z.INSPECT_USER_ID) AS INSPECT_USER_NM 
+            , jmes.SF_GET_CODE_NM('1040', Z.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM
+            , Z.ERROR_QTY    
+            , CASE WHEN Z.INSPECT_GRADE IN ('GRD010','GRD020','GRD030') THEN jmes.SF_GET_CODE_NM('1019', Z.INSPECT_RESULT, #{LOGIN_LOCALE})    
+                   WHEN Z.INSPECT_GRADE = 'GRD040' THEN jmes.SF_GET_CODE_NM('1020', Z.INSPECT_RESULT, #{LOGIN_LOCALE}) 
+                   WHEN Z.INSPECT_GRADE = 'GRD050' THEN jmes.SF_GET_CODE_NM('1021', Z.INSPECT_RESULT, #{LOGIN_LOCALE}) 
+              END AS INSPECT_RESULT_NM
+            , Z.INSPECT_DESC
+            , jmes.SF_GET_CODE_NM('1010', Z.ERROR_PROCESS, #{LOGIN_LOCALE}) AS ERROR_PROCESS_NM
+            , jmes.SF_GET_CODE_NM('1032', Z.ERROR_REASON, #{LOGIN_LOCALE}) AS ERROR_REASON_NM
+            , jmes.SF_GET_CODE_NM('1025', Z.ERROR_ACTION, #{LOGIN_LOCALE}) AS ERROR_ACTION_NM    
+            , Z.ERROR_NOTE
+            , jmes.SF_GET_DATE_F(Z.INSERT_DT,'YY','M') AS INSERT_DT
+        FROM (  SELECT X.ORDER_COMP_CD, X.OUTSIDE_COMP_CD, X.MATERIAL_TYPE
+                    , X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+                    , X.INSPECT_SEQ, X.INSPECT_GRADE
+                    , ( SELECT COUNT(*) AS RETURN_CNT
+                        FROM jmes.TBL_INSPECT M 
+                        WHERE M.CONTROL_SEQ = X.CONTROL_SEQ 
+                            AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ 
+                            AND M.INSPECT_TYPE = '2'
+                            AND M.INSPECT_GRADE = 'GRD050'
+                       ) AS RETURN_CNT     
+                    , X.OUT_FINISH_DT
+                    , X.INNER_WORK_FINISH_DT
+                    , X.CONTROL_NUM
+                    , X.PART_NUM
+                    , X.DRAWING_NUM
+                    , X.MATERIAL_DETAIL
+                    , X.WORK_FACTORY               
+                FROM (  SELECT A.ORDER_COMP_CD, B.OUTSIDE_COMP_CD, B.MATERIAL_TYPE 
+                            , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                            , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM            
+                            , C.INSPECT_SEQ
+                            , C.INSPECT_GRADE
+                            , A.OUT_FINISH_DT
+                            , B.INNER_WORK_FINISH_DT
+                            , A.CONTROL_NUM
+                            , B.PART_NUM
+                            , B.DRAWING_NUM
+                            , B.MATERIAL_DETAIL
+                            , B.WORK_FACTORY                    
+                        FROM jmes.TBL_CONTROL A
+                            , jmes.TBL_CONTROL_PART B LEFT OUTER JOIN jmes.TBL_INSPECT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND C.INSPECT_TYPE = '1'
+                        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                            AND A.DEL_YN = 'N'
+                            AND B.WORK_TYPE != 'WTP020'
+                            AND A.OUT_FINISH_DT >= STR_TO_DATE(CONCAT(#{START_YEAR}, #{START_MONTH},'01'),'%Y%m%d')
+                            <if test="END_YEAR != null and END_YEAR != '' and END_MONTH != null and END_MONTH != ''">
+                            AND A.OUT_FINISH_DT <![CDATA[ < ]]> DATE_ADD(LAST_DAY(STR_TO_DATE(CONCAT(#{END_YEAR}, #{END_MONTH},'01'),'%Y%m%d')), INTERVAL 1 DAY)
+                            </if>
+                            <choose>
+                                <when test="asdfasdfasdf == 'OUTSIDE'">
+                                    AND B.OUTSIDE_COMP_CD IS NOT NULL     <!-- 외주업체를 선택했을 경우 조건추가 -->
+                                </when>
+                            </choose>
+                      ) X
+                WHERE X.INSPECT_RNUM = 1
+            ) Y LEFT OUTER JOIN jmes.TBL_INSPECT Z ON Y.CONTROL_SEQ = Z.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ
+        WHERE (Y.INSPECT_GRADE IN ('GRD030','GRD040') OR Y.RETURN_CNT > 0)
+            <choose>
+                <when test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                    AND Y.ORDER_COMP_CD = #{ORDER_COMP_CD}     -- 조건 쿼리
+                </when>
+                <when test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
+                    AND Y.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}     <!-- 조건 쿼리 -->
+                </when>
+                <when test="MATERIAL_TYPE != null and MATERIAL_TYPE != ''">
+                    AND Y.MATERIAL_TYPE = #{MATERIAL_TYPE}     <!-- 조건 쿼리 -->
+                </when>
+            </choose>
+        ORDER BY Y.CONTROL_NUM, Y.PART_NUM, Z.INSPECT_SEQ
     </select>
 
 </mapper>

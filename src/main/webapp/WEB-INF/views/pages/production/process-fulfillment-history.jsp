@@ -209,9 +209,51 @@
                 colModel: [
                     {title: '착수일시', width: 90, dataIndx: 'WORK_START_DT'},
                     {title: '완료일시', width: 90, dataIndx: 'WORK_FINISH_DT'},
-                    {title: '정지시간', width: 60, dataIndx: 'WORK_STOP_MINUTE'},
-                    {title: '총 R/T', width: 60, dataIndx: 'WORK_WORK_MINUTE'},
-                    {title: '1EA R/T', width: 60, dataIndx: 'LEAD_TIME'},
+                    {
+                        title: '정지시간', width: 60, dataIndx: 'WORK_STOP_MINUTE',
+                        render: function (ui) {
+                            const cellData = ui.cellData;
+                            const min = Math.floor(cellData % 3600 / 60);
+                            console.log(cellData)
+
+                            if (Math.abs(cellData) > 3600) {
+                                const hour = Math.floor(cellData / 3600);
+
+                                return hour + 'h ' + min + 'm';
+                            } else {
+                                return min + 'm';
+                            }
+                        }},
+                    {
+                        title: '총 R/T', width: 60, dataIndx: 'WORK_WORK_MINUTE',
+                        render: function (ui) {
+                            const cellData = ui.cellData;
+                            const min = Math.floor(cellData % 3600 / 60);
+
+                            if (Math.abs(cellData) > 3600) {
+                                const hour = Math.floor(cellData / 3600);
+
+                                return hour + 'h ' + min + 'm';
+                            } else {
+                                return min + 'm';
+                            }
+                        }
+                    },
+                    {
+                        title: '1EA R/T', dataType: 'integer', width: 60, dataIndx: 'LEAD_TIME',
+                        render: function (ui) {
+                            const cellData = ui.cellData;
+                            const min = Math.floor(cellData % 3600 / 60);
+
+                            if (Math.abs(cellData) > 3600) {
+                                const hour = Math.floor(cellData / 3600);
+
+                                return hour + 'h ' + min + 'm';
+                            } else {
+                                return min + 'm';
+                            }
+                        }
+                    },
                     {title: '완료수량', width: 60, dataIndx: 'FINISH_QTY'},
                     {title: '불량', width: 60, dataIndx: 'ERROR_QTY'},
                     {title: '불량원인', width: 100, dataIndx: 'ERROR_REASON'},

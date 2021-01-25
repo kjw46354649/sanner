@@ -496,18 +496,18 @@
             },
             xAxis: {
                 categories: [
-                    '1月',
-                    '2月',
-                    '3月',
-                    '4月',
-                    '5月',
-                    '6月',
-                    '7月',
-                    '8月',
-                    '9月',
-                    '10月',
-                    '11月',
-                    '12月'
+                    '1월',
+                    '2월',
+                    '3월',
+                    '4월',
+                    '5월',
+                    '6월',
+                    '7월',
+                    '8월',
+                    '9월',
+                    '10월',
+                    '11월',
+                    '12월'
                 ]
             },
             yAxis: {
@@ -531,15 +531,6 @@
                 }
             },
             series: [{
-                name: '24시간',
-                data: []
-            }, {
-                name: '근무시간',
-                data: []
-            }, {
-                name: '가동시간',
-                data: []
-            }, {
                 name: '절대가동률',
                 data: []
             }, {
@@ -566,147 +557,147 @@
                 title: '시간별 가동현황 (2018.08.12)', align: 'center',
                 colModel: [
                     {
-                        title: '08', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0800', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0830', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                        title: '08', halign: 'center', colModel: [ 
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_0800', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_0830', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '09', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0900', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0930', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_0900', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_0930', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '10', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1000', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1030', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_1000', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_1030', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '11', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1100', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_1100', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_1230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '12', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1200', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_1200', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_1230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '13', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1300', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1330', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_1300', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_1330', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '14', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1400', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1430', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_1400', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_1430', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '15', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1500', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1530', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_1500', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_1530', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '16', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1600', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1630', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_1600', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_1630', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '17', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1700', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1730', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_1700', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_1730', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '18', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1800', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1830', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_1800', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_1830', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '19', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_1900', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_1930', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_1900', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_1930', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '20', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_2000', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_2030', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_2000', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_2030', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '21', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_2100', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_2130', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_2100', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_2130', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '22', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_2200', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_2230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_2200', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_2230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '23', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_2300', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_2330', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_2300', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_2330', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '24', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0000', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0030', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_0000', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_0030', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '01', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0100', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0130', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_0100', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_0130', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '02', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0200', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_0200', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_0230', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '03', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0300', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0330', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_0300', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_0330', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '04', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0400', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0430', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_0400', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_0430', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '05', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0500', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0530', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_0500', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_0530', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '06', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0600', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0630', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_0600', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_0630', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                     {
                         title: '07', halign: 'center', colModel: [
-                            {title: '00', dataIndx: 'STATUS_0700', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
-                            {title: '30', dataIndx: 'STATUS_0730', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {cls: 'bg-green', text: ''}; case 'PAUSE': return {cls: 'bg-orange', text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '00', minWidth: 30, dataIndx: 'STATUS_0700', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
+                            {title: '30', minWidth: 30, dataIndx: 'STATUS_0730', render: function (ui) {switch (ui.cellData) {case 'WORKING': return {style: {'background': '#a9d18e'}, text: ''}; case 'PAUSE': return {style: {'background': '#ffd966'}, text: ''}; default: return {cls: 'bg-white', text: ''};}}},
                         ]
                     },
                 ]
@@ -733,11 +724,13 @@
             },
             sortModel: {on: false},
             load: function (event, ui) {
-                let date = $('#mct_execute_board_date').val().replaceAll('/', '.');
+                $mctExecuteBoardGrid.pqGrid({
+                    refresh: function () {
+                        let date = $('#mct_execute_board_date').val().replaceAll('/', '.');
 
-                console.log($('#mct_execute_board_grid #pq-head-cell-u5-0-11-right').find('.pq-title-span'));
-                $('#mct_execute_board_grid #pq-head-cell-u5-0-11-right > div > span.pq-title-span').html('시간별 가동현황 (' + date + ')');
-                this.refreshHeader();                 //TODO: refresh header
+                        $('#mct_execute_board_grid #pq-head-cell-u5-0-11-right > div > span.pq-title-span').html('시간별 가동현황 (' + date + ')');
+                    }
+                });
             }
         };
         const $mctExecuteBoardGrid = $('#' + gridId).pqGrid(obj);
@@ -763,7 +756,7 @@
             if (element) {
                 element.setTitle({text: text});
             }
-        }
+        };
 
         const changeHighchartsSeriesName = function (element, data) {
             if (element) {
@@ -771,14 +764,24 @@
                     element.series[i].setName(data[i]);
                 }
             }
-        }
+        };
+
         const changeHighchartsSeriesData = function (element, data) {
             if (element) {
                 for (let i = 0, LENGTH = data.length; i < LENGTH; i++) {
                     element.series[i].setData(data[i]);
                 }
             }
-        }
+        };
+        const changeHighchartsCategories = function (element, axis, data) {
+            if (element) {
+                if (axis.includes('x')) {
+                    element.xAxis[0].setCategories(data);
+                } else {
+                    element.yAxis[0].setCategories(data);
+                }
+            }
+        };
         // 일일 실 가동률
         const changeDailyActualOperateRate = function () {
             getJsonList('reportMapper.selectDailyActualOperateRate', function (arg) {
@@ -791,7 +794,7 @@
                     point.update(newVal);
                 }
             });
-        }
+        };
         // 일일 가동률 Rank5
         const changeDailyOperateRateRank5 = function () {
             getJsonList('reportMapper.selectDailyOperateRateRank5', function (arg) {
@@ -808,7 +811,7 @@
                         realRatio[index] = Number(value.REAL_RATIO);
                     });
 
-                    chart2.xAxis[0].setCategories(categories);
+                    changeHighchartsCategories(chart2, 'x', categories);
                     chart2.series[0].setData(absRatio);
                     chart2.series[1].setData(realRatio);
                 }
@@ -849,7 +852,7 @@
                     htmlString += '    <tr>';
                     htmlString += '        <td scope="row">' + dataTypeName + '</td>';
                     for(let j = 1; j <= 12; j++) {
-                        const value = obj['DATA_VALUE_' + j] || '';
+                        const value = obj['DATA_VALUE_' + String(j).padStart(2, '0')] || '';
                         htmlString += '        <td>' + value + '</td>';
                     }
                     htmlString += '    </tr>';
@@ -880,6 +883,13 @@
                 changeHighchartsSeriesName(chart3, nameArray);
                 changeHighchartsSeriesData(chart3, dataArray);
             });
+
+            getJsonList('reportMapper.selectDailyMCTOperateRateTrendSevenDaysLabels', function (arg) {
+                let list = arg.list;
+                list = list.map(value => value.DT);
+
+                changeHighchartsCategories(chart3, 'x', list)
+            });
         };
         // 주별 가동률 추이 (8week)
         const changeWeeklyMctOperateRateEightWeeks = function () {
@@ -904,13 +914,17 @@
         const changeMonthlyOperateRateTrend = function () {
             getJsonList('reportMapper.selectMonthlyOperateRateTrend', function (arg) {
                 const list = arg.list;
-                const dataArray = [[], [], [], [], []];
+                const dataArray = [[], []];
+                let k = -1;
 
                 for (let i = 0, LENGTH = list.length; i < LENGTH; i++) {
                     const obj = list[i];
-
-                    for (let j = 1; j <= 12; j++) {
-                        dataArray[i].push(obj['DATA_VALUE_' + j] || 0);
+                    if (obj.DATA_TYPE_NM === '절대가동률' || obj.DATA_TYPE_NM === '실가동률') {
+                        k++;
+                        for (let j = 1; j <= 12; j++) {
+                            const value = obj['DATA_VALUE_' + String(j).padStart(2, '0')] || 0;
+                            dataArray[k].push(value);
+                        }
                     }
                 }
                 changeHighchartsTitle(chart5, '월별 가동률 추이 (' + mctExecuteBoardDateYear + '年)')
@@ -921,7 +935,7 @@
         const refreshMctExecuteBoardGrid = function () {
             $mctExecuteBoardGrid.pqGrid('option', 'dataModel.postData', function () {
                 const postData = fnFormToJsonArrayData('#mct_execute_board_top_form');
-                postData.queryId = 'reportMapper.selectDFGSDFG123';
+                postData.queryId = 'reportMapper.selectMctExecuteBoardGridList';
                 return postData;
             });
             $mctExecuteBoardGrid.pqGrid('refreshDataAndView');

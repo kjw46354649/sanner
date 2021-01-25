@@ -293,7 +293,7 @@
 
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
                 },
-                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1017')}
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1017')}
             },
             {
                 title: '사업자<br>구분', width: 75, dataIndx: 'COMP_CD',
@@ -1830,6 +1830,73 @@
                         let newRowData = ui.updateList[i].newRow;
                         let rowIndx = ui.updateList[i].rowIndx;
 
+                        // 단가확인
+                        if (newRowData.hasOwnProperty('PRICE_CONFIRM')) {
+                            let priceConfirmList = fnGetCommCodeGridSelectBox('1017');
+                            let index = priceConfirmList.findIndex(function (element) {
+                                return element.text === newRowData.PRICE_CONFIRM;
+                            });
+
+                            if (index < 0) {
+                                index = priceConfirmList.findIndex(function (element) {
+                                    return element.value === newRowData.PRICE_CONFIRM;
+                                });
+                            }
+                            $orderManagementGrid.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'PRICE_CONFIRM': priceConfirmList[index].value}
+                            });
+                        }
+                        // 사업자 구분
+                        if (newRowData.hasOwnProperty('COMP_CD')) {
+                            let index = FAMILY_COMPANY.findIndex(function (element) {
+                                return element.text === newRowData.COMP_CD;
+                            });
+
+                            if (index < 0) {
+                                index = FAMILY_COMPANY.findIndex(function (element) {
+                                    return element.value === newRowData.COMP_CD;
+                                });
+                            }
+                            $orderManagementGrid.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'COMP_CD': FAMILY_COMPANY[index].value}
+                            });
+                        }
+                        // 발주업체
+                        if (newRowData.hasOwnProperty('ORDER_COMP_CD')) {
+                            let index = ORDER_COMPANY.findIndex(function (element) {
+                                return element.text === newRowData.ORDER_COMP_CD;
+                            });
+
+                            if (index < 0) {
+                                index = ORDER_COMPANY.findIndex(function (element) {
+                                    return element.value === newRowData.ORDER_COMP_CD;
+                                });
+                            }
+                            $orderManagementGrid.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'ORDER_COMP_CD': ORDER_COMPANY[index].value}
+                            });
+                        }
+                        // 주요검사
+                        if (newRowData.hasOwnProperty('MAIN_INSPECTION')) {
+                            let mainInspectionList = fnGetCommCodeGridSelectBox('1059');
+                            let index = mainInspectionList.findIndex(function (element) {
+                                return element.text === newRowData.MAIN_INSPECTION;
+                            });
+
+                            if (index < 0) {
+                                index = mainInspectionList.findIndex(function (element) {
+                                    return element.value === newRowData.MAIN_INSPECTION;
+                                });
+                            }
+                            $orderManagementGrid.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'MAIN_INSPECTION': mainInspectionList[index].value}
+                            });
+                        }
+                        // 작업형태
                         if (newRowData.hasOwnProperty('WORK_TYPE')) {
                             let workType = fnGetCommCodeGridSelectBox('1033');
                             let index = workType.findIndex(function (element) {
@@ -1844,6 +1911,125 @@
                             $orderManagementGrid.pqGrid('updateRow', {
                                 rowIndx: rowIndx,
                                 row: {'WORK_TYPE': workType[index].value}
+                            });
+                        }
+                        // 수행공장
+                        if (newRowData.hasOwnProperty('WORK_FACTORY')) {
+                            let workFactoryList = fnGetCommCodeGridSelectBox('1014');
+                            let index = workFactoryList.findIndex(function (element) {
+                                return element.text === newRowData.WORK_FACTORY;
+                            });
+
+                            if (index < 0) {
+                                index = workFactoryList.findIndex(function (element) {
+                                    return element.value === newRowData.WORK_FACTORY;
+                                });
+                            }
+                            $orderManagementGrid.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'WORK_FACTORY': workFactoryList[index].value}
+                            });
+                        }
+                        // 소재종류
+                        if (newRowData.hasOwnProperty('MATERIAL_DETAIL')) {
+                            let materialDetailList = fnGetCommCodeGridSelectBox('1027');
+                            let index = materialDetailList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_DETAIL;
+                            });
+
+                            if (index < 0) {
+                                index = materialDetailList.findIndex(function (element) {
+                                    return element.value === newRowData.MATERIAL_DETAIL;
+                                });
+                            }
+                            $orderManagementGrid.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'MATERIAL_DETAIL': materialDetailList[index].value}
+                            });
+                        }
+                        // 소재형태
+                        if (newRowData.hasOwnProperty('MATERIAL_KIND')) {
+                            let materialKindList = fnGetCommCodeGridSelectBox('1029');
+                            let index = materialKindList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_KIND;
+                            });
+
+                            if (index < 0) {
+                                index = materialKindList.findIndex(function (element) {
+                                    return element.value === newRowData.MATERIAL_KIND;
+                                });
+                            }
+                            $orderManagementGrid.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'MATERIAL_KIND': materialKindList[index].value}
+                            });
+                        }
+                        // 표면처리
+                        if (newRowData.hasOwnProperty('SURFACE_TREAT')) {
+                            let surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
+                            let index = surfaceTreatList.findIndex(function (element) {
+                                return element.text === newRowData.SURFACE_TREAT;
+                            });
+
+                            if (index < 0) {
+                                index = surfaceTreatList.findIndex(function (element) {
+                                    return element.value === newRowData.SURFACE_TREAT;
+                                });
+                            }
+                            $orderManagementGrid.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'SURFACE_TREAT': surfaceTreatList[index].value}
+                            });
+                        }
+                        // TM각비
+                        if (newRowData.hasOwnProperty('MATERIAL_FINISH_TM')) {
+                            let materialFinishTmList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
+                            let index = materialFinishTmList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_TM;
+                            });
+
+                            if (index < 0) {
+                                index = materialFinishTmList.findIndex(function (element) {
+                                    return element.value === newRowData.MATERIAL_FINISH_TM;
+                                });
+                            }
+                            $orderManagementGrid.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'MATERIAL_FINISH_TM': materialFinishTmList[index].value}
+                            });
+                        }
+                        // 연마
+                        if (newRowData.hasOwnProperty('MATERIAL_FINISH_GRIND')) {
+                            let materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
+                            let index = materialFinishGrindList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_GRIND;
+                            });
+
+                            if (index < 0) {
+                                index = materialFinishGrindList.findIndex(function (element) {
+                                    return element.value === newRowData.MATERIAL_FINISH_GRIND;
+                                });
+                            }
+                            $orderManagementGrid.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'MATERIAL_FINISH_GRIND': materialFinishGrindList[index].value}
+                            });
+                        }
+                        // 열처리
+                        if (newRowData.hasOwnProperty('MATERIAL_FINISH_HEAT')) {
+                            let materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
+                            let index = materialFinishHeatList.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_FINISH_HEAT;
+                            });
+
+                            if (index < 0) {
+                                index = materialFinishHeatList.findIndex(function (element) {
+                                    return element.value === newRowData.MATERIAL_FINISH_HEAT;
+                                });
+                            }
+                            $orderManagementGrid.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'MATERIAL_FINISH_HEAT': materialFinishHeatList[index].value}
                             });
                         }
                     }
@@ -2336,12 +2522,259 @@
             }
         };
 
-        /*const valiiiiiiiiiiiiiiiiiidationnnnnnnnnnnnnnnnn = function () {
-            let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
-            let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-            let addList = gridInstance.getChanges().addList;
-            let updateList = gridInstance.getChanges().updateList;
-        };*/
+        const validationCheck = function (dataList) {
+            // sameControlNumCheck(dataList);
+            workTypeCheck(dataList);
+
+            for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
+                let rowData = dataList[i];
+
+                if (Object.keys(rowData).length > 10) {
+                    requiredCheck(rowData);
+                    badCodeCheck(rowData);
+                    inputErrorCheck(rowData);
+                }
+            }
+        };
+
+        const workTypeCheck = function (dataList) {
+            let groupedControlNum = fnGroupBy(dataList, 'CONTROL_NUM');
+
+            for (let controlNum in groupedControlNum) {
+                if (groupedControlNum.hasOwnProperty(controlNum)) {
+                    let groupedWorkType = fnGroupBy(groupedControlNum[controlNum], 'WORK_TYPE');
+
+                    if (groupedWorkType.hasOwnProperty('WTP020')) {
+                        if (groupedWorkType.hasOwnProperty('WTP010') || groupedWorkType.hasOwnProperty('WTP040')) {
+                            for (let i = 0; i < groupedControlNum[controlNum].length; i++) {
+                                addErrorList(groupedControlNum[controlNum][i].pq_ri, 'WORK_TYPE');
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        // required 체크
+        const requiredCheck = function (rowData) {
+            let list;
+            const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NUM', 'DRAWING_NUM', /*'ITEM_NM', FIXME 확인*/ 'INNER_DUE_DT', 'SIZE_TXT'];
+            const singleList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'ORDER_QTY']; // 단품
+            const assemblyList = ['ORDER_QTY']; // 조립
+            const modifiedList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'ORDER_QTY']; // 수정
+            const stockList = ['MATERIAL_KIND', 'ORDER_QTY']; // 재고
+            const partList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'PART_UNIT_QTY']; // 파트
+
+            switch (rowData.WORK_TYPE) {
+                case 'WTP010':
+                    // list = $.extend(true, commonRequiredList, singleList);
+                    list = commonRequiredList.concat(singleList);
+                    break;
+                case 'WTP020':
+                    list = commonRequiredList.concat(assemblyList);
+                    break;
+                case 'WTP030':
+                    list = commonRequiredList.concat(modifiedList);
+                    break;
+                case 'WTP040':
+                    list = commonRequiredList.concat(stockList);
+                    break;
+                case 'WTP050':
+                    list = commonRequiredList.concat(partList);
+                    break;
+                default:
+                    list = commonRequiredList.concat(['WORK_TYPE']);
+            }
+
+            for (let i in list) {
+                if (rowData[list[i]] === undefined || rowData[list[i]] == null || rowData[list[i]] === '' || (rowData[list[i]] != null && typeof rowData[list[i]] == 'object' && !Object.keys(rowData[list[i]]).length)) {
+                    addErrorList(rowData.pq_ri, list[i]);
+                }
+            }
+        };
+        // 잘못된 데이터(코드) 체크
+        const badCodeCheck = function (rowData) {
+            const rowIndex = rowData.pq_ri;
+            const priceConfirmList = fnGetCommCodeGridSelectBox('1017');
+            const mainInspectionList = fnGetCommCodeGridSelectBox('1059');
+            const workTypeList = fnGetCommCodeGridSelectBox('1033');
+            const workFactoryList = fnGetCommCodeGridSelectBox('1014');
+            const materialDetailList = fnGetCommCodeGridSelectBox('1027');
+            const materialKindList = fnGetCommCodeGridSelectBox('1029');
+            const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
+            const materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
+            const materialFinishTmList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
+            const materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
+            const BUSINESS_COMPANY = fnCommCodeDatasourceGridSelectBoxCreate({
+                'url': '/json-list',
+                'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+            });
+
+            // 단가확인
+            if (rowData.PRICE_CONFIRM !== undefined && rowData.PRICE_CONFIRM !== null && rowData.PRICE_CONFIRM !== '') {
+                let index = priceConfirmList.findIndex(function (element) {
+                    return element.value === rowData.PRICE_CONFIRM;
+                });
+                if (index < 0) addErrorList(rowIndex, 'PRICE_CONFIRM');
+            }
+            // 사업자
+            if (rowData.COMP_CD !== undefined && rowData.COMP_CD !== null && rowData.COMP_CD !== '') {
+                let index = BUSINESS_COMPANY.findIndex(function (element) {
+                    return element.value === rowData.COMP_CD;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'COMP_CD');
+            }
+            // 발주업체
+            if (rowData.ORDER_COMP_CD !== undefined && rowData.ORDER_COMP_CD !== null && rowData.ORDER_COMP_CD !== '') {
+                let index = ORDER_COMPANY.findIndex(function (element) {
+                    return element.value === rowData.ORDER_COMP_CD;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'ORDER_COMP_CD');
+            }
+            // 구매 담당자
+            if (rowData.ORDER_STAFF_SEQ !== undefined && rowData.ORDER_STAFF_SEQ !== null && rowData.ORDER_STAFF_SEQ !== '') {
+                let index = COMPANY_STAFF.findIndex(function (element) {
+                    return element.value === Number(rowData.ORDER_STAFF_SEQ);
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'ORDER_STAFF_SEQ');
+            }
+            // 주요검사품
+            if (rowData.MAIN_INSPECTION !== undefined && rowData.MAIN_INSPECTION !== null && rowData.MAIN_INSPECTION !== '') {
+                let index = mainInspectionList.findIndex(function (element) {
+                    return element.value === rowData.MAIN_INSPECTION;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MAIN_INSPECTION');
+            }
+            // 작업형태
+            if (rowData.WORK_TYPE !== undefined && rowData.WORK_TYPE !== null && rowData.WORK_TYPE !== '') {
+                let index = workTypeList.findIndex(function (element) {
+                    return element.value === rowData.WORK_TYPE;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'WORK_TYPE');
+            }
+            // 수행공장
+            if (rowData.WORK_FACTORY !== undefined && rowData.WORK_FACTORY !== null && rowData.WORK_FACTORY !== '') {
+                let index = workFactoryList.findIndex(function (element) {
+                    return element.value === rowData.WORK_FACTORY;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'WORK_FACTORY');
+            }
+            //소재 상세
+            if (rowData.MATERIAL_DETAIL !== undefined && rowData.MATERIAL_DETAIL !== null && rowData.MATERIAL_DETAIL !== '') {
+                let index = materialDetailList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_DETAIL;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MATERIAL_DETAIL');
+            }
+            // 소재형태
+            if (rowData.MATERIAL_KIND !== undefined && rowData.MATERIAL_KIND !== null && rowData.MATERIAL_KIND !== '') {
+                let index = materialKindList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_KIND;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MATERIAL_KIND');
+            }
+            // 표면처리
+            if (rowData.SURFACE_TREAT !== undefined && rowData.SURFACE_TREAT !== null && rowData.SURFACE_TREAT !== '') {
+                let index = surfaceTreatList.findIndex(function (element) {
+                    return element.value === rowData.SURFACE_TREAT;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'SURFACE_TREAT');
+            }
+            // 열처리
+            if (rowData.MATERIAL_FINISH_HEAT !== undefined && rowData.MATERIAL_FINISH_HEAT !== null && rowData.MATERIAL_FINISH_HEAT !== '') {
+                let index = materialFinishHeatList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_FINISH_HEAT;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_HEAT');
+            }
+            // TM각비
+            if (rowData.MATERIAL_FINISH_TM !== undefined && rowData.MATERIAL_FINISH_TM !== null && rowData.MATERIAL_FINISH_TM !== '') {
+                let index = materialFinishTmList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_FINISH_TM;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_TM');
+            }
+            // 연마
+            if (rowData.MATERIAL_FINISH_GRIND !== undefined && rowData.MATERIAL_FINISH_GRIND !== null && rowData.MATERIAL_FINISH_GRIND !== '') {
+                let index = materialFinishGrindList.findIndex(function (element) {
+                    return element.value === rowData.MATERIAL_FINISH_GRIND;
+                });
+
+                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_GRIND');
+            }
+        };
+        // 잘못 입력된 데이터 체크
+        const inputErrorCheck = function (rowData) {
+            let list = [];
+            const singleList = ['PART_UNIT_QTY']; // 단품
+            const assemblyList = ['MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY']; // 조립
+            const modifiedList = ['PART_UNIT_QTY']; // 수정
+            const stockList = ['PART_UNIT_QTY', 'ORDER_NUM', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT']; // 재고
+            const partList = ['ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT']; // 파트
+
+            switch (rowData.WORK_TYPE) {
+                case 'WTP010':
+                    list = singleList;
+                    break;
+                case 'WTP020':
+                    list = assemblyList;
+                    break;
+                case 'WTP030':
+                    list = modifiedList;
+                    break;
+                case 'WTP040':
+                    list = stockList;
+                    break;
+                case 'WTP050':
+                    list = partList;
+                    break;
+            }
+
+            for (let i in list) {
+                if (list.hasOwnProperty(i)) {
+                    if (rowData[list[i]] !== undefined && rowData[list[i]] != null && rowData[list[i]] !== '') {
+                        addErrorList(rowData.pq_ri, list[i]);
+                    }
+                }
+            }
+        };
+
+        // error
+        let errorList = [];
+        let prevErrorList = [];
+        const addErrorList = function (rowIndex, dataIndex) {
+            let tempObject = {};
+            tempObject.rowIndx = rowIndex;
+            tempObject.dataIndx = dataIndex;
+            errorList.push(tempObject);
+        };
+
+        // cell 색 변경
+        const changeCellColor = function (list, prevList) {
+            for(let i in prevList) {
+                if (prevList.hasOwnProperty(i)) {
+                    $orderManagementGrid.pqGrid('removeClass', {rowIndx: prevList[i].rowIndx, dataIndx: prevList[i].dataIndx, cls: 'bg-lightcoral'} );
+                }
+            }
+
+            if (list.length > 0) {
+                for(let i in list) {
+                    if (list.hasOwnProperty(i)) {
+                        $orderManagementGrid.pqGrid('addClass', {rowIndx: list[i].rowIndx, dataIndx: list[i].dataIndx, cls: 'bg-lightcoral'} );
+                    }
+                }
+            }
+        };
 
         const changeColumnFilter = function () {
             // 필터 옵션 변경
@@ -2373,35 +2806,46 @@
         });
 
         $('#CONTROL_MANAGE_SAVE').on('click', function () {
+            prevErrorList = errorList;
+            errorList = [];
+            let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+
+            validationCheck(data);
+            changeCellColor(errorList, prevErrorList);
+
+            if (errorList.length) {
+                fnAlert(null, errorList.length + '건의 데이터가 올바르지 않습니다.');
+                return false;
+            }
+
             // 관리번호 수정 여부 확인
             let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
             let parameters = {'url': '/validationCheckBeforeSaveFromControl', 'data': {data: JSON.stringify(changes)}};
+            let flag = false;
 
             fnPostAjaxAsync(function (data) {
-                let flag = data.flag;
-                let message = data.message;
+                flag = data.flag;
 
                 if (flag) {
-                    fnAlert(null, message);
+                    fnAlert(null, data.message);
                     return false;
                 }
             }, parameters, '');
 
-            parameters = {'url': '/saveFromControlManage', 'data': {data: JSON.stringify(changes)}};
+            if (!flag) {
+                parameters = {'url': '/saveFromControlManage', 'data': {data: JSON.stringify(changes)}};
 
-            fnPostAjaxAsync(function (data) {
-                let flag = data.flag;
-                let message = data.message;
+                fnPostAjaxAsync(function (data) {
+                    if (data.flag) {
+                        fnAlert(null, data.message);
+                        return false;
+                    }
 
-                if (flag) {
-                    fnAlert(null, message);
-                    return false;
-                } else {
                     fnAlert(null, '<spring:message code="com.alert.default.save.success"/>');
                     $orderManagementGrid.pqGrid('refreshDataAndView');
-                }
-            }, parameters, '');
+                }, parameters, '');
+            }
         });
 
         $('#CONTROL_MANAGE_DELETE').on('click', function () {
@@ -2751,37 +3195,39 @@
             fnReportFormToHiddenFormPageAction('control_estimate_list_excel_download', '/downloadExcel');
         });
 
-        alertify.dialog('barcodeDrawingConfirm', function () {
-            return {
-                setup: function () {
-                    var settings = alertify.confirm().settings;
-                    for (var prop in settings)
-                        this.settings[prop] = settings[prop];
-                    var setup = alertify.confirm().setup();
-                    setup.buttons.push({
-                        text: '취소',
-                        scope: 'primary'
-                    });
-                    return setup;
-                },
-                settings: {
-                    oncontinue: null
-                },
-                callback: function (closeEvent) {
-                    if (closeEvent.index == 2) {
-                        if (typeof this.get('oncontinue') === 'function') {
-                            let returnValue;
-                            returnValue = this.get('oncontinue').call(this, closeEvent);
-                            if (typeof returnValue !== 'undefined') {
-                                closeEvent.cancel = !returnValue;
+        if (!alertify.barcodeDrawingConfirm) {
+            alertify.dialog('barcodeDrawingConfirm', function () {
+                return {
+                    setup: function () {
+                        let settings = alertify.confirm().settings;
+                        for (let prop in settings)
+                            this.settings[prop] = settings[prop];
+                        let setup = alertify.confirm().setup();
+                        setup.buttons.push({
+                            text: '취소',
+                            scope: 'primary'
+                        });
+                        return setup;
+                    },
+                    settings: {
+                        oncontinue: null
+                    },
+                    callback: function (closeEvent) {
+                        if (closeEvent.index == 2) {
+                            if (typeof this.get('oncontinue') === 'function') {
+                                let returnValue;
+                                returnValue = this.get('oncontinue').call(this, closeEvent);
+                                if (typeof returnValue !== 'undefined') {
+                                    closeEvent.cancel = !returnValue;
+                                }
                             }
+                        } else {
+                            alertify.confirm().callback.call(this, closeEvent);
                         }
-                    } else {
-                        alertify.confirm().callback.call(this, closeEvent);
                     }
-                }
-            };
-        }, false, 'confirm');
+                };
+            }, false, 'confirm');
+        }
 
         // 바코드도면 출력
         $('#CONTROL_MANAGE_BARCODE_DRAWING_PRINT').on('click', function () {
@@ -3219,7 +3665,7 @@
         $('#CONTROL_MERGE').on({
             'click': function () {
                 if (noSelectedRowAlert()) return false;
-                let flag = new Boolean();
+                let flag = false;
                 let dataList = [];
 
                 for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {

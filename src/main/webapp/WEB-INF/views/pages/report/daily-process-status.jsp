@@ -40,10 +40,9 @@
         <div style="height: inherit;">
             <div class="d-flex align-items-center">
                 <div>
-                    <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#TARGET_AMOUNT_REGISTER_POPUP">목표금액 설정</button>
                 </div>
                 <div class="ml-auto">
-                    <button type="button" id="DAILY_PROCESS_STATUSLEFT_EXPORT_EXCEL"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
+                    <button type="button" id="DAILY_PROCESS_STATUS_LEFT_EXPORT_EXCEL"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                     <button type="button" class="defaultBtn btn-100w green" id="DAILY_PROCESS_STATUS_LEFT_SAVE">저장</button>
                 </div>
             </div>
@@ -72,47 +71,6 @@
     </div>
 </div>
 
-<div class="popup_container" id="TARGET_AMOUNT_REGISTER_POPUP" style="display: none;">
-    <div class="controlCloseLayerPopup" style="width: 768px; height: 540px;">
-        <h3>목표금액 설정</h3>
-        <hr>
-        <button type="button" class="pop_close" name="TARGET_AMOUNT_REGISTER_CLOSE">닫기</button>
-        <form class="form-inline" id="TARGET_AMOUNT_REGISTER_FORM" role="form">
-            <input type="hidden" name="queryId" id="queryId" value="reportMapper.selectTargetAmountRegisterList">
-            <div class="d-flex align-items-center">
-
-                <div>
-                    <span class="slt_wrap">
-                        <label class="label_100">조회년월</label>
-                        <select class="wd_100" class="two" name="YEAR" id="TARGET_AMOUNT_REGISTER_YEAR"></select>
-                    </span>
-                    <span class="slt_wrap">
-                        <label class="label_100" for="WORK_FACTORY">대상공장</label>
-                        <select class="wd_200" name="WORK_FACTORY" id="WORK_FACTORY" title="대상공장">
-                            <c:forEach var="code" items="${HighCode.H_1014}">
-                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                            </c:forEach>
-                        </select>
-                    </span>
-                </div>
-                <div class="ml-auto">
-                    <button type="button" class="defaultBtn btn-100w green" id="DAILY_PROCESS_STATUS_TARGET_AMOUNT_SAVE">
-                        저장
-                    </button>
-                </div>
-            </div>
-        </form>
-        <hr>
-        <div>
-            <div id="TARGET_AMOUNT_REGISTER_GRID"></div>
-        </div>
-
-        <div class="text-center">
-            <button class="defaultBtn grayPopGra" name="TARGET_AMOUNT_REGISTER_CLOSE">닫기</button>
-        </div>
-    </div>
-</div>
-
 <script>
     $(function () {
         'use strict';
@@ -122,19 +80,6 @@
         fnAppendSelectboxYear('DAILY_PROCESS_STATUS_YEAR', 10);
         fnAppendSelectboxMonth('DAILY_PROCESS_STATUS_MONTH');
         $('#DAILY_PROCESS_STATUS_MONTH').val(CURRENT_MONTH < 9 ? '0' + (CURRENT_MONTH + 1) : CURRENT_MONTH + 1).prop('selected', true);
-
-        (function (id, severalYears) {
-            $('#' + id).empty();
-            let date = new Date();
-            date.setMonth(date.getMonth() + 1);
-            let year = date.getFullYear();
-
-            for (let i = year - 2; i < year + severalYears; i++) {
-                $('#' + id).append(new Option(i + '년', i));
-            }
-            $('#' + id).val(CURRENT_YEAR).prop('selected', true);
-        })('TARGET_AMOUNT_REGISTER_YEAR', 3);
-
 
         const leftGridId = 'DAILY_PROCESS_STATUS_LEFT_GRID';
         let leftPostData = fnFormToJsonArrayData('#DAILY_PROCESS_STATUS_LEFT_SEARCH_FORM');
@@ -332,69 +277,8 @@
             },
         };
 
-        const targetAmountRegisterGridId = 'TARGET_AMOUNT_REGISTER_GRID';
-        let targetAmountRegisterPostData = fnFormToJsonArrayData('#TARGET_AMOUNT_REGISTER_FORM');
-        const targetAmountRegisterColModel = [
-            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
-            {title: '대상년월', dataIndx: 'YYYYMM'},
-            {title: '대상공장', dataIndx: 'WORK_FACTORY', hidden: true},
-            {title: '대상공장', dataIndx: 'WORK_FACTORY_NM'},
-            {
-                title: '목표금액', align: 'center',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
-                colModel: [
-                    {
-                        title: '생산목표', dataType: 'integer', format: '#,###', dataIndx: 'PRODUCTION_GOAL_AMT', editable: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
-                    },
-                    {
-                        title: '매출목표', dataType: 'integer', format: '#,###', dataIndx: 'SALES_GOAL_AMT', editable: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
-                    }
-                ]
-            }
-        ];
-        const targetAmountObj = {
-            height: 365,
-            collapsible: false,
-            resizable: false,
-            showTitle: false,
-            rowHtHead: 15,
-            numberCell: {title: 'No.', show: false},
-            scrollModel: {autoFit: true},
-            trackModel: {on: true},
-            selectionModel: {type: 'row', mode: 'single'},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
-            colModel: targetAmountRegisterColModel,
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: targetAmountRegisterPostData, recIndx: 'ROW_NUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            beforePaste: function (evt, ui) {
-                let CM = this.getColModel(),
-                    rows = ui.rows,
-                    area = ui.areas[0],
-                    //r1 = area.r1,
-                    c1 = area.c1;
-                for (let i = 0; i < rows.length; i++) {
-                    let row = rows[i];
-                    for (let j = 0; j < row.length; j++) {
-                        let column = CM[j + c1],
-                            dt = column.dataType;
-                        if (dt == "integer" || dt == "float") {
-                            row[j] = row[j].replace(/[^(\d|\.)]/g, "");
-                        }
-                    }
-                }
-            }
-        };
-
         const $dailyProcessStatusLeftGrid = $('#' + leftGridId).pqGrid(leftObj);
         const $dailyProcessStatusRightGrid = $('#' + rightGridId).pqGrid(rightObj);
-        let $targetAmountRegisterGrid;
         /* init */
 
         /* function */
@@ -435,34 +319,7 @@
             changeViewColumn(this.checked);
         });
 
-        $('#TARGET_AMOUNT_REGISTER_POPUP').on({
-            'show.bs.modal': function () {
-                $targetAmountRegisterGrid = $('#' + targetAmountRegisterGridId).pqGrid(targetAmountObj);
-            },
-            'hide.bs.modal': function () {
-                $targetAmountRegisterGrid.pqGrid('destroy');
-            }
-        });
-        
-        $('[name=TARGET_AMOUNT_REGISTER_CLOSE]').on('click', function () {
-            $('#TARGET_AMOUNT_REGISTER_POPUP').modal('hide');
-        });
-        
-        $('#TARGET_AMOUNT_REGISTER_FORM').on('change', function () {
-            $targetAmountRegisterGrid.pqGrid('option', 'dataModel.postData', function () {
-                return fnFormToJsonArrayData('#TARGET_AMOUNT_REGISTER_FORM');
-            });
-            $targetAmountRegisterGrid.pqGrid('refreshDataAndView');
-        });
-
-        $('#DAILY_PROCESS_STATUS_TARGET_AMOUNT_SAVE').on('click', function () {
-            const insertQueryList = ['reportMapper.createTargetAmount'];
-            const updateQueryList = ['reportMapper.createTargetAmount'];
-
-            fnModifyPQGrid($targetAmountRegisterGrid, insertQueryList, updateQueryList);
-        });
-
-        $('#DAILY_PROCESS_STATUSLEFT_EXPORT_EXCEL').on('click', function () {
+        $('#DAILY_PROCESS_STATUS_LEFT_EXPORT_EXCEL').on('click', function () {
             const blob = $dailyProcessStatusLeftGrid.pqGrid('getInstance').grid.exportData({
                 format: 'xlsx',
                 render: true,

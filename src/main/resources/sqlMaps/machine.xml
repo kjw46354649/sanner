@@ -276,6 +276,9 @@
     </select>
 
     <insert id="insertMctPlan"  parameterType="java.util.HashMap" >
+        <selectKey keyProperty="MCT_PLAN_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_MCT_PLAN) FROM DUAL
+        </selectKey>
         INSERT INTO TBL_MCT_PLAN (
             MCT_PLAN_SEQ,
             EQUIP_SEQ,
@@ -286,7 +289,7 @@
             INSERT_DT,
             INSERT_ID
         ) VALUES(
-            IFNULL(#{MCT_PLAN_SEQ}, NEXTVAL(SEQ_MCT_PLAN)),
+            #{MCT_PLAN_SEQ},
             #{EQUIP_SEQ},
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ},
@@ -391,7 +394,7 @@
             A.MCT_WORK_TYPE, <!-- MCT 작업 구분 -->
             IFNULL(SF_GET_CODE_NM('1011', A.MCT_WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS MCT_WORK_TYPE_NM, <!-- MCT 작업 구분 이름 -->
             (
-                SELECT CONCAT(CEILING(SF_GET_MCT_WORK_TIME(I.CONTROL_SEQ, I.CONTROL_DETAIL_SEQ) / SF_GET_CONTROL_PART_QTY(I.CONTROL_SEQ, I.CONTROL_DETAIL_SEQ)), 'm')
+                SELECT CONCAT(CEILING(SF_GET_MCT_WORK_TIME(I.CONTROL_SEQ, I.CONTROL_DETAIL_SEQ) / SUM(J.FINISH_QTY)), 'm')
                 FROM jmes.TBL_CONTROL H, jmes.TBL_CONTROL_PART I, jmes.TBL_MCT_WORK J, jmes.TBL_EQUIP K
                 WHERE K.EQUIP_SEQ = J.EQUIP_SEQ
                     AND J.CONTROL_SEQ = I.CONTROL_SEQ
@@ -443,7 +446,7 @@
             jmes.SF_GET_MATERIAL_RECEIPT_DT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT <!-- 소재 입고 일시 -->
         FROM jmes.TBL_CONTROL_PART A
             INNER JOIN jmes.TBL_CONTROL B ON B.CONTROL_SEQ = A.CONTROL_SEQ
-                 AND B.DEL_YN = 'N' AND B.CONTROL_STATUS IN ('ORD001', 'ORD004') AND B.OUT_FINISH_DT IS NULL
+                 AND B.DEL_YN = 'N' AND B.CONTROL_STATUS IN ('ORD001', 'ORD003') AND B.OUT_FINISH_DT IS NULL
             LEFT OUTER JOIN jmes.TBL_MCT_PLAN C ON C.CONTROL_SEQ = A.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND C.DEL_YN = 'N'
             LEFT OUTER JOIN jmes.TBL_POP Y ON Y.CONTROL_SEQ = A.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
                 AND Y.POP_SEQ = (   SELECT MAX(K.POP_SEQ) FROM jmes.TBL_POP K
@@ -531,7 +534,8 @@
 
     <select id="selectCamWorkHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            ROW_NUMBER () OVER (ORDER BY H.INSERT_DT, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0)) AS ROW_NUM
+            ROW_NUMBER () OVER (ORDER BY A.INNER_DUE_DT, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), H.CAM_SEQ) AS ROW_NUM
+	        , DENSE_RANK () OVER(ORDER BY A.INNER_DUE_DT, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), H.CAM_SEQ) AS `NO`
             , A.CONTROL_SEQ
             , A.CONTROL_DETAIL_SEQ
             , ( SELECT jmes.SF_GET_DATE_F(MAX(M.INSERT_DT), 'YY', 'M')
@@ -632,7 +636,7 @@
         WHERE 1 = 1
             <choose>
                 <when test="CAM_WORK_HISTORY_CONDITION == 1">
-                    AND A.UPDATE_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
+                    AND G.UPDATE_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
                 </when>
                 <when test="CAM_WORK_HISTORY_CONDITION == 2">
                     AND EXISTS (SELECT 1 FROM TBL_CONTROL_PART_PROGRESS P
@@ -862,13 +866,13 @@
             , jmes.SF_GET_DATE_F(A.WORK_START_DT, 'YY', 'M') AS WORK_START_DT <!-- 착수일시 -->
             , jmes.SF_GET_DATE_F(A.WORK_FINISH_DT, 'YY', 'M') AS WORK_FINISH_DT <!-- 완료일시 -->
             , CASE
-                WHEN A.WORK_FINISH_DT IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('STOP', A.MCT_WORK_SEQ), 0)/ 3600, 0), 'h ', TRUNCATE((IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('STOP', A.MCT_WORK_SEQ), 0)%3600)/ 60, 0), 'm')
+                WHEN A.WORK_FINISH_DT IS NOT NULL THEN TRUNCATE(jmes.SF_GET_DRAWING_WORK_TIME('STOP', A.MCT_WORK_SEQ), 0)
             END AS WORK_STOP_MINUTE <!-- 작업 중지 전체 분 -->
             , CASE
-                WHEN A.WORK_FINISH_DT IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ), 0)/ 3600, 0), 'h ', TRUNCATE((IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ), 0)%3600)/ 60, 0), 'm')
+                WHEN A.WORK_FINISH_DT IS NOT NULL THEN TRUNCATE(jmes.SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ), 0)
             END AS WORK_WORK_MINUTE <!-- 작업 전체 분 -->
             , CASE
-                WHEN A.WORK_FINISH_DT IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) / jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 0)/ 3600, 0), 'h ', TRUNCATE((IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) / jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 0)%3600)/ 60, 0), 'm')
+                WHEN A.WORK_FINISH_DT IS NOT NULL THEN TRUNCATE(jmes.SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) / jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 0)
             END AS LEAD_TIME
             , A.FINISH_QTY <!-- 완료 수량 -->
             , A.ERROR_QTY <!-- 불량 -->
@@ -1172,7 +1176,7 @@
                 )
             </if>
             <if test='SEL_COMPLETED_YN != null'>
-                AND A.INNER_WORK_FINISH_DT IS NULL
+                AND (A.INNER_WORK_FINISH_DT IS NULL OR H.FAIL_STATUS IS NOT NULL)
             </if>
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
         ORDER BY

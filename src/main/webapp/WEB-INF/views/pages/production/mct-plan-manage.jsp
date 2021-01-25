@@ -17,7 +17,7 @@
         <form id="MCT_PLAN_MANAGE_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="machine.selectEquipId">
             <div class="hWrap">
-                <h2 style="height: 42px; line-height: 42px;">MCT 가공 계획 현황</h2>
+                <h2 style="height: 42px; line-height: 42px;">MCT가공계획 관리</h2>
                 <span class="slt_wrap namePlusSlt ml-20">
                         <label for="FACTORY_AREA">MCT 센터</label>
                         <select name="FACTORY_AREA" id="FACTORY_AREA">
@@ -29,10 +29,6 @@
                         </select>
                 </span>
                 <span class="refresh ml-10"><button type="button" id="MCT_PLAN_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
-                <span class="buttonWrap" style="padding: 8px 0px 0px 0px;">
-                    <button type="button" class="defaultBtn black" id="MCT_PLAN_MANAGE_DRAWING_VIEW">도면보기</button>
-                    <!-- <button type="button" class="defaultBtn sky">레이아웃관리</button> -->
-                </span>
             </div>
         </form>
         <div class="conWrap">
@@ -91,7 +87,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_30" for="MATERIAL_TYPE">재질</label>
-                            <select class="wd_100" name="MATERIAL_TYPE" id="MATERIAL_TYPE" title="재질">
+                            <select class="wd_70" name="MATERIAL_TYPE" id="MATERIAL_TYPE" title="재질">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1035}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -108,7 +104,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_50" for="OPTION">Option</label>
-                            <input type="text" class="wd_100" name="OPTION" id="OPTION" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" title="발주사" readonly>
+                            <input type="text" class="wd_100" name="OPTION" id="OPTION" placeholder="<spring:message code='com.form.top.all.option' />" title="발주사" readonly>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -152,11 +148,6 @@
             'url': '/json-list',
             'data': {'queryId': 'machine.selectNCMachineList'}
         });
-        let selectedGrid = '';
-        let selectedRowIndex = '';
-        const insertQueryList = ['machine.insertMctPlan'];
-        const updateQueryList = ['machine.updateMctPlan'];
-        const deleteQueryList = ['machine.deleteMctPlan'];
         let $processPlanGrid1, $processPlanGrid2, $processPlanGrid3, $processPlanGrid4, $processPlanGrid5,
             $processPlanGrid6, $processPlanGrid7, $processPlanGrid8, $processPlanGrid9, $processPlanGrid10,
             $processPlanGrid11, $processPlanGrid12, $processPlanGrid13, $processPlanGrid14;
@@ -259,28 +250,13 @@
             {title: 'SORT_NUM', dataType: 'integer', dataIndx: 'SORT_NUM', hidden: true},
             {title: '납기', minWidth: 40, dataIndx: 'INNER_DUE_DT'},
             {
-                title: '관리번호', width: 175, dataIndx: 'CONTROL_NUM',
+                title: '관리번호', width: 200, dataIndx: 'CONTROL_NUM',
                 postRender: function (ui) {
                     let grid = this,
                         $cell = grid.getCell(ui);
                     $cell.bind('click', function () {
                         let rowData = ui.rowData;
                         g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
-                    });
-                }
-            },
-            {
-                title: '', minWidth: 25, dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background': '#a9d3f5'},
-                render: function (ui) {
-                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>';
-                    else return '';
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find('#imageView').bind('click', function () {
-                        let rowData = ui.rowData;
-                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
@@ -351,14 +327,6 @@
 
                 changeFooter(data, tableElement);
             },
-            rowSelect: function (event, ui) {
-                selectedGrid = $(this.element.context);
-                selectedRowIndex = ui.addList[0].rowIndx;
-            },
-            moveNode: function () {
-                changeSortNum(this, $(this.element.context));
-                modifyPQGrid($(this.element.context), insertQueryList, updateQueryList, deleteQueryList);
-            },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
                     $(this.element.context).pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
@@ -366,9 +334,6 @@
             },
             change: function (event, ui) {
                 gridChange(this, ui);
-                setTimeout(function () {
-                    refreshTargetGrid();
-                }, 1000);
             },
         };
 
@@ -546,35 +511,16 @@
                 beforeDrop: function () {},
                 afterDrop: function (evt, uiDrop) {}
             },
-            // load: function () {
-            //     let filterOpts = '<option value=\"\">All Fields</option>';
-            //     let frozenOts = '<option value="0">Selected</option>';
-            //     this.getColModel().forEach(function (column) {
-            //         let hiddenYn = column.hidden === undefined;
-            //         if (hiddenYn && column.title) {
-            //             filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
-            //             frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
-            //         }
-            //     });
-            //     $("#mctPlanManageFilterColumn").empty();
-            //     $("#mctPlanManageFilterColumn").html(filterOpts);
-            //     $("#mctPlanManageFrozen").empty();
-            //     $("#mctPlanManageFrozen").html(frozenOts);
-            // },
-            // complete: function () {
-            //     // this.flex();
-            // },
-            selectChange: function (event, ui) {
-                selectedGrid = $(this.element.context);
-
-                if (ui.selection.iCells.ranges[0] !== undefined) {
-                    selectedRowIndex = [];
-                    let firstRow = ui.selection.iCells.ranges[0].r1;
-                    let lastRow = ui.selection.iCells.ranges[0].r2;
-
-                    if (firstRow === lastRow) selectedRowIndex[0] = firstRow;
-                    else for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
+            load: function () {
+                if ($('#ALLOCATION_COMPLETED_EXCLUDED').prop('checked')) {
+                    $('#ALLOCATION_COMPLETED_EXCLUDED').click();
+                    $('#ALLOCATION_COMPLETED_EXCLUDED').click();
                 }
+            },
+            rowSelect: function (event, ui) {
+                const rowData = ui.addList[0].rowData;
+
+                setPlanSelection(rowData);
             },
             cellSave: function (evt, ui) {
                 if (ui.oldVal === undefined && ui.newVal === null) {
@@ -584,67 +530,6 @@
         };
 
         /* function */
-        /*function mctPlanManageFilterRender(ui) {
-            let val = ui.column.formatVal === undefined ? '' : ui.column.formatVal,
-                filter = ui.column.filter,
-                crules = (filter || {}).crules;
-
-            if (val === '') {
-                val = ui.cellData === undefined ? '' : ui.cellData;
-            }
-
-            // console.log(ui);
-            if (filter && filter.on && crules && crules[0].value) {
-                let condition = $('#mctPlanManageFilterCondition :selected').val(),
-                    valUpper = val.toString().toUpperCase(),
-                    txt = $('#mctPlanManageFilterKeyword').val(),
-                    txtUpper = (txt === null) ? '' : txt.toString().toUpperCase(),
-                    indx = -1;
-
-                if (condition === 'end') {
-                    indx = valUpper.lastIndexOf(txtUpper);
-                    if (indx + txtUpper.length != valUpper.length) {
-                        indx = -1;
-                    }
-                } else if (condition === 'contain') {
-                    indx = valUpper.indexOf(txtUpper);
-                } else if (condition === 'begin') {
-                    indx = valUpper.indexOf(txtUpper);
-                    if (indx > 0) {
-                        indx = -1;
-                    }
-                }
-                if (indx >= 0) {
-                    let txt1 = val.toString().substring(0, indx);
-                    let txt2 = val.toString().substring(indx, indx + txtUpper.length);
-                    let txt3 = val.toString().substring(indx + txtUpper.length);
-                    return txt1 + '<span style="background: #FFFF00; color: #333;">' + txt2 + '</span>' + txt3;
-                } else {
-                    return val;
-                }
-            } else {
-                return val;
-            }
-        }*/
-
-        const modifyPQGrid = function (grid, insertQueryList, updateQueryList, deleteQueryList) {
-            let parameters;
-            let gridInstance = grid.pqGrid('getInstance').grid;
-            //추가 또는 수정된 값이 있으면 true
-            if (gridInstance.isDirty()) {
-                let changes = gridInstance.getChanges({format: 'byVal'});
-                changes.queryIdList = {
-                    'insertQueryId': insertQueryList,
-                    'updateQueryId': updateQueryList,
-                    'deleteQueryId': deleteQueryList
-                };
-                parameters = {'url': '/paramQueryCRUDGrid', 'data': {data: JSON.stringify(changes)}};
-                fnPostAjax(function (data) {
-                    grid.pqGrid('refreshDataAndView');
-                }, parameters, '');
-            }
-        };
-
         const refreshMctPlanGrids = function () {
             $processPlanGrid1.pqGrid('refreshDataAndView');
             $processPlanGrid2.pqGrid('refreshDataAndView');
@@ -664,6 +549,26 @@
 
         const refreshTargetGrid = function () {
             $processTargetGrid.pqGrid('refreshDataAndView');
+        };
+
+        const refreshTargetGrid1 = function (actionType, data) {
+            const processTargetGridData = $processTargetGrid.pqGrid('option', 'dataModel.data');
+            const rowIndx = processTargetGridData.findIndex(function (element) {
+                return element.CONTROL_DETAIL_SEQ === data.CONTROL_DETAIL_SEQ;
+            });
+
+            $processTargetGrid.pqGrid('updateRow', {
+                'rowIndx': rowIndx,
+                row: {
+                    'MCT_PLAN_SEQ': actionType !== 'delete' ? data.MCT_PLAN_SEQ : null,
+                    'EQUIP_SEQ': actionType !== 'delete' ? data.EQUIP_SEQ : null,
+                    'WORKING_TIME': actionType !== 'delete' ? data.WORKING_TIME : null,
+                },
+                track: false,
+                checkEditable: false
+            });
+
+            $processTargetGrid.pqGrid('refreshRow', {rowIndx: rowIndx});
         };
 
         const destroyForm = function () {
@@ -792,18 +697,45 @@
         };
 
         const gridChange = function (thisObject, ui) {
-            if(ui.source === 'addNodes') {
-                let $grid = $(thisObject.element.context);
-                ui.addList[0].newRow.EQUIP_SEQ = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
-                ui.addList[0].newRow.ROWNUM = $grid.pqGrid('option', 'dataModel.data').length;
-                // changeSortNum(thisObject, $grid);
-                modifyPQGrid($(thisObject.element.context), insertQueryList, [], []);
-            } else if (ui.source === 'edit' || ui.source === 'update') {
-                modifyPQGrid($(thisObject.element.context), [], updateQueryList, []);
-            } else if (ui.source === 'delete') {
-                modifyPQGrid($(thisObject.element.context), [], [], deleteQueryList);
-                changeSortNum(thisObject, $(thisObject.element.context));
+            let actionType;
+            let obj = {};
+
+            switch (ui.source) {
+                case 'addNodes':
+                    actionType = 'add';
+                    let $grid = $(thisObject.element.context);
+                    ui.addList[0].newRow.EQUIP_SEQ = $grid.closest('[id^=MCT_NC][id$=PLAN_FORM]').children('#EQUIP_SEQ').val();
+                    ui.addList[0].newRow.ROWNUM = $grid.pqGrid('option', 'dataModel.data').length;
+                    obj = ui.addList[0].newRow;
+                    break;
+                case 'edit':
+                case 'update':
+                    actionType = 'update';
+                    obj = ui.updateList[0].rowData;
+                    break;
+                case 'delete':
+                case 'deleteNodes':
+                    actionType = 'delete';
+                    obj = ui.deleteList[0].rowData; //FIXME: ????
+
+                    changeSortNum(thisObject, $(thisObject.element.context));
+                    break;
             }
+
+            let parameters = {
+                'url': '/modifyMctPlan',
+                'data': {actionType: actionType, data: JSON.stringify(obj)}
+            };
+            fnPostAjax(function (data) {
+                const flag = data.flag;
+
+                if (flag) {
+                    fnAlert(null, '<spring:message code="error.common"/>');
+                    return false;
+                }
+
+                refreshTargetGrid1(actionType, data.data);
+            }, parameters, '');
         };
 
         let createPlanGrid = function () {
@@ -852,6 +784,21 @@
             $processPlanGrid13 = $('#' + processPlanGrid13Id).pqGrid(processPlanObj13);
             $processPlanGrid14 = $('#' + processPlanGrid14Id).pqGrid(processPlanObj14);
         };
+
+        const setPlanSelection = function (rowData) {
+            for (let i = 1; i <= 14; i++) {
+                if ($('#PROCESS_PLAN_GRID' + i).hasClass('pq-grid')) {
+                    //deselect everything.
+                    $('#PROCESS_PLAN_GRID' + i).pqGrid('setSelection', null);
+                    const data = $('#PROCESS_PLAN_GRID' + i).pqGrid('option', 'dataModel.data');
+                    const found = data.findIndex(element => Number(element.MCT_PLAN_SEQ) === Number(rowData.MCT_PLAN_SEQ));
+
+                    if (found !== -1){
+                        $('#PROCESS_PLAN_GRID' + i).pqGrid('setSelection', {rowIndx: found});
+                    }
+                }
+            }
+        };
         /* function */
 
         /* event */
@@ -869,12 +816,7 @@
             refreshTargetGrid();
         });
         
-        $('#MCT_PLAN_MANAGE_DRAWING_VIEW').on('click', function () {
-            let rowData = selectedGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex});
-            callWindowImageViewer(rowData.IMG_GFILE_SEQ);
-        });
-
-        $('#MCT_PROCESS_TARGET_FORM').on('change', function () {
+        $('#MCT_PROCESS_TARGET_FORM #COMP_CD,#MCT_PROCESS_TARGET_FORM #POP_POSITION,#MCT_PROCESS_TARGET_FORM #MATERIAL_TYPE,#MCT_PROCESS_TARGET_FORM #CONTROL_NUM_OR_DRAWING_NUM, #MCT_PROCESS_TARGET_FORM #OPTION, #MCT_PROCESS_TARGET_FORM #MATERIAL_KIND').on('change', function () {
             $processTargetGrid.pqGrid('option', 'dataModel.postData', function () {
                 return (fnFormToJsonArrayData('#MCT_PROCESS_TARGET_FORM'));
             });
@@ -897,6 +839,23 @@
            $MCT_PROCESS_TARGET_FORM.find('#OUTSOURCING_PROCESSING').val(outsourcingProcessing);
            $MCT_PROCESS_TARGET_FORM.find('#NC_COMPLETE').val(NcComplete);
            $MCT_PROCESS_TARGET_FORM.find('#FINISHED_PROCESSING').val(finishedProcessing);
+        });
+
+        $('#ALLOCATION_COMPLETED_EXCLUDED').on('click', function () {
+            const checked = this.checked;
+            const data = $processTargetGrid.pqGrid('option', 'dataModel').data;
+
+            for (let i = 0, LENGTH = data.length; i < LENGTH; i++) {
+                let rowData = data[i];
+                if (checked) {
+                    if (rowData.EQUIP_SEQ) {
+                        rowData.pq_hidden = true;
+                    }
+                } else {
+                    rowData.pq_hidden = false;
+                }
+            }
+            $processTargetGrid.pqGrid("refreshView");
         });
         /* event */
 

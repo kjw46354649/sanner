@@ -34,7 +34,7 @@
     <style type="text/css">
 
         html {
-            cursor: none;
+            /*cursor: none;*/
        	}
 
         .dhx_message__icon{
@@ -101,6 +101,25 @@
             <tr>
                 <td width="15%">&nbsp;</td>
                 <td><h3 style="font-size: 30px;font-weight: bold; text-align: center;">완료 되었습니다.</h3></td>
+                <td width="15%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td width="15%">&nbsp;</td>
+                <td style="text-align: center;"><img src="/resource/asset/images/work/icon_4_1.png" width="40px"></td>
+                <td width="15%">&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="cancelDiv" style="display: none">
+    <div id="cancelDivHtml">
+        <table>
+            <tr>
+                <td width="15%">&nbsp;</td>
+                <td><h3 style="font-size: 30px;font-weight: bold; text-align: center;">취소 되었습니다.</h3></td>
                 <td width="15%">&nbsp;</td>
             </tr>
             <tr>
@@ -186,6 +205,30 @@
     </div>
 </div>
 <!-- Target Modal End -->
+
+<!-- 보류 상태 확인 Modal Start -->
+<div class="modal-scan" id="drawing_worker_hold_popup" style="display: none;">
+    <div class="modal-hold-dialog">
+        <div class="modal-hold-content">
+            <div class="modal-hold-body">
+                <div class="tableWrap">
+                    <div><h1 class="stop-txt" style="background-color: white;" id="holdControlNumHtml"></h1></div>
+                    <div style="margin-top: 20px;text-align: center;">
+                        <span class="hold-txt" style="color: #474747;" ><srping:message key="drawing.board.alert.11"/></span>
+                        <span class="hold-txt" style="color: #ff0707;" >'<srping:message key="drawing.board.button.15"/>'</span>
+                        <span class="hold-txt" style="color: #474747;" ><srping:message key="drawing.board.alert.12"/></span>
+                    </div>
+                    <div><p class="hold-txt" style="color: #474747;margin-top: 10px;" ><srping:message key="drawing.board.alert.13"/></p></div>
+                    <div style="text-align: center;padding-top: 20px;" class="buttonCenterWrap">
+                        <button type="button" id="holdBtnSave" class="listBlueBtn"><srping:message key="drawing.board.button.14"/></button>
+                        <button type="button" id="holdBtnCancel" class="listGrnBtn"><srping:message key="drawing.board.button.06"/></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Scan Modal End -->
 
 <!-- Drawing Start Modal Start -->
 <div class="modal-scan" id="drawing_worker_scan_popup" style="display: none;">
@@ -836,9 +879,10 @@
                     } else if (returnCode == "RET97") {
                         fnDrawingDialogAlert('drawingVerErrorHtml', 3);
                     } else if (returnCode == "RET96") {
-                        fnConfirm(null, data.message, function () {
-                            startWork(data.info);
-                        });
+                        holdWork(data.info);
+                        // fnConfirm(null, data.message, function () {
+                        //     startWork(data.info);
+                        // });
                     } else {
                         showMessage(data.message);
                         return false;
@@ -981,12 +1025,37 @@
                     startWork(data.info);
                 }else if(returnCode == "RET97"){
                     fnDrawingDialogAlert('drawingVerErrorHtml', 3);
+                }else if(returnCode == "RET96"){
+                    holdWork(data.info);
+                    // fnDrawingDialogAlert('drawingVerErrorHtml', 3);
                 }else{
                     showMessage(data.message);
                     return false;
                 }
             }, parameters, '');
         });
+
+        /** 보류 상태 팝업 처리 **/
+        let holdWork = function(dataInfo){
+            $("#drawing_worker_hold_popup").find("#holdControlNumHtml").html(dataInfo.CONTROL_INFO);
+            $("#drawing_worker_hold_popup").css("display", "block");
+            $("#holdBtnSave").on('click', function(){
+                $("#drawing_worker_target_list_popup").css("display", "none");
+                startWork(dataInfo);
+            });
+            $("#holdBtnCancel").on('click', function(){
+                $("#drawing_worker_hold_popup").css("display", "none");
+            });
+        };
+
+        // $("#holdBtnSave").on('click', function(){
+        //     fnDrawingBoardSave();
+        // });
+        //
+        // $("#scanBtnCancel").on('click', function(){
+        //     fnPopupClose("drawing_worker_hold_popup");
+        // });
+
 
         let restartWorkControlNumFn = function(reStartWorkControlNum){
             if(reStartWorkControlNum){
@@ -1074,6 +1143,7 @@
                 'data': $("#drawing_action_form").serialize()
             };
             fnPostAjax(function (data, callFunctionParam) {
+                fnDrawingAlertDialogAlert('cancelDivHtml', 1);
                 fnPopupClose("drawing_worker_cancel_popup");
             }, parameters, '');
         });

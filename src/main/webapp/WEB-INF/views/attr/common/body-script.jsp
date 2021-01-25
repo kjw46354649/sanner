@@ -1143,4 +1143,23 @@
             return acc;
         }, {});
     };
+
+    function callQuickDrawingImageViewer(imageSeq) {
+        // 팝업창 열려 있는지 확인
+        let isOpen = $("#common_quick_drawing_popup").dialog("isOpen");
+        $("#common_quick_drawing_form").find("#gFileSeq").val(imageSeq);
+        $("#common_quick_drawing_form").find("#drawingImage").attr("src", '/qimage/' + imageSeq);
+        if (!isOpen) {
+            $("#common_quick_drawing_popup").dialog("open");
+        }
+    }
+
+    function callQuickRowChangeDrawingImageViewer(imageSeq) {
+        // 팝업창이 열려 있는 경우만 처리
+        let isOpen = $("#common_quick_drawing_popup").dialog("isOpen");
+        if (isOpen) {
+            $("#common_quick_drawing_form").find("#gFileSeq").val(imageSeq);
+            $("#common_quick_drawing_form").find("#drawingImage").attr("src", '/qimage/' + imageSeq);
+        }
+    }
 </script>
