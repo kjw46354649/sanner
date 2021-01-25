@@ -99,6 +99,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void createMonthClose(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
         ArrayList<HashMap<String, Object>> listData = null;
@@ -115,20 +116,22 @@ public class OrderServiceImpl implements OrderService {
 
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
+                hashMap.put("LOGIN_USER_ID", userId);
                 hashMap.put("CONTROL_STATUS", "ORD003");
-                hashMap.put("queryId", "orderMapper.updateControlStatus");
-                this.innodaleDao.update(hashMap);
-                hashMap.put("queryId", "orderMapper.createControlProgress");
-                this.innodaleDao.create(hashMap);
                 hashMap.put("queryId", "orderMapper.createMonthClose");
                 this.innodaleDao.create(hashMap);
-                hashMap.put("queryId", "orderMapper.createMonthCloseDetail");
+                hashMap.put("queryId", "orderMapper.createMonthCloseOrder");
+                this.innodaleDao.create(hashMap);
+                hashMap.put("queryId", "orderMapper.updateControlStatusFromMonthClose");
+                this.innodaleDao.update(hashMap);
+                hashMap.put("queryId", "orderMapper.createControlProgressFromMonthClose");
                 this.innodaleDao.create(hashMap);
             }
         }
 
         if (infoData != null && infoData.size() > 0) {
             for (HashMap<String, Object> hashMap : infoData) {
+                hashMap.put("LOGIN_USER_ID", userId);
                 hashMap.put("queryId", "orderMapper.updateMonthCloseFinalNego");
                 this.innodaleDao.update(hashMap);
             }
