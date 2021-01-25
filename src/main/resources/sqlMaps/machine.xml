@@ -1176,7 +1176,7 @@
                 )
             </if>
             <if test='SEL_COMPLETED_YN != null'>
-                AND A.INNER_WORK_FINISH_DT IS NULL
+                AND (A.INNER_WORK_FINISH_DT IS NULL OR H.FAIL_STATUS IS NOT NULL)
             </if>
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
         ORDER BY
