@@ -776,6 +776,7 @@
             , A.UNIT_AMT
             , A.UNIT_MIN_AMT
             , A.NOTE
+            , A.ADD_SEQ
             , B.RANGE_TYPE
             , B.RANGE_1
             , B.RANGE_2
@@ -805,11 +806,11 @@
         INSERT INTO TBL_CALC_MATERIAL (
             CALC_SEQ, MATERIAL_KIND, MATERIAL_TYPE,
             MATERIAL_DETAIL, SPECIFIC_GRAVITY, CALC_METHOD,
-            UNIT_AMT, UNIT_MIN_AMT, NOTE, INSERT_DT, INSERT_ID
+            UNIT_AMT, UNIT_MIN_AMT, NOTE, ADD_SEQ, INSERT_ID
         ) VALUES (
             #{CALC_SEQ}, #{MATERIAL_KIND}, #{MATERIAL_TYPE},
             #{MATERIAL_DETAIL}, #{SPECIFIC_GRAVITY}, #{CALC_METHOD},
-            #{UNIT_AMT}, #{UNIT_MIN_AMT}, #{NOTE}, NOW(), #{LOGIN_USER_ID}
+            #{UNIT_AMT}, #{UNIT_MIN_AMT}, #{NOTE}, #{ADD_SEQ}, #{LOGIN_USER_ID}
         )
         ON DUPLICATE KEY UPDATE
             MATERIAL_KIND = #{MATERIAL_KIND},
@@ -820,6 +821,7 @@
             UNIT_AMT = #{UNIT_AMT},
             UNIT_MIN_AMT = #{UNIT_MIN_AMT},
             NOTE = #{NOTE},
+            ADD_SEQ = #{ADD_SEQ},
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
@@ -900,40 +902,32 @@
         WHERE CALC_SEQ = #{CALC_SEQ}
     </delete>
 
-    <select id="selectMaterialCloseList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="selectMaterialAddLogicList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT ROW_NUMBER () OVER() AS ROW_NUM
-            , CALC_SEQ
-            , FINISH_TYPE_1
-            , FINISH_TYPE_2
-            , MATERIAL_TYPE
+            , ADD_SEQ
+            , ADD_NM
             , AMT_FACTOR_1
             , AMT_FACTOR_2
             , UNIT_MIN_AMT
             , CALC_NOTE
             , DEL_YN
             , NOTE
-        FROM TBL_CALC_MATERIAL_FINISH
-        WHERE FINISH_TYPE_1 = 'MFN010'
-        <if test="FINISH_TYPE_1 !='' and FINISH_TYPE_1 != null">
-            AND FINISH_TYPE_1 = #{FINISH_TYPE_1}
-        </if>
-        ORDER BY FINISH_TYPE_1, FINISH_TYPE_2, MATERIAL_TYPE
+        FROM TBL_CALC_MATERIAL_ADD_LOGIC
+        ORDER BY ADD_SEQ
     </select>
 
-    <insert id="insertMaterialClose" parameterType="java.util.HashMap">
-        INSERT INTO TBL_CALC_MATERIAL_FINISH (
-            CALC_SEQ, FINISH_TYPE_1, FINISH_TYPE_2,
-            MATERIAL_TYPE, AMT_FACTOR_1, AMT_FACTOR_2,
-            UNIT_MIN_AMT, CALC_NOTE, DEL_YN, NOTE, INSERT_DT, INSERT_ID
-        ) VALUES(
-            IFNULL(#{CALC_SEQ}, NEXTVAL(SEQ_DUMMY)), #{FINISH_TYPE_1}, #{FINISH_TYPE_2},
-            #{MATERIAL_TYPE}, #{AMT_FACTOR_1}, #{AMT_FACTOR_2},
-            #{UNIT_MIN_AMT}, #{CALC_NOTE}, 'N', #{NOTE}, NOW(), #{LOGIN_USER_ID}
+    <insert id="insertMaterialAddLogic" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CALC_MATERIAL_ADD_LOGIC (
+            ADD_SEQ, ADD_NM, AMT_FACTOR_1,
+            AMT_FACTOR_2, UNIT_MIN_AMT, CALC_NOTE,
+            DEL_YN, NOTE, INSERT_ID
+        ) VALUES (
+            IFNULL(#{ADD_SEQ}, NEXTVAL(SEQ_DUMMY)), #{ADD_NM}, #{AMT_FACTOR_1},
+            #{AMT_FACTOR_2}, #{UNIT_MIN_AMT}, #{CALC_NOTE},
+            IFNULL(#{DEL_YN}, 'N'), #{NOTE}, #{LOGIN_USER_ID}
         )
         ON DUPLICATE KEY UPDATE
-            FINISH_TYPE_1 = #{FINISH_TYPE_1},
-            FINISH_TYPE_2 = #{FINISH_TYPE_2},
-            MATERIAL_TYPE = #{MATERIAL_TYPE},
+            ADD_NM = #{ADD_NM},
             AMT_FACTOR_1 = #{AMT_FACTOR_1},
             AMT_FACTOR_2 = #{AMT_FACTOR_2},
             UNIT_MIN_AMT = #{UNIT_MIN_AMT},
@@ -944,9 +938,9 @@
             UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
 
-    <delete id="deleteMaterialClose"  parameterType="java.util.HashMap">
-        DELETE FROM TBL_CALC_MATERIAL_FINISH
-        WHERE CALC_SEQ = #{CALC_SEQ}
+    <delete id="deleteMaterialAddLogic"  parameterType="java.util.HashMap">
+        DELETE FROM TBL_CALC_MATERIAL_ADD_LOGIC
+        WHERE ADD_SEQ = #{ADD_SEQ}
     </delete>
 
     <select id="selectPostProcessingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
