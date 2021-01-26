@@ -1263,37 +1263,6 @@
                 }
             },
             {
-                title: '소재마감', align: 'center',
-                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                colModel: [
-                    {
-                        title: 'TM각비', width: 70, dataIndx: 'MATERIAL_FINISH_TM', hidden: true,
-                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                        editable: function (ui) {
-                            let rowData = ui.rowData;
-
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
-                        },
-                        editor: {
-                            type: 'select',
-                            valueIndx: 'value',
-                            labelIndx: 'text',
-                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')
-                        },
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
-                    },
-                ]
-            },
-            {
                 title: '후가공', align: 'center', hidden: true,
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 colModel: [
@@ -1549,7 +1518,7 @@
                         }
                     }
                 ]
-            },UNIT_MATERIAL_FINISH_TM_AMT
+            },
             {title: '재질', dataIndx: 'MATERIAL_TYPE', hidden: true},
             {
                 title: 'DXF', minWidth: 35, dataIndx: 'DXF_GFILE_SEQ',
@@ -1829,23 +1798,6 @@
                                 row: {'SURFACE_TREAT': surfaceTreatList[index].value}
                             });
                         }
-                        // TM각비
-                        if (newRowData.hasOwnProperty('MATERIAL_FINISH_TM')) {
-                            let materialFinishTmList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
-                            let index = materialFinishTmList.findIndex(function (element) {
-                                return element.text === newRowData.MATERIAL_FINISH_TM;
-                            });
-
-                            if (index < 0) {
-                                index = materialFinishTmList.findIndex(function (element) {
-                                    return element.value === newRowData.MATERIAL_FINISH_TM;
-                                });
-                            }
-                            $orderManagementGrid.pqGrid('updateRow', {
-                                rowIndx: rowIndx,
-                                row: {'MATERIAL_FINISH_TM': materialFinishTmList[index].value}
-                            });
-                        }
                         // 연마
                         if (newRowData.hasOwnProperty('MATERIAL_FINISH_GRIND')) {
                             let materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
@@ -1889,7 +1841,6 @@
                     let newRow = ui.updateList[0].newRow;
                     let row;
 
-                    // 항목별 계산견적 단가
                     const estimateArray = ['ORDER_QTY', 'UNIT_FINAL_AMT'];
                     let estimateFlag = false;
                     for (let value of estimateArray) {
@@ -1968,7 +1919,7 @@
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'PART_UNIT_QTY',
                 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'SIZE_TXT', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN',
                 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
-                'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
+                'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
                 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMT', 'UNIT_FINAL_AMT', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM',
                 'LABEL_NOTE', 'PREV_DRAWING_NUM', 'TOTAL_SHEET', 'SAME_SIDE_YN', 'DETAIL_MACHINE_REQUIREMENT'
@@ -1994,7 +1945,7 @@
                 'WORK_TYPE', 'OUTSIDE_YN', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL', 'MATERIAL_KIND',
                 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY',
                 'OTHER_SIDE_QTY', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY',
-                'ORDER_OUT_FINISH_DT', 'CLOSE_DT', 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM',
+                'ORDER_OUT_FINISH_DT', 'CLOSE_DT', 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT',
                 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT', 'UNIT_MATERIAL_AUTO_AMT',
                 'UNIT_MATERIA_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT',
                 'UNIT_PROCESS_AUTO_AMT', 'UNIT_SUM_AUTO_AMT', 'UNIT_SURFACE_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
@@ -2012,7 +1963,7 @@
                 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT',
                 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
-                'CLOSE_DT', 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND',
+                'CLOSE_DT', 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_GRIND',
                 'MATERIAL_FINISH_HEAT', 'MATERIAL_BUTTON', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
                 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'UNIT_FINAL_EST_AMT', 'UNIT_MATERIAL_AUTO_AMT',
                 'UNIT_MATERIA_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT',
@@ -2243,7 +2194,7 @@
                 'WORK_TYPE', 'CONTROL_PART_QTY', 'DNJSCLD', 'EOCLD', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT',
                 'SIZE_TXT', 'SIZE_TYPE', 'SIZE_W', 'SIZE_H', 'SIZE_T', 'SIZE_D', 'SIZE_L', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
                 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
-                'PART_UNIT_QTY', 'MATERIAL_BUTTON', 'MATERIAL_FINISH_TM', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
+                'PART_UNIT_QTY', 'MATERIAL_BUTTON', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_SURFACE_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'DETAIL_MACHINE_REQUIREMENT',
                 'UNIT_AMT_NOTE',
@@ -2401,7 +2352,6 @@
             const materialKindList = fnGetCommCodeGridSelectBox('1029');
             const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
             const materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
-            const materialFinishTmList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
             const materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
             const BUSINESS_COMPANY = fnCommCodeDatasourceGridSelectBoxCreate({
                 'url': '/json-list',
@@ -2494,14 +2444,6 @@
                 });
 
                 if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_HEAT');
-            }
-            // TM각비
-            if (rowData.MATERIAL_FINISH_TM !== undefined && rowData.MATERIAL_FINISH_TM !== null && rowData.MATERIAL_FINISH_TM !== '') {
-                let index = materialFinishTmList.findIndex(function (element) {
-                    return element.value === rowData.MATERIAL_FINISH_TM;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_TM');
             }
             // 연마
             if (rowData.MATERIAL_FINISH_GRIND !== undefined && rowData.MATERIAL_FINISH_GRIND !== null && rowData.MATERIAL_FINISH_GRIND !== '') {
