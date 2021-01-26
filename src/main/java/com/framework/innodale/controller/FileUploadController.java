@@ -32,24 +32,6 @@ public class FileUploadController {
     }
 
     /**
-     *
-     * @param model
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/uploadControlCadFilesTesting")
-    public String uploadControlCadFilesTesting(Model model, MultipartHttpServletRequest request) throws Exception {
-
-        model.addAttribute("result", "false");
-        model.addAttribute("message", "처리 할수 없는 파일 형식 입니다.");
-
-        fileUploadService.uploadControlCadFilesTesting(request, model);
-
-        return "jsonView";
-    }
-
-    /**
      * 견적 파일 업로드만 처리 하고 등록된 내용중에 리스트를 조회한다.
      * @param model
      * @param request

@@ -261,8 +261,9 @@
                     <div><p class="stop-txt"><span class="red-txt">일시정지</span> 되었습니다</p></div>
                     <div>
                         <p class="stop-time"><srping:message key="drawing.board.label.14"/> :
-                            <span id="stopMinutes">0<srping:message key="drawing.board.label.01"/></span>
-                            <span id="stopSeconds">0<srping:message key="drawing.board.label.02"/></span>
+                            <span id="stopHour">0<srping:message key="drawing.board.label.20"/></span>
+                            <span id="stopMinutes">0<srping:message key="drawing.board.label.02"/></span>
+                            <span id="stopSeconds">0<srping:message key="drawing.board.label.01"/></span>
                         </p>
                     </div>
                     <div style="text-align: center;">
@@ -933,6 +934,7 @@
                     }
                     $("#stopSeconds").html(seconds + '&nbsp;<srping:message key='drawing.board.label.01'/>');
                     $("#stopMinutes").html(minutes + '&nbsp;<srping:message key='drawing.board.label.02'/>');
+                    $("#stopHour").html(hours + '&nbsp;<srping:message key='drawing.board.label.20'/>');
                 }, 1000);
                 $("#drawing_worker_stop_popup").bind('style', function(e) {
                     let style =  $(this).attr('style');

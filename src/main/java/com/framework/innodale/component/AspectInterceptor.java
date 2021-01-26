@@ -115,8 +115,6 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
      */
     private boolean isPassUrlList(String url) throws Exception{
 
-        // System.out.println("url=[" + url + "]");
-
         List<String> passList = new ArrayList<String>();
 
         // index.do => home.do
@@ -130,35 +128,19 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         /** pop path **/
         passList.add("/pop");
         passList.add("/scanningBarcodePop");
-//        passList.add("/tv/pop");
-//        passList.add("/tv/pop/data");
-//        passList.add("/tv/pop/alarm");
-//        passList.add("/tv/mct");
-//        passList.add("/tv/mct/data");
 
         /** websocket **/
-//        passList.add("/tv/test");
         passList.add("/jmes-socket");
         passList.add("/topic");
         passList.add("/app");
 
-
-
         /** drawing path **/
         passList.add("/drawing-change-user-locale");
-//        passList.add("/drawing-worker");
-//        passList.add("/drawing-board");
-//        passList.add("/drawing-board-save");
 
         /** upload **/
         passList.add("/uploadNormalFile");
         passList.add("/imageViewer");
         passList.add("/drawingPrint");
-
-        /** test path  **/
-//        passList.add("/static/test/cadfile_test");
-        passList.add("/paramQueryGridSelect");
-        passList.add("/uploadControlCadFilesTesting");
 
         String patterns[] = {"/image", "/qimage", "/barcode", "/static", "/downloadGfile", "/downloadfile", "/drawing", "/pop", "/tv"};
 

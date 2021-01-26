@@ -9,10 +9,6 @@ public interface FileUploadService {
 
     public void uploadDxfAndPdfCadFiles(MultipartHttpServletRequest request, Model model) throws Exception;
 
-    public void uploadDxfCadFiles(MultipartHttpServletRequest request, Model model) throws Exception;
-
-    public void uploadControlCadFilesTesting(MultipartHttpServletRequest request, Model model) throws Exception;
-
     public void uploadDxfAndPdfCadFilesControlOrder(MultipartHttpServletRequest request, Model model) throws Exception;
 
 }

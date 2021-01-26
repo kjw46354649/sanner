@@ -51,6 +51,9 @@ public class PopServiceImpl implements PopService {
      *         // PRO016	출하완료
      *         // PRO017	반품
      *         // PRO018	조립전환        -- 조립 & part 에서 조립이 POP 에 스캔 된 경우 Part 상태를 조림전환으로 분리함
+     *         // PRO020    폐기
+     *         // PRO019    소재입고(보)
+     *         // PRO021    소재입고(사급)
      *
      *          // POP010  소형MCT1
      *          // POP020  소형MCT2

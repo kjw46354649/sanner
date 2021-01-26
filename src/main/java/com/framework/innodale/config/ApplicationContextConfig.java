@@ -56,7 +56,6 @@ public class ApplicationContextConfig {
 
     /**
      * {@link javax.sql.DataSource}를 빈으로 등록한다.
-     * {@link spring.examples.EnvironmentInitializer}에 의해 등록된 JDBC 설정정보를 사용한다.
      * BoneCP는 오픈소스 JDBC Pool 라이브러리이다.
      * 같은 일을 하는 라이브러리로 Tomcat JDBC Pool(Apache DBCP), c3p0 등이 있다.
      */

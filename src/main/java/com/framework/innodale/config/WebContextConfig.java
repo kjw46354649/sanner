@@ -1,6 +1,7 @@
 package com.framework.innodale.config;
 
 import com.framework.innodale.component.AspectInterceptor;
+import com.tomes.config.JwtAuthInterceptor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -25,6 +26,8 @@ import org.springframework.web.servlet.view.tiles3.TilesView;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import static org.springframework.context.annotation.ComponentScan.*;
@@ -48,6 +51,10 @@ public class WebContextConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+
+        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
     @Override
@@ -65,7 +72,7 @@ public class WebContextConfig implements WebMvcConfigurer {
         XmlViewResolver resolver = new XmlViewResolver();
         Resource resource = new ClassPathResource("xmlConfig/viewResolver.xml");
         resolver.setLocation(resource);
-        resolver.setOrder(1);
+        resolver.setOrder(0);
         return resolver;
     }
 
@@ -74,7 +81,7 @@ public class WebContextConfig implements WebMvcConfigurer {
         TilesViewResolver resolver = new TilesViewResolver();
         resolver.setViewClass(TilesView.class);
         resolver.setViewNames("**.tiles");
-        resolver.setOrder(2);
+        resolver.setOrder(1);
         return resolver;
     }
 
@@ -92,7 +99,7 @@ public class WebContextConfig implements WebMvcConfigurer {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
         resolver.setPrefix("/WEB-INF/views/");
         resolver.setSuffix(".jsp");
-        resolver.setOrder(3);
+        resolver.setOrder(2);
         return resolver;
     }
 
@@ -113,7 +120,8 @@ public class WebContextConfig implements WebMvcConfigurer {
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasenames("classpath:/messages/message-common");
+        messageSource.setBasenames("classpath:/messages/message-common",
+                "classpath:/messages/exception");
 //        messageSource.setBasenames("/WEB-INF/messages");
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setCacheSeconds(5);
@@ -140,10 +148,35 @@ public class WebContextConfig implements WebMvcConfigurer {
         return new AspectInterceptor();
     }
 
+    @Bean
+    public JwtAuthInterceptor jwtAuthInterceptor() {
+        return new JwtAuthInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+
+        List<String> tomesList = new ArrayList<String>();
+
+        tomesList.add("/tomes/**");
+        tomesList.add("/swagger-ui.html/**");
+        tomesList.add("/api/**");
+        tomesList.add("/v2/**");
+        tomesList.add("/swagger/**");
+        tomesList.add("/webjars/**");
+        tomesList.add("/swagger-resources/**");
+
+        List<String> tomesAddPathList = new ArrayList<String>();
+        tomesAddPathList.add("/tomes/**");
+
+        List<String> tomesExcludePathList = new ArrayList<String>();
+        tomesExcludePathList.add("/tomes/login");
+
+        registry.addInterceptor(localeChangeInterceptor()).addPathPatterns("/**").excludePathPatterns(tomesList);
         // registry.addInterceptor(localeChangeInterceptor()).addPathPatterns("/**");
-        registry.addInterceptor(aspectInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(aspectInterceptor()).addPathPatterns("/**").excludePathPatterns(tomesList);
+
+        registry.addInterceptor(jwtAuthInterceptor()).addPathPatterns(tomesAddPathList).excludePathPatterns(tomesExcludePathList);
     }
 
 }

@@ -55,7 +55,7 @@
 			</div>
 			<div class="right">
 				<form id="goMct" name="goMct" method="post" action="/tv/pop">
-					<button type="submit" id="reserveSaveBtn" class="tvReservePopBtn blue">MCT 가공현황</button>
+					<button type="submit" id="reserveSaveBtn" class="tvReservePopBtn blue">전체 가공현황</button>
 				</form>
 			</div>
 		</div>

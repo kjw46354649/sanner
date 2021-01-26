@@ -1,27 +1,14 @@
 package com.framework.innodale.service.impl;
 
-import aj.org.objectweb.asm.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.innodale.component.BarcodePrintUtil;
-import com.framework.innodale.component.CadFileConverter;
-import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.dao.InnodaleDao;
 import com.framework.innodale.service.BarcodeService;
-import com.framework.innodale.service.FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
