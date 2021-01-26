@@ -19,7 +19,7 @@ public class SystemController {
     @Autowired
     private SystemService systemService;
 
-    @RequestMapping(value = "/getCommonCodeList")
+    @RequestMapping(value = "/getCommonCodeList", method = RequestMethod.POST)
     public String getCommonCodeList(Model model, HttpServletRequest request, HttpSession session) throws Exception {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
 

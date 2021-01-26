@@ -26,6 +26,12 @@ public class ExceptionAdvice {
     @Autowired
     private MessageSource messageSource;
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult exception(HttpServletRequest request, Exception e) {
+        return responseService.getFailResult(Integer.parseInt(getMessage("unKnown.code")), getMessage("unKnown.msg"));
+    }
+
     @ExceptionHandler(CompanyNotFoundException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult companyNotFoundException(HttpServletRequest request, CompanyNotFoundException e) {
