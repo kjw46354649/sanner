@@ -1370,7 +1370,8 @@
         });
 
         $("#btnItemOrderRegisterSave").on('click', function(){
-            let itemOrderRegisterInsertUpdateQueryList = ['material.insertUpdateItemOrderRegister'];
+            let itemOrderRegisterInsertUpdateQueryList = ['material.insertUpdateItemOrderRegister', 'material.updateMaterialOrderUnitMaterialAutoAmt', 'material.updateControlPartMaterial', 'orderMapper.updateControlAutomaticQuote'];
+
             fnModifyPQGrid(itemOrderRegisterLeftGrid, itemOrderRegisterInsertUpdateQueryList, itemOrderRegisterInsertUpdateQueryList);
         });
 

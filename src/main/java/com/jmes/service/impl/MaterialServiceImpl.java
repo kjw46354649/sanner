@@ -40,6 +40,8 @@ public class MaterialServiceImpl implements MaterialService {
                     hashMap.put("queryId", "material.updateItemOrderRegisterPopSave");
                     this.innodaleDao.update(hashMap);
                 }
+                hashMap.put("queryId", "material.updateMaterialOrderUnitMaterialAutoAmt");
+                this.innodaleDao.update(hashMap);
                 hashMap.put("queryId", "material.updateControlPartMaterial");
                 this.innodaleDao.update(hashMap);
                 hashMap.put("queryId", "orderMapper.updateControlAutomaticQuote");
