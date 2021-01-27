@@ -1,5 +1,6 @@
 package com.framework.innodale.controller;
 
+import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.service.InnodaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class StaticUrlController {
@@ -265,5 +267,24 @@ public class StaticUrlController {
     @RequestMapping(value = "/outsideDetail")
     public String outsideDetailController(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return "/common/outside_detail";
+    }
+
+    /**
+     * CAM 작업업 상세 List
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/camWorkDetail")
+    public ModelAndView camWorkDetailView(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("/common/cam_work_detail");
+        mav.addObject("controlSeq", map.get("controlSeq"));
+        mav.addObject("controlDetailSeq", map.get("controlDetailSeq"));
+
+        return mav;
     }
 }

@@ -1075,10 +1075,10 @@
             AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </select>
 
-    <select id="selectCommItemDetailGridCamPop" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="selectCamWorkDetail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.CONTROL_SEQ
 			, X.CONTROL_DETAIL_SEQ
-			, jmes.SF_GET_DATE_F(X.ORDER_CONFIRM_DT, '', '') AS ORDER_CONFIRM_DT
+			, jmes.SF_GET_DATE_F(X.ORDER_CONFIRM_DT, 'YYYY', '') AS ORDER_CONFIRM_DT
 			, CASE WHEN X.OUTSIDE_YN = 'Y' THEN X.OUTSIDE_YN END AS OUTSIDE_YN
 			, X.CONTROL_NUM
 			, X.IMG_GFILE_SEQ
@@ -1153,7 +1153,7 @@
                                                                          )
                     ) T LEFT OUTER JOIN jmes.TBL_CAM P ON T.CONTROL_SEQ = P.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ
             ) X LEFT OUTER JOIN jmes.TBL_CAM_DETAIL Q ON X.CAM_SEQ = Q.CAM_SEQ
-            ORDER BY CASE WHEN CONCAT(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ) = CONCAT(#{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}) THEN 0 ELSE 1 END, POINT_SUM DESC, ORDER_CONFIRM_DT DESC, Q.SEQ
+            ORDER BY CASE WHEN CONCAT(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ) = CONCAT(#{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}) THEN 0 ELSE 1 END, POINT_SUM DESC, X.CONTROL_NUM, X.ORDER_CONFIRM_DT DESC, Q.SEQ
     </select>
     <select id="selectOutgoingHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <!-- 3. 출하 이력관리 쿼리 -->
