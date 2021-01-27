@@ -797,7 +797,7 @@
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                            if (rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
                             }
 
@@ -810,13 +810,13 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP050';
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                            if (rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
                             }
 
@@ -829,13 +829,13 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP050';
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                            if (rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
                             }
 
@@ -848,13 +848,13 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP050';
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                            if (rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
                             }
 
@@ -887,7 +887,7 @@
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                            if (rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
                             }
 
@@ -900,7 +900,7 @@
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                            if (rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
                             }
 
@@ -1036,13 +1036,13 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                            return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002' && rowData.WORK_TYPE !== 'WTP050';
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                            if (rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
                             }
 
@@ -1055,13 +1055,13 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                            return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002' && rowData.WORK_TYPE !== 'WTP050';
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                            if (rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
                             }
 
@@ -1074,13 +1074,13 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                            return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002' && rowData.WORK_TYPE !== 'WTP050';
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                            if (rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
                             }
 
@@ -1093,13 +1093,13 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                            return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002' && rowData.WORK_TYPE !== 'WTP050';
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                            if (rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
                             }
 
@@ -1154,13 +1154,13 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+                            return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002' && rowData.WORK_TYPE !== 'WTP050';
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                            if (rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
                             }
 
@@ -1272,14 +1272,14 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020';
                         },
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                            if (rowData.WORK_TYPE === 'WTP020') {
                                 cls = 'bg-lightgray';
                             }
 
@@ -1292,14 +1292,14 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE !== 'WTP020';
                         },
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
                         render: function (ui) {
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
+                            if (rowData.WORK_TYPE === 'WTP020') {
                                 cls = 'bg-lightgray';
                             }
 
