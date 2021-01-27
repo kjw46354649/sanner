@@ -26,7 +26,7 @@
     <div class="buttonWrap" style="display: inline-block;">
         <form class="form-inline" id="CONTROL_MONTH_CLOSE_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId">
-            <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
+            <input type="hidden" name="ORDER_SEQ" id="ORDER_SEQ">
             <input type="hidden" name="COMP_CD" id="COMP_CD">
             <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
             <div class="leftbuttonWrap" style="width: 480px; text-align: right;">
@@ -73,17 +73,13 @@
     </div>
 </div>
 <script>
-    // console.log(opener.$orderManagementGrid);
     $(function () {
         'use strict';
-        // console.log(window);
-        // console.log(opener);
-        // console.log(opener.$orderManagementGrid);
-        // console.log(opener.selectedOrderManagementRowIndex);
-
+        const lastMonth = new Date((new Date()).setMonth(TODAY.getMonth() - 1));
         fnAppendSelectboxYear('CONTROL_MONTH_CLOSE_YEAR', 4);
         fnAppendSelectboxMonth('CONTROL_MONTH_CLOSE_MONTH');
-        $('#CONTROL_MONTH_CLOSE_MONTH').val(CURRENT_MONTH < 10 ? '0' + CURRENT_MONTH : CURRENT_MONTH).prop('selected', true);
+        $('#CONTROL_MONTH_CLOSE_YEAR').val(lastMonth.getFullYear()).prop('selected', true);
+        $('#CONTROL_MONTH_CLOSE_MONTH').val(String(lastMonth.getMonth() + 1).padStart(2, '0')).prop('selected', true);
 
         $('#CONTROL_MONTH_CLOSE_POPUP #CLOSE_VER');
 
@@ -97,7 +93,7 @@
             {title: '마감월', width: 70, dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataIndx: 'CLOSE_VER'},
             {title: '품수', dataType: 'integer', format: '#,###', dataIndx: 'CNT'},
-            {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_ORDER_QTY'},
+            {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'},
             {title: '공급가', width: 70, align: 'right', dataIndx: 'TOTAL_AMT'},
             {title: '마감금액', width: 70, align: 'right', dataIndx: 'FINAL_NEGO_AMT'}
         ];
@@ -130,7 +126,7 @@
             {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
             {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
             {title: '품수', dataIndx: 'CNT'},
-            {title: '수량', dataIndx: 'CONTROL_ORDER_QTY'},
+            {title: '수량', dataIndx: 'ORDER_QTY'},
             {title: '공급가', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
                 title: '마감금액', width: 70, align: 'right', dataType: 'integer', format: '#,###',
@@ -161,34 +157,37 @@
 
         const loadDataControlClose = function (open) {
             let selectedRowCount = opener.selectedOrderManagementRowIndex.length;
-            let controlSeqList = [];
-            let compCdList = [];
-            let orderCompCdList = [];
-            let controlSeqStr = '';
+            let orderSeqList = new Set ();
+            let compCdList = new Set();
+            let orderCompCdList = new Set();
+            let orderSeqStr = '';
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = opener.$orderManagementGrid.pqGrid('getRowData', {rowIndx: opener.selectedOrderManagementRowIndex[i]});
 
-                controlSeqList.push(rowData.CONTROL_SEQ);
-                compCdList.push(rowData.COMP_CD);
-                orderCompCdList.push(rowData.ORDER_COMP_CD);
-            }
-            // 중복제거
-            controlSeqList = [...new Set(controlSeqList)];
-            compCdList = [...new Set(compCdList)];
-            orderCompCdList = [...new Set(orderCompCdList)];
+                if (rowData.ORDER_SEQ) {
+                    orderSeqList.add(rowData.ORDER_SEQ);
+                }
 
-            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
-                controlSeqStr += controlSeqList[i];
+                if (rowData.COMP_CD) {
+                    compCdList.add(rowData.COMP_CD);
+                }
 
-                if (i < CONTROL_SEQ_LIST_LENGTH - 1) {
-                    controlSeqStr += ',';
+                if (rowData.ORDER_COMP_CD) {
+                    orderCompCdList.add(rowData.ORDER_COMP_CD);
+
                 }
             }
 
-            $('#CONTROL_MONTH_CLOSE_FORM > #CONTROL_SEQ').val(controlSeqStr);
-            $('#CONTROL_MONTH_CLOSE_FORM > #COMP_CD').val(compCdList[0]);
-            $('#CONTROL_MONTH_CLOSE_FORM > #ORDER_COMP_CD').val(orderCompCdList[0]);
+            for (let item of orderSeqList) {
+                orderSeqStr += item;
+                orderSeqStr += ',';
+            }
+            orderSeqStr = orderSeqStr.substring(0, orderSeqStr.length - 1);
+
+            $('#CONTROL_MONTH_CLOSE_FORM > #ORDER_SEQ').val(orderSeqStr);
+            $('#CONTROL_MONTH_CLOSE_FORM > #COMP_CD').val(compCdList.values().next().value);
+            $('#CONTROL_MONTH_CLOSE_FORM > #ORDER_COMP_CD').val(orderCompCdList.values().next().value);
 
             if (open) {
                 // 마지막 마감 차수 가져오기
@@ -230,19 +229,24 @@
 
             for (let i = 0, selectedRowCount = opener.selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = opener.$orderManagementGrid.pqGrid('getRowData', {rowIndx: opener.selectedOrderManagementRowIndex[i]});
-                let tempObject = {
-                    CONTROL_STATUS: rowData.CONTROL_STATUS,
-                    CONTROL_SEQ: rowData.CONTROL_SEQ,
-                    COMP_CD: rowData.COMP_CD,
-                    CLOSE_MONTH: CLOSE_MONTH,
-                    ORDER_COMP_CD: rowData.ORDER_COMP_CD,
-                    CLOSE_VER: CLOSE_VER,
-                    CLOSE_NOTE: rowData.CLOSE_NOTE,
-                    CLOSE_CONTROL_AMT: rowData.CLOSE_CONTROL_AMT,
-                    CLOSE_DETAIL_NOTE: rowData.CLOSE_DETAIL_NOTE,
-                    FINAL_NEGO_AMT: rowData.FINAL_NEGO_AMT
-                };
-                list.push(tempObject);
+
+                if (rowData.ORDER_SEQ) {
+                    let tempObject = {
+                        CONTROL_STATUS: rowData.CONTROL_STATUS,
+                        CONTROL_SEQ: rowData.CONTROL_SEQ,
+                        CONTROL_DETAIL_SEQ: rowData.CONTROL_DETAIL_SEQ,
+                        ORDER_SEQ: rowData.ORDER_SEQ,
+                        COMP_CD: rowData.COMP_CD,
+                        CLOSE_MONTH: CLOSE_MONTH,
+                        ORDER_COMP_CD: rowData.ORDER_COMP_CD,
+                        CLOSE_VER: CLOSE_VER,
+                        CLOSE_NOTE: rowData.CLOSE_NOTE,
+                        CLOSE_CONTROL_AMT: rowData.CLOSE_CONTROL_AMT,
+                        CLOSE_DETAIL_NOTE: rowData.CLOSE_DETAIL_NOTE,
+                        FINAL_NEGO_AMT: rowData.FINAL_NEGO_AMT
+                    };
+                    list.push(tempObject);
+                }
             }
 
             let rightData = $controlMonthCloseRightGrid.pqGrid('option', 'dataModel.data');

@@ -155,7 +155,7 @@ public class EstimateServiceImpl implements EstimateService {
                 this.innodaleDao.deleteGrid(hashMap);
                 String str = (String) hashMap.get("SIZE_NUM");
                 String[] arr;
-                if (str != null) {
+                if (!(str == null || str.equals(""))) {
                     arr = str.split(",");
 
                     for (String value : arr) {

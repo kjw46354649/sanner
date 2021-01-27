@@ -21,7 +21,7 @@
                                 <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
                                 <select class="wd_200" name="estimate_standard" id="estimate_standard">
                                     <option value="0">소재비</option>
-                                    <option value="1">소재마감</option>
+                                    <option value="1">소재비추가로직</option>
                                     <option value="2">후가공</option>
                                     <option value="3">표면처리비</option>
                                     <option value="4">가공비</option>
@@ -86,11 +86,11 @@
         </div>
     </div>
 
-    <!-- 소재마감 -->
+    <!-- 소재비추가로직 -->
     <div id="escm1" style="display: none;">
         <div class="topWrap">
-            <form id="material_close_form" role="form" onsubmit="return false;">
-                <input type="hidden" name="queryId" id="queryId" value="estimate.selectMaterialCloseList">
+            <form id="material_add_logic_form" role="form" onsubmit="return false;">
+                <input type="hidden" name="queryId" id="queryId" value="estimate.selectMaterialAddLogicList">
                 <div class="none_gubunWrap">
                     <ul>
                         <li>
@@ -98,23 +98,14 @@
                                 <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
                                 <select class="wd_200" name="estimate_standard" id="estimate_standard">
                                     <option value="0">소재비</option>
-                                    <option value="1">소재마감</option>
+                                    <option value="1">소재비추가로직</option>
                                     <option value="2">후가공</option>
                                     <option value="3">표면처리비</option>
                                     <option value="4">가공비</option>
                                 </select>
                             </span>
-                            <span class="slt_wrap">
-                                <label class="label_100" for="finish_type_1">반영항목</label>
-                                <select class="wd_200" name="FINISH_TYPE_1" id="finish_type_1" title="반영항목">
-                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                    <c:forEach var="code" items="${HighCode.H_1057}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                    </c:forEach>
-                                </select>
-                            </span>
                             <span class="ipu_wrap right_float">
-                                <button type="button" class="defaultBtn radius blue" id="material_close_search">검색</button>
+                                <button type="button" class="defaultBtn radius blue" id="material_add_logic_search">검색</button>
                             </span>
                         </li>
                     </ul>
@@ -127,17 +118,17 @@
                     <div class="buttonWrap">
                         <div class="d-flex align-items-center">
                             <div>
-                                <button class="defaultBtn btn-100w" id="material_close_add">Add</button>
-                                <button class="defaultBtn btn-100w red" id="material_close_delete">Delete</button>
+                                <button class="defaultBtn btn-100w" id="material_add_logic_add">Add</button>
+                                <button class="defaultBtn btn-100w red" id="material_add_logic_delete">Delete</button>
                             </div>
                             <div class="ml-auto">
-                                <button class="defaultBtn btn-100w green" id="material_close_save">Save</button>
+                                <button class="defaultBtn btn-100w green" id="material_add_logic_save">Save</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="conWrap">
-                    <div id="material_close_grid"></div>
+                    <div id="material_add_logic_grid"></div>
                 </div>
             </div>
         </div>
@@ -155,7 +146,7 @@
                                 <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
                                 <select class="wd_200" name="estimate_standard" id="estimate_standard">
                                     <option value="0">소재비</option>
-                                    <option value="1">소재마감</option>
+                                    <option value="1">소재비추가로직</option>
                                     <option value="2">후가공</option>
                                     <option value="3">표면처리비</option>
                                     <option value="4">가공비</option>
@@ -212,7 +203,7 @@
                                 <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
                                 <select class="wd_200" name="estimate_standard" id="estimate_standard">
                                     <option value="0">소재비</option>
-                                    <option value="1">소재마감</option>
+                                    <option value="1">소재비추가로직</option>
                                     <option value="2">후가공</option>
                                     <option value="3">표면처리비</option>
                                     <option value="4">가공비</option>
@@ -279,7 +270,7 @@
                                 <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
                                 <select class="wd_200" name="estimate_standard" id="estimate_standard">
                                     <option value="0">소재비</option>
-                                    <option value="1">소재마감</option>
+                                    <option value="1">소재비추가로직</option>
                                     <option value="2">후가공</option>
                                     <option value="3">표면처리비</option>
                                     <option value="4">가공비</option>
@@ -386,6 +377,23 @@
     $(function () {
         'use strict';
         /* init */
+        let ADD_LOGIC_LIST = (function () {
+            let list = [];
+            let parameters = {
+                'url': '/json-list',
+                'data': {'queryId': 'estimate.selectMaterialAddLogicList'}
+            };
+
+            fnPostAjaxAsync(function (data) {
+                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                    let obj = data.list[i];
+
+                    list.push({value: obj.ADD_SEQ, text: obj.ADD_NM});
+                }
+            }, parameters, '');
+
+            return list;
+        })();
         /* init */
 
         /* function */
@@ -400,10 +408,27 @@
                 case 0:
                     $('#escm0').show();
                     $materialCostGrid.pqGrid('refreshDataAndView');
+                    ADD_LOGIC_LIST = (function () {
+                        let list = [];
+                        let parameters = {
+                            'url': '/json-list',
+                            'data': {'queryId': 'estimate.selectMaterialAddLogicList'}
+                        };
+
+                        fnPostAjaxAsync(function (data) {
+                            for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
+                                let obj = data.list[i];
+
+                                list.push({value: obj.ADD_SEQ, text: obj.ADD_NM});
+                            }
+                        }, parameters, '');
+
+                        return list;
+                    })();
                     break;
                 case 1: // 소재 마감
                     $('#escm1').show();
-                    $materialCloseGrid.pqGrid('refreshDataAndView');
+                    $materialAddLogicGrid.pqGrid('refreshDataAndView');
                     break;
                 case 2: // 후가공
                     $('#escm2').show();
@@ -424,6 +449,7 @@
 
 
         /* init */
+
         const materialCostGridId = 'material_cost_grid';
         const materialCostColModel = [
             {title: 'GROUP_KEY', dataIndx: 'GROUP_KEY', hidden: true, editable: false},
@@ -561,8 +587,34 @@
             },
             {
                 title: '규격<br>소재<br>여부', dataIndx: 'RANGE_SIZE_YN', maxWidth: 50,
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')}},
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')}
+            },
             {title: '규격 Size', align: 'left', dataIndx: 'SIZE_NUM'},
+            {
+                title: '추가로직', dataType: 'integer', dataIndx: 'ADD_SEQ',
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ADD_LOGIC_LIST},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (fnIsEmpty(cellData)) {
+                        return '';
+                    } else {
+                        let data = ADD_LOGIC_LIST;
+
+                        let index = data.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = data.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : data[index].text;
+                    }
+                }
+            },
             {title: '비고',/* align: 'left',*/ dataIndx: 'NOTE'}
         ];
         const materialCostObj = {
@@ -604,7 +656,7 @@
         const autoMerge = function (grid, refresh) {
             const includeList = [
                 'MATERIAL_KIND', 'MATERIAL_TYPE', 'MATERIAL_DETAIL', 'SPECIFIC_GRAVITY',
-                'CALC_METHOD', 'UNIT_AMT', 'UNIT_MIN_AMT', 'NOTE'
+                'CALC_METHOD', 'UNIT_AMT', 'UNIT_MIN_AMT', 'NOTE', 'ADD_SEQ'
             ];
 
             let mergeCellList = [],
@@ -702,89 +754,11 @@
         
         
         /* init */
-        const materialCloseReflectedItems = fnGetCommCodeGridSelectBox('1057').filter(function (element, index) {
-           return element.value === 'MFN010';
-        });
-        const materialCloseGridId = 'material_close_grid';
-        const materialCloseColModel = [
+        const materialAddLogicGridId = 'material_add_logic_grid';
+        const materialAddLogicColModel = [
             {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true, editable: false},
-            {title: 'SEQ', dataIndx: 'CALC_SEQ', maxWidth: 55, hidden: false, editable: false},
-            {
-                title: '반영항목', dataIndx: 'FINISH_TYPE_1',
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: materialCloseReflectedItems},
-                render: function (ui) {
-                    let cellData = ui.cellData;
-                    if (cellData === '' || cellData === undefined) {
-                        return '';
-                    } else {
-                        let data = materialCloseReflectedItems;
-                        let index = data.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = data.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : data[index].text;
-                    }
-                }
-            },
-            {
-                title: '소재마감<br>항목', dataIndx: 'FINISH_TYPE_2',
-                editor: {
-                    type: 'select', valueIndx: 'value', labelIndx: 'text',
-                    options: function (ui) {
-                        let rowData = ui.rowData;
-
-                        return fnGetCommCodeGridSelectBoxEtc('1058', rowData.FINISH_TYPE_1);
-                    }
-                },
-                render: function (ui) {
-                    let cellData = ui.cellData;
-                    if (cellData === '' || cellData === undefined) {
-                        return '';
-                    } else {
-                        let data = fnGetCommCodeGridSelectBox('1058');
-                        let index = data.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = data.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : data[index].text;
-                    }
-                }
-            },
-            {
-                title: '재질', dataIndx: 'MATERIAL_TYPE',
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1035')},
-                render: function (ui) {
-                    let cellData = ui.cellData;
-                    if (cellData === '' || cellData === undefined) {
-                        return '';
-                    } else {
-                        let data = fnGetCommCodeGridSelectBox('1035');
-                        let index = data.findIndex(function (element) {
-                            return element.text === cellData;
-                        });
-
-                        if (index < 0) {
-                            index = data.findIndex(function (element) {
-                                return element.value === cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : data[index].text;
-                    }
-                }
-            },
+            {title: 'SEQ', dataIndx: 'ADD_SEQ', maxWidth: 55, hidden: false, editable: false},
+            {title: '반영항목', dataIndx: 'ADD_NM'},
             {
                 title: '단가단위A<br>(cm기준)', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'AMT_FACTOR_1',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
@@ -811,7 +785,7 @@
             },
             {title: '비고', dataIndx: 'NOTE'}
         ];
-        const materialCloseObj = {
+        const materialAddLogicObj = {
             height: 760,
             collapsible: false,
             resizable: false,
@@ -826,53 +800,53 @@
                 align: 'center', halign: 'center', hvalign: 'center', valign: 'center',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#000000'}
             },
-            colModel: materialCloseColModel,
+            colModel: materialAddLogicColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'estimate.selectMaterialCloseList'},
+                postData: {'queryId': 'estimate.selectMaterialAddLogicList'},
                 recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
             },
             rowSelect: function (event, ui) {
-                materialCloseSelectedRowIndex[0] = ui.addList[0].rowIndx;
+                materialAddLogicSelectedRowIndex[0] = ui.addList[0].rowIndx;
             }
         };
-        const $materialCloseGrid = $('#' + materialCloseGridId).pqGrid(materialCloseObj);
-        let materialCloseSelectedRowIndex = [];
+        const $materialAddLogicGrid = $('#' + materialAddLogicGridId).pqGrid(materialAddLogicObj);
+        let materialAddLogicSelectedRowIndex = [];
         /* init */
 
         /* function */
         /* function */
 
         /* event */
-        $('#material_close_search').on('click', function () {
-            $materialCloseGrid.pqGrid('option', 'dataModel.postData', function () {
-                return fnFormToJsonArrayData('#material_close_form');
+        $('#material_add_logic_search').on('click', function () {
+            $materialAddLogicGrid.pqGrid('option', 'dataModel.postData', function () {
+                return fnFormToJsonArrayData('#material_add_logic_form');
             });
-            $materialCloseGrid.pqGrid('refreshDataAndView');
+            $materialAddLogicGrid.pqGrid('refreshDataAndView');
         });
 
-        $("#material_close_add").on('click', function () {
-            const totalRecords = $materialCloseGrid.pqGrid('option', 'dataModel.data').length;
+        $("#material_add_logic_add").on('click', function () {
+            const totalRecords = $materialAddLogicGrid.pqGrid('option', 'dataModel.data').length;
 
-            $materialCloseGrid.pqGrid('addNodes', [{}], totalRecords + 1);
+            $materialAddLogicGrid.pqGrid('addNodes', [{}], totalRecords + 1);
         });
 
-        $("#material_close_delete").on('click', function () {
+        $("#material_add_logic_delete").on('click', function () {
             fnConfirm(null, '<spring:message code="com.alert.default.removeText"/>', function () {
-                const deleteQuery = 'estimate.deleteMaterialClose'
+                const deleteQuery = 'estimate.deleteMaterialAddLogic'
 
-                fnDeletePQGrid($materialCloseGrid, materialCloseSelectedRowIndex, deleteQuery);
+                fnDeletePQGrid($materialAddLogicGrid, materialAddLogicSelectedRowIndex, deleteQuery);
             });
         });
 
-        $('#material_close_save').on('click', function () {
-            const insertQueryList = ['estimate.insertMaterialClose'];
+        $('#material_add_logic_save').on('click', function () {
+            const insertQueryList = ['estimate.insertMaterialAddLogic'];
             const updateQueryList = insertQueryList;
 
-            fnModifyPQGrid($materialCloseGrid, insertQueryList, updateQueryList);
+            fnModifyPQGrid($materialAddLogicGrid, insertQueryList, updateQueryList);
         })
         /* event */
         

@@ -1077,10 +1077,12 @@
                 if (ui.rowData['INSPECT_SEQ'] !== undefined && ui.rowData['INSPECT_SEQ'] > 0) {
                     if (ui.dataIndx === 'MANUAL_ACTION') {
                         let data = {
-                            'queryId': 'inspection.updateOutgoingReturnComplete',
+                            'queryId': 'inspection.updateOutgoingReturnComplete,inspection.updateShippingPartStatus,inspection.insertShippingPartProgress',
+                            'CONTROL_SEQ': ui.rowData['CONTROL_SEQ'],
+                            'CONTROL_DETAIL_SEQ': ui.rowData['CONTROL_DETAIL_SEQ'],
                             'INSPECT_SEQ': ui.rowData['INSPECT_SEQ']
                         };
-                        let parameters = {'url': '/json-create', 'data': data};
+                        let parameters = {'url': '/json-manager', 'data': data};
                         fnPostAjax(function () {
                             fnAlert(null, "<spring:message code='com.alert.default.save.success' />");
                             $('#outgoing_manage_return_complete_pop').modal('hide');
@@ -1102,9 +1104,9 @@
             $('#outgoing_manage_return_form').find("#INSPECT_DESC").attr("readonly", false);
 
 
-            $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn");
+            $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn,inspection.updateReturnPartStatus,inspection.insertReturnPartProgress");
 
-            let parameters = {'url': '/json-create', 'data': $("#outgoing_manage_return_form").serialize()};
+            let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_return_form").serialize()};
             fnPostAjax(function () {
                 fnAlert(null, "등록이 완료되었습니다.");
                 $('#outgoing_manage_return_pop').modal('hide');
@@ -1395,10 +1397,10 @@
 
                 switch (target) {
                     case 'disposal':
-                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.updateOutgoingDisposal,inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2");
+                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.updateOutgoingDisposal,inspection.updateScrapPartStatus,inspection.insertScrapPartProgress");
                         break;
                     default:
-                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2");
+                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2,inspection.updateShippingPartStatus,inspection.insertShippingPartProgress");
                 }
 
                 let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_pop_type_1_form").serialize()};
@@ -1467,7 +1469,7 @@
                     };
                     changes.queryIdList = {
                         'insertQueryId': ['inspection.insertOutgoingOutType2'],
-                        'updateQueryId': ['inspection.updateOutgoingOutType1After1', 'inspection.updateOutgoingOutType1After2', 'updateOutgoingOutType1After3']
+                        'updateQueryId': ['inspection.updateOutgoingOutType1After1', 'inspection.updateOutgoingOutType1After2', 'inspection.updateOutgoingOutType1After3', 'inspection.updateShippingPartStatus', 'inspection.insertShippingPartProgress']
                     };
                     let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
