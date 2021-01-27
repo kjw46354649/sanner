@@ -115,7 +115,7 @@ public class DrawingBoardController {
         return "jsonView";
     }
 
-    @RequestMapping(value="/drawing/{equipNm}")
+    @RequestMapping(value="/drawing/{equipNm}",  method= RequestMethod.POST)
     public String drawingTargetEquip(@PathVariable("equipNm") String equipNm, HttpServletRequest request, HttpSession session) throws Exception {
         logger.info("pop page submit");
 
@@ -163,7 +163,7 @@ public class DrawingBoardController {
         }
     }
 
-    @RequestMapping(value="/drawing")
+    @RequestMapping(value="/drawing",  method= RequestMethod.POST)
     public String drawingLogin(Model model, HttpSession session, HttpServletRequest request) throws Exception {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
@@ -203,7 +203,7 @@ public class DrawingBoardController {
         return "board/login";
     }
 
-    @RequestMapping(value="/drawing-worker")
+    @RequestMapping(value="/drawing-worker",  method= RequestMethod.POST)
     public String drawingWorker(Model model, HttpSession session, HttpServletRequest request) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
@@ -255,7 +255,7 @@ public class DrawingBoardController {
         return "board/drawing-worker";
     }
 
-    @RequestMapping(value="/drawing-board")
+    @RequestMapping(value="/drawing-board",  method= RequestMethod.POST)
     public String drawingBoard(Model model, HttpSession session, HttpServletRequest request) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
@@ -326,7 +326,7 @@ public class DrawingBoardController {
     }
 
     /** 신규 작업을 시작한 경우 **/
-    @RequestMapping(value="/drawing-board-start")
+    @RequestMapping(value="/drawing-board-start",  method= RequestMethod.POST)
     public String drawingBoardStart(HttpSession session, HttpServletRequest request) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
@@ -350,7 +350,7 @@ public class DrawingBoardController {
     }
 
     /** 신규 작업을 임시 정지 한 경우 **/
-    @RequestMapping(value="/drawing-board-pause")
+    @RequestMapping(value="/drawing-board-pause",  method= RequestMethod.POST)
     public String managerDrawingBoardPause(HttpSession session, HttpServletRequest request) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
@@ -375,7 +375,7 @@ public class DrawingBoardController {
     }
 
     /** 신규 작업을 임시 정지 후 재 실행 한 경우 **/
-    @RequestMapping(value="/drawing-board-restart")
+    @RequestMapping(value="/drawing-board-restart",  method= RequestMethod.POST)
     public String managerDrawingBoardRestart(HttpSession session, HttpServletRequest request) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
@@ -400,7 +400,7 @@ public class DrawingBoardController {
     }
 
     /** 작업을 완료한 경우 **/
-    @RequestMapping(value="/drawing-board-complete")
+    @RequestMapping(value="/drawing-board-complete",  method= RequestMethod.POST)
     public String managerDrawingBoardComplete(HttpSession session, HttpServletRequest request) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
@@ -425,7 +425,7 @@ public class DrawingBoardController {
     }
 
     /** 작업 취소 경우 **/
-    @RequestMapping(value="/drawing-board-cancel")
+    @RequestMapping(value="/drawing-board-cancel",  method= RequestMethod.POST)
     public String managerDrawingBoardCancel(HttpSession session, HttpServletRequest request) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);

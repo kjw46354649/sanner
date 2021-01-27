@@ -181,7 +181,6 @@
 
         $(function () {
             'use strict';
-
             onScan.attachTo(document.getElementById("popBarcode"), {
                 onScan: function(barcode, iQty) {
                     // $(this).startWaitMe();
@@ -278,12 +277,12 @@
             //     }
             // });
 
-            // $("#popBarcode").on('keyup', function(e) {
-            //     if (e.keyCode === 13) {
-            //         let barcodeNum = fnBarcodeKo2En(this.value);
-            //         sendDrawingNum(barcodeNum);
-            //     }
-            // });
+            $("#popBarcode").on('keyup', function(e) {
+                if (e.keyCode === 13) {
+                    let barcodeNum = fnBarcodeKo2En(this.value);
+                    sendDrawingNum(barcodeNum);
+                }
+            });
 
             $("#popBarcode").on('focus', function(){
                 $(this).attr('placeholder', '');

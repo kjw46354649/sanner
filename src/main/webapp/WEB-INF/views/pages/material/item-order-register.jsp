@@ -379,7 +379,7 @@
             {title: '규격_세로', dataIndx: 'SIZE_H', minWidth: 90, width: 90, editable: false, hidden: true },
             {title: '규격_두께', dataIndx: 'SIZE_T', minWidth: 90, width: 90, editable: false, hidden: true },
             {title: '발주량', dataIndx: 'ORDER_QTY', minWidth: 50, width: 50, editable: false},
-            {title: '소재<br>주문상태', dataIndx: 'M_STATUS_NM', width: 60, editable: false},
+            {title: '소재<br>주문상태', dataIndx: 'M_STATUS_NM', width: 70, editable: false},
             {title: '소재 주문번호', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false,
                 render: function (ui) {
                     let cls = null;
