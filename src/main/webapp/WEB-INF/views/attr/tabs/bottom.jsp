@@ -297,39 +297,6 @@
     </div>
 </div>
 <!-- 주문상세정보 layer popup : E -->
-<!-- CAM 상세정보 layer popup : S -->
-<div class="popup_container g_item_detail_pop_cam_pop" id="g_item_detail_pop_cam_pop" style="display: none;">
-    <form class="form-inline" id="g_item_detail_pop_cam_pop_form" name="g_item_detail_pop_cam_pop_form" role="form">
-        <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailGridCamPop"/>
-        <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
-        <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
-
-        <input type="hidden" id="ORDER_COMP_CD" name="ORDER_COMP_CD" value=""/>
-        <input type="hidden" id="SIZE_TXT" name="SIZE_TXT" value=""/>
-        <input type="hidden" id="DRAWING_NUM" name="DRAWING_NUM" value=""/>
-        <input type="hidden" id="MATERIAL_TYPE" name="MATERIAL_TYPE" value=""/>
-        <input type="hidden" id="CAD_FILE_SIZE" name="CAD_FILE_SIZE" value=""/>
-
-        <div class="layerPopup">
-            <h3>CAM 작업 상세 조회</h3>
-            <button type="button" class="pop_close mt-10 mr-8" id="g_item_detail_pop_cam_pop_grid_pop_close2">닫기</button>
-            <div class="qualityWrap">
-                <div class="h_area">
-
-                 </div>
-                <h4>&nbsp;</h4>
-                <div class="list4">
-                    <div id="g_item_detail_pop_camp_pop_grid_01" class="jqx-refresh"></div>
-                </div>
-            </div>
-            <div class="btnWrap">
-<%--                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn" style="display: none;">CAM 작업시작</button>--%>
-                <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_cam_pop_grid_pop_close">닫기</button>
-            </div>
-        </div>
-    </form>
-</div>
-<!-- CAM 상세정보 layer popup : E -->
 
 <!-- -->
 <div class="modal" id="common_alert_popup" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 10000;">
@@ -632,7 +599,6 @@
     let commonFileDownUploadGrid = $("#common_file_download_upload_grid");
 
     let g_ItemDetailPopGrid04;
-    // let $camWorkManagePopGrid;
 
     let $processingRequirementsGrid;
     let processingRequirementsTargetGrid;
@@ -1797,297 +1763,33 @@
     });
 
     /** cam popup */
-    let g_ItemDetailPopCamPopGridId01 =  $("#g_item_detail_pop_camp_pop_grid_01");
-    let g_ItemDetailPopCamPopColModel01 = [
-        {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
-        {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-        {title: 'CAM_SEQ', dataType: 'integer', dataIndx: 'CAM_SEQ', hidden: true},
-        // {
-        //     title: '', align: 'center', dataIndx: 'DETAIL_INFO', width: 40, minWidth: 40,
-        //     render: function (ui) {
-        //         let rowIndx = ui.rowIndx, grid = this;
-        //         if (ui.rowData['CONTROL_SEQ'] > 0) return "<span class=\"ui-icon ui-icon-circle-zoomin\"></span>";
-        //         return '';
-        //     }
-        // },
-        {title: '주문확정<br>일자', dataIndx: 'ORDER_CONFIRM_DT', width: 95},
-        {title: '외<br>주', minWidth: 30, dataIndx: 'OUTSIDE_YN'},
-        {title: '관리번호', halign: 'center', align: 'left', dataIndx: 'CONTROL_NUM', width: 180},
-        {
-            title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
-            render: function (ui) {
-                if (ui.rowData.CONTROL_NUM)
-                    return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
-            },
-            postRender: function (ui) {
-                let grid = this,
-                    $cell = grid.getCell(ui),
-                    rowIndx = ui.rowIndx,
-                    rowData = ui.rowData;
+    let camWorkDetailPopup;
+    const g_item_detail_pop_cam_pop = function (CONTROL_SEQ, CONTROL_DETAIL_SEQ) {
+        const url = '/camWorkDetail?controlSeq=' + CONTROL_SEQ + '&controlDetailSeq=' + CONTROL_DETAIL_SEQ;
+        // 팝업 사이즈
+        const nWidth = 1152;
+        const nHeight = 648;
+        const winWidth = document.body.clientWidth;
+        const winHeight = document.body.clientHeight;
+        const winX = window.screenX || window.screenLeft || 0;
+        const winY = window.screenY || window.screenTop || 0;
+        const nLeft = winX + (winWidth - nWidth) / 2;
+        const nTop = winY + (winHeight - nHeight) / 2;
 
-                $cell.find('[name=detailView]').bind('click', function () {
-                    $('#g_item_detail_pop').modal('hide');
-                    g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
-                    $('#g_item_detail_pop_cam_pop').modal('hide');
-                });
-            }
-        },
-        {title: '작업<br>형태', dataIndx: 'WORK_TYPE'},
-        {
-            title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 95,
-            styleHead: {'background': '#ffe699'},
-            render: function (ui) {
-                const firstRowData = this.getRowData({rowIndx: 0});
+        let strOption = '';
+        strOption += 'left=' + nLeft + 'px,';
+        strOption += 'top=' + nTop + 'px,';
+        strOption += 'width=' + nWidth + 'px,';
+        strOption += 'height=' + nHeight + 'px,';
+        strOption += 'toolbar=no,menubar=no,location=no,resizable=no,status=yes';
 
-                if (ui.rowIndx !== 0 && ui.cellData === firstRowData[ui.dataIndx]) {
-                    return {style: 'color: #0000ff'};
-                }
-            }
-        },
-        {
-            title: '규격', dataIndx: 'SIZE_TXT', width: 95,
-            styleHead: {'background': '#ffe699'},
-            render: function (ui) {
-                const firstRowData = this.getRowData({rowIndx: 0});
-
-                if (ui.rowIndx !== 0 && ui.cellData === firstRowData[ui.dataIndx]) {
-                    return {style: 'color: #0000ff'};
-                }
-            }
-        },
-        {
-            title: '재질', dataIndx: 'MATERIAL_TYPE_NM', width: 95,
-            styleHead: {'background': '#ffe699'},
-            render: function (ui) {
-                const firstRowData = this.getRowData({rowIndx: 0});
-
-                if (ui.rowIndx !== 0 && ui.cellData === firstRowData[ui.dataIndx]) {
-                    return {style: 'color: #0000ff'};
-                }
-            }
-        },
-        {
-            title: '도면번호', halign: 'center', align: 'left', dataIndx: 'DRAWING_NUM', width: 150,
-            styleHead: {'background': '#ffe699'},
-            render: function (ui) {
-                const firstRowData = this.getRowData({rowIndx: 0});
-
-                if (ui.rowIndx !== 0 && ui.cellData === firstRowData[ui.dataIndx]) {
-                    return {style: 'color: #0000ff'};
-                }
-            }
-        },
-        {
-            title: '', minWidth: 25, dataIndx: 'IMG_GFILE_SEQ',
-            styleHead: {'background': '#ffe699'},
-            render: function (ui) {
-                if (ui.cellData)
-                    return '<span class="fileSearchIcon" name="imageView" style="cursor: pointer"></span>';
-            },
-            postRender: function (ui) {
-                let grid = this,
-                    $cell = grid.getCell(ui);
-                $cell.find('[name=imageView]').bind('click', function () {
-                    let rowData = ui.rowData;
-                    callWindowImageViewer(rowData.IMG_GFILE_SEQ);
-                });
-            }
-        },
-        {
-            title: 'CAD 파일', align: 'center',
-            styleHead: {'background': '#ffe699'},
-            colModel: [
-                {
-                    title: 'Size', dataIndx: 'CAD_FILE_SIZE', width: 95,
-                    styleHead: {'background': '#ffe699'},
-                    render: function (ui) {
-                        const firstRowData = this.getRowData({rowIndx: 0});
-
-                        if (ui.rowIndx !== 0 && ui.cellData === firstRowData[ui.dataIndx]) {
-                            return {style: 'color: #0000ff'};
-                        }
-                    }
-                },
-                {
-                    title: '', minWidth: 35, dataIndx: 'DXF_GFILE_SEQ',
-                    styleHead: {'background': '#ffe699'},
-                    render: function (ui) {
-                        if (ui.cellData)
-                            return '<span class="blueFileImageICon" name="downloadView" style="cursor: pointer"></span>';
-                    },
-                    postRender: function (ui) {
-                        let grid = this,
-                            $cell = grid.getCell(ui);
-                        $cell.find('[name=downloadView]').bind('click', function () {
-                            let rowData = ui.rowData;
-                            fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
-                        });
-                    }
-                },
-            ]
-        },
-        {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', width: 80},
-        {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
-        {
-            title: '1EA 가공시간', align: 'center',
-            colModel: [
-                {title: 'NC', dataIndx: 'NC_WORK_TIME'},
-                {title: 'Total', dataIndx: 'TOTAL_WORK_TIME'}
-            ]
-        },
-        {
-            title: 'CAM 작업 실적', align: 'center',
-            colModel: [
-                {title: 'Steps', dataIndx: 'SEQ'},
-                {title: '작업자', dataIndx: 'WORK_USER_NM', width: 95},
-                {title: '업데이트', dataIndx: 'CAM_WORK_DT', width: 95},
-                {title: '경험 기록사항', halign: 'center', align: 'left', dataIndx: 'HISTORY_NOTE', width: 120}
-            ]
+        // 최초 클릭이면 팝업을 띄운다.
+        if (camWorkDetailPopup === undefined || camWorkDetailPopup.closed) {
+            camWorkDetailPopup = window.open(url, '', strOption);
+        } else {
+            camWorkDetailPopup.focus();
         }
-    ];
-    let g_ItemDetailPopCamPopObj01 = {
-        height: 320,
-        dataModel: {
-            location: "remote", dataType: "json", method: "POST", recIndx: 'RNUM',
-            url: "/paramQueryGridSelect",
-            postData: fnFormToJsonArrayData('g_item_detail_pop_cam_pop_form'),
-            getData: function (dataJSON) {
-                return {data: dataJSON.data};
-            }
-        },
-        strNoRows: g_noData,
-        editable: false,
-        postRenderInterval: -1,
-        columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
-        //scrollModel: {autoFit: true},
-        numberCell: {width: 30, title: "No", show: true, styleHead: {'vertical-align': 'middle'}},
-        selectionModel: {type: 'row', mode: 'single'},
-        swipeModel: {on: false},
-        showTitle: false,
-        collapsible: false,
-        resizable: false,
-        trackModel: {on: true},
-        colModel: g_ItemDetailPopCamPopColModel01,
-        rowInit: function (ui) {
-            if (ui.rowIndx === 0) {
-                return {style: {'background': '#FFFF00'}};
-            }
-        },
-        load: function () {
-            const autoMerge = function (grid, refresh) {
-                let mergeCellList = [],
-                    colModelList = grid.getColModel(),
-                    i = colModelList.length,
-                    data = grid.option('dataModel.data');
-
-                const controlList = [
-                    'ORDER_COMP_NM'
-                ];
-                const partList = [
-                    'ORDER_CONFIRM_DT', 'OUTSIDE_YN', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'WORK_TYPE', 'SIZE_TXT',
-                    'MATERIAL_TYPE_NM', 'DRAWING_NUM', 'IMG_GFILE_SEQ', 'CAD_FILE_SIZE', 'DXF_GFILE_SEQ',
-                    'MATERIAL_DETAIL_NM', 'MATERIAL_DETAIL_NM', 'CONTROL_PART_QTY', 'NC_WORK_TIME', 'TOTAL_WORK_TIME'
-                ];
-                const includeList = controlList.concat(partList);
-
-                while (i--) {
-                    let dataIndx = colModelList[i].dataIndx,
-                        rc = 1,
-                        j = data.length;
-
-                    if (includeList.includes(dataIndx)) {
-                        while (j--) {
-                            let controlNum = data[j]['CONTROL_NUM'],
-                                controlNumPrev = data[j - 1] ? data[j - 1]['CONTROL_NUM'] : undefined,
-                                cellData = data[j][dataIndx],
-                                cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
-
-                            if (controlList.includes(dataIndx)) {
-                                if (controlNum === controlNumPrev) {
-                                    // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
-                                    if (cellData === cellDataPrev) {
-                                        rc++;
-                                    }
-                                } else if (rc > 1) {
-                                    /**
-                                     * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
-                                     * c1: colIndx of first column. 첫 번째 열의 colIndx.
-                                     * rc: number of rows in the range. 범위 내 행 수.
-                                     * cc: number of columns in the range. 범위 내 열 수.
-                                     */
-                                    mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
-                                    rc = 1;
-                                }
-                            } else if (partList.includes(dataIndx)) {
-                                let cellData = data[j][dataIndx],
-                                    cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
-
-                                if (controlNum === controlNumPrev) {
-                                    // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
-                                    if (cellData === cellDataPrev) {
-                                        rc++;
-                                    }
-                                } else if (rc > 1) {
-                                    /**
-                                     * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
-                                     * c1: colIndx of first column. 첫 번째 열의 colIndx.
-                                     * rc: number of rows in the range. 범위 내 행 수.
-                                     * cc: number of columns in the range. 범위 내 열 수.
-                                     */
-                                    mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
-                                    rc = 1;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                grid.option('mergeCells', mergeCellList);
-                if (refresh) {
-                    grid.refreshView();
-                }
-            };
-
-            autoMerge(this, true);
-        }
-    };
-    let g_item_detail_pop_cam_pop = function(CONTROL_SEQ,CONTROL_DETAIL_SEQ){
-        $("#g_item_detail_pop_cam_pop_form").find("#queryId").val('inspection.selectCommItemDetailGridCamPop');
-        $("#g_item_detail_pop_cam_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
-        $("#g_item_detail_pop_cam_pop_form").find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
-        $('#g_item_detail_pop_cam_pop').modal('show');
-
-        $("#g_item_detail_pop_cam_pop_form").find("#queryId").val('inspection.selectCommItemDetailGridCamPopBefore');
-        let parameters = {
-         'url': '/json-info',
-         'data': fnFormToJsonArrayData('g_item_detail_pop_cam_pop_form')
-        };
-        fnPostAjaxAsync(function (data, callFunctionParam) {
-         let dataInfo = data.info;
-         if(dataInfo == null ) {
-             fnResetFrom("g_item_detail_pop_cam_pop_form");
-         }else{
-             fnJsonDataToForm("g_item_detail_pop_cam_pop_form", dataInfo);
-         }
-        }, parameters, '');
-
-        $("#g_item_detail_pop_cam_pop_form").find("#queryId").val('inspection.selectCommItemDetailGridCamPop');
-        g_ItemDetailPopCamPopObj01.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_cam_pop_form');
-        g_ItemDetailPopCamPopGridId01.pqGrid(g_ItemDetailPopCamPopObj01);
-
     }
-
-    $("#g_item_detail_pop_cam_pop_grid_pop_close, #g_item_detail_pop_cam_pop_grid_pop_close2").on('click', function () {
-         //fnResetFrom("g_item_detail_pop_cam_pop_form");
-        //       console.log(g_ItemDetailPopCamPopGridId01);
-        $('#g_item_detail_pop_cam_pop').modal('hide');
-              // g_ItemDetailPopCamPopGridId01.pqGrid('destroy');
-
-     });
-    $("#g_item_detail_pop_cam_pop").on('hide.bs.modal', function(){
-          fnResetFrom("g_item_detail_pop_cam_pop_form");
-          g_ItemDetailPopCamPopGridId01.pqGrid('destroy');
-      });
     /** cam popup */
 
     /**  공통 제품상세 정보  끝 **/

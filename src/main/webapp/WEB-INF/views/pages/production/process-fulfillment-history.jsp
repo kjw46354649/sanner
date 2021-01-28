@@ -171,7 +171,7 @@
             'url': '/json-list', 'data': {'queryId': 'dataSource.getMCTWorkerList'}
         });
         fnCommCodeDatasourceSelectBoxCreate($('#PROCESS_FULFILLMENT_HISTORY_SEARCH_FORM').find('#EQUIP_SEQ'), 'all', {
-            'url': '/json-list', 'data': {'queryId': 'dataSource.getEquipList'}
+            'url': '/json-list', 'data': {'queryId': 'dataSource.getProcessingMachineList'}
         });
         const EQUIP = (function () {
             let list = [];

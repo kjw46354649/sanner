@@ -138,7 +138,9 @@
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
             <include refid="orderMapper.controlPartOrder"/>,
-            D.OUTSIDE_REQUEST_SEQ
+            D.OUTSIDE_REQUEST_SEQ,
+            SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS DNJSCLD,
+            SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS EOCLD
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = B.CONTROL_SEQ
@@ -146,7 +148,8 @@
                                                             AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
                                                             AND D.DEL_YN = 'N'
         WHERE
-            B.CONTROL_SEQ IN (${CONTROL_SEQ})
+            A.DEL_YN = 'N'
+            AND B.CONTROL_SEQ IN (${CONTROL_SEQ})
             AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
     </select>
 

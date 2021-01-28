@@ -1027,7 +1027,7 @@
                     SF_GET_DATE_F(CANCEL_DT, 'YY', 'M') CANCEL_DT,
                     A.INSERT_DT, A.INSERT_ID, A.UPDATE_DT, A.UPDATE_ID, SF_GET_DATE_F(A.IN_DT,'','M') AS IN_DT,
                     CANCEL_USER_ID,
-                    A.IN_UNIT_AMT, A.IN_NOTE, A.IN_UNIT_AMT * A.ORDER_QTY AS IN_SUM_AMT, B.UNIT_MATERIAL_AUTO_AMT
+                    A.IN_UNIT_AMT, A.IN_NOTE, A.IN_UNIT_AMT * A.ORDER_QTY AS IN_SUM_AMT, A.UNIT_MATERIAL_AUTO_AMT
                 FROM TBL_MATERIAL_ORDER A
                     INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
                     INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -1914,6 +1914,29 @@
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
+    </update>
+
+    <update id="updateControlPartMaterial" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            MATERIAL_KIND = #{MATERIAL_KIND}
+            , MATERIAL_DETAIL = #{MATERIAL_DETAIL}
+            , MATERIAL_TYPE = SF_GET_ETC_CD('1027', #{MATERIAL_DETAIL})
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+    <update id="updateMaterialOrderUnitMaterialAutoAmt" parameterType="java.util.HashMap">
+        UPDATE TBL_MATERIAL_ORDER
+        SET
+            UNIT_MATERIAL_AUTO_AMT = SF_GET_CALC_MATERIAL_AMT('MATERIAL_ORDER', #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ})
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
 
 </mapper>

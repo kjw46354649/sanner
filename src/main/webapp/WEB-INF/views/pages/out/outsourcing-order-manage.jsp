@@ -626,9 +626,7 @@
                         fnFileDownloadFormPageAction(rowData.PDF_GFILE_SEQ);
                     });
                 }
-            },
-            {title: '원칭', dataIndx: 'ORIGINAL_SIDE_QTY', hidden: true},
-            {title: '대칭', dataIndx: 'OTHER_SIDE_QTY', hidden: true}
+            }
         ];
         const obj = {
             minHeight: '100%',
@@ -909,8 +907,8 @@
                     }
                 }
             },
-            {title: 'ORIGINAL_SIDE_QTY', dataIndx: 'ORIGINAL_SIDE_QTY', hidden: true},
-            {title: 'OTHER_SIDE_QTY', dataIndx: 'OTHER_SIDE_QTY', hidden: true},
+            {title: 'ORIGINAL_SIDE_QTY', dataIndx: 'DNJSCLD', hidden: true},
+            {title: 'OTHER_SIDE_QTY', dataIndx: 'EOCLD', hidden: true},
             {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: '소재<br>제공', minWidth: 30, width: 40, dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
@@ -1192,8 +1190,8 @@
                     }
                 }
             },
-            {title: 'ORIGINAL_SIDE_QTY', dataIndx: 'ORIGINAL_SIDE_QTY', hidden: true},
-            {title: 'OTHER_SIDE_QTY', dataIndx: 'OTHER_SIDE_QTY', hidden: true},
+            {title: 'ORIGINAL_SIDE_QTY', dataIndx: 'DNJSCLD', hidden: true},
+            {title: 'OTHER_SIDE_QTY', dataIndx: 'EOCLD', hidden: true},
             {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
@@ -1672,7 +1670,7 @@
                     '</thead>\n' +
                     '<tbody>\n';
 
-            let titleInfo = "";
+            let titleInfo = '';
             for (let i = 0, LIST_LENGTH = list.length; i < LIST_LENGTH; i++) {
                 let outsideMaterialSupplyYnChecked = list[i].OUTSIDE_MATERIAL_SUPPLY_YN === 'Y' ? '○' : '';
                 let outsideRequestFinishYnChecked = list[i].OUTSIDE_REQUEST_FINISH_YN === 'Y' ? '○' : '';
@@ -1684,10 +1682,10 @@
                 // let outsideNote = list[i].OUTSIDE_NOTE || '';
                 let sideQtyText = '';
 
-                if (list[i].ORIGINAL_SIDE_QTY || list[i].OTHER_SIDE_QTY) {
+                if (list[i].DNJSCLD || list[i].EOCLD) {
                     sideQtyYnChecked = '○';
-                    let originalSideQty = list[i].ORIGINAL_SIDE_QTY || 0;
-                    let otherSideQty = list[i].OTHER_SIDE_QTY || 0;
+                    let originalSideQty = list[i].DNJSCLD || 0;
+                    let otherSideQty = list[i].EOCLD || 0;
                     sideQtyText = '(원' + originalSideQty + ', 대' + otherSideQty + ')';
                 }
 
@@ -1703,7 +1701,7 @@
                 '        <td style="' + st_center + '">' + list[i].SURFACE_TREAT_NM + '</td>\n' +
                 '        <td style="' + st_center + '">' + outsideMaterialSupplyYnChecked + '</td>\n' +
                 '        <td style="' + st_center + '">' + sideQtyYnChecked + '</td>\n';
-                if (sideQtyText === '') {
+                if (fnIsEmpty(sideQtyText)) {
                     table += '        <td style="' + st_center + '">' + list[i].CONTROL_PART_QTY + '</td>\n';
                 } else {
                     table += '        <td style="' + st_center + '">' + list[i].CONTROL_PART_QTY + ' ' + sideQtyText + '</td>\n';
