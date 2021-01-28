@@ -2557,6 +2557,10 @@
                     </if>
                 GROUP BY C.ORDER_DUE_DT, A.ORDER_COMP_CD
              ) X LEFT OUTER JOIN TBL_COMPANY Y ON Y.COMP_CD = X.ORDER_COMP_CD
+        ORDER BY X.ORDER_DUE_DT, CASE WHEN X.OUT_FINISH_CNT = X.ORDER_CNT THEN 2   <!-- 출고가 모두 완료되었을 때 -->
+                 WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') <![CDATA[ <= ]]> X.ORDER_DUE_DT THEN 1   <!-- 아직 출고가 완료되지 않은상태 이면서 납기 안지난 경우 -->
+                 WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') > X.ORDER_DUE_DT THEN 2 <!-- 아직 출고가 완료되지 않은상태 이면서 납기 지난 경우 -->
+            END
     </select>
 
     <select id="businessEmergencyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">

@@ -74,7 +74,6 @@ public class PDFPringMakeController {
             PDImageXObject pdImageXObject = PDImageXObject.createFromFile((String) fileInfo.get("FILE_PATH") + ".print.png", document);
             PDPageContentStream contentStream = new PDPageContentStream(document, addPage);
             contentStream.drawImage(pdImageXObject, 0, 0, PDRectangle.A4.getWidth(), PDRectangle.A4.getHeight());
-            // contentStream.drawImage(pdImageXObject, 0f, -10f, pdImageXObject.getWidth() / 300f * 72, pdImageXObject.getHeight() / 300f * 72);
             contentStream.close();
             document.addPage(addPage);
         }
