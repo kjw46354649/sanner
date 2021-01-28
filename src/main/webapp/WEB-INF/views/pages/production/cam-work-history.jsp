@@ -632,8 +632,8 @@
             {
                 title: '1EA 가공시간', align: 'center',
                 colModel: [
-                    {title: 'CNC', dataIndx: 'NC_WORK_TIME'},
-                    {title: '전공정', dataIndx: 'TOTAL_WORK_TIME'}
+                    {title: '전공정', dataIndx: 'TOTAL_WORK_TIME'},
+                    {title: 'NC', dataIndx: 'NC_WORK_TIME'}
                 ]
             },
             {
