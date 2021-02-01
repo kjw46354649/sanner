@@ -578,6 +578,7 @@
                 GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
               ) AS TOTAL_WORK_TIME <!-- 전공정 -->
             , H.SEQ AS CAM_STEP <!-- CAM 스탭 -->
+            , SF_GET_CODE_NM('1080', H.WORK_DIRECTION, #{LOGIN_LOCALE}) AS WORK_DIRECTION <!-- CAM 가공위치 -->
             , H.WORK_DESC <!-- CAM 작업 내용 -->
             , H.DESIGN_QTY <!-- 단위 수량 -->
             , jmes.SF_GET_USER_NM(H.WORK_USER_ID) AS WORK_USER_NM
