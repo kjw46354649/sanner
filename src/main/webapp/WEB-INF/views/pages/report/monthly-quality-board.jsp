@@ -97,6 +97,7 @@
     $(function () {
         'use strict';
         /* init */
+        const D_GRADE = 'GRD040';
         const lastMonth = new Date((new Date()).setMonth(TODAY.getMonth() - 1));
         fnAppendSelectboxYear('monthly_quality_board_start_year', 10);
         fnAppendSelectboxYear('monthly_quality_board_end_year', 10);
@@ -105,6 +106,7 @@
         $('#monthly_quality_board_start_year').val(lastMonth.getFullYear()).prop('selected', true);
         $('#monthly_quality_board_start_month').val(String(lastMonth.getMonth() + 1).padStart(2, '0')).prop('selected', true);
         $('#monthly_quality_board_end_month').val(CURRENT_MONTH + 1 < 9 ? '0' + (CURRENT_MONTH + 1) : CURRENT_MONTH + 1).prop('selected', true);
+        $('#monthly_quality_board_top_form').find('#INSPECT_GRADE').val(D_GRADE);
 
         let topFormData = fnFormToJsonArrayData('#monthly_quality_board_top_form');
         topFormData.queryId = 'reportMapper.selectMonthlyQualityBoardFromOrder';
