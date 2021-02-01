@@ -1880,7 +1880,7 @@
 
     <select id="selectBadTypeCD" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.BAD_TYPE
-            , IFNULL(jmes.SF_GET_CODE_NM('1089',X.BAD_TYPE,#{LOGIN_LOCALE}),'N/A') AS BAD_TYPE_NM    -- 언어조건
+            , IFNULL(jmes.SF_GET_CODE_NM('1089',X.BAD_TYPE,#{LOGIN_LOCALE}),'N/A') AS BAD_TYPE_NM    <!-- 언어조건 -->
             , COUNT(*) AS CNT
         FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                     , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
@@ -1919,7 +1919,7 @@
 
     <select id="selectBadTypeReturn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.BAD_TYPE
-            , IFNULL(jmes.SF_GET_CODE_NM('1089',X.BAD_TYPE,#{LOGIN_LOCALE}),'N/A') AS BAD_TYPE_NM    -- 언어조건
+            , IFNULL(jmes.SF_GET_CODE_NM('1089',X.BAD_TYPE,#{LOGIN_LOCALE}),'N/A') AS BAD_TYPE_NM    <!-- 언어조건 -->
             , SUM(X.RETURN_CNT) AS CNT
         FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                     , 1 AS RETURN_CNT
@@ -1949,7 +1949,7 @@
 
     <select id="selectGenerationProcessCD" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.ERROR_PROCESS
-            , IFNULL(jmes.SF_GET_CODE_NM('1010', X.ERROR_PROCESS, #{LOGIN_LOCALE}),'N/A') AS ERROR_PROCESS_NM    -- 언어조건
+            , IFNULL(jmes.SF_GET_CODE_NM('1010', X.ERROR_PROCESS, #{LOGIN_LOCALE}),'N/A') AS ERROR_PROCESS_NM    <!-- 언어조건 -->
             , COUNT(*) AS CNT
         FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                     , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
@@ -1988,7 +1988,7 @@
 
     <select id="selectGenerationProcessReturn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.ERROR_PROCESS
-            , IFNULL(jmes.SF_GET_CODE_NM('1010', X.ERROR_PROCESS, #{LOGIN_LOCALE}),'N/A') AS ERROR_PROCESS_NM    -- 언어조건
+            , IFNULL(jmes.SF_GET_CODE_NM('1010', X.ERROR_PROCESS, #{LOGIN_LOCALE}),'N/A') AS ERROR_PROCESS_NM    <!-- 언어조건 -->
             , SUM(X.RETURN_CNT) AS CNT
         FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                     , 1 AS RETURN_CNT
@@ -2018,7 +2018,7 @@
 
     <select id="selectCausesCD" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.ERROR_REASON
-            , IFNULL(jmes.SF_GET_CODE_NM('1032', X.ERROR_REASON, #{LOGIN_LOCALE}),'N/A') AS ERROR_PROCESS_NM    -- 언어조건
+            , IFNULL(jmes.SF_GET_CODE_NM('1032', X.ERROR_REASON, #{LOGIN_LOCALE}),'N/A') AS ERROR_PROCESS_NM    <!-- 언어조건 -->
             , COUNT(*) AS CNT
         FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                     , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
@@ -2057,7 +2057,7 @@
 
     <select id="selectCausesReturn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.ERROR_REASON
-            , IFNULL(jmes.SF_GET_CODE_NM('1032', X.ERROR_REASON, #{LOGIN_LOCALE}),'N/A') AS ERROR_PROCESS_NM    -- 언어조건
+            , IFNULL(jmes.SF_GET_CODE_NM('1032', X.ERROR_REASON, #{LOGIN_LOCALE}),'N/A') AS ERROR_PROCESS_NM    <!-- 언어조건 -->
             , SUM(X.RETURN_CNT) AS CNT
         FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                     , 1 AS RETURN_CNT
@@ -2236,7 +2236,7 @@
         WHERE (Y.INSPECT_GRADE IN ('GRD030','GRD040') OR Y.RETURN_CNT > 0)
             <choose>
                 <when test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-                    AND Y.ORDER_COMP_CD = #{ORDER_COMP_CD}     -- 조건 쿼리
+                    AND Y.ORDER_COMP_CD = #{ORDER_COMP_CD}     <!-- 조건 쿼리 -->
                 </when>
                 <when test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
                     AND Y.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}     <!-- 조건 쿼리 -->
