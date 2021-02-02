@@ -794,10 +794,7 @@
                         fnPostAjaxAsync(function () {
                             parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
                             fnPostAjax(function(data, callFunctionParam){
-                                // fnAlert(null,"삭제 되었습니다.");
-                                itemOrderRegisterPopTopGrid.pqGrid('deleteRow', { rowIndx: rowIndex });
-                                let rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length;
-                                if (rowCount == 0) $("#item_order_register_popup").modal('hide');
+                                itemOrderRegisterPopTopGrid.pqGrid('deleteRow', {rowIndx: rowIndex});
 
                                 makeInnerTable();
                             }, parameters, '');
