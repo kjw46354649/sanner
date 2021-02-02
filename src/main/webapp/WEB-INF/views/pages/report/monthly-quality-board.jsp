@@ -25,7 +25,7 @@
                         <span style="margin: 0 5px; font-size: 1.2rem; vertical-align: middle;">~</span>
                         <select class="wd_100" name="END_YEAR" id="monthly_quality_board_end_year" disabled></select>
                         <select class="wd_100" name="END_MONTH" id="monthly_quality_board_end_month" disabled></select>
-                        <span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_S1EARCH" id="RANGE_S1EARCH"><label for="RANGE_S1EARCH"> 기간검색</label></span>
+                        <span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH"><label for="RANGE_SEARCH"> 기간검색</label></span>
                     </span>
                     <span class="slt_wrap">
                         <!-- TODO: -->
@@ -115,31 +115,31 @@
                     {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
                     {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
                     {title: '출고<br>품수', dataIndx: 'PART_CNT'},
-                    {title: '검사<br>품수', dataIndx: 'INSPECT_CNT', style: {'text-decoration': 'underline'}},
-                    {title: '검사<br>비율', dataIndx: 'INSPECT_RATIO', style: {'text-decoration': 'underline'}},
-                    {title: '합격<br>률', dataIndx: 'PASS_RATIO', style: {'text-decoration': 'underline'}},
+                    {title: '검사<br>품수', dataIndx: 'INSPECT_CNT'},
+                    {title: '검사<br>비율', dataIndx: 'INSPECT_RATIO'},
+                    {title: '합격<br>률', dataIndx: 'PASS_RATIO'},
                     {
                         title: 'A', halign: 'center', colModel: [
-                            {title: 'CNT', dataIndx: 'A_CNT', style: {'text-decoration': 'underline'}},
-                            {title: 'RATIO', dataIndx: 'A_RATIO', style: {'text-decoration': 'underline'}},
+                            {title: 'CNT', dataIndx: 'A_CNT'},
+                            {title: 'RATIO', dataIndx: 'A_RATIO'},
                         ]
                     },
                     {
                         title: 'B', halign: 'center', colModel: [
-                            {title: 'CNT', dataIndx: 'B_CNT', style: {'text-decoration': 'underline'}},
-                            {title: 'RATIO', dataIndx: 'B_RATIO', style: {'text-decoration': 'underline'}},
+                            {title: 'CNT', dataIndx: 'B_CNT'},
+                            {title: 'RATIO', dataIndx: 'B_RATIO'},
                         ]
                     },
                     {
                         title: 'C', halign: 'center', colModel: [
-                            {title: 'CNT', dataIndx: 'C_CNT', style: {'text-decoration': 'underline'}},
-                            {title: 'RATIO', dataIndx: 'C_RATIO', style: {'text-decoration': 'underline'}},
+                            {title: 'CNT', dataIndx: 'C_CNT'},
+                            {title: 'RATIO', dataIndx: 'C_RATIO'},
                         ]
                     },
                     {
                         title: 'D', halign: 'center', colModel: [
-                            {title: 'CNT', dataIndx: 'D_CNT', style: {'text-decoration': 'underline'}},
-                            {title: 'RATIO', dataIndx: 'D_RATIO', style: {'text-decoration': 'underline'}},
+                            {title: 'CNT', dataIndx: 'D_CNT'},
+                            {title: 'RATIO', dataIndx: 'D_RATIO'},
                         ]
                     },
                 ]
@@ -148,8 +148,8 @@
                 title: '반품', halign: 'center', colModel: [
                     {
                         title: 'RT-D', halign: 'center', colModel: [
-                            {title: 'CNT', dataIndx: 'RETURN_CNT', style: {'text-decoration': 'underline'}},
-                            {title: 'RATIO', dataIndx: 'RETURN_RATIO', style: {'text-decoration': 'underline'}},
+                            {title: 'CNT', dataIndx: 'RETURN_CNT'},
+                            {title: 'RATIO', dataIndx: 'RETURN_RATIO'},
                         ]
                     }
 
@@ -787,8 +787,7 @@
                 array[0] = dataArray;
 
                 subtitle = $('#monthly_quality_board_start_year').val() + '.' + $('#monthly_quality_board_start_month').val() + '월';
-                subtitle += $('#RANGE_S1EARCH').prop('checked') ? ' ~ ' + $('#monthly_quality_board_end_year').val() + '.' + $('#monthly_quality_board_end_month').val() + '월' : '';
-
+                subtitle += $('#monthly_quality_board_top_form').find('#RANGE_SEARCH').prop('checked') ? ' ~ ' + $('#monthly_quality_board_end_year').val() + '.' + $('#monthly_quality_board_end_month').val() + '월' : '';
                 changeHighchartsSubtitle(chart1, subtitle);
                 changeHighchartsSeriesData(chart1, array);
             });
@@ -823,7 +822,7 @@
                 array[0] = dataArray;
 
                 subtitle = $('#monthly_quality_board_start_year').val() + '.' + $('#monthly_quality_board_start_month').val() + '월';
-                subtitle += $('#RANGE_S1EARCH').prop('checked') ? ' ~ ' + $('#monthly_quality_board_end_year').val() + '.' + $('#monthly_quality_board_end_month').val() + '월' : '';
+                subtitle += $('#monthly_quality_board_top_form').find('#RANGE_SEARCH').prop('checked') ? ' ~ ' + $('#monthly_quality_board_end_year').val() + '.' + $('#monthly_quality_board_end_month').val() + '월' : '';
 
                 changeHighchartsSubtitle(chart2, subtitle);
                 changeHighchartsSeriesData(chart2, array);
@@ -860,7 +859,7 @@
                 array[0] = dataArray;
 
                 subtitle = $('#monthly_quality_board_start_year').val() + '.' + $('#monthly_quality_board_start_month').val() + '월';
-                subtitle += $('#RANGE_S1EARCH').prop('checked') ? ' ~ ' + $('#monthly_quality_board_end_year').val() + '.' + $('#monthly_quality_board_end_month').val() + '월' : '';
+                subtitle += $('#monthly_quality_board_top_form').find('#RANGE_SEARCH').prop('checked') ? ' ~ ' + $('#monthly_quality_board_end_year').val() + '.' + $('#monthly_quality_board_end_month').val() + '월' : '';
 
                 changeHighchartsSubtitle(chart3, subtitle);
                 changeHighchartsSeriesData(chart3, array);
@@ -898,7 +897,7 @@
             changeAnnualQualityStatus();
         });
 
-        $('#RANGE_S1EARCH').on('change', function () {
+        $('#monthly_quality_board_top_form').find('#RANGE_SEARCH').on('change', function () {
             const isNotChecked = !$(this).prop('checked');
             $('#monthly_quality_board_end_year').prop('disabled', isNotChecked);
             $('#monthly_quality_board_end_month').prop('disabled', isNotChecked);

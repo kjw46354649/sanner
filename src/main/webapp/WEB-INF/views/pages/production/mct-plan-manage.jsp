@@ -733,7 +733,8 @@
                     fnAlert(null, '<spring:message code="error.common"/>');
                     return false;
                 }
-
+                
+                refreshMctPlanGrids();
                 refreshTargetGrid1(actionType, data.data);
             }, parameters, '');
         };

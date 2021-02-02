@@ -1029,7 +1029,7 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
     border-collapse: collapse;
 }
 
-.mct_execute_board .middle_wrap > div:nth-child(3) > table th, table td {
+.mct_execute_board .middle_wrap > div:nth-child(3) > table th, .mct_execute_board .middle_wrap > div:nth-child(3) > table td {
     border: 1px solid black;
     font-size: 1rem;
     text-align: center;

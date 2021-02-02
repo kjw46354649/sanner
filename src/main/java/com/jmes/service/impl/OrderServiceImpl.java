@@ -280,12 +280,6 @@ public class OrderServiceImpl implements OrderService {
                     flag = true;
                     message = "이미 외주전환 된 도면입니다.";
                 }
-                // 소재입고 확인
-                map.put("queryId", "orderMapper.selectHasInStockFromBarcode");
-                if (this.orderDao.getFlag(map) && !flag) {
-                    flag = true;
-                    message = "소재 주문완료된 대상입니다.";
-                }
                 // 출고 확인
                 map.put("queryId", "orderMapper.selectHasOut");
                 if (this.orderDao.getFlag(map) && !flag) {

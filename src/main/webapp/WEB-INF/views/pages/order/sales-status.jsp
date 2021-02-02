@@ -12,24 +12,6 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<style>
-    #MONTH_SALE_STATUS_SUMMARY {
-        width: 100%;
-        height: 100%;
-        table-layout: fixed;
-        border: 1px solid ##d7d7d7;
-        border-collapse: collapse;
-    }
-
-    #MONTH_SALE_STATUS_SUMMARY td {
-        border: 1px solid #d7d7d7;
-        text-align: right;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        padding: 5px;
-    }
-</style>
 <div class="page estimate">
     <div class="topWrap">
         <form class="form-inline" id="SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM" role="form">
@@ -155,73 +137,6 @@
                 </ul>
                 <ul class="conWrap" id="MONTHLY_SALES_STATUS">
                     <div id="MONTHLY_SALES_STATUS_GRID"></div>
-                    <div>
-                        <table id="MONTH_SALE_STATUS_SUMMARY">
-                            <colgroup>
-                                <col style="width: 261px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                            </colgroup>
-                            <tbody>
-                                <tr style="line-height: 27px;">
-                                    <td style="background-color: #fff2cc;">매출</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr style="line-height: 27px;">
-                                    <td style="background-color: #fff2cc;">입금</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
                 </ul>
             </div>
         </div>
@@ -346,53 +261,40 @@
             {title: '구분', dataIndx: 'STATUS_TYPE',},
             {
                 title: '1분기', align: 'center', colModel: [
-                    {title: '1월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '01_AMT', summary: {type: 'sum'}},
-                    {title: '2월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '02_AMT', summary: {type: 'sum'}},
-                    {title: '3월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '03_AMT', summary: {type: 'sum'}},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '03_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
+                    {title: '1월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_01'},
+                    {title: '2월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_02'},
+                    {title: '3월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_03'},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_03_SUM', style: {'font-weight': 'bold'}}
                 ]
             },
             {
                 title: '2분기', align: 'center', colModel: [
-                    {title: '4월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '04_AMT', summary: {type: 'sum'}},
-                    {title: '5월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '05_AMT', summary: {type: 'sum'}},
-                    {title: '6월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '06_AMT', summary: {type: 'sum'}},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '06_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
+                    {title: '4월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_04'},
+                    {title: '5월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_05'},
+                    {title: '6월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_06'},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_06_SUM', style: {'font-weight': 'bold'}}
                 ]
             },
             {
                 title: '3분기', align: 'center', colModel: [
-                    {title: '7월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '07_AMT', summary: {type: 'sum'}},
-                    {title: '8월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '08_AMT', summary: {type: 'sum'}},
-                    {title: '9월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '09_AMT', summary: {type: 'sum'}},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '09_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
+                    {title: '7월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_07'},
+                    {title: '8월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_08'},
+                    {title: '9월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_09'},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_09_SUM', style: {'font-weight': 'bold'}}
                 ]
             },
             {
                 title: '4분기', align: 'center', colModel: [
-                    {title: '10월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '10_AMT', summary: {type: 'sum'}},
-                    {title: '11월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '11_AMT', summary: {type: 'sum'}},
-                    {title: '12월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '12_AMT', summary: {type: 'sum'}},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: '12_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
+                    {title: '10월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_10'},
+                    {title: '11월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_11'},
+                    {title: '12월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_12'},
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_12_SUM', style: {'font-weight': 'bold'}}
                 ]
             },
-            {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
+            {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT', style: {'font-weight': 'bold'}}
         ];
-        const tab2GroupModel = {
-            on: true, header:false,
-            headerMenu: false,
-            indent: 10,
-            dataIndx: ['GROUP_KEY'],
-            summaryInTitleRow: '',
-            summaryEdit: false,
-            // showSummary: [true], //to display summary at end of every group.
-            collapsed: [false],
-            grandSummary: true,
-            merge: true,
-            nodeClose: false,
-        };
         const tab2Obj = {
-            height: 680,
+            height: 745,
             collapsible: false,
             resizable: false,
             showTitle: false,
@@ -412,7 +314,7 @@
                 }
             },
             summaryTitle: {sum: '{0}'},
-            complete: function() {
+            load: function() {
                 const merge = function (grid, refresh) {
                     let mc = [],
                         CM = ['COMP_NM', 'ORDER_COMP_NM'],
@@ -446,8 +348,7 @@
                 };
 
                 merge(this, true);
-                createSummary();
-                changeSummarySize();
+                this.option('summaryData', getSummary());
             }
         };
         
@@ -493,113 +394,6 @@
             }, parameters, '');
 
             return dataList;
-        };
-
-        const createSummary = function () {
-            const dataList = getSummary();
-            let htmlString = '';
-
-            if (Array.isArray(dataList) && dataList.length > 0) {
-                for (let i = 0; i < dataList.length; i++) {
-                    htmlString += '<tr style="line-height: 27px;">';
-                    htmlString += '    <td class="center_sort" style="background-color: #fff2cc; text-align: center;">' + dataList[i].STATUS_TYPE + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_01 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_02 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_03 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_03_SUM || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_04 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_05 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_06 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_06_SUM || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_07 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_08 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_09 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_09_SUM || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_10 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_11 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_12 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_12_SUM || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].TOTAL_AMT || 0 + '</td>';
-                    htmlString += '</tr>';
-                }
-            } else {
-                htmlString += '<tr style="line-height: 27px;">';
-                htmlString += '    <td class="center_sort" style="background-color: #fff2cc; text-align: center;">' + '매출' + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '</tr>';
-                htmlString += '<tr style="line-height: 27px;">';
-                htmlString += '    <td class="center_sort" style="background-color: #fff2cc; text-align: center;">' + '입금' + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '</tr>';
-            }
-
-            $('#MONTH_SALE_STATUS_SUMMARY > tbody').html(htmlString);
-        };
-
-        const changeSummarySize = function () {
-            const PADDING = 2;
-            let width = [];
-            $('#MONTHLY_SALES_STATUS_GRID').find('div.pq-table-right.pq-table.pq-grid-header-table div:first').children().each((index, element) => {
-               width.push($(element).width() + PADDING);
-            });
-
-            const a = width[0] + width[1] + width[2] + width[3];
-            const b = width[4];
-            const c = width[5];
-            const d = width[6];
-            const e = width[7];
-            const f = width[8];
-
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(0)').width(a);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(1)').width(b / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(2)').width(b / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(3)').width(b / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(4)').width(b / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(5)').width(c / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(6)').width(c / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(7)').width(c / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(8)').width(c / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(9)').width(d / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(10)').width(d / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(11)').width(d / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(12)').width(d / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(13)').width(e / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(14)').width(e / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(15)').width(e / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(16)').width(e / 4);
-            $('#MONTH_SALE_STATUS_SUMMARY > colgroup col:eq(17)').width(f);
         };
         /* function */
 
