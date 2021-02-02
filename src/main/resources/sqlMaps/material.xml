@@ -1823,7 +1823,6 @@
         AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
         AND B.DRAWING_NUM = C.DRAWING_NUM
         AND A.DEL_YN = 'N'
-        AND B.DEL_YN = 'N'
         AND A.BARCODE_NUM = #{BARCODE_NUM}
     </select>
 

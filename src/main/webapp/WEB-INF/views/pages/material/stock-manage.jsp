@@ -750,7 +750,7 @@
                 return;
             } else {
                 fnConfirm(null, "선택한 대상의 모든 정보가 삭제됩니다.<br>진행하시겠습니까?", function () {
-                    fnDeletePQGrid(stockManageGridId01, selectedRowIndex, "material.deleteInsideStock");
+                    fnDeletePQGrid(stockManageGridId01, selectedRowIndex, "material.deleteInsideStock_old");
                     $("#stock_manage_search_btn").trigger("click");
                 });
             }
