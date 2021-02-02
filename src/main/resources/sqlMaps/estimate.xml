@@ -1144,7 +1144,7 @@
             , A.LEVEL_1
             , A.LEVEL_2
             <!-- , A.NOTE -->
-            , B.UNIT_AMT
+            , SUM(B.UNIT_AMT) AS UNIT_AMT
             <!-- , C.EST_SEQ -->
             <!-- , C.SEQ -->
             , C.PROCESS_CNT
@@ -1154,7 +1154,7 @@
                 LEFT OUTER JOIN TBL_ESTIMATE_DETAIL_PROCESS C ON C.FACTOR_CD = A.FACTOR_CD
                     AND C.EST_SEQ = #{EST_SEQ}
                     AND C.SEQ = #{SEQ}
-        ORDER BY A.SORT_NUM, A.FACTOR_CD
+        GROUP BY A.FACTOR_CD WITH ROLLUP
     </select>
 
     <insert id="insertEstimateDetailProcess" parameterType="java.util.HashMap">

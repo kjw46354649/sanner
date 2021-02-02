@@ -509,10 +509,7 @@
                         <button id="prev">이전</button>
                         <button id="next">다음</button>
                     </div>
-                    <div class="ml-auto">
-                        <button type="button" class="defaultBtn btn-100w green" id="processing_requirements_save">저장
-                        </button>
-                    </div>
+                    <div class="ml-auto"></div>
                 </div>
                 <hr style="display: block; border: 1px solid #e2e2e2; margin: 7px;">
                 <div>
@@ -2029,11 +2026,18 @@
                     }
                 },
                 load: function () {
-                    const merge = function (grid, refresh) {
+                    const data = this.option('dataModel.data');
+                    const summary = function (data) {
+                        const lastRow = data[data.length - 1];
+                        const total = lastRow ? lastRow.UNIT_AMT : '';
+                        const array = [
+                            {LEVEL_1: '추가가공비 합계', UNIT_AMT: total}
+                        ];
+
+                        return array;
+                    };
+                    const merge = function (grid, refresh, data) {
                         let mc = [],
-                            // CM = grid.option('colModel'),
-                            // i = CM.length,
-                            data = grid.option('dataModel.data'),
                             rc = 1,
                             j = data.length;
 
@@ -2053,7 +2057,9 @@
                         }
                     };
 
-                    merge(this, true);
+                    this.option('summaryData', summary(data));
+                    data.pop(); // 총계(마지막 행) 제외
+                    merge(this, true, data);
                 },
                 editorKeyDown: function (evt, ui) {
                     if (evt.keyCode === 9 || evt.keyCode === 13) {
@@ -2061,12 +2067,7 @@
                     }
                 },
                 cellSave: function (evt, ui) {
-                    if (ui.newVal === null || ui.newVal === '') {
-                        this.updateRow({
-                            rowIndx: ui.rowIndx,
-                            row: {[ui.dataIndx]: undefined}
-                        });
-                    }
+                    processingRequirementsSave();
                 },
                 beforePaste: function (evt, ui) {
                     let CM = this.getColModel(),
@@ -2118,7 +2119,7 @@
     };
 
     const changeProcessingRequirementsInformation = function (rowData) {
-        let $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
+        const $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
         let queryId = '';
 
         if ($processingRequirementsType === 'ESTIMATE') {
@@ -2127,7 +2128,7 @@
             queryId = 'orderMapper.selectProcessingRequirementsInfo';
         }
 
-        let postData = $.extend({queryId: queryId}, rowData);
+        const postData = $.extend({queryId: queryId}, rowData);
         postData.TYPE = $processingRequirementsType;
         postData.SEQ1 = $('.basic_information').find('#seq1').html();
         postData.SEQ2 = $('.basic_information').find('#seq2').html();
@@ -2224,12 +2225,6 @@
         }
     };
 
-    const isProcessingRequirementsGridDirty = function () {
-        let gridInstance = $processingRequirementsGrid.pqGrid('getInstance').grid;
-
-        return gridInstance.isDirty();
-    };
-
     //TODO: 함수명 변경
     const changeData = function () {
         const rowData = processingRequirementsTargetGrid.pqGrid('getRowData', {rowIndx: processingRequirementsTargetRowIndex});
@@ -2244,27 +2239,21 @@
 
     /* event */
     $('#processingRequirementsModal #prev').on('click', function () {
-        if (isProcessingRequirementsGridDirty()) {
-            fnAlert(null, '현재 수정중인 작업을 완료 후 다시 실행해 주세요.');
-            return
-        }
-
         processingRequirementsTargetRowIndex--;
+
         changeData();
     });
 
     $('#processingRequirementsModal #next').on('click', function () {
-        if (isProcessingRequirementsGridDirty()) {
-            fnAlert(null, '현재 수정중인 작업을 완료 후 다시 실행해 주세요.');
-            return
-        }
-
         processingRequirementsTargetRowIndex++;
+
         changeData();
     });
 
-    $('#processing_requirements_save').on('click', function () {
-        if (isProcessingRequirementsGridDirty()) {
+    const processingRequirementsSave = function () {
+        const gridInstance = $processingRequirementsGrid.pqGrid('getInstance').grid;
+
+        if (gridInstance.isDirty()) {
             let $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
             let $basicInformation = $('.basic_information');
             let gridInstance = $processingRequirementsGrid.pqGrid('getInstance').grid;
@@ -2290,12 +2279,10 @@
                     return;
                 }
 
-                fnAlert(null, "<spring:message code='com.alert.default.save.success' />");
                 $processingRequirementsGrid.pqGrid('refreshDataAndView');
-                // isProcessingRequirementsDirty = false;
             }, parameter, '');
         }
-    });
+    };
 
     $(document).on('click', '.basic_information #imageView', function () {
         const imgGfileSeq = $(this).data('value');

@@ -3147,7 +3147,7 @@
             , A.LEVEL_1
             , A.LEVEL_2
             <!-- , A.NOTE -->
-            , B.UNIT_AMT
+            , SUM(B.UNIT_AMT) AS UNIT_AMT
             <!-- , C.CONTROL_SEQ -->
             <!--- , C.CONTROL_DETAIL_SEQ -->
             , C.PROCESS_CNT
@@ -3157,7 +3157,7 @@
                 LEFT OUTER JOIN TBL_CONTROL_PART_PROCESS C ON C.FACTOR_CD = A.FACTOR_CD
                     AND C.CONTROL_SEQ = #{CONTROL_SEQ}
                     AND C.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-        ORDER BY A.SORT_NUM, A.FACTOR_CD
+        GROUP BY A.FACTOR_CD WITH ROLLUP
     </select>
 
     <insert id="insertControlPartProcess" parameterType="java.util.HashMap">
