@@ -33,8 +33,18 @@
                                         </c:forEach>
                                     </select>
                                 </span>
-                                <button type="button" class="defaultBtn btn-100w" id="PROCESS_CONFIRM_DETAIL">상세정보 조회</button>
-                                <button type="button" class="defaultBtn btn-100w" id="PROCESS_CONFIRM_DRAWING_VIEW">도면 보기</button>
+                                <label for="processConfirmFilterKeyword"></label><input type="search" id="processConfirmFilterKeyword" placeholder="Enter your keyword">
+                                <label for="processConfirmFilterColumn"></label>
+                                <select id="processConfirmFilterColumn">
+<%--                                    <option value="">All Fields</option>--%>
+                                    <option value="CONTROL_NUM">관리번호</option>
+                                </select>
+                                <label for="processConfirmFilterCondition"></label>
+                                <select id="processConfirmFilterCondition">
+                                    <c:forEach var="code" items="${HighCode.H_1083}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
+                                </select>
                             </div>
                         </div>
                         <div class="topLeftWrap left_float">
@@ -49,12 +59,6 @@
                                             <span id="CONFIRM_ORDER_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
                                         </p>
                                         <div class="d-inline-block right_float">
-<%--                                            <span>--%>
-<%--                                                <label class="label_50" for="CONFIRM_ORDER_CORPORATION">발주처</label>--%>
-<%--                                                <select class="wd_100" name="ORDER_COMP_CD" id="CONFIRM_ORDER_CORPORATION">--%>
-<%--                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
-<%--                                                </select>--%>
-<%--                                            </span>--%>
                                             <span>
                                                 <label class="label_50" for="CONFIRM_ORDER_MATERIAL">소재</label>
                                                 <select class="wd_100" name="MATERIAL_TYPE" id="CONFIRM_ORDER_MATERIAL">
@@ -88,15 +92,6 @@
                                                 <input type="checkbox" name="EMERGENCY_YN"
                                                        id="EMERGENCY_YN"><i></i> Show Only 긴급
                                             </label>
-<%--                                            <span>--%>
-<%--                                                <label class="label_50" for="PROCESS_CONFIRM_CORPORATION">발주처</label>--%>
-<%--                                                <select class="wd_100" name="ORDER_COMP_CD" id="PROCESS_CONFIRM_CORPORATION">--%>
-<%--                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
-<%--                                                    <c:forEach var="code" items="${HighCode.H_1007}">--%>
-<%--                                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
-<%--                                                    </c:forEach>--%>
-<%--                                                </select>--%>
-<%--                                            </span>--%>
                                                 <span>
                                                 <label class="label_50" for="PROCESS_CONFIRM_MATERIAL">소재</label>
                                                 <select class="wd_100" name="MATERIAL_TYPE" id="PROCESS_CONFIRM_MATERIAL">
@@ -126,12 +121,6 @@
                                             <span id="OUTSIDE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
                                         </p>
                                         <div class="d-inline-block right_float">
-<%--                                            <span>--%>
-<%--                                                <label class="label_50" for="OUTSIDE_CORPORATION">발주처</label>--%>
-<%--                                                <select class="wd_100" name="ORDER_COMP_CD" id="OUTSIDE_CORPORATION">--%>
-<%--                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
-<%--                                                </select>--%>
-<%--                                            </span>--%>
                                             <span>
                                                 <label class="label_50" for="OUTSIDE_SUBCONTRACTOR">외주업체</label>
                                                 <select class="wd_100" name="OUTSIDE_COMP_CD" id="OUTSIDE_SUBCONTRACTOR">
@@ -158,18 +147,6 @@
                                             <span id="PROCESS_COMPLETE_TOTAL_ORDER_QUANTITY" style="color: #00b3ee">0</span> EA )
                                         </p>
                                         <div class="d-inline-block right_float">
-<%--                                            <span>--%>
-<%--                                                <label class="label_50" for="PROCESS_COMPLETE_CORPORATION">발주처</label>--%>
-<%--                                                <select class="wd_100" name="ORDER_COMP_CD" id="PROCESS_COMPLETE_CORPORATION">--%>
-<%--                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
-<%--                                                </select>--%>
-<%--                                            </span>--%>
-<%--                                            <span>--%>
-<%--                                                <label class="label_50" for="PROCESS_COMPLETE_SUBCONTRACTOR">외주업체</label>--%>
-<%--                                                <select class="wd_100" name="OUTSIDE_COMP_CD" id="PROCESS_COMPLETE_SUBCONTRACTOR">--%>
-<%--                                                    <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
-<%--                                                </select>--%>
-<%--                                            </span>--%>
                                         </div>
                                         <hr>
                                     </div>
@@ -318,7 +295,9 @@
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: processConfirmFilterRender},
+            filterModel: {mode: 'OR'},
+            editable: false,
             colModel: topLeftColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -460,7 +439,9 @@
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: processConfirmFilterRender},
+            filterModel: {mode: 'OR'},
+            editable: false,
             colModel: topRightColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
@@ -571,7 +552,6 @@
             },
             {title: '외주<br>납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
             {title: '발주<br>납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
-            // {title: '가공<br>납기', width: '7.5%', dataIndx: 'INNER_DUE_DT'},
             {title: '작업<br>형태', minWidth: 40, dataIndx: 'WORK_TYPE_NM'},
             {title: '규격', width: '7.5%', dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', width: '5%', dataIndx: 'MATERIAL_DETAIL_NM'},
@@ -590,9 +570,10 @@
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: processConfirmFilterRender},
+            filterModel: {mode: 'OR'},
+            editable: false,
             colModel: botLeftColModel,
-            // toolbar: rightBotToolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: botLeftPostData,
@@ -716,9 +697,10 @@
             scrollModel: {autoFit: true},
             trackModel: {on: true},
             selectionModel: {type: 'row', mode: 'single'},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: processConfirmFilterRender},
+            filterModel: {mode: 'OR'},
+            editable: false,
             colModel: botRightColModel,
-            // toolbar: rightBotToolbar,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: botRightPostData,
@@ -824,6 +806,57 @@
                 $outsideGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
         };
+
+        function processConfirmFilterRender(ui) {
+            let val = ui.cellData === undefined ? '' : ui.cellData,
+                options = ui.column.editor === undefined ? '' : ui.column.editor.options;
+            let index = -1;
+            if (options) {
+                index = options.findIndex(function (element) {
+                    return element.value === val;
+                });
+                if (index > -1) val = options[index].text;
+            }
+            if (val) {
+                if (ui.column.dataType === 'integer') {
+                    val = numberWithCommas(val);
+                } else if (ui.column.dataType === 'date' && ui.column.format !== undefined) {
+                    let o = new Date(val);
+                    val = o && !isNaN(o.getTime()) && $.datepicker.formatDate(ui.column.format, o);
+                }
+
+                let condition = $('#processConfirmFilterCondition :selected').val(),
+                    valUpper = val.toString().toUpperCase(),
+                    txt = $('#processConfirmFilterKeyword').val(),
+                    txtUpper = (txt == null) ? '' : txt.toString().toUpperCase(),
+                    indx = -1;
+
+                if (condition === 'end') {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length !== valUpper.length) {
+                        indx = -1;
+                    }
+                } else if (condition === 'contain') {
+                    indx = valUpper.indexOf(txtUpper);
+                } else if (condition === 'begin') {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
+
+                if (indx >= 0 && txt) {
+                    let txt1 = val.toString().substring(0, indx);
+                    let txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                    let txt3 = val.toString().substring(indx + txtUpper.length);
+                    return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
+                } else {
+                    return val;
+                }
+            } else {
+                return val;
+            }
+        }
         /* function */
 
         $('#CONFIRM_ORDER_SEARCH_FORM').on('change', function() {
@@ -871,30 +904,10 @@
             $('#OUTSIDE_SEARCH_FORM').trigger("change");
             $('#PROCESS_COMPLETE_SEARCH_FORM').trigger("change");
         });
-        // fnCommCodeDatasourceSelectBoxCreate($('#CONFIRM_ORDER_SEARCH_FORM').find('#CONFIRM_ORDER_CORPORATION'), 'all', {
-        //     'url': '/json-list',
-        //     'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        // });
-        // fnCommCodeDatasourceSelectBoxCreate($('#PROCESS_CONFIRM_SEARCH_FORM').find('#PROCESS_CONFIRM_CORPORATION'), 'all', {
-        //     'url': '/json-list',
-        //     'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        // });
-        // fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_SEARCH_FORM').find('#OUTSIDE_CORPORATION'), 'all', {
-        //     'url': '/json-list',
-        //     'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        // });
-        // fnCommCodeDatasourceSelectBoxCreate($('#PROCESS_COMPLETE_SEARCH_FORM').find('#PROCESS_COMPLETE_CORPORATION'), 'all', {
-        //     'url': '/json-list',
-        //     'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        // });
         fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_SEARCH_FORM').find('#OUTSIDE_SUBCONTRACTOR'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
         });
-        // fnCommCodeDatasourceSelectBoxCreate($('#PROCESS_COMPLETE_SEARCH_FORM').find('#PROCESS_COMPLETE_SUBCONTRACTOR'), 'all', {
-        //     'url': '/json-list',
-        //     'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
-        // });
         $confirmOrderGrid = $('#' + topLeftGridId).pqGrid(topLeftObj);
         $processConfirmGrid = $('#' + topRightGridId).pqGrid(topRightObj);
         $outsideGrid = $('#' + botLeftGridId).pqGrid(botLeftObj);
@@ -1022,6 +1035,20 @@
             });
         });
 
+        $('#processConfirmFilterKeyword').on({
+            'keyup': function () {
+                fnFilterHandler($confirmOrderGrid, 'processConfirmFilterKeyword', 'processConfirmFilterCondition', 'processConfirmFilterColumn');
+                fnFilterHandler($processConfirmGrid, 'processConfirmFilterKeyword', 'processConfirmFilterCondition', 'processConfirmFilterColumn');
+                fnFilterHandler($outsideGrid, 'processConfirmFilterKeyword', 'processConfirmFilterCondition', 'processConfirmFilterColumn');
+                fnFilterHandler($processCompleteGrid, 'processConfirmFilterKeyword', 'processConfirmFilterCondition', 'processConfirmFilterColumn');
+            },
+            'search': function () {
+                fnFilterHandler($confirmOrderGrid, 'processConfirmFilterKeyword', 'processConfirmFilterCondition', 'processConfirmFilterColumn');
+                fnFilterHandler($processConfirmGrid, 'processConfirmFilterKeyword', 'processConfirmFilterCondition', 'processConfirmFilterColumn');
+                fnFilterHandler($outsideGrid, 'processConfirmFilterKeyword', 'processConfirmFilterCondition', 'processConfirmFilterColumn');
+                fnFilterHandler($processCompleteGrid, 'processConfirmFilterKeyword', 'processConfirmFilterCondition', 'processConfirmFilterColumn');
+            }
+        });
     });
 </script>
 </html>
