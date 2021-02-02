@@ -1223,8 +1223,8 @@
 
         $('#item_order_register_popup').on({
             'show.bs.modal': function () {
-                $('.popupTableDiv").parent().width('100%');
-            $(".popupTableDiv').parent().prev().width('100%');
+                $('.popupTableDiv').parent().width('100%');
+                $('.popupTableDiv').parent().prev().width('100%');
 
                 itemOrderRegisterPopTopGrid.pqGrid({
                     width: '100%', height: 500,
