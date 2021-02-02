@@ -1801,22 +1801,22 @@
             , X.ORDER_COMP_CD
             , X.ORDER_COMP_NM
             , X.STATUS_TYPE
-            , SUM(X.`01_AMT`) AS `01_AMT`
-            , SUM(X.`02_AMT`) AS `02_AMT`
-            , SUM(X.`03_AMT`) AS `03_AMT`
-            , SUM(X.`03_SUM_AMT`) AS `03_SUM_AMT`
-            , SUM(X.`04_AMT`) AS `04_AMT`
-            , SUM(X.`05_AMT`) AS `05_AMT`
-            , SUM(X.`06_AMT`) AS `06_AMT`
-            , SUM(X.`06_SUM_AMT`) AS `06_SUM_AMT`
-            , SUM(X.`07_AMT`) AS `07_AMT`
-            , SUM(X.`08_AMT`) AS `08_AMT`
-            , SUM(X.`09_AMT`) AS `09_AMT`
-            , SUM(X.`09_SUM_AMT`) AS `09_SUM_AMT`
-            , SUM(X.`10_AMT`) AS `10_AMT`
-            , SUM(X.`11_AMT`) AS `11_AMT`
-            , SUM(X.`12_AMT`) AS `12_AMT`
-            , SUM(X.`12_SUM_AMT`) AS `12_SUM_AMT`
+            , SUM(X.`AMT_01`) AS `AMT_01`
+            , SUM(X.`AMT_02`) AS `AMT_02`
+            , SUM(X.`AMT_03`) AS `AMT_03`
+            , SUM(X.`AMT_03_SUM`) AS `AMT_03_SUM`
+            , SUM(X.`AMT_04`) AS `AMT_04`
+            , SUM(X.`AMT_05`) AS `AMT_05`
+            , SUM(X.`AMT_06`) AS `AMT_06`
+            , SUM(X.`AMT_06_SUM`) AS `AMT_06_SUM`
+            , SUM(X.`AMT_07`) AS `AMT_07`
+            , SUM(X.`AMT_08`) AS `AMT_08`
+            , SUM(X.`AMT_09`) AS `AMT_09`
+            , SUM(X.`AMT_09_SUM`) AS `AMT_09_SUM`
+            , SUM(X.`AMT_10`) AS `AMT_10`
+            , SUM(X.`AMT_11`) AS `AMT_11`
+            , SUM(X.`AMT_12`) AS `AMT_12`
+            , SUM(X.`AMT_12_SUM`) AS `AMT_12_SUM`
             , SUM(X.TOTAL_AMT) AS TOTAL_AMT
         FROM (
                 SELECT H.YYYY
@@ -1826,22 +1826,22 @@
                     , H.ORDER_COMP_CD
                     , SF_GET_COMP_NM(H.ORDER_COMP_CD) AS ORDER_COMP_NM
                     , CASE WHEN STATUS_TYPE = '1' THEN '입금' ELSE '매출' END STATUS_TYPE
-                    , CASE WHEN H.MM = '01' THEN H.AMT ELSE 0 END AS `01_AMT`
-                    , CASE WHEN H.MM = '02' THEN H.AMT ELSE 0 END AS `02_AMT`
-                    , CASE WHEN H.MM = '03' THEN H.AMT ELSE 0 END AS `03_AMT`
-                    , CASE WHEN H.MM IN ('01', '02', '03') THEN H.AMT ELSE 0 END AS `03_SUM_AMT`
-                    , CASE WHEN H.MM = '04' THEN H.AMT ELSE 0 END AS `04_AMT`
-                    , CASE WHEN H.MM = '05' THEN H.AMT ELSE 0 END AS `05_AMT`
-                    , CASE WHEN H.MM = '06' THEN H.AMT ELSE 0 END AS `06_AMT`
-                    , CASE WHEN H.MM IN ('04', '05', '06') THEN H.AMT ELSE 0 END AS `06_SUM_AMT`
-                    , CASE WHEN H.MM = '07' THEN H.AMT ELSE 0 END AS `07_AMT`
-                    , CASE WHEN H.MM = '08' THEN H.AMT ELSE 0 END AS `08_AMT`
-                    , CASE WHEN H.MM = '09' THEN H.AMT ELSE 0 END AS `09_AMT`
-                    , CASE WHEN H.MM IN ('07', '08', '09') THEN H.AMT ELSE 0 END AS `09_SUM_AMT`
-                    , CASE WHEN H.MM = '10' THEN H.AMT ELSE 0 END AS `10_AMT`
-                    , CASE WHEN H.MM = '11' THEN H.AMT ELSE 0 END AS `11_AMT`
-                    , CASE WHEN H.MM = '12' THEN H.AMT ELSE 0 END AS `12_AMT`
-                    , CASE WHEN H.MM IN ('10', '11', '12') THEN H.AMT ELSE 0 END AS `12_SUM_AMT`
+                    , CASE WHEN H.MM = '01' THEN H.AMT ELSE 0 END AS `AMT_01`
+                    , CASE WHEN H.MM = '02' THEN H.AMT ELSE 0 END AS `AMT_02`
+                    , CASE WHEN H.MM = '03' THEN H.AMT ELSE 0 END AS `AMT_03`
+                    , CASE WHEN H.MM IN ('01', '02', '03') THEN H.AMT ELSE 0 END AS `AMT_03_SUM`
+                    , CASE WHEN H.MM = '04' THEN H.AMT ELSE 0 END AS `AMT_04`
+                    , CASE WHEN H.MM = '05' THEN H.AMT ELSE 0 END AS `AMT_05`
+                    , CASE WHEN H.MM = '06' THEN H.AMT ELSE 0 END AS `AMT_06`
+                    , CASE WHEN H.MM IN ('04', '05', '06') THEN H.AMT ELSE 0 END AS `AMT_06_SUM`
+                    , CASE WHEN H.MM = '07' THEN H.AMT ELSE 0 END AS `AMT_07`
+                    , CASE WHEN H.MM = '08' THEN H.AMT ELSE 0 END AS `AMT_08`
+                    , CASE WHEN H.MM = '09' THEN H.AMT ELSE 0 END AS `AMT_09`
+                    , CASE WHEN H.MM IN ('07', '08', '09') THEN H.AMT ELSE 0 END AS `AMT_09_SUM`
+                    , CASE WHEN H.MM = '10' THEN H.AMT ELSE 0 END AS `AMT_10`
+                    , CASE WHEN H.MM = '11' THEN H.AMT ELSE 0 END AS `AMT_11`
+                    , CASE WHEN H.MM = '12' THEN H.AMT ELSE 0 END AS `AMT_12`
+                    , CASE WHEN H.MM IN ('10', '11', '12') THEN H.AMT ELSE 0 END AS `AMT_12_SUM`
                     , H.AMT AS TOTAL_AMT
                 FROM (
                     SELECT F.YYYY
@@ -1909,31 +1909,31 @@
     </select>
     <select id="selectMonthSaleStatusSummary" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT 1 AS GROUP_KEY
-            , ROW_NUMBER () OVER (ORDER BY X.YYYY, X.COMP_CD, X.ORDER_COMP_CD, X.STATUS_TYPE) AS ROW_NUM
+            , NULL AS ROW_NUM
             , X.YYYY
             , X.MM
-            , X.COMP_CD
-            , X.COMP_NM
-            , X.ORDER_COMP_CD
-            , X.ORDER_COMP_NM
+            , NULL AS COMP_CD
+            , NULL AS COMP_NM
+            , NULL AS ORDER_COMP_CD
+            , NULL AS ORDER_COMP_NM
             , X.STATUS_TYPE
-            , FORMAT(SUM(X.`AMT_01`), 0) AS `AMT_01`
-            , FORMAT(SUM(X.`AMT_02`), 0) AS `AMT_02`
-            , FORMAT(SUM(X.`AMT_03`), 0) AS `AMT_03`
-            , FORMAT(SUM(X.`AMT_03_SUM`), 0) AS `AMT_03_SUM`
-            , FORMAT(SUM(X.`AMT_04`), 0) AS `AMT_04`
-            , FORMAT(SUM(X.`AMT_05`), 0) AS `AMT_05`
-            , FORMAT(SUM(X.`AMT_06`), 0) AS `AMT_06`
-            , FORMAT(SUM(X.`AMT_06_SUM`), 0) AS `AMT_06_SUM`
-            , FORMAT(SUM(X.`AMT_07`), 0) AS `AMT_07`
-            , FORMAT(SUM(X.`AMT_08`), 0) AS `AMT_08`
-            , FORMAT(SUM(X.`AMT_09`), 0) AS `AMT_09`
-            , FORMAT(SUM(X.`AMT_09_SUM`), 0) AS `AMT_09_SUM`
-            , FORMAT(SUM(X.`AMT_10`), 0) AS `AMT_10`
-            , FORMAT(SUM(X.`AMT_11`), 0) AS `AMT_11`
-            , FORMAT(SUM(X.`AMT_12`), 0) AS `AMT_12`
-            , FORMAT(SUM(X.`AMT_12_SUM`), 0) AS `AMT_12_SUM`
-            , FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT
+            , SUM(X.`AMT_01`) AS `AMT_01`
+            , SUM(X.`AMT_02`) AS `AMT_02`
+            , SUM(X.`AMT_03`) AS `AMT_03`
+            , SUM(X.`AMT_03_SUM`) AS `AMT_03_SUM`
+            , SUM(X.`AMT_04`) AS `AMT_04`
+            , SUM(X.`AMT_05`) AS `AMT_05`
+            , SUM(X.`AMT_06`) AS `AMT_06`
+            , SUM(X.`AMT_06_SUM`) AS `AMT_06_SUM`
+            , SUM(X.`AMT_07`) AS `AMT_07`
+            , SUM(X.`AMT_08`) AS `AMT_08`
+            , SUM(X.`AMT_09`) AS `AMT_09`
+            , SUM(X.`AMT_09_SUM`) AS `AMT_09_SUM`
+            , SUM(X.`AMT_10`) AS `AMT_10`
+            , SUM(X.`AMT_11`) AS `AMT_11`
+            , SUM(X.`AMT_12`) AS `AMT_12`
+            , SUM(X.`AMT_12_SUM`) AS `AMT_12_SUM`
+            , SUM(X.TOTAL_AMT) AS TOTAL_AMT
         FROM (
                 SELECT H.YYYY
                     , H.MM
