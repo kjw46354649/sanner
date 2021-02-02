@@ -453,11 +453,6 @@
                         newRowData.SIZE_T = null;
                         newRowData.SIZE_D = null;
                         newRowData.SIZE_L = null;
-                        newRowData.SIZE_W_M = null;
-                        newRowData.SIZE_H_M = null;
-                        newRowData.SIZE_T_M = null;
-                        newRowData.SIZE_D_M = null;
-                        newRowData.SIZE_L_M = null;
                         newRowData.MATERIAL_TYPE = null;
                         newRowData.MATERIAL_DETAIL = null;
                         newRowData.MATERIAL_KIND = null;
@@ -920,19 +915,6 @@
                         }
                     },
                     {
-                        title: '출고일자', dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_OUT_FINISH_DT',
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
-                    },
-                    {
                         title: '마감일자', dataType: 'date', format: 'mm/dd', dataIndx: 'CLOSE_DT',
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -1377,85 +1359,6 @@
                     return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
-            {
-                title: '예상소재 Size (견적계산용)', align: 'center', hidden: true, colModel: [
-                    {
-                        title: '@', dataIndx: 'MATERIAL_BUTTON',
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
-                    },
-                    {
-                        title: '가로', dataIndx: 'SIZE_W_M',
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
-                    },
-                    {title: '세로', dataIndx: 'SIZE_H_M',
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
-                    },
-                    {title: '높이', dataIndx: 'SIZE_T_M',
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }},
-                    {
-                        title: '중량', dataIndx: 'SIZE_D_M',
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
-                    },
-                    {
-                        title: '부피', dataIndx: 'SIZE_L_M',
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let cls = null;
-
-                            if (rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: controlManageFilterRender(ui)};
-                        }
-                    }
-                ]
-            },
             /*{
                 title: '견적<br>합계금액', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'EST_TOTAL_AMT', hidden: true,
                 render: function (ui) {
@@ -1568,6 +1471,7 @@
                     {title: '비고', dataIndx: 'OUTSIDE_NOTE', hidden: true},
                 ]
             },
+            {title: '등록/업데이트<br>일시', width: 90, dataIndx: 'CONTROL_PART_INSERT_UPDATE_DT'},
             {title: 'CONTROL_BARCODE_NUM', dataIndx: 'CONTROL_BARCODE_NUM', hidden: true}
         ];
         const obj = {
@@ -1935,7 +1839,7 @@
                 'PREV_DRAWING_NUM', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT',
                 'MATERIAL_FINISH_HEAT', 'MATERIAL_NOTE', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
                 'DRAWING_UP_DT', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
-                'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT_F', 'DELIVERY_DT', 'ORDER_IMG_GFILE_SEQ',
+                'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT_F', 'DELIVERY_DT', 'CONTROL_PART_INSERT_UPDATE_DT', 'ORDER_IMG_GFILE_SEQ',
                 'EOCLD', 'DNJSCLD', 'SAME_SIDE_YN',
             ];
             const closeModeArray = [
@@ -1964,7 +1868,7 @@
                 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
                 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
                 'CLOSE_DT', 'DELIVERY_DT', 'DETAIL_MACHINE_REQUIREMENT', 'MATERIAL_FINISH_GRIND',
-                'MATERIAL_FINISH_HEAT', 'MATERIAL_BUTTON', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
+                'MATERIAL_FINISH_HEAT',
                 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'UNIT_FINAL_EST_AMT', 'UNIT_MATERIAL_AUTO_AMT',
                 'UNIT_MATERIA_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT',
                 'UNIT_PROCESS_AUTO_AMT', 'UNIT_SUM_AUTO_AMT', 'UNIT_SURFACE_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
@@ -1973,7 +1877,7 @@
                 'ETC_GFILE_SEQ', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT',
                 'OUTSIDE_FINAL_AMT', 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT_F', 'OUTSIDE_NOTE', 'UNIT_MATERIAL_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT',
-                'UNIT_PROCESS_AUTO_AMT', 'UNIT_SUM_AUTO_AMT'
+                'UNIT_PROCESS_AUTO_AMT', 'UNIT_SUM_AUTO_AMT', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
 
             switch (elementId) {
@@ -2192,9 +2096,9 @@
             const partList = [
                 'PART_NUM', 'ORDER_NUM_PLUS_BUTTON', 'DRAWING_VER', 'DRAWING_UP_DT', 'PREV_DRAWING_NUM',
                 'WORK_TYPE', 'CONTROL_PART_QTY', 'DNJSCLD', 'EOCLD', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT',
-                'SIZE_TXT', 'SIZE_TYPE', 'SIZE_W', 'SIZE_H', 'SIZE_T', 'SIZE_D', 'SIZE_L', 'SIZE_W_M', 'SIZE_H_M', 'SIZE_T_M', 'SIZE_D_M', 'SIZE_L_M',
+                'SIZE_TXT', 'SIZE_TYPE', 'SIZE_W', 'SIZE_H', 'SIZE_T', 'SIZE_D', 'SIZE_L',
                 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
-                'PART_UNIT_QTY', 'MATERIAL_BUTTON', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
+                'PART_UNIT_QTY', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_SURFACE_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'DETAIL_MACHINE_REQUIREMENT',
                 'UNIT_AMT_NOTE',
@@ -2204,13 +2108,13 @@
                 'OUTSIDE_REQUEST_FINISH_YN', 'OUTSIDE_REQUEST_PROCESS_YN', 'OUTSIDE_REQUEST_GRIND_YN',
                 'OUTSIDE_REQUEST_SURFACE_YN', 'OUTSIDE_REQUEST_ETC', 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_UNIT_AMT',
                 'OUTSIDE_FINAL_AMT', 'OUTSIDE_IN_DT_F', 'OUTSIDE_STATUS', 'OUTSIDE_STATUS_DT',
-                
                 'UNIT_MATERIAL_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT',
                 'UNIT_SURFACE_AUTO_AMT',
                 'UNIT_PROCESS_AUTO_AMT',
-                'UNIT_SUM_AUTO_AMT'
+                'CONTROL_PART_INSERT_UPDATE_DT',
+                // 'UNIT_SUM_AUTO_AMT'
             ];
             const includeList = controlList.concat(partList);
 
