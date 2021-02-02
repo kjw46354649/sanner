@@ -1649,10 +1649,10 @@
           , jmes.SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, #{LOGIN_LOCALE}) AS WAREHOUSE_CD_NM
           , A.LOC_SEQ
           , (SELECT LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION WHERE WAREHOUSE_CD = A.WAREHOUSE_CD AND LOC_SEQ = A.LOC_SEQ ) AS LOC_SEQ_NM
-            , A.DWG_GFILE_SEQ
-            , A.DXF_GFILE_SEQ
-            , A.IMG_GFILE_SEQ
-            , A.PDF_GFILE_SEQ
+          , A.DWG_GFILE_SEQ
+          , A.DXF_GFILE_SEQ
+          , A.IMG_GFILE_SEQ
+          , A.PDF_GFILE_SEQ
           , jmes.SF_GET_DATE_F(A.INSERT_DT, 'YY', 'M') AS INSERT_TIME
           , jmes.SF_GET_DATE_F(A.UPDATE_DT, 'YY', 'M') AS UPDATE_TIME
           , A.NOTE
@@ -1673,8 +1673,8 @@
         <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null"> <!-- FIXME -->
             AND A.CONTROL_SEQ IN (SELECT CONTROL_SEQ FROM jmes.TBL_CONTROL B WHERE B.CONTROL_NUM LIKE CONCAT('%', #{SEL_CONTROL_NUM}, '%'))
         </if>
-        <if test="SEL_MATERIAL_DETAIL !='' and SEL_MATERIAL_DETAIL != null">
-            AND A.MATERIAL_DETAIL = #{SEL_MATERIAL_DETAIL}
+        <if test="HIDDEN_SEL_MATERIAL_DETAIL != '' and HIDDEN_SEL_MATERIAL_DETAIL != null">
+                AND A.MATERIAL_DETAIL IN (${HIDDEN_SEL_MATERIAL_DETAIL})
         </if>
         <if test="SEL_WAREHOUSE_CD !='' and SEL_WAREHOUSE_CD != null">
             AND A.WAREHOUSE_CD = #{SEL_WAREHOUSE_CD}

@@ -1138,7 +1138,7 @@
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
-                AND B.PART_STATUS IS NULL
+                AND (B.PART_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD005'))
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
             AND A.CONTROL_STATUS IN ('ORD001', 'ORD005')

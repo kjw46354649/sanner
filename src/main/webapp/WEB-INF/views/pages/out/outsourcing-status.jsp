@@ -617,7 +617,7 @@
         $('#OUTSIDE_CLOSE_YEAR_RIGHT').on('change', function () {
             fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_RIGHT', this.value);
         });
-        $('#RANGE_SEARCH').on('change', function () {
+        $('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').find('#RANGE_SEARCH').on('change', function () {
             if ($(this).prop('checked')) {
                 $('#OUTSIDE_CLOSE_YEAR_RIGHT').prop('disabled', false);
                 $('#OUTSIDE_CLOSE_MONTH_RIGHT').prop('disabled', false);

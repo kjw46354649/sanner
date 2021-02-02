@@ -160,7 +160,8 @@
                     {title: '기타사항', width: 90, dataIndx: 'OUTSIDE_REQUEST_ETC'}
                 ]
             },
-            {title: '외주<br>납기', width: 70, dataIndx: 'OUTSIDE_HOPE_DUE_DT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editor: {type: 'textbox', init: fnDateEditor},
+            {
+                title: '외주<br>납기', dataIndx: 'OUTSIDE_HOPE_DUE_DT',
                 render: function (ui) {
                     if (ui.cellData) {
                         let date = ui.cellData;

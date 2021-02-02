@@ -67,6 +67,9 @@
                             </select>
                             <select class="wd_100" name="WORK_US3ER_2ID4" id="WORK_US3ER_2ID4">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1090}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -632,8 +635,8 @@
             {
                 title: '1EA 가공시간', align: 'center',
                 colModel: [
-                    {title: 'CNC', dataIndx: 'NC_WORK_TIME'},
-                    {title: '전공정', dataIndx: 'TOTAL_WORK_TIME'}
+                    {title: '전공정', dataIndx: 'TOTAL_WORK_TIME'},
+                    {title: 'NC', dataIndx: 'NC_WORK_TIME'}
                 ]
             },
             {

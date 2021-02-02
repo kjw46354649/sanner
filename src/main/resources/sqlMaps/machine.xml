@@ -338,7 +338,8 @@
             EQUIP_SEQ = #{EQUIP_SEQ},
             WORKING_TIME = #{WORKING_TIME},
             SORT_NUM = #{SORT_NUM},
-            UPDATE_DT = NOW()
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE MCT_PLAN_SEQ = #{MCT_PLAN_SEQ}
     </update>
     <delete id="deleteMctPlan" parameterType="java.util.HashMap">
@@ -527,8 +528,10 @@
     <update id="updateMctPlanFromTarget"  parameterType="java.util.HashMap" >
         UPDATE TBL_MCT_PLAN
         SET
+            EQUIP_SEQ = #{EQUIP_SEQ},
             WORKING_TIME = #{WORKING_TIME},
-            UPDATE_DT = NOW()
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE MCT_PLAN_SEQ = #{MCT_PLAN_SEQ}
     </update>
 
@@ -578,6 +581,7 @@
                 GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
               ) AS TOTAL_WORK_TIME <!-- 전공정 -->
             , H.SEQ AS CAM_STEP <!-- CAM 스탭 -->
+            , SF_GET_CODE_NM('1080', H.WORK_DIRECTION, #{LOGIN_LOCALE}) AS WORK_DIRECTION <!-- CAM 가공위치 -->
             , H.WORK_DESC <!-- CAM 작업 내용 -->
             , H.DESIGN_QTY <!-- 단위 수량 -->
             , jmes.SF_GET_USER_NM(H.WORK_USER_ID) AS WORK_USER_NM
@@ -1061,7 +1065,7 @@
             , I.EQUIP_SEQ <!-- 계획 장비 번호 -->
             , J.EQUIP_ID 	<!-- 계획 장비 아이디 -->
             , J.EQUIP_NM AS MCT_PLAN_EQUIP_NM <!-- 계획 장비 -->
-            , I.WORKING_TIME AS PLAN_WORKING_TIME <!-- MCT 계획 시간 -->
+            , I.WORKING_TIME <!-- MCT 계획 시간 -->
             , ( SELECT CONCAT(jmes.SF_GET_DATE_F(N.INSERT_DT, 'YYYY', ''), ' / ',(SELECT T.USER_NM FROM jmes.TBL_USER T WHERE T.USER_ID = N.WORK_USER_ID))
                 FROM jmes.TBL_CAM M, jmes.TBL_CAM_DETAIL N, jmes.TBL_CONTROL_PART O
                 WHERE O.CONTROL_SEQ = M.CONTROL_SEQ
@@ -1080,7 +1084,7 @@
 	            											WHEN K.WORKING_TIME > 3600 THEN CONCAT(TRUNCATE(IFNULL(K.WORKING_TIME, 0)/ 3600, 0), 'h ', TRUNCATE((IFNULL(K.WORKING_TIME, 0)%3600)/ 60, 0), 'm')
 	        												ELSE CONCAT(TRUNCATE((IFNULL(K.WORKING_TIME, 0)%3600)/ 60, 0), 'm')
 														END
-            END AS WORKING_TIME
+            END AS RECENT_WORKING_TIME
             , K.WORK_STATUS
             , K.WORK_STATUS_NM
             , K.NC_WORK_TYPE

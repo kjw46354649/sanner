@@ -807,6 +807,8 @@
             },
             {title: '입고일시', dataIndx: 'IN_DT', width: 100, editable: false},
             {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
+            {title: '', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: '', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'ORDER_USER_ID', hidden: true}
@@ -988,6 +990,8 @@
             },
             {title: '입고일시', dataIndx: 'IN_DT', width: 100, editable: false},
             {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
+            {title: '', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: '', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'ORDER_USER_ID', hidden: true}
@@ -1812,7 +1816,7 @@
                             }
                             table += '<tr>';
                             table += '<td style="max-width: 110px;">' + materialDetailNm + '</td>';
-                            table += '<td class="text-right" style="max-width: 150px;">' + sizeTxt + '</td>';
+                            table += '<td class="text-right" style="max-width: 110px;">' + sizeTxt + '</td>';
                             table += '<td class="text-right" style="max-width: 55px;">' + orderQtyInfo + '</td>';
                             table += '</tr>';
                         } else {

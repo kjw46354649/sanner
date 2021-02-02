@@ -177,17 +177,59 @@
             {
                 title: '1EA 가공시간', align: 'center',
                 colModel: [
-                    {title: 'NC', dataIndx: 'NC_WORK_TIME'},
-                    {title: 'Total', dataIndx: 'TOTAL_WORK_TIME'}
+                    {title: '전공정', dataIndx: 'UNIT_TOTAL_WORK_TIME'},
+                    {title: 'NC', dataIndx: 'UNIT_NC_WORK_TIME'}
                 ]
             },
             {
-                title: 'CAM 작업 실적', align: 'center',
+                title: '가공시간', align: 'center',
                 colModel: [
-                    {title: 'Steps', dataIndx: 'SEQ'},
-                    {title: '작업자', dataIndx: 'WORK_USER_NM'},
-                    {title: '업데이트', dataIndx: 'CAM_WORK_DT'},
-                    {title: '경험 기록사항', halign: 'center', align: 'left', dataIndx: 'HISTORY_NOTE'}
+                    {title: 'Total', dataIndx: 'TOTAL_WORK_TIME'},
+                    {title: '선반', dataIndx: 'NC_WORK_TIME'},
+                    {title: 'NC', dataIndx: 'MILLING_WORK_TIME'},
+                    {title: '밀링', dataIndx: 'GRINDING_WORK_TIME'},
+                    {title: '연마', dataIndx: 'LATHE_WORK_TIME'}
+                ]
+            },
+            {
+                title: 'CAM 작업 실적', align: 'center', colModel: [
+                    {title: 'Steps', width: 50, datatype: 'integer', dataIndx: 'CAM_STEP'},
+                    {title: '위치', dataIndx: 'WORK_DIRECTION'},
+                    {title: '작업내용', width: 70, dataIndx: 'WORK_DESC'},
+                    {title: '단위수량', width: 50, datatype: 'integer', dataIndx: 'DESIGN_QTY'},
+                    {
+                        title: 'File', width: 70, dataIndx: '',
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let camVisibility = fnIsEmpty(rowData.CAM_FILE_SEQ) ? 'hidden' : 'visible';
+                            let ncVisibility = fnIsEmpty(rowData.NC_FILE_SEQ) ? 'hidden' : 'visible';
+                            let iconFiles = '';
+                            iconFiles += '<span id="downloadCAMFIle" class="greenFileImageICon" style="visibility: ' + camVisibility + '; cursor: pointer;"></span>&nbsp;&nbsp;';
+                            iconFiles += '<span id="downloadNCFile" class="purpleFileImageICon" style="visibility: ' + ncVisibility + '; cursor: pointer; margin-left: 10px;"></span>';
+
+                            return iconFiles;
+                        },
+                        postRender: function (ui) {
+                            let grid = this;
+                            let $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            $cell.find('#downloadCAMFIle').bind('click', function(e) {
+                                // console.log(rowData.CAM_FILE_SEQ);
+                                e.preventDefault();
+                                fnSingleFileDownloadFormPageAction(rowData.CAM_FILE_SEQ);
+                            });
+                            $cell.find('#downloadNCFile').bind('click', function(e) {
+                                // console.log(rowData.NC_FILE_SEQ);
+                                e.preventDefault();
+                                fnSingleFileDownloadFormPageAction(rowData.NC_FILE_SEQ);
+                            });
+                        }
+                    },
+                    {title: '작업자', width: 80, dataIndx: 'WORK_USER_NM'},
+                    {title: '실적등록일시', width: 90, dataIndx: 'CAM_INSERT_DT'},
+                    {title: '경험 기록사항',  width: 150, dataIndx: 'CAM_EXPERIENCE_NOTE'},
+                    {title: '비고 및 공유사항',  width: 150, dataIndx: 'CAM_WORK_NOTE'},
                 ]
             }
         ];
