@@ -541,13 +541,13 @@
 	        , DENSE_RANK () OVER(ORDER BY A.INNER_DUE_DT, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), H.CAM_SEQ) AS `NO`
             , A.CONTROL_SEQ
             , A.CONTROL_DETAIL_SEQ
-            , ( SELECT jmes.SF_GET_DATE_F(MAX(M.INSERT_DT), 'YY', 'M')
+            , ( SELECT jmes.SF_GET_DATE_F(MAX(IFNULL(M.UPDATE_DT, M.INSERT_DT)), 'YY', 'M')
                 FROM jmes.TBL_CAM_DETAIL M, jmes.TBL_CAM N
                 WHERE M.CAM_SEQ = N.CAM_SEQ
                     AND N.CONTROL_SEQ = A.CONTROL_SEQ
                     AND N.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
                     AND G.FINISH_DT IS NOT NULL
-              ) AS CAM_RECENTLY_INSERT_DT <!-- 실적등록일시 -->
+              ) AS CAM_RECENTLY_REGISTRATION_DT <!-- 실적등록일시 -->
             , jmes.SF_GET_DATE_F(A.INNER_DUE_DT, 'YY', '') AS INNER_DUE_DT <!-- 내부가공납기 -->
             , jmes.SF_GET_DATE_F(A.INNER_WORK_FINISH_DT, 'YY', '') AS INNER_WORK_FINISH_DT <!-- 가공완료-->
             , CASE WHEN A.OUTSIDE_YN = 'Y' THEN A.OUTSIDE_YN END AS OUTSIDE_YN

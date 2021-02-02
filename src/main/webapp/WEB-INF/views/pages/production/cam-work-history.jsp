@@ -548,7 +548,7 @@
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'No.', align: 'right', minWidth: 30, dataType: 'integer', dataIndx: 'NO'},
             {
-                title: '실적등록일시', width: 90, dataIndx: 'CAM_RECENTLY_INSERT_DT',
+                title: '최근등록일시', width: 90, dataIndx: 'CAM_RECENTLY_REGISTRATION_DT',
                 render: function (ui) {
                     const cellData = ui.cellData;
 
@@ -792,7 +792,7 @@
                 'NO', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'ORDER_COMP_NM',
             ];
              const partList = [
-                 'CAM_RECENTLY_INSERT_DT', 'INNER_WORK_FINISH_DT', 'OUTSIDE_YN', 'WORK_FACTORY_NM',  'WORK_TYPE_NM', 'SIZE_TXT',
+                 'CAM_RECENTLY_REGISTRATION_DT', 'INNER_WORK_FINISH_DT', 'OUTSIDE_YN', 'WORK_FACTORY_NM',  'WORK_TYPE_NM', 'SIZE_TXT',
                  'MATERIAL_TYPE_NM', 'DRAWING_NUM', 'IMG_GFILE_SEQ', 'CONTROL_PART_QTY', 'CAD_FILE_SIZE', 'DXF_GFILE_SEQ',
                  'MATERIAL_DETAIL_NM', 'MATERIAL_KIND_NM', 'MATERAIL_ORDER_SIZE', 'NC_WORK_TIME', 'TOTAL_WORK_TIME',
                  // 'CAM_STEP', 'WORK_DIRECTION', 'WORK_DESC', 'DESIGN_QTY', '', 'WORK_USER_NM',
