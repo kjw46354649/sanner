@@ -1102,6 +1102,7 @@
             AND A.INSPECT_MATERIAL_YN = 'Y'
             AND A.INSPECT_SURFACE_YN = 'Y'
             AND INSPECT_SIZE_YN = 'Y'
+            AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO005')
     </update>
 
     <update id="updateItemOrderHistoryOrderInManual" parameterType="java.util.HashMap">
@@ -1123,6 +1124,7 @@
             B.UPDATE_DT = NOW(),
             B.UPDATE_ID = #{LOGIN_USER_ID}
         WHERE A.MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
+            AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO005')
     </update>
 
     <insert id="insertInWareHouseManagePartProgressManual" parameterType="java.util.HashMap">
@@ -1133,7 +1135,7 @@
         FROM TBL_CONTROL_PART A
             INNER JOIN TBL_MATERIAL_ORDER B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
                 AND B.MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
-        WHERE 1 = 1
+                AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO005')
     </insert>
 
     <insert id="insertInWareHouseManageOutManual" parameterType="java.util.HashMap">

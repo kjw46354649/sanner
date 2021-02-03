@@ -431,7 +431,7 @@
         });
 
         $("#btnItemOrderHistorySave").on('click', function(){
-            itemOrdereHistoryInspectionIn();
+            itemOrderHistoryInspectionIn();
         });
 
         $("#btnItemOrderHistoryExcel").on('click', function(){
@@ -493,23 +493,31 @@
         /**
          * 검사 입고
          */
-        function itemOrdereHistoryInspectionIn() {
+        function itemOrderHistoryInspectionIn() {
+            const MATERIAL_ORDER_SEQ = $("#item_order_history_hidden_form #MATERIAL_ORDER_SEQ").val();
             let parameter = {
                 'queryId': 'updateItemOrderHistoryOrderInManual',
-                'MATERIAL_ORDER_SEQ': $("#item_order_history_hidden_form #MATERIAL_ORDER_SEQ").val(),
+                'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
             };
             let parameters = {'url': '/json-update', 'data': parameter};
             fnPostAjax(function(data, callFunctionParam){
                 parameter = {
                     'queryId': 'updateItemOrderHistoryPartInManual',
-                    'MATERIAL_ORDER_SEQ': $("#item_order_history_hidden_form #MATERIAL_ORDER_SEQ").val(),
+                    'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
                 };
                 parameters = {'url': '/json-update', 'data': parameter};
-                fnPostAjax(function(data, callFunctionParam){
-                    itemOrderHistoryRightGrid.pqGrid('option', "dataModel.postData", function (ui) {
-                        return (fnFormToJsonArrayData('#item_order_history_hidden_form'));
-                    });
-                    itemOrderHistoryRightGrid.pqGrid('refreshDataAndView');
+                fnPostAjax(function (data, callFunctionParam) {
+                    parameter = {
+                        'queryId': 'insertInWareHouseManagePartProgressManual',
+                        'MATERIAL_ORDER_SEQ': MATERIAL_ORDER_SEQ,
+                    };
+                    parameters = {'url': '/json-update', 'data': parameter};
+                    fnPostAjax(function (data, callFunctionParam) {
+                        itemOrderHistoryRightGrid.pqGrid('option', "dataModel.postData", function (ui) {
+                            return (fnFormToJsonArrayData('#item_order_history_hidden_form'));
+                        });
+                        itemOrderHistoryRightGrid.pqGrid('refreshDataAndView');
+                    }, parameters, '');
                 }, parameters, '');
             }, parameters, '');
         }
