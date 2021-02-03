@@ -1145,7 +1145,7 @@
                 'data': $("#drawing_action_form").serialize()
             };
             fnPostAjax(function (data, callFunctionParam) {
-                fnDrawingAlertDialogAlert('cancelDivHtml', 1);
+                fnDrawingAlertDialogAlert('cancelDivHtml', 2);
                 fnPopupClose("drawing_worker_cancel_popup");
             }, parameters, '');
         });
@@ -1208,7 +1208,7 @@
             };
             fnPostAjax(function (data, callFunctionParam) {
                 fnPopupClose("drawing_worker_end_popup");
-                fnDrawingAlertDialogAlert('completeDivHtml', 1);
+                fnDrawingAlertDialogAlert('completeDivHtml', 2);
             }, parameters, '');
         });
 
@@ -1311,7 +1311,7 @@
                 'data': $("#drawing_action_form").serialize()
             };
             fnPostAjax(function (data, callFunctionParam) {
-                fnDrawingAlertDialogAlert('startDivHtml', 1);
+                fnDrawingAlertDialogAlert('startDivHtml', 2);
                 fnResetFrom("drawing_action_form");
                 fnPopupClose("drawing_worker_scan_popup");
             }, parameters, '');

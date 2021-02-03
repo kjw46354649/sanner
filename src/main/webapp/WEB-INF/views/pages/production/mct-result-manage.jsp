@@ -1392,7 +1392,8 @@
     
     $('#MCT_RESULT_MANAGE_SAVE').on('click', function () {
         const insertQueryList = ['machine.insertMctPlan'];
-        const updateQueryList = ['machine.updateMctPlanFromTarget'];
+        const updateQueryList = ['machine.deleteMctPlanAll', 'machine.insertMctPlan'];
+        // const updateQueryList = ['machine.updateMctPlanFromTarget'];
 
         fnModifyPQGrid($mctResultManageGrid, insertQueryList, updateQueryList);
     });

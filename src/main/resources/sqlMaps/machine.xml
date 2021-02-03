@@ -351,6 +351,19 @@
         WHERE
             MCT_PLAN_SEQ = #{MCT_PLAN_SEQ}
     </delete>
+
+    <delete id="deleteMctPlanAll" parameterType="java.util.HashMap">
+            UPDATE TBL_MCT_PLAN
+            SET
+                UPDATE_DT = NOW(),
+                UPDATE_ID = #{LOGIN_USER_ID},
+                DEL_YN = 'Y'
+            WHERE 1 = 1
+                AND CONTROL_SEQ = #{CONTROL_SEQ}
+                AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                AND DEL_YN = 'N'
+    </delete>
+
     <delete id="deleteMctWork" parameterType="java.util.HashMap">
         UPDATE TBL_MCT_WORK
         SET
