@@ -1814,8 +1814,8 @@
                 let orderStatus = new Set();
 
                 for (let i = 0, selectedRowCount = itemOrderRegisterSelectedRowIndex.length; i < selectedRowCount; i++) {
-                    const controlSeq = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_SEQ;
-                    const controlDetailSeq = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_DETAIL_SEQ;
+                    const controlSeq = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_SEQ || '';
+                    const controlDetailSeq = itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).CONTROL_DETAIL_SEQ || '';
                     concatSeq += "'" + controlSeq + "" + controlDetailSeq + "',";
                     orderStatus.add(itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).M_STATUS);
                     orderNum.add(itemOrderRegisterLeftGrid.pqGrid('getRowData', {rowIndx: itemOrderRegisterSelectedRowIndex[i]}).MATERIAL_ORDER_NUM);
@@ -2219,12 +2219,14 @@
                 $('#btnItemOrderRegisterPopDelete').css('display', 'inline');
             }
 
-            if (!fnIsEmpty(MATERIAL_ORDER_NUM) && ORDER_STATUS === 'MST002' || ORDER_STATUS === 'MST004') {
-                itemOrderRegisterPopTopGrid.pqGrid('option', 'colModel', itemOrderRegisterPopTopColModel_disabled);
-            } else if (fnIsEmpty(MATERIAL_ORDER_NUM) && fnIsEmpty(ORDER_STATUS)) {
-                itemOrderRegisterPopTopGrid.pqGrid('option', 'colModel', itemOrderRegisterPopTopColModel);
+            if (!fnIsEmpty(MATERIAL_ORDER_NUM)) {
+                if (ORDER_STATUS === 'MST002' || ORDER_STATUS === 'MST004') {
+                    itemOrderRegisterPopTopGrid.pqGrid('option', 'colModel', itemOrderRegisterPopTopColModel_disabled);
+                } else {
+                    itemOrderRegisterPopTopGrid.pqGrid('option', 'colModel', itemOrderRegisterPopTopColModel_temp);
+                }
             } else {
-                itemOrderRegisterPopTopGrid.pqGrid('option', 'colModel', itemOrderRegisterPopTopColModel_temp);
+                itemOrderRegisterPopTopGrid.pqGrid('option', 'colModel', itemOrderRegisterPopTopColModel);
             }
             itemOrderRegisterPopTopGrid.pqGrid('refresh');
         };
