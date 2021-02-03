@@ -175,8 +175,8 @@
             str += '    <div class="table">';
             str += '        <div class="titleWrap">';
             str += '            <span class="equipLabel">';
-            str += '                <span class="ellipsis" id="NC' + order + '_EQUIP_NM" style="width: 25px;">' + equipNm + '</span>';
-            str += '                <span class="ellipsis" id="NC' + order + '_WORK_USER_ID" style="width: 35px;"></span>';
+            str += '                <span class="ellipsis" id="NC' + order + '_EQUIP_NM" style="width: 32px;">' + equipNm + '</span>';
+            str += '                <span class="ellipsis" id="NC' + order + '_WORK_USER_ID" style="width: 42px;"></span>';
             str += '            </span>';
             str += '            <p class="listTxt" style="display: none;">';
             str += '                <span class="ellipsis" id="NC' + order + '_CONTROL_NUM" style="width: 125px; text-decoration: underline; cursor: pointer;"></span>';
