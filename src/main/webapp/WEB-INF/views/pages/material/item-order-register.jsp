@@ -756,21 +756,20 @@
                             const cellData = ui.cellData;
 
                             if (cellData) {
-                                const temp = cellData.split('&lt;br>');
-                                let str = '';
-
-                                for (let i = 0; i < temp.length; i++) {
-                                    str += temp[i];
-                                    if (i < temp.length) {
-                                        str += '<br>';
-                                    }
-                                }
-
-                                return str;
+                                return cellData.replace(/&lt;/g, '<');
                             }
                         }
                     },
-                    {title: '수량', dataIndx: 'M_ORDER_COMPLETED_QTY', editable: false},
+                    {
+                        title: '수량', dataIndx: 'M_ORDER_COMPLETED_QTY', width: 55, editable: false,
+                        render: function (ui) {
+                            const cellData = ui.cellData;
+
+                            if (cellData) {
+                                return cellData.replace(/&lt;/g, '<');
+                            }
+                        }
+                    },
                 ]
             },
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 60},

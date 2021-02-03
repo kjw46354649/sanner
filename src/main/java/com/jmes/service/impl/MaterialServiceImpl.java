@@ -31,12 +31,11 @@ public class MaterialServiceImpl implements MaterialService {
 
         try {
             for (Map<String, Object> hashMap : list) {
+                hashMap.put("LOGIN_USER_ID", map.get("LOGIN_USER_ID"));
                 if (hashMap.get("MATERIAL_ORDER_SEQ") == null) {
-                    hashMap.put("LOGIN_USER_ID", map.get("LOGIN_USER_ID"));
                     hashMap.put("queryId", "material.insertItemOrderRegisterPopSave");
                     this.innodaleDao.create(hashMap);
                 } else {
-                    hashMap.put("LOGIN_USER_ID", map.get("LOGIN_USER_ID"));
                     hashMap.put("queryId", "material.updateItemOrderRegisterPopSave");
                     this.innodaleDao.update(hashMap);
                 }
