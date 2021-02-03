@@ -45,7 +45,7 @@
             $viewer = new Viewer(image, {
                 backdrop: false,
                 button: false,
-                movable: false,
+                movable: true,
                 navbar: false,
                 transition: false,
                 viewed: function () {
