@@ -1006,7 +1006,7 @@
         // required 체크
         const requiredCheck = function (rowData) {
             let list;
-            const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NUM', 'DRAWING_NUM', 'ITEM_NM', 'INNER_DUE_DT', 'SIZE_TXT'];
+            const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NUM', 'DRAWING_NUM', /*'ITEM_NM', FIXME 확인*/ 'INNER_DUE_DT', 'SIZE_TXT'];
             const singleList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'ORDER_QTY']; // 단품
             const assemblyList = ['ORDER_QTY']; // 조립
             const modifiedList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'ORDER_QTY']; // 수정
