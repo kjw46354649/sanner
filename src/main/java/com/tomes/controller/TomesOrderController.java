@@ -55,7 +55,7 @@ public class TomesOrderController {
     })
     @ApiOperation(value = "Buyer Order 상세 리스트 조회", notes = "Buyer Order 리스트 상세 조회한다.")
     @GetMapping("/order/{rowKey}")
-    public ListResult orderDetail(@ApiParam(value = "발주 번호", required = true) @RequestParam String rowKey,
+    public ListResult orderDetail(@ApiParam(value = "발주 번호", required = true) @PathVariable String rowKey,
             @ApiParam(value = "조회 시작 일자 (YYYYmmdd)", required = true) @RequestParam String startDt,
             @ApiParam(value = "조회 시작 일자 (YYYYmmdd)", required = true) @RequestParam String endDt,
             HttpServletRequest request) throws Exception {

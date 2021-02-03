@@ -115,7 +115,7 @@ public class DrawingBoardController {
         return "jsonView";
     }
 
-    @RequestMapping(value="/drawing/{equipNm}",  method= RequestMethod.POST)
+    @RequestMapping(value="/drawing/{equipNm}")
     public String drawingTargetEquip(@PathVariable("equipNm") String equipNm, HttpServletRequest request, HttpSession session) throws Exception {
         logger.info("pop page submit");
 
@@ -163,7 +163,7 @@ public class DrawingBoardController {
         }
     }
 
-    @RequestMapping(value="/drawing",  method= RequestMethod.POST)
+    @RequestMapping(value="/drawing")
     public String drawingLogin(Model model, HttpSession session, HttpServletRequest request) throws Exception {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
@@ -203,7 +203,7 @@ public class DrawingBoardController {
         return "board/login";
     }
 
-    @RequestMapping(value="/drawing-worker",  method= RequestMethod.POST)
+    @RequestMapping(value="/drawing-worker")
     public String drawingWorker(Model model, HttpSession session, HttpServletRequest request) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
@@ -255,7 +255,7 @@ public class DrawingBoardController {
         return "board/drawing-worker";
     }
 
-    @RequestMapping(value="/drawing-board",  method= RequestMethod.POST)
+    @RequestMapping(value="/drawing-board")
     public String drawingBoard(Model model, HttpSession session, HttpServletRequest request) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);

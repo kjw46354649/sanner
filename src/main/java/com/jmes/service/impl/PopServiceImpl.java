@@ -134,6 +134,18 @@ public class PopServiceImpl implements PopService {
                 notificationMessage.setContent02(context02);
                 notificationMessage.setContent03(context03);
 
+                // 가공확정 이후에 POP 스캔되면 소재사급(보), 사급인 경우 소재사급(사) 처리 한다.
+                if (createPRO021 != null && !"".equals(createPRO021)) {
+                    // 소재사급(보), 사급인 경우 소재사급(사)
+                    controlPartInfo.put("PART_STATUS", createPRO021);
+                    controlPartInfo.put("queryId", "popMapper.insertControlPartProgressStatus");
+                    innodaleDao.create(controlPartInfo);
+
+                    // Part 상태를 Progress 상태와 맞춤
+                    controlPartInfo.put("queryId", "popMapper.updateControlPartProgressMappingStatus");
+                    innodaleDao.update(controlPartInfo);
+                }
+
                 // 모도면이 POP 바코드 스캔 되면 조립전환 상태를 추가 한다.
                 if ("WTP020".equals(workType)) {
                     controlPartInfo.put("PART_STATUS", "PRO018");
@@ -148,18 +160,6 @@ public class PopServiceImpl implements PopService {
 
                     controlPartInfo.put("queryId", "popMapper.updateControlPartChildProgressMappingStatus");
                     innodaleDao.create(controlPartInfo);
-                }
-
-                // 가공확정 이후에 POP 스캔되면 소재사급(보), 사급인 경우 소재사급(사) 처리 한다.
-                if (createPRO021 != null && !"".equals(createPRO021)) {
-                    // 소재사급(보), 사급인 경우 소재사급(사)
-                    controlPartInfo.put("PART_STATUS", createPRO021);
-                    controlPartInfo.put("queryId", "popMapper.insertControlPartProgressStatus");
-                    innodaleDao.create(controlPartInfo);
-
-                    // Part 상태를 Progress 상태와 맞춤
-                    controlPartInfo.put("queryId", "popMapper.updateControlPartProgressMappingStatus");
-                    innodaleDao.update(controlPartInfo);
                 }
 
                 // 소재 주문 이후에 POP 바코드 스캔 되면 소재 입고 처리를 완료 한다.
