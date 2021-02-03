@@ -78,7 +78,7 @@
                     });
                 }
             },
-            {title: '작업<br>형태', dataIndx: 'WORK_TYPE'},
+            {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM'},
             {
                 title: '발주처', dataIndx: 'ORDER_COMP_NM',
                 styleHead: {'background': '#ffe699'},
@@ -281,9 +281,10 @@
                 'ORDER_COMP_NM'
             ];
             const partList = [
-                'ORDER_CONFIRM_DT', 'OUTSIDE_YN', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'WORK_TYPE', 'SIZE_TXT',
+                'ORDER_CONFIRM_DT', 'OUTSIDE_YN', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'WORK_TYPE_NM', 'SIZE_TXT',
                 'MATERIAL_TYPE_NM', 'DRAWING_NUM', 'IMG_GFILE_SEQ', 'CAD_FILE_SIZE', 'DXF_GFILE_SEQ',
-                'MATERIAL_DETAIL_NM', 'MATERIAL_DETAIL_NM', 'CONTROL_PART_QTY', 'NC_WORK_TIME', 'TOTAL_WORK_TIME'
+                'MATERIAL_DETAIL_NM', 'CONTROL_PART_QTY', 'UNIT_TOTAL_WORK_TIME', 'UNIT_NC_WORK_TIME',
+                'TOTAL_WORK_TIME', 'NC_WORK_TIME', 'MILLING_WORK_TIME', 'GRINDING_WORK_TIME', 'LATHE_WORK_TIME'
             ];
             const includeList = controlList.concat(partList);
 
