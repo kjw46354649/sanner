@@ -17,11 +17,11 @@
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_NUM, B.PART_NUM) AS ROW_NUM,
             A.CONTROL_SEQ,  <!-- 주문관리일련번호 -->
             B.CONTROL_DETAIL_SEQ, <!-- 주문관리상세일련번호 -->
-            C.ORDER_SEQ, <!--발주번호 -->
+            C.ORDER_SEQ, <!--발주 일련번호 -->
             CASE WHEN IFNULL(C.ORDER_NUM, SPACE(0)) = '' THEN DATE_FORMAT(H.STATUS_DT, '%Y%m%d') ELSE C.ORDER_NUM END AS ROW_KEY, <!-- Portal Key -->
             (SELECT MIN(DATE_FORMAT(M.STATUS_DT, '%Y%m%d')) FROM jmes.TBL_CONTROL_PROGRESS M
             	WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.ORDER_STATUS = 'ORD001' GROUP BY M.CONTROL_SEQ) AS ORDER_CONFIRM_DT, <!--주문등록일자 (최초 확정일자) -->
-            C.ORDER_NUM, <!--주문등록일자 (최초 확정일자) -->
+            C.ORDER_NUM, <!-- 발주번호 -->
             COUNT(C.DRAWING_NUM) AS DRAWING_NUM_CNT, <!--도면 건수-->
             SUM(C.ORDER_QTY) AS ORDER_QTY, <!--주문수량-->
             C.ORDER_DUE_DT, <!--납기일자-->
@@ -77,7 +77,7 @@
         	IFNULL(SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, 'KR'), SPACE(0)) AS MATERIAL_DETAIL_NM,  --  소재 종류 -->
         	IFNULL(SF_GET_CODE_NM('1039', B.SURFACE_TREAT, 'KR'), SPACE(0)) AS SURFACE_TREAT_NM,   --  표면 처리 -->
         	IFNULL(C.ORDER_QTY, SPACE(0)) AS ORDER_QTY, -- 발주수량 -->
-            IFNULL(C.SAME_SIDE_YN, SPACE(0)) AS SAME_SIDE_YN, -- 대칭 여부 -->
+            IFNULL(A.SAME_SIDE_YN, SPACE(0)) AS SAME_SIDE_YN, -- 대칭 여부 -->
             IFNULL(C.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, -- 대칭_원칭 -->
             IFNULL(C.OTHER_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY, -- 대칭_대칭 -->
             (SELECT SUM(OUT_QTY) FROM TBL_OUT WHERE CONTROL_SEQ = C.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY, -- 출고 -->

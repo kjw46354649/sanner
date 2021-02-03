@@ -74,7 +74,6 @@ public class PDFPringMakeController {
             PDImageXObject pdImageXObject = PDImageXObject.createFromFile((String) fileInfo.get("FILE_PATH") + ".print.png", document);
             PDPageContentStream contentStream = new PDPageContentStream(document, addPage);
             contentStream.drawImage(pdImageXObject, 0, 0, PDRectangle.A4.getWidth(), PDRectangle.A4.getHeight());
-            // contentStream.drawImage(pdImageXObject, 0f, -10f, pdImageXObject.getWidth() / 300f * 72, pdImageXObject.getHeight() / 300f * 72);
             contentStream.close();
             document.addPage(addPage);
         }
@@ -156,9 +155,7 @@ public class PDFPringMakeController {
             byte[] imageInByte = baos.toByteArray();
             baos.close();
             Image barcodeImage = Image.getInstance(imageInByte);
-            //barcodeImage.setAbsolutePosition(2, 700);
-            //barcodeImage.scaleAbsolute(120, 70);
-            //document.add(barcodeImage);
+
             table.addCell(createImageCell(barcodeImage, 1, 2, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("CONTROL_VER"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, mediumNormalFont));
@@ -206,10 +203,12 @@ public class PDFPringMakeController {
             table.flushContent();
 
             if (controlInfo.get("IMAGE_PATH") != null && !"".equals(controlInfo.get("IMAGE_PATH"))) {
+
                 Image pngImage = Image.getInstance((String) controlInfo.get("IMAGE_PATH") + ".print.png");
                 pngImage.setAbsolutePosition(15, 10);
                 pngImage.scaleAbsolute(PageSize.A4.getWidth() - 30, PageSize.A4.getHeight() - 70);
                 document.add(pngImage);
+
             }
             iCount++;
 
@@ -219,13 +218,16 @@ public class PDFPringMakeController {
                     List<Map<String, Object>> imageList = innodaleService.getList(controlInfo);
 
                     for (Map<String, Object> fileInfo : imageList) {
+
                         document.newPage();
 
                         if (fileInfo.get("FILE_PATH") != null && !"".equals(fileInfo.get("FILE_PATH"))) {
+
                             Image pngImage = Image.getInstance((String) fileInfo.get("FILE_PATH") + ".print.png");
                             pngImage.setAbsolutePosition(0, 0);
                             pngImage.scaleAbsolute(PageSize.A4.getWidth(), PageSize.A4.getHeight());
                             document.add(pngImage);
+
                         }
                     }
                 }
@@ -307,9 +309,7 @@ public class PDFPringMakeController {
             table.addCell(createCellBackground("수량", 1, 1, headFont, headBackground));
             table.addCell(createCellBackground("요청사항", 2, 1, headFont, headBackground));
             table.addCell(createCellBackground("비고", 1, 1, headFont, headBackground));
-//            table.addCell(createCellBackground("납기", 1, 1, headFont, headBackground));
             table.addCell(createCellBackground("관리번호", 1, 1, headFont, headBackground));
-//            table.addCell(createCellBackground("Part", 1, 1, headFont, headBackground));
 
             for (int i = 0; i < dataList.size(); i++) {
                 String partNum = "";
@@ -324,9 +324,7 @@ public class PDFPringMakeController {
                 table.addCell(createCell("" + dataList.get(i).get("ORDER_QTY"), 1, 1, contentsFont));
                 table.addCell(createCell((String) dataList.get(i).get("REQUEST_NOTE"), 2, 1, contentsFont));
                 table.addCell(createCell((String) dataList.get(i).get("ORDER_NOTE"), 1, 1, contentsFont));
-//                table.addCell(createCell((String) dataList.get(i).get("INNER_DUE_DT"), 1, 1, contentsFont));
                 table.addCell(createCell((String) dataList.get(i).get("CONTROL_NUM") + partNum, 1, 1, contentsFont));
-//                table.addCell(createCell("" + dataList.get(i).get("PART_NUM"), 1, 1, contentsFont));
             }
             document.add(table);
 
