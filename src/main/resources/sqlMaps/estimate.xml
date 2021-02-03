@@ -1143,11 +1143,9 @@
             , A.FACTOR_CD
             , A.LEVEL_1
             , A.LEVEL_2
-            <!-- , A.NOTE -->
-            , SUM(B.UNIT_AMT) AS UNIT_AMT
-            <!-- , C.EST_SEQ -->
-            <!-- , C.SEQ -->
+            , B.UNIT_AMT
             , C.PROCESS_CNT
+            , SUM(B.UNIT_AMT * C.PROCESS_CNT) AS TOTAL
         FROM TBL_PROCESS_FACTOR A
                 LEFT OUTER JOIN TBL_CALC_PROCESS_FACTOR B ON B.FACTOR_CD = A.FACTOR_CD
                     AND B.CALC_SEQ = SF_GET_CALC_PROCESS_SEQ(#{TYPE}, #{EST_SEQ}, #{SEQ})

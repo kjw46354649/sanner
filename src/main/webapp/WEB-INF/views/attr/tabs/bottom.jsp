@@ -2029,7 +2029,7 @@
                     const data = this.option('dataModel.data');
                     const summary = function (data) {
                         const lastRow = data[data.length - 1];
-                        const total = lastRow ? lastRow.UNIT_AMT : '';
+                        const total = lastRow ? lastRow.TOTAL : '';
                         const array = [
                             {LEVEL_1: '추가가공비 합계', UNIT_AMT: total}
                         ];
@@ -2066,7 +2066,7 @@
                         evt.originalEvent.keyCode = 40; //disguise down key.
                     }
                 },
-                cellSave: function (evt, ui) {
+                cellSave: function () {
                     processingRequirementsSave();
                 },
                 beforePaste: function (evt, ui) {
@@ -2279,7 +2279,7 @@
                     return;
                 }
 
-                $processingRequirementsGrid.pqGrid('refreshDataAndView');
+                changeData();
             }, parameter, '');
         }
     };
