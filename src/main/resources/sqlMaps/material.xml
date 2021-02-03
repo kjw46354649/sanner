@@ -581,6 +581,9 @@
     </delete>
 
     <insert id="insertItemOrderRegisterPopSave" parameterType="java.util.HashMap" >
+        <selectKey keyProperty="MATERIAL_ORDER_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_MATERIAL_ORDER) FROM DUAL
+        </selectKey>
         INSERT INTO TBL_MATERIAL_ORDER
         (
             MATERIAL_ORDER_SEQ, MATERIAL_ORDER_NUM, CONTROL_SEQ, CONTROL_DETAIL_SEQ,
@@ -591,7 +594,7 @@
             INSERT_DT, INSERT_ID
         )
         SELECT
-            NEXTVAL(SEQ_MATERIAL_ORDER),
+            #{MATERIAL_ORDER_SEQ},
             #{MATERIAL_ORDER_NUM}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
             #{M_COMP_CD}, REPLACE(#{HOPE_DUE_DT}, '-', SPACE(0)), #{M_SIZE_TXT},
             SF_GET_SIZE_TXT('SIZE_TYPE', #{M_SIZE_TXT}), SF_GET_SIZE_TXT('SIZE_W', #{M_SIZE_TXT}),
@@ -1930,7 +1933,7 @@
     <update id="updateMaterialOrderUnitMaterialAutoAmt" parameterType="java.util.HashMap">
         UPDATE TBL_MATERIAL_ORDER
         SET
-            UNIT_MATERIAL_AUTO_AMT = SF_GET_CALC_MATERIAL_AMT('MATERIAL_ORDER', #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ})
+            UNIT_MATERIAL_AUTO_AMT = SF_GET_CALC_MATERIAL_AMT('MATERIAL_ORDER', #{MATERIAL_ORDER_SEQ}, '')
             , UPDATE_DT = NOW()
             , UPDATE_ID = #{LOGIN_USER_ID}
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
