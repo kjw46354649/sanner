@@ -78,10 +78,10 @@
 				CASE WHEN SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'CPL') = SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'QTY') THEN 'Y' ELSE 'N' END OUT_YN,
 				SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'CPL') AS COMPLETE_OUT_QTY,
                 F.ORDER_STATUS, F.INSERT_DT AS MATERIAL_ORDER_INSERT_DT,
-                B.DXF_GFILE_SEQ, B.DWG_GFILE_SEQ, B.PDF_GFILE_SEQ, B.IMG_GFILE_SEQ, F.NOTE
+                B.DXF_GFILE_SEQ, B.DWG_GFILE_SEQ, B.PDF_GFILE_SEQ, B.IMG_GFILE_SEQ, F.NOTE, B.OUTSIDE_YN
 			FROM TBL_CONTROL A
 				INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE != 'WTP020'
-					AND B.PART_STATUS IN ( 'PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO021', 'PRO022' ) AND B.OUTSIDE_YN = 'N'
+					AND IFNULL(B.PART_STATUS, SPACE(0)) NOT IN (SPACE(0), 'PRO003')
 					AND B.MATERIAL_SUPPLY_YN = 'N'
 				LEFT OUTER JOIN TBL_MATERIAL_ORDER F ON B.CONTROL_SEQ = F.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
 				    AND IFNULL(F.ORDER_STATUS, SPACE(0)) IN (SPACE(0), 'MST002', 'MST004')
@@ -112,7 +112,7 @@
 				CASE WHEN SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'CPL') = SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'QTY') THEN 'Y' ELSE 'N' END OUT_YN,
 				SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'CPL') AS COMPLETE_OUT_QTY,
                 F.ORDER_STATUS, F.INSERT_DT AS MATERIAL_ORDER_INSERT_DT,
-                '' AS DXF_GFILE_SEQ, '' AS DWG_GFILE_SEQ, '' AS PDF_GFILE_SEQ, '' AS IMG_GFILE_SEQ, F.NOTE
+                '' AS DXF_GFILE_SEQ, '' AS DWG_GFILE_SEQ, '' AS PDF_GFILE_SEQ, '' AS IMG_GFILE_SEQ, F.NOTE, '' AS OUTSIDE_YN
 			FROM TBL_MATERIAL_ORDER F
 			WHERE IFNULL(F.ORDER_STATUS, SPACE(0)) NOT IN ('MST003')
 				AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART X WHERE X.CONTROL_SEQ = F.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ)
@@ -124,15 +124,7 @@
                                 WHERE K.CONTROL_SEQ = X.CONTROL_SEQ AND K.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
                                 GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ)
 		WHERE 1 = 1
-        <choose>
-            <when test="ORDER_STATUS != '' and ORDER_STATUS != null">
-                AND IFNULL(Z.ORDER_STATUS, 'NULL') IN (${ORDER_STATUS})
-            </when>
-            <otherwise>
-                AND Z.ORDER_STATUS = '' <!-- 아무것도 표시 안 하기 위함 -->
-            </otherwise>
-        </choose>
-        <choose>
+		<choose>
             <when test="ITEM_ORDER_REGISTER_CONDITION =='IOM010'">
                 AND CASE WHEN Z.STATUS_DT_CONDITION IS NULL
                         THEN DATE_FORMAT(Z.MATERIAL_ORDER_INSERT_DT, '%Y/%m/%d') BETWEEN #{ITEM_ORDER_REGISTER_START_DATE} AND #{ITEM_ORDER_REGISTER_END_DATE}
@@ -143,28 +135,42 @@
                 AND DATE_FORMAT(Z.M_ORDER_DT, '%Y/%m/%d') BETWEEN #{ITEM_ORDER_REGISTER_START_DATE} AND #{ITEM_ORDER_REGISTER_END_DATE}
             </when>
         </choose>
-        <if test="COMP_CD !='' and COMP_CD != null">
+        <choose>
+            <when test="ORDER_STATUS != '' and ORDER_STATUS != null">
+                AND IFNULL(Z.ORDER_STATUS, 'NULL') IN (${ORDER_STATUS})
+            </when>
+            <otherwise>
+                AND Z.ORDER_STATUS = '' <!-- 아무것도 표시 안 하기 위함 -->
+            </otherwise>
+        </choose>
+        <if test="SHIPMENT_YN == null">
+            AND Z.PART_STATUS NOT IN ('PRO016', 'PRO017', 'PRO020')
+        </if>
+        <if test="OUTSIDE_YN == null">
+            AND IFNULL(Z.OUTSIDE_YN, 'N') = 'N'
+        </if>
+        <if test="COMP_CD != '' and COMP_CD != null">
             AND Z.COMP_CD = #{COMP_CD}
         </if>
-        <if test="ORDER_COMP_CD !='' and ORDER_COMP_CD != null">
+        <if test="ORDER_COMP_CD != '' and ORDER_COMP_CD != null">
 		    AND Z.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
-        <if test="DRAWING_NUM !='' and DRAWING_NUM != null">
+        <if test="DRAWING_NUM != '' and DRAWING_NUM != null">
 		    AND UPPER(Z.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
         </if>
-        <if test="WORK_TYPE !='' and WORK_TYPE != null">
+        <if test="WORK_TYPE != '' and WORK_TYPE != null">
             AND Z.WORK_TYPE = #{WORK_TYPE}
         </if>
-        <if test="CONTROL_NUM !='' and CONTROL_NUM != null">
+        <if test="CONTROL_NUM != '' and CONTROL_NUM != null">
 		    AND UPPER(Z.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
         </if>
-        <if test="MATERIAL_ORDER_NUM !='' and MATERIAL_ORDER_NUM != null">
+        <if test="MATERIAL_ORDER_NUM != '' and MATERIAL_ORDER_NUM != null">
 		    AND UPPER(Z.MATERIAL_ORDER_NUM) LIKE CONCAT('%', UPPER(#{MATERIAL_ORDER_NUM}), '%')
         </if>
-        <if test="M_COMP_CD !='' and M_COMP_CD != null">
+        <if test="M_COMP_CD != '' and M_COMP_CD != null">
 		    AND Z.M_COMP_CD = #{M_COMP_CD}
         </if>
-        <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
+        <if test="MATERIAL_DETAIL != '' and MATERIAL_DETAIL != null">
 		    AND Z.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
         </if>
         ORDER BY
@@ -276,7 +282,7 @@
 				IFNULL(F.ORDER_STATUS, SPACE(0)) AS ORDER_STATUS, F.NOTE, SF_GET_DATE_F(F.IN_DT,'YYYY','M') AS IN_DT
 			FROM TBL_CONTROL A
 				INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE != 'WTP020'
-					AND B.PART_STATUS IN ( 'PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO021', 'PRO022' ) AND B.OUTSIDE_YN = 'N'
+					AND IFNULL(B.PART_STATUS, SPACE(0)) NOT IN (SPACE(0), 'PRO003')
 					AND B.MATERIAL_SUPPLY_YN = 'N'
 				LEFT OUTER JOIN TBL_MATERIAL_ORDER F ON B.CONTROL_SEQ = F.CONTROL_SEQ AND F.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
 			WHERE A.DEL_YN = 'N' AND A.CONTROL_STATUS = 'ORD001'
@@ -323,7 +329,7 @@
 				IFNULL(F.ORDER_STATUS, SPACE(0)) AS ORDER_STATUS, F.NOTE, SF_GET_DATE_F(F.IN_DT,'YYYY','M') AS IN_DT
 			FROM TBL_CONTROL A
 				INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE != 'WTP020'
-					AND B.PART_STATUS IN ( 'PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO021', 'PRO022' ) AND B.OUTSIDE_YN = 'N'
+					AND IFNULL(B.PART_STATUS, SPACE(0)) NOT IN (SPACE(0), 'PRO003')
 					AND B.MATERIAL_SUPPLY_YN = 'N'
 				INNER JOIN TBL_MATERIAL_ORDER F ON B.CONTROL_SEQ = F.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
 				INNER JOIN TBL_MY_MATERIAL_OUT G ON F.MATERIAL_ORDER_SEQ = G.MATERIAL_ORDER_SEQ
@@ -374,7 +380,7 @@
                 F.ORDER_STATUS, F.NOTE, F.ORDER_USER_ID, SF_GET_DATE_F(F.IN_DT,'YYYY','M') AS IN_DT
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE != 'WTP020'
-                    AND B.PART_STATUS IN ( 'PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO021', 'PRO022' ) AND B.OUTSIDE_YN = 'N'
+                    AND IFNULL(B.PART_STATUS, SPACE(0)) NOT IN (SPACE(0), 'PRO003')
 					AND B.MATERIAL_SUPPLY_YN = 'N'
                 INNER JOIN TBL_MATERIAL_ORDER F ON B.CONTROL_SEQ = F.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
                     AND F.MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
@@ -417,7 +423,7 @@
                 F.ORDER_STATUS, F.NOTE, F.ORDER_USER_ID, SF_GET_DATE_F(F.IN_DT,'YYYY','M') AS IN_DT
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE != 'WTP020'
-                    AND B.PART_STATUS IN ( 'PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO021', 'PRO022' ) AND B.OUTSIDE_YN = 'N'
+                    AND IFNULL(B.PART_STATUS, SPACE(0)) NOT IN (SPACE(0), 'PRO003')
 					AND B.MATERIAL_SUPPLY_YN = 'N'
                 INNER JOIN TBL_MATERIAL_ORDER F ON B.CONTROL_SEQ = F.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
                     AND F.MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
@@ -444,7 +450,7 @@
                 DATE_FORMAT(STR_TO_DATE(F.HOPE_DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS HOPE_DUE_DT,
                 F.ORDER_STATUS, F.NOTE, F.ORDER_USER_ID, SF_GET_DATE_F(F.IN_DT,'YYYY','M') AS IN_DT
             FROM TBL_MATERIAL_ORDER F
-            WHERE 1=1
+            WHERE 1 = 1
                 AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART X WHERE X.CONTROL_SEQ = F.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ)
                 AND F.MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
                 <!-- AND IFNULL(F.ORDER_STATUS, SPACE(0)) NOT IN('MST004') -->
@@ -468,7 +474,7 @@
                 DATE_FORMAT(STR_TO_DATE(F.HOPE_DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS HOPE_DUE_DT,
                 F.ORDER_STATUS, F.NOTE, F.ORDER_USER_ID, SF_GET_DATE_F(F.IN_DT,'YYYY','M') AS IN_DT
             FROM TBL_MATERIAL_ORDER F
-            WHERE 1=1
+            WHERE 1 = 1
                 AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART X WHERE X.CONTROL_SEQ = F.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ)
                 AND F.MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
                 <!-- AND IFNULL(F.ORDER_STATUS, SPACE(0)) NOT IN('MST004') -->
@@ -479,15 +485,16 @@
     </select>
 
     <update id="updateItemOrderRegisterPartStatus" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART
+        UPDATE TBL_CONTROL_PART A
         SET
             PART_STATUS = 'PRO004',
             STATUS_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID},
             UPDATE_DT = NOW()
         WHERE 1 = 1
-            AND CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND NOT EXISTS (SELECT * FROM TBL_MATERIAL_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ)
     </update>
 
     <update id="updateItemOrderRegisterOrderStatus" parameterType="java.util.HashMap">
@@ -508,8 +515,8 @@
         WHERE 1 = 1
             AND A.CONTROL_SEQ = #{CONTROL_SEQ}
             AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-            AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART_PROGRESS B WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                                AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND A.PART_STATUS = B.PART_STATUS)
+            AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.PART_STATUS = A.PART_STATUS)
+            AND NOT EXISTS (SELECT * FROM TBL_MATERIAL_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ)
     </insert>
 
     <update id="insertUpdateItemOrderRegister" parameterType="java.util.HashMap">
@@ -695,7 +702,7 @@
 
     <update id="updateItemOrderRegisterMaterialOrderCancel" parameterType="java.util.HashMap">
         UPDATE TBL_MATERIAL_ORDER
-        SET MATERIAL_ORDER_NUM = NULL,
+        SET
             ORDER_STATUS = 'MST003',
             ORDER_DT = NULL,
             CANCEL_DT = NOW(),
@@ -706,12 +713,12 @@
     </update>
 
     <update id="updateItemOrderRegisterControlPartCancel" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART
+        UPDATE TBL_CONTROL_PART A
         SET PART_STATUS = 'PRO002',
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE 1=1
-            AND CONCAT(CONTROL_SEQ, CONTROL_DETAIL_SEQ) IN(${CONCAT_SEQ})
+        WHERE CONCAT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) IN(${CONCAT_SEQ})
+            AND NOT EXISTS (SELECT * FROM TBL_MATERIAL_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_STATUS IN ('MST001','MST002','MST004'))
     </update>
 
     <delete id="deleteItemOrderRegisterCancelOrder" parameterType="java.util.HashMap">
@@ -776,8 +783,8 @@
             , NULL <!-- UPDATE_DT -->
             , NULL <!-- UPDATE_ID -->
         FROM TBL_MATERIAL_ORDER A
-        WHERE A.MATERIAL_ORDER_SEQ IN(${MATERIAL_ORDER_SEQ})
-            AND A.ORDER_STATUS = 'MST002'
+        WHERE A.ORDER_STATUS = 'MST002'
+            AND A.MATERIAL_ORDER_SEQ IN(${MATERIAL_ORDER_SEQ})
     </insert>
 
     <select id="selectItemOrderRegisterPopMailTable" parameterType="java.util.HashMap" resultType="java.util.HashMap">

@@ -153,6 +153,8 @@
                             <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_WAIT_YN" value="NULL,MST001,MST003" checked><label for="ORDER_WAIT_YN"> 주문대기</label></span>
                             <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_YN" value="MST002" checked><label for="ORDER_YN"> 주문완료</label></span>
                             <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="IN_YN" value="MST004"><label for="IN_YN"> 입고완료</label></span>
+                            <span class="chk_box"><input type="checkbox" name="SHIPMENT_YN" id="SHIPMENT_YN"><label for="SHIPMENT_YN"> 출하완료</label></span>
+                            <span class="chk_box"><input type="checkbox" name="OUTSIDE_YN" id="OUTSIDE_YN"><label for="OUTSIDE_YN"> 외주가공</label></span>
                         </span>
                         <span class="ipu_wrap right_float">
                             <button type="button" id="ITEM_ORDER_REGISTER_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
@@ -1919,24 +1921,24 @@
                 $("#item_order_register_popup_form #MATERIAL_ORDER_SEQ").val(ORDER_SEQ);
 
                 let parameter = {
-                    'queryId': 'insertItemOrderRegisterMasterOrderHistory',
+                    'queryId': 'material.insertItemOrderRegisterMasterOrderHistory',
                     'MATERIAL_ORDER_SEQ': ORDER_SEQ,
                 };
                 let parameters = {'url': '/json-create', 'data': parameter};
                 fnPostAjax(function(){
                     parameter = {
-                        'queryId': 'updateItemOrderRegisterMaterialOrderCancel',
+                        'queryId': 'material.updateItemOrderRegisterMaterialOrderCancel',
                         'MATERIAL_ORDER_SEQ': ORDER_SEQ,
                     };
                     parameters = {'url': '/json-remove', 'data': parameter};
                     fnPostAjax(function(){
                         parameter = {
-                            'queryId': 'updateItemOrderRegisterControlPartCancel',
+                            'queryId': 'material.updateItemOrderRegisterControlPartCancel',
                             'CONCAT_SEQ': CONCAT_SEQ,
                         };
                         parameters = {'url': '/json-remove', 'data': parameter};
                         fnPostAjax(function () {
-                            parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
+                            parameters = {'url': '/json-remove', 'data': {'queryId': 'material.deleteItemOrderRegisterCancelOrder'}};
                             fnPostAjax(function () {
                                 fnAlert(null,'취소 완료되었습니다.');
                                 $('#item_order_register_popup').modal('hide');
