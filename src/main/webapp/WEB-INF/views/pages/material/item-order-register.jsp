@@ -2058,34 +2058,20 @@
 
             fnConfirm(title, message, function () {
                 let list = [];
-                let insertQueryIdList;
-                let updateQueryIdList = [];
-                let controlDetail = new Set();
-                let rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length;
-                for (let i = 0; i < rowCount; i++) {
+                for (let i = 0, rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length; i < rowCount; i++) {
                     let rowData = itemOrderRegisterPopTopGrid.pqGrid('getRowData', {rowIndx: i});
-                    controlDetail.add(rowData.CONTROL_DETAIL_SEQ);
                     list.push(rowData);
                 }
                 let changes = {
                     'addList': list,
                     'updateList': list
                 };
-                const itemOrderRegisterLeftGridData = itemOrderRegisterLeftGrid.pqGrid('option', 'dataModel.data');
-                const groupedControlDetailSeq = fnGroupBy(itemOrderRegisterLeftGridData, 'CONTROL_DETAIL_SEQ');
-
-                if (groupedControlDetailSeq[controlDetail.values().next().value].length > 1) {
-                    insertQueryIdList = ['material.insertUpdateItemOrderRegisterPopStatus'];
-                } else {
-                    insertQueryIdList = ['material.insertUpdateItemOrderRegisterPopStatus', 'material.insertItemOrderRegisterControlPartProgress'];
-                    updateQueryIdList = ['material.updateItemOrderRegisterPartStatus', 'material.insertItemOrderRegisterControlPartProgress'];
-                }
-
                 changes.queryIdList = {
-                    'insertQueryId': insertQueryIdList,
-                    'updateQueryId': updateQueryIdList,
+                    'insertQueryId': ['material.insertUpdateItemOrderRegisterPopStatus', 'material.insertItemOrderRegisterControlPartProgress'],
+                    'updateQueryId': ['material.updateItemOrderRegisterPartStatus', 'material.insertItemOrderRegisterControlPartProgress']
                 };
                 let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
+
                 fnPostAjax(function () {
                     let parameter = {
                         'queryId': 'material.selectItemOrderRegisterPopMailTable',
