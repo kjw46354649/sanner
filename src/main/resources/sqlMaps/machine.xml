@@ -1166,6 +1166,7 @@
             <if test="HIDDEN_EQUIP_SEQ != null and HIDDEN_EQUIP_SEQ != ''">
                 AND (
                       EXISTS (SELECT 1 FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N' AND M.EQUIP_SEQ IN (${HIDDEN_EQUIP_SEQ}))
+                      OR I.EQUIP_SEQ IN (${HIDDEN_EQUIP_SEQ})
                     <if test="INCLUDE_UNALLOCATED_WAIT != null">
                         OR I.EQUIP_SEQ IS NULL
                     </if>
@@ -1197,13 +1198,13 @@
             </if>
         GROUP BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
         ORDER BY
+            <if test="INCLUDE_UNALLOCATED_WAIT != null and INCLUDE_UNALLOCATED_WAIT != ''">
+            I.EQUIP_SEQ IS NULL,
+            </if>
             CASE CAM_STATUS WHEN 'CWS020' THEN 0 WHEN 'CWS010' THEN 1 WHEN 'CWS030' THEN 2 END,
         	CASE H.FAIL_STATUS WHEN '반품' THEN 0 WHEN '불량' THEN 1 ELSE 2 END,
         	CASE EMERGENCY_HOLD WHEN '긴급' THEN 0 WHEN '보류' THEN 1 ELSE 2 END,
             A.INNER_DUE_DT, STATUS_DT DESC, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0)
-            <if test="INCLUDE_UNALLOCATED_WAIT != null and INCLUDE_UNALLOCATED_WAIT != ''">
-            , I.EQUIP_SEQ IS NULL
-            </if>
     </select>
 
     <select id="selectResultManagePopInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
