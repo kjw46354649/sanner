@@ -2666,6 +2666,11 @@
                     return false;
                 }
 
+                if (fnIsEmpty(rowData.ORDER_DRAWING_NUM)) {
+                    fnAlert(null, '발주 도면 번호를 등록 후 다시 시도해주세요');
+                    return false;
+                }
+
                 if (fnIsEmpty(rowData.PDF_GFILE_SEQ)) {
                     fnAlert(null, 'PDF확장자 파일 도면을 등록 후 다시 시도해주세요');
                     return false;
