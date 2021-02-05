@@ -35,6 +35,7 @@
                     <h5 class="d-inline-block">기본정보</h5>
                     <div class="d-inline-block right_float buttonWrap" style="overflow: hidden;">
                         <div>
+                            <button class="popupBtn" id="SALES_DRAWING_PRINT">영업도면출력</button>
                             <button class="popupBtn" id="TRANSACTION_STATEMENT_LABEL_PRINT">라벨 출력</button>
                             <button class="popupBtn red" id="TRANSACTION_STATEMENT_DELETE">삭제</button>
                             <button class="popupBtn green" id="TRANSACTION_STATEMENT_SAVE">저장</button>
@@ -102,6 +103,7 @@
 <script>
     $(function () {
         'use strict';
+        let selectedTransactionStatementRowIndex = [];
         let $transactionStatementGrid;
         const transactionStatementGridId = 'TRANSACTION_STATEMENT_DETAIL_GRID';
         const transactionStatementColModel = [
@@ -183,7 +185,16 @@
             },
             complete: function() {
                 this.flex();
-            }
+            },
+            selectChange: function (event, ui) {
+                selectedTransactionStatementRowIndex = [];
+                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                    let firstRow = ui.selection._areas[i].r1;
+                    let lastRow = ui.selection._areas[i].r2;
+
+                    for (let i = firstRow; i <= lastRow; i++) selectedTransactionStatementRowIndex.push(i);
+                }
+            },
         };
 
         let selectedRowCount = opener.selectedOrderManagementRowIndex.length;
@@ -257,9 +268,24 @@
 
 
         /* event */
+        $('#SALES_DRAWING_PRINT').on('click', function () {
+            if (selectedTransactionStatementRowIndex.length === 0) {
+                fnAlert(null, '하나 이상 선택해주세요');
+                return false;
+            }
+
+            let selectControlList = '';
+
+            for (let i = 0, selectedRowCount = selectedTransactionStatementRowIndex.length; i < selectedRowCount; i++) {
+                const rowData = $transactionStatementGrid.pqGrid('getRowData', {rowIndx: selectedTransactionStatementRowIndex[i]});
+
+                selectControlList += String(rowData.CONTROL_SEQ) + String(rowData.CONTROL_DETAIL_SEQ) + '|';
+            }
+
+            printJS({printable:'/makeSalesDrawingPrint?selectControlList=' + encodeURI(selectControlList), type:'pdf', showModal:true});
+        });
         // 라벨 출력
         $('#TRANSACTION_STATEMENT_LABEL_PRINT').on('click', function () {
-            // console.log(1111);
             let barcodeList = [];
             let data = $transactionStatementGrid.pqGrid('option', 'dataModel.data');
 

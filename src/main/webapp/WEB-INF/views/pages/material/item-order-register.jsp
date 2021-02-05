@@ -154,7 +154,7 @@
                             <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_YN" value="MST002" checked><label for="ORDER_YN"> 주문완료</label></span>
                             <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="IN_YN" value="MST004"><label for="IN_YN"> 입고완료</label></span>
                             <span class="chk_box"><input type="checkbox" name="SHIPMENT_YN" id="SHIPMENT_YN"><label for="SHIPMENT_YN"> 출하완료</label></span>
-                            <span class="chk_box"><input type="checkbox" name="OUTSIDE_YN" id="OUTSIDE_YN"><label for="OUTSIDE_YN"> 외주가공</label></span>
+                            <span class="chk_box"><input type="checkbox" name="OUTSIDE_YN" id="ITEM_ORDER_REGISTER_OUTSIDE_YN"><label for="ITEM_ORDER_REGISTER_OUTSIDE_YN"> 외주가공</label></span>
                         </span>
                         <span class="ipu_wrap right_float">
                             <button type="button" id="ITEM_ORDER_REGISTER_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
@@ -2058,34 +2058,20 @@
 
             fnConfirm(title, message, function () {
                 let list = [];
-                let insertQueryIdList;
-                let updateQueryIdList = [];
-                let controlDetail = new Set();
-                let rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length;
-                for (let i = 0; i < rowCount; i++) {
+                for (let i = 0, rowCount = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length; i < rowCount; i++) {
                     let rowData = itemOrderRegisterPopTopGrid.pqGrid('getRowData', {rowIndx: i});
-                    controlDetail.add(rowData.CONTROL_DETAIL_SEQ);
                     list.push(rowData);
                 }
                 let changes = {
                     'addList': list,
                     'updateList': list
                 };
-                const itemOrderRegisterLeftGridData = itemOrderRegisterLeftGrid.pqGrid('option', 'dataModel.data');
-                const groupedControlDetailSeq = fnGroupBy(itemOrderRegisterLeftGridData, 'CONTROL_DETAIL_SEQ');
-
-                if (groupedControlDetailSeq[controlDetail.values().next().value].length > 1) {
-                    insertQueryIdList = ['material.insertUpdateItemOrderRegisterPopStatus'];
-                } else {
-                    insertQueryIdList = ['material.insertUpdateItemOrderRegisterPopStatus', 'material.insertItemOrderRegisterControlPartProgress'];
-                    updateQueryIdList = ['material.updateItemOrderRegisterPartStatus', 'material.insertItemOrderRegisterControlPartProgress'];
-                }
-
                 changes.queryIdList = {
-                    'insertQueryId': insertQueryIdList,
-                    'updateQueryId': updateQueryIdList,
+                    'insertQueryId': ['material.insertUpdateItemOrderRegisterPopStatus', 'material.insertItemOrderRegisterControlPartProgress'],
+                    'updateQueryId': ['material.updateItemOrderRegisterPartStatus', 'material.insertItemOrderRegisterControlPartProgress']
                 };
                 let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
+
                 fnPostAjax(function () {
                     let parameter = {
                         'queryId': 'material.selectItemOrderRegisterPopMailTable',

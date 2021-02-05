@@ -9,13 +9,13 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -36,10 +36,14 @@ import java.util.Map;
 @Controller
 public class PDFPringMakeController {
 
-    private static final Logger logger = LoggerFactory.getLogger(PDFPringMakeController.class);
+    private final Log log = LogFactory.getLog(getClass());
 
     private static final int BLACK = 0xFF000000;
     private static final int WHITE = 0xFFFFFFFF;
+
+    private final float small = 7.0f;
+    private final float medium = 10.0f;
+    private final float large = 12.0f;
 
     @Autowired
     public Environment environment;
@@ -107,9 +111,9 @@ public class PDFPringMakeController {
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
         BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
-        float small = 7.0f;
-        float medium = 10.0f;
-        float large = 12.0f;
+//        float small = 7.0f;
+//        float medium = 10.0f;
+//        float large = 12.0f;
 
         Font smallNormalFont = new Font(bf, small, Font.NORMAL);
         Font smallBoldFont = new Font(bf, small, Font.BOLD);
@@ -156,7 +160,7 @@ public class PDFPringMakeController {
             baos.close();
             Image barcodeImage = Image.getInstance(imageInByte);
 
-            table.addCell(createImageCell(barcodeImage, 1, 2, mediumNormalFont));
+            table.addCell(createImageCell(barcodeImage, 1, 2, 40f, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("CONTROL_VER"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, mediumNormalFont));
@@ -336,6 +340,122 @@ public class PDFPringMakeController {
         document.close();
     }
 
+    /**
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(value = "/makeSalesDrawingPrint", method = RequestMethod.GET)
+    public void makeSalesDrawingPrint(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        response.setContentType("application/pdf");
+        OutputStream out = response.getOutputStream();
+
+        // 문서 만들기
+        Document document = new Document(PageSize.A4);
+        document.setMargins(15, 15, 15, 15);
+        // 한글 처리를 위한 글꼴 설정 추가
+        String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
+        BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+
+        Font smallNormalFont = new Font(bf, small, Font.NORMAL);
+        Font smallBoldFont = new Font(bf, small, Font.BOLD);
+        Font mediumNormalFont = new Font(bf, medium, Font.NORMAL);
+        Font mediumBoldFont = new Font(bf, medium, Font.BOLD);
+        Font largeNormalFont = new Font(bf, large, Font.NORMAL);
+        Font largeBoldFont = new Font(bf, large, Font.BOLD);
+
+        PdfWriter.getInstance(document, out);
+
+        String[] selectControlLists = ((String) hashMap.get("selectControlList")).split("\\|");
+//        String sameDrawingPrint = ((String) hashMap.get("flag"));
+        hashMap.put("selectControlLists", selectControlLists);
+        hashMap.put("queryId", "orderMapper.selectControlSalesCadBarcodeList");
+        List<Map<String, Object>> controlInfoList = innodaleService.getList(hashMap);
+
+        int iCount = 0;
+
+        document.open();
+
+        for (Map<String, Object> controlInfo : controlInfoList) {
+            if (iCount > 0) document.newPage();
+
+            PdfPTable table = new PdfPTable(11);
+            table.init();
+            table.setWidthPercentage(100);
+            table.setWidths(new float[]{1.5f, 2.5f, 6.5f, 1.5f, 4.5f, 2.5f, 2.5f, 1.5f, 1f, 1f, 5f});
+            // 바코드 생성
+            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) controlInfo.get("BARCODE_NUM"), 90, 20);
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+            System.out.println(height);
+            // Converting BitMatrix to Buffered Image
+            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    image.setRGB(x, y, bitMatrix.get(x, y) ? BLACK : WHITE);
+                }
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", baos);
+            baos.flush();
+            byte[] imageInByte = baos.toByteArray();
+            baos.close();
+            Image barcodeImage = Image.getInstance(imageInByte);
+            System.out.println(barcodeImage.getHeight());
+            System.out.println(barcodeImage.getScaledHeight());
+            // 1st line
+            table.addCell(createCell("영업\n도면", 1, 2, mediumBoldFont));
+            table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("PROJECT_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell("도번", 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) controlInfo.get("DRAWING_NUM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("ITEM_NM"), 2, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("WORK_TYPE_NM"), 1, 1, mediumNormalFont));
+            if (controlInfo.get("WORK_TYPE_NM") != null && !controlInfo.get("WORK_TYPE_NM").equals("")) {
+                String content = controlInfo.get("WORK_TYPE_NM").equals("조립") ? "SET" : "EA";
+
+                if (controlInfo.get("SAME_SIDE_YN").equals("Y")) {
+                    table.addCell(createQtyCell1((String) controlInfo.get("CONTROL_PART_QTY"), 1, 1, mediumBoldFont));
+                    table.addCell(createEACell1(content, 1, 1, smallBoldFont));
+                } else {
+                    table.addCell(createQtyCell((String) controlInfo.get("CONTROL_PART_QTY"), 1, 2, mediumBoldFont));
+                    table.addCell(createEACell(content, 1, 2, smallBoldFont));
+                }
+            }
+            table.addCell(createImageCell(barcodeImage, 1, 1, 20f,mediumNormalFont));
+            // 2nd line
+            table.addCell(createCell((String) controlInfo.get("COMP_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("MODULE_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell("발주", 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) controlInfo.get("ORDER_NUM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("MATERIAL_TYPE_NM"), 1, 1, mediumNormalFont));
+            if (controlInfo.get("SAME_SIDE_YN").equals("Y")) {
+                table.addCell(createCellPartUnit((String) controlInfo.get("SIDE_QTY"), 2, 1, smallNormalFont));
+            }
+            table.addCell(createCell((String) controlInfo.get("CONTROL_NUM"), 1, 1, mediumNormalFont));
+            document.add(table);
+            table.flushContent();
+
+            if (controlInfo.get("IMAGE_PATH") != null && !controlInfo.get("IMAGE_PATH").equals("")) {
+                try {
+                    Image pngImage = Image.getInstance((String) controlInfo.get("IMAGE_PATH") + ".print.png");
+                    pngImage.setAbsolutePosition(15, 10);
+                    pngImage.scaleAbsolute(PageSize.A4.getWidth() - 30, PageSize.A4.getHeight() - 70);
+                    document.add(pngImage);
+                } catch (Exception e){
+                    log.error(e.getMessage(), e.getCause());
+                    e.printStackTrace();
+                }
+            }
+            iCount++;
+        }
+        document.close();
+    }
+
     private static PdfPCell createCell(String content, int colspan, int rowspan, Font font) {
         PdfPCell cell = new PdfPCell(new Phrase(content, font));
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -427,13 +547,13 @@ public class PDFPringMakeController {
         return cell;
     }
 
-    private static PdfPCell createImageCell(Image image, int colspan, int rowspan, Font font) {
+    private static PdfPCell createImageCell(Image image, int colspan, int rowspan, float height, Font font) {
         PdfPCell cell = new PdfPCell(image, true);
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         cell.setColspan(colspan);
         cell.setRowspan(rowspan);
-        cell.setFixedHeight(40f);
+        cell.setFixedHeight(height);
         cell.setPaddingLeft(2);
         cell.setPaddingRight(2);
         return cell;
