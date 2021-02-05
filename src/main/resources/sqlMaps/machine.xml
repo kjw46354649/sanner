@@ -1156,11 +1156,11 @@
             </if>
             <choose>
                 <when test='SEL_OUTSIDE_YN != null'>
-                    AND A.PART_STATUS IN ('PRO001', 'PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018', 'PRO019')
+                    AND A.PART_STATUS IN ('PRO001', 'PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018', 'PRO019', 'PRO021', 'PRO022')
                 </when>
                 <otherwise>
                     AND IFNULL(A.OUTSIDE_YN, 'N') = 'N'
-                    AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018')
+                    AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018', 'PRO021', 'PRO022')
                 </otherwise>
             </choose>
             <if test="HIDDEN_EQUIP_SEQ != null and HIDDEN_EQUIP_SEQ != ''">
