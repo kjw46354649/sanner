@@ -1671,12 +1671,12 @@
             INNER JOIN TBL_MONTH_CLOSE_ORDER E ON E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD AND E.CLOSE_MONTH = D.CLOSE_MONTH AND E.CLOSE_VER = D.CLOSE_VER AND E.CONTROL_SEQ = C.CONTROL_SEQ AND E.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND E.ORDER_SEQ = C.ORDER_SEQ
         WHERE A.DEL_YN = 'N'
             AND A.CONTROL_STATUS = 'ORD003'
-        <if test="CLOSE_YEAR != null and CLOSE_YEAR != ''">
-        	AND DATE_FORMAT(A.STATUS_DT, '%Y') = #{CLOSE_YEAR}
-        </if>
-        <if test="CLOSE_MONTH != null and CLOSE_MONTH != ''">
-        	AND DATE_FORMAT(A.STATUS_DT, '%m') = #{CLOSE_MONTH}
-        </if>
+            <if test="CLOSE_YEAR != null and CLOSE_YEAR != ''">
+                AND DATE_FORMAT(A.STATUS_DT, '%Y') = #{CLOSE_YEAR}
+            </if>
+            <if test="CLOSE_MONTH != null and CLOSE_MONTH != ''">
+                AND DATE_FORMAT(A.STATUS_DT, '%m') = #{CLOSE_MONTH}
+            </if>
         <choose>
             <!-- 마감수행일자 -->
             <when test="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION == '1'">
