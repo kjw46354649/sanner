@@ -83,6 +83,9 @@
 				INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE != 'WTP020'
 					AND IFNULL(B.PART_STATUS, SPACE(0)) NOT IN (SPACE(0), 'PRO003')
 					AND B.MATERIAL_SUPPLY_YN = 'N'
+                    <if test="SHIPMENT_YN == null">
+                        AND B.PART_STATUS NOT IN ('PRO016', 'PRO017', 'PRO020')
+                    </if>
 				LEFT OUTER JOIN TBL_MATERIAL_ORDER F ON B.CONTROL_SEQ = F.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
 				    AND IFNULL(F.ORDER_STATUS, SPACE(0)) IN (SPACE(0), 'MST002', 'MST004')
 			WHERE A.CONTROL_STATUS = 'ORD001'
@@ -143,9 +146,6 @@
                 AND Z.ORDER_STATUS = '' <!-- 아무것도 표시 안 하기 위함 -->
             </otherwise>
         </choose>
-        <if test="SHIPMENT_YN == null">
-            AND Z.PART_STATUS NOT IN ('PRO016', 'PRO017', 'PRO020')
-        </if>
         <if test="OUTSIDE_YN == null">
             AND IFNULL(Z.OUTSIDE_YN, 'N') = 'N'
         </if>
