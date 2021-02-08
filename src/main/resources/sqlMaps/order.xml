@@ -252,7 +252,7 @@
         <if test="NO_UNIT_FINAL_AMT != null and NO_UNIT_FINAL_AMT != ''">
             AND C.UNIT_FINAL_AMT IS NULL
         </if>
-        ORDER BY A.CONTROL_NUM, B.PART_NUM, C.ORDER_NUM
+        ORDER BY A.CONTROL_NUM, B.PART_NUM, C.ORDER_SEQ DESC
     </select>
 
     <select id="selectControlCloseVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -3357,5 +3357,13 @@
                                     AND N.COMP_CD IS NULL
                             )
     </insert>
+
+    <delete id="deleteControlPartOrder" parameterType="java.util.HashMap">
+        DELETE FROM TBL_CONTROL_PART_ORDER
+        WHERE
+            CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND ORDER_SEQ = #{ORDER_SEQ}
+    </delete>
 
 </mapper>
