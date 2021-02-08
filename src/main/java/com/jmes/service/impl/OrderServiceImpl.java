@@ -120,6 +120,8 @@ public class OrderServiceImpl implements OrderService {
                 hashMap.put("CONTROL_STATUS", "ORD003");
                 hashMap.put("queryId", "orderMapper.createMonthClose");
                 this.innodaleDao.create(hashMap);
+                hashMap.put("queryId", "orderMapper.deleteMonthCloseOrder");
+                this.innodaleDao.remove(hashMap);
                 hashMap.put("queryId", "orderMapper.createMonthCloseOrder");
                 this.innodaleDao.create(hashMap);
                 hashMap.put("queryId", "orderMapper.updateControlStatusFromMonthClose");

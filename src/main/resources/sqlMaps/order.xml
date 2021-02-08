@@ -377,8 +377,7 @@
                                         AND M.CONTROL_SEQ = C.CONTROL_SEQ
                                         AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                                         AND M.ORDER_SEQ = C.ORDER_SEQ
-                                        AND M.CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH})
-                                        AND M.CLOSE_VER = #{CLOSE_VER})) Q
+                                        AND M.CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH}))) Q
             GROUP BY Q.COMP_CD, Q.ORDER_COMP_CD, Q.CLOSE_MONTH, Q.CLOSE_VER) X
         GROUP BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
         ORDER BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
@@ -572,8 +571,7 @@
             , ORDER_SEQ
             , CLOSE_DETAIL_NOTE
             , INSERT_ID
-        )
-        SELECT
+        ) VALUES(
             #{COMP_CD}
             , #{CLOSE_MONTH}
             , #{ORDER_COMP_CD}
@@ -583,17 +581,7 @@
             , #{ORDER_SEQ}
             , #{CLOSE_DETAIL_NOTE}
             , #{LOGIN_USER_ID}
-        FROM DUAL
-        WHERE NOT EXISTS (  SELECT *
-                            FROM TBL_MONTH_CLOSE_ORDER
-                            WHERE
-                                COMP_CD = #{COMP_CD}
-                                AND CLOSE_MONTH = #{CLOSE_MONTH}
-                                AND ORDER_COMP_CD = #{ORDER_COMP_CD}
-                                AND CLOSE_VER = #{CLOSE_VER}
-                                AND CONTROL_SEQ = #{CONTROL_SEQ}
-                                AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-                                AND ORDER_SEQ = #{ORDER_SEQ})
+        )
     </insert>
 
     <update id="updateMonthCloseFinalNego" parameterType="java.util.HashMap">
@@ -608,6 +596,13 @@
             AND ORDER_COMP_CD = #{ORDER_COMP_CD}
             AND CLOSE_VER = #{CLOSE_VER}
     </update>
+
+    <delete id="deleteMonthCloseOrder" parameterType="java.util.HashMap">
+        DELETE FROM TBL_MONTH_CLOSE_ORDER
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND ORDER_SEQ = #{ORDER_SEQ}
+    </delete>
 
     <insert id="createControlPart" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_PART (
