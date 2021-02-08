@@ -1119,13 +1119,14 @@
             , FORMAT(C.UNIT_BASIC_AMT, 0) AS UNIT_BASIC_AMT <!-- 기본가공비 -->
             , (
                 SELECT
-                    FORMAT(IFNULL(SUM(O.PROCESS_CNT * N.UNIT_AMT), 0) + C.UNIT_BASIC_AMT, 0)
+                    FORMAT(SUM(P.PROCESS_CNT * N.UNIT_AMT) + C.UNIT_BASIC_AMT, 0)
                 FROM TBL_PROCESS_FACTOR M
-                        LEFT OUTER JOIN TBL_CALC_PROCESS_FACTOR N ON N.FACTOR_CD = M.FACTOR_CD
-                            AND CALC_SEQ = SF_GET_CALC_PROCESS_SEQ('ESTIMATE', #{EST_SEQ}, #{SEQ})
-                        LEFT OUTER JOIN TBL_ESTIMATE_DETAIL_PROCESS O ON O.FACTOR_CD = M.FACTOR_CD
-                            AND O.EST_SEQ = #{EST_SEQ}
-                            AND O.SEQ = #{SEQ}
+                    LEFT OUTER JOIN TBL_CALC_PROCESS_FACTOR N ON N.FACTOR_CD = M.FACTOR_CD
+                    LEFT OUTER JOIN TBL_CALC_PROCESS O ON O.CALC_SEQ = N.CALC_SEQ
+                        AND O.CALC_SEQ = SF_GET_CALC_PROCESS_SEQ('ESTIMATE', #{EST_SEQ}, #{SEQ})
+                    LEFT OUTER JOIN TBL_ESTIMATE_DETAIL_PROCESS P ON P.FACTOR_CD = M.FACTOR_CD
+                        AND P.EST_SEQ = #{EST_SEQ}
+                        AND P.SEQ = #{SEQ}
             ) AS TOTAL_PROCESSING_COST <!-- 총가공비 -->
         FROM TBL_ESTIMATE A
             INNER JOIN TBL_ESTIMATE_DETAIL B ON B.EST_SEQ = A.EST_SEQ
@@ -1144,14 +1145,15 @@
             , A.LEVEL_1
             , A.LEVEL_2
             , B.UNIT_AMT
-            , C.PROCESS_CNT
-            , SUM(B.UNIT_AMT * C.PROCESS_CNT) AS TOTAL
+            , D.PROCESS_CNT
+            , SUM(B.UNIT_AMT * D.PROCESS_CNT) AS TOTAL
         FROM TBL_PROCESS_FACTOR A
-                LEFT OUTER JOIN TBL_CALC_PROCESS_FACTOR B ON B.FACTOR_CD = A.FACTOR_CD
-                    AND B.CALC_SEQ = SF_GET_CALC_PROCESS_SEQ(#{TYPE}, #{EST_SEQ}, #{SEQ})
-                LEFT OUTER JOIN TBL_ESTIMATE_DETAIL_PROCESS C ON C.FACTOR_CD = A.FACTOR_CD
-                    AND C.EST_SEQ = #{EST_SEQ}
-                    AND C.SEQ = #{SEQ}
+            INNER JOIN TBL_CALC_PROCESS_FACTOR B ON B.FACTOR_CD = A.FACTOR_CD
+            INNER JOIN TBL_CALC_PROCESS C ON C.CALC_SEQ = B.CALC_SEQ
+                AND C.CALC_SEQ = SF_GET_CALC_PROCESS_SEQ(#{TYPE}, #{EST_SEQ}, #{SEQ})
+            LEFT OUTER JOIN TBL_ESTIMATE_DETAIL_PROCESS D ON D.FACTOR_CD = A.FACTOR_CD
+                AND D.EST_SEQ = #{EST_SEQ}
+                AND D.SEQ = #{SEQ}
         GROUP BY A.FACTOR_CD WITH ROLLUP
     </select>
 
