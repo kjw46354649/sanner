@@ -3437,9 +3437,8 @@
             const grid = $controlMergeGrid.pqGrid('getInstance').grid;
             const node = grid.Checkbox('CONTROL_MERGE_CHECKBOX').getCheckedNodes();
             const data = grid.option('dataModel.data');
-            const NODE_LENGTH = node.length;
 
-            if (NODE_LENGTH > 0) {
+            if (node.length > 0) {
                 let postData = {
                     'ACTION': 'SAVE',
                     'STANDARD_CONTROL_SEQ': node[0].CONTROL_SEQ,

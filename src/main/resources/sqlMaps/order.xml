@@ -3165,8 +3165,23 @@
                         FROM TBL_CONTROL_PART_ORDER M
                         WHERE M.CONTROL_SEQ = #{STANDARD_CONTROL_SEQ}
                             AND M.CONTROL_DETAIL_SEQ = #{STANDARD_CONTROL_DETAIL_SEQ}
-                            AND M.ORDER_NUM = #{ORDER_NUM}
-                            AND M.DRAWING_NUM = #{ORDER_DRAWING_NUM})
+                            <choose>
+                                <when test="PART_NUM != null and PART_NUM != ''">
+                                    AND M.ORDER_NUM = #{ORDER_NUM}
+                                </when>
+                                <otherwise>
+                                    AND M.ORDER_NUM IS NULL
+                                </otherwise>
+                            </choose>
+                            <choose>
+                                <when test="ORDER_DRAWING_NUM != null and ORDER_DRAWING_NUM != ''">
+                                    AND M.DRAWING_NUM = #{ORDER_DRAWING_NUM}
+                                </when>
+                                <otherwise>
+                                    AND M.DRAWING_NUM IS NULL
+                                </otherwise>
+                            </choose>
+                        )
     </insert>
 
     <insert id="createOutBarcodeToMerge" parameterType="java.util.HashMap" >
