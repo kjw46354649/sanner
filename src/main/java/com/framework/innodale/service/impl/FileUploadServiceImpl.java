@@ -43,7 +43,6 @@ public class FileUploadServiceImpl implements FileUploadService {
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS", new Locale("ko", "KR"));
-        String serverFileName = "file-" + CommonUtility.getUUIDString();
         String uploadFilePath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.upload.main.path") + File.separator + formatter.format(new Date()).substring(0, 8);
 
         ArrayList<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
@@ -59,6 +58,8 @@ public class FileUploadServiceImpl implements FileUploadService {
             List<MultipartFile> fileList = request.getFiles(itr.next());
 
             for(MultipartFile multipartFile:fileList) {
+
+                String serverFileName = "file-" + CommonUtility.getUUIDString();
 
                 HashMap<String, Object> fileMap = new HashMap<String, Object>();
                 CommonUtility.createFileDirectory(new File(uploadFilePath));
