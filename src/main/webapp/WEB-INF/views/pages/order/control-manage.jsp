@@ -684,7 +684,11 @@
                             let cls = null, text = '';
 
                             if ((ui.rowData.WORK_TYPE === 'WTP010' || ui.rowData.WORK_TYPE === 'WTP020' || ui.rowData.WORK_TYPE === 'WTP030') && (ui.rowData.CONTROL_STATUS === undefined || ui.rowData.CONTROL_STATUS == null || ui.rowData.CONTROL_STATUS === 'ORD002')) {
-                                text = '<span class="ui-icon ui-icon-circle-plus" name="ORDER_NUM_PLUS_BUTTON" style="cursor: pointer"></span>';
+                                if (ui.rowData.LAG_WORK_TYPE === undefined) {
+                                    text = '<span class="ui-icon ui-icon-circle-plus" name="ORDER_NUM_PLUS_BUTTON" style="cursor: pointer"></span>';
+                                } else {
+                                    text = '<span class="ui-icon ui-icon-circle-minus" name="ORDER_NUM_MINUS_BUTTON" style="cursor: pointer"></span>';
+                                }
                             }
                             if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
@@ -735,6 +739,12 @@
 
                                 autoMerge($orderManagementGrid.pqGrid('getInstance').grid, true);
                                 // event.preventDefault();
+                            });
+
+                            $cell.find('[name=ORDER_NUM_MINUS_BUTTON]').on('click', function () {
+                                fnConfirm(null, '<spring:message code="com.alert.default.removeText"/>', function () {
+                                    fnDeletePQGrid($orderManagementGrid, [ui.rowIndx], 'orderMapper.deleteControlPartOrder');
+                                });
                             });
                         }
                     },
@@ -2094,7 +2104,7 @@
                 'PRICE_CONFIRM', 'SAME_SIDE_YN', 'CONTROL_MERGE_CHECKBOX'
             ];
             const partList = [
-                'PART_NUM', 'ORDER_NUM_PLUS_BUTTON', 'DRAWING_VER', 'DRAWING_UP_DT', 'PREV_DRAWING_NUM',
+                'PART_NUM', 'DRAWING_VER', 'DRAWING_UP_DT', 'PREV_DRAWING_NUM',
                 'WORK_TYPE', 'CONTROL_PART_QTY', 'DNJSCLD', 'EOCLD', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT',
                 'SIZE_TXT', 'SIZE_TYPE', 'SIZE_W', 'SIZE_H', 'SIZE_T', 'SIZE_D', 'SIZE_L',
                 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
@@ -3427,9 +3437,8 @@
             const grid = $controlMergeGrid.pqGrid('getInstance').grid;
             const node = grid.Checkbox('CONTROL_MERGE_CHECKBOX').getCheckedNodes();
             const data = grid.option('dataModel.data');
-            const NODE_LENGTH = node.length;
 
-            if (NODE_LENGTH > 0) {
+            if (node.length > 0) {
                 let postData = {
                     'ACTION': 'SAVE',
                     'STANDARD_CONTROL_SEQ': node[0].CONTROL_SEQ,

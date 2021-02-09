@@ -254,6 +254,8 @@
               WHERE P.CAM_SEQ = Q.CAM_SEQ
                 AND P.CONTROL_SEQ = R.CONTROL_SEQ
                 AND P.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ
+                AND NOT R.CONTROL_SEQ = B.CONTROL_SEQ
+                AND NOT R.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
                 AND R.DRAWING_NUM = B.DRAWING_NUM
               ORDER BY Q.SEQ DESC
               LIMIT 1

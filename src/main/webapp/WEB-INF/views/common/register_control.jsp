@@ -42,7 +42,7 @@
         const materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
         const materialFinishTmList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
         const materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
-        const BUSINESS_COMPANY = fnCommCodeDatasourceGridSelectBoxCreate({
+        const FAMILY_COMPANY = fnCommCodeDatasourceGridSelectBoxCreate({
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
         });
@@ -93,24 +93,24 @@
             },
             {
                 title: '사업자<br>구분', width: 75, dataIndx: 'COMP_CD',  styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: BUSINESS_COMPANY},
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: FAMILY_COMPANY},
                 render: function (ui) {
                     let cellData = ui.cellData;
 
                     if (cellData === '' || cellData === undefined) {
                         return '';
                     } else {
-                        let index = BUSINESS_COMPANY.findIndex(function (element) {
+                        let index = FAMILY_COMPANY.findIndex(function (element) {
                             return element.text === cellData;
                         });
 
                         if (index < 0) {
-                            index = BUSINESS_COMPANY.findIndex(function (element) {
+                            index = FAMILY_COMPANY.findIndex(function (element) {
                                 return element.value === cellData;
                             });
                         }
 
-                        return (index < 0) ? cellData : BUSINESS_COMPANY[index].text;
+                        return (index < 0) ? cellData : FAMILY_COMPANY[index].text;
                     }
                 }
             },
@@ -629,11 +629,11 @@
                         }
                         // 사업자
                         if (newRowData.COMP_CD !== undefined) {
-                            let index = BUSINESS_COMPANY.findIndex(function (element) {
+                            let index = FAMILY_COMPANY.findIndex(function (element) {
                                 return element.text === newRowData.COMP_CD;
                             });
 
-                            if (index >= 0) compCd = BUSINESS_COMPANY[index].value;
+                            if (index >= 0) compCd = FAMILY_COMPANY[index].value;
                         }
                         // 발주업체
                         if (newRowData.ORDER_COMP_CD !== undefined) {
@@ -769,12 +769,12 @@
                         }
                         // 사업자
                         if (newRowData.COMP_CD !== undefined) {
-                            let index = BUSINESS_COMPANY.findIndex(function (element) {
+                            let index = FAMILY_COMPANY.findIndex(function (element) {
                                 return element.text === newRowData.COMP_CD;
                             });
 
                             if (index >= 0) {
-                                compCd = BUSINESS_COMPANY[index].value;
+                                compCd = FAMILY_COMPANY[index].value;
                                 tempNewRow.COMP_CD = compCd;
                             }
                         }
@@ -1053,7 +1053,7 @@
             }
             // 사업자
             if (rowData.COMP_CD !== undefined && rowData.COMP_CD !== null && rowData.COMP_CD !== '') {
-                let index = BUSINESS_COMPANY.findIndex(function (element) {
+                let index = FAMILY_COMPANY.findIndex(function (element) {
                     return element.value === rowData.COMP_CD;
                 });
 
