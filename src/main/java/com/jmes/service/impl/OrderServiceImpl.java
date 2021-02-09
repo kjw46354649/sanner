@@ -160,13 +160,13 @@ public class OrderServiceImpl implements OrderService {
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
                 hashMap.put("CONTROL_STATUS", "ORD001");
-                hashMap.put("queryId", "orderMapper.deleteMonthCloseDetail");
+                hashMap.put("queryId", "orderMapper.deleteMonthCloseOrder");
                 this.innodaleDao.remove(hashMap);
                 hashMap.put("queryId", "orderMapper.deleteMonthClose");
                 this.innodaleDao.remove(hashMap);
-                hashMap.put("queryId", "orderMapper.updateControlStatus");
+                hashMap.put("queryId", "orderMapper.updateControlStatusFromMonthCloseCancel");
                 this.innodaleDao.update(hashMap);
-                hashMap.put("queryId", "orderMapper.createControlProgress");
+                hashMap.put("queryId", "orderMapper.createControlProgressFromMonthCloseCancel");
                 this.innodaleDao.create(hashMap);
             }
         }

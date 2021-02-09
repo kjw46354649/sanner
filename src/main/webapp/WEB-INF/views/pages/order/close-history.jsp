@@ -134,6 +134,8 @@
                     <a href="#END_HISTORY" data-toggle="tab" aria-expanded="false">종료이력</a>
                 </li>
                 <div class="right_float">
+                    <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CONTROL_CLOSE_CANCEL_POPUP" style="font-weight:normal;">마감 취소</button>
+                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_FINISH_CANCEL" style="font-weight:normal;">종료 취소</button>
                     <button type="button" class="defaultBtn btn-100w" id="CLOSE_HISTORY_DRAWING_PRINT" style="font-weight:normal;">도면 출력</button>
                     <button type="button" class="defaultBtn btn-100w" id="CLOSE_HISTORY_BARCODE_DRAWING_PRINT" style="font-weight:normal;">바코드도면 출력</button>
                     <button type="button" class="defaultBtn btn-100w green" id="CONTROL_CLOSE_HISTORY_SAVE" style="font-weight:normal;">저장</button>
@@ -149,37 +151,6 @@
             </div>
         </div>
     </div>
-<%--    <div class="bottomWrap row4_bottomWrap">--%>
-<%--        <div class="hWrap">--%>
-<%--            <div class="d-inline">--%>
-<%--                <input type="search" id="closeHistoryFilterKeyword" placeholder="Enter your keyword">--%>
-<%--                <select id="closeHistoryFilterColumn"></select>--%>
-<%--                <select id="closeHistoryFilterCondition">--%>
-<%--                    <c:forEach var="code" items="${HighCode.H_1083}">--%>
-<%--                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
-<%--                    </c:forEach>--%>
-<%--                </select>--%>
-<%--                <label for="closeHistoryFrozen" class="label_50" style="font-size: 15px;">Fix</label>--%>
-<%--                <select id="closeHistoryFrozen" name="closeHistoryFrozen">--%>
-<%--                </select>--%>
-<%--            </div>--%>
-<%--            <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CONTROL_CLOSE_CANCEL_POPUP">마감 취소</button>--%>
-<%--            <button type="button" class="defaultBtn btn-100w" id="CONTROL_FINISH_CANCEL">종료 취소</button>--%>
-<%--            <div class="rightSpan">--%>
-<%--                <button type="button" class="defaultBtn btn-100w" id="CLOSE_HISTORY_DRAWING_PRINT">도면 출력</button>--%>
-<%--                <button type="button" class="defaultBtn btn-100w" id="CLOSE_HISTORY_BARCODE_DRAWING_PRINT">바코드도면 출력</button>--%>
-<%--                <button type="button" class="defaultBtn btn-100w green" id="CONTROL_CLOSE_HISTORY_SAVE">저장</button>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <div class="tableWrap" style="padding: 10px 0;">--%>
-<%--            <div class="conWrap">--%>
-<%--                <div id="CONTROL_CLOSE_HISTORY_GRID"></div>--%>
-<%--                <div class="right_sort">--%>
-<%--                    전체 조회 건수 (Total : <span id="CLOSE_HISTORY_RECORDS" style="color: #00b3ee">0</span>)--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--    </div>--%>
 </div>
 
 <%-- modal --%>
@@ -192,6 +163,7 @@
             <form class="form-inline" id="CONTROL_CLOSE_CANCEL_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlCloseCancelLeftList">
                 <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
+                <input type="hidden" name="ORDER_SEQ" id="ORDER_SEQ">
                 <div style="width: 450px; float:left;">
                     <div id="CONTROL_CLOSE_CANCEL_LEFT_GRID"></div>
                 </div>
@@ -249,6 +221,8 @@
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true},
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
+            {title: 'CLOSE_MONTH', dataIndx: 'CLOSE_MONTH', hidden: true},
+            {title: 'CLOSE_VER', dataIndx: 'CLOSE_VER', hidden: true},
             {
                 title: '주문상태', align: 'center', colModel: [
                     {title: '상태', dataIndx: 'CONTROL_STATUS', hidden: true},
@@ -1584,24 +1558,20 @@
             }
         };
 
-        console.log(fnFormToJsonArrayData('#CLOSE_HISTORY_SEARCH_FORM'));
-        console.log();
-
         let $controlCloseCancelLeftGrid;
         const controlCloseCancelLeftGridId = 'CONTROL_CLOSE_CANCEL_LEFT_GRID';
         const controlCloseCancelLeftColModel = [
             {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', width: 70,  dataIndx: 'COMP_NM'},
+            {title: '사업자', dataIndx: 'COMP_NM'},
             {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주처', width: 70, dataIndx: 'ORDER_COMP_NM'},
+            {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
             {title: '마감월', dataIndx: 'CLOSE_MONTH', hidden: true},
             {title: '마감월', width: 70, dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
-            {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
-            {title: '건수', dataIndx: 'CONTROL_ORDER_QTY', hidden: true},
-            {title: '건수', dataIndx: 'CONTROL_ORDER_QTY_TRAN'},
-            {title: '공급가', width: 90, align: 'right', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 90, align: 'right', dataIndx: 'FINAL_NEGO_AMT'}
+            {title: '차수', dataIndx: 'CLOSE_VER'},
+            {title: '품수', dataType: 'integer', format: '#,###', dataIndx: 'CNT'},
+            {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'},
+            {title: '공급가', width: 70, align: 'right', dataIndx: 'TOTAL_AMT'},
+            {title: '마감금액', width: 70, align: 'right', dataIndx: 'FINAL_NEGO_AMT'}
         ];
         const controlCloseCancelLeftObj = {
             height: 300,
@@ -1630,17 +1600,17 @@
         const controlCloseCancelRightGridId = 'CONTROL_CLOSE_CANCEL_RIGHT_GRID';
         const controlCloseCancelRightColModel = [
             {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', width: 70, dataIndx: 'COMP_NM'},
+            {title: '사업자', dataIndx: 'COMP_NM'},
             {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주처', width: 70, dataIndx: 'ORDER_COMP_NM'},
+            {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
             {title: '마감월', dataIndx: 'CLOSE_MONTH', hidden: true},
             {title: '마감월', width: 70, dataIndx: 'CLOSE_MONTH_TRAN'},
             {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
             {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
-            {title: '건수', dataIndx: 'CONTROL_ORDER_QTY', hidden: true},
-            {title: '건수', dataIndx: 'CONTROL_ORDER_QTY_TRAN'},
-            {title: '공급가', width: 90, align: 'right', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 90, align: 'right', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
+            {title: '품수', dataType: 'integer', format: '#,###', dataIndx: 'CNT'},
+            {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'},
+            {title: '공급가', width: 70, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'TOTAL_AMT'},
+            {title: '마감금액', width: 70, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
         ];
         const controlCloseCancelRightObj = {
             height: 300,
@@ -1687,10 +1657,10 @@
                 };
                 rowListConvert.push(tempObject);
             }
-            $controlCloseHistoryGrid.pqGrid('updateRow', {rowList: rowListConvert, checkEditable: false});
+            $controlEndHistoryGrid.pqGrid('updateRow', {rowList: rowListConvert, checkEditable: false});
             const updateQueryList = ['orderMapper.createControlProgress', 'orderMapper.updateControlStatus'];
 
-            fnModifyPQGrid($controlCloseHistoryGrid, [], updateQueryList);
+            fnModifyPQGrid($controlEndHistoryGrid, [], updateQueryList);
         };
 
         const noSelectedRowAlert = function () {
@@ -1703,28 +1673,36 @@
         };
 
         const loadDataControlCloseCancel = function () {
-            let list = [];
-            let controlSeqList = [];
+            let controlSeqList = new Set();
+            let orderSeqList = new Set ();
             let controlSeqStr = '';
+            let orderSeqStr = '';
 
             for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                let rowData = $controlCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                const rowData = $controlCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
-                list.push(rowData);
-                controlSeqList.push(rowData.CONTROL_SEQ);
-            }
-            // 중복제거
-            controlSeqList = [...new Set(controlSeqList)];
-
-            for (let i = 0, CONTROL_SEQ_LIST_LENGTH = controlSeqList.length; i < CONTROL_SEQ_LIST_LENGTH; i++) {
-                controlSeqStr += controlSeqList[i];
-
-                if (i < CONTROL_SEQ_LIST_LENGTH - 1) {
-                    controlSeqStr += ',';
+                if (rowData.ORDER_SEQ) {
+                    orderSeqList.add(rowData.ORDER_SEQ);
+                }
+                if (rowData.ORDER_SEQ) {
+                    controlSeqList.add(rowData.CONTROL_SEQ);
                 }
             }
 
+            for (let item of controlSeqList) {
+                controlSeqStr += item;
+                controlSeqStr += ',';
+            }
+            for (let item of orderSeqList) {
+                orderSeqStr += item;
+                orderSeqStr += ',';
+            }
+
+            controlSeqStr = controlSeqStr.substring(0, controlSeqStr.length - 1);
+            orderSeqStr = orderSeqStr.substring(0, orderSeqStr.length - 1);
+
             $('#CONTROL_CLOSE_CANCEL_FORM > #CONTROL_SEQ').val(controlSeqStr);
+            $('#CONTROL_CLOSE_CANCEL_FORM > #ORDER_SEQ').val(orderSeqStr);
 
             let postData = fnFormToJsonArrayData('#CONTROL_CLOSE_CANCEL_FORM');
             postData.queryId = 'orderMapper.selectControlCloseCancelLeftList';
@@ -1740,23 +1718,30 @@
             $controlCloseCancelRightGrid.pqGrid('refreshDataAndView');
         };
 
+        // status ORD003 마감, ORD004 종료
         let isDifferentStatus = function (status) {
-            // status ORD003 마감, ORD004 종료
-            let controlStatusList = [];
+            const active = $("#CONTROL_CLOSE_HISTORY_TABS").tabs('option', 'active');
+            let grid;
+            let controlStatusList = new Set();
+
+            switch (active) {
+                case 0:
+                    grid = $controlCloseHistoryGrid;
+                    break;
+                case 1:
+                    grid = $controlEndHistoryGrid;
+                    break;
+            }
 
             for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                let rowData = $controlCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                let rowData = grid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
-                controlStatusList.push(rowData.CONTROL_STATUS);
+                controlStatusList.add(rowData.CONTROL_STATUS);
             }
-            // 중복제거
-            controlStatusList = [...new Set(controlStatusList)];
 
-            if (controlStatusList.length > 1) {
-                fnAlert(null, '주문 상태가 다릅니다.');
-                return true;
-            }
-            if(controlStatusList[0] !== status) {
+            const iterator = controlStatusList.values();
+
+            if (controlStatusList.size > 1 || iterator.next().value !== status) {
                 fnAlert(null, '주문 상태가 다릅니다.');
                 return true;
             }
@@ -1821,24 +1806,12 @@
 
         $("#CONTROL_CLOSE_HISTORY_TABS").tabs({
             activate: function (event, ui) {
-                const active = $(this).tabs('option', 'active');
-
-                switch (active) {
-                    case 0:
-                        console.log(0);
-                        break;
-                    case 1:
-                        console.log(1);
-                        break;
-                }
-
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
             }
         });
 
         $('#CONTROL_CLOSE_CANCEL_POPUP').on({
             'show.bs.modal': function () {
-                // updateControlStatus();
                 if (noSelectedRowAlert()) {
                     return false;
                 }
@@ -1847,25 +1820,27 @@
                     return false;
                 }
 
-                let compCdList = [];
-                let orderCompCdList = [];
+                let compCdList = new Set();
+                let orderCompCdList = new Set();
 
                 for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                    let rowData = $controlCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                    const rowData = $controlCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
 
-                    compCdList.push(rowData.COMP_CD);
-                    orderCompCdList.push(rowData.ORDER_COMP_CD);
+                    if (rowData.COMP_CD) {
+                        compCdList.add(rowData.COMP_CD);
+                    }
+
+                    if (rowData.ORDER_COMP_CD) {
+                        orderCompCdList.add(rowData.ORDER_COMP_CD);
+                    }
                 }
 
-                // 중복제거
-                compCdList = [...new Set(compCdList)];
-                orderCompCdList = [...new Set(orderCompCdList)];
-
-                if (compCdList.length > 1) {
+                if (compCdList.size > 1) {
                     fnAlert(null, '선택된 대상들의 발주사는 동일해야 합니다.');
                     return false;
                 }
-                if (orderCompCdList.length > 1) {
+
+                if (orderCompCdList.size > 1) {
                     fnAlert(null, '선택된 대상들의 공급사는 동일해야 합니다.');
                     return false;
                 }
