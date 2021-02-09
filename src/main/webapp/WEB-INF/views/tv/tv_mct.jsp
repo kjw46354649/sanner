@@ -40,15 +40,15 @@
 					<div class="infoCont">
 						<span>현재</span>
 <%--						<span class="txtB">82%</span>--%>
-						<span class="txtB"></span>
+						<span class="txtB" id="nowRate"></span>
 					</div>
 					<div class="infoCont">
 						<span>3일간 평균</span>
-						<span class="txtR"></span>
+						<span class="txtR" id="dayRate"></span>
 					</div>
 					<div class="infoCont">
 						<span>月 평균</span>
-						<span></span>
+						<span class="txtR" id="monthRate"></span>
 					</div>
 				</div>
 				<a href="/tv/mct" class="refresh">refresh</a>
@@ -1374,6 +1374,11 @@
 					createGrid1(data.grid_list1);	//불량/반품
 					createGrid2(data.grid_list2);	//긴급주문
 					createGrid3(data.grid_list3);	//납기지연목록
+
+					var rateInfo = data.mct_rate;
+					$('#nowRate').html(rateInfo.NOW_RATE);
+					$('#dayRate').html(rateInfo.DAY_RATE);
+					$('#monthRate').html(rateInfo.MONTH_RATE);
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
@@ -1420,6 +1425,9 @@
 					createGrid1(data.grid_list1);	//불량/반품
 					createGrid2(data.grid_list2);	//긴급주문
 					createGrid3(data.grid_list3);	//납기지연목록
+
+					var rateInfo = data.mct_rate;
+					$('#nowRate').html(rateInfo.NOW_RATE);
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
@@ -1529,12 +1537,13 @@
 					let inner_due_dt = grid_list1[i].INNER_DUE_DT == undefined ? "" : grid_list1[i].INNER_DUE_DT;
 					let inspect_result_nm = grid_list1[i].INSPECT_RESULT_NM == undefined ? "" : grid_list1[i].INSPECT_RESULT_NM;
 					let error_action_nm = grid_list1[i].ERROR_ACTION_NM == undefined ? "" : grid_list1[i].ERROR_ACTION_NM;
+					let imageSeq =( grid_list1[i].IMG_GFILE_SEQ != undefined ) ? grid_list1[i].IMG_GFILE_SEQ : '' ;
 
 					let grid1Html = '<tr>';
 						grid1Html += '<td>' + (i+1) +'</td>';
 						grid1Html += '<td>'+ inspect_dt + '</td>';
 						grid1Html += '<td>'+ order_comp_nm + '</td>';
-						grid1Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
+						grid1Html += '<td class="alignLeft ellipsis" ><a href="javascript:callWindowImageViewer(' + imageSeq + ');">'+ control_part_info + '</a></td>';
 						grid1Html += '<td class="txtR">'+ error_type + '</td>';
 						grid1Html += '<td class="txtR">'+ error_qty_info + '</td>';
 						grid1Html += '<td>'+ inner_due_dt + '</td>';
@@ -1569,12 +1578,13 @@
 					let control_part_qty_info = grid_list2[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list2[i].CONTROL_PART_QTY_INFO;
 					let part_status_nm = grid_list2[i].PART_STATUS_NM == undefined ? "" : grid_list2[i].PART_STATUS_NM;
 					let pop_position_nm = grid_list2[i].POP_POSITION_NM == undefined ? "" : grid_list2[i].POP_POSITION_NM;
+					let imageSeq =( grid_list2[i].IMG_GFILE_SEQ != undefined ) ? grid_list2[i].IMG_GFILE_SEQ : '' ;
 
 					let grid2Html = '<tr>';
 						grid2Html += '<td>' + (i+1) +'</td>';
 						grid2Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
 						grid2Html += '<td class="ellipsis">'+ order_comp_nm + '</td>';
-						grid2Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
+						grid2Html += '<td class="alignLeft ellipsis"><a href="javascript:callWindowImageViewer(' + imageSeq + ');">'+ control_part_info + '</a></td>';
 						grid2Html += '<td>'+ control_part_qty_info + '</td>';
 						grid2Html += '<td class="ellipsis">'+ part_status_nm + '</td>';
 						grid2Html += '<td>'+ pop_position_nm + '</td>';
@@ -1608,12 +1618,13 @@
 					let control_part_qty_info = grid_list3[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list3[i].CONTROL_PART_QTY_INFO;
 					let part_status_nm = grid_list3[i].PART_STATUS_NM == undefined ? "" : grid_list3[i].PART_STATUS_NM;
 					let charge_user_nm = grid_list3[i].CHARGE_USER_NM == undefined ? "" : grid_list3[i].CHARGE_USER_NM;
+					let imageSeq =( grid_list3[i].IMG_GFILE_SEQ != undefined ) ? grid_list3[i].IMG_GFILE_SEQ : '' ;
 
 					let grid3Html = '<tr>';
 						grid3Html += '<td>' + (i+1) +'</td>';
 						grid3Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
 						grid3Html += '<td class="alignLeft ellipsis">'+ order_comp_nm + '</td>';
-						grid3Html += '<td class="alignLeft ellipsis">'+ control_part_info + '</td>';
+						grid3Html += '<td class="alignLeft ellipsis" ><a href="javascript:callWindowImageViewer(' + imageSeq + ');">'+ control_part_info + '</a></td>';
 						grid3Html += '<td>'+ control_part_qty_info + '</td>';
 						grid3Html += '<td>'+ part_status_nm + '</td>';
 						grid3Html += '<td>'+ charge_user_nm + '</td>';

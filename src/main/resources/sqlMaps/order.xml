@@ -1809,7 +1809,7 @@
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                                        AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                INNER JOIN TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ
+                INNER JOIN TBL_MONTH_CLOSE_ORDER D ON A.CONTROL_SEQ = D.CONTROL_SEQ
                                                        AND A.COMP_CD = D.COMP_CD
                                                        AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
                                                 <choose>
@@ -1938,7 +1938,7 @@
                                                 , A.ORDER_COMP_CD
                                                 , D.CLOSE_MONTH
                                                 , E.FINAL_NEGO_AMT + E.FINAL_NEGO_AMT * 0.1 AS AMT
-                                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_MONTH_CLOSE_DETAIL D, TBL_MONTH_CLOSE E
+                                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_MONTH_CLOSE_ORDER D, TBL_MONTH_CLOSE E
                                             WHERE 1 = 1
                                                 AND E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD AND E.CLOSE_VER = D.CLOSE_VER AND E.CLOSE_MONTH = D.CLOSE_MONTH <if test="DEGREE != null and DEGREE != ''"> AND E.CLOSE_VER = #{DEGREE} </if>
                                                 AND D.CONTROL_SEQ = A.CONTROL_SEQ AND D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{MONTH_SALE_YEAR}
@@ -2054,7 +2054,7 @@
                                                 , A.ORDER_COMP_CD
                                                 , D.CLOSE_MONTH
                                                 , E.FINAL_NEGO_AMT + E.FINAL_NEGO_AMT * 0.1 AS AMT
-                                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_MONTH_CLOSE_DETAIL D, TBL_MONTH_CLOSE E
+                                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_MONTH_CLOSE_ORDER D, TBL_MONTH_CLOSE E
                                             WHERE 1 = 1
                                                 AND E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD AND E.CLOSE_VER = D.CLOSE_VER AND E.CLOSE_MONTH = D.CLOSE_MONTH <if test="DEGREE != null and DEGREE != ''"> AND E.CLOSE_VER = #{DEGREE} </if>
                                                 AND D.CONTROL_SEQ = A.CONTROL_SEQ AND D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{MONTH_SALE_YEAR}
@@ -2274,7 +2274,7 @@
                 FROM jmes.TBL_CONTROL A
                     INNER JOIN jmes.TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND IFNULL(B.PART_NUM, '0') = '0'
                     INNER JOIN jmes.TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                    INNER JOIN jmes.TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND A.COMP_CD = D.COMP_CD AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
+                    INNER JOIN jmes.TBL_MONTH_CLOSE_ORDER D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND A.COMP_CD = D.COMP_CD AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
                     INNER JOIN jmes.TBL_MONTH_CLOSE E ON D.COMP_CD = E.COMP_CD AND D.CLOSE_MONTH = E.CLOSE_MONTH AND D.ORDER_COMP_CD = E.ORDER_COMP_CD AND D.CLOSE_VER = E.CLOSE_VER
                         AND DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y') = #{MONEY_MANAGE_STATUS_YEAR}
                 WHERE A.DEL_YN = 'N'
@@ -2355,7 +2355,7 @@
             FROM jmes.TBL_CONTROL A
                 INNER JOIN jmes.TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND IFNULL(B.PART_NUM, '0') = '0'
                 INNER JOIN jmes.TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                INNER JOIN jmes.TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND A.COMP_CD = D.COMP_CD AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
+                INNER JOIN jmes.TBL_MONTH_CLOSE_ORDER D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND A.COMP_CD = D.COMP_CD AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
                 INNER JOIN jmes.TBL_MONTH_CLOSE E ON D.COMP_CD = E.COMP_CD AND D.CLOSE_MONTH = E.CLOSE_MONTH AND D.ORDER_COMP_CD = E.ORDER_COMP_CD AND D.CLOSE_VER = E.CLOSE_VER
                     <if test="MONEY_RECEIVE_CLOSE_YEAR_ST != null and MONEY_RECEIVE_CLOSE_YEAR_ST != ''">
                         AND E.CLOSE_MONTH BETWEEN CONCAT(#{MONEY_RECEIVE_CLOSE_YEAR_ST}, #{MONEY_RECEIVE_CLOSE_MONTH_ST})
@@ -2682,7 +2682,7 @@
     </select>
 
     <update id="updateMonthCloseDetailNote" parameterType="java.util.HashMap">
-        UPDATE TBL_MONTH_CLOSE_DETAIL
+        UPDATE TBL_MONTH_CLOSE_ORDER
         SET
             CLOSE_DETAIL_NOTE = #{CLOSE_DETAIL_NOTE},
             UPDATE_DT = NOW(),
@@ -2696,7 +2696,7 @@
     </update>
 
     <delete id="deleteMonthCloseDetail" parameterType="java.util.HashMap">
-        DELETE FROM TBL_MONTH_CLOSE_DETAIL
+        DELETE FROM TBL_MONTH_CLOSE_ORDER
         WHERE
             COMP_CD = #{COMP_CD}
             AND CLOSE_MONTH = #{CLOSE_MONTH}
@@ -2819,7 +2819,7 @@
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
                                                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            INNER JOIN TBL_MONTH_CLOSE_DETAIL D ON A.CONTROL_SEQ = D.CONTROL_SEQ
+            INNER JOIN TBL_MONTH_CLOSE_ORDER D ON A.CONTROL_SEQ = D.CONTROL_SEQ
                                                    AND A.COMP_CD = D.COMP_CD
                                                    AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
                                                    AND D.COMP_CD = #{COMP_CD}

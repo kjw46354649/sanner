@@ -1291,7 +1291,7 @@
                                                         AND N.CONTROL_DETAIL_SEQ = O.CONTROL_DETAIL_SEQ ORDER BY O.POP_SEQ DESC LIMIT 1
                                                 )
         WHERE 1 = 1
-            AND A.PART_STATUS IN ('PRO001', 'PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018', 'PRO019')
+            AND A.PART_STATUS IN ('PRO001', 'PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018', 'PRO019', 'PRO021', 'PRO022')
             <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
                 AND UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
             </if>
