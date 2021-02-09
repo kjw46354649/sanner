@@ -40,15 +40,15 @@
 					<div class="infoCont">
 						<span>현재</span>
 <%--						<span class="txtB">82%</span>--%>
-						<span class="txtB"></span>
+						<span class="txtB" id="nowRate"></span>
 					</div>
 					<div class="infoCont">
 						<span>3일간 평균</span>
-						<span class="txtR"></span>
+						<span class="txtR" id="dayRate"></span>
 					</div>
 					<div class="infoCont">
 						<span>月 평균</span>
-						<span></span>
+						<span class="txtR" id="monthRate"></span>
 					</div>
 				</div>
 				<a href="/tv/mct" class="refresh">refresh</a>
@@ -1374,6 +1374,11 @@
 					createGrid1(data.grid_list1);	//불량/반품
 					createGrid2(data.grid_list2);	//긴급주문
 					createGrid3(data.grid_list3);	//납기지연목록
+
+					var rateInfo = data.mct_rate;
+					$('#nowRate').html(rateInfo.NOW_RATE);
+					$('#dayRate').html(rateInfo.DAY_RATE);
+					$('#monthRate').html(rateInfo.MONTH_RATE);
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
@@ -1420,6 +1425,9 @@
 					createGrid1(data.grid_list1);	//불량/반품
 					createGrid2(data.grid_list2);	//긴급주문
 					createGrid3(data.grid_list3);	//납기지연목록
+
+					var rateInfo = data.mct_rate;
+					$('#nowRate').html(rateInfo.NOW_RATE);
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");

@@ -123,9 +123,9 @@ public class TvController {
        List<Map<String, Object>> grid_list3 = this.innodaleService.getList(hashMap);
        model.addAttribute("grid_list3", grid_list3);
 
-//       hashMap.put("queryId","tvMapper.selectMctInfo");//mct가동률 및 기타.
-//       Map<String, Object> mct_info = this.innodaleService.getInfo(hashMap);
-//       model.addAttribute("mct_info", mct_info);
+       hashMap.put("queryId","tvMapper.selectMctInfo");//mct가동률 및 기타.
+       Map<String, Object> mct_info = this.innodaleService.getInfo(hashMap);
+       model.addAttribute("mct_rate", mct_info);
 
        return "jsonView";
    }
@@ -145,6 +145,10 @@ public class TvController {
        hashMap.put("queryId","tvMapper.selectMctGrid3List");//납기지연 목록
        List<Map<String, Object>> grid_list3 = this.innodaleService.getList(hashMap);
        model.addAttribute("grid_list3", grid_list3);
+
+       hashMap.put("queryId","tvMapper.selectMctInfo");//mct가동률 및 기타.
+       Map<String, Object> mct_info = this.innodaleService.getInfo(hashMap);
+       model.addAttribute("mct_rate", mct_info);
 
        return "jsonView";
    }
