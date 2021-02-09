@@ -145,6 +145,7 @@
 
 <script>
     var $closingHistoryGrid;
+    var salesClosingHistoryRowIndex = [];
     $(function () {
         'use strict';
         fnCommCodeDatasourceSelectBoxCreate($('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM').find('#COMP_CD'), 'all', {
@@ -198,8 +199,7 @@
                     let grid = this,
                         $cell = grid.getCell(ui);
                     $cell.find('[name=SALES_STATUS_CONTROL_DETAIL_VIEW]').bind('click', function () {
-                        let rowData = ui.rowData;
-                        openNewWindowControlDetail(rowData);
+                        openNewWindowControlDetail();
                     });
                 }
             },
@@ -243,6 +243,9 @@
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
+            },
+            rowSelect: function (event, ui) {
+                salesClosingHistoryRowIndex = ui.addList[0].rowIndx;
             },
             summaryTitle: {sum: '{0}'},
         };
@@ -356,7 +359,7 @@
         /* variable */
 
         /* function */
-        const openNewWindowControlDetail = function (rowData) {
+        const openNewWindowControlDetail = function () {
             let url = '/controlDetail';
             // 팝업 사이즈
             let nWidth = 1400;
