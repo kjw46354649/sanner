@@ -896,6 +896,70 @@
             AND NOT EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.OUT_FINISH_DT IS NULL)
     </update>
 
+    <select id="selectOutgoingOutType5" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+        	D.CONTROL_NUM
+        	, D.DRAWING_NUM
+        	, D.ORDER_NUM
+            , D.CONTROL_SEQ
+            , D.CONTROL_DETAIL_SEQ
+            , D.ORDER_SEQ
+            , D.ORDER_QTY
+            , D.PACKING_CNT
+            , D.OUT_QTY AS OUT_CNT
+            , D.ORDER_BARCODE_NUM
+            , CONCAT(D.ORDER_QTY - D.OUT_QTY, '/', D.ORDER_QTY) AS QTY_INFO
+            , D.ORDER_QTY - D.OUT_QTY AS PLAN_QTY
+        FROM (
+            SELECT
+            	A.CONTROL_NUM
+            	, C.DRAWING_NUM
+            	, C.ORDER_NUM
+				, C.CONTROL_SEQ
+                , C.CONTROL_DETAIL_SEQ
+                , C.ORDER_SEQ
+                , IFNULL(C.ORDER_QTY, 0) AS ORDER_QTY
+                , C.PACKING_CNT
+                , (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY
+                , C.ORDER_BARCODE_NUM
+            FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
+            WHERE 1 = 1
+            	AND C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            	AND B.CONTROL_SEQ = A.CONTROL_SEQ
+            	AND A.DEL_YN = 'N'
+                <choose>
+                    <when test="BARCODE_NUM != null and BARCODE_NUM != ''">
+                        AND C.ORDER_BARCODE_NUM = #{BARCODE_NUM}
+                    </when>
+                    <when test="ORDER_SEQ != null and ORDER_SEQ != ''">
+                        AND C.ORDER_SEQ = #{ORDER_SEQ}
+                    </when>
+                </choose>
+        ) D
+    </select>
+
+    <insert id="insertOutgoingOutType5" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_OUT (OUT_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, ORDER_SEQ, OUT_QTY, INSERT_ID)
+        SELECT NEXTVAL(jmes.OUT_SEQ) AS OUT_SEQ
+            , A.CONTROL_SEQ
+            , A.CONTROL_DETAIL_SEQ
+            , A.ORDER_SEQ
+            , A.ORDER_QTY
+            , #{LOGIN_USER_ID} AS INSERT_ID
+        FROM jmes.TBL_CONTROL_PART_ORDER A
+        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND A.ORDER_SEQ = #{ORDER_SEQ}
+    </insert>
+
+    <update id="updateOutgoingOutType5After1" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_CONTROL_PART_ORDER A
+        SET A.OUT_FINISH_DT = NOW()
+        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND A.ORDER_SEQ = #{ORDER_SEQ}
+            AND IFNULL(A.ORDER_QTY, 0) = (SELECT IFNULL(SUM(M.OUT_QTY), 0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ)
+    </update>
 
     <select id="selectOutgoingReturnInfo1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ
