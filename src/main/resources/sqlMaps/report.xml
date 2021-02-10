@@ -71,22 +71,44 @@
                                                 , SUM(P.FORECAST_UNIT_AMT * P.PART_QTY) AS FORECAST_AMT
                                                 , SUM(P.ERROR_CNT) AS ERROR_CNT
                                                 , SUM(P.ERROR_QTY) AS ERROR_QTY
-                                            FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
-                                                        , DATE_FORMAT(DATE_ADD(A.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
+                                            FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                                                        , DATE_FORMAT(DATE_ADD(B.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
                                                         , 1 AS PART_CNT
-                                                        , jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS PART_QTY
-                                                        , IFNULL(A.FORECAST_UNIT_AMT,0) AS FORECAST_UNIT_AMT
-                                                        , ROW_NUMBER() OVER (PARTITION BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ ORDER BY B.INSPECT_SEQ) AS INSPECT_RNUM
-                                                        , CASE WHEN B.INSPECT_GRADE = 'GRD040' THEN 1 ELSE 0 END AS ERROR_CNT
-                                                        , CASE WHEN B.INSPECT_GRADE = 'GRD040' THEN B.ERROR_QTY ELSE 0 END AS ERROR_QTY
-                                                    FROM jmes.TBL_CONTROL_PART A LEFT OUTER JOIN jmes.TBL_INSPECT B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND B.INSPECT_TYPE = '1'
-                                                    WHERE A.WORK_TYPE != 'WTP020'
+                                                        , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY
+                                                        , IFNULL(D.UNIT_FINAL_AMT, IFNULL(D.UNIT_FINAL_EST_AMT,  IFNULL(CASE WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN ( SELECT M.UNIT_FINAL_AMT
+                                                                                                                                                                        FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
+                                                                                                                                                                        WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                                                                                                                                                            AND N.CONTROL_STATUS = 'ORD003'
+                                                                                                                                                                            AND N.DEL_YN = 'N'
+                                                                                                                                                                            AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
+                                                                                                                                                                        ORDER BY M.CONTROL_SEQ DESC
+                                                                                                                                                                        LIMIT 1)
+                                                                                                                             ELSE ( SELECT M.UNIT_FINAL_AMT
+                                                                                                                                    FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
+                                                                                                                                    WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                                                                                                                        AND N.CONTROL_STATUS = 'ORD003'
+                                                                                                                                        AND N.DEL_YN = 'N'
+                                                                                                                                        AND N.CONTROL_SEQ != B.CONTROL_SEQ
+                                                                                                                                        AND M.DRAWING_NUM = B.DRAWING_NUM
+                                                                                                                                    ORDER BY M.CONTROL_SEQ DESC
+                                                                                                                                    LIMIT 1)
+                                                                                                                        END, IFNULL(B.FORECAST_UNIT_AMT,0)))) AS FORECAST_UNIT_AMT
+                                                        , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
+                                                        , CASE WHEN C.INSPECT_GRADE = 'GRD040' THEN 1 ELSE 0 END AS ERROR_CNT
+                                                        , CASE WHEN C.INSPECT_GRADE = 'GRD040' THEN C.ERROR_QTY ELSE 0 END AS ERROR_QTY
+                                                    FROM jmes.TBL_CONTROL A
+                                                        , jmes.TBL_CONTROL_PART B LEFT OUTER JOIN jmes.TBL_INSPECT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND C.INSPECT_TYPE = '1'
+                                                        , jmes.TBL_CONTROL_PART_ORDER_MAIN D
+                                                    WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                        AND A.CONTROL_SEQ = D.CONTROL_SEQ
+                                                        AND A.DEL_YN = 'N'
+                                                        AND B.WORK_TYPE != 'WTP020'
                                                     <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
-                                                        AND WORK_FACTORY = #{WORK_FACTORY}   <!-- 가변조건 -->
+                                                        AND B.WORK_FACTORY = #{WORK_FACTORY}   <!-- 가변조건 -->
                                                     </if>
-                                                        AND A.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)     <!-- 고정조건 -->
-                                                        AND A.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL 1 MONTH), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)      <!-- 고정조건 -->
-                                                        AND NOT EXISTS (SELECT 1 FROM jmes.TBL_CONTROL M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.DEL_YN = 'Y')
+                                                        AND B.INNER_WORK_FINISH_DT >= DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)     <!-- 고정조건 -->
+                                                        AND B.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR}, #{MONTH},'01'),'%Y%m%d'), INTERVAL 1 MONTH), INTERVAL CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT) MINUTE)      <!-- 고정조건 -->
+                                                        AND NOT EXISTS (SELECT 1 FROM jmes.TBL_CONTROL M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.DEL_YN = 'Y')
                                                   ) P
                                             WHERE P.INSPECT_RNUM = 1
                                             GROUP BY P.WORKING_FINISH_DT
@@ -337,7 +359,24 @@
                                                                 , CASE WHEN C.INNER_WORK_FINISH_DT IS NULL THEN 'N' ELSE 'Y' END AS INNER_WORK_FINISH_YN
                                                                 , CASE WHEN B.OUT_FINISH_DT IS NULL THEN 'N' ELSE 'Y' END AS OUT_FINISH_YN
                                                                 , DATE_FORMAT(B.OUT_FINISH_DT,'%Y%m%d') AS OUT_FINISH_DT
-                                                                , C.FORECAST_UNIT_AMT
+                                                                , IFNULL(E.UNIT_FINAL_AMT, IFNULL(E.UNIT_FINAL_EST_AMT, IFNULL(CASE WHEN C.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.UNIT_FINAL_AMT
+                                                                                                                                                                                FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
+                                                                                                                                                                                WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                                                                                                                                                                    AND N.CONTROL_STATUS = 'ORD003'
+                                                                                                                                                                                    AND N.DEL_YN = 'N'
+                                                                                                                                                                                    AND M.DRAWING_NUM = C.PREV_DRAWING_NUM
+                                                                                                                                                                                ORDER BY M.CONTROL_SEQ DESC
+                                                                                                                                                                                LIMIT 1)
+                                                                                                                                    ELSE ( SELECT M.UNIT_FINAL_AMT
+                                                                                                                                           FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
+                                                                                                                                           WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                                                                                                                               AND N.CONTROL_STATUS = 'ORD003'
+                                                                                                                                               AND N.DEL_YN = 'N'
+                                                                                                                                               AND N.CONTROL_SEQ != C.CONTROL_SEQ
+                                                                                                                                               AND M.DRAWING_NUM = C.DRAWING_NUM
+                                                                                                                                           ORDER BY M.CONTROL_SEQ DESC
+                                                                                                                                           LIMIT 1)
+                                                                                                                               END, C.FORECAST_UNIT_AMT))) AS FORECAST_UNIT_AMT
                                                                 , ROW_NUMBER() OVER (PARTITION BY C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ ORDER BY D.INSPECT_SEQ) AS INSPECT_RNUM
                                                                 , CASE WHEN D.INSPECT_GRADE = 'GRD040' THEN 1 ELSE 0 END AS ERROR_CNT
                                                                 , CASE WHEN D.INSPECT_GRADE = 'GRD040' THEN D.ERROR_QTY ELSE 0 END AS ERROR_QTY
@@ -350,8 +389,10 @@
                                                                 , jmes.TBL_CONTROL B
                                                                 , jmes.TBL_CONTROL_PART C
                                                                         LEFT OUTER JOIN jmes.TBL_INSPECT D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.INSPECT_TYPE = '1'
+                                                                , jmes.TBL_CONTROL_PART_ORDER_MAIN E
                                                             WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                                                                 AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                                                                AND A.CONTROL_SEQ = E.CONTROL_SEQ
                                                                 AND B.DEL_YN = 'N'
                                                                 AND B.CONTROL_STATUS IN ('ORD001', 'ORD003')
                                                                 AND C.WORK_TYPE != 'WTP020'
