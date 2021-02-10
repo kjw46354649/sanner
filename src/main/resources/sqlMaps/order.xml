@@ -32,7 +32,8 @@
         IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
         IFNULL(B.DRAWING_NUM, SPACE(0)) AS DRAWING_NUM, <!-- 도면번호 -->
         IFNULL(B.DRAWING_VER, SPACE(0)) AS DRAWING_VER, <!-- 도면번호 버전 -->
-        IFNULL(SF_GET_DATE_F(B.DRAWING_UP_DT, 'YY', 'M'), SPACE(0)) AS DRAWING_UP_DT, <!-- 도면업로드시간 -->
+        CASE WHEN B.DRAWING_VER IS NOT NULL THEN IFNULL(SF_GET_DATE_F(B.DRAWING_UP_DT, 'YY', 'M'), SPACE(0))
+            ELSE SPACE(0) END AS DRAWING_UP_DT, <!-- 도면업로드시간 -->
         IFNULL(B.PREV_DRAWING_NUM, SPACE(0)) AS PREV_DRAWING_NUM, <!-- 변경전 도면번호 -->
         IFNULL(B.WORK_TYPE, SPACE(0)) AS WORK_TYPE, <!-- 작업형태 -->
         IFNULL(SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
@@ -1501,7 +1502,8 @@
             B.DRAWING_VER,
             B.SIZE_TXT, <!-- 규격 -->
             CONCAT(C.CONTROL_NUM, IFNULL(B.PART_NUM, 0)) AS SORTKEY,
-            SF_GET_DATE_F(B.DRAWING_UP_DT,'YY','M') AS DRAWING_UP_DT,
+            CASE WHEN B.DRAWING_VER IS NOT NULL THEN IFNULL(SF_GET_DATE_F(B.DRAWING_UP_DT, 'YY', 'M'), SPACE(0))
+                    ELSE SPACE(0) END AS DRAWING_UP_DT, <!-- 도면업로드시간 -->
             #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
             #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
             #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ

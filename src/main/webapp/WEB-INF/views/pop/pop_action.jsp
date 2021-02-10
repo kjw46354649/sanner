@@ -270,19 +270,14 @@
                 refreshData();
             });
 
-            // $("#popBarcode").on('change', function(){
-            //     var barcode = $(this).val();
-            //     if( barcode.length == 10) {
-            //         scanningBarcode();
+            // POP 입력은 바코드로 처리 한다.
+            // 중복 처리로 주석 처리
+            // $("#popBarcode").on('keyup', function(e) {
+            //     if (e.keyCode === 13) {
+            //         let barcodeNum = fnBarcodeKo2En(this.value);
+            //         sendDrawingNum(barcodeNum);
             //     }
             // });
-
-            $("#popBarcode").on('keyup', function(e) {
-                if (e.keyCode === 13) {
-                    let barcodeNum = fnBarcodeKo2En(this.value);
-                    sendDrawingNum(barcodeNum);
-                }
-            });
 
             $("#popBarcode").on('focus', function(){
                 $(this).attr('placeholder', '');
@@ -328,10 +323,10 @@
                 });
             }
 
-            /** 30초마다 그리드 재조회 **/
+            /** 60초마다 그리드 재조회 **/
             setInterval(function() {
                 refreshData();
-            }, 1000 * 30);
+            }, 1000 * 60);
 
             $("#popBarcode").focus();
 
