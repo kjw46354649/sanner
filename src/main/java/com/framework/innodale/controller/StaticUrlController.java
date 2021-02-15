@@ -287,4 +287,22 @@ public class StaticUrlController {
 
         return mav;
     }
+
+    /**
+     * 도면 업로드 팝업 변경
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/drawingUploadPopup")
+    public ModelAndView drawingUploadPopup(HttpServletRequest request) throws Exception {
+
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("/common/drawing_upload");
+        mav.addObject("actionType", map.get("actionType"));
+
+        return mav;
+    }
 }

@@ -195,6 +195,7 @@
                                                 AND A.WORK_STATUS IN ('DBS010', 'DBS020')
                                                 <!-- AND B.OUT_FINISH_DT IS NULL -->
                                                 AND A.DEL_YN = 'N'
+                                                AND B.DEL_YN = 'N'
                                                 <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
                                                     AND A.EQUIP_SEQ = #{EQUIP_SEQ}
                                                 </if>
@@ -227,6 +228,7 @@
                                                 AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                                                 <!-- AND B.OUT_FINISH_DT IS NULL -->
                                                 AND A.DEL_YN = 'N'
+                                                AND B.DEL_YN = 'N'
                                                 <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
                                                     AND A.EQUIP_SEQ = #{EQUIP_SEQ}
                                                 </if>

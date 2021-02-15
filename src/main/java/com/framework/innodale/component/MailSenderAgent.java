@@ -71,7 +71,7 @@ public class MailSenderAgent {
                     for(Map<String, Object> fileInfo : attachFileList){
                         String file = (String)fileInfo.get("FILE_PATH");
                         File fsr = new File(file);
-                        message.addAttachment(MimeUtility.encodeText((String)fileInfo.get("ORGINAL_FILE_NM")), fsr);
+                        message.addAttachment(MimeUtility.encodeText((String)fileInfo.get("ORGINAL_FILE_NM"), "UTF-8", "B"), fsr);
                     }
                 }
             };

@@ -203,8 +203,36 @@ public class PDFPringMakeController {
             table.addCell(createCell((String) controlInfo.get("INNER_DUE_DT"), 1, 1, mediumBoldFont));
 
             document.add(table);
-
             table.flushContent();
+
+            controlInfo.put("queryId", "orderMapper.selectControlCadOrderList");
+            List<Map<String, Object>> controlOrderList = innodaleService.getList(controlInfo);
+
+            if(controlOrderList != null && controlOrderList.size() > 0){
+
+                PdfPTable drawingInfoTable = new PdfPTable(4);
+                drawingInfoTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                drawingInfoTable.setWidthPercentage(70f);
+                drawingInfoTable.setWidths(new int[] {35, 65, 30, 17});
+
+                drawingInfoTable.addCell(createCell("발주번호", 1, 1, mediumNormalFont));
+                drawingInfoTable.addCell(createCell("도면번호", 1, 1, mediumNormalFont));
+                drawingInfoTable.addCell(createCell("수량", 1, 1, mediumNormalFont));
+                drawingInfoTable.addCell(createCell("납기", 1, 1, mediumNormalFont));
+
+                for (Map<String, Object> controlOrderInfo : controlOrderList) {
+
+                    drawingInfoTable.addCell(createCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, mediumNormalFont));
+                    drawingInfoTable.addCell(createCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, mediumNormalFont));
+                    drawingInfoTable.addCell(createCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, mediumNormalFont));
+                    drawingInfoTable.addCell(createCell((String) controlOrderInfo.get("ORDER_DUE_DT"), 1, 1, mediumNormalFont));
+
+                }
+
+                document.add(drawingInfoTable);
+                drawingInfoTable.flushContent();
+
+            }
 
             if (controlInfo.get("IMAGE_PATH") != null && !"".equals(controlInfo.get("IMAGE_PATH"))) {
 
@@ -224,6 +252,17 @@ public class PDFPringMakeController {
                     for (Map<String, Object> fileInfo : imageList) {
 
                         document.newPage();
+
+                        PdfPTable orderTable = new PdfPTable(2);
+                        orderTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                        orderTable.setWidthPercentage(40.0f);
+                        orderTable.setWidths(new int[] {20, 44});
+
+                        orderTable.addCell(createCell("도면번호", 1, 1, mediumNormalFont));
+                        orderTable.addCell(createCell(String.valueOf(fileInfo.get("DRAWING_NUM")) , 1, 1, mediumNormalFont));
+
+                        document.add(orderTable);
+                        orderTable.flushContent();
 
                         if (fileInfo.get("FILE_PATH") != null && !"".equals(fileInfo.get("FILE_PATH"))) {
 
