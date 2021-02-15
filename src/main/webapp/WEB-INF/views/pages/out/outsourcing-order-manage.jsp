@@ -544,7 +544,7 @@
             },
             {
                 title: '외주납기', width: 70, dataIndx: 'OUTSIDE_HOPE_DUE_DT',
-                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true, editor: {type: 'textbox', init: fnDateEditor},
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editor: {type: 'textbox', init: fnDateEditor},
                 editable: function (ui) {
                     let rowData = ui.rowData;
 

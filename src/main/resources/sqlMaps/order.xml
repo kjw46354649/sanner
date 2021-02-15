@@ -149,7 +149,6 @@
             LAG(B.WORK_TYPE, 1) OVER(PARTITION BY A.CONTROL_NUM ORDER BY A.CONTROL_SEQ, B.PART_NUM, C.ORDER_NUM) AS LAG_WORK_TYPE,
             CONCAT(A.CONTROL_NUM, ':', IFNULL(B.PART_NUM, 0)) AS CONTROL_NUM_BUTTON, <!-- merge 용도 -->
             CONCAT(C.DRAWING_NUM, ':', IFNULL(B.PART_NUM, 0)) AS DRAWING_NUM_BUTTON, <!-- merge 용도 -->
-            CONCAT(B.WORK_TYPE, ':', IFNULL(B.PART_NUM, 0)) AS ORDER_NUM_PLUS_BUTTON, <!-- merge 용도 -->
             CONCAT(B.WORK_TYPE, ':', IFNULL(B.PART_NUM, 0)) AS DETAIL_MACHINE_REQUIREMENT, <!-- merge 용도 -->
             IFNULL(SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1), SPACE(0)) AS DNJSCLD,
             IFNULL(SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1), SPACE(0)) AS EOCLD,
@@ -828,77 +827,11 @@
         )
     </insert>
 
-    <insert id="createControlPartProgressAll" parameterType="java.util.HashMap" >
-        INSERT INTO TBL_CONTROL_PART_PROGRESS (
-            CONTROL_SEQ,
-            CONTROL_DETAIL_SEQ,
-            SEQ,
-            PART_STATUS,
-            STATUS_DT,
-            INSERT_ID
-        )
-        SELECT
-            CONTROL_SEQ,
-            CONTROL_DETAIL_SEQ,
-            NEXTVAL(SEQ_CONTROL_PART_PROGRESS),
-            #{PART_STATUS},
-            NOW(),
-            #{LOGIN_USER_ID}
-        FROM TBL_CONTROL_PART
-        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-    </insert>
-
     <update id="removeControl" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL
         SET
             CONTROL_NUM = CONCAT('DEL_', #{CONTROL_NUM}),
             DEL_YN = 'Y',
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE
-            CONTROL_SEQ = #{CONTROL_SEQ}
-    </update>
-
-    <update id="updateControlMaster" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL
-        SET
-        <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
-            CONTROL_NUM = #{CONTROL_NUM},
-        </if>
-        <if test="CONTROL_VER != null and CONTROL_VER != ''">
-            CONTROL_VER = #{CONTROL_VER},
-        </if>
-        <if test="COMP_CD != null and COMP_CD != ''">
-            COMP_CD = #{COMP_CD},
-        </if>
-        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-            ORDER_COMP_CD = #{ORDER_COMP_CD},
-        </if>
-        <if test="CONTROL_NOTE != null and CONTROL_NOTE != ''">
-            NOTE = #{CONTROL_NOTE},
-        </if>
-        <if test="MAIN_INSPECTION != null and MAIN_INSPECTION != ''">
-            MAIN_INSPECTION = #{MAIN_INSPECTION},
-        </if>
-        <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
-            EMERGENCY_YN = #{EMERGENCY_YN},
-        </if>
-        <if test="TOTAL_SHEET != null and TOTAL_SHEET != ''">
-            TOTAL_SHEET = #{TOTAL_SHEET},
-        </if>
-        <if test="CONTROL_STATUS != null and CONTROL_STATUS != ''">
-            CONTROL_STATUS = #{CONTROL_STATUS},
-            STATUS_DT = NOW(),
-        </if>
-        <if test="EST_SEQ != null and EST_SEQ != ''">
-            EST_SEQ = #{EST_SEQ},
-        </if>
-        <if test="PRICE_CONFIRM != null and PRICE_CONFIRM != ''">
-            PRICE_CONFIRM = #{PRICE_CONFIRM},
-        </if>
-        <if test="SAME_SIDE_YN != null and SAME_SIDE_YN != ''">
-            SAME_SIDE_YN = #{SAME_SIDE_YN},
-        </if>
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE
@@ -1076,11 +1009,6 @@
             ORDER_STAFF_SEQ = #{ORDER_STAFF_SEQ},
             DESIGNER_NM = #{DESIGNER_NM},
             DRAWING_NUM = #{ORDER_DRAWING_NUM},
-<!--             DWG_GFILE_SEQ = #{DWG_GFILE_SEQ}, -->
-<!--             DXF_GFILE_SEQ = #{ORDER_DXF_GFILE_SEQ}, -->
-<!--             PDF_GFILE_SEQ = #{ORDER_PDF_GFILE_SEQ}, -->
-<!--             IMG_GFILE_SEQ = #{ORDER_IMG_GFILE_SEQ}, -->
-<!--             VIEW_GFILE_SEQ = #{VIEW_GFILE_SEQ}, -->
             ITEM_NM = #{ITEM_NM},
             ORIGINAL_SIDE_QTY = REPLACE(#{ORIGINAL_SIDE_QTY}, ',', SPACE(0)),
             OTHER_SIDE_QTY = REPLACE(#{OTHER_SIDE_QTY}, ',', SPACE(0)),
@@ -1304,7 +1232,6 @@
               AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
     </update>
 
-
     <update id="updateOutsideConversion" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
@@ -1317,29 +1244,6 @@
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
               AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
-    </update>
-
-    <update id="updateControlPartStatusAll" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART
-        SET
-            PART_STATUS = #{PART_STATUS},
-            STATUS_DT = NOW(),
-            UPDATE_DT = NOW()
-        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-    </update>
-
-    <update id="updateControlPartAssembly" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART
-            SET PART_STATUS = NULL
-        WHERE 1 = 1
-            AND CONTROL_SEQ = #{CONTROL_SEQ}
-            AND PART_STATUS = 'WTP050'
-            AND NOT EXISTS (SELECT *
-                            FROM TBL_CONTROL_PART
-                            WHERE 1 = 1
-                                AND CONTROL_SEQ = #{CONTROL_SEQ}
-                                AND WORK_TYPE = 'WTP050'
-                                AND PART_STATUS = 'PRO002')
     </update>
 
     <select id="selectProcessConfirmList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1463,31 +1367,6 @@
             AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
 
-    <!--<update id="manageControlCadFiles" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART
-        SET
-            DRAWING_UP_DT = NOW(),
-            PREV_DRAWING_NUM = DRAWING_NUM,
-            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
-            PDF_GFILE_SEQ = NULL,
-            IMG_GFILE_SEQ = NULL,
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE
-        CONTROL_SEQ = #{CONTROL_SEQ}
-    </update>
-
-    <update id="manageControlCadFiles_mapping" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART
-        SET
-            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
-            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE
-            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ}
-    </update>-->
-
     <!-- 캐드 도면 교체 -->
     <select id="manageControlCadRevFiles_select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
@@ -1532,32 +1411,6 @@
             AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
 
-    <!--<update id="manageControlCadRevFiles" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART
-        SET
-            DRAWING_VER = IFNULL(DRAWING_VER, 0) + 1,
-            DRAWING_UP_DT = NOW(),
-            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
-            PDF_GFILE_SEQ = NULL,
-            IMG_GFILE_SEQ = NULL,
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE 1 = 1
-            AND CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-    </update>
-
-    <update id="manageControlCadRevFiles_mapping" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART
-        SET
-            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
-            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE
-            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ}
-    </update>-->
-
     <update id="manageControlCadRevFiles_revDelete" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_BARCODE
         SET
@@ -1589,6 +1442,8 @@
             <include refid="control"/>,
             <include refid="controlPart"/>,
             <include refid="controlPartOrder"/>,
+            D.CLOSE_MONTH,
+            D.CLOSE_VER,
             CASE WHEN B.PART_NUM IS NULL THEN C.DRAWING_NUM ELSE B.DRAWING_NUM END AS ORDER_DRAWING_NUM,
             CASE WHEN B.PART_NUM IS NULL THEN C.IMG_GFILE_SEQ ELSE B.IMG_GFILE_SEQ END AS ORDER_IMG_GFILE_SEQ,
             CASE WHEN B.PART_NUM IS NULL THEN C.DXF_GFILE_SEQ ELSE B.DXF_GFILE_SEQ END AS ORDER_DXF_GFILE_SEQ,
