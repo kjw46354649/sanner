@@ -425,7 +425,7 @@ public class PDFPringMakeController {
             table.setWidthPercentage(100);
             table.setWidths(new float[]{1.5f, 2.5f, 6.5f, 1.5f, 4.5f, 2.5f, 2.5f, 1.5f, 1f, 1f, 5f});
             // 바코드 생성
-            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) controlInfo.get("BARCODE_NUM"), 90, 20);
+            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) controlInfo.get("ORDER_BARCODE_NUM"), 90, 20);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
             System.out.println(height);

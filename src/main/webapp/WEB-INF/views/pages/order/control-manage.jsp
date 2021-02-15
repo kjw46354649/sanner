@@ -2187,8 +2187,8 @@
         };
 
         const validationCheck = function (dataList) {
-            // sameControlNumCheck(dataList);
             workTypeCheck(dataList);
+            drawingNumCheck(dataList);
 
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 let rowData = dataList[i];
@@ -2218,10 +2218,32 @@
                 }
             }
         };
+
+        const drawingNumCheck = function (dataList) {
+            const groupedControlNum = fnGroupBy(dataList, 'CONTROL_NUM');
+
+            for (let controlNum in groupedControlNum) {
+                const orderNum = fnGroupBy(groupedControlNum[controlNum], 'ORDER_NUM');
+
+                for (let i in orderNum) {
+                    if (i !== 'undefined') {
+                        const ORDER_DRAWING_NUM = fnGroupBy(orderNum[i], 'ORDER_DRAWING_NUM');
+
+                        for (let j in ORDER_DRAWING_NUM) {
+                            if (ORDER_DRAWING_NUM[j].length > 1) {
+                                for (let k in ORDER_DRAWING_NUM[j]) {
+                                    addErrorList(ORDER_DRAWING_NUM[j][k].pq_ri, 'ORDER_DRAWING_NUM');
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
         // required 체크
         const requiredCheck = function (rowData) {
             let list;
-            const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NUM', 'DRAWING_NUM', /*'ITEM_NM', FIXME 확인*/ 'INNER_DUE_DT', 'SIZE_TXT'];
+            const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NUM', 'ORDER_DRAWING_NUM', /*'ITEM_NM', FIXME 확인*/ 'INNER_DUE_DT', 'SIZE_TXT'];
             const singleList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'ORDER_QTY']; // 단품
             const assemblyList = ['ORDER_QTY']; // 조립
             const modifiedList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'ORDER_QTY']; // 수정
@@ -2267,10 +2289,6 @@
             const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
             const materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
             const materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
-            const BUSINESS_COMPANY = fnCommCodeDatasourceGridSelectBoxCreate({
-                'url': '/json-list',
-                'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-            });
 
             // 단가확인
             if (rowData.PRICE_CONFIRM !== undefined && rowData.PRICE_CONFIRM !== null && rowData.PRICE_CONFIRM !== '') {
@@ -2281,7 +2299,7 @@
             }
             // 사업자
             if (rowData.COMP_CD !== undefined && rowData.COMP_CD !== null && rowData.COMP_CD !== '') {
-                let index = BUSINESS_COMPANY.findIndex(function (element) {
+                let index = FAMILY_COMPANY.findIndex(function (element) {
                     return element.value === rowData.COMP_CD;
                 });
 

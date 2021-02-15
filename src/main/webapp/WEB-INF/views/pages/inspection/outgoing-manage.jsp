@@ -471,6 +471,7 @@
         <input type="hidden" id="queryId" name="queryId" value="inspection.selectOutgoingOutType3">
         <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value="">
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value="">
+        <input type="hidden" id="ORDER_SEQ" name="ORDER_SEQ" value="">
 
         <div class="miniPopup">
 <%--            <div class="headWrap">--%>
@@ -1569,6 +1570,8 @@
                     barcodesql = "inspection.selectOutgoingOutType4";
                 } else if (barcodeType == "C") {//도면
                     barcodesql = "common.selectControlBarcodeInfo";
+                } else if (barcodeType == "O") {// TODO: 영업도면
+                    barcodesql = "inspection.selectOutgoingOutType5";
                 } else {
                     fnAlert(null, "알수 없는 바코드 타입입니다.[" + barcodeNum + "]");
                     $("#OUTGOING_BARCODE_NUM").val("");
@@ -1588,7 +1591,6 @@
                         fnConfirm(null, "이미 출하처리 되었습니다", function() {}, null, 2);
                         return false;
                     } else {
-
                         if (barcodeType == "L") {
                             fnJsonDataToForm("outgoing_manage_pop_type_label_form", dataInfo);
                             // console.log(dataInfo);
@@ -1606,7 +1608,6 @@
                             //let data = {'queryId': 'inspection.insertOutgoingOutType4','BARCODE_NUM': barcodeNum};
                             //let parameters = {'url': '/json-create', 'data': data };
                             fnPostAjaxAsync(function () {
-
                                 //. 모달 띄우기
                                 $('#outgoing_manage_pop_type_label').modal('show');
                                 setTimeout(function () {
@@ -1614,14 +1615,10 @@
                                     $("#OUTGOING_BARCODE_NUM").val("");
                                     outgoingManageGridId01.pqGrid("refreshDataAndView");
                                 }, 2000);
-
                             }, parameters, '');
-
-
-                        } else if (barcodeType == "C") {
-
+                        } else if (barcodeType == "C" || barcodeType == "O") {
                             fnJsonDataToForm("outgoing_manage_pop_type_control_form", dataInfo);
-                            $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.selectOutgoingOutType3");
+                            $("#outgoing_manage_pop_type_control_form").find("#queryId").val(barcodeType == "C" ? "inspection.selectOutgoingOutType3" : "inspection.selectOutgoingOutType5");
                             let parameters = {
                                 'url': '/json-info',
                                 'data': $('#outgoing_manage_pop_type_control_form').serialize()
@@ -1629,7 +1626,7 @@
                             fnPostAjaxAsync(function (data) {
                                 let dataInfo = data.info;
                                 if (dataInfo == null) {
-                                    fnAlert(null, "정보가 존재하지 않습니다. " + dataInfo);
+                                    fnAlert(null, "정보가 존재하지 않습니다.");
                                     $("#OUTGOING_BARCODE_NUM").val("");
                                     return false;
                                 } else if (dataInfo.OUT_CNT > 0) {
@@ -1643,14 +1640,16 @@
                                     $("#outgoing_manage_pop_type_control_form").find("#outgoing_manage_pop_type_control_form_view_3").html(data.info.PLAN_QTY);
 
                                     //. 저장하기
-                                    $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType3,inspection.updateOutgoingOutType3After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3");
-                                    //let parameters = {'url': '/json-create', 'data': $('#outgoing_manage_pop_type_control_form').serialize() };
+                                    if (barcodeType == "C") {
+                                        $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType3,inspection.updateOutgoingOutType3After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3");
+                                    } else if (barcodeType == "O") {
+                                        $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType5,inspection.updateOutgoingOutType5After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3");
+                                    }
                                     let parameters = {
                                         'url': '/json-manager',
                                         'data': $('#outgoing_manage_pop_type_control_form').serialize()
                                     };
                                     fnPostAjax(function () {
-
                                         //. 모달 띄우기
                                         $('#outgoing_manage_pop_type_control').modal('show');
                                         setTimeout(function () {
@@ -1658,55 +1657,13 @@
                                             $("#OUTGOING_BARCODE_NUM").val("");
                                             outgoingManageGridId01.pqGrid("refreshDataAndView");
                                         }, 2000);
-
                                     }, parameters, '');
-
                                 }
                             }, parameters, '');
-
-
                         }
-
-
                     }
                 }, parameters, '');
-
-
-
-                // //1. insert
-                // alert("바코드 임의로 키넣어놨음. 삭제 필요");
-                // $("#outgoing_manage_pop_form").find("#CONTROL_SEQ").val("2094");
-                // $("#outgoing_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val("2160");
-                // $('#outgoing_manage_pop').modal('show');
             }
-            // }
-            // else if (OUTGOING_BARCODE_PRINT_TYPE == "2") {//라벨출력
-            //
-            //     // let barcodeNum = this.value;
-            //     // let postData = { 'queryId': 'inspection.selectOutgoingLabelType3', 'BARCODE_NUM': barcodeNum};
-            //     // let parameter = {'url': '/json-list', 'data': postData};
-            //     // fnPostAjaxAsync(function (data, callFunctionParam) {
-            //     //     let barcodeList = new Array() ;
-            //     //     for(let i=0; i < data.list.length; i++){
-            //     //         barcodeList.push(data.list[i].BARCODE_NUM);
-            //     //     }
-            //     // }, parameter, '');
-            //     if (e.keyCode == 13) {
-            //         let formData = new Array();
-            //         formData[0] = fnBarcodeKo2En(this.value);
-            //         fnBarcodePrint(function (data, callFunctionParam) {
-            //             fnAlert(null, data.message);
-            //             $("#OUTGOING_BARCODE_NUM").val("");
-            //         }, formData, '');
-            //     }
-            //
-            //
-            // } else {
-            //     alert("바코드 종류를 선택해주십시오.");
-            //     // $("#OUTGOING_BARCODE_NUM").val("");
-            // }
-
-
         });
 
         $("#outgoingBarcodeSpan").on('click', function () {
