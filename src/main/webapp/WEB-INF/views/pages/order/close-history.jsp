@@ -91,26 +91,27 @@
                             <select class="wd_100" class="two" name="CLOSE_MONTH" id="CLOSE_HISTORY_CLOSE_MONTH"></select>
                         </div>
                         <span class="gubun"></span>
-                        <span class="slt_wrap trans_slt" style="width: 120px;">
-                            <label for="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION"></label>
-                            <select name="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION" id="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION" style="width: inherit; text-align-last: center;">
-                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
-                                <option value="1">마감수행일자</option>
-                                <option value="2">종료수행일자</option>
-                                <option value="3">출고일자</option>
-                                <option value="4">가공납기</option>
-                            </select>
-                        </span>
-                        <div class="d-inline-block" style="width:542px">
-                            <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_CLOSE_HISTORY_START_DATE" id="CONTROL_CLOSE_HISTORY_START_DATE" readonly disabled><button type="button" id="CONTROL_CLOSE_HISTORY_START_DATE_BUTTON">달력선택</button>
-                            </span>
-                            <span class="nbsp">~</span>
-                            <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_CLOSE_HISTORY_END_DATE" id="CONTROL_CLOSE_HISTORY_END_DATE" readonly disabled><button type="button" id="CONTROL_CLOSE_HISTORY_END_DATE_BUTTON">달력선택</button>
-                            </span>
-                        </div>
-                        <span class="gubun"></span>
+<%--                        삭제 예정--%>
+<%--                        <span class="slt_wrap trans_slt" style="width: 120px;">--%>
+<%--                            <label for="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION"></label>--%>
+<%--                            <select name="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION" id="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION" style="width: inherit; text-align-last: center;">--%>
+<%--                                <option value=""><spring:message code="com.form.top.sel.option"/></option>--%>
+<%--                                <option value="1">마감수행일자</option>--%>
+<%--                                <option value="2">종료수행일자</option>--%>
+<%--                                <option value="3">출고일자</option>--%>
+<%--                                <option value="4">가공납기</option>--%>
+<%--                            </select>--%>
+<%--                        </span>--%>
+<%--                        <div class="d-inline-block" style="width:542px">--%>
+<%--                            <span class="calendar_span">--%>
+<%--                                <input type="text" title="달력정보" name="CONTROL_CLOSE_HISTORY_START_DATE" id="CONTROL_CLOSE_HISTORY_START_DATE" readonly disabled><button type="button" id="CONTROL_CLOSE_HISTORY_START_DATE_BUTTON">달력선택</button>--%>
+<%--                            </span>--%>
+<%--                            <span class="nbsp">~</span>--%>
+<%--                            <span class="calendar_span">--%>
+<%--                                <input type="text" title="달력정보" name="CONTROL_CLOSE_HISTORY_END_DATE" id="CONTROL_CLOSE_HISTORY_END_DATE" readonly disabled><button type="button" id="CONTROL_CLOSE_HISTORY_END_DATE_BUTTON">달력선택</button>--%>
+<%--                            </span>--%>
+<%--                        </div>--%>
+<%--                        <span class="gubun"></span>--%>
                         <span class="ipu_wrap"><label class="label_100">Option</label></span>
                         <span class="wd_200" style="display: inline-block;">
                             <span class="chk_box"><input type="checkbox" name="VISIBLE_PART" id="VISIBLE_PART"><label for="VISIBLE_PART">Part</label></span>
@@ -144,9 +145,15 @@
             <div class="tab-content">
                 <ul class="active conWrap" id="CONTROL_CLOSE_HISTORY">
                     <div id="CONTROL_CLOSE_HISTORY_GRID"></div>
+                    <div class="right_sort">
+                        전체 조회 건수 (Total : <span id="CONTROL_CLOSE_HISTORY_RECORDS" style="color: #00b3ee">0</span>)
+                    </div>
                 </ul>
                 <ul class="conWrap" id="END_HISTORY">
                     <div id="CONTROL_END_HISTORY_GRID"></div>
+                    <div class="right_sort">
+                        전체 조회 건수 (Total : <span id="CONTROL_END_HISTORY_RECORDS" style="color: #00b3ee">0</span>)
+                    </div>
                 </ul>
             </div>
         </div>
@@ -244,7 +251,20 @@
                     }
                 ]
             },
-            {title: '단가확인', width: 70, dataIndx: 'PRICE_CONFIRM'},
+            {
+                title: '마감차수', align: 'center', colModel: [
+                    {
+                        title: '마감월', minWidth: 55, dataIndx: 'CLOSE_MONTH',
+                        render: function (ui) {
+                            const cellData = ui.cellData;
+
+                            return cellData.substring(0, 4) + '.' + cellData.substring(4);
+                        }
+                    },
+                    {title: '차수', dataIndx: 'CLOSE_VER'},
+                ]
+            },
+            {title: '단가확인', width: 70, dataIndx: 'PRICE_CONFIRM_NM'},
             {title: '사업자<br>구분', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자<br>구분', width: 75, dataIndx: 'COMP_NM'},
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD', hidden: true},
@@ -857,6 +877,11 @@
                     return {data: dataJSON.data};
                 }
             },
+            complete: function () {
+                const data = this.option('dataModel.data');
+
+                $('#CONTROL_CLOSE_HISTORY_RECORDS').html(data.length);
+            },
             selectChange: function (event, ui) {
                 selectedRowIndex = [];
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
@@ -917,7 +942,7 @@
                     }
                 ]
             },
-            {title: '단가확인', width: 70, dataIndx: 'PRICE_CONFIRM'},
+            {title: '단가확인', width: 70, dataIndx: 'PRICE_CONFIRM_NM'},
             {title: '사업자<br>구분', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자<br>구분', width: 75, dataIndx: 'COMP_NM'},
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD', hidden: true},
@@ -1530,6 +1555,11 @@
                     return {data: dataJSON.data};
                 }
             },
+            complete: function () {
+                const data = this.option('dataModel.data');
+
+                $('#CONTROL_END_HISTORY_RECORDS').html(data.length);
+            },
             selectChange: function (event, ui) {
                 selectedRowIndex = [];
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
@@ -1797,12 +1827,12 @@
             });
             grid.pqGrid('refreshDataAndView');
         });
-        
-        $('#CONTROL_CLOSE_HISTORY_SEARCH_CONDITION').on('change', function () {
-            const $controlCloseHistoryDates = $('[id^=CONTROL_CLOSE_HISTORY][id$=DATE]');
-
-            $(this).val() === '' ? $controlCloseHistoryDates.prop('disabled', true) : $controlCloseHistoryDates.prop('disabled', false);
-        });
+        // TODO: 삭제예정
+        // $('#CONTROL_CLOSE_HISTORY_SEARCH_CONDITION').on('change', function () {
+        //     const $controlCloseHistoryDates = $('[id^=CONTROL_CLOSE_HISTORY][id$=DATE]');
+        //
+        //     $(this).val() === '' ? $controlCloseHistoryDates.prop('disabled', true) : $controlCloseHistoryDates.prop('disabled', false);
+        // });
 
         $("#CONTROL_CLOSE_HISTORY_TABS").tabs({
             activate: function (event, ui) {
@@ -2094,13 +2124,28 @@
         });
 
         $('#CLOSE_HISTORY_EXCEL_EXPORT').on('click', function () {
-            const blob = $controlCloseHistoryGrid.pqGrid('getInstance').grid.exportData({
+            const active = $("#CONTROL_CLOSE_HISTORY_TABS").tabs('option', 'active');
+            let grid;
+            let text;
+
+            switch (active) {
+                case 0:
+                    grid = $controlCloseHistoryGrid;
+                    text = '마감이력.xlsx';
+                    break;
+                case 1:
+                    grid = $controlEndHistoryGrid;
+                    text = '종료이력.xlsx';
+                    break;
+            }
+
+            const blob = grid.pqGrid('getInstance').grid.exportData({
                 format: 'xlsx',
                 render: true,
                 type: 'blob'
             });
 
-            saveAs(blob, '마감이력.xlsx');
+            saveAs(blob, text);
         });
         /* event */
 
