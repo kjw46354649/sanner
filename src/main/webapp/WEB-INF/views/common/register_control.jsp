@@ -934,6 +934,7 @@
         const validationCheck = function (dataList) {
             // sameControlNumCheck(dataList);
             workTypeCheck(dataList);
+            drawingNumCheck(dataList);
 
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 let rowData = dataList[i];
@@ -1003,6 +1004,29 @@
                 }
             }
         };
+
+        const drawingNumCheck = function (dataList) {
+            const groupedControlNum = fnGroupBy(dataList, 'CONTROL_NUM');
+
+            for (let controlNum in groupedControlNum) {
+                const orderNum = fnGroupBy(groupedControlNum[controlNum], 'ORDER_NUM');
+
+                for (let i in orderNum) {
+                    if (i !== 'undefined') {
+                        const ORDER_DRAWING_NUM = fnGroupBy(orderNum[i], 'DRAWING_NUM');
+
+                        for (let j in ORDER_DRAWING_NUM) {
+                            if (ORDER_DRAWING_NUM[j].length > 1) {
+                                for (let k in ORDER_DRAWING_NUM[j]) {
+                                    addErrorList(ORDER_DRAWING_NUM[j][k].pq_ri, 'DRAWING_NUM');
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
         // required 체크
         const requiredCheck = function (rowData) {
             let list;
