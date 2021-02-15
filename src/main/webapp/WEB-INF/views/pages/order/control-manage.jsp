@@ -2226,7 +2226,7 @@
                 const orderNum = fnGroupBy(groupedControlNum[controlNum], 'ORDER_NUM');
 
                 for (let i in orderNum) {
-                    if (i !== 'undefined') {
+                    if (!fnIsEmpty(i) && i !== 'undefined') {
                         const ORDER_DRAWING_NUM = fnGroupBy(orderNum[i], 'ORDER_DRAWING_NUM');
 
                         for (let j in ORDER_DRAWING_NUM) {

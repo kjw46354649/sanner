@@ -994,8 +994,7 @@
                     let groupedWorkType = fnGroupBy(groupedControlNum[controlNum], 'WORK_TYPE');
 
                     if (groupedWorkType.hasOwnProperty('WTP020')) {
-                        // 조립이 두개이상이거나 단품, 재고를 포함하고 있을 때
-                        if (groupedWorkType.WTP020.length > 1 || groupedWorkType.hasOwnProperty('WTP010') || groupedWorkType.hasOwnProperty('WTP040')) {
+                        if (groupedWorkType.hasOwnProperty('WTP010') || groupedWorkType.hasOwnProperty('WTP040')) {
                             for (let i = 0; i < groupedControlNum[controlNum].length; i++) {
                                 addErrorList(groupedControlNum[controlNum][i].pq_ri, 'WORK_TYPE');
                             }
@@ -1012,7 +1011,7 @@
                 const orderNum = fnGroupBy(groupedControlNum[controlNum], 'ORDER_NUM');
 
                 for (let i in orderNum) {
-                    if (i !== 'undefined') {
+                    if (!fnIsEmpty(i) && i !== 'undefined') {
                         const ORDER_DRAWING_NUM = fnGroupBy(orderNum[i], 'DRAWING_NUM');
 
                         for (let j in ORDER_DRAWING_NUM) {
