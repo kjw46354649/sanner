@@ -1357,8 +1357,9 @@
                     AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.CONTROL_SEQ = D.CONTROL_SEQ
                     AND A.ORDER_SEQ = D.ORDER_SEQ
-                    AND IFNULL(D.SCRAP_YN, 'N') = 'N'
                     AND A.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_ST_DT},'/',space(0)),'%Y%m%d') AND DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY)
+                    AND B.DEL_YN = 'N'
+                    AND IFNULL(D.SCRAP_YN, 'N') = 'N'
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND B.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
@@ -1402,6 +1403,7 @@
                     AND A.ORDER_SEQ = D.ORDER_SEQ
                     AND A.INSPECT_TYPE = '2'
                     AND A.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_ST_DT},'/',space(0)),'%Y%m%d') AND DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY) <!-- 인덱스 고려 -->
+                    AND B.DEL_YN = 'N'
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND B.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
@@ -1443,8 +1445,9 @@
                     AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.CONTROL_SEQ = D.CONTROL_SEQ
                     AND A.ORDER_SEQ = D.ORDER_SEQ
-                    AND IFNULL(D.SCRAP_YN, 'N') = 'Y'
                     AND A.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_ST_DT},'/',space(0)),'%Y%m%d') AND DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY)
+                    AND B.DEL_YN = 'N'
+                    AND IFNULL(D.SCRAP_YN, 'N') = 'Y'
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND B.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
