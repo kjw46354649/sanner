@@ -17,7 +17,7 @@
         width: 100%;
         height: 100%;
         table-layout: fixed;
-        border: 1px solid ##d7d7d7;
+        border: 1px solid #d7d7d7;
         border-collapse: collapse;
     }
 
@@ -229,14 +229,10 @@
     $(function () {
         'use strict';
         /* variable */
-        const TODAY = new Date();
-        const YEAR = TODAY.getFullYear();
-        const MONTH = TODAY.getMonth() + 1;
-
         const tab1GridId = 'OUTSIDE_CLOSE_STATUS_GRID';
         let tab1PostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM');
-        tab1PostData.CLOSE_YEAR_LEFT = YEAR;
-        tab1PostData.CLOSE_MONTH_LEFT = MONTH;
+        tab1PostData.CLOSE_YEAR_LEFT = CURRENT_YEAR;
+        tab1PostData.CLOSE_MONTH_LEFT = '01';
         const tab1ColModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
             {title: 'CLOSE_MONTH', dataIndx: 'CLOSE_MONTH', hidden: true},
@@ -324,7 +320,7 @@
         let $monthlyOutsideStatusGrid;
         const tab2GridId = 'MONTHLY_OUTSIDE_STATUS_GRID';
         let tab2PostData = fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM');
-        tab2PostData.YEAR = YEAR;
+        tab2PostData.YEAR = CURRENT_YEAR;
         const tab2ColModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
             {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
