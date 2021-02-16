@@ -270,7 +270,7 @@
             , Z.LATE_QTY
             , CASE WHEN IFNULL(Z.PART_CNT,0) = 0 THEN NULL ELSE Z.LATE_CNT / Z.PART_CNT * 100 END AS LATE_RATIO
             , CASE WHEN IFNULL(Z.PART_CNT,0) = 0 THEN NULL ELSE Z.OUTSIDE_CNT / Z.PART_CNT * 100 END AS OUTSIDE_RATIO
-            , Z.FORECAST_UNIT_AMT
+            , Z.FORECAST_AMT
             , Z.DT_GOAL_AMT
             , CASE WHEN IFNULL(Z.DT_GOAL_AMT,0) = 0 THEN NULL ELSE CONCAT(FORMAT(IFNULL(Z.FORECAST_UNIT_AMT,0) / IFNULL(Z.DT_GOAL_AMT,0) * 100,1),'%') END AS GOAL_RATIO
             , Z.ERROR_CNT
@@ -291,6 +291,7 @@
                     , SUM(IFNULL(Y.LATE_CNT,0)) AS LATE_CNT
                     , SUM(IFNULL(Y.LATE_QTY,0)) AS LATE_QTY
                     , SUM(IFNULL(Y.FORECAST_UNIT_AMT,0)) AS FORECAST_UNIT_AMT
+                    , SUM(IFNULL(Y.FORECAST_AMT,0)) AS FORECAST_AMT
                     , SUM(IFNULL(X.DT_GOAL_AMT,0)) AS DT_GOAL_AMT
                     , SUM(IFNULL(Y.ERROR_CNT,0)) AS ERROR_CNT
                     , SUM(IFNULL(Y.ERROR_QTY,0)) AS ERROR_QTY
@@ -327,6 +328,7 @@
                                                 , SUM(CASE WHEN T.OUT_FINISH_DT > T.ORDER_DUE_DT THEN 1 ELSE 0 END) AS LATE_CNT
                                                 , SUM(CASE WHEN T.OUT_FINISH_DT > T.ORDER_DUE_DT THEN T.PART_QTY ELSE 0 END) AS LATE_QTY
                                                 , SUM(T.FORECAST_UNIT_AMT) AS FORECAST_UNIT_AMT
+                                                , SUM(T.FORECAST_UNIT_AMT * T.PART_QTY) AS FORECAST_AMT
                                                 , SUM(T.ERROR_CNT) AS ERROR_CNT
                                                 , SUM(T.ERROR_QTY) AS ERROR_QTY
                                                 , SUM(CASE WHEN T.RETURN_QTY > 0 THEN 1 ELSE 0 END) AS RETURN_CNT
