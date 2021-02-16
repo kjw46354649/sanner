@@ -2876,6 +2876,7 @@
                         for (let prop in settings)
                             this.settings[prop] = settings[prop];
                         let setup = alertify.confirm().setup();
+                        setup.buttons[1].invokeOnClose = false; // indicate if closing the dialog should trigger this button action
                         setup.buttons.push({
                             text: '취소',
                             scope: 'primary'
