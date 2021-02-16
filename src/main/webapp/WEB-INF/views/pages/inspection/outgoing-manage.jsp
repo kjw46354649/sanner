@@ -1584,11 +1584,12 @@
                 fnPostAjax(function (data) {
                     let dataInfo = data.info;
                     if (dataInfo == null) {
-                        fnAlert(null, "해당 바코드가 존재하지 않습니다.");
+                        fnConfirm(null, "해당 바코드가 존재하지 않습니다", function() {}, null, 2);
                         $("#OUTGOING_BARCODE_NUM").val("");
                         return false;
                     } else if (dataInfo.OUT_CNT > 0) {
                         fnConfirm(null, "이미 출하처리 되었습니다", function() {}, null, 2);
+                        $("#OUTGOING_BARCODE_NUM").val("");
                         return false;
                     } else {
                         if (barcodeType == "L") {
@@ -1626,11 +1627,12 @@
                             fnPostAjaxAsync(function (data) {
                                 let dataInfo = data.info;
                                 if (dataInfo == null) {
-                                    fnAlert(null, "정보가 존재하지 않습니다.");
+                                    fnConfirm(null, "정보가 존재하지 않습니다", function() {}, null, 2);
                                     $("#OUTGOING_BARCODE_NUM").val("");
                                     return false;
                                 } else if (dataInfo.OUT_CNT > 0) {
                                     fnConfirm(null, "이미 출하처리 되었습니다", function() {}, null, 2);
+                                    $("#OUTGOING_BARCODE_NUM").val("");
                                     return false;
                                 } else {
                                     fnJsonDataToForm("outgoing_manage_pop_type_control_form", dataInfo);
