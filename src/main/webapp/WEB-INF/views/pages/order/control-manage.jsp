@@ -704,7 +704,6 @@
                                 const data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
                                 const totalRecords = data.length;
                                 const groupedControlNum = fnGroupBy(data, 'CONTROL_NUM');
-                                let assembleCount = 0;
                                 let newRowData = fnCloneObj(ui.rowData);
                                 newRowData.ROW_NUM = totalRecords + 1;
                                 newRowData.ORDER_SEQ = null;
@@ -724,18 +723,14 @@
                                 // newRowData.ORDER_IMG_GFILE_SEQ = null; // 확인 필요
                                 // newRowData.VIEW_GFILE_SEQ = null; // 확인 필요
 
-                                for (let i = 0; i < groupedControlNum[newRowData.CONTROL_NUM].length; i++) {
-                                    if (groupedControlNum[newRowData.CONTROL_NUM][i].WORK_TYPE === newRowData.WORK_TYPE) {
-                                        assembleCount++;
-                                    }
-                                }
+                                const firstRow = groupedControlNum[newRowData.CONTROL_NUM][0].pq_ri;
 
                                 $orderManagementGrid.pqGrid('addRow', {
                                     newRow: newRowData,
-                                    rowIndx: ui.rowIndx + assembleCount,
+                                    rowIndx: firstRow,
                                     checkEditable: false
                                 });
-                                $orderManagementGrid.pqGrid('setSelection', {rowIndx: ui.rowIndx + assembleCount});
+                                $orderManagementGrid.pqGrid('setSelection', {rowIndx: firstRow});
 
                                 autoMerge($orderManagementGrid.pqGrid('getInstance').grid, true);
                                 // event.preventDefault();
