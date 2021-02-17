@@ -243,7 +243,7 @@
             AND A.EMERGENCY_YN = 'Y'
         </if>
         <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-            AND UPPER(C.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
+            AND (UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%') OR UPPER(C.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%'))
         </if>
         <if test="ITEM_NM != null and ITEM_NM != ''">
             AND UPPER(C.ITEM_NM) LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
