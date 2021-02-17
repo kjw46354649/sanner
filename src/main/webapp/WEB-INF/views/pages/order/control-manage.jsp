@@ -2988,6 +2988,7 @@
                 });
             }
         });
+
         // 바코드 출력
         $('#CONTROL_MANAGE_BARCODE_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;

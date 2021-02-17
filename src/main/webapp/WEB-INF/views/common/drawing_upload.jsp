@@ -39,7 +39,7 @@
 
 </head>
 <body>
-<div style="padding: 10px;">
+<div id="common_cad_file_attach_pop" style="padding: 10px;">
     <h3 id="common_cad_file_attach_pop_title" style="font-size: 20px; font-family: 'NotoKrB'; color: #000; ">도면 등록</h3>
     <hr style="display: block; border: 1px solid #e0e2e6; margin: 7px;">
     <!-- CAD 도면 업로드 공통 Start -->
@@ -48,20 +48,24 @@
             <input type="hidden" id="queryId" name="queryId" value="">
             <input type="hidden" id="actionType" name="actionType" value="">
             <input type="hidden" id="fileGrid" name="fileGrid" value="">
-            <div class="buttonWrap">
-                <button type="button" class="defaultBtn radius blue right_float" id="cadFileConvertUploadCompletedBtn" disabled>Save</button>
-            </div>
-            <div id="common_cad_file_attach_grid" style="margin:auto;"></div>
-            <div class="right_sort fileTableInfoWrap">
-                <h4>전체 조회 건수 (Total : <span id="cadFileUploadTotalCount" style="color: #00b3ee">0</span>)</h4>
-            </div>
-            <div class="fileTableWrap">
-                <div id="attachDragAndDrop">
-                    <div id="common_cad_upload_file_grid" style="margin:auto;"></div>
+            <div>
+                <div class="buttonWrap">
+                    <button type="button" class="defaultBtn radius blue right_float" id="cadFileConvertUploadCompletedBtn" disabled>Save</button>
                 </div>
             </div>
-            <div class="fileTableInfoWrap right_float">
-                <h4>첨부파일 개수 : <span id="successCntHtml">0</span><span class="errorInfo">에러파일 : <span id="errorCntHtml">0</span></span></h4>
+            <div>
+                <div id="common_cad_file_attach_grid" style="margin:auto;"></div>
+                <div class="right_sort fileTableInfoWrap">
+                    <h4>전체 조회 건수 (Total : <span id="cadFileUploadTotalCount" style="color: #00b3ee">0</span>)</h4>
+                </div>
+            </div>
+            <div>
+                <div id="attachDragAndDrop">
+                    <div id="common_cad_upload_file_grid" style="margin:auto;"></div>
+                    <div class="right_sort fileTableInfoWrap">
+                        <h4>첨부파일 개수 : <span id="successCntHtml">0</span><span class="errorInfo">에러파일 : <span id="errorCntHtml">0</span></span></h4>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -96,11 +100,180 @@
 <script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
 <script type='text/javascript'>
 
+    let commonCadFileAttachGridId = "common_cad_file_attach_grid";
+    let commonCadUploadFileGridId = "common_cad_upload_file_grid";
     let commonCadFileAttachPopup = $("#common_cad_file_attach_pop");
+    let commonCadFileAttachObj;
+    let commonCadUploadFileObj;
     let $commonCadFileAttachGrid;
+    let $cadFileConvertUploadCompletedBtn = $("#cadFileConvertUploadCompletedBtn");
 
     $(function() {
         'use strict';
+
+        /**
+         * @description Ajax Post
+         * @param {function} callFunction - 리텅 Function 처리
+         * @param {object} params - 호출 URL에 Parameter 정보
+         * @param {*} callFunctionParam - 리텅 Function 전달 Parameter
+         */
+        let fnPostAjax = function (callFunction, params, callFunctionParam) {
+            'use strict';
+            let callback = $.Callbacks();
+            let param = $.extend({url: null, data: ''}, params || {});
+
+            $.ajax({
+                type: 'POST',
+                url: param.url,
+                dataType: 'json',
+                data: param.data,
+                success: function (data, textStatus, jqXHR) {
+                    if (textStatus === 'success') {
+                        // if (data.exception === null) {
+                        callback.add(callFunction);
+                        callback.fire(data, callFunctionParam);
+                        // } else {
+                        <%--alert('<spring:message code='com.alert.default.failText' />');--%>
+                        // }
+                    } else {
+                        fnAlert(null, '<srping:message key="error.common"/>');
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if ($waitMeMainContainer !== undefined) $(this).stopWaitMe();
+                    // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
+                    // if (errorThrown == 'Forbidden') {
+                    //     $(this).fnHiddenFormPageAction('/');
+                    // }
+                }
+            });
+        };
+
+        /**
+         * Normal File upload
+         * */
+        let fnFormDataFileUploadAjax = function (callFunction, formData, submitUrl) {
+            'use strict';
+            let actionUrl = (submitUrl) ? submitUrl : '/uploadNormalFile';
+            let callback = $.Callbacks();
+            $.ajax({
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                url: actionUrl,
+                contentType : false,
+                processData: false,
+                data: formData,
+                beforeSend: function (jqXHR, settings) {
+                  $(this).startWaitMe();
+                },
+                complete: function (jqXHR, textStatus) {
+                  $(this).stopWaitMe();
+                },
+                success: function (data, textStatus, jqXHR) {
+                    if (textStatus === 'success') {
+                        callback.add(callFunction);
+                        callback.fire(jQuery.parseJSON(data));
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
+                    // if (errorThrown == 'Forbidden') {
+                    //     $(this).fnHiddenFormPageAction('/');
+                    // }
+                }
+            });
+        };
+
+        /**
+         * @description 그리드 생성
+         * @param {string} gridId
+         * @param {object} postData
+         * @param {object} colModel
+         * @param {object} toolbar
+         * @returns {object | jQuery} grid
+         */
+        let fnCreatePQGrid = function (gridId, postData, colModel, toolbar) {
+            'use strict';
+            let obj = {
+                // width: 700,
+                // height: 400,
+                collapsible: false,
+                resizable: true,
+                // title: '',
+                // pageModel: {type: 'remote'},
+                numberCell: {title: 'No.'},
+                scrollModel: {autoFit: true},
+                trackModel: {on: true}, //to turn on the track changes.
+                colModel: colModel,
+                dataModel: {
+                    location: 'remote',
+                    dataType: 'json',
+                    method: 'POST',
+                    url: '/paramQueryGridSelect',
+                    postData: postData,
+                    // recIndx: 'USER_ID',
+                    getData: function (dataJSON) {
+                        return {data: dataJSON.data};
+                        // return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
+                    }
+                },
+                toolbar: toolbar
+            };
+            return $('#' + gridId).pqGrid(obj);
+        };
+
+        /**
+         * @title {String or DOMElement} The dialog title.
+         * @message {String or DOMElement} The dialog contents.
+         * @onok {Function} Invoked when the user clicks OK button or closes the dialog.
+         *
+         * fnAlert(null,"<h1>안녕하세요</h1>", function () {alert('확인 클릭')});
+         *
+         */
+        const fnAlert = function (title, message, onok) {
+            alertify.alert()
+                .setting({
+                    'title': title,
+                    'message': message,
+                    'onok': onok,
+                    'movable': false,
+                    'transitionOff': true
+                }).show();
+        };
+
+        /**
+         * @title {String or DOMElement} The dialog title.
+         * @message {String or DOMElement} The dialog contents.
+         * @onok {Function} Invoked when the user clicks OK button.
+         * @oncancel {Function} Invoked when the user clicks Cancel button or closes the dialog.
+         * @autoOk {number} Automatically confirms the dialog after n seconds.
+         *
+         * fnConfirm(null, 'message', function() {alert('확인 클릭')}, function() {alert('취소 클릭')}, 5);
+         *
+         */
+        const fnConfirm = function (title, message, onok, oncancel, autoOk) {
+            if (autoOk == undefined || autoOk == null) {
+                alertify.confirm()
+                    .setting({
+                        'title': title,
+                        'message': message,
+                        'onok': onok,
+                        'oncancel': oncancel,
+                        'movable': false,
+                        'transitionOff': true
+                    }).show();
+            } else {
+                alertify.confirm()
+                    .setting({
+                        'title': title,
+                        'message': message,
+                        'onok': onok,
+                        'oncancel': oncancel,
+                        'movable': false,
+                        'transitionOff': true
+                    }).show().autoOk(autoOk);
+            }
+        };
 
         /** 캐드 파일 업로드 시작 스크립트 **/
         let estimateCadFileColModel =  [
@@ -421,396 +594,40 @@
             }
         })
 
-        commonCadFileAttachPopup.on('show.bs.modal',function(e) {
-            var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
-            $commonCadFileAttachGrid = $('#' + commonCadFileAttachGridId).pqGrid(commonCadFileAttachObj);
-            $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면 등록');
-            if(actionType == 'estimate') {          // 견적 도면 등록
-                $commonCadFileAttachGrid.pqGrid('option', 'colModel', estimateCadFileColModel);
-            }else if(actionType == 'control') {     // 주문 도면 등록
-                $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadFileColModel);
-            }else if(actionType == 'controlRev') {  // 주문 도면 차수 변경
-                $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면변경(Revision up)');
-                $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadRevFileColModel);
-            }else if(actionType == 'inside') {      // 자재 도면 등록
-                $commonCadFileAttachGrid.pqGrid('option', 'colModel', insideStockCadFileColModel);
-            }
-            $commonCadFileAttachGrid.pqGrid('refresh');
+        var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
+        $commonCadFileAttachGrid = $('#' + commonCadFileAttachGridId).pqGrid(commonCadFileAttachObj);
+        $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면 등록');
+        if(actionType == 'estimate') {          // 견적 도면 등록
+            $commonCadFileAttachGrid.pqGrid('option', 'colModel', estimateCadFileColModel);
+        }else if(actionType == 'control') {     // 주문 도면 등록
+            $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadFileColModel);
+        }else if(actionType == 'controlRev') {  // 주문 도면 차수 변경
+            $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면변경(Revision up)');
+            $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadRevFileColModel);
+        }else if(actionType == 'inside') {      // 자재 도면 등록
+            $commonCadFileAttachGrid.pqGrid('option', 'colModel', insideStockCadFileColModel);
+        }
+        $commonCadFileAttachGrid.pqGrid('refresh');
+        $commonCadUploadFileGrid = $('#' + commonCadUploadFileGridId).pqGrid(commonCadUploadFileObj);
+        $commonCadUploadFileGrid.pqGrid('refresh');
 
-            $commonCadUploadFileGrid = $('#' + commonCadUploadFileGridId).pqGrid(commonCadUploadFileObj);
-            $commonCadUploadFileGrid.pqGrid('refresh');
-        });
-
-        commonCadFileAttachPopup.on('hide.bs.modal',function(e) {
-            var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
-            if(actionType == 'estimate') {          // 견적 도면 등록
-                $("#estimateRegisterReloadBtn").trigger("click");
-            }else if(actionType == 'control' || actionType == 'controlRev') {     // 주문 도면 등록 || 주문 도면 차수 변경
-                $("#CONTROL_MANAGE_SEARCH").trigger("click");
-            }else if(actionType == 'inside') {      // 자재 도면 등록
-                $("#stock_manage_search_btn").trigger("click");
-            }
-            uploadControlFiles = [];
-            $commonCadFileAttachGrid.pqGrid('destroy');
-            $commonCadUploadFileGrid.pqGrid('destroy');
-        });
+        // commonCadFileAttachPopup.on('hide.bs.modal',function(e) {
+        //     var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
+        //     if(actionType == 'estimate') {          // 견적 도면 등록
+        //         $("#estimateRegisterReloadBtn").trigger("click");
+        //     }else if(actionType == 'control' || actionType == 'controlRev') {
+        //         $("#CONTROL_MANAGE_SEARCH").trigger("click");
+        //     }else if(actionType == 'inside') {      // 자재 도면 등록
+        //         $("#stock_manage_search_btn").trigger("click");
+        //     }
+        //     uploadControlFiles = [];
+        //     $commonCadFileAttachGrid.pqGrid('destroy');
+        //     $commonCadUploadFileGrid.pqGrid('destroy');
+        // });
 
     });
 
-    /**
-     * @description Ajax Post
-     * @param {function} callFunction - 리텅 Function 처리
-     * @param {object} params - 호출 URL에 Parameter 정보
-     * @param {*} callFunctionParam - 리텅 Function 전달 Parameter
-     */
-    let fnPostAjax = function (callFunction, params, callFunctionParam) {
-        'use strict';
-        let callback = $.Callbacks();
-        let param = $.extend({url: null, data: ''}, params || {});
 
-        $.ajax({
-            type: 'POST',
-            url: param.url,
-            dataType: 'json',
-            data: param.data,
-            success: function (data, textStatus, jqXHR) {
-                if (textStatus === 'success') {
-                    // if (data.exception === null) {
-                    callback.add(callFunction);
-                    callback.fire(data, callFunctionParam);
-                    // } else {
-                    <%--alert('<spring:message code='com.alert.default.failText' />');--%>
-                    // }
-                } else {
-                    fnAlert(null, '<srping:message key="error.common"/>');
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if ($waitMeMainContainer !== undefined) $(this).stopWaitMe();
-                // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
-                // if (errorThrown == 'Forbidden') {
-                //     $(this).fnHiddenFormPageAction('/');
-                // }
-            }
-        });
-    };
-
-    let fnPostAjaxAsync = function (callFunction, params, callFunctionParam) {
-        'use strict';
-        let callback = $.Callbacks();
-        let param = $.extend({url: null, data: ''}, params || {});
-
-        $.ajax({
-            type: 'POST',
-            url: param.url,
-            dataType: 'json',
-            data: param.data,
-            async: false,
-            success: function (data, textStatus, jqXHR) {
-                if (textStatus === 'success') {
-                    // if (data.exception === null) {
-                    callback.add(callFunction);
-                    callback.fire(data, callFunctionParam);
-                    // } else {
-                    <%--alert('<spring:message code='com.alert.default.failText' />');--%>
-                    // }
-                } else {
-                    // alert('fail=[' + json.msg + ']111');
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                //console.log(textStatus);
-                //console.log(jqXHR);
-                //console.log(errorThrown);
-                //console.log('error=[' + jqXHR + ' ' + "status" + ' ' + textStatus + ' ' + "errorThrown" + errorThrown+']');
-                // if (errorThrown == 'Forbidden') {
-                //     $(this).fnHiddenFormPageAction('/');
-                // }
-            }
-        });
-    };
-
-    /**
-     * @description Ajax Post
-     * @param {function} callFunction - 리텅 Function 처리
-     * @param {object} params - 호출 URL에 Parameter 정보
-     * @param {*} callFunctionParam - 리텅 Function 전달 Parameter
-     */
-    let fnPostAjaxSound = function (callFunction, params, callFunctionParam) {
-        'use strict';
-        let callback = $.Callbacks();
-        let param = $.extend({url: null, data: ''}, params || {});
-
-        $.ajax({
-            type: 'POST',
-            url: param.url,
-            dataType: 'json',
-            data: param.data,
-            success: function (data, textStatus, jqXHR) {
-                if (textStatus === 'success') {
-                    successPlay();
-                    // if (data.exception === null) {
-                    callback.add(callFunction);
-                    callback.fire(data, callFunctionParam);
-                    // } else {
-                    <%--alert('<spring:message code='com.alert.default.failText' />');--%>
-                    // }
-                } else {
-                    failPlay();
-                    fnAlert(null, '<srping:message key="error.common"/>');
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                failPlay();
-                if ($waitMeMainContainer !== undefined) $(this).stopWaitMe();
-                // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
-                // if (errorThrown == 'Forbidden') {
-                //     $(this).fnHiddenFormPageAction('/');
-                // }
-            }
-        });
-    };
-
-    /**
-     * Normal File upload
-     * */
-    let fnFormDataFileUploadAjax = function (callFunction, formData, submitUrl) {
-        'use strict';
-        let actionUrl = (submitUrl) ? submitUrl : '/uploadNormalFile';
-        let callback = $.Callbacks();
-        $.ajax({
-            type: 'POST',
-            enctype: 'multipart/form-data',
-            url: actionUrl,
-            contentType : false,
-            processData: false,
-            data: formData,
-            beforeSend: function (jqXHR, settings) {
-              $(this).startWaitMe();
-            },
-            complete: function (jqXHR, textStatus) {
-              $(this).stopWaitMe();
-            },
-            success: function (data, textStatus, jqXHR) {
-                if (textStatus === 'success') {
-                    // if (data.exception === null) {
-                    callback.add(callFunction);
-                    callback.fire(jQuery.parseJSON(data));
-                    // } else {
-                    <%--alert('<spring:message code='com.alert.default.failText' />');--%>
-                    // }
-                } else {
-                    // alert('fail=[' + json.msg + ']111');
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
-                // if (errorThrown == 'Forbidden') {
-                //     $(this).fnHiddenFormPageAction('/');
-                // }
-            }
-        });
-    };
-
-    /* form에 JsonData를 셋팅 한다.
-		/* formid : form 아이디
-		/* data : json return data
-		*/
-    let fnJsonDataToForm = function (formid, data) {
-        fnResetFrom(formid);
-        if(formid.indexOf("#") == -1) formid = "#"+formid;
-        $.each(data, function(key, value) {
-            let $ctrl = $(formid).find('[name='+key+']');
-            if ($ctrl.is('select')){
-                $('option', $ctrl).each(function() {
-                    if (this.value == value)
-                        this.selected = true;
-                });
-            } else if ($ctrl.is('textarea')) {
-                $ctrl.val(value);
-            } else {
-                switch($ctrl.attr("type")) {
-                    case "text":
-                    case "number":
-                    case "date":
-                    case "password":
-                    case "hidden":
-                        $ctrl.val(value);
-                        break;
-                    case "checkbox":
-                        if (value == '1' || $ctrl.val() == value)
-                            $ctrl.prop('checked', true);
-                        else
-                            $ctrl.prop('checked', false);
-                        break;
-                    case 'radio':
-                        $ctrl.filter('[value="' + value + '"]').attr('checked', 'checked');
-                        break;
-                }
-            }
-        });
-    };
-
-    /* form 값을 JsonData 값으로 변경하여 전달 한다.
-		/* formid : form 아이디
-		/* data : json return data
-		*/
-    let fnFormToJsonArrayData = function (formid) {
-        if(formid.indexOf("#") == -1) formid = "#"+formid;
-        let elementArray = {};
-        let formArr = $(formid).serializeArray();
-        for(let i=0; i < formArr.length; i++) {
-            let tmp = formArr[i];
-            let name = tmp.name;
-            let value = "";
-            if(name != null){
-                let $ctrl = $(formid).find('[name='+name+']');
-                if ($ctrl.is('select')){
-                    value = $ctrl.val();
-                } else if ($ctrl.is('textarea')) {
-                    value = $ctrl.val();
-                } else {
-                    switch($ctrl.attr("type")) {
-                        case "text":
-                        case "number":
-                        case "date":
-                        case "password":
-                        case "hidden":
-                        case "search":
-                            value = $ctrl.val();
-                            break;
-                        case "checkbox":
-                            if($ctrl.prop('checked')) value = true;
-                            else value = false;
-                            break;
-                        case 'radio':
-                            value = $("input:radio[name=" + name + "]:checked").val();
-                            break;
-                    }
-                }
-                elementArray[name] = value;
-            }
-        }
-        return elementArray;
-    };
-
-    /**
-     *	Form reset 처리
-     *	formId : form Id
-     **/
-    let fnResetFrom = function (formid){
-        if(formid.indexOf("#") == -1) formid = $("#"+formid);
-        formid.find('input[type=text], input[type=number], input[type=password], input[type=file], textarea').val('');
-        formid.find('input[type=radio], input[type=checkbox]').removeAttr('checked').removeAttr('selected');
-        // select box 첫번째 값이 공백이 아니면 첫번째 값으로 셋팅
-        $('select', formid).each(function() {
-            $(this).val($(this).prop('defaultSelected'));
-            if($(this).find('option:first').val() == ''){
-                $(this).val('');
-            } else {
-                $(this).val($(this).find('option:first').val());
-            }
-        });
-
-        // hidden value가 queryId, url 제외 나머지 clear
-        $('input:hidden', formid).each(function() {
-            if($(this).attr("type") == "button" || $(this).attr("id") == "url" || $(this).attr("id") == "queryId"){
-            }else{
-                $(this).val('');
-            }
-        });
-    }
-
-    /**
-     * @description 그리드 생성
-     * @param {string} gridId
-     * @param {object} postData
-     * @param {object} colModel
-     * @param {object} toolbar
-     * @returns {object | jQuery} grid
-     */
-    let fnCreatePQGrid = function (gridId, postData, colModel, toolbar) {
-        'use strict';
-        let obj = {
-            // width: 700,
-            // height: 400,
-            collapsible: false,
-            resizable: true,
-            // title: '',
-            // pageModel: {type: 'remote'},
-            numberCell: {title: 'No.'},
-            scrollModel: {autoFit: true},
-            trackModel: {on: true}, //to turn on the track changes.
-            colModel: colModel,
-            dataModel: {
-                location: 'remote',
-                dataType: 'json',
-                method: 'POST',
-                url: '/paramQueryGridSelect',
-                postData: postData,
-                // recIndx: 'USER_ID',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                    // return {curPage: dataJSON.curPage, totalRecords: dataJSON.totalRecords, data: data};
-                }
-            },
-            toolbar: toolbar
-        };
-        return $('#' + gridId).pqGrid(obj);
-    };
-
-    /**
-     * @title {String or DOMElement} The dialog title.
-     * @message {String or DOMElement} The dialog contents.
-     * @onok {Function} Invoked when the user clicks OK button or closes the dialog.
-     *
-     * fnAlert(null,"<h1>안녕하세요</h1>", function () {alert('확인 클릭')});
-     *
-     */
-    const fnAlert = function (title, message, onok) {
-        alertify.alert()
-            .setting({
-                'title': title,
-                'message': message,
-                'onok': onok,
-                'movable': false,
-                'transitionOff': true
-            }).show();
-    };
-
-    /**
-     * @title {String or DOMElement} The dialog title.
-     * @message {String or DOMElement} The dialog contents.
-     * @onok {Function} Invoked when the user clicks OK button.
-     * @oncancel {Function} Invoked when the user clicks Cancel button or closes the dialog.
-     * @autoOk {number} Automatically confirms the dialog after n seconds.
-     *
-     * fnConfirm(null, 'message', function() {alert('확인 클릭')}, function() {alert('취소 클릭')}, 5);
-     *
-     */
-    const fnConfirm = function (title, message, onok, oncancel, autoOk) {
-        if (autoOk == undefined || autoOk == null) {
-            alertify.confirm()
-                .setting({
-                    'title': title,
-                    'message': message,
-                    'onok': onok,
-                    'oncancel': oncancel,
-                    'movable': false,
-                    'transitionOff': true
-                }).show();
-        } else {
-            alertify.confirm()
-                .setting({
-                    'title': title,
-                    'message': message,
-                    'onok': onok,
-                    'oncancel': oncancel,
-                    'movable': false,
-                    'transitionOff': true
-                }).show().autoOk(autoOk);
-        }
-    };
 
 </script>
 </body>

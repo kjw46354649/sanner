@@ -576,7 +576,15 @@
         </div>
     </div>
 </div>
-
+<div id="drawingPrintDiv" style="display: none">
+    <div id="drawingPrintDivHtml">
+        <div>
+            <span>동일 관리번호에 도면번호가 다른 대상이 있습니다. 포함하여 출력할까요?</span>
+            <span class="text-blue">대상관리번호</span><br>
+            <span class="drawingPrintControlHtml"></span>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
 
     let $cadFileConvertUploadCompletedBtn = $("#cadFileConvertUploadCompletedBtn");
@@ -2292,8 +2300,8 @@
     const drawing_upload_popup = function (actionType) {
         const url = '/drawingUploadPopup?actionType=' + actionType;
         // 팝업 사이즈
-        const nWidth = 1152;
-        const nHeight = 648;
+        const nWidth = 1000;
+        const nHeight = 530;
         const winWidth = document.body.clientWidth;
         const winHeight = document.body.clientHeight;
         const winX = window.screenX || window.screenLeft || 0;

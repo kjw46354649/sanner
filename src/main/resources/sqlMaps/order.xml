@@ -2657,7 +2657,7 @@
 
     <select id="selectControlCadOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            C.ORDER_SEQ, C.ORDER_NUM, C.DRAWING_NUM, C.ORDER_QTY,
+            C.ORDER_SEQ, IFNULL(C.ORDER_NUM, SPACE(0)) AS ORDER_NUM, C.DRAWING_NUM, C.ORDER_QTY,
             IFNULL(SF_GET_DATE_F(C.ORDER_DUE_DT, 'MM', ''), SPACE(0)) AS ORDER_DUE_DT <!-- 납기 -->
         FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C
         WHERE 1 = 1

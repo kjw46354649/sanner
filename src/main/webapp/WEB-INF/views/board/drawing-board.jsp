@@ -1145,8 +1145,11 @@
                 'data': $("#drawing_action_form").serialize()
             };
             fnPostAjax(function (data, callFunctionParam) {
-                fnDrawingAlertDialogAlert('cancelDivHtml', 2);
-                fnPopupClose("drawing_worker_cancel_popup");
+                // fnDrawingAlertDialogAlert('cancelDivHtml', 3);
+                // fnPopupClose("drawing_worker_cancel_popup");
+                fnDrawingAlertDialogAlert('cancelDivHtml', 3).then(result =>
+                    fnPopupClose("drawing_worker_cancel_popup")
+                );
             }, parameters, '');
         });
 
@@ -1207,8 +1210,11 @@
                 'data': $("#drawing_action_form").serialize()
             };
             fnPostAjax(function (data, callFunctionParam) {
-                fnPopupClose("drawing_worker_end_popup");
-                fnDrawingAlertDialogAlert('completeDivHtml', 2);
+                // fnDrawingAlertDialogAlert('completeDivHtml', 3);
+                // fnPopupClose("drawing_worker_end_popup");
+                fnDrawingAlertDialogAlert('completeDivHtml', 3).then(result =>
+                    fnPopupClose("drawing_worker_end_popup")
+                );
             }, parameters, '');
         });
 
@@ -1311,9 +1317,13 @@
                 'data': $("#drawing_action_form").serialize()
             };
             fnPostAjax(function (data, callFunctionParam) {
-                fnDrawingAlertDialogAlert('startDivHtml', 2);
+                // fnDrawingAlertDialogAlert('startDivHtml', 3);
+                // fnResetFrom("drawing_action_form");
+                // fnPopupClose("drawing_worker_scan_popup");
                 fnResetFrom("drawing_action_form");
-                fnPopupClose("drawing_worker_scan_popup");
+                fnDrawingAlertDialogAlert('startDivHtml', 3).then(result =>
+                    fnPopupClose("drawing_worker_scan_popup")
+                );
             }, parameters, '');
         }
 
@@ -1470,14 +1480,23 @@
             };
         });
 
-        const fnDrawingAlertDialogAlert = function (elementId, autoClose) {
+        async function fnDrawingAlertDialogAlert(elementId, autoClose) {
             let alertBox = alertify.drawingAlertDialog($('#' + elementId)[0]);
             if (autoClose) {
-                setTimeout(function() {
-                    alertBox.close();
-                }, autoClose * 1000);
+                await new Promise(resolve => setTimeout(resolve, 1000 + autoClose));
+                alertBox.close();
+                return;
             }
         };
+
+        // const fnDrawingAlertDialogAlert = function (elementId, autoClose) {
+        //     let alertBox = alertify.drawingAlertDialog($('#' + elementId)[0]);
+        //     if (autoClose) {
+        //         setTimeout(function() {
+        //             alertBox.close();
+        //         }, autoClose * 1000);
+        //     }
+        // };
 
         const fnConfirm = function (title, message, onok, oncancel, autoOk) {
             if (autoOk == undefined || autoOk == null) {

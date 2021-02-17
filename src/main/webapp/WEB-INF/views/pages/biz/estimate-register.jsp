@@ -308,21 +308,6 @@
                     }
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            /*{title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM' ,
-                editor: {
-                    type: 'select',
-                    mapIndices: { name: "MATERIAL_TYPE_NM", id: "MATERIAL_TYPE" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1035'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_TYPE"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
-                    }
-                }
-            },*/
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 editor: { type: 'select', valueIndx: "value", labelIndx: "text", options: fnGetCommCodeGridSelectBox('1027') },
                 render: function (ui) {
@@ -1409,6 +1394,7 @@
                 return false;
             }
             callCadDrawingUploadPopup('estimate', 'estimate.manageEstimateCadFiles');
+            // drawing_upload_popup('estimate', 'estimate.manageEstimateCadFiles');
         });
 
         /* 도면 등록 팝업 호출 */

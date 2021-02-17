@@ -44,7 +44,7 @@ public class DrawingBoardController {
     /**
      * Json List
      */
-    @RequestMapping(value = "/drawing-json-list",  method= RequestMethod.POST)
+    @RequestMapping(value = "/drawing-json-list")
     public String jsonList(Model model, HttpServletRequest request, HttpSession session) throws Exception {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
         model.addAttribute("list", this.innodaleService.getList(hashMap));
@@ -54,7 +54,7 @@ public class DrawingBoardController {
     /**
      * Json Info
      */
-    @RequestMapping(value = "/drawing-json-info",  method=RequestMethod.POST)
+    @RequestMapping(value = "/drawing-json-info")
     public String jsonInfo(Model model, HttpServletRequest request, HttpSession session) throws Exception {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
         model.addAttribute("info", this.innodaleService.getInfo(hashMap));
@@ -64,7 +64,7 @@ public class DrawingBoardController {
     /**
      * Drawing barcode Info
      */
-    @RequestMapping(value = "/drawing/barcode",  method= RequestMethod.POST)
+    @RequestMapping(value = "/drawing/barcode")
     public String drawingBarcodeInfo(Model model, HttpServletRequest request, HttpSession session) throws Exception {
 
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
