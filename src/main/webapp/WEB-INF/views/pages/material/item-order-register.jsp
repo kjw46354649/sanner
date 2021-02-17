@@ -164,6 +164,7 @@
                 </ul>
             </div>
             <input type="hidden" name="ORDER_STATUS" id="ORDER_STATUS">
+            <input type="checkbox" name="IN_YN" id="HIDDEN_IN_YN" style="display: none">
         </form>
     </div>
     <div class="bottomWrap row3_bottomWrap">
@@ -2314,6 +2315,8 @@
 
             checkedValue += '\'' + $(this).val().replace(/,/g, "','") + '\'';
         });
+
+        $('[name=IN_YN]').prop('checked', checkedValue.includes('MST004'));
         $('#ORDER_STATUS').val(checkedValue);
     });
 
