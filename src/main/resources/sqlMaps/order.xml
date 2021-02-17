@@ -1712,99 +1712,138 @@
     </select>
 
     <select id="selectMonthSaleStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT 1 AS GROUP_KEY
-            , ROW_NUMBER () OVER (ORDER BY X.YYYY, X.COMP_CD, X.ORDER_COMP_CD, X.STATUS_TYPE) AS ROW_NUM
-            , X.YYYY
-            , X.MM
-            , X.COMP_CD
-            , X.COMP_NM
-            , X.ORDER_COMP_CD
-            , X.ORDER_COMP_NM
-            , X.STATUS_TYPE
-            , SUM(X.`AMT_01`) AS `AMT_01`
-            , SUM(X.`AMT_02`) AS `AMT_02`
-            , SUM(X.`AMT_03`) AS `AMT_03`
-            , SUM(X.`AMT_03_SUM`) AS `AMT_03_SUM`
-            , SUM(X.`AMT_04`) AS `AMT_04`
-            , SUM(X.`AMT_05`) AS `AMT_05`
-            , SUM(X.`AMT_06`) AS `AMT_06`
-            , SUM(X.`AMT_06_SUM`) AS `AMT_06_SUM`
-            , SUM(X.`AMT_07`) AS `AMT_07`
-            , SUM(X.`AMT_08`) AS `AMT_08`
-            , SUM(X.`AMT_09`) AS `AMT_09`
-            , SUM(X.`AMT_09_SUM`) AS `AMT_09_SUM`
-            , SUM(X.`AMT_10`) AS `AMT_10`
-            , SUM(X.`AMT_11`) AS `AMT_11`
-            , SUM(X.`AMT_12`) AS `AMT_12`
-            , SUM(X.`AMT_12_SUM`) AS `AMT_12_SUM`
-            , SUM(X.TOTAL_AMT) AS TOTAL_AMT
-        FROM (
-                SELECT H.YYYY
-                    , H.MM
-                    , H.COMP_CD
-                    , SF_GET_COMP_NM(H.COMP_CD) AS COMP_NM
-                    , H.ORDER_COMP_CD
-                    , SF_GET_COMP_NM(H.ORDER_COMP_CD) AS ORDER_COMP_NM
-                    , CASE WHEN STATUS_TYPE = '1' THEN '입금' ELSE '매출' END STATUS_TYPE
-                    , CASE WHEN H.MM = '01' THEN H.AMT ELSE 0 END AS `AMT_01`
-                    , CASE WHEN H.MM = '02' THEN H.AMT ELSE 0 END AS `AMT_02`
-                    , CASE WHEN H.MM = '03' THEN H.AMT ELSE 0 END AS `AMT_03`
-                    , CASE WHEN H.MM IN ('01', '02', '03') THEN H.AMT ELSE 0 END AS `AMT_03_SUM`
-                    , CASE WHEN H.MM = '04' THEN H.AMT ELSE 0 END AS `AMT_04`
-                    , CASE WHEN H.MM = '05' THEN H.AMT ELSE 0 END AS `AMT_05`
-                    , CASE WHEN H.MM = '06' THEN H.AMT ELSE 0 END AS `AMT_06`
-                    , CASE WHEN H.MM IN ('04', '05', '06') THEN H.AMT ELSE 0 END AS `AMT_06_SUM`
-                    , CASE WHEN H.MM = '07' THEN H.AMT ELSE 0 END AS `AMT_07`
-                    , CASE WHEN H.MM = '08' THEN H.AMT ELSE 0 END AS `AMT_08`
-                    , CASE WHEN H.MM = '09' THEN H.AMT ELSE 0 END AS `AMT_09`
-                    , CASE WHEN H.MM IN ('07', '08', '09') THEN H.AMT ELSE 0 END AS `AMT_09_SUM`
-                    , CASE WHEN H.MM = '10' THEN H.AMT ELSE 0 END AS `AMT_10`
-                    , CASE WHEN H.MM = '11' THEN H.AMT ELSE 0 END AS `AMT_11`
-                    , CASE WHEN H.MM = '12' THEN H.AMT ELSE 0 END AS `AMT_12`
-                    , CASE WHEN H.MM IN ('10', '11', '12') THEN H.AMT ELSE 0 END AS `AMT_12_SUM`
-                    , H.AMT AS TOTAL_AMT
-                FROM (
-                    SELECT F.YYYY
-                        , F.MM
-                        , G.STATUS_TYPE
-                        , G.COMP_CD
-                        , G.ORDER_COMP_CD
-                        , G.CLOSE_MONTH
-                        , G.AMT
-                    FROM TBL_YYYYMMDD F
-                        INNER JOIN (	<!-- 입금 -->
-                                        SELECT '1' AS STATUS_TYPE
-                                            , COMP_CD
-                                            , ORDER_COMP_CD
-                                            , DATE_FORMAT(DEPOSIT_DT, '%Y%m') AS CLOSE_MONTH
-                                            , DEPOSIT_AMT AS AMT
-                                        FROM TBL_MONEY_DEPOSIT
-                                        WHERE SUBSTR(DEPOSIT_DT, 1, 4) = #{MONTH_SALE_YEAR}
-                                        <if test="COMP_CD != null and COMP_CD != ''">
-                                            AND COMP_CD = #{COMP_CD}
-                                        </if>
-                                        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-                                            AND ORDER_COMP_CD = #{ORDER_COMP_CD}
-                                        </if>
-                                        GROUP BY COMP_CD, ORDER_COMP_CD, DATE_FORMAT(DEPOSIT_DT, '%Y%m')
-                                        UNION ALL
-                                        <!-- 매출 -->
-                                        SELECT '2' AS STATUS_TYPE
-                                            , M.COMP_CD
-                                            , M.ORDER_COMP_CD
-                                            , M.CLOSE_MONTH
-                                            , SUM(M.AMT) AS AMT
-                                        FROM (
-                                            SELECT A.COMP_CD
+        SELECT
+            ROW_NUMBER () OVER (ORDER BY K.YYYY, K.COMP_CD, K.ORDER_COMP_CD, K.`TYPE`) AS ROW_NUM
+            , K.COMP_CD
+            , K.COMP_NM
+            , K.ORDER_COMP_CD
+            , K.ORDER_COMP_NM
+            , K.YYYY
+            , K.MM
+            , CASE WHEN K.`TYPE` = '1' THEN '입금' ELSE '매출' END AS `TYPE`
+            , K.CLOSE_MONTH
+            , SUM(K.AMT_01) AS AMT_01
+            , SUM(K.AMT_02) AS AMT_02
+            , SUM(K.AMT_03) AS AMT_03
+            , SUM(K.Q1_SUM) AS Q1_SUM
+            , SUM(K.AMT_04) AS AMT_04
+            , SUM(K.AMT_05) AS AMT_05
+            , SUM(K.AMT_06) AS AMT_06
+            , SUM(K.Q2_SUM) AS Q2_SUM
+            , SUM(K.AMT_07) AS AMT_07
+            , SUM(K.AMT_08) AS AMT_08
+            , SUM(K.AMT_09) AS AMT_09
+            , SUM(K.Q3_SUM) AS Q3_SUM
+            , SUM(K.AMT_10) AS AMT_10
+            , SUM(K.AMT_11) AS AMT_11
+            , SUM(K.AMT_12) AS AMT_12
+            , SUM(K.Q4_SUM) AS Q4_SUM
+            , SUM(K.TOTAL_AMT) AS TOTAL_AMT
+        FROM (	SELECT
+                    F.COMP_CD
+                    , F.COMP_NM
+                    , F.ORDER_COMP_CD
+                    , F.ORDER_COMP_NM
+                    , G.YYYY
+                    , G.MM
+                    , G.`TYPE`
+                    , H.CLOSE_MONTH
+                    , CASE WHEN G.MM = '01' THEN H.AMT ELSE 0 END AS AMT_01
+                    , CASE WHEN G.MM = '02' THEN H.AMT ELSE 0 END AS AMT_02
+                    , CASE WHEN G.MM = '03' THEN H.AMT ELSE 0 END AS AMT_03
+                    , CASE WHEN G.MM IN ('01', '02', '03') THEN H.AMT ELSE 0 END AS Q1_SUM
+                    , CASE WHEN G.MM = '04' THEN H.AMT ELSE 0 END AS AMT_04
+                    , CASE WHEN G.MM = '05' THEN H.AMT ELSE 0 END AS AMT_05
+                    , CASE WHEN G.MM = '06' THEN H.AMT ELSE 0 END AS AMT_06
+                    , CASE WHEN G.MM IN ('04', '05', '06') THEN H.AMT ELSE 0 END AS Q2_SUM
+                    , CASE WHEN G.MM = '07' THEN H.AMT ELSE 0 END AS AMT_07
+                    , CASE WHEN G.MM = '08' THEN H.AMT ELSE 0 END AS AMT_08
+                    , CASE WHEN G.MM = '09' THEN H.AMT ELSE 0 END AS AMT_09
+                    , CASE WHEN G.MM IN ('07', '08', '09') THEN H.AMT ELSE 0 END AS Q3_SUM
+                    , CASE WHEN G.MM = '10' THEN H.AMT ELSE 0 END AS AMT_10
+                    , CASE WHEN G.MM = '11' THEN H.AMT ELSE 0 END AS AMT_11
+                    , CASE WHEN G.MM = '12' THEN H.AMT ELSE 0 END AS AMT_12
+                    , CASE WHEN G.MM IN ('10', '11', '12') THEN H.AMT ELSE 0 END AS Q4_SUM
+                    , IFNULL(H.AMT, 0) AS TOTAL_AMT
+                FROM (	SELECT
+                            A.COMP_CD
+                            , A.COMP_NM
+                            , B.COMP_CD AS ORDER_COMP_CD
+                            , B.COMP_NM AS ORDER_COMP_NM
+                        FROM (	SELECT
+                                    COMP_CD
+                                    , COMP_NM
+                                FROM TBL_COMPANY
+                                WHERE 1 = 1
+                                    AND ACTIVE_YN = 'Y'
+                                    AND FAMILY_COMPANY_YN = 'Y' ) A
+                        CROSS JOIN (	SELECT
+                                            COMP_CD
+                                            , COMP_NM
+                                        FROM TBL_COMPANY
+                                        WHERE 1 = 1
+                                            AND ACTIVE_YN = 'Y'
+                                            AND ORDER_COMPANY_YN = 'Y' ) B ) F <!-- COMP * ORDER_COMP_CD -->
+                CROSS JOIN (	SELECT
+                                    '1' AS `TYPE`
+                                    , A.YYYY
+                                    , A.MM
+                                FROM TBL_YYYYMMDD A
+                                WHERE A.YYYY = #{MONTH_SALE_YEAR}
+                                GROUP BY A.YYYY, A.MM
+                                UNION ALL
+                                SELECT
+                                    2 AS `TYPE`
+                                    , A.YYYY
+                                    , A.MM
+                                FROM TBL_YYYYMMDD A
+                                WHERE A.YYYY = #{MONTH_SALE_YEAR}
+                                GROUP BY A.YYYY, A.MM ) G <!-- 12Month * 2Type -->
+                LEFT OUTER JOIN (   SELECT <!-- 입금 -->
+                                        '1' AS `TYPE`
+                                        , COMP_CD
+                                        , ORDER_COMP_CD
+                                        , DATE_FORMAT(DEPOSIT_DT, '%Y%m') AS CLOSE_MONTH
+                                        , DEPOSIT_AMT AS AMT
+                                    FROM TBL_MONEY_DEPOSIT A
+                                    WHERE SUBSTR(DEPOSIT_DT, 1, 4) = #{MONTH_SALE_YEAR}
+                                    <if test="COMP_CD != null and COMP_CD != ''">
+                                        AND COMP_CD = #{COMP_CD}
+                                    </if>
+                                    <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                                        AND ORDER_COMP_CD = #{ORDER_COMP_CD}
+                                    </if>
+                                    GROUP BY COMP_CD, ORDER_COMP_CD, DATE_FORMAT(DEPOSIT_DT, '%Y%m')
+                                    UNION ALL
+                                    SELECT <!-- 매출 -->
+                                        '2' AS `TYPE`
+                                        , F.COMP_CD
+                                        , F.ORDER_COMP_CD
+                                        , F.CLOSE_MONTH
+                                        , SUM(F.AMT) AS AMT
+                                    FROM ( 	SELECT
+                                                A.COMP_CD
                                                 , A.ORDER_COMP_CD
                                                 , D.CLOSE_MONTH
                                                 , E.FINAL_NEGO_AMT + E.FINAL_NEGO_AMT * 0.1 AS AMT
-                                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_MONTH_CLOSE_ORDER D, TBL_MONTH_CLOSE E
+                                            FROM TBL_CONTROL A
+                                                , TBL_CONTROL_PART B
+                                                , TBL_CONTROL_PART_ORDER C
+                                                , TBL_MONTH_CLOSE_ORDER D
+                                                , TBL_MONTH_CLOSE E
                                             WHERE 1 = 1
-                                                AND E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD AND E.CLOSE_VER = D.CLOSE_VER AND E.CLOSE_MONTH = D.CLOSE_MONTH <if test="DEGREE != null and DEGREE != ''"> AND E.CLOSE_VER = #{DEGREE} </if>
-                                                AND D.CONTROL_SEQ = A.CONTROL_SEQ AND D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{MONTH_SALE_YEAR}
-                                                AND C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                                AND B.CONTROL_SEQ = A.CONTROL_SEQ AND IFNULL(B.PART_NUM, '0') = '0'
+                                                AND E.COMP_CD = D.COMP_CD
+                                                AND E.ORDER_COMP_CD = D.ORDER_COMP_CD
+                                                AND E.CLOSE_VER = D.CLOSE_VER
+                                                AND E.CLOSE_MONTH = D.CLOSE_MONTH
+                                                AND D.CONTROL_SEQ = A.CONTROL_SEQ
+                                                AND D.COMP_CD = A.COMP_CD
+                                                AND D.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                                AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{MONTH_SALE_YEAR}
+                                                AND C.CONTROL_SEQ = B.CONTROL_SEQ
+                                                AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                                AND B.CONTROL_SEQ = A.CONTROL_SEQ
+                                                AND IFNULL(B.PART_NUM, '0') = '0'
                                                 AND A.DEL_YN = 'N'
                                             <if test="COMP_CD != null and COMP_CD != ''">
                                                 AND A.COMP_CD = #{COMP_CD}
@@ -1812,115 +1851,149 @@
                                             <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
                                                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
                                             </if>
-                                            GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH, D.CLOSE_VER
-                                        ) M
-                                        GROUP BY M.COMP_CD, M.ORDER_COMP_CD, M.CLOSE_MONTH
-                                    ) G ON CONCAT(F.YYYY, F.MM) = G.CLOSE_MONTH
-                    WHERE F.YYYY = #{MONTH_SALE_YEAR}
-                    GROUP BY F.YYYY, F.MM, G.STATUS_TYPE, G.COMP_CD, G.ORDER_COMP_CD, G.CLOSE_MONTH
-                ) H
-        ) X
+                                            GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH, D.CLOSE_VER ) F
+                                    GROUP BY F.COMP_CD, F.ORDER_COMP_CD, F.CLOSE_MONTH ) H ON H.COMP_CD = F.COMP_CD AND H.ORDER_COMP_CD = F.ORDER_COMP_CD AND H.CLOSE_MONTH = CONCAT(G.YYYY, G.MM) AND H.`TYPE` = G.`TYPE`
+                GROUP BY G.YYYY, G.MM, F.COMP_CD, F.ORDER_COMP_CD, G.`TYPE` ) K
         WHERE 1 = 1
         <if test="DEPOSIT_STATUS_INDICATION == null">
-            AND X.STATUS_TYPE = '매출'
+            AND K.`TYPE` = '2' <!-- 매출 -->
         </if>
-        GROUP BY X.YYYY, X.COMP_CD, X.ORDER_COMP_CD, X.STATUS_TYPE
-        ORDER BY X.YYYY, X.COMP_CD, X.ORDER_COMP_CD, X.STATUS_TYPE
+        GROUP BY K.YYYY, K.COMP_CD, K.ORDER_COMP_CD, K.`TYPE`
+        ORDER BY K.YYYY, K.COMP_CD, K.ORDER_COMP_CD, K.`TYPE`
     </select>
     <select id="selectMonthSaleStatusSummary" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT 1 AS GROUP_KEY
-            , NULL AS ROW_NUM
-            , X.YYYY
-            , X.MM
+        SELECT
+            NULL AS ROW_NUM
             , NULL AS COMP_CD
             , NULL AS COMP_NM
             , NULL AS ORDER_COMP_CD
             , NULL AS ORDER_COMP_NM
-            , X.STATUS_TYPE
-            , SUM(X.`AMT_01`) AS `AMT_01`
-            , SUM(X.`AMT_02`) AS `AMT_02`
-            , SUM(X.`AMT_03`) AS `AMT_03`
-            , SUM(X.`AMT_03_SUM`) AS `AMT_03_SUM`
-            , SUM(X.`AMT_04`) AS `AMT_04`
-            , SUM(X.`AMT_05`) AS `AMT_05`
-            , SUM(X.`AMT_06`) AS `AMT_06`
-            , SUM(X.`AMT_06_SUM`) AS `AMT_06_SUM`
-            , SUM(X.`AMT_07`) AS `AMT_07`
-            , SUM(X.`AMT_08`) AS `AMT_08`
-            , SUM(X.`AMT_09`) AS `AMT_09`
-            , SUM(X.`AMT_09_SUM`) AS `AMT_09_SUM`
-            , SUM(X.`AMT_10`) AS `AMT_10`
-            , SUM(X.`AMT_11`) AS `AMT_11`
-            , SUM(X.`AMT_12`) AS `AMT_12`
-            , SUM(X.`AMT_12_SUM`) AS `AMT_12_SUM`
-            , SUM(X.TOTAL_AMT) AS TOTAL_AMT
-        FROM (
-                SELECT H.YYYY
-                    , H.MM
-                    , H.COMP_CD
-                    , SF_GET_COMP_NM(H.COMP_CD) AS COMP_NM
-                    , H.ORDER_COMP_CD
-                    , SF_GET_COMP_NM(H.ORDER_COMP_CD) AS ORDER_COMP_NM
-                    , CASE WHEN STATUS_TYPE = '1' THEN '입금' ELSE '매출' END STATUS_TYPE
-                    , CASE WHEN H.MM = '01' THEN H.AMT ELSE 0 END AS `AMT_01`
-                    , CASE WHEN H.MM = '02' THEN H.AMT ELSE 0 END AS `AMT_02`
-                    , CASE WHEN H.MM = '03' THEN H.AMT ELSE 0 END AS `AMT_03`
-                    , CASE WHEN H.MM IN ('01', '02', '03') THEN H.AMT ELSE 0 END AS `AMT_03_SUM`
-                    , CASE WHEN H.MM = '04' THEN H.AMT ELSE 0 END AS `AMT_04`
-                    , CASE WHEN H.MM = '05' THEN H.AMT ELSE 0 END AS `AMT_05`
-                    , CASE WHEN H.MM = '06' THEN H.AMT ELSE 0 END AS `AMT_06`
-                    , CASE WHEN H.MM IN ('04', '05', '06') THEN H.AMT ELSE 0 END AS `AMT_06_SUM`
-                    , CASE WHEN H.MM = '07' THEN H.AMT ELSE 0 END AS `AMT_07`
-                    , CASE WHEN H.MM = '08' THEN H.AMT ELSE 0 END AS `AMT_08`
-                    , CASE WHEN H.MM = '09' THEN H.AMT ELSE 0 END AS `AMT_09`
-                    , CASE WHEN H.MM IN ('07', '08', '09') THEN H.AMT ELSE 0 END AS `AMT_09_SUM`
-                    , CASE WHEN H.MM = '10' THEN H.AMT ELSE 0 END AS `AMT_10`
-                    , CASE WHEN H.MM = '11' THEN H.AMT ELSE 0 END AS `AMT_11`
-                    , CASE WHEN H.MM = '12' THEN H.AMT ELSE 0 END AS `AMT_12`
-                    , CASE WHEN H.MM IN ('10', '11', '12') THEN H.AMT ELSE 0 END AS `AMT_12_SUM`
-                    , H.AMT AS TOTAL_AMT
-                FROM (
-                    SELECT F.YYYY
-                        , F.MM
-                        , G.STATUS_TYPE
-                        , G.COMP_CD
-                        , G.ORDER_COMP_CD
-                        , G.CLOSE_MONTH
-                        , G.AMT
-                    FROM TBL_YYYYMMDD F
-                        INNER JOIN (	<!-- 입금 -->
-                                        SELECT '1' AS STATUS_TYPE
-                                            , COMP_CD
-                                            , ORDER_COMP_CD
-                                            , DATE_FORMAT(DEPOSIT_DT, '%Y%m') AS CLOSE_MONTH
-                                            , DEPOSIT_AMT AS AMT
-                                        FROM TBL_MONEY_DEPOSIT
-                                        WHERE SUBSTR(DEPOSIT_DT, 1, 4) = #{MONTH_SALE_YEAR}
-                                        <if test="COMP_CD != null and COMP_CD != ''">
-                                            AND COMP_CD = #{COMP_CD}
-                                        </if>
-                                        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-                                            AND ORDER_COMP_CD = #{ORDER_COMP_CD}
-                                        </if>
-                                        GROUP BY COMP_CD, ORDER_COMP_CD, DATE_FORMAT(DEPOSIT_DT, '%Y%m')
-                                        UNION ALL
-                                        <!-- 매출 -->
-                                        SELECT '2' AS STATUS_TYPE
-                                            , M.COMP_CD
-                                            , M.ORDER_COMP_CD
-                                            , M.CLOSE_MONTH
-                                            , SUM(M.AMT) AS AMT
-                                        FROM (
-                                            SELECT A.COMP_CD
+            , K.YYYY
+            , K.MM
+            , CASE WHEN K.`TYPE` = '1' THEN '입금' ELSE '매출' END AS `TYPE`
+            , K.CLOSE_MONTH
+            , SUM(K.AMT_01) AS AMT_01
+            , SUM(K.AMT_02) AS AMT_02
+            , SUM(K.AMT_03) AS AMT_03
+            , SUM(K.Q1_SUM) AS Q1_SUM
+            , SUM(K.AMT_04) AS AMT_04
+            , SUM(K.AMT_05) AS AMT_05
+            , SUM(K.AMT_06) AS AMT_06
+            , SUM(K.Q2_SUM) AS Q2_SUM
+            , SUM(K.AMT_07) AS AMT_07
+            , SUM(K.AMT_08) AS AMT_08
+            , SUM(K.AMT_09) AS AMT_09
+            , SUM(K.Q3_SUM) AS Q3_SUM
+            , SUM(K.AMT_10) AS AMT_10
+            , SUM(K.AMT_11) AS AMT_11
+            , SUM(K.AMT_12) AS AMT_12
+            , SUM(K.Q4_SUM) AS Q4_SUM
+            , SUM(K.TOTAL_AMT) AS TOTAL_AMT
+        FROM (	SELECT
+                    F.COMP_CD
+                    , F.COMP_NM
+                    , F.ORDER_COMP_CD
+                    , F.ORDER_COMP_NM
+                    , G.YYYY
+                    , G.MM
+                    , G.`TYPE`
+                    , H.CLOSE_MONTH
+                    , CASE WHEN G.MM = '01' THEN H.AMT ELSE 0 END AS AMT_01
+                    , CASE WHEN G.MM = '02' THEN H.AMT ELSE 0 END AS AMT_02
+                    , CASE WHEN G.MM = '03' THEN H.AMT ELSE 0 END AS AMT_03
+                    , CASE WHEN G.MM IN ('01', '02', '03') THEN H.AMT ELSE 0 END AS Q1_SUM
+                    , CASE WHEN G.MM = '04' THEN H.AMT ELSE 0 END AS AMT_04
+                    , CASE WHEN G.MM = '05' THEN H.AMT ELSE 0 END AS AMT_05
+                    , CASE WHEN G.MM = '06' THEN H.AMT ELSE 0 END AS AMT_06
+                    , CASE WHEN G.MM IN ('04', '05', '06') THEN H.AMT ELSE 0 END AS Q2_SUM
+                    , CASE WHEN G.MM = '07' THEN H.AMT ELSE 0 END AS AMT_07
+                    , CASE WHEN G.MM = '08' THEN H.AMT ELSE 0 END AS AMT_08
+                    , CASE WHEN G.MM = '09' THEN H.AMT ELSE 0 END AS AMT_09
+                    , CASE WHEN G.MM IN ('07', '08', '09') THEN H.AMT ELSE 0 END AS Q3_SUM
+                    , CASE WHEN G.MM = '10' THEN H.AMT ELSE 0 END AS AMT_10
+                    , CASE WHEN G.MM = '11' THEN H.AMT ELSE 0 END AS AMT_11
+                    , CASE WHEN G.MM = '12' THEN H.AMT ELSE 0 END AS AMT_12
+                    , CASE WHEN G.MM IN ('10', '11', '12') THEN H.AMT ELSE 0 END AS Q4_SUM
+                    , IFNULL(H.AMT, 0) AS TOTAL_AMT
+                FROM (	SELECT
+                            A.COMP_CD
+                            , A.COMP_NM
+                            , B.COMP_CD AS ORDER_COMP_CD
+                            , B.COMP_NM AS ORDER_COMP_NM
+                        FROM (	SELECT
+                                    COMP_CD
+                                    , COMP_NM
+                                FROM TBL_COMPANY
+                                WHERE 1 = 1
+                                    AND ACTIVE_YN = 'Y'
+                                    AND FAMILY_COMPANY_YN = 'Y' ) A
+                        CROSS JOIN (    SELECT
+                                            COMP_CD
+                                            , COMP_NM
+                                        FROM TBL_COMPANY
+                                        WHERE 1 = 1
+                                            AND ACTIVE_YN = 'Y'
+                                            AND ORDER_COMPANY_YN = 'Y' ) B ) F <!-- COMP * ORDER_COMP_CD -->
+                CROSS JOIN (	SELECT
+                                    '1' AS `TYPE`
+                                    , A.YYYY
+                                    , A.MM
+                                FROM TBL_YYYYMMDD A
+                                WHERE A.YYYY = #{MONTH_SALE_YEAR}
+                                GROUP BY A.YYYY, A.MM
+                                UNION ALL
+                                SELECT
+                                    2 AS `TYPE`
+                                    , A.YYYY
+                                    , A.MM
+                                FROM TBL_YYYYMMDD A
+                                WHERE A.YYYY = #{MONTH_SALE_YEAR}
+                                GROUP BY A.YYYY, A.MM ) G <!-- 12Month * 2Type -->
+                LEFT OUTER JOIN (   SELECT <!-- 입금 -->
+                                        '1' AS `TYPE`
+                                        , COMP_CD
+                                        , ORDER_COMP_CD
+                                        , DATE_FORMAT(DEPOSIT_DT, '%Y%m') AS CLOSE_MONTH
+                                        , DEPOSIT_AMT AS AMT
+                                    FROM TBL_MONEY_DEPOSIT A
+                                    WHERE SUBSTR(DEPOSIT_DT, 1, 4) = #{MONTH_SALE_YEAR}
+                                    <if test="COMP_CD != null and COMP_CD != ''">
+                                        AND COMP_CD = #{COMP_CD}
+                                    </if>
+                                    <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                                        AND ORDER_COMP_CD = #{ORDER_COMP_CD}
+                                    </if>
+                                    GROUP BY COMP_CD, ORDER_COMP_CD, DATE_FORMAT(DEPOSIT_DT, '%Y%m')
+                                    UNION ALL
+                                    SELECT <!-- 매출 -->
+                                        '2' AS `TYPE`
+                                        , F.COMP_CD
+                                        , F.ORDER_COMP_CD
+                                        , F.CLOSE_MONTH
+                                        , SUM(F.AMT) AS AMT
+                                    FROM ( 	SELECT
+                                                A.COMP_CD
                                                 , A.ORDER_COMP_CD
                                                 , D.CLOSE_MONTH
                                                 , E.FINAL_NEGO_AMT + E.FINAL_NEGO_AMT * 0.1 AS AMT
-                                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_MONTH_CLOSE_ORDER D, TBL_MONTH_CLOSE E
+                                            FROM TBL_CONTROL A
+                                                , TBL_CONTROL_PART B
+                                                , TBL_CONTROL_PART_ORDER C
+                                                , TBL_MONTH_CLOSE_ORDER D
+                                                , TBL_MONTH_CLOSE E
                                             WHERE 1 = 1
-                                                AND E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD AND E.CLOSE_VER = D.CLOSE_VER AND E.CLOSE_MONTH = D.CLOSE_MONTH <if test="DEGREE != null and DEGREE != ''"> AND E.CLOSE_VER = #{DEGREE} </if>
-                                                AND D.CONTROL_SEQ = A.CONTROL_SEQ AND D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{MONTH_SALE_YEAR}
-                                                AND C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                                AND B.CONTROL_SEQ = A.CONTROL_SEQ AND IFNULL(B.PART_NUM, '0') = '0'
+                                                AND E.COMP_CD = D.COMP_CD
+                                                AND E.ORDER_COMP_CD = D.ORDER_COMP_CD
+                                                AND E.CLOSE_VER = D.CLOSE_VER
+                                                AND E.CLOSE_MONTH = D.CLOSE_MONTH
+                                                AND D.CONTROL_SEQ = A.CONTROL_SEQ
+                                                AND D.COMP_CD = A.COMP_CD
+                                                AND D.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                                AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{MONTH_SALE_YEAR}
+                                                AND C.CONTROL_SEQ = B.CONTROL_SEQ
+                                                AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                                AND B.CONTROL_SEQ = A.CONTROL_SEQ
+                                                AND IFNULL(B.PART_NUM, '0') = '0'
                                                 AND A.DEL_YN = 'N'
                                             <if test="COMP_CD != null and COMP_CD != ''">
                                                 AND A.COMP_CD = #{COMP_CD}
@@ -1928,17 +2001,15 @@
                                             <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
                                                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
                                             </if>
-                                            GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH, D.CLOSE_VER
-                                        ) M
-                                        GROUP BY M.COMP_CD, M.ORDER_COMP_CD, M.CLOSE_MONTH
-                                    ) G ON CONCAT(F.YYYY, F.MM) = G.CLOSE_MONTH
-                    WHERE F.YYYY = #{MONTH_SALE_YEAR}
-                    GROUP BY F.YYYY, F.MM, G.STATUS_TYPE, G.COMP_CD, G.ORDER_COMP_CD, G.CLOSE_MONTH
-                ) H
-        ) X
+                                            GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH, D.CLOSE_VER ) F
+                                    GROUP BY F.COMP_CD, F.ORDER_COMP_CD, F.CLOSE_MONTH ) H ON H.COMP_CD = F.COMP_CD AND H.ORDER_COMP_CD = F.ORDER_COMP_CD AND H.CLOSE_MONTH = CONCAT(G.YYYY, G.MM) AND H.`TYPE` = G.`TYPE`
+                GROUP BY G.YYYY, G.MM, F.COMP_CD, F.ORDER_COMP_CD, G.`TYPE` ) K
         WHERE 1 = 1
-        GROUP BY X.YYYY, X.STATUS_TYPE
-        ORDER BY X.YYYY, X.STATUS_TYPE
+        <if test="DEPOSIT_STATUS_INDICATION == null">
+            AND K.`TYPE` = '2' <!-- 매출 -->
+        </if>
+        GROUP BY K.YYYY, K.`TYPE`
+        ORDER BY K.YYYY, K.`TYPE`
     </select>
 
     <insert id="createControlBarcode" parameterType="java.util.HashMap" >
