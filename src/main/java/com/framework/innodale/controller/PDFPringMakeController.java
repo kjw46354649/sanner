@@ -439,7 +439,7 @@ public class PDFPringMakeController {
             BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) controlInfo.get("ORDER_BARCODE_NUM"), 90, 20);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
-            System.out.println(height);
+            // System.out.println(height);
             // Converting BitMatrix to Buffered Image
             BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             for (int x = 0; x < width; x++) {
@@ -453,8 +453,8 @@ public class PDFPringMakeController {
             byte[] imageInByte = baos.toByteArray();
             baos.close();
             Image barcodeImage = Image.getInstance(imageInByte);
-            System.out.println(barcodeImage.getHeight());
-            System.out.println(barcodeImage.getScaledHeight());
+            //System.out.println(barcodeImage.getHeight());
+            //System.out.println(barcodeImage.getScaledHeight());
             // 1st line
             table.addCell(createCell("영업\n도면", 1, 2, mediumBoldFont));
             table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, mediumNormalFont));
@@ -467,10 +467,10 @@ public class PDFPringMakeController {
                 String content = controlInfo.get("WORK_TYPE_NM").equals("조립") ? "SET" : "EA";
 
                 if (controlInfo.get("SAME_SIDE_YN").equals("Y")) {
-                    table.addCell(createQtyCell1((String) controlInfo.get("CONTROL_PART_QTY"), 1, 1, mediumBoldFont));
+                    table.addCell(createQtyCell1((String) controlInfo.get("ORDER_QTY"), 1, 1, mediumBoldFont));
                     table.addCell(createEACell1(content, 1, 1, smallBoldFont));
                 } else {
-                    table.addCell(createQtyCell((String) controlInfo.get("CONTROL_PART_QTY"), 1, 2, mediumBoldFont));
+                    table.addCell(createQtyCell((String) controlInfo.get("ORDER_QTY"), 1, 2, mediumBoldFont));
                     table.addCell(createEACell(content, 1, 2, smallBoldFont));
                 }
             }

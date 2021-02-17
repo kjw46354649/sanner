@@ -71,7 +71,7 @@ public class CommandExecuteUtil {
         }
 
         // Thread.sleep(3000);
-        System.out.println("exitValue=[" + exitValue + "]");
+        // System.out.println("exitValue=[" + exitValue + "]");
 
         return exitValue;
     }
@@ -104,7 +104,7 @@ public class CommandExecuteUtil {
         bri.close();
         Integer exitValue = p.waitFor();
         // Thread.sleep(3000);
-        System.out.println("exitValue=[" + exitValue + "]");
+        // System.out.println("exitValue=[" + exitValue + "]");
         return exitValue;
     }
 }

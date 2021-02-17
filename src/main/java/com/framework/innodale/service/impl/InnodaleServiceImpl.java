@@ -209,8 +209,8 @@ public class InnodaleServiceImpl implements InnodaleService {
             {
                 String queryId = (String) queryIdList[i];
                 String queryIdArr[] = queryId.split("\\.");
-                System.out.println(queryIdArr[0]);
-                System.out.println(queryIdArr[1]);
+//                System.out.println(queryIdArr[0]);
+//                System.out.println(queryIdArr[1]);
                 if(queryIdArr[1].startsWith("insert") || queryIdArr[1].startsWith("create")){
                     map.put("queryId",queryId);
                     this.innodaleDao.create(map);

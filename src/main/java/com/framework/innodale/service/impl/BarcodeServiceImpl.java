@@ -42,7 +42,7 @@ public class BarcodeServiceImpl implements BarcodeService {
         if (list != null && list.size() > 0) {
             for (String number : list) {
 
-                System.out.println("Barcode=["+number+"]");
+                //System.out.println("Barcode=["+number+"]");
                 if(!"".equals(number) && number != null) {
 
                     char barcodeTypeC = number.charAt(0);

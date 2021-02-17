@@ -85,7 +85,7 @@ public class DrawingBoardController {
             String chkHoldYn = (String) controlPartInfo.get("CHE_HOLD_YN");// 주문 보류 된 경우
 
             String controlInfo = (String) controlPartInfo.get("CONTROL_INFO"); // 일자
-            System.out.println(controlInfo);
+            // System.out.println(controlInfo);
 
             if("X".equals(chkDelYn)){
                 model.addAttribute("returnCode", "RET99");

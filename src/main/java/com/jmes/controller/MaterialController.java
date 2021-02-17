@@ -31,7 +31,7 @@ public class MaterialController {
     public String managerInsideStock(Model model, HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
 
-        System.out.println("---managerInsideStock-----map-------" + map.toString());
+//        System.out.println("---managerInsideStock-----map-------" + map.toString());
         this.materialService.managerInsideStock(model, map);
 
         return "jsonView";
@@ -41,7 +41,7 @@ public class MaterialController {
     public String managerInsideStockPop(Model model, HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
 
-        System.out.println("---managerInsideStockPop-----map-------" + map.toString());
+//        System.out.println("---managerInsideStockPop-----map-------" + map.toString());
         this.materialService.managerInsideStockPop(model, map);
 
         return "jsonView";
@@ -51,7 +51,7 @@ public class MaterialController {
     public String inWarehouseManageSave(Model model, HttpServletRequest request) throws Exception {
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
-        System.out.println("---inWarehouseManageSave-----hashMap-------" + hashMap.toString());
+//        System.out.println("---inWarehouseManageSave-----hashMap-------" + hashMap.toString());
         this.materialService.inWarehouseManageSave(model, hashMap);
 
         return "jsonView";

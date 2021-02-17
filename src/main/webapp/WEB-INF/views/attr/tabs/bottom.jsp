@@ -14,6 +14,10 @@
     <input type="hidden" id="hidden_est_seq" name="hidden_est_seq">
     <input type="hidden" id="hidden_control_seq" name="hidden_control_seq">
 </form>
+<form id="drawing_file_upload_form" name="drawing_file_upload_form" method="post">
+    <input type="hidden" id="actionType" name="actionType">
+    <input type="hidden" id="queryId" name="queryId">
+</form>
 <!-- CAD 도면 업로드 공통 Start -->
 <div class="modal" id="common_cad_file_attach_pop" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg cadDrawing">
@@ -2297,11 +2301,12 @@
      * Drawing Upload Popup Window
      **/
     let drawingUploadPopup;
-    const drawing_upload_popup = function (actionType) {
-        const url = '/drawingUploadPopup?actionType=' + actionType;
+    const drawingUploadPopupWindow = function (actionType, queryId) {
+        let drawingForm = document.drawing_file_upload_form;
+        // const url = '/drawingUploadPopup?actionType=' + actionType + '&queryId=' + queryId;
         // 팝업 사이즈
         const nWidth = 1000;
-        const nHeight = 530;
+        const nHeight = 550;
         const winWidth = document.body.clientWidth;
         const winHeight = document.body.clientHeight;
         const winX = window.screenX || window.screenLeft || 0;
@@ -2318,9 +2323,24 @@
 
         // 최초 클릭이면 팝업을 띄운다.
         if (drawingUploadPopup === undefined || drawingUploadPopup.closed) {
-            drawingUploadPopup = window.open(url, '', strOption);
+
+            $('#drawing_file_upload_form').find("#actionType").val(actionType);
+            $('#drawing_file_upload_form').find("#queryId").val(queryId);
+
+            drawingUploadPopup = window.open('', 'popForm', strOption);
+
+            drawingForm.action = "/drawingUploadPopup";
+            drawingForm.target = "popForm";
+            drawingForm.submit();
+
         } else {
             drawingUploadPopup.focus();
+            setTimeout(function() {
+                $(drawingUploadPopup.window.document).find("#actionType").val(actionType);
+                $(drawingUploadPopup.window.document).find("#queryId").val(queryId);
+
+                drawingUploadPopup.initDrawingLoad();
+            }, 500);
         }
     }
 

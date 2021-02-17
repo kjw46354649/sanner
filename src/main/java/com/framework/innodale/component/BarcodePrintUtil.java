@@ -222,7 +222,7 @@ public class BarcodePrintUtil {
 
             double totalLen = 0;
             List returnStr = new ArrayList();
-            System.out.println("note="+note);
+            // System.out.println("note="+note);
             if (note != null && !"".equals(note) && !"NULL".equals(note)) {
                 int munjaLen = note.length();
                 //int totcnt = (munjaLen/maxLen)+1;
@@ -243,13 +243,13 @@ public class BarcodePrintUtil {
                     newMunja.append(munjaEach);
                     if (totalLen > maxLen) {
                         returnStr.add(newMunja.toString());
-                        System.out.println(newMunja.toString());
+                        //System.out.println(newMunja.toString());
                         newMunja = new StringBuffer();
                         totalLen=0;
                         //System.out.println(String.format("%1$,.0f", totalLen));
                     }else if (munjaLen == i+1) {
                         returnStr.add(newMunja.toString());
-                        System.out.println(newMunja.toString());
+                        //System.out.println(newMunja.toString());
                         newMunja = new StringBuffer();
                         totalLen=0;
                     }

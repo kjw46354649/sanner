@@ -49,7 +49,7 @@ public class SystemController {
     public String managerSystemCompany(Model model, HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
 
-        System.out.println("---managerSystemCompany-----map-------" + map.toString());
+//        System.out.println("---managerSystemCompany-----map-------" + map.toString());
         this.systemService.managerSystemCompany(model, map);
 
         return "jsonView";

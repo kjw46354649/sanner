@@ -121,7 +121,7 @@ public class LoginController {
     public String drawingChangeMainLocale(@RequestParam(value = "lang", defaultValue = "ko_KR")  String newLocale,
                                HttpSession session, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
-        System.out.println("newLocale=[" + newLocale + "]");
+        // System.out.println("newLocale=[" + newLocale + "]");
 
         /** Begin Locale Setting **/
         LocaleEditor localeEditor = new LocaleEditor();

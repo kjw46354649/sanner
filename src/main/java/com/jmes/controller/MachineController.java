@@ -26,7 +26,7 @@ public class MachineController {
     public String managerEquip(Model model, HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
 
-        System.out.println("---managerEquip-----map-------" + map.toString());
+        // System.out.println("---managerEquip-----map-------" + map.toString());
         this.machineService.managerEquip(model, map);
 
         return "jsonView";

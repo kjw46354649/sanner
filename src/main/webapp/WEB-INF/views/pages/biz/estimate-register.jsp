@@ -1394,7 +1394,7 @@
                 return false;
             }
             callCadDrawingUploadPopup('estimate', 'estimate.manageEstimateCadFiles');
-            // drawing_upload_popup('estimate', 'estimate.manageEstimateCadFiles');
+            // drawingUploadPopupWindow('estimate', 'estimate.manageEstimateCadFiles');
         });
 
         /* 도면 등록 팝업 호출 */

@@ -302,6 +302,7 @@ public class StaticUrlController {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("/common/drawing_upload");
         mav.addObject("actionType", map.get("actionType"));
+        mav.addObject("queryId", map.get("queryId"));
 
         return mav;
     }

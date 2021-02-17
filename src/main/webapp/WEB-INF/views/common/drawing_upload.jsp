@@ -11,7 +11,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<jsp:include page="/WEB-INF/views/attr/tabs/body-script.jsp"/>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -41,24 +40,19 @@
 <body>
 <div id="common_cad_file_attach_pop" style="padding: 10px;">
     <h3 id="common_cad_file_attach_pop_title" style="font-size: 20px; font-family: 'NotoKrB'; color: #000; ">도면 등록</h3>
-    <hr style="display: block; border: 1px solid #e0e2e6; margin: 7px;">
     <!-- CAD 도면 업로드 공통 Start -->
     <div>
         <form class="" role="form" id="common_cad_file_attach_form" name="common_cad_file_attach_form">
-            <input type="hidden" id="queryId" name="queryId" value="">
-            <input type="hidden" id="actionType" name="actionType" value="">
+            <input type="hidden" id="queryId" name="queryId" value="${queryId}">
+            <input type="hidden" id="actionType" name="actionType" value="${actionType}">
             <input type="hidden" id="fileGrid" name="fileGrid" value="">
-            <div>
-                <div class="buttonWrap">
-                    <button type="button" class="defaultBtn radius blue right_float" id="cadFileConvertUploadCompletedBtn" disabled>Save</button>
-                </div>
-            </div>
             <div>
                 <div id="common_cad_file_attach_grid" style="margin:auto;"></div>
                 <div class="right_sort fileTableInfoWrap">
                     <h4>전체 조회 건수 (Total : <span id="cadFileUploadTotalCount" style="color: #00b3ee">0</span>)</h4>
                 </div>
             </div>
+            <div><br></div>
             <div>
                 <div id="attachDragAndDrop">
                     <div id="common_cad_upload_file_grid" style="margin:auto;"></div>
@@ -70,7 +64,8 @@
         </form>
     </div>
     <div style="text-align: center; margin: 12px 0;">
-        <button type="button" class="defaultBtn grayPopGra" id="cam_work_detail_close">닫기</button>
+        <button type="button" class="defaultBtn greenPopGra" id="cadFileConvertUploadCompletedBtn" disabled>저장</button>
+        <button type="button" class="defaultBtn grayPopGra" id="drawing_upload_close">닫기</button>
     </div>
     <!-- CAD 도면 업로드 공통 End -->
 </div>
@@ -106,6 +101,7 @@
     let commonCadFileAttachObj;
     let commonCadUploadFileObj;
     let $commonCadFileAttachGrid;
+    let $commonCadUploadFileGrid;
     let $cadFileConvertUploadCompletedBtn = $("#cadFileConvertUploadCompletedBtn");
 
     $(function() {
@@ -594,22 +590,37 @@
             }
         })
 
-        var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
-        $commonCadFileAttachGrid = $('#' + commonCadFileAttachGridId).pqGrid(commonCadFileAttachObj);
-        $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면 등록');
-        if(actionType == 'estimate') {          // 견적 도면 등록
-            $commonCadFileAttachGrid.pqGrid('option', 'colModel', estimateCadFileColModel);
-        }else if(actionType == 'control') {     // 주문 도면 등록
-            $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadFileColModel);
-        }else if(actionType == 'controlRev') {  // 주문 도면 차수 변경
-            $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면변경(Revision up)');
-            $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadRevFileColModel);
-        }else if(actionType == 'inside') {      // 자재 도면 등록
-            $commonCadFileAttachGrid.pqGrid('option', 'colModel', insideStockCadFileColModel);
+        $('#drawing_upload_close').on('click', function () {
+            window.close();
+        });
+
+        function initDrawingLoad(){
+
+            var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
+
+            $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면 등록');
+
+            $commonCadFileAttachGrid = $('#' + commonCadFileAttachGridId).pqGrid(commonCadFileAttachObj);
+
+            if(actionType == 'estimate') {          // 견적 도면 등록
+                $commonCadFileAttachGrid.pqGrid('option', 'colModel', estimateCadFileColModel);
+            }else if(actionType == 'control') {     // 주문 도면 등록
+                $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadFileColModel);
+            }else if(actionType == 'controlRev') {  // 주문 도면 차수 변경
+                $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면변경(Revision up)');
+                $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadRevFileColModel);
+            }else if(actionType == 'inside') {      // 자재 도면 등록
+                $commonCadFileAttachGrid.pqGrid('option', 'colModel', insideStockCadFileColModel);
+            }
+
+            $commonCadFileAttachGrid.pqGrid('refresh');
+            $commonCadUploadFileGrid = $('#' + commonCadUploadFileGridId).pqGrid(commonCadUploadFileObj);
+            $commonCadUploadFileGrid.pqGrid('refresh');
+
         }
-        $commonCadFileAttachGrid.pqGrid('refresh');
-        $commonCadUploadFileGrid = $('#' + commonCadUploadFileGridId).pqGrid(commonCadUploadFileObj);
-        $commonCadUploadFileGrid.pqGrid('refresh');
+
+        initDrawingLoad();
+
 
         // commonCadFileAttachPopup.on('hide.bs.modal',function(e) {
         //     var actionType = $('#common_cad_file_attach_form').find('#actionType').val();

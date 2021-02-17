@@ -178,11 +178,11 @@ public class SystemServiceImpl implements SystemService {
         String resultType = (String) map.get("compType");
         if (!"".equals(resultType)) {
             String[] resultTypeArr = resultType.split(",");
-            System.out.println("resultTypeArr.length==" + resultTypeArr.length);
+//            System.out.println("resultTypeArr.length==" + resultTypeArr.length);
             if (resultTypeArr.length > 0) {
                 for(int i = 0; i <= resultTypeArr.length-1; i++){
                     Map<String, Object> hashMap = new HashMap<String, Object>();
-                    System.out.println(i+ "/resultTypeArr[i]==" + resultTypeArr[i]);
+//                    System.out.println(i+ "/resultTypeArr[i]==" + resultTypeArr[i]);
                     String[] smap = resultTypeArr[i].split("\\|");
                     hashMap.put("COMP_CD",COMP_CD);
                     hashMap.put("COMP_TYPE",smap[0]+"");
