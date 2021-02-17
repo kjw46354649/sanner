@@ -255,19 +255,18 @@
         let tab2PostData = fnFormToJsonArrayData('#MONTH_SALE_STATUS_SEARCH_FORM');
         tab2PostData.MONTH_SALE_YEAR = CURRENT_YEAR;
         const tab2ColModel = [
-            {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
             {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
             {title: '사업자', dataIndx: 'COMP_NM'},
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', dataIndx: 'ORDER_COMP_NM'},
-            {title: '구분', dataIndx: 'STATUS_TYPE',},
+            {title: '구분', dataIndx: 'TYPE'},
             {
                 title: '1분기', align: 'center', colModel: [
                     {title: '1월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_01'},
                     {title: '2월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_02'},
                     {title: '3월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_03'},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_03_SUM', style: {'font-weight': 'bold'}}
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'Q1_SUM', style: {'font-weight': 'bold'}}
                 ]
             },
             {
@@ -275,7 +274,7 @@
                     {title: '4월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_04'},
                     {title: '5월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_05'},
                     {title: '6월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_06'},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_06_SUM', style: {'font-weight': 'bold'}}
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'Q2_SUM', style: {'font-weight': 'bold'}}
                 ]
             },
             {
@@ -283,7 +282,7 @@
                     {title: '7월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_07'},
                     {title: '8월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_08'},
                     {title: '9월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_09'},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_09_SUM', style: {'font-weight': 'bold'}}
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'Q3_SUM', style: {'font-weight': 'bold'}}
                 ]
             },
             {
@@ -291,7 +290,7 @@
                     {title: '10월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_10'},
                     {title: '11월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_11'},
                     {title: '12월', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_12'},
-                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'AMT_12_SUM', style: {'font-weight': 'bold'}}
+                    {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'Q4_SUM', style: {'font-weight': 'bold'}}
                 ]
             },
             {title: '합계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT', style: {'font-weight': 'bold'}}
@@ -328,7 +327,7 @@
                         let dataIndx = CM[i],
                             rc = 1,
                             j = data.length,
-                            k = dataIndx === 'COMP_NM' ? 3 : 5; // hard coding
+                            k = grid.getColIndx({dataIndx: CM[i]});
 
                         while (j--) {
                             let orderComp = data[j]['ORDER_COMP_NM'],

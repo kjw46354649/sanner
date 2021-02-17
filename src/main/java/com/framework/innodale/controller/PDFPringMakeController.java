@@ -224,18 +224,16 @@ public class PDFPringMakeController {
 
                 for (Map<String, Object> controlOrderInfo : controlOrderList) {
 
-                    if(iOrderListSize > iCnt){
+                    if (iOrderListSize > iCnt) {
                         drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, verySmallFont, true, true, true, false));
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, verySmallFont,true, true, true, true));
+                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, verySmallFont, true, true, true, true));
                         drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, verySmallFont, true, false, true, true));
 //                        drawingInfoTable.addCell(createDrawingInCell((String) controlOrderInfo.get("ORDER_DUE_DT"), 1, 1, verySmallFont, true, false, true, true));
-
-                    }else{
+                    } else {
                         drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, verySmallFont, true, true, false, false));
                         drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, verySmallFont, true, true, false, true));
                         drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, verySmallFont, true, false, false, true));
 //                        drawingInfoTable.addCell(createDrawingInCell((String) controlOrderInfo.get("ORDER_DUE_DT"), 1, 1, verySmallFont, true, false, false, true));
-
                     }
                     iCnt++;
                 }
