@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class PDFPringMakeController {
+public class PdfPrintMakeController {
 
     private final Log log = LogFactory.getLog(getClass());
 
@@ -407,6 +407,8 @@ public class PDFPringMakeController {
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
         BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
+        Font verySmallNormalFont = new Font(bf, verySmall, Font.NORMAL);
+        Font verySmallBoldFont = new Font(bf, verySmall, Font.BOLD);
         Font smallNormalFont = new Font(bf, small, Font.NORMAL);
         Font smallBoldFont = new Font(bf, small, Font.BOLD);
         Font mediumNormalFont = new Font(bf, medium, Font.NORMAL);
@@ -432,12 +434,11 @@ public class PDFPringMakeController {
             PdfPTable table = new PdfPTable(11);
             table.init();
             table.setWidthPercentage(100);
-            table.setWidths(new float[]{1.5f, 2.5f, 6.5f, 1.5f, 4.5f, 2.5f, 2.5f, 1.5f, 1f, 1f, 5f});
+            table.setWidths(new float[]{2.5f, 3.5f, 3.5f, 1.0f, 5.5f, 1.0f, 3.0f, 1.0f, 1.0f, 2.0f, 2.0f});
             // 바코드 생성
             BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) controlInfo.get("ORDER_BARCODE_NUM"), 90, 20);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
-            // System.out.println(height);
             // Converting BitMatrix to Buffered Image
             BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             for (int x = 0; x < width; x++) {
@@ -451,40 +452,44 @@ public class PDFPringMakeController {
             byte[] imageInByte = baos.toByteArray();
             baos.close();
             Image barcodeImage = Image.getInstance(imageInByte);
-            //System.out.println(barcodeImage.getHeight());
-            //System.out.println(barcodeImage.getScaledHeight());
             // 1st line
-            table.addCell(createCell("영업\n도면", 1, 2, mediumBoldFont));
-            table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("PROJECT_NM"), 1, 1, mediumNormalFont));
-            table.addCell(createCell("도번", 1, 1, mediumBoldFont));
-            table.addCell(createCell((String) controlInfo.get("DRAWING_NUM"), 1, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("ITEM_NM"), 2, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("WORK_TYPE_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell("영업도면", 1, 3, smallBoldFont));
+            table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, smallNormalFont));
+            table.addCell(createCell((String) controlInfo.get("COMP_NM"), 1, 1, smallNormalFont));
+            table.addCell(createCell("발번", 1, 1, smallBoldFont));
+            table.addCell(createCell((String) controlInfo.get("ORDER_NUM"), 1, 1, smallNormalFont));
+            table.addCell(createCell("형태", 1, 1, smallBoldFont));
+            table.addCell(createCell(controlInfo.get("WORK_TYPE_NM") != null && controlInfo.get("MATERIAL_TYPE_NM") != null ? controlInfo.get("WORK_TYPE_NM") + "/" + controlInfo.get("MATERIAL_TYPE_NM") : controlInfo.get("WORK_TYPE_NM") != null ? (String) controlInfo.get("WORK_TYPE_NM") : "" + controlInfo.get("MATERIAL_TYPE_NM") != null ? (String) controlInfo.get("MATERIAL_TYPE_NM") : "", 1, 1, smallNormalFont));
             if (controlInfo.get("WORK_TYPE_NM") != null && !controlInfo.get("WORK_TYPE_NM").equals("")) {
                 String content = controlInfo.get("WORK_TYPE_NM").equals("조립") ? "SET" : "EA";
 
                 if (controlInfo.get("SAME_SIDE_YN").equals("Y")) {
-                    table.addCell(createQtyCell1((String) controlInfo.get("ORDER_QTY"), 1, 1, mediumBoldFont));
-                    table.addCell(createEACell1(content, 1, 1, smallBoldFont));
+                    table.addCell(createQtyCell1((String) controlInfo.get("ORDER_QTY"), 1, 1, smallBoldFont));
+                    table.addCell(createEACell1(content, 1, 1, verySmallNormalFont));
                 } else {
-                    table.addCell(createQtyCell((String) controlInfo.get("ORDER_QTY"), 1, 2, mediumBoldFont));
-                    table.addCell(createEACell(content, 1, 2, smallBoldFont));
+                    table.addCell(createQtyCell((String) controlInfo.get("ORDER_QTY"), 1, 2, smallBoldFont));
+                    table.addCell(createEACell(content, 1, 2, verySmallNormalFont));
                 }
             }
-            table.addCell(createImageCell(barcodeImage, 1, 1, 20f,mediumNormalFont));
+            table.addCell(createImageCell(barcodeImage, 2, 1, 20.0f, smallNormalFont));
             // 2nd line
-            table.addCell(createCell((String) controlInfo.get("COMP_NM"), 1, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("MODULE_NM"), 1, 1, mediumNormalFont));
-            table.addCell(createCell("발주", 1, 1, mediumBoldFont));
-            table.addCell(createCell((String) controlInfo.get("ORDER_NUM"), 1, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 1, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("MATERIAL_TYPE_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("PROJECT_NM"), 2, 1, verySmallNormalFont));
+            table.addCell(createCell("도번", 1, 1, smallBoldFont));
+            table.addCell(createCell((String) controlInfo.get("DRAWING_NUM"), 1, 1, smallNormalFont));
+            table.addCell(createCell("규격", 1, 1, smallBoldFont));
+            table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, smallNormalFont));
             if (controlInfo.get("SAME_SIDE_YN").equals("Y")) {
-                table.addCell(createCellPartUnit((String) controlInfo.get("SIDE_QTY"), 2, 1, smallNormalFont));
+                table.addCell(createCellPartUnit((String) controlInfo.get("SIDE_QTY"), 2, 1, verySmallNormalFont));
             }
-            table.addCell(createCell((String) controlInfo.get("CONTROL_NUM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell(controlInfo.get("INNER_DUE_DT") != null ? "가공" + controlInfo.get("INNER_DUE_DT") : "", 1, 1, smallNormalFont));
+            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? "납기" + controlInfo.get("ORDER_DUE_DT") : "", 1, 1, smallNormalFont));
+            // 3rd line
+            table.addCell(createCell((String) controlInfo.get("MODULE_NM"), 2, 1, verySmallNormalFont));
+            table.addCell(createCell("품명", 1, 1, smallBoldFont));
+            table.addCell(createCell((String) controlInfo.get("ITEM_NM"), 1, 1, verySmallNormalFont));
+            table.addCell(createCell("표면", 1, 1, smallBoldFont));
+            table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 1, 1, smallNormalFont));
+            table.addCell(createCell(controlInfo.get("CONTROL_NUM") != null && controlInfo.get("TOTAL_SHEET") != null ? controlInfo.get("CONTROL_NUM") + " / " + controlInfo.get("TOTAL_SHEET"): controlInfo.get("CONTROL_NUM") != null ? (String) controlInfo.get("CONTROL_NUM") : "" + controlInfo.get("TOTAL_SHEET") != null ? (String) controlInfo.get("TOTAL_SHEET") : "", 4, 1, smallNormalFont));
             document.add(table);
             table.flushContent();
 
@@ -492,7 +497,7 @@ public class PDFPringMakeController {
                 try {
                     Image pngImage = Image.getInstance((String) controlInfo.get("IMAGE_PATH") + ".print.png");
                     pngImage.setAbsolutePosition(15, 10);
-                    pngImage.scaleAbsolute(PageSize.A4.getWidth() - 30, PageSize.A4.getHeight() - 70);
+                    pngImage.scaleAbsolute(PageSize.A4.getWidth() - 30, PageSize.A4.getHeight() - 90);
                     document.add(pngImage);
                 } catch (Exception e){
                     log.error(e.getMessage(), e.getCause());
