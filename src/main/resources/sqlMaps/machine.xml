@@ -320,14 +320,14 @@
             #{EQUIP_SEQ},
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ},
-            CAST(#{WORKING_TIME} AS INT) * #{CONTROL_PART_QTY},
+            CAST(#{WORKING_TIME} AS INT),
             (SELECT IFNULL(MAX(SORT_NUM), 0) + 1 FROM TBL_MCT_PLAN AS A WHERE 1 = 1 AND EQUIP_SEQ = #{EQUIP_SEQ} AND DEL_YN = 'N'),
             NOW(),
             #{LOGIN_USER_ID}
         ) ON DUPLICATE KEY
             UPDATE
                 EQUIP_SEQ = #{EQUIP_SEQ},
-                WORKING_TIME = CAST(#{WORKING_TIME} AS INT) * #{CONTROL_PART_QTY},
+                WORKING_TIME = CAST(#{WORKING_TIME} AS INT),
                 UPDATE_DT = NOW(),
                 UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
