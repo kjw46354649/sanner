@@ -58,10 +58,9 @@
         <div class="hWrap" style="padding: 0;">
             <form id="MCT_PROCESS_TARGET_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="machine.selectWorkPlanGridList">
-                <input type="hidden" name="OUTSOURCING_PROCESSING" id="OUTSOURCING_PROCESSING">
-                <input type="hidden" name="NC_COMPLETE" id="NC_COMPLETE">
-                <input type="hidden" name="FINISHED_PROCESSING" id="FINISHED_PROCESSING">
-
+                <input type="hidden" name="OUTSOURCING_PROCESSING" id="OUTSOURCING_PROCESSING" value="false">
+                <input type="hidden" name="NC_COMPLETE" id="NC_COMPLETE" value="false">
+                <input type="hidden" name="FINISHED_PROCESSING" id="FINISHED_PROCESSING" value="false">
                 <div class="d-flex align-items-center" style="padding: 0 20px;">
                     <div>
                         <h2 style="height: 42px; line-height: 42px;">가공 대상 List</h2>
@@ -223,20 +222,6 @@
             }, parameters, '');
         };
         loadMctInfo();
-
-        /*const EQUIP_LIST = (function () {
-            let list = [];
-            let parameters = ({'url':'/json-list', 'data': {'queryId': 'dataSource.getEquipList'}});
-
-            fnPostAjax(function (data, callFunctionParam) {
-                for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
-                    let thisParameter = data.list[i];
-
-                    list.push({'value': thisParameter.CODE_CD, 'text': thisParameter.CODE_NM});
-                }
-            }, parameters, '');
-            return list;
-        })();*/
 
         const processPlanColModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
@@ -593,30 +578,6 @@
             grid.pqGrid('updateRow', {rowList: rowListConvert, checkEditable: false});
         };
 
-        // const colorClassification = function (status) {
-        //     let backgroundColor = '';
-        //     switch (status) {
-        //         // 가동중
-        //         case 'PRO007':
-        //             backgroundColor = 'bg-green';
-        //             break;
-        //         // 완료
-        //         case 'PRO008':
-        //             backgroundColor = 'bg-skyblue';
-        //             break;
-        //         // 비가동상태
-        //         case '비가동상태':
-        //             backgroundColor = 'bg-yellow';
-        //             break;
-        //         // 일시정지상태
-        //         case '일시정지상태':
-        //             backgroundColor = 'bg-orange';
-        //             break;
-        //     }
-        //
-        //     return backgroundColor;
-        // };
-
         const showTitle = function (data, tableElement) {
             let equipLabelElement = $(tableElement).find('.equipLabel');
             let listTxtElement = $(tableElement).find('.listTxt');
@@ -825,7 +786,6 @@
         });
 
         $('#MCT_TARGET_SAVE').on('click', function () {
-            // console.count();
             fnModifyPQGrid($processTargetGrid, [], ['machine.updateMctTarget', 'machine.insertMctPlanFromTarget']);
             setTimeout(refreshMctPlanGrids, 1000);
         });
@@ -878,19 +838,6 @@
                 cascadeSelect: false
             });
         })();
-
-        /*$('#mctPlanManageFilterKeyword').on('keyup', function(e){
-            fnFilterHandler($processTargetGrid, 'mctPlanManageFilterKeyword', 'mctPlanManageFilterCondition', 'mctPlanManageFilterColumn');
-        });*/
-
-        /*$('#mctPlanManageFrozen').on('change', function(e){
-             fnFrozenHandler($processTargetGrid, $(this).val());
-         });*/
-
-        /*setInterval(function () {
-            refreshMctPlanGrids();
-            refreshTargetGrid();
-        }, TWENTY_SECONDS);*/
         /* init */
     });
 </script>
