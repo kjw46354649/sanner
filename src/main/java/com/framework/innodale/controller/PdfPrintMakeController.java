@@ -40,6 +40,8 @@ public class PdfPrintMakeController {
 
     private final float verySmall = 5.0f;
     private final float small = 7.0f;
+    private final float saleSmall = 8.0f;
+    private final float saleMedium = 9.0f;
     private final float medium = 10.0f;
     private final float large = 12.0f;
 
@@ -407,19 +409,14 @@ public class PdfPrintMakeController {
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
         BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
-        Font verySmallNormalFont = new Font(bf, verySmall, Font.NORMAL);
-        Font verySmallBoldFont = new Font(bf, verySmall, Font.BOLD);
-        Font smallNormalFont = new Font(bf, small, Font.NORMAL);
+        Font smallNormalFont = new Font(bf, saleSmall, Font.NORMAL);
         Font smallBoldFont = new Font(bf, small, Font.BOLD);
-        Font mediumNormalFont = new Font(bf, medium, Font.NORMAL);
-        Font mediumBoldFont = new Font(bf, medium, Font.BOLD);
-        Font largeNormalFont = new Font(bf, large, Font.NORMAL);
+        Font mediumNormalFont = new Font(bf, saleMedium, Font.NORMAL);
         Font largeBoldFont = new Font(bf, large, Font.BOLD);
 
         PdfWriter.getInstance(document, out);
 
         String[] selectControlLists = ((String) hashMap.get("selectControlList")).split("\\|");
-//        String sameDrawingPrint = ((String) hashMap.get("flag"));
         hashMap.put("selectControlLists", selectControlLists);
         hashMap.put("queryId", "orderMapper.selectControlSalesCadBarcodeList");
         List<Map<String, Object>> controlInfoList = innodaleService.getList(hashMap);
@@ -453,7 +450,7 @@ public class PdfPrintMakeController {
             baos.close();
             Image barcodeImage = Image.getInstance(imageInByte);
             // 1st line
-            table.addCell(createCell("영업도면", 1, 3, smallBoldFont));
+            table.addCell(createCell("영업도면", 1, 3, largeBoldFont));
             table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("COMP_NM"), 1, 1, mediumNormalFont));
             table.addCell(createCell("발번", 1, 1, smallBoldFont));
@@ -481,8 +478,8 @@ public class PdfPrintMakeController {
             if (controlInfo.get("SAME_SIDE_YN").equals("Y")) {
                 table.addCell(createCellPartUnit((String) controlInfo.get("SIDE_QTY"), 2, 1, mediumNormalFont));
             }
-            table.addCell(createCell(controlInfo.get("INNER_DUE_DT") != null ? "가" + controlInfo.get("INNER_DUE_DT") : "", 1, 1, mediumNormalFont));
-            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? "납" + controlInfo.get("ORDER_DUE_DT") : "", 1, 1, mediumNormalFont));
+            table.addCell(createCell(controlInfo.get("INNER_DUE_DT") != null ? "가 " + controlInfo.get("INNER_DUE_DT") : "", 1, 1, mediumNormalFont));
+            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? "발 " + controlInfo.get("ORDER_DUE_DT") : "", 1, 1, mediumNormalFont));
             // 3rd line
             table.addCell(createCell((String) controlInfo.get("MODULE_NM"), 2, 1, mediumNormalFont));
             table.addCell(createCell("품명", 1, 1, smallBoldFont));
