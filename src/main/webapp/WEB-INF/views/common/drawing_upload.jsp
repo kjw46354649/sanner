@@ -558,7 +558,6 @@
         // 주문 도면 차수 변경
         if (actionType === 'controlRev') {
             const message = '도면 변경시 바코드가 변경되며,<br>이미 배포된 바코드 출력도면은 교체해야 합니다.<br><br>진행하시겠습니까?';
-
             fnConfirm(null, message, function () {
                 let gridInstance = $commonCadFileAttachGrid.pqGrid('getInstance').grid;
                 let changes = gridInstance.getChanges({format: 'byVal'});
@@ -571,6 +570,7 @@
                     fnAlert(null,"<h1>저장되었습니다.</h1>", function () {
                         $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
                         $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
+                        $('#drawing_upload_close').trigger("click");
                     });
                 }, parameters, '');
             });
@@ -586,12 +586,14 @@
                 fnAlert(null,"<h1>저장되었습니다.</h1>", function () {
                     $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
                     $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
+                    $('#drawing_upload_close').trigger("click");
                 });
             }, parameters, '');
         }
     })
 
     $('#drawing_upload_close').on('click', function () {
+        window.opener.callDrawingUploadPopupWindow($('#common_cad_file_attach_form').find('#actionType').val());
         window.close();
     });
 

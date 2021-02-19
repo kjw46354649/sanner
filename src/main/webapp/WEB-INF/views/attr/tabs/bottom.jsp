@@ -18,54 +18,6 @@
     <input type="hidden" id="actionType" name="actionType">
     <input type="hidden" id="queryId" name="queryId">
 </form>
-<!-- CAD 도면 업로드 공통 Start -->
-<div class="modal" id="common_cad_file_attach_pop" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg cadDrawing">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                <h2 class="headerTitle_01" id="common_cad_file_attach_pop_title">도면 등록</h2>
-            </div>
-            <div class="modal-body">
-                <form class="" role="form" id="common_cad_file_attach_form" name="common_cad_file_attach_form">
-                    <input type="hidden" id="queryId" name="queryId" value="">
-                    <input type="hidden" id="actionType" name="actionType" value="">
-                    <input type="hidden" id="fileGrid" name="fileGrid" value="">
-                    <div class="buttonWrap">
-                        <button type="button" class="defaultBtn radius blue right_float" id="cadFileConvertUploadCompletedBtn" disabled>Save</button>
-                    </div>
-                    <div id="common_cad_file_attach_grid" style="margin:auto;"></div>
-                    <div class="right_sort fileTableInfoWrap">
-                        <h4>전체 조회 건수 (Total : <span id="cadFileUploadTotalCount" style="color: #00b3ee">0</span>)</h4>
-                    </div>
-                    <div class="fileTableWrap">
-                    <div id="attachDragAndDrop">
-                        <div id="common_cad_upload_file_grid" style="margin:auto;"></div>
-                    </div>
-<%--                        <table class="colStyle" id="attachDragAndDrop" >--%>
-<%--                            <caption></caption>--%>
-<%--                            <thead>--%>
-<%--                            <tr>--%>
-<%--                                <th scope="col" class="fileName txt">파일명</th>--%>
-<%--                                <th scope="col" class="etcInfo">확장자</th>--%>
-<%--                                <th scope="col" class="etcInfo">파일 사이즈</th>--%>
-<%--                                <th scope="col" class="etcInfo">매칭도면번호</th>--%>
-<%--                                <th scope="col" class="etcInfo">메시지</th>--%>
-<%--                                <th scope="col" class="etcInfo"></th>--%>
-<%--                            </tr>--%>
-<%--                            </thead>--%>
-<%--                            <tbody class="files"></tbody>--%>
-<%--                        </table>--%>
-                    </div>
-                    <div class="fileTableInfoWrap right_float">
-                        <h4>첨부파일 개수 : <span id="successCntHtml">0</span><span class="errorInfo">에러파일 : <span id="errorCntHtml">0</span></span></h4>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- CAD 도면 업로드 공통 End -->
 <!-- 파일 다운로드 공통 Start -->
 <div class="modal" id="common_file_download_upload_pop" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-lg cadDrawing">
@@ -591,17 +543,7 @@
 </div>
 <script type="text/javascript">
 
-    let $cadFileConvertUploadCompletedBtn = $("#cadFileConvertUploadCompletedBtn");
-    let commonCadFileAttachPopup = $("#common_cad_file_attach_pop");
-    let commonConfirmPopup = $("#common_confirm_popup");
     let commonAlertPopup = $("#common_alert_popup");
-    let commonCadFileAttachGridId = "common_cad_file_attach_grid";
-    let commonCadUploadFileGridId = "common_cad_upload_file_grid";
-    let commonCadFileAttachObj;
-    let commonCadUploadFileObj;
-    let $commonCadFileAttachGrid;
-    let $commonCadUploadFileGrid;
-    let empty_data = [];
 
     let commonFileDownUploadPopup = $("#common_file_download_upload_pop");
     let commonFileDownUploadGridId = "common_file_download_upload_grid";
@@ -656,7 +598,6 @@
 
         $("#user_info_pop").on('hide.bs.modal', function(){
             fnResetFrom("user_info_pop_form");
-            // $("#user_info_pop_form").find("#PHOTO_GFILE_SRC").attr("src", "/image/999");
         });
 
         // 모달 open
@@ -703,369 +644,7 @@
                 }, parameters, '');
             });
         });
-
-        /** 캐드 파일 업로드 시작 스크립트 **/
-        let estimateCadFileColModel =  [
-            {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 1, minWidth: 70},
-            {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ', hidden: true, width: 1, minWidth: 70},
-            // {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 1, minWidth: 70},
-            {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ', hidden: true, width: 1, minWidth: 70},
-            {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
-            {title: '견적번호', datatype: 'string', dataIndx: 'EST_NUM', width: 205, minWidth: 100},
-            {title: '차수', align: 'center', dataType: 'string', dataIndx: 'EST_VER', width: 50, minWidth: 50},
-            {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM', width: 255, minWidth: 100},
-            {title: '도면번호', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 200, minWidth: 100},
-            {
-                title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
-                render: function (ui) {
-                    if (ui.cellData) return 'V'
-                }
-            },
-            {
-                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ',
-                render: function (ui) {
-                    if (ui.cellData) return 'V'
-                }
-            }
-        ];
-
-        let controlCadFileColModel =  [
-            {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70},
-            {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 70, minWidth: 70},
-            {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
-            // {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 150, minWidth: 100},
-            {title: '관리번호', datatype: 'string', dataIndx: 'CONTROL_NUM', width: 155, minWidth: 100},
-            {title: '파트', align: 'center', dataType: 'string', dataIndx: 'PART_NUM', width: 50, minWidth: 50},
-            {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM', width: 155, minWidth: 100},
-            {title: '발주번호', align: 'center', dataType: 'string', dataIndx: 'ORDER_NUM', width: 155, minWidth: 50},
-            {title: '도면번호', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 155, minWidth: 100},
-            {title: 'Rev', align: 'center', dataType: 'string', dataIndx: 'DRAWING_VER', width: 50, minWidth: 50},
-            {
-                title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
-                render: function (ui) {
-                    if (ui.cellData) return 'V'
-                }
-            },
-            {
-                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ',
-                render: function (ui) {
-                    if (ui.cellData) return 'V'
-                }
-            }
-        ];
-
-        let controlCadRevFileColModel =  [
-            {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70},
-            {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 1, minWidth: 1},
-            {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
-            // {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 150, minWidth: 100},
-            {title: '관리번호', datatype: 'string', dataIndx: 'CONTROL_NUM', width: 155, minWidth: 100},
-            {title: '파트', align: 'center', dataType: 'string', dataIndx: 'PART_NUM', width: 50, minWidth: 50},
-            {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM', width: 155, minWidth: 100},
-            {title: '발주번호', align: 'center', dataType: 'string', dataIndx: 'ORDER_NUM', width: 155, minWidth: 100},
-            {title: '도면번호', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 155, minWidth: 100},
-            // {title: '규격', align: 'center', dataType: 'string', dataIndx: 'SIZE_TXT', width: 155, minWidth: 100},
-            {title: 'Rev', align: 'center', dataType: 'string', dataIndx: 'DRAWING_VER', width: 50, minWidth: 50},
-            {title: '최근 변경일자', align: 'center', dataType: 'string', dataIndx: 'DRAWING_UP_DT', width: 100, minWidth: 50},
-            {
-                title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
-                render: function (ui) {
-                    if (ui.cellData) return 'V'
-                }
-            },
-            {
-                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ',
-                render: function (ui) {
-                    if (ui.cellData) return 'V'
-                }
-            }
-        ];
-
-        let insideStockCadFileColModel =  [
-            {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70},
-            {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 70, minWidth: 70},
-            {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 70, minWidth: 70},
-            {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
-            // {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 250, minWidth: 100},
-            {title: '재고번호', datatype: 'string', dataIndx: 'INSIDE_STOCK_NUM', width: 155, minWidth: 100},
-            {title: '품명', align: 'center', dataType: 'string', dataIndx: 'ITEM_NM', width: 155, minWidth: 100},
-            {title: '도면번호', align: 'center', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 155, minWidth: 100},
-            {
-                title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ',
-                render: function (ui) {
-                    if (ui.cellData) return 'V'
-                }
-            },
-            {
-                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ',
-                render: function (ui) {
-                    if (ui.cellData) return 'V'
-                }
-            }
-        ];
-
-        commonCadFileAttachObj = {
-            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
-            selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false}, editable : false,
-            scrollModel: {autoFit: true}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
-            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
-            colModel: controlCadFileColModel,
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {queryId: 'dataSource.emptyGrid'},
-                recIndx: 'ROWNUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data || []};
-                }
-            },
-            dataReady: function (event, ui) {
-                let cnt = 0;
-                let data = $commonCadFileAttachGrid.pqGrid('option', 'dataModel.data');
-                let totalRecords = data.length;
-                for(let i=0;i<totalRecords;i++){
-                    if(data[i].DRAWING_NUM) cnt++;
-                }
-                $('#cadFileUploadTotalCount').html(cnt);
-            },
-        };
-
-        let commonUploadFileListColModel =  [
-            {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 0, minWidth: 0},
-            {title: 'PDF_GFILE_SEQ', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', hidden: true, width: 0, minWidth: 0},
-            {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 0, minWidth: 0},
-            {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 0, minWidth: 0},
-            {title: 'SUCCESS', dataType: 'string', dataIndx: 'SUCCESS', hidden: true, width: 0, minWidth: 0},
-            {title: '파일명', dataType: 'string', dataIndx: 'ORGINAL_FILE_NM', width: 200, minWidth: 70},
-            {title: '확장자', dataType: 'string', dataIndx: 'FILE_EXT', width: 70, minWidth: 70},
-            {title: '파일크기', datatype: 'string', dataIndx: 'FILE_SIZE', width: 80, minWidth: 50,
-                render: function (ui) {
-                    return fn_getFileSize(ui.rowData.FILE_SIZE);
-                },
-            },
-            {title: '매칭 도면번호', datatype: 'string', dataIndx: 'MAPPING_STR', width: 150, minWidth: 100},
-            {title: '메시지', align: 'center', dataType: 'string', dataIndx: 'MESSAGE', width: 250, minWidth: 100},
-            {title: '작업', minWidth: 100, width: 100, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'}, dataType: 'string', dataIndx: 'CAM_STATUS',
-                render: function (ui) {
-                    return '<button type="button" class="miniBtn red" id="REMOVE_CAD_FILE_UPLOAD_BTN">삭제</button>';
-                },
-                postRender: function (ui) {
-                    let grid = this;
-                    let $cell = grid.getCell(ui);
-                    let rowData = ui.rowData;
-                    $cell.find('#REMOVE_CAD_FILE_UPLOAD_BTN').bind('click', function(e) {
-                        var gridData = $commonCadFileAttachGrid.pqGrid('option', 'dataModel.data');
-                        var delKdys = [];
-                        var selfDelKdys = [];
-                        $.each(gridData, function (key, eachRowData) {
-                            if (rowData.FILE_EXT == "pdf") {
-                                if(rowData.PDF_GFILE_SEQ === eachRowData.PDF_GFILE_SEQ)
-                                    eachRowData.PDF_GFILE_SEQ = '';
-                            } else {
-                                if(rowData.DXF_GFILE_SEQ === eachRowData.DXF_GFILE_SEQ)
-                                    eachRowData.DXF_GFILE_SEQ = '';
-                            }
-                            if (!eachRowData.DXF_GFILE_SEQ && !eachRowData.PDF_GFILE_SEQ) {
-                                delKdys.push({'rowIndx': eachRowData});
-                            }
-                        });
-                        $commonCadFileAttachGrid.pqGrid('deleteRow', {rowList: delKdys});
-                        $commonCadFileAttachGrid.pqGrid('refresh');
-
-                        $commonCadUploadFileGrid.pqGrid("deleteRow", {rowIndx: ui.rowIndx, effect: true });
-                        $commonCadUploadFileGrid.pqGrid('refresh');
-
-                    });
-                }
-            }
-        ];
-
-        commonCadUploadFileObj = {
-            height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
-            selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false}, editable : false,
-            strNoRows: '<div style="font-size:14px;margin-top:20px;">마우스로 파일을 Drag & Drop 하세요.</div>',
-            scrollModel: {autoFit: false}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
-            columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
-            colModel: commonUploadFileListColModel,
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {queryId: 'dataSource.emptyGrid', 'COUNT': 0},
-                recIndx: 'ROWNUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data || []};
-                }
-            },
-            dataReady: function (event, ui) {
-                let success_cnt = 0;
-                let fail_cnt = 0;
-                let data = $commonCadUploadFileGrid.pqGrid('option', 'dataModel.data');
-                let totalRecords = data.length;
-                for(let i=0;i<totalRecords;i++){
-                    if(data[i].SUCCESS == "Y") success_cnt++;
-                    else fail_cnt++;
-                }
-                $("#successCntHtml").html(success_cnt);
-                $("#errorCntHtml").html(fail_cnt);
-                if(totalRecords > 0 && fail_cnt == 0){
-                    $('#cadFileConvertUploadCompletedBtn').prop('disabled', false);
-                }else{
-                    $('#cadFileConvertUploadCompletedBtn').prop('disabled', true);
-                }
-            },
-        };
-
-        /** drag & drop file Attach */
-        let uploadControlFiles = [];
-
-        let $attachDragAndDrop = $("#attachDragAndDrop");
-        $attachDragAndDrop.on("dragenter", function(e) {  //드래그 요소가 들어왔을떄
-            $(this).addClass('drag-over');
-        }).on("dragleave", function(e) {  //드래그 요소가 나갔을때
-            $(this).removeClass('drag-over');
-        }).on("dragover", function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-        }).on('drop', function(e) {  //드래그한 항목을 떨어뜨렸을때
-            e.preventDefault();
-            $(this).startWaitMe();
-            $(this).removeClass('drag-over');
-            let cadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
-            for(let i = 0; i < cadFiles.length; i++) {
-                let file = cadFiles[i];
-                uploadControlFiles.push(file); //업로드 목록에 추가
-            }
-            if (uploadControlFiles.length > 0) { // file upload
-                let formData = new FormData();
-                $.each(uploadControlFiles, function(i, file) {
-                    if(file.upload != 'disable') //삭제하지 않은 이미지만 업로드 항목으로 추가
-                        formData.append('file', file, file.name);
-                });
-                formData.append('queryId', $('#common_cad_file_attach_form').find("#queryId").val() + "_select");
-                formData.append('actionType', $('#common_cad_file_attach_form').find('#actionType').val());
-                uploadControlFiles = [];    // 파일 업로드 정보 초기화
-                $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
-                $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
-                fnFormDataFileUploadAjax(function (data) {
-                    let fileUploadDataList = data.fileUploadDataList;
-                    if (fileUploadDataList.length <= 0) {
-                        fnAlert(null, "주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
-                        $(this).stopWaitMe();
-                        return false;
-                    }
-                    // 도면 번호 없는 경우 삭제 처리
-                    let gridData = $commonCadFileAttachGrid.pqGrid('option', 'dataModel.data')
-                    let delKdys = [];
-                    $.each(gridData, function (key, rowData) {
-                        if (!rowData.CONTROL_NUM) {
-                            delKdys.push({'rowIndx': rowData});
-                        }
-                    });
-                    $commonCadFileAttachGrid.pqGrid('deleteRow', {rowList: delKdys});
-                    $commonCadFileAttachGrid.pqGrid('option', {editable: true});
-                    $commonCadFileAttachGrid.pqGrid('addNodes', fileUploadDataList, 0);
-                    $commonCadFileAttachGrid.pqGrid('option', {editable: false});   // 수정 여부를 false 처리 한다.
-                    $commonCadFileAttachGrid.pqGrid('refresh');
-
-                    if (!(data.fileUploadList == undefined) && !(data.fileUploadList == null)) {
-                        // 도면 번호 없는 경우 삭제 처리
-                        let gridData = $commonCadUploadFileGrid.pqGrid('option', 'dataModel.data')
-                        let delKdys = [];
-                        $.each(gridData, function (key, rowData) {
-                            if (!rowData.FILE_NM) {
-                                delKdys.push({'rowIndx': rowData});
-                            }
-                        });
-                        $commonCadUploadFileGrid.pqGrid('deleteRow', {rowList: delKdys});
-                        $commonCadUploadFileGrid.pqGrid('option', {editable: true});
-                        $commonCadUploadFileGrid.pqGrid('addNodes', data.fileUploadList, 0);
-                        $commonCadUploadFileGrid.pqGrid('option', {editable: false});   // 수정 여부를 false 처리 한다.
-                        $commonCadUploadFileGrid.pqGrid('refresh');
-                        $(this).stopWaitMe();
-                    }
-                }, formData, '/uploadControlCadFiles');
-            }
-        });
-
-        $cadFileConvertUploadCompletedBtn.on('click', function () {
-            const actionType = $('#common_cad_file_attach_form').find('#actionType').val();
-            // 주문 도면 차수 변경
-            if (actionType === 'controlRev') {
-                const message = '도면 변경시 바코드가 변경되며,<br>이미 배포된 바코드 출력도면은 교체해야 합니다.<br><br>진행하시겠습니까?';
-
-                fnConfirm(null, message, function () {
-                    let gridInstance = $commonCadFileAttachGrid.pqGrid('getInstance').grid;
-                    let changes = gridInstance.getChanges({format: 'byVal'});
-                    changes.queryIdList = {
-                        'insertQueryId': [$('#common_cad_file_attach_form').find("#queryId").val()]
-                    };
-                    $("#common_cad_file_attach_form").find("#fileGrid").val(JSON.stringify(changes));
-                    let parameters = {'url': '/cadFileConvert', 'data': {data: JSON.stringify(changes)}};
-                    fnPostAjax(function (data, callFunctionParam) {
-                        fnAlertMessageAutoClose('save');
-                        $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
-                        $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
-                        commonCadFileAttachPopup.modal('hide');
-                    }, parameters, '');
-                });
-            } else {
-                let gridInstance = $commonCadFileAttachGrid.pqGrid('getInstance').grid;
-                let changes = gridInstance.getChanges({format: 'byVal'});
-                changes.queryIdList = {
-                    'insertQueryId': [$('#common_cad_file_attach_form').find("#queryId").val()]
-                };
-                $("#common_cad_file_attach_form").find("#fileGrid").val(JSON.stringify(changes));
-                let parameters = {'url': '/cadFileConvert', 'data': {data: JSON.stringify(changes)}};
-                fnPostAjax(function (data, callFunctionParam) {
-                    fnAlertMessageAutoClose('save');
-                    $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
-                    $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
-                    commonCadFileAttachPopup.modal('hide');
-                }, parameters, '');
-            }
-        })
-
-        commonCadFileAttachPopup.on('show.bs.modal',function(e) {
-            var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
-            $commonCadFileAttachGrid = $('#' + commonCadFileAttachGridId).pqGrid(commonCadFileAttachObj);
-            $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면 등록');
-            if(actionType == 'estimate') {          // 견적 도면 등록
-                $commonCadFileAttachGrid.pqGrid('option', 'colModel', estimateCadFileColModel);
-            }else if(actionType == 'control') {     // 주문 도면 등록
-                $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadFileColModel);
-            }else if(actionType == 'controlRev') {  // 주문 도면 차수 변경
-                $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('도면변경(Revision up)');
-                $commonCadFileAttachGrid.pqGrid('option', 'colModel', controlCadRevFileColModel);
-            }else if(actionType == 'inside') {      // 자재 도면 등록
-                $commonCadFileAttachGrid.pqGrid('option', 'colModel', insideStockCadFileColModel);
-            }
-            $commonCadFileAttachGrid.pqGrid('refresh');
-
-            $commonCadUploadFileGrid = $('#' + commonCadUploadFileGridId).pqGrid(commonCadUploadFileObj);
-            $commonCadUploadFileGrid.pqGrid('refresh');
-        });
-
-        commonCadFileAttachPopup.on('hide.bs.modal',function(e) {
-            var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
-            if(actionType == 'estimate') {          // 견적 도면 등록
-                $("#estimateRegisterReloadBtn").trigger("click");
-            }else if(actionType == 'control' || actionType == 'controlRev') {     // 주문 도면 등록 || 주문 도면 차수 변경
-                $("#CONTROL_MANAGE_SEARCH").trigger("click");
-            }else if(actionType == 'inside') {      // 자재 도면 등록
-                $("#stock_manage_search_btn").trigger("click");
-            }
-            uploadControlFiles = [];
-            $commonCadFileAttachGrid.pqGrid('destroy');
-            $commonCadUploadFileGrid.pqGrid('destroy');
-        });
     });
-
-    function callCadDrawingUploadPopup(actionType, queryId) {
-        $('#common_cad_file_attach_form').find('#actionType').val(actionType);
-        $('#common_cad_file_attach_form').find('#queryId').val(queryId);
-        // clearCadFileAttachPopup(getCadUploadBlankHtml());
-        setTimeout(function() {
-            commonCadFileAttachPopup.modal('show');
-        }, 200);
-    }
 
     function getCadUploadBlankHtml(){
         return'<tr><td colspan="6" class="spanArea" >마우스로 파일을 Drag & Drop 하세요.</td></tr><tr><td colspan="6"></td></tr><tr><td colspan="6"></td></tr><tr><td colspan="6"></td></tr><tr><td colspan="6"></td></tr>';
@@ -2344,9 +1923,21 @@
         }
     }
 
+    /**
+     * Drawing Upload Popup Close then call function
+     **/
+    function callDrawingUploadPopupWindow(actionType){
+        if(actionType == 'estimate') {          // 견적 도면 등록
+            $("#estimateRegisterReloadBtn").trigger("click");
+        }else if(actionType == 'control' || actionType == 'controlRev') {
+            $("#CONTROL_MANAGE_SEARCH").trigger("click");
+        }else if(actionType == 'inside') {      // 자재 도면 등록
+            $("#stock_manage_search_btn").trigger("click");
+        }
+    }
+
     $(document).on('click', '.basic_information #imageView', function () {
         const imgGfileSeq = $(this).data('value');
-
         callWindowImageViewer(imgGfileSeq);
     });
     /* event */
