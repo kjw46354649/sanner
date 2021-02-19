@@ -2900,8 +2900,6 @@
             , DELIVERY_DT
             , PACKING_CNT
             , OUT_FINISH_DT
-            , INSERT_DT
-            , INSERT_ID
             , PROJECT_NM
             , MODULE_NM
             , DELIVERY_COMP_NM
@@ -2931,8 +2929,6 @@
             , DELIVERY_DT
             , PACKING_CNT
             , OUT_FINISH_DT
-            , NOW()
-            , #{LOGIN_USER_ID}
             , PROJECT_NM
             , MODULE_NM
             , DELIVERY_COMP_NM
