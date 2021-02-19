@@ -2138,7 +2138,7 @@
                         if (controlList.includes(dataIndx)) {
                             if (controlNum === controlNumPrev) {
                                 // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
-                                if (cellDataPrev !== undefined && cellData === cellDataPrev) {
+                                if (cellDataPrev !== undefined && cellData == cellDataPrev) {
                                     rc++;
                                 }
                             } else if (rc > 1) {
@@ -2157,7 +2157,7 @@
 
                             if (controlNum === controlNumPrev && controlDetailSeq === controlDetailSeqPrev) {
                                 // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
-                                if (cellDataPrev !== undefined && cellData === cellDataPrev) {
+                                if (cellDataPrev !== undefined && cellData == cellDataPrev) {
                                     rc++;
                                 }
                             } else if (rc > 1) {
