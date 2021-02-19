@@ -254,9 +254,10 @@
               WHERE P.CAM_SEQ = Q.CAM_SEQ
                 AND P.CONTROL_SEQ = R.CONTROL_SEQ
                 AND P.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ
-                AND NOT R.CONTROL_SEQ = B.CONTROL_SEQ
-                AND NOT R.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                AND R.DRAWING_NUM = B.DRAWING_NUM
+                AND R.CONTROL_SEQ != B.CONTROL_SEQ
+                AND R.CONTROL_DETAIL_SEQ != B.CONTROL_DETAIL_SEQ
+                AND R.SIZE_TXT = B.SIZE_TXT
+                AND R.MATERIAL_TYPE = B.MATERIAL_TYPE
               ORDER BY Q.SEQ DESC
               LIMIT 1
             ) AS WORK_HISTORY_INFO <!-- 과거 경험 -->
@@ -1276,6 +1277,7 @@
                                                                             AND A.DEL_YN = 'N'
                                                                             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
                                                                             AND B.SIZE_TXT = #{SIZE_TXT}
+                                                                            AND B.MATERIAL_TYPE = #{MATERIAL_TYPE}
                                                                      )
                 ) D LEFT OUTER JOIN (SELECT
                                         D.CONTROL_SEQ
