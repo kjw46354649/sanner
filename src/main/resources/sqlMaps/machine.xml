@@ -483,30 +483,28 @@
             ) Z ON Z.CONTROL_SEQ = A.CONTROL_SEQ AND Z.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
         WHERE 1 = 1
             AND IFNULL(A.WORK_TYPE, SPACE(0)) != 'WTP020' <!-- 조립이 아닌경우 -->
-            AND (A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) IN (	<!-- 가공확정된 대상 -->
-            												SELECT M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
+            AND (A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) IN (  SELECT M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ <!-- 가공확정된 대상 -->
 															FROM TBL_CONTROL_PART_PROGRESS M
 															WHERE CONTROL_SEQ = A.CONTROL_SEQ
 																AND CONTROL_DETAIL_SEQ  = A.CONTROL_DETAIL_SEQ
 																AND EXISTS (SELECT * FROM TBL_CONTROL_PART_PROGRESS K WHERE K.CONTROL_SEQ = M.CONTROL_SEQ AND K.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ AND K.PART_STATUS = 'PRO002')
-															GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
-    		)
-            <if test="OUTSOURCING_PROCESSING == 'false'">
-                AND A.OUTSIDE_YN = 'N' <!-- 외주 가공 제외 -->
-            </if>
-            <if test="NC_COMPLETE == 'false'">
-                AND (A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) NOT IN (  <!-- NC 공정이 한번이라도 완료된대상 제외 -->
-                                                                    SELECT M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
-                                                                    FROM TBL_MCT_WORK M
-                                                                    WHERE M.CONTROL_SEQ = A.CONTROL_SEQ
-                                                                        AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
-                                                                        AND EXISTS (SELECT * FROM TBL_MCT_WORK K WHERE K.CONTROL_SEQ = M.CONTROL_SEQ AND K.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ)
-                                                                    GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
-                )
-            </if>
-            <if test="FINISHED_PROCESSING == 'false'">
-    		    AND A.INNER_WORK_FINISH_DT IS NULL <!-- 가공완료된 대상 제외 -->
-            </if>
+															GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ )
+    		<choose>
+                <when test="OPTION == 'OUTSOURCING_PROCESSING'">
+                    AND A.OUTSIDE_YN = 'N'
+                </when>
+                <when test="OPTION == 'NC_COMPLETE'">
+                    AND (A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) NOT IN (  SELECT M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ <!-- NC 공정이 한번이라도 완료된대상 제외 -->
+                                                                        FROM TBL_MCT_WORK M
+                                                                        WHERE M.CONTROL_SEQ = A.CONTROL_SEQ
+                                                                            AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                                                                            AND EXISTS (SELECT * FROM TBL_MCT_WORK K WHERE K.CONTROL_SEQ = M.CONTROL_SEQ AND K.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ)
+                                                                        GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ )
+                </when>
+                <when test="OPTION == 'FINISHED_PROCESSING'">
+                    AND A.INNER_WORK_FINISH_DT IS NULL
+                </when>
+            </choose>
             <if test="WORK_FACTORY != null and WORK_FACTORY!= ''">
                 AND A.WORK_FACTORY = #{WORK_FACTORY}
             </if>

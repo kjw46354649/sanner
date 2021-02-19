@@ -77,6 +77,8 @@
 <script type="text/javascript" src="/resource/plugins/Highcharts-8.2.2/js/highcharts-more.js"></script>
 <script type="text/javascript" src="/resource/plugins/Highcharts-8.2.2/modules/no-data-to-display.js"></script>
 <script type="text/javascript" src="/resource/plugins/Highcharts-8.2.2/modules/solid-gauge.js"></script>
+<!-- monthpicker -->
+<script type="text/javascript" src="/resource/plugins/jquery.mtz.monthpicker/jquery.mtz.monthpicker.js"></script>
 
 <script type='text/javascript'>
 

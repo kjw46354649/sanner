@@ -481,8 +481,8 @@ public class PdfPrintMakeController {
             if (controlInfo.get("SAME_SIDE_YN").equals("Y")) {
                 table.addCell(createCellPartUnit((String) controlInfo.get("SIDE_QTY"), 2, 1, mediumNormalFont));
             }
-            table.addCell(createCell(controlInfo.get("INNER_DUE_DT") != null ? "가공" + controlInfo.get("INNER_DUE_DT") : "", 1, 1, mediumNormalFont));
-            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? "납기" + controlInfo.get("ORDER_DUE_DT") : "", 1, 1, mediumNormalFont));
+            table.addCell(createCell(controlInfo.get("INNER_DUE_DT") != null ? "가" + controlInfo.get("INNER_DUE_DT") : "", 1, 1, mediumNormalFont));
+            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? "납" + controlInfo.get("ORDER_DUE_DT") : "", 1, 1, mediumNormalFont));
             // 3rd line
             table.addCell(createCell((String) controlInfo.get("MODULE_NM"), 2, 1, mediumNormalFont));
             table.addCell(createCell("품명", 1, 1, smallBoldFont));

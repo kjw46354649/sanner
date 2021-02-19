@@ -85,33 +85,17 @@
                         </div>
                     </li>
                     <li>
-                        <div class="slt_wrap">
+                        <div class="ipu_wrap d-inline-block" style="width:662px">
                             <label class="label_100">마감/종료 월</label>
-                            <select class="wd_100" class="two" name="CLOSE_YEAR" id="CLOSE_HISTORY_CLOSE_YEAR"></select>
-                            <select class="wd_100" class="two" name="CLOSE_MONTH" id="CLOSE_HISTORY_CLOSE_MONTH"></select>
+                            <span class="calendar_span">
+                                <input type="text" name="CONTROL_CLOSE_HISTORY_START_DATE" id="CONTROL_CLOSE_HISTORY_START_DATE"><button type="button" id="CONTROL_CLOSE_HISTORY_START_DATE_BUTTON">달력선택</button>
+                            </span>
+                            <span class="nbsp">~</span>
+                            <span class="calendar_span">
+                                <input type="text" name="CONTROL_CLOSE_HISTORY_END_DATE" id="CONTROL_CLOSE_HISTORY_END_DATE"><button type="button" id="CONTROL_CLOSE_HISTORY_END_DATE_BUTTON">달력선택</button>
+                            </span>
                         </div>
                         <span class="gubun"></span>
-<%--                        삭제 예정--%>
-<%--                        <span class="slt_wrap trans_slt" style="width: 120px;">--%>
-<%--                            <label for="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION"></label>--%>
-<%--                            <select name="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION" id="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION" style="width: inherit; text-align-last: center;">--%>
-<%--                                <option value=""><spring:message code="com.form.top.sel.option"/></option>--%>
-<%--                                <option value="1">마감수행일자</option>--%>
-<%--                                <option value="2">종료수행일자</option>--%>
-<%--                                <option value="3">출고일자</option>--%>
-<%--                                <option value="4">가공납기</option>--%>
-<%--                            </select>--%>
-<%--                        </span>--%>
-<%--                        <div class="d-inline-block" style="width:542px">--%>
-<%--                            <span class="calendar_span">--%>
-<%--                                <input type="text" title="달력정보" name="CONTROL_CLOSE_HISTORY_START_DATE" id="CONTROL_CLOSE_HISTORY_START_DATE" readonly disabled><button type="button" id="CONTROL_CLOSE_HISTORY_START_DATE_BUTTON">달력선택</button>--%>
-<%--                            </span>--%>
-<%--                            <span class="nbsp">~</span>--%>
-<%--                            <span class="calendar_span">--%>
-<%--                                <input type="text" title="달력정보" name="CONTROL_CLOSE_HISTORY_END_DATE" id="CONTROL_CLOSE_HISTORY_END_DATE" readonly disabled><button type="button" id="CONTROL_CLOSE_HISTORY_END_DATE_BUTTON">달력선택</button>--%>
-<%--                            </span>--%>
-<%--                        </div>--%>
-<%--                        <span class="gubun"></span>--%>
                         <span class="ipu_wrap"><label class="label_100">Option</label></span>
                         <span class="wd_200" style="display: inline-block;">
                             <span class="chk_box"><input type="checkbox" name="VISIBLE_PART" id="VISIBLE_PART"><label for="VISIBLE_PART">Part</label></span>
@@ -201,19 +185,21 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
-        fnAppendSelectboxYear('CLOSE_HISTORY_CLOSE_YEAR', 10);
-        fnAppendSelectboxMonth('CLOSE_HISTORY_CLOSE_MONTH');
-        $('#CLOSE_HISTORY_CLOSE_YEAR').append(new Option('<spring:message code="com.form.top.all.option" />', ''));
-        $('#CLOSE_HISTORY_CLOSE_MONTH').append(new Option('<spring:message code="com.form.top.all.option" />', ''));
-         const lastMonth = new Date((new Date()).setMonth(TODAY.getMonth() - 1));
-        $('#CLOSE_HISTORY_CLOSE_YEAR').val(lastMonth.getFullYear()).prop('selected', true);
-        $('#CLOSE_HISTORY_CLOSE_MONTH').val(String(lastMonth.getMonth() + 1).padStart(2, '0')).prop('selected', true);
-        const $controlCloseHistoryStartDate = $('#CONTROL_CLOSE_HISTORY_START_DATE');
-        const $controlCloseHistoryEndDate = $('#CONTROL_CLOSE_HISTORY_END_DATE');
-        $controlCloseHistoryStartDate.datepicker({dateFormat: 'yy/mm/dd'});
-        $controlCloseHistoryEndDate.datepicker({dateFormat: 'yy/mm/dd'});
-        $controlCloseHistoryStartDate.datepicker('setDate', '-1m');
-        $controlCloseHistoryEndDate.datepicker('setDate', 'today');
+        (function () {
+            const dateOfLastMonth = new Date((new Date()).setMonth(TODAY.getMonth() - 1));
+            const yearOfLastMonth = dateOfLastMonth.getFullYear();
+            const monthOfLastMonth = String(dateOfLastMonth.getMonth() + 1).padStart(2, '0');
+            const value = yearOfLastMonth + '/' + monthOfLastMonth;
+            const options = {
+                selectedYear: yearOfLastMonth,
+                selectedMonth: monthOfLastMonth,
+                finalYear: CURRENT_YEAR,
+            };
+            $('#CONTROL_CLOSE_HISTORY_START_DATE').monthpicker(options);
+            $('#CONTROL_CLOSE_HISTORY_END_DATE').monthpicker(options);
+            $('#CONTROL_CLOSE_HISTORY_START_DATE').val(value);
+            $('#CONTROL_CLOSE_HISTORY_END_DATE').val(value);
+        })();
         /* variable */
         let selectedRowIndex = [];
 
@@ -2146,6 +2132,13 @@
             });
 
             saveAs(blob, text);
+        });
+
+        $('#CONTROL_CLOSE_HISTORY_START_DATE_BUTTON').on('click', function () {
+            $('#CONTROL_CLOSE_HISTORY_START_DATE').monthpicker('show');
+        });
+        $('#CONTROL_CLOSE_HISTORY_END_DATE_BUTTON').on('click', function () {
+            $('#CONTROL_CLOSE_HISTORY_END_DATE').monthpicker('show');
         });
         /* event */
 
