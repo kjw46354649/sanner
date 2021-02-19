@@ -94,7 +94,7 @@
                             </select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="chk_box"><input id="ALLOCATION_COMPLETED_EXCLUDED" name="ALLOCATION_COMPLETED_EXCLUDED" type="checkbox" checked><label for="ALLOCATION_COMPLETED_EXCLUDED">배정완료제외</label></span>
+                        <span class="chk_box"><input id="ALLOCATION_COMPLETED_EXCLUDED" name="ALLOCATION_COMPLETED_EXCLUDED" type="checkbox"><label for="ALLOCATION_COMPLETED_EXCLUDED">배정완료제외</label></span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
                             <label class="label_80" for="CONTROL_NUM_OR_DRAWING_NUM">관리/도면번호</label>

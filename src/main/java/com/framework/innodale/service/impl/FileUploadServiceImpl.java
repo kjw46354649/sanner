@@ -266,8 +266,14 @@ public class FileUploadServiceImpl implements FileUploadService {
 
             }
 
-            // 도면 대상 업로드 리스트 및 적둉 대상 작업 리스트 조회
-            hashMap.put("queryId", "procedure.SP_CONTROL_DRAWING_UPLOAD");
+            String actionType = (String)hashMap.get("actionType");
+            if("control".equals(actionType)){
+                // 도면 대상 업로드 리스트 및 적둉 대상 작업 리스트 조회
+                hashMap.put("queryId", "procedure.SP_CONTROL_DRAWING_UPLOAD");
+            }else{
+                // 도면 대상 업로드 리스트 및 적둉 대상 작업 리스트 조회
+                hashMap.put("queryId", "procedure.SP_CONTROL_DRAWING_UPLOAD_REV");
+            }
             innodaleDao.callProcedureMethod(hashMap);
         }
         model.addAttribute("result",       "success");
@@ -280,7 +286,7 @@ public class FileUploadServiceImpl implements FileUploadService {
         model.addAttribute("fileUploadDataList", innodaleDao.getList(hashMap));
     }
 
-    /** 임시로 PDF 파일 업로드 하여 이미지 처리 하는 부분 적용 **/
+    /** 견적 & 재고 도면 업로드 **/
     @Override
     public void uploadDxfAndPdfCadFiles(MultipartHttpServletRequest request, Model model) throws Exception {
 

@@ -1393,8 +1393,8 @@
                 fnAlert(null,"변경된 사항이 존재합니다. 저장 후 등록 해 주세요.");
                 return false;
             }
-            callCadDrawingUploadPopup('estimate', 'estimate.manageEstimateCadFiles');
-            // drawingUploadPopupWindow('estimate', 'estimate.manageEstimateCadFiles');
+            // callCadDrawingUploadPopup('estimate', 'estimate.manageEstimateCadFiles');
+            drawingUploadPopupWindow('estimate', 'estimate.manageEstimateCadFiles');
         });
 
         /* 도면 등록 팝업 호출 */
