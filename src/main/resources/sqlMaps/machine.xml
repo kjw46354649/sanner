@@ -796,7 +796,10 @@
               WHERE P.CAM_SEQ = Q.CAM_SEQ
                 AND P.CONTROL_SEQ = R.CONTROL_SEQ
                 AND P.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ
-                AND R.DRAWING_NUM = A.DRAWING_NUM
+                AND R.CONTROL_SEQ != A.CONTROL_SEQ
+                AND R.CONTROL_DETAIL_SEQ != A.CONTROL_DETAIL_SEQ
+                AND R.SIZE_TXT = A.SIZE_TXT
+                AND R.MATERIAL_TYPE = A.MATERIAL_TYPE
               ORDER BY Q.SEQ DESC
               LIMIT 1
             ) AS WORK_HISTORY_INFO <!-- 과거 경험 -->
@@ -1082,7 +1085,10 @@
                 WHERE O.CONTROL_SEQ = M.CONTROL_SEQ
                     AND O.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
                     AND N.CAM_SEQ = M.CAM_SEQ
-                    AND O.DRAWING_NUM = A.DRAWING_NUM
+                    AND O.CONTROL_SEQ != A.CONTROL_SEQ
+                    AND O.CONTROL_DETAIL_SEQ != A.CONTROL_DETAIL_SEQ
+                    AND O.SIZE_TXT = A.SIZE_TXT
+                    AND O.MATERIAL_TYPE = A.MATERIAL_TYPE
                 ORDER BY N.SEQ DESC
                 LIMIT 1
             ) AS WORK_HISTORY_INFO <!-- 과거 경험 -->
@@ -1264,7 +1270,10 @@
               WHERE P.CAM_SEQ = Q.CAM_SEQ
                 AND P.CONTROL_SEQ = R.CONTROL_SEQ
                 AND P.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ
-                AND R.DRAWING_NUM = A.DRAWING_NUM
+                AND R.CONTROL_SEQ != A.CONTROL_SEQ
+                AND R.CONTROL_DETAIL_SEQ != A.CONTROL_DETAIL_SEQ
+                AND R.SIZE_TXT = A.SIZE_TXT
+                AND R.MATERIAL_TYPE = A.MATERIAL_TYPE
               ORDER BY Q.SEQ DESC
               LIMIT 1
             ) AS WORK_HISTORY_INFO, <!-- 과거 경험 -->
