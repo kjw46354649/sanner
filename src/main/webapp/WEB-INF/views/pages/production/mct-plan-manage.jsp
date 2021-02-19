@@ -58,9 +58,6 @@
         <div class="hWrap" style="padding: 0;">
             <form id="MCT_PROCESS_TARGET_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="machine.selectWorkPlanGridList">
-                <input type="hidden" name="OUTSOURCING_PROCESSING" id="OUTSOURCING_PROCESSING" value="false">
-                <input type="hidden" name="NC_COMPLETE" id="NC_COMPLETE" value="false">
-                <input type="hidden" name="FINISHED_PROCESSING" id="FINISHED_PROCESSING" value="false">
                 <div class="d-flex align-items-center" style="padding: 0 20px;">
                     <div>
                         <h2 style="height: 42px; line-height: 42px;">가공 대상 List</h2>
@@ -103,7 +100,12 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_50" for="OPTION">Option</label>
-                            <input type="text" class="wd_100" name="OPTION" id="OPTION" placeholder="<spring:message code='com.form.top.all.option' />" title="발주사" readonly>
+                            <select class="wd_100" name="OPTION" id="OPTION">
+                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
+                                <option value="OUTSOURCING_PROCESSING">외주가공</option>
+                                <option value="NC_COMPLETE">NC완료</option>
+                                <option value="FINISHED_PROCESSING">가공완료</option>
+                            </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -790,18 +792,6 @@
             setTimeout(refreshMctPlanGrids, 1000);
         });
 
-        $('#MCT_PROCESS_TARGET_FORM').find('#OPTION').on('change', function () {
-           const str = this.value;
-           const outsourcingProcessing = str.includes('외주가공');
-           const NcComplete = str.includes('NC완료');
-           const finishedProcessing = str.includes('가공완료');
-           const $MCT_PROCESS_TARGET_FORM = $('#MCT_PROCESS_TARGET_FORM');
-
-           $MCT_PROCESS_TARGET_FORM.find('#OUTSOURCING_PROCESSING').val(outsourcingProcessing);
-           $MCT_PROCESS_TARGET_FORM.find('#NC_COMPLETE').val(NcComplete);
-           $MCT_PROCESS_TARGET_FORM.find('#FINISHED_PROCESSING').val(finishedProcessing);
-        });
-
         $('#ALLOCATION_COMPLETED_EXCLUDED').on('click', function () {
             const checked = this.checked;
             const data = $processTargetGrid.pqGrid('option', 'dataModel').data;
@@ -823,21 +813,6 @@
         /* init */
         createPlanGrid();
         $processTargetGrid = $('#' + processTargetGridId).pqGrid(processTargetGridObj);
-
-        // 발주사
-        (function () {
-            let comboData = [
-                {title: '외주가공', id: 'obj.value', value: 'obj.value'},
-                {title: 'NC완료', id: 'obj.value', value: 'obj.value'},
-                {title: '가공완료', id: 'obj.value', value: 'obj.value'},
-            ];
-
-            $('#MCT_PROCESS_TARGET_FORM').find('#OPTION').comboTree({
-                source: comboData,
-                isMultiple: true,
-                cascadeSelect: false
-            });
-        })();
         /* init */
     });
 </script>
