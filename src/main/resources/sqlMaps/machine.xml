@@ -491,19 +491,27 @@
 															GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ )
     		<choose>
                 <when test="OPTION == 'OUTSOURCING_PROCESSING'">
+                    AND A.OUTSIDE_YN = 'Y'
+                </when>
+                <otherwise>
                     AND A.OUTSIDE_YN = 'N'
-                </when>
-                <when test="OPTION == 'NC_COMPLETE'">
-                    AND (A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) NOT IN (  SELECT M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ <!-- NC 공정이 한번이라도 완료된대상 제외 -->
-                                                                        FROM TBL_MCT_WORK M
-                                                                        WHERE M.CONTROL_SEQ = A.CONTROL_SEQ
-                                                                            AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
-                                                                            AND EXISTS (SELECT * FROM TBL_MCT_WORK K WHERE K.CONTROL_SEQ = M.CONTROL_SEQ AND K.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ)
-                                                                        GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ )
-                </when>
+                </otherwise>
+            </choose>
+            <if test="OPTION == 'NC_COMPLETE'">
+                AND (A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) IN (  SELECT M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
+                                                                FROM TBL_MCT_WORK M
+                                                                WHERE M.CONTROL_SEQ = A.CONTROL_SEQ
+                                                                    AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                                                                    AND EXISTS (SELECT * FROM TBL_MCT_WORK K WHERE K.CONTROL_SEQ = M.CONTROL_SEQ AND K.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ)
+                                                                GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ )
+            </if>
+            <choose>
                 <when test="OPTION == 'FINISHED_PROCESSING'">
-                    AND A.INNER_WORK_FINISH_DT IS NULL
+                    AND A.INNER_WORK_FINISH_DT IS NOT NULL
                 </when>
+                <otherwise>
+                    AND A.INNER_WORK_FINISH_DT IS NULL
+                </otherwise>
             </choose>
             <if test="WORK_FACTORY != null and WORK_FACTORY!= ''">
                 AND A.WORK_FACTORY = #{WORK_FACTORY}
