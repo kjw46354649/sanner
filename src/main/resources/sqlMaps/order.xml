@@ -1472,30 +1472,10 @@
             </if>
             LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             INNER JOIN TBL_MONTH_CLOSE D ON D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD
+                AND D.CLOSE_MONTH BETWEEN DATE_FORMAT(STR_TO_DATE(#{CONTROL_CLOSE_HISTORY_START_DATE}, '%Y/%m'), '%Y%m') AND DATE_FORMAT(STR_TO_DATE(#{CONTROL_CLOSE_HISTORY_END_DATE}, '%Y/%m'), '%Y%m')
             INNER JOIN TBL_MONTH_CLOSE_ORDER E ON E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD AND E.CLOSE_MONTH = D.CLOSE_MONTH AND E.CLOSE_VER = D.CLOSE_VER AND E.CONTROL_SEQ = C.CONTROL_SEQ AND E.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND E.ORDER_SEQ = C.ORDER_SEQ
         WHERE A.DEL_YN = 'N'
             AND A.CONTROL_STATUS = 'ORD003'
-            <if test="CLOSE_YEAR != null and CLOSE_YEAR != ''">
-                AND DATE_FORMAT(A.STATUS_DT, '%Y') = #{CLOSE_YEAR}
-            </if>
-            <if test="CLOSE_MONTH != null and CLOSE_MONTH != ''">
-                AND DATE_FORMAT(A.STATUS_DT, '%m') = #{CLOSE_MONTH}
-            </if>
-<!--             삭제 예정-->
-<!--        <choose>-->
-<!--            &lt;!&ndash; 마감수행일자 &ndash;&gt;-->
-<!--            <when test="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION == '1'">-->
-<!--                AND DATE_FORMAT(A.STATUS_DT, '%Y/%m/%d') BETWEEN #{CONTROL_CLOSE_HISTORY_START_DATE} AND #{CONTROL_CLOSE_HISTORY_END_DATE}-->
-<!--            </when>-->
-<!--            &lt;!&ndash; 출고일자 &ndash;&gt;-->
-<!--            <when test="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION == '3'">-->
-<!--                AND DATE_FORMAT(C.OUT_FINISH_DT, '%Y/%m/%d') BETWEEN #{CONTROL_CLOSE_HISTORY_START_DATE} AND #{CONTROL_CLOSE_HISTORY_END_DATE}-->
-<!--            </when>-->
-<!--            &lt;!&ndash; 가공납기 &ndash;&gt;-->
-<!--            <when test="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION == '4'">-->
-<!--                AND DATE_FORMAT(B.INNER_DUE_DT, '%Y/%m/%d') BETWEEN #{CONTROL_CLOSE_HISTORY_START_DATE} AND #{CONTROL_CLOSE_HISTORY_END_DATE}-->
-<!--            </when>-->
-<!--        </choose>-->
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
             AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
         </if>
@@ -1568,27 +1548,7 @@
             LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
         WHERE A.DEL_YN = 'N'
             AND A.CONTROL_STATUS = 'ORD004'
-        <if test="CLOSE_YEAR != null and CLOSE_YEAR != ''">
-        	AND DATE_FORMAT(A.STATUS_DT, '%Y') = #{CLOSE_YEAR}
-        </if>
-        <if test="CLOSE_MONTH != null and CLOSE_MONTH != ''">
-        	AND DATE_FORMAT(A.STATUS_DT, '%m') = #{CLOSE_MONTH}
-        </if>
-<!--    삭제 예정-->
-<!--        <choose>-->
-<!--            &lt;!&ndash; 종료수행일자 &ndash;&gt;-->
-<!--            <when test="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION == '1'">-->
-<!--                AND DATE_FORMAT(A.STATUS_DT, '%Y/%m/%d') BETWEEN #{CONTROL_CLOSE_HISTORY_START_DATE} AND #{CONTROL_CLOSE_HISTORY_END_DATE}-->
-<!--            </when>-->
-<!--            &lt;!&ndash; 출고일자 &ndash;&gt;-->
-<!--            <when test="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION == '3'">-->
-<!--                AND DATE_FORMAT(C.OUT_FINISH_DT, '%Y/%m/%d') BETWEEN #{CONTROL_CLOSE_HISTORY_START_DATE} AND #{CONTROL_CLOSE_HISTORY_END_DATE}-->
-<!--            </when>-->
-<!--            &lt;!&ndash; 가공납기 &ndash;&gt;-->
-<!--            <when test="CONTROL_CLOSE_HISTORY_SEARCH_CONDITION == '4'">-->
-<!--                AND DATE_FORMAT(B.INNER_DUE_DT, '%Y/%m/%d') BETWEEN #{CONTROL_CLOSE_HISTORY_START_DATE} AND #{CONTROL_CLOSE_HISTORY_END_DATE}-->
-<!--            </when>-->
-<!--        </choose>-->
+            AND A.STATUS_DT BETWEEN STR_TO_DATE(CONCAT(#{CONTROL_CLOSE_HISTORY_START_DATE}, '/01'), '%Y/%m/%d %k:%i:%s') AND STR_TO_DATE(CONCAT(LAST_DAY(STR_TO_DATE(#{CONTROL_CLOSE_HISTORY_END_DATE}, '%Y/%m')), '23:59:59'), '%Y-%m-%d %k:%i:%s')
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
             AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
         </if>
