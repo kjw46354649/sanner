@@ -453,43 +453,43 @@ public class PdfPrintMakeController {
             baos.close();
             Image barcodeImage = Image.getInstance(imageInByte);
             // 1st line
-            table.addCell(createCell("영업도면", 1, 3, smallBoldFont));
-            table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, smallNormalFont));
-            table.addCell(createCell((String) controlInfo.get("COMP_NM"), 1, 1, smallNormalFont));
-            table.addCell(createCell("발번", 1, 1, smallBoldFont));
-            table.addCell(createCell((String) controlInfo.get("ORDER_NUM"), 1, 1, smallNormalFont));
-            table.addCell(createCell("형태", 1, 1, smallBoldFont));
-            table.addCell(createCell(controlInfo.get("WORK_TYPE_NM") != null && controlInfo.get("MATERIAL_TYPE_NM") != null ? controlInfo.get("WORK_TYPE_NM") + "/" + controlInfo.get("MATERIAL_TYPE_NM") : controlInfo.get("WORK_TYPE_NM") != null ? (String) controlInfo.get("WORK_TYPE_NM") : "" + controlInfo.get("MATERIAL_TYPE_NM") != null ? (String) controlInfo.get("MATERIAL_TYPE_NM") : "", 1, 1, smallNormalFont));
+            table.addCell(createCell("영업도면", 1, 3, largeBoldFont));
+            table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, verySmallNormalFont));
+            table.addCell(createCell((String) controlInfo.get("COMP_NM"), 1, 1, verySmallNormalFont));
+            table.addCell(createCell("발번", 1, 1, verySmallBoldFont));
+            table.addCell(createCell((String) controlInfo.get("ORDER_NUM"), 1, 1, verySmallNormalFont));
+            table.addCell(createCell("형태", 1, 1, verySmallBoldFont));
+            table.addCell(createCell(controlInfo.get("WORK_TYPE_NM") != null && controlInfo.get("MATERIAL_TYPE_NM") != null ? controlInfo.get("WORK_TYPE_NM") + "/" + controlInfo.get("MATERIAL_TYPE_NM") : controlInfo.get("WORK_TYPE_NM") != null ? (String) controlInfo.get("WORK_TYPE_NM") : "" + controlInfo.get("MATERIAL_TYPE_NM") != null ? (String) controlInfo.get("MATERIAL_TYPE_NM") : "", 1, 1, verySmallNormalFont));
             if (controlInfo.get("WORK_TYPE_NM") != null && !controlInfo.get("WORK_TYPE_NM").equals("")) {
                 String content = controlInfo.get("WORK_TYPE_NM").equals("조립") ? "SET" : "EA";
 
                 if (controlInfo.get("SAME_SIDE_YN").equals("Y")) {
-                    table.addCell(createQtyCell1((String) controlInfo.get("ORDER_QTY"), 1, 1, smallBoldFont));
+                    table.addCell(createQtyCell1((String) controlInfo.get("ORDER_QTY"), 1, 1, verySmallBoldFont));
                     table.addCell(createEACell1(content, 1, 1, verySmallNormalFont));
                 } else {
-                    table.addCell(createQtyCell((String) controlInfo.get("ORDER_QTY"), 1, 2, smallBoldFont));
+                    table.addCell(createQtyCell((String) controlInfo.get("ORDER_QTY"), 1, 2, verySmallBoldFont));
                     table.addCell(createEACell(content, 1, 2, verySmallNormalFont));
                 }
             }
-            table.addCell(createImageCell(barcodeImage, 2, 1, 20.0f, smallNormalFont));
+            table.addCell(createImageCell(barcodeImage, 2, 1, 20.0f, verySmallNormalFont));
             // 2nd line
             table.addCell(createCell((String) controlInfo.get("PROJECT_NM"), 2, 1, verySmallNormalFont));
-            table.addCell(createCell("도번", 1, 1, smallBoldFont));
-            table.addCell(createCell((String) controlInfo.get("DRAWING_NUM"), 1, 1, smallNormalFont));
-            table.addCell(createCell("규격", 1, 1, smallBoldFont));
-            table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, smallNormalFont));
+            table.addCell(createCell("도번", 1, 1, verySmallBoldFont));
+            table.addCell(createCell((String) controlInfo.get("DRAWING_NUM"), 1, 1, verySmallNormalFont));
+            table.addCell(createCell("규격", 1, 1, verySmallBoldFont));
+            table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, verySmallNormalFont));
             if (controlInfo.get("SAME_SIDE_YN").equals("Y")) {
                 table.addCell(createCellPartUnit((String) controlInfo.get("SIDE_QTY"), 2, 1, verySmallNormalFont));
             }
-            table.addCell(createCell(controlInfo.get("INNER_DUE_DT") != null ? "가공" + controlInfo.get("INNER_DUE_DT") : "", 1, 1, smallNormalFont));
-            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? "납기" + controlInfo.get("ORDER_DUE_DT") : "", 1, 1, smallNormalFont));
+            table.addCell(createCell(controlInfo.get("INNER_DUE_DT") != null ? "가 " + controlInfo.get("INNER_DUE_DT") : "", 1, 1, verySmallNormalFont));
+            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? "납 " + controlInfo.get("ORDER_DUE_DT") : "", 1, 1, verySmallNormalFont));
             // 3rd line
             table.addCell(createCell((String) controlInfo.get("MODULE_NM"), 2, 1, verySmallNormalFont));
-            table.addCell(createCell("품명", 1, 1, smallBoldFont));
+            table.addCell(createCell("품명", 1, 1, verySmallBoldFont));
             table.addCell(createCell((String) controlInfo.get("ITEM_NM"), 1, 1, verySmallNormalFont));
-            table.addCell(createCell("표면", 1, 1, smallBoldFont));
-            table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 1, 1, smallNormalFont));
-            table.addCell(createCell(controlInfo.get("CONTROL_NUM") != null && controlInfo.get("TOTAL_SHEET") != null ? controlInfo.get("CONTROL_NUM") + " / " + controlInfo.get("TOTAL_SHEET"): controlInfo.get("CONTROL_NUM") != null ? (String) controlInfo.get("CONTROL_NUM") : "" + controlInfo.get("TOTAL_SHEET") != null ? (String) controlInfo.get("TOTAL_SHEET") : "", 4, 1, smallNormalFont));
+            table.addCell(createCell("표면", 1, 1, verySmallBoldFont));
+            table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 1, 1, verySmallNormalFont));
+            table.addCell(createCell(controlInfo.get("CONTROL_NUM") != null && controlInfo.get("TOTAL_SHEET") != null ? controlInfo.get("CONTROL_NUM") + " / " + controlInfo.get("TOTAL_SHEET"): controlInfo.get("CONTROL_NUM") != null ? (String) controlInfo.get("CONTROL_NUM") : "" + controlInfo.get("TOTAL_SHEET") != null ? (String) controlInfo.get("TOTAL_SHEET") : "", 4, 1, verySmallNormalFont));
             document.add(table);
             table.flushContent();
 
