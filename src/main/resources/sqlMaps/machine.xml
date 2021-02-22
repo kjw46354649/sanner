@@ -4,73 +4,73 @@
 <mapper namespace="machine">
 
     <select id="selectMachineList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-            SELECT
-                  A.EQUIP_SEQ
-                , A.EQUIP_ID
-                , A.PHOTO_GFILE_SEQ
-                , jmes.SF_GET_FILE_ORGINAL_NM(A.PHOTO_GFILE_SEQ, '1') as PHOTO_GFILE_SEQ_NM
-                , A.EQUIP_NM
-                , jmes.SF_GET_CODE_NM('1010', A.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM
-                , jmes.SF_GET_CODE_NM('1012', A.EQUIP_TYPE, #{LOGIN_LOCALE}) AS EQUIP_TYPE_NM
-                <!-- , jmes.SF_GET_CODE_NM('1034', A.EQUIP_SIZE, #{LOGIN_LOCALE}) AS EQUIP_SIZE_NM -->
-                , A.EQUIP_SIZE
-                , jmes.SF_GET_CODE_NM('1037', A.EQUIP_COMP_CD, #{LOGIN_LOCALE}) AS EQUIP_COMP_NM
-                , jmes.SF_GET_CODE_NM('1022', A.RESELLER_CD, #{LOGIN_LOCALE}) AS RESELLER_NM
-                , jmes.SF_GET_CODE_NM('1005', A.FACTORY_AREA, #{LOGIN_LOCALE}) AS FACTORY_AREA_NM
-                , jmes.SF_GET_CODE_NM('1014', (SELECT REF_CD FROM jmes.TBL_CODE WHERE HIGH_CD = '1005' AND CODE_CD = A.FACTORY_AREA), #{LOGIN_LOCALE}) AS FACTORY_NM
-                , jmes.SF_GET_DATE_F(A.PURCHASE_DT,'YY','') AS PURCHASE_DT
-                , (SELECT USER_NM FROM jmes.TBL_USER WHERE USER_ID = A.MAIN_USER_ID) AS MAIN_USER_NM
-                , (SELECT USER_NM FROM jmes.TBL_USER WHERE USER_ID = A.SUB_USER_ID) AS SUB_USER_NM
-                , (SELECT CONCAT(FLOOR(SUM(TIMESTAMPDIFF(MINUTE, Y.WORK_START_DT, Y.WORK_STOP_DT) / 60)),'H ', MOD(SUM(TIMESTAMPDIFF(MINUTE, Y.WORK_START_DT, Y.WORK_STOP_DT)), 60), 'M')
-                    FROM jmes.TBL_MCT_WORK X, jmes.TBL_MCT_WORK_TIME Y
-                    WHERE X.MCT_WORK_SEQ = Y.MCT_WORK_SEQ
-                        AND X.DEL_YN = 'N'
-                        AND Y.WORK_STOP_DT IS NOT NULL
-                        AND X.EQUIP_SEQ = A.EQUIP_SEQ) AS WORKING_TIME
-                , (SELECT jmes.SF_GET_DATE_F(MAX(REPAIR_END_DT),'YY','') FROM jmes.TBL_EQUIP_REPAIR WHERE EQUIP_SEQ = A.EQUIP_SEQ) AS LAST_REPAIR_DT
-                , (SELECT jmes.SF_GET_DATE_F(MAX(M.WORK_FINISH_DT),'YY','') FROM jmes.TBL_MCT_WORK M WHERE M.EQUIP_SEQ = A.EQUIP_SEQ) AS LAST_WORK_FINISH_DT
-                , ( SELECT Y.CONTROL_NUM
-                    FROM jmes.TBL_MCT_WORK X, jmes.TBL_CONTROL Y
-                    WHERE X.CONTROL_SEQ = Y.CONTROL_SEQ
-                        AND X.EQUIP_SEQ = A.EQUIP_SEQ
-                    ORDER BY X.MCT_WORK_SEQ DESC
-                    LIMIT 1) AS LAST_CONTROL_NUM
-                , A.NOTE
-                , A.MODEL_NUM, A.SERIAL_NUM
-                , A.COMBO_BOX_SORT_NUM
-            FROM jmes.TBL_EQUIP A
-            WHERE A.EQUIP_KIND = #{SEL_EQUIP_KIND}
+        SELECT
+              A.EQUIP_SEQ
+            , A.EQUIP_ID
+            , A.PHOTO_GFILE_SEQ
+            , jmes.SF_GET_FILE_ORGINAL_NM(A.PHOTO_GFILE_SEQ, '1') as PHOTO_GFILE_SEQ_NM
+            , A.EQUIP_NM
+            , jmes.SF_GET_CODE_NM('1010', A.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM
+            , jmes.SF_GET_CODE_NM('1012', A.EQUIP_TYPE, #{LOGIN_LOCALE}) AS EQUIP_TYPE_NM
+            <!-- , jmes.SF_GET_CODE_NM('1034', A.EQUIP_SIZE, #{LOGIN_LOCALE}) AS EQUIP_SIZE_NM -->
+            , A.EQUIP_SIZE
+            , jmes.SF_GET_CODE_NM('1037', A.EQUIP_COMP_CD, #{LOGIN_LOCALE}) AS EQUIP_COMP_NM
+            , jmes.SF_GET_CODE_NM('1022', A.RESELLER_CD, #{LOGIN_LOCALE}) AS RESELLER_NM
+            , jmes.SF_GET_CODE_NM('1005', A.FACTORY_AREA, #{LOGIN_LOCALE}) AS FACTORY_AREA_NM
+            , jmes.SF_GET_CODE_NM('1014', (SELECT REF_CD FROM jmes.TBL_CODE WHERE HIGH_CD = '1005' AND CODE_CD = A.FACTORY_AREA), #{LOGIN_LOCALE}) AS FACTORY_NM
+            , jmes.SF_GET_DATE_F(A.PURCHASE_DT,'YY','') AS PURCHASE_DT
+            , (SELECT USER_NM FROM jmes.TBL_USER WHERE USER_ID = A.MAIN_USER_ID) AS MAIN_USER_NM
+            , (SELECT USER_NM FROM jmes.TBL_USER WHERE USER_ID = A.SUB_USER_ID) AS SUB_USER_NM
+            , (SELECT CONCAT(FLOOR(SUM(TIMESTAMPDIFF(MINUTE, Y.WORK_START_DT, Y.WORK_STOP_DT) / 60)),'H ', MOD(SUM(TIMESTAMPDIFF(MINUTE, Y.WORK_START_DT, Y.WORK_STOP_DT)), 60), 'M')
+                FROM jmes.TBL_MCT_WORK X, jmes.TBL_MCT_WORK_TIME Y
+                WHERE X.MCT_WORK_SEQ = Y.MCT_WORK_SEQ
+                    AND X.DEL_YN = 'N'
+                    AND Y.WORK_STOP_DT IS NOT NULL
+                    AND X.EQUIP_SEQ = A.EQUIP_SEQ) AS WORKING_TIME
+            , (SELECT jmes.SF_GET_DATE_F(MAX(REPAIR_END_DT),'YY','') FROM jmes.TBL_EQUIP_REPAIR WHERE EQUIP_SEQ = A.EQUIP_SEQ) AS LAST_REPAIR_DT
+            , (SELECT jmes.SF_GET_DATE_F(MAX(M.WORK_FINISH_DT),'YY','') FROM jmes.TBL_MCT_WORK M WHERE M.EQUIP_SEQ = A.EQUIP_SEQ) AS LAST_WORK_FINISH_DT
+            , ( SELECT Y.CONTROL_NUM
+                FROM jmes.TBL_MCT_WORK X, jmes.TBL_CONTROL Y
+                WHERE X.CONTROL_SEQ = Y.CONTROL_SEQ
+                    AND X.EQUIP_SEQ = A.EQUIP_SEQ
+                ORDER BY X.MCT_WORK_SEQ DESC
+                LIMIT 1) AS LAST_CONTROL_NUM
+            , A.NOTE
+            , A.MODEL_NUM, A.SERIAL_NUM
+            , A.COMBO_BOX_SORT_NUM
+        FROM jmes.TBL_EQUIP A
+        WHERE A.EQUIP_KIND = #{SEL_EQUIP_KIND}
             AND A.DEL_YN = 'N'
-            <if test="SEL_EQUIP_TYPE !='' and SEL_EQUIP_TYPE != null">
-                AND A.EQUIP_TYPE = #{SEL_EQUIP_TYPE}
-            </if>
-            <if test="SEL_EQUIP_SIZE !='' and SEL_EQUIP_SIZE != null">
-                AND A.EQUIP_SIZE = #{SEL_EQUIP_SIZE}
-            </if>
-            <if test="SEL_EQUIP_NM !='' and SEL_EQUIP_NM != null">
-                AND A.EQUIP_SEQ = #{SEL_EQUIP_NM}
-            </if>
-            <if test="SEL_FACTORY_AREA !='' and SEL_FACTORY_AREA != null">
-                AND A.FACTORY_AREA = #{SEL_FACTORY_AREA}
-            </if>
-            <if test="SEL_MAIN_USER_ID !='' and SEL_MAIN_USER_ID != null">
-                AND EXISTS (  SELECT 1
-                                FROM jmes.TBL_USER
-                                WHERE USER_ID IN (A.MAIN_USER_ID, A.SUB_USER_ID)
-                                AND USER_NM LIKE CONCAT('%', #{SEL_MAIN_USER_ID}, '%')
-                           )
-            </if>
+        <if test="SEL_EQUIP_TYPE !='' and SEL_EQUIP_TYPE != null">
+            AND A.EQUIP_TYPE = #{SEL_EQUIP_TYPE}
+        </if>
+        <if test="SEL_EQUIP_SIZE !='' and SEL_EQUIP_SIZE != null">
+            AND A.EQUIP_SIZE = #{SEL_EQUIP_SIZE}
+        </if>
+        <if test="SEL_EQUIP_NM !='' and SEL_EQUIP_NM != null">
+            AND A.EQUIP_SEQ = #{SEL_EQUIP_NM}
+        </if>
+        <if test="SEL_FACTORY_AREA !='' and SEL_FACTORY_AREA != null">
+            AND A.FACTORY_AREA = #{SEL_FACTORY_AREA}
+        </if>
+        <if test="SEL_MAIN_USER_ID !='' and SEL_MAIN_USER_ID != null">
+            AND EXISTS (  SELECT 1
+                            FROM jmes.TBL_USER
+                            WHERE USER_ID IN (A.MAIN_USER_ID, A.SUB_USER_ID)
+                            AND USER_NM LIKE CONCAT('%', #{SEL_MAIN_USER_ID}, '%')
+                       )
+        </if>
 <!--            <if test="SEL_TERM_DT_USE or SEL_TERM_DT_USE ==true">-->
-                <if test='SEL_DAY_TYPE == "1"'>
-                    AND A.PURCHASE_DT >= REPLACE(#{SEL_ST_DT},'/',space(0))
-                    AND A.PURCHASE_DT <![CDATA[ <= ]]> REPLACE(#{SEL_END_DT},'/',space(0))
-                </if>
-<!--            </if>-->
-            <if test="SEL_MAIN_USER_ID !='' and SEL_MAIN_USER_ID != null">
-                AND (A.MAIN_USER_ID = #{SEL_MAIN_USER_ID} OR SUB_USER_ID = #{SEL_MAIN_USER_ID})
+            <if test='SEL_DAY_TYPE == "1"'>
+                AND A.PURCHASE_DT >= REPLACE(#{SEL_ST_DT},'/',space(0))
+                AND A.PURCHASE_DT <![CDATA[ <= ]]> REPLACE(#{SEL_END_DT},'/',space(0))
             </if>
-            ORDER BY A.EQUIP_ID
-        </select>
+<!--            </if>-->
+        <if test="SEL_MAIN_USER_ID !='' and SEL_MAIN_USER_ID != null">
+            AND (A.MAIN_USER_ID = #{SEL_MAIN_USER_ID} OR SUB_USER_ID = #{SEL_MAIN_USER_ID})
+        </if>
+        ORDER BY A.EQUIP_ID
+    </select>
 
     <select id="selectMachineInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.EQUIP_SEQ, A.EQUIP_ID
