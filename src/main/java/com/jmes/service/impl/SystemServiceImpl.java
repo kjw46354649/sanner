@@ -206,6 +206,40 @@ public class SystemServiceImpl implements SystemService {
         model.addAttribute("result",		"success");
     }
 
+    @Override
+    public void updateWorkingTime(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
 
+        ArrayList<HashMap<String, Object>> updateList = null;
+        String[] weekDayArray = {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
 
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("updateList"))
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+        for (int i = 0; i < updateList.size(); i++) {
+            Set set = updateList.get(i).entrySet();
+            Iterator iterator = set.iterator();
+
+            while (iterator.hasNext()) {
+                HashMap<String, Object> hashMap = new HashMap<String, Object>();
+                Map.Entry entry = (Map.Entry) iterator.next();
+                String key = (String) entry.getKey();
+
+                if (Arrays.asList(weekDayArray).indexOf(key) > -1) {
+                    hashMap.put("LOGIN_USER_ID", userId);
+                    hashMap.put("queryId", "systemMapper.updateWorkingWeekTime");
+                    hashMap.put("WORKING_TIME", updateList.get(i).get(key));
+                    hashMap.put("WORK_FACTORY", updateList.get(i).get("WORK_FACTORY"));
+                    hashMap.put("WEEK_DAY", Arrays.asList(weekDayArray).indexOf(key));
+                    this.innodaleDao.updateGrid(hashMap);
+                }
+            }
+        }
+    }
 }

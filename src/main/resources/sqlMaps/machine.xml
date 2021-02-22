@@ -38,9 +38,12 @@
             , A.NOTE
             , A.MODEL_NUM, A.SERIAL_NUM
             , A.COMBO_BOX_SORT_NUM
+            , A.REPORT_SHOW_YN
         FROM jmes.TBL_EQUIP A
-        WHERE A.EQUIP_KIND = #{SEL_EQUIP_KIND}
-            AND A.DEL_YN = 'N'
+        WHERE A.DEL_YN = 'N'
+        <if test="SEL_EQUIP_KIND !='' and SEL_EQUIP_KIND != null">
+            AND A.EQUIP_KIND = #{SEL_EQUIP_KIND}
+        </if>
         <if test="SEL_EQUIP_TYPE !='' and SEL_EQUIP_TYPE != null">
             AND A.EQUIP_TYPE = #{SEL_EQUIP_TYPE}
         </if>
