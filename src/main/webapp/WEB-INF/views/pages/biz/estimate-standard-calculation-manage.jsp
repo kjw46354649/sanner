@@ -385,6 +385,8 @@
             };
 
             fnPostAjaxAsync(function (data) {
+                list.push({value: '', text: ''});
+
                 for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
                     let obj = data.list[i];
 
@@ -416,6 +418,8 @@
                         };
 
                         fnPostAjaxAsync(function (data) {
+                            list.push({value: '', text: ''});
+
                             for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
                                 let obj = data.list[i];
 
