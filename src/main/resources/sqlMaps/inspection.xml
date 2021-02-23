@@ -614,8 +614,9 @@
                                                 AND BB.ORDER_STATUS = 'ORD003')) AS CONTROL_CLOSE_DT <!-- 확정 일자 -->
                     , C.SCRAP_YN
                 FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
-                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                WHERE B.CONTROL_SEQ = A.CONTROL_SEQ
+                    AND C.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
                     AND A.DEL_YN = 'N'
                     AND A.CONTROL_STATUS IN ('ORD001', 'ORD003', 'ORD005')
                     <!-- AND B.PART_STATUS IN ('PRO009','PRO010','PRO011') 상태확인 필요 -->
