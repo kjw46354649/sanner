@@ -932,7 +932,19 @@
                             return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
-                    {title: '계산견적', width: 55, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_SUM_AUTO_AMT'},
+                    {
+                        title: '계산견적', width: 55, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_SUM_AUTO_AMT',
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    },
                     {
                         title: '납품확인', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
