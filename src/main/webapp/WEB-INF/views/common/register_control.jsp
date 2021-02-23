@@ -40,7 +40,6 @@
         const materialKindList = fnGetCommCodeGridSelectBox('1029');
         const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
         const materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
-        const materialFinishTmList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
         const materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
         const FAMILY_COMPANY = fnCommCodeDatasourceGridSelectBoxCreate({
             'url': '/json-list',
@@ -464,31 +463,6 @@
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 colModel: [
                     {
-                        title: 'TM각비', width: 70, dataIndx: 'MATERIAL_FINISH_TM',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')},
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-
-                            if (cellData === '' || cellData === undefined) {
-                                return '';
-                            } else {
-                                let materialFinishTm = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
-                                let index = materialFinishTm.findIndex(function (element) {
-                                    return element.text === cellData;
-                                });
-
-                                if (index < 0) {
-                                    index = materialFinishTm.findIndex(function (element) {
-                                        return element.value === cellData;
-                                    });
-                                }
-
-                                return (index < 0) ? cellData : materialFinishTm[index].text;
-                            }
-                        }
-                    },
-                    {
                         title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
@@ -617,7 +591,6 @@
                         let materialKind = null;
                         let surfaceTreat = null;
                         let materialFinishHeat = null;
-                        let materialFinishTm = null;
                         let materialFinishGrind = null;
 
                         // 단가확인
@@ -707,14 +680,6 @@
 
                             if (index >= 0) materialFinishHeat = materialFinishHeatList[index].value;
                         }
-                        // TM각비
-                        if (newRowData.MATERIAL_FINISH_TM !== undefined) {
-                            let index = materialFinishTmList.findIndex(function (element) {
-                                return element.text === newRowData.MATERIAL_FINISH_TM;
-                            });
-
-                            if (index >= 0) materialFinishTm = materialFinishTmList[index].value;
-                        }
                         // 연마
                         if (newRowData.MATERIAL_FINISH_GRIND !== undefined) {
                             let index = materialFinishGrindList.findIndex(function (element) {
@@ -735,7 +700,6 @@
                         ui.addList[i].newRow.MATERIAL_KIND = materialKind;
                         ui.addList[i].newRow.SURFACE_TREAT = surfaceTreat;
                         ui.addList[i].newRow.MATERIAL_FINISH_HEAT = materialFinishHeat;
-                        ui.addList[i].newRow.MATERIAL_FINISH_TM = materialFinishTm;
                         ui.addList[i].newRow.MATERIAL_FINISH_GRIND = materialFinishGrind;
                     }
 
@@ -754,7 +718,6 @@
                         let materialKind = null;
                         let surfaceTreat = null;
                         let materialFinishHeat = null;
-                        let materialFinishTm = null;
                         let materialFinishGrind = null;
 
                         // 단가확인
@@ -875,17 +838,6 @@
                             if (index >= 0) {
                                 materialFinishHeat = materialFinishHeatList[index].value;
                                 tempNewRow.MATERIAL_FINISH_HEAT = materialFinishHeat;
-                            }
-                        }
-                        // TM각비
-                        if (newRowData.MATERIAL_FINISH_TM !== undefined) {
-                            let index = materialFinishTmList.findIndex(function (element) {
-                                return element.text === newRowData.MATERIAL_FINISH_TM;
-                            });
-
-                            if (index >= 0) {
-                                materialFinishTm = materialFinishTmList[index].value;
-                                tempNewRow.MATERIAL_FINISH_TM = materialFinishTm;
                             }
                         }
                         // 연마
@@ -1153,14 +1105,6 @@
                 });
 
                 if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_HEAT');
-            }
-            // TM각비
-            if (rowData.MATERIAL_FINISH_TM !== undefined && rowData.MATERIAL_FINISH_TM !== null && rowData.MATERIAL_FINISH_TM !== '') {
-                let index = materialFinishTmList.findIndex(function (element) {
-                    return element.value === rowData.MATERIAL_FINISH_TM;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_TM');
             }
             // 연마
             if (rowData.MATERIAL_FINISH_GRIND !== undefined && rowData.MATERIAL_FINISH_GRIND !== null && rowData.MATERIAL_FINISH_GRIND !== '') {

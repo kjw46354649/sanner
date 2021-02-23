@@ -105,9 +105,6 @@
 
             },
             {
-                title: 'TM각비', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-            },
-            {
                 title: '연마비', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
             {
                 title: '열처리', width: 70, dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}},
@@ -118,7 +115,6 @@
             {title: '중량', datatype: 'string', dataIndx: 'SIZE_D_M'},
             {title: '부피', datatype: 'string', dataIndx: 'SIZE_L_M'},
             {title: '소재비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, },
-            {title: 'TM각비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, },
             {title: '연마비', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, },
             {title: '열처리', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, },
             {title: '표면처리', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, },

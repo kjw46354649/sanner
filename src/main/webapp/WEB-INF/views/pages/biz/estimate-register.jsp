@@ -389,39 +389,6 @@
             },
             {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
             {
-                title: '소재마감', align: 'center',
-                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                colModel: [
-                    {
-                        title: 'TM각비', width: 70, dataIndx: 'MATERIAL_FINISH_TM',
-                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010')},
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-
-                            if (cellData === '' || cellData === undefined) {
-                                return '';
-                            } else {
-                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
-                                let index = workFactory.findIndex(function (element) {
-                                    return element.text === cellData;
-                                });
-
-                                if (index < 0) {
-                                    index = workFactory.findIndex(function (element) {
-                                        return element.value === cellData;
-                                    });
-                                }
-
-                                return (index < 0) ? cellData : workFactory[index].text;
-                            }
-                        }
-                    },
-                ]
-            },
-
-
-            {
                 title: '후가공', align: 'center',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 colModel: [
@@ -519,7 +486,6 @@
                 ], hidden: true},
             {title: '자동계산 견적단가', align: "center", colModel:[
                     {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', format: '#,###', align: 'right', editable: false},
-                    {title: 'TM각비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AUTO_AMT', format: '#,###', align: 'right', editable: false},
                     {title: '연마비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###', align: 'right', editable: false},
                     {title: '열처리', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###', align: 'right', editable: false},
                     {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AUTO_AMT', format: '#,###', align: 'right', editable: false},
@@ -529,7 +495,6 @@
             },
             {title: '항목별 계산 견적단가(10원단위 반올림)', align: "center", colModel: [
                     {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
-                    {title: 'TM각비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
                     {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
                     {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
                     {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
@@ -728,7 +693,6 @@
                     const materialDetailList = fnGetCommCodeGridSelectBox('1027');
                     const materialKindList = fnGetCommCodeGridSelectBox('1029');
                     const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
-                    const materialFinishTmList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
                     const materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
                     const materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
 
@@ -739,7 +703,6 @@
                         let materialDetail = null;
                         let materialKind = null;
                         let surfaceTreat = null;
-                        let materialFinishTm = null;
                         let materialFinishGrind = null;
                         let materialFinishHeat = null;
 
@@ -775,14 +738,6 @@
 
                             if(index >= 0) surfaceTreat = surfaceTreatList[index].value;
                         }
-                        // TM각비
-                        if (newRowData.MATERIAL_FINISH_TM !== undefined) {
-                            let index = materialFinishTmList.findIndex(function (element) {
-                                return element.text === newRowData.MATERIAL_FINISH_TM;
-                            });
-
-                            if(index >= 0) materialFinishTm = materialFinishTmList[index].value;
-                        }
                         // 연마비
                         if (newRowData.MATERIAL_FINISH_GRIND !== undefined) {
                             let index = materialFinishGrindList.findIndex(function (element) {
@@ -804,7 +759,6 @@
                         ui.addList[i].newRow.MATERIAL_DETAIL = materialDetail ;
                         ui.addList[i].newRow.MATERIAL_KIND = materialKind ;
                         ui.addList[i].newRow.SURFACE_TREAT = surfaceTreat ;
-                        ui.addList[i].newRow.MATERIAL_FINISH_TM = materialFinishTm ;
                         ui.addList[i].newRow.MATERIAL_FINISH_GRIND = materialFinishGrind ;
                         ui.addList[i].newRow.MATERIAL_FINISH_HEAT = materialFinishHeat ;
                     }
@@ -846,14 +800,6 @@
 
                             if (index >= 0) tempNewRow.SURFACE_TREAT = surfaceTreatList[index].value;
                         }
-                        // TM각비
-                        if (newRowData.MATERIAL_FINISH_TM !== undefined) {
-                            let index = materialFinishTmList.findIndex(function (element) {
-                                return element.text === newRowData.MATERIAL_FINISH_TM;
-                            });
-
-                            if (index >= 0) tempNewRow.MATERIAL_FINISH_TM = materialFinishTmList[index].value;
-                        }
                         // 연마비
                         if (newRowData.MATERIAL_FINISH_GRIND !== undefined) {
                             let index = materialFinishGrindList.findIndex(function (element) {
@@ -887,7 +833,6 @@
                         let calculateEstimateAmt = 0;
                         let data = ui.updateList[iTmp].rowData;
                         let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_AMT);
-                        let UNIT_MATERIAL_FINISH_TM_AMT = data.UNIT_MATERIAL_FINISH_TM_AMT == null || data.UNIT_MATERIAL_FINISH_TM_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_FINISH_TM_AMT);
                         let UNIT_MATERIAL_FINISH_GRIND_AMT = data.UNIT_MATERIAL_FINISH_GRIND_AMT == null || data.UNIT_MATERIAL_FINISH_GRIND_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_FINISH_GRIND_AMT);
                         let UNIT_MATERIAL_FINISH_HEAT_AMT = data.UNIT_MATERIAL_FINISH_HEAT_AMT == null || data.UNIT_MATERIAL_FINISH_HEAT_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_FINISH_HEAT_AMT);
                         let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT == '' ? 0 : parseFloat(data.UNIT_SURFACE_AMT);
@@ -896,7 +841,6 @@
                         let ITEM_QTY = data.ITEM_QTY == null || data.ITEM_QTY == '' ? 0 : parseFloat(data.ITEM_QTY);
 
                         calculateEstimateAmt += UNIT_MATERIAL_AMT;
-                        calculateEstimateAmt += UNIT_MATERIAL_FINISH_TM_AMT;
                         calculateEstimateAmt += UNIT_MATERIAL_FINISH_GRIND_AMT;
                         calculateEstimateAmt += UNIT_MATERIAL_FINISH_HEAT_AMT;
                         calculateEstimateAmt += UNIT_SURFACE_AMT;
@@ -1123,7 +1067,6 @@
             const materialDetailList = fnGetCommCodeGridSelectBox('1027');
             const materialKindList = fnGetCommCodeGridSelectBox('1029');
             const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
-            const materialFinishTmList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
             const materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
             const materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
             let rowIndex = rowData.pq_ri;
@@ -1159,14 +1102,6 @@
                 });
 
                 if (index < 0) addErrorList(rowIndex, 'SURFACE_TREAT');
-            }
-            // TM각비
-            if (!fnIsEmpty(rowData.MATERIAL_FINISH_TM)) {
-                let index = materialFinishTmList.findIndex(function (element) {
-                    return element.value === rowData.MATERIAL_FINISH_TM;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_TM');
             }
             // 연마비
             if (!fnIsEmpty(rowData.MATERIAL_FINISH_GRIND)) {
@@ -1331,14 +1266,12 @@
             for (let i = 0, selectedRowCount = estimateRegisterSelectedRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = estimateRegisterTopGrid.pqGrid('getRowData', {rowIndx: estimateRegisterSelectedRowIndex[i]});
                 let unitMaterialAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_MATERIAL_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(Number(rowData.UNIT_MATERIAL_AUTO_AMT) * (number / 100) / 100) * 100) : null;
-                let unitTmAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_MATERIAL_FINISH_TM_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(Number(rowData.UNIT_MATERIAL_FINISH_TM_AUTO_AMT) * (number / 100) / 100) * 100) : null;
                 let unitGrindAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(rowData.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT * (number / 100) / 100) * 100) : null;
                 let unitHeatAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(Number(rowData.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT) * (number / 100) / 100) * 100) : null;
                 let unitSurfaceAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_SURFACE_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(Number(rowData.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT) * (number / 100) / 100) * 100) : null;
                 let unitProcessAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_PROCESS_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(rowData.UNIT_PROCESS_AUTO_AMT * (number / 100) / 100) * 100) : null;
                 let row = {};
                 row.UNIT_MATERIAL_AMT = unitMaterialAmt;
-                row.UNIT_MATERIAL_FINISH_TM_AMT = unitTmAmt;
                 row.UNIT_MATERIAL_FINISH_GRIND_AMT = unitGrindAmt;
                 row.UNIT_MATERIAL_FINISH_HEAT_AMT = unitHeatAmt;
                 row.UNIT_SURFACE_AMT = unitSurfaceAmt;
@@ -1348,7 +1281,6 @@
                     'rowIndx': estimateRegisterSelectedRowIndex[i],
                     row: {
                         'UNIT_MATERIAL_AMT': unitMaterialAmt,
-                        'UNIT_MATERIAL_FINISH_TM_AMT': unitTmAmt,
                         'UNIT_MATERIAL_FINISH_GRIND_AMT': unitGrindAmt,
                         'UNIT_MATERIAL_FINISH_HEAT_AMT': unitHeatAmt,
                         'UNIT_SURFACE_AMT': unitSurfaceAmt,
