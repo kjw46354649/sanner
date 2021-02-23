@@ -97,8 +97,22 @@
                 <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailInfo"/>
                 <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
                 <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
+                <input type="hidden" id="ASSEMBLY_CONTROL_DETAIL_SEQ" name="ASSEMBLY_CONTROL_DETAIL_SEQ"/>
+                <input type="hidden" id="FIRST_PART_CONTROL_DETAIL_SEQ" name="FIRST_PART_CONTROL_DETAIL_SEQ"/>
+                <input type="hidden" id="PREV_PART_CONTROL_DETAIL_SEQ" name="PREV_PART_CONTROL_DETAIL_SEQ" value=""/>
+                <input type="hidden" id="NEXT_PART_CONTROL_DETAIL_SEQ" name="NEXT_PART_CONTROL_DETAIL_SEQ" value=""/>
                 <div class="d-flex align-items-center">
                     <h4>기본정보</h4>
+                    <div id="view_part_wrap" style="margin-left: 75px;">
+                        <button class="defaultBtn" name="view_assembly_or_part" id="WTP020" value="WTP020">조립</button>
+                        <button class="defaultBtn" name="view_assembly_or_part" id="WTP050" value="WTP050">파트</button>
+                        <span name="view_part" id="view_part_prev" style="cursor: pointer;">
+                            <img src="/resource/asset/images/common/img_left_arrow.png" alt="왼쪽 화살표" style="width: 15px;">
+                        </span>
+                        <span name="view_part" id="view_part_next" style="cursor: pointer;">
+                            <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표" style="width: 15px;">
+                        </span>
+                    </div>
                     <div class="btnWrap ml-auto mb-10">
                         <button id="CAD_DOWNLOAD" class="d-none defaultBtn">캐드파일</button>
                         <button id="DRAWING_VIEW" class="defaultBtn">도면보기</button>
@@ -1081,21 +1095,28 @@
             'data': fnFormToJsonArrayData('g_item_detail_pop_form')
         };
         fnPostAjax(function (data, callFunctionParam) {
+            const dataInfo = data.info;
             let dxfFileDownloadYn = '${authUserInfo.DXF_FILE_DOWNLOAD_YN}';
             fnResetFrom("g_item_detail_pop_form");
+            fnJsonDataToForm('g_item_detail_pop_form', dataInfo);
+
             $itemDetailPopForm.find("#CAD_DOWNLOAD").addClass('d-none');
             $itemDetailPopForm.find("#CAD_DOWNLOAD").removeAttr('onClick');
             $itemDetailPopForm.find("#DRAWING_VIEW").removeAttr('onClick');
             $itemDetailPopForm.find("#WORK_HISTORY_INFO").removeAttr('onClick');
-            let dataInfo = data.info;
-
             $itemDetailPopForm.find(".list1").find(".rowStyle").find("td").html('');
+            $itemDetailPopForm.find("[name=view_assembly_or_part]").siblings().removeClass('bg-moccasin');
+            if (dataInfo.WORK_TYPE === 'WTP020' || dataInfo.WORK_TYPE === 'WTP050') {
+                $itemDetailPopForm.find("#" + dataInfo.WORK_TYPE).addClass('bg-moccasin');
+            }
             if (dataInfo) {
+                dataInfo.ASSEMBLY_YN === 'Y' ? $('#view_part_wrap').show() : $('#view_part_wrap').hide();
+                fnIsEmpty(dataInfo.PREV_PART_CONTROL_DETAIL_SEQ) ? $('#g_item_detail_pop_form').find('#view_part_prev').css('visibility', 'hidden') : $('#g_item_detail_pop_form').find('#view_part_prev').css('visibility', 'visible');
+                fnIsEmpty(dataInfo.NEXT_PART_CONTROL_DETAIL_SEQ) ? $('#g_item_detail_pop_form').find('#view_part_next').css('visibility', 'hidden') : $('#g_item_detail_pop_form').find('#view_part_next').css('visibility', 'visible');
                 const emergencySpanElement = dataInfo.EMERGENCY_YN === 'Y' ? '<span class="mark">긴급</span>' : '';
                 const materialFinishHeatSpanElement = dataInfo.MATERIAL_FINISH_HEAT === '열처리' ? '<span class="mark">열처리</span>' : '';
                 const controlStatusHoldSpanElement = dataInfo.CONTROL_STATUS === 'ORD005' ? '<span class="mark" style="background-color: #ff0000; color: #ffffff">보류</span>' : '';
 
-                //fnJsonDataToForm("stock_manage_pop_form", dataInfo);
                 $itemDetailPopForm.find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
                 $itemDetailPopForm.find("#WORK_TYPE_NM_ORDER_QTY_INFO").html(dataInfo.WORK_TYPE_NM_ORDER_QTY_INFO);
                 $itemDetailPopForm.find("#INNER_DUE_DT").html(dataInfo.INNER_DUE_DT + emergencySpanElement);
@@ -1120,16 +1141,6 @@
 
                 $itemDetailPopForm.find("#OUTSIDE_CONFIRM_DT").html(dataInfo.OUTSIDE_CONFIRM_DT);
                 $itemDetailPopForm.find("#MATERIAL_ORDER_DT").html(dataInfo.MATERIAL_ORDER_DT);
-
-                // $itemDetailPopForm.find("#MATERIAL_ORDER_STATUS_NM").html(dataInfo.MATERIAL_ORDER_STATUS_NM);
-                // $itemDetailPopForm.find("#DRAWING_VER").html(dataInfo.DRAWING_VER);
-                // $itemDetailPopForm.find("#MATERIAL_SIZE_TXT").html(dataInfo.MATERIAL_SIZE_TXT);
-
-                // let filedownlod = "";
-                // if (dataInfo.DXF_GFILE_SEQ != "" && dataInfo.DXF_GFILE_SEQ != undefined) {
-                //     filedownlod = "<button type='button' class='smallBtn red' onclick=\"javascript:fnFileDownloadFormPageAction('" + dataInfo.DXF_GFILE_SEQ + "');\"><i class='fa fa-trash'></i><span >다운로드</span></button>";
-                // }
-                // $itemDetailPopForm.find("#DXF_GFILE_SEQ").html(filedownlod);
 
                 $itemDetailPopForm.find("#ORDER_COMP_NM_DESIGNER_NM").html(dataInfo.ORDER_COMP_NM_DESIGNER_NM);
                 $itemDetailPopForm.find("#OUTSIDE_COMP_NM").html(dataInfo.OUTSIDE_COMP_NM);
@@ -1294,6 +1305,43 @@
 
         g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, orderDetailGrid, orderDetailRowIndx + value);
     });
+
+    $('#g_item_detail_pop_form').find('[name=view_assembly_or_part]').on('click', function () {
+        $(this).siblings().removeClass('bg-moccasin');
+        $(this).addClass("bg-moccasin");
+
+        const controlSeq = $('#g_item_detail_pop_form > #CONTROL_SEQ').val();
+        let controlDetailSeq;
+
+        switch (this.value) {
+            case 'WTP020':
+                controlDetailSeq = $('#g_item_detail_pop_form > #ASSEMBLY_CONTROL_DETAIL_SEQ').val();
+                break;
+            case 'WTP050':
+                controlDetailSeq = $('#g_item_detail_pop_form > #FIRST_PART_CONTROL_DETAIL_SEQ').val();
+                break;
+        }
+
+        g_item_detail_pop_view(controlSeq, controlDetailSeq, orderDetailGrid, orderDetailRowIndx);
+    });
+
+    $('#g_item_detail_pop_form').find('[name=view_part]').on('click', function () {
+        const controlSeq = $('#g_item_detail_pop_form > #CONTROL_SEQ').val();
+        let controlDetailSeq;
+
+        switch ($(this).attr('id')) {
+            case 'view_part_prev':
+                controlDetailSeq = $('#g_item_detail_pop_form > #PREV_PART_CONTROL_DETAIL_SEQ').val();
+                break;
+            case 'view_part_next':
+                controlDetailSeq = $('#g_item_detail_pop_form > #NEXT_PART_CONTROL_DETAIL_SEQ').val();
+                break;
+        }
+
+        g_item_detail_pop_view(controlSeq, controlDetailSeq, orderDetailGrid, orderDetailRowIndx);
+    });
+
+
 
     $("#g_item_detail_pop").find('#g_item_detail_pop_grid_05_pop_close, #popClose2').on('click', function () {
         $('#g_item_detail_pop').modal('hide');

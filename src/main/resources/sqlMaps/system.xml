@@ -771,9 +771,9 @@
         WHERE STAFF_SEQ = #{STAFF_SEQ}
     </update>
 
-    <update id="deleteCompanyAllType" parameterType="java.util.HashMap">
+    <delete id="deleteCompanyAllType" parameterType="java.util.HashMap">
         DELETE FROM jmes.TBL_COMPANY_TYPE WHERE COMP_CD = #{COMP_CD}
-    </update>
+    </delete>
 
     <update id="insertCompanyType" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_COMPANY_TYPE (COMP_CD, COMP_TYPE, HIGH_TYPE, INSERT_ID)
@@ -962,5 +962,126 @@
 	            , UPDATE_DT = NOW()
 	            , UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
+
+    <select id="selectWorkingWeekTimeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER() AS ROW_NUM
+            , WORK_FACTORY
+            , SF_GET_CODE_NM('1014', WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
+            , MAX(CASE  WHEN WEEK_DAY =  0 THEN WORKING_TIME END) AS SUN
+            , MAX(CASE  WHEN WEEK_DAY =  1 THEN WORKING_TIME END) AS MON
+            , MAX(CASE  WHEN WEEK_DAY =  2 THEN WORKING_TIME END) AS TUE
+            , MAX(CASE  WHEN WEEK_DAY =  3 THEN WORKING_TIME END) AS WED
+            , MAX(CASE  WHEN WEEK_DAY =  4 THEN WORKING_TIME END) AS THU
+            , MAX(CASE  WHEN WEEK_DAY =  5 THEN WORKING_TIME END) AS FRI
+            , MAX(CASE  WHEN WEEK_DAY =  6 THEN WORKING_TIME END) AS SAT
+        FROM jmes.TBL_WORKING_WEEK_TIME
+        GROUP BY WORK_FACTORY
+        ORDER BY WORK_FACTORY_NM
+    </select>
+
+    <update id="updateWorkingWeekTime" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_WORKING_WEEK_TIME (
+            WORK_FACTORY
+            , WEEK_DAY
+            , WORKING_TIME
+            , INSERT_ID
+        ) VALUES (
+            #{WORK_FACTORY}
+            , #{WEEK_DAY}
+            , #{WORKING_TIME}
+            , #{LOGIN_USER_ID}
+        ) ON DUPLICATE KEY UPDATE
+            WORKING_TIME = #{WORKING_TIME}
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+    </update>
+
+    <select id="selectMaterialSizeSearchList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER () AS ROW_NUM
+            , SEARCH_SEQ
+            , MATERIAL_KIND
+            , jmes.SF_GET_CODE_NM('1029', MATERIAL_KIND, 'KO') AS MATERIAL_KIND_NM
+            , SEARCH_NM
+            , SEARCH_TEXT
+            , SIZE_W_START
+            , SIZE_W_END
+            , SIZE_H_START
+            , SIZE_H_END
+            , SIZE_T_START
+            , SIZE_T_END
+            , SIZE_D_START
+            , SIZE_D_END
+            , SIZE_L_START
+            , SIZE_L_END
+        FROM jmes.TBL_MATERIAL_SIZE_SEARCH
+        ORDER BY MATERIAL_KIND, SEARCH_NM
+    </select>
+
+    <insert id="insertMaterialSizeSearch" parameterType="java.util.HashMap">
+        INSERT INTO TBL_MATERIAL_SIZE_SEARCH (
+            SEARCH_SEQ
+            , MATERIAL_KIND
+            , SEARCH_NM
+            , SEARCH_TEXT
+            , SIZE_W_START
+            , SIZE_W_END
+            , SIZE_H_START
+            , SIZE_H_END
+            , SIZE_T_START
+            , SIZE_T_END
+            , SIZE_D_START
+            , SIZE_D_END
+            , SIZE_L_START
+            , SIZE_L_END
+            , INSERT_ID
+        ) VALUES (
+            NEXTVAL(SEQ_DUMMY)
+            , #{MATERIAL_KIND}
+            , #{SEARCH_NM}
+            , #{SEARCH_TEXT}
+            , #{SIZE_W_START}
+            , #{SIZE_W_END}
+            , #{SIZE_H_START}
+            , #{SIZE_H_END}
+            , #{SIZE_T_START}
+            , #{SIZE_T_END}
+            , #{SIZE_D_START}
+            , #{SIZE_D_END}
+            , #{SIZE_L_START}
+            , #{SIZE_L_END}
+            , #{INSERT_ID}
+        )
+    </insert>
+
+    <update id="updateMaterialSizeSearch" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_MATERIAL_SIZE_SEARCH
+        SET
+            MATERIAL_KIND = #{MATERIAL_KIND}
+            , SEARCH_NM = #{SEARCH_NM}
+            , SEARCH_TEXT = #{SEARCH_TEXT}
+            , SIZE_W_START = #{SIZE_W_START}
+            , SIZE_W_END = #{SIZE_W_END}
+            , SIZE_H_START = #{SIZE_H_START}
+            , SIZE_H_END = #{SIZE_H_END}
+            , SIZE_T_START = #{SIZE_T_START}
+            , SIZE_T_END = #{SIZE_T_END}
+            , SIZE_D_START = #{SIZE_D_START}
+            , SIZE_D_END = #{SIZE_D_END}
+            , SIZE_L_START = #{SIZE_L_START}
+            , SIZE_L_END = #{SIZE_L_END}
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{UPDATE_ID}
+        WHERE SEARCH_SEQ = #{SEARCH_SEQ}
+    </update>
+
+    <delete id="deleteMaterialSizeSearch" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_MATERIAL_SIZE_SEARCH WHERE SEARCH_SEQ = #{SEARCH_SEQ}
+    </delete>
+
+    <update id="updateReportEquipShowYn" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_EQUIP
+        SET REPORT_SHOW_YN = #{REPORT_SHOW_YN}
+        WHERE EQUIP_SEQ = #{EQUIP_SEQ}
+    </update>
 
 </mapper>

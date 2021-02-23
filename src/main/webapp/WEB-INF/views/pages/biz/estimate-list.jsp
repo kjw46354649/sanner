@@ -443,34 +443,6 @@
             },
             {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE' },
             {title: '소재마감', align: "center", colModel:[
-                    {title: 'TM각비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_TM', width: 70,
-                        editor: {
-                            type: 'select',
-                            valueIndx: "value",
-                            labelIndx: "text",
-                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010'),
-                        },
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-
-                            if (cellData === '' || cellData === undefined) {
-                                return '';
-                            } else {
-                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN010');
-                                let index = workFactory.findIndex(function (element) {
-                                    return element.text === cellData;
-                                });
-
-                                if (index < 0) {
-                                    index = workFactory.findIndex(function (element) {
-                                        return element.value === cellData;
-                                    });
-                                }
-
-                                return (index < 0) ? cellData : workFactory[index].text;
-                            }
-                        }
-                    },
                     {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', width: 70,
                         editor: {
                             type: 'select',
@@ -551,7 +523,6 @@
                 ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
                     {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###'},
-                    {title: 'TM각비', datatype: 'string', dataIndx: 'UNIT_MATERIAL_FINISH_TM_AMT', format: '#,###'},
                     {title: '연마비', datatype: 'string', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', format: '#,###'},
                     {title: '열처리', datatype: 'string', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', format: '#,###'},
                     {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
@@ -708,7 +679,6 @@
                         let calculateEstimateAmt = 0;
                         let data = ui.updateList[0].rowData;
                         let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_AMT);
-                        let UNIT_MATERIAL_FINISH_TM_AMT = data.UNIT_MATERIAL_FINISH_TM_AMT == null || data.UNIT_MATERIAL_FINISH_TM_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_FINISH_TM_AMT);
                         let UNIT_MATERIAL_FINISH_GRIND_AMT = data.UNIT_MATERIAL_FINISH_GRIND_AMT == null || data.UNIT_MATERIAL_FINISH_GRIND_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_FINISH_GRIND_AMT);
                         let UNIT_MATERIAL_FINISH_HEAT_AMT = data.UNIT_MATERIAL_FINISH_HEAT_AMT == null || data.UNIT_MATERIAL_FINISH_HEAT_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_FINISH_HEAT_AMT);
                         let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT == '' ? 0 : parseFloat(data.UNIT_SURFACE_AMT);
@@ -717,7 +687,6 @@
                         let ITEM_QTY = data.ITEM_QTY == null || data.ITEM_QTY == '' ? 0 : parseFloat(data.ITEM_QTY);
 
                         calculateEstimateAmt += UNIT_MATERIAL_AMT;
-                        calculateEstimateAmt += UNIT_MATERIAL_FINISH_TM_AMT;
                         calculateEstimateAmt += UNIT_MATERIAL_FINISH_GRIND_AMT;
                         calculateEstimateAmt += UNIT_MATERIAL_FINISH_HEAT_AMT;
                         calculateEstimateAmt += UNIT_SURFACE_AMT;

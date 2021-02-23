@@ -10,5 +10,7 @@ public interface SystemService {
 
     void commonCodeModifyGrid(Map<String, Object> map) throws Exception;
 
-    public void managerSystemCompany(Model model, Map<String, Object> map) throws Exception;
+    void managerSystemCompany(Model model, Map<String, Object> map) throws Exception;
+
+    void updateWorkingTime(Map<String, Object> map) throws Exception;
 }

@@ -461,11 +461,9 @@
                         newRowData.PART_UNIT_QTY = null;
                         newRowData.ORIGINAL_SIDE_QTY = null;
                         newRowData.OTHER_SIDE_QTY = null;
-                        newRowData.MATERIAL_FINISH_TM = null;
                         newRowData.MATERIAL_FINISH_GRIND = null;
                         newRowData.MATERIAL_FINISH_HEAT = null;
                         newRowData.UNIT_MATERIAL_AMT = null;
-                        newRowData.UNIT_MATERIAL_FINISH_TM_AMT = null;
                         newRowData.UNIT_MATERIAL_FINISH_GRIND_AMT = null;
                         newRowData.UNIT_MATERIAL_FINISH_HEAT_AMT = null;
                         newRowData.UNIT_SURFACE_AMT = null;
@@ -560,7 +558,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && (fnIsEmpty(rowData.PART_NUM) && rowData.WORK_TYPE !== 'WTP050');
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')}
             },
@@ -932,7 +930,19 @@
                             return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
-                    {title: '계산견적', width: 55, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_SUM_AUTO_AMT'},
+                    {
+                        title: '계산견적', width: 55, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_SUM_AUTO_AMT',
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    },
                     {
                         title: '납품확인', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
@@ -1338,7 +1348,6 @@
                 postRender(ui) {
                     const grid = this,
                         $cell = grid.getCell(ui);
-                    const rowData = ui.rowData;
 
                     $cell.find("[name=processing_requirements]").bind("click", function () {
                         processingRequirementsPop('CONTROL');
@@ -3089,7 +3098,6 @@
             let controlSeqList = new Set(); // 선택 된 row 관리번호
             let drawingNumList = new Set();
             let selectControlList = '';
-            let count = 0;
 
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 const rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});

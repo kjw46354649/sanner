@@ -54,4 +54,13 @@ public class SystemController {
 
         return "jsonView";
     }
+
+    @RequestMapping(value = "/updateWorkingTime", method = RequestMethod.POST)
+    public String updateWorkingTime(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.systemService.updateWorkingTime(map);
+
+        return "jsonView";
+    }
 }

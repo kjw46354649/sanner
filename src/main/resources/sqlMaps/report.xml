@@ -646,33 +646,6 @@
             )
     </select>
 
-    <select id="selectWorkingWeekTimeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT ROW_NUMBER () OVER() AS ROW_NUM
-            , WORK_FACTORY
-            , SF_GET_CODE_NM('1014', WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
-            , MAX(CASE  WHEN WEEK_DAY =  0 THEN WORKING_TIME END) AS SUN
-            , MAX(CASE  WHEN WEEK_DAY =  1 THEN WORKING_TIME END) AS MON
-            , MAX(CASE  WHEN WEEK_DAY =  2 THEN WORKING_TIME END) AS TUE
-            , MAX(CASE  WHEN WEEK_DAY =  3 THEN WORKING_TIME END) AS WED
-            , MAX(CASE  WHEN WEEK_DAY =  4 THEN WORKING_TIME END) AS THU
-            , MAX(CASE  WHEN WEEK_DAY =  5 THEN WORKING_TIME END) AS FRI
-            , MAX(CASE  WHEN WEEK_DAY =  6 THEN WORKING_TIME END) AS SAT
-        FROM TBL_WORKING_WEEK_TIME
-        GROUP BY WORK_FACTORY
-        ORDER BY WORK_FACTORY
-    </select>
-
-    <update id="updateWorkingWeekTime" parameterType="java.util.HashMap">
-        UPDATE TBL_WORKING_WEEK_TIME
-        SET
-            WORKING_TIME = #{WORKING_TIME},
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE 1 = 1
-            AND WORK_FACTORY = #{WORK_FACTORY}
-            AND WEEK_DAY = #{WEEK_DAY}
-    </update>
-
     <select id="selectGetDate" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <!-- 최초 -->
         SELECT DATE_FORMAT(DATE_ADD(STR_TO_DATE(C.BASE_DT,'%Y%m%d'), INTERVAL -7 DAY),'%Y%m%d') AS START_DT
@@ -1216,7 +1189,7 @@
                                                                 AND M.CONTROL_SEQ = B.CONTROL_SEQ
                                                                 AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ        
                                                           ) AS UNIT_EC_AMT
-                                                        , (IFNULL(D.UNIT_FINAL_AMT,0) - (IFNULL(B.UNIT_MATERIAL_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_TM_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT,0) + IFNULL(B.UNIT_SURFACE_AMT,0) + IFNULL(B.UNIT_PROCESS_AMT,0) + IFNULL(B.UNIT_ETC_AMT,0))) AS UNIT_AP_AMT
+                                                        , (IFNULL(D.UNIT_FINAL_AMT,0) - (IFNULL(B.UNIT_MATERIAL_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT,0) + IFNULL(B.UNIT_SURFACE_AMT,0) + IFNULL(B.UNIT_PROCESS_AMT,0) + IFNULL(B.UNIT_ETC_AMT,0))) AS UNIT_AP_AMT
                                                         , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
                                                         , C.INSPECT_GRADE
                                                     FROM jmes.TBL_CONTROL A
@@ -1310,7 +1283,7 @@
                             AND M.CONTROL_SEQ = B.CONTROL_SEQ
                             AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ        
                       ) AS UNIT_EC_AMT
-                    , (IFNULL(D.UNIT_FINAL_AMT,0) - (IFNULL(B.UNIT_MATERIAL_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_TM_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT,0) + IFNULL(B.UNIT_SURFACE_AMT,0) + IFNULL(B.UNIT_PROCESS_AMT,0) + IFNULL(B.UNIT_ETC_AMT,0))) AS UNIT_AP_AMT
+                    , (IFNULL(D.UNIT_FINAL_AMT,0) - (IFNULL(B.UNIT_MATERIAL_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT,0) + IFNULL(B.UNIT_SURFACE_AMT,0) + IFNULL(B.UNIT_PROCESS_AMT,0) + IFNULL(B.UNIT_ETC_AMT,0))) AS UNIT_AP_AMT
                     , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
                     , C.INSPECT_GRADE
                     , C.INSPECT_RESULT
