@@ -151,9 +151,9 @@
                 <input type="hidden" id="NEXT_PART_CONTROL_DETAIL_SEQ" name="NEXT_PART_CONTROL_DETAIL_SEQ" value=""/>
                 <div class="d-flex align-items-center">
                     <h4>기본정보</h4>
-                    <div id="hdsfgjidfogj" style="margin-left: 75px;">
-                        <button class="defaultBtn" name="view_assembly_or_part" value="WTP020">조립</button>
-                        <button class="defaultBtn" name="view_assembly_or_part" value="WTP050">파트</button>
+                    <div id="view_part_wrap" style="margin-left: 75px;">
+                        <button class="defaultBtn" name="view_assembly_or_part" id="WTP020" value="WTP020">조립</button>
+                        <button class="defaultBtn" name="view_assembly_or_part" id="WTP050" value="WTP050">파트</button>
                         <span name="view_part" id="view_part_prev" style="cursor: pointer;">
                             <img src="/resource/asset/images/common/img_left_arrow.png" alt="왼쪽 화살표" style="width: 15px;">
                         </span>
@@ -1526,9 +1526,12 @@
             $itemDetailPopForm.find("#DRAWING_VIEW").removeAttr('onClick');
             $itemDetailPopForm.find("#WORK_HISTORY_INFO").removeAttr('onClick');
             $itemDetailPopForm.find(".list1").find(".rowStyle").find("td").html('');
-
+            $itemDetailPopForm.find("[name=view_assembly_or_part]").siblings().removeClass('bg-moccasin');
+            if (dataInfo.WORK_TYPE === 'WTP020' || dataInfo.WORK_TYPE === 'WTP050') {
+                $itemDetailPopForm.find("#" + dataInfo.WORK_TYPE).addClass('bg-moccasin');
+            }
             if (dataInfo) {
-                dataInfo.ASSEMBLY_YN === 'Y' ? $('#hdsfgjidfogj').show() : $('#hdsfgjidfogj').hide();
+                dataInfo.ASSEMBLY_YN === 'Y' ? $('#view_part_wrap').show() : $('#view_part_wrap').hide();
                 fnIsEmpty(dataInfo.PREV_PART_CONTROL_DETAIL_SEQ) ? $('#g_item_detail_pop_form').find('#view_part_prev').css('visibility', 'hidden') : $('#g_item_detail_pop_form').find('#view_part_prev').css('visibility', 'visible');
                 fnIsEmpty(dataInfo.NEXT_PART_CONTROL_DETAIL_SEQ) ? $('#g_item_detail_pop_form').find('#view_part_next').css('visibility', 'hidden') : $('#g_item_detail_pop_form').find('#view_part_next').css('visibility', 'visible');
                 const emergencySpanElement = dataInfo.EMERGENCY_YN === 'Y' ? '<span class="mark">긴급</span>' : '';
@@ -1725,6 +1728,9 @@
     });
 
     $('#g_item_detail_pop_form').find('[name=view_assembly_or_part]').on('click', function () {
+        $(this).siblings().removeClass('bg-moccasin');
+        $(this).addClass("bg-moccasin");
+
         const controlSeq = $('#g_item_detail_pop_form > #CONTROL_SEQ').val();
         let controlDetailSeq;
 
