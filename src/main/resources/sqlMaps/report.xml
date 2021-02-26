@@ -2264,4 +2264,316 @@
         ORDER BY Y.CONTROL_NUM, Y.PART_NUM, Z.INSPECT_SEQ
     </select>
 
+    <select id="selectMonthlyBusinessStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT TRIM(CONCAT(IFNULL(X.GOAL_AMT_1,SPACE(0)),' ',IFNULL(X.GOAL_AMT_2,SPACE(0)))) AS GOAL_AMT_KOR
+            , TRIM(CONCAT(IFNULL(Y.FINAL_NEGO_AMT_1,SPACE(0)),' ',IFNULL(Y.FINAL_NEGO_AMT_2,SPACE(0)))) AS SALES_AMT_KOR
+            , CASE WHEN IFNULL(X.GOAL_AMT,0) =0 THEN NULL ELSE ROUND(Y.FINAL_NEGO_AMT / X.GOAL_AMT * 100,0) END AS MONTH_RATIO
+        FROM (  SELECT SUM(A.GOAL_AMT) AS GOAL_AMT
+                    , CASE WHEN TRUNCATE(SUM(A.GOAL_AMT) / 100000000,0) > 0 THEN CONCAT (TRUNCATE(SUM(A.GOAL_AMT) / 100000000,0),'억') END AS GOAL_AMT_1
+                    , CASE WHEN TRUNCATE(MOD(SUM(A.GOAL_AMT),100000000) / 10000000,0) > 0 THEN CONCAT(TRUNCATE(MOD(SUM(A.GOAL_AMT),100000000) / 10000000,0),'천') END AS GOAL_AMT_2
+                FROM jmes.TBL_XXX_SALES_GOAL A
+                WHERE A.YYYYMM = CONCAT(#{YEAR}, #{MONTH})
+                <if test="COMP_CD != null and COMP_CD != ''">
+                    AND A.COMP_CD = {COMP_CD}
+                </if>
+             ) X
+           , (  SELECT SUM(A.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
+                    , CASE WHEN TRUNCATE(SUM(A.FINAL_NEGO_AMT) / 100000000,0) > 0 THEN CONCAT (TRUNCATE(SUM(A.FINAL_NEGO_AMT) / 100000000,0),'억') END AS FINAL_NEGO_AMT_1
+                    , CASE WHEN TRUNCATE(MOD(SUM(A.FINAL_NEGO_AMT),100000000) / 10000000,0) > 0 THEN CONCAT(TRUNCATE(MOD(SUM(A.FINAL_NEGO_AMT),100000000) / 10000000,0),'천') END AS FINAL_NEGO_AMT_2
+                FROM jmes.TBL_MONTH_CLOSE A
+                WHERE A.CLOSE_MONTH = CONCAT(#{YEAR}, #{MONTH})
+                <if test="COMP_CD != null and COMP_CD != ''">
+                    AND A.COMP_CD = {COMP_CD}
+                </if>
+             ) Y
+    </select>
+
+    <select id="selectMonthlyBusinessStatusRatioList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.ORDER_COMP_CD
+            , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE COMP_CD = X.ORDER_COMP_CD) AS ORDER_COMP_NM
+            , X.SALES_AMT
+        FROM (  SELECT A.ORDER_COMP_CD
+                    , SUM(A.FINAL_NEGO_AMT) AS SALES_AMT
+                FROM jmes.TBL_MONTH_CLOSE A
+                WHERE A.CLOSE_MONTH = CONCAT(#{YEAR}, #{MONTH})
+                <if test="COMP_CD != null and COMP_CD != ''">
+                    AND A.COMP_CD = {COMP_CD}
+                </if>
+                GROUP BY A.ORDER_COMP_CD
+                ORDER BY 2 DESC
+                LIMIT 5
+             ) X
+        UNION ALL
+        SELECT 'ETC' AS ORDER_COMP_CD
+            , '기타' AS ORDER_COMP_NM
+            , MAX(X.TOTAL_AMT) - SUM(X.FINAL_NEGO_AMT) AS SALES_AMT
+        FROM (  SELECT A.ORDER_COMP_CD, SUM(A.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
+                    , SUM(A.FINAL_NEGO_AMT) OVER() AS TOTAL_AMT
+                FROM jmes.TBL_MONTH_CLOSE A
+                WHERE A.CLOSE_MONTH = CONCAT(#{YEAR}, #{MONTH})
+                <if test="COMP_CD != null and COMP_CD != ''">
+                    AND A.COMP_CD = {COMP_CD}
+                </if>
+                GROUP BY A.ORDER_COMP_CD
+                ORDER BY 2 DESC
+                LIMIT 5
+             )  X
+        HAVING MAX(X.TOTAL_AMT) - SUM(X.FINAL_NEGO_AMT) > 0
+    </select>
+
+    <select id="selectMonthlyBusinessCumulativeStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT TRIM(CONCAT(IFNULL(X.GOAL_AMT_1,SPACE(0)),' ',IFNULL(X.GOAL_AMT_2,SPACE(0)))) AS GOAL_AMT_KOR
+            , TRIM(CONCAT(IFNULL(Y.FINAL_NEGO_AMT_1,SPACE(0)),' ',IFNULL(Y.FINAL_NEGO_AMT_2,SPACE(0)))) AS SALES_AMT_KOR
+            , CASE WHEN IFNULL(X.GOAL_AMT,0) =0 THEN NULL ELSE ROUND(Y.FINAL_NEGO_AMT / X.GOAL_AMT * 100,0) END AS YEAR_RATIO
+        FROM (  SELECT SUM(A.GOAL_AMT) AS GOAL_AMT
+                    , CASE WHEN TRUNCATE(SUM(A.GOAL_AMT) / 100000000,0) > 0 THEN CONCAT (TRUNCATE(SUM(A.GOAL_AMT) / 100000000,0),'억') END AS GOAL_AMT_1
+                    , CASE WHEN TRUNCATE(MOD(SUM(A.GOAL_AMT),100000000) / 10000000,0) > 0 THEN CONCAT(TRUNCATE(MOD(SUM(A.GOAL_AMT),100000000) / 10000000,0),'천') END AS GOAL_AMT_2
+                FROM jmes.TBL_XXX_SALES_GOAL A
+                WHERE A.YYYYMM LIKE CONCAT(#{YEAR},'%')
+                <if test="COMP_CD != null and COMP_CD != ''">
+                    AND A.COMP_CD = {COMP_CD}
+                </if>
+             ) X
+           , (  SELECT SUM(A.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
+                    , CASE WHEN TRUNCATE(SUM(A.FINAL_NEGO_AMT) / 100000000,0) > 0 THEN CONCAT (TRUNCATE(SUM(A.FINAL_NEGO_AMT) / 100000000,0),'억') END AS FINAL_NEGO_AMT_1
+                    , CASE WHEN TRUNCATE(MOD(SUM(A.FINAL_NEGO_AMT),100000000) / 10000000,0) > 0 THEN CONCAT(TRUNCATE(MOD(SUM(A.FINAL_NEGO_AMT),100000000) / 10000000,0),'천') END AS FINAL_NEGO_AMT_2
+                FROM jmes.TBL_MONTH_CLOSE A
+                WHERE A.CLOSE_MONTH LIKE CONCAT(#{YEAR},'%')
+                <if test="COMP_CD != null and COMP_CD != ''">
+                    AND A.COMP_CD = {COMP_CD}
+                </if>
+             ) Y
+    </select>
+
+    <select id="selectMonthlyBusinessCumulativeStatusRatioList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.ORDER_COMP_CD
+            , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE COMP_CD = X.ORDER_COMP_CD) AS ORDER_COMP_NM
+            , X.SALES_AMT
+        FROM (  SELECT A.ORDER_COMP_CD
+                    , SUM(A.FINAL_NEGO_AMT) AS SALES_AMT
+                FROM jmes.TBL_MONTH_CLOSE A
+                WHERE A.CLOSE_MONTH LIKE CONCAT(#{YEAR},'%')
+                <if test="COMP_CD != null and COMP_CD != ''">
+                    AND A.COMP_CD = {COMP_CD}
+                </if>
+                GROUP BY A.ORDER_COMP_CD
+                ORDER BY 2 DESC
+                LIMIT 5
+             ) X
+        UNION ALL
+        SELECT 'ETC' AS ORDER_COMP_CD
+            , '기타' AS ORDER_COMP_NM
+            , MAX(X.TOTAL_AMT) - SUM(X.FINAL_NEGO_AMT) AS SALES_AMT
+        FROM (  SELECT A.ORDER_COMP_CD, SUM(A.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
+                    , SUM(A.FINAL_NEGO_AMT) OVER() AS TOTAL_AMT
+                FROM jmes.TBL_MONTH_CLOSE A
+                WHERE A.CLOSE_MONTH LIKE CONCAT(#{YEAR},'%')
+                <if test="COMP_CD != null and COMP_CD != ''">
+                    AND A.COMP_CD = {COMP_CD}
+                </if>
+                GROUP BY A.ORDER_COMP_CD
+                ORDER BY 2 DESC
+                LIMIT 5
+             )  X
+        HAVING MAX(X.TOTAL_AMT) - SUM(X.FINAL_NEGO_AMT) > 0
+    </select>
+
+    <select id="selectAnnualBusinessStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT Z.DATA_TYPE, Z.DATA_TYPE_NM
+            , IFNULL(MAX(CASE WHEN Z.MM = '01' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.GOAL_AMT WHEN Z.DATA_TYPE = '2' THEN Z.SALES_AMT WHEN Z.DATA_TYPE = '3' THEN Z.RATIO END END),0) AS DATA_VALUE_01
+            , IFNULL(MAX(CASE WHEN Z.MM = '02' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.GOAL_AMT WHEN Z.DATA_TYPE = '2' THEN Z.SALES_AMT WHEN Z.DATA_TYPE = '3' THEN Z.RATIO END END),0) AS DATA_VALUE_02
+            , IFNULL(MAX(CASE WHEN Z.MM = '03' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.GOAL_AMT WHEN Z.DATA_TYPE = '2' THEN Z.SALES_AMT WHEN Z.DATA_TYPE = '3' THEN Z.RATIO END END),0) AS DATA_VALUE_03
+            , IFNULL(MAX(CASE WHEN Z.MM = '04' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.GOAL_AMT WHEN Z.DATA_TYPE = '2' THEN Z.SALES_AMT WHEN Z.DATA_TYPE = '3' THEN Z.RATIO END END),0) AS DATA_VALUE_04
+            , IFNULL(MAX(CASE WHEN Z.MM = '05' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.GOAL_AMT WHEN Z.DATA_TYPE = '2' THEN Z.SALES_AMT WHEN Z.DATA_TYPE = '3' THEN Z.RATIO END END),0) AS DATA_VALUE_05
+            , IFNULL(MAX(CASE WHEN Z.MM = '06' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.GOAL_AMT WHEN Z.DATA_TYPE = '2' THEN Z.SALES_AMT WHEN Z.DATA_TYPE = '3' THEN Z.RATIO END END),0) AS DATA_VALUE_06
+            , IFNULL(MAX(CASE WHEN Z.MM = '07' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.GOAL_AMT WHEN Z.DATA_TYPE = '2' THEN Z.SALES_AMT WHEN Z.DATA_TYPE = '3' THEN Z.RATIO END END),0) AS DATA_VALUE_07
+            , IFNULL(MAX(CASE WHEN Z.MM = '08' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.GOAL_AMT WHEN Z.DATA_TYPE = '2' THEN Z.SALES_AMT WHEN Z.DATA_TYPE = '3' THEN Z.RATIO END END),0) AS DATA_VALUE_08
+            , IFNULL(MAX(CASE WHEN Z.MM = '09' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.GOAL_AMT WHEN Z.DATA_TYPE = '2' THEN Z.SALES_AMT WHEN Z.DATA_TYPE = '3' THEN Z.RATIO END END),0) AS DATA_VALUE_09
+            , IFNULL(MAX(CASE WHEN Z.MM = '10' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.GOAL_AMT WHEN Z.DATA_TYPE = '2' THEN Z.SALES_AMT WHEN Z.DATA_TYPE = '3' THEN Z.RATIO END END),0) AS DATA_VALUE_10
+            , IFNULL(MAX(CASE WHEN Z.MM = '11' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.GOAL_AMT WHEN Z.DATA_TYPE = '2' THEN Z.SALES_AMT WHEN Z.DATA_TYPE = '3' THEN Z.RATIO END END),0) AS DATA_VALUE_11
+            , IFNULL(MAX(CASE WHEN Z.MM = '12' THEN CASE WHEN Z.DATA_TYPE = '1' THEN Z.GOAL_AMT WHEN Z.DATA_TYPE = '2' THEN Z.SALES_AMT WHEN Z.DATA_TYPE = '3' THEN Z.RATIO END END),0) AS DATA_VALUE_12
+        FROM (  SELECT P.MM, P.DATA_TYPE, P.DATA_TYPE_NM
+                    , Q.GOAL_AMT
+                    , Q.SALES_AMT
+                    , CASE WHEN IFNULL(Q.GOAL_AMT,0) =0 THEN NULL ELSE ROUND(Q.SALES_AMT / Q.GOAL_AMT * 100,0) END AS RATIO
+                FROM (  SELECT M.MM, N.DATA_TYPE, N.DATA_TYPE_NM
+                        FROM jmes.TBL_YYYYMMDD M
+                            , ( SELECT '1' AS DATA_TYPE, '목표매출' AS DATA_TYPE_NM FROM DUAL
+                                UNION ALL
+                                SELECT '2' AS DATA_TYPE, '달성매출' AS DATA_TYPE_NM FROM DUAL
+                                UNION ALL
+                                SELECT '3' AS DATA_TYPE, '달성률' AS DATA_TYPE_NM FROM DUAL
+                               ) N
+                        WHERE M.DT LIKE CONCAT(#{YEAR},'%')
+                        GROUP BY M.MM, N.DATA_TYPE, N.DATA_TYPE_NM
+                     ) P LEFT OUTER JOIN (  SELECT SUBSTR(X.YYYYMM,5,2) AS MM
+                                                , IFNULL(X.GOAL_AMT,0) AS GOAL_AMT
+                                                , IFNULL(Y.CLOSE_AMT,0) AS SALES_AMT
+                                                , CASE WHEN IFNULL(X.GOAL_AMT,0) = 0 THEN 0 ELSE IFNULL(Y.CLOSE_AMT,0) / X.GOAL_AMT * 100 END AS MONTH_RATIO
+                                            FROM (  SELECT A.YYYYMM, SUM(A.GOAL_AMT) AS GOAL_AMT
+                                                    FROM jmes.TBL_XXX_SALES_GOAL A
+                                                    WHERE YYYYMM LIKE CONCAT(#{YEAR},'%')
+                                                    <if test="COMP_CD != null and COMP_CD != ''">
+                                                        AND A.COMP_CD = #{COMP_CD}
+                                                    </if>
+                                                    GROUP BY A.YYYYMM
+                                                  ) X LEFT OUTER JOIN ( SELECT A.CLOSE_MONTH
+                                                                            , SUM(A.FINAL_NEGO_AMT) AS CLOSE_AMT
+                                                                        FROM jmes.TBL_MONTH_CLOSE A
+                                                                        WHERE A.CLOSE_MONTH LIKE CONCAT(#{YEAR},'%')
+                                                                        <if test="COMP_CD != null and COMP_CD != ''">
+                                                                            AND A.COMP_CD = #{COMP_CD}
+                                                                        </if>
+                                                                        GROUP BY A.CLOSE_MONTH
+                                                                      ) Y ON X.YYYYMM = Y.CLOSE_MONTH
+                                         ) Q ON P.MM = Q.MM
+             ) Z
+        GROUP BY Z.DATA_TYPE, Z.DATA_TYPE_NM
+    </select>
+
+    <select id="selectDetailedCumulativeStatusByMonthlyOrderCompList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT V.ORDER_COMP_CD
+            , V.COMP_NM
+            , V.PLUS_MINUS
+            , V.PLUS_MINUS_RED_YN
+            , V.BUSINESS_ITEM
+            , V.MONTH_AMT
+            , W.YEAR_AMT
+            , W.ORDER_CNT
+            , W.ORDER_QTY
+            , CONCAT(TRUNCATE(IFNULL(W.MCT_WORK_TIME,0)/3600,0),'h') AS MCT_WORK_TIME
+            , ROUND(W.YEAR_AMT / (W.MCT_WORK_TIME / 3600),0) AS YEAR_AMT_PER_HOUR
+            , V.STAFF_NM
+            , DATE_FORMAT(STR_TO_DATE(CONCAT(V.PREV_CLOSE_MONTH,'01'),'%Y%m%d'),'%y년 %c월') AS PREV_SALES_MONTH
+            , CASE WHEN V.PREV_CLOSE_MONTH IS NULL THEN '신규거래'
+                   ELSE CONCAT(PERIOD_DIFF(#{V_MONTH},V.PREV_CLOSE_MONTH),'개월 미거래')
+              END AS NOTE
+        FROM (  SELECT X.ORDER_COMP_CD
+                    , Z.COMP_NM
+                    , Z.BUSINESS_ITEM
+                    , (SELECT M.STAFF_NM FROM jmes.TBL_COMPANY_STAFF M WHERE M.COMP_CD = X.ORDER_COMP_CD AND MAIN_YN = 'Y' LIMIT 1) AS STAFF_NM
+                    , CASE WHEN Y.ORDER_COMP_CD IS NULL THEN '신규'
+                           WHEN X.RANK_NUM = Y.RANK_NUM THEN '-'
+                           WHEN X.RANK_NUM <![CDATA[ < ]]> Y.RANK_NUM THEN CONCAT('▲',(Y.RANK_NUM - X.RANK_NUM))
+                           WHEN X.RANK_NUM > Y.RANK_NUM THEN CONCAT('▼',(X.RANK_NUM - Y.RANK_NUM))
+                      END AS PLUS_MINUS
+                    , CASE WHEN Y.ORDER_COMP_CD IS NULL THEN 'Y'
+                           WHEN X.RANK_NUM <![CDATA[ < ]]> Y.RANK_NUM THEN 'Y'
+                      END AS PLUS_MINUS_RED_YN
+                    , X.MONTH_AMT
+                    , ( SELECT MAX(M.CLOSE_MONTH)
+                        FROM jmes.TBL_MONTH_CLOSE M
+                        WHERE M.ORDER_COMP_CD = X.ORDER_COMP_CD
+                            AND M.CLOSE_MONTH <![CDATA[ < ]]> CONCAT(#{YEAR}, #{MONTH})
+                        <if test="COMP_CD != null and COMP_CD != ''">
+                            AND M.COMP_CD = #{COMP_CD} -- 가변조건
+                        </if>
+                      ) AS PREV_CLOSE_MONTH
+                FROM (  SELECT P.ORDER_COMP_CD
+                            , P.MONTH_AMT
+                            , RANK() OVER(ORDER BY P.MONTH_AMT DESC) AS RANK_NUM
+                        FROM (  SELECT A.ORDER_COMP_CD
+                                    , SUM(A.FINAL_NEGO_AMT) AS MONTH_AMT
+                                FROM jmes.TBL_MONTH_CLOSE A
+                                WHERE A.CLOSE_MONTH = CONCAT(#{YEAR}, #{MONTH})
+                                <if test="COMP_CD != null and COMP_CD != ''">
+                                    AND A.COMP_CD = #{COMP_CD}
+                                </if>
+                                GROUP BY A.ORDER_COMP_CD
+                            ) P
+                     ) X LEFT OUTER JOIN ( SELECT Q.ORDER_COMP_CD
+                                                , Q.FINAL_NEGO_AMT
+                                                , RANK() OVER(ORDER BY Q.FINAL_NEGO_AMT DESC) AS RANK_NUM
+                                            FROM (  SELECT A.ORDER_COMP_CD
+                                                        , SUM(A.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
+                                                    FROM jmes.TBL_MONTH_CLOSE A
+                                                    WHERE A.CLOSE_MONTH = DATE_FORMAT(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR},#{MONTH},'01'),'%Y%m%d'), INTERVAL -1 MONTH),'%Y%m')
+                                                    <if test="COMP_CD != null and COMP_CD != ''">
+                                                        AND A.COMP_CD = #{COMP_CD}
+                                                    </if>
+                                                    GROUP BY A.ORDER_COMP_CD
+                                                ) Q
+                                         ) Y ON X.ORDER_COMP_CD = Y.ORDER_COMP_CD
+                    , jmes.TBL_COMPANY Z
+                WHERE X.ORDER_COMP_CD = Z.COMP_CD
+            ) V LEFT OUTER JOIN (   SELECT E.ORDER_COMP_CD
+                                        , SUM(E.ORDER_CNT) AS ORDER_CNT
+                                        , SUM(E.ORDER_QTY) AS ORDER_QTY
+                                        , ROUND(SUM(E.MCT_WORK_TIME * E.ORDER_CNT / E.ORDER_CNT_TOTAL),0) AS MCT_WORK_TIME
+                                        , SUM(E.YEAR_AMT) AS YEAR_AMT
+                                    FROM (  SELECT D.ORDER_COMP_CD
+                                                , D.CONTROL_SEQ
+                                                , (SELECT COUNT(*) FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = D.CONTROL_SEQ) AS ORDER_CNT_TOTAL
+                                                , D.ORDER_CNT
+                                                , D.ORDER_QTY
+                                                , (SELECT SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK', M.MCT_WORK_SEQ)) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = D.CONTROL_SEQ) AS MCT_WORK_TIME
+                                                , D.YEAR_AMT
+                                            FROM (  SELECT C.ORDER_COMP_CD
+                                                        , C.CONTROL_SEQ
+                                                        , COUNT(C.ORDER_SEQ) AS ORDER_CNT
+                                                        , SUM(jmes.SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ)) AS ORDER_QTY
+                                                        , SUM(C.YEAR_AMT) AS YEAR_AMT
+                                                    FROM (  SELECT B.ORDER_COMP_CD, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.ORDER_SEQ, SUM(A.FINAL_NEGO_AMT) AS YEAR_AMT
+                                                            FROM jmes.TBL_MONTH_CLOSE A, jmes.TBL_MONTH_CLOSE_ORDER B
+                                                            WHERE A.COMP_CD = B.COMP_CD
+                                                                AND A.CLOSE_MONTH = B.CLOSE_MONTH
+                                                                AND A.ORDER_COMP_CD = B.ORDER_COMP_CD
+                                                                AND A.CLOSE_VER = B.CLOSE_VER
+                                                                AND A.CLOSE_MONTH LIKE CONCAT(#{YEAR},'%')
+                                                                <if test="COMP_CD != null and COMP_CD != ''">
+                                                                    AND A.COMP_CD = #{COMP_CD}
+                                                                </if>
+                                                            GROUP BY B.ORDER_COMP_CD, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.ORDER_SEQ
+                                                         ) C
+                                                    GROUP BY C.ORDER_COMP_CD, C.CONTROL_SEQ
+                                                  ) D
+                                         ) E
+                                    GROUP BY E.ORDER_COMP_CD
+                                ) W ON V.ORDER_COMP_CD = W.ORDER_COMP_CD
+        ORDER BY W.YEAR_AMT DESC
+    </select>
+
+    <select id="selectOutsourcingProcessPurchaseStatusByCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.OUTSIDE_COMP_CD
+            , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS COMP_NM
+            , X.MONTH_AMT
+            , Y.YEAR_AMT
+            , Y.PART_CNT AS YEAR_PART_CNT
+            , Y.PART_QTY AS YEAR_PART_QTY
+        FROM (  SELECT A.OUTSIDE_COMP_CD
+                    , SUM(A.FINAL_NEGO_AMT) AS MONTH_AMT
+                    , MAX(B.CONTROL_SEQ) AS CONTROL_SEQ
+                    , MAX(B.CONTROL_DETAIL_SEQ) AS CONTROL_DETAIL_SEQ
+                FROM TBL_OUTSIDE_CLOSE_NOTE A, TBL_OUTSIDE_CLOSE B
+                WHERE A.CLOSE_MONTH = B.CLOSE_MONTH
+                    AND A.CLOSE_VER = B.CLOSE_VER
+                    AND A.CLOSE_MONTH = CONCAT(#{YEAR},#{MONTH})
+                <if test="COMP_CD != null and COMP_CD != ''">
+                    AND A.COMP_CD = #{COMP_CD}
+                </if>
+                GROUP BY A.OUTSIDE_COMP_CD
+             ) X
+           , (  SELECT P.OUTSIDE_COMP_CD
+                    , MAX(P.FINAL_NEGO_AMT) AS YEAR_AMT
+                    , COUNT(*) AS PART_CNT
+                    , SUM(jmes.SF_GET_CONTROL_PART_QTY(P.CONTROL_SEQ, P.CONTROL_DETAIL_SEQ)) AS PART_QTY
+                FROM (  SELECT A.OUTSIDE_COMP_CD
+                            , SUM(A.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
+                            , MAX(B.CONTROL_SEQ) AS CONTROL_SEQ
+                            , MAX(B.CONTROL_DETAIL_SEQ) AS CONTROL_DETAIL_SEQ
+                        FROM TBL_OUTSIDE_CLOSE_NOTE A, TBL_OUTSIDE_CLOSE B
+                        WHERE A.CLOSE_MONTH = B.CLOSE_MONTH
+                            AND A.CLOSE_VER = B.CLOSE_VER
+                            AND A.CLOSE_MONTH LIKE CONCAT(#{YEAR},'%')
+                        <if test="COMP_CD != null and COMP_CD != ''">
+                            AND A.COMP_CD = #{COMP_CD}
+                        </if>
+                        GROUP BY A.OUTSIDE_COMP_CD
+                     ) P
+                GROUP BY P.OUTSIDE_COMP_CD
+             ) Y
+        WHERE X.OUTSIDE_COMP_CD = Y.OUTSIDE_COMP_CD
+        ORDER BY Y.YEAR_AMT DESC
+    </select>
+
 </mapper>
