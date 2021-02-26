@@ -1105,7 +1105,7 @@
             $('#outgoing_manage_return_form').find("#INSPECT_DESC").attr("readonly", false);
 
 
-            $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn,inspection.updateReturnPartStatus,inspection.insertReturnPartProgress");
+            $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn,inspection.updateOutFinishStatus,inspection.updateReturnPartStatus,inspection.insertReturnPartProgress");
 
             let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_return_form").serialize()};
             fnPostAjax(function () {
@@ -1398,10 +1398,10 @@
 
                 switch (target) {
                     case 'disposal':
-                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.updateOutgoingDisposal,inspection.updateScrapPartStatus,inspection.insertScrapPartProgress");
+                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.updateOutgoingDisposal,inspection.updateOutFinishStatus,inspection.updateScrapPartStatus,inspection.insertScrapPartProgress");
                         break;
                     default:
-                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2,inspection.updateShippingPartStatus,inspection.insertShippingPartProgress");
+                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2,inspection.updateOutFinishStatus,inspection.updateShippingPartStatus,inspection.insertShippingPartProgress");
                 }
 
                 let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_pop_type_1_form").serialize()};
