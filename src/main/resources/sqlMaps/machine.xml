@@ -803,14 +803,16 @@
             L.EQUIP_NM AS MCT_PLAN_EQUIP_NM, <!-- 계획 장비 -->
             K.WORKING_TIME AS WORKING_TIME, <!-- MCT 계획 시간 -->
             ( SELECT CONCAT(jmes.SF_GET_DATE_F(Q.INSERT_DT,'YYYY',''),' / ',(SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Q.WORK_USER_ID))
-              FROM jmes.TBL_CAM P, jmes.TBL_CAM_DETAIL Q, jmes.TBL_CONTROL_PART R
+              FROM jmes.TBL_CAM P, jmes.TBL_CAM_DETAIL Q, jmes.TBL_CONTROL_PART R, jmes.TBL_CONTROL S
               WHERE P.CAM_SEQ = Q.CAM_SEQ
                 AND P.CONTROL_SEQ = R.CONTROL_SEQ
                 AND P.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ
+                AND S.CONTROL_SEQ = R.CONTROL_SEQ
                 AND R.CONTROL_SEQ != A.CONTROL_SEQ
                 AND R.CONTROL_DETAIL_SEQ != A.CONTROL_DETAIL_SEQ
                 AND R.SIZE_TXT = A.SIZE_TXT
                 AND R.MATERIAL_TYPE = A.MATERIAL_TYPE
+                AND S.ORDER_COMP_CD = B.ORDER_COMP_CD
               ORDER BY Q.SEQ DESC
               LIMIT 1
             ) AS WORK_HISTORY_INFO <!-- 과거 경험 -->
@@ -1092,14 +1094,16 @@
             , J.EQUIP_NM AS MCT_PLAN_EQUIP_NM <!-- 계획 장비 -->
             , I.WORKING_TIME <!-- MCT 계획 시간 -->
             , ( SELECT CONCAT(jmes.SF_GET_DATE_F(N.INSERT_DT, 'YYYY', ''), ' / ',(SELECT T.USER_NM FROM jmes.TBL_USER T WHERE T.USER_ID = N.WORK_USER_ID))
-                FROM jmes.TBL_CAM M, jmes.TBL_CAM_DETAIL N, jmes.TBL_CONTROL_PART O
-                WHERE O.CONTROL_SEQ = M.CONTROL_SEQ
+                FROM jmes.TBL_CAM M, jmes.TBL_CAM_DETAIL N, jmes.TBL_CONTROL_PART O, jmes.TBL_CONTROL P
+                WHERE N.CAM_SEQ = M.CAM_SEQ
+                    AND O.CONTROL_SEQ = M.CONTROL_SEQ
                     AND O.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
-                    AND N.CAM_SEQ = M.CAM_SEQ
+                    AND P.CONTROL_SEQ = O.CONTROL_SEQ
                     AND O.CONTROL_SEQ != A.CONTROL_SEQ
                     AND O.CONTROL_DETAIL_SEQ != A.CONTROL_DETAIL_SEQ
                     AND O.SIZE_TXT = A.SIZE_TXT
                     AND O.MATERIAL_TYPE = A.MATERIAL_TYPE
+                    AND P.ORDER_COMP_CD = B.ORDER_COMP_CD
                 ORDER BY N.SEQ DESC
                 LIMIT 1
             ) AS WORK_HISTORY_INFO <!-- 과거 경험 -->
@@ -1277,14 +1281,16 @@
             jmes.SF_GET_MATERIAL_RECEIPT_DT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT, <!-- 소재 입고 일시 -->
             K.WORKING_TIME AS WORKING_TIME, <!-- MCT 계획 시간 -->
             ( SELECT CONCAT(jmes.SF_GET_DATE_F(Q.INSERT_DT,'YYYY',''),' / ',(SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Q.WORK_USER_ID))
-              FROM jmes.TBL_CAM P, jmes.TBL_CAM_DETAIL Q, jmes.TBL_CONTROL_PART R
+              FROM jmes.TBL_CAM P, jmes.TBL_CAM_DETAIL Q, jmes.TBL_CONTROL_PART R, jmes.TBL_CONTROL S
               WHERE P.CAM_SEQ = Q.CAM_SEQ
                 AND P.CONTROL_SEQ = R.CONTROL_SEQ
                 AND P.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ
+                AND S.CONTROL_SEQ = R.CONTROL_SEQ
                 AND R.CONTROL_SEQ != A.CONTROL_SEQ
                 AND R.CONTROL_DETAIL_SEQ != A.CONTROL_DETAIL_SEQ
                 AND R.SIZE_TXT = A.SIZE_TXT
                 AND R.MATERIAL_TYPE = A.MATERIAL_TYPE
+                AND S.ORDER_COMP_CD = B.ORDER_COMP_CD
               ORDER BY Q.SEQ DESC
               LIMIT 1
             ) AS WORK_HISTORY_INFO, <!-- 과거 경험 -->
