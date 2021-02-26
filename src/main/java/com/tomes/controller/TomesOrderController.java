@@ -20,14 +20,11 @@ import java.util.Map;
 @CrossOrigin
 public class TomesOrderController {
 
-    @Autowired
-    private ResponseService responseService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
-    private InnodaleService innodaleService;
+    private final ResponseService responseService;
 
-    @Autowired
-    public JwtTokenProvider jwtTokenProvider;
+    private final InnodaleService innodaleService;
 
     @ApiImplicitParams({
         @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")

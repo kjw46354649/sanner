@@ -23,17 +23,11 @@ import java.util.Map;
 @CrossOrigin
 public class TomesAuthorizeController {
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
-    private ResponseService responseService;
+    private final ResponseService responseService;
 
-    @Autowired
-    private InnodaleService innodaleService;
-
-    @Autowired
-    private MessageSource messageSource;
+    private final InnodaleService innodaleService;
 
     @ApiOperation(value = "시스템 로그인", notes = "시스템 로그인을 한다.")
     @GetMapping("/login")
@@ -54,20 +48,5 @@ public class TomesAuthorizeController {
                 String.valueOf(companyInfo.get("COMP_CD")), String.valueOf(companyInfo.get("COMP_NM"))));
 
     }
-
-//    @ApiImplicitParams({
-//        @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
-//    })
-//    @ApiOperation(value = "시스템 사용가능 여부확인", notes = "시스템 사용 가능 여부를 확인 한다.")
-//    @GetMapping("/company/{compNum}")
-//    public SingleResult buyer(@ApiParam(value = "업체코드", required = true) @RequestParam String compNum) throws Exception {
-//
-//        HashMap<String, Object> paramMap = new HashMap<String, Object>();
-//
-//        paramMap.put("COMP_CD", compNum);
-//        paramMap.put("queryId", "systemMapper.getUserAuthorize");
-//
-//        return responseService.getSingleResult(innodaleService.getInfo(paramMap));
-//    }
 
 }
