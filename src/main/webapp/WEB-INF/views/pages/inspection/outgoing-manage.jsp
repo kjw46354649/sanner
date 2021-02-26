@@ -1570,11 +1570,11 @@
                     barcodesql = "inspection.selectOutgoingOutType4";
                 } else if (barcodeType == "C") {//도면
                     barcodesql = "common.selectControlBarcodeInfo";
-                } else if (barcodeType == "O") {// TODO: 영업도면
+                } else if (barcodeType == "O") {//영업도면
                     barcodesql = "inspection.selectOutgoingOutType5";
                 } else {
-                    fnAlert(null, "알수 없는 바코드 타입입니다.[" + barcodeNum + "]");
                     $("#OUTGOING_BARCODE_NUM").val("");
+                    fnConfirm(null, "알 수 없는 바코드 타입입니다.[" + barcodeNum + "]", function() {}, null, 3);
                     return;
                 }
 
@@ -1627,12 +1627,12 @@
                             fnPostAjaxAsync(function (data) {
                                 let dataInfo = data.info;
                                 if (dataInfo == null) {
-                                    fnConfirm(null, "정보가 존재하지 않습니다", function() {}, null, 2);
                                     $("#OUTGOING_BARCODE_NUM").val("");
+                                    fnConfirm(null, "정보가 존재하지 않습니다", function() {}, null, 2);
                                     return false;
                                 } else if (dataInfo.OUT_CNT > 0) {
-                                    fnConfirm(null, "이미 출하처리 되었습니다", function() {}, null, 2);
                                     $("#OUTGOING_BARCODE_NUM").val("");
+                                    fnConfirm(null, "이미 출하처리 되었습니다", function() {}, null, 2);
                                     return false;
                                 } else {
                                     fnJsonDataToForm("outgoing_manage_pop_type_control_form", dataInfo);
