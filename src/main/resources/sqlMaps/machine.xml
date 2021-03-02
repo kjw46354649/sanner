@@ -463,7 +463,6 @@
             jmes.SF_GET_MATERIAL_RECEIPT_DT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT <!-- 소재 입고 일시 -->
         FROM jmes.TBL_CONTROL_PART A
             INNER JOIN jmes.TBL_CONTROL B ON B.CONTROL_SEQ = A.CONTROL_SEQ
-                 AND B.DEL_YN = 'N' AND B.CONTROL_STATUS IN ('ORD001', 'ORD003') AND B.OUT_FINISH_DT IS NULL
             LEFT OUTER JOIN jmes.TBL_MCT_PLAN C ON C.CONTROL_SEQ = A.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND C.DEL_YN = 'N'
             LEFT OUTER JOIN jmes.TBL_POP Y ON Y.CONTROL_SEQ = A.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
                 AND Y.POP_SEQ = (   SELECT MAX(K.POP_SEQ) FROM jmes.TBL_POP K
@@ -477,8 +476,7 @@
                     CONCAT(TRUNCATE(IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK',A.MCT_WORK_SEQ),0)/3600,0),'h ',TRUNCATE((IFNULL(jmes.SF_GET_DRAWING_WORK_TIME('WORK',A.MCT_WORK_SEQ),0)%3600)/60,0),'m') AS RECENTLY_WORKING_TIME
                 FROM TBL_MCT_WORK A
                     INNER JOIN jmes.TBL_EQUIP B ON B.EQUIP_SEQ = A.EQUIP_SEQ
-                WHERE 1 = 1
-                    AND A.DEL_YN = 'N'
+                WHERE A.DEL_YN = 'N'
                     AND A.MCT_WORK_SEQ IN (SELECT MAX(X.MCT_WORK_SEQ) FROM TBL_MCT_WORK X
                                            WHERE  X.DEL_YN = 'N' AND X.WORK_FINISH_DT IS NOT NULL
                                            GROUP BY X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
@@ -486,17 +484,21 @@
             ) Z ON Z.CONTROL_SEQ = A.CONTROL_SEQ AND Z.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
         WHERE 1 = 1
             AND IFNULL(A.WORK_TYPE, SPACE(0)) != 'WTP020' <!-- 조립이 아닌경우 -->
-            AND (A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) IN (  SELECT M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ <!-- 가공확정된 대상 -->
-															FROM TBL_CONTROL_PART_PROGRESS M
-															WHERE CONTROL_SEQ = A.CONTROL_SEQ
-																AND CONTROL_DETAIL_SEQ  = A.CONTROL_DETAIL_SEQ
-																AND EXISTS (SELECT * FROM TBL_CONTROL_PART_PROGRESS K WHERE K.CONTROL_SEQ = M.CONTROL_SEQ AND K.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ AND K.PART_STATUS = 'PRO002')
-															GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ )
+            AND B.DEL_YN = 'N'
+            AND B.CONTROL_STATUS IN ('ORD001', 'ORD003')
+            AND B.OUT_FINISH_DT IS NULL
     		<choose>
                 <when test="OPTION == 'OUTSOURCING_PROCESSING'">
                     AND A.OUTSIDE_YN = 'Y'
                 </when>
                 <otherwise>
+                    AND (A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) IN (  SELECT M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ <!-- 가공확정된 대상 -->
+                                                    FROM TBL_CONTROL_PART_PROGRESS M
+                                                    WHERE CONTROL_SEQ = A.CONTROL_SEQ
+                                                        AND CONTROL_DETAIL_SEQ  = A.CONTROL_DETAIL_SEQ
+                                                        AND EXISTS (SELECT * FROM TBL_CONTROL_PART_PROGRESS K WHERE K.CONTROL_SEQ = M.CONTROL_SEQ AND K.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ AND K.PART_STATUS = 'PRO002')
+                                                    GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
+                                                 )
                     AND A.OUTSIDE_YN = 'N'
                 </otherwise>
             </choose>
