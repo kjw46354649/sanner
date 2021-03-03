@@ -81,7 +81,7 @@
         <table>
             <tr>
                 <td width="15%">&nbsp;</td>
-                <td><h3 style="font-size: 30px;font-weight: bold; text-align: center;">시작 되었습니다.</h3></td>
+                <td><h3 style="font-size: 30px;font-weight: bold; text-align: center;"><srping:message key='drawing.board.alert.14'/></h3></td>
                 <td width="15%">&nbsp;</td>
             </tr>
             <tr>
@@ -100,7 +100,7 @@
         <table>
             <tr>
                 <td width="15%">&nbsp;</td>
-                <td><h3 style="font-size: 30px;font-weight: bold; text-align: center;">완료 되었습니다.</h3></td>
+                <td><h3 style="font-size: 30px;font-weight: bold; text-align: center;"><srping:message key='drawing.board.alert.15'/></h3></td>
                 <td width="15%">&nbsp;</td>
             </tr>
             <tr>
@@ -119,7 +119,7 @@
         <table>
             <tr>
                 <td width="15%">&nbsp;</td>
-                <td><h3 style="font-size: 30px;font-weight: bold; text-align: center;">취소 되었습니다.</h3></td>
+                <td><h3 style="font-size: 30px;font-weight: bold; text-align: center;"><srping:message key='drawing.board.alert.16'/></h3></td>
                 <td width="15%">&nbsp;</td>
             </tr>
             <tr>
@@ -151,11 +151,11 @@
             <tr>
                 <td width="10%">&nbsp;</td>
                 <td rowspan="2" width="25%"><img src="/resource/asset/images/work/alarm.png" width="90px"></td>
-                <td width="65%"><h3 style="font-size: 24px;font-weight: bold;">도면정보가 변경되었습니다.</h3></td>
+                <td width="65%"><h3 style="font-size: 24px;font-weight: bold;"><srping:message key='drawing.board.alert.01'/></h3></td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
-                <td><h3 style="font-size: 24px;font-weight: bold;">사무실에 확인 바랍니다.</h3></td>
+                <td><h3 style="font-size: 24px;font-weight: bold;"><srping:message key='drawing.board.alert.02'/></h3></td>
             </tr>
         </table>
     </div>
@@ -258,7 +258,7 @@
         <div class="modal-stop-content">
             <div class="modal-stop-body">
                 <div class="tableWrap">
-                    <div><p class="stop-txt"><span class="red-txt">일시정지</span> 되었습니다</p></div>
+                    <div><p class="stop-txt"><srping:message key="drawing.board.message.03"/></p></div>
                     <div>
                         <p class="stop-time"><srping:message key="drawing.board.label.14"/> :
                             <span id="stopHour">0<srping:message key="drawing.board.label.20"/></span>
@@ -267,7 +267,7 @@
                         </p>
                     </div>
                     <div style="text-align: center;">
-                        <button type="button" id="workRestartBtn" class="gradeMidBtn red"><srping:message key="drawing.board.button.13"/></button>
+                        <button type="button" id="workRestartBtn" class="gradeMidBtn red" style="width: auto; padding: 0 20px;"><srping:message key="drawing.board.button.13"/></button>
                         <%--<button id="stopBtn">작업재개</button>--%>
                     </div>
                 </div>
@@ -283,7 +283,7 @@
         <div class="modal-stop-content">
             <div class="modal-stop-body">
                 <div class="tableWrap">
-                    <div><p class="stop-txt">작업을<span class="red-txt">취소</span>하시겠습니까?</p></div>
+                    <div><p class="stop-txt"><srping:message key="drawing.board.message.04"/></p></div>
                     <br/>
                     <div style="text-align: center;">
                         <button type="button" id="cancelBtnSave" class="gradeMidBtn red"><srping:message key="drawing.board.button.05"/></button>
@@ -424,14 +424,11 @@
                     <div class="contsTitWrap" id="workMainProgressConts" style="">
                         <div class="contsTit blink-blue"><srping:message key='drawing.board.label.13'/></div>
                         <div class="right_sort">
-                            <button type="button" id="reserveBtn" class="reserveDbDisableBtn"><input id="reserveChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;"  />예약</button>&nbsp;
+                            <button type="button" id="reserveBtn" class="reserveDbDisableBtn"><input id="reserveChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;"/><srping:message key='drawing.board.button.16'/></button>&nbsp;
                             <button type="button" id="workCancelBtn" class="graDbBtn red"><srping:message key='drawing.board.button.06'/></button>&nbsp;
                             <button type="button" id="workPuaseBtn" class="graDbBtn yellow"><srping:message key='drawing.board.button.07'/></button>&nbsp;
                             <button type="button" id="workCompletelBtn" class="graDbBtn purple"><srping:message key='drawing.board.button.08'/></button>
                         </div>
-    <%--                    <div class="endBox"><a href="#">종료하기</a></div>--%>
-    <%--                    <div class="stopBox"><a href="#">일시</br>정지</a></div>--%>
-    <%--                    <div class="cancelBox"><a href="#">작업</br>취소</a></div>--%>
                     </div>
                 </c:if>
                 <div class="contsWrap">
@@ -546,17 +543,17 @@
                                     <img id="reserveMinuteUpBtn" src="/resource/asset/images/common/arrow_up.png">
                                 </td>
                                 <td class="modal-reserve-dialog-table" rowspan="3">
-                                    <button type="button" id="reserveEndCheckBtn" class="graDbBtn gray"><input id="reserveEndChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;"  />종&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;료</button>
+                                    <button type="button" id="reserveEndCheckBtn" class="graDbBtn gray" style="width: 125px; text-align: justify"><input id="reserveEndChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;"/><srping:message key='drawing.board.button.02'/></button>
                                     <br/>&nbsp;<br/>
-                                    <button type="button" id="reservePauseCheckBtn" class="graDbBtn gray"><input id="reservePauseChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;" />일시정지</button>
+                                    <button type="button" id="reservePauseCheckBtn" class="graDbBtn gray" style="width: 125px; text-align: justify"><input id="reservePauseChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;" /><srping:message key='drawing.board.button.07'/></button>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="modal-reserve-dialog-text-table">
-                                    <span id="reserveHourHtml"></span> 시간
+                                    <span id="reserveHourHtml">0</span> <srping:message key="drawing.board.label.20"/>
                                 </td>
                                 <td class="modal-reserve-dialog-text-table">
-                                    <span id="reserveMinuteHtml"></span> 분 후
+                                    <span id="reserveMinuteHtml">0</span> <srping:message key="drawing.board.label.02"/> <srping:message key="drawing.board.label.19"/>
                                 </td>
                             </tr>
                             <tr>
@@ -571,9 +568,9 @@
                     </table>
                     <br/>
                     <div style="text-align: center;">
-                        <button type="button" id="reserveSaveBtn" class="reservePopBtn blue">저장</button>
-                        <button type="button" id="reserveCloseBtn" class="reservePopBtn yellow" >닫기</button>
-                        <button type="button" id="reserveCancelBtn" class="reservePopBtn red" style="display: none;">예약취소</button>
+                        <button type="button" id="reserveSaveBtn" class="reservePopBtn blue"><srping:message key='drawing.board.button.18'/></button>
+                        <button type="button" id="reserveCloseBtn" class="reservePopBtn yellow"><srping:message key='drawing.board.button.09'/></button>
+                        <button type="button" id="reserveCancelBtn" class="reservePopBtn red" style="display: none;"><srping:message key='drawing.board.button.17'/></button>
                     </div>
                 </div>
             </div>
@@ -1077,7 +1074,7 @@
                         return false;
                     }
                 }, parameters, '');
-            };
+            }
         };
 
         let startWork = function(dataInfo){

@@ -1105,7 +1105,7 @@
             $('#outgoing_manage_return_form').find("#INSPECT_DESC").attr("readonly", false);
 
 
-            $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn,inspection.updateReturnPartStatus,inspection.insertReturnPartProgress");
+            $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn,inspection.updateOutFinishStatus,inspection.updateReturnPartStatus,inspection.insertReturnPartProgress");
 
             let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_return_form").serialize()};
             fnPostAjax(function () {
@@ -1398,10 +1398,10 @@
 
                 switch (target) {
                     case 'disposal':
-                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.updateOutgoingDisposal,inspection.updateScrapPartStatus,inspection.insertScrapPartProgress");
+                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.updateOutgoingDisposal,inspection.updateOutFinishStatus,inspection.updateScrapPartStatus,inspection.insertScrapPartProgress");
                         break;
                     default:
-                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2,inspection.updateShippingPartStatus,inspection.insertShippingPartProgress");
+                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2,inspection.updateOutFinishStatus,inspection.updateShippingPartStatus,inspection.insertShippingPartProgress");
                 }
 
                 let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_pop_type_1_form").serialize()};
@@ -1570,11 +1570,11 @@
                     barcodesql = "inspection.selectOutgoingOutType4";
                 } else if (barcodeType == "C") {//도면
                     barcodesql = "common.selectControlBarcodeInfo";
-                } else if (barcodeType == "O") {// TODO: 영업도면
+                } else if (barcodeType == "O") {//영업도면
                     barcodesql = "inspection.selectOutgoingOutType5";
                 } else {
-                    fnAlert(null, "알수 없는 바코드 타입입니다.[" + barcodeNum + "]");
                     $("#OUTGOING_BARCODE_NUM").val("");
+                    fnConfirm(null, "알 수 없는 바코드 타입입니다.[" + barcodeNum + "]", function() {}, null, 3);
                     return;
                 }
 
@@ -1627,12 +1627,12 @@
                             fnPostAjaxAsync(function (data) {
                                 let dataInfo = data.info;
                                 if (dataInfo == null) {
-                                    fnConfirm(null, "정보가 존재하지 않습니다", function() {}, null, 2);
                                     $("#OUTGOING_BARCODE_NUM").val("");
+                                    fnConfirm(null, "정보가 존재하지 않습니다", function() {}, null, 2);
                                     return false;
                                 } else if (dataInfo.OUT_CNT > 0) {
-                                    fnConfirm(null, "이미 출하처리 되었습니다", function() {}, null, 2);
                                     $("#OUTGOING_BARCODE_NUM").val("");
+                                    fnConfirm(null, "이미 출하처리 되었습니다", function() {}, null, 2);
                                     return false;
                                 } else {
                                     fnJsonDataToForm("outgoing_manage_pop_type_control_form", dataInfo);
