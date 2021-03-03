@@ -217,7 +217,7 @@
             </table>
         </div>
         <div>
-            <img id="drawing_image" src="/image/20201224" alt="도면">
+            <img id="drawing_image" src="/image/19961224" alt="도면">
         </div>
     </div>
 
@@ -999,7 +999,7 @@
                 const rowData = ui.addList[0].rowData;
 
                 changeDrawingInformationTable(rowData);
-                changedrawingImage(rowData.IMG_GFILE_SEQ);
+                changeDrawingImage(rowData.IMG_GFILE_SEQ);
                 changeProcessingRecordByDevice(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
             }
         };
@@ -1023,7 +1023,9 @@
                 if (data.info) {
                     console.group('가공납기 준수율');
                     console.log(data.info)
-                    chartSpeed.setTitle(null, {text: '대상품수: ' + data.info.PART_CNT + '품<br>달성품수: ' + data.info.OK_CNT + '품'}); // subTitle
+                    const targetItemCount = data.info.PART_CNT || 0;
+                    const numberAchievements = data.info.OK_CNT || 0;
+                    chartSpeed.setTitle(null, {text: '대상품수: ' + targetItemCount + '품<br>달성품수: ' + numberAchievements + '품'});
                     let point = chartSpeed.series[0].points[0];
                     point.update(data.info.OK_RATIO);
                     let arrow = '';
@@ -1272,29 +1274,6 @@
 
         };
 
-        /*const changeMaterialList = function (id, data) {
-            let htmlString = '';
-
-            if (data) {
-                for (let i = 0; i < data.length; i++) {
-                    htmlString += '<tr>';
-                    htmlString += '    <td>' + 'data[i].1' + '</td>';
-                    htmlString += '    <td>' + 'data[i].관리번호' + '</td>';
-                    htmlString += '    <td>' + 'data[i].수량' + '</td>';
-                    htmlString += '    <td>' + 'data[i].시간' + '</td>';
-                    htmlString += '    <td>' + 'data[i].p' + '/h</td>';
-                    htmlString += '    <td>' + 'data[i].c' + '/h</td>';
-                    htmlString += '</tr>';
-                }
-            } else {
-                htmlString += '<tr>';
-                htmlString += '    <td colspan="6">no data.</td>';
-                htmlString += '</tr>';
-            }
-
-            $('#' + id).html(htmlString);
-        };*/
-
         const changeDrawingInformationTable = function (data) {
             let htmlString = '';
 
@@ -1406,12 +1385,120 @@
                 htmlString += data.ERROR_REASON_NM ? '<td colspan="3">' + data.ERROR_REASON_NM + '</td>' : '<td colspan="3"></td>';
                 htmlString += data.ERROR_ACTION_NM ? '<td colspan="2">' + data.ERROR_ACTION_NM + '</td>' : '<td colspan="2"></td>';
                 htmlString += '</tr>';
+            } else {
+                htmlString += '<tr>';
+                htmlString += '    <td class="header" colspan="5">관리번호</td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '<td colspan="5"></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '    <td class="header" colspan="3">규격</td>';
+                htmlString += '    <td colspan="2"></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '    <td class="header" colspan="3">소재종류</td>';
+                htmlString += '    <td colspan="2"></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '    <td class="header" colspan="3">수량</td>';
+                htmlString += '    <td colspan="2"></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '    <td class="header" colspan="3">CAM 설계</td>';
+                htmlString += '    <td colspan="2"></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '    <td class="header" colspan="3">E/C</td>';
+                htmlString += '    <td colspan="2"></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '    <td class="header" colspan="3">A/P</td>';
+                htmlString += '<td colspan="2"></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '    <td class="header" colspan="3">마진율</td>';
+                htmlString += '    <td colspan="2"></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '    <td class="header" colspan="3">총 가공시간</td>';
+                htmlString += '    <td colspan="2"></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '    <td colspan="2">밀링</td>';
+                htmlString += '<td></td>';
+                htmlString += '    <td>NC</td>';
+                htmlString += '    <td></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '    <td colspan="2">선반</td>';
+                htmlString += '<td></td>';
+                htmlString += '    <td>연마</td>';
+                htmlString += '    <td></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '    <td class="header" colspan="5">기기별 가공기록</td>';
+                htmlString += '</tr>';
+                htmlString += '<tr id="processing_record_1">';
+                htmlString += '    <td>1</td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr id="processing_record_2">';
+                htmlString += '    <td>2</td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr id="processing_record_3">';
+                htmlString += '    <td>3</td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr id="processing_record_4">';
+                htmlString += '    <td>4</td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr id="processing_record_5">';
+                htmlString += '    <td>5</td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr id="processing_record_6">';
+                htmlString += '    <td>6</td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '    <td class="header" colspan="5">품질검사</td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '    <td colspan="2">등급</td>';
+                htmlString += '    <td></td>';
+                htmlString += '    <td colspan="2"></td>';
+                htmlString += '</tr>';
+                htmlString += '<tr>';
+                htmlString += '    <td colspan="3"></td>';
+                htmlString += '    <td colspan="2"></td>';
+                htmlString += '</tr>';
             }
 
             $('#drawing_information_table').html(htmlString);
         };
 
-        const changedrawingImage = function (IMG_GFILE_SEQ) {
+        const changeDrawingImage = function (IMG_GFILE_SEQ) {
             $("#drawing_image").attr('src', /image/ + IMG_GFILE_SEQ);
         };
 
@@ -1450,6 +1537,8 @@
 
         /* event */
         $('#monthly_productivity_top_form').on('change', function () {
+            changeDrawingInformationTable(); // 빈 화면
+            changeDrawingImage(); // 빈 화면
             changeInnerDueDtComplianceRate();
             changeProcessingPerformance();
             changeMonthlyStatus();
@@ -1502,44 +1591,6 @@
                     $monthlyProductivityBottomForm.find('#SIZE_L').show();
             }
         });
-
-        /*$(document).on('click', '.page.monthly-productivity-board .bottom-wrap div table tr', function(){
-            let tr = $(this);
-            let td = tr.children();
-            let controlNum = td.eq(1).text();
-            $('.bottom-wrap .selected').removeClass('selected');
-            $(this).addClass('selected');
-
-            (function () {
-                let parameters = {
-                    'url': '/json-info',
-                    'data': {'queryId': 'reportMapper.getCompanyStaffList', 'CONTROL_NUM': controlNum}
-                };
-
-                fnPostAjax(function (data) {
-                    changeDrawingInformationTable(data.info);
-                }, parameters, '');
-            })();
-
-            (function () {
-                let parameters = {
-                    'url': '/json-info',
-                    'data': {'queryId': 'reportMapper.getCompanyStaffList', 'CONTROL_NUM': controlNum}
-                };
-
-                fnPostAjax(function (data) {
-                    if (data.info) {
-                        $('#drawing_image').prop('src', '/resource/asset/images/common/img_barcode_long_on.png');
-                    } else {
-
-                    }
-                }, parameters, '');
-            })();
-        });*/
-
-        /*$('#drawing_image').on('click', function () {
-            window.open(this.src);
-        });*/
 
         $('.sideWrap a').on('click', function (e) {
             setTimeout(function(){
