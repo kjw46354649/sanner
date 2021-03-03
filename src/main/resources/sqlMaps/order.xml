@@ -3029,7 +3029,7 @@
             , A.LEVEL_1
             , A.LEVEL_2
             , B.UNIT_AMT
-            , D.PROCESS_CNT
+            , SUM(D.PROCESS_CNT) AS PROCESS_CNT
             , SUM(B.UNIT_AMT * D.PROCESS_CNT) AS TOTAL
         FROM TBL_PROCESS_FACTOR A
             INNER JOIN TBL_CALC_PROCESS_FACTOR B ON B.FACTOR_CD = A.FACTOR_CD
