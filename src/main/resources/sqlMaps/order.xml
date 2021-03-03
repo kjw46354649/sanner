@@ -3003,24 +3003,21 @@
             , B.SIZE_TXT
             , D.SIZE_LEVEL <!-- 규격 Level -->
             , FORMAT(D.UNIT_BASIC_AMT, 0) AS UNIT_BASIC_AMT <!-- 기본가공비 -->
-            , (
-                SELECT
-                    FORMAT(SUM(P.PROCESS_CNT * N.UNIT_AMT) + D.UNIT_BASIC_AMT, 0)
+            , (	SELECT FORMAT(SUM(P.PROCESS_CNT * N.UNIT_AMT) + D.UNIT_BASIC_AMT, 0)
                 FROM TBL_PROCESS_FACTOR M
-                    LEFT OUTER JOIN TBL_CALC_PROCESS_FACTOR N ON N.FACTOR_CD = M.FACTOR_CD
-                    LEFT OUTER JOIN TBL_CALC_PROCESS O ON O.CALC_SEQ = N.CALC_SEQ
-                        AND O.CALC_SEQ = SF_GET_CALC_PROCESS_SEQ('CONTROL', #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ})
-                    LEFT OUTER JOIN TBL_CONTROL_PART_PROCESS P ON P.FACTOR_CD = M.FACTOR_CD
-                        AND P.CONTROL_SEQ = #{CONTROL_SEQ}
-                        AND P.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-            )  AS TOTAL_PROCESSING_COST <!-- 총가공비 -->
+                    INNER JOIN TBL_CALC_PROCESS_FACTOR N ON N.FACTOR_CD = M.FACTOR_CD
+                    INNER JOIN TBL_CALC_PROCESS O ON O.CALC_SEQ = N.CALC_SEQ
+                    INNER JOIN TBL_CONTROL_PART_PROCESS P ON P.FACTOR_CD = M.FACTOR_CD
+                WHERE O.CALC_SEQ = SF_GET_CALC_PROCESS_SEQ('CONTROL', #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ})
+                    AND P.CONTROL_SEQ = #{CONTROL_SEQ}
+                    AND P.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ} ) AS TOTAL_PROCESSING_COST <!-- 총가공비 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
-                AND B.CONTROL_SEQ = #{CONTROL_SEQ}
-                AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
             INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = A.CONTROL_SEQ
             LEFT OUTER JOIN TBL_CALC_PROCESS D ON CALC_SEQ = SF_GET_CALC_PROCESS_SEQ('CONTROL', #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ})
         WHERE A.DEL_YN = 'N'
+            AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </select>
 
     <select id="selectProcessingRequirementsInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
