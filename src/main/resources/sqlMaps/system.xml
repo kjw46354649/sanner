@@ -283,10 +283,6 @@
         WHERE MENU_SEQ = #{MENU_SEQ}
 	</update>
 
-    <select id="selectCommoGroupNextSequence" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT NEXT VALUE FOR SEQ_CODE_GROUP AS SEQ
-    </select>
-
     <select id="selectCommonGroupCodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT HIGH_CD,
                HIGH_NM,
@@ -300,9 +296,11 @@
     </select>
 
     <insert id="insertCommonGroupCode" parameterType="java.util.HashMap">
-        INSERT INTO TBL_CODE_GROUP
-            (HIGH_CD, HIGH_NM, DEL_YN, NOTE, INSERT_DT, INSERT_ID)
-        VALUES(NEXTVAL(SEQ_CODE_GROUP), #{HIGH_NM}, #{DEL_YN}, #{NOTE}, NOW(), NULL)
+        <selectKey keyProperty="CODE_GROUP_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_CODE_GROUP) FROM DUAL
+        </selectKey>
+        INSERT INTO TBL_CODE_GROUP (HIGH_CD, HIGH_NM, DEL_YN, NOTE, INSERT_DT, INSERT_ID)
+        VALUES (#{CODE_GROUP_SEQ}, #{HIGH_NM}, #{DEL_YN}, #{NOTE}, NOW(), NULL)
 	</insert>
 
     <update id="updateCommonGroupCode"  parameterType="java.util.HashMap" >
@@ -311,7 +309,7 @@
             DEL_YN = #{DEL_YN},
             NOTE = #{NOTE},
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE HIGH_CD = #{HIGH_CD}
    </update>
 
@@ -326,7 +324,7 @@
                     AND LANG_CD = #{item}) AS CODE_NM_${item},
                 </foreach>
                DEL_YN,
-               SF_GET_CODE_NM(1042, DEL_YN, 'EN') AS DEL_YN_NM,
+               SF_GET_CODE_NM('1042', DEL_YN, 'EN') AS DEL_YN_NM,
                SORT_NUM,
                ABBR_NM,
                REF_CD,
