@@ -19,7 +19,7 @@
             INNER JOIN jmes.TBL_FILE_GROUP B ON A.GFILE_SEQ = B.GFILE_SEQ
             INNER JOIN jmes.TBL_FILE C ON B.GFILE_SEQ = C.GFILE_SEQ
          WHERE A.WORK_KEY = #{WORK_KEY}
-         ORDER BY A.ORGINAL_FILE_NM
+         ORDER BY C.ORGINAL_FILE_NM
     </select>
 
     <select id="selectDrawingUploadControlDataList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
