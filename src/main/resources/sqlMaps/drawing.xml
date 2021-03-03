@@ -433,14 +433,14 @@
             CASE WHEN Z.MAIN_INSPECTION IS NOT NULL THEN Z.MAIN_INSPECTION ELSE SPACE(0) END AS MAIN_INSPECTION_NM,
             CASE WHEN Z.MATERIAL_FINISH_HEAT IS NOT NULL THEN Z.MATERIAL_FINISH_HEAT ELSE SPACE(0) END AS MATERIAL_FINISH_HEAT_NM,
             CASE WHEN ORIGINAL_SIDE_QTY > 0 AND Z.OTHER_SIDE_QTY > 0
-                    THEN CONCAT('수량', SPACE(1), Z.ORDER_QTY, ' EA', SPACE(1), '(', '원 ', Z.ORIGINAL_SIDE_QTY, ',', ' 대 ', Z.OTHER_SIDE_QTY, ')')
+                    THEN CONCAT(CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'Qty.' ELSE '수량' END, SPACE(1), Z.ORDER_QTY, ' EA', SPACE(1), '(', '원 ', Z.ORIGINAL_SIDE_QTY, ',', ' 대 ', Z.OTHER_SIDE_QTY, ')')
                  WHEN ORIGINAL_SIDE_QTY  > 0 AND Z.OTHER_SIDE_QTY = 0
-                    THEN CONCAT('수량', SPACE(1), Z.ORDER_QTY, ' EA', SPACE(1), '(', '원 ', Z.ORIGINAL_SIDE_QTY, ')')
+                    THEN CONCAT(CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'Qty.' ELSE '수량' END, SPACE(1), Z.ORDER_QTY, ' EA', SPACE(1), '(', '원 ', Z.ORIGINAL_SIDE_QTY, ')')
                  WHEN ORIGINAL_SIDE_QTY  = 0 AND Z.OTHER_SIDE_QTY > 0
-                    THEN CONCAT('수량', SPACE(1), Z.ORDER_QTY, ' EA', SPACE(1), '(', '대 ', Z.OTHER_SIDE_QTY, ')')
-                 ELSE CONCAT('수량', SPACE(1), Z.ORDER_QTY, ' EA', SPACE(1))
-            END AS ORDER_QTY_INFO,<!--수량에 대칭 추가 -->
-            jmes.SF_GET_DATE_F(Z.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!--내부가공납기 -->
+                    THEN CONCAT(CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'Qty.' ELSE '수량' END, SPACE(1), Z.ORDER_QTY, ' EA', SPACE(1), '(', '대 ', Z.OTHER_SIDE_QTY, ')')
+                 ELSE CONCAT(CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'Qty.' ELSE '수량' END, SPACE(1), Z.ORDER_QTY, ' EA', SPACE(1))
+            END AS ORDER_QTY_INFO, <!-- 수량에 대칭 추가 -->
+            jmes.SF_GET_DATE_F(Z.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
             CASE WHEN Z.POP_COUNT = 0 THEN 'X' ELSE '' END CHE_POP, <!-- pop 선작업이 필요한 경우 -->
             CASE WHEN Z.OUTSIDE_CONFIRM_DT IS NULL AND PRO002 IS NULL THEN 'X' ELSE '' END AS CHE_PRO002, <!-- NULL 이 아닌경우 가공 확정 이후 DRAWING 작업 가능 -->
             CASE WHEN Z.SCAN_BARCODE_NUM != Z.CURR_BARCODE_NUM THEN 'X' ELSE '' END AS CHE_VER, <!-- 최선 바코드 정보와 스캔 바코드의 DRAWING_NUM 가 다른경우 -->
@@ -449,9 +449,9 @@
             CASE WHEN Z.CONTROL_STATUS = 'ORD005' THEN 'X' ELSE '' END AS CHE_HOLD_YN <!-- 주문 보류 된 경우  -->
         FROM (
             SELECT
-                A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, H.CONTROL_NUM, A.PART_NUM, A.INNER_DUE_DT, H.SAME_SIDE_YN,<!-- 대칭 여부 -->
-                CASE WHEN H.EMERGENCY_YN = 'Y' THEN H.EMERGENCY_YN ELSE SPACE(0) END AS EMERGENCY_YN,<!--긴급 -->
-                IFNULL(SF_GET_CODE_NM('1059', H.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION,<!--주요 검사품 -->
+                A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, H.CONTROL_NUM, A.PART_NUM, A.INNER_DUE_DT, H.SAME_SIDE_YN, <!-- 대칭 여부 -->
+                CASE WHEN H.EMERGENCY_YN = 'Y' THEN H.EMERGENCY_YN ELSE SPACE(0) END AS EMERGENCY_YN, <!-- 긴급 -->
+                IFNULL(SF_GET_CODE_NM('1059', H.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION, <!-- 주요 검사품 -->
                 IFNULL(SF_GET_CODE_NM('1058', A.MATERIAL_FINISH_HEAT, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
                 IFNULL(H.CONTROL_STATUS, SPACE(0)) AS CONTROL_STATUS, <!-- CONTROL 상태 -->
                 IFNULL(A.PART_STATUS, SPACE(0)) AS PART_STATUS, <!-- CONTROL PART 현재 상태  -->
