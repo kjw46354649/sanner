@@ -1658,8 +1658,21 @@
 			}, timesec*selVal);
 		};
 
+		let setIntervalReloadTimer;
+		let reloadTimer = function(){
+			let reloadTimeTerm = 4;// 4시간
+			let reloadTimeHour = 60;   // 1시간
+			let reloadTimeMinute = 60; //1분
+			let reloadTimeSecond = 1000;//1초
+			setIntervalReloadTimer = setInterval(function() {
+				location.reload();
+			}, reloadTimeSecond*reloadTimeMinute*reloadTimeHour*reloadTimeTerm);
+		};
+
+
 		getInitData();
 		jmesConnect();
+		reloadTimer();
 		timer();
 	});
 
