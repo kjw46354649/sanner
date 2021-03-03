@@ -4,6 +4,7 @@ import com.framework.innodale.component.CommonUtility;
 import com.jmes.service.OutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -44,10 +45,10 @@ public class OutController {
      * 외주가공 요청 저장 및 제출 || 가공요청 취소 저장 및 제출
      */
     @RequestMapping(value = "/managerRequestOutside", method = RequestMethod.POST)
-    public String managerRequestOutside(HttpServletRequest request) throws Exception {
+    public String managerRequestOutside(Model model, HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
 
-        this.outService.managerRequestOutside(map);
+        this.outService.managerRequestOutside(model, map);
 
         return "jsonView";
     }
