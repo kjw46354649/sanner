@@ -1669,9 +1669,10 @@
                     const data = this.option('dataModel.data');
                     const summary = function (data) {
                         const lastRow = data[data.length - 1];
-                        const total = lastRow ? lastRow.TOTAL : '';
+                        const processCntTotal = lastRow ? lastRow.PROCESS_CNT : '';
+                        const costTotal = lastRow ? lastRow.TOTAL : '';
                         const array = [
-                            {LEVEL_1: '추가가공비 합계', UNIT_AMT: total}
+                            {LEVEL_1: '추가가공비 합계', PROCESS_CNT: processCntTotal, UNIT_AMT: costTotal}
                         ];
 
                         return array;

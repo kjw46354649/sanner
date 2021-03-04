@@ -3,9 +3,11 @@ package com.jmes.service.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.innodale.dao.InnodaleDao;
+import com.jmes.dao.OrderDao;
 import com.jmes.service.OutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +18,8 @@ public class OutServiceImpl implements OutService {
 
     @Autowired
     private InnodaleDao innodaleDao;
+    @Autowired
+    private OrderDao orderDao;
 
     @Override
     public void removeOutsideOrder(Map<String, Object> map) throws Exception {
@@ -74,13 +78,15 @@ public class OutServiceImpl implements OutService {
     }
 
     @Override
-    public void managerRequestOutside(Map<String, Object> map) throws Exception {
+    public void managerRequestOutside(Model model, Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
 
-        int outsideRequestSeq;
+        int outsideRequestSeq = 0;
         String status = null;
+        boolean flag = false;
         ArrayList<HashMap<String, Object>> controlPartList = null;
         ArrayList<HashMap<String, Object>> mailReceiverList = null;
         HashMap<String, Object> requestMailForm = null;
@@ -111,66 +117,74 @@ public class OutServiceImpl implements OutService {
             mailAttachGfileSeq = Integer.toString((int) requestMailForm.get("GFILE_SEQ"));
         }
 
-        // 주문관리 Part 저장
-        if (controlPartList != null && controlPartList.size() > 0) {
-            for (HashMap<String, Object> hashMap : controlPartList) {
-                hashMap.put("queryId", "outMapper.updateOutsideRequestDetailDelete");
-                this.innodaleDao.update(hashMap);
-
-                if (status.equals("request")) {
-                    hashMap.put("PART_STATUS", "PRO001");
-                    hashMap.put("OUTSIDE_STATUS", "OST001");
-                    // 첨부 파일을 하나의 Gfile로 추가 한다.
-                    hashMap.put("GFILE_SEQ", mailAttachGfileSeq);
-                    hashMap.put("queryId", "outMapper.createMailAttachCadFilePlus");
-                    this.innodaleDao.create(hashMap);
-
-                } else {
-                    hashMap.put("PART_STATUS", "null");
-                    hashMap.put("OUTSIDE_STATUS", "OST002");
-                }
-                hashMap.put("queryId", "orderMapper.createControlPartProgress");
-                this.innodaleDao.create(hashMap);
-
-                hashMap.put("queryId", "orderMapper.updateControlPart");
-                this.innodaleDao.update(hashMap);
-            }
-        }
-
-        // 외주 가공 요청
         if (requestMailForm != null && requestMailForm.size() > 0) {
-            requestMailForm.put("queryId", "outMapper.createOutsideRequest");
-            this.innodaleDao.create(requestMailForm);
-        }
-        outsideRequestSeq = (int) requestMailForm.get("OUTSIDE_REQUEST_SEQ");
 
-        // 외주가공요청 상세 저장
-        if (controlPartList != null && controlPartList.size() > 0) {
-            for (HashMap<String, Object> hashMap : controlPartList) {
-                hashMap.put("OUTSIDE_REQUEST_SEQ", outsideRequestSeq);
-                hashMap.put("queryId", "outMapper.createOutsideRequestDetail");
-                this.innodaleDao.create(hashMap);
+            if (controlPartList != null && controlPartList.size() > 0) {
+
+                for (int i = 0, SIZE = controlPartList.size(); i < SIZE; i++) {
+                    HashMap<String, Object> hashMap = new HashMap<String, Object>();
+                    hashMap.put("LOGIN_USER_ID", userId);
+                    hashMap.putAll(controlPartList.get(i));
+
+                    if (status.equals("request")) {
+                        hashMap.put("PART_STATUS", "PRO001");
+                        hashMap.put("OUTSIDE_STATUS", "OST001");
+                    } else {
+                        hashMap.put("PART_STATUS", "null");
+                        hashMap.put("OUTSIDE_STATUS", "OST002");
+                    }
+
+                    hashMap.put("queryId", "outMapper.selectOutsideStatusCheck");
+                    flag = this.orderDao.getFlag(hashMap);
+
+                    if (flag) {
+                        if (i == 0) {
+                            requestMailForm.put("queryId", "outMapper.createOutsideRequest");
+                            this.innodaleDao.create(requestMailForm);
+                            outsideRequestSeq = (int) requestMailForm.get("OUTSIDE_REQUEST_SEQ");
+                        }
+                        // 기존 요청을 삭제한다.
+                        hashMap.put("queryId", "outMapper.updateOutsideRequestDetailDelete");
+                        this.innodaleDao.update(hashMap);
+
+                        if (status.equals("request")) {
+                            // 첨부 파일을 하나의 Gfile로 추가 한다.
+                            hashMap.put("GFILE_SEQ", mailAttachGfileSeq);
+                            hashMap.put("queryId", "outMapper.createMailAttachCadFilePlus");
+                            this.innodaleDao.create(hashMap);
+                        }
+
+                        hashMap.put("queryId", "orderMapper.updateControlPart");
+                        this.innodaleDao.update(hashMap);
+
+                        hashMap.put("queryId", "orderMapper.createControlPartProgress");
+                        this.innodaleDao.create(hashMap);
+                    } else {
+                        model.addAttribute("result", "error");
+                        throw new Exception();
+                    }
+                }
+                // 외주가공 요청 수신자 저장
+                if (flag) {
+                    if (mailReceiverList != null && mailReceiverList.size() > 0) {
+                        for (HashMap<String, Object> hashMap : mailReceiverList) {
+                            hashMap.put("OUTSIDE_REQUEST_SEQ", outsideRequestSeq);
+                            hashMap.put("queryId", "outMapper.createOutsideRequestReceiver");
+                            this.innodaleDao.create(hashMap);
+                        }
+                        // 메일 발송
+                        String reception = (String) requestMailForm.get("RECEIVE_EMAIL");
+                        String reference = (String) requestMailForm.get("CC_EMAIL");
+                        requestMailForm.put("RECEPTION", reception);
+                        requestMailForm.put("REFERENCE", reference);
+                        requestMailForm.put("queryId", "mail.insertOutsideRequestSubmitMail");
+                        this.innodaleDao.create(requestMailForm);
+                    }
+                }
             }
         }
 
-        // 외주가공 요청 수신자 저장
-        if (mailReceiverList != null && mailReceiverList.size() > 0) {
-            for (HashMap<String, Object> hashMap : mailReceiverList) {
-                hashMap.put("OUTSIDE_REQUEST_SEQ", outsideRequestSeq);
-                hashMap.put("queryId", "outMapper.createOutsideRequestReceiver");
-                this.innodaleDao.create(hashMap);
-            }
-
-            // 메일 발송
-            if (requestMailForm != null && requestMailForm.size() > 0) {
-                String reception = (String) requestMailForm.get("RECEIVE_EMAIL");
-                String reference = (String) requestMailForm.get("CC_EMAIL");
-                requestMailForm.put("RECEPTION", reception);
-                requestMailForm.put("REFERENCE", reference);
-                requestMailForm.put("queryId", "mail.insertOutsideRequestSubmitMail");
-                this.innodaleDao.create(requestMailForm);
-            }
-        }
+        model.addAttribute("result", "success");
     }
 
     @Override

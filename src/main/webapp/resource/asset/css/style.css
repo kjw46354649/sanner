@@ -1194,7 +1194,7 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
 
 .month_sales_board .middle_wrap > div table th, .month_sales_board .middle_wrap > div table td {
     border: 1px solid black;
-    font-size: 1rem;
+    font-size: 1.4rem;
     text-align: center;
     text-overflow: ellipsis;
     overflow: hidden;

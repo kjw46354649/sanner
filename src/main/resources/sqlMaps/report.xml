@@ -42,7 +42,7 @@
                             , DATE_FORMAT(STR_TO_DATE(F.DT,'%Y%m%d'),'%u') AS WEEK_SEQ
                             , CASE WHEN F.WEEK_DAY > 0 THEN (   SELECT ROUND(M.GOAL_AMT / N.DT_CNT,0) AS DT_GOAL_AMT
                                                                 FROM (  SELECT SUM(M.GOAL_AMT) AS GOAL_AMT
-                                                                        FROM jmes.TBL_XXX_PRODUCTION_GOAL M
+                                                                        FROM jmes.TBL_PRODUCTION_GOAL M
                                                                         WHERE M.YYYYMM = CONCAT(#{YEAR}, #{MONTH})           <!-- 고정조건 -->
                                                                         <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
                                                                             AND M.WORK_FACTORY = #{WORK_FACTORY}   <!-- 가변조건 -->
@@ -301,7 +301,7 @@
                             , DATE_FORMAT(STR_TO_DATE(F.DT,'%Y%m%d'),'%u') AS WEEK_SEQ
                             , CASE WHEN F.WEEK_DAY > 0 THEN (   SELECT ROUND(M.GOAL_AMT / N.DT_CNT,0) AS DT_GOAL_AMT
                                                                 FROM (  SELECT SUM(M.GOAL_AMT) AS GOAL_AMT
-                                                                        FROM jmes.TBL_XXX_SALES_GOAL M
+                                                                        FROM jmes.TBL_SALES_GOAL M
                                                                         WHERE M.YYYYMM = CONCAT(#{YEAR}, #{MONTH})           <!-- 고정조건 -->
                                                                       ) M
                                                                     , ( SELECT COUNT(*) AS DT_CNT
@@ -1057,7 +1057,7 @@
                 WHERE DT LIKE CONCAT(#{YEAR},'%')      <!-- 고정조건 -->    
                 GROUP BY SUBSTRING(DT,1,6)
              ) X LEFT OUTER JOIN (  SELECT YYYYMM, SUM(GOAL_AMT) AS GOAL_AMT
-                                    FROM jmes.TBL_XXX_PRODUCTION_GOAL
+                                    FROM jmes.TBL_PRODUCTION_GOAL
                                     WHERE YYYYMM LIKE CONCAT(#{YEAR},'%')      <!-- 고정조건 -->
                                         <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
                                         AND WORK_FACTORY = #{WORK_FACTORY}           <!-- 가변조건 -->
@@ -2271,7 +2271,7 @@
         FROM (  SELECT SUM(A.GOAL_AMT) AS GOAL_AMT
                     , CASE WHEN TRUNCATE(SUM(A.GOAL_AMT) / 100000000,0) > 0 THEN CONCAT (TRUNCATE(SUM(A.GOAL_AMT) / 100000000,0),'억') END AS GOAL_AMT_1
                     , CASE WHEN TRUNCATE(MOD(SUM(A.GOAL_AMT),100000000) / 10000000,0) > 0 THEN CONCAT(TRUNCATE(MOD(SUM(A.GOAL_AMT),100000000) / 10000000,0),'천') END AS GOAL_AMT_2
-                FROM jmes.TBL_XXX_SALES_GOAL A
+                FROM jmes.TBL_SALES_GOAL A
                 WHERE A.YYYYMM = CONCAT(#{YEAR}, #{MONTH})
                 <if test="COMP_CD != null and COMP_CD != ''">
                     AND A.COMP_CD = {COMP_CD}
@@ -2328,7 +2328,7 @@
         FROM (  SELECT SUM(A.GOAL_AMT) AS GOAL_AMT
                     , CASE WHEN TRUNCATE(SUM(A.GOAL_AMT) / 100000000,0) > 0 THEN CONCAT (TRUNCATE(SUM(A.GOAL_AMT) / 100000000,0),'억') END AS GOAL_AMT_1
                     , CASE WHEN TRUNCATE(MOD(SUM(A.GOAL_AMT),100000000) / 10000000,0) > 0 THEN CONCAT(TRUNCATE(MOD(SUM(A.GOAL_AMT),100000000) / 10000000,0),'천') END AS GOAL_AMT_2
-                FROM jmes.TBL_XXX_SALES_GOAL A
+                FROM jmes.TBL_SALES_GOAL A
                 WHERE A.YYYYMM LIKE CONCAT(#{YEAR},'%')
                 <if test="COMP_CD != null and COMP_CD != ''">
                     AND A.COMP_CD = {COMP_CD}
@@ -2411,7 +2411,7 @@
                                                 , IFNULL(Y.CLOSE_AMT,0) AS SALES_AMT
                                                 , CASE WHEN IFNULL(X.GOAL_AMT,0) = 0 THEN 0 ELSE IFNULL(Y.CLOSE_AMT,0) / X.GOAL_AMT * 100 END AS MONTH_RATIO
                                             FROM (  SELECT A.YYYYMM, SUM(A.GOAL_AMT) AS GOAL_AMT
-                                                    FROM jmes.TBL_XXX_SALES_GOAL A
+                                                    FROM jmes.TBL_SALES_GOAL A
                                                     WHERE YYYYMM LIKE CONCAT(#{YEAR},'%')
                                                     <if test="COMP_CD != null and COMP_CD != ''">
                                                         AND A.COMP_CD = #{COMP_CD}

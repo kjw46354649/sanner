@@ -2344,7 +2344,12 @@
             };
             let parameters = {'url': '/managerRequestOutside', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data, callFunctionParam) {
-                fnAlert(null, "<spring:message code='com.alert.default.save.success' />");
+                if (data.result === 'success') {
+                    fnAlert(null, "<spring:message code='com.alert.default.save.success'/>");
+                } else {
+                    fnAlert(null, 'Error');
+                }
+
                 $('#REQUEST_OUTSIDE_POPUP').modal('hide');
                 $outsideOrderManageGrid.pqGrid('refreshDataAndView');
             }, parameters, '');

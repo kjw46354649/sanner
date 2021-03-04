@@ -41,19 +41,19 @@
             <div>
                 <table id="monthly_status_table">
                     <tr>
-                        <th>12월 영업목표</th>
+                        <th><span name="month">12</span>월 영업목표</th>
                     </tr>
                     <tr>
                         <td id="goal_amt_kor">10억</td>
                     </tr>
                     <tr>
-                        <th>12월 매출현황</th>
+                        <th><span name="month">12</span>월 매출현황</th>
                     </tr>
                     <tr>
                         <td id="sales_amt_kor">10억 3천</td>
                     </tr>
                     <tr>
-                        <th>12월 달성률</th>
+                        <th><span name="month">12</span>월 달성률</th>
                     </tr>
                     <tr>
                         <td id="month_ratio">105%</td>
@@ -69,22 +69,22 @@
             <div>
                 <table id="cumulative_status_table">
                     <tr>
-                        <th>12월 영업목표</th>
+                        <th>누적 영업목표</th>
                     </tr>
                     <tr>
-                        <td id="goal_amt_kor">10억</td>
+                        <td id="goal_amt_kor">45억</td>
                     </tr>
                     <tr>
-                        <th>12월 매출현황</th>
+                        <th>누적 매출현황</th>
                     </tr>
                     <tr>
-                        <td id="sales_amt_kor">10억 3천</td>
+                        <td id="sales_amt_kor">41억 3천</td>
                     </tr>
                     <tr>
-                        <th>12월 달성률</th>
+                        <th>누적 달성률</th>
                     </tr>
                     <tr>
-                        <td id="month_ratio">105%</td>
+                        <td id="month_ratio">89%</td>
                     </tr>
                 </table>
             </div>
@@ -321,14 +321,22 @@
         const botLeftGridColModel = [
             {title: '발주처명', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주처명', dataIndx: 'COMP_NM'},
-            {title: '변동', dataIndx: 'PLUS_MINUS'},
+            {
+                title: '변동', dataIndx: 'PLUS_MINUS',
+                render: function (ui) {
+                    if (ui.rowData.PLUS_MINUS_RED_YN === 'Y') {
+                        return {style: {'color': '#FF0000'}};
+                    }
+                }
+            },
+            {title: 'PLUS_MINUS_RED_YN', dataIndx: 'PLUS_MINUS_RED_YN', hidden: true},
             {title: '업종', dataIndx: 'BUSINESS_ITEM'},
-            {title: '월매출금액<br>(백만원)', dataIndx: 'MONTH_AMT'},
-            {title: '누적매출금액<br>(백만원)', dataIndx: 'YEAR_AMT'},
-            {title: '누적품수<br>(발주단위)', dataIndx: 'ORDER_CNT'},
-            {title: '누적수량<br>(EA)', dataIndx: 'ORDER_QTY'},
+            {title: '월매출금액<br>(백만원)', dataType: 'integer', format: '#,###',dataIndx: 'MONTH_AMT'},
+            {title: '누적매출금액<br>(백만원)', dataType: 'integer', format: '#,###',dataIndx: 'YEAR_AMT'},
+            {title: '누적품수<br>(발주단위)', dataType: 'integer', format: '#,###',dataIndx: 'ORDER_CNT'},
+            {title: '누적수량<br>(EA)', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'},
             {title: '누적<br>가공시간', dataIndx: 'MCT_WORK_TIME'},
-            {title: '시간당 매출<br>(매출/가공시간)', dataIndx: 'YEAR_AMT_PER_HOUR'},
+            {title: '시간당 매출<br>(매출/가공시간)', dataType: 'integer', format: '#,###', dataIndx: 'YEAR_AMT_PER_HOUR'},
             {title: '이전<br>거래년월', dataIndx: 'PREV_SALES_MONTH'},
             {title: '영업담당', dataIndx: 'STAFF_NM'},
             {title: '구분', dataIndx: 'NOTE'},
@@ -360,10 +368,10 @@
         const botRightGridColModel = [
             {title: '외주업체명', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
             {title: '외주업체명', dataIndx: 'COMP_NM'},
-            {title: '월 매입금액', dataIndx: 'MONTH_AMT'},
-            {title: '누적 매입금액', dataIndx: 'YEAR_AMT'},
-            {title: '누적품수', dataIndx: 'YEAR_PART_CNT'},
-            {title: '누적수량', dataIndx: 'YEAR_PART_QTY'},
+            {title: '월 매입금액', dataType: 'integer', format: '#,###', dataIndx: 'MONTH_AMT'},
+            {title: '누적 매입금액', dataType: 'integer', format: '#,###', dataIndx: 'YEAR_AMT'},
+            {title: '누적품수', dataType: 'integer', format: '#,###', dataIndx: 'YEAR_PART_CNT'},
+            {title: '누적수량', dataType: 'integer', format: '#,###', dataIndx: 'YEAR_PART_QTY'},
         ];
         const botRightGridObj = {
             height: 340,
@@ -476,11 +484,11 @@
             });
         };
 
-        const changeGas = function (target) {
+        const changeStatus = function (target) {
             changeTable(target);
             changePieChart(target);
         };
-        // 월별현황
+        // 월간현황
         const changeAnnualBusinessStatus = function () {
             getJsonList('reportMapper.selectAnnualBusinessStatusList', function (arg) {
                 const list = arg.list;
@@ -545,11 +553,13 @@
         /* event */
         $('#month_sales_board_top_form').on('change', function () {
             topFormData = fnFormToJsonArrayData('#month_sales_board_top_form');
-            changeGas('monthly');
-            changeGas('cumulative');
+            changeStatus('monthly');
+            changeStatus('cumulative');
             changeAnnualBusinessStatus();
             refreshBotLeftGrid();
             refreshBotRightGrid();
+
+            $('#monthly_status_table [name=month]').html($('#month_sales_board_month').val());
         });
         /* event */
 
