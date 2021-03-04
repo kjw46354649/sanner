@@ -1112,7 +1112,6 @@
                 LIMIT 1
             ) AS WORK_HISTORY_INFO <!-- 과거 경험 -->
             , B.SAME_SIDE_YN <!-- 대칭 -->
-            , A.IMG_GFILE_SEQ <!-- IMG 파일그룹번호 -->
             , K.EQUIP_NM
             , CASE
             	WHEN A.PART_STATUS != 'PRO007' AND K.WORKING_TIME IS NOT NULL THEN
