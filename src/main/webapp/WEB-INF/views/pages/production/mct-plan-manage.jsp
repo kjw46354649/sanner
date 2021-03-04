@@ -28,6 +28,7 @@
                         </c:forEach>
                         </select>
                 </span>
+                <span class="fileSearchIcon ml-10" id="toggleImageView" style="cursor: pointer"></span>
                 <span class="refresh ml-10"><button type="button" id="MCT_PLAN_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
             </div>
         </form>
@@ -144,11 +145,11 @@
     $(function () {
         'use strict';
         /* variable */
-        const TWENTY_SECONDS = 20000;
         const NC_MACHINE = fnCommCodeDatasourceGridSelectBoxCreate({
             'url': '/json-list',
             'data': {'queryId': 'machine.selectNCMachineList'}
         });
+        let isActiveDrawingView = false;
         let $processPlanGrid1, $processPlanGrid2, $processPlanGrid3, $processPlanGrid4, $processPlanGrid5,
             $processPlanGrid6, $processPlanGrid7, $processPlanGrid8, $processPlanGrid9, $processPlanGrid10,
             $processPlanGrid11, $processPlanGrid12, $processPlanGrid13, $processPlanGrid14;
@@ -808,6 +809,32 @@
             }
             $processTargetGrid.pqGrid("refreshView");
         });
+
+        $('#toggleImageView').on('click', function () {
+            isActiveDrawingView = !isActiveDrawingView;
+        });
+
+        $(document).on({
+            mouseenter: function () {
+                if (isActiveDrawingView) {
+                    const id = $(this).attr('id');
+                    const splits = id.split('-');
+                    const rowIndx = splits[4];
+                    const rowData = $(this).closest('.pq-grid').pqGrid('getRowData', {rowIndx: rowIndx});
+                    
+                    if (rowData.IMG_GFILE_SEQ) {
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                    }
+                }
+            },
+            mouseleave: function () {
+                const isOpen = $('#common_quick_drawing_popup').dialog('isOpen');
+
+                if (isOpen) {
+                    $('#common_quick_drawing_popup').dialog('close');
+                }
+            }
+        }, '[id^=PROCESS_PLAN_GRID] .pq-grid-row');
         /* event */
 
         /* init */
