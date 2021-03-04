@@ -249,8 +249,7 @@
                 AND B.MCT_WORK_SEQ = (SELECT MAX(MCT_WORK_SEQ) FROM TBL_MCT_WORK WHERE EQUIP_SEQ = TRIM(#{EQUIP_SEQ}) AND DEL_YN = 'N')
             LEFT OUTER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND D.DEL_YN = 'N'
-        WHERE 1 = 1
-            AND A.DEL_YN = 'N'
+        WHERE A.DEL_YN = 'N'
             AND A.EQUIP_SEQ = TRIM(#{EQUIP_SEQ})
     </select>
     <select id="selectProcessPlanGridList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -272,9 +271,9 @@
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
             INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
             LEFT OUTER JOIN TBL_EQUIP E ON A.EQUIP_SEQ = E.EQUIP_SEQ
-        WHERE 1 = 1
+        WHERE A.DEL_YN = 'N'
+            AND C.DEL_YN = 'N'
             AND E.EQUIP_SEQ = #{EQUIP_SEQ}
-            AND A.DEL_YN = 'N'
         ORDER BY A.SORT_NUM
     </select>
 
@@ -413,14 +412,16 @@
             (
                 SELECT CONCAT(CEILING(SF_GET_MCT_WORK_TIME(I.CONTROL_SEQ, I.CONTROL_DETAIL_SEQ) / SUM(J.FINISH_QTY)), 'm')
                 FROM jmes.TBL_CONTROL H, jmes.TBL_CONTROL_PART I, jmes.TBL_MCT_WORK J, jmes.TBL_EQUIP K
-                WHERE K.EQUIP_SEQ = J.EQUIP_SEQ
+                WHERE I.CONTROL_SEQ = H.CONTROL_SEQ
                     AND J.CONTROL_SEQ = I.CONTROL_SEQ
                     AND J.CONTROL_DETAIL_SEQ = I.CONTROL_DETAIL_SEQ
-                    AND H.CONTROL_SEQ = I.CONTROL_SEQ
-                    AND K.PROCESS_TYPE = 'MPR010'
-                    AND I.DRAWING_NUM = A.DRAWING_NUM
+                    AND K.EQUIP_SEQ = J.EQUIP_SEQ
                     AND H.DEL_YN = 'N'
+                    AND H.ORDER_COMP_CD = B.ORDER_COMP_CD
                     AND H.OUT_FINISH_DT IS NOT NULL
+                    AND I.SIZE_TXT = A.SIZE_TXT
+                    AND I.MATERIAL_TYPE = A.MATERIAL_TYPE
+                    AND K.PROCESS_TYPE = 'MPR010'
                 GROUP BY I.DRAWING_NUM
                 ORDER BY J.MCT_WORK_SEQ DESC
                 LIMIT 1
@@ -428,30 +429,32 @@
             (
                 SELECT SF_GET_DATE_F(J.WORK_START_DT, '', '')
                 FROM jmes.TBL_CONTROL H, jmes.TBL_CONTROL_PART I, jmes.TBL_MCT_WORK J, jmes.TBL_EQUIP K
-                WHERE K.EQUIP_SEQ = J.EQUIP_SEQ
+                WHERE I.CONTROL_SEQ = H.CONTROL_SEQ
                     AND J.CONTROL_SEQ = I.CONTROL_SEQ
                     AND J.CONTROL_DETAIL_SEQ = I.CONTROL_DETAIL_SEQ
-                    AND H.CONTROL_SEQ = I.CONTROL_SEQ
-                    AND K.PROCESS_TYPE = 'MPR010'
-                    AND I.DRAWING_NUM = A.DRAWING_NUM
+                    AND K.EQUIP_SEQ = J.EQUIP_SEQ
                     AND H.DEL_YN = 'N'
+                    AND H.ORDER_COMP_CD = B.ORDER_COMP_CD
                     AND H.OUT_FINISH_DT IS NOT NULL
-                GROUP BY I.DRAWING_NUM
+                    AND I.SIZE_TXT = A.SIZE_TXT
+                    AND I.MATERIAL_TYPE = A.MATERIAL_TYPE
+                    AND K.PROCESS_TYPE = 'MPR010'
                 ORDER BY J.MCT_WORK_SEQ DESC
                 LIMIT 1
             ) AS LAST_MCT_START_DT,
             (
             	SELECT SF_GET_USER_NM(IFNULL(J.UPDATE_ID, J.INSERT_ID))
             	FROM jmes.TBL_CONTROL H, jmes.TBL_CONTROL_PART I, jmes.TBL_MCT_WORK J, jmes.TBL_EQUIP K
-                WHERE K.EQUIP_SEQ = J.EQUIP_SEQ
+                WHERE I.CONTROL_SEQ = H.CONTROL_SEQ
                     AND J.CONTROL_SEQ = I.CONTROL_SEQ
                     AND J.CONTROL_DETAIL_SEQ = I.CONTROL_DETAIL_SEQ
-                    AND H.CONTROL_SEQ = I.CONTROL_SEQ
-                    AND K.PROCESS_TYPE = 'MPR010'
-                    AND I.DRAWING_NUM = A.DRAWING_NUM
+                    AND K.EQUIP_SEQ = J.EQUIP_SEQ
                     AND H.DEL_YN = 'N'
+                    AND H.ORDER_COMP_CD = B.ORDER_COMP_CD
                     AND H.OUT_FINISH_DT IS NOT NULL
-        		GROUP BY I.DRAWING_NUM
+                    AND I.SIZE_TXT = A.SIZE_TXT
+                    AND I.MATERIAL_TYPE = A.MATERIAL_TYPE
+                    AND K.PROCESS_TYPE = 'MPR010'
         		ORDER BY J.MCT_WORK_SEQ DESC
         		LIMIT 1
             ) AS LAST_MCT_WORK_USER,
@@ -482,8 +485,7 @@
                                            GROUP BY X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
                     )
             ) Z ON Z.CONTROL_SEQ = A.CONTROL_SEQ AND Z.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
-        WHERE 1 = 1
-            AND IFNULL(A.WORK_TYPE, SPACE(0)) != 'WTP020' <!-- 조립이 아닌경우 -->
+        WHERE IFNULL(A.WORK_TYPE, SPACE(0)) != 'WTP020' <!-- 조립이 아닌경우 -->
             AND B.DEL_YN = 'N'
             AND B.CONTROL_STATUS IN ('ORD001', 'ORD003')
             AND B.OUT_FINISH_DT IS NULL
