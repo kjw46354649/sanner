@@ -1746,7 +1746,7 @@
             AND K.`TYPE` = '2' <!-- 매출 -->
         </if>
         GROUP BY K.YYYY, K.COMP_CD, K.ORDER_COMP_CD, K.`TYPE`
-        ORDER BY K.YYYY, K.COMP_CD, K.ORDER_COMP_CD, K.`TYPE` DESC
+        ORDER BY K.YYYY, K.COMP_CD, K.ORDER_COMP_CD, K.`TYPE`
     </select>
     <select id="selectMonthSaleStatusSummary" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT NULL AS ROW_NUM
@@ -1873,7 +1873,7 @@
             AND K.`TYPE` = '2' <!-- 매출 -->
         </if>
         GROUP BY K.YYYY, K.`TYPE`
-        ORDER BY K.YYYY, K.`TYPE` DESC
+        ORDER BY K.YYYY, K.`TYPE`
     </select>
 
     <insert id="createControlBarcode" parameterType="java.util.HashMap" >
