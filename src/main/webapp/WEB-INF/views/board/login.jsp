@@ -101,8 +101,6 @@
                         for(let i=0; i < data.list.length; i++){
                             document.getElementById("EQUIP_SEQ").options.add(new Option(data.list[i].EQUIP_NM, data.list[i].EQUIP_SEQ));
                         }
-                        if($("#drawing_login_form").find("#SEL_EQUIP_SEQ").val() != "")
-                            $("#EQUIP_SEQ").val($("#drawing_login_form").find("#SEL_EQUIP_SEQ").val()).prop("selected", true);
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
