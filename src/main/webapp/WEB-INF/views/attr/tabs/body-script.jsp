@@ -147,6 +147,7 @@
             dataType: 'json',
             data: param.data,
             success: function (data, textStatus, jqXHR) {
+                console.log(data);
                 if (textStatus === 'success') {
                     // if (data.exception === null) {
                     callback.add(callFunction);
@@ -160,10 +161,18 @@
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if ($waitMeMainContainer !== undefined) $(this).stopWaitMe();
-                // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
-                // if (errorThrown == 'Forbidden') {
-                //     $(this).fnHiddenFormPageAction('/');
-                // }
+                var errorDatas = jqXHR.responseJSON;
+                if(errorDatas){
+                    if(errorDatas.code === -9000){
+                        fnConfirm(null, errorDatas.msg, function() {
+                            fnHiddenFormPageAction('/');
+                        }, null, 3);
+                    }else{
+                        fnAlert(null,errorDatas.msg, function(){});
+                    }
+                }else{
+                    fnAlert(null, errorThrown, function(){});
+                }
             }
         });
     };
@@ -192,13 +201,19 @@
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                //console.log(textStatus);
-                //console.log(jqXHR);
-                //console.log(errorThrown);
-                //console.log('error=[' + jqXHR + ' ' + "status" + ' ' + textStatus + ' ' + "errorThrown" + errorThrown+']');
-                // if (errorThrown == 'Forbidden') {
-                //     $(this).fnHiddenFormPageAction('/');
-                // }
+                if ($waitMeMainContainer !== undefined) $(this).stopWaitMe();
+                var errorDatas = jqXHR.responseJSON;
+                if(errorDatas){
+                    if(errorDatas.code === -9000){
+                        fnConfirm(null, errorDatas.msg, function() {
+                            fnHiddenFormPageAction('/');
+                        }, null, 3);
+                    }else{
+                        fnAlert(null,errorDatas.msg, function(){});
+                    }
+                }else{
+                    fnAlert(null, errorThrown, function(){});
+                }
             }
         });
     };
@@ -236,10 +251,18 @@
             error: function (jqXHR, textStatus, errorThrown) {
                 failPlay();
                 if ($waitMeMainContainer !== undefined) $(this).stopWaitMe();
-                // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
-                // if (errorThrown == 'Forbidden') {
-                //     $(this).fnHiddenFormPageAction('/');
-                // }
+                var errorDatas = jqXHR.responseJSON;
+                if(errorDatas){
+                    if(errorDatas.code === -9000){
+                        fnConfirm(null, errorDatas.msg, function() {
+                            fnHiddenFormPageAction('/');
+                        }, null, 3);
+                    }else{
+                        fnAlert(null,errorDatas.msg, function(){});
+                    }
+                }else{
+                    fnAlert(null, errorThrown, function(){});
+                }
             }
         });
     };
@@ -277,10 +300,19 @@
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
-                // if (errorThrown == 'Forbidden') {
-                //     $(this).fnHiddenFormPageAction('/');
-                // }
+                if ($waitMeMainContainer !== undefined) $(this).stopWaitMe();
+                var errorDatas = jqXHR.responseJSON;
+                if(errorDatas){
+                    if(errorDatas.code === -9000){
+                        fnConfirm(null, errorDatas.msg, function() {
+                            fnHiddenFormPageAction('/');
+                        }, null, 3);
+                    }else{
+                        fnAlert(null,errorDatas.msg, function(){});
+                    }
+                }else{
+                    fnAlert(null, errorThrown, function(){});
+                }
             }
         });
     };
@@ -1039,7 +1071,6 @@
                         //callback(true);
                     } else {
                         let text = '조회대상이 없습니다.';
-
                         fnAlert(null, text);
                     }
                 } else {
@@ -1218,6 +1249,15 @@
 
             return acc;
         }, {});
+    };
+
+    /**
+     * actinon 처리
+     * @param actionUrl
+     */
+    const fnHiddenFormPageAction = function(actionUrl) {
+        $('form[name="hidden_action_frm"]').attr("action",actionUrl);
+        $('form[name="hidden_action_frm"]').submit();
     };
 
     $(document).on('click', '#DETAIL_VIEW', function () {

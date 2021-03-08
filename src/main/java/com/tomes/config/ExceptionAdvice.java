@@ -1,6 +1,7 @@
 package com.tomes.config;
 
 import com.tomes.domain.CommonResult;
+import com.tomes.exception.AuthenticationFailException;
 import com.tomes.exception.CompanyDisabledException;
 import com.tomes.exception.CompanyNotFoundException;
 import com.tomes.exception.TokenException;
@@ -10,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestControllerAdvice
@@ -29,8 +30,13 @@ public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult exception(HttpServletRequest request, Exception e) {
-        e.printStackTrace();
         return responseService.getFailResult(Integer.parseInt(getMessage("unKnown.code")), getMessage("unKnown.msg"));
+    }
+
+    @ExceptionHandler(AuthenticationFailException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    protected CommonResult authenticationFailException(HttpServletRequest request, AuthenticationFailException e) {
+        return responseService.getFailResult(Integer.parseInt(getMessage("authenticationFailException.code")), getMessage("authenticationFailException.msg"));
     }
 
     @ExceptionHandler(CompanyNotFoundException.class)
