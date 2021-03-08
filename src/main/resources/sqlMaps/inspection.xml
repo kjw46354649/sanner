@@ -1604,6 +1604,7 @@
             jmes.TBL_CONTROL_PART_ORDER
         SET
             SCRAP_YN = 'Y'
+            , OUT_FINISH_DT = NOW()
             , UPDATE_DT = NOW()
             , UPDATE_ID = #{LOGIN_USER_ID}
         WHERE
@@ -1617,6 +1618,7 @@
             jmes.TBL_CONTROL_PART_ORDER
         SET
             SCRAP_YN = 'N'
+            , OUT_FINISH_DT = NULL
             , UPDATE_DT = NOW()
             , UPDATE_ID = #{LOGIN_USER_ID}
         WHERE
@@ -1734,4 +1736,22 @@
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
     </update>
 
+    <update id="updateOutgoingDisposalAfter1" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_CONTROL_PART_ORDER
+        SET OUT_FINISH_DT = NOW()
+          , UPDATE_DT = NOW()
+          , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+          	AND ORDER_SEQ = #{ORDER_SEQ}
+    </update>
+
+    <update id="updateOutgoingDisposalAfter2" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_CONTROL
+        SET OUT_FINISH_DT = NOW()
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+            AND jmes.SF_GET_OUT_FINISH_STATUS(#{CONTROL_SEQ}) = 'SCRAP STATUS'
+    </update>
 </mapper>

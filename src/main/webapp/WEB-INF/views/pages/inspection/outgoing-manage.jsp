@@ -1398,7 +1398,7 @@
 
                 switch (target) {
                     case 'disposal':
-                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.updateOutgoingDisposal,inspection.updateOutFinishStatus,inspection.updateScrapPartStatus,inspection.insertScrapPartProgress");
+                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.updateOutgoingDisposal,inspection.updateOutFinishStatus,inspection.updateOutgoingDisposalAfter1,inspection.updateOutgoingDisposalAfter2");
                         break;
                     default:
                         $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2,inspection.updateOutFinishStatus,inspection.updateShippingPartStatus,inspection.insertShippingPartProgress");
