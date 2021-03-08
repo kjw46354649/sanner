@@ -1703,13 +1703,11 @@
 
 		let setIntervalReloadTimer;
 		let reloadTimer = function(){
-			let reloadTimeTerm = 2;// 4시간
-			let reloadTimeHour = 60;   // 1시간
-			let reloadTimeMinute = 60; //1분
-			let reloadTimeSecond = 1000;//1초
+			let reloadTimeMinute = 30; // 30분
+			let reloadTimeSecond = 1000 * 60;// 1분
 			setIntervalReloadTimer = setInterval(function() {
 				location.reload();
-			}, reloadTimeSecond*reloadTimeMinute*reloadTimeHour*reloadTimeTerm);
+			}, reloadTimeSecond*reloadTimeMinute);
 		};
 
 		getInitData();
