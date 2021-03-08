@@ -643,6 +643,20 @@
                 recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
+                },
+                error:function( jqXHR, textStatus, errorThrown ){
+                    var errorDatas = jqXHR.responseJSON;
+                    if(errorDatas){
+                        if(errorDatas.code === -9000){
+                            fnConfirm(null, errorDatas.msg, function() {
+                                fnHiddenFormPageAction('/');
+                            }, null, 3);
+                        }else{
+                            fnAlert(null,errorDatas.msg, function(){});
+                        }
+                    }else{
+                        fnAlert(null, errorThrown, function(){});
+                    }
                 }
             },
             load: function (event, ui) {
