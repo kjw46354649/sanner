@@ -1701,10 +1701,20 @@
 			}, timesec*selVal);
 		};
 
+		let setIntervalReloadTimer;
+		let reloadTimer = function(){
+			let reloadTimeMinute = 30; // 30분
+			let reloadTimeSecond = 1000 * 60;// 1분
+			setIntervalReloadTimer = setInterval(function() {
+				location.reload();
+			}, reloadTimeSecond*reloadTimeMinute);
+		};
+
 		getInitData();
 		jmesConnect();
 		gridSchedulerTimer();
 		workSchedulerTimer();
+		reloadTimer();
 	});
 </script>
 </body>

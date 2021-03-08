@@ -11,6 +11,16 @@
             AND A.DEL_YN ='N'
     </select>
 
+    <select id="selectOrderCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+           	COMP_NUM, COMP_CD, COMP_NM
+        FROM TBL_COMPANY
+        WHERE 1 = 1
+            AND ORDER_COMPANY_YN = 'Y'
+            AND DEL_YN = 'N'
+        ORDER BY COMP_CD
+    </select>
+
     <!-- ORDER_KEY : 발주번호가 없는 경우 발주 시퀀스로 키를 사용하고 있는 경우 발주 번호로 사용한다. -->
     <select id="selectPortalOrderMasterList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT

@@ -1,6 +1,7 @@
 package com.framework.innodale.component;
 
 import com.framework.innodale.service.InnodaleService;
+import com.tomes.exception.AuthenticationFailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.LocaleEditor;
 import org.springframework.web.servlet.LocaleResolver;
@@ -60,8 +61,9 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
                     return false;
                 }
             }else{
-                response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                return false;
+                throw new AuthenticationFailException();
+//                request.setAttribute("throwException", "authenticationFailException");
+//                request.getRequestDispatcher("/exception").forward(request, response);
             }
         }
         return true;
