@@ -61,7 +61,7 @@
                                         <div class="d-inline-block right_float">
                                             <span>
                                                 <label class="label_50" for="CONFIRM_ORDER_MATERIAL">소재</label>
-                                                <select class="wd_100" name="MATERIAL_TYPE" id="CONFIRM_ORDER_MATERIAL">
+                                                <select class="wd_100" name="MATERIAL_DETAIL" id="CONFIRM_ORDER_MATERIAL">
                                                     <option value=""><spring:message code="com.form.top.all.option"/></option>
                                                     <c:forEach var="code" items="${HighCode.H_1027}">
                                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -94,7 +94,7 @@
                                             </label>
                                                 <span>
                                                 <label class="label_50" for="PROCESS_CONFIRM_MATERIAL">소재</label>
-                                                <select class="wd_100" name="MATERIAL_TYPE" id="PROCESS_CONFIRM_MATERIAL">
+                                                <select class="wd_100" name="MATERIAL_DETAIL" id="PROCESS_CONFIRM_MATERIAL">
                                                     <option value=""><spring:message code="com.form.top.all.option"/></option>
                                                     <c:forEach var="code" items="${HighCode.H_1027}">
                                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>

@@ -422,12 +422,12 @@
                 <c:if test="${not empty drawingInfo.currentWork}">
                     <input type="hidden" name="curStatus" id="curStatus" value="work">
                     <div class="contsTitWrap" id="workMainProgressConts" style="">
-                        <div class="contsTit blink-blue"><srping:message key='drawing.board.label.13'/></div>
+                        <div class="contsTit blink-blue" style="padding-left: 0"><srping:message key='drawing.board.label.13'/></div>
                         <div class="right_sort">
-                            <button type="button" id="reserveBtn" class="reserveDbDisableBtn"><input id="reserveChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;"/><srping:message key='drawing.board.button.16'/></button>&nbsp;
-                            <button type="button" id="workCancelBtn" class="graDbBtn red"><srping:message key='drawing.board.button.06'/></button>&nbsp;
-                            <button type="button" id="workPuaseBtn" class="graDbBtn yellow"><srping:message key='drawing.board.button.07'/></button>&nbsp;
-                            <button type="button" id="workCompletelBtn" class="graDbBtn purple"><srping:message key='drawing.board.button.08'/></button>
+                            <button type="button" id="reserveBtn" class="reserveDbDisableBtn" style="min-width: 90px; padding: 0 5px;"><input id="reserveChecked" type="checkbox" style="margin-bottom:2px; margin-right:10px; zoom:2.0;"/><srping:message key='drawing.board.button.16'/></button>&nbsp;
+                            <button type="button" id="workCancelBtn" class="graDbBtn red" style="min-width: 90px; padding: 0 5px;"><srping:message key='drawing.board.button.06'/></button>&nbsp;
+                            <button type="button" id="workPuaseBtn" class="graDbBtn yellow" style="min-width: 90px; padding: 0 5px;"><srping:message key='drawing.board.button.07'/></button>&nbsp;
+                            <button type="button" id="workCompletelBtn" class="graDbBtn purple" style="min-width: 90px; padding: 0 5px;"><srping:message key='drawing.board.button.08'/></button>
                         </div>
                     </div>
                 </c:if>

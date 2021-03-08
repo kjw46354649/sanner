@@ -1007,8 +1007,8 @@
             <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
             </if>
-            <if test="MATERIAL_TYPE != null and MATERIAL_TYPE != ''">
-                AND B.MATERIAL_TYPE = #{MATERIAL_TYPE}
+            <if test="MATERIAL_DETAIL != null and MATERIAL_DETAIL != ''">
+                AND B.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
             </if>
         ORDER BY
         <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
@@ -1224,23 +1224,22 @@
             SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION <!-- 현재 등록된 위치 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
-                AND B.PART_STATUS IS NOT NULL
-                AND B.INNER_WORK_FINISH_DT IS NULL
-                <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
-                    AND B.MATERIAL_KIND = #{MATERIAL_KIND}
-                </if>
             LEFT OUTER JOIN TBL_POP D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
                 AND D.POP_SEQ = (SELECT MAX(X.POP_SEQ) FROM TBL_POP X WHERE X.CONTROL_SEQ = D.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ)
         WHERE 1 = 1
             AND A.CONTROL_STATUS = 'ORD001'
             AND A.OUT_FINISH_DT IS NULL
-          <!-- AND B.WORK_TYPE != 'WTP020' -->
+            AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
+            AND B.PART_STATUS IS NOT NULL
+            AND B.INNER_WORK_FINISH_DT IS NULL
             <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
             </if>
             <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
-                AND A.EMERGENCY_YN = #{EMERGENCY_YN}
+                AND A.EMERGENCY_YN = 'Y'
+            </if>
+            <if test="MATERIAL_DETAIL != null and MATERIAL_DETAIL != ''">
+                AND B.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
             </if>
         ORDER BY A.STATUS_DT DESC, A.CONTROL_SEQ, B.PART_NUM
     </select>
@@ -2412,10 +2411,13 @@
                     </if>
                 GROUP BY C.ORDER_DUE_DT, A.ORDER_COMP_CD
              ) X LEFT OUTER JOIN TBL_COMPANY Y ON Y.COMP_CD = X.ORDER_COMP_CD
-        ORDER BY X.ORDER_DUE_DT, CASE WHEN X.OUT_FINISH_CNT = X.ORDER_CNT THEN 2   <!-- 출고가 모두 완료되었을 때 -->
-                 WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') <![CDATA[ <= ]]> X.ORDER_DUE_DT THEN 1   <!-- 아직 출고가 완료되지 않은상태 이면서 납기 안지난 경우 -->
-                 WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') > X.ORDER_DUE_DT THEN 2 <!-- 아직 출고가 완료되지 않은상태 이면서 납기 지난 경우 -->
+        ORDER BY X.ORDER_DUE_DT
+            , CASE
+                WHEN X.OUT_FINISH_CNT = X.ORDER_CNT THEN 3   <!-- 출고가 모두 완료되었을 때 -->
+                WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') <![CDATA[ <= ]]> X.ORDER_DUE_DT THEN 2   <!-- 아직 출고가 완료되지 않은상태 이면서 납기 안지난 경우 -->
+                WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') > X.ORDER_DUE_DT THEN 1 <!-- 아직 출고가 완료되지 않은상태 이면서 납기 지난 경우 -->
             END
+            , X.ORDER_CNT DESC
     </select>
 
     <select id="businessEmergencyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">

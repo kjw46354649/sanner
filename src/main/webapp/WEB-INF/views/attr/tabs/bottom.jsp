@@ -1503,12 +1503,27 @@
         });
     });
 
-    $("#btnCommonWarehouseManageRemove").on('click', function(){
-        $("#common_warehouse_manage_popup_form #queryId").val('material.deleteCommonWarehouseManage');
-        let parameters = {'url': '/json-list', 'data': fnFormToJsonArrayData('#common_warehouse_manage_popup_form')};
-        fnPostAjaxAsync(function (data, callFunctionParam) {
-            commonWarehouseManageGrid.pqGrid('refreshDataAndView');
-        }, parameters, '');
+    $("#btnCommonWarehouseManageRemove").on('click', function () {
+        const data = commonWarehouseManageGrid.pqGrid('option', 'dataModel.data');
+        const value = $("#common_warehouse_manage_popup_form #LOC_SEQ").val();
+        let rowIndx;
+
+        for (let i = 0; i < data.length; i++) {
+            let rowData = data[i];
+
+            if (rowData['LOC_SEQ'] == value) {
+                rowIndx = i;
+                break;
+            }
+        }
+
+        if (rowIndx) {
+            fnConfirm(null, '<spring:message code="com.alert.default.removeText"/>', function () {
+                const deleteQuery = 'material.deleteCommonWarehouseManage'
+
+                fnDeletePQGrid(commonWarehouseManageGrid, [rowIndx], deleteQuery);
+            });
+        }
     });
 
     $("#btnCommonWarehouseManageSave").on('click', function(){
