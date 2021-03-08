@@ -1078,7 +1078,7 @@
                 if (ui.rowData['INSPECT_SEQ'] !== undefined && ui.rowData['INSPECT_SEQ'] > 0) {
                     if (ui.dataIndx === 'MANUAL_ACTION') {
                         let data = {
-                            'queryId': 'inspection.updateOutgoingReturnComplete,inspection.updateShippingPartStatus,inspection.insertShippingPartProgress',
+                            'queryId': 'inspection.updateOutgoingReturnComplete,inspection.updateOutFinishStatus',
                             'CONTROL_SEQ': ui.rowData['CONTROL_SEQ'],
                             'CONTROL_DETAIL_SEQ': ui.rowData['CONTROL_DETAIL_SEQ'],
                             'INSPECT_SEQ': ui.rowData['INSPECT_SEQ']
@@ -1090,7 +1090,6 @@
                             $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
                             $("#outgoing_manage_search_btn").trigger("click");
                         }, parameters, '');
-
                     }
                 }
             }
@@ -1105,7 +1104,7 @@
             $('#outgoing_manage_return_form').find("#INSPECT_DESC").attr("readonly", false);
 
 
-            $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn,inspection.updateOutFinishStatus,inspection.updateReturnPartStatus,inspection.insertReturnPartProgress");
+            $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn,inspection.updateOutFinishStatus");
 
             let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_return_form").serialize()};
             fnPostAjax(function () {
@@ -1401,7 +1400,7 @@
                         $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.updateOutgoingDisposal,inspection.updateOutFinishStatus,inspection.updateOutgoingDisposalAfter1,inspection.updateOutgoingDisposalAfter2");
                         break;
                     default:
-                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2,inspection.updateOutFinishStatus,inspection.updateShippingPartStatus,inspection.insertShippingPartProgress");
+                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2,inspection.updateOutFinishStatus");
                 }
 
                 let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_pop_type_1_form").serialize()};
@@ -1470,7 +1469,7 @@
                     };
                     changes.queryIdList = {
                         'insertQueryId': ['inspection.insertOutgoingOutType2'],
-                        'updateQueryId': ['inspection.updateOutgoingOutType1After1', 'inspection.updateOutgoingOutType1After2', 'inspection.updateOutgoingOutType1After3', 'inspection.updateShippingPartStatus', 'inspection.insertShippingPartProgress']
+                        'updateQueryId': ['inspection.updateOutgoingOutType1After1', 'inspection.updateOutgoingOutType1After2', 'inspection.updateOutgoingOutType1After3']
                     };
                     let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
