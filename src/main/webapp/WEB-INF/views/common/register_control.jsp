@@ -891,7 +891,7 @@
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 let rowData = dataList[i];
 
-                if (Object.keys(rowData).length > 10) {
+                if (Object.keys(rowData).length > 2) {
                     requiredCheck(rowData);
                     badCodeCheck(rowData);
                     inputErrorCheck(rowData);
@@ -986,7 +986,7 @@
             const assemblyList = ['ORDER_QTY']; // 조립
             const modifiedList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'ORDER_QTY']; // 수정
             const stockList = ['MATERIAL_KIND', 'ORDER_QTY']; // 재고
-            const partList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'PART_UNIT_QTY']; // 파트
+            const partList = ['PART_NUM', 'MATERIAL_KIND', 'SURFACE_TREAT', 'PART_UNIT_QTY']; // 파트
 
             switch (rowData.WORK_TYPE) {
                 case 'WTP010':
