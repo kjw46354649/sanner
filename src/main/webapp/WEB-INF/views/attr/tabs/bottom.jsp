@@ -6,6 +6,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <audio id='fail_play' src='/resource/sound/fail.wav'></audio>
 <audio id='success_play' src='/resource/sound/success.wav'></audio>
+<form id="hidden_action_frm" name="hidden_action_frm" action="" target="_self" method="post">
+</form>
 <form id="common_formdata_multi_upload_form" method="post">
     <input type="file" id="click_singfile_chose_btn" name="click_singfile_chose_btn" style="display: none;">
     <input type="file" id="click_multifile_chose_btn" name="click_multifile_chose_btn" multiple  style="display: none;">
