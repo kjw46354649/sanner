@@ -212,8 +212,8 @@
                     <ul>
                         <li>
                             <span class="slt_wrap">
-                                <label class="label_100" for="WAREHOUSE">창고</label>
-                                <select id="WAREHOUSE" name="WAREHOUSE" title="창고" class="wd_200">
+                                <label class="label_100" for="WAREHOUSE_CD">창고</label>
+                                <select id="WAREHOUSE_CD" name="WAREHOUSE_CD" title="창고" class="wd_200">
                                     <option value=""><spring:message code="com.form.top.all.option"/></option>
                                     <c:forEach var="code" items="${HighCode.H_1049}">
                                         <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -619,7 +619,7 @@
             {title: '위치', dataType: 'string', dataIndx: 'LOC_NM', minWidth: '9%' },
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM', minWidth: '5%'} ,
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: '9%'},
-            {title: '구격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: '9%'},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: '9%'},
             {title: '입고수량', dataType: 'string', dataIndx: 'IN_QTY', minWidth: '5%'},
             {title: '불출수량', dataType: 'string', dataIndx: 'OUT_QTY', minWidth: '5%'},
             {title: '요청자', dataType: 'string', dataIndx: 'REGISTED_USER', minWidth: '6%' },
