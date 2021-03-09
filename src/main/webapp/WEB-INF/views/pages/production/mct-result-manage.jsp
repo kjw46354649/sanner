@@ -815,7 +815,7 @@
                 }
             },
             {title: '작업<br>구분', dataIndx: 'MCT_WORK_TYPE_NM', minWidth: 15, width: 50},
-            {title: '가공확정<br>일시', dataIndx: 'STATUS_DT', minWidth: 75, width: 100},
+            {title: '가공확정<br>일시', dataIndx: 'PROCESS_CONFIRM_DT', minWidth: 75, width: 100},
             {title: '소재입고<br>일시', dataIndx: 'MATERIAL_RECEIPT_DT', minWidth: 75, width: 100},
             // {title: '이전<br>위치', dataIndx: 'POP_PREV_POSITION', minWidth: 70, width: 70},
             // {title: '1ea L/T', dataIndx: '1ea L/T', minWidth: 60, width: 60},
