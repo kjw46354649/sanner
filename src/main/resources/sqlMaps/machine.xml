@@ -409,55 +409,9 @@
             A.MCT_NOTE, <!-- 가공계획 비고 -->
             A.MCT_WORK_TYPE, <!-- MCT 작업 구분 -->
             IFNULL(SF_GET_CODE_NM('1011', A.MCT_WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS MCT_WORK_TYPE_NM, <!-- MCT 작업 구분 이름 -->
-            (
-                SELECT CONCAT(CEILING(SF_GET_MCT_WORK_TIME(I.CONTROL_SEQ, I.CONTROL_DETAIL_SEQ) / SUM(J.FINISH_QTY)), 'm')
-                FROM jmes.TBL_CONTROL H, jmes.TBL_CONTROL_PART I, jmes.TBL_MCT_WORK J, jmes.TBL_EQUIP K
-                WHERE I.CONTROL_SEQ = H.CONTROL_SEQ
-                    AND J.CONTROL_SEQ = I.CONTROL_SEQ
-                    AND J.CONTROL_DETAIL_SEQ = I.CONTROL_DETAIL_SEQ
-                    AND K.EQUIP_SEQ = J.EQUIP_SEQ
-                    AND H.DEL_YN = 'N'
-                    AND H.ORDER_COMP_CD = B.ORDER_COMP_CD
-                    AND H.OUT_FINISH_DT IS NOT NULL
-                    AND I.SIZE_TXT = A.SIZE_TXT
-                    AND I.MATERIAL_TYPE = A.MATERIAL_TYPE
-                    AND K.PROCESS_TYPE = 'MPR010'
-                GROUP BY I.DRAWING_NUM
-                ORDER BY J.MCT_WORK_SEQ DESC
-                LIMIT 1
-            ) AS LAST_UNIT_LEAD_TIME,
-            (
-                SELECT SF_GET_DATE_F(J.WORK_START_DT, '', '')
-                FROM jmes.TBL_CONTROL H, jmes.TBL_CONTROL_PART I, jmes.TBL_MCT_WORK J, jmes.TBL_EQUIP K
-                WHERE I.CONTROL_SEQ = H.CONTROL_SEQ
-                    AND J.CONTROL_SEQ = I.CONTROL_SEQ
-                    AND J.CONTROL_DETAIL_SEQ = I.CONTROL_DETAIL_SEQ
-                    AND K.EQUIP_SEQ = J.EQUIP_SEQ
-                    AND H.DEL_YN = 'N'
-                    AND H.ORDER_COMP_CD = B.ORDER_COMP_CD
-                    AND H.OUT_FINISH_DT IS NOT NULL
-                    AND I.SIZE_TXT = A.SIZE_TXT
-                    AND I.MATERIAL_TYPE = A.MATERIAL_TYPE
-                    AND K.PROCESS_TYPE = 'MPR010'
-                ORDER BY J.MCT_WORK_SEQ DESC
-                LIMIT 1
-            ) AS LAST_MCT_START_DT,
-            (
-            	SELECT SF_GET_USER_NM(IFNULL(J.UPDATE_ID, J.INSERT_ID))
-            	FROM jmes.TBL_CONTROL H, jmes.TBL_CONTROL_PART I, jmes.TBL_MCT_WORK J, jmes.TBL_EQUIP K
-                WHERE I.CONTROL_SEQ = H.CONTROL_SEQ
-                    AND J.CONTROL_SEQ = I.CONTROL_SEQ
-                    AND J.CONTROL_DETAIL_SEQ = I.CONTROL_DETAIL_SEQ
-                    AND K.EQUIP_SEQ = J.EQUIP_SEQ
-                    AND H.DEL_YN = 'N'
-                    AND H.ORDER_COMP_CD = B.ORDER_COMP_CD
-                    AND H.OUT_FINISH_DT IS NOT NULL
-                    AND I.SIZE_TXT = A.SIZE_TXT
-                    AND I.MATERIAL_TYPE = A.MATERIAL_TYPE
-                    AND K.PROCESS_TYPE = 'MPR010'
-        		ORDER BY J.MCT_WORK_SEQ DESC
-        		LIMIT 1
-            ) AS LAST_MCT_WORK_USER,
+            jmes.SF_GET_RECENT_MCT_WORK('LEAD_TIME', A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS LAST_UNIT_LEAD_TIME,
+            jmes.SF_GET_RECENT_MCT_WORK('START_DATE', A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS LAST_MCT_START_DT,
+            jmes.SF_GET_RECENT_MCT_WORK('WORKER', A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS LAST_MCT_WORK_USER,
             CASE WHEN B.CONTROL_STATUS IN ('ORD001','ORD003','ORD004') THEN (   SELECT jmes.SF_GET_DATE_F(MAX(M.STATUS_DT), '', '')
                                                                                 FROM jmes.TBL_CONTROL_PART_PROGRESS M
                                                                               	WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO002'

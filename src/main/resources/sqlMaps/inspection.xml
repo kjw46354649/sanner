@@ -1305,7 +1305,7 @@
                                             A.PROCESS_TYPE
                                             , B.CONTROL_SEQ
                                             , B.CONTROL_DETAIL_SEQ
-                                            , SUM(TIMESTAMPDIFF(MINUTE, B.WORK_START_DT, B.WORK_FINISH_DT)) AS WORK_TIME
+                                            , SUM(TIMESTAMPDIFF(MINUTE, C.WORK_START_DT, C.WORK_STOP_DT)) AS WORK_TIME
                                         FROM
                                             jmes.TBL_EQUIP A
                                             , jmes.TBL_MCT_WORK B
