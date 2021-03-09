@@ -12,6 +12,68 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+</style>
+
 <div class="page mct">
     <div class="topWrap">
         <form id="MCT_PLAN_MANAGE_SEARCH_FORM" role="form">
@@ -28,7 +90,10 @@
                         </c:forEach>
                         </select>
                 </span>
-                <span class="fileSearchIcon ml-10" id="toggleImageView" style="cursor: pointer"></span>
+                <label class="switch ml-10">
+                    <input type="checkbox" id="toggleImageView">
+                    <span class="slider round"></span>
+                </label>
                 <span class="refresh ml-10"><button type="button" id="MCT_PLAN_REFRESH"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
             </div>
         </form>
@@ -767,7 +832,7 @@
         /* function */
 
         /* event */
-        $('#MCT_PLAN_MANAGE_SEARCH_FORM').on('change', function () {
+        $('#MCT_PLAN_MANAGE_SEARCH_FORM #FACTORY_AREA').on('change', function () {
             destroyForm();
             loadMctInfo();
             createPlanGrid();
@@ -811,6 +876,8 @@
         });
 
         $('#toggleImageView').on('click', function () {
+            console.log('toggleImageView click');
+            console.log(isActiveDrawingView);
             isActiveDrawingView = !isActiveDrawingView;
         });
 
@@ -826,15 +893,23 @@
                         callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     }
                 }
-            },
-            mouseleave: function () {
-                const isOpen = $('#common_quick_drawing_popup').dialog('isOpen');
-
-                if (isOpen) {
-                    $('#common_quick_drawing_popup').dialog('close');
-                }
             }
         }, '[id^=PROCESS_PLAN_GRID] .pq-grid-row');
+
+        $(document).on({
+            mouseenter: function () {
+                if (isActiveDrawingView) {
+                    const id = $(this).attr('id');
+                    const splits = id.split('-');
+                    const rowIndx = splits[4];
+                    const rowData = $(this).closest('.pq-grid').pqGrid('getRowData', {rowIndx: rowIndx});
+
+                    if (rowData.IMG_GFILE_SEQ) {
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                    }
+                }
+            }
+        }, '#PROCESS_TARGET_GRID .pq-grid-row');
         /* event */
 
         /* init */
