@@ -478,8 +478,8 @@
             <div class="modal-body">
                 <div class="d-flex align-items-center">
                     <div>
-                        <button id="prev">이전</button>
-                        <button id="next">다음</button>
+                        <button class="defaultBtn" id="prev">이전</button>
+                        <button class="defaultBtn" id="next">다음</button>
                     </div>
                     <div class="ml-auto"></div>
                 </div>
@@ -1641,13 +1641,9 @@
                                 return $('#processing_requirements_form').find('#WORK_TYPE').val() !== 'WTP020';
                             },
                             render: function () {
-                                let style = null;
-
                                 if ($('#processing_requirements_form').find('#WORK_TYPE').val() === 'WTP020'){
-                                    style = 'background: #dbdbdb';
+                                    return {style: 'background: #dbdbdb'};
                                 }
-
-                                return {style: style};
                             }
                         },
                         {
