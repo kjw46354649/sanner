@@ -214,7 +214,7 @@
                         render: function (ui) {
                             const cellData = ui.cellData;
                             const min = Math.floor(cellData % 3600 / 60);
-                            console.log(cellData)
+                            // console.log(cellData)
 
                             if (Math.abs(cellData) > 3600) {
                                 const hour = Math.floor(cellData / 3600);

@@ -1021,8 +1021,8 @@
 
             fnPostAjax(function (data) {
                 if (data.info) {
-                    console.group('가공납기 준수율');
-                    console.log(data.info)
+                    // console.group('가공납기 준수율');
+                    // console.log(data.info)
                     const targetItemCount = data.info.PART_CNT || 0;
                     const numberAchievements = data.info.OK_CNT || 0;
                     chartSpeed.setTitle(null, {text: '대상품수: ' + targetItemCount + '품<br>달성품수: ' + numberAchievements + '품'});
@@ -1058,9 +1058,9 @@
 
             fnPostAjax(function (data) {
                 if (data.info) {
-                    console.group('가공실적 현황');
-                    console.log(data.info)
-                    console.log(pieChart);
+                    // console.group('가공실적 현황');
+                    // console.log(data.info)
+                    // console.log(pieChart);
                     let colors = Highcharts.getOptions().colors;
 
                     pieChart.setTitle(null, {text: data.info.SALES_AMT + '억'}); // subTitle

@@ -213,7 +213,7 @@
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: outsideDetailListViewPostData,
                 getData: function (dataJSON) {
-                    console.log(dataJSON.data);
+                    // console.log(dataJSON.data);
                     return {data: dataJSON.data};
                 }
             },

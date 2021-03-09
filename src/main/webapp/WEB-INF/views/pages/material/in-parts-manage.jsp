@@ -831,7 +831,7 @@
             };
             fnPostAjaxAsync(function (data, callFunctionParam) {
                 rowCnt = data.info.CNT;
-                console.log(rowCnt);
+                // console.log(rowCnt);
             }, deleteData, '');
 
             if (rowCnt > 0) {
@@ -948,7 +948,7 @@
     // 모달 open
     $("#PARTS_MANAGE_CURRENT_POPUP").on('show.bs.modal', function(){
         $("#pop_form").find("#queryId").val("material.selectConsumableList");
-        console.log($('#pop_form').serialize());
+        // console.log($('#pop_form').serialize());
         let parameters = {
             'url': '/json-info',
             'data': $('#pop_form').serialize()

@@ -291,7 +291,7 @@
 
         $itemOrderRegisterSearchForm.find('[name=SEL_ITEM_ORDER_REGISTER_TERM]').change(function () {
              let value = $(this).val(), today = new Date(), newDate = new Date();
-             console.log(value);
+             // console.log(value);
              switch (value) {
                  case "today":
                      break;

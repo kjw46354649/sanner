@@ -313,7 +313,7 @@ Date.now = Date.now || function() { return +new Date; };
     var $window = $(window);
     // mobile
   	var mobile = function(option){
-      console.log("option=[" + option + "]");
+      // console.log("option=[" + option + "]");
   		if(option == 'reset'){
   			$('[data-toggle^="shift"]').shift('reset');
   			return true;

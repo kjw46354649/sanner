@@ -147,7 +147,7 @@
             dataType: 'json',
             data: param.data,
             success: function (data, textStatus, jqXHR) {
-                console.log(data);
+                // console.log(data);
                 if (textStatus === 'success') {
                     // if (data.exception === null) {
                     callback.add(callFunction);
