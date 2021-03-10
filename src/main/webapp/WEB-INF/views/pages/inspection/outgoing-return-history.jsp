@@ -238,7 +238,7 @@
                     if (ui.dataIndx == 'BTN_CANCEL') {
                         if (ui.rowData['OUT_RETURN_TYPE'] == '1') {//출고
                             let data = {
-                                'queryId': 'inspection.deleteOutgoingHistoryInspectionCancelStep1,inspection.updateOutgoingHistoryInspectionCancelStep2,inspection.updateOutgoingHistoryInspectionCancelStep3',
+                                'queryId': 'inspection.deleteOutgoingHistoryInspectionCancelStep1,/*inspection.updateOutgoingHistoryInspectionCancelStep2*//*,inspection.updateOutgoingHistoryInspectionCancelStep3*/,inspection.updateOutFinishStatus',
                                 'OUT_SEQ': ui.rowData['KEY_SEQ'],
                                 'CONTROL_SEQ': ui.rowData['CONTROL_SEQ'],
                                 'CONTROL_DETAIL_SEQ': ui.rowData['CONTROL_DETAIL_SEQ'],
@@ -252,7 +252,7 @@
                             }, parameters, '');
                         } else if (ui.rowData['OUT_RETURN_TYPE'] == '2') {//반품
                             let data = {
-                                'queryId': 'inspection.deleteOutgoingHistoryReturnCancelStep1',
+                                'queryId': 'inspection.deleteOutgoingHistoryReturnCancelStep1,inspection.updateOutFinishStatus',
                                 'INSPECT_SEQ': ui.rowData['KEY_SEQ']
                             };
                             let parameters = {'url': '/json-remove', 'data': data};
@@ -263,7 +263,7 @@
                             }, parameters, '');
                         } else if (ui.rowData['OUT_RETURN_TYPE'] == '3') {//폐기
                             let data = {
-                                'queryId': 'inspection.updateOutgoingCancelDisposal,inspection.deleteOutgoingHistoryInspectionCancelStep1,inspection.updateOutgoingHistoryInspectionCancelStep2,inspection.updateOutgoingHistoryInspectionCancelStep3',
+                                'queryId': 'inspection.updateOutgoingCancelDisposal,inspection.updateOutgoingHistoryInspectionCancelStep2,inspection.updateOutgoingHistoryInspectionCancelStep3,inspection.updateOutFinishStatus',
                                 'OUT_SEQ': ui.rowData['KEY_SEQ'],
                                 'CONTROL_SEQ': ui.rowData['CONTROL_SEQ'],
                                 'CONTROL_DETAIL_SEQ': ui.rowData['CONTROL_DETAIL_SEQ'],

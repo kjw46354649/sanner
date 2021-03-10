@@ -1554,25 +1554,19 @@
         });
 
         $("#OUTGOING_BARCODE_NUM").on('keyup', function (e) {
-
-            // let OUTGOING_BARCODE_PRINT_TYPE = $('input[name="OUTGOING_BARCODE_PRINT_TYPE"]:checked').val();
-            // if (OUTGOING_BARCODE_PRINT_TYPE == "1") {//출고
             if (e.keyCode == 13) {
-                //fnResetFrom("outgoing_manage_pop_form");
-                //L : LABEL, C:BARCODE
-                let barcodeNum = fnBarcodeKo2En(this.value);
-                let barcodeType = barcodeNum.charAt(0).toUpperCase();
+                const barcodeNum = fnBarcodeKo2En(this.value);
+                const barcodeType = barcodeNum.charAt(0).toUpperCase();
                 let barcodesql = "";
+                $("#OUTGOING_BARCODE_NUM").val(""); // 바코드 input 초기화
 
                 if (barcodeType == "L") {//라벨
-                    //barcodesql = "common.selectOutBarcodeInfo";//라벨바코드 뒤지 않고 바로 가져오게 수정
                     barcodesql = "inspection.selectOutgoingOutType4";
                 } else if (barcodeType == "C") {//도면
                     barcodesql = "common.selectControlBarcodeInfo";
                 } else if (barcodeType == "O") {//영업도면
                     barcodesql = "inspection.selectOutgoingOutType5";
                 } else {
-                    $("#OUTGOING_BARCODE_NUM").val("");
                     fnConfirm(null, "알 수 없는 바코드 타입입니다.[" + barcodeNum + "]", function() {}, null, 3);
                     return;
                 }
@@ -1584,11 +1578,9 @@
                     let dataInfo = data.info;
                     if (dataInfo == null) {
                         fnConfirm(null, "해당 바코드가 존재하지 않습니다", function() {}, null, 2);
-                        $("#OUTGOING_BARCODE_NUM").val("");
                         return false;
                     } else if (dataInfo.OUT_CNT > 0) {
                         fnConfirm(null, "이미 출하처리 되었습니다", function() {}, null, 2);
-                        $("#OUTGOING_BARCODE_NUM").val("");
                         return false;
                     } else {
                         if (barcodeType == "L") {
@@ -1605,14 +1597,11 @@
                                 'url': '/json-manager',
                                 'data': $('#outgoing_manage_pop_type_label_form').serialize()
                             };
-                            //let data = {'queryId': 'inspection.insertOutgoingOutType4','BARCODE_NUM': barcodeNum};
-                            //let parameters = {'url': '/json-create', 'data': data };
                             fnPostAjaxAsync(function () {
                                 //. 모달 띄우기
                                 $('#outgoing_manage_pop_type_label').modal('show');
                                 setTimeout(function () {
                                     $('#outgoing_manage_pop_type_label').modal('hide');
-                                    $("#OUTGOING_BARCODE_NUM").val("");
                                     outgoingManageGridId01.pqGrid("refreshDataAndView");
                                 }, 2000);
                             }, parameters, '');
@@ -1626,11 +1615,9 @@
                             fnPostAjaxAsync(function (data) {
                                 let dataInfo = data.info;
                                 if (dataInfo == null) {
-                                    $("#OUTGOING_BARCODE_NUM").val("");
                                     fnConfirm(null, "정보가 존재하지 않습니다", function() {}, null, 2);
                                     return false;
                                 } else if (dataInfo.OUT_CNT > 0) {
-                                    $("#OUTGOING_BARCODE_NUM").val("");
                                     fnConfirm(null, "이미 출하처리 되었습니다", function() {}, null, 2);
                                     return false;
                                 } else {
@@ -1655,7 +1642,6 @@
                                         $('#outgoing_manage_pop_type_control').modal('show');
                                         setTimeout(function () {
                                             $('#outgoing_manage_pop_type_control').modal('hide');
-                                            $("#OUTGOING_BARCODE_NUM").val("");
                                             outgoingManageGridId01.pqGrid("refreshDataAndView");
                                         }, 2000);
                                     }, parameters, '');
