@@ -1629,12 +1629,7 @@
 
     <update id="updateOutFinishStatus" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_CONTROL
-        SET OUT_FINISH_STATUS = CASE jmes.SF_GET_OUT_FINISH_STATUS(#{CONTROL_SEQ})
-                                        WHEN 'OUT FINISH STATUS' THEN 'RLS010'
-                                        WHEN 'SCRAP STATUS' THEN 'RLS020'
-                                        WHEN 'RETURN STATUS' THEN 'RLS030'
-                                        ELSE NULL
-                                END
+        SET OUT_FINISH_STATUS = jmes.SF_GET_OUT_FINISH_STATUS(#{CONTROL_SEQ})
             , OUT_FINISH_STATUS_DT = CASE WHEN jmes.SF_GET_OUT_FINISH_STATUS(#{CONTROL_SEQ}) IS NOT NULL THEN NOW() ELSE NULL END
             , UPDATE_DT = NOW()
             , UPDATE_ID = #{LOGIN_USER_ID}
@@ -1657,6 +1652,6 @@
             , UPDATE_DT = NOW()
             , UPDATE_ID = #{LOGIN_USER_ID}
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-            AND jmes.SF_GET_OUT_FINISH_STATUS(#{CONTROL_SEQ}) = 'SCRAP STATUS'
+            AND jmes.SF_GET_OUT_FINISH_STATUS(#{CONTROL_SEQ}) = 'RLS020'
     </update>
 </mapper>
