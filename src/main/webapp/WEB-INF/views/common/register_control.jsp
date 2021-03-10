@@ -68,7 +68,11 @@
                 title: '단가확인', width: 70, dataIndx: 'PRICE_CONFIRM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1017')
+                    options: fnGetCommCodeGridSelectBox('1017'),
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -92,7 +96,13 @@
             },
             {
                 title: '사업자<br>구분', width: 75, dataIndx: 'COMP_CD',  styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: FAMILY_COMPANY},
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text', options: FAMILY_COMPANY,
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                },
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -115,7 +125,13 @@
             },
             {
                 title: '발주업체', width: 100, dataIndx: 'ORDER_COMP_CD', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY,
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                },
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -136,12 +152,26 @@
                     }
                 }
             },
-            {title: '비고', align: 'left', width: 100, dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {
-                title: '주요<br>검사', width: 50, dataIndx: 'MAIN_INSPECTION', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                title: '비고', align: 'left', width: 100, dataIndx: 'NOTE',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editor: {
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                }
+            },
+            {
+                title: '주요<br>검사', width: 50, dataIndx: 'MAIN_INSPECTION',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select', valueIndx: 'value', labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1059')
+                    options: fnGetCommCodeGridSelectBox('1059'),
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -165,11 +195,15 @@
                 }
             },
             {
-                title: '긴<br>급', minWidth: 30, dataIndx: 'EMERGENCY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                editor: {type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1042')
+                title: '긴<br>급', minWidth: 30, dataIndx: 'EMERGENCY_YN',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1042'),
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -178,12 +212,15 @@
                 }
             },
             {
-                title: '대칭', minWidth: 30, dataIndx: 'SAME_SIDE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                title: '대칭', minWidth: 30, dataIndx: 'SAME_SIDE_YN',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1042')
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1042'),
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -191,20 +228,47 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '총<br>장', minWidth: 30, dataType: 'integer', dataIndx: 'TOTAL_SHEET', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
+            {
+                title: '총<br>장', minWidth: 30, dataType: 'integer', dataIndx: 'TOTAL_SHEET',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editor: {
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                }
+            },
             {
                 title: '관리번호', align: 'left', width: 180, dataIndx: 'CONTROL_NUM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'red'},
                 style: {'font-weight': 'bold', 'color': 'black'},
-            },
-            {title: '파<br>트', minWidth: 30, dataIndx: 'PART_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {
-                title: '작업<br>형태', dataIndx: 'WORK_TYPE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1033')
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                }
+            },
+            {
+                title: '파<br>트', minWidth: 30, dataIndx: 'PART_NUM',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+               editor: {
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                }
+            },
+            {
+                title: '작업<br>형태', dataIndx: 'WORK_TYPE',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1033'),
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -230,16 +294,33 @@
             {
                 title: '가공<br>납기', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'INNER_DUE_DT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                editor: {type: 'textbox', init: fnDateEditor}
+                editor: {
+                    type: 'textbox', init: fnDateEditor,
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                }
             },
-            {title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
+            {
+                title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editor: {
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                }
+            },
             {
                 title: '외<br>주', minWidth: 30, dataIndx: 'OUTSIDE_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1042')
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1042'),
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -250,10 +331,12 @@
             {
                 title: '수행<br>공장', dataIndx: 'WORK_FACTORY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1014')
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1014'),
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -279,10 +362,12 @@
             {
                 title: '소재<br>사급', dataIndx: 'MATERIAL_SUPPLY_YN', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
-                    type: 'select',
-                    valueIndx: 'value',
-                    labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1042')
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1042'),
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -294,31 +379,149 @@
                 title: '발주정보', align: 'center',
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 colModel: [
-                    {title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {
+                        title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM',
+                        styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                        editor: {
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
+                    },
                     {
                         title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editor: {
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
                     },
-                    {title: '품명', align: 'left', width: 150, dataIndx: 'ITEM_NM', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
-                    {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY',styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
-                    {title: '원', dataType: 'integer', format: '#,###', dataIndx: 'ORIGINAL_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-                    {title: '대', dataType: 'integer', format: '#,###', dataIndx: 'OTHER_SIDE_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {
+                        title: '품명', align: 'left', width: 150, dataIndx: 'ITEM_NM',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editor: {
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
+                    },
+                    {
+                        title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editor: {
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
+                    },
+                    {
+                        title: '원', dataType: 'integer', format: '#,###', dataIndx: 'ORIGINAL_SIDE_QTY',
+                        styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                        editor: {
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
+                    },
+                    {
+                        title: '대', dataType: 'integer', format: '#,###', dataIndx: 'OTHER_SIDE_QTY',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}, editor: {
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
+                    },
                     {
                         title: '발주납기', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'ORDER_DUE_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                        editor: {type: 'textbox', init: fnDateEditor}
+                        editor: {
+                            type: 'textbox', init: fnDateEditor,
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
                     },
                     {
                         title: '납품확인', width: 70, dataType: 'date', format: 'yy/mm/dd', dataIndx: 'DELIVERY_DT',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                        editor: {type: 'textbox', init: fnDateEditor}
+                        editor: {
+                            type: 'textbox', init: fnDateEditor,
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
                     },
-                    {title: '견적단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-                    {title: '공급단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-                    {title: '프로젝트', align: 'left', width: 200, dataIndx: 'PROJECT_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-                    {title: '모듈', align: 'left', width: 100, dataIndx: 'MODULE_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-                    {title: '납품처', align: 'left', width: 100, dataIndx: 'DELIVERY_COMP_NM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-                    {title: '비고(라벨)', align: 'left', width: 100, dataIndx: 'LABEL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+                    {
+                        title: '견적단가', align: 'right', width: 90,
+                        dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT',
+                        styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                        editor: {
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
+                    },
+                    {
+                        title: '공급단가', align: 'right', width: 90,
+                        dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT',
+                        styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                        editor: {
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
+                    },
+                    {
+                        title: '프로젝트', align: 'left', width: 200, dataIndx: 'PROJECT_NM',
+                        styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                        editor: {
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
+                    },
+                    {
+                        title: '모듈', align: 'left', width: 100, dataIndx: 'MODULE_NM',
+                        styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                        editor: {
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
+                    },
+                    {
+                        title: '납품처', align: 'left', width: 100, dataIndx: 'DELIVERY_COMP_NM',
+                        styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                        editor: {
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
+                    },
+                    {
+                        title: '비고(라벨)', align: 'left', width: 100, dataIndx: 'LABEL_NOTE',
+                        styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                        editor: {
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
+                    },
                     {
                         title: '구매담당', dataIndx: 'ORDER_STAFF_SEQ',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
@@ -328,6 +531,10 @@
                                 return COMPANY_STAFF.filter(function (value) {
                                     return value.compCd === ui.rowData.ORDER_COMP_CD;
                                 });
+                            },
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
                             }
                         },
                         render: function (ui) {
@@ -350,17 +557,39 @@
                             }
                         }
                     },
-                    {title: '설계자', dataIndx: 'DESIGNER_NM', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
+                    {
+                        title: '설계자', dataIndx: 'DESIGNER_NM',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                        editor: {
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
+                    },
                 ]
             },
-            {title: '규격', width: 110, dataIndx: 'SIZE_TXT',styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
+            {
+                title: '규격', width: 110, dataIndx: 'SIZE_TXT',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editor: {
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                }
+            },
             {
                 title: '소재종류', width: 80, dataIndx: 'MATERIAL_DETAIL', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
                     labelIndx: 'text',
-                    options: fnGetCommCodeGridSelectBox('1027')
+                    options: fnGetCommCodeGridSelectBox('1027'),
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
                 },
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -385,7 +614,14 @@
             },
             {
                 title: '소재<br>형태', dataIndx: 'MATERIAL_KIND', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1029')},
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1029'),
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                },
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -409,8 +645,16 @@
                 }
             },
             {
-                title: '표면<br>처리', width: 80, dataIndx: 'SURFACE_TREAT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1039')},
+                title: '표면<br>처리', width: 80, dataIndx: 'SURFACE_TREAT',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBox('1039'),
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                },
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -433,8 +677,16 @@
                 }
             },
             {
-                title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
+                title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editor: {
+                    type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030'),
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                },
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -456,8 +708,26 @@
                     }
                 }
             },
-            {title: '소재비고', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '변경전 도면번호', align: 'left', width: 150, dataIndx: 'PREV_DRAWING_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
+            {
+                title: '소재비고', dataIndx: 'MATERIAL_NOTE',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                editor: {
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                }
+            },
+            {
+                title: '변경전 도면번호', align: 'left', width: 150, dataIndx: 'PREV_DRAWING_NUM',
+                styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                editor: {
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                }
+            },
             {
                 title: '소재마감', align: 'center',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
@@ -465,7 +735,14 @@
                     {
                         title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND',
                         styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
+                        editor: {
+                            type: 'select', valueIndx: 'value', labelIndx: 'text',
+                            options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020'),
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        },
                         render: function (ui) {
                             let cellData = ui.cellData;
 

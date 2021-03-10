@@ -703,6 +703,7 @@
                                 const totalRecords = data.length;
                                 const groupedControlNum = fnGroupBy(data, 'CONTROL_NUM');
                                 let newRowData = fnCloneObj(ui.rowData);
+                                let rowIndex;
                                 newRowData.ROW_NUM = totalRecords + 1;
                                 newRowData.ORDER_SEQ = null;
                                 newRowData.ORDER_NUM = null;
@@ -715,23 +716,25 @@
                                 newRowData.ORDER_OUT_FINISH_DT = null;
                                 newRowData.INVOICE_NUM = null;
                                 newRowData.DELIVERY_DT = null;
-                                // newRowData.DWG_GFILE_SEQ = null; // 확인 필요
-                                // newRowData.ORDER_DXF_GFILE_SEQ = null; // 확인 필요
-                                // newRowData.ORDER_PDF_GFILE_SEQ = null; // 확인 필요
-                                // newRowData.ORDER_IMG_GFILE_SEQ = null; // 확인 필요
-                                // newRowData.VIEW_GFILE_SEQ = null; // 확인 필요
+                                newRowData.LAG_WORK_TYPE = 'not undefined'; // minus button 표시하기 위함
 
-                                const firstRow = groupedControlNum[newRowData.CONTROL_NUM][0].pq_ri;
+                                for (let i = 0, LENGTH = groupedControlNum[newRowData.CONTROL_NUM].length; i < LENGTH; i++) {
+                                    const rowData = groupedControlNum[newRowData.CONTROL_NUM][i];
+                                    const WORK_TYPE = rowData.WORK_TYPE;
+
+                                    if (WORK_TYPE === 'WTP010' || WORK_TYPE === 'WTP020' || WORK_TYPE === 'WTP030') {
+                                        rowIndex = rowData.pq_ri;
+                                    }
+                                }
 
                                 $orderManagementGrid.pqGrid('addRow', {
                                     newRow: newRowData,
-                                    rowIndx: firstRow,
+                                    rowIndx: rowIndex + 1,
                                     checkEditable: false
                                 });
-                                $orderManagementGrid.pqGrid('setSelection', {rowIndx: firstRow});
+                                $orderManagementGrid.pqGrid('setSelection', {rowIndx: rowIndex + 1});
 
                                 autoMerge($orderManagementGrid.pqGrid('getInstance').grid, true);
-                                // event.preventDefault();
                             });
 
                             $cell.find('[name=ORDER_NUM_MINUS_BUTTON]').on('click', function () {

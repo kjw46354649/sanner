@@ -170,7 +170,7 @@
                 ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_NUM) AS ROWNUM,
                 A.CONTROL_NUM,
                 C.ORDER_NUM,
-                B.DRAWING_NUM,
+                C.DRAWING_NUM,
                 C.ITEM_NM,
                 CONCAT(B.DRAWING_NUM, '\n', C.ITEM_NM) AS DRAWING_NUM_ITEM_NM,
                 B.SIZE_TXT,
