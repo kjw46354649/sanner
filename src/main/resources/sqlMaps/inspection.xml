@@ -417,7 +417,7 @@
           , jmes.SF_GET_CODE_NM('1060', A.INSPECT_METHOD, #{LOGIN_LOCALE}) AS Q_INSPECT_METHOD_NM
           , CASE WHEN A.INSPECT_TYPE = '2' THEN jmes.SF_GET_DATE_F(A.INSERT_DT,'YY','M') END AS Q_RETURN_DT
           , CONCAT( CASE
-                        WHEN A.INSPECT_GRADE IN ('GRD010', 'GRD020', 'GRD0320') THEN '적합'
+                        WHEN A.INSPECT_GRADE IN ('GRD010', 'GRD020', 'GRD030') THEN '적합'
                         WHEN A.INSPECT_GRADE = 'GRD040' THEN '부적합'
                         WHEN A.INSPECT_GRADE IN ('GRD050', 'GRD060') THEN '반품'
                     END, '(', jmes.SF_GET_CODE_NM('1040', A.INSPECT_GRADE, #{LOGIN_LOCALE}), ')') AS Q_INSPECT_GRADE_NOTE
