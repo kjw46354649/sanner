@@ -143,10 +143,12 @@ public class OutServiceImpl implements OutService {
                             this.innodaleDao.create(requestMailForm);
                             outsideRequestSeq = (int) requestMailForm.get("OUTSIDE_REQUEST_SEQ");
                         }
-                        // 기존 요청을 삭제한다.
+                        // 기존 요청이 있으면 삭제한다.
                         hashMap.put("queryId", "outMapper.updateOutsideRequestDetailDelete");
                         this.innodaleDao.update(hashMap);
-
+                        hashMap.put("OUTSIDE_REQUEST_SEQ", outsideRequestSeq);
+                        hashMap.put("queryId", "outMapper.createOutsideRequestDetail");
+                        this.innodaleDao.create(hashMap);
                         if (status.equals("request")) {
                             // 첨부 파일을 하나의 Gfile로 추가 한다.
                             hashMap.put("GFILE_SEQ", mailAttachGfileSeq);
