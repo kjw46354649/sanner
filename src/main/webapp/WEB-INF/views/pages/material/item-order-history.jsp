@@ -97,10 +97,11 @@
 
 <form id="item_order_history_hidden_form" name="item_order_history_hidden_form">
     <input type="hidden" id="queryId" name="queryId" value="material.selectItemOrderHistoryListDetail"/>
-    <input type="hidden" id="MATERIAL_ORDER_NUM" name="MATERIAL_ORDER_NUM"/>
-    <input type="hidden" id="MATERIAL_COMP_CD" name="MATERIAL_COMP_CD"/>
     <input type="hidden" id="MATERIAL_ORDER_SEQ" name="MATERIAL_ORDER_SEQ"/>
     <input type="hidden" id="CONCAT_SEQ" name="CONCAT_SEQ"/>
+    <input type="hidden" id="MATERIAL_ORDER_NUM" name="MATERIAL_ORDER_NUM"/>
+    <input type="hidden" id="MATERIAL_COMP_CD" name="MATERIAL_COMP_CD"/>
+    <input type="hidden" id="MATERIAL_DETAIL" name="MATERIAL_DETAIL"/>
 </form>
 
 <form id="item_order_history_inspection_hidden_form" name="item_order_history_inspection_hidden_form">
@@ -322,24 +323,22 @@
             },
             rowSelect: function( event, ui ) {
                 //if(ui.addList.length > 0 ) {
+                let MATERIAL_ORDER_SEQ = ui.addList[0].rowData.MATERIAL_ORDER_SEQ;
                 let MATERIAL_ORDER_NUM = ui.addList[0].rowData.MATERIAL_ORDER_NUM;
                 let MATERIAL_COMP_CD = ui.addList[0].rowData.MATERIAL_COMP_CD;
-
-                let MATERIAL_ORDER_SEQ = ui.addList[0].rowData.MATERIAL_ORDER_SEQ;
                 let CONCAT_SEQ = ui.addList[0].rowData.CONCAT_SEQ === undefined ? "0" : ui.addList[0].rowData.CONCAT_SEQ;
-
                 let IN_YN = ui.addList[0].rowData.IN_YN;
-
-                $("#item_order_history_hidden_form #MATERIAL_ORDER_NUM").val(MATERIAL_ORDER_NUM);
-                $("#item_order_history_hidden_form #MATERIAL_COMP_CD").val(MATERIAL_COMP_CD);
 
                 $("#item_order_history_search_form #MATERIAL_ORDER_SEQ").val(MATERIAL_ORDER_SEQ);
                 $("#item_order_history_search_form #CONCAT_SEQ").val(CONCAT_SEQ);
+                $("#item_order_history_hidden_form #MATERIAL_ORDER_NUM").val(MATERIAL_ORDER_NUM);
+                $("#item_order_history_hidden_form #MATERIAL_COMP_CD").val(MATERIAL_COMP_CD);
+                $("#item_order_history_hidden_form #MATERIAL_DETAIL").val(MATERIAL_DETAIL);
 
-
-                if(IN_YN == 'Y'){
+                $("#item_order_history_search_form").find('#MATERIAL_DETAIL');
+                if (IN_YN == 'Y') {
                     $("#btnItemOrderHistoryCancel").attr("disabled", true);
-                }else {
+                } else {
                     $("#btnItemOrderHistoryCancel").attr("disabled", false);
                 }
                 selectItemOrderHistoryRightList();
@@ -547,10 +546,7 @@
                         };
                         parameters = {'url': '/json-remove', 'data': parameter};
                         fnPostAjax(function (data, callFunctionParam) {
-                            parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
-                            fnPostAjax(function(data, callFunctionParam){
-                                $("#btnItemOrderHistorySearch").trigger('click');
-                            }, parameters, '');
+                            $("#btnItemOrderHistorySearch").trigger('click');
                         }, parameters, '');
                     }, parameters, '');
                 }, parameters, '');
