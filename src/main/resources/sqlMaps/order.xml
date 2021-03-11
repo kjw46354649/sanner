@@ -1732,6 +1732,12 @@
         <if test="DEPOSIT_STATUS_INDICATION == null">
             AND K.`TYPE` = '2' <!-- 매출 -->
         </if>
+        <if test="COMP_CD != null and COMP_CD != ''">
+            AND K.COMP_CD = #{COMP_CD}
+        </if>
+        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+            AND K.ORDER_COMP_CD = #{ORDER_COMP_CD}
+        </if>
         GROUP BY K.YYYY, K.COMP_CD, K.ORDER_COMP_CD, K.`TYPE`
         ORDER BY K.YYYY, K.COMP_CD, K.ORDER_COMP_CD, K.`TYPE`
     </select>
@@ -1858,6 +1864,12 @@
         WHERE 1 = 1
         <if test="DEPOSIT_STATUS_INDICATION == null">
             AND K.`TYPE` = '2' <!-- 매출 -->
+        </if>
+        <if test="COMP_CD != null and COMP_CD != ''">
+            AND K.COMP_CD = #{COMP_CD}
+        </if>
+        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+            AND K.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
         GROUP BY K.YYYY, K.`TYPE`
         ORDER BY K.YYYY, K.`TYPE`
