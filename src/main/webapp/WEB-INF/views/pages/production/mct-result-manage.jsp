@@ -586,11 +586,11 @@
                     let rowData = ui.rowData;
                     $cell.find('#CAM_WORK_START_ACTION').bind('click', function(e) {
                         e.preventDefault();
-                        camWorkManagePop(rowData, true);
+                        camWorkManagePreSearchPop(rowData, true);
                     });
                     $cell.find('#CAM_WORK_COMPLETE_ACTION').bind('click', function(e) {
                         e.preventDefault();
-                        camWorkManagePop(rowData, true);
+                        camWorkManagePreSearchPop(rowData, true);
                     });
                 }
             },
@@ -733,7 +733,7 @@
 
                             $cell.find('[name=CAM_STEP]').bind('click', function (e) {
                                 e.preventDefault();
-                                camWorkManagePop(rowData, true);
+                                camWorkManagePreSearchPop(rowData, true);
                             });
                         }
                     },
@@ -899,6 +899,26 @@
             }
         };
         /* function */
+        /** 제품 리스트 조회 시간 때문에 별도 상세 쿼리 처리 **/
+        let camWorkManagePreSearchPop = function (rowData, popOpenFlag){
+            let infoParameters = {
+                'url': '/json-info',
+                'data': {
+                    'queryId': 'machine.selectResultManagePopInfo',
+                    'CONTROL_NUM': rowData.CONTROL_NUM,
+                    'CONTROL_DETAIL_SEQ': rowData.CONTROL_DETAIL_SEQ
+                }
+            };
+            fnPostAjax(function (infoData, infoCallFunctionParam) {
+                if (infoData.info) {
+                    camWorkManagePop(infoData.info, popOpenFlag);
+                } else {
+                    fnAlert(null, "관리번호를 확인 해 주십시오.");
+                    return;
+                }
+            }, infoParameters, '');
+        };
+
         /** 제품 시작 상세 표시 **/
         let camWorkManagePop = function(rowData, popOpenFlag) {
             fnResetFrom('cam_work_manage_pop_form');

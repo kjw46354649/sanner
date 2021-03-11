@@ -257,7 +257,7 @@
             trackModel: {on: true},
             colModel: camWorkDetailColModel,
             rowInit: function (ui) {
-                console.log(ui);
+                // console.log(ui);
                 if (ui.rowIndx === 0) {
                     return {style: {'background': '#FFFF00'}};
                 }

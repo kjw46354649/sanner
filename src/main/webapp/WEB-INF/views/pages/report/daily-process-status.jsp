@@ -140,7 +140,7 @@
 
                 if (data.length > 0) {
                     const rowIndx = isRightSaveButtonClick ? selectedRowIndex[0] : 0;
-                    console.log(rowIndx);
+                    // console.log(rowIndx);
 
                     $dailyProcessStatusLeftGrid.pqGrid('setSelection', {rowIndx: rowIndx});
                 }

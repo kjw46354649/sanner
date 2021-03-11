@@ -487,7 +487,7 @@ var getYTPVideoID = function( url ) {
                                 'onError': function( err ) {
 
                                     if( err.data == 150 ) {
-                                        console.log( "Embedding this video is restricted by Youtube." );
+                                        // console.log( "Embedding this video is restricted by Youtube." );
                                         if( YTPlayer.isPlayList ) jQuery( YTPlayer ).playNext();
                                     }
 
