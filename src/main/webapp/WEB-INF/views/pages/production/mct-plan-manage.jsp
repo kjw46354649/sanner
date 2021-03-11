@@ -72,6 +72,13 @@
     .slider.round:before {
         border-radius: 50%;
     }
+
+    .slider:before {
+        left: 10px;
+        height: 17px;
+        width: 16px;
+    }
+
 </style>
 
 <div class="page mct">
@@ -90,7 +97,7 @@
                         </c:forEach>
                         </select>
                 </span>
-                <label class="switch ml-10">
+                <label class="switch ml-10" style="height: 25px;">
                     <input type="checkbox" id="toggleImageView">
                     <span class="slider round"></span>
                 </label>
