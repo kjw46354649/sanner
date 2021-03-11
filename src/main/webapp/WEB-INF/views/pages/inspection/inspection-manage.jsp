@@ -584,12 +584,13 @@
 
 
 
-        $("#inspection_manage_pop").on('hide.bs.modal', function(){
+        $("#inspection_manage_pop").on('hide.bs.modal', function () {
             fnResetFrom("inspection_manage_pop_form");
             $("#inspection_manage_form").find("#queryId").val("inspection.selectInspectionList");
             $("#inspection_manage_search_btn").trigger("click");
+            $("#INSPECTION_BARCODE_NUM").focus();
         });
-        $("#inspection_manage_pop").on('show.bs.modal', function(){
+        $("#inspection_manage_pop").on('show.bs.modal', function () {
             //popType : 그리드입출고 GRID_IN, GRID_OUT, 바코드 BARCODE
             //     let popType = $("#inspection_manage_form").find("#popType").val();
             //     let V_INSIDE_inspection_NUM = $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val();
@@ -609,17 +610,17 @@
             };
             fnPostAjax(function (data, callFunctionParam) {
                 let dataInfo = data.info;
-                if(dataInfo == null ) {
+                if (dataInfo == null) {
                     fnAlert(null, "해당 데이터가 존재하지 않습니다.");
                     $('#inspection_manage_pop').modal('hide');
-                }else{
+                } else {
                     let emergencySpan = '';
                     fnJsonDataToForm("inspection_manage_pop_form", dataInfo);
                     $("#inspection_manage_pop_form").find("#Q_SEQ").html(dataInfo.Q_SEQ);
                     $("#inspection_manage_pop_form").find("#CONTROL_NUM" + "_VIEW_T").html(dataInfo.CONTROL_NUM);
                     $("#inspection_manage_pop_form").find("#DRAWING_NUM" + "_VIEW_T").html(dataInfo.DRAWING_NUM);
                     $("#inspection_manage_pop_form").find("#MAIN_INSPECTION_NM" + "_VIEW_T").html(dataInfo.MAIN_INSPECTION_NM);
-                    if(dataInfo.EMERGENCY_YN === 'Y') {
+                    if (dataInfo.EMERGENCY_YN === 'Y') {
                         emergencySpan = '<span style="display: inline-block; margin: 0 5px; padding: 0px 7px; border: solid red; border-radius: 5px; color: #FF0000; text-align: center; font-size: 1rem;">긴급</span>';
                     }
                     $("#inspection_manage_pop_form").find("#INNER_DUE_DT" + "_VIEW_T").html(dataInfo.INNER_DUE_DT + emergencySpan);
@@ -646,17 +647,17 @@
 
             //그리드 1
             $("#inspection_manage_pop_form").find("#queryId").val("inspection.selectInspectionPopInfoList1");
-            inspectionManageGridIdPop01.pqGrid("option", "dataModel.postData", function(ui){
+            inspectionManageGridIdPop01.pqGrid("option", "dataModel.postData", function (ui) {
                 return fnFormToJsonArrayData('#inspection_manage_pop_form');
-            } );
+            });
             inspectionManageGridIdPop01.pqGrid("refreshDataAndView");
 
 
             //그리드 2
             $("#inspection_manage_pop_form").find("#queryId").val("inspection.selectInspectionPopInfoList2");
-            inspectionManageGridIdPop02.pqGrid("option", "dataModel.postData", function(ui){
+            inspectionManageGridIdPop02.pqGrid("option", "dataModel.postData", function (ui) {
                 return fnFormToJsonArrayData('#inspection_manage_pop_form');
-            } );
+            });
             inspectionManageGridIdPop02.pqGrid("refreshDataAndView");
 
         });
@@ -730,7 +731,9 @@
             $(this).startWaitMe();
             fnPostAjax(function (data, callFunctionParam) {
                 $(this).stopWaitMe();
-                fnAlert(null, "등록이 완료되었습니다.");
+                fnAlert(null, "등록이 완료되었습니다.", function () {
+                    $("#INSPECTION_BARCODE_NUM").focus()
+                });
                 $('#inspection_manage_pop').modal('hide');
             }, parameters, '');
 
@@ -1003,24 +1006,5 @@
         }
     });
 
-    /* 10초마다 재조회
-     $("#chkInspectionTimer").on('click', function(e){
-         inspectionTimer();
-     });
-     $("#selectInspectionTimer").on('change', function(e){
-         inspectionTimer();
-     });
-     let inspectionsetIntervalTimer;
-     let inspectionTimer = function(){
-         let isinspectonChk = $("#chkInspectionTimer").is(":checked");
-         let selVal = $("#selectInspectionTimer").val();
-         let timesec = 1000;
-         if(isinspectonChk){
-             inspectionsetIntervalTimer = setInterval(function() {
-                 $("#inspection_manage_search_btn").trigger('click');
-             }, timesec*selVal);
-         }else{
-             clearInterval(inspectionsetIntervalTimer);
-         }
-     }*/
+    $("#INSPECTION_BARCODE_NUM").focus();
 </script>
