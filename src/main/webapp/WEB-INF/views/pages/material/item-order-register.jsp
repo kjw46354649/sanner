@@ -562,7 +562,7 @@
             }*/
         ];
 
-        let itemOrderRegisterRightColModel= [
+        let itemOrderRegisterRightColModel = [
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM' , editable: false, minWidth: 80} ,
             {title: '상세위치', dataType: 'string', dataIndx: 'LOC_NM', minWidth: 80},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' , editable: false, minWidth: 80} ,
@@ -791,17 +791,14 @@
                         let parameters = {
                             'url': '/json-list',
                             'data': {
-                                'queryId': 'deleteItemOrderRegisterCancelOrderManual',
+                                'queryId': 'deleteMaterialOrderToSequence',
                                 'MATERIAL_ORDER_SEQ': rowData.MATERIAL_ORDER_SEQ
                             }
                         };
                         fnPostAjaxAsync(function () {
-                            parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
-                            fnPostAjax(function(data, callFunctionParam){
-                                itemOrderRegisterPopTopGrid.pqGrid('deleteRow', {rowIndx: rowIndex});
+                            itemOrderRegisterPopTopGrid.pqGrid('deleteRow', {rowIndx: rowIndex});
 
-                                makeInnerTable();
-                            }, parameters, '');
+                            makeInnerTable();
                         }, parameters, '');
                     });
                 }
@@ -1004,17 +1001,14 @@
                         let parameters = {
                             'url': '/json-list',
                             'data': {
-                                'queryId': 'deleteItemOrderRegisterCancelOrderManual',
+                                'queryId': 'deleteMaterialOrderToSequence',
                                 'MATERIAL_ORDER_SEQ': rowData.MATERIAL_ORDER_SEQ
                             }
                         };
                         fnPostAjaxAsync(function () {
-                            parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
-                            fnPostAjax(function(data, callFunctionParam){
-                                itemOrderRegisterPopTopGrid.pqGrid('deleteRow', {rowIndx: rowIndex});
+                            itemOrderRegisterPopTopGrid.pqGrid('deleteRow', {rowIndx: rowIndex});
 
-                                makeInnerTable();
-                            }, parameters, '');
+                            makeInnerTable();
                         }, parameters, '');
                     });
                 }
@@ -1345,15 +1339,18 @@
                 let MATERIAL_ORDER_SEQ = ui.rowData.MATERIAL_ORDER_SEQ === undefined ? '' : ui.rowData.MATERIAL_ORDER_SEQ;
                 let ORDER_STATUS = ui.rowData.M_STATUS === undefined ? '' : ui.rowData.M_STATUS;
 
+                console.log('ORDER_STATUS', ORDER_STATUS);
+                console.log('MATERIAL_ORDER_SEQ', MATERIAL_ORDER_SEQ);
                 // 소재 입고 상태
                 if (ORDER_STATUS === 'MST002' || ORDER_STATUS === 'MST004') {
                     $("#btnItemOrderRegisterOutSave").attr('disabled', true);
                 } else {
-                    if (MATERIAL_ORDER_SEQ === '') {
-                        $("#btnItemOrderRegisterOutSave").attr('disabled', true);
-                    } else {
+                    // 확인 필요
+                    // if (MATERIAL_ORDER_SEQ === '') {
                         $("#btnItemOrderRegisterOutSave").attr('disabled', false);
-                    }
+                    // } else {
+                    //     $("#btnItemOrderRegisterOutSave").attr('disabled', true);
+                    // }
                 }
 
                 $("#item_order_register_hidden_form #MATERIAL_ORDER_SEQ").val(MATERIAL_ORDER_SEQ);
@@ -1784,19 +1781,15 @@
 
             fnConfirm(title, message, function () {
                 let parameter = {
-                    'queryId': 'deleteItemOrderRegisterDeleteOrderManual',
+                    'queryId': 'deleteMaterialOrderToNumber',
                     'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
                 };
                 let parameters = {'url': '/json-remove', 'data': parameter};
                 fnPostAjax(function () {
-
-                    parameters = {'url': '/json-remove', 'data': {'queryId': 'deleteItemOrderRegisterCancelOrder'}};
-                    fnPostAjax(function () {
-                        fnAlert(null, '취소 완료되었습니다.');
-                        if ($('#item_order_register_popup').hasClass('in')) {
-                            $('#item_order_register_popup').modal('hide');
-                        }
-                    }, parameters, '');
+                    fnAlert(null, '취소 완료되었습니다.');
+                    if ($('#item_order_register_popup').hasClass('in')) {
+                        $('#item_order_register_popup').modal('hide');
+                    }
                 }, parameters, '');
             });
         });
@@ -1939,11 +1932,8 @@
                         };
                         parameters = {'url': '/json-remove', 'data': parameter};
                         fnPostAjax(function () {
-                            parameters = {'url': '/json-remove', 'data': {'queryId': 'material.deleteItemOrderRegisterCancelOrder'}};
-                            fnPostAjax(function () {
-                                fnAlert(null,'취소 완료되었습니다.');
-                                $('#item_order_register_popup').modal('hide');
-                            }, parameters, '');
+                            fnAlert(null, '취소 완료되었습니다.');
+                            $('#item_order_register_popup').modal('hide');
                         }, parameters, '');
                     }, parameters, '');
                 }, parameters, '');
