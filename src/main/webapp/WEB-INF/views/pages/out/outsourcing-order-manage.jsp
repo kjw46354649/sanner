@@ -389,7 +389,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.OUTSIDE_STATUS !== 'OST001';
+                    return !(rowData.OUTSIDE_STATUS === 'OST001' || rowData.OUTSIDE_STATUS === 'OST003');
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: OUTSOURCE_COMPANY},
                 render: function (ui) {
@@ -847,6 +847,7 @@
                 }
             },
             {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM', editable: true},
+            {title: 'OUTSIDE_ORDER_NUM', dataIndx: 'OUTSIDE_ORDER_NUM', hidden: false},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
@@ -1130,6 +1131,7 @@
                 }
             },
             {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM', editable: true},
+            {title: 'OUTSIDE_ORDER_NUM', dataIndx: 'OUTSIDE_ORDER_NUM', hidden: false},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
