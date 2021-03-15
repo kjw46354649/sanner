@@ -296,10 +296,17 @@
                     #{COMP_CD} AS COMP_CD,
                     B.OUTSIDE_COMP_CD,
                     CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH}) AS CLOSE_MONTH,
-                    IFNULL((SELECT MAX(M.CLOSE_VER)
+                    <choose>
+                        <when test="CLOSE_VER !='' and CLOSE_VER != null">
+                            #{CLOSE_VER} AS CLOSE_VER,
+                        </when>
+                        <otherwise>
+                            IFNULL((SELECT MAX(M.CLOSE_VER)
                             FROM TBL_OUTSIDE_CLOSE_NOTE M
                             WHERE M.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
                                 AND M.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD), 0) + 1 AS CLOSE_VER,
+                        </otherwise>
+                    </choose>
                     SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY,
                     B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS OUTSIDE_TOTAL_AMT,
                     B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS FINAL_NEGO_AMT
@@ -317,7 +324,9 @@
                                         AND N.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
                                         AND N.OUTSIDE_COMP_CD IN (${OUTSIDE_COMP_CD_QUOTATION})
                                         AND O.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
-                                        <!-- AND O.CLOSE_VER = #{CLOSE_VER} --> <!-- 확인 필요 -->
+                                        <if test="CLOSE_VER != null and CLOSE_VER != ''">
+                                            AND O.CLOSE_VER = #{CLOSE_VER}
+                                        </if>
                                         AND P.COMP_CD = #{COMP_CD} ) ) Q
             GROUP BY Q.COMP_CD, Q.OUTSIDE_COMP_CD, Q.CLOSE_MONTH, Q.CLOSE_VER) X
         GROUP BY X.COMP_CD, X.OUTSIDE_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
