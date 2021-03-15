@@ -1335,7 +1335,6 @@
         };
         let $outsideCloseRightGrid;
         const outsideCloseRightGridId = 'OUTSIDE_CLOSE_RIGHT_GRID';
-
         const outsideCloseRightColModel = [
             {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
             {
