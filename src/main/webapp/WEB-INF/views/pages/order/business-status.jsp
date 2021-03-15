@@ -316,6 +316,16 @@
         let businessEmergencyColModel = [
             {dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: '구분', minWidth: 40, dataIndx: 'TYPE_NM',
+                render: function (ui) {
+                    switch (ui.cellData) {
+                        case '긴급':
+                            return {style: 'color: #FF0000;'};
+                        case '반품':
+                            return {style: 'background-color: #FAFAAA; color: #FF0000;'};
+                    }
+                }
+            },
             {title: '납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
             {title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 80},
             {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
