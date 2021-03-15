@@ -256,7 +256,7 @@
                                 'queryId': 'inspection.deleteOutgoingHistoryReturnCancelStep1,inspection.updateOutFinishStatus',
                                 'INSPECT_SEQ': ui.rowData['KEY_SEQ']
                             };
-                            let parameters = {'url': '/json-remove', 'data': data};
+                            let parameters = {'url': '/json-manager', 'data': data};
                             fnPostAjax(function (data, callFunctionParam) {
                                 fnAlert(null, "취소가 완료되었습니다.");
                                 $("#outgoing_history_form").find("#queryId").val("inspection.selectOutgoingHistoryList");
