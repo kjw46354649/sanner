@@ -1450,7 +1450,7 @@
                     , D.PACKING_CNT
                     , A.PACKING_NUM
                     , NULL AS RETURN_QTY
-                    , A.INSERT_DT
+                    , D.OUT_FINISH_DT
                     , '' AS RETURN_SETTLEMENT_DT
                 FROM jmes.TBL_OUT A
                     , jmes.TBL_CONTROL B
