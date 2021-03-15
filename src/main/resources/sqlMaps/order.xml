@@ -1584,21 +1584,24 @@
                 INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
                 INNER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
                 INNER JOIN TBL_MONTH_CLOSE_ORDER D ON D.CONTROL_SEQ = A.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND D.ORDER_SEQ = C.ORDER_SEQ AND D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD
-                    <choose>
-                        <when test="RANGE_SEARCH != null and RANGE_SEARCH != ''">
-                            AND (D.CLOSE_MONTH BETWEEN  DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m') AND DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_RIGHT}, #{CLOSE_MONTH_RIGHT}), '%Y%m'), '%Y%m'))
-                        </when>
-                        <otherwise>
-                            AND D.CLOSE_MONTH <![CDATA[ >= ]]> DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m')
-                        </otherwise>
-                    </choose>
                 INNER JOIN TBL_MONTH_CLOSE E ON E.CLOSE_MONTH = D.CLOSE_MONTH AND E.CLOSE_VER = D.CLOSE_VER AND E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD
             WHERE A.DEL_YN = 'N'
+            <choose>
+                <when test="RANGE_SEARCH != null and RANGE_SEARCH != ''">
+                    AND (D.CLOSE_MONTH BETWEEN DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m') AND DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_RIGHT}, #{CLOSE_MONTH_RIGHT}), '%Y%m'), '%Y%m'))
+                </when>
+                <otherwise>
+                    AND D.CLOSE_MONTH = DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m')
+                </otherwise>
+            </choose>
             <if test="COMP_CD != null and COMP_CD != ''">
                 AND A.COMP_CD = #{COMP_CD}
             </if>
             <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+            </if>
+            <if test="CLOSE_VER != null and CLOSE_VER != ''">
+                AND D.CLOSE_VER = #{CLOSE_VER}
             </if>
             <if test="NOTE != null and NOTE != ''">
                 AND UPPER(A.NOTE) LIKE CONCAT('%', UPPER(#{NOTE}), '%')
