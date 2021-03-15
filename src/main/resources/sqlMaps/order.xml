@@ -2770,6 +2770,7 @@
            , CONCAT(CASE WHEN X.RETURN_QTY IS NOT NULL THEN X.RETURN_QTY ELSE X.CONTROL_PART_QTY END,'ea') AS CONTROL_PART_QTY_INFO
        --     , CONCAT(X.CONTROL_PART_QTY,'ea') AS CONTROL_PART_QTY_INFO
            , X.PART_STATUS_NM
+           , CASE WHEN X.RETURN_QTY IS NULL THEN '긴급' ELSE '반품' END AS TYPE_NM
        FROM (   --  출고일 없는경우 -->
                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                    , C.ORDER_DUE_DT
@@ -2787,16 +2788,23 @@
        			) AS RETURN_QTY
                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                   AND B.CONTROL_SEQ = C.CONTROL_SEQ
-                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                   AND A.DEL_YN = 'N'
-                   AND A.CONTROL_STATUS IN ('ORD001','ORD003')
-                   AND B.PART_STATUS NOT IN ('PRO020')  --  폐기 제외 -->
-                   AND A.EMERGENCY_YN = 'Y'
-                   AND A.OUT_FINISH_DT IS NULL
-                   AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
+                    AND B.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND A.DEL_YN = 'N'
+                    AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+                    AND B.PART_STATUS NOT IN ('PRO020')  --  폐기 제외 -->
+                    AND (
+                    		(A.EMERGENCY_YN = 'Y' AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d'))
+                    	OR
+                    		(EXISTS (SELECT 1 FROM jmes.TBL_INSPECT D WHERE 1 = 1
+        	            		AND D.CONTROL_SEQ = C.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND D.ORDER_SEQ = C.ORDER_SEQ
+        						AND D.INSPECT_TYPE = '2'
+        						AND D.RETURN_SETTLEMENT_DT IS NULL)
+        					)
+        			)
+                    AND IFNULL(A.OUT_FINISH_STATUS, 'RLS030') NOT IN ('RLS010', 'RLS020')
            ) X
-       ORDER BY X.ORDER_DUE_DT, X.CONTROL_PART_INFO
+       ORDER BY CASE WHEN X.RETURN_QTY IS NULL THEN 1 ELSE 0 END, X.ORDER_DUE_DT, X.CONTROL_PART_INFO
     </select>
 
     <select id="selectBusinessOverOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">

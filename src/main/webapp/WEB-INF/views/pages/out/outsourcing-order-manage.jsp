@@ -388,7 +388,6 @@
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
-
                     return !(rowData.OUTSIDE_STATUS === 'OST001' || rowData.OUTSIDE_STATUS === 'OST003');
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: OUTSOURCE_COMPANY},
