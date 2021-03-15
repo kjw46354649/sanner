@@ -139,7 +139,7 @@
             <tr>
                 <td width="15%">&nbsp;</td>
                 <td rowspan="2" width="25%"><img src="/resource/asset/images/work/alarm.png" width="90px"></td>
-                <td width="45%"><h3 style="font-size: 44px;font-weight: bold; text-align: center;">대칭주의</h3></td>
+                <td width="45%"><h3 style="font-size: 44px;font-weight: bold; text-align: center;"><srping:message key='drawing.board.label.21'/></h3></td>
                 <td width="15%">&nbsp;</td>
             </tr>
         </table>
