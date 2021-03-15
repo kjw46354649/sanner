@@ -1179,18 +1179,15 @@
             ORDER BY INSERT_DT DESC
             LIMIT 1) AS OUTSIDE_REQUEST_DT
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ AND B.OUTSIDE_YN = 'Y'
+            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
             INNER JOIN TBL_OUTSIDE_CLOSE D ON D.CONTROL_SEQ = B.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                AND D.CLOSE_MONTH = #{CLOSE_MONTH}
-                AND D.CLOSE_VER = #{CLOSE_VER}
-            INNER JOIN TBL_OUTSIDE_CLOSE_NOTE E ON E.COMP_CD = A.COMP_CD
-                                                   AND E.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD
-                                                   AND E.CLOSE_MONTH = D.CLOSE_MONTH
-                                                   AND E.CLOSE_VER = D.CLOSE_VER
-                                                   AND E.COMP_CD = #{COMP_CD}
-                                                   AND E.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
-        WHERE 1 = 1
-            AND A.DEL_YN = 'N'
+            INNER JOIN TBL_OUTSIDE_CLOSE_NOTE E ON E.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD AND E.CLOSE_MONTH = D.CLOSE_MONTH AND E.CLOSE_VER = D.CLOSE_VER
+        WHERE A.DEL_YN = 'N'
+            AND B.OUTSIDE_YN = 'Y'
+            AND D.CLOSE_MONTH = #{CLOSE_MONTH}
+            AND D.CLOSE_VER = #{CLOSE_VER}
+            AND E.COMP_CD = #{COMP_CD}
+            AND E.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
     </select>
 
 
