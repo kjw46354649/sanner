@@ -37,6 +37,12 @@
                             <label class="label_100" for="DRAWING_NUM">도면번호</label>
                             <input type="search" class="wd_200" name="DRAWING_NUM" id="DRAWING_NUM">
                         </span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="OUTSIDE_COMP_CD">외주업체</label>
+                            <select class="wd_200" name="OUTSIDE_COMP_CD" id="OUTSIDE_COMP_CD">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                            </select>
+                        </span>
                     </li>
                     <li>
                         <span class="ipu_wrap">
@@ -757,6 +763,10 @@
         fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_CLOSE_HISTORY_SEARCH_FORM').find('#ORDER_COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_CLOSE_HISTORY_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOutsourceProcessCompanyList'}
         });
 
         $outsideCloseHistoryGrid = $('#' + gridId).pqGrid(obj);

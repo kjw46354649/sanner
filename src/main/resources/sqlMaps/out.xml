@@ -479,25 +479,19 @@
             LIMIT 1) AS OUTSIDE_REQUEST_DT
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                AND B.OUTSIDE_STATUS = 'OST004'
-            <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
-                AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
-            </if>
             LEFT OUTER JOIN TBL_OUTSIDE_CLOSE C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN TBL_OUTSIDE_CLOSE_NOTE D ON  D.CLOSE_MONTH = C.CLOSE_MONTH
-                                AND D.CLOSE_VER = C.CLOSE_VER
-     							<!-- AND D.COMP_CD = A.COMP_CD -->
-                                AND D.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD
+                AND D.CLOSE_VER = C.CLOSE_VER
+                AND D.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD
             LEFT OUTER JOIN TBL_INSPECT E ON B.CONTROL_SEQ = E.CONTROL_SEQ
-                                                     AND B.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
-                                                     AND E.INSPECT_SEQ = (SELECT MAX(INSPECT_SEQ)
-                                                                        FROM TBL_INSPECT
-                                                                        WHERE 1 = 1
-                                                                            AND CONTROL_SEQ = B.CONTROL_SEQ
-                                                                            AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
-        WHERE 1 = 1
-            AND A.DEL_YN = 'N'
+                 AND B.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+                 AND E.INSPECT_SEQ = (  SELECT MAX(INSPECT_SEQ)
+                                        FROM TBL_INSPECT
+                                        WHERE CONTROL_SEQ = B.CONTROL_SEQ
+                                            AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ )
+        WHERE A.DEL_YN = 'N'
+            AND B.OUTSIDE_STATUS = 'OST004'
             <choose>
                 <when test="OUTSIDE_CLOSE_YEAR != null and OUTSIDE_CLOSE_YEAR != '' and OUTSIDE_CLOSE_MONTH != null and OUTSIDE_CLOSE_MONTH != ''">
                     AND C.CLOSE_MONTH = CONCAT(#{OUTSIDE_CLOSE_YEAR}, #{OUTSIDE_CLOSE_MONTH})
@@ -514,6 +508,12 @@
         </if>
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+        </if>
+        <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
+            AND B.DRAWING_NUM LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
+        </if>
+        <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
+            AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
         </if>
         ORDER BY C.CLOSE_MONTH, C.CLOSE_VER, A.COMP_CD, A.ORDER_COMP_CD, A.CONTROL_NUM, B.PART_NUM
     </select>
@@ -554,44 +554,42 @@
                     , SF_GET_DATE_F(CASE WHEN IFNULL(TIMESTAMPDIFF(SECOND, E.INSERT_DT, E.UPDATE_DT), -1) <![CDATA[ < ]]> 0 THEN E.INSERT_DT ELSE E.UPDATE_DT END, 'YY', 'M') AS OUTISDE_CLOSE_NOTE_INSERT_UPDATE_DT <!-- 업데이트 일시 -->
                     , E.CLOSE_NOTE
                 FROM TBL_CONTROL A
-                    INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ AND B.OUTSIDE_YN = 'Y'
-                        <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
-                            AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
-                        </if>
+                    INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
                     INNER JOIN TBL_OUTSIDE_CLOSE D ON D.CONTROL_SEQ = B.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                                    <choose>
-                                                        <when test="RANGE_SEARCH != null and RANGE_SEARCH != ''">
-                                                            AND (D.CLOSE_MONTH BETWEEN  DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m') AND DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_RIGHT}, #{CLOSE_MONTH_RIGHT}), '%Y%m'), '%Y%m'))
-                                                        </when>
-                                                        <otherwise>
-                                                            AND D.CLOSE_MONTH <![CDATA[ = ]]> DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m')
-                                                        </otherwise>
-                                                    </choose>
-                                                    <choose>
-                                                        <when test="CLOSE_VER != null and CLOSE_VER != ''">
-                                                            AND D.CLOSE_VER = #{CLOSE_VER}
-                                                        </when>
-                                                        <otherwise>
-                                                            AND D.CLOSE_VER = (SELECT MAX(CLOSE_VER)
-                                                                               FROM TBL_OUTSIDE_CLOSE
-                                                                               WHERE
-                                                                                    D.CLOSE_MONTH = CLOSE_MONTH
-                                                                                    AND D.CONTROL_SEQ = CONTROL_SEQ
-                                                                                    AND D.CONTROL_DETAIL_SEQ = CONTROL_DETAIL_SEQ)
-                                                        </otherwise>
-                                                    </choose>
-                                                    <if test="CLOSE_NOTE != null and CLOSE_NOTE != ''">
-                                                        AND D.CLOSE_NOTE LIKE CONCAT('%', #{CLOSE_NOTE}, '%')
-                                                    </if>
-                    INNER JOIN TBL_OUTSIDE_CLOSE_NOTE E ON E.COMP_CD = A.COMP_CD
-                                                           AND E.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD
-                                                           AND E.CLOSE_MONTH = D.CLOSE_MONTH
-                                                           AND E.CLOSE_VER = D.CLOSE_VER
-                                                           <if test="COMP_CD != null and COMP_CD != ''">
-                                                                AND E.COMP_CD = #{COMP_CD}
-                                                           </if>
-                WHERE 1 = 1
-                    AND A.DEL_YN = 'N'
+                    LEFT OUTER JOIN TBL_OUTSIDE_CLOSE_NOTE E ON E.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD
+                        AND E.CLOSE_MONTH = D.CLOSE_MONTH
+                        AND E.CLOSE_VER = D.CLOSE_VER
+                WHERE A.DEL_YN = 'N'
+                    AND B.OUTSIDE_YN = 'Y'
+                <if test="COMP_CD != null and COMP_CD != ''">
+                    AND E.COMP_CD = #{COMP_CD}
+                </if>
+                <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
+                    AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
+                </if>
+                <choose>
+                    <when test="RANGE_SEARCH != null and RANGE_SEARCH != ''">
+                        AND (D.CLOSE_MONTH BETWEEN DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m') AND DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_RIGHT}, #{CLOSE_MONTH_RIGHT}), '%Y%m'), '%Y%m'))
+                    </when>
+                    <otherwise>
+                        AND D.CLOSE_MONTH = DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m')
+                    </otherwise>
+                </choose>
+                <choose>
+                    <when test="CLOSE_VER != null and CLOSE_VER != ''">
+                        AND D.CLOSE_VER = #{CLOSE_VER}
+                    </when>
+                    <otherwise>
+                        AND D.CLOSE_VER = ( SELECT MAX(CLOSE_VER)
+                                            FROM TBL_OUTSIDE_CLOSE
+                                            WHERE D.CLOSE_MONTH = CLOSE_MONTH
+                                            AND D.CONTROL_SEQ = CONTROL_SEQ
+                                            AND D.CONTROL_DETAIL_SEQ = CONTROL_DETAIL_SEQ )
+                    </otherwise>
+                </choose>
+                <if test="CLOSE_NOTE != null and CLOSE_NOTE != ''">
+                    AND E.CLOSE_NOTE LIKE CONCAT('%', #{CLOSE_NOTE}, '%')
+                </if>
         ) X
         GROUP BY X.COMP_CD, X.OUTSIDE_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
         ORDER BY COMP_NM, `YEAR`, `QUARTER`, FINISH_MONTH, OUTSIDE_COMP_NM, X.CLOSE_VER

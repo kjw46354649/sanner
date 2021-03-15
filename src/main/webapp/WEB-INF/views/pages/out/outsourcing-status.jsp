@@ -79,8 +79,8 @@
                         <select name="CLOSE_YEAR_RIGHT" id="OUTSIDE_CLOSE_YEAR_RIGHT" disabled></select>
                         <select name="CLOSE_MONTH_RIGHT" id="OUTSIDE_CLOSE_MONTH_RIGHT" disabled></select>
                         <span class="chk_box" style="margin-left: 10px;">
-                            <input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH">
-                            <label for="RANGE_SEARCH"> Range 검색</label>
+                            <input type="checkbox" name="RANGE_SEARCH" id="OUTSIDE_CLOSE_STATUS_RANGE_SEARCH">
+                            <label for="OUTSIDE_CLOSE_STATUS_RANGE_SEARCH"> Range 검색</label>
                         </span>
                         <span class="ipu_wrap right_float">
                             <button type="button" id="OUTSIDE_CLOSE_STATUS_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
@@ -613,7 +613,7 @@
         $('#OUTSIDE_CLOSE_YEAR_RIGHT').on('change', function () {
             fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_RIGHT', this.value);
         });
-        $('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').find('#RANGE_SEARCH').on('change', function () {
+        $('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').find('#OUTSIDE_CLOSE_STATUS_RANGE_SEARCH').on('change', function () {
             if ($(this).prop('checked')) {
                 $('#OUTSIDE_CLOSE_YEAR_RIGHT').prop('disabled', false);
                 $('#OUTSIDE_CLOSE_MONTH_RIGHT').prop('disabled', false);
