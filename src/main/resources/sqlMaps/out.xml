@@ -676,51 +676,55 @@
                         FROM (
                             SELECT
                                 '1' AS STATUS_TYPE
-                                , A.COMP_CD
+                                , E.COMP_CD
                                 , B.OUTSIDE_COMP_CD
                                 , D.CLOSE_MONTH
                                 , SUM(C.UNIT_FINAL_AMT * C.ORDER_QTY) AS ORDER_AMT
-                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_OUTSIDE_CLOSE D
-                            WHERE 1 = 1
-                                AND D.CONTROL_SEQ = B.CONTROL_SEQ
-                                AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_OUTSIDE_CLOSE D, TBL_OUTSIDE_CLOSE_NOTE E
+                            WHERE B.CONTROL_SEQ = A.CONTROL_SEQ
                                 AND C.CONTROL_SEQ = B.CONTROL_SEQ
                                 AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                AND B.CONTROL_SEQ = A.CONTROL_SEQ
+                                AND D.CONTROL_SEQ = B.CONTROL_SEQ
+                                AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                AND E.CLOSE_MONTH = D.CLOSE_MONTH
+								AND E.CLOSE_VER = D.CLOSE_VER
+								AND E.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD
                                 AND A.DEL_YN = 'N'
                                 AND IFNULL(B.PART_NUM, '0') = '0'
                                 AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{YEAR}
                                 <if test="COMP_CD != null and COMP_CD != ''">
-                                    AND A.COMP_CD = #{COMP_CD}
+                                    AND E.COMP_CD = #{COMP_CD}
                                 </if>
                                 <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
                                     AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
                                 </if>
-                            GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
+                            GROUP BY E.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
                             UNION ALL
                             SELECT
                                 '2' AS STATUS_TYPE
-                                , A.COMP_CD
+                                , E.COMP_CD
                                 , B.OUTSIDE_COMP_CD
                                 , D.CLOSE_MONTH
                                 , SUM(B.OUTSIDE_UNIT_AMT * C.ORDER_QTY) AS ORDER_AMT
-                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_OUTSIDE_CLOSE D
-                            WHERE 1 = 1
-                                AND D.CONTROL_SEQ = B.CONTROL_SEQ
-                                AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_OUTSIDE_CLOSE D, TBL_OUTSIDE_CLOSE_NOTE E
+                            WHERE B.CONTROL_SEQ = A.CONTROL_SEQ
                                 AND C.CONTROL_SEQ = B.CONTROL_SEQ
                                 AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                AND B.CONTROL_SEQ = A.CONTROL_SEQ
+                                AND D.CONTROL_SEQ = B.CONTROL_SEQ
+                                AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                AND E.CLOSE_MONTH = D.CLOSE_MONTH
+								AND E.CLOSE_VER = D.CLOSE_VER
+								AND E.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD
                                 AND A.DEL_YN = 'N'
                                 AND IFNULL(B.PART_NUM, '0') = '0'
                                 AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{YEAR}
                                 <if test="COMP_CD != null and COMP_CD != ''">
-                                    AND A.COMP_CD = #{COMP_CD}
+                                    AND E.COMP_CD = #{COMP_CD}
                                 </if>
                                 <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
                                     AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
                                 </if>
-                            GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
+                            GROUP BY E.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
                         ) K
                     ) G ON CONCAT(F.YYYY, F.MM) = G.CLOSE_MONTH
                 WHERE F.YYYY = #{YEAR}
@@ -807,51 +811,55 @@
                         FROM (
                             SELECT
                                 '1' AS STATUS_TYPE
-                                , A.COMP_CD
+                                , E.COMP_CD
                                 , B.OUTSIDE_COMP_CD
                                 , D.CLOSE_MONTH
                                 , SUM(C.UNIT_FINAL_AMT * C.ORDER_QTY) AS ORDER_AMT
-                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_OUTSIDE_CLOSE D
-                            WHERE 1 = 1
-                                AND D.CONTROL_SEQ = B.CONTROL_SEQ
-                                AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_OUTSIDE_CLOSE D, TBL_OUTSIDE_CLOSE_NOTE E
+                            WHERE B.CONTROL_SEQ = A.CONTROL_SEQ
                                 AND C.CONTROL_SEQ = B.CONTROL_SEQ
                                 AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                AND B.CONTROL_SEQ = A.CONTROL_SEQ
+                                AND D.CONTROL_SEQ = B.CONTROL_SEQ
+                                AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                AND E.CLOSE_MONTH = D.CLOSE_MONTH
+								AND E.CLOSE_VER = D.CLOSE_VER
+								AND E.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD
                                 AND A.DEL_YN = 'N'
                                 AND IFNULL(B.PART_NUM, '0') = '0'
                                 AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{YEAR}
                                 <if test="COMP_CD != null and COMP_CD != ''">
-                                    AND A.COMP_CD = #{COMP_CD}
+                                    AND E.COMP_CD = #{COMP_CD}
                                 </if>
                                 <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
                                     AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
                                 </if>
-                            GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
+                            GROUP BY E.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
                             UNION ALL
                             SELECT
                                 '2' AS STATUS_TYPE
-                                , A.COMP_CD
+                                , E.COMP_CD
                                 , B.OUTSIDE_COMP_CD
                                 , D.CLOSE_MONTH
                                 , SUM(B.OUTSIDE_UNIT_AMT * C.ORDER_QTY) AS ORDER_AMT
-                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_OUTSIDE_CLOSE D
-                            WHERE 1 = 1
-                                AND D.CONTROL_SEQ = B.CONTROL_SEQ
-                                AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C, TBL_OUTSIDE_CLOSE D, TBL_OUTSIDE_CLOSE_NOTE E
+                            WHERE B.CONTROL_SEQ = A.CONTROL_SEQ
                                 AND C.CONTROL_SEQ = B.CONTROL_SEQ
                                 AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                AND B.CONTROL_SEQ = A.CONTROL_SEQ
+                                AND D.CONTROL_SEQ = B.CONTROL_SEQ
+                                AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                AND E.CLOSE_MONTH = D.CLOSE_MONTH
+								AND E.CLOSE_VER = D.CLOSE_VER
+								AND E.OUTSIDE_COMP_CD = B.OUTSIDE_COMP_CD
                                 AND A.DEL_YN = 'N'
                                 AND IFNULL(B.PART_NUM, '0') = '0'
                                 AND SUBSTR(D.CLOSE_MONTH, 1, 4) = #{YEAR}
                                 <if test="COMP_CD != null and COMP_CD != ''">
-                                    AND A.COMP_CD = #{COMP_CD}
+                                    AND E.COMP_CD = #{COMP_CD}
                                 </if>
                                 <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
                                     AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
                                 </if>
-                            GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
+                            GROUP BY E.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH
                         ) K
                     ) G ON CONCAT(F.YYYY, F.MM) = G.CLOSE_MONTH
                 WHERE F.YYYY = #{YEAR}

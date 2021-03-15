@@ -98,7 +98,7 @@
                 <ul>
                     <li>
                         <span class="slt_wrap">
-                            <label class="label_100" for="COMP_CD">사업자</label>
+                            <label class="label_100" for="COMP_CD">매입 사업자</label>
                             <select class="wd_200" name="COMP_CD" id="COMP_CD">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
@@ -238,8 +238,8 @@
             {title: 'CLOSE_MONTH', dataIndx: 'CLOSE_MONTH', hidden: true},
             {title: 'CLOSE_VER', dataType: 'integer', dataIndx: 'CLOSE_VER', hidden: true},
             {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
-            {title: '매입 사업자', dataIndx: 'COMP_CD', hidden: true},
-            {title: '매입 사업자', dataIndx: 'COMP_NM'},
+            {title: '매입 사업자', width: 75, dataIndx: 'COMP_CD', hidden: true},
+            {title: '매입 사업자', width:75, dataIndx: 'COMP_NM'},
             {title: '년도', dataIndx: 'YEAR'},
             {title: '분기', dataIndx: 'QUARTER'},
             {title: '마감월', dataIndx: 'FINISH_MONTH'},
@@ -324,8 +324,8 @@
         const tab2ColModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
             {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
-            {title: '사업자', width: 75, dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', width: 75, dataIndx: 'COMP_NM'},
+            {title: '매입 사업자', width: 75, dataIndx: 'COMP_CD', hidden: true},
+            {title: '매입 사업자', width:75, dataIndx: 'COMP_NM'},
             {title: '발주업체', width: 75, dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
             {title: '대상외주업체', width: 75, dataIndx: 'OUTSIDE_COMP_NM'},
             {title: '구분', width: 75, dataIndx: 'STATUS_TYPE'},
