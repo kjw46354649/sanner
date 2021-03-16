@@ -492,15 +492,16 @@
                             return returnVal;
                         },
                         postRender: function (ui) {
-                            let grid = this,
-                                $cell = grid.getCell(ui);
+                            const grid = this,
+                                $cell = grid.getCell(ui),
+                                rowData = ui.rowData;
                             $cell.find("#itemOrderRegisterOutReset").bind("click", function () {
-                                let parameter = {
-                                    'queryId': 'deleteItemOrderRegisterOut',
-                                    'MY_MAT_OUT_SEQ': ui.rowData.MY_MAT_OUT_SEQ
+                                const data = {
+                                    queryId: 'material.deleteMaterialOrderToNumber,material.deleteItemOrderRegisterOut',
+                                    MATERIAL_ORDER_NUM: rowData.MATERIAL_ORDER_NUM,
+                                    MY_MAT_OUT_SEQ: rowData.MY_MAT_OUT_SEQ
                                 };
-
-                                let parameters = {'url': '/json-remove', 'data': parameter};
+                                let parameters = {'url': '/json-manager', 'data': data};
                                 fnPostAjax(function () {
                                     itemOrderRegisterLeftGrid.pqGrid('option', 'dataModel.postData', function () {
                                         return (fnFormToJsonArrayData('#item_order_register_search_form'));
@@ -1257,7 +1258,7 @@
                     const partList = [
                         'STATUS_DT', 'CONTROL_NUM_BUTTON', 'CONTROL_PART_NUM', 'DRAWING_NUM','IMG_GFILE_SEQ',
                         'WORK_TYPE', 'POP_POSITION_NM', 'ORDER_COMP_NM', 'SIZE_TXT', 'SIZE_W', 'SIZE_H', 'SIZE_T',
-                        'ORDER_QTY', 'OUT_SIZE_TXT', 'OUT_QTY', 'COMPLETE_OUT_QTY', 'RESET_BUTTON', 'OUT_YN'
+                        'ORDER_QTY' /* , 'OUT_SIZE_TXT', 'OUT_QTY', 'COMPLETE_OUT_QTY', 'RESET_BUTTON', 'OUT_YN' */ // 확인 필요
                     ];
                     const includeList = controlList.concat(partList);
 
@@ -1339,8 +1340,6 @@
                 let MATERIAL_ORDER_SEQ = ui.rowData.MATERIAL_ORDER_SEQ === undefined ? '' : ui.rowData.MATERIAL_ORDER_SEQ;
                 let ORDER_STATUS = ui.rowData.M_STATUS === undefined ? '' : ui.rowData.M_STATUS;
 
-                console.log('ORDER_STATUS', ORDER_STATUS);
-                console.log('MATERIAL_ORDER_SEQ', MATERIAL_ORDER_SEQ);
                 // 소재 입고 상태
                 if (ORDER_STATUS === 'MST002' || ORDER_STATUS === 'MST004') {
                     $("#btnItemOrderRegisterOutSave").attr('disabled', true);
@@ -1596,12 +1595,20 @@
             let CONTROL_DETAIL_SEQ = $('#item_order_register_hidden_form #CONTROL_DETAIL_SEQ').val();
 
             if ((CONTROL_SEQ !== '' && CONTROL_DETAIL_SEQ !== '') || MATERIAL_ORDER_SEQ !== '') {
-                let itemOrderRegisterOutInsertUpdateQueryList = ['insertItemOrderRegisterOut'];
-                fnModifyPQGrid(itemOrderRegisterRightGrid, itemOrderRegisterOutInsertUpdateQueryList, itemOrderRegisterOutInsertUpdateQueryList);
+                const gridInstance = itemOrderRegisterRightGrid.pqGrid('getInstance').grid;
+                //추가 또는 수정된 값이 있으면 true
+                if (gridInstance.isDirty()) {
+                    let changes = gridInstance.getChanges({format: 'byVal'});
+                    let parameters = {'url': '/providePossessionMaterialSave', 'data': {data: JSON.stringify(changes)}};
 
-                setTimeout(function(){
-                    $('#btnItemOrderRegisterSearch').trigger('click');
-                }, 1500);
+                    fnPostAjaxAsync(function (data, callFunctionParam) {
+                        console.log(data);
+                        itemOrderRegisterRightGrid.pqGrid('refreshDataAndView');
+                        setTimeout(function () {
+                            $('#btnItemOrderRegisterSearch').trigger('click');
+                        }, 1000);
+                    }, parameters, '');
+                }
             } else {
                 fnAlert(null, 'You must be select item.');
             }
@@ -1781,7 +1788,7 @@
 
             fnConfirm(title, message, function () {
                 let parameter = {
-                    'queryId': 'deleteMaterialOrderToNumber',
+                    'queryId': 'material.deleteMaterialOrderToNumber',
                     'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
                 };
                 let parameters = {'url': '/json-remove', 'data': parameter};

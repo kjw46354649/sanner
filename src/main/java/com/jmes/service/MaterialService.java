@@ -15,4 +15,5 @@ public interface MaterialService {
 
     void inWarehouseManageSave(Model model, HashMap<String, Object> hashMap) throws Exception;
 
+    void providePossessionMaterialSave(Model model, HashMap<String, Object> hashMap) throws Exception;
 }

@@ -271,4 +271,31 @@ public class MaterialServiceImpl implements MaterialService {
         }
     }
 
+    @Override
+    public void providePossessionMaterialSave(Model model, HashMap<String, Object> hashMap) throws Exception {
+        String userId = (String) hashMap.get("LOGIN_USER_ID");
+        String jsonObject = (String) hashMap.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+        ArrayList<HashMap<String, Object>> updateList = null;
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("updateList"))
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+        if (updateList != null && updateList.size() > 0) {
+            for (HashMap<String, Object> dataList : updateList) {
+                dataList.put("LOGIN_USER_ID", userId);
+                dataList.put("queryId", "material.insertItemOrderRegisterPopSave");
+                this.innodaleDao.create(dataList);
+                System.out.println(dataList);
+                dataList.put("queryId", "material.insertItemOrderRegisterOut");
+                this.innodaleDao.create(dataList);
+
+            }
+        }
+    }
+
 }
