@@ -48,7 +48,7 @@
                             <th>관리번호</th>
                             <td id="CONTROL_NUM"></td>
                             <th>수량 (원, 대)</th>
-                            <td id="ORDER_QTY"></td>
+                            <td id="CONTROL_PART_QTY"></td>
                             <th>가공납기</th>
                             <td id="DUE_OUT_DT"></td>
                         </tr>
@@ -78,11 +78,11 @@
                         </tr>
                         <tr>
                             <th>가공계획 비고</th>
-                            <td id="MCT_PLAN_NOTE"></td>
+                            <td id="MCT_NOTE"></td>
                             <th>배정 NC</th>
-                            <td id="MCT_PLAN_NC"></td>
+                            <td id="MCT_PLAN_EQUIP_NM"></td>
                             <th>최근공정</th>
-                            <td id="LAST_WORK_NC"></td>
+                            <td id="LAST_WORK_EQUIP_NM"></td>
                         </tr>
                     </table>
                 </div>
@@ -922,6 +922,9 @@
         /** 제품 시작 상세 표시 **/
         let camWorkManagePop = function(rowData, popOpenFlag) {
             fnResetFrom('cam_work_manage_pop_form');
+            for (let i = 1; i <= 5; i++) {
+                $("#cam_work_manage_pop_form").find("#CAM_WORK_FILE_0" + i).html("");
+            }
             $("#cam_work_manage_pop_form").find("#CONTROL_SEQ").val(rowData.CONTROL_SEQ);
             $("#cam_work_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ);
             $("#cam_work_manage_pop_form").find("#DXF_GFILE_SEQ").val(rowData.DXF_GFILE_SEQ);
@@ -930,9 +933,9 @@
             let controlNum = rowData.CONTROL_NUM;
             if(rowData.PART_NUM) controlNum += " # " + rowData.PART_NUM;
             $("#cam_work_manage_pop_form").find("#CONTROL_NUM").html("<p style='color:blue;'>" + controlNum + "<p/>");
-            let orderQty = numberWithCommas(rowData.ORDER_QTY);
-            if(rowData.ORIGINAL_SIDE_QTY) orderQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.ORIGINAL_SIDE_QTY + ") </span>";
-            $("#cam_work_manage_pop_form").find("#ORDER_QTY").html(orderQty);
+           let controlPartQty = numberWithCommas(rowData.CONTROL_PART_QTY);
+            if (rowData.ORIGINAL_SIDE_QTY) controlPartQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.ORIGINAL_SIDE_QTY + ") </span>";
+            $("#cam_work_manage_pop_form").find("#CONTROL_PART_QTY").html(controlPartQty);
             let dueOutDt = rowData.INNER_DUE_DT.slice(5);
             switch (rowData.EMERGENCY_HOLD) {
                 case '보류':
@@ -943,12 +946,10 @@
                     break;
             }
             $("#cam_work_manage_pop_form").find("#DUE_OUT_DT").html(dueOutDt);
-            let concatDrawingNum = rowData.CONCAT_DRAWING_NUM;
-            if(rowData.DRAWING_VER === "Y") concatDrawingNum += " <span> ( " + rowData.DRAWING_VER + ") </span>";
-            $("#cam_work_manage_pop_form").find("#DRAWING_NUM").html(concatDrawingNum);
+            $("#cam_work_manage_pop_form").find("#DRAWING_NUM").html(rowData.CONCAT_DRAWING_NUM);
             $("#cam_work_manage_pop_form").find("#WORK_TYPE").html(rowData.WORK_TYPE_NM);
             let drawingFile = "";
-            if (rowData.CAM_STATUS === "CWS020") {
+            if (rowData.CAM_STATUS === "CWS020" || rowData.CAM_STATUS === "CWS030") {
                 let str = rowData.CONCAT_DRAWING_NUM;
                 let arr = str.split(',');
 
@@ -962,17 +963,13 @@
             $("#cam_work_manage_pop_form").find("#ITEM_NM").html(rowData.ITEM_NM);
             $("#cam_work_manage_pop_form").find("#MATERIAL_DETAIL_NM").html(rowData.MATERIAL_DETAIL_NM);
             let camWorkDate = rowData.CAM_START_DT;
-            if(rowData.CAM_STATUS === "CWS030") camWorkDate = rowData.CAM_FINISH_DT;
+            if (rowData.CAM_STATUS === "CWS030") camWorkDate = rowData.CAM_FINISH_DT;
             $("#cam_work_manage_pop_form").find("#LAST_WORK_DT").html(camWorkDate);
-            $("#cam_work_manage_pop_form").find("#SIZE_TXT").html(rowData.STANDARD_SIZE);
+            $("#cam_work_manage_pop_form").find("#SIZE_TXT").html(rowData.SIZE_TXT);
             $("#cam_work_manage_pop_form").find("#SURFACE_TREAT_NM").html(rowData.SURFACE_TREAT_NM);
-            $("#cam_work_manage_pop_form").find("#MCT_PLAN_NOTE").html(rowData.MCT_NOTE);
-            $("#cam_work_manage_pop_form").find("#MCT_PLAN_NC").html(rowData.EQUIP_ID);
-            let lastWorkEquipId = rowData.WORK_EQUIP_ID_1;
-            if(rowData.WORK_EQUIP_ID_2) lastWorkEquipId = rowData.WORK_EQUIP_ID_2;
-            if(rowData.WORK_EQUIP_ID_3) lastWorkEquipId = rowData.WORK_EQUIP_ID_3;
-            if(rowData.WORK_EQUIP_ID_4) lastWorkEquipId = rowData.WORK_EQUIP_ID_4;
-            $("#cam_work_manage_pop_form").find("#LAST_WORK_NC").html(lastWorkEquipId);
+            $("#cam_work_manage_pop_form").find("#MCT_NOTE").html(rowData.MCT_NOTE);
+            $("#cam_work_manage_pop_form").find("#MCT_PLAN_EQUIP_NM").html(rowData.MCT_PLAN_EQUIP_NM);
+            $("#cam_work_manage_pop_form").find("#LAST_WORK_EQUIP_NM").html(rowData.LAST_WORK_EQUIP_NM);
             let camPopHtml = "";
             if(rowData.WORK_HISTORY_INFO){
                 camPopHtml = rowData.WORK_HISTORY_INFO + "  ";
