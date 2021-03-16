@@ -2392,12 +2392,18 @@
     </select>
 
     <select id="businessMonthOutgoingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT DATE_FORMAT(STR_TO_DATE(X.ORDER_DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS `start`,
-            CONCAT(Y.COMP_NM, ' ', X.OUT_FINISH_CNT, ' / ', X.ORDER_CNT) AS `title`,
-            CASE WHEN X.OUT_FINISH_CNT = X.ORDER_CNT THEN '#E1F7FF'                                                                                 <!-- 출고가 모두 완료되었을 때 -->
+        SELECT DATE_FORMAT(STR_TO_DATE(X.ORDER_DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS `start`
+            , CONCAT(Y.COMP_NM, ' ', X.OUT_FINISH_CNT, ' / ', X.ORDER_CNT) AS `title`
+            , CASE WHEN X.OUT_FINISH_CNT = X.ORDER_CNT THEN '#E1F7FF'                                                                                 <!-- 출고가 모두 완료되었을 때 -->
                  WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') <![CDATA[ <= ]]> X.ORDER_DUE_DT THEN '#FFFDA9'   <!-- 아직 출고가 완료되지 않은상태 이면서 납기 안지난 경우 -->
                  WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') > X.ORDER_DUE_DT THEN '#FFECDD'                  <!-- 아직 출고가 완료되지 않은상태 이면서 납기 지난 경우 -->
             END AS `color`
+            , CASE
+                WHEN X.OUT_FINISH_CNT = X.ORDER_CNT THEN 3   <!-- 출고가 모두 완료되었을 때 -->
+                WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') <![CDATA[ <= ]]> X.ORDER_DUE_DT THEN 2   <!-- 아직 출고가 완료되지 않은상태 이면서 납기 안지난 경우 -->
+                WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') > X.ORDER_DUE_DT THEN 1 <!-- 아직 출고가 완료되지 않은상태 이면서 납기 지난 경우 -->
+            END AS SORT_1
+            , X.ORDER_CNT AS SORT_2
         FROM (  SELECT C.ORDER_DUE_DT
                     , A.ORDER_COMP_CD
                     , SUM(CASE WHEN C.OUT_FINISH_DT IS NOT NULL THEN 1 ELSE 0 END) AS OUT_FINISH_CNT
