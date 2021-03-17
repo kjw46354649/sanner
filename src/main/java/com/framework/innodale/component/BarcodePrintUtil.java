@@ -28,13 +28,14 @@ public class BarcodePrintUtil {
         BufferedWriter bufWriter = null;
         try {
             socket = new Socket(barcodeIp, barcodePort);
-            bufWriter = new BufferedWriter( new OutputStreamWriter( socket.getOutputStream(),"euc-kr"));
+             bufWriter = new BufferedWriter( new OutputStreamWriter( socket.getOutputStream(),"euc-kr"));
+            // bufWriter = new BufferedWriter(new OutputStreamWriter(System.out,"utf-8"));
             if("L".equals(barcodeType)){//라벨
                 getBOut(bufWriter, barcodeInfo);
             }else if("C".equals(barcodeType)) {//도면
                 getBControl(bufWriter, barcodeInfo);
             }
-//            System.out.println("barcodePrint bufWriter=" + bufWriter.toString());
+            // System.out.println("barcodePrint bufWriter=" + bufWriter.toString());
             bufWriter.newLine();
             bufWriter.flush();
             socket.close();
