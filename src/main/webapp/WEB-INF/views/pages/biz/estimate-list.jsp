@@ -667,6 +667,7 @@
                 showTitle: false,
                 strNoRows: g_noData,
                 editable: false,
+                copyModel: {render: true},
                 complete: function (event, ui) {
                     this.flex();
                     let data = estimateMasterBotGrid.pqGrid('option', 'dataModel.data');
