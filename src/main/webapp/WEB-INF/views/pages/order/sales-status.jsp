@@ -35,8 +35,13 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="DEGREE">차수</label>
-                            <select class="wd_200" name="DEGREE" id="DEGREE">
+                            <select class="wd_200" name="CLOSE_VER" id="CLOSE_VER">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <option value="1">1차</option>
+                                <option value="2">2차</option>
+                                <option value="3">3차</option>
+                                <option value="4">4차</option>
+                                <option value="5">5차</option>
                             </select>
                         </span>
                         <span class="gubun"></span>

@@ -173,10 +173,7 @@
                                 ORDER BY M.CONTROL_SEQ DESC
                                 LIMIT 1)
                     END, SPACE(0)) AS PREV_UNIT_FINAL_AMT,  <!-- 종전가 -->
-            CASE
-                WHEN B.WORK_TYPE != 'WTP050' AND IFNULL(B.UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT ,0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT ,0) + IFNULL(B.UNIT_SURFACE_AUTO_AMT ,0) + IFNULL(B.UNIT_PROCESS_AUTO_AMT ,0) + IFNULL(B.UNIT_ETC_AMT, 0) > 0
-                THEN IFNULL(B.UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT ,0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT ,0) + IFNULL(B.UNIT_SURFACE_AUTO_AMT ,0) + IFNULL(B.UNIT_PROCESS_AUTO_AMT ,0) + IFNULL(B.UNIT_ETC_AMT, 0)
-            END AS UNIT_SUM_AUTO_AMT,
+            SF_GET_UNIT_SUM_AUTO_AMT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS UNIT_SUM_AUTO_AMT,
             SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', 'M') AS OUTSIDE_IN_DT_F,
             (SELECT SF_GET_DATE_F(M.CLOSE_DT, 'YYYY', '') FROM TBL_MONTH_CLOSE M, TBL_MONTH_CLOSE_ORDER N WHERE N.COMP_CD = M.COMP_CD AND M.ORDER_COMP_CD = N.ORDER_COMP_CD AND N.CLOSE_MONTH = M.CLOSE_MONTH AND N.CLOSE_VER = M.CLOSE_VER AND N.CONTROL_SEQ = C.CONTROL_SEQ AND N.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND N.ORDER_SEQ = C.ORDER_SEQ ORDER BY N.INSERT_DT DESC LIMIT 1) AS CLOSE_DT,
             SF_GET_DATE_F(CASE WHEN IFNULL(TIMESTAMPDIFF(SECOND, B.INSERT_DT, B.UPDATE_DT), -1) <![CDATA[ < ]]> 0 THEN B.INSERT_DT ELSE B.UPDATE_DT END, 'YY', 'M') AS CONTROL_PART_INSERT_UPDATE_DT, <!-- 등록/업데이트 일시 -->
@@ -1584,21 +1581,24 @@
                 INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
                 INNER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
                 INNER JOIN TBL_MONTH_CLOSE_ORDER D ON D.CONTROL_SEQ = A.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND D.ORDER_SEQ = C.ORDER_SEQ AND D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD
-                    <choose>
-                        <when test="RANGE_SEARCH != null and RANGE_SEARCH != ''">
-                            AND (D.CLOSE_MONTH BETWEEN  DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m') AND DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_RIGHT}, #{CLOSE_MONTH_RIGHT}), '%Y%m'), '%Y%m'))
-                        </when>
-                        <otherwise>
-                            AND D.CLOSE_MONTH <![CDATA[ >= ]]> DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m')
-                        </otherwise>
-                    </choose>
                 INNER JOIN TBL_MONTH_CLOSE E ON E.CLOSE_MONTH = D.CLOSE_MONTH AND E.CLOSE_VER = D.CLOSE_VER AND E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD
             WHERE A.DEL_YN = 'N'
+            <choose>
+                <when test="RANGE_SEARCH != null and RANGE_SEARCH != ''">
+                    AND (D.CLOSE_MONTH BETWEEN DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m') AND DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_RIGHT}, #{CLOSE_MONTH_RIGHT}), '%Y%m'), '%Y%m'))
+                </when>
+                <otherwise>
+                    AND D.CLOSE_MONTH = DATE_FORMAT(STR_TO_DATE(CONCAT(#{CLOSE_YEAR_LEFT}, #{CLOSE_MONTH_LEFT}), '%Y%m'), '%Y%m')
+                </otherwise>
+            </choose>
             <if test="COMP_CD != null and COMP_CD != ''">
                 AND A.COMP_CD = #{COMP_CD}
             </if>
             <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+            </if>
+            <if test="CLOSE_VER != null and CLOSE_VER != ''">
+                AND D.CLOSE_VER = #{CLOSE_VER}
             </if>
             <if test="NOTE != null and NOTE != ''">
                 AND UPPER(A.NOTE) LIKE CONCAT('%', UPPER(#{NOTE}), '%')
@@ -2389,12 +2389,18 @@
     </select>
 
     <select id="businessMonthOutgoingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT DATE_FORMAT(STR_TO_DATE(X.ORDER_DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS `start`,
-            CONCAT(Y.COMP_NM, ' ', X.OUT_FINISH_CNT, ' / ', X.ORDER_CNT) AS `title`,
-            CASE WHEN X.OUT_FINISH_CNT = X.ORDER_CNT THEN '#E1F7FF'                                                                                 <!-- 출고가 모두 완료되었을 때 -->
+        SELECT DATE_FORMAT(STR_TO_DATE(X.ORDER_DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS `start`
+            , CONCAT(Y.COMP_NM, ' ', X.OUT_FINISH_CNT, ' / ', X.ORDER_CNT) AS `title`
+            , CASE WHEN X.OUT_FINISH_CNT = X.ORDER_CNT THEN '#E1F7FF'                                                                                 <!-- 출고가 모두 완료되었을 때 -->
                  WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') <![CDATA[ <= ]]> X.ORDER_DUE_DT THEN '#FFFDA9'   <!-- 아직 출고가 완료되지 않은상태 이면서 납기 안지난 경우 -->
                  WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') > X.ORDER_DUE_DT THEN '#FFECDD'                  <!-- 아직 출고가 완료되지 않은상태 이면서 납기 지난 경우 -->
             END AS `color`
+            , CASE
+                WHEN X.OUT_FINISH_CNT = X.ORDER_CNT THEN 3   <!-- 출고가 모두 완료되었을 때 -->
+                WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') <![CDATA[ <= ]]> X.ORDER_DUE_DT THEN 2   <!-- 아직 출고가 완료되지 않은상태 이면서 납기 안지난 경우 -->
+                WHEN X.OUT_FINISH_CNT <![CDATA[ < ]]> X.ORDER_CNT AND DATE_FORMAT(NOW(),'%Y%m%d') > X.ORDER_DUE_DT THEN 1 <!-- 아직 출고가 완료되지 않은상태 이면서 납기 지난 경우 -->
+            END AS SORT_1
+            , X.ORDER_CNT AS SORT_2
         FROM (  SELECT C.ORDER_DUE_DT
                     , A.ORDER_COMP_CD
                     , SUM(CASE WHEN C.OUT_FINISH_DT IS NOT NULL THEN 1 ELSE 0 END) AS OUT_FINISH_CNT

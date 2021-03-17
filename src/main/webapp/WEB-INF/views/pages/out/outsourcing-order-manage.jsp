@@ -846,7 +846,7 @@
                 }
             },
             {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM', editable: true},
-            {title: 'OUTSIDE_ORDER_NUM', dataIndx: 'OUTSIDE_ORDER_NUM', hidden: false},
+            {title: 'OUTSIDE_ORDER_NUM', dataIndx: 'OUTSIDE_ORDER_NUM', hidden: true},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
@@ -856,7 +856,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
@@ -968,6 +968,7 @@
         const outsideProcessRequestObj = {
             height: 200,
             collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
@@ -1014,7 +1015,7 @@
                 }
             },
             rowSelect: function (event, ui) {
-                selectedReqeustMailRowIndex = ui.addList[0].rowIndx;
+                selectedCancelMailRowIndex = ui.addList[0].rowIndx;
             }
         };
         let $cancelRequestOutsideFileGrid;
@@ -1130,7 +1131,7 @@
                 }
             },
             {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM', editable: true},
-            {title: 'OUTSIDE_ORDER_NUM', dataIndx: 'OUTSIDE_ORDER_NUM', hidden: false},
+            {title: 'OUTSIDE_ORDER_NUM', dataIndx: 'OUTSIDE_ORDER_NUM', hidden: true},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
@@ -1140,7 +1141,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                        callWindowImageViewer(rowData.IMG_GFILE_SEQ);
                     });
                 }
             },
@@ -1230,6 +1231,7 @@
         const cancelRequestOutsideObj = {
             height: 200,
             collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
             resizable: false,
             showTitle: false,
             numberCell: {title: 'No.'},
@@ -1332,7 +1334,6 @@
         };
         let $outsideCloseRightGrid;
         const outsideCloseRightGridId = 'OUTSIDE_CLOSE_RIGHT_GRID';
-
         const outsideCloseRightColModel = [
             {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
             {
@@ -2222,7 +2223,7 @@
         });
 
         $('#CANCEL_REQUEST_OUTSIDE_MAIL_DESTINATION_DELETE_BUTTON').on('click', function () {
-            $cancelMailRecipientGrid.pqGrid('deleteRow', {'rowIndx': selectedReqeustMailRowIndex});
+            $cancelMailRecipientGrid.pqGrid('deleteRow', {'rowIndx': selectedCancelMailRowIndex});
         });
 
         $('#OUTSIDE_ORDER_EXCEL_EXPORT').on('click', function () {

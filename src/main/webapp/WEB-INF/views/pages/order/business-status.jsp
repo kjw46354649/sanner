@@ -45,7 +45,7 @@
                     <div id="business_status_calendar"></div>
                     <div class="">
                         <div class="left_float left-Warp">
-                            <div class="left_float"><h2 style="color: red">긴급주문 목록</h2></div>
+                            <div class="left_float"><h2 style="color: red">긴급/반품 목록</h2></div>
                             <div class="left_float" id="business_emergency_grid"></div>
                             <div class="right_float">
                                 전체 조회 건수 (Total : <span id="business_emergency_records" style="color: #00b3ee">0</span>)
@@ -160,7 +160,7 @@
                             'ORDER_COMP_CD': $('#business_status_search_form').find("#ORDER_COMP_CD").val(),
                             // 'ORDER_COMP_CHARGE': $('#business_status_search_form').find("#ORDER_STAFF_SEQ").val()
                         },
-                        success: function(data) {
+                        success: function (data) {
                             successCallback(data.list);
                         }
                     });
@@ -168,23 +168,7 @@
                 // color: "#333bff",   // an option!
                 textColor: '#000000' // an option!
             }]
-            // , events: function (info, successCallback, failureCallback) {
-            //     $.ajax({
-            //         url: '/json-list',
-            //         type: 'POST',
-            //         dataType: 'json',
-            //         data: {
-            //             'queryId': 'orderMapper.businessMonthOutgoingList',
-            //             'SEL_START_DATE': moment(info.startStr).format('YYYYMMDD'),
-            //             'SEL_END_DATE': moment(info.endStr).format('YYYYMMDD')
-            //         },
-            //         success: function(data) {
-            //             console.log("################################################");
-            //             console.log(data.list);
-            //             successCallback(data.list);
-            //         }
-            //     });
-            // }
+            , eventOrder: "SORT_1,-SORT_2" // Determines the ordering events within the same day.
         };
         businessCalendar = new FullCalendar.Calendar(businessCalendarEl, businessCalendarProps);
         businessCalendar.render();

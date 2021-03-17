@@ -245,18 +245,18 @@
             , SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
             , CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004', 'ORD005') THEN (SELECT jmes.SF_GET_DATE_F(MAX(M.STATUS_DT),'YYYY','M') FROM jmes.TBL_CONTROL_PROGRESS M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.ORDER_STATUS = 'ORD001') END AS CONTROL_CONFIRM_DT
             , jmes.SF_GET_DATE_F(A.OUT_FINISH_DT,'','M') AS OUT_FINISH_DT
-            , ( SELECT CONCAT(jmes.SF_GET_DATE_F(Q.INSERT_DT,'YYYY',''),' / ',(SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Q.WORK_USER_ID))
-                FROM jmes.TBL_CAM P, jmes.TBL_CAM_DETAIL Q, jmes.TBL_CONTROL_PART R, jmes.TBL_CONTROL S
-                WHERE P.CAM_SEQ = Q.CAM_SEQ
-                    AND P.CONTROL_SEQ = R.CONTROL_SEQ
-                    AND P.CONTROL_DETAIL_SEQ = R.CONTROL_DETAIL_SEQ
-                    AND R.CONTROL_SEQ = S.CONTROL_SEQ
-                    AND R.CONTROL_SEQ != B.CONTROL_SEQ
-                    AND R.CONTROL_DETAIL_SEQ != B.CONTROL_DETAIL_SEQ
-                    AND R.SIZE_TXT = B.SIZE_TXT
-                    AND R.MATERIAL_TYPE = B.MATERIAL_TYPE
-                    AND S.ORDER_COMP_CD = A.ORDER_COMP_CD
-                ORDER BY Q.SEQ DESC
+            , ( SELECT TRUE
+                FROM TBL_CONTROL_PART_PROGRESS M, TBL_CONTROL_PART N, TBL_CONTROL O
+                WHERE N.CONTROL_SEQ = M.CONTROL_SEQ
+                    AND N.CONTROL_DETAIL_SEQ  = M.CONTROL_DETAIL_SEQ
+                    AND O.CONTROL_SEQ = N.CONTROL_SEQ
+                    AND M.PART_STATUS = 'PRO002'
+                    AND N.CONTROL_SEQ != B.CONTROL_SEQ
+                    AND N.CONTROL_DETAIL_SEQ != B.CONTROL_DETAIL_SEQ
+                    AND N.SIZE_TXT = B.SIZE_TXT
+                    AND N.MATERIAL_TYPE = B.MATERIAL_TYPE
+                    AND O.ORDER_COMP_CD = A.ORDER_COMP_CD
+                    AND M.SEQ > IFNULL((SELECT MAX(M.SEQ) FROM TBL_CONTROL_PART_PROGRESS P WHERE P.CONTROL_SEQ = M.CONTROL_SEQ AND P.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ AND M.PART_STATUS IS NULL), 0)
                 LIMIT 1
             ) AS WORK_HISTORY_INFO <!-- 과거 경험 -->
             , (SELECT
@@ -430,7 +430,7 @@
                                                     AND M.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
                                                 ) - IFNULL(A.ERROR_QTY,0)
             END AS Q_OK_QTY
-          , CASE WHEN A.INSPECT_GRADE = 'GRD040' THEN A.ERROR_QTY END AS Q_ERROR_QTY
+          , CASE WHEN A.INSPECT_GRADE IN ('GRD040', 'GRD050', 'GRD060') THEN A.ERROR_QTY END AS Q_ERROR_QTY
           , CASE WHEN A.INSPECT_TYPE = '1' THEN CASE WHEN A.INSPECT_GRADE = 'GRD040' THEN jmes.SF_GET_CODE_NM('1020', A.INSPECT_RESULT, #{LOGIN_LOCALE}) END
                  WHEN A.INSPECT_TYPE = '2' THEN jmes.SF_GET_CODE_NM('1021', A.INSPECT_RESULT, #{LOGIN_LOCALE})
             END AS Q_INSPECT_RESULT_NM
@@ -1450,7 +1450,7 @@
                     , D.PACKING_CNT
                     , A.PACKING_NUM
                     , NULL AS RETURN_QTY
-                    , A.INSERT_DT
+                    , D.OUT_FINISH_DT
                     , '' AS RETURN_SETTLEMENT_DT
                 FROM jmes.TBL_OUT A
                     , jmes.TBL_CONTROL B

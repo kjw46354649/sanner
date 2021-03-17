@@ -239,11 +239,11 @@
                         </tr>
                         <tr>
                             <th>가공계획 비고</th>
-                            <td id="MCT_PLAN_NOTE"></td>
+                            <td id="MCT_NOTE"></td>
                             <th>배정 NC</th>
-                            <td id="MCT_PLAN_NC"></td>
+                            <td id="MCT_PLAN_EQUIP_NM"></td>
                             <th>최근공정</th>
-                            <td id="LAST_WORK_NC"></td>
+                            <td id="LAST_WORK_EQUIP_NM"></td>
                         </tr>
                     </table>
                 </div>
@@ -376,7 +376,7 @@
                             <input type="hidden" id="CAM_WORK_SEQ_03" name="CAM_WORK_SEQ_03" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_03" name="CAM_WORK_GFILE_SEQ_03" value="">
                         </li>
-                        <li style="list-style-type: none; float: right; padding-right: 5px;">
+                        <li style="list-style-type: none; float: left; padding-right: 5px;">
                             <table class="mctWorkStyle" idx="04">
                                 <colgroup>
                                     <col width="20%">
@@ -418,7 +418,7 @@
                             <input type="hidden" id="CAM_WORK_SEQ_04" name="CAM_WORK_SEQ_04" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_04" name="CAM_WORK_GFILE_SEQ_04" value="">
                         </li>
-                        <li style="list-style-type: none; float: right; padding-right: 5px;">
+                        <li style="list-style-type: none; float: left; padding-right: 5px;">
                             <table class="mctWorkStyle" idx="05">
                                 <colgroup>
                                     <col width="20%">
@@ -1027,6 +1027,9 @@
 
         let camWorkHistoryPop = function (rowData) {
             fnResetFrom('cam_work_history_pop_form');
+            for (let i = 1; i <= 5; i++) {
+                $("#cam_work_history_detail_pop").find("#CAM_WORK_FILE_0" + i).html("");
+            }
             $("#cam_work_history_pop_form").find("#CONTROL_SEQ").val(rowData.CONTROL_SEQ);
             $("#cam_work_history_pop_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ);
             $("#cam_work_history_pop_form").find("#DXF_GFILE_SEQ").val(rowData.DXF_GFILE_SEQ);
@@ -1050,7 +1053,7 @@
             $("#cam_work_history_pop_form").find("#DRAWING_NUM").html(rowData.CONCAT_DRAWING_NUM);
             $("#cam_work_history_pop_form").find("#WORK_TYPE").html(rowData.WORK_TYPE_NM);
             let drawingFile = "";
-            if (rowData.CAM_STATUS === "CWS020") {
+            if (rowData.CAM_STATUS === "CWS020" || rowData.CAM_STATUS === "CWS030") {
                 let str = rowData.CONCAT_DRAWING_NUM;
                 let arr = str.split(',');
 
@@ -1068,13 +1071,9 @@
             $("#cam_work_history_pop_form").find("#LAST_WORK_DT").html(camWorkDate);
             $("#cam_work_history_pop_form").find("#SIZE_TXT").html(rowData.SIZE_TXT);
             $("#cam_work_history_pop_form").find("#SURFACE_TREAT_NM").html(rowData.SURFACE_TREAT_NM);
-            $("#cam_work_history_pop_form").find("#MCT_PLAN_NOTE").html(rowData.MCT_NOTE);
-            $("#cam_work_history_pop_form").find("#MCT_PLAN_NC").html(rowData.EQUIP_ID);
-            let lastWorkEquipId = rowData.WORK_EQUIP_ID_1;
-            if (rowData.WORK_EQUIP_ID_2) lastWorkEquipId = rowData.WORK_EQUIP_ID_2;
-            if (rowData.WORK_EQUIP_ID_3) lastWorkEquipId = rowData.WORK_EQUIP_ID_3;
-            if (rowData.WORK_EQUIP_ID_4) lastWorkEquipId = rowData.WORK_EQUIP_ID_4;
-            $("#cam_work_history_pop_form").find("#LAST_WORK_NC").html(lastWorkEquipId);
+            $("#cam_work_history_pop_form").find("#MCT_NOTE").html(rowData.MCT_NOTE);
+            $("#cam_work_history_pop_form").find("#MCT_PLAN_EQUIP_NM").html(rowData.MCT_PLAN_EQUIP_NM);
+            $("#cam_work_history_pop_form").find("#LAST_WORK_EQUIP_NM").html(rowData.LAST_WORK_EQUIP_NM);
             let camPopHtml = "";
             if (rowData.WORK_HISTORY_INFO) {
                 camPopHtml = rowData.WORK_HISTORY_INFO + "  ";

@@ -1096,10 +1096,9 @@
             'url': '/json-info',
             'data': fnFormToJsonArrayData('g_item_detail_pop_form')
         };
-        fnPostAjax(function (data, callFunctionParam) {
+        fnPostAjaxAsync(function (data, callFunctionParam) {
             const dataInfo = data.info;
             let dxfFileDownloadYn = '${authUserInfo.DXF_FILE_DOWNLOAD_YN}';
-            fnResetFrom("g_item_detail_pop_form");
             fnJsonDataToForm('g_item_detail_pop_form', dataInfo);
 
             $itemDetailPopForm.find("#CAD_DOWNLOAD").addClass('d-none');
@@ -1180,7 +1179,14 @@
                 if (fnIsEmpty(dataInfo.IMG_GFILE_SEQ)) {
                     $itemDetailPopForm.find("#DRAWING_VIEW").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
                 } else {
-                    $itemDetailPopForm.find("#DRAWING_VIEW").attr('onClick', 'callWindowImageViewer(' + dataInfo.IMG_GFILE_SEQ + ');');
+                    const str = dataInfo.DRAWING_NUM;
+                    const arr = str.split(',');
+
+                    if (arr.length === 1) {
+                        $itemDetailPopForm.find("#DRAWING_VIEW").attr('onClick', 'callWindowImageViewer(' + dataInfo.IMG_GFILE_SEQ + ');');
+                    } else if (arr.length > 1) {
+                        $itemDetailPopForm.find("#DRAWING_VIEW").attr('onClick', 'commonMultiDownloadPop(' + dataInfo.CONTROL_SEQ + ',' + dataInfo.CONTROL_DETAIL_SEQ + ');');
+                    }
                 }
 
                 if (fnIsEmpty(dataInfo.WORK_HISTORY_INFO)) {
@@ -1207,7 +1213,7 @@
             'url': '/json-info',
             'data': fnFormToJsonArrayData('g_item_detail_pop_form')
         };
-        fnPostAjax(function (data, callFunctionParam) {
+        fnPostAjaxAsync(function (data, callFunctionParam) {
             let dataInfo = data.info;
 
             if (dataInfo == null) {
@@ -1571,11 +1577,25 @@
                         }
                     },
                 },
+                {
+                    title: '', align: 'center', dataIndx: 'IMG_GFILE_SEQ', width: 25, minWidth: 25, editable: false,
+                    render: function (ui) {
+                        if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
+                    },
+                    postRender: function (ui) {
+                        let grid = this,
+                            $cell = grid.getCell(ui);
+                        $cell.find("#imageView").bind("click", function () {
+                            let rowData = ui.rowData;
+                            callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                        });
+                    }
+                }
             ];
             const obj = {
                 height: 350,
                 collapsible: false,
-                // postRenderInterval: -1,
+                postRenderInterval: -1,
                 scrollModel: {autoFit: true},
                 showTitle: false,
                 numberCell: {show: false},

@@ -79,8 +79,8 @@
                         <select name="CLOSE_YEAR_RIGHT" id="OUTSIDE_CLOSE_YEAR_RIGHT" disabled></select>
                         <select name="CLOSE_MONTH_RIGHT" id="OUTSIDE_CLOSE_MONTH_RIGHT" disabled></select>
                         <span class="chk_box" style="margin-left: 10px;">
-                            <input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH">
-                            <label for="RANGE_SEARCH"> Range 검색</label>
+                            <input type="checkbox" name="RANGE_SEARCH" id="OUTSIDE_CLOSE_STATUS_RANGE_SEARCH">
+                            <label for="OUTSIDE_CLOSE_STATUS_RANGE_SEARCH"> Range 검색</label>
                         </span>
                         <span class="ipu_wrap right_float">
                             <button type="button" id="OUTSIDE_CLOSE_STATUS_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
@@ -98,7 +98,7 @@
                 <ul>
                     <li>
                         <span class="slt_wrap">
-                            <label class="label_100" for="COMP_CD">사업자</label>
+                            <label class="label_100" for="COMP_CD">매입 사업자</label>
                             <select class="wd_200" name="COMP_CD" id="COMP_CD">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
@@ -238,8 +238,8 @@
             {title: 'CLOSE_MONTH', dataIndx: 'CLOSE_MONTH', hidden: true},
             {title: 'CLOSE_VER', dataType: 'integer', dataIndx: 'CLOSE_VER', hidden: true},
             {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
-            {title: '매입 사업자', dataIndx: 'COMP_CD', hidden: true},
-            {title: '매입 사업자', dataIndx: 'COMP_NM'},
+            {title: '매입 사업자', width: 75, dataIndx: 'COMP_CD', hidden: true},
+            {title: '매입 사업자', width:75, dataIndx: 'COMP_NM'},
             {title: '년도', dataIndx: 'YEAR'},
             {title: '분기', dataIndx: 'QUARTER'},
             {title: '마감월', dataIndx: 'FINISH_MONTH'},
@@ -324,8 +324,8 @@
         const tab2ColModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
             {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
-            {title: '사업자', width: 75, dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', width: 75, dataIndx: 'COMP_NM'},
+            {title: '매입 사업자', width: 75, dataIndx: 'COMP_CD', hidden: true},
+            {title: '매입 사업자', width:75, dataIndx: 'COMP_NM'},
             {title: '발주업체', width: 75, dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
             {title: '대상외주업체', width: 75, dataIndx: 'OUTSIDE_COMP_NM'},
             {title: '구분', width: 75, dataIndx: 'STATUS_TYPE'},
@@ -613,7 +613,7 @@
         $('#OUTSIDE_CLOSE_YEAR_RIGHT').on('change', function () {
             fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_RIGHT', this.value);
         });
-        $('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').find('#RANGE_SEARCH').on('change', function () {
+        $('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').find('#OUTSIDE_CLOSE_STATUS_RANGE_SEARCH').on('change', function () {
             if ($(this).prop('checked')) {
                 $('#OUTSIDE_CLOSE_YEAR_RIGHT').prop('disabled', false);
                 $('#OUTSIDE_CLOSE_MONTH_RIGHT').prop('disabled', false);

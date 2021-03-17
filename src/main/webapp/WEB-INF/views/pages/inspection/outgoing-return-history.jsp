@@ -238,7 +238,8 @@
                     if (ui.dataIndx == 'BTN_CANCEL') {
                         if (ui.rowData['OUT_RETURN_TYPE'] == '1') {//출고
                             let data = {
-                                'queryId': 'inspection.deleteOutgoingHistoryInspectionCancelStep1,/*inspection.updateOutgoingHistoryInspectionCancelStep2*//*,inspection.updateOutgoingHistoryInspectionCancelStep3*/,inspection.updateOutFinishStatus',
+                                'queryId': 'inspection.deleteOutgoingHistoryInspectionCancelStep1,inspection.updateOutFinishStatus',
+                                // 'queryId': 'inspection.deleteOutgoingHistoryInspectionCancelStep1,/*inspection.updateOutgoingHistoryInspectionCancelStep2*//*,inspection.updateOutgoingHistoryInspectionCancelStep3*/,inspection.updateOutFinishStatus',
                                 'OUT_SEQ': ui.rowData['KEY_SEQ'],
                                 'CONTROL_SEQ': ui.rowData['CONTROL_SEQ'],
                                 'CONTROL_DETAIL_SEQ': ui.rowData['CONTROL_DETAIL_SEQ'],
@@ -255,7 +256,7 @@
                                 'queryId': 'inspection.deleteOutgoingHistoryReturnCancelStep1,inspection.updateOutFinishStatus',
                                 'INSPECT_SEQ': ui.rowData['KEY_SEQ']
                             };
-                            let parameters = {'url': '/json-remove', 'data': data};
+                            let parameters = {'url': '/json-manager', 'data': data};
                             fnPostAjax(function (data, callFunctionParam) {
                                 fnAlert(null, "취소가 완료되었습니다.");
                                 $("#outgoing_history_form").find("#queryId").val("inspection.selectOutgoingHistoryList");
