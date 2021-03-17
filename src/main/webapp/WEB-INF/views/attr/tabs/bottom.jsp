@@ -433,7 +433,7 @@
         <input type="hidden" id="gFileSeq" name="gFileSeq" value="">
         <div>
             <div>
-                <img id="drawingImage" style='width: 475px;height: 410px;' src="/resource/main/blank.jpg">
+                <img id="drawingImage" style='width: 930px;height: 820px;' src="/resource/main/blank.jpg">
             </div>
             <div style="padding: 10px 2px 5px 0px; float: right;">
                 <button type="button" class="defaultBtn greenPopGra" id="common_quick_drawing_detail_view">상세보기</button>
