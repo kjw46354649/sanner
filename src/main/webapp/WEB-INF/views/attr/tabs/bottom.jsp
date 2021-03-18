@@ -1107,10 +1107,11 @@
             $itemDetailPopForm.find("#WORK_HISTORY_INFO").removeAttr('onClick');
             $itemDetailPopForm.find(".list1").find(".rowStyle").find("td").html('');
             $itemDetailPopForm.find("[name=view_assembly_or_part]").siblings().removeClass('bg-moccasin');
-            if (dataInfo.WORK_TYPE === 'WTP020' || dataInfo.WORK_TYPE === 'WTP050') {
-                $itemDetailPopForm.find("#" + dataInfo.WORK_TYPE).addClass('bg-moccasin');
-            }
+
             if (dataInfo) {
+                if (dataInfo.WORK_TYPE === 'WTP020' || dataInfo.WORK_TYPE === 'WTP050') {
+                    $itemDetailPopForm.find("#" + dataInfo.WORK_TYPE).addClass('bg-moccasin');
+                }
                 dataInfo.ASSEMBLY_YN === 'Y' ? $('#view_part_wrap').show() : $('#view_part_wrap').hide();
                 fnIsEmpty(dataInfo.PREV_PART_CONTROL_DETAIL_SEQ) ? $('#g_item_detail_pop_form').find('#view_part_prev').css('visibility', 'hidden') : $('#g_item_detail_pop_form').find('#view_part_prev').css('visibility', 'visible');
                 fnIsEmpty(dataInfo.NEXT_PART_CONTROL_DETAIL_SEQ) ? $('#g_item_detail_pop_form').find('#view_part_next').css('visibility', 'hidden') : $('#g_item_detail_pop_form').find('#view_part_next').css('visibility', 'visible');
