@@ -249,7 +249,7 @@
                     {title: '측정방법', datatype: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', minWidth: 120, width: 120},
                     {title: '등급', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NM', minWidth: 80, width: 80},
                     {title: '합/불', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', minWidth: 80, width: 80},
-                    {title: '대상수량', datatype: 'string', dataIndx: 'Q_ERROR_QTY', minWidth: 80, width: 80},
+                    {title: '부적합 수량', datatype: 'string', dataIndx: 'Q_ERROR_QTY', minWidth: 80, width: 80},
                     // {title: '반품일시', datatype: 'string', dataIndx: 'Q_RETURN_DT', minWidth: 120, width: 120},
                     {title: '검사코드', datatype: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', minWidth: 120, width: 120},
                     {title: '상세 내용', datatype: 'string', dataIndx: 'Q_INSPECT_DESC', minWidth: 300, width: 300},
