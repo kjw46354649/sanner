@@ -362,7 +362,7 @@
                     let $cell = grid.getCell(ui);
 
                     $cell.find('[name=CONFIRM_CANCEL_BUTTON]').on('click', function (event) {
-                        updatePartStatus(ui.rowData, null);
+                        updatePartStatus(ui.rowData, 'PRO003');
                         event.preventDefault();
                     });
                 }
