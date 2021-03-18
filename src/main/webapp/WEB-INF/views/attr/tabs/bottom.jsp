@@ -1061,10 +1061,10 @@
     let orderDetailGrid;
     let orderDetailRowIndx;
     const g_item_detail_pop_view = function (CONTROL_SEQ, CONTROL_DETAIL_SEQ, grid, rowIndx) {
-        // 작업 worker 지정은 협의 필요
-        // fnCommCodeDatasourceSelectBoxCreate($("#g_item_detail_pop_form").find("#CAM_WORK_USER_ID"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getUserList'}});
         orderDetailGrid = grid;
-        orderDetailRowIndx = rowIndx;
+        orderDetailRowIndx = rowIndx;        
+        const $itemDetailPop = $('#g_item_detail_pop');
+        const $itemDetailPopForm = $("#g_item_detail_pop_form");
         (function () {
             let grid;
             let rowDataPrev;
@@ -1076,13 +1076,11 @@
                 rowDataNext = grid.getRowData({rowIndx: orderDetailRowIndx + 1});
             }
 
-            rowDataPrev === undefined ? $('#g_item_detail_pop_form').find('#left_arrow').css('visibility', 'hidden') : $('#g_item_detail_pop_form').find('#left_arrow').css('visibility', 'visible');
-            rowDataNext === undefined ? $('#g_item_detail_pop_form').find('#right_arrow').css('visibility', 'hidden') : $('#g_item_detail_pop_form').find('#right_arrow').css('visibility', 'visible');
+            rowDataPrev === undefined ? $itemDetailPopForm.find('#left_arrow').css('visibility', 'hidden') : $itemDetailPopForm.find('#left_arrow').css('visibility', 'visible');
+            rowDataNext === undefined ? $itemDetailPopForm.find('#right_arrow').css('visibility', 'hidden') : $itemDetailPopForm.find('#right_arrow').css('visibility', 'visible');
         })();
 
 
-        const $itemDetailPop = $('#g_item_detail_pop');
-        const $itemDetailPopForm = $("#g_item_detail_pop_form");
 
         $itemDetailPopForm.find("#CONTROL_SEQ").val(CONTROL_SEQ);
         $itemDetailPopForm.find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
@@ -1113,8 +1111,8 @@
                     $itemDetailPopForm.find("#" + dataInfo.WORK_TYPE).addClass('bg-moccasin');
                 }
                 dataInfo.ASSEMBLY_YN === 'Y' ? $('#view_part_wrap').show() : $('#view_part_wrap').hide();
-                fnIsEmpty(dataInfo.PREV_PART_CONTROL_DETAIL_SEQ) ? $('#g_item_detail_pop_form').find('#view_part_prev').css('visibility', 'hidden') : $('#g_item_detail_pop_form').find('#view_part_prev').css('visibility', 'visible');
-                fnIsEmpty(dataInfo.NEXT_PART_CONTROL_DETAIL_SEQ) ? $('#g_item_detail_pop_form').find('#view_part_next').css('visibility', 'hidden') : $('#g_item_detail_pop_form').find('#view_part_next').css('visibility', 'visible');
+                fnIsEmpty(dataInfo.PREV_PART_CONTROL_DETAIL_SEQ) ? $itemDetailPopForm.find('#view_part_prev').css('visibility', 'hidden') : $itemDetailPopForm.find('#view_part_prev').css('visibility', 'visible');
+                fnIsEmpty(dataInfo.NEXT_PART_CONTROL_DETAIL_SEQ) ? $itemDetailPopForm.find('#view_part_next').css('visibility', 'hidden') : $itemDetailPopForm.find('#view_part_next').css('visibility', 'visible');
                 const emergencySpanElement = dataInfo.EMERGENCY_YN === 'Y' ? '<span class="mark">긴급</span>' : '';
                 const materialFinishHeatSpanElement = dataInfo.MATERIAL_FINISH_HEAT === '열처리' ? '<span class="mark">열처리</span>' : '';
                 const controlStatusHoldSpanElement = dataInfo.CONTROL_STATUS === 'ORD005' ? '<span class="mark" style="background-color: #ff0000; color: #ffffff">보류</span>' : '';
@@ -1294,10 +1292,10 @@
             g_ItemDetailPopObj05.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
             g_ItemDetailPopGridId05.pqGrid(g_ItemDetailPopObj05);
         }
-        $itemDetailPopForm.find("#g_item_detail_pop_barcode_num").focus();
+        $itemDetailPop.find("#g_item_detail_pop_barcode_num").focus();
     };
 
-    $("#g_item_detail_pop").on('hide.bs.modal', function(){
+    $("#g_item_detail_pop").on('hide.bs.modal', function () {
         fnResetFrom("g_item_detail_pop_form");
         $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfo');
         if (g_ItemDetailPopGridId01.hasClass('pq-grid')) g_ItemDetailPopGridId01.pqGrid('destroy');
