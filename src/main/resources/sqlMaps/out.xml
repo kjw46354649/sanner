@@ -501,7 +501,7 @@
             AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
         </if>
         <if test="COMP_CD != null and COMP_CD != ''">
-            AND A.COMP_CD = #{COMP_CD}
+            AND D.COMP_CD = #{COMP_CD}
         </if>
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}

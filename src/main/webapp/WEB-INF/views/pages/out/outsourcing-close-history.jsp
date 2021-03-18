@@ -20,7 +20,7 @@
                 <ul>
                     <li>
                         <span class="slt_wrap">
-                            <label class="label_100" for="COMP_CD">사업자</label>
+                            <label class="label_100" for="COMP_CD">매입사업자</label>
                             <select class="wd_200" name="COMP_CD" id="COMP_CD">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
@@ -177,11 +177,11 @@
                 title: '마감 정보', align: 'center', colModel: [
                     {title: '마감월', width: 60, dataIndx: 'OUTSIDE_CLOSE_MONTH'},
                     {title: '차수', minWidth: 30, dataIndx: 'OUTSIDE_CLOSE_VER'},
-                    {title: '마감사업자', width: 70, dataIndx: 'OUTSIDE_CLOSE_COMP_NM'}
+                    {title: '매입사업자', width: 70, dataIndx: 'OUTSIDE_CLOSE_COMP_NM'}
                 ]
             },
-            {title: '원발주<br>사업자구분', dataIndx: 'COMP_CD', hidden: true},
-            {title: '원발주<br>사업자구분', width: 70, dataIndx: 'COMP_NM'},
+            {title: '원발주<br>사업자', dataIndx: 'COMP_CD', hidden: true},
+            {title: '원발주<br>사업자', width: 70, dataIndx: 'COMP_NM'},
             {title: '외주<br>발주', minWidth: 30, dataIndx: 'OUTSIDE_YN'},
             {title: '원발주<br>상태', width: 70, dataIndx: 'PART_STATUS_NM'},
             {title: '외주<br>발주상태', dataIndx: 'OUTSIDE_STATUS', hidden: true},
