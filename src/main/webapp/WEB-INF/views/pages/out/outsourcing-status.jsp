@@ -12,24 +12,6 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<style>
-    #MONTHLY_OUTSIDE_STATUS_SUMMARY {
-        width: 100%;
-        height: 100%;
-        table-layout: fixed;
-        border: 1px solid #d7d7d7;
-        border-collapse: collapse;
-    }
-
-    #MONTHLY_OUTSIDE_STATUS_SUMMARY td {
-        border: 1px solid #d7d7d7;
-        text-align: right;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        padding: 5px;
-    }
-</style>
 <div class="page estimate">
     <div class="topWrap">
         <form class="form-inline" id="OUTSIDE_CLOSE_STATUS_SEARCH_FORM" role="form">
@@ -150,73 +132,6 @@
                 </ul>
                 <ul class="conWrap" id="MONTHLY_OUTSIDE_STATUS">
                     <div id="MONTHLY_OUTSIDE_STATUS_GRID"></div>
-                    <div>
-                        <table id="MONTHLY_OUTSIDE_STATUS_SUMMARY">
-                            <colgroup>
-                                <col style="width: 261px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                                <col style="width: 75px;">
-                            </colgroup>
-                            <tbody>
-                                <tr style="line-height: 27px;">
-                                    <td style="background-color: #fff2cc;">외주금액</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr style="line-height: 27px;">
-                                    <td style="background-color: #fff2cc;">원발주금액</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
                 </ul>
             </div>
         </div>
@@ -228,6 +143,29 @@
     var outsideCloseStatusRowIndex = [];
     $(function () {
         'use strict';
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_OUTSIDE_STATUS_SEARCH_FORM').find('#COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
+        });
+        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_OUTSIDE_STATUS_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
+            'url': '/json-list',
+            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
+        });
+        fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR_LEFT', 10);
+        fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_LEFT');
+        $('#OUTSIDE_CLOSE_MONTH_LEFT').val('01').prop('selected', true);
+        fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR_RIGHT', 10);
+        fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_RIGHT');
+        fnAppendSelectboxYear('YEAR', 10);
+
         /* variable */
         const tab1GridId = 'OUTSIDE_CLOSE_STATUS_GRID';
         let tab1PostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM');
@@ -322,7 +260,7 @@
         let tab2PostData = fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM');
         tab2PostData.YEAR = CURRENT_YEAR;
         const tab2ColModel = [
-            {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
+            // {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
             {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '매입 사업자', width: 75, dataIndx: 'COMP_CD', hidden: true},
             {title: '매입 사업자', width:75, dataIndx: 'COMP_NM'},
@@ -331,53 +269,40 @@
             {title: '구분', width: 75, dataIndx: 'STATUS_TYPE'},
             {
                 title: '1분기', align: 'center', colModel: [
-                    {title: '1월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '01_AMT', summary: {type: 'sum'}},
-                    {title: '2월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '02_AMT', summary: {type: 'sum'}},
-                    {title: '3월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '03_AMT', summary: {type: 'sum'}},
-                    {title: '합계', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '03_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
+                    {title: '1월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '01_AMT'},
+                    {title: '2월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '02_AMT'},
+                    {title: '3월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '03_AMT'},
+                    {title: '합계', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '03_SUM_AMT', style: {'font-weight': 'bold'}}
                 ]
             },
             {
                 title: '2분기', align: 'center', colModel: [
-                    {title: '4월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '04_AMT', summary: {type: 'sum'}},
-                    {title: '5월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '05_AMT', summary: {type: 'sum'}},
-                    {title: '6월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '06_AMT', summary: {type: 'sum'}},
-                    {title: '합계', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '06_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
+                    {title: '4월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '04_AMT'},
+                    {title: '5월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '05_AMT'},
+                    {title: '6월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '06_AMT'},
+                    {title: '합계', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '06_SUM_AMT', style: {'font-weight': 'bold'}}
                 ]
             },
             {
                 title: '3분기', align: 'center', colModel: [
-                    {title: '7월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '07_AMT', summary: {type: 'sum'}},
-                    {title: '8월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '08_AMT', summary: {type: 'sum'}},
-                    {title: '9월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '09_AMT', summary: {type: 'sum'}},
-                    {title: '합계', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '09_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
+                    {title: '7월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '07_AMT'},
+                    {title: '8월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '08_AMT'},
+                    {title: '9월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '09_AMT'},
+                    {title: '합계', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '09_SUM_AMT', style: {'font-weight': 'bold'}}
                 ]
             },
             {
                 title: '4분기', align: 'center', colModel: [
-                    {title: '10월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '10_AMT', summary: {type: 'sum'}},
-                    {title: '11월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '11_AMT', summary: {type: 'sum'}},
-                    {title: '12월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '12_AMT', summary: {type: 'sum'}},
-                    {title: '합계', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '12_SUM_AMT', summary: {type: 'sum'}, style: {'font-weight': 'bold'}}
+                    {title: '10월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '10_AMT'},
+                    {title: '11월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '11_AMT'},
+                    {title: '12월', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '12_AMT'},
+                    {title: '합계', width: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: '12_SUM_AMT', style: {'font-weight': 'bold'}}
                 ]
             },
             {title: '합계', width:75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT', style: {'font-weight': 'bold'}}
         ];
-        const tab2GroupModel = {
-            on: true, header:false,
-            headerMenu: false,
-            indent: 10,
-            dataIndx: ['GROUP_KEY'],
-            summaryInTitleRow: '',
-            summaryEdit: false,
-            // showSummary: [true], //to display summary at end of every group.
-            collapsed: [false],
-            // grandSummary: true,
-            merge: true,
-            nodeClose: false,
-        };
         const tab2Obj = {
-            height: 680,
+            height: 745,
             collapsible: false,
             resizable: false,
             showTitle: false,
@@ -397,7 +322,7 @@
                 }
             },
             summaryTitle: {sum: '{0}'},
-            complete: function() {
+            load: function() {
                 const merge = function (grid, refresh) {
                     let mc = [],
                         CM = ['COMP_NM', 'OUTSIDE_COMP_NM'],
@@ -408,17 +333,15 @@
                         let dataIndx = CM[i],
                             rc = 1,
                             j = data.length,
-                            k = dataIndx === 'COMP_NM' ? 3 : 5; // hard coding
+                            k = grid.getColIndx({dataIndx: CM[i]});
 
                         while (j--) {
-                            let comp = data[j]['COMP_NM'],
-                                compPrev = data[j - 1] ? data[j - 1]['COMP_NM'] : undefined,
-                                outsideComp = data[j]['OUTSIDE_COMP_CD'],
-                                outsideCompPrev = data[j - 1] ? data[j - 1]['OUTSIDE_COMP_CD'] : undefined,
+                            let outsideComp = data[j]['OUTSIDE_COMP_NM'],
+                                outsideCompPrev = data[j - 1] ? data[j - 1]['OUTSIDE_COMP_NM'] : undefined,
                                 cd = data[j][dataIndx],
                                 cd_prev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
 
-                            if (cd_prev !== undefined && comp === compPrev && outsideComp === outsideCompPrev && cd === cd_prev) {
+                            if (cd_prev !== undefined && outsideComp === outsideCompPrev && cd === cd_prev) {
                                 rc++;
                             } else if (rc > 1) {
                                 mc.push({r1: j, c1: k, rc: rc, cc: 1});
@@ -433,16 +356,15 @@
                 };
 
                 merge(this, true);
-                createSummary();
-                changeSummarySize();
+                this.option('summaryData', getSummary());
             }
         };
 
-        let controlDetailPopup;
+        let outsideDetailPopup;
         /* variable */
 
         /* funciton */
-        const openNewWindowControlDetail = function (rowData) {
+        const openNewWindowControlDetail = function () {
             let url = '/outsideDetail';
             // 팝업 사이즈
             let nWidth = 1400;
@@ -462,10 +384,10 @@
             strOption += 'toolbar=no,menubar=no,location=no,resizable=no,status=yes';
 
             // 최초 클릭이면 팝업을 띄운다.
-            if (controlDetailPopup === undefined || controlDetailPopup.closed) {
-                controlDetailPopup = window.open(url, '', strOption);
+            if (outsideDetailPopup === undefined || outsideDetailPopup.closed) {
+                outsideDetailPopup = window.open(url, '', strOption);
             } else {
-                controlDetailPopup.focus();
+                outsideDetailPopup.focus();
             }
         };
 
@@ -474,135 +396,28 @@
             postData.queryId = 'outMapper.selectOutsideYearCloseStatusSummary';
             let parameters = {'url': '/json-list', 'data': postData};
             let dataList = [];
+            console.time()
 
             fnPostAjaxAsync(function (data) {
                 dataList = data.list;
             }, parameters, '');
-
+            console.log(dataList);
+            console.timeEnd();
             return dataList;
-        };
-
-        const createSummary = function () {
-            const dataList = getSummary();
-            let htmlString = '';
-
-            if (Array.isArray(dataList) && dataList.length > 0) {
-                for (let i = 0; i < dataList.length; i++) {
-                    htmlString += '<tr style="line-height: 27px;">';
-                    htmlString += '    <td class="center_sort" style="background-color: #fff2cc; text-align: center;">' + dataList[i].STATUS_TYPE || '외주금액' + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_01 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_02 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_03 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_03_SUM || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_04 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_05 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_06 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_06_SUM || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_07 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_08 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_09 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_09_SUM || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_10 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_11 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_12 || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].AMT_12_SUM || 0 + '</td>';
-                    htmlString += '    <td class="right_sort" style="padding: 3px;">' + dataList[i].TOTAL_AMT || 0 + '</td>';
-                    htmlString += '</tr>';
-                }
-            } else {
-                htmlString += '<tr style="line-height: 27px;">';
-                htmlString += '    <td class="center_sort" style="background-color: #fff2cc; text-align: center;">' + '외주금액' + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '</tr>';
-                htmlString += '<tr style="line-height: 27px;">';
-                htmlString += '    <td class="center_sort" style="background-color: #fff2cc; text-align: center;">' + '원발주 금액' + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '    <td class="right_sort" style="padding: 3px;">' + 0 + '</td>';
-                htmlString += '</tr>';
-            }
-
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > tbody').html(htmlString);
-        };
-
-        const changeSummarySize = function () {
-            const PADDING = 2;
-            let width = [];
-            $('#MONTHLY_OUTSIDE_STATUS_GRID').find('div.pq-table-right.pq-table.pq-grid-header-table div:first').children().each(function (index, element) {
-                width.push($(element).width() + PADDING);
-            });
-
-            const a = width[0] + width[1] + width[2] + width[3];
-            const b = width[4];
-            const c = width[5];
-            const d = width[6];
-            const e = width[7];
-            const f = width[8];
-
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(0)').width(a);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(1)').width(b / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(2)').width(b / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(3)').width(b / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(4)').width(b / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(5)').width(c / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(6)').width(c / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(7)').width(c / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(8)').width(c / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(9)').width(d / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(10)').width(d / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(11)').width(d / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(12)').width(d / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(13)').width(e / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(14)').width(e / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(15)').width(e / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(16)').width(e / 4);
-            $('#MONTHLY_OUTSIDE_STATUS_SUMMARY > colgroup col:eq(17)').width(f);
         };
         /* funciton */
 
         /* event */
         $('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').on('change', function () {
-            tab1PostData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM');
             $outsideCloseStatusGrid.pqGrid('option', 'dataModel.postData', function () {
-                return tab1PostData;
+                return fnFormToJsonArrayData('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM');
             });
             $outsideCloseStatusGrid.pqGrid('refreshDataAndView');
         });
 
         $('#MONTH_OUTSIDE_STATUS_SEARCH_FORM').on('change', function () {
-            tab2PostData = fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM');
             $monthlyOutsideStatusGrid.pqGrid('option', 'dataModel.postData', function () {
-                return tab2PostData;
+                return fnFormToJsonArrayData('#MONTH_OUTSIDE_STATUS_SEARCH_FORM');
             });
             $monthlyOutsideStatusGrid.pqGrid('refreshDataAndView');
         });
@@ -656,40 +471,11 @@
 
             saveAs(blob, '외주 월별 현황.xlsx');
         });
-
-        $('.sideWrap a').on('click', function (e) {
-            setTimeout(function() {
-                changeSummarySize();
-            }, 500);
-        });
         /* event */
 
         /* init */
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').find('#COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#OUTSIDE_CLOSE_STATUS_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_OUTSIDE_STATUS_SEARCH_FORM').find('#COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getBusinessCompanyList'}
-        });
-        fnCommCodeDatasourceSelectBoxCreate($('#MONTH_OUTSIDE_STATUS_SEARCH_FORM').find('#OUTSIDE_COMP_CD'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOutsourceCompanyList'}
-        });
         $outsideCloseStatusGrid = $('#' + tab1GridId).pqGrid(tab1Obj);
         $monthlyOutsideStatusGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
-
-        fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR_LEFT', 10);
-        fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_LEFT');
-        $('#OUTSIDE_CLOSE_MONTH_LEFT').val('01').prop('selected', true);
-        fnAppendSelectboxYear('OUTSIDE_CLOSE_YEAR_RIGHT', 10);
-        fnAppendSelectboxMonth('OUTSIDE_CLOSE_MONTH_RIGHT');
-        fnAppendSelectboxYear('YEAR', 10);
         /* init */
     });
 </script>
