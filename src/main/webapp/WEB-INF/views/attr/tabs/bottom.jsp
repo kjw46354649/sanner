@@ -433,7 +433,7 @@
         <input type="hidden" id="gFileSeq" name="gFileSeq" value="">
         <div>
             <div>
-                <img id="drawingImage" style='width: 475px;height: 410px;' src="/resource/main/blank.jpg">
+                <img id="drawingImage" style='width: 785px;height: 610px;' src="/resource/main/blank.jpg">
             </div>
             <div style="padding: 10px 2px 5px 0px; float: right;">
                 <button type="button" class="defaultBtn greenPopGra" id="common_quick_drawing_detail_view">상세보기</button>
@@ -594,8 +594,8 @@
             autoOpen:false, //자동으로 열리지않게
             position:[100,200], //x,y  값을 지정
             //"center", "left", "right", "top", "bottom"
-            width : "500",            // dialog 넓이 지정
-            height : "500",        // dialog 높이 지정
+            width : "800",            // dialog 넓이 지정
+            height : "700",        // dialog 높이 지정
             modal:false, //모달대화상자
             resizable:false, //크기 조절 못하게
             open: function( event, ui ) {
