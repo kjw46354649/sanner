@@ -664,6 +664,7 @@
             showTitle: false,
             title: false,
             strNoRows: g_noData,
+            copyModel: {render: true},
             complete: function (event, ui) {
                 this.flex();
                 let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
