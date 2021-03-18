@@ -1893,7 +1893,10 @@
 
     const changeImageView = function (rowData) {
         const imgGfileSeq = rowData.ORDER_IMG_GFILE_SEQ || rowData.IMG_GFILE_SEQ || '';
-        callWindowImageViewer(imgGfileSeq);
+
+        if (!(windowImageViewer === undefined || windowImageViewer.closed) && imgGfileSeq) {
+            callWindowImageViewer(imgGfileSeq);
+        }
     };
 
     //TODO: 함수명 변경
