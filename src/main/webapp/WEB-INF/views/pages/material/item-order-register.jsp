@@ -1531,6 +1531,10 @@
                         $('#btnItemOrderRegisterPopSubmit').attr('disabled', true);
                     },
                 });
+
+                setTimeout(function () {
+                    $('#item_order_register_popup').find('#itempOrderResgisterBarcodeNum').focus();
+                }, 1000);
             },
             'hide.bs.modal': function () {
                 const $popupTableDiv = $('.popupTableDiv');
