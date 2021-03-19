@@ -627,7 +627,7 @@
                         WHERE A.CONTROL_SEQ = P.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ AND P.PART_STATUS = 'PRO002' <!-- 가공 확정 존재 유무 주문 -->
                             AND P.STATUS_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
                             AND P.SEQ > IFNULL((SELECT MAX(E.SEQ) FROM TBL_CONTROL_PART_PROGRESS E
-                                WHERE P.CONTROL_SEQ = E.CONTROL_SEQ AND P.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND E.PART_STATUS IS NULL), 0
+                                WHERE P.CONTROL_SEQ = E.CONTROL_SEQ AND P.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND IFNULL(E.PART_STATUS, 'PRO003') = 'PRO003'), 0
                             )
                     )
                 </when>
