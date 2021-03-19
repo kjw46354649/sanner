@@ -137,7 +137,6 @@
                 </select>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-100w" id="inspection_history_barcode_drawing_print">바코드도면 출력</button>
-                    <button type="button" class="defaultBtn" id="inspection_history_detail_btn">상세정보 조회</button>
                 </div>
             </div>
         </div>
@@ -334,9 +333,6 @@
             } );
             inspectionHistoryGridId01.pqGrid("refreshDataAndView");
 
-        });
-        $("#inspection_history_detail_btn").on('click', function(e){
-               g_item_detail_pop_view();
         });
 
         $('#inspectionHistoryFilterKeyword').on({

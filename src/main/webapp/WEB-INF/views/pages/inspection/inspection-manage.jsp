@@ -76,16 +76,6 @@
                 </select>
                 <span class="barCode" id="inspectionBarcodeSpan"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="inspectionBarcodeImg"></span>
                 <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode" name="INSPECTION_BARCODE_NUM" id="INSPECTION_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
-                <div class="rightSpan">
-                    <button type="button" class="defaultBtn" id="inspection_manage_detail_btn">상세정보 조회</button>
-                    &nbsp;
-                    <%-- <input type="checkbox" id="chkInspectionTimer" />
-                     <select class="wd_50" name="selectInspectionTimer" id="selectInspectionTimer" title="">
-                         <option value="10">10초</option>
-                         <option value="30">30초</option>
-                         <option value="60">60초</option>
-                     </select>&nbsp;마다 재조회--%>
-                </div>
             </div>
         </div>
         <div class="tableWrap" style="padding: 10px 0;">
@@ -922,20 +912,6 @@
             $('#inspection_manage_pop_form').find('#ERROR_QTY').val(POP_ERROR_QTY);
             $('#inspection_manage_pop_form').find('#ERROR_QTY_VIEW').html(POP_ERROR_QTY);
         }
-
-        $("#inspection_manage_detail_btn").on('click', function(e){
-            /*  if(SelectedRowIndex.length >0){
-                  let rowDataArray = inspectionManageGridId01.pqGrid('getRowData', {rowIndx: SelectedRowIndex[0]});
-                  console.log(rowDataArray);
-                  let CONTROL_DETAIL_SEQ = rowDataArray.CONTROL_DETAIL_SEQ;
-                  let CONTROL_SEQ = rowDataArray.CONTROL_SEQ;
-
-                  g_item_detail_pop_view(CONTROL_SEQ,CONTROL_DETAIL_SEQ);
-              }else{
-                  alert("그리드를 선택해 주십시오.");
-              }*/
-            g_item_detail_pop_view();
-        });
 
         $('#inspectionManageFilterKeyword').on({
             'keyup': function () {

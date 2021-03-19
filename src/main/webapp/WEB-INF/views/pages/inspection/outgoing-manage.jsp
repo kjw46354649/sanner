@@ -105,7 +105,6 @@
 <%--                    <input reqcd="R" type="radio" name="OUTGOING_BARCODE_PRINT_TYPE" id="OUTGOING_BARCODE_PRINT_TYPE_2" value="2"><label for="OUTGOING_BARCODE_PRINT_TYPE_2">라벨출력</label>--%>
 <%--                </span>--%>
                 <div class="rightSpan">
-                    <button type="button" class="defaultBtn" id="outgoing_manage_detail_btn">상세정보 조회</button>
                     <button type="button" class="defaultBtn" id="outgoing_manage_return_complete_btn">반품현황 조회</button>
                     <button type="button" class="defaultBtn" id="outgoing_manage_out_btn">출고등록</button>
                     <button type="button" class="defaultBtn" id="outgoing_manage_label_print_btn">라벨출력</button>
@@ -1299,19 +1298,7 @@
                 fnAlert(null, data.message);
             }, formData, '');
         });
-        $("#outgoing_manage_detail_btn").on('click', function () {
-            // if(SelectedRowIndex.length >0){
-            //     let rowDataArray = outgoingManageGridId01.pqGrid('getRowData', {rowIndx: SelectedRowIndex[0]});
-            //     console.log(rowDataArray);
-            //     let CONTROL_DETAIL_SEQ = rowDataArray.CONTROL_DETAIL_SEQ;
-            //     let CONTROL_SEQ = rowDataArray.CONTROL_SEQ;
-            //
-            //     g_item_detail_pop_view(CONTROL_SEQ,CONTROL_DETAIL_SEQ);
-            // }else{
-            //     alert("그리드를 선택해 주십시오.");
-            // }
-            g_item_detail_pop_view();
-        });
+
         $("#outgoing_manage_search_btn").on('click', function () {
             outgoingManageGridId01.pqGrid("option", "dataModel.postData", function () {
                 return fnFormToJsonArrayData('#outgoing_manage_form');

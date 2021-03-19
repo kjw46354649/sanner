@@ -83,9 +83,6 @@
                 <label for="outgoingReturnHistoryFrozen" class="label_50" style="font-size: 15px;">Fix</label>
                 <select id="outgoingReturnHistoryFrozen" name="outgoingReturnHistoryFrozen">
                 </select>
-                <div class="rightSpan">
-                    <button type="button" class="defaultBtn" id="outgoing_history_detail_btn">상세정보 조회</button>
-                </div>
             </div>
         </div>
         <div class="tableWrap" style="padding: 10px 0;">
@@ -373,9 +370,6 @@
         fnCommCodeDatasourceSelectBoxCreate($('#outgoing_history_form').find('#SEL_ORDER_COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
-        });
-        $("#outgoing_history_detail_btn").on('click', function () {
-              g_item_detail_pop_view();
         });
 
         $('#OUTGOING_HISTORY_EXCEL_EXPORT').on('click', function () {
