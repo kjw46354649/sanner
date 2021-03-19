@@ -203,7 +203,7 @@
             {title: 'Area 구분', width: 80, dataIndx: 'FACTORY_AREA_NM'},
             {title: '공정', width: 50, dataIndx: 'PROCESS_TYPE_NM'},
             {title: '장비명', width: 50, dataIndx: 'EQUIP_NM'},
-            {title: '작업자', width: 65, dataIndx: 'WORK_USER_ID'},
+            {title: '작업자', width: 65, dataIndx: 'WORK_USER_NM'},
             {
                 title: '가공 수행 실적', align: 'center',
                 colModel: [
