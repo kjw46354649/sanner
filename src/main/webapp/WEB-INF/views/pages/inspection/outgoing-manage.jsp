@@ -807,7 +807,7 @@
                 title: '최근 품질 실적', align: 'center', colModel: [
                     {title: 'Seq.', dataIndx: 'Q_SEQ', minWidth: 40},
                     {title: '등급', dataIndx: 'Q_INSPECT_GRADE_NM', minWidth: 40},
-                    {title: '수량', dataIndx: 'Q_ERROR_QTY', minWidth: 40},
+                    {title: '부적합 수량', dataIndx: 'Q_ERROR_QTY', minWidth: 40},
                     // {title: '검사결과', dataIndx: 'Q_INSPECT_GRADE_NOTE', width: 80},
                     {title: '검사코드', dataIndx: 'Q_INSPECT_RESULT_NM', width: 100},
                     // {title: '비고', dataIndx: 'Q_INSPECT_DESC', width: 100},
