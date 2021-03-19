@@ -2798,7 +2798,7 @@
                     AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.DEL_YN = 'N'
                     AND A.CONTROL_STATUS IN ('ORD001','ORD003')
-                    AND B.PART_STATUS NOT IN ('PRO020')  --  폐기 제외 -->
+                    AND IFNULL(B.PART_STATUS, SPACE(0)) NOT IN ('PRO020')  --  폐기 제외 -->
                     AND (
                     		(A.EMERGENCY_YN = 'Y' AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d'))
                     	OR
@@ -2836,7 +2836,7 @@
                     AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.DEL_YN = 'N'
                     AND A.CONTROL_STATUS IN ('ORD001','ORD003')
-                    AND B.PART_STATUS NOT IN ('PRO020') <!-- 폐기 제외 -->
+                    AND IFNULL(B.PART_STATUS, SPACE(0)) NOT IN ('PRO020') <!-- 폐기 제외 -->
                     AND A.OUT_FINISH_DT IS NULL
                     AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
             ) X
