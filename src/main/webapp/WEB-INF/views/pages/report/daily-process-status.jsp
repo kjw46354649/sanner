@@ -135,12 +135,12 @@
                     return {data: dataJSON.data};
                 }
             },
-            complete: function (event, ui) {
+            sortModel: {on: false},
+            complete: function () {
                 const data = $dailyProcessStatusLeftGrid.pqGrid('option', 'dataModel.data');
 
                 if (data.length > 0) {
                     const rowIndx = isRightSaveButtonClick ? selectedRowIndex[0] : 0;
-                    // console.log(rowIndx);
 
                     $dailyProcessStatusLeftGrid.pqGrid('setSelection', {rowIndx: rowIndx});
                 }
