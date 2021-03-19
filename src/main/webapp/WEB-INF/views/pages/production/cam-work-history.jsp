@@ -1038,7 +1038,7 @@
             if (rowData.PART_NUM) controlNum += " # " + rowData.PART_NUM;
             $("#cam_work_history_pop_form").find("#CONTROL_NUM").html("<p style='color:blue;'>" + controlNum + "<p/>");
             let controlPartQty = numberWithCommas(rowData.CONTROL_PART_QTY);
-            if (rowData.ORIGINAL_SIDE_QTY) controlPartQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.ORIGINAL_SIDE_QTY + ") </span>";
+            if (rowData.ORIGINAL_SIDE_QTY) controlPartQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.OTHER_SIDE_QTY + ") </span>";
             $("#cam_work_history_pop_form").find("#CONTROL_PART_QTY").html(controlPartQty);
             let dueOutDt = rowData.INNER_DUE_DT;
             switch (rowData.EMERGENCY_HOLD) {
