@@ -776,25 +776,34 @@
 
     <select id="selectOutgoingOutType3" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         /* 도면 바코드 입력시 정보  */
-        SELECT
-              X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+        SELECT X.CONTROL_SEQ
+            , X.CONTROL_DETAIL_SEQ
             , X.CONTROL_NUM
             , X.DRAWING_NUM
             , X.IMG_GFILE_SEQ
             , CONCAT(X.ORDER_QTY - X.OUT_QTY, '/', X.ORDER_QTY) AS QTY_INFO
             , X.ORDER_QTY - X.OUT_QTY AS PLAN_QTY
-        FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+            , X.OUT_QTY
+            , X.MY_OUT_PACKING_CNT
+        FROM (  SELECT B.CONTROL_SEQ
+                    , B.CONTROL_DETAIL_SEQ
                     , A.CONTROL_NUM
                     , C.DRAWING_NUM
                     , C.IMG_GFILE_SEQ
                     , jmes.SF_GET_CONTROL_ORDER_QTY(A.CONTROL_SEQ, 0) AS ORDER_QTY
                     , (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS OUT_QTY
-                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER_MAIN C
-                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                    , (SELECT COUNT(M.PACKING_NUM) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS MY_OUT_PACKING_CNT
+                FROM jmes.TBL_CONTROL A
+                    , jmes.TBL_CONTROL_PART B
+                    , jmes.TBL_CONTROL_PART_ORDER_MAIN C
+                    , jmes.TBL_CONTROL_BARCODE D
+                WHERE B.CONTROL_SEQ = A.CONTROL_SEQ
+                    AND C.CONTROL_SEQ = A.CONTROL_SEQ
+                    AND D.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
                     AND A.DEL_YN = 'N'
-                    AND B.CONTROL_SEQ = #{CONTROL_SEQ}
-                    AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                    AND D.DEL_YN = 'N'
+                    AND D.BARCODE_NUM = #{BARCODE_NUM}
         ) X
     </select>
 
@@ -836,40 +845,45 @@
     </update>
 
     <select id="selectOutgoingOutType4" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ
-          , X.CONTROL_NUM
-          , X.DRAWING_NUM
-          , X.IMG_GFILE_SEQ
-          , X.ORDER_NUM
-          , CONCAT(X.ORDER_QTY,'(',X.PACKING_CNT,')') AS QTY_INFO
-          , X.PACKING_CNT - X.OUT_PACKING_CNT - 1 AS REMAIN_PACKING_CNT
-          , CONCAT(X.PACKING_NUM,'/',X.PACKING_CNT) AS MY_PACKING_NUM
-          , X.OUT_CNT
-        FROM (  SELECT T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ
-                  , A.CONTROL_NUM
-                  , C.DRAWING_NUM
-                  , C.IMG_GFILE_SEQ
-                  , C.ORDER_NUM
-                  , jmes.SF_GET_CONTROL_ORDER_QTY(T.CONTROL_SEQ, T.ORDER_SEQ) AS ORDER_QTY
-                  , C.PACKING_CNT
-                  , T.PACKING_NUM
-                  , (SELECT IFNULL(COUNT(PACKING_NUM),0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = T.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = T.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = T.ORDER_SEQ) AS OUT_PACKING_CNT
-                  , (SELECT COUNT(*) FROM TBL_OUT O WHERE O.CONTROL_SEQ = T.CONTROL_SEQ AND O.CONTROL_DETAIL_SEQ = T.CONTROL_DETAIL_SEQ AND O.ORDER_SEQ = T.ORDER_SEQ AND O.PACKING_NUM = T.PACKING_NUM) AS OUT_CNT
-                FROM jmes.TBL_OUT_BARCODE T
-                  , jmes.TBL_CONTROL A
-                  , jmes.TBL_CONTROL_PART B
-                  , jmes.TBL_CONTROL_PART_ORDER C
-                WHERE T.CONTROL_SEQ = A.CONTROL_SEQ
-                  AND T.CONTROL_SEQ = B.CONTROL_SEQ
-                  AND T.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                  AND T.CONTROL_SEQ = C.CONTROL_SEQ
-                  AND T.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                  AND T.ORDER_SEQ = C.ORDER_SEQ
-                  AND T.BARCODE_NUM = #{BARCODE_NUM}
-                  AND T.DEL_YN = 'N'
-                  AND A.DEL_YN = 'N'
-                  AND NOT EXISTS (SELECT * FROM TBL_OUT O WHERE O.CONTROL_SEQ = T.CONTROL_SEQ AND O.CONTROL_DETAIL_SEQ = T.CONTROL_DETAIL_SEQ AND O.ORDER_SEQ = T.ORDER_SEQ AND O.PACKING_NUM = T.PACKING_NUM)
-            ) X
+        SELECT X.CONTROL_SEQ
+            , X.CONTROL_DETAIL_SEQ
+            , X.ORDER_SEQ
+            , X.CONTROL_NUM
+            , X.DRAWING_NUM
+            , X.IMG_GFILE_SEQ
+            , X.ORDER_NUM
+            , CONCAT(X.ORDER_QTY,'(',X.PACKING_CNT,')') AS QTY_INFO
+            , X.PACKING_CNT - X.OUT_PACKING_CNT - 1 AS REMAIN_PACKING_CNT
+            , CONCAT(X.PACKING_NUM,'/',X.PACKING_CNT) AS MY_PACKING_NUM
+            , X.OUT_QTY
+            , X.MY_OUT_PACKING_CNT
+        FROM (  SELECT A.CONTROL_SEQ
+                    , A.CONTROL_DETAIL_SEQ
+                    , A.ORDER_SEQ
+                    , D.CONTROL_NUM
+                    , B.DRAWING_NUM
+                    , B.IMG_GFILE_SEQ
+                    , B.ORDER_NUM
+                    , jmes.SF_GET_CONTROL_ORDER_QTY(A.CONTROL_SEQ, A.ORDER_SEQ) AS ORDER_QTY
+                    , B.PACKING_CNT
+                    , A.PACKING_NUM
+                    , (SELECT COUNT(M.PACKING_NUM) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ) AS OUT_PACKING_CNT
+                    , (SELECT COUNT(M.PACKING_NUM) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ AND M.PACKING_NUM = A.PACKING_NUM) AS MY_OUT_PACKING_CNT
+                    , (SELECT IFNULL(SUM(M.OUT_QTY), 0) FROM TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ) AS OUT_QTY
+                FROM jmes.TBL_OUT_BARCODE A
+                    , jmes.TBL_CONTROL_PART_ORDER B
+                    , jmes.TBL_CONTROL_PART C
+                    , jmes.TBL_CONTROL D
+                WHERE B.CONTROL_SEQ = A.CONTROL_SEQ
+                    AND B.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                    AND B.ORDER_SEQ = A.ORDER_SEQ
+                    AND C.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                    AND D.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND A.DEL_YN = 'N'
+                    AND D.DEL_YN = 'N'
+                    AND A.BARCODE_NUM = #{BARCODE_NUM}
+             ) X
     </select>
     <insert id="insertOutgoingOutType4" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_OUT (OUT_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, ORDER_SEQ, PACKING_NUM, INSERT_ID)
@@ -921,10 +935,11 @@
             , D.ORDER_SEQ
             , D.ORDER_QTY
             , D.PACKING_CNT
-            , D.OUT_QTY AS OUT_CNT
+            , D.OUT_QTY
             , D.ORDER_BARCODE_NUM
             , CONCAT(D.ORDER_QTY - D.OUT_QTY, '/', D.ORDER_QTY) AS QTY_INFO
             , D.ORDER_QTY - D.OUT_QTY AS PLAN_QTY
+            , D.MY_OUT_PACKING_CNT
         FROM (
             SELECT
             	A.CONTROL_NUM
@@ -936,11 +951,13 @@
                 , IFNULL(C.ORDER_QTY, 0) AS ORDER_QTY
                 , C.PACKING_CNT
                 , (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY
+                , (SELECT COUNT(PACKING_NUM) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS MY_OUT_PACKING_CNT
                 , C.ORDER_BARCODE_NUM
-            FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
-            WHERE 1 = 1
+            FROM jmes.TBL_CONTROL A
+                , jmes.TBL_CONTROL_PART B
+                , jmes.TBL_CONTROL_PART_ORDER C
+            WHERE B.CONTROL_SEQ = A.CONTROL_SEQ
             	AND C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-            	AND B.CONTROL_SEQ = A.CONTROL_SEQ
             	AND A.DEL_YN = 'N'
                 <choose>
                     <when test="BARCODE_NUM != null and BARCODE_NUM != ''">
@@ -969,7 +986,7 @@
 
     <update id="updateOutgoingOutType5After1" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_CONTROL_PART_ORDER A
-        SET A.OUT_FINISH_DT = NOW()
+        SET A.OUT_FINISH_DT = CASE WHEN A.OUT_FINISH_DT IS NULL THEN NOW() ELSE A.OUT_FINISH_DT END
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
             AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
             AND A.ORDER_SEQ = #{ORDER_SEQ}
@@ -1637,16 +1654,6 @@
     </update>
 
     <update id="updateOutgoingDisposalAfter1" parameterType="java.util.HashMap">
-        UPDATE jmes.TBL_CONTROL_PART_ORDER
-        SET OUT_FINISH_DT = NOW()
-          , UPDATE_DT = NOW()
-          , UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-          	AND ORDER_SEQ = #{ORDER_SEQ}
-    </update>
-
-    <update id="updateOutgoingDisposalAfter2" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_CONTROL
         SET OUT_FINISH_DT = NOW()
             , UPDATE_DT = NOW()
