@@ -993,26 +993,23 @@
         SELECT
             ROW_NUMBER () OVER () AS ROW_NUM,
             <include refid="control"/>,
-            <include refid="controlPart"/>
+            <include refid="controlPart"/>,
+            SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
-                AND (IFNULL(B.PART_STATUS, 'PRO003') = 'PRO003' OR A.CONTROL_STATUS IN ('ORD005'))
-        WHERE 1 = 1
-            AND A.DEL_YN = 'N'
+            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = A.CONTROL_SEQ
+        WHERE A.DEL_YN = 'N'
             AND A.CONTROL_STATUS IN ('ORD001', 'ORD005')
             AND A.OUT_FINISH_DT IS NULL
+            AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
+            AND (IFNULL(B.PART_STATUS, 'PRO003') = 'PRO003' OR A.CONTROL_STATUS IN ('ORD005'))
             <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
             </if>
             <if test="MATERIAL_DETAIL != null and MATERIAL_DETAIL != ''">
                 AND B.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
             </if>
-        ORDER BY
-        <if test="EMERGENCY_YN != null and EMERGENCY_YN != ''">
-            A.EMERGENCY_YN DESC,
-        </if>
-            CONTROL_STATUS_DT DESC, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.PART_NUM
+        ORDER BY A.STATUS_DT DESC, A.CONTROL_SEQ, B.PART_NUM
     </select>
 
     <!-- 유효 도면(바코드 스캔) -->
@@ -1219,12 +1216,14 @@
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
             <include refid="control"/>,
             <include refid="controlPart"/>,
+            SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT,
             SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION <!-- 현재 등록된 위치 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = A.CONTROL_SEQ
             LEFT OUTER JOIN TBL_POP D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
                 AND D.POP_SEQ = (SELECT MAX(X.POP_SEQ) FROM TBL_POP X WHERE X.CONTROL_SEQ = D.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ)
-        WHERE 1 = 1
+        WHERE A.DEL_YN = 'N'
             AND A.CONTROL_STATUS = 'ORD001'
             AND A.OUT_FINISH_DT IS NULL
             AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
@@ -1246,23 +1245,23 @@
         SELECT
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
             <include refid="control"/>,
-            <include refid="controlPart"/>
+            <include refid="controlPart"/>,
+            SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                AND IFNULL(B.OUTSIDE_YN, 'N') = 'Y'
-                AND B.OUTSIDE_IN_DT IS NULL
-        WHERE 1 = 1
+            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = A.CONTROL_SEQ
+        WHERE A.DEL_YN = 'N'
             AND A.CONTROL_STATUS = 'ORD001'
-            <!-- AND B.PART_STATUS = 'PRO001' -->
-            <!-- AND B.WORK_TYPE != 'WTP020' -->
             AND A.OUT_FINISH_DT IS NULL
+            AND B.OUTSIDE_YN = 'Y'
+            AND B.OUTSIDE_IN_DT IS NULL
             <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
             </if>
             <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
                 AND B.OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD}
             </if>
-        ORDER BY A.CONTROL_SEQ, B.PART_NUM, CONTROL_STATUS_DT DESC
+        ORDER BY A.STATUS_DT DESC, A.CONTROL_SEQ, B.PART_NUM
     </select>
 
     <select id="selectProcessCompleteList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1270,19 +1269,22 @@
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
             <include refid="control"/>,
             <include refid="controlPart"/>,
-            SF_GET_CODE_NM('1040', C.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM,
-            SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION <!-- 현재 등록된 위치 -->
+            SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT,
+            SF_GET_CODE_NM('1040', D.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM,
+            SF_GET_CODE_NM('1009', E.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION <!-- 현재 등록된 위치 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-            LEFT OUTER JOIN TBL_INSPECT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                AND C.INSPECT_SEQ = (SELECT MAX(M.INSPECT_SEQ) FROM TBL_INSPECT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ)
-            LEFT OUTER JOIN TBL_POP D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-                AND D.POP_SEQ = (SELECT MAX(M.POP_SEQ) FROM TBL_POP M WHERE M.CONTROL_SEQ = D.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ)
-        WHERE  A.CONTROL_STATUS = 'ORD001'
+            INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = A.CONTROL_SEQ
+            LEFT OUTER JOIN TBL_INSPECT D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                AND D.INSPECT_SEQ = (SELECT MAX(M.INSPECT_SEQ) FROM TBL_INSPECT M WHERE M.CONTROL_SEQ = D.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ)
+            LEFT OUTER JOIN TBL_POP E ON B.CONTROL_SEQ = E.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+                AND E.POP_SEQ = (SELECT MAX(M.POP_SEQ) FROM TBL_POP M WHERE M.CONTROL_SEQ = E.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ)
+        WHERE A.DEL_YN = 'N'
+            AND A.CONTROL_STATUS = 'ORD001'
             AND A.OUT_FINISH_DT IS NULL
             AND B.WORK_TYPE != 'WTP020'
             AND (( IFNULL(B.OUTSIDE_YN, 'N') = 'Y' AND B.OUTSIDE_IN_DT IS NOT NULL ) OR ( IFNULL(B.OUTSIDE_YN, 'N') = 'N' AND B.INNER_WORK_FINISH_DT IS NOT NULL ))
-        ORDER BY A.CONTROL_SEQ, B.PART_NUM
+        ORDER BY A.STATUS_DT DESC, A.CONTROL_SEQ, B.PART_NUM
     </select>
 
     <select id="manageControlCadFiles_select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
