@@ -202,7 +202,7 @@
                             <td id="OUTSIDE_PROCESS_CONFIRM_DT"></td>
                             <th class="antiquewhite blueviolet">가공완료 일시</th>
                             <td id="PROCESS_FINISH_DT" class="blueviolet"></td>
-                            <%--<th>최근유사가공</th>--%>
+                            <%--<th>유사주문수행기록</th>--%>
                             <%--<td id="WORK_HISTORY_INFO"></td>--%>
                         </tr>
                         <tr>

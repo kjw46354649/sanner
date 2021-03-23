@@ -539,7 +539,7 @@
             {title: '등급', dataType: 'string', dataIndx: 'Q_INSPECT_GRADE_NM',  width: 95},
             {title: '합/불', dataType: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE',  width: 95},
             // {title: '양품', dataType: 'string', dataIndx: 'Q_OK_QTY',  width: 95},
-            {title: '수량', dataType: 'string', dataIndx: 'Q_ERROR_QTY',  width: 95},
+            {title: '불량수량', dataType: 'string', dataIndx: 'Q_ERROR_QTY',  width: 95},
             {title: '검사코드', dataType: 'string', dataIndx: 'Q_INSPECT_RESULT_NM',  width: 95},
             {title: '상세 내용', dataType: 'string', dataIndx: 'Q_INSPECT_DESC',  width: 95},
             // {title: '원인', dataType: 'string', dataIndx: 'Q_ERROR_REASON_NM',  width: 95},

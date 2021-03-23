@@ -73,7 +73,7 @@
                             <td id="SIZE_TXT"></td>
                             <th>표면처리</th>
                             <td id="SURFACE_TREAT_NM"></td>
-                            <th>최근유사가공</th>
+                            <th>유사주문수행기록</th>
                             <td id="WORK_HISTORY_INFO"></td>
                         </tr>
                         <tr>
@@ -81,7 +81,7 @@
                             <td id="MCT_NOTE"></td>
                             <th>배정 NC</th>
                             <td id="MCT_PLAN_EQUIP_NM"></td>
-                            <th>최근공정</th>
+                            <th>최근수행공정</th>
                             <td id="LAST_WORK_EQUIP_NM"></td>
                         </tr>
                     </table>

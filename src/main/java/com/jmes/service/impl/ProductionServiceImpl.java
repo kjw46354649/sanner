@@ -129,6 +129,7 @@ public class ProductionServiceImpl implements ProductionService {
     @Override
     public void modifyMctPlan(Model model, Map<String, Object> map) throws Exception {
         String jsonArray = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         String actionType = (String) map.get("actionType");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> map1 = null;
@@ -138,8 +139,11 @@ public class ProductionServiceImpl implements ProductionService {
             map1 = objectMapper.readValue(jsonArray, new TypeReference<Map<String, Object>>() {});
 
         try {
+            map1.put("LOGIN_USER_ID", userId);
             switch (actionType) {
                 case "add":
+                    map1.put("queryId", "machine.deleteMctPlanAll");
+                    this.innodaleDao.remove(map1);
                     map1.put("queryId", "machine.insertMctPlan");
                     this.innodaleDao.create(map1);
                     break;

@@ -261,7 +261,7 @@
                         } else if (ui.rowData['OUT_RETURN_TYPE'] == '3') {//폐기
                             let data = {
                                 'queryId': 'inspection.updateOutgoingCancelDisposal,inspection.updateOutgoingHistoryInspectionCancelStep2,inspection.updateOutgoingHistoryInspectionCancelStep3,inspection.updateOutFinishStatus',
-                                'OUT_SEQ': ui.rowData['KEY_SEQ'],
+                                // 'OUT_SEQ': ui.rowData['KEY_SEQ'],
                                 'CONTROL_SEQ': ui.rowData['CONTROL_SEQ'],
                                 'CONTROL_DETAIL_SEQ': ui.rowData['CONTROL_DETAIL_SEQ'],
                                 'ORDER_SEQ': ui.rowData['ORDER_SEQ']

@@ -1384,7 +1384,7 @@
 
                 switch (target) {
                     case 'disposal':
-                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.updateOutgoingDisposal,inspection.updateOutFinishStatus,inspection.updateOutgoingDisposalAfter1");
+                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.deleteOutgoingDisposal,inspection.updateOutgoingDisposal,inspection.updateOutFinishStatus,inspection.updateOutgoingDisposalAfter1");
                         break;
                     default:
                         $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2,inspection.updateOutgoingOutType1After3,inspection.updateOutFinishStatus");
@@ -1798,24 +1798,47 @@
 
         $('#DISPOSAL_YN').on('click', function () {
             const $miniPopup = $('#outgoing_manage_pop_type_1').find('.miniPopup');
+            const $outgoingManagePopType1Form = $("#outgoing_manage_pop_type_1_form");
+            const orderQty = $outgoingManagePopType1Form.find('#ORDER_QTY').val();
+            let backgroundColor;
+            let outHtmlString;
+            let target;
+            let readonly;
+            let view;
+            let qty;
 
             if (this.checked) {
-                $miniPopup.css('background-color', '#ffeed9');
-                $miniPopup.find('#out').html('폐기<br>출고');
-                $('#outgoing_manage_mini_pop_save_btn').data('target', 'disposal');
-                $('#NEW_OUT_QTY_VIEW').prop('readonly', true);
+                backgroundColor = '#ffeed9';
+                outHtmlString = '폐기<br>출고';
+                target = 'disposal';
+                readonly = true;
+                view = orderQty + '/' + orderQty;
+                qty = orderQty;
             } else {
-                $miniPopup.css('background-color', '');
-                $miniPopup.find('#out').html('출고');
-                $('#outgoing_manage_mini_pop_save_btn').data('target', 'release');
-                $('#NEW_OUT_QTY_VIEW').prop('readonly', false);
+                const originalNewOutQty = $outgoingManagePopType1Form.find('#ORG_NEW_OUT_QTY').val();
+                backgroundColor = '';
+                outHtmlString = '출고';
+                target = 'release';
+                readonly = false;
+                view = originalNewOutQty + '/' + orderQty;
+                qty = originalNewOutQty;
+
+                $miniPopup.find('#outgoing_manage_mini_pop_all_btn').click();
             }
+
+            $miniPopup.css('background-color', backgroundColor);
+            $miniPopup.find('#out').html(outHtmlString);
+            $miniPopup.find('#outgoing_manage_mini_pop_save_btn').data('target', target);
+            $miniPopup.find('#NEW_OUT_QTY_VIEW').prop('readonly', readonly);
             $miniPopup.find('#subtitle').toggle();
             $miniPopup.find('.process > .pr_txt > span:first').toggle();
             $miniPopup.find('#outgoing_manage_mini_pop_plus_btn').toggle();
             $miniPopup.find('#outgoing_manage_mini_pop_minus_btn').toggle();
             $miniPopup.find('#outgoing_manage_mini_pop_all_btn').toggle();
-            $miniPopup.find('#outgoing_manage_mini_pop_all_btn').click();
+
+            $outgoingManagePopType1Form.find("#outgoing_manage_pop_type_1_form_view_1").html(view);
+            $outgoingManagePopType1Form.find("#outgoing_manage_pop_type_1_form_view_2").html('0');
+            $outgoingManagePopType1Form.find("#NEW_OUT_QTY_VIEW").val(qty);
         });
     });
 

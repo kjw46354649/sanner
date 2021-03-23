@@ -393,7 +393,6 @@
                     <!-- AND IFNULL(F.ORDER_STATUS, SPACE(0)) NOT IN('MST004') -->
             WHERE A.CONTROL_STATUS = 'ORD001'
                 AND SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) > 0
-            GROUP BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
             UNION ALL
             SELECT
                 '' AS CONTROL_SEQ, '' AS CONTROL_DETAIL_SEQ, F.MATERIAL_ORDER_SEQ, F.MATERIAL_ORDER_NUM,
@@ -412,12 +411,10 @@
                 DATE_FORMAT(STR_TO_DATE(F.HOPE_DUE_DT, '%Y%m%d'), '%Y-%m-%d') AS HOPE_DUE_DT,
                 F.ORDER_STATUS, F.NOTE, F.ORDER_USER_ID, SF_GET_DATE_F(F.IN_DT,'YYYY','M') AS IN_DT
             FROM TBL_MATERIAL_ORDER F
-            WHERE 1 = 1
-                AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART X WHERE X.CONTROL_SEQ = F.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ)
+            WHERE NOT EXISTS (SELECT * FROM TBL_CONTROL_PART X WHERE X.CONTROL_SEQ = F.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ)
                 AND F.MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
                 <!-- AND IFNULL(F.ORDER_STATUS, SPACE(0)) NOT IN('MST004') -->
                 <!-- AND F.ORDER_QTY-IFNULL(SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'QTY'), 0) > 0 -->
-            GROUP BY F.MATERIAL_ORDER_SEQ
         ) Z
         ORDER BY Z.MATERIAL_ORDER_NUM, Z.MATERIAL_DETAIL_NM, Z.REQUEST_NOTE, Z.CONTROL_NUM, Z.PART_NUM
     </select>
@@ -510,14 +507,54 @@
             UPDATE_ID = #{LOGIN_USER_ID}
     </update>
 
-    <update id="insertItemOrderRegisterOut" parameterType="java.util.HashMap">
+    <insert id="insertItemOrderRegisterOut1" parameterType="java.util.HashMap">
+        <selectKey keyProperty="MATERIAL_ORDER_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_MATERIAL_ORDER) FROM DUAL
+        </selectKey>
+        INSERT INTO TBL_MATERIAL_ORDER (
+            MATERIAL_ORDER_SEQ
+            , MATERIAL_ORDER_NUM
+            , CONTROL_SEQ
+            , CONTROL_DETAIL_SEQ
+            , INSERT_ID
+        ) VALUES (
+            #{MATERIAL_ORDER_SEQ}
+            , #{MATERIAL_ORDER_NUM}
+            , #{CONTROL_SEQ}
+            , #{CONTROL_DETAIL_SEQ}
+            , #{LOGIN_USER_ID}
+        )
+    </insert>
+
+    <insert id="insertItemOrderRegisterOut2" parameterType="java.util.HashMap">
+        <selectKey keyProperty="MY_MAT_OUT_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_MY_MAT_OUT) FROM DUAL
+        </selectKey>
         INSERT INTO TBL_MY_MATERIAL_OUT
         (MY_MAT_OUT_SEQ, OUT_QTY, OUT_DT, OUT_USER_ID, MY_MAT_STOCK_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, MATERIAL_ORDER_SEQ, OUT_STATUS, INSERT_ID)
         VALUES
         (
-        NEXTVAL(SEQ_MY_MAT_OUT), #{OUT_QTY}, NOW(), #{OUT_USER_ID}, #{MY_MAT_STOCK_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
+        #{MY_MAT_OUT_SEQ}, #{OUT_QTY}, NOW(), #{OUT_USER_ID}, #{MY_MAT_STOCK_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
         #{MATERIAL_ORDER_SEQ}, 'OUT001', #{LOGIN_USER_ID}
         )
+    </insert>
+
+    <update id="updateItemOrderRegisterOut3" parameterType="java.util.HashMap">
+        UPDATE TBL_MATERIAL_ORDER A, TBL_MY_MATERIAL_OUT B, TBL_MY_MATERIAL_STOCK C
+        SET A.MATERIAL_TYPE = C.MATERIAL_TYPE
+            , A.MATERIAL_DETAIL = C.MATERIAL_DETAIL
+            , A.MATERIAL_KIND = C.MATERIAL_KIND
+            , A.SIZE_TXT = C.SIZE_TXT
+            , A.SIZE_TYPE = C.SIZE_TYPE
+            , A.SIZE_W = C.SIZE_W
+            , A.SIZE_H = C.SIZE_H
+            , A.SIZE_T = C.SIZE_T
+            , A.SIZE_D = C.SIZE_D
+            , A.SIZE_L = C.SIZE_L
+        WHERE B.MATERIAL_ORDER_SEQ = A.MATERIAL_ORDER_SEQ
+            AND C.MY_MAT_STOCK_SEQ = B.MY_MAT_STOCK_SEQ
+            AND C.DEL_YN = 'N'
+            AND B.MY_MAT_OUT_SEQ = #{MY_MAT_OUT_SEQ}
     </update>
 
     <delete id="deleteItemOrderRegisterOut" parameterType="java.util.HashMap">
@@ -906,22 +943,22 @@
 
     <select id="selectItemOrderHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT ROW_NUMBER() OVER() AS ROWNUM
-            , Z.MATERIAL_ORDER_SEQ
-            , Z.MATERIAL_ORDER_NUM
-            , Z.MATERIAL_COMP_CD
-            , SF_GET_COMP_NM(Z.MATERIAL_COMP_CD) AS MATERIAL_COMP_NM
-            , Z.MATERIAL_DETAIL
-            , Z.ORDER_DT
-            , Z.IN_DT
-            , SUM(Z.ORDER_QTY) ORDER_QTY
-            , SUM(Z.IN_QTY) AS IN_QTY
-            , GROUP_CONCAT(Z.CONCAT_SEQ) CONCAT_SEQ
+            , X.MATERIAL_ORDER_SEQ
+            , X.MATERIAL_ORDER_NUM
+            , X.MATERIAL_COMP_CD
+            , SF_GET_COMP_NM(X.MATERIAL_COMP_CD) AS MATERIAL_COMP_NM
+            , X.MATERIAL_DETAIL
+            , X.ORDER_DT
+            , X.IN_DT
+            , SUM(X.ORDER_QTY) ORDER_QTY
+            , SUM(X.IN_QTY) AS IN_QTY
+            , GROUP_CONCAT(X.CONCAT_SEQ) CONCAT_SEQ
             ,
             CASE
-                WHEN GROUP_CONCAT(Z.IN_DT) IS NOT NULL THEN 'Y'
+                WHEN GROUP_CONCAT(X.IN_DT) IS NOT NULL THEN 'Y'
                 ELSE 'N'
             END IN_YN
-            , SF_GET_USER_NM(Z.ORDER_USER_ID) AS ORDER_USER_NM
+            , SF_GET_USER_NM(X.ORDER_USER_ID) AS ORDER_USER_NM
         FROM (
             SELECT MATERIAL_ORDER_SEQ
                 , CONTROL_SEQ
@@ -937,30 +974,29 @@
                 , IN_DT
                 , ORDER_USER_ID
             FROM TBL_MATERIAL_ORDER
-            WHERE IFNULL(ORDER_STATUS, SPACE(0)) IN('MST002','MST004')
-                <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
-                    AND MATERIAL_DETAIL = #{MATERIAL_DETAIL}
-                </if>
+            WHERE ORDER_STATUS IN ('MST002','MST004')
                 AND SF_GET_DATE_F(ORDER_DT,'YYYY','') >= #{ITEM_ORDER_HISTORY_START_DATE}
                 AND SF_GET_DATE_F(ORDER_DT,'YYYY','') <![CDATA[ <= ]]> #{ITEM_ORDER_HISTORY_END_DATE}
-        ) Z
-            LEFT OUTER JOIN TBL_CONTROL_PART B ON Z.CONTROL_SEQ = B.CONTROL_SEQ AND Z.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-            LEFT OUTER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-        WHERE 1 = 1
-            <if test="CONTROL_NUM !='' and CONTROL_NUM != null">
-                AND UPPER(C.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
-            </if>
-            <if test="MATERIAL_ORDER_NUM !='' and MATERIAL_ORDER_NUM != null">
-                AND UPPER(Z.MATERIAL_ORDER_NUM) LIKE CONCAT('%', UPPER(#{MATERIAL_ORDER_NUM}), '%')
-            </if>
-            <if test="MATERIAL_COMP_CD !='' and MATERIAL_COMP_CD != null">
-                AND Z.MATERIAL_COMP_CD = #{MATERIAL_COMP_CD}
-            </if>
-            <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
-                AND Z.MATERIAL_DETAIL = #{MATERIAL_DETAIL}
-            </if>
-        GROUP BY MATERIAL_COMP_CD, MATERIAL_ORDER_NUM
-        ORDER BY ORDER_DT DESC
+                <if test="CONTROL_NUM !='' and CONTROL_NUM != null">
+                    AND (CONTROL_SEQ, CONTROL_DETAIL_SEQ) = (	SELECT N.CONTROL_SEQ , N.CONTROL_DETAIL_SEQ
+                                                                FROM TBL_CONTROL M
+                                                                    , TBL_CONTROL_PART N
+                                                                WHERE N.CONTROL_SEQ = M.CONTROL_SEQ
+                                                                    AND M.DEL_YN = 'N'
+                                                                    AND UPPER(M.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%'))
+                </if>
+            	<if test="MATERIAL_ORDER_NUM !='' and MATERIAL_ORDER_NUM != null">
+	                AND UPPER(MATERIAL_ORDER_NUM) LIKE CONCAT('%', UPPER(#{MATERIAL_ORDER_NUM}), '%')
+	            </if>
+	            <if test="MATERIAL_COMP_CD !='' and MATERIAL_COMP_CD != null">
+	                AND MATERIAL_COMP_CD = #{MATERIAL_COMP_CD}
+	            </if>
+	            <if test="MATERIAL_DETAIL !='' and MATERIAL_DETAIL != null">
+	                AND MATERIAL_DETAIL = #{MATERIAL_DETAIL}
+	            </if>
+        ) X
+        GROUP BY X.MATERIAL_COMP_CD, X.MATERIAL_ORDER_NUM
+        ORDER BY X.ORDER_DT DESC
     </select>
 
     <select id="selectItemOrderHistoryListDetail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1004,7 +1040,8 @@
                 WHERE NOT EXISTS ( SELECT * FROM TBL_CONTROL_PART
                                     WHERE A.CONTROL_SEQ = CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = CONTROL_DETAIL_SEQ)
             ) Z
-        WHERE MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
+        WHERE 1 = 1
+            AND MATERIAL_ORDER_NUM = #{MATERIAL_ORDER_NUM}
             AND MATERIAL_COMP_CD = #{MATERIAL_COMP_CD}
         ORDER BY MATERIAL_ORDER_SEQ, MATERIAL_ORDER_NUM, MATERIAL_COMP_CD
     </select>
