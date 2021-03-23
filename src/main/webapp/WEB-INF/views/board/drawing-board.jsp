@@ -513,7 +513,8 @@
                             <span class="alertBox"><srping:message key='drawing.board.label.18'/></span>
                         </c:if>
                         <c:if test="${not empty workInfo && workInfo.MATERIAL_FINISH_HEAT ne ''}">
-                            <span class="alertBox">${workInfo.MATERIAL_FINISH_HEAT}</span>
+<%--                            <span class="alertBox">${workInfo.MATERIAL_FINISH_HEAT}</span>--%>
+                            <span class="alertBox" style="<c:if test="${not empty LocalInfo && LocalInfo eq 'en'}">width:145px;</c:if>"><srping:message key='drawing.board.label.22'/></span>
                         </c:if>
                         <c:if test="${(empty workInfo || (workInfo.MATERIAL_FINISH_HEAT eq '' &&  workInfo.MAIN_INSPECTION eq '' &&  orkInfo.EMERGENCY_YN ne 'Y' && workInfo.SAME_SIDE_YN ne 'Y'))}">
                             <span style="height: 35px; line-height: 35px;">&nbsp; &nbsp;</span>
