@@ -185,10 +185,10 @@
                 title: '가공시간', align: 'center',
                 colModel: [
                     {title: 'Total', dataIndx: 'TOTAL_WORK_TIME'},
-                    {title: '선반', dataIndx: 'NC_WORK_TIME'},
-                    {title: 'NC', dataIndx: 'MILLING_WORK_TIME'},
-                    {title: '밀링', dataIndx: 'GRINDING_WORK_TIME'},
-                    {title: '연마', dataIndx: 'LATHE_WORK_TIME'}
+                    {title: '선반', dataIndx: 'LATHE_WORK_TIME'},
+                    {title: 'NC', dataIndx: 'NC_WORK_TIME'},
+                    {title: '밀링', dataIndx: 'MILLING_WORK_TIME'},
+                    {title: '연마', dataIndx: 'GRINDING_WORK_TIME'}
                 ]
             },
             {
