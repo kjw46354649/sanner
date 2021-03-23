@@ -288,21 +288,19 @@
             CONTROL_DETAIL_SEQ,
             WORKING_TIME,
             SORT_NUM,
-            INSERT_DT,
             INSERT_ID
         ) VALUES(
             #{MCT_PLAN_SEQ},
             #{EQUIP_SEQ},
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ},
-            CAST(#{WORKING_TIME} AS INT),
-            (SELECT IFNULL(MAX(SORT_NUM), 0) + 1 FROM TBL_MCT_PLAN AS A WHERE 1 = 1 AND EQUIP_SEQ = #{EQUIP_SEQ} AND DEL_YN = 'N'),
-            NOW(),
+            REGEXP_REPLACE(#{WORKING_TIME}, '[^0-9]', SPACE(0)),
+            (SELECT IFNULL(MAX(M.SORT_NUM), 0) + 1 FROM TBL_MCT_PLAN M WHERE M.DEL_YN = 'N' AND M.EQUIP_SEQ = #{EQUIP_SEQ}),
             #{LOGIN_USER_ID}
         ) ON DUPLICATE KEY
             UPDATE
                 EQUIP_SEQ = #{EQUIP_SEQ},
-                WORKING_TIME = #{WORKING_TIME},
+                WORKING_TIME = REGEXP_REPLACE(#{WORKING_TIME}, '[^0-9]', SPACE(0)),
                 UPDATE_DT = NOW(),
                 UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
@@ -315,21 +313,19 @@
             CONTROL_DETAIL_SEQ,
             WORKING_TIME,
             SORT_NUM,
-            INSERT_DT,
             INSERT_ID
         ) VALUES(
             IFNULL(#{MCT_PLAN_SEQ}, NEXTVAL(SEQ_MCT_PLAN)),
             #{EQUIP_SEQ},
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ},
-            CAST(#{WORKING_TIME} AS INT),
-            (SELECT IFNULL(MAX(SORT_NUM), 0) + 1 FROM TBL_MCT_PLAN AS A WHERE 1 = 1 AND EQUIP_SEQ = #{EQUIP_SEQ} AND DEL_YN = 'N'),
-            NOW(),
+            REGEXP_REPLACE(#{WORKING_TIME}, '[^0-9]', SPACE(0)),
+            (SELECT IFNULL(MAX(M.SORT_NUM), 0) + 1 FROM TBL_MCT_PLAN M WHERE M.DEL_YN = 'N' AND M.EQUIP_SEQ = #{EQUIP_SEQ}),
             #{LOGIN_USER_ID}
         ) ON DUPLICATE KEY
             UPDATE
                 EQUIP_SEQ = #{EQUIP_SEQ},
-                WORKING_TIME = CAST(#{WORKING_TIME} AS INT),
+                WORKING_TIME = REGEXP_REPLACE(#{WORKING_TIME}, '[^0-9]', SPACE(0)),
                 UPDATE_DT = NOW(),
                 UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
@@ -338,7 +334,7 @@
         UPDATE TBL_MCT_PLAN
         SET
             EQUIP_SEQ = #{EQUIP_SEQ},
-            WORKING_TIME = #{WORKING_TIME},
+            WORKING_TIME = REGEXP_REPLACE(#{WORKING_TIME}, '[^0-9]', SPACE(0)),
             SORT_NUM = #{SORT_NUM},
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
@@ -348,22 +344,22 @@
         UPDATE TBL_MCT_PLAN
         SET
             UPDATE_DT = NOW(),
-            <!-- UPDATE_ID = NULL, -->
+            UPDATE_ID = #{LOGIN_USER_ID},
             DEL_YN = 'Y'
         WHERE
             MCT_PLAN_SEQ = #{MCT_PLAN_SEQ}
     </delete>
 
     <delete id="deleteMctPlanAll" parameterType="java.util.HashMap">
-            UPDATE TBL_MCT_PLAN
-            SET
-                UPDATE_DT = NOW(),
-                UPDATE_ID = #{LOGIN_USER_ID},
-                DEL_YN = 'Y'
-            WHERE 1 = 1
-                AND CONTROL_SEQ = #{CONTROL_SEQ}
-                AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-                AND DEL_YN = 'N'
+        UPDATE TBL_MCT_PLAN
+        SET
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID},
+            DEL_YN = 'Y'
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND DEL_YN = 'N'
     </delete>
 
     <delete id="deleteMctWork" parameterType="java.util.HashMap">
