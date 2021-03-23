@@ -1447,48 +1447,45 @@
                         AND UPPER(D.ORDER_NUM) LIKE CONCAT('%', UPPER(#{SEL_ORDER_NUM}), '%')
                     </if>
                 UNION ALL
-                SELECT A.OUT_SEQ AS KEY_SEQ
-                    , '3' AS OUT_RETURN_TYPE
-                    , A.CONTROL_SEQ
-                    , A.CONTROL_DETAIL_SEQ
-                    , A.ORDER_SEQ
-                    , C.OUTSIDE_COMP_CD
-                    , D.ORDER_NUM
-                    , B.CONTROL_NUM
-                    , B.ORDER_COMP_CD
-                    , CASE WHEN C.PART_NUM IS NULL THEN D.DRAWING_NUM ELSE C.DRAWING_NUM END AS DRAWING_NUM
-                    , C.MATERIAL_DETAIL
-                    , C.SIZE_TXT
-                    , D.ORDER_QTY
-                    , A.OUT_QTY
-                    , D.PACKING_CNT
-                    , A.PACKING_NUM
+                SELECT C.ORDER_SEQ AS KEY_SEQ
+					, '3' AS OUT_RETURN_TYPE
+                    , C.CONTROL_SEQ
+                    , C.CONTROL_DETAIL_SEQ
+                    , C.ORDER_SEQ
+                    , B.OUTSIDE_COMP_CD
+                    , C.ORDER_NUM
+                    , A.CONTROL_NUM
+                    , A.ORDER_COMP_CD
+                    , CASE WHEN B.PART_NUM IS NULL THEN C.DRAWING_NUM ELSE B.DRAWING_NUM END AS DRAWING_NUM
+                    , B.MATERIAL_DETAIL
+                    , B.SIZE_TXT
+                    , C.ORDER_QTY
+                    , C.ORDER_QTY AS OUT_QTY
+                    , C.PACKING_CNT
+                    , NULL AS PACKING_NUM
                     , NULL AS RETURN_QTY
-                    , D.OUT_FINISH_DT
-                    , '' AS RETURN_SETTLEMENT_DT
-                FROM jmes.TBL_OUT A
-                    , jmes.TBL_CONTROL B
-                    , jmes.TBL_CONTROL_PART C
-                    , jmes.TBL_CONTROL_PART_ORDER D
-                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND A.CONTROL_SEQ = C.CONTROL_SEQ
-                    AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                    AND A.CONTROL_SEQ = D.CONTROL_SEQ
-                    AND A.ORDER_SEQ = D.ORDER_SEQ
-                    AND A.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_ST_DT},'/',space(0)),'%Y%m%d') AND DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY)
-                    AND B.DEL_YN = 'N'
-                    AND IFNULL(D.SCRAP_YN, 'N') = 'Y'
+                    , C.OUT_FINISH_DT
+                    , NULL AS RETURN_SETTLEMENT_DT
+				FROM TBL_CONTROL A
+					, TBL_CONTROL_PART B
+					, TBL_CONTROL_PART_ORDER C
+				WHERE B.CONTROL_SEQ = A.CONTROL_SEQ
+					AND C.CONTROL_SEQ = B.CONTROL_SEQ
+					AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+					AND A.DEL_YN = 'N'
+					AND C.SCRAP_YN = 'Y'
+ 					AND A.OUT_FINISH_STATUS_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_ST_DT},'/',space(0)),'%Y%m%d') AND DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY)
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
-                        AND B.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
+                        AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
                     <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
-                        AND UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
+                        AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
                     </if>
                     <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
-                        AND UPPER(C.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
+                        AND UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
                     </if>
                     <if test="SEL_ORDER_NUM !='' and SEL_ORDER_NUM != null">
-                        AND UPPER(D.ORDER_NUM) LIKE CONCAT('%', UPPER(#{SEL_ORDER_NUM}), '%')
+                        AND UPPER(C.ORDER_NUM) LIKE CONCAT('%', UPPER(#{SEL_ORDER_NUM}), '%')
                     </if>
             ) X
         WHERE 1 = 1
@@ -1611,6 +1608,13 @@
     </update>
     <delete id="deleteOutgoingHistoryReturnCancelStep1" parameterType="java.util.HashMap">
         DELETE FROM jmes.TBL_INSPECT WHERE INSPECT_SEQ = #{INSPECT_SEQ}
+    </delete>
+
+    <delete id="deleteOutgoingDisposal" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_OUT
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND ORDER_SEQ = #{ORDER_SEQ}
     </delete>
 
     <update id="updateOutgoingDisposal" parameterType="java.util.HashMap">
