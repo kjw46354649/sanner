@@ -724,6 +724,11 @@
                 fnAlert(null, "등록이 완료되었습니다.", function () {
                     $("#INSPECTION_BARCODE_NUM").focus()
                 });
+
+                setTimeout(function() {
+                    alertify.alert().close();
+                    $("#INSPECTION_BARCODE_NUM").focus()
+                },1000);
                 $('#inspection_manage_pop').modal('hide');
             }, parameters, '');
 
@@ -933,6 +938,11 @@
         $("#inspectionManageFrozen").on('change', function(e){
             fnFrozenHandler(inspectionManageGridId01, $(this).val());
         });
+        $("#tab_10000601").on('click', function(e){
+            setTimeout(function () {
+                $("#INSPECTION_BARCODE_NUM").focus();
+            },50)
+        })
 
         function inspectionManageFilterRender(ui) {
             let val = ui.cellData == undefined ? "" : ui.cellData,
@@ -983,4 +993,12 @@
     });
 
     $("#INSPECTION_BARCODE_NUM").focus();
+
+    window.addEventListener('focus', function() {
+        if($("#tab_10000601").parent().hasClass('on')) {
+            setTimeout(function () {
+                $("#INSPECTION_BARCODE_NUM").focus();
+            },50)
+        }
+    }, false);
 </script>
