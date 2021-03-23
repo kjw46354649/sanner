@@ -510,14 +510,54 @@
             UPDATE_ID = #{LOGIN_USER_ID}
     </update>
 
-    <update id="insertItemOrderRegisterOut" parameterType="java.util.HashMap">
+    <insert id="insertItemOrderRegisterOut1" parameterType="java.util.HashMap">
+        <selectKey keyProperty="MATERIAL_ORDER_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_MATERIAL_ORDER) FROM DUAL
+        </selectKey>
+        INSERT INTO TBL_MATERIAL_ORDER (
+            MATERIAL_ORDER_SEQ
+            , MATERIAL_ORDER_NUM
+            , CONTROL_SEQ
+            , CONTROL_DETAIL_SEQ
+            , INSERT_ID
+        ) VALUES (
+            #{MATERIAL_ORDER_SEQ}
+            , #{MATERIAL_ORDER_NUM}
+            , #{CONTROL_SEQ}
+            , #{CONTROL_DETAIL_SEQ}
+            , #{LOGIN_USER_ID}
+        )
+    </insert>
+
+    <insert id="insertItemOrderRegisterOut2" parameterType="java.util.HashMap">
+        <selectKey keyProperty="MY_MAT_OUT_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_MY_MAT_OUT) FROM DUAL
+        </selectKey>
         INSERT INTO TBL_MY_MATERIAL_OUT
         (MY_MAT_OUT_SEQ, OUT_QTY, OUT_DT, OUT_USER_ID, MY_MAT_STOCK_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, MATERIAL_ORDER_SEQ, OUT_STATUS, INSERT_ID)
         VALUES
         (
-        NEXTVAL(SEQ_MY_MAT_OUT), #{OUT_QTY}, NOW(), #{OUT_USER_ID}, #{MY_MAT_STOCK_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
+        #{MY_MAT_OUT_SEQ}, #{OUT_QTY}, NOW(), #{OUT_USER_ID}, #{MY_MAT_STOCK_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
         #{MATERIAL_ORDER_SEQ}, 'OUT001', #{LOGIN_USER_ID}
         )
+    </insert>
+
+    <update id="updateItemOrderRegisterOut3" parameterType="java.util.HashMap">
+        UPDATE TBL_MATERIAL_ORDER A, TBL_MY_MATERIAL_OUT B, TBL_MY_MATERIAL_STOCK C
+        SET A.MATERIAL_TYPE = C.MATERIAL_TYPE
+            , A.MATERIAL_DETAIL = C.MATERIAL_DETAIL
+            , A.MATERIAL_KIND = C.MATERIAL_KIND
+            , A.SIZE_TXT = C.SIZE_TXT
+            , A.SIZE_TYPE = C.SIZE_TYPE
+            , A.SIZE_W = C.SIZE_W
+            , A.SIZE_H = C.SIZE_H
+            , A.SIZE_T = C.SIZE_T
+            , A.SIZE_D = C.SIZE_D
+            , A.SIZE_L = C.SIZE_L
+        WHERE B.MATERIAL_ORDER_SEQ = A.MATERIAL_ORDER_SEQ
+            AND C.MY_MAT_STOCK_SEQ = B.MY_MAT_STOCK_SEQ
+            AND C.DEL_YN = 'N'
+            AND B.MY_MAT_OUT_SEQ = #{MY_MAT_OUT_SEQ}
     </update>
 
     <delete id="deleteItemOrderRegisterOut" parameterType="java.util.HashMap">
