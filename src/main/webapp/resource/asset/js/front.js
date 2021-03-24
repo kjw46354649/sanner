@@ -63,16 +63,18 @@ $(document).ready(function(){
 		else if ($('.addTapPage').length == 10) { // 최종 7개의 탭 메뉴만 열림
 			alert("동시에 10개의 탭만 열수 있습니다. 작업완료 탭을 닫고 메뉴를 다시 클릭해 주세요.")
 		} else {
-			$('.contentsWrap .addTapPage').hide();
-			$('.tabMenuWrap ul li').removeClass('on');
-			$('.tabMenuWrap ul').append("<li class='on'><a href='#a;' id='tab_" + pid + "'>" + $(this).attr('tname') + "</a><button type='button' class='closeBtn' idx='tab_" + pid + "'>닫기</button></li>");
-			$.get($(this).attr('url'), function (data) {
-				let containerDiv = "<span class='addTapPage estimate page' id='view_tab_" + pid + "'>" + data + "</span>";
-				$(".contentsWrap").append(containerDiv).trigger('create');
-				tabMenuFn();
-				//estimateH("view_tab_" + pid);
+			if(pid != '10000203') {
+				$('.contentsWrap .addTapPage').hide();
+				$('.tabMenuWrap ul li').removeClass('on');
+				$('.tabMenuWrap ul').append("<li class='on'><a href='#a;' id='tab_" + pid + "'>" + $(this).attr('tname') + "</a><button type='button' class='closeBtn' idx='tab_" + pid + "'>닫기</button></li>");
+				$.get($(this).attr('url'), function (data) {
+					let containerDiv = "<span class='addTapPage estimate page' id='view_tab_" + pid + "'>" + data + "</span>";
+					$(".contentsWrap").append(containerDiv).trigger('create');
+					tabMenuFn();
+					//estimateH("view_tab_" + pid);
 
-			});
+				});
+			}
 		}
 		// setTimeout(function () {
 			// currentTabBarcodeEnable("tab_" + pid);

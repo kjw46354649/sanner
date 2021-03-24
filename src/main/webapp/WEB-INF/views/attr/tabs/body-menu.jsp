@@ -37,7 +37,16 @@
                 </c:if>
             </c:if>
             <c:if test="${menu.PARENT_MENU_SEQ ne 0}">
-                <li><a href="#" url="${menu.MENU_LINK}" tname="${menu.MENU_NM}" pid="${menu.CD_NO}">${menu.MENU_NM}</a></li>
+                <li>
+                    <c:choose>
+                        <c:when test="${not empty menu.CD_NO && menu.CD_NO eq '10000203'}">
+                            <a href="/salesOrderStatus" target="_blank" pid="${menu.CD_NO}">${menu.MENU_NM}</a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="#" url="${menu.MENU_LINK}" tname="${menu.MENU_NM}" pid="${menu.CD_NO}">${menu.MENU_NM}</a>
+                        </c:otherwise>
+                    </c:choose>
+                </li>
             </c:if>
             <c:set var="menuCnt" value="${menuCnt + 1}"/>
             <c:if test="${menu.MENU_SEQ eq 12}">
