@@ -30,18 +30,21 @@ public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult exception(HttpServletRequest request, Exception e) {
+        e.printStackTrace();
         return responseService.getFailResult(Integer.parseInt(getMessage("unKnown.code")), getMessage("unKnown.msg"));
     }
 
     @ExceptionHandler(AuthenticationFailException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     protected CommonResult authenticationFailException(HttpServletRequest request, AuthenticationFailException e) {
+        e.printStackTrace();
         return responseService.getFailResult(Integer.parseInt(getMessage("authenticationFailException.code")), getMessage("authenticationFailException.msg"));
     }
 
     @ExceptionHandler(CompanyNotFoundException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult companyNotFoundException(HttpServletRequest request, CompanyNotFoundException e) {
+        e.printStackTrace();
         return responseService.getFailResult(Integer.parseInt(getMessage("companyNotFound.code")), getMessage("companyNotFound.msg"));
     }
 
