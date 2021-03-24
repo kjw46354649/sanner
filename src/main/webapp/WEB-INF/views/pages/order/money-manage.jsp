@@ -74,9 +74,10 @@
                         <span style="margin: 10px 0; vertical-align: middle; font-size: 1.4rem;"> &nbsp;&nbsp;~</span>
                         <span class="chk_box"><select name="MONEY_RECEIVE_CLOSE_YEAR_ED" id="MONEY_RECEIVE_CLOSE_YEAR_ED"></select>
                         <select name="MONEY_RECEIVE_CLOSE_MONTH_ED" id="MONEY_RECEIVE_CLOSE_MONTH_ED"></select></span>
-                        <%--<span class="chk_box" style="margin-left: 10px;"><input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH">
-                        <label for="RANGE_SEARCH"> Range 검색</label></span>--%>
-<%--                        <button type="button" class="right_float defaultBtn radius blue" id="moneyReceiveStatusSearchBtn">검색</button>--%>
+<%--                        <span class="chk_box" style="margin-left: 10px;">--%>
+<%--                            <input type="checkbox" name="RANGE_SEARCH" id="RANGE_SEARCH">--%>
+<%--                            <label for="RANGE_SEARCH"> Range 검색</label></span>--%>
+                        <button type="button" class="right_float defaultBtn radius blue" id="moneyReceiveStatusSearchBtn">검색</button>
                     </li>
                 </ul>
             </div>
@@ -177,7 +178,7 @@
     let $moneyReceiveStatusGrid;
 
     let $moneyManageStatusSearchBtn = $("#moneyManageStatusSearchBtn");
-    // let $moneyReceiveStatusSearchBtn = $("#moneyReceiveStatusSearchBtn");
+    let $moneyReceiveStatusSearchBtn = $("#moneyReceiveStatusSearchBtn");
 
     let $moneyReceiveAddBtn = $("#moneyReceiveAddBtn");
     let $moneyReceiveDelBtn = $("#moneyReceiveDelBtn");
@@ -495,7 +496,9 @@
         };
 
         let moneyReceiveStatusObj = {
-            height: 700, width: "100%", selectionModel: { type: 'row', mode: 'single'} , swipeModel: {on: false}, collapsible: false,
+            height: 700, width: "100%",
+            // selectionModel: { type: 'row', mode: 'single'} ,
+            swipeModel: {on: false}, collapsible: false,
             trackModel: {on: true}, resizable: false, flexWidth: false, scrollModel: { autoFit: true }, showTitle: false, rowHtHead: 15,
             numberCell: {title: 'No.'}, toolbar: false, columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' },
             colModel: moneyReceiveStatusModel,
@@ -542,6 +545,19 @@
             }
         };
         $moneyReceiveStatusGrid = $('#' + moneyReceiveStatusGridID).pqGrid(moneyReceiveStatusObj);
+
+        $moneyReceiveStatusSearchBtn.click(function(){
+            $moneySalesMonthGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return fnFormToJsonArrayData('money_receive_manage_search_form');
+            });
+            $moneySalesMonthGrid.pqGrid('refreshDataAndView');
+
+            $moneyReceiveStatusGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return fnQueryIdFormToJsonArrayDataOverload('money_receive_manage_search_form', 'orderMapper.moneyManageReceiveList');
+            });
+            $moneyReceiveStatusGrid.pqGrid('refreshDataAndView');
+
+        });
 
         $moneyReceiveAddBtn.click(function(){
             $moneyReceiveStatusGrid.pqGrid('addNodes', [{}], 0);

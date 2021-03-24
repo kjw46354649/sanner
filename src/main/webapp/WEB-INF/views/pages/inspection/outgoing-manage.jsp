@@ -677,7 +677,10 @@
             {title: '출고<br>수량', dataIndx: 'OUT_QTY', minWidth: 40, format: '#,###'},
             {title: '출고<br>일시', dataIndx: 'OUT_FINISH_DT', width: 60},
             {
-                title: '포장<br>묶음', dataType: 'integer', dataIndx: 'PACKING_CNT', minWidth: 40, editable: true,
+                title: '포장<br>묶음', dataType: 'integer', dataIndx: 'PACKING_CNT', minWidth: 40,
+                editable: function (ui) {
+                    return !(ui.rowData['OUT_FINISH_DT'] !== undefined || ui.rowData['ORDER_PACKING_NUM_CNT'] > 0);
+                },
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
             {
@@ -1459,11 +1462,9 @@
             }
         });
         $('#outgoing_manage_label_print_btn').on('click', function () {
-            // let list = [];
-
             let barcodeList = [];
-            if (outgoingManageSelectedRowIndex.length > 0) {
 
+            if (outgoingManageSelectedRowIndex.length > 0) {
                 for (let i = 0; i < outgoingManageSelectedRowIndex.length; i++) {
                     let rowData = outgoingManageGridId01.pqGrid('getRowData', {rowIndx: outgoingManageSelectedRowIndex[i]});
                     let postData = {
@@ -1482,12 +1483,11 @@
                 }
                 let bCodePrintLen = barcodeList.length;
                 if (bCodePrintLen > 0) {
-                    if (fnConfirm(null, bCodePrintLen + "건에 대해서 라벨을 출력합니다.\n진행하시겠습니까?")) {
+                    fnConfirm(null, bCodePrintLen + "건에 대해서 라벨을 출력합니다.\n진행하시겠습니까?", function () {
                         fnBarcodePrint(function (data) {
                             fnAlert(null, data.message);
                         }, barcodeList, '');
-                    }
-
+                    });
                 } else {
                     fnAlert(null, "출력할 바코드가 존재 하지 않습니다.");
                 }

@@ -306,4 +306,9 @@ public class StaticUrlController {
 
         return mav;
     }
+
+    @RequestMapping(value = "/salesOrderStatus")
+    public String salesOrderStatus(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return "/common/sales_order_status";
+    }
 }
