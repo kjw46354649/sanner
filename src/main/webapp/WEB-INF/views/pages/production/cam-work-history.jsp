@@ -1039,7 +1039,7 @@
             $("#cam_work_history_pop_form").find("#CONTROL_NUM").html("<p style='color:blue;'>" + controlNum + "<p/>");
             let controlPartQty = numberWithCommas(rowData.CONTROL_PART_QTY);
             if (rowData.ORIGINAL_SIDE_QTY) controlPartQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.OTHER_SIDE_QTY + ") </span>";
-            $("#cam_work_history_pop_form").find("#CONTROL_PART_QTY").html(controlPartQty);
+            $("#cam_work_history_pop_form").find("#CONTROL_PART_QTY").html(controlPartQty || '');
             let dueOutDt = rowData.INNER_DUE_DT;
             switch (rowData.EMERGENCY_HOLD) {
                 case '보류':
@@ -1049,9 +1049,9 @@
                     dueOutDt += " <input type='button' class='smallBtn red' value='긴급'>";
                     break;
             }
-            $("#cam_work_history_pop_form").find("#DUE_OUT_DT").html(dueOutDt);
-            $("#cam_work_history_pop_form").find("#DRAWING_NUM").html(rowData.CONCAT_DRAWING_NUM);
-            $("#cam_work_history_pop_form").find("#WORK_TYPE").html(rowData.WORK_TYPE_NM);
+            $("#cam_work_history_pop_form").find("#DUE_OUT_DT").html(dueOutDt || '');
+            $("#cam_work_history_pop_form").find("#DRAWING_NUM").html(rowData.CONCAT_DRAWING_NUM || '');
+            $("#cam_work_history_pop_form").find("#WORK_TYPE").html(rowData.WORK_TYPE_NM || '');
             let drawingFile = "";
             if (rowData.CAM_STATUS === "CWS020" || rowData.CAM_STATUS === "CWS030") {
                 let str = rowData.CONCAT_DRAWING_NUM;
@@ -1063,23 +1063,23 @@
                     drawingFile = '<button type="button" class="smallBtn blue" onclick="commonMultiDownloadPop(' + rowData.CONTROL_SEQ + ')">다운로드</button>';
                 }
             }
-            $("#cam_work_history_pop_form").find("#DXF_DOWNLOAD").html(drawingFile);
-            $("#cam_work_history_pop_form").find("#ITEM_NM").html(rowData.ITEM_NM);
-            $("#cam_work_history_pop_form").find("#MATERIAL_DETAIL_NM").html(rowData.MATERIAL_DETAIL_NM);
+            $("#cam_work_history_pop_form").find("#DXF_DOWNLOAD").html(drawingFile || '');
+            $("#cam_work_history_pop_form").find("#ITEM_NM").html(rowData.ITEM_NM || '');
+            $("#cam_work_history_pop_form").find("#MATERIAL_DETAIL_NM").html(rowData.MATERIAL_DETAIL_NM || '');
             let camWorkDate = rowData.CAM_START_DT;
             if (rowData.CAM_STATUS === "CWS030") camWorkDate = rowData.CAM_FINISH_DT;
-            $("#cam_work_history_pop_form").find("#LAST_WORK_DT").html(camWorkDate);
-            $("#cam_work_history_pop_form").find("#SIZE_TXT").html(rowData.SIZE_TXT);
-            $("#cam_work_history_pop_form").find("#SURFACE_TREAT_NM").html(rowData.SURFACE_TREAT_NM);
-            $("#cam_work_history_pop_form").find("#MCT_NOTE").html(rowData.MCT_NOTE);
-            $("#cam_work_history_pop_form").find("#MCT_PLAN_EQUIP_NM").html(rowData.MCT_PLAN_EQUIP_NM);
-            $("#cam_work_history_pop_form").find("#LAST_WORK_EQUIP_NM").html(rowData.LAST_WORK_EQUIP_NM);
+            $("#cam_work_history_pop_form").find("#LAST_WORK_DT").html(camWorkDate || '');
+            $("#cam_work_history_pop_form").find("#SIZE_TXT").html(rowData.SIZE_TXT || '');
+            $("#cam_work_history_pop_form").find("#SURFACE_TREAT_NM").html(rowData.SURFACE_TREAT_NM || '');
+            $("#cam_work_history_pop_form").find("#MCT_NOTE").html(rowData.MCT_NOTE || '');
+            $("#cam_work_history_pop_form").find("#MCT_PLAN_EQUIP_NM").html(rowData.MCT_PLAN_EQUIP_NM || '');
+            $("#cam_work_history_pop_form").find("#LAST_WORK_EQUIP_NM").html(rowData.LAST_WORK_EQUIP_NM || '');
             let camPopHtml = "";
             if (rowData.WORK_HISTORY_INFO) {
                 camPopHtml = rowData.WORK_HISTORY_INFO + "  ";
                 camPopHtml += "<button type='button' class='smallBtn yellow' onclick=\"javascript:g_item_detail_pop_cam_pop('" + rowData.CONTROL_SEQ + "','" + rowData.CONTROL_DETAIL_SEQ + "');\"><i class='fa fa-trash'></i><span >조회</span></button>";
             }
-            $("#cam_work_history_pop_form").find("#WORK_HISTORY_INFO").html(camPopHtml);
+            $("#cam_work_history_pop_form").find("#WORK_HISTORY_INFO").html(camPopHtml || '');
             $("#cam_work_history_pop_form").find("#HISTORY_NOTE").val(rowData.HISTORY_NOTE);
             $("#cam_work_history_pop_form").find("#NOTE").val(rowData.NOTE);
             camWorkHistoryStatusConfig(rowData);
