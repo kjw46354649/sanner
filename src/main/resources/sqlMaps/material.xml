@@ -66,13 +66,19 @@
                 F.ORDER_NOTE AS M_ORDER_NOTE,
                 CASE WHEN F.SIZE_TXT IS NOT NULL THEN F.SIZE_TXT ELSE B.SIZE_TXT END AS M_SIZE_TXT,
 				F.ORDER_STATUS AS M_STATUS,
-			    CASE
-                    WHEN B.PART_STATUS IN ('PRO021', 'PRO022') THEN jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE})
-                    ELSE
-                        CASE
-                            WHEN F.ORDER_STATUS IS NULL THEN '주문대기'
-                            WHEN F.ORDER_STATUS IS NOT NULL THEN SF_GET_CODE_NM('1028', F.ORDER_STATUS, #{LOGIN_LOCALE})
-                        END
+                CASE
+                    WHEN F.ORDER_STATUS IS NOT NULL THEN SF_GET_CODE_NM('1028', F.ORDER_STATUS, #{LOGIN_LOCALE})
+                    ELSE CASE
+                            WHEN EXISTS(SELECT *
+                                        FROM TBL_CONTROL_PART_PROGRESS M
+                                        WHERE M.CONTROL_SEQ = B.CONTROL_SEQ
+                                          AND M.CONTROL_DETAIL_SEQ= B.CONTROL_DETAIL_SEQ
+                                          AND PART_STATUS IN ('PRO021', 'PRO022')) THEN CASE
+                                                                                            WHEN B.PART_STATUS IN ('PRO021', 'PRO022') THEN jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE})
+                                                                                            ELSE '소재입고'
+                                                                                        END
+                            ELSE '주문대기'
+                         END
                 END AS M_STATUS_NM,
 				SF_GET_DATE_F(F.ORDER_DT, '', 'M') AS M_ORDER_DT,
 				SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'TXT') AS OUT_SIZE_TXT,
