@@ -57,18 +57,14 @@
 .onegrid .bottomWrap .right-70Warp { float: right; margin-left: 10px; width: calc(100% - 482px); height: 100%; }
 
 /*# Master & Detail vertical Grid */
-.onegrid .bottomWrap .left-40Warp { float: left; width: calc(100% - 960px); height: 100%; }
-/*.onegrid .bottomWrap .left-40Warp { float: left; width: calc(100% - 1020px); height: 100%; }*/
-.onegrid .bottomWrap .right-60Warp { float: right; margin-left: 15px; width: 945px; height: 100%; }
-/*.onegrid .bottomWrap .right-60Warp { float: right; margin-left: 10px; width: 1010px; height: 100%; }*/
+.onegrid .bottomWrap .left-40Warp { float: left; width: calc(100% - 1020px); height: 100%; }
+.onegrid .bottomWrap .right-60Warp { float: right; margin-left: 10px; width: 1010px; height: 100%; }
 
 /* control business status three grid */
 .onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap h2 { font-size: 1.5em; padding: 5px;}
-.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .left-Warp { width: 475px; height: 150px; }
-/*.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .left-Warp { width: 500px; height: 150px; }*/
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .left-Warp { width: 500px; height: 150px; }
 /*.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .center-Warp { width: 333.3px; height: 150px; }*/
-.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .right-Warp { width: 455px; height: 150px }
-/*.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .right-Warp { width: 500px; height: 150px }*/
+.onegrid .bottomWrap .tableNotSearchOneGridWrap .conWrap .right-Warp { width: 500px; height: 150px }
 
 .form-group1 .group-item { display: inline-block; width: 24.5%; padding: 0.5vh 0.5vw; }
 .form-group1 .group-item-option { display: inline-block; width: 5%; padding: 0.5vh 0.5vw; }

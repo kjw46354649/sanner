@@ -535,9 +535,3 @@ input[type=number] {
   0% { color: #ffffff; }
   100% { color: blue; }
 }
-.mb05 {
-  margin-bottom: 5px;
-}
-.mt10 {
-  margin-top: 10px;
-}
