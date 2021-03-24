@@ -671,6 +671,23 @@
 
                 $('#estimate_register_top_grid_records').html(data.length);
             },
+            beforePaste: function (evt, ui) {
+                let CM = this.getColModel(),
+                    rows = ui.rows,
+                    area = ui.areas[0],
+                    //r1 = area.r1,
+                    c1 = area.c1;
+                for (let i = 0; i < rows.length; i++) {
+                    let row = rows[i];
+                    for (let j = 0; j < row.length; j++) {
+                        let column = CM[j + c1],
+                            dt = column.dataType;
+                        if (dt === 'integer' || dt === 'float') {
+                            row[j] = row[j].replace(/[^(\d|.)]/g, '');
+                        }
+                    }
+                }
+            },
             selectChange: function (event, ui) {
                 estimateRegisterSelectedRowIndex = [];
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
