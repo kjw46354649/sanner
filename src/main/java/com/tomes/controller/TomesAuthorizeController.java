@@ -38,12 +38,18 @@ public class TomesAuthorizeController {
         paramMap.put("queryId", "tomesMapper.selectPortalLogin");
         paramMap.put("COMP_NUM", compNum);
 
-        Map<String, Object> companyInfo = innodaleService.getInfo(paramMap);
+        Map<String, Object> companyInfo = new HashMap<String, Object>();
 
+        if("tomes".equals(compNum)){
+            companyInfo.put("COMP_NUM", "TOMES");
+            companyInfo.put("COMP_CD", "TOMES");
+            companyInfo.put("COMP_NM", "TOMES");
+            companyInfo.put("PORTAL_SHOW_YN", "Y");
+        }else {
+            companyInfo = innodaleService.getInfo(paramMap);
+        }
         if(companyInfo == null) throw new CompanyNotFoundException();
-
         if("N".equals(companyInfo.get("PORTAL_SHOW_YN"))) throw new CompanyDisabledException();
-
         return responseService.getSingleResult(jwtTokenProvider.createToken(String.valueOf(companyInfo.get("COMP_NUM")),
                 String.valueOf(companyInfo.get("COMP_CD")), String.valueOf(companyInfo.get("COMP_NM"))));
 
