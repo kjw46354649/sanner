@@ -2446,7 +2446,7 @@
             , V.STAFF_NM
             , DATE_FORMAT(STR_TO_DATE(CONCAT(V.PREV_CLOSE_MONTH,'01'),'%Y%m%d'),'%y년 %c월') AS PREV_SALES_MONTH
             , CASE WHEN V.PREV_CLOSE_MONTH IS NULL THEN '신규거래'
-                   ELSE CONCAT(PERIOD_DIFF(#{V_MONTH},V.PREV_CLOSE_MONTH),'개월 미거래')
+                   ELSE CONCAT(PERIOD_DIFF(#{MONTH},V.PREV_CLOSE_MONTH),'개월 미거래')
               END AS NOTE
         FROM (  SELECT X.ORDER_COMP_CD
                     , Z.COMP_NM
