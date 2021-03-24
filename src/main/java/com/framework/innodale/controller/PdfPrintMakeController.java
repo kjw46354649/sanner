@@ -376,7 +376,7 @@ public class PdfPrintMakeController {
                 table.addCell(createCell((String) dataList.get(i).get("MATERIAL_DETAIL_NM"), 1, 1, contentsFont));
                 table.addCell(createCell((String) dataList.get(i).get("SIZE_TXT"), 1, 1, contentsFont));
                 table.addCell(createCell("" + dataList.get(i).get("ORDER_QTY"), 1, 1, contentsFont));
-                table.addCell(createCell((String) dataList.get(i).get("REQUEST_NOTE"), 2, 1, contentsFont));
+                table.addCell(createCell1((String) dataList.get(i).get("REQUEST_NOTE"), 2, 1, contentsFont));
                 table.addCell(createCell((String) dataList.get(i).get("ORDER_NOTE"), 1, 1, contentsFont));
                 table.addCell(createCell((String) dataList.get(i).get("CONTROL_NUM") + partNum, 1, 1, contentsFont));
             }
@@ -643,6 +643,19 @@ public class PdfPrintMakeController {
     	if(disableBottom) cell.disableBorderSide(PdfPCell.BOTTOM);
     	if(disableLeft) cell.disableBorderSide(PdfPCell.LEFT);
     	return cell;
+    }
+
+    private static PdfPCell createCell1(String content, int colspan, int rowspan, Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase(content, font));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setMinimumHeight(20f);
+        cell.setPaddingTop(0);
+        cell.setPaddingBottom(0);
+        cell.setUseAscender(true);
+        return cell;
     }
 
 }
