@@ -186,7 +186,6 @@
                             <button type="button" class="defaultBtn btn-120w" id="btnItemOrderRegisterCurrentStock">보유소재 전체현황</button>
                             <span class="chk_box"><input id="chkItemOrderRegisterAutoMatching" type="checkbox"/><label for="chkItemOrderRegisterAutoMatching">보유소재 자동매칭</label></span>
                             <span class="slt_wrap namePlusSlt right_float">
-                                <button type="button" class="defaultBtn radius" id="btnItemOrderRegisterDrawView">도면 보기</button>
                                 <button type="button" class="defaultBtn radius green" id="btnItemOrderRegisterSave">저장</button>
                             </span>
                         </div>
@@ -1583,10 +1582,6 @@
             }
         });
 
-        $("#btnItemOrderRegisterDrawView").on('click', function(){
-
-        });
-
         $("#btnItemOrderRegisterSave").on('click', function(){
             let itemOrderRegisterInsertUpdateQueryList = ['material.insertUpdateItemOrderRegister', 'material.updateMaterialOrderUnitMaterialAutoAmt', 'material.updateControlPartMaterial', 'orderMapper.updateControlAutomaticQuote'];
 
@@ -1780,6 +1775,10 @@
         }, 1000));
 
         $("#btnItemOrderRegisterPopSubmit").on('click', function(){
+            if (materialOrderEmptyRowCheck()) {
+                fnAlert(null, '소재주문 제출시 빈ROW 가 있으면 메세지를...');
+                return false;
+            }
             //메일 여부
             itemOrderRegisterPopMail();
         });
@@ -2050,6 +2049,20 @@
                 }
             }, parameters, '');
         }
+
+        const materialOrderEmptyRowCheck = function () {
+            const gridData = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data')
+            let returnVal = false;
+
+            for (let i = 0, LENGTH = gridData.length; i < LENGTH; i++) {
+                if (Object.keys(gridData[i]).length < 8) {
+                    returnVal = true;
+                    break;
+                }
+            }
+
+            return returnVal;
+        };
 
         function itemOrderRegisterPopMail() {
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();

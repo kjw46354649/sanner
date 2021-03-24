@@ -288,11 +288,15 @@ public class MaterialServiceImpl implements MaterialService {
         if (updateList != null && updateList.size() > 0) {
             for (HashMap<String, Object> dataList : updateList) {
                 dataList.put("LOGIN_USER_ID", userId);
-                dataList.put("queryId", "material.insertItemOrderRegisterPopSave");
+                dataList.put("queryId", "material.selectItemOrderRegisterNextMaterialOrderNum");
+                Map<String, Object> selMap1 =  this.innodaleDao.getInfo(dataList);
+                dataList.put("MATERIAL_ORDER_NUM", selMap1.get("MATERIAL_ORDER_NUM"));
+                dataList.put("queryId", "material.insertItemOrderRegisterOut1");
                 this.innodaleDao.create(dataList);
-                System.out.println(dataList);
-                dataList.put("queryId", "material.insertItemOrderRegisterOut");
+                dataList.put("queryId", "material.insertItemOrderRegisterOut2");
                 this.innodaleDao.create(dataList);
+                dataList.put("queryId", "material.updateItemOrderRegisterOut3");
+                this.innodaleDao.update(dataList);
 
             }
         }

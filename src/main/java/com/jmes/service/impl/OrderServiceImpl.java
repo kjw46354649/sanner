@@ -182,6 +182,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public String createInvoice(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
         ArrayList<HashMap<String, Object>> infoData = null;
@@ -205,6 +206,7 @@ public class OrderServiceImpl implements OrderService {
                     invoiceNum = this.orderDao.createInvoiceNum(hashMap);
                     hashMap.put("INVOICE_NUM", invoiceNum);
                 }
+                hashMap.put("LOGIN_USER_ID", userId);
                 hashMap.put("queryId", "orderMapper.createInvoice");
                 this.innodaleDao.create(hashMap);
             }
@@ -212,15 +214,15 @@ public class OrderServiceImpl implements OrderService {
 
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
+                hashMap.put("LOGIN_USER_ID", userId);
                 hashMap.put("INVOICE_NUM", invoiceNum);
+                hashMap.put("queryId", "orderMapper.selectInvoiceDetailDuplicateCheck");
+                if (this.orderDao.getFlag(hashMap)) {
+                    throw new Exception("duplicate invoice number");
+                }
+
                 hashMap.put("queryId", "orderMapper.createInvoiceDetail");
                 this.innodaleDao.create(hashMap);
-//                hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt1");
-//                this.innodaleDao.update(hashMap);
-//                hashMap.put("queryId", "inspection.updateControlPartOrderPackingCnt2");
-//                this.innodaleDao.update(hashMap);
-//                hashMap.put("queryId", "inspection.insertControlPartOrderPackingCnt3");
-//                this.innodaleDao.create(hashMap);
             }
         }
 

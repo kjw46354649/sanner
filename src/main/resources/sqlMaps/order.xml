@@ -2032,6 +2032,14 @@
                 UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
 
+    <select id="selectInvoiceDetailDuplicateCheck" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+        SELECT EXISTS ( SELECT * FROM TBL_INVOICE_DETAIL
+                        WHERE 1 = 1
+                            AND CONTROL_SEQ = #{CONTROL_SEQ}
+                        	AND ORDER_SEQ = #{ORDER_SEQ}
+                            AND INVOICE_NUM != #{INVOICE_NUM} ) AS FLAG
+    </select>
+
     <insert id="createInvoiceDetail" parameterType="java.util.HashMap" >
         INSERT INTO TBL_INVOICE_DETAIL (
             INVOICE_NUM,

@@ -136,11 +136,19 @@
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                if (waitMeMainContainer !== undefined) $(this).stopWaitMe();
-                // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
-                // if (errorThrown == 'Forbidden') {
-                //     $(this).fnHiddenFormPageAction('/');
-                // }
+                if (typeof $waitMeMainContainer !== 'undefined') $(this).stopWaitMe();
+                const errorDatas = jqXHR.responseJSON;
+                if (errorDatas) {
+                    if (errorDatas.code === -9000) {
+                        fnConfirm(null, errorDatas.msg, function () {
+                            fnHiddenFormPageAction('/');
+                        }, null, 3);
+                    } else {
+                        fnAlert(null, errorDatas.msg);
+                    }
+                } else {
+                    fnAlert(null, errorThrown);
+                }
             }
         });
     };
@@ -212,7 +220,7 @@
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 failPlay();
-                if ($waitMeMainContainer !== undefined) $(this).stopWaitMe();
+                if (typeof $waitMeMainContainer !== 'undefined') $(this).stopWaitMe();
                 // alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
                 // if (errorThrown == 'Forbidden') {
                 //     $(this).fnHiddenFormPageAction('/');

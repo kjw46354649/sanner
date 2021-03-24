@@ -288,21 +288,19 @@
             CONTROL_DETAIL_SEQ,
             WORKING_TIME,
             SORT_NUM,
-            INSERT_DT,
             INSERT_ID
         ) VALUES(
             #{MCT_PLAN_SEQ},
             #{EQUIP_SEQ},
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ},
-            CAST(#{WORKING_TIME} AS INT),
-            (SELECT IFNULL(MAX(SORT_NUM), 0) + 1 FROM TBL_MCT_PLAN AS A WHERE 1 = 1 AND EQUIP_SEQ = #{EQUIP_SEQ} AND DEL_YN = 'N'),
-            NOW(),
+            REGEXP_REPLACE(#{WORKING_TIME}, '[^0-9]', SPACE(0)),
+            (SELECT IFNULL(MAX(M.SORT_NUM), 0) + 1 FROM TBL_MCT_PLAN M WHERE M.DEL_YN = 'N' AND M.EQUIP_SEQ = #{EQUIP_SEQ}),
             #{LOGIN_USER_ID}
         ) ON DUPLICATE KEY
             UPDATE
                 EQUIP_SEQ = #{EQUIP_SEQ},
-                WORKING_TIME = #{WORKING_TIME},
+                WORKING_TIME = REGEXP_REPLACE(#{WORKING_TIME}, '[^0-9]', SPACE(0)),
                 UPDATE_DT = NOW(),
                 UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
@@ -315,21 +313,19 @@
             CONTROL_DETAIL_SEQ,
             WORKING_TIME,
             SORT_NUM,
-            INSERT_DT,
             INSERT_ID
         ) VALUES(
             IFNULL(#{MCT_PLAN_SEQ}, NEXTVAL(SEQ_MCT_PLAN)),
             #{EQUIP_SEQ},
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ},
-            CAST(#{WORKING_TIME} AS INT),
-            (SELECT IFNULL(MAX(SORT_NUM), 0) + 1 FROM TBL_MCT_PLAN AS A WHERE 1 = 1 AND EQUIP_SEQ = #{EQUIP_SEQ} AND DEL_YN = 'N'),
-            NOW(),
+            REGEXP_REPLACE(#{WORKING_TIME}, '[^0-9]', SPACE(0)),
+            (SELECT IFNULL(MAX(M.SORT_NUM), 0) + 1 FROM TBL_MCT_PLAN M WHERE M.DEL_YN = 'N' AND M.EQUIP_SEQ = #{EQUIP_SEQ}),
             #{LOGIN_USER_ID}
         ) ON DUPLICATE KEY
             UPDATE
                 EQUIP_SEQ = #{EQUIP_SEQ},
-                WORKING_TIME = CAST(#{WORKING_TIME} AS INT),
+                WORKING_TIME = REGEXP_REPLACE(#{WORKING_TIME}, '[^0-9]', SPACE(0)),
                 UPDATE_DT = NOW(),
                 UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
@@ -338,7 +334,7 @@
         UPDATE TBL_MCT_PLAN
         SET
             EQUIP_SEQ = #{EQUIP_SEQ},
-            WORKING_TIME = #{WORKING_TIME},
+            WORKING_TIME = REGEXP_REPLACE(#{WORKING_TIME}, '[^0-9]', SPACE(0)),
             SORT_NUM = #{SORT_NUM},
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
@@ -348,22 +344,22 @@
         UPDATE TBL_MCT_PLAN
         SET
             UPDATE_DT = NOW(),
-            <!-- UPDATE_ID = NULL, -->
+            UPDATE_ID = #{LOGIN_USER_ID},
             DEL_YN = 'Y'
         WHERE
             MCT_PLAN_SEQ = #{MCT_PLAN_SEQ}
     </delete>
 
     <delete id="deleteMctPlanAll" parameterType="java.util.HashMap">
-            UPDATE TBL_MCT_PLAN
-            SET
-                UPDATE_DT = NOW(),
-                UPDATE_ID = #{LOGIN_USER_ID},
-                DEL_YN = 'Y'
-            WHERE 1 = 1
-                AND CONTROL_SEQ = #{CONTROL_SEQ}
-                AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-                AND DEL_YN = 'N'
+        UPDATE TBL_MCT_PLAN
+        SET
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID},
+            DEL_YN = 'Y'
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND DEL_YN = 'N'
     </delete>
 
     <delete id="deleteMctWork" parameterType="java.util.HashMap">
@@ -543,7 +539,7 @@
             , jmes.SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM <!-- 소재 종류 -->
             , jmes.SF_GET_CODE_NM('1029', A.MATERIAL_KIND, #{LOGIN_LOCALE}) AS MATERIAL_KIND_NM <!-- 소재 형태 -->
             , jmes.SF_GET_MATERIAL_SIZE_TXT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERAIL_ORDER_SIZE	<!-- 소재 주문 규격 -->
-            , ( SELECT CONCAT(TRUNCATE(SUM(TIMESTAMPDIFF(SECOND, N.WORK_START_DT, N.WORK_STOP_DT)) % 3600 / 60 / jmes.SF_GET_CONTROL_PART_QTY(M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ), 1), '''')
+            , ( SELECT CONCAT(TRUNCATE(TRUNCATE(SUM(TIMESTAMPDIFF(SECOND, N.WORK_START_DT, N.WORK_STOP_DT)) / 60, 0) / jmes.SF_GET_CONTROL_PART_QTY(M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ), 1), '''')
                 FROM TBL_MCT_WORK M
                     , TBL_MCT_WORK_TIME N
                 WHERE N.MCT_WORK_SEQ = M.MCT_WORK_SEQ
@@ -552,7 +548,7 @@
                     AND M.EQUIP_SEQ IN (SELECT EQUIP_SEQ FROM TBL_EQUIP WHERE PROCESS_TYPE = 'MPR010')
                 GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
               ) AS NC_WORK_TIME <!-- CNC -->
-            , ( SELECT CONCAT(TRUNCATE(SUM(TIMESTAMPDIFF(SECOND, N.WORK_START_DT, N.WORK_STOP_DT)) % 3600 / 60 / jmes.SF_GET_CONTROL_PART_QTY(M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ), 1), '''')
+            , ( SELECT CONCAT(TRUNCATE(TRUNCATE(SUM(TIMESTAMPDIFF(SECOND, N.WORK_START_DT, N.WORK_STOP_DT)) / 60, 0) / jmes.SF_GET_CONTROL_PART_QTY(M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ), 1), '''')
                 FROM TBL_MCT_WORK M
                     , TBL_MCT_WORK_TIME N
                 WHERE N.MCT_WORK_SEQ = M.MCT_WORK_SEQ
@@ -620,12 +616,12 @@
         WHERE 1 = 1
             <choose>
                 <when test="CAM_WORK_HISTORY_CONDITION == 1">
-                    AND G.UPDATE_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
+                    AND G.UPDATE_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND DATE_ADD(STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d'), INTERVAL 1 DAY)
                 </when>
                 <when test="CAM_WORK_HISTORY_CONDITION == 2">
                     AND EXISTS (SELECT 1 FROM TBL_CONTROL_PART_PROGRESS P
                         WHERE A.CONTROL_SEQ = P.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ AND P.PART_STATUS = 'PRO002' <!-- 가공 확정 존재 유무 주문 -->
-                            AND P.STATUS_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d')
+                            AND P.STATUS_DT BETWEEN STR_TO_DATE(#{CAM_WORK_HISTORY_START_DT}, '%Y/%m/%d') AND DATE_ADD(STR_TO_DATE(#{CAM_WORK_HISTORY_END_DT}, '%Y/%m/%d'), INTERVAL 1 DAY)
                             AND P.SEQ > IFNULL((SELECT MAX(E.SEQ) FROM TBL_CONTROL_PART_PROGRESS E
                                 WHERE P.CONTROL_SEQ = E.CONTROL_SEQ AND P.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND IFNULL(E.PART_STATUS, 'PRO003') = 'PRO003'), 0
                             )

@@ -172,7 +172,7 @@
                 C.ORDER_NUM,
                 C.DRAWING_NUM,
                 C.ITEM_NM,
-                CONCAT(B.DRAWING_NUM, '\n', C.ITEM_NM) AS DRAWING_NUM_ITEM_NM,
+                CONCAT(C.DRAWING_NUM, '\n', C.ITEM_NM) AS DRAWING_NUM_ITEM_NM,
                 B.SIZE_TXT,
                 SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
                 C.UNIT_FINAL_AMT,
