@@ -984,7 +984,7 @@
                 AND SF_GET_DATE_F(ORDER_DT,'YYYY','') >= #{ITEM_ORDER_HISTORY_START_DATE}
                 AND SF_GET_DATE_F(ORDER_DT,'YYYY','') <![CDATA[ <= ]]> #{ITEM_ORDER_HISTORY_END_DATE}
                 <if test="CONTROL_NUM !='' and CONTROL_NUM != null">
-                    AND (CONTROL_SEQ, CONTROL_DETAIL_SEQ) = (	SELECT N.CONTROL_SEQ , N.CONTROL_DETAIL_SEQ
+                    AND (CONTROL_SEQ, CONTROL_DETAIL_SEQ) IN (	SELECT N.CONTROL_SEQ , N.CONTROL_DETAIL_SEQ
                                                                 FROM TBL_CONTROL M
                                                                     , TBL_CONTROL_PART N
                                                                 WHERE N.CONTROL_SEQ = M.CONTROL_SEQ
