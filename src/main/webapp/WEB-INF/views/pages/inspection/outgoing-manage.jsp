@@ -1528,8 +1528,8 @@
 
         });
 
-        $("#OUTGOING_BARCODE_NUM").on('keyup', function (e) {
-            if (e.keyCode == 13) {
+        $("#OUTGOING_BARCODE_NUM").on('keydown', function (e) {
+            if (e.keyCode === 13) {
                 const barcodeNum = fnBarcodeKo2En(this.value);
                 const barcodeType = barcodeNum.charAt(0).toUpperCase();
                 let barcodeSql = "";
@@ -1542,34 +1542,33 @@
                 } else if (barcodeType === "O") {//영업도면
                     barcodeSql = "inspection.selectOutgoingOutType5";
                 } else {
-                    fnConfirm(null, "알 수 없는 바코드 타입입니다.[" + barcodeNum + "]", function() {}, null, 3);
-                    return;
+                    alertify.notify('알 수 없는 바코드 타입입니다.[' + barcodeNum + ']', 'error');
+                    return false;
                 }
 
                 //0. 바코드 정보 가져오기
                 let data = {'queryId': barcodeSql, 'BARCODE_NUM': barcodeNum};
                 let parameters = {'url': '/json-info', 'data': data};
-                fnPostAjax(function (data) {
+                fnPostAjaxSound(function (data) {
                     let dataInfo = data.info;
                     if (dataInfo == null) {
-                        fnConfirm(null, "해당 바코드가 존재하지 않습니다", function() {}, null, 2);
+                        alertify.notify('해당 바코드가 존재하지 않습니다', 'error');
                         return false;
                     } else {
-                        if (barcodeType == "L") {
+                        if (barcodeType === "L") {
                             // 1. 버튼으로 출고 했을 때 메시지
                             // 2. 버튼으로 모두 출고 했을 때 처리방법
                             if (dataInfo.OUT_QTY > 0) {
-                                fnConfirm(null, "이미 출하처리 되었습니다", function () {}, null, 2);
+                                alertify.notify('이미 출하처리 되었습니다', 'error');
                                 return false;
                             }
 
                             if (dataInfo.MY_OUT_PACKING_CNT > 0) {
-                                fnConfirm(null, "이미 출하처리 되었습니다", function () {}, null, 2);
+                                alertify.notify('이미 출하처리 되었습니다', 'error');
                                 return false;
                             }
 
                             fnJsonDataToForm("outgoing_manage_pop_type_label_form", dataInfo);
-                            // console.log(dataInfo);
                             $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_1").html(dataInfo.QTY_INFO);
                             $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_2").html(dataInfo.REMAIN_PACKING_CNT);
                             $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_3").html(dataInfo.MY_PACKING_NUM);
@@ -1582,21 +1581,16 @@
                                 'data': $('#outgoing_manage_pop_type_label_form').serialize()
                             };
                             fnPostAjaxAsync(function () {
-                                //. 모달 띄우기
-                                $('#outgoing_manage_pop_type_label').modal('show');
-                                setTimeout(function () {
-                                    $('#outgoing_manage_pop_type_label').modal('hide');
-                                    outgoingManageGridId01.pqGrid("refreshDataAndView");
-                                }, 2000);
+                                alertify.notify('출고처리되었습니다', 'success');
                             }, parameters, '');
                         } else if (barcodeType === "C" || barcodeType === "O") {
                             if (dataInfo.OUT_QTY > 0) {
-                                fnConfirm(null, "이미 출하처리 되었습니다", function () {}, null, 2);
+                                alertify.notify('이미 출하처리 되었습니다', 'error');
                                 return false;
                             }
                             // TODO: PACKING 단위로 출고 한 후 출고 된 메세지 어떻게 할지
                             if (dataInfo.MY_OUT_PACKING_CNT > 0) {
-                                fnConfirm(null, "이미 출하처리 되었습니다", function () {}, null, 2);
+                                alertify.notify('이미 출하처리 되었습니다', 'error');
                                 return false;
                             }
 
@@ -1617,12 +1611,7 @@
                                 'data': $('#outgoing_manage_pop_type_control_form').serialize()
                             };
                             fnPostAjaxAsync(function () {
-                                //. 모달 띄우기
-                                $('#outgoing_manage_pop_type_control').modal('show');
-                                setTimeout(function () {
-                                    $('#outgoing_manage_pop_type_control').modal('hide');
-                                    outgoingManageGridId01.pqGrid("refreshDataAndView");
-                                }, 2000);
+                                alertify.notify('출고처리되었습니다', 'success');
                             }, parameters, '');
                         }
                     }
