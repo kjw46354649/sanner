@@ -637,7 +637,7 @@
                 , SF_GET_COMP_NM(H.COMP_CD) AS COMP_NM
                 , H.OUTSIDE_COMP_CD
                 , SF_GET_COMP_NM(H.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
-                , CASE WHEN STATUS_TYPE = '1' THEN '외주금액' ELSE '원발주 금액' END STATUS_TYPE
+                , CASE WHEN STATUS_TYPE = '1' THEN '외주발주금액' ELSE '원발주 금액' END STATUS_TYPE
                 , CASE WHEN H.MM = '01' THEN H.ORDER_AMT ELSE 0 END AS `01_AMT`
                 , CASE WHEN H.MM = '02' THEN H.ORDER_AMT ELSE 0 END AS `02_AMT`
                 , CASE WHEN H.MM = '03' THEN H.ORDER_AMT ELSE 0 END AS `03_AMT`
@@ -719,7 +719,7 @@
         ) X
         WHERE 1 = 1
         <if test="ORIGINAL_ORDER_AMOUNT == null">
-            AND X.STATUS_TYPE = '외주금액'
+            AND X.STATUS_TYPE = '외주발주금액'
         </if>
         GROUP BY X.YYYY, X.COMP_CD, X.OUTSIDE_COMP_CD, X.STATUS_TYPE
         ORDER BY X.YYYY, X.COMP_CD, X.OUTSIDE_COMP_CD, X.STATUS_TYPE
@@ -759,7 +759,7 @@
                 , SF_GET_COMP_NM(H.COMP_CD) AS COMP_NM
                 , H.OUTSIDE_COMP_CD
                 , SF_GET_COMP_NM(H.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
-                , CASE WHEN STATUS_TYPE = '1' THEN '외주금액' ELSE '원발주 금액' END STATUS_TYPE
+                , CASE WHEN STATUS_TYPE = '1' THEN '외주발주금액' ELSE '원발주 금액' END STATUS_TYPE
                 , CASE WHEN H.MM = '01' THEN H.ORDER_AMT ELSE 0 END AS `01_AMT`
                 , CASE WHEN H.MM = '02' THEN H.ORDER_AMT ELSE 0 END AS `02_AMT`
                 , CASE WHEN H.MM = '03' THEN H.ORDER_AMT ELSE 0 END AS `03_AMT`
@@ -841,7 +841,7 @@
         ) X
         WHERE 1 = 1
         <if test="ORIGINAL_ORDER_AMOUNT == null">
-            AND X.STATUS_TYPE = '외주금액'
+            AND X.STATUS_TYPE = '외주발주금액'
         </if>
         GROUP BY X.YYYY, X.STATUS_TYPE
         ORDER BY X.YYYY, X.STATUS_TYPE
