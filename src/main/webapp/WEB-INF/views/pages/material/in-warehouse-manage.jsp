@@ -906,9 +906,10 @@
         }
 
         /** Element Event **/
-        $("#inWarehouseManageBarcode").on('keyup', function(e){
-            if (e.keyCode == 13) {
-                $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val($(this).val());
+        $("#inWarehouseManageBarcode").on('keydown', function(e){
+            if (e.keyCode === 13) {
+                const barcodeNum = fnBarcodeKo2En(this.value);
+                $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val(barcodeNum);
                 $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val('');
                 fnSearchScanTableOnData();
             }
