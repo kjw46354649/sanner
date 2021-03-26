@@ -447,14 +447,17 @@
         <input type="hidden" name="queryId" id="queryId" value="common.selectMultiDownloadList">
         <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
         <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ">
-        <div class="layerPopup" style="height: 490px;">
+        <input type="hidden" name="MAIN_IMG_SEQ" id="MAIN_IMG_SEQ">
+        <div class="layerPopup" style="height: 880px;">
             <h3>도면파일 다운로드</h3>
             <button type="button" class="pop_close mt-10 mr-8" name="common_multi_download_pop_close">닫기
             </button>
             <div class="qualityWrap">
-                <div class="h_area"></div>
+                <div class="h_area">
+                    <img id="floor_plan_img" src="" alt="" class="viewer-move" style="height: 400px;margin-top: 10px;position: absolute;width: 600px;max-width: none !important;transform: none;left: 22%;">
+                </div>
                 <h4></h4>
-                <div class="list4">
+                <div class="list4" style="margin-top: 405px;">
                     <div id="common_multi_download_pop_grid"></div>
                 </div>
             </div>
@@ -1180,10 +1183,10 @@
                 } else {
                     const str = dataInfo.DRAWING_NUM;
                     const arr = str.split(',');
-
                     if (arr.length === 1) {
                         $itemDetailPopForm.find("#DRAWING_VIEW").attr('onClick', 'callWindowImageViewer(' + dataInfo.IMG_GFILE_SEQ + ');');
                     } else if (arr.length > 1) {
+                        $('#common_multi_download_pop_form').find('#MAIN_IMG_SEQ').val(dataInfo.IMG_GFILE_SEQ);
                         $itemDetailPopForm.find("#DRAWING_VIEW").attr('onClick', 'commonMultiDownloadPop(' + dataInfo.CONTROL_SEQ + ',' + dataInfo.CONTROL_DETAIL_SEQ + ');');
                     }
                 }
@@ -1558,6 +1561,10 @@
 
     $('#common_multi_download_pop').on({
         'show.bs.modal': function () {
+            let mainImgSeq = $('#common_multi_download_pop_form').find('#MAIN_IMG_SEQ').val();
+            // $('#floor_plan_img').attr('src','/resource/asset/images/common/'+mainImgSeq+ '.png');
+            $('#floor_plan_img').attr('src','/qimage/'+mainImgSeq);
+            $('#floor_plan_img').attr('alt',mainImgSeq);
             const gridId = 'common_multi_download_pop_grid';
             const postData = fnFormToJsonArrayData('common_multi_download_pop_form');
             const colModel = [
@@ -1594,6 +1601,7 @@
             const obj = {
                 height: 350,
                 collapsible: false,
+                selectionModel: { type: 'row', mode: 'single'} ,
                 postRenderInterval: -1,
                 scrollModel: {autoFit: true},
                 showTitle: false,
@@ -1607,6 +1615,32 @@
                     getData: function (dataJSON) {
                         return {data: dataJSON.data};
                     }
+                },
+                rowSelect: function (evt, ui) {
+                    $.each(ui.addList, function (idx,Item) {
+                        if(idx === 0) {
+                            // let imgUrl = '/resource/asset/images/common/'+Item.rowData.IMG_GFILE_SEQ + '.png';
+                            let imgUrl = '/qimage/'+Item.rowData.IMG_GFILE_SEQ;
+                            $("#floor_plan_img").attr('src',imgUrl);
+                            $("#floor_plan_img").attr('alt',Item.rowData.IMG_GFILE_SEQ);
+                        }
+                    })
+                },
+                cellKeyDown: function (event, ui) {
+                    const rowIndx = ui.rowIndx;
+                    const sr = this.SelectRow();
+                    const selRowData = this.getRowData({rowIndx: rowIndx});
+
+                    if (event.keyCode == $.ui.keyCode.DOWN) {
+                        sr.removeAll();
+                        sr.add({rowIndx: rowIndx + 1});
+                    } else if (event.keyCode == $.ui.keyCode.UP) {
+                        sr.removeAll();
+                        sr.add({rowIndx: rowIndx - 1});
+                    }
+                    let imgUrl = '/qimage/'+selRowData.IMG_GFILE_SEQ;
+                    $("#floor_plan_img").attr('src',imgUrl);
+                    $("#floor_plan_img").attr('alt',selRowData.IMG_GFILE_SEQ);
                 },
             };
             $multiDownloadGrid = $('#' + gridId).pqGrid(obj);
