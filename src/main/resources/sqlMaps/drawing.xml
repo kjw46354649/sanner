@@ -338,6 +338,18 @@
             AND MCT_WORK_SEQ = #{MCT_WORK_SEQ}
     </update>
 
+    <delete id="updateCancelMctControlPartWork" parameterType="java.util.HashMap" >
+        DELETE A
+        FROM jmes.TBL_CONTROL_PART_PROGRESS A
+        WHERE 1 = 1
+            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND A.PART_STATUS = 'PRO007'
+            AND A.SEQ = (SELECT X.SEQ FROM (SELECT MAX(B.SEQ) AS SEQ FROM TBL_CONTROL_PART_PROGRESS B
+                WHERE B.CONTROL_SEQ = #{CONTROL_SEQ} AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}) X
+            )
+    </delete>
+
     <update id="updateCompleteMctWork"  parameterType="java.util.HashMap" >
         UPDATE jmes.TBL_MCT_WORK
         SET

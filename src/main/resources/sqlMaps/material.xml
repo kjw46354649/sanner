@@ -568,6 +568,11 @@
         WHERE MY_MAT_OUT_SEQ IN(${MY_MAT_OUT_SEQ})
     </delete>
 
+    <delete id="deleteItemOrderRegisterOut2" parameterType="java.util.HashMap">
+        DELETE FROM TBL_MY_MATERIAL_OUT
+        WHERE MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
+    </delete>
+
     <insert id="insertItemOrderRegisterPopSave" parameterType="java.util.HashMap" >
         <selectKey keyProperty="MATERIAL_ORDER_SEQ" resultType="int" order="BEFORE">
             SELECT NEXTVAL(SEQ_MATERIAL_ORDER) FROM DUAL
@@ -1409,7 +1414,7 @@
     <update id="updateInWarehouseScan" parameterType="java.util.HashMap">
         UPDATE TBL_MY_MATERIAL_OUT A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-            INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ <!-- FIXME -->
                 AND C.BARCODE_NUM = #{BARCODE_NUM}
         SET A.OUT_STATUS = 'OUT002',
             A.UPDATE_DT = NOW(),

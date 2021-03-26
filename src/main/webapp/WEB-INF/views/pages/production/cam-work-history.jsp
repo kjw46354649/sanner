@@ -570,7 +570,8 @@
             {title: '외<br>주', minWidth: 30, dataIndx: 'OUTSIDE_YN'},
             {title: '수행<br>공장', minWidth: 40, dataIndx: 'WORK_FACTORY_NM'},
             {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
-            {title: '관리번호', align: 'left', width: 160, dataIndx: 'CONTROL_NUM'},
+            {title: '관리번호', align: 'left', width: 160, dataIndx: 'CONTROL_NUM', hidden: true},
+            {title: '관리번호', align: 'left', width: 160, dataIndx: 'CONTROL_PART_NUM'},
             {
                 title: '', width: 25, minWidth: 25, dataIndx: 'CONTROL_NUM_BUTTON', editable: false,
                 render: function (ui) {
@@ -789,10 +790,10 @@
                 data = grid.option('dataModel.data');
 
             const controlList = [
-                'NO', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'ORDER_COMP_NM',
+                'NO', 'CONTROL_PART_NUM', 'ORDER_COMP_NM',
             ];
              const partList = [
-                 'CAM_RECENTLY_REGISTRATION_DT', 'INNER_WORK_FINISH_DT', 'OUTSIDE_YN', 'WORK_FACTORY_NM',  'WORK_TYPE_NM', 'SIZE_TXT',
+                 'CONTROL_NUM_BUTTON', 'CAM_RECENTLY_REGISTRATION_DT', 'INNER_WORK_FINISH_DT', 'OUTSIDE_YN', 'WORK_FACTORY_NM',  'WORK_TYPE_NM', 'SIZE_TXT',
                  'MATERIAL_TYPE_NM', 'DRAWING_NUM', 'IMG_GFILE_SEQ', 'CONTROL_PART_QTY', 'CAD_FILE_SIZE', 'DXF_GFILE_SEQ',
                  'MATERIAL_DETAIL_NM', 'MATERIAL_KIND_NM', 'MATERAIL_ORDER_SIZE', 'NC_WORK_TIME', 'TOTAL_WORK_TIME',
                  // 'CAM_STEP', 'WORK_DIRECTION', 'WORK_DESC', 'DESIGN_QTY', '', 'WORK_USER_NM',
@@ -807,15 +808,15 @@
 
                 if (includeList.includes(dataIndx)) {
                     while (j--) {
-                        let controlNum = data[j]['CONTROL_NUM'],
-                            controlNumPrev = data[j - 1] ? data[j - 1]['CONTROL_NUM'] : undefined,
-                            cellData = data[j][dataIndx],
-                            cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
+                        let controlNum = data[j]['CONTROL_PART_NUM'],
+                            controlNumPrev = data[j - 1] ? data[j - 1]['CONTROL_PART_NUM'] : undefined,
+                            cellData = data[j][dataIndx] || '',
+                            cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] || '' : undefined;
 
                         if (controlList.includes(dataIndx)) {
                             if (controlNum === controlNumPrev) {
                                 // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
-                                if (cellData == cellDataPrev) {
+                                if (cellDataPrev !== undefined && cellData == cellDataPrev) {
                                     rc++;
                                 }
                             } else if (rc > 1) {
@@ -829,12 +830,12 @@
                                 rc = 1;
                             }
                         } else if (partList.includes(dataIndx)) {
-                            let cellData = data[j][dataIndx],
-                                cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] : undefined;
+                            let controlDetailSeq = data[j]['CONTROL_DETAIL_SEQ'],
+                                controlDetailSeqPrev = data[j - 1] ? data[j - 1]['CONTROL_DETAIL_SEQ'] : undefined;
 
-                            if (controlNum === controlNumPrev) {
+                            if (controlNum === controlNumPrev && controlDetailSeq === controlDetailSeqPrev) {
                                 // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
-                                if (cellData == cellDataPrev) {
+                                if (cellDataPrev !== undefined && cellData == cellDataPrev) {
                                     rc++;
                                 }
                             } else if (rc > 1) {
