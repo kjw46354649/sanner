@@ -1882,8 +1882,15 @@
 
         if (!(fnIsEmpty(processingRequirementsTargetGrid) && fnIsEmpty(processingRequirementsTargetRowIndex))) {
             gridInstance = processingRequirementsTargetGrid.pqGrid('getInstance').grid;
-            rowDataPrev = gridInstance.getRowData({rowIndx: processingRequirementsTargetRowIndex + -1});
-            rowDataNext = gridInstance.getRowData({rowIndx: processingRequirementsTargetRowIndex + 1});
+
+            if ($('#processing_requirements_form').find('#TYPE').val() === 'CONTROL') {
+                //TODO: 첫 번째 행 또는 마지막 행이 복수 주문일 경우 버튼 안 보이게
+                rowDataPrev = gridInstance.getRowData({rowIndx: processingRequirementsTargetRowIndex + -1});
+                rowDataNext = gridInstance.getRowData({rowIndx: processingRequirementsTargetRowIndex + 1});
+            } else {
+                rowDataPrev = gridInstance.getRowData({rowIndx: processingRequirementsTargetRowIndex + -1});
+                rowDataNext = gridInstance.getRowData({rowIndx: processingRequirementsTargetRowIndex + 1});
+            }
         }
 
         rowDataPrev === undefined ? $('#prev').css('visibility', 'hidden') : $('#prev').css('visibility', 'visible');
@@ -1912,14 +1919,38 @@
 
     /* event */
     $('#processingRequirementsModal #prev').on('click', function () {
-        processingRequirementsTargetRowIndex--;
+        if ($('#processing_requirements_form').find('#TYPE').val() === 'CONTROL') {
+            const rowData = processingRequirementsTargetGrid.pqGrid('getRowData', {rowIndx: processingRequirementsTargetRowIndex});
+            const controlDetailSeq = rowData.CONTROL_DETAIL_SEQ;
+            let prevControlDetailSeq;
+
+            do {
+                processingRequirementsTargetRowIndex--;
+                const prevRowData = processingRequirementsTargetGrid.pqGrid('getRowData', {rowIndx: processingRequirementsTargetRowIndex});
+                prevControlDetailSeq = prevRowData.CONTROL_DETAIL_SEQ;
+            } while (controlDetailSeq === prevControlDetailSeq)
+        } else {
+            processingRequirementsTargetRowIndex--;
+        }
 
         changeData();
     });
 
     $('#processingRequirementsModal #next').on('click', function () {
-        processingRequirementsTargetRowIndex++;
+        if ($('#processing_requirements_form').find('#TYPE').val() === 'CONTROL') {
+            const rowData = processingRequirementsTargetGrid.pqGrid('getRowData', {rowIndx: processingRequirementsTargetRowIndex});
+            const controlDetailSeq = rowData.CONTROL_DETAIL_SEQ;
+            let nextControlDetailSeq;
 
+            do {
+                processingRequirementsTargetRowIndex++;
+                const nextRowData = processingRequirementsTargetGrid.pqGrid('getRowData', {rowIndx: processingRequirementsTargetRowIndex});
+                nextControlDetailSeq = nextRowData.CONTROL_DETAIL_SEQ;
+            } while (controlDetailSeq === nextControlDetailSeq)
+        } else {
+            processingRequirementsTargetRowIndex++;
+        }
+        
         changeData();
     });
 
