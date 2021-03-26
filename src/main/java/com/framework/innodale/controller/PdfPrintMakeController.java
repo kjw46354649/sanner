@@ -216,9 +216,9 @@ public class PdfPrintMakeController {
                 drawingInfoTable.setWidthPercentage(25f);
                 drawingInfoTable.setWidths(new int[] {35, 65, 12});
 
-                drawingInfoTable.addCell(createDrawingInCell("발주번호", 1, 1, verySmallFont, false, true, false, false));
-                drawingInfoTable.addCell(createDrawingInCell("도면번호", 1, 1, verySmallFont, false, true, false, true));
-                drawingInfoTable.addCell(createDrawingInCell("수량", 1, 1, verySmallFont, false, false, false, true));
+                drawingInfoTable.addCell(createDrawingInCell("발주번호", 1, 1, mediumNormalFont, false, true, false, false));
+                drawingInfoTable.addCell(createDrawingInCell("도면번호", 1, 1, mediumNormalFont, false, true, false, true));
+                drawingInfoTable.addCell(createDrawingInCell("수량", 1, 1, mediumNormalFont, false, false, false, true));
 //                drawingInfoTable.addCell(createDrawingInCell("납기", 1, 1, verySmallFont, false, false, false, true));
 
                 int iOrderListSize = controlOrderList.size();
@@ -266,11 +266,11 @@ public class PdfPrintMakeController {
 
                         PdfPTable orderTable = new PdfPTable(2);
                         orderTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        orderTable.setWidthPercentage(25f);
-                        orderTable.setWidths(new int[] {10, 25});
+                        orderTable.setWidthPercentage(35f);
+                        orderTable.setWidths(new int[] {15, 30});
 
-                        orderTable.addCell(createDrawingLineInCell("도면번호", 1, 1, verySmallFont, false, false, false, false));
-                        orderTable.addCell(createDrawingLineInCell(String.valueOf(fileInfo.get("DRAWING_NUM")) , 1, 1, verySmallFont, false, false, false, false));
+                        orderTable.addCell(createDrawingLineInCell("도면번호", 1, 1, largeNormalFont, false, false, false, false));
+                        orderTable.addCell(createDrawingLineInCell(String.valueOf(fileInfo.get("DRAWING_NUM")) , 1, 1, largeNormalFont, false, false, false, false));
 
                         document.add(orderTable);
                         orderTable.flushContent();
@@ -278,8 +278,8 @@ public class PdfPrintMakeController {
                         if (fileInfo.get("FILE_PATH") != null && !"".equals(fileInfo.get("FILE_PATH"))) {
 
                             Image pngImage = Image.getInstance((String) fileInfo.get("FILE_PATH") + ".print.png");
-                            pngImage.setAbsolutePosition(0, 0);
-                            pngImage.scaleAbsolute(PageSize.A4.getWidth(), PageSize.A4.getHeight());
+                            pngImage.setAbsolutePosition(10, 10);
+                            pngImage.scaleAbsolute(PageSize.A4.getWidth() - 20, PageSize.A4.getHeight() - 20);
                             document.add(pngImage);
 
                         }
@@ -617,7 +617,7 @@ public class PdfPrintMakeController {
     	cell.setHorizontalAlignment(Element.ALIGN_CENTER);
     	cell.setColspan(colspan);
     	cell.setRowspan(rowspan);
-    	cell.setFixedHeight(9f);
+    	cell.setFixedHeight(11f);
         cell.setBorderWidth(0.1f);
     	// cell.setBackgroundColor(BaseColor.WHITE);
     	if(disableTop) cell.disableBorderSide(PdfPCell.TOP);
@@ -635,7 +635,7 @@ public class PdfPrintMakeController {
     	cell.setHorizontalAlignment(Element.ALIGN_CENTER);
     	cell.setColspan(colspan);
     	cell.setRowspan(rowspan);
-    	cell.setFixedHeight(9f);
+    	cell.setFixedHeight(20f);
         cell.setBorderWidth(0.1f);
     	cell.setBackgroundColor(BaseColor.WHITE);
     	if(disableTop) cell.disableBorderSide(PdfPCell.TOP);
