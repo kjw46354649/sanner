@@ -112,14 +112,13 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
         /**
          * Part 상태가 가공 중 인 경우 현재 상태를 이전 상태로 되 돌린다.
          * Progress 상태를 먼저 변경하고 Part Status 상태를 매칭 하여 맞춘다.
-         * 임시로 막고.. WORK 쪽만 삭제 처리 한다.
+         * 2021.03 협의 된 내용으로 삭제 처리된 PART 상태에서는 관리 할 필요 없다는 강대표 확인 으로 이전 상태 삭제 하고 맞추는 방법으로 처리 함
          **/
-//        hashMap.put("queryId", "drawingMapper.createDrawingBoardControlPartProgress");
-//        hashMap.put("PART_STATUS", "PRO008");
-//        innodaleDao.create(hashMap);
-//
-//        hashMap.put("queryId", "drawingMapper.updateDrawingBoardControlPartStatusMapping");
-//        innodaleDao.create(hashMap);
+        hashMap.put("queryId", "drawingMapper.updateCancelMctControlPartWork");
+        innodaleDao.create(hashMap);
+
+        hashMap.put("queryId", "drawingMapper.updateDrawingBoardControlPartStatusMapping");
+        innodaleDao.create(hashMap);
 
     }
 }

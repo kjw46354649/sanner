@@ -979,7 +979,7 @@
                 , jmes.SF_GET_DATE_F(A.ORDER_DT,'YY','M') AS ORDER_DT
                 , A.IN_DT
                 , A.ORDER_USER_ID
-            FROM TBL_MATERIAL_ORDER
+            FROM TBL_MATERIAL_ORDER A
             WHERE A.ORDER_STATUS IN ('MST002','MST004')
                 AND SF_GET_DATE_F(A.ORDER_DT,'YYYY','') >= #{ITEM_ORDER_HISTORY_START_DATE}
                 AND SF_GET_DATE_F(A.ORDER_DT,'YYYY','') <![CDATA[ <= ]]> #{ITEM_ORDER_HISTORY_END_DATE}
