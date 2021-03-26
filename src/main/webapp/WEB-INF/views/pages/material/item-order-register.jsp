@@ -1924,29 +1924,16 @@
                 $("#item_order_register_popup_form #CONCAT_SEQ").val(CONCAT_SEQ);
                 $("#item_order_register_popup_form #MATERIAL_ORDER_SEQ").val(ORDER_SEQ);
 
-                let parameter = {
-                    'queryId': 'material.insertItemOrderRegisterMasterOrderHistory',
+                const data = {
+                    'queryId': 'material.insertItemOrderRegisterMasterOrderHistory,material.updateItemOrderRegisterMaterialOrderCancel,material.deleteItemOrderRegisterOut2,material.updateItemOrderRegisterControlPartCancel',
+                    'CONCAT_SEQ': CONCAT_SEQ,
                     'MATERIAL_ORDER_SEQ': ORDER_SEQ,
                 };
-                let parameters = {'url': '/json-create', 'data': parameter};
-                fnPostAjax(function(){
-                    parameter = {
-                        'queryId': 'material.updateItemOrderRegisterMaterialOrderCancel',
-                        'MATERIAL_ORDER_SEQ': ORDER_SEQ,
-                    };
-                    parameters = {'url': '/json-remove', 'data': parameter};
-                    fnPostAjax(function(){
-                        parameter = {
-                            'queryId': 'material.updateItemOrderRegisterControlPartCancel',
-                            'CONCAT_SEQ': CONCAT_SEQ,
-                        };
-                        parameters = {'url': '/json-remove', 'data': parameter};
-                        fnPostAjax(function () {
-                            fnAlert(null, '취소 완료되었습니다.');
-                            $('#item_order_register_popup').modal('hide');
-                        }, parameters, '');
-                    }, parameters, '');
-                }, parameters, '');
+                const parameter = {'url': '/json-manager', 'data': data};
+                fnPostAjax(function (data, callFunctionParam) {
+                    fnAlert(null, '취소 완료되었습니다.');
+                    $('#item_order_register_popup').modal('hide');
+                }, parameter, '');
             });
         }
 
