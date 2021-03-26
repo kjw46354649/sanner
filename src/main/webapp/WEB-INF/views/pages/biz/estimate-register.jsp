@@ -982,8 +982,10 @@
                 }
                 //$("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
 
-                postData = { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
-                fnRequestGridData(estimateRegisterTopGrid, postData);
+                estimateRegisterTopGrid.pqGrid('option', 'dataModel.postData', function () {
+                    return { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
+                });
+                estimateRegisterTopGrid.pqGrid('refreshDataAndView');
 
                 postData = { 'queryId': 'estimate.selectEstimateReceiverList', 'EST_SEQ': EST_SEQ };
                 fnRequestGridData(estimateRegisterBotGrid, postData);
@@ -1338,12 +1340,13 @@
 
         /* 도면 등록 팝업 호출 */
         $btnEstimateRegisterDrawAdd.click(function () {
-            var gridInstance = estimateRegisterTopGrid.pqGrid('getInstance').grid;
+            const gridInstance = estimateRegisterTopGrid.pqGrid('getInstance').grid;
+
             if (gridInstance.isDirty()) {
                 fnAlert(null,"변경된 사항이 존재합니다. 저장 후 등록 해 주세요.");
                 return false;
             }
-            // callCadDrawingUploadPopup('estimate', 'estimate.manageEstimateCadFiles');
+
             drawingUploadPopupWindow('estimate', 'estimate.manageEstimateCadFiles');
         });
 
