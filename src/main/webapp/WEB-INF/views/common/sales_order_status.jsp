@@ -332,6 +332,13 @@
 
                 callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
+            rowSelect: function (evt, ui) {
+                $.each(ui.addList, function (idx,Item) {
+                    if(idx === 0) {
+                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
+                })
+            },
             toolbar: false,
         };
         $businessOutgoingListGrid = $('#' + businessOutgoingListGridId).pqGrid(businessStatusObj);
@@ -404,6 +411,13 @@
                 let data = $businessEmergencyListGrid.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
                 $('#business_emergency_records').html(totalRecords);
+            },
+            rowSelect: function (evt, ui) {
+                $.each(ui.addList, function (idx,Item) {
+                    if(idx === 0) {
+                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
+                })
             },
             cellKeyDown: function (event, ui) {
                 const rowIndx = ui.rowIndx;
@@ -482,6 +496,13 @@
                 let data = $businessOverOrderListGrid.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
                 $('#business_over_total_records').html(totalRecords);
+            },
+            rowSelect: function (evt, ui) {
+                $.each(ui.addList, function (idx,Item) {
+                    if(idx === 0) {
+                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
+                })
             },
             cellKeyDown: function (event, ui) {
                 const rowIndx = ui.rowIndx;

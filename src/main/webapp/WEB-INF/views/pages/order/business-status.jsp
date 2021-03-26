@@ -319,6 +319,13 @@
 
                 callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
+            rowSelect: function (evt, ui) {
+                $.each(ui.addList, function (idx,Item) {
+                    if(idx === 0) {
+                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
+                })
+            },
             toolbar: false,
         };
         $businessOutgoingListGrid = $('#' + businessOutgoingListGridId).pqGrid(businessStatusObj);
@@ -392,6 +399,28 @@
                 let totalRecords = data.length;
                 $('#business_emergency_records').html(totalRecords);
             },
+            rowSelect: function (evt, ui) {
+                $.each(ui.addList, function (idx,Item) {
+                    if(idx === 0) {
+                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
+                })
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                }
+
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+            },
             toolbar: false,
         };
         $businessEmergencyListGrid = $('#' + businessEmergencyListGridId).pqGrid(businessEmergencyObj);
@@ -454,6 +483,28 @@
                 let data = $businessOverOrderListGrid.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
                 $('#business_over_total_records').html(totalRecords);
+            },
+            rowSelect: function (evt, ui) {
+                $.each(ui.addList, function (idx,Item) {
+                    if(idx === 0) {
+                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
+                })
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                }
+
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
             toolbar: false,
         };
