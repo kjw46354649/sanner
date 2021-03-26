@@ -390,12 +390,12 @@
               ) X
     </select>
     <select id="selectCommItemDetailInfoGrid4" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT ROW_NUMBER() OVER(ORDER BY B.CAM_SEQ) AS RNUM
+        SELECT ROW_NUMBER() OVER(ORDER BY B.SEQ) AS RNUM
           , B.SEQ AS CAM_SEQ
-          , SF_GET_CODE_NM(1080, B.WORK_DIRECTION, #{LOGIN_LOCALE}) AS WORK_DIRECTION <!-- CAM 가공위치 -->
+          , SF_GET_CODE_NM('1080', B.WORK_DIRECTION, #{LOGIN_LOCALE}) AS WORK_DIRECTION <!-- CAM 가공위치 -->
           , B.WORK_DESC
           , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = B.WORK_USER_ID) AS WORK_USER_NM
-          , B.CAM_GFILE_SEQ    -- 확인
+          , B.CAM_GFILE_SEQ    <!-- 확인 -->
           , CASE WHEN B.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE B.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_KIND = 'EXC') ELSE SPACE(0) END CAM_FILE_SEQ <!-- CAM FILE -->
           , CASE WHEN B.CAM_GFILE_SEQ IS NOT NULL THEN (SELECT FILE_SEQ FROM TBL_FILE I WHERE B.CAM_GFILE_SEQ = I.GFILE_SEQ AND I.FILE_KIND = 'EXN') ELSE SPACE(0) END NC_FILE_SEQ <!-- NC FILE -->
           , CASE WHEN A.START_DT IS NOT NULL AND A.FINISH_DT IS NULL THEN '(진행중)' ELSE SPACE(0) END AS STATUS_INFO
@@ -406,7 +406,7 @@
         WHERE A.CAM_SEQ = B.CAM_SEQ
           AND A.CONTROL_SEQ = #{CONTROL_SEQ}
           AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-        ORDER BY 1 DESC
+        ORDER BY 1
     </select>
     <select id="selectCommItemDetailInfoGrid5" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT ROW_NUMBER() OVER(ORDER BY A.INSPECT_SEQ) AS Q_SEQ
