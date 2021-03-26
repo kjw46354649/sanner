@@ -448,16 +448,16 @@
         <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
         <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ">
         <input type="hidden" name="MAIN_IMG_SEQ" id="MAIN_IMG_SEQ">
-        <div class="layerPopup" style="height: 880px;">
+        <div class="layerPopup" style="height: 930px;">
             <h3>도면파일 다운로드</h3>
             <button type="button" class="pop_close mt-10 mr-8" name="common_multi_download_pop_close">닫기
             </button>
             <div class="qualityWrap">
                 <div class="h_area">
-                    <img id="floor_plan_img" src="" alt="" class="viewer-move" style="height: 400px;margin-top: 10px;position: absolute;width: 600px;max-width: none !important;transform: none;left: 22%;">
+                    <img id="floor_plan_img" src="" alt="" class="viewer-move" style="height: 500px;margin-top: 23px;position: absolute;width: 700px;max-width: none !important;transform: none;left: 15%;">
                 </div>
                 <h4></h4>
-                <div class="list4" style="margin-top: 405px;">
+                <div class="list4" style="margin-top: 530px;">
                     <div id="common_multi_download_pop_grid"></div>
                 </div>
             </div>
@@ -1171,6 +1171,7 @@
                         if (arr.length === 1) {
                             $itemDetailPopForm.find("#CAD_DOWNLOAD").attr('onClick', 'fnFileDownloadFormPageAction(' + dataInfo.DXF_GFILE_SEQ + ');');
                         } else if (arr.length > 1) {
+                            $('#common_multi_download_pop_form').find('#MAIN_IMG_SEQ').val(dataInfo.IMG_GFILE_SEQ);
                             $itemDetailPopForm.find("#CAD_DOWNLOAD").attr('onClick', 'commonMultiDownloadPop(' + dataInfo.CONTROL_SEQ + ',' + dataInfo.CONTROL_DETAIL_SEQ + ');');
                         }
 
@@ -1599,7 +1600,7 @@
                 }
             ];
             const obj = {
-                height: 350,
+                height: 250,
                 collapsible: false,
                 selectionModel: { type: 'row', mode: 'single'} ,
                 postRenderInterval: -1,
