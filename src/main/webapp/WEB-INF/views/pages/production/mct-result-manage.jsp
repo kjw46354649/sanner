@@ -933,7 +933,7 @@
             let controlNum = rowData.CONTROL_NUM;
             if(rowData.PART_NUM) controlNum += " # " + rowData.PART_NUM;
             $("#cam_work_manage_pop_form").find("#CONTROL_NUM").html("<p style='color:blue;'>" + controlNum + "<p/>");
-           let controlPartQty = numberWithCommas(rowData.CONTROL_PART_QTY);
+            let controlPartQty = numberWithCommas(rowData.CONTROL_PART_QTY);
             if (rowData.ORIGINAL_SIDE_QTY) controlPartQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.OTHER_SIDE_QTY + ") </span>";
             $("#cam_work_manage_pop_form").find("#CONTROL_PART_QTY").html(controlPartQty || '');
             let dueOutDt = rowData.INNER_DUE_DT;
@@ -956,6 +956,7 @@
                 if (arr.length === 1) {
                     drawingFile = "<a href='/downloadGfile/" + rowData.DXF_GFILE_SEQ + "' download><input type='button' class='smallBtn blue' value='다운로드'/></a>";
                 } else if (arr.length > 1) {
+                    $('#common_multi_download_pop_form').find('#MAIN_IMG_SEQ').val(rowData.IMG_GFILE_SEQ);
                     drawingFile = '<button type="button" class="smallBtn blue" onclick="commonMultiDownloadPop(' + rowData.CONTROL_SEQ + ')">다운로드</button>';
                 }
             }
