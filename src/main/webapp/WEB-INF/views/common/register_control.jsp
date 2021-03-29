@@ -516,8 +516,6 @@
                                 return false;
                             }
 
-                            return false;
-
                             let parameters = {
                                 'url': '/createNewOrder',
                                 'data': {data: JSON.stringify(data)}
