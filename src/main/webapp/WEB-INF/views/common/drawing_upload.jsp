@@ -274,7 +274,7 @@
 
     /** 캐드 파일 업로드 시작 스크립트 **/
     let estimateCadFileColModel =  [
-        {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 1, minWidth: 70},
+        {title: 'ROW_NUM', dataType: 'string', dataIndx: 'ROW_NUM', hidden: true, width: 1, minWidth: 70},
         {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ', hidden: true, width: 1, minWidth: 70},
         // {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 1, minWidth: 70},
         {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ', hidden: true, width: 1, minWidth: 70},
@@ -298,7 +298,7 @@
     ];
 
     let controlCadFileColModel =  [
-        {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70},
+        {title: 'ROW_NUM', dataType: 'string', dataIndx: 'ROW_NUM', hidden: true, width: 70, minWidth: 70},
         {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 70, minWidth: 70},
         {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
         // {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 150, minWidth: 100},
@@ -323,7 +323,7 @@
     ];
 
     let controlCadRevFileColModel =  [
-        {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70},
+        {title: 'ROW_NUM', dataType: 'string', dataIndx: 'ROW_NUM', hidden: true, width: 70, minWidth: 70},
         {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 1, minWidth: 1},
         {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
         // {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 150, minWidth: 100},
@@ -350,7 +350,7 @@
     ];
 
     let insideStockCadFileColModel =  [
-        {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 70, minWidth: 70},
+        {title: 'ROW_NUM', dataType: 'string', dataIndx: 'ROW_NUM', hidden: true, width: 70, minWidth: 70},
         {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 70, minWidth: 70},
         {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 70, minWidth: 70},
         {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
@@ -381,7 +381,7 @@
         dataModel: {
             location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
             postData: {queryId: 'dataSource.emptyGrid'},
-            recIndx: 'ROWNUM',
+            recIndx: 'ROW_NUM',
             getData: function (dataJSON) {
                 return {data: dataJSON.data || []};
             }
@@ -398,7 +398,7 @@
     };
 
     let commonUploadFileListColModel =  [
-        {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true, width: 0, minWidth: 0},
+        {title: 'ROW_NUM', dataType: 'string', dataIndx: 'ROW_NUM', hidden: true, width: 0, minWidth: 0},
         {title: 'PDF_GFILE_SEQ', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', hidden: true, width: 0, minWidth: 0},
         {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 0, minWidth: 0},
         {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 0, minWidth: 0},
@@ -421,27 +421,22 @@
                 let $cell = grid.getCell(ui);
                 let rowData = ui.rowData;
                 $cell.find('#REMOVE_CAD_FILE_UPLOAD_BTN').bind('click', function(e) {
-                    var gridData = $commonCadFileAttachGrid.pqGrid('option', 'dataModel.data');
-                    var delKdys = [];
-                    var selfDelKdys = [];
-                    $.each(gridData, function (key, eachRowData) {
-                        if (rowData.FILE_EXT == "pdf") {
-                            if(rowData.PDF_GFILE_SEQ === eachRowData.PDF_GFILE_SEQ)
-                                eachRowData.PDF_GFILE_SEQ = '';
-                        } else {
-                            if(rowData.DXF_GFILE_SEQ === eachRowData.DXF_GFILE_SEQ)
-                                eachRowData.DXF_GFILE_SEQ = '';
+                    let commonCadFileAttachGridData = $commonCadFileAttachGrid.pqGrid('option', 'dataModel.data');
+                    const deleteRowList = commonCadFileAttachGridData.reduce(function (acc, eachRowData) {
+                        if (rowData.FILE_EXT === "pdf" && rowData.PDF_GFILE_SEQ === eachRowData.PDF_GFILE_SEQ) {
+                            eachRowData.PDF_GFILE_SEQ = '';
+                        } else if (rowData.FILE_EXT === "dxf" && rowData.DXF_GFILE_SEQ === eachRowData.DXF_GFILE_SEQ) {
+                            eachRowData.DXF_GFILE_SEQ = '';
                         }
                         if (!eachRowData.DXF_GFILE_SEQ && !eachRowData.PDF_GFILE_SEQ) {
-                            delKdys.push({'rowIndx': eachRowData});
+                            acc.push({rowIndx: eachRowData.pq_ri});
                         }
-                    });
-                    $commonCadFileAttachGrid.pqGrid('deleteRow', {rowList: delKdys});
+                        return acc;
+                    }, []);
+                    $commonCadFileAttachGrid.pqGrid('deleteRow', {rowList: deleteRowList, effect: true});
                     $commonCadFileAttachGrid.pqGrid('refresh');
-
                     $commonCadUploadFileGrid.pqGrid("deleteRow", {rowIndx: ui.rowIndx, effect: true });
                     $commonCadUploadFileGrid.pqGrid('refresh');
-
                 });
             }
         }
@@ -457,7 +452,7 @@
         dataModel: {
             location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
             postData: {queryId: 'dataSource.emptyGrid', 'COUNT': 0},
-            recIndx: 'ROWNUM',
+            recIndx: 'ROW_NUM',
             getData: function (dataJSON) {
                 return {data: dataJSON.data || []};
             }
@@ -510,8 +505,10 @@
             formData.append('queryId', $('#common_cad_file_attach_form').find("#queryId").val() + "_select");
             formData.append('actionType', $('#common_cad_file_attach_form').find('#actionType').val());
             uploadControlFiles = [];    // 파일 업로드 정보 초기화
+
             $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
             $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
+
             fnFormDataFileUploadAjax(function (data) {
                 let fileUploadDataList = data.fileUploadDataList;
                 if (fileUploadDataList.length <= 0) {
@@ -549,7 +546,7 @@
                     $commonCadUploadFileGrid.pqGrid('refresh');
                     $(this).stopWaitMe();
                 }
-            }, formData, $('#common_cad_file_attach_form').find('#actionUrl').val());
+            }, formData, '/uploadControlCadFiles');
         }
     });
 
@@ -566,6 +563,12 @@
                 };
                 $("#common_cad_file_attach_form").find("#fileGrid").val(JSON.stringify(changes));
                 let parameters = {'url': '/cadFileConvert', 'data': {data: JSON.stringify(changes)}};
+
+
+                console.log("$cadFileConvertUploadCompletedBtn");
+                console.log(parameters);
+
+
                 fnPostAjax(function (data, callFunctionParam) {
                     fnAlert(null,"<h1>저장되었습니다.</h1>", function () {
                         $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
