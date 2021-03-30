@@ -2274,7 +2274,7 @@
                 FROM jmes.TBL_SALES_GOAL A
                 WHERE A.YYYYMM = CONCAT(#{YEAR}, #{MONTH})
                 <if test="COMP_CD != null and COMP_CD != ''">
-                    AND A.COMP_CD = {COMP_CD}
+                    AND A.COMP_CD = #{COMP_CD}
                 </if>
              ) X
            , (  SELECT SUM(A.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
@@ -2283,7 +2283,7 @@
                 FROM jmes.TBL_MONTH_CLOSE A
                 WHERE A.CLOSE_MONTH = CONCAT(#{YEAR}, #{MONTH})
                 <if test="COMP_CD != null and COMP_CD != ''">
-                    AND A.COMP_CD = {COMP_CD}
+                    AND A.COMP_CD = #{COMP_CD}
                 </if>
              ) Y
     </select>
@@ -2297,7 +2297,7 @@
                 FROM jmes.TBL_MONTH_CLOSE A
                 WHERE A.CLOSE_MONTH = CONCAT(#{YEAR}, #{MONTH})
                 <if test="COMP_CD != null and COMP_CD != ''">
-                    AND A.COMP_CD = {COMP_CD}
+                    AND A.COMP_CD = #{COMP_CD}
                 </if>
                 GROUP BY A.ORDER_COMP_CD
                 ORDER BY 2 DESC
@@ -2312,7 +2312,7 @@
                 FROM jmes.TBL_MONTH_CLOSE A
                 WHERE A.CLOSE_MONTH = CONCAT(#{YEAR}, #{MONTH})
                 <if test="COMP_CD != null and COMP_CD != ''">
-                    AND A.COMP_CD = {COMP_CD}
+                    AND A.COMP_CD = #{COMP_CD}
                 </if>
                 GROUP BY A.ORDER_COMP_CD
                 ORDER BY 2 DESC
@@ -2331,7 +2331,7 @@
                 FROM jmes.TBL_SALES_GOAL A
                 WHERE A.YYYYMM LIKE CONCAT(#{YEAR},'%')
                 <if test="COMP_CD != null and COMP_CD != ''">
-                    AND A.COMP_CD = {COMP_CD}
+                    AND A.COMP_CD = #{COMP_CD}
                 </if>
              ) X
            , (  SELECT SUM(A.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
@@ -2340,7 +2340,7 @@
                 FROM jmes.TBL_MONTH_CLOSE A
                 WHERE A.CLOSE_MONTH LIKE CONCAT(#{YEAR},'%')
                 <if test="COMP_CD != null and COMP_CD != ''">
-                    AND A.COMP_CD = {COMP_CD}
+                    AND A.COMP_CD = #{COMP_CD}
                 </if>
              ) Y
     </select>
@@ -2354,7 +2354,7 @@
                 FROM jmes.TBL_MONTH_CLOSE A
                 WHERE A.CLOSE_MONTH LIKE CONCAT(#{YEAR},'%')
                 <if test="COMP_CD != null and COMP_CD != ''">
-                    AND A.COMP_CD = {COMP_CD}
+                    AND A.COMP_CD = #{COMP_CD}
                 </if>
                 GROUP BY A.ORDER_COMP_CD
                 ORDER BY 2 DESC
@@ -2369,7 +2369,7 @@
                 FROM jmes.TBL_MONTH_CLOSE A
                 WHERE A.CLOSE_MONTH LIKE CONCAT(#{YEAR},'%')
                 <if test="COMP_CD != null and COMP_CD != ''">
-                    AND A.COMP_CD = {COMP_CD}
+                    AND A.COMP_CD = #{COMP_CD}
                 </if>
                 GROUP BY A.ORDER_COMP_CD
                 ORDER BY 2 DESC
@@ -2437,16 +2437,18 @@
             , V.PLUS_MINUS
             , V.PLUS_MINUS_RED_YN
             , V.BUSINESS_ITEM
-            , V.MONTH_AMT
-            , W.YEAR_AMT
-            , W.ORDER_CNT
-            , W.ORDER_QTY
-            , CONCAT(TRUNCATE(IFNULL(W.MCT_WORK_TIME,0)/3600,0),'h') AS MCT_WORK_TIME
-            , ROUND(W.YEAR_AMT / (W.MCT_WORK_TIME / 3600),0) AS YEAR_AMT_PER_HOUR
+            , TRUNCATE(V.MONTH_AMT / 1000,0) AS MONTH_AMT
+            , V.MONTH_ORDER_CNT
+            , V.MONTH_ORDER_QTY
+            , TRUNCATE(W.YEAR_AMT / 1000,0) AS YEAR_AMT
+            , W.YEAR_ORDER_CNT
+            , W.YEAR_ORDER_QTY
+            , CONCAT(TRUNCATE(IFNULL(W.YEAR_MCT_WORK_TIME,0)/3600,0),'h') AS MCT_WORK_TIME
+            , ROUND(TRUNCATE(W.YEAR_AMT / 1000,0) / (W.YEAR_MCT_WORK_TIME / 3600),0) AS YEAR_AMT_PER_HOUR
             , V.STAFF_NM
             , DATE_FORMAT(STR_TO_DATE(CONCAT(V.PREV_CLOSE_MONTH,'01'),'%Y%m%d'),'%y년 %c월') AS PREV_SALES_MONTH
             , CASE WHEN V.PREV_CLOSE_MONTH IS NULL THEN '신규거래'
-                   ELSE CONCAT(PERIOD_DIFF(#{MONTH},V.PREV_CLOSE_MONTH),'개월 미거래')
+                   ELSE CASE WHEN PERIOD_DIFF(CONCAT(#{YEAR},#{MONTH}),V.PREV_CLOSE_MONTH) > 1 THEN CONCAT(PERIOD_DIFF(CONCAT(#{YEAR},#{MONTH}),V.PREV_CLOSE_MONTH)-1,'개월 미거래') END
               END AS NOTE
         FROM (  SELECT X.ORDER_COMP_CD
                     , Z.COMP_NM
@@ -2457,119 +2459,153 @@
                            WHEN X.RANK_NUM <![CDATA[ < ]]> Y.RANK_NUM THEN CONCAT('▲',(Y.RANK_NUM - X.RANK_NUM))
                            WHEN X.RANK_NUM > Y.RANK_NUM THEN CONCAT('▼',(X.RANK_NUM - Y.RANK_NUM))
                       END AS PLUS_MINUS
-                    , CASE WHEN Y.ORDER_COMP_CD IS NULL THEN 'Y'
+                    ,  CASE WHEN Y.ORDER_COMP_CD IS NULL THEN 'Y'
                            WHEN X.RANK_NUM <![CDATA[ < ]]> Y.RANK_NUM THEN 'Y'
                       END AS PLUS_MINUS_RED_YN
                     , X.MONTH_AMT
+                    , X.MONTH_ORDER_CNT
+                    , X.MONTH_ORDER_QTY
                     , ( SELECT MAX(M.CLOSE_MONTH)
                         FROM jmes.TBL_MONTH_CLOSE M
                         WHERE M.ORDER_COMP_CD = X.ORDER_COMP_CD
-                            AND M.CLOSE_MONTH <![CDATA[ < ]]> CONCAT(#{YEAR}, #{MONTH})
-                        <if test="COMP_CD != null and COMP_CD != ''">
-                            AND M.COMP_CD = #{COMP_CD} -- 가변조건
-                        </if>
+                            AND M.CLOSE_MONTH <![CDATA[ < ]]> CONCAT(#{YEAR},#{MONTH})
+                            <if test="COMP_CD != null and COMP_CD != ''">
+                            	AND M.COMP_CD = #{COMP_CD}
+                        	</if>
                       ) AS PREV_CLOSE_MONTH
                 FROM (  SELECT P.ORDER_COMP_CD
                             , P.MONTH_AMT
+                            , Q.ORDER_CNT AS MONTH_ORDER_CNT
+                            , Q.ORDER_QTY AS MONTH_ORDER_QTY
                             , RANK() OVER(ORDER BY P.MONTH_AMT DESC) AS RANK_NUM
                         FROM (  SELECT A.ORDER_COMP_CD
                                     , SUM(A.FINAL_NEGO_AMT) AS MONTH_AMT
                                 FROM jmes.TBL_MONTH_CLOSE A
-                                WHERE A.CLOSE_MONTH = CONCAT(#{YEAR}, #{MONTH})
-                                <if test="COMP_CD != null and COMP_CD != ''">
-                                    AND A.COMP_CD = #{COMP_CD}
-                                </if>
+                                WHERE A.CLOSE_MONTH = CONCAT(#{YEAR},#{MONTH})
+	                                <if test="COMP_CD != null and COMP_CD != ''">
+	                                    AND A.COMP_CD = #{COMP_CD}
+	                                </if>
                                 GROUP BY A.ORDER_COMP_CD
                             ) P
+                          , (   SELECT B.ORDER_COMP_CD
+                                    , COUNT(DISTINCT B.ORDER_SEQ) AS ORDER_CNT
+                                    , SUM(jmes.SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, B.ORDER_SEQ)) AS ORDER_QTY
+                                FROM jmes.TBL_MONTH_CLOSE_ORDER B
+                                WHERE B.CLOSE_MONTH = CONCAT(#{YEAR},#{MONTH})
+	                                <if test="COMP_CD != null and COMP_CD != ''">
+	                                    AND B.COMP_CD = #{COMP_CD}
+	                                </if>
+                                GROUP BY B.ORDER_COMP_CD
+                            ) Q
+                        WHERE P.ORDER_COMP_CD = Q.ORDER_COMP_CD
                      ) X LEFT OUTER JOIN ( SELECT Q.ORDER_COMP_CD
-                                                , Q.FINAL_NEGO_AMT
-                                                , RANK() OVER(ORDER BY Q.FINAL_NEGO_AMT DESC) AS RANK_NUM
+                                                , Q.PREV_MONTH_AMT
+                                                , RANK() OVER(ORDER BY Q.PREV_MONTH_AMT DESC) AS RANK_NUM
                                             FROM (  SELECT A.ORDER_COMP_CD
-                                                        , SUM(A.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
+                                                        , SUM(A.FINAL_NEGO_AMT) AS PREV_MONTH_AMT
                                                     FROM jmes.TBL_MONTH_CLOSE A
                                                     WHERE A.CLOSE_MONTH = DATE_FORMAT(DATE_ADD(STR_TO_DATE(CONCAT(#{YEAR},#{MONTH},'01'),'%Y%m%d'), INTERVAL -1 MONTH),'%Y%m')
-                                                    <if test="COMP_CD != null and COMP_CD != ''">
-                                                        AND A.COMP_CD = #{COMP_CD}
-                                                    </if>
+                                                    	<if test="COMP_CD != null and COMP_CD != ''">
+	                                                        AND A.COMP_CD = #{COMP_CD}
+	                                                    </if>
                                                     GROUP BY A.ORDER_COMP_CD
                                                 ) Q
                                          ) Y ON X.ORDER_COMP_CD = Y.ORDER_COMP_CD
                     , jmes.TBL_COMPANY Z
                 WHERE X.ORDER_COMP_CD = Z.COMP_CD
-            ) V LEFT OUTER JOIN (   SELECT E.ORDER_COMP_CD
-                                        , SUM(E.ORDER_CNT) AS ORDER_CNT
-                                        , SUM(E.ORDER_QTY) AS ORDER_QTY
-                                        , ROUND(SUM(E.MCT_WORK_TIME * E.ORDER_CNT / E.ORDER_CNT_TOTAL),0) AS MCT_WORK_TIME
-                                        , SUM(E.YEAR_AMT) AS YEAR_AMT
-                                    FROM (  SELECT D.ORDER_COMP_CD
-                                                , D.CONTROL_SEQ
-                                                , (SELECT COUNT(*) FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = D.CONTROL_SEQ) AS ORDER_CNT_TOTAL
-                                                , D.ORDER_CNT
-                                                , D.ORDER_QTY
-                                                , (SELECT SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK', M.MCT_WORK_SEQ)) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = D.CONTROL_SEQ) AS MCT_WORK_TIME
-                                                , D.YEAR_AMT
-                                            FROM (  SELECT C.ORDER_COMP_CD
-                                                        , C.CONTROL_SEQ
-                                                        , COUNT(C.ORDER_SEQ) AS ORDER_CNT
-                                                        , SUM(jmes.SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ)) AS ORDER_QTY
-                                                        , SUM(C.YEAR_AMT) AS YEAR_AMT
-                                                    FROM (  SELECT B.ORDER_COMP_CD, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.ORDER_SEQ, SUM(A.FINAL_NEGO_AMT) AS YEAR_AMT
-                                                            FROM jmes.TBL_MONTH_CLOSE A, jmes.TBL_MONTH_CLOSE_ORDER B
-                                                            WHERE A.COMP_CD = B.COMP_CD
-                                                                AND A.CLOSE_MONTH = B.CLOSE_MONTH
-                                                                AND A.ORDER_COMP_CD = B.ORDER_COMP_CD
-                                                                AND A.CLOSE_VER = B.CLOSE_VER
-                                                                AND A.CLOSE_MONTH LIKE CONCAT(#{YEAR},'%')
-                                                                <if test="COMP_CD != null and COMP_CD != ''">
-                                                                    AND A.COMP_CD = #{COMP_CD}
-                                                                </if>
-                                                            GROUP BY B.ORDER_COMP_CD, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.ORDER_SEQ
-                                                         ) C
-                                                    GROUP BY C.ORDER_COMP_CD, C.CONTROL_SEQ
-                                                  ) D
-                                         ) E
-                                    GROUP BY E.ORDER_COMP_CD
+            ) V LEFT OUTER JOIN (   SELECT P.ORDER_COMP_CD
+                                        , P.YEAR_AMT
+                                        , Q.ORDER_CNT AS YEAR_ORDER_CNT
+                                        , Q.ORDER_QTY AS YEAR_ORDER_QTY
+                                        , Q.MCT_WORK_TIME AS YEAR_MCT_WORK_TIME
+                                    FROM (  SELECT A.ORDER_COMP_CD
+                                                , SUM(A.FINAL_NEGO_AMT) AS YEAR_AMT
+                                            FROM jmes.TBL_MONTH_CLOSE A
+                                            WHERE A.CLOSE_MONTH LIKE CONCAT(#{YEAR},'%')
+                                            	<if test="COMP_CD != null and COMP_CD != ''">
+                                                    AND A.COMP_CD = #{COMP_CD}
+                                                </if>
+                                            GROUP BY A.ORDER_COMP_CD
+                                        ) P
+                                      , (   SELECT B.ORDER_COMP_CD
+                                                , COUNT(DISTINCT B.ORDER_SEQ) AS ORDER_CNT
+                                                , SUM(jmes.SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, B.ORDER_SEQ)) AS ORDER_QTY
+                                                , SUM((SELECT SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK', M.MCT_WORK_SEQ)) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N' )) AS MCT_WORK_TIME
+                                            FROM jmes.TBL_MONTH_CLOSE_ORDER B
+                                            WHERE B.CLOSE_MONTH LIKE CONCAT(#{YEAR},'%')
+                                            	<if test="COMP_CD != null and COMP_CD != ''">
+                                                    AND B.COMP_CD = #{COMP_CD}
+                                                </if>
+                                            GROUP BY B.ORDER_COMP_CD
+                                        ) Q
+                                    WHERE P.ORDER_COMP_CD = Q.ORDER_COMP_CD
                                 ) W ON V.ORDER_COMP_CD = W.ORDER_COMP_CD
         ORDER BY W.YEAR_AMT DESC
     </select>
 
     <select id="selectOutsourcingProcessPurchaseStatusByCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.OUTSIDE_COMP_CD
-            , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS COMP_NM
-            , X.MONTH_AMT
-            , Y.YEAR_AMT
-            , Y.PART_CNT AS YEAR_PART_CNT
-            , Y.PART_QTY AS YEAR_PART_QTY
-        FROM (  SELECT A.OUTSIDE_COMP_CD
-                    , SUM(A.FINAL_NEGO_AMT) AS MONTH_AMT
-                    , MAX(B.CONTROL_SEQ) AS CONTROL_SEQ
-                    , MAX(B.CONTROL_DETAIL_SEQ) AS CONTROL_DETAIL_SEQ
-                FROM TBL_OUTSIDE_CLOSE_NOTE A, TBL_OUTSIDE_CLOSE B
-                WHERE A.CLOSE_MONTH = B.CLOSE_MONTH
-                    AND A.CLOSE_VER = B.CLOSE_VER
-                    AND A.CLOSE_MONTH = CONCAT(#{YEAR},#{MONTH})
-                <if test="COMP_CD != null and COMP_CD != ''">
-                    AND A.COMP_CD = #{COMP_CD}
-                </if>
-                GROUP BY A.OUTSIDE_COMP_CD
+            , jmes.SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS COMP_NM
+            , TRUNCATE(X.MONTH_AMT / 1000,0) AS MONTH_AMT
+            , X.MONTH_PART_CNT
+            , X.MONTH_PART_QTY
+            , TRUNCATE(Y.YEAR_AMT / 1000,0) AS YEAR_AMT
+            , Y.YEAR_PART_CNT
+            , Y.YEAR_PART_QTY
+        FROM (  SELECT P.OUTSIDE_COMP_CD
+                    , SUM(P.FINAL_NEGO_AMT) AS MONTH_AMT
+                    , SUM(Q.MONTH_PART_CNT) AS MONTH_PART_CNT
+                    , SUM(Q.MONTH_PART_QTY) AS MONTH_PART_QTY
+                FROM TBL_OUTSIDE_CLOSE_NOTE P
+                    , ( SELECT A.CLOSE_MONTH, A.CLOSE_VER, B.COMP_CD, C.OUTSIDE_COMP_CD
+                            , COUNT(A.CONTROL_SEQ) AS MONTH_PART_CNT
+                            , SUM(jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ)) AS MONTH_PART_QTY
+                        FROM jmes.TBL_OUTSIDE_CLOSE A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
+                        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                            AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                            AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                            AND A.CLOSE_MONTH = CONCAT(#{YEAR},#{MONTH})
+                            <if test="COMP_CD != null and COMP_CD != ''">
+                                AND B.COMP_CD = #{COMP_CD}
+                            </if>
+                        GROUP BY A.CLOSE_MONTH, A.CLOSE_VER, B.COMP_CD, C.OUTSIDE_COMP_CD
+                       ) Q
+                WHERE P.CLOSE_MONTH = Q.CLOSE_MONTH
+                    AND P.CLOSE_VER = Q.CLOSE_VER
+                    AND P.COMP_CD = Q.COMP_CD
+                    AND P.OUTSIDE_COMP_CD = Q.OUTSIDE_COMP_CD
+                    AND P.CLOSE_MONTH = CONCAT(#{YEAR},#{MONTH})
+                    <if test="COMP_CD != null and COMP_CD != ''">
+                        AND P.COMP_CD = #{COMP_CD}
+                    </if>
+                GROUP BY P.OUTSIDE_COMP_CD
              ) X
            , (  SELECT P.OUTSIDE_COMP_CD
-                    , MAX(P.FINAL_NEGO_AMT) AS YEAR_AMT
-                    , COUNT(*) AS PART_CNT
-                    , SUM(jmes.SF_GET_CONTROL_PART_QTY(P.CONTROL_SEQ, P.CONTROL_DETAIL_SEQ)) AS PART_QTY
-                FROM (  SELECT A.OUTSIDE_COMP_CD
-                            , SUM(A.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
-                            , MAX(B.CONTROL_SEQ) AS CONTROL_SEQ
-                            , MAX(B.CONTROL_DETAIL_SEQ) AS CONTROL_DETAIL_SEQ
-                        FROM TBL_OUTSIDE_CLOSE_NOTE A, TBL_OUTSIDE_CLOSE B
-                        WHERE A.CLOSE_MONTH = B.CLOSE_MONTH
-                            AND A.CLOSE_VER = B.CLOSE_VER
+                    , SUM(P.FINAL_NEGO_AMT) AS YEAR_AMT
+                    , SUM(Q.YEAR_PART_CNT) AS YEAR_PART_CNT
+                    , SUM(Q.YEAR_PART_QTY) AS YEAR_PART_QTY
+                FROM TBL_OUTSIDE_CLOSE_NOTE P
+                    , ( SELECT A.CLOSE_MONTH, A.CLOSE_VER, B.COMP_CD, C.OUTSIDE_COMP_CD
+                            , COUNT(A.CONTROL_SEQ) AS YEAR_PART_CNT
+                            , SUM(jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ)) AS YEAR_PART_QTY
+                        FROM jmes.TBL_OUTSIDE_CLOSE A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
+                        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                            AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                            AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                             AND A.CLOSE_MONTH LIKE CONCAT(#{YEAR},'%')
-                        <if test="COMP_CD != null and COMP_CD != ''">
-                            AND A.COMP_CD = #{COMP_CD}
-                        </if>
-                        GROUP BY A.OUTSIDE_COMP_CD
-                     ) P
+                            <if test="COMP_CD != null and COMP_CD != ''">
+                                AND B.COMP_CD = #{COMP_CD}
+                            </if>
+                        GROUP BY A.CLOSE_MONTH, A.CLOSE_VER, B.COMP_CD, C.OUTSIDE_COMP_CD
+                       ) Q
+                WHERE P.CLOSE_MONTH = Q.CLOSE_MONTH
+                    AND P.CLOSE_VER = Q.CLOSE_VER
+                    AND P.COMP_CD = Q.COMP_CD
+                    AND P.OUTSIDE_COMP_CD = Q.OUTSIDE_COMP_CD
+                    AND P.CLOSE_MONTH LIKE CONCAT(#{YEAR},'%')
+                    <if test="COMP_CD != null and COMP_CD != ''">
+                        AND P.COMP_CD = #{COMP_CD}
+                    </if>
                 GROUP BY P.OUTSIDE_COMP_CD
              ) Y
         WHERE X.OUTSIDE_COMP_CD = Y.OUTSIDE_COMP_CD

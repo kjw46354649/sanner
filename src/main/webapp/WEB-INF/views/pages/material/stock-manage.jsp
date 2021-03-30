@@ -1092,8 +1092,13 @@
                             }, parameters2, '');
 
                         }else{
+                            let popType = $("#stock_manage_form").find("#popType").val();
+                            let foot_msg = pop_msg_in;
                             fnJsonDataToForm("stock_manage_pop_form", dataInfo);
-                            $("#stock_manage_pop_form").find("#footer_msg").html(pop_msg_in);
+                            if(popType == 'GRID_OUT') {
+                                foot_msg = pop_msg_out;
+                            }
+                            $("#stock_manage_pop_form").find("#footer_msg").html(foot_msg);
                             $("#stock_manage_pop_form").find("#ORDER_QTY").val(dataInfo.ORDER_QTY);
                             $("#stock_manage_pop_form").find("#ORIGINAL_ORDER_QTY").val(dataInfo.ORDER_QTY);
                             $("#stock_manage_pop_form").find("#ORIGINAL_POP_STOCK_QTY_AFTER").val(dataInfo.POP_STOCK_QTY_AFTER);

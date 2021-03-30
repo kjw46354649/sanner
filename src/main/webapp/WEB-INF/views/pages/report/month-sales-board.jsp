@@ -103,7 +103,9 @@
                     <div>
                         <h4>발주처별 상세 누적현황</h4>
                     </div>
-                    <div class="ml-auto"></div>
+                    <div class="ml-auto">
+                        <span>(단위 : 천원)</span>
+                    </div>
                 </div>
             </div>
             <div class="conWrap">
@@ -116,7 +118,9 @@
                     <div>
                         <h4>업체별 외주가공 매입현황</h4>
                     </div>
-                    <div class="ml-auto"></div>
+                    <div class="ml-auto">
+                        <span>(단위 : 천원)</span>
+                    </div>
                 </div>
             </div>
             <div class="conWrap">
@@ -171,7 +175,8 @@
                 pie: {
                     enableMouseTracking: false,
                     dataLabels: {
-                        enabled: false
+                        format: '<b>{point.name}</b><br>{point.percentage:.1f} %',
+                        // distance: -50,
                     },
                     showInLegend: true
                 }
@@ -213,7 +218,8 @@
                 pie: {
                     enableMouseTracking: false,
                     dataLabels: {
-                        enabled: false
+                        format: '<b>{point.name}</b><br>{point.percentage:.1f} %',
+                        // distance: -50,
                     },
                     showInLegend: true
                 }
@@ -320,7 +326,7 @@
         const botLeftGridId = 'month_sales_board_botGrid1';
         const botLeftGridColModel = [
             {title: '발주처명', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주처명', dataIndx: 'COMP_NM'},
+            {title: '발주처명', width: 110, dataIndx: 'COMP_NM'},
             {
                 title: '변동', dataIndx: 'PLUS_MINUS',
                 render: function (ui) {
@@ -330,25 +336,27 @@
                 }
             },
             {title: 'PLUS_MINUS_RED_YN', dataIndx: 'PLUS_MINUS_RED_YN', hidden: true},
-            {title: '업종', dataIndx: 'BUSINESS_ITEM'},
-            {title: '월매출금액<br>(백만원)', dataType: 'integer', format: '#,###',dataIndx: 'MONTH_AMT'},
-            {title: '누적매출금액<br>(백만원)', dataType: 'integer', format: '#,###',dataIndx: 'YEAR_AMT'},
-            {title: '누적품수<br>(발주단위)', dataType: 'integer', format: '#,###',dataIndx: 'ORDER_CNT'},
-            {title: '누적수량<br>(EA)', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'},
-            {title: '누적<br>가공시간', dataIndx: 'MCT_WORK_TIME'},
-            {title: '시간당 매출<br>(매출/가공시간)', dataType: 'integer', format: '#,###', dataIndx: 'YEAR_AMT_PER_HOUR'},
-            {title: '이전<br>거래년월', dataIndx: 'PREV_SALES_MONTH'},
-            {title: '영업담당', dataIndx: 'STAFF_NM'},
-            {title: '구분', dataIndx: 'NOTE'},
+            {title: '업종', width: 140, dataIndx: 'BUSINESS_ITEM'},
+            {title: '월매출금액', width: 80, dataType: 'integer', format: '#,###',dataIndx: 'MONTH_AMT'},
+            {title: '품수<br>(월단위)', width: 60, dataType: 'integer', format: '#,###',dataIndx: 'MONTH_ORDER_CNT'},
+            {title: '수량<br>(월단위)', width: 60, dataType: 'integer', format: '#,###',dataIndx: 'MONTH_ORDER_QTY'},
+            {title: '누적매출금액', width: 100, dataType: 'integer', format: '#,###',dataIndx: 'YEAR_AMT'},
+            {title: '누적품수<br>(발주단위)', width: 100, dataType: 'integer', format: '#,###',dataIndx: 'YEAR_ORDER_CNT'},
+            {title: '누적수량<br>(EA)', width: 60, dataType: 'integer', format: '#,###', dataIndx: 'YEAR_ORDER_QTY'},
+            {title: '누적<br>가공시간', width: 60, dataIndx: 'MCT_WORK_TIME'},
+            {title: '시간당 매출<br>(매출/가공시간)', width: 110, dataType: 'integer', format: '#,###', dataIndx: 'YEAR_AMT_PER_HOUR'},
+            {title: '이전<br>거래년월', width: 70, dataIndx: 'PREV_SALES_MONTH'},
+            {title: '영업담당', width: 70, dataIndx: 'STAFF_NM'},
+            {title: '구분', width: 100, dataIndx: 'NOTE'}
         ];
         const botLeftGridObj = {
-            height: 340,
+            height: 380,
             collapsible: false,
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
             numberCell: {title: 'No.'},
-            scrollModel: {autoFit: true},
+            // scrollModel: {autoFit: true},
             // selectionModel: {type: 'row', mode: 'single'},
             editable: false,
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
@@ -369,12 +377,14 @@
             {title: '외주업체명', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
             {title: '외주업체명', dataIndx: 'COMP_NM'},
             {title: '월 매입금액', dataType: 'integer', format: '#,###', dataIndx: 'MONTH_AMT'},
-            {title: '누적 매입금액', dataType: 'integer', format: '#,###', dataIndx: 'YEAR_AMT'},
+            {title: '품수<br>(월단위)', dataType: 'integer', format: '#,###',dataIndx: 'MONTH_PART_CNT'},
+            {title: '수량<br>(월단위)', dataType: 'integer', format: '#,###',dataIndx: 'MONTH_PART_QTY'},
+            {title: '누적<br>매입금액', dataType: 'integer', format: '#,###', dataIndx: 'YEAR_AMT'},
             {title: '누적품수', dataType: 'integer', format: '#,###', dataIndx: 'YEAR_PART_CNT'},
             {title: '누적수량', dataType: 'integer', format: '#,###', dataIndx: 'YEAR_PART_QTY'},
         ];
         const botRightGridObj = {
-            height: 340,
+            height: 380,
             collapsible: false,
             resizable: false,
             showTitle: false,
@@ -543,7 +553,7 @@
 
             const GOAL_AMT_KOR = data !== undefined && data[0].GOAL_AMT_KOR ? data[0].GOAL_AMT_KOR : '';
             const SALES_AMT_KOR = data !== undefined && data[0].SALES_AMT_KOR ? data[0].SALES_AMT_KOR : '';
-            const MONTH_RATIO = data !== undefined && data[0].MONTH_RATIO ? data[0].MONTH_RATIO : '';
+            const MONTH_RATIO = data !== undefined && data[0].MONTH_RATIO ? data[0].MONTH_RATIO + '%' : '';
             const $table = $('.month_sales_board').find('#' + tableId);
             $table.find('#goal_amt_kor').html(GOAL_AMT_KOR);
             $table.find('#sales_amt_kor').html(SALES_AMT_KOR);
