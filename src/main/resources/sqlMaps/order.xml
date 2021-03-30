@@ -2369,7 +2369,7 @@
             H.INSPECT_GRADE, jmes.SF_GET_CODE_NM('1040', H.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 -->
             G.USER_NM, F.STAFF_NM
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL AND B.WORK_TYPE NOT IN ('WTP050') <!-- 21.03.30 작업형태 '파트'인것 제외 -->
             INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ
                 <if test="INNER_DUE_DT != null and INNER_DUE_DT != ''">
                     AND C.ORDER_DUE_DT = REPLACE(#{INNER_DUE_DT}, '/', SPACE(0))
@@ -2411,7 +2411,7 @@
                     , SUM(CASE WHEN C.OUT_FINISH_DT IS NOT NULL THEN 1 ELSE 0 END) AS OUT_FINISH_CNT
                     , COUNT(*) AS ORDER_CNT
                 FROM jmes.TBL_CONTROL A
-                    INNER JOIN jmes.TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ AND B.PART_NUM IS NULL
+                    INNER JOIN jmes.TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ AND B.PART_NUM IS NULL AND B.WORK_TYPE NOT IN ('WTP050') <!-- 21.03.30 작업형태 '파트'인것 제외 -->
                     INNER JOIN jmes.TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = A.CONTROL_SEQ
                         AND C.ORDER_DUE_DT BETWEEN #{SEL_START_DATE} AND #{SEL_END_DATE}
                 WHERE 1 = 1
@@ -2432,6 +2432,7 @@
     </select>
 
     <select id="businessEmergencyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <!-- 21.03.30 현재 미사용 -->
         SELECT
             ROW_NUMBER() OVER() AS ROW_NUM,
             DATE_FORMAT(STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d'), '%m-%d') as ORDER_DUE_DT,
@@ -2451,6 +2452,7 @@
     </select>
 
     <select id="businessOverOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <!-- 21.03.30 현재 미사용 -->
         SELECT
             ROW_NUMBER() OVER() AS ROW_NUM,
             DATE_FORMAT(STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d'), '%m-%d') as ORDER_DUE_DT,
@@ -2471,6 +2473,7 @@
     </select>
 
     <select id="businessOverDangerList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        <!-- 21.03.30 현재 미사용 -->
         SELECT
             ROW_NUMBER() OVER() AS ROW_NUM,
             DATE_FORMAT(STR_TO_DATE(C.ORDER_DUE_DT, '%Y%m%d'), '%m-%d') as ORDER_DUE_DT,
@@ -2805,6 +2808,8 @@
                     AND B.CONTROL_SEQ = C.CONTROL_SEQ
                     AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.DEL_YN = 'N'
+                    AND B.PART_NUM IS NULL
+                    AND B.WORK_TYPE NOT IN ('WTP050')   <!-- 21.03.30 작업형태 '파트'인것 제외 -->
                     AND A.CONTROL_STATUS IN ('ORD001','ORD003')
                     AND IFNULL(B.PART_STATUS, SPACE(0)) NOT IN ('PRO020')  --  폐기 제외 -->
                     AND (
@@ -2846,6 +2851,8 @@
                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND B.CONTROL_SEQ = C.CONTROL_SEQ
                     AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND B.PART_NUM IS NULL
+                    AND B.WORK_TYPE NOT IN ('WTP050') <!-- 21.03.30 작업형태 '파트'인것 제외 -->
                     AND A.DEL_YN = 'N'
                     AND A.CONTROL_STATUS IN ('ORD001','ORD003')
                     AND IFNULL(B.PART_STATUS, SPACE(0)) NOT IN ('PRO020') <!-- 폐기 제외 -->
