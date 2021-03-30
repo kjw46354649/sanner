@@ -522,16 +522,16 @@
                     {title:'길이', dataType: 'float', dataIndx: 'SIZE_L_M'}
                 ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
+                    {title: '합계', dataType: 'integer', dataIndx: 'UNIT_SUM_AUTO_AMT', format: '#,###'},
                     {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###'},
-                    {title: '연마비', datatype: 'string', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', format: '#,###'},
-                    {title: '열처리', datatype: 'string', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', format: '#,###'},
+                    {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', format: '#,###'},
+                    {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', format: '#,###'},
                     {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
                     {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###'},
                     {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###'},
                     {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE'}
                 ]},
-            {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST', format: '#,###', width: 80},
-            {title: '최종견적가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80},
+            {title: '최종견적단가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80},
             {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
             {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,

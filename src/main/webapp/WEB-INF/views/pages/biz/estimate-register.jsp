@@ -484,26 +484,18 @@
                     {title:'지름', dataType: 'float', dataIndx: 'SIZE_D_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
                     {title:'길이', dataType: 'float', dataIndx: 'SIZE_L_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} }
                 ], hidden: true},
-            {title: '자동계산 견적단가', align: "center", colModel:[
+            {title: '자동 계산견적 단가', align: "center", colModel: [
+                    {title: '합계', dataType: 'integer', dataIndx: 'UNIT_SUM_AUTO_AMT', format: '#,###', align: 'right', editable: false},
                     {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', format: '#,###', align: 'right', editable: false},
                     {title: '연마비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###', align: 'right', editable: false},
                     {title: '열처리', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###', align: 'right', editable: false},
                     {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AUTO_AMT', format: '#,###', align: 'right', editable: false},
                     {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AUTO_AMT', format: '#,###', align: 'right', editable: false},
-                    {title: '합계', dataType: 'integer', dataIndx: 'UNIT_SUM_AUTO_AMT', format: '#,###', align: 'right', editable: false},
-                ]
-            },
-            {title: '항목별 계산 견적단가(10원단위 반올림)', align: "center", colModel: [
-                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
-                    {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
-                    {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
-                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
-                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
                     {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
                     {title: '견적비고', dataType: 'string', dataIndx: 'UNIT_AMT_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'left'}
-                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
-            {title: '계산견적단가', dataType: 'float', dataIndx: 'CALCUL_EST_UNIT_COST', format: '#,###', width: 80, editable: false},
-            {title: '최종견적가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+                ]
+            },
+            {title: '최종견적단가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
             {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80, editable: false},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
             {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
@@ -845,36 +837,15 @@
                     estimateRegisterTopGrid.pqGrid('updateRow', {rowList: rowListConvert});
                 }
 
-                if(ui.source === 'edit' || ui.source === 'paste'){
-                    for(let iTmp=0; iTmp < ui.updateList.length; iTmp++ ){
-                        let rowIndx = ui.updateList[iTmp].rowIndx;
-                        let calculateEstimateAmt = 0;
-                        let data = ui.updateList[iTmp].rowData;
-                        let UNIT_MATERIAL_AMT = data.UNIT_MATERIAL_AMT == null || data.UNIT_MATERIAL_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_AMT);
-                        let UNIT_MATERIAL_FINISH_GRIND_AMT = data.UNIT_MATERIAL_FINISH_GRIND_AMT == null || data.UNIT_MATERIAL_FINISH_GRIND_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_FINISH_GRIND_AMT);
-                        let UNIT_MATERIAL_FINISH_HEAT_AMT = data.UNIT_MATERIAL_FINISH_HEAT_AMT == null || data.UNIT_MATERIAL_FINISH_HEAT_AMT == '' ? 0 : parseFloat(data.UNIT_MATERIAL_FINISH_HEAT_AMT);
-                        let UNIT_SURFACE_AMT = data.UNIT_SURFACE_AMT == null || data.UNIT_SURFACE_AMT == '' ? 0 : parseFloat(data.UNIT_SURFACE_AMT);
-                        let UNIT_PROCESS_AMT = data.UNIT_PROCESS_AMT == null || data.UNIT_PROCESS_AMT == '' ? 0 : parseFloat(data.UNIT_PROCESS_AMT);
-                        let UNIT_ETC_AMT = data.UNIT_ETC_AMT == null || data.UNIT_ETC_AMT == '' ? 0 : parseFloat(data.UNIT_ETC_AMT);
-                        let ITEM_QTY = data.ITEM_QTY == null || data.ITEM_QTY == '' ? 0 : parseFloat(data.ITEM_QTY);
+                if (ui.source === 'edit' || ui.source === 'paste') {
+                    for (let i = 0; i < ui.updateList.length; i++) {
+                        const rowIndx = ui.updateList[i].rowIndx;
+                        const data = ui.updateList[i].rowData;
+                        const ITEM_QTY = parseFloat(data.ITEM_QTY) || 0;
+                        let calculateEstimateAmt = data.UNIT_FINAL_EST_AMT || data.UNIT_SUM_AUTO_AMT || 0;
+                        calculateEstimateAmt *= ITEM_QTY;
 
-                        calculateEstimateAmt += UNIT_MATERIAL_AMT;
-                        calculateEstimateAmt += UNIT_MATERIAL_FINISH_GRIND_AMT;
-                        calculateEstimateAmt += UNIT_MATERIAL_FINISH_HEAT_AMT;
-                        calculateEstimateAmt += UNIT_SURFACE_AMT;
-                        calculateEstimateAmt += UNIT_PROCESS_AMT;
-                        calculateEstimateAmt += UNIT_ETC_AMT;
-
-                        if(calculateEstimateAmt != 0) {
-                            estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'CALCUL_EST_UNIT_COST': calculateEstimateAmt }, checkEditable: false });
-
-                            let UNIT_FINAL_EST_AMT = ui.updateList[iTmp].newRow.UNIT_FINAL_EST_AMT
-                            if(UNIT_FINAL_EST_AMT != undefined){
-                                calculateEstimateAmt = UNIT_FINAL_EST_AMT;
-                            }
-                            estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'UNIT_FINAL_EST_AMT': calculateEstimateAmt }, checkEditable: false });
-
-                            calculateEstimateAmt *= ITEM_QTY;
+                        if (calculateEstimateAmt > 0) {
                             estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'DTL_AMOUNT': calculateEstimateAmt }, checkEditable: false });
                         }
                     }
@@ -1284,28 +1255,13 @@
             let number = Number($('#selEstimateRegisterCalculateApply option:selected').val());
 
             for (let i = 0, selectedRowCount = estimateRegisterSelectedRowIndex.length; i < selectedRowCount; i++) {
-                let rowData = estimateRegisterTopGrid.pqGrid('getRowData', {rowIndx: estimateRegisterSelectedRowIndex[i]});
-                let unitMaterialAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_MATERIAL_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(Number(rowData.UNIT_MATERIAL_AUTO_AMT) * (number / 100) / 100) * 100) : null;
-                let unitGrindAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(rowData.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT * (number / 100) / 100) * 100) : null;
-                let unitHeatAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(Number(rowData.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT) * (number / 100) / 100) * 100) : null;
-                let unitSurfaceAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_SURFACE_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(Number(rowData.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT) * (number / 100) / 100) * 100) : null;
-                let unitProcessAmt = $.isNumeric(Math.floor(Math.round(rowData.UNIT_PROCESS_AUTO_AMT * (number / 100) / 100) * 100)) ? Math.floor(Math.round(rowData.UNIT_PROCESS_AUTO_AMT * (number / 100) / 100) * 100) : null;
-                let row = {};
-                row.UNIT_MATERIAL_AMT = unitMaterialAmt;
-                row.UNIT_MATERIAL_FINISH_GRIND_AMT = unitGrindAmt;
-                row.UNIT_MATERIAL_FINISH_HEAT_AMT = unitHeatAmt;
-                row.UNIT_SURFACE_AMT = unitSurfaceAmt;
-                row.UNIT_PROCESS_AMT = unitProcessAmt;
+                const rowData = estimateRegisterTopGrid.pqGrid('getRowData', {rowIndx: estimateRegisterSelectedRowIndex[i]});
+                let UNIT_FINAL_EST_AMT = rowData.UNIT_FINAL_EST_AMT || rowData.UNIT_SUM_AUTO_AMT || null;
+                UNIT_FINAL_EST_AMT = (Math.ceil(UNIT_FINAL_EST_AMT * (number / 100) / 100) * 100).toFixed(0) || null;
 
                 estimateRegisterTopGrid.pqGrid('updateRow', {
-                    'rowIndx': estimateRegisterSelectedRowIndex[i],
-                    row: {
-                        'UNIT_MATERIAL_AMT': unitMaterialAmt,
-                        'UNIT_MATERIAL_FINISH_GRIND_AMT': unitGrindAmt,
-                        'UNIT_MATERIAL_FINISH_HEAT_AMT': unitHeatAmt,
-                        'UNIT_SURFACE_AMT': unitSurfaceAmt,
-                        'UNIT_PROCESS_AMT': unitProcessAmt
-                    },
+                    rowIndx: estimateRegisterSelectedRowIndex[i],
+                    row: {UNIT_FINAL_EST_AMT: UNIT_FINAL_EST_AMT},
                     checkEditable: false
                 });
             }
