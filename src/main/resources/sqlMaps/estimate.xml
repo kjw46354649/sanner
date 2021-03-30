@@ -318,7 +318,7 @@
             #{UNIT_MATERIAL_AMT}, #{UNIT_MATERIAL_FINISH_GRIND_AMT}, #{UNIT_MATERIAL_FINISH_HEAT_AMT}, #{UNIT_SURFACE_AMT}, #{UNIT_PROCESS_AMT}, #{UNIT_ETC_AMT},
             #{UNIT_AMT_NOTE}, #{UNIT_FINAL_EST_AMT},
             #{NOTE}, #{DWG_GFILE_SEQ}, #{DXF_GFILE_SEQ}, #{PDF_GFILE_SEQ}, #{IMG_GFILE_SEQ},
-            NULL
+            #{LOGIN_USER_ID}
         )
         ON DUPLICATE KEY UPDATE
             PROJECT_NM = #{PROJECT_NM},
@@ -346,7 +346,7 @@
             NOTE = #{NOTE},
             DWG_GFILE_SEQ = #{DWG_GFILE_SEQ},                   DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
             PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},                   IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
-            UPDATE_DT = NOW(),                                  UPDATE_ID = #{UPDATE_ID}
+            UPDATE_DT = NOW(),                                  UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
 
     <insert id="insertEstimateReceiver" parameterType="java.util.HashMap">
@@ -361,7 +361,7 @@
             RECEIVER_EMAIL = #{RECEIVER_EMAIL},
             RECEIVER_TEL= #{RECEIVER_TEL},
             UPDATE_DT = NOW(),
-            UPDATE_ID = #{UPDATE_ID}
+            UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
 
     <update id="updateEstimateMaster"  parameterType="java.util.HashMap">
@@ -493,7 +493,7 @@
         INSERT INTO TBL_ESTIMATE_RECEIVER
         (EST_SEQ, SEQ, RECEIVER_NM, RECEIVER_EMAIL, RECEIVER_TEL, INSERT_DT, INSERT_ID)
         SELECT
-            #{N_EST_SEQ}, NEXTVAL(SEQ_ESTIMATE_RECEIVER), RECEIVER_NM, RECEIVER_EMAIL, RECEIVER_TEL, NOW(), NULL
+            #{N_EST_SEQ}, NEXTVAL(SEQ_ESTIMATE_RECEIVER), RECEIVER_NM, RECEIVER_EMAIL, RECEIVER_TEL, NOW(), #{LOGIN_USER_ID}
         FROM TBL_ESTIMATE_RECEIVER
         WHERE EST_SEQ = #{EST_SEQ}
     </insert>
@@ -511,10 +511,13 @@
     </select>
 
     <insert id="insertEstimateOrderControlMaster" parameterType="java.util.HashMap">
+        <selectKey keyProperty="CONTROL_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_CONTROL) FROM DUAL
+        </selectKey>
         INSERT INTO TBL_CONTROL
             (CONTROL_SEQ, CONTROL_VER, STATUS_DT, COMP_CD, ORDER_COMP_CD, EST_SEQ, INSERT_ID)
         SELECT
-            NEXTVAL(SEQ_CONTROL), 0, NOW(), A.COMP_CD, A.ORDER_COMP_CD, A.EST_SEQ, #{LOGIN_USER_ID}
+            #{CONTROL_SEQ}, 0, NOW(), A.COMP_CD, A.ORDER_COMP_CD, A.EST_SEQ, #{LOGIN_USER_ID}
         FROM TBL_ESTIMATE A
             INNER JOIN TBL_ESTIMATE_DETAIL B ON A.EST_SEQ = B.EST_SEQ
                 AND CASE WHEN B.PARENT_SEQ IS NULL THEN B.SEQ ELSE B.PARENT_SEQ END = #{SEQ}
@@ -523,6 +526,9 @@
     </insert>
 
     <insert id="insertEstimateOrderControlDetail"  parameterType="java.util.HashMap">
+        <selectKey keyProperty="CONTROL_DETAIL_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_CONTROL_PART) FROM DUAL
+        </selectKey>
         INSERT INTO TBL_CONTROL_PART
             (CONTROL_SEQ, CONTROL_DETAIL_SEQ, PART_NUM, DRAWING_NUM,
             WORK_TYPE, MATERIAL_SUPPLY_YN,
@@ -535,7 +541,7 @@
             DWG_GFILE_SEQ, DXF_GFILE_SEQ, PDF_GFILE_SEQ, IMG_GFILE_SEQ,
             INSERT_ID)
         SELECT
-            LASTVAL(SEQ_CONTROL), NEXTVAL(SEQ_CONTROL_PART), PART_NUM, DRAWING_NUM,
+            #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, PART_NUM, DRAWING_NUM,
             WORK_TYPE, MATERIAL_SUPPLY_YN,
             SIZE_TXT, SIZE_TYPE, SIZE_W, SIZE_H, SIZE_T, SIZE_D, SIZE_L,
             SIZE_W_M, SIZE_H_M, SIZE_T_M, SIZE_D_M, SIZE_L_M,
@@ -587,12 +593,12 @@
         WHERE X.EST_SEQ = Y.EST_SEQ
     </insert>
 
-    <insert id="insertEstimateOrderControlBarcode"  parameterType="java.util.HashMap">
+    <insert id="insertEstimateOrderControlBarcode" parameterType="java.util.HashMap">
         INSERT IGNORE INTO TBL_CONTROL_BARCODE
-            (BARCODE_NUM, CONTROL_SEQ, CONTROL_DETAIL_SEQ, CONTROL_VER)
+            (BARCODE_NUM, CONTROL_SEQ, CONTROL_DETAIL_SEQ, CONTROL_VER, INSERT_ID)
         SELECT
             CONCAT('C', LPAD(NEXTVAL(SEQ_BARCODE), 9, '0')) AS BARCODE_NUM
-          , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.CONTROL_VER
+          , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.CONTROL_VER, #{LOGIN_USER_ID}
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
 				AND B.CONTROL_DETAIL_SEQ NOT IN (
@@ -606,6 +612,26 @@
             AND A.EST_SEQ = #{EST_SEQ}
     </insert>
 
+    <insert id="insertEstimateOrderPartProcess" parameterType="java.util.HashMap">
+        INSERT INTO TBL_CONTROL_PART_PROCESS (
+            CONTROL_SEQ
+            , CONTROL_DETAIL_SEQ
+            , FACTOR_CD
+            , PROCESS_CNT
+            , INSERT_ID
+        )
+        SELECT #{CONTROL_SEQ}
+            , #{CONTROL_DETAIL_SEQ}
+            , A.FACTOR_CD
+            , A.PROCESS_CNT
+            , #{LOGIN_USER_ID}
+        FROM TBL_ESTIMATE_DETAIL_PROCESS A
+        WHERE 1 = 1
+            AND A.EST_SEQ = #{EST_SEQ}
+            AND A.SEQ = #{SEQ}
+            AND NOT EXISTS (SELECT * FROM TBL_CONTROL_PART_PROCESS M WHERE M.FACTOR_CD = A.FACTOR_CD AND M.CONTROL_SEQ = #{CONTROL_SEQ} AND M.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ})
+    </insert>
+
     <select id="selectEstimateMailNextSequence" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT NEXTVAL(SEQ_MAIL) AS MAIL_BOX_SEQ FROM DUAL
     </select>
@@ -616,7 +642,7 @@
             EST_STATUS = 'EST020',
             SEND_DT = NOW(),
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE EST_SEQ = #{EST_SEQ}
     </update>
 
@@ -642,6 +668,7 @@
     </update>
     <select id="selectEstimateInfoFromControl" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
+            GROUP_CONCAT(A.CONTROL_SEQ) AS CONCAT_CONTROL_SEQ,
             A.COMP_CD, <!-- 사업자(공급사) -->
             C.ORDER_STAFF_SEQ, <!-- 구매 담당자 -->
             A.ORDER_COMP_CD, <!-- 발주사 -->
@@ -654,12 +681,14 @@
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
         WHERE A.DEL_YN = 'N'
             AND A.CONTROL_SEQ IN (${CONTROL_SEQ})
-        GROUP BY  A.COMP_CD, A.ORDER_COMP_CD, C.ORDER_STAFF_SEQ
+        GROUP BY A.COMP_CD, A.ORDER_COMP_CD, C.ORDER_STAFF_SEQ
     </select>
 
     <select id="selectEstimateListFromControl" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER() OVER() AS ROWNUM,
+            B.CONTROL_SEQ,
+            B.CONTROL_DETAIL_SEQ,
             C.PROJECT_NM,
             C.MODULE_NM,
             C.ITEM_NM,
@@ -679,29 +708,32 @@
             B.MATERIAL_NOTE,
             B.MATERIAL_FINISH_GRIND,
             B.MATERIAL_FINISH_HEAT,
-            B.UNIT_MATERIAL_AMT,
-            B.UNIT_MATERIAL_FINISH_GRIND_AMT,
-            B.UNIT_MATERIAL_FINISH_HEAT_AMT,
-            B.UNIT_SURFACE_AMT,
-            B.UNIT_PROCESS_AMT,
+            CASE WHEN IFNULL(B.UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, 0) + IFNULL(B.UNIT_SURFACE_AUTO_AMT, 0) + IFNULL(B.UNIT_PROCESS_AUTO_AMT, 0) > 0
+            	 THEN IFNULL(B.UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, 0) + IFNULL(B.UNIT_SURFACE_AUTO_AMT, 0) + IFNULL(B.UNIT_PROCESS_AUTO_AMT, 0)
+            END AS UNIT_SUM_AUTO_AMT,
+            B.UNIT_MATERIAL_AUTO_AMT,
+            B.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT,
+            B.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT,
+            B.UNIT_SURFACE_AUTO_AMT,
+            B.UNIT_PROCESS_AUTO_AMT,
             B.UNIT_ETC_AMT,
             B.UNIT_AMT_NOTE,
             C.UNIT_FINAL_EST_AMT,
-            A.NOTE, -- NOTE
+            A.NOTE, <!-- NOTE -->
             B.DWG_GFILE_SEQ,
             B.DXF_GFILE_SEQ,
             B.PDF_GFILE_SEQ,
             B.IMG_GFILE_SEQ,
-            IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0) AS CALCUL_EST_UNIT_COST,
+            <!-- IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0) AS CALCUL_EST_UNIT_COST, -->
             CASE
-                WHEN C.UNIT_FINAL_EST_AMT IS NOT NULL THEN IFNULL(C.UNIT_FINAL_EST_AMT, 0) * IFNULL(C.ORDER_QTY, 0)
-                ELSE (IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)) * IFNULL(C.ORDER_QTY, 0)
+                WHEN C.UNIT_FINAL_EST_AMT IS NOT NULL THEN C.UNIT_FINAL_EST_AMT * C.ORDER_QTY
+                ELSE (IFNULL(B.UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, 0) + IFNULL(B.UNIT_SURFACE_AUTO_AMT, 0) + IFNULL(B.UNIT_PROCESS_AUTO_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)) * C.ORDER_QTY
             END AS DTL_AMOUNT
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                                   AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-        WHERE A.CONTROL_SEQ IN (${CONTROL_SEQ})
+            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+        WHERE A.DEL_YN = 'N'
+            AND A.CONTROL_SEQ IN (${CONTROL_SEQ})
     </select>
 
     <select id="selectEstimateReceiverListFromControl" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1192,5 +1224,25 @@
         DELETE FROM TBL_ESTIMATE_DETAIL_PROCESS
         WHERE EST_SEQ = #{EST_SEQ} AND SEQ = #{SEQ}
     </delete>
+
+    <insert id="insertEstimateDetailProcessFromControl" parameterType="java.util.HashMap">
+        INSERT INTO TBL_ESTIMATE_DETAIL_PROCESS (
+            EST_SEQ
+            , SEQ
+            , FACTOR_CD
+            , PROCESS_CNT
+            , INSERT_ID
+        )
+        SELECT #{EST_SEQ}
+            , #{SEQ}
+            , A.FACTOR_CD
+            , A.PROCESS_CNT
+            , #{LOGIN_USER_ID}
+        FROM TBL_CONTROL_PART_PROCESS A
+        WHERE 1 = 1
+            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND NOT EXISTS ( SELECT * FROM TBL_ESTIMATE_DETAIL_PROCESS M WHERE M.FACTOR_CD = A.FACTOR_CD AND M.EST_SEQ = #{EST_SEQ} AND M.SEQ = #{SEQ} )
+    </insert>
 
 </mapper>

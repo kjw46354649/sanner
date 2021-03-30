@@ -21,6 +21,7 @@ public class EstimateServiceImpl implements EstimateService {
 
     @Override
     public void registerEstimateSave(HashMap<String, Object> hashMap) throws Exception {
+        String userId = (String) hashMap.get("LOGIN_USER_ID");
         String jsonDetail = (String) hashMap.get("ESTIMATE_DETAIL_DATA");
         String jsonReceive = (String) hashMap.get("ESTIMATE_RECEIVER_DATA");
         String EST_SEQ = (String) hashMap.get("EST_SEQ");
@@ -28,6 +29,7 @@ public class EstimateServiceImpl implements EstimateService {
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Map<String, Object>> jsonMap = null;
         Map<String, Object> data = new HashMap<String, Object>();
+        data.put("LOGIN_USER_ID", userId);
 
         // Estimate Master Insert
         estimateDao.insertEstimateMaster(hashMap);
@@ -59,29 +61,68 @@ public class EstimateServiceImpl implements EstimateService {
     }
 
     @Override
+    public void saveFromControlToEstimate(HashMap<String, Object> hashMap) throws Exception {
+        String userId = (String) hashMap.get("LOGIN_USER_ID");
+        String jsonDetail = (String) hashMap.get("ESTIMATE_DETAIL_DATA");
+        String jsonReceive = (String) hashMap.get("ESTIMATE_RECEIVER_DATA");
+        String EST_SEQ = (String) hashMap.get("EST_SEQ");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<Map<String, Object>> jsonMap = null;
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("LOGIN_USER_ID", userId);
+
+        // Estimate Master Insert
+        estimateDao.insertEstimateMaster(hashMap);
+
+        if (jsonDetail != null) {
+            jsonMap = objectMapper.readValue(jsonDetail, new TypeReference<ArrayList<Map<String, Object>>>() {});
+        }
+
+        for (int i = 0; i < jsonMap.size(); i++) {
+            data = jsonMap.get(i);
+            data.put("EST_SEQ", EST_SEQ);
+            estimateDao.insertEstimateDetail(data);
+            data.put("queryId", "estimate.insertEstimateDetailProcessFromControl");
+            this.innodaleDao.create(data);
+            data.put("queryId", "estimate.updateEstimateAutomaticQuote");
+        }
+
+        if (jsonReceive != null) {
+            jsonMap = objectMapper.readValue(jsonReceive, new TypeReference<ArrayList<Map<String, Object>>>() {});
+        }
+
+        for (int i = 0; i < jsonMap.size(); i++) {
+            data = jsonMap.get(i);
+            data.put("EST_SEQ", EST_SEQ);
+
+            estimateDao.insertEstimateReceiver(data);
+        }
+    }
+
+    @Override
     public void registerEstimateOrder(HashMap<String, Object> hashMap) throws Exception {
+        String userId = (String) hashMap.get("LOGIN_USER_ID");
         String jsonObject = (String) hashMap.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Map<String, Object>> jsonMap = null;
         Map<String, Object> data = new HashMap<String, Object>();
+        data.put("LOGIN_USER_ID", userId);
 
         if (jsonObject != null) {
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {
             });
         }
 
-        for(int i=0; i<jsonMap.size(); i++) {
+        for (int i = 0; i < jsonMap.size(); i++) {
             data = jsonMap.get(i);
-
-            //System.out.println(" ################################## ");
-            //System.out.println(data);
-            //System.out.println(" ################################## ");
 
             estimateDao.insertEstimateOrderControlMaster(data);
             estimateDao.insertEstimateOrderControlDetail(data);
             estimateDao.insertEstimateOrderControlOrder(data);
             estimateDao.insertEstimateOrderControlBarcode(data);
-
+            data.put("queryId", "estimate.insertEstimateOrderPartProcess");
+            this.innodaleDao.create(data);
         }
 
         estimateDao.updateEstimateMasterFinish(data);

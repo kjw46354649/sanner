@@ -222,6 +222,8 @@
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
             {title: 'EST_SEQ', dataType: 'integer', dataIndx: 'EST_SEQ', hidden: true},
             {title: 'SEQ', dataType: 'integer', dataIndx: 'SEQ', hidden: true},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true}, // 주문 -> 견적
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true}, // 주문 -> 견적
             {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
@@ -239,45 +241,6 @@
                 }
             },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 100, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
-            {
-                title: '파<br>트', dataType: 'integer', dataIndx: 'PART_NUM', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
-                render: function (ui) {
-                    if (ui.rowData.WORK_TYPE === 'WTP020') {
-                        return '<span class="ui-icon ui-icon-circle-plus" id="estimateListPartNumPlus" style="cursor: pointer"></span>';
-                    }
-                },
-                postRender: function (ui) {
-                    let grid = this;
-                    let $cell = grid.getCell(ui);
-                    let rowIndex = ui.rowIndx;
-
-                    $cell.find("#estimateListPartNumPlus").on('click', function (event) {
-                        let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data')
-                        let totalRecords = data.length;
-                        let newPartNum = 0
-                        let newRowIndex = 0;
-
-                        let newRowData = fnCloneObj(data[rowIndex]);
-                        for (let i = 0; i < totalRecords; i++) {
-                            if (data[i].PARENT_SEQ === newRowData.PARENT_SEQ) {
-                                newPartNum++;
-                                newRowIndex = data[i].pq_ri + 1;
-                            }
-                        }
-
-                        newRowData.ROW_NUM = totalRecords + 1;
-                        newRowData.SEQ = "";
-                        newRowData.PART_NUM = newPartNum;
-                        newRowData.WORK_TYPE = 'WTP050';
-
-                        estimateRegisterTopGrid.pqGrid('addRow', {
-                            newRow: newRowData,
-                            rowIndx: newRowIndex,
-                            checkEditable: false
-                        });
-                    });
-                }
-            },
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 100, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
@@ -1039,6 +1002,63 @@
             }, parameters, '');
         }
 
+        const saveFromControlToEstimate = function (alertYn) {
+            prevErrorList = errorList;
+            errorList = [];
+            let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
+
+            validationCheck(data);
+            changeCellColor(errorList, prevErrorList);
+            if (errorList.length) {
+                fnAlert(null, errorList.length + '건의 데이터가 올바르지 않습니다.');
+                return false;
+            }
+
+            $("#estimate_register_info_form #queryId").val('selectEstimateNextSequence');
+            let parameters = {'url': '/json-list', 'data': $("#estimate_register_info_form").serialize()};
+            let EST_SEQ = $("#estimate_register_info_form #EST_SEQ").val();
+            fnPostAjaxAsync(function (data, callFunctionParam) {
+                let list = data.list[0];
+                if (EST_SEQ == '' || EST_SEQ == null) {
+                    EST_SEQ = list.EST_SEQ;
+                }
+
+                $("#estimate_register_info_form #queryId").val('insertEstimateMaster');
+                $("#estimate_register_info_form #EST_SEQ").val(EST_SEQ);
+                let detail_data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
+                //let mail_data = $("#EMAIL_CONTENT_TXT").val();
+                let mail_data = CKEDITOR.instances.EMAIL_CONTENT_TXT.getData();
+                let receiver_data = estimateRegisterBotGrid.pqGrid('option', 'dataModel.data');
+                $("#estimate_register_info_form #ESTIMATE_DETAIL_DATA").val(JSON.stringify(detail_data));
+                $("#estimate_register_info_form #ESTIMATE_RECEIVER_DATA").val(JSON.stringify(receiver_data));
+                $("#estimate_register_info_form #EMAIL_CONTENT").val(mail_data);
+
+                $("#estimate_version_up_sequence_form #hidden_est_seq").val(EST_SEQ);
+                $("#common_excel_form #paramData").val(EST_SEQ);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/saveFromControlToEstimate',
+                    dataType: 'json',
+                    data: $("#estimate_register_info_form").serialize(),
+                    async: false,
+                    success: function (data, textStatus, jqXHR) {
+                        if (textStatus === 'success') {
+                            estimateRegisterSaveCallBack();
+                            if (alertYn == 'Y') {
+                                fnAlert(null, "저장 되었습니다.");
+                            }
+                        } else {
+                            // alert('fail=[' + json.msg + ']');
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        fnAlert(null, '저장중 에러가 발생하였습니다.');
+                    }
+                });
+            }, parameters, '');
+        };
+
         const validationCheck = function (dataList) {
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 let rowData = dataList[i];
@@ -1340,6 +1360,9 @@
             postData = { 'queryId': 'estimate.selectEstimateReceiverListFromControl', 'CONTROL_SEQ': CONTROL_SEQ };
             fnRequestGridData(estimateRegisterBotGrid, postData);
 
+            setTimeout(function () {
+                saveFromControlToEstimate('N');
+            }, 1000);
         });
     });
 

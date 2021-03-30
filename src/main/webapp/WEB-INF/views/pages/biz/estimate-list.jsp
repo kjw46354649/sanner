@@ -272,45 +272,6 @@
                 }
             },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100 } ,
-            {
-                title: '파<br>트', clsHead: 'cantChange', dataType: 'integer', dataIndx: 'PART_NUM', width: 50,
-                render: function (ui) {
-                    if (ui.rowData.WORK_TYPE === 'WTP020') {
-                        return '<span class="ui-icon ui-icon-circle-plus" id="estimateListPartNumPlus" style="cursor: pointer"></span>';
-                    }
-                },
-                postRender: function (ui) {
-                    let grid = this;
-                    let $cell = grid.getCell(ui);
-                    let rowIndex = ui.rowIndx;
-
-                    $cell.find("#estimateListPartNumPlus").on('click', function (event) {
-                        let data = estimateMasterBotGrid.pqGrid('option', 'dataModel.data')
-                        let totalRecords = data.length;
-                        let newPartNum = 0
-                        let newRowIndex = 0;
-
-                        let newRowData = fnCloneObj(data[rowIndex]);
-                        for (let i = 0; i < totalRecords; i++) {
-                            if (data[i].PARENT_SEQ === newRowData.PARENT_SEQ) {
-                                newPartNum++;
-                                newRowIndex = data[i].pq_ri + 1;
-                            }
-                        }
-
-                        newRowData.ROWNUM = totalRecords + 1;
-                        newRowData.SEQ = "";
-                        newRowData.PART_NUM = newPartNum;
-                        newRowData.WORK_TYPE = 'WTP050';
-
-                        estimateMasterBotGrid.pqGrid('addRow', {
-                            newRow: newRowData,
-                            rowIndx: newRowIndex,
-                            checkEditable: false
-                        });
-                    });
-                }
-            } ,
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80 } ,
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', width: 50},
                 {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: false,

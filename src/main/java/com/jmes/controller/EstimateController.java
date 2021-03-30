@@ -29,6 +29,17 @@ public class EstimateController {
 
         return "jsonView";
     }
+    /**
+     * @description 견적 주문 SAVE(주문관리 -> 견적)
+     */
+    @RequestMapping(value = "/saveFromControlToEstimate", method = RequestMethod.POST)
+    public String saveFromControlToEstimate(HttpServletRequest request) throws Exception {
+        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        this.estimateService.saveFromControlToEstimate(hashMap);
+
+        return "jsonView";
+    }
 
     /**
      * @description 견적 주문 등록
