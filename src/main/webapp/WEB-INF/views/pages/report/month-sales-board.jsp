@@ -553,7 +553,7 @@
 
             const GOAL_AMT_KOR = data !== undefined && data[0].GOAL_AMT_KOR ? data[0].GOAL_AMT_KOR : '';
             const SALES_AMT_KOR = data !== undefined && data[0].SALES_AMT_KOR ? data[0].SALES_AMT_KOR : '';
-            const MONTH_RATIO = data !== undefined && data[0].MONTH_RATIO ? data[0].MONTH_RATIO : '';
+            const MONTH_RATIO = data !== undefined && data[0].MONTH_RATIO ? data[0].MONTH_RATIO + '%' : '';
             const $table = $('.month_sales_board').find('#' + tableId);
             $table.find('#goal_amt_kor').html(GOAL_AMT_KOR);
             $table.find('#sales_amt_kor').html(SALES_AMT_KOR);
