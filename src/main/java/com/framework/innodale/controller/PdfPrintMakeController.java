@@ -216,9 +216,9 @@ public class PdfPrintMakeController {
                 drawingInfoTable.setWidthPercentage(25f);
                 drawingInfoTable.setWidths(new int[] {35, 65, 12});
 
-                drawingInfoTable.addCell(createDrawingInCell("발주번호", 1, 1, mediumNormalFont, false, true, false, false));
-                drawingInfoTable.addCell(createDrawingInCell("도면번호", 1, 1, mediumNormalFont, false, true, false, true));
-                drawingInfoTable.addCell(createDrawingInCell("수량", 1, 1, mediumNormalFont, false, false, false, true));
+                drawingInfoTable.addCell(createDrawingInCell("발주번호", 1, 1, smallNormalFont, true, true, true, true));
+                drawingInfoTable.addCell(createDrawingInCell("도면번호", 1, 1, smallNormalFont, true, true, true, true));
+                drawingInfoTable.addCell(createDrawingInCell("수량", 1, 1, smallNormalFont, true, true, true, true));
 //                drawingInfoTable.addCell(createDrawingInCell("납기", 1, 1, verySmallFont, false, false, false, true));
 
                 int iOrderListSize = controlOrderList.size();
@@ -227,14 +227,14 @@ public class PdfPrintMakeController {
                 for (Map<String, Object> controlOrderInfo : controlOrderList) {
 
                     if (iOrderListSize > iCnt) {
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, verySmallFont, true, true, true, false));
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, verySmallFont, true, true, true, true));
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, verySmallFont, true, false, true, true));
+                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, smallNormalFont, true, true, true, true));
+                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, smallNormalFont, true, true, true, true));
+                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, smallNormalFont, true, true, true, true));
 //                        drawingInfoTable.addCell(createDrawingInCell((String) controlOrderInfo.get("ORDER_DUE_DT"), 1, 1, verySmallFont, true, false, true, true));
                     } else {
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, verySmallFont, true, true, false, false));
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, verySmallFont, true, true, false, true));
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, verySmallFont, true, false, false, true));
+                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, smallNormalFont, true, true, true, true));
+                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, smallNormalFont, true, true, true, true));
+                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, smallNormalFont, true, true, true, true));
 //                        drawingInfoTable.addCell(createDrawingInCell((String) controlOrderInfo.get("ORDER_DUE_DT"), 1, 1, verySmallFont, true, false, false, true));
                     }
                     iCnt++;
@@ -617,7 +617,7 @@ public class PdfPrintMakeController {
     	cell.setHorizontalAlignment(Element.ALIGN_CENTER);
     	cell.setColspan(colspan);
     	cell.setRowspan(rowspan);
-    	cell.setFixedHeight(11f);
+    	cell.setFixedHeight(15f);
         cell.setBorderWidth(0.1f);
     	// cell.setBackgroundColor(BaseColor.WHITE);
     	if(disableTop) cell.disableBorderSide(PdfPCell.TOP);
