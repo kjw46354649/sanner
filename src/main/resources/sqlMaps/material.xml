@@ -96,7 +96,7 @@
                 AND IFNULL(B.PART_STATUS, SPACE(0)) NOT IN (SPACE(0), 'PRO003')
                 AND B.MATERIAL_SUPPLY_YN = 'N'
                 <if test="SHIPMENT_YN == null">
-                    AND B.PART_STATUS NOT IN ('PRO016', 'PRO017', 'PRO020')
+                    AND IFNULL(A.OUT_FINISH_STATUS, SPACE(0)) NOT IN ('RLS010', 'RLS020', 'RLS030')
                 </if>
                 <if test="IN_YN == null">
                     AND B.PART_STATUS NOT IN ('PRO021', 'PRO022')
