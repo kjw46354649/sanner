@@ -2092,7 +2092,7 @@
                             if (compareCd !== compCd) {
                                 innerTable = makeMailInnerTable(tableList);
                                 let parameter = {
-                                    'queryId': 'material.insertItemOrderRegisterPopSubmitMail',
+                                    'queryId': 'mail.insertItemOrderRegisterPopSubmitMail',
                                     'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
                                     'MATERIAL_COMP_CD': compareCd,
                                     'INNER_TABLE': innerTable
@@ -2110,7 +2110,7 @@
 
                         innerTable = makeMailInnerTable(tableList);
                         let parameter = {
-                            'queryId': 'insertItemOrderRegisterPopSubmitMail',
+                            'queryId': 'mail.insertItemOrderRegisterPopSubmitMail',
                             'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
                             'MATERIAL_COMP_CD': compareCd,
                             'INNER_TABLE': innerTable
@@ -2118,7 +2118,7 @@
                         let parameters = {'url': '/json-create', 'data': parameter};
                         fnPostAjaxAsync(function () {
                             let parameter = {
-                                'queryId': 'updateItemOrderRegisterOrderStatus',
+                                'queryId': 'material.updateItemOrderRegisterOrderStatus',
                                 'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
                             };
                             let parameters = {'url': '/json-update', 'data': parameter};
