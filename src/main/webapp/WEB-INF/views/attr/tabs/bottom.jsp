@@ -1632,7 +1632,6 @@
                     const sr = this.SelectRow();
                     const selRowData = this.getRowData({rowIndx: rowIndx});
                     let nextRowData = "";
-                    let flag = false;
                     if (event.keyCode == $.ui.keyCode.DOWN) {
                         sr.removeAll();
                         sr.add({rowIndx: rowIndx + 1});

@@ -893,6 +893,26 @@
                         }
                     }
                 }
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+                let nextRowData = "";
+                let nextImgUrl = selRowData.IMG_GFILE_SEQ;
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                    nextRowData = this.getRowData({rowIndx: rowIndx +1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                    nextRowData = this.getRowData({rowIndx: rowIndx -1});
+                }
+                if(typeof nextRowData != 'undefined' && nextRowData != "") {
+                    nextImgUrl = nextRowData.IMG_GFILE_SEQ;
+                }
+                callQuickRowChangeDrawingImageViewer(nextImgUrl);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
 
@@ -1571,6 +1591,26 @@
                         }
                     }
                 }
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+                let nextRowData = "";
+                let nextImgUrl = selRowData.IMG_GFILE_SEQ;
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                    nextRowData = this.getRowData({rowIndx: rowIndx +1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                    nextRowData = this.getRowData({rowIndx: rowIndx -1});
+                }
+                if(typeof nextRowData != 'undefined' && nextRowData != "") {
+                    nextImgUrl = nextRowData.IMG_GFILE_SEQ;
+                }
+                callQuickRowChangeDrawingImageViewer(nextImgUrl);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
 
