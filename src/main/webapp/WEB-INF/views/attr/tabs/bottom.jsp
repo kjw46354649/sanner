@@ -116,7 +116,7 @@
                         </span>
                     </div>
                     <div class="btnWrap ml-auto mb-10">
-                        <button id="CAD_DOWNLOAD" class="d-none defaultBtn">캐드파일</button>
+<%--                        <button id="CAD_DOWNLOAD" class="d-none defaultBtn">캐드파일</button>--%>
                         <button id="DRAWING_VIEW" class="defaultBtn">도면보기</button>
                         <button id="WORK_HISTORY_INFO" class="defaultBtn">유사주문 수행기록</button>
                     </div>
@@ -449,15 +449,15 @@
         <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ">
         <input type="hidden" name="MAIN_IMG_SEQ" id="MAIN_IMG_SEQ">
         <div class="layerPopup" style="height: 930px;">
-            <h3>도면파일 다운로드</h3>
+            <h3>도면보기</h3>
             <button type="button" class="pop_close mt-10 mr-8" name="common_multi_download_pop_close">닫기
             </button>
             <div class="qualityWrap">
                 <div class="h_area">
-                    <img id="floor_plan_img" src="" alt="" class="viewer-move" style="height: 500px;margin-top: 23px;position: absolute;width: 700px;max-width: none !important;transform: none;left: 15%;">
+                    <img id="floor_plan_img" src="" alt="" class="viewer-move" style="height: 610px;margin-top: 23px;position: absolute;width: 810px;max-width: none !important;transform: none;left: 10%;">
                 </div>
                 <h4></h4>
-                <div class="list4" style="margin-top: 530px;">
+                <div class="list4" style="margin-top: 640px;">
                     <div id="common_multi_download_pop_grid"></div>
                 </div>
             </div>
@@ -1576,7 +1576,7 @@
                 {title: '작업형태', dataIndx: 'WORK_TYPE_NM'},
                 {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
                 {
-                    title: '', align: 'center', dataIndx: 'DXF_GFILE_SEQ', width: 25, minWidth: 25, editable: false,
+                    title: 'CAD파일', align: 'center', dataIndx: 'DXF_GFILE_SEQ', width: 25, minWidth: 25, editable: false,
                     render: function (ui) {
                         cellData = ui.cellData;
                         if (cellData) {
@@ -1585,7 +1585,7 @@
                     },
                 },
                 {
-                    title: '', align: 'center', dataIndx: 'IMG_GFILE_SEQ', width: 25, minWidth: 25, editable: false,
+                    title: '상세보기', align: 'center', dataIndx: 'IMG_GFILE_SEQ', width: 25, minWidth: 25, editable: false,
                     render: function (ui) {
                         if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
                     },
@@ -1600,7 +1600,7 @@
                 }
             ];
             const obj = {
-                height: 250,
+                height: 160,
                 collapsible: false,
                 selectionModel: { type: 'row', mode: 'single'} ,
                 postRenderInterval: -1,
@@ -1631,15 +1631,19 @@
                     const rowIndx = ui.rowIndx;
                     const sr = this.SelectRow();
                     const selRowData = this.getRowData({rowIndx: rowIndx});
-
+                    let nextRowData = "";
+                    let flag = false;
                     if (event.keyCode == $.ui.keyCode.DOWN) {
                         sr.removeAll();
                         sr.add({rowIndx: rowIndx + 1});
+                        nextRowData = this.getRowData({rowIndx: rowIndx +1});
                     } else if (event.keyCode == $.ui.keyCode.UP) {
                         sr.removeAll();
                         sr.add({rowIndx: rowIndx - 1});
+                        nextRowData = this.getRowData({rowIndx: rowIndx -1});
                     }
-                    let imgUrl = '/qimage/'+selRowData.IMG_GFILE_SEQ;
+                    let imgUrl = '/qimage/';
+                    imgUrl += (typeof nextRowData != 'undefined' && nextRowData != "")?nextRowData.IMG_GFILE_SEQ:selRowData.IMG_GFILE_SEQ;
                     $("#floor_plan_img").attr('src',imgUrl);
                     $("#floor_plan_img").attr('alt',selRowData.IMG_GFILE_SEQ);
                 },
