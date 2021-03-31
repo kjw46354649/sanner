@@ -213,12 +213,12 @@ public class PdfPrintMakeController {
 
                 PdfPTable drawingInfoTable = new PdfPTable(3);
                 drawingInfoTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                drawingInfoTable.setWidthPercentage(25f);
-                drawingInfoTable.setWidths(new int[] {35, 65, 12});
+                drawingInfoTable.setWidthPercentage(35f);
+                drawingInfoTable.setWidths(new int[] {60, 60, 30});
 
-                drawingInfoTable.addCell(createDrawingInCell("발주번호", 1, 1, smallNormalFont, true, true, true, true));
-                drawingInfoTable.addCell(createDrawingInCell("도면번호", 1, 1, smallNormalFont, true, true, true, true));
-                drawingInfoTable.addCell(createDrawingInCell("수량", 1, 1, smallNormalFont, true, true, true, true));
+                drawingInfoTable.addCell(createDrawingInCell("발주번호", 1, 1, smallNormalFont, false, true, true, false));
+                drawingInfoTable.addCell(createDrawingInCell("도면번호", 1, 1, smallNormalFont, false, true, true, true));
+                drawingInfoTable.addCell(createDrawingInCell("수량", 1, 1, smallNormalFont, false, false, true, true));
 //                drawingInfoTable.addCell(createDrawingInCell("납기", 1, 1, verySmallFont, false, false, false, true));
 
                 int iOrderListSize = controlOrderList.size();
@@ -227,14 +227,14 @@ public class PdfPrintMakeController {
                 for (Map<String, Object> controlOrderInfo : controlOrderList) {
 
                     if (iOrderListSize > iCnt) {
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, smallNormalFont, true, true, true, true));
+                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, smallNormalFont, true, true, true, false));
                         drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, smallNormalFont, true, true, true, true));
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, smallNormalFont, true, true, true, true));
+                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, smallNormalFont, true, false, true, true));
 //                        drawingInfoTable.addCell(createDrawingInCell((String) controlOrderInfo.get("ORDER_DUE_DT"), 1, 1, verySmallFont, true, false, true, true));
                     } else {
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, smallNormalFont, true, true, true, true));
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, smallNormalFont, true, true, true, true));
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, smallNormalFont, true, true, true, true));
+                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, smallNormalFont, true, true, false, false));
+                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, smallNormalFont, true, true, false, true));
+                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, smallNormalFont, true, false, false, true));
 //                        drawingInfoTable.addCell(createDrawingInCell((String) controlOrderInfo.get("ORDER_DUE_DT"), 1, 1, verySmallFont, true, false, false, true));
                     }
                     iCnt++;
@@ -613,11 +613,12 @@ public class PdfPrintMakeController {
             boolean disableTop, boolean disableRight, boolean disableBottom, boolean disableLeft) {
 
     	PdfPCell cell = new PdfPCell(new Phrase(content, font));
+    	cell.setBackgroundColor(BaseColor.WHITE);
     	cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
     	cell.setHorizontalAlignment(Element.ALIGN_CENTER);
     	cell.setColspan(colspan);
     	cell.setRowspan(rowspan);
-    	cell.setFixedHeight(15f);
+    	cell.setFixedHeight(11f);
         cell.setBorderWidth(0.1f);
     	// cell.setBackgroundColor(BaseColor.WHITE);
     	if(disableTop) cell.disableBorderSide(PdfPCell.TOP);

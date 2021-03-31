@@ -1227,7 +1227,7 @@
             AND A.CONTROL_STATUS = 'ORD001'
             AND A.OUT_FINISH_DT IS NULL
             AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
-            AND B.PART_STATUS IS NOT NULL
+            AND IFNULL(B.PART_STATUS, 'PRO003') != 'PRO003'
             AND B.INNER_WORK_FINISH_DT IS NULL
             <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
                 AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
