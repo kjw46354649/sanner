@@ -58,22 +58,24 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="WORK_USER_ID">소재형태/Size</label>
-                            <select class="wd_100" name="WORK_US3ER_ID" id="WORK_US3ER_ID">
-                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1029}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-                            <select class="wd_100" name="WORK_US3ER_2ID4" id="WORK_US3ER_2ID4">
+<%--                            <label class="label_100" for="WORK_USER_ID">소재형태/Size</label>--%>
+                            <label class="label_100" for="MATERIAL_KIND">소재형태/Size</label>
+                            <select class="wd_100" name="MATERIAL_KIND" id="MATERIAL_KIND"></select>
+<%--                            <select class="wd_100" name="WORK_US3ER_ID" id="WORK_US3ER_ID">--%>
+<%--                                <option value=""><spring:message code="com.form.top.sel.option"/></option>--%>
+<%--                                <c:forEach var="code" items="${HighCode.H_1029}">--%>
+<%--                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
+<%--                                </c:forEach>--%>
+<%--                            </select>--%>
+                            <select class="wd_100" name="SEARCH_SEQ" id="SEARCH_SEQ" disabled>
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
-                                <c:forEach var="code" items="${HighCode.H_1090}">
-                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                </c:forEach>
+<%--                                <c:forEach var="code" items="${HighCode.H_1090}">--%>
+<%--                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
+<%--                                </c:forEach>--%>
                             </select>
                         </span>
                         <span class="gubun"></span>
-                        <span class="material_size ellipsis">&nbsp;</span>
+                        <span class="material_size ellipsis" id="MATERIAL_SEARCH_TEXT">&nbsp;</span>
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt mr-10">
@@ -531,7 +533,17 @@
         fnCommCodeDatasourceSelectBoxCreate($('#cam_work_history_pop_form').find('#CAM_WORK_USER_ID_05'), 'sel', {
             'url': '/json-list', 'data': {'queryId': 'dataSource.getUserList'}
         });
+        fnCommCodeDatasourceSelectBoxCreate($('#CAM_WORK_HISTORY_GRID_SEARCH_FORM').find('#MATERIAL_KIND'), 'sel', {
+            'url': '/json-list', 'data': {'queryId': 'dataSource.getMaterialTypeForSelectBox'}
+        });
 
+        let parameters = {'url': '/json-list', 'data': {'queryId': 'systemMapper.selectMaterialSizeSearchList'}};
+        fnPostAjax(function(data, callFunctionParam){
+            $.each(data.list,function (idx,Item) {
+               $("#SEARCH_SEQ").append("<option class='dep2 "+Item.MATERIAL_KIND +"' value='" + Item.SEARCH_SEQ + "' value2='"+ Item.SEARCH_TEXT + "'>" + Item.SEARCH_NM +"</option>");
+            });
+
+        }, parameters, '');
         /* variable */
         const YEAR = TODAY.getFullYear();
         const MONTH = TODAY.getMonth() + 1;
@@ -1125,6 +1137,26 @@
             });
             $(this).datepicker('setDate', 'today');
         });
+
+        $("#MATERIAL_KIND").on('change', function () {
+            $('.dep2').hide();
+            $('#SEARCH_SEQ').prop('selectedIndex', 0);
+            $('#MATERIAL_SEARCH_TEXT').html('&nbsp;');
+            if($(this).val() != '') {
+                $('#SEARCH_SEQ').attr('disabled',false);
+                $('#SEARCH_SEQ > .' + $(this).val()).show();
+            }else {
+                $("#SEARCH_SEQ").attr('disabled',true);
+            }
+        })
+        $("#SEARCH_SEQ").on('change', function () {
+            let searchText = $("#SEARCH_SEQ > option:selected").attr("value2");
+            if(typeof searchText != 'undefined') {
+                $("#MATERIAL_SEARCH_TEXT").html(searchText);
+            }else {
+                $("#MATERIAL_SEARCH_TEXT").html('&nbsp;');
+            }
+        })
 
         /* init */
     });

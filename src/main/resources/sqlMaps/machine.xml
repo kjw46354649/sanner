@@ -650,7 +650,21 @@
             <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
                 AND A.MATERIAL_KIND = #{MATERIAL_KIND}
             </if>
-            <if test="WORK_USER_ID != null and WORK_USER_ID != ''">
+            <if test="SEARCH_SEQ != null and SEARCH_SEQ != ''">
+                AND EXISTS(
+                    SELECT 1
+                    FROM TBL_MATERIAL_ORDER Y, TBL_MATERIAL_SIZE_SEARCH Q
+                    WHERE Y.CONTROL_SEQ = A.CONTROL_SEQ
+                    AND Q.SEARCH_SEQ = #{SEARCH_SEQ}
+                    AND Y.SIZE_W BETWEEN Q.SIZE_W_START AND Q.SIZE_W_END
+                    AND CASE WHEN Y.SIZE_W IS NOT NULL THEN Y.SIZE_W BETWEEN Q.SIZE_W_START AND Q.SIZE_W_END ELSE TRUE END
+                    AND CASE WHEN Y.SIZE_H IS NOT NULL THEN Y.SIZE_H BETWEEN Q.SIZE_H_START AND Q.SIZE_H_END ELSE TRUE END
+                    AND CASE WHEN Y.SIZE_D IS NOT NULL THEN Y.SIZE_D BETWEEN Q.SIZE_D_START AND Q.SIZE_D_END ELSE TRUE END
+                    AND CASE WHEN Y.SIZE_T IS NOT NULL THEN Y.SIZE_T BETWEEN Q.SIZE_T_START AND Q.SIZE_T_END ELSE TRUE END
+                    AND CASE WHEN Y.SIZE_L IS NOT NULL THEN Y.SIZE_L BETWEEN Q.SIZE_L_START AND Q.SIZE_L_END ELSE TRUE END
+                )
+            </if>
+        <if test="WORK_USER_ID != null and WORK_USER_ID != ''">
                 AND H.WORK_USER_ID = #{WORK_USER_ID}
             </if>
             <choose>
