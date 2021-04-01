@@ -253,7 +253,6 @@
                 <div class="btnWrap">
                     <button type="button" class="defaultBtn greenPopGra" id="inside_stock_pop_save_btn">저장</button>
                     <button type="button" class="defaultBtn grayPopGra" id="inside_stock_pop_close_btn">닫기</button>
-
                 </div>
             </div>
         </div>
@@ -1101,7 +1100,9 @@
                             $("#stock_manage_pop_form").find("#footer_msg").html(foot_msg);
                             $("#stock_manage_pop_form").find("#ORDER_QTY").val(dataInfo.ORDER_QTY);
                             $("#stock_manage_pop_form").find("#ORIGINAL_ORDER_QTY").val(dataInfo.ORDER_QTY);
-                            $("#stock_manage_pop_form").find("#ORIGINAL_POP_STOCK_QTY_AFTER").val(dataInfo.POP_STOCK_QTY_AFTER);
+                            $("#stock_manage_pop_form").find("#ORIGINAL_POP_STOCK_QTY_AFTER").val(dataInfo.POP_STOCK_QTY - dataInfo.ORDER_QTY);
+                            // $("#stock_manage_pop_form").find("#ORIGINAL_POP_STOCK_QTY_AFTER").val(dataInfo.POP_STOCK_QTY_AFTER);
+                            $("#stock_manage_pop_form").find("#POP_STOCK_QTY_AFTER").val(dataInfo.POP_STOCK_QTY - dataInfo.ORDER_QTY);
                             $("#stock_manage_pop_form").find("#WAREHOUSE_CD").val(dataInfo.WAREHOUSE_CD);
                             $("#stock_manage_pop_form").find("#WAREHOUSE_CD").change();
                             setTimeout(function() {

@@ -321,7 +321,6 @@
             <if test="CONTROL_DETAIL_SEQ !='' and CONTROL_DETAIL_SEQ != null">
                 AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
             </if>
-        LIMIT 4
     </select>
 
     <select id="selectDummyNextSequence" parameterType="java.util.HashMap" resultType="integer">
