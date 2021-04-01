@@ -196,6 +196,45 @@
             <if test="HIDE_PART != null and HIDE_PART != ''">
                 AND B.PART_NUM IS NULL
             </if>
+            <if test="SIZE_TYPE != null and SIZE_TYPE != ''">
+                AND B.SIZE_TYPE = #{SIZE_TYPE}
+                <choose>
+                    <when test="SIZE_TYPE == 'XYZ010'">
+                        <if test="SIZE_W_F != null and SIZE_W_F != ''">
+                            AND B.SIZE_W >= #{SIZE_W_F}
+                        </if>
+                        <if test="SIZE_W_T != null and SIZE_W_T != ''">
+                            AND B.SIZE_W <![CDATA[ <= ]]> #{SIZE_W_T}
+                        </if>
+                        <if test="SIZE_H_F != null and SIZE_H_F != ''">
+                            AND B.SIZE_H >= #{SIZE_H_F}
+                        </if>
+                        <if test="SIZE_H_T != null and SIZE_H_T != ''">
+                            AND B.SIZE_H <![CDATA[ <= ]]> #{SIZE_H_T}
+                        </if>
+                        <if test="SIZE_T_F != null and SIZE_T_F != ''">
+                            AND B.SIZE_T >= #{SIZE_T_F}
+                        </if>
+                        <if test="SIZE_T_T != null and SIZE_T_T != ''">
+                            AND B.SIZE_T <![CDATA[ <= ]]> #{SIZE_T_T}
+                        </if>
+                    </when>
+                    <when test="SIZE_TYPE == 'XYZ020' or SIZE_TYPE == 'XYZ030' or SIZE_TYPE == 'XYZ040' or SIZE_TYPE == 'XYZ050'">
+                        <if test="SIZE_D_F != null and SIZE_D_F != ''">
+                            AND B.SIZE_D >= #{SIZE_D_F}
+                        </if>
+                        <if test="SIZE_D_T != null and SIZE_D_T != ''">
+                            AND B.SIZE_D <![CDATA[ <= ]]> #{SIZE_D_T}
+                        </if>
+                        <if test="SIZE_L_F != null and SIZE_L_F != ''">
+                            AND B.SIZE_L >= #{SIZE_L_F}
+                        </if>
+                        <if test="SIZE_L_T != null and SIZE_L_T != ''">
+                            AND B.SIZE_L <![CDATA[ <= ]]> #{SIZE_L_T}
+                        </if>
+                    </when>
+                </choose>
+            </if>
             LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
         WHERE A.DEL_YN = 'N'
             AND (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002', 'ORD005'))

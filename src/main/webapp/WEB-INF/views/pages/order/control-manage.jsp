@@ -56,16 +56,44 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="RBRUR">규격</label>
-                            <select class="wd_200" name="RBRUR" id="RBRUR" title="규격">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                            <label class="label_100" for="SIZE_TYPE">규격</label>
+                            <select class="wd_100" name="SIZE_TYPE" id="SIZE_TYPE" title="규격">
+                                <c:forEach var="vlocale" items="${HighCode.H_1016}">
+                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                </c:forEach>
                             </select>
                         </span>
-                        <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="MATERIAL_KIND">소재형태</label>
-                            <input type="text" class="wd_200" name="MATERIAL_KIND" id="MATERIAL_KIND" placeholder="<spring:message code='com.form.top.all.option'/>(복수개 선택)" title="소재형태" readonly>
+                        <span class="slt_wrap" id="SIZE_W">
+                            <label class="label_8">W</label>
+                            <input class="wd_50" type="number" name="SIZE_W_F" id="SIZE_W_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_W_T" id="SIZE_W_T" placeholder="To">
                         </span>
+                        <span class="slt_wrap" id="SIZE_H">
+                            <label class="label_8">H</label>
+                            <input class="wd_50" type="number" name="SIZE_H_F" id="SIZE_H_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_H_T" id="SIZE_H_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_T">
+                            <label class="label_8">T</label>
+                            <input class="wd_50" type="number" name="SIZE_T_F" id="SIZE_T_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_T_T" id="SIZE_T_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_D" style="display: none;">
+                            <label class="label_8">D</label>
+                            <input class="wd_50" type="number" name="SIZE_D_F" id="SIZE_D_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_D_T" id="SIZE_D_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_L" style="display: none;">
+                            <label class="label_8">L</label>
+                            <input class="wd_50" type="number" name="SIZE_L_F" id="SIZE_L_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_L_T" id="SIZE_L_T" placeholder="To">
+                        </span>
+                        <span class="gubun"></span>
                     </li>
                     <li>
                         <span class="slt_wrap trans_slt" style="width: 120px;">
@@ -77,18 +105,18 @@
                             </c:forEach>
                             </select>
                         </span>
-                        <div class="d-inline-block" style="width:542px">
+                        <div class="d-inline-block" style="width:260px">
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE" readonly disabled><button type="button" id="CONTROL_MANAGE_START_DATE_BUTTON">달력선택</button>
+                                <input type="text" title="달력정보" style="width: 120px;" name="CONTROL_MANAGE_START_DATE" id="CONTROL_MANAGE_START_DATE" readonly disabled><button type="button" id="CONTROL_MANAGE_START_DATE_BUTTON">달력선택</button>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input type="text" title="달력정보" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly disabled><button type="button" id="CONTROL_MANAGE_END_DATE_BUTTON">달력선택</button>
+                                <input type="text" title="달력정보" style="width: 120px;" name="CONTROL_MANAGE_END_DATE" id="CONTROL_MANAGE_END_DATE" readonly disabled><button type="button" id="CONTROL_MANAGE_END_DATE_BUTTON">달력선택</button>
                             </span>
                         </div>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="UNIT_PRICE_CONFIRM">단가확인</label>
+                            <label class="label_50" style="width: 40px !important;" for="UNIT_PRICE_CONFIRM">단가확인</label>
                             <select class="wd_200" name="UNIT_PRICE_CONFIRM" id="UNIT_PRICE_CONFIRM" title="단가확인">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1017}">
@@ -101,6 +129,12 @@
                             <label class="label_100" for="WORK_TYPE">작업형태</label>
                             <input type="text" class="wd_200" name="WORK_TYPE" id="WORK_TYPE" placeholder="<spring:message code='com.form.top.all.option'/>(복수개 선택)" title="작업형태" readonly>
                         </span>
+                        <span class="gubun"></span>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="MATERIAL_KIND">소재형태</label>
+                            <input type="text" class="wd_200" name="MATERIAL_KIND" id="MATERIAL_KIND" placeholder="<spring:message code='com.form.top.all.option'/>(복수개 선택)" title="소재형태" readonly>
+                        </span>
+                        <span class="gubun"></span>
                     </li>
                     <li>
                         <span>
@@ -3511,6 +3545,46 @@
                 $controlManageSearchForm.find('#amount_summary_html').html("공급 금액 합계 : " + totalAmountCurrency);
             }
         }
+
+        $('#CONTROL_MANAGE_SEARCH_FORM').find('#SIZE_TYPE').on('change', function () {
+            const $controlManageSearchForm = $('#CONTROL_MANAGE_SEARCH_FORM');
+
+            switch (this.value) {
+                case 'XYZ010':
+                    $controlManageSearchForm.find('#SIZE_W').show();
+                    $controlManageSearchForm.find('#SIZE_H').show();
+                    $controlManageSearchForm.find('#SIZE_T').show();
+                    $controlManageSearchForm.find('#SIZE_D').hide();
+                    $controlManageSearchForm.find('#SIZE_L').hide();
+                    $controlManageSearchForm.find('#SIZE_D_F').val('');
+                    $controlManageSearchForm.find('#SIZE_D_T').val('');
+                    $controlManageSearchForm.find('#SIZE_L_F').val('');
+                    $controlManageSearchForm.find('#SIZE_L_T').val('');
+                    break;
+                case 'XYZ020':
+                case 'XYZ030':
+                case 'XYZ040':
+                case 'XYZ050':
+                    $controlManageSearchForm.find('#SIZE_W').hide();
+                    $controlManageSearchForm.find('#SIZE_H').hide();
+                    $controlManageSearchForm.find('#SIZE_T').hide();
+                    $controlManageSearchForm.find('#SIZE_W_F').val('');
+                    $controlManageSearchForm.find('#SIZE_W_T').val('');
+                    $controlManageSearchForm.find('#SIZE_H_F').val('');
+                    $controlManageSearchForm.find('#SIZE_H_T').val('');
+                    $controlManageSearchForm.find('#SIZE_T_F').val('');
+                    $controlManageSearchForm.find('#SIZE_T_T').val('');
+                    $controlManageSearchForm.find('#SIZE_D').show();
+                    $controlManageSearchForm.find('#SIZE_L').show();
+                    break;
+                default:
+                    $controlManageSearchForm.find('#SIZE_W').show();
+                    $controlManageSearchForm.find('#SIZE_H').show();
+                    $controlManageSearchForm.find('#SIZE_T').show();
+                    $controlManageSearchForm.find('#SIZE_D').show();
+                    $controlManageSearchForm.find('#SIZE_L').show();
+            }
+        });
 
     });
 </script>
