@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 @Service
 public class ProductionServiceImpl implements ProductionService {
@@ -60,23 +58,10 @@ public class ProductionServiceImpl implements ProductionService {
     @Override
     public void managerCancelCamWork(Model model, Map<String, Object> map) throws Exception {
         // actionType : temp: 임시저장, complete: 완료, cancel: 취소
-        Set set = map.entrySet();
-        Iterator iterator = set.iterator();
-        while (iterator.hasNext()) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            String key = (String) entry.getKey();
-
-            if (key.contains("CAM_WORK_SEQ")) {
-                String value = (String) entry.getValue();
-                Map<String, Object> map1 = new HashMap<String, Object>();
-                map1.putAll(map);
-                map1.put("SEQ", value);
-                map1.put("queryId", "machine.deleteMctCamDetailWork");
-                innodaleDao.remove(map1);
-            }
-        }
+        map.put("queryId", "machine.deleteMctCamAllDetailWork");
+        innodaleDao.remove(map);
         map.put("queryId", "machine.deleteMctCamWork");
-        innodaleDao.update(map);
+        innodaleDao.remove(map);
         // 현재 상태가 PRO006 이면 CONTROL PARTS 이전 상태로 변경
         // parts 상태 업데이트 처리
         map.put("queryId", "machine.beforeStatusControlPartProgress");

@@ -614,8 +614,7 @@
                     , C.SCRAP_YN
                 FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
                 WHERE B.CONTROL_SEQ = A.CONTROL_SEQ
-                    AND C.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                    AND C.CONTROL_SEQ = A.CONTROL_SEQ
                     AND A.DEL_YN = 'N'
                     AND A.CONTROL_STATUS IN ('ORD001', 'ORD003', 'ORD005')
                     <!-- AND B.PART_STATUS IN ('PRO009','PRO010','PRO011') 상태확인 필요 -->

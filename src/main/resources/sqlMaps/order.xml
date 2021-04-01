@@ -2276,6 +2276,7 @@
             SAME_SIDE_YN,
             ORIGINAL_SIDE_QTY,
             OTHER_SIDE_QTY,
+            MATERIAL_FINISH_GRIND,
             MATERIAL_FINISH_HEAT,
             ORDER_NUM,
             ORDER_QTY,
@@ -2322,6 +2323,7 @@
             IFNULL(#{item.SAME_SIDE_YN}, 'N'),
             #{item.ORIGINAL_SIDE_QTY},
             #{item.OTHER_SIDE_QTY},
+            #{item.MATERIAL_FINISH_GRIND},
             #{item.MATERIAL_FINISH_HEAT},
             #{item.ORDER_NUM},
             #{item.ORDER_QTY},
@@ -2811,7 +2813,6 @@
                     AND B.PART_NUM IS NULL
                     AND B.WORK_TYPE NOT IN ('WTP050')   <!-- 21.03.30 작업형태 '파트'인것 제외 -->
                     AND A.CONTROL_STATUS IN ('ORD001','ORD003')
-                    AND IFNULL(B.PART_STATUS, SPACE(0)) NOT IN ('PRO020')  --  폐기 제외 -->
                     AND (
                     		(A.EMERGENCY_YN = 'Y' AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d'))
                     	OR
@@ -2855,7 +2856,7 @@
                     AND B.WORK_TYPE NOT IN ('WTP050') <!-- 21.03.30 작업형태 '파트'인것 제외 -->
                     AND A.DEL_YN = 'N'
                     AND A.CONTROL_STATUS IN ('ORD001','ORD003')
-                    AND IFNULL(B.PART_STATUS, SPACE(0)) NOT IN ('PRO020') <!-- 폐기 제외 -->
+                    AND IFNULL(A.OUT_FINISH_STATUS, SPACE(0)) NOT IN ('RLS020') <!-- 폐기 제외 -->
                     AND A.OUT_FINISH_DT IS NULL
                     AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
             ) X
