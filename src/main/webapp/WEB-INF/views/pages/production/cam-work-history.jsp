@@ -61,17 +61,8 @@
 <%--                            <label class="label_100" for="WORK_USER_ID">소재형태/Size</label>--%>
                             <label class="label_100" for="MATERIAL_KIND">소재형태/Size</label>
                             <select class="wd_100" name="MATERIAL_KIND" id="MATERIAL_KIND"></select>
-<%--                            <select class="wd_100" name="WORK_US3ER_ID" id="WORK_US3ER_ID">--%>
-<%--                                <option value=""><spring:message code="com.form.top.sel.option"/></option>--%>
-<%--                                <c:forEach var="code" items="${HighCode.H_1029}">--%>
-<%--                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
-<%--                                </c:forEach>--%>
-<%--                            </select>--%>
                             <select class="wd_100" name="SEARCH_SEQ" id="SEARCH_SEQ" disabled>
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
-<%--                                <c:forEach var="code" items="${HighCode.H_1090}">--%>
-<%--                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
-<%--                                </c:forEach>--%>
                             </select>
                         </span>
                         <span class="gubun"></span>
@@ -538,11 +529,12 @@
         });
 
         let parameters = {'url': '/json-list', 'data': {'queryId': 'systemMapper.selectMaterialSizeSearchList'}};
-        fnPostAjax(function(data, callFunctionParam){
+        fnPostAjaxAsync(function(data){
+            let optText = "<option value=''><spring:message code='com.form.top.all.option'/></option>";
             $.each(data.list,function (idx,Item) {
-               $("#SEARCH_SEQ").append("<option class='dep2 "+Item.MATERIAL_KIND +"' value='" + Item.SEARCH_SEQ + "' value2='"+ Item.SEARCH_TEXT + "'>" + Item.SEARCH_NM +"</option>");
+                optText += "<option class='dep2 "+Item.MATERIAL_KIND +"' value='" + Item.SEARCH_SEQ + "' value2='"+ Item.SEARCH_TEXT + "'>" + Item.SEARCH_NM +"</option>"
             });
-
+            $("#SEARCH_SEQ").html(optText);
         }, parameters, '');
         /* variable */
         const YEAR = TODAY.getFullYear();
