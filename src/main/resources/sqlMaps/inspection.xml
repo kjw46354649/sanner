@@ -1653,12 +1653,4 @@
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
     </update>
 
-    <update id="updateOutgoingDisposalAfter1" parameterType="java.util.HashMap">
-        UPDATE jmes.TBL_CONTROL
-        SET OUT_FINISH_DT = NOW()
-            , UPDATE_DT = NOW()
-            , UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-            AND jmes.SF_GET_OUT_FINISH_STATUS(#{CONTROL_SEQ}) = 'RLS020'
-    </update>
 </mapper>
