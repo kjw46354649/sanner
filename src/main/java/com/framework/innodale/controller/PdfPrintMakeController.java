@@ -266,8 +266,8 @@ public class PdfPrintMakeController {
 
                         PdfPTable orderTable = new PdfPTable(2);
                         orderTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                        orderTable.setWidthPercentage(35f);
-                        orderTable.setWidths(new int[] {15, 30});
+                        orderTable.setWidthPercentage(45f);
+                        orderTable.setWidths(new int[] {15, 45});
 
                         orderTable.addCell(createDrawingLineInCell("도면번호", 1, 1, largeNormalFont, false, false, false, false));
                         orderTable.addCell(createDrawingLineInCell(String.valueOf(fileInfo.get("DRAWING_NUM")) , 1, 1, largeNormalFont, false, false, false, false));

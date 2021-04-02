@@ -409,6 +409,7 @@
             },
             {
                 title: '상세 가공요건', width: 85,
+                // hidden: true, // 20210331 임시 hidden 처리
                 render: function (ui) {
                     const rowData = ui.rowData;
 
