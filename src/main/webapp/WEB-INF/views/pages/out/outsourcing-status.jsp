@@ -396,13 +396,11 @@
             postData.queryId = 'outMapper.selectOutsideYearCloseStatusSummary';
             let parameters = {'url': '/json-list', 'data': postData};
             let dataList = [];
-            console.time()
 
             fnPostAjaxAsync(function (data) {
                 dataList = data.list;
             }, parameters, '');
-            console.log(dataList);
-            console.timeEnd();
+
             return dataList;
         };
         /* funciton */
