@@ -213,8 +213,8 @@ public class PdfPrintMakeController {
 
                 PdfPTable drawingInfoTable = new PdfPTable(3);
                 drawingInfoTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                drawingInfoTable.setWidthPercentage(35f);
-                drawingInfoTable.setWidths(new int[] {60, 60, 30});
+                drawingInfoTable.setWidthPercentage(40f);
+                drawingInfoTable.setWidths(new int[] {60, 80, 30});
 
                 drawingInfoTable.addCell(createDrawingInCell("발주번호", 1, 1, smallNormalFont, false, true, true, false));
                 drawingInfoTable.addCell(createDrawingInCell("도면번호", 1, 1, smallNormalFont, false, true, true, true));
