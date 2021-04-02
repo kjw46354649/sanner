@@ -113,11 +113,16 @@
                 <table class="rowStyle" id="inWarehouseManageScanPopDynamicTable">
                     <tbody>
                     <tr class="">
-                        <th style="width: 30px;">No.</th><th style="width: 45px;">형태</th>
-                        <th style="width: 70px;">소재종류</th><th style="width: 80px;">규격</th>
-                        <th style="width: 45px">보유수량</th><th style="width: 45px">요청수량</th>
-                        <th style="width: 70px;">창고</th><th style="width: 70px;">위치</th>
-                        <th>주문번호</th><th>요청일시</th>
+                        <th style="width: 30px;">No.</th>
+                        <th style="width: 45px;">형태</th>
+                        <th style="width: 70px;">소재종류</th>
+                        <th style="width: 80px;">규격</th>
+                        <th style="width: 45px">보유수량</th>
+                        <th style="width: 45px">요청수량</th>
+                        <th style="width: 70px;">창고</th>
+                        <th style="width: 70px;">위치</th>
+                        <th>주문번호</th>
+                        <th>요청일시</th>
                     </tr>
                     <tr class="" id="dynamicTableTr">
                         <td><input type="text" id="SEQ" name="SEQ" readonly></td>
@@ -856,7 +861,7 @@
             $("#in_warehouse_manage_scan_barcode_popup_form").find('#dynamicTableTr').remove();
         });
 
-        function fnSearchScanTableOnData(){
+        function fnSearchScanTableOnData() {
             $("#in_warehouse_manage_scan_barcode_popup_form").find('#dynamicTableTr').remove();
 
             let MY_MAT_OUT_SEQ = $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val();
@@ -865,16 +870,22 @@
                 fnMakeScanTableTdOnData('');
             } else {
                 let parameters = {'url': '/json-list', 'data': $("#in_warehouse_manage_scan_barcode_popup_form").serialize()};
-                fnPostAjax(function(data, callFunctionParam){
-                    fnMakeScanTableTdOnData(data);
+                fnPostAjax(function (data, callFunctionParam) {
+                    if (Array.isArray(data.list) && data.list.length > 0) {
+                        fnMakeScanTableTdOnData(data);
+                    } else {
+                        fnAlert(null, '불출 대상이 없습니다');
+                    }
                 }, parameters, '');
             }
         }
-        function fnMakeScanTableTdOnData(data){
-            let html = "";
-            let list = data.list;
-            if(data != '') {
-                for(var i=0; i<list.length; i++) {
+
+        function fnMakeScanTableTdOnData(data) {
+            const list = data.list;
+            let html = '';
+
+            if (data !== '') {
+                for (let i = 0; i < list.length; i++) {
                     html +='<tr class="outTopTableStyle" id="dynamicTableTr">';
                     html += '<td><input type="text" id="SEQ" name="SEQ" value="'+ list[i].SEQ +'" readonly></td>';
                     html += '<td><input type="text" id="MATERIAL_KIND_NM" name="MATERIAL_KIND_NM" value="'+ fnEmptyValReturn(list[i].MATERIAL_KIND_NM) +'" readonly></td>';
@@ -909,9 +920,23 @@
         $("#inWarehouseManageBarcode").on('keydown', function(e){
             if (e.keyCode === 13) {
                 const barcodeNum = fnBarcodeKo2En(this.value);
-                $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val(barcodeNum);
-                $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val('');
-                fnSearchScanTableOnData();
+                $('#inWarehouseManageBarcode').val('');
+                //0. 바코드 정보 가져오기
+                const data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeNum};
+                const parameters = {'url': '/json-info', 'data': data};
+                fnPostAjax(function (data, callFunctionParam) {
+                    const dataInfo = data.info;
+
+                    if (dataInfo === null) {
+                        fnAlert(null, '해당 바코드가 존재하지 않습니다.');
+
+                        return false;
+                    } else {
+                        $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val(barcodeNum);
+                        $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val('');
+                        fnSearchScanTableOnData();
+                    }
+                }, parameters, '');
             }
         });
 
@@ -1026,23 +1051,24 @@
         });
 
         $("#btnInWarehouseManageScanPopSave").on('click', function(){
-            let type = $("#in_warehouse_manage_scan_barcode_popup_form #TYPE").val();
-            let my_mat_out_seq = $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val();
-            let barcode_num = $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val();
+            const type = $("#in_warehouse_manage_scan_barcode_popup_form #TYPE").val();
+            const my_mat_out_seq = $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val();
+            const barcode_num = $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val();
             let parameter;
 
-            if(type == 'manual'){
+            if (type === 'manual') {
                 parameter = {
                     'queryId': 'material.updateInWarehouseOut',
                     'MY_MAT_OUT_SEQ': my_mat_out_seq
                 };
-            } else if(type == 'scan') {
+            } else if (type === 'scan') {
                 parameter = {
                     'queryId': 'material.updateInWarehouseScan',
                     'BARCODE_NUM': barcode_num
                 };
             }
-            let parameters = {'url': '/json-update', 'data': parameter};
+
+            const parameters = {'url': '/json-update', 'data': parameter};
             fnPostAjax(function(data, callFunctionParam){
                 $("#in_warehouse_manage_scan_barcode_popup").modal('hide');
 
