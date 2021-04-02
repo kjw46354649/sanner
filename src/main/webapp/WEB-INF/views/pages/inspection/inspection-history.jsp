@@ -86,6 +86,26 @@
                             </select>
                        </span>
                         <span class="gubun"></span>
+                        <span class="slt_wrap" style="margin-left: 45px;">
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" name="SEL_INSPECTION_RETURN_TERM" id="SEL_INSPECTION_RETURN_TERM_1" value="0"><label for="SEL_INSPECTION_RETURN_TERM_1">오늘</label>
+                        </span>
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" name="SEL_INSPECTION_RETURN_TERM" id="SEL_INSPECTION_RETURN_TERM_2" value="3"><label for="SEL_INSPECTION_RETURN_TERM_2">~3일</label>
+                        </span>
+                        <span class="radio_box">
+                            <input reqcd="R" type="radio" name="SEL_INSPECTION_RETURN_TERM" id="SEL_INSPECTION_RETURN_TERM_3" value="7"><label for="SEL_INSPECTION_RETURN_TERM_3">~1주일</label>
+                        </span>
+                            </span>
+                        <div class="calendar_wrap">
+                            <span class="calendar_span">
+                                <input class="datepicker-input hasDatepicker" type="text" name="SEL_INSPECTION_ST_DT" id="SEL_INSPECTION_ST_DT" placeholder="" value="" title="시작날짜" readonly="">
+                            </span>
+                            <span class="nbsp">~</span>
+                            <span class="calendar_span">
+                                <input class="datepicker-input hasDatepicker" type="text" name="SEL_INSPECTION_END_DT" id="SEL_INSPECTION_END_DT" placeholder="" value="" title="종료날짜" readonly="">
+                            </span>
+                        </div>
                        <%-- <span class="slt_wrap mr-10">
                                                     <label class="label_100" for="SEL_OUTGOING_DATE_TYPE">구분</label>
                                                     <select class="wd_200" name="SEL_OUTGOING_DATE_TYPE" id="SEL_OUTGOING_DATE_TYPE">
@@ -165,6 +185,23 @@
         let inspectionHistoryColModel01;
         let inspectionHistoryPostData01;
 
+        let today = new Date();
+        $('#SEL_INSPECTION_ST_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#SEL_INSPECTION_END_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#SEL_INSPECTION_ST_DT').datepicker('setDate', 'today');
+        $('#SEL_INSPECTION_END_DT').datepicker('setDate', 'today');
+        $("#inspection_history_form").find('#SEL_INSPECTION_ST_DT').val(today.yyyymmdd());
+        $("#inspection_history_form").find('#SEL_INSPECTION_END_DT').val(today.yyyymmdd());
+        $("#inspection_history_form").find("#SEL_INSPECTION_RETURN_TERM_1").trigger("click");
+
+        $("#inspection_history_form").find('[name=SEL_INSPECTION_RETURN_TERM]').change(function () {
+            let value = $(this).val(), newDate = new Date();
+            newDate.setDate(newDate.getDate() - value);
+            $("#inspection_history_form").find('#SEL_INSPECTION_ST_DT').val(newDate.yyyymmdd());
+            $("#inspection_history_form").find('#SEL_INSPECTION_END_DT').val(today.yyyymmdd());
+            // outgoingChangeDate(newDate, today);
+
+        });
 
         /**  리스트 그리드 선언 시작 **/
         $("#inspection_history_form").find("#queryId").val("inspection.selectInspectionHistoryList");

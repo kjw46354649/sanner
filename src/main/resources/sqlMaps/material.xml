@@ -1409,11 +1409,17 @@
     </delete>
 
     <update id="updateInWarehouseOut" parameterType="java.util.HashMap">
-        UPDATE TBL_MY_MATERIAL_OUT
-        SET OUT_STATUS = 'OUT002',
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{UPDATE_ID}
-        WHERE MY_MAT_OUT_SEQ = #{MY_MAT_OUT_SEQ}
+        UPDATE TBL_MY_MATERIAL_OUT A
+        SET A.OUT_STATUS = 'OUT002',
+            A.UPDATE_DT = NOW(),
+            A.UPDATE_ID = #{UPDATE_ID}
+        WHERE A.MY_MAT_OUT_SEQ = #{MY_MAT_OUT_SEQ}
+            AND A.OUT_QTY <![CDATA[ <= ]]> (SELECT
+                                                SUM(IFNULL((SELECT SUM(M.IN_QTY) FROM TBL_MY_MATERIAL_IN M WHERE M.MY_MAT_STOCK_SEQ = Q.MY_MAT_STOCK_SEQ), 0)) -
+                                                SUM(IFNULL((SELECT SUM(M.OUT_QTY) FROM TBL_MY_MATERIAL_OUT M WHERE M.MY_MAT_STOCK_SEQ = Q.MY_MAT_STOCK_SEQ AND M.OUT_STATUS = 'OUT002'), 0)) AS STOCK_QTY
+                                            FROM TBL_MY_MATERIAL_STOCK Q
+                                            WHERE Q.MY_MAT_STOCK_SEQ = A.MY_MAT_STOCK_SEQ
+                                            GROUP BY Q.MY_MAT_STOCK_SEQ )
     </update>
 
     <update id="updateInWarehouseScan" parameterType="java.util.HashMap">
@@ -1430,6 +1436,13 @@
         SET A.OUT_STATUS = 'OUT002'
             , A.UPDATE_DT = NOW()
             , A.UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND A.OUT_QTY <![CDATA[ <= ]]> (SELECT
+                                                SUM(IFNULL((SELECT SUM(M.IN_QTY) FROM TBL_MY_MATERIAL_IN M WHERE M.MY_MAT_STOCK_SEQ = Q.MY_MAT_STOCK_SEQ), 0)) -
+                                                SUM(IFNULL((SELECT SUM(M.OUT_QTY) FROM TBL_MY_MATERIAL_OUT M WHERE M.MY_MAT_STOCK_SEQ = Q.MY_MAT_STOCK_SEQ AND M.OUT_STATUS = 'OUT002'), 0)) AS STOCK_QTY
+                                            FROM TBL_MY_MATERIAL_STOCK Q
+                                            WHERE Q.MY_MAT_STOCK_SEQ = A.MY_MAT_STOCK_SEQ
+                                            GROUP BY Q.MY_MAT_STOCK_SEQ )
     </update>
 
     <select id="selectInWarehousePop" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1483,7 +1496,7 @@
                     , A.SIZE_L
                     , C.IN_QTY 
                     , B.OUT_QTY 
-                    , SUM(IFNULL(C.IN_QTY, 0)) - SUM(IFNULL(B.OUT_QTY, 0)) AS STOCK_QTY
+                    , SUM(IFNULL(C.IN_QTY, 0)) - SUM(IFNULL((SELECT SUM(M.OUT_QTY) FROM TBL_MY_MATERIAL_OUT M WHERE M.MY_MAT_STOCK_SEQ = A.MY_MAT_STOCK_SEQ AND M.OUT_STATUS = 'OUT002'), 0)) AS STOCK_QTY
                     , B.OUT_DT
                     , B.OUT_USER_ID
                     , A.WAREHOUSE_CD
@@ -1495,7 +1508,7 @@
                    INNER JOIN TBL_MY_MATERIAL_IN C ON C.MY_MAT_STOCK_SEQ = A.MY_MAT_STOCK_SEQ
                    INNER JOIN TBL_WAREHOUSE_LOCATION D ON D.WAREHOUSE_CD = A.WAREHOUSE_CD AND D.LOC_SEQ = A.LOC_SEQ 
                WHERE A.DEL_YN = 'N'
-                   AND B.OUT_STATUS = 'OUT001'
+                   AND B.OUT_STATUS = 'OUT001' <!-- 불출대기-->
                    AND D.DEL_YN = 'N'
                    <if test="MY_MAT_OUT_SEQ != '' and MY_MAT_OUT_SEQ != null">
                        AND B.MY_MAT_OUT_SEQ = #{MY_MAT_OUT_SEQ}
