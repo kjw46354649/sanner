@@ -192,19 +192,10 @@
         $('#SEL_INSPECTION_END_DT').datepicker('setDate', 'today');
         $("#inspection_history_form").find('#SEL_INSPECTION_ST_DT').val(today.yyyymmdd());
         $("#inspection_history_form").find('#SEL_INSPECTION_END_DT').val(today.yyyymmdd());
-        // $('#SEL_INSPECTION_ST_DT').datepicker({dateFormat: 'yy/mm/dd'});
-        // $('#SEL_INSPECTION_END_DT').datepicker({dateFormat: 'yy/mm/dd'});
-        // $("#inspection_history_form").find(".datepicker-input").each(function(){ $(this).datepicker();});
-        // $("#inspection_history_form").find(".datepicker-input").each(function(){ $(this).datepicker('setDate', 'today');});
         $("#inspection_history_form").find("#SEL_INSPECTION_RETURN_TERM_1").trigger("click");
-        console.log($("#inspection_history_form").find('#SEL_INSPECTION_END_DT'))
-        console.log($("#inspection_history_form").find('#SEL_INSPECTION_ST_DT'))
-        console.log($("#inspection_history_form").find('.datepicker-input'))
 
         $("#inspection_history_form").find('[name=SEL_INSPECTION_RETURN_TERM]').change(function () {
             let value = $(this).val(), newDate = new Date();
-            console.log('change',$(this))
-            console.log('change',$(this))
             newDate.setDate(newDate.getDate() - value);
             $("#inspection_history_form").find('#SEL_INSPECTION_ST_DT').val(newDate.yyyymmdd());
             $("#inspection_history_form").find('#SEL_INSPECTION_END_DT').val(today.yyyymmdd());
