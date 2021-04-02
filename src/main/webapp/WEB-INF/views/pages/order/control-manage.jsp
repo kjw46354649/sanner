@@ -57,7 +57,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="SIZE_TYPE">규격</label>
-                            <select class="wd_100" name="SIZE_TYPE" id="SIZE_TYPE" title="규격">
+                            <select class="wd_100" style="width: 98px !important;" name="SIZE_TYPE" id="SIZE_TYPE" title="규격">
                                 <c:forEach var="vlocale" items="${HighCode.H_1016}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
