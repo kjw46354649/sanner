@@ -949,6 +949,17 @@
             $("#cam_work_manage_pop_form").find("#DRAWING_NUM").html(rowData.CONCAT_DRAWING_NUM || '');
             $("#cam_work_manage_pop_form").find("#WORK_TYPE").html(rowData.WORK_TYPE_NM || '');
             let drawingFile = "";
+
+            /** 21.04.02 중복도면 팝업 처리 - 이수빈 **/
+            let str = rowData.CONCAT_DRAWING_NUM;
+            let arr = str.split(',');
+            if (arr.length === 1) {
+                $("#mctWorkPopMctResultDrawingViewBtn").attr('onClick', 'callWindowImageViewer(' + rowData.IMG_GFILE_SEQ + ');');
+            } else if (arr.length > 1) {
+                $('#common_multi_download_pop_form').find('#MAIN_IMG_SEQ').val(rowData.IMG_GFILE_SEQ);
+                $("#mctWorkPopMctResultDrawingViewBtn").attr('onClick', 'commonMultiDownloadPop(' + rowData.CONTROL_SEQ + ',' + rowData.CONTROL_DETAIL_SEQ + ');');
+            }
+
             if (rowData.CAM_STATUS === "CWS020" || rowData.CAM_STATUS === "CWS030") {
                 let str = rowData.CONCAT_DRAWING_NUM;
                 let arr = str.split(',');
@@ -1231,9 +1242,10 @@
             g_item_detail_pop_view($("#cam_work_manage_pop_form").find("#CONTROL_SEQ").val(), $("#cam_work_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val());
         });
         /** 팝업 제품 도면 보기 **/
-        $("#cam_work_manage_pop_form").find("#mctWorkPopMctResultDrawingViewBtn").click(function(event) {
-            callWindowImageViewer($("#cam_work_manage_pop_form").find("#IMG_GFILE_SEQ").val());
-        });
+        /** 21.04.02 중복도면 팝업 처리를 위한 주석 - 이수빈 **/
+        // $("#cam_work_manage_pop_form").find("#mctWorkPopMctResultDrawingViewBtn").click(function(event) {
+        //     callWindowImageViewer($("#cam_work_manage_pop_form").find("#IMG_GFILE_SEQ").val());
+        // });
 
         $("#cam_work_manage_pop_form").find(".camworkChekbox").click(function(){
             let attrName = $(this).attr('name');
