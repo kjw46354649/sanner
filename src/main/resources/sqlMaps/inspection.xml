@@ -1590,6 +1590,9 @@
             <if test="SEL_INSPECT_USER_ID !='' and SEL_INSPECT_USER_ID != null">
                 AND W.INSPECT_USER_ID = #{SEL_INSPECT_USER_ID}   <!-- 검사자 -->
             </if>
+            <if test="SEL_INSPECTION_ST_DT !='' and SEL_INSPECTION_ST_DT != null and SEL_INSPECTION_END_DT !='' and SEL_INSPECTION_END_DT != null">
+                AND W.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_INSPECTION_ST_DT},'/',space(0)),'%Y%m%d') AND  DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_INSPECTION_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY)
+            </if>
         ORDER BY V.CONTROL_SEQ, V.CONTROL_DETAIL_SEQ, W.INSPECT_SEQ DESC    <!-- 정렬도 확인필요 -->
     </select>
     <delete id="deleteOutgoingHistoryInspectionCancelStep1" parameterType="java.util.HashMap">
