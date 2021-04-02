@@ -875,6 +875,10 @@
                     let lastRow = ui.selection._areas[i].r2;
 
                     for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
+                    if(firstRow === lastRow){
+                        let selRowData = $('#' + controlCloseHistoryGridId).pqGrid("getRowData", {rowIndx: firstRow});
+                        callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
                 }
             },
             beforePaste: function (evt, ui) {
@@ -1573,6 +1577,10 @@
                     let lastRow = ui.selection._areas[i].r2;
 
                     for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
+                    if(firstRow === lastRow){
+                        let selRowData = $('#' + controlEndHistoryGridId).pqGrid("getRowData", {rowIndx: firstRow});
+                        callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
                 }
             },
             beforePaste: function (evt, ui) {

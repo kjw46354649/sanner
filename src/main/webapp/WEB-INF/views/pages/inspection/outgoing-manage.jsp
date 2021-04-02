@@ -1387,7 +1387,7 @@
 
                 switch (target) {
                     case 'disposal':
-                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.deleteOutgoingDisposal,inspection.updateOutgoingDisposal,inspection.updateOutFinishStatus,inspection.updateOutgoingDisposalAfter1");
+                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.deleteOutgoingDisposal,inspection.updateOutgoingDisposal,inspection.updateOutgoingOutType1After2,inspection.updateOutFinishStatus");
                         break;
                     default:
                         $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2,inspection.updateOutgoingOutType1After3,inspection.updateOutFinishStatus");

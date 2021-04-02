@@ -253,7 +253,6 @@
                 <div class="btnWrap">
                     <button type="button" class="defaultBtn greenPopGra" id="inside_stock_pop_save_btn">저장</button>
                     <button type="button" class="defaultBtn grayPopGra" id="inside_stock_pop_close_btn">닫기</button>
-
                 </div>
             </div>
         </div>
@@ -1094,14 +1093,30 @@
                         }else{
                             let popType = $("#stock_manage_form").find("#popType").val();
                             let foot_msg = pop_msg_in;
+                            let orderQty = dataInfo.ORDER_QTY;
+                            let afterQty = dataInfo.POP_STOCK_QTY_AFTER;
                             fnJsonDataToForm("stock_manage_pop_form", dataInfo);
                             if(popType == 'GRID_OUT') {
                                 foot_msg = pop_msg_out;
+                                let currentQty = dataInfo.POP_STOCK_QTY;
+                                let outQty = dataInfo.ORDER_QTY;
+                                afterQty = dataInfo.POP_STOCK_QTY - dataInfo.ORDER_QTY;
+                                if(Number(currentQty) < Number(outQty)){
+                                    fnAlert(null, "불출 수량을 확인 해 주세요.");
+                                    $(this).val(0);
+                                    outQty = 0;
+                                    orderQty = 0;
+                                    afterQty = currentQty;
+                                }
                             }
                             $("#stock_manage_pop_form").find("#footer_msg").html(foot_msg);
-                            $("#stock_manage_pop_form").find("#ORDER_QTY").val(dataInfo.ORDER_QTY);
-                            $("#stock_manage_pop_form").find("#ORIGINAL_ORDER_QTY").val(dataInfo.ORDER_QTY);
-                            $("#stock_manage_pop_form").find("#ORIGINAL_POP_STOCK_QTY_AFTER").val(dataInfo.POP_STOCK_QTY_AFTER);
+                            // $("#stock_manage_pop_form").find("#ORDER_QTY").val(dataInfo.ORDER_QTY);
+                            $("#stock_manage_pop_form").find("#ORDER_QTY").val(orderQty);
+                            $("#stock_manage_pop_form").find("#ORIGINAL_ORDER_QTY").val(orderQty);
+                            // $("#stock_manage_pop_form").find("#ORIGINAL_ORDER_QTY").val(dataInfo.ORDER_QTY);
+                            $("#stock_manage_pop_form").find("#ORIGINAL_POP_STOCK_QTY_AFTER").val(afterQty);
+                            // $("#stock_manage_pop_form").find("#ORIGINAL_POP_STOCK_QTY_AFTER").val(dataInfo.POP_STOCK_QTY_AFTER);
+                            $("#stock_manage_pop_form").find("#POP_STOCK_QTY_AFTER").val(afterQty);
                             $("#stock_manage_pop_form").find("#WAREHOUSE_CD").val(dataInfo.WAREHOUSE_CD);
                             $("#stock_manage_pop_form").find("#WAREHOUSE_CD").change();
                             setTimeout(function() {
