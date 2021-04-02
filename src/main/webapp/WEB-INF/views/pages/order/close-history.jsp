@@ -59,12 +59,16 @@
                             <input type="search" class="wd_200" name="PROJECT_NM_OR_MODULE_NM" id="PROJECT_NM_OR_MODULE_NM">
                         </div>
                         <span class="gubun"></span>
-                        <span class="slt_wrap">
-                            <label class="label_100" for="RBRUR">규격</label>
-                            <select class="wd_200" name="RBRUR" id="RBRUR" title="규격">
-                                <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            </select>
-                        </span>
+<%--                        <span class="slt_wrap">--%>
+<%--                            <label class="label_100" for="RBRUR">규격</label>--%>
+<%--                            <select class="wd_200" name="RBRUR" id="RBRUR" title="규격">--%>
+<%--                                <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
+<%--                            </select>--%>
+<%--                        </span>--%>
+                        <div class="ipu_wrap">
+                            <label class="label_100" for="AMOUNT_SUM">금액합산</label>
+                            <input type="search" class="wd_200" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
+                        </div>
                     </li>
                     <li>
                         <div class="ipu_wrap">
@@ -72,17 +76,63 @@
                             <input type="search" class="wd_200" name="ORDER_NUMBER" id="ORDER_NUMBER">
                         </div>
                         <span class="gubun"></span>
+<%--                        <div class="slt_wrap">--%>
+<%--                            <label class="label_100" for="UNIT_PRICE">단가</label>--%>
+<%--                            <select class="wd_200" id="UNIT_PRICE">--%>
+<%--                                <option></option>--%>
+<%--                            </select>--%>
+<%--                        </div>--%>
                         <div class="slt_wrap">
-                            <label class="label_100" for="UNIT_PRICE">단가</label>
-                            <select class="wd_200" id="UNIT_PRICE">
-                                <option></option>
-                            </select>
+                            <label class="label_100" for="UNIT_PRICE">공급단가</label>
+                            <span class="slt_wrap" id="UNIT_PRICE">
+                                <input class="wd_100" style="width: 90px !important;" type="number" name="UNIT_PRICE_F" id="UNIT_PRICE_F" placeholder="From">
+                                <span class="nbsp">~</span>
+                                <input class="wd_100" style="width: 90px !important;" type="number" name="UNIT_PRICE_T" id="UNIT_PRICE_T" placeholder="To">
+                            </span>
                         </div>
                         <span class="gubun"></span>
-                        <div class="ipu_wrap">
-                            <label class="label_100" for="AMOUNT_SUM">금액합산</label>
-                            <input type="search" class="wd_200" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>
-                        </div>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="SIZE_TYPE">규격</label>
+                            <select class="wd_100" name="SIZE_TYPE" id="SIZE_TYPE" title="규격">
+                                <c:forEach var="vlocale" items="${HighCode.H_1016}">
+                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
+                        </span>
+                        <span class="slt_wrap" id="SIZE_W">
+                            <label class="label_8">W</label>
+                            <input class="wd_50" type="number" name="SIZE_W_F" id="SIZE_W_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_W_T" id="SIZE_W_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_H">
+                            <label class="label_8">H</label>
+                            <input class="wd_50" type="number" name="SIZE_H_F" id="SIZE_H_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_H_T" id="SIZE_H_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_T">
+                            <label class="label_8">T</label>
+                            <input class="wd_50" type="number" name="SIZE_T_F" id="SIZE_T_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_T_T" id="SIZE_T_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_D" style="display: none;">
+                            <label class="label_8">D</label>
+                            <input class="wd_50" type="number" name="SIZE_D_F" id="SIZE_D_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_D_T" id="SIZE_D_T" placeholder="To">
+                        </span>
+                        <span class="slt_wrap" id="SIZE_L" style="display: none;">
+                            <label class="label_8">L</label>
+                            <input class="wd_50" type="number" name="SIZE_L_F" id="SIZE_L_F" placeholder="From">
+                            <span class="nbsp">~</span>
+                            <input class="wd_50" type="number" name="SIZE_L_T" id="SIZE_L_T" placeholder="To">
+                        </span>
+<%--                        <div class="ipu_wrap">--%>
+<%--                            <label class="label_100" for="AMOUNT_SUM">금액합산</label>--%>
+<%--                            <input type="search" class="wd_200" name="AMOUNT_SUM" id="AMOUNT_SUM" readonly>--%>
+<%--                        </div>--%>
                     </li>
                     <li>
                         <div class="ipu_wrap d-inline-block" style="width:662px">
@@ -2194,5 +2244,45 @@
         $controlCloseHistoryGrid = $('#' + controlCloseHistoryGridId).pqGrid(controlCloseHistoryObj);
         $controlEndHistoryGrid = $('#' + controlEndHistoryGridId).pqGrid(controlEndHistoryObj);
         /* init */
+
+        $('#CLOSE_HISTORY_SEARCH_FORM').find('#SIZE_TYPE').on('change', function () {
+            const $closeHistorySearchForm = $('#CLOSE_HISTORY_SEARCH_FORM');
+
+            switch (this.value) {
+                case 'XYZ010':
+                    $closeHistorySearchForm.find('#SIZE_W').show();
+                    $closeHistorySearchForm.find('#SIZE_H').show();
+                    $closeHistorySearchForm.find('#SIZE_T').show();
+                    $closeHistorySearchForm.find('#SIZE_D').hide();
+                    $closeHistorySearchForm.find('#SIZE_L').hide();
+                    $closeHistorySearchForm.find('#SIZE_D_F').val('');
+                    $closeHistorySearchForm.find('#SIZE_D_T').val('');
+                    $closeHistorySearchForm.find('#SIZE_L_F').val('');
+                    $closeHistorySearchForm.find('#SIZE_L_T').val('');
+                    break;
+                case 'XYZ020':
+                case 'XYZ030':
+                case 'XYZ040':
+                case 'XYZ050':
+                    $closeHistorySearchForm.find('#SIZE_W').hide();
+                    $closeHistorySearchForm.find('#SIZE_H').hide();
+                    $closeHistorySearchForm.find('#SIZE_T').hide();
+                    $closeHistorySearchForm.find('#SIZE_W_F').val('');
+                    $closeHistorySearchForm.find('#SIZE_W_T').val('');
+                    $closeHistorySearchForm.find('#SIZE_H_F').val('');
+                    $closeHistorySearchForm.find('#SIZE_H_T').val('');
+                    $closeHistorySearchForm.find('#SIZE_T_F').val('');
+                    $closeHistorySearchForm.find('#SIZE_T_T').val('');
+                    $closeHistorySearchForm.find('#SIZE_D').show();
+                    $closeHistorySearchForm.find('#SIZE_L').show();
+                    break;
+                default:
+                    $closeHistorySearchForm.find('#SIZE_W').show();
+                    $closeHistorySearchForm.find('#SIZE_H').show();
+                    $closeHistorySearchForm.find('#SIZE_T').show();
+                    $closeHistorySearchForm.find('#SIZE_D').show();
+                    $closeHistorySearchForm.find('#SIZE_L').show();
+            }
+        });
     });
 </script>

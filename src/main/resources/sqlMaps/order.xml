@@ -1483,7 +1483,52 @@
             <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
                 AND B.MATERIAL_KIND = #{MATERIAL_KIND}
             </if>
+            <if test="SIZE_TYPE != null and SIZE_TYPE != ''">
+                AND B.SIZE_TYPE = #{SIZE_TYPE}
+                <choose>
+                    <when test="SIZE_TYPE == 'XYZ010'">
+                        <if test="SIZE_W_F != null and SIZE_W_F != ''">
+                            AND B.SIZE_W >= #{SIZE_W_F}
+                        </if>
+                        <if test="SIZE_W_T != null and SIZE_W_T != ''">
+                            AND B.SIZE_W <![CDATA[ <= ]]> #{SIZE_W_T}
+                        </if>
+                        <if test="SIZE_H_F != null and SIZE_H_F != ''">
+                            AND B.SIZE_H >= #{SIZE_H_F}
+                        </if>
+                        <if test="SIZE_H_T != null and SIZE_H_T != ''">
+                            AND B.SIZE_H <![CDATA[ <= ]]> #{SIZE_H_T}
+                        </if>
+                        <if test="SIZE_T_F != null and SIZE_T_F != ''">
+                            AND B.SIZE_T >= #{SIZE_T_F}
+                        </if>
+                        <if test="SIZE_T_T != null and SIZE_T_T != ''">
+                            AND B.SIZE_T <![CDATA[ <= ]]> #{SIZE_T_T}
+                        </if>
+                    </when>
+                    <when test="SIZE_TYPE == 'XYZ020' or SIZE_TYPE == 'XYZ030' or SIZE_TYPE == 'XYZ040' or SIZE_TYPE == 'XYZ050'">
+                        <if test="SIZE_D_F != null and SIZE_D_F != ''">
+                            AND B.SIZE_D >= #{SIZE_D_F}
+                        </if>
+                        <if test="SIZE_D_T != null and SIZE_D_T != ''">
+                            AND B.SIZE_D <![CDATA[ <= ]]> #{SIZE_D_T}
+                        </if>
+                        <if test="SIZE_L_F != null and SIZE_L_F != ''">
+                            AND B.SIZE_L >= #{SIZE_L_F}
+                        </if>
+                        <if test="SIZE_L_T != null and SIZE_L_T != ''">
+                            AND B.SIZE_L <![CDATA[ <= ]]> #{SIZE_L_T}
+                        </if>
+                    </when>
+                </choose>
+            </if>
             LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                <if test="UNIT_PRICE_F != null and UNIT_PRICE_F != ''">
+                    AND IFNULL(C.UNIT_FINAL_AMT,0) <![CDATA[ >= ]]> #{UNIT_PRICE_F} <!-- 단가 - 공급단가 기준 -->
+                </if>
+                <if test="UNIT_PRICE_T != null and UNIT_PRICE_T != ''">
+                    AND IFNULL(C.UNIT_FINAL_AMT,0) <![CDATA[ <= ]]> #{UNIT_PRICE_T}
+                </if>
             INNER JOIN TBL_MONTH_CLOSE D ON D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD
                 AND D.CLOSE_MONTH BETWEEN DATE_FORMAT(STR_TO_DATE(#{CONTROL_CLOSE_HISTORY_START_DATE}, '%Y/%m'), '%Y%m') AND DATE_FORMAT(STR_TO_DATE(#{CONTROL_CLOSE_HISTORY_END_DATE}, '%Y/%m'), '%Y%m')
             INNER JOIN TBL_MONTH_CLOSE_ORDER E ON E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD AND E.CLOSE_MONTH = D.CLOSE_MONTH AND E.CLOSE_VER = D.CLOSE_VER AND E.CONTROL_SEQ = C.CONTROL_SEQ AND E.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND E.ORDER_SEQ = C.ORDER_SEQ
@@ -1555,7 +1600,52 @@
             <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
                 AND B.MATERIAL_KIND = #{MATERIAL_KIND}
             </if>
+            <if test="SIZE_TYPE != null and SIZE_TYPE != ''">
+                AND B.SIZE_TYPE = #{SIZE_TYPE}
+                <choose>
+                    <when test="SIZE_TYPE == 'XYZ010'">
+                        <if test="SIZE_W_F != null and SIZE_W_F != ''">
+                            AND B.SIZE_W >= #{SIZE_W_F}
+                        </if>
+                        <if test="SIZE_W_T != null and SIZE_W_T != ''">
+                            AND B.SIZE_W <![CDATA[ <= ]]> #{SIZE_W_T}
+                        </if>
+                        <if test="SIZE_H_F != null and SIZE_H_F != ''">
+                            AND B.SIZE_H >= #{SIZE_H_F}
+                        </if>
+                        <if test="SIZE_H_T != null and SIZE_H_T != ''">
+                            AND B.SIZE_H <![CDATA[ <= ]]> #{SIZE_H_T}
+                        </if>
+                        <if test="SIZE_T_F != null and SIZE_T_F != ''">
+                            AND B.SIZE_T >= #{SIZE_T_F}
+                        </if>
+                        <if test="SIZE_T_T != null and SIZE_T_T != ''">
+                            AND B.SIZE_T <![CDATA[ <= ]]> #{SIZE_T_T}
+                        </if>
+                    </when>
+                    <when test="SIZE_TYPE == 'XYZ020' or SIZE_TYPE == 'XYZ030' or SIZE_TYPE == 'XYZ040' or SIZE_TYPE == 'XYZ050'">
+                        <if test="SIZE_D_F != null and SIZE_D_F != ''">
+                            AND B.SIZE_D >= #{SIZE_D_F}
+                        </if>
+                        <if test="SIZE_D_T != null and SIZE_D_T != ''">
+                            AND B.SIZE_D <![CDATA[ <= ]]> #{SIZE_D_T}
+                        </if>
+                        <if test="SIZE_L_F != null and SIZE_L_F != ''">
+                            AND B.SIZE_L >= #{SIZE_L_F}
+                        </if>
+                        <if test="SIZE_L_T != null and SIZE_L_T != ''">
+                            AND B.SIZE_L <![CDATA[ <= ]]> #{SIZE_L_T}
+                        </if>
+                    </when>
+                </choose>
+            </if>
             LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            <if test="UNIT_PRICE_F != null and UNIT_PRICE_F != ''">
+                AND IFNULL(C.UNIT_FINAL_AMT,0) >= #{UNIT_PRICE_F} <!-- 단가 - 공급단가 기준 -->
+            </if>
+            <if test="UNIT_PRICE_T != null and UNIT_PRICE_T != ''">
+                AND IFNULL(C.UNIT_FINAL_AMT,0) <![CDATA[ <= ]]> #{UNIT_PRICE_T}
+            </if>
         WHERE A.DEL_YN = 'N'
             AND A.CONTROL_STATUS = 'ORD004'
             AND A.STATUS_DT BETWEEN STR_TO_DATE(CONCAT(#{CONTROL_CLOSE_HISTORY_START_DATE}, '/01'), '%Y/%m/%d %k:%i:%s') AND STR_TO_DATE(CONCAT(LAST_DAY(STR_TO_DATE(#{CONTROL_CLOSE_HISTORY_END_DATE}, '%Y/%m')), '23:59:59'), '%Y-%m-%d %k:%i:%s')
