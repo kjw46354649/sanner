@@ -14,55 +14,64 @@
 
 <div class="page main">
     <div class="leftWrap">
-        <div class="chartWrap">
-            <div class="hWrap">
-                <h2>주요 지표 현황</h2>
+        <div class="topWrap">
+            <div class="searchWrap ">
+                <div class="hWrap">
+                    <form class="form-inline" id="operating_rate_and_operation_record_search_form" name="operating_rate_and_operation_record_search_form" role="form">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <span class="slt_wrap ml-10">
+                                    <label class="label_50" for="inquiry_target">조회대상</label>
+                                    <select class="wd_70" id="inquiry_target" title="조회대상">
+                                        <option value="process">가공수행</option>
+                                        <option value="cam">CAM설계</option>
+                                    </select>
+                                </span>
+                                <span class="slt_wrap ml-10">
+                                    <label class="label_50" for="user_id">작업자</label>
+                                    <select class="wd_70" name="USER_ID" id="user_id" title="작업자"></select>
+                                </span>
+                                <span class="slt_wrap ml-10">
+                                    <label class="label_50" for="factory_area">위치구분</label>
+                                    <select class="wd_70" name="FACTORY_AREA" id="factory_area">
+                                        <option value=""><spring:message
+                                                code="com.form.top.all.option"/></option>
+                                        <c:forEach var="code" items="${HighCode.H_1005}">
+                                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                        </c:forEach>
+                                    </select>
+                                </span>
+                                <span class="calendar_span">
+                                    <input type="text" title="집계일자" name="BATCH_DT" id="main_aggregation_dt" readonly>
+                                    <button type="button" id="main_aggregation_dt_button">달력선택</button>
+                                </span>
+                            </div>
+                            <div class="ml-auto mr-10">
+                                <button type="button" id="refresh_main_left"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="conWrap">
-                <ul>
-                    <li>
-                        <div class="title">
-                            <span class="t_text">MCT 가동률</span>
-                            <span class="t_date">2019/12/17</span>
-                        </div>
-                        <div class="plugWrap"><img src="/resource/asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
-                    </li>
-                    <li>
-                        <div class="title">
-                            <span class="t_text">MCT 가동률</span>
-                            <span class="t_date">2019/12/17</span>
-                        </div>
-                        <div class="plugWrap"><img src="/resource/asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
-                    </li>
-                    <li>
-                        <div class="title">
-                            <span class="t_text">MCT 가동률</span>
-                            <span class="t_date">2019/12/17</span>
-                        </div>
-                        <div class="plugWrap"><img src="/resource/asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
-                    </li>
-                    <li>
-                        <div class="title">
-                            <span class="t_text">MCT 가동률</span>
-                            <span class="t_date">2019/12/17</span>
-                        </div>
-                        <div class="plugWrap"><img src="/resource/asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
-                    </li>
-                    <li>
-                        <div class="title">
-                            <span class="t_text">MCT 가동률</span>
-                            <span class="t_date">2019/12/17</span>
-                        </div>
-                        <div class="plugWrap"><img src="/resource/asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
-                    </li>
-                    <li>
-                        <div class="title">
-                            <span class="t_text">MCT 가동률</span>
-                            <span class="t_date">2019/12/17</span>
-                        </div>
-                        <div class="plugWrap"><img src="/resource/asset/images/common/img_char_sp.png" alt="차트 샘플"></div>
-                    </li>
-                </ul>
+            <div class="chartWrap hWrap">
+<%--                <div class="card">--%>
+<%--                    <div id="chart0"></div>--%>
+<%--                </div>--%>
+            </div>
+            <div class="tableWrap">
+                <div id="grid1">
+                    <div id="main_left_grid_1"></div>
+                    <div class="right_sort">
+                        전체 조회 건수 (Total : <span id="main_left_grid_1_total_records" style="color: #00b3ee">0</span>)
+                    </div>
+                </div>
+
+                <div id="grid2" style="display: none;">
+                    <div id="main_left_grid_2"></div>
+                    <div class="right_sort">
+                        전체 조회 건수 (Total : <span id="main_left_grid_2_total_records" style="color: #00b3ee">0</span>)
+                    </div>
+                </div>
             </div>
         </div>
         <div class="noticeWrap">
@@ -129,37 +138,38 @@
             <div class="hWrap">
                 <form class="form-inline" id="main_master_search_form" name="main_master_search_form" role="form">
                     <input type="hidden" name="queryId" id="queryId" value="main.selectMainTodayMCTList">
-                    <h2>가공 대상 List</h2>
-                    <span class="chk_box ml-20"></span>
-                    <span class="slt_wrap ml-10">
-                        <input type="checkbox" name="NOTEXISTS_INNER_WORK_FINISH_DT_CHK" id="NOTEXISTS_INNER_WORK_FINISH_DT_CHK" checked><label for="NOTEXISTS_INNER_WORK_FINISH_DT_CHK">&nbsp;&nbsp;가공완료제외</label>
-                    </span>
-                    <span class="slt_wrap ml-10">
-                        <label for="MATERIAL_TYPE">발주처</label>
-                        <select class="wd_150" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-                            <option value=""><spring:message code="com.form.top.all.option"/></option>
-                        </select>
-                    </span>
-                    <span class="slt_wrap ml-10">
-                        <label for="MATERIAL_TYPE">재질</label>
-                        <select class="label_150" name="MATERIAL_TYPE" id="MATERIAL_TYPE" title="재질">
-                            <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            <c:forEach var="code" items="${HighCode.H_1035}">
-                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                            </c:forEach>
-                        </select>
-                    </span>
-                    <span class="slt_wrap ml-10">
-                        <label for="WORK_FACTORY">수행공장</label>
-                        <select class="wd_150" name="WORK_FACTORY" id="WORK_FACTORY" title="수행공장">
-                            <option value=""><spring:message code="com.form.top.all.option"/></option>
-                            <c:forEach var="code" items="${HighCode.H_1014}">
-                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                            </c:forEach>
-                        </select>
-                    </span>
-<%--                    <span class="ipu_wrap ml-10"><label for="dateSltd">조회일자</label><input type="text" name="INNER_DUE_DT" id="INNER_DUE_DT" placeholder="" value="" class="wd_150" title="조회일자"></span>--%>
-                    <span class="refresh"><button type="button" id="main_refresh"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button></span>
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <!-- <h2>가공 대상 List</h2> -->
+                            <span class="slt_wrap ml-10">
+                                <label class="label_50" for="work_factory">공장구분</label>
+                                <select class="wd_70" name="WORK_FACTORY" id="work_factory" title="공장구분">
+                                    <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                    <c:forEach var="code" items="${HighCode.H_1014}">
+                                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                    </c:forEach>
+                                </select>
+                            </span>
+                            <span class="slt_wrap ml-10">
+                                <label class="label_50" for="work_status_type_1">진행상태</label>
+                                <span class="radio_box">
+                                    <input type="radio" name="WORK_STATUS_TYPE" id="work_status_type_1" value="1" checked><label for="work_status_type_1">가공전</label>
+                                </span>
+                                <span class="radio_box" style="margin-left: 0;">
+                                    <input type="radio" name="WORK_STATUS_TYPE" id="work_status_type_2" value="2"><label for="work_status_type_2">가공중</label>
+                                </span>
+                                <span class="radio_box" style="margin-left: 0;">
+                                    <input type="radio" name="WORK_STATUS_TYPE" id="work_status_type_3" value="3"><label for="work_status_type_3">가공완료</label>
+                                </label>
+                            </span>
+                        </div>
+                        <div class="ml-auto mr-10">
+                            <span class="slt_wrap ml-10">
+                                <input type="checkbox" name="ASSEMBLY_YN" id="assembly_yn" checked><label for="assembly_yn">조립제외</label>
+                            </span>
+                            <button type="button" id="refresh_main_right"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="conWrap">
@@ -167,40 +177,42 @@
                 <div class="right_sort">
                     전체 조회 건수 (Total : <span id="main_master_total_records" style="color: #00b3ee">0</span>)
                 </div>
-<%--                <img src="/resource/asset/images/common/img_table_sp.jpg" alt="테이블샘플">--%>
+                <%--                <img src="/resource/asset/images/common/img_table_sp.jpg" alt="테이블샘플">--%>
             </div>
         </div>
     </div>
 </div>
 <script>
 
+    let $mainLeftGrid1;
+    let mainLeftGrid1Id = 'main_left_grid_1';
+    let $mainLeftGrid2;
+    let mainLeftGrid2Id = 'main_left_grid_2';
     let $mainMasterGrid;
     let mainMasterGridId = 'main_manager_grid';
-    let mainMasterPostData = fnFormToJsonArrayData('main_master_search_form');
 
     $(function () {
         'use strict';
-        $('#main_master_search_form').find('#INNER_DUE_DT').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#main_master_search_form').find('#INNER_DUE_DT').datepicker('setDate', 'today');
+        $('#operating_rate_and_operation_record_search_form').find('#main_aggregation_dt').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#operating_rate_and_operation_record_search_form').find('#main_aggregation_dt').datepicker('setDate', 'today');
 
-        fnCommCodeDatasourceSelectBoxCreate($('#main_master_search_form').find('#ORDER_COMP_CD'), 'all', {
+        fnCommCodeDatasourceSelectBoxCreate($('#operating_rate_and_operation_record_search_form').find('#user_id'), 'all', {
             'url': '/json-list',
-            'data': {'queryId': 'dataSource.getOrderCompanyList'}
+            'data': {'queryId': 'dataSource.getUserList'}
         });
 
-        let mainMasterColModel = [
-            {title: '공장', minWidth: 40, dataIndx: 'WORK_FACTORY_NM'},
-            {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', width: 50, minWidth: 40},
-            {title: '가공<br>완료', dataType: 'string', dataIndx: 'LAST_PRODUCT_COMPLETE_DT', width: 50, minWidth: 40},
-            {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN_NM', width: 25, minWidth: 25},
-            {title: '불<br>량', dataType: 'string', dataIndx: 'FAIL_STATUS', width: 20, minWidth: 25},
-            {title: 'NC<br>계획', dataType: 'string', dataIndx: 'LAST_MCT_PLAN', width: 60},
-            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25,
+        const leftTopForm = fnFormToJsonArrayData('#operating_rate_and_operation_record_search_form');
+        const leftColModel1 = [
+            {title: '', dataIndx: 'MCT_WORK_SEQ', hidden: true},
+            {title: '공정', dataIndx: 'PROCESS_TYPE_NM'},
+            {title: '장비<br>No.', dataIndx: 'EQUIP_NM'},
+            {
+                title: '', dataIndx: '', minWidth: 25,
                 render: function (ui) {
-                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
+                    if (ui.rowData.CONTROL_SEQ > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
                     return '';
                 },
-                postRender: function(ui) {
+                postRender: function (ui) {
                     let grid = this,
                         $cell = grid.getCell(ui),
                         rowIndx = ui.rowIndx,
@@ -211,34 +223,146 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', width: 150},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', width: 25, minWidth: 25},
-            {title: '', dataIndx: ''},
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', width: 80, minWidth: 50},
-            {
-                title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY', width: 50,
-                render: function (ui) {
-                    let cellData = ui.cellData;
+            {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 150, align: 'left'},
+            {title: '규격', dataIndx: 'SIZE_TXT', width: 85},
+            {title: '', dataIndx: '', minWidth: 25},
+            {title: '재질', dataIndx: 'MATERIAL_TYPE_NM'},
+            {title: '작업자', dataIndx: 'WORK_USER_NM'},
+            {title: '착수일시', dataIndx: 'WORK_START_DT', width: 75},
+            {title: '완료일시', dataIndx: 'WORK_FINISH_DT', width: 75},
+            {title: '작업<br>수량', dataIndx: 'FINISH_QTY'},
+            {title: '불량<br>발생', dataIndx: 'ERROR_QTY'},
+            {title: '검사<br>등급', dataIndx: 'LAST_INSPECT_NM'}
+        ];
+        const leftPostData1 = $.extend(true, {}, leftTopForm, {queryId: 'main.selectProcessHistoryList-main'});
+        const leftObj1 = {
+            height: 385,
+            collapsible: false, postRenderInterval: -1, //call postRender synchronously.
+            resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
+            colModel: leftColModel1,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: leftPostData1,
+                getData: function (response, textStatus, jqXHR) {
+                    return {data: response.data};
+                }
+            },
+            dataReady: function () {
+                const totalRecords = this.option('dataModel.data').length;
+                $('#main_left_grid_1_total_records').html(totalRecords);
+            },
+            toolbar: false,
+        };
 
-                    if (!(fnIsEmpty(cellData))) {
-                        return ui.rowData.SAME_SIDE_YN === 'Y' ? cellData + '&nbsp;<span style="background-color: #C00000; color: white; font-size: 1.2rem; text-align: center; vertical-align: middle;">대</span>' : cellData;
+        $mainLeftGrid1 = $('#' + mainLeftGrid1Id).pqGrid(leftObj1);
+
+        const leftColModel2 = [
+            {title: '', dataIndx: 'CAM_SEQ', hidden: true},
+            {title: '실적등록<br>일시', dataIndx: 'FINISH_DT', width: 75},
+            {title: '가공<br>납기', dataIndx: 'INNER_DUE_DT', width: 75},
+            {
+                title: '', dataIndx: '', minWidth: 25,
+                render: function (ui) {
+                    if (ui.rowData.CONTROL_SEQ > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
+                    });
+                }
+            },
+            {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 150, align: 'left'},
+            {title: '규격', dataIndx: 'SIZE_TXT', width: 85},
+            {title: '수<br>량', dataIndx: 'PART_QTY'},
+            {title: 'Step', dataIndx: 'STEP_SEQ'},
+            {title: '위치', dataIndx: 'WORK_DIRECTION_NM'},
+            {title: '작업자', dataIndx: ''},
+            {title: '진행상태', dataIndx: ''},
+            {
+                title: '최근가공', align: 'center',
+                colModel: [
+                    {title: '공정', dataIndx: 'PROCESS_TYPE_NM'},
+                    {title: '기기명', dataIndx: 'EQUIP_NM'}
+                ]
+            },
+        ];
+        const leftPostData2 = $.extend(true, {}, leftTopForm, {queryId: 'main.selectCamWorkHistoryList-main'});
+        const leftObj2 = {
+            height: 385,
+            collapsible: false, postRenderInterval: -1, //call postRender synchronously.
+            resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
+            colModel: leftColModel2,발
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: leftPostData2,
+                getData: function (response, textStatus, jqXHR) {
+                    return {data: response.data};
+                }
+            },
+            dataReady: function () {
+                const totalRecords = this.option('dataModel.data').length;
+                $('#main_left_grid_2_total_records').html(totalRecords);
+            },
+            toolbar: false,
+        };
+
+        $mainLeftGrid2 = $('#' + mainLeftGrid2Id).pqGrid(leftObj2);
+
+        let rightColModel = [
+            {title: '가공확정', dataIndx: 'WORK_CONFIRM_DT', width: 75},
+            {title: '긴급<br>보류', dataIndx: 'EMERGENCY_DELAY_NM'},
+            {title: '불량<br>반품', dataIndx: 'ERROR_RETURN_NM'},
+            {
+                title: '가공<br>납기', dataIndx: 'INNER_DUE_DT',
+                render: function (ui) {
+                    const rowData = ui.rowData
+                    if (rowData.DELAY_YN === 'Y') {
+                        return {style: 'background-color: #ffff00;'};
                     }
                 }
             },
-            {title: '가공확정', dataIndx: 'PROCESS_CONFIRM_DT', width: 80},
-            {title: '소재입고', dataIndx: 'MATERIAL_RECEIPT_DT', width: 80},
-            {title: '현재위치', dataType: 'string', dataIndx: 'LAST_POP_POSITION', width: 80, minWidth: 40},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS', width: 80, minWidth: 40},
-            {title: '영업담당', dataType: 'string', dataIndx: 'ORDER_STAFF_NM', width: 50}
+            {title: '공장<br>구분', dataIndx: 'WORK_FACTORY_NM'},
+            {title: '진행상태', dataIndx: 'PART_STATUS_NM', width: 70},
+            {title: '발주업체', dataIndx: 'ORDER_COMP_NM', width: 60},
+            {
+                title: '', dataIndx: '', minWidth: 25,
+                render: function (ui) {
+                    if (ui.rowData.CONTROL_SEQ > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
+                    });
+                }
+            },
+            {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 150},
+            {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM'},
+            {title: '수량', dataIndx: 'PART_QTY', dataType: 'integer', format: '#,###'},
+            {title: '규격', dataIndx: 'SIZE_TXT', width: 85},
+            {title: '현재위치', dataIndx: 'POP_POSITION_NM', width: 60},
+            {title: '비고', dataIndx: 'NOTE', width: 100}
         ];
 
-        let mainMasterObj = {
-            minHeight: "auto",
+        const rightObj = {
             height: 800,
-            width: "auto", collapsible: false, postRenderInterval: -1, //call postRender synchronously.
+            collapsible: false, postRenderInterval: -1, //call postRender synchronously.
             resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
-            trackModel: {on: true}, columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
-            colModel: mainMasterColModel,
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
+            colModel: rightColModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: fnFormToJsonArrayData('main_master_search_form'),
@@ -246,24 +370,195 @@
                     return {data: response.data};
                 }
             },
-            dataReady: function (event, ui) {
-                let data = $mainMasterGrid.pqGrid('option', 'dataModel.data');
-                let totalRecords = data.length;
+            dataReady: function () {
+                const totalRecords = this.option('dataModel.data').length;
                 $('#main_master_total_records').html(totalRecords);
             },
             toolbar: false,
         };
-        $mainMasterGrid = $('#' + mainMasterGridId).pqGrid(mainMasterObj);
+        $mainMasterGrid = $('#' + mainMasterGridId).pqGrid(rightObj);
 
-        $('#main_master_search_form').on('change', function () {
+        const gaugeOptions = {
+            chart: {
+                width: 120,
+                height: 80,
+                type: 'solidgauge'
+            },
+            title: {
+                margin: 0,
+                style: {
+                    fontSize: '1rem'
+                },
+                // verticalAlign: 'bottom',
+            },
+            credits: {
+                enabled: false
+            },
+            pane: {
+                center: ['50%', '85%'],
+                size: '160%',
+                startAngle: -90,
+                endAngle: 90,
+                background: {
+                    backgroundColor:
+                        Highcharts.defaultOptions.legend.backgroundColor || '#EEE',
+                    innerRadius: '60%',
+                    outerRadius: '100%',
+                    shape: 'arc'
+                }
+            },
+            exporting: {
+                enabled: false
+            },
+            tooltip: {
+                enabled: false,
+                // valueSuffix: ' %'
+            },
+            // the value axis
+            yAxis: {
+                min: 0,
+                max: 100,
+                stops: [
+                    [0.1, '#55BF3B'], // green
+                    [0.5, '#DDDF0D'], // yellow
+                    [0.9, '#DF5353'] // red
+                ],
+                lineWidth: 0,
+                tickWidth: 0,
+                minorTickInterval: null,
+                tickAmount: 2,
+                title: {
+                    y: -70
+                },
+                labels: {
+                    enabled: false
+                    // y: 16
+                }
+            },
+
+            plotOptions: {
+                solidgauge: {
+                    dataLabels: {
+                        // y: 5,
+                        // borderWidth: 0,
+                        // useHTML: true
+                    }
+                }
+            }
+        };
+
+        const removeChartWrap = function () {
+            $('.chartWrap').empty();
+        };
+
+        const refreshChart = function (data) {
+            for (let i = 0; i < data.list.length; i++) {
+                const rowData = data.list[i];
+                createChartElement(i);
+                createChart(rowData, i);
+            }
+        };
+
+        const createChartElement = function (index) {
+            const $charWrap = $('.chartWrap');
+            const valueElement = $('<div class="card"><div id="' + 'chart' + index + '"></div></div>');
+            $charWrap.append(valueElement);
+        };
+
+        const createChart = function (rowData, index) {
+            Highcharts.chart('chart' + index, Highcharts.merge(gaugeOptions, {
+                title: {
+                    text: rowData.EQUIP_NM
+                },
+                series: [{
+                    name: rowData.EQUIP_NM,
+                    data: [rowData.REAL_RATIO],
+                    dataLabels: {
+                        format:
+                            '<div style="text-align:center">' +
+                            '<span>{y}</span>' +
+                            '<span>%</span>' +
+                            '</div>'
+                    },
+                }]
+            }));
+        };
+
+        const loadChartDataList = function () {
+            const postData = fnFormToJsonArrayData('#operating_rate_and_operation_record_search_form');
+            postData.queryId = 'main.selectOperatingRateChart'
+            const parameter = {'url': '/json-list', 'data': postData}
+
+            fnPostAjax(function (data) {
+                removeChartWrap();
+
+                if (Array.isArray(data.list) && data.list.length > 0) {
+                    refreshChart(data);
+                }
+           }, parameter, '');
+        };
+        loadChartDataList();
+
+        const loadLeftGrid = function () {
+            const $form = fnFormToJsonArrayData('#operating_rate_and_operation_record_search_form');
+            const leftPostData1 = $.extend(true, {}, $form, {queryId: 'main.selectProcessHistoryList-main'});
+            const leftPostData2 = $.extend(true, {}, $form, {queryId: 'main.selectCamWorkHistoryList-main'});
+
+            $mainLeftGrid1.pqGrid('option', 'dataModel.postData', function () {
+                return leftPostData1;
+            });
+            $mainLeftGrid1.pqGrid('refreshDataAndView');
+
+
+            $mainLeftGrid2.pqGrid('option', 'dataModel.postData', function () {
+                return leftPostData2;
+            });
+            $mainLeftGrid2.pqGrid('refreshDataAndView');
+        };
+
+        const refreshLeft = function () {
+            loadChartDataList();
+            loadLeftGrid();
+        };
+
+        const refreshRight = function () {
             $mainMasterGrid.pqGrid('option', 'dataModel.postData', function () {
                 return (fnFormToJsonArrayData('#main_master_search_form'));
             });
             $mainMasterGrid.pqGrid('refreshDataAndView');
+        };
+
+        $('#operating_rate_and_operation_record_search_form').on('change', function () {
+            refreshLeft();
         });
 
-        $('#main_refresh').on('click', function () {
-            $mainMasterGrid.pqGrid('refreshDataAndView');
+        $('#main_master_search_form').on('change', function () {
+            refreshRight();
+        });
+
+        $('#refresh_main_left').on('click', function () {
+            refreshLeft();
+        });
+
+        $('#refresh_main_right').on('click', function () {
+            refreshRight();
+        });
+
+        $('#inquiry_target').on('change', function () {
+            switch (this.value) {
+                case 'process':
+                    $('.page.main #grid1').show();
+                    $('.page.main #grid2').hide();
+                    break;
+                case 'cam':
+                    $('.page.main #grid1').hide();
+                    $('.page.main #grid2').show();
+                    break;
+            }
+        });
+
+        $('#main_aggregation_dt_button').on('click', function () {
+            $('#main_aggregation_dt').focus();
         });
     });
 </script>
