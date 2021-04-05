@@ -28,7 +28,7 @@
 .main .leftWrap .topWrap { background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); margin-bottom: 13px; /*IE 5.5-7*/ }
 .main .leftWrap .topWrap .hWrap { padding-bottom: 5px; border-bottom: 1px solid #e2e2e2; }
 .main .leftWrap .topWrap > div { padding: 5px; }
-.main .leftWrap .topWrap .chartWrap { height: 100px; overflow-x: scroll; overflow-y: hidden; white-space: nowrap; background: aquamarine; }
+.main .leftWrap .topWrap .chartWrap { height: 100px; overflow-x: scroll; overflow-y: hidden; white-space: nowrap; }
 .main .leftWrap .topWrap .chartWrap .card { display: inline-block; margin: 10px; }
 .main .leftWrap .topWrap .tableWrap { height: 400px; }
 

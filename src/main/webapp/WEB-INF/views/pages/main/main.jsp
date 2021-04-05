@@ -349,7 +349,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 150},
+            {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 150, align: 'left'},
             {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM'},
             {title: '수량', dataIndx: 'PART_QTY', dataType: 'integer', format: '#,###'},
             {title: '규격', dataIndx: 'SIZE_TXT', width: 85},
