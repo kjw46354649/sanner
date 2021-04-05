@@ -116,7 +116,7 @@
                         </span>
                     </div>
                     <div class="btnWrap ml-auto mb-10">
-<%--                        <button id="CAD_DOWNLOAD" class="d-none defaultBtn">캐드파일</button>--%>
+                        <button id="CAD_DOWNLOAD" class="d-none defaultBtn">캐드파일</button>
                         <button id="DRAWING_VIEW" class="defaultBtn">도면보기</button>
                         <button id="WORK_HISTORY_INFO" class="defaultBtn">유사주문 수행기록</button>
                     </div>
