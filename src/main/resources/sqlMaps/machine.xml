@@ -664,45 +664,48 @@
                     AND CASE WHEN Y.SIZE_L IS NOT NULL THEN Y.SIZE_L BETWEEN Q.SIZE_L_START AND Q.SIZE_L_END ELSE TRUE END
                 )
             </if>
-        <if test="WORK_USER_ID != null and WORK_USER_ID != ''">
+            <if test="WORK_USER_ID != null and WORK_USER_ID != ''">
                 AND H.WORK_USER_ID = #{WORK_USER_ID}
             </if>
-            <choose>
-                <when test="SIZE_TYPE == 'XYZ010'">
-                    <if test="SIZE_W_F != null and SIZE_W_F != ''">
-                        AND A.SIZE_W >= #{SIZE_W_F}
-                    </if>
-                    <if test="SIZE_W_T != null and SIZE_W_T != ''">
-                        AND A.SIZE_W <![CDATA[ <= ]]> #{SIZE_W_T}
-                    </if>
-                    <if test="SIZE_H_F != null and SIZE_H_F != ''">
-                        AND A.SIZE_H >= #{SIZE_H_F}
-                    </if>
-                    <if test="SIZE_H_T != null and SIZE_H_T != ''">
-                        AND A.SIZE_H <![CDATA[ <= ]]> #{SIZE_H_T}
-                    </if>
-                    <if test="SIZE_T_F != null and SIZE_T_F != ''">
-                        AND A.SIZE_T >= #{SIZE_T_F}
-                    </if>
-                    <if test="SIZE_T_T != null and SIZE_T_T != ''">
-                        AND A.SIZE_T <![CDATA[ <= ]]> #{SIZE_T_T}
-                    </if>
-                </when>
-                <when test="SIZE_TYPE == 'XYZ020' or SIZE_TYPE == 'XYZ030' or SIZE_TYPE == 'XYZ040' or SIZE_TYPE == 'XYZ050'">
-                    <if test="SIZE_D_F != null and SIZE_D_F != ''">
-                        AND A.SIZE_D >= #{SIZE_D_F}
-                    </if>
-                    <if test="SIZE_D_T != null and SIZE_D_T != ''">
-                        AND A.SIZE_D <![CDATA[ <= ]]> #{SIZE_D_T}
-                    </if>
-                    <if test="SIZE_L_F != null and SIZE_L_F != ''">
-                        AND A.SIZE_L >= #{SIZE_L_F}
-                    </if>
-                    <if test="SIZE_L_T != null and SIZE_L_T != ''">
-                        AND A.SIZE_L <![CDATA[ <= ]]> #{SIZE_L_T}
-                    </if>
-                </when>
-            </choose>
+            <if test="SIZE_TYPE != null and SIZE_TYPE != ''">
+                AND A.SIZE_TYPE = #{SIZE_TYPE}
+                <choose>
+                    <when test="SIZE_TYPE == 'XYZ010'">
+                        <if test="SIZE_W_F != null and SIZE_W_F != ''">
+                            AND A.SIZE_W >= #{SIZE_W_F}
+                        </if>
+                        <if test="SIZE_W_T != null and SIZE_W_T != ''">
+                            AND A.SIZE_W <![CDATA[ <= ]]> #{SIZE_W_T}
+                        </if>
+                        <if test="SIZE_H_F != null and SIZE_H_F != ''">
+                            AND A.SIZE_H >= #{SIZE_H_F}
+                        </if>
+                        <if test="SIZE_H_T != null and SIZE_H_T != ''">
+                            AND A.SIZE_H <![CDATA[ <= ]]> #{SIZE_H_T}
+                        </if>
+                        <if test="SIZE_T_F != null and SIZE_T_F != ''">
+                            AND A.SIZE_T >= #{SIZE_T_F}
+                        </if>
+                        <if test="SIZE_T_T != null and SIZE_T_T != ''">
+                            AND A.SIZE_T <![CDATA[ <= ]]> #{SIZE_T_T}
+                        </if>
+                    </when>
+                    <when test="SIZE_TYPE == 'XYZ020' or SIZE_TYPE == 'XYZ030' or SIZE_TYPE == 'XYZ040' or SIZE_TYPE == 'XYZ050'">
+                        <if test="SIZE_D_F != null and SIZE_D_F != ''">
+                            AND A.SIZE_D >= #{SIZE_D_F}
+                        </if>
+                        <if test="SIZE_D_T != null and SIZE_D_T != ''">
+                            AND A.SIZE_D <![CDATA[ <= ]]> #{SIZE_D_T}
+                        </if>
+                        <if test="SIZE_L_F != null and SIZE_L_F != ''">
+                            AND A.SIZE_L >= #{SIZE_L_F}
+                        </if>
+                        <if test="SIZE_L_T != null and SIZE_L_T != ''">
+                            AND A.SIZE_L <![CDATA[ <= ]]> #{SIZE_L_T}
+                        </if>
+                    </when>
+                </choose>
+            </if>
         ORDER BY A.INNER_DUE_DT, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0), H.CAM_SEQ
     </select>
 
@@ -757,42 +760,45 @@
                 <if test="WORK_TYPE != null and WORK_TYPE != ''">
                     AND C.WORK_TYPE = #{WORK_TYPE}
                 </if>
-                <choose>
-                    <when test="SIZE_TYPE == 'XYZ010'">
-                        <if test="SIZE_W_F != null and SIZE_W_F != ''">
-                            AND C.SIZE_W >= #{SIZE_W_F}
-                        </if>
-                        <if test="SIZE_W_T != null and SIZE_W_T != ''">
-                            AND C.SIZE_W <![CDATA[ <= ]]> #{SIZE_W_T}
-                        </if>
-                        <if test="SIZE_H_F != null and SIZE_H_F != ''">
-                            AND C.SIZE_H >= #{SIZE_H_F}
-                        </if>
-                        <if test="SIZE_H_T != null and SIZE_H_T != ''">
-                            AND C.SIZE_H <![CDATA[ <= ]]> #{SIZE_H_T}
-                        </if>
-                        <if test="SIZE_T_F != null and SIZE_T_F != ''">
-                            AND C.SIZE_T >= #{SIZE_T_F}
-                        </if>
-                        <if test="SIZE_T_T != null and SIZE_T_T != ''">
-                            AND C.SIZE_T <![CDATA[ <= ]]> #{SIZE_T_T}
-                        </if>
-                    </when>
-                    <when test="SIZE_TYPE == 'XYZ020' or SIZE_TYPE == 'XYZ030' or SIZE_TYPE == 'XYZ040' or SIZE_TYPE == 'XYZ050'">
-                        <if test="SIZE_D_F != null and SIZE_D_F != ''">
-                            AND C.SIZE_D >= #{SIZE_D_F}
-                        </if>
-                        <if test="SIZE_D_T != null and SIZE_D_T != ''">
-                            AND C.SIZE_D <![CDATA[ <= ]]> #{SIZE_D_T}
-                        </if>
-                        <if test="SIZE_L_F != null and SIZE_L_F != ''">
-                            AND C.SIZE_L >= #{SIZE_L_F}
-                        </if>
-                        <if test="SIZE_L_T != null and SIZE_L_T != ''">
-                            AND C.SIZE_L <![CDATA[ <= ]]> #{SIZE_L_T}
-                        </if>
-                    </when>
-                </choose>
+                <if test="SIZE_TYPE != null and SIZE_TYPE != ''">
+                    AND C.SIZE_TYPE = #{SIZE_TYPE}
+                    <choose>
+                        <when test="SIZE_TYPE == 'XYZ010'">
+                            <if test="SIZE_W_F != null and SIZE_W_F != ''">
+                                AND C.SIZE_W >= #{SIZE_W_F}
+                            </if>
+                            <if test="SIZE_W_T != null and SIZE_W_T != ''">
+                                AND C.SIZE_W <![CDATA[ <= ]]> #{SIZE_W_T}
+                            </if>
+                            <if test="SIZE_H_F != null and SIZE_H_F != ''">
+                                AND C.SIZE_H >= #{SIZE_H_F}
+                            </if>
+                            <if test="SIZE_H_T != null and SIZE_H_T != ''">
+                                AND C.SIZE_H <![CDATA[ <= ]]> #{SIZE_H_T}
+                            </if>
+                            <if test="SIZE_T_F != null and SIZE_T_F != ''">
+                                AND C.SIZE_T >= #{SIZE_T_F}
+                            </if>
+                            <if test="SIZE_T_T != null and SIZE_T_T != ''">
+                                AND C.SIZE_T <![CDATA[ <= ]]> #{SIZE_T_T}
+                            </if>
+                        </when>
+                        <when test="SIZE_TYPE == 'XYZ020' or SIZE_TYPE == 'XYZ030' or SIZE_TYPE == 'XYZ040' or SIZE_TYPE == 'XYZ050'">
+                            <if test="SIZE_D_F != null and SIZE_D_F != ''">
+                                AND C.SIZE_D >= #{SIZE_D_F}
+                            </if>
+                            <if test="SIZE_D_T != null and SIZE_D_T != ''">
+                                AND C.SIZE_D <![CDATA[ <= ]]> #{SIZE_D_T}
+                            </if>
+                            <if test="SIZE_L_F != null and SIZE_L_F != ''">
+                                AND C.SIZE_L >= #{SIZE_L_F}
+                            </if>
+                            <if test="SIZE_L_T != null and SIZE_L_T != ''">
+                                AND C.SIZE_L <![CDATA[ <= ]]> #{SIZE_L_T}
+                            </if>
+                        </when>
+                    </choose>
+                </if>
         	INNER JOIN TBL_EQUIP D ON A.EQUIP_SEQ = D.EQUIP_SEQ
                 <if test="FACTORY_AREA != null and FACTORY_AREA != ''">
                     AND D.FACTORY_AREA = #{FACTORY_AREA}

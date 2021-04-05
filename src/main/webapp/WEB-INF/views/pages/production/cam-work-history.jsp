@@ -98,6 +98,7 @@
                         <span class="slt_wrap">
                             <label class="label_100" for="SIZE_TYPE">규격</label>
                             <select class="wd_100" name="SIZE_TYPE" id="SIZE_TYPE" title="규격">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="vlocale" items="${HighCode.H_1016}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
@@ -105,33 +106,33 @@
                         </span>
                         <span class="slt_wrap" id="SIZE_W">
                             <label class="label_8">W</label>
-                            <input class="wd_50" type="number" name="SIZE_W_F" id="SIZE_W_F" placeholder="From">
+                            <input class="wd_50 for_diabled" type="number" name="SIZE_W_F" id="SIZE_W_F" placeholder="From" disabled>
                             <span class="nbsp">~</span>
-                            <input class="wd_50" type="number" name="SIZE_W_T" id="SIZE_W_T" placeholder="To">
+                            <input class="wd_50 for_diabled" type="number" name="SIZE_W_T" id="SIZE_W_T" placeholder="To" disabled>
                         </span>
                         <span class="slt_wrap" id="SIZE_H">
                             <label class="label_8">H</label>
-                            <input class="wd_50" type="number" name="SIZE_H_F" id="SIZE_H_F" placeholder="From">
+                            <input class="wd_50 for_diabled" type="number" name="SIZE_H_F" id="SIZE_H_F" placeholder="From" disabled>
                             <span class="nbsp">~</span>
-                            <input class="wd_50" type="number" name="SIZE_H_T" id="SIZE_H_T" placeholder="To">
+                            <input class="wd_50 for_diabled" type="number" name="SIZE_H_T" id="SIZE_H_T" placeholder="To" disabled>
                         </span>
                         <span class="slt_wrap" id="SIZE_T">
                             <label class="label_8">T</label>
-                            <input class="wd_50" type="number" name="SIZE_T_F" id="SIZE_T_F" placeholder="From">
+                            <input class="wd_50 for_diabled" type="number" name="SIZE_T_F" id="SIZE_T_F" placeholder="From" disabled>
                             <span class="nbsp">~</span>
-                            <input class="wd_50" type="number" name="SIZE_T_T" id="SIZE_T_T" placeholder="To">
+                            <input class="wd_50 for_diabled" type="number" name="SIZE_T_T" id="SIZE_T_T" placeholder="To" disabled>
                         </span>
                         <span class="slt_wrap" id="SIZE_D" style="display: none;">
                             <label class="label_8">D</label>
-                            <input class="wd_50" type="number" name="SIZE_D_F" id="SIZE_D_F" placeholder="From">
+                            <input class="wd_50 for_diabled" type="number" name="SIZE_D_F" id="SIZE_D_F" placeholder="From" disabled>
                             <span class="nbsp">~</span>
-                            <input class="wd_50" type="number" name="SIZE_D_T" id="SIZE_D_T" placeholder="To">
+                            <input class="wd_50 for_diabled" type="number" name="SIZE_D_T" id="SIZE_D_T" placeholder="To" disabled>
                         </span>
                         <span class="slt_wrap" id="SIZE_L" style="display: none;">
                             <label class="label_8">L</label>
-                            <input class="wd_50" type="number" name="SIZE_L_F" id="SIZE_L_F" placeholder="From">
+                            <input class="wd_50 for_diabled" type="number" name="SIZE_L_F" id="SIZE_L_F" placeholder="From" disabled>
                             <span class="nbsp">~</span>
-                            <input class="wd_50" type="number" name="SIZE_L_T" id="SIZE_L_T" placeholder="To">
+                            <input class="wd_50 for_diabled" type="number" name="SIZE_L_T" id="SIZE_L_T" placeholder="To" disabled>
                         </span>
                         <span class="ipu_wrap right_float">
                             <button type="button" id="CAM_WORK_HISTORY_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
@@ -901,34 +902,35 @@
             $("#CAM_WORK_HISTORY_GRID_SEARCH_FORM").find('#CAM_WORK_HISTORY_END_DT').val(today.yyyymmdd());
         });
 
+        function resetInput(form, idArr) {
+            $.each(idArr,function (idx,Item) {
+                form.find("#"+Item).val('');
+            });
+        }
         $('#CAM_WORK_HISTORY_GRID_SEARCH_FORM').find('#SIZE_TYPE').on('change', function () {
             const $camWorkHistoryGridSearchForm = $('#CAM_WORK_HISTORY_GRID_SEARCH_FORM');
+            $camWorkHistoryGridSearchForm.find('.for_diabled').attr('disabled',false);
+            let resetArr = [];
 
             switch (this.value) {
                 case 'XYZ010':
+                    resetArr = ['SIZE_D_F','SIZE_D_T','SIZE_L_F','SIZE_L_T']
+                    resetInput($camWorkHistoryGridSearchForm,resetArr)
                     $camWorkHistoryGridSearchForm.find('#SIZE_W').show();
                     $camWorkHistoryGridSearchForm.find('#SIZE_H').show();
                     $camWorkHistoryGridSearchForm.find('#SIZE_T').show();
                     $camWorkHistoryGridSearchForm.find('#SIZE_D').hide();
                     $camWorkHistoryGridSearchForm.find('#SIZE_L').hide();
-                    $camWorkHistoryGridSearchForm.find('#SIZE_D_F').val('');
-                    $camWorkHistoryGridSearchForm.find('#SIZE_D_T').val('');
-                    $camWorkHistoryGridSearchForm.find('#SIZE_L_F').val('');
-                    $camWorkHistoryGridSearchForm.find('#SIZE_L_T').val('');
                     break;
                 case 'XYZ020':
                 case 'XYZ030':
                 case 'XYZ040':
                 case 'XYZ050':
+                    resetArr = ['SIZE_W_F','SIZE_W_T','SIZE_H_F','SIZE_H_T','SIZE_T_F','SIZE_T_T']
+                    resetInput($camWorkHistoryGridSearchForm,resetArr)
                     $camWorkHistoryGridSearchForm.find('#SIZE_W').hide();
                     $camWorkHistoryGridSearchForm.find('#SIZE_H').hide();
                     $camWorkHistoryGridSearchForm.find('#SIZE_T').hide();
-                    $camWorkHistoryGridSearchForm.find('#SIZE_W_F').val('');
-                    $camWorkHistoryGridSearchForm.find('#SIZE_W_T').val('');
-                    $camWorkHistoryGridSearchForm.find('#SIZE_H_F').val('');
-                    $camWorkHistoryGridSearchForm.find('#SIZE_H_T').val('');
-                    $camWorkHistoryGridSearchForm.find('#SIZE_T_F').val('');
-                    $camWorkHistoryGridSearchForm.find('#SIZE_T_T').val('');
                     $camWorkHistoryGridSearchForm.find('#SIZE_D').show();
                     $camWorkHistoryGridSearchForm.find('#SIZE_L').show();
                     break;
@@ -936,8 +938,11 @@
                     $camWorkHistoryGridSearchForm.find('#SIZE_W').show();
                     $camWorkHistoryGridSearchForm.find('#SIZE_H').show();
                     $camWorkHistoryGridSearchForm.find('#SIZE_T').show();
-                    $camWorkHistoryGridSearchForm.find('#SIZE_D').show();
-                    $camWorkHistoryGridSearchForm.find('#SIZE_L').show();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_D').hide();
+                    $camWorkHistoryGridSearchForm.find('#SIZE_L').hide();
+                    resetArr = ['SIZE_W_F','SIZE_W_T','SIZE_H_F','SIZE_H_T','SIZE_T_F','SIZE_T_T','SIZE_D_F','SIZE_D_T','SIZE_L_F','SIZE_L_T']
+                    resetInput($camWorkHistoryGridSearchForm,resetArr)
+                    $camWorkHistoryGridSearchForm.find('.for_diabled').attr('disabled',true);
             }
         });
         /* event */
