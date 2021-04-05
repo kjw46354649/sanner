@@ -157,7 +157,7 @@
             , X.WORK_TYPE_NM
             , X.PART_QTY
             , X.SIZE_TXT
-            , ( SELECT jmes.SF_GET_CODE_NM('1009', M.POP_POSITION, 'EN') FROM TBL_POP M WHERE M.POP_SEQ = X.POP_SEQ) AS POP_POSITION_NM    -- 언어조건 확인
+            , ( SELECT jmes.SF_GET_CODE_NM('1009', M.POP_POSITION, #{LOGIN_LOCALE}) FROM TBL_POP M WHERE M.POP_SEQ = X.POP_SEQ) AS POP_POSITION_NM    -- 언어조건 확인
             , X.NOTE
             , X.WORK_STATUS_TYPE
             , X.ASSEMBLY_YN
