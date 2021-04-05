@@ -546,7 +546,7 @@
                     $commonCadUploadFileGrid.pqGrid('refresh');
                     $(this).stopWaitMe();
                 }
-            }, formData, '/uploadControlCadFiles');
+            }, formData, $('#common_cad_file_attach_form').find('#actionUrl').val());
         }
     });
 
