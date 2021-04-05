@@ -160,7 +160,7 @@
                                 </span>
                                 <span class="radio_box" style="margin-left: 0;">
                                     <input type="radio" name="WORK_STATUS_TYPE" id="work_status_type_3" value="3"><label for="work_status_type_3">가공완료</label>
-                                </label>
+                                </span>
                             </span>
                         </div>
                         <div class="ml-auto mr-10">
@@ -299,7 +299,7 @@
             collapsible: false, postRenderInterval: -1, //call postRender synchronously.
             resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
-            colModel: leftColModel2,발
+            colModel: leftColModel2,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: leftPostData2,
