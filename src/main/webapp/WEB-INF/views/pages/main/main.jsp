@@ -194,7 +194,7 @@
     $(function () {
         'use strict';
         $('#operating_rate_and_operation_record_search_form').find('#main_aggregation_dt').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#operating_rate_and_operation_record_search_form').find('#main_aggregation_dt').datepicker('setDate', 'today');
+        $('#operating_rate_and_operation_record_search_form').find('#main_aggregation_dt').datepicker('setDate', '-1D');
 
         fnCommCodeDatasourceSelectBoxCreate($('#operating_rate_and_operation_record_search_form').find('#user_id'), 'all', {
             'url': '/json-list',
