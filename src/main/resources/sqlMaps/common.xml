@@ -302,25 +302,52 @@
     </select>
 
     <select id="selectMultiDownloadList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+<!--        SELECT A.CONTROL_SEQ-->
+<!--            , A.CONTROL_DETAIL_SEQ-->
+<!--            , A.ORDER_NUM-->
+<!--            , A.DRAWING_NUM-->
+<!--            , SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM-->
+<!--            , CASE-->
+<!--                WHEN B.PART_NUM IS NULL THEN C.CONTROL_NUM-->
+<!--                ELSE CONCAT(C.CONTROL_NUM, '#', B.PART_NUM)-->
+<!--              END AS CONTROL_PART_INFO-->
+<!--            , A.IMG_GFILE_SEQ-->
+<!--            , A.DXF_GFILE_SEQ-->
+<!--        FROM TBL_CONTROL_PART_ORDER A-->
+<!--            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ-->
+<!--            INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ  = B.CONTROL_SEQ-->
+<!--        WHERE C.DEL_YN = 'N'-->
+<!--            AND A.CONTROL_SEQ = #{CONTROL_SEQ}-->
+<!--            <if test="CONTROL_DETAIL_SEQ !='' and CONTROL_DETAIL_SEQ != null">-->
+<!--                AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}-->
+<!--            </if>-->
+
         SELECT A.CONTROL_SEQ
-            , A.CONTROL_DETAIL_SEQ
-            , A.ORDER_NUM
-            , A.DRAWING_NUM
-            , SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+             , B.CONTROL_DETAIL_SEQ
+             , C.ORDER_NUM
+             , SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+             , CASE
+                 WHEN C.IMG_GFILE_SEQ IS NOT NULL THEN C.IMG_GFILE_SEQ
+                 WHEN B.IMG_GFILE_SEQ IS NOT NULL THEN B.IMG_GFILE_SEQ
+               END AS IMG_GFILE_SEQ
             , CASE
-                WHEN B.PART_NUM IS NULL THEN C.CONTROL_NUM
-                ELSE CONCAT(C.CONTROL_NUM, '#', B.PART_NUM)
+                WHEN C.DXF_GFILE_SEQ IS NOT NULL THEN C.DXF_GFILE_SEQ
+                WHEN B.DXF_GFILE_SEQ IS NOT NULL THEN B.DXF_GFILE_SEQ
+              END AS DXF_GFILE_SEQ
+            , CASE
+                WHEN C.DRAWING_NUM IS NOT NULL THEN C.DRAWING_NUM
+                WHEN B.DRAWING_NUM IS NOT NULL THEN B.DRAWING_NUM
+              END AS DRAWING_NUM
+            , CASE
+                WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM
+                ELSE CONCAT(A.CONTROL_NUM, '#', B.PART_NUM)
               END AS CONTROL_PART_INFO
-            , A.IMG_GFILE_SEQ
-            , A.DXF_GFILE_SEQ
-        FROM TBL_CONTROL_PART_ORDER A
-            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
-            INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ  = B.CONTROL_SEQ
-        WHERE C.DEL_YN = 'N'
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B on B.CONTROL_SEQ  = B.CONTROL_SEQ AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+            LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+        WHERE A.DEL_YN = 'N'
             AND A.CONTROL_SEQ = #{CONTROL_SEQ}
-            <if test="CONTROL_DETAIL_SEQ !='' and CONTROL_DETAIL_SEQ != null">
-                AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-            </if>
+        ORDER BY A.CONTROL_NUM, B.PART_NUM, C.ORDER_SEQ
     </select>
 
     <select id="selectDummyNextSequence" parameterType="java.util.HashMap" resultType="integer">
