@@ -310,20 +310,20 @@
                     <table>
                         <tbody>
                         <tr>
-                            <td class="modal-end-dialog-table-header-end" style="width:30%;"><srping:message key="drawing.board.label.15"/></td>
-                            <td class="modal-end-dialog-table-header-end" style="width:30%; color: red"><srping:message key="drawing.board.label.16"/></td>
-                            <td class="modal-end-dialog-table-header-end" style="width:40%;"><srping:message key="drawing.board.label.17"/></td>
+                            <td class="modal-end-dialog-table-header-end" style="width:35%;"><srping:message key="drawing.board.label.15"/></td>
+                            <td class="modal-end-dialog-table-header-end" style="width:35%; color: red"><srping:message key="drawing.board.label.16"/></td>
+                            <td class="modal-end-dialog-table-header-end" style="width:30%;"><srping:message key="drawing.board.label.17"/></td>
                         </tr>
                         <tr>
                             <td class="modal-end-dialog-table-contents-end">
                                 <button type="button" style="padding-right: 0px; position: absolute; right: 625px; top: 144px;" class="btn_plus" id="complete_success_qty_pop_plus_btn">더하기</button>
-                                <span class="text" style="padding-right: 23px; font-size: 40px; position: absolute; right: 536px; top: 146px;" id="completeControlCompleteQtyHtml">0</span>
-                                <button type="button" style="position: absolute; right: 489px; top: 144px;" class="btn_minus" id="complete_success_qty_pop_minus_btn">빼기</button>
+                                <span class="text" style="padding-right: 23px; font-size: 40px; position: absolute; right: 505px; top: 146px;" id="completeControlCompleteQtyHtml">0</span>
+                                <button type="button" style="position: absolute; right: 472px; top: 144px;" class="btn_minus" id="complete_success_qty_pop_minus_btn">빼기</button>
                             </td>
                             <td class="modal-end-dialog-table-contents-end">
-                                <button type="button" style="position: absolute; right: 424px; top: 144px;" class="btn_plus" id="complete_fail_qty_pop_plus_btn">더하기</button>
-                                <span class="text" style="padding-right: 23px; font-size: 40px; position: absolute; right: 337px; top: 146px;" id="completeControlFailQtyHtml">1</span>
-                                <button type="button" class="btn_minus" style="position: absolute; right: 289px; top: 144px;" id="complete_fail_qty_pop_minus_btn">빼기</button>
+                                <button type="button" style="position: absolute; right: 405px; top: 144px;" class="btn_plus" id="complete_fail_qty_pop_plus_btn">더하기</button>
+                                <span class="text" style="padding-right: 23px; font-size: 40px; position: absolute; right: 285px; top: 146px;" id="completeControlFailQtyHtml">1</span>
+                                <button type="button" class="btn_minus" style="position: absolute; right: 249px; top: 144px;" id="complete_fail_qty_pop_minus_btn">빼기</button>
                             </td>
                             <td class="modal-end-dialog-table-contents-end">
                                 <select id="ERROR_REASON" name="ERROR_REASON">
@@ -1224,6 +1224,8 @@
             let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
             let afterQty = parseInt(finishQty) + 1;
+            if(afterQty > orderQty) return false;
+
             let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
             // if((afterQty + errorParseQty) > orderQty) return false;
             $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
@@ -1261,6 +1263,7 @@
 
             // let afterFinishQty = parseInt(finishParseQty) - 1;
             let afterErrorQty = parseInt(errorParseQty) + 1;
+            if(afterErrorQty > orderQty) return false;
 
             $("#drawing_action_form").find("#ERROR_QTY").val(afterErrorQty);
             $("#completeControlFailQtyHtml").html(afterErrorQty);
@@ -1282,8 +1285,9 @@
 
             // let afterFinishQty = parseInt(finishParseQty) + 1;
             let afterErrorQty = parseInt(errorParseQty) - 1;
-
-            // console.log(afterQty);
+            if($("#completeControlFailQtyHtml").text() == "") {
+                afterErrorQty = finishQty;
+            }
 
             if(afterErrorQty < 0) return false;
             // $("#drawing_action_form").find("#FINISH_QTY").val(afterFinishQty);
