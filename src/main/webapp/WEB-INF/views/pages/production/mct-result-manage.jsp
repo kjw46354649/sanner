@@ -1444,7 +1444,7 @@
         $("#cam_work_manage_pop_form").find("#CAM_WORK_DIRECTION_" + index).val($("#cam_work_manage_pop_form").find("#CAM_WORK_DIRECTION_" + index).find('option:first').val());
         $("#cam_work_manage_pop_form").find("#CAM_WORK_DESC_" + index).val('');
         $("#cam_work_manage_pop_form").find("#CAM_WORK_DESIGN_QTY_" + index).val('');
-        $("#cam_work_manage_pop_form").find("#CAM_WORK_USER_ID_" + index).val('${authUserInfo.USER_ID}');
+        $("#cam_work_manage_pop_form").find("#CAM_WORK_USER_ID_" + index).val($("#cam_work_manage_pop_form").find("#CAM_WORK_USER_ID_" + index).find('option:first').val());
         $("#cam_work_manage_pop_form").find("#CAM_WORK_FILE_" + index).html('');
     }
 
