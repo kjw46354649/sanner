@@ -883,8 +883,6 @@
         });
 
         $('#toggleImageView').on('click', function () {
-            console.log('toggleImageView click');
-            console.log(isActiveDrawingView);
             isActiveDrawingView = !isActiveDrawingView;
         });
 

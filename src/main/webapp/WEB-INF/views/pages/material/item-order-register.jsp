@@ -1601,7 +1601,6 @@
                     let parameters = {'url': '/providePossessionMaterialSave', 'data': {data: JSON.stringify(changes)}};
 
                     fnPostAjaxAsync(function (data, callFunctionParam) {
-                        console.log(data);
                         itemOrderRegisterRightGrid.pqGrid('refreshDataAndView');
                         setTimeout(function () {
                             $('#btnItemOrderRegisterSearch').trigger('click');
