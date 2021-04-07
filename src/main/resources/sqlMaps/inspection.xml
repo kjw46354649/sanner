@@ -577,7 +577,7 @@
                     , B.MATERIAL_DETAIL
                     , B.SURFACE_TREAT
                     , B.SIZE_TXT
-                    , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS ORDER_QTY
+                    , jmes.SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS ORDER_QTY
                     , C.PACKING_CNT
                     , B.PART_STATUS
                     , C.OUT_FINISH_DT
