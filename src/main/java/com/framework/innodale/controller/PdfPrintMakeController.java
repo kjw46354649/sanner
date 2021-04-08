@@ -1,5 +1,7 @@
 package com.framework.innodale.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.component.CreateBarcodeStream;
 import com.framework.innodale.service.InnodaleService;
@@ -58,11 +60,13 @@ public class PdfPrintMakeController {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(value = "/makeCadPrint", method = RequestMethod.GET)
+    @RequestMapping(value = "/makeCadPrint", method = RequestMethod.POST)
     public void makeCadPrint(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
-        String[] selectControlLists = ((String) hashMap.get("selectControlList")).split("\\|");
-
+        String jsonObject = (String) hashMap.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+        String[] selectControlLists = ((String) jsonMap.get("selectControlList")).split("\\|");
         hashMap.put("selectControlLists", selectControlLists);
         hashMap.put("queryId", "orderMapper.selectControlDrawingInfoList");
         List<Map<String, Object>> imageList = innodaleService.getList(hashMap);
@@ -97,12 +101,16 @@ public class PdfPrintMakeController {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(value = "/makeCadBarcodePrint", method = RequestMethod.GET)
+    @RequestMapping(value = "/makeCadBarcodePrint", method = RequestMethod.POST)
     public void makeCadBarcodePrint(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
         response.setContentType("application/pdf");
         OutputStream out = response.getOutputStream();
+
+        String jsonObject = (String) hashMap.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
         Document document = new Document();
         document.setMargins(15, 15, 15, 15);
@@ -125,8 +133,8 @@ public class PdfPrintMakeController {
 
         PdfWriter.getInstance(document, out);
 
-        String[] selectControlLists = ((String) hashMap.get("selectControlList")).split("\\|");
-        String sameDrawingPrint = ((String) hashMap.get("flag"));
+        String[] selectControlLists = ((String) jsonMap.get("selectControlList")).split("\\|");
+        String sameDrawingPrint = ((String) jsonMap.get("flag"));
         hashMap.put("selectControlLists", selectControlLists);
         hashMap.put("queryId", "orderMapper.selectControlCadBarcodeList");
         List<Map<String, Object>> controlImageList = innodaleService.getList(hashMap);
@@ -297,11 +305,15 @@ public class PdfPrintMakeController {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(value = "/makeItemOrderSheetPrint", method = RequestMethod.GET)
+    @RequestMapping(value = "/makeItemOrderSheetPrint", method = RequestMethod.POST)
     public void makeItemOrderSheetPrint(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
-        String MATERIAL_ORDER_NUM = ((String) hashMap.get("MATERIAL_ORDER_NUM"));
+        String jsonObject = (String) hashMap.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        String MATERIAL_ORDER_NUM = (String) jsonMap.get("MATERIAL_ORDER_NUM");
         hashMap.put("MATERIAL_ORDER_NUM", MATERIAL_ORDER_NUM);
 
         response.setContentType("application/pdf");
@@ -395,12 +407,16 @@ public class PdfPrintMakeController {
      * @param response
      * @throws Exception
      */
-    @RequestMapping(value = "/makeSalesDrawingPrint", method = RequestMethod.GET)
+    @RequestMapping(value = "/makeSalesDrawingPrint", method = RequestMethod.POST)
     public void makeSalesDrawingPrint(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
         response.setContentType("application/pdf");
         OutputStream out = response.getOutputStream();
+
+        String jsonObject = (String) hashMap.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
         // 문서 만들기
         Document document = new Document(PageSize.A4);
@@ -416,7 +432,7 @@ public class PdfPrintMakeController {
 
         PdfWriter.getInstance(document, out);
 
-        String[] selectControlLists = ((String) hashMap.get("selectControlList")).split("\\|");
+        String[] selectControlLists = ((String) jsonMap.get("selectControlList")).split("\\|");
         hashMap.put("selectControlLists", selectControlLists);
         hashMap.put("queryId", "orderMapper.selectControlSalesCadBarcodeList");
         List<Map<String, Object>> controlInfoList = innodaleService.getList(hashMap);

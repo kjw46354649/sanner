@@ -282,7 +282,7 @@
                 selectControlList += String(rowData.CONTROL_SEQ) + String(rowData.CONTROL_DETAIL_SEQ) + '|';
             }
 
-            printJS({printable:'/makeSalesDrawingPrint?selectControlList=' + encodeURI(selectControlList), type:'pdf', showModal:true});
+            printJS({printable:'/makeSalesDrawingPrint', properties: {selectControlList: selectControlList}, type:'pdf', showModal:true});
         });
         // 라벨 출력
         $('#TRANSACTION_STATEMENT_LABEL_PRINT').on('click', function () {

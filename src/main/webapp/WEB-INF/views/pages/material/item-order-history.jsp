@@ -436,7 +436,7 @@
         $("#btnItemOrderHistoryExcel").on('click', function(){
             let MATERIAL_ORDER_NUM = $("#item_order_history_hidden_form #MATERIAL_ORDER_NUM").val();
 
-            printJS({printable:'/makeItemOrderSheetPrint?MATERIAL_ORDER_NUM='+encodeURI(MATERIAL_ORDER_NUM), type:'pdf', showModal:true});
+            printJS({printable:'/makeItemOrderSheetPrint', properties: {MATERIAL_ORDER_NUM: MATERIAL_ORDER_NUM}, type:'pdf', showModal:true});
         });
 
         $("#btnItemOrderHistoryCancel").on('click', function(){

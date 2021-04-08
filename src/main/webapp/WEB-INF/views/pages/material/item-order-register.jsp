@@ -2131,7 +2131,6 @@
         }
 
         function itemOrderRegisterPopOrderSheet(mailYn) {
-            let MATERIAL_ORDER_NUM = $('#item_order_register_material_order_num').val();
             //Confirm Box
             let title = 'Information', message;
 
@@ -2150,7 +2149,9 @@
             }
 
             fnConfirm(title, message, function () {
-                printJS({printable:'/makeItemOrderSheetPrint?MATERIAL_ORDER_NUM=' + encodeURI(MATERIAL_ORDER_NUM), type:'pdf', showModal:true});
+                let MATERIAL_ORDER_NUM = $('#item_order_register_material_order_num').val();
+
+                printJS({printable:'/makeItemOrderSheetPrint', properties: {MATERIAL_ORDER_NUM: MATERIAL_ORDER_NUM}, type:'pdf', showModal:true});
             });
 
             itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.postData', function () {
