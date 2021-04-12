@@ -3008,10 +3008,10 @@
                 // invoke the custom dialog
                 alertify.barcodeDrawingConfirm(message).set({
                     'onok': function () {
-                        printJS({printable: '/makeCadBarcodePrint', properties: {selectControlList: selectControlList, flag: 'Y'}, type: 'pdf', showModal: true});
+                        printJS({printable: '/makeCadBarcodePrint', properties: {selectControl:selectControlList, flag:'Y'}, type: 'pdf', showModal: true});
                     },
                     'oncancel': function () {
-                        printJS({printable: '/makeCadBarcodePrint', properties: {selectControlList: selectControlList, flag: 'N'}, type: 'pdf', showModal: true});
+                        printJS({printable: '/makeCadBarcodePrint', properties: {selectControl:selectControlList, flag:'N'}, type: 'pdf', showModal: true});
                     },
                     'oncontinue': function () {
 
@@ -3028,7 +3028,7 @@
                     '   <span>' + controlDetailList.size + ' 건의 바코드도면이 출력 됩니다.</span> 진행하시겠습니까?' +
                     '</h4>';
                 fnConfirm(null, message, function () {
-                    printJS({printable: '/makeCadBarcodePrint', properties: {selectControlList: selectControlList, flag: 'N'}, type: 'pdf', showModal: true});
+                    printJS({printable: '/makeCadBarcodePrint', properties: {selectControl:selectControlList, flag:'N'}, type: 'pdf', showModal: true});
                 });
             }
         });
@@ -3158,13 +3158,15 @@
                 }
             }
 
+            console.log(selectControlList);
+
             const message =
                 '<h4>' +
                 '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
                 '   <span>' + drawingNumList.size + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
                 '</h4>';
             fnConfirm(null, message, function () {
-                printJS({printable:'/makeCadPrint', properties: {selectControlList: selectControlList}, type:'pdf', showModal:true});
+                printJS({printable:'/makeCadPrint', properties: {selectControl:selectControlList}, type: 'pdf', showModal:true});
             });
         });
 

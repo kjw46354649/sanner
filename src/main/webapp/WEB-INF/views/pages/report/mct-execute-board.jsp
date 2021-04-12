@@ -212,7 +212,8 @@
         /* 가공납기 준수율 */
         let gaugeOptions = {
             chart: {
-                type: 'solidgauge'
+                type: 'solidgauge',
+                styledMode: true
             },
             pane: {
                 center: ['50%', '85%'],
@@ -267,6 +268,7 @@
         let chart1 = Highcharts.chart('middle_wrap_div_1', Highcharts.merge(gaugeOptions, {
             chart: {
                 // width: 215,
+                styledMode: true,
                 height: 190
             },
             title: {
@@ -304,6 +306,7 @@
         let chart2 = Highcharts.chart('middle_wrap_div_2', {
             chart: {
                 type: 'bar',
+                styledMode: true
                 // width: 220,
                 // height: 150
             },
@@ -343,7 +346,8 @@
         /* 일일 가동률 추이 (7days) */
         let chart3 = Highcharts.chart('middle_wrap_div_4', {
             chart: {
-                type: 'column'
+                type: 'column',
+                styledMode: true
             },
             title: {
                 align: 'left',
@@ -401,7 +405,8 @@
         /* 주별 가동률 추이 (8week) */
         let chart4 = Highcharts.chart('middle_wrap_div_5', {
             chart: {
-                type: 'column'
+                type: 'column',
+                styledMode: true
             },
             title: {
                 align: 'left',
@@ -454,7 +459,8 @@
         /* 월별 가동률 추이 (2018年) */
         let chart5 = Highcharts.chart('middle_wrap_div_6', {
             chart: {
-                type: 'column'
+                type: 'column',
+                styledMode: true
             },
             title: {
                 align: 'left',

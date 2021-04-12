@@ -66,7 +66,7 @@ public class PdfPrintMakeController {
         String jsonObject = (String) hashMap.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
-        String[] selectControlLists = ((String) jsonMap.get("selectControlList")).split("\\|");
+        String[] selectControlLists = ((String) jsonMap.get("selectControl")).split("\\|");
         hashMap.put("selectControlLists", selectControlLists);
         hashMap.put("queryId", "orderMapper.selectControlDrawingInfoList");
         List<Map<String, Object>> imageList = innodaleService.getList(hashMap);
@@ -133,7 +133,7 @@ public class PdfPrintMakeController {
 
         PdfWriter.getInstance(document, out);
 
-        String[] selectControlLists = ((String) jsonMap.get("selectControlList")).split("\\|");
+        String[] selectControlLists = ((String) jsonMap.get("selectControl")).split("\\|");
         String sameDrawingPrint = ((String) jsonMap.get("flag"));
         hashMap.put("selectControlLists", selectControlLists);
         hashMap.put("queryId", "orderMapper.selectControlCadBarcodeList");

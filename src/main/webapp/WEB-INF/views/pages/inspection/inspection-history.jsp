@@ -507,7 +507,7 @@
                     '       </h4>';
 
             fnConfirm(null, message, function () {
-                printJS({printable:'/makeCadBarcodePrint', properties: {selectControlList: selectControlList}, type:'pdf', showModal:true});
+                printJS({printable:'/makeCadBarcodePrint', properties: {selectControl: selectControlList}, type:'pdf', showModal:true});
             });
         });
     });

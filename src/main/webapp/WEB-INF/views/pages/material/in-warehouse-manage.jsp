@@ -646,6 +646,7 @@
                 }
             },
             {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: '10%'},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', width: 30},
             {title: '수행일시', dataType: 'string', dataIndx: 'REGISTED_DT', minWidth: '14%'}
         ];
 

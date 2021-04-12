@@ -2432,7 +2432,9 @@
     </select>
 
     <select id="selectDetailedCumulativeStatusByMonthlyOrderCompList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT V.ORDER_COMP_CD
+        SELECT
+            '1' as GROUP_KEY
+            , V.ORDER_COMP_CD
             , V.COMP_NM
             , V.PLUS_MINUS
             , V.PLUS_MINUS_RED_YN
@@ -2443,7 +2445,7 @@
             , TRUNCATE(W.YEAR_AMT / 1000,0) AS YEAR_AMT
             , W.YEAR_ORDER_CNT
             , W.YEAR_ORDER_QTY
-            , CONCAT(TRUNCATE(IFNULL(W.YEAR_MCT_WORK_TIME,0)/3600,0),'h') AS MCT_WORK_TIME
+            , TRUNCATE(IFNULL(W.YEAR_MCT_WORK_TIME,0)/3600,0) AS MCT_WORK_TIME
             , ROUND(TRUNCATE(W.YEAR_AMT / 1000,0) / (W.YEAR_MCT_WORK_TIME / 3600),0) AS YEAR_AMT_PER_HOUR
             , V.STAFF_NM
             , DATE_FORMAT(STR_TO_DATE(CONCAT(V.PREV_CLOSE_MONTH,'01'),'%Y%m%d'),'%y년 %c월') AS PREV_SALES_MONTH
@@ -2544,7 +2546,9 @@
     </select>
 
     <select id="selectOutsourcingProcessPurchaseStatusByCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT X.OUTSIDE_COMP_CD
+        SELECT
+            '1' as GROUP_KEY
+            , X.OUTSIDE_COMP_CD
             , jmes.SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS COMP_NM
             , TRUNCATE(X.MONTH_AMT / 1000,0) AS MONTH_AMT
             , X.MONTH_PART_CNT

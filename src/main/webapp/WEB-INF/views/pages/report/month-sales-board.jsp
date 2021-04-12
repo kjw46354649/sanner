@@ -44,19 +44,19 @@
                         <th><span name="month">12</span>월 영업목표</th>
                     </tr>
                     <tr>
-                        <td id="goal_amt_kor">10억</td>
+                        <td id="goal_amt_kor" style="font-size: 24px;">10억</td>
                     </tr>
                     <tr>
                         <th><span name="month">12</span>월 매출현황</th>
                     </tr>
                     <tr>
-                        <td id="sales_amt_kor">10억 3천</td>
+                        <td id="sales_amt_kor" style="font-size: 24px;">10억 3천</td>
                     </tr>
                     <tr>
                         <th><span name="month">12</span>월 달성률</th>
                     </tr>
                     <tr>
-                        <td id="month_ratio">105%</td>
+                        <td id="month_ratio" style="font-size: 24px;">105%</td>
                     </tr>
                 </table>
             </div>
@@ -72,19 +72,19 @@
                         <th>누적 영업목표</th>
                     </tr>
                     <tr>
-                        <td id="goal_amt_kor">45억</td>
+                        <td id="goal_amt_kor" style="font-size: 24px;">45억</td>
                     </tr>
                     <tr>
                         <th>누적 매출현황</th>
                     </tr>
                     <tr>
-                        <td id="sales_amt_kor">41억 3천</td>
+                        <td id="sales_amt_kor" style="font-size: 24px;">41억 3천</td>
                     </tr>
                     <tr>
                         <th>누적 달성률</th>
                     </tr>
                     <tr>
-                        <td id="month_ratio">89%</td>
+                        <td id="month_ratio" style="font-size: 24px;">89%</td>
                     </tr>
                 </table>
             </div>
@@ -101,7 +101,7 @@
             <div class="hWrap">
                 <div class="d-flex align-items-center">
                     <div>
-                        <h4>발주처별 상세 누적현황</h4>
+                        <h4>상세매출현황</h4>
                     </div>
                     <div class="ml-auto">
                         <span>(단위 : 천원)</span>
@@ -109,14 +109,14 @@
                 </div>
             </div>
             <div class="conWrap">
-                <div id="month_sales_board_botGrid1"></div>
+                <div id="month_sales_board_botGrid1" style="margin:auto;"></div>
             </div>
         </div>
         <div>
             <div class="hWrap">
                 <div class="d-flex align-items-center">
                     <div>
-                        <h4>업체별 외주가공 매입현황</h4>
+                        <h4>외주현황</h4>
                     </div>
                     <div class="ml-auto">
                         <span>(단위 : 천원)</span>
@@ -148,7 +148,8 @@
         const chart1 = Highcharts.chart('monthly_status_chart', {
             chart: {
                 type: 'pie',
-                height: '100%'
+                height: '100%',
+                styledMode: true
             },
             title: {
                 text: '발주처 비율',
@@ -191,7 +192,8 @@
         const chart2 = Highcharts.chart('cumulative_status_chart', {
             chart: {
                 type: 'pie',
-                height: '100%'
+                height: '100%',
+                styledMode: true
             },
             title: {
                 text: '발주처 비율',
@@ -232,6 +234,9 @@
         });
 
         const chart3 = Highcharts.chart('annual_sales_status_chart', {
+            chart: {
+                styledMode: true
+            },
             title: {
                 align: 'left',
                 text: '월별현황 (2020년)',
@@ -325,6 +330,7 @@
 
         const botLeftGridId = 'month_sales_board_botGrid1';
         const botLeftGridColModel = [
+            {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
             {title: '발주처명', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주처명', width: 110, dataIndx: 'COMP_NM'},
             {
@@ -337,18 +343,44 @@
             },
             {title: 'PLUS_MINUS_RED_YN', dataIndx: 'PLUS_MINUS_RED_YN', hidden: true},
             {title: '업종', width: 140, dataIndx: 'BUSINESS_ITEM'},
-            {title: '월매출금액', width: 80, dataType: 'integer', format: '#,###',dataIndx: 'MONTH_AMT'},
-            {title: '품수<br>(월단위)', width: 60, dataType: 'integer', format: '#,###',dataIndx: 'MONTH_ORDER_CNT'},
-            {title: '수량<br>(월단위)', width: 60, dataType: 'integer', format: '#,###',dataIndx: 'MONTH_ORDER_QTY'},
-            {title: '누적매출금액', width: 100, dataType: 'integer', format: '#,###',dataIndx: 'YEAR_AMT'},
-            {title: '누적품수<br>(발주단위)', width: 100, dataType: 'integer', format: '#,###',dataIndx: 'YEAR_ORDER_CNT'},
-            {title: '누적수량<br>(EA)', width: 60, dataType: 'integer', format: '#,###', dataIndx: 'YEAR_ORDER_QTY'},
-            {title: '누적<br>가공시간', width: 60, dataIndx: 'MCT_WORK_TIME'},
-            {title: '시간당 매출<br>(매출/가공시간)', width: 110, dataType: 'integer', format: '#,###', dataIndx: 'YEAR_AMT_PER_HOUR'},
+            {
+                title: '월간실적', align: 'center', colModel: [
+                    {title: '매출금액', width: 80, align: 'right', dataType: 'integer', format: '#,###',dataIndx: 'MONTH_AMT', summary: {type: 'sum'}},
+                    {title: '품수', width: 60, align: 'right', dataType: 'integer', format: '#,###',dataIndx: 'MONTH_ORDER_CNT', summary: {type: 'sum'}},
+                    {title: '수량', width: 60, align: 'right', dataType: 'integer', format: '#,###',dataIndx: 'MONTH_ORDER_QTY', summary: {type: 'sum'}},
+                ]
+            },
+            {
+                title: '누적실적(년간)', align: 'center', colModel: [
+                    {title: '매출금액', width: 100, align: 'right', dataType: 'integer', format: '#,###',dataIndx: 'YEAR_AMT', summary: {type: 'sum'}},
+                    {title: '품수', width: 100, align: 'right', dataType: 'integer', format: '#,###',dataIndx: 'YEAR_ORDER_CNT', summary: {type: 'sum'}},
+                    {title: '수량', width: 60, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'YEAR_ORDER_QTY', summary: {type: 'sum'}},
+                ]
+            },
+            {title: '누적<br>가공시간', width: 60, align: 'right', dataIndx: 'MCT_WORK_TIME', format: '#,###', summary: {type: 'sum'},
+                render: function (ui) {
+                    return numberWithCommas(ui.cellData) + 'h';
+                },
+            },
+            {title: '시간당<br>매출', width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'YEAR_AMT_PER_HOUR', summary: {type: 'sum'}},
             {title: '이전<br>거래년월', width: 70, dataIndx: 'PREV_SALES_MONTH'},
-            {title: '영업담당', width: 70, dataIndx: 'STAFF_NM'},
-            {title: '구분', width: 100, dataIndx: 'NOTE'}
+            {title: '구분', width: 100, dataIndx: 'NOTE'},
+            {title: '영업담당', width: 70, dataIndx: 'STAFF_NM'}
         ];
+        const leftGroupModel = {
+            on: true,
+            header:false,
+            headerMenu: false,
+            indent: 10,
+            dataIndx: ['GROUP_KEY'],
+            summaryInTitleRow: '',
+            summaryEdit: false,
+            // showSummary: [true], //to display summary at end of every group.
+            collapsed: [false],
+            grandSummary: true,
+            merge: true,
+            nodeClose: false,
+        };
         const botLeftGridObj = {
             height: 380,
             collapsible: false,
@@ -362,6 +394,7 @@
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             styleHead: {'background': '#2b2b2b'},
             colModel: botLeftGridColModel,
+            groupModel: leftGroupModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: {queryId: 'dataSource.emptyGrid'},
@@ -369,20 +402,36 @@
                     return {data: dataJSON.data};
                 }
             },
+            summaryTitle: {sum: '{0}'},
         };
         const $botLeftGrid = $('#' + botLeftGridId).pqGrid(botLeftGridObj);
         
         const botRightGridId = 'month_sales_board_botGrid2';
         const botRightGridColModel = [
+            {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
             {title: '외주업체명', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
             {title: '외주업체명', dataIndx: 'COMP_NM'},
-            {title: '월 매입금액', dataType: 'integer', format: '#,###', dataIndx: 'MONTH_AMT'},
-            {title: '품수<br>(월단위)', dataType: 'integer', format: '#,###',dataIndx: 'MONTH_PART_CNT'},
-            {title: '수량<br>(월단위)', dataType: 'integer', format: '#,###',dataIndx: 'MONTH_PART_QTY'},
-            {title: '누적<br>매입금액', dataType: 'integer', format: '#,###', dataIndx: 'YEAR_AMT'},
-            {title: '누적품수', dataType: 'integer', format: '#,###', dataIndx: 'YEAR_PART_CNT'},
-            {title: '누적수량', dataType: 'integer', format: '#,###', dataIndx: 'YEAR_PART_QTY'},
+            {title: '월 매입금액', dataType: 'integer', align: 'right', format: '#,###', dataIndx: 'MONTH_AMT', summary: {type: 'sum'}},
+            {title: '품수<br>(월단위)', dataType: 'integer', align: 'right', format: '#,###',dataIndx: 'MONTH_PART_CNT', summary: {type: 'sum'}},
+            {title: '수량<br>(월단위)', dataType: 'integer', align: 'right', format: '#,###',dataIndx: 'MONTH_PART_QTY', summary: {type: 'sum'}},
+            {title: '누적<br>매입금액', dataType: 'integer', align: 'right', format: '#,###', dataIndx: 'YEAR_AMT', summary: {type: 'sum'}},
+            {title: '누적품수', dataType: 'integer', align: 'right', format: '#,###', dataIndx: 'YEAR_PART_CNT', summary: {type: 'sum'}},
+            {title: '누적수량', dataType: 'integer', align: 'right', format: '#,###', dataIndx: 'YEAR_PART_QTY', summary: {type: 'sum'}},
         ];
+        const rightGroupModel = {
+            on: true,
+            header:false,
+            headerMenu: false,
+            indent: 10,
+            dataIndx: ['GROUP_KEY'],
+            summaryInTitleRow: '',
+            summaryEdit: false,
+            // showSummary: [true], //to display summary at end of every group.
+            collapsed: [false],
+            grandSummary: true,
+            merge: true,
+            nodeClose: false,
+        };
         const botRightGridObj = {
             height: 380,
             collapsible: false,
@@ -396,6 +445,8 @@
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             styleHead: {'background': '#fde598'},
             colModel: botRightGridColModel,
+            groupModel: rightGroupModel,
+            summaryTitle: {sum: '{0}'},
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
                 postData: {queryId: 'dataSource.emptyGrid'},
@@ -434,8 +485,12 @@
 
         const changeHighchartsSeriesData = function (element, data) {
             if (element) {
-                for (let i = 0, LENGTH = data.length; i < LENGTH; i++) {
-                    element.series[i].setData(data[i]);
+                if(element.series.length > 1){
+                    for (let i = 0, LENGTH = data.length; i < LENGTH; i++) {
+                        element.series[i].setData(data[i]);
+                    }
+                }else{
+                    element.series[0].setData(data);
                 }
             }
         };
@@ -454,7 +509,6 @@
 
             getJsonList('reportMapper.' + queryId, function (arg) {
                 const list = arg.list;
-
                 createTable(target, list);
             });
         };
@@ -481,16 +535,14 @@
             getJsonList('reportMapper.' + queryId, function (arg) {
                 const list = arg.list;
                 const dataArray = [];
-
                 for (let i = 0, LENGTH = list.length; i < LENGTH; i++) {
-                    dataArray[i] = {
+                    dataArray.push({
                         name: list[i].ORDER_COMP_NM,
                         y: list[i].SALES_AMT
-                    };
+                    });
                 }
-
                 changeHighchartsSubtitle(chart, subtitle);
-                changeHighchartsSeriesData(chart, [dataArray]);
+                changeHighchartsSeriesData(chart, dataArray);
             });
         };
 
@@ -513,7 +565,6 @@
                     }
                     array[i] = dataArray;
                 }
-                
                 changeHighchartsTitle(chart3, '월별현황 (' + $('#month_sales_board_year').val() +  '년)')
                 changeHighchartsSeriesData(chart3, array);
             });

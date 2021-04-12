@@ -302,7 +302,8 @@
 
         const chart1 = Highcharts.chart('monthly_quality_board_middle_wrap_div_2', {
             chart: {
-                type: 'pie'
+                type: 'pie',
+                styledMode: true
             },
             title: {
                 text: '불량유형',
@@ -366,7 +367,8 @@
 
         const chart2 = Highcharts.chart('monthly_quality_board_middle_wrap_div_3', {
             chart: {
-                type: 'pie'
+                type: 'pie',
+                styledMode: true
             },
             title: {
                 text: '발생공정',
@@ -430,7 +432,8 @@
 
         const chart3 = Highcharts.chart('monthly_quality_board_middle_wrap_div_4', {
             chart: {
-                type: 'pie'
+                type: 'pie',
+                styledMode: true
             },
             title: {
                 text: '발생원인',
@@ -494,6 +497,9 @@
 
 
         const chart4 = Highcharts.chart('monthly_quality_board_middle_wrap_div_5', {
+            chart: {
+                styledMode: true
+            },
             title: {
                 align: 'left',
                 text: '월별 품질 현황',

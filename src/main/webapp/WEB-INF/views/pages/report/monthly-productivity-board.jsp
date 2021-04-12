@@ -663,7 +663,8 @@
         /* 가공납기 준수율 */
         let gaugeOptions = {
             chart: {
-                type: 'solidgauge'
+                type: 'solidgauge',
+                styledMode: true
             },
             pane: {
                 center: ['50%', '85%'],
@@ -717,6 +718,9 @@
 
         // The speed gauge
         let chartSpeed = Highcharts.chart('container-speed', Highcharts.merge(gaugeOptions, {
+            chart: {
+                styledMode: true
+            },
             title: {
                 text: '가공납기 준수율',
                 align: 'left'
@@ -773,7 +777,8 @@
         // Create the chart
         let pieChart = Highcharts.chart('pieChart', {
             chart: {
-                type: 'pie'
+                type: 'pie',
+                styledMode: true
             },
             title: {
                 text: '가공실적 현황',
@@ -834,7 +839,8 @@
         /* 월간현황 */
         let monthlyStatus = Highcharts.chart('months1', {
             chart: {
-                zoomType: 'xy'
+                zoomType: 'xy',
+                styledMode: true
             },
             title: {
                 text: '월간현황',
