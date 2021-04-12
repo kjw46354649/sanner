@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.innodale.dao.InnodaleDao;
 import com.jmes.service.MaterialService;
+import com.jmes.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -77,7 +78,7 @@ public class MaterialServiceImpl implements MaterialService {
            if (addList.size() > 0) {
                for (HashMap<String, Object> hashMap : addList) {
 
-                   hashMap.put("queryId", "material.selectInsideStockAbbrNm");
+                   hashMap.put("queryId", "material.selectInsideStockAbbrNmUseType");
                    Map<String, Object> selMap1 = this.innodaleDao.getInfo(hashMap);
 
                    String ABBR_NM = (String)selMap1.get("ABBR_NM");
@@ -100,6 +101,9 @@ public class MaterialServiceImpl implements MaterialService {
                    hashMap.put("INSIDE_STOCK_NUM", INSIDE_STOCK_NUM);
                    hashMap.put("queryId", "material.insertInsideStock");
                    this.innodaleDao.insertGrid(hashMap);
+
+                   // 21.04.12 추가버튼으로 저장한 경우 재고수량 입력가능
+                   hashMap.put("IN_OUT_QTY", hashMap.get("INSIDE_STOCK_CURR_QTY"));
 
                    hashMap.put("queryId", "material.insertInsideStockIn");
                    this.innodaleDao.insertGrid(hashMap);
@@ -135,6 +139,7 @@ public class MaterialServiceImpl implements MaterialService {
     public void managerInsideStockPop(Model model, Map<String, Object> map) throws Exception {
         //popType : 그리드입출고 GRID_IN, GRID_OUT, 바코드 BARCODE
         String POP_TYPE = (String) map.get("POP_TYPE");
+        String USE_BARCODE = (String)map.get("USE_BARCODE"); // 바코드 사용여부
         if("GRID_IN".equals(POP_TYPE)){
 
             map.put("queryId", "material.updateInsideStockPop");
@@ -148,12 +153,17 @@ public class MaterialServiceImpl implements MaterialService {
             map.put("queryId", "material.insertInsideStockOut");
             this.innodaleDao.create(map);
 
+//            if("Y".equals(USE_BARCODE)) {
+//                outGoingProcessForBarcodeIn(model,map);
+//            }
+
         }else if("BARCODE".equals(POP_TYPE)){
             String INSIDE_STOCK_NUM = (String) map.get("INSIDE_STOCK_NUM");
 
-            if("".equals(INSIDE_STOCK_NUM)){
+            if("".equals(INSIDE_STOCK_NUM)){ // 새로 등록하는 케이스
 
-                map.put("queryId", "material.selectInsideStockAbbrNm");
+                map.put("queryId", "material.selectInsideStockAbbrNmUseType");
+//                map.put("queryId", "material.selectInsideStockAbbrNm");
                 Map<String, Object> selMap1 = this.innodaleDao.getInfo(map);
 
                 String ABBR_NM = (String)selMap1.get("ABBR_NM");
@@ -185,9 +195,36 @@ public class MaterialServiceImpl implements MaterialService {
             map.put("queryId", "material.insertInsideStockIn");
             this.innodaleDao.create(map);
 
+            if("Y".equals(USE_BARCODE)) {
+//                map.put("queryId", "material.insertInsideStockOut");
+//                map.put("IN_OUT_QTY",map.get("ORDER_QTY"));
+//                this.innodaleDao.create(map);
+
+                outGoingProcessForBarcodeIn(model,map);
+            }
         }
 
         model.addAttribute("result",		"success");
+    }
+
+    @Override // 바코드로 소재입고시, 출고까지 진행
+    public void outGoingProcessForBarcodeIn(Model model, Map<String, Object> map) throws Exception {
+        map.put("queryId", "inspection.insertOutgoingOutType1");
+        map.put("NEW_OUT_QTY",map.get("ORDER_QTY"));
+        this.innodaleDao.create(map);
+
+        map.put("queryId", "inspection.updateOutgoingOutType1After1");
+        this.innodaleDao.update(map);
+
+        map.put("queryId", "inspection.updateOutgoingOutType1After2");
+        this.innodaleDao.update(map);
+
+        map.put("queryId", "inspection.updateOutgoingOutType1After3");
+        this.innodaleDao.update(map);
+
+        map.put("queryId", "inspection.updateOutFinishStatus");
+        this.innodaleDao.update(map);
+
     }
 
     /**

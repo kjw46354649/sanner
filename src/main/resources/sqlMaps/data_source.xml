@@ -96,6 +96,7 @@
 
     <select id="getLocationListWithWarehouse" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
+            WAREHOUSE_CD,
             LOC_NM AS `text`, CAST(LOC_SEQ AS CHAR) AS `value`,
             LOC_NM AS `CODE_NM`, CAST(LOC_SEQ AS CHAR) AS `CODE_CD`
         FROM TBL_WAREHOUSE_LOCATION

@@ -21,8 +21,8 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="SEL_ORDER_COMP_CD">발주사</label>
-                            <select class="wd_200" name="SEL_ORDER_COMP_CD" id="SEL_ORDER_COMP_CD" title="발주사">
+                            <label class="label_100" for="SEL_ORDER_COMP_CD">발주처</label>
+                            <select class="wd_200" name="SEL_ORDER_COMP_CD" id="SEL_ORDER_COMP_CD" title="발주처">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
                         </span>
@@ -39,13 +39,22 @@
                     </li>
                     <li>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="SEL_CONTROL_NUM">관리번호</label>
-                            <input type="search" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="관리번호">
+                            <label class="label_100" for="SEL_CONTROL_NUM">재고번호</label>
+                            <input type="search" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="재고번호">
                         </span>
                         <span class="gubun"></span>
-                        <span class="ipu_wrap">
-                            <label class="label_100" for="SEL_MATERIAL_DETAIL">소재종류</label>
-                            <input type="text" class="wd_200" name="SEL_MATERIAL_DETAIL" id="SEL_MATERIAL_DETAIL" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" readonly>
+                        <%--                        <span class="ipu_wrap">--%>
+                        <%--                            <label class="label_100" for="SEL_MATERIAL_DETAIL">소재종류</label>--%>
+                        <%--                            <input type="text" class="wd_200" name="SEL_MATERIAL_DETAIL" id="SEL_MATERIAL_DETAIL" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" readonly>--%>
+                        <%--                        </span>--%>
+                        <span class="slt_wrap">
+                            <label class="label_100" for="material_type">재질</label>
+                            <select class="wd_200" name="MATERIAL_TYPE" id="material_type" title="재질">
+                                <option value=""><spring:message code="com.form.top.all.option"/></option>
+                                <c:forEach var="code" items="${HighCode.H_1035}">
+                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                </c:forEach>
+                            </select>
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -67,44 +76,52 @@
                     </li>
                     <li>
                         <div class="slt_wrap">
-                            <label class="label_100" for="SEL_SIZE_TYPE">규격</label>
-                            <select class="wd_100" class="two" name="SEL_SIZE_TYPE" id="SEL_SIZE_TYPE">
+                            <label class="label_100" for="SIZE_TYPE">규격</label>
+                            <select class="wd_100" class="two" name="SIZE_TYPE" id="SIZE_TYPE">
+                                <%--                            <select class="wd_100" class="two" name="SEL_SIZE_TYPE" id="SEL_SIZE_TYPE">--%>
                                 <option value=""><spring:message code="com.form.top.all.option" /></option>
                                 <c:forEach var="vlocale" items="${HighCode.H_1016}">
                                     <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
-                            <span class="nbsp"></span>
-                            <select class="wd_100" class="two" name="SEL_SIZE_SEARCH_TYPE" id="SEL_SIZE_SEARCH_TYPE" style="display: none">
-                                <option value=""><spring:message code="com.form.top.all.option" /></option>
-                                <c:forEach var="vlocale" items="${HighCode.H_1056}">
-                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
-                                </c:forEach>
-                            </select>
-
+                            <span class="slt_wrap" id="SIZE_W">
+                                <label class="label_8">W</label>
+                                <input class="wd_50 for_diabled" type="number" name="SIZE_W_F" id="SIZE_W_F" placeholder="From" disabled>
+                                <span class="nbsp">~</span>
+                                <input class="wd_50 for_diabled" type="number" name="SIZE_W_T" id="SIZE_W_T" placeholder="To" disabled>
+                            </span>
+                            <span class="slt_wrap" id="SIZE_H">
+                                <label class="label_8">H</label>
+                                <input class="wd_50 for_diabled" type="number" name="SIZE_H_F" id="SIZE_H_F" placeholder="From" disabled>
+                                <span class="nbsp">~</span>
+                                <input class="wd_50 for_diabled" type="number" name="SIZE_H_T" id="SIZE_H_T" placeholder="To" disabled>
+                            </span>
+                            <span class="slt_wrap" id="SIZE_T">
+                                <label class="label_8">T</label>
+                                <input class="wd_50 for_diabled" type="number" name="SIZE_T_F" id="SIZE_T_F" placeholder="From" disabled>
+                                <span class="nbsp">~</span>
+                                <input class="wd_50 for_diabled" type="number" name="SIZE_T_T" id="SIZE_T_T" placeholder="To" disabled>
+                            </span>
+                            <span class="slt_wrap" id="SIZE_D" style="display: none;">
+                                <label class="label_8">D</label>
+                                <input class="wd_50 for_diabled" type="number" name="SIZE_D_F" id="SIZE_D_F" placeholder="From" disabled>
+                                <span class="nbsp">~</span>
+                                <input class="wd_50 for_diabled" type="number" name="SIZE_D_T" id="SIZE_D_T" placeholder="To" disabled>
+                            </span>
+                            <span class="slt_wrap" id="SIZE_L" style="display: none;">
+                                <label class="label_8">L</label>
+                                <input class="wd_50 for_diabled" type="number" name="SIZE_L_F" id="SIZE_L_F" placeholder="From" disabled>
+                                <span class="nbsp">~</span>
+                                <input class="wd_50 for_diabled" type="number" name="SIZE_L_T" id="SIZE_L_T" placeholder="To" disabled>
+                            </span>
+                            <span class="gubun"></span>
+                            <%--                            <select class="wd_100" class="two" name="SEL_SIZE_SEARCH_TYPE" id="SEL_SIZE_SEARCH_TYPE" style="display: none">--%>
+                            <%--                                <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
+                            <%--                                <c:forEach var="vlocale" items="${HighCode.H_1056}">--%>
+                            <%--                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>--%>
+                            <%--                                </c:forEach>--%>
+                            <%--                            </select>--%>
                         </div>
-                        <span class="nbsp"> </span>
-                        <%-- 원통@, 반원R, 육각H, 가로W, 세로H, 두께T, 지름D, 길이L --%>
-                        <span id="SEL_SIZE_SEARCH_TYPE_E" style="display: none">
-                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_E_1" id="SEL_SIZE_SEARCH_TYPE_E_1">
-                            <span class="nbsp">*</span>
-                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_E_2" id="SEL_SIZE_SEARCH_TYPE_E_2">
-                            <span class="nbsp" id="SEL_SIZE_SEARCH_TYPE_E_3_SPAN">*</span>
-                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_E_3" id="SEL_SIZE_SEARCH_TYPE_E_3">
-                        </span>
-                        <span id="SEL_SIZE_SEARCH_TYPE_R" style="display: none">
-                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_1" id="SEL_SIZE_SEARCH_TYPE_R_1">
-                                <span class="nbsp">~</span>
-                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_2" id="SEL_SIZE_SEARCH_TYPE_R_2">
-                            <span class="nbsp">*</span>
-                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_3" id="SEL_SIZE_SEARCH_TYPE_R_3">
-                                <span class="nbsp">~</span>
-                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_4" id="SEL_SIZE_SEARCH_TYPE_R_4">
-                            <span class="nbsp" id="SEL_SIZE_SEARCH_TYPE_R_5_SPAN">*</span>
-                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_5" id="SEL_SIZE_SEARCH_TYPE_R_5">
-                                <span class="nbsp" id="SEL_SIZE_SEARCH_TYPE_R_6_SPAN">~</span>
-                            <input type="text" class="wd_50" name="SEL_SIZE_SEARCH_TYPE_R_6" id="SEL_SIZE_SEARCH_TYPE_R_6">
-                        </span>
                         <span class="ipu_wrap right_float">
                             <button type="button" id="STOCK_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="stock_manage_search_btn">검색</button>
@@ -163,47 +180,51 @@
         <input type="hidden" id="ORIGINAL_ORDER_QTY" name="ORIGINAL_ORDER_QTY" value="0">
         <input type="hidden" id="ORIGINAL_POP_STOCK_QTY_AFTER" name="ORIGINAL_POP_STOCK_QTY_AFTER" value="0">
         <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value="">
+        <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value="">
+        <input type="hidden" id="ORDER_SEQ" name="ORDER_SEQ" value="">
         <input type="hidden" name="POP_TYPE" id="POP_TYPE" value="">
+        <input type="hidden" name="USE_BARCODE" id="USE_BARCODE" value="">
+        <input type="hidden" name="MATERIAL_TYPE" id="MATERIAL_TYPE" value="">
 
         <input type="hidden" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" value="">
         <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD" value="">
         <input type="hidden" name="ITEM_NM" id="ITEM_NM" value="">
         <input type="hidden" name="COMP_CD" id="COMP_CD" value="">
 
-    <div class="miniPopup">
-        <%--<div class="headWrap">
-            <h4 id="pop_title">재고 입고</h4>
-            <button class="closeBtn">닫기</button>
-        </div>--%>
-        <div class="contentWrap">
-            <h3 id="pop_title">재고 입고</h3>
-            <button type="button" class="pop_close" id="inside_stock_pop_close_btn2">닫기</button>
-            <table>
-                <caption></caption>
-                <colgroup>
-                    <col width="10%">
-                    <col width="*">
-                    <col width="5%">
-                    <col width="5%">
-                    <col width="5%">
-                </colgroup>
-                <tr>
-                    <th>도면번호</th>
-                    <td colspan="4"><input type="text" name="DRAWING_NUM" id="DRAWING_NUM"  value="" title="도면번호" class="wd_250" readonly></td>
-<%--                    <th class="bg_green">Part</th>--%>
-<%--                    <td>23</td>--%>
-                </tr>
-                <tr>
-                    <th>재고번호</th>
-                    <td colspan="4"><input type="text" name="INSIDE_STOCK_NUM" id="INSIDE_STOCK_NUM"  value="" title="재고번호" class="wd_250" readonly></td>
-                </tr>
-                <tr>
-                    <th>규격</th>
-                    <td colspan="4"><input type="text" name="SIZE_TXT" id="SIZE_TXT"  value="" title="규격" class="wd_250" readonly></td>
-                </tr>
-                <tr>
-                    <th>창고</th>
-                    <td class="nopadding bg_green">
+        <div class="miniPopup">
+            <%--<div class="headWrap">
+                <h4 id="pop_title">재고 입고</h4>
+                <button class="closeBtn">닫기</button>
+            </div>--%>
+            <div class="contentWrap">
+                <h3 id="pop_title">재고 입고</h3>
+                <button type="button" class="pop_close" id="inside_stock_pop_close_btn2">닫기</button>
+                <table>
+                    <caption></caption>
+                    <colgroup>
+                        <col width="10%">
+                        <col width="*">
+                        <col width="5%">
+                        <col width="5%">
+                        <col width="5%">
+                    </colgroup>
+                    <tr>
+                        <th>도면번호</th>
+                        <td colspan="4"><input type="text" name="DRAWING_NUM" id="DRAWING_NUM"  value="" title="도면번호" class="wd_250" readonly></td>
+                        <%--                    <th class="bg_green">Part</th>--%>
+                        <%--                    <td>23</td>--%>
+                    </tr>
+                    <tr>
+                        <th>재고번호</th>
+                        <td colspan="4"><input type="text" name="INSIDE_STOCK_NUM" id="INSIDE_STOCK_NUM"  value="" title="재고번호" class="wd_250" readonly></td>
+                    </tr>
+                    <tr>
+                        <th>규격</th>
+                        <td colspan="4"><input type="text" name="SIZE_TXT" id="SIZE_TXT"  value="" title="규격" class="wd_250" readonly></td>
+                    </tr>
+                    <tr>
+                        <th>창고</th>
+                        <td class="nopadding bg_green">
 				    	<span>
 							<select id="WAREHOUSE_CD" name="WAREHOUSE_CD" title="창고" data-required="true">
 								<option value=""><spring:message code="com.form.top.all.option" /></option>
@@ -212,51 +233,51 @@
                                 </c:forEach>
 							</select>
 						</span>
-                    </td>
-                    <th>위치</th>
-                    <td colspan="2" class="nopadding bg_green">
+                        </td>
+                        <th>위치</th>
+                        <td colspan="2" class="nopadding bg_green">
 				    	<span>
 							 <select id="LOC_SEQ" name="LOC_SEQ" title="위치" data-required="true" >
                                 <option value=""><spring:message code="com.form.top.all.option" /></option>
                             </select>
 						</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>현재수량</th>
-                    <td><input type="text" name="POP_STOCK_QTY" id="POP_STOCK_QTY"  value="" title="현재수량" class="wd_50" readonly></td>
-                    <th>변경후수량</th>
-                    <td colspan="2"><input type="text" name="POP_STOCK_QTY_AFTER" id="POP_STOCK_QTY_AFTER"  value="" title="변경후수량" class="wd_50" readonly></td>
-                </tr>
-                <tr>
-                    <th>수량</th>
-                    <td colspan="4" class="bg_green">
-                        <button type="button" class="btn_plus" id="inside_stock_qty_plus_btn">더하기</button>
-                        <span class="text">
-                            <input type="text" id="ORDER_QTY" value="0" style="border: none; outline: none; background: #e8f9ea; width: 70px; height: 33px; font-size: 19px; text-align: center;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>현재수량</th>
+                        <td><input type="text" name="POP_STOCK_QTY" id="POP_STOCK_QTY"  value="" title="현재수량" class="wd_50" readonly></td>
+                        <th>변경후수량</th>
+                        <td colspan="2"><input type="text" name="POP_STOCK_QTY_AFTER" id="POP_STOCK_QTY_AFTER"  value="" title="변경후수량" class="wd_50" readonly></td>
+                    </tr>
+                    <tr>
+                        <th>수량</th>
+                        <td colspan="4" class="bg_green">
+                            <button type="button" class="btn_plus" id="inside_stock_qty_plus_btn">더하기</button>
+                            <span class="text">
+                            <input type="text" id="ORDER_QTY" name="ORDER_QTY" value="0" style="border: none; outline: none; background: #e8f9ea; width: 70px; height: 33px; font-size: 19px; text-align: center;">
                         </span>
-                        <button type="button" class="btn_minus" id="inside_stock_qty_minus_btn">빼기</button>
-                        <button type="button" class="btn_allPlus" id="inside_stock_qty_all_btn">전량</button>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="footerWrap">
-            <div class="barcode" id="footer_barcode">
-                <span class="barCodeTxt"><input type="text" class="wd_240_barcode hg_35" name="BARCODE_NUM" id="BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요" ></span>
-                <span class="barCode" style="margin: 13px 15px 0 0;"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="stock_manage_pop_form_barcode_img" ></span>
+                            <button type="button" class="btn_minus" id="inside_stock_qty_minus_btn">빼기</button>
+                            <button type="button" class="btn_allPlus" id="inside_stock_qty_all_btn">전량</button>
+                        </td>
+                    </tr>
+                </table>
             </div>
-            <div class="process">
-                <span class="pr_txt" id="footer_msg"></span>
-<%--                <span class="pr_txt">재고를 <b>신규 생성</b>하시겠습니까?</span>--%>
-<%--                <span class="pr_txt"><b class="block">입고가 완료되었습니다.</b>추가 진행하려면 바코드를 스캔해주세요</span>--%>
-                <div class="btnWrap">
-                    <button type="button" class="defaultBtn greenPopGra" id="inside_stock_pop_save_btn">저장</button>
-                    <button type="button" class="defaultBtn grayPopGra" id="inside_stock_pop_close_btn">닫기</button>
+            <div class="footerWrap">
+                <div class="barcode" id="footer_barcode">
+                    <span class="barCodeTxt"><input type="text" class="wd_240_barcode hg_35" name="BARCODE_NUM" id="BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요" ></span>
+                    <span class="barCode" style="margin: 13px 15px 0 0;"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="stock_manage_pop_form_barcode_img" ></span>
+                </div>
+                <div class="process">
+                    <span class="pr_txt" id="footer_msg"></span>
+                    <%--                <span class="pr_txt">재고를 <b>신규 생성</b>하시겠습니까?</span>--%>
+                    <%--                <span class="pr_txt"><b class="block">입고가 완료되었습니다.</b>추가 진행하려면 바코드를 스캔해주세요</span>--%>
+                    <div class="btnWrap">
+                        <button type="button" class="defaultBtn greenPopGra" id="inside_stock_pop_save_btn">저장</button>
+                        <button type="button" class="defaultBtn grayPopGra" id="inside_stock_pop_close_btn">닫기</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </form>
 </div>
 <!-- 재고입고 mini popup : E -->
@@ -266,6 +287,24 @@
 <script>
     $(function () {
         'use strict';
+        let testList = '<c:out value="${HighCode.H_1049}"/>';
+        let listHigh = [];
+        let listJson = {"WARE_HOUSE":[],"MATERIAL_TYPE":[],"LOC_SEQ":[],"ORDER_COMP_CD":[],"COMP_CD":[]};
+        <c:forEach var="vlocale" items="${HighCode.H_1049}">
+            var tmpJson = {
+                "CODE_NM_KR" : "${vlocale.CODE_NM_KR}",
+                "CODE_CD":"${vlocale.CODE_CD}"
+            }
+            listJson.WARE_HOUSE.push(tmpJson);
+        </c:forEach>
+
+        <c:forEach var="vlocale" items="${HighCode.H_1035}">
+        var tmpJson = {
+            "CODE_NM_KR" : "${vlocale.CODE_NM_KR}",
+            "CODE_CD":"${vlocale.CODE_CD}"
+        }
+        listJson.MATERIAL_TYPE.push(tmpJson);
+        </c:forEach>
 
         let selectedRowIndex = [];
 
@@ -276,9 +315,9 @@
 
         let pop_msg_new = "재고를 <b>신규 생성</b>하시겠습니까?";
         let pop_msg_in = "<b>입고</b>를 진행하겠습니까?";
-        let pop_msg_out = "<b>출고</b>를 진행하겠습니까?";
+        let pop_msg_out = "<b>불출</b> 진행하겠습니까?";
         let pop_msg_in_done = "<b class=\"block\">입고가 완료되었습니다.</b>추가 진행하려면 바코드를 스캔해주세요";
-        let pop_msg_out_done = "<b class=\"block\">출고가 완료되었습니다.</b>";
+        let pop_msg_out_done = "<b class=\"block\">불출 완료되었습니다.</b>";
 
         /**  리스트 그리드 선언 시작 **/
         $("#stock_manage_form").find("#queryId").val("material.selectInsideStockList");
@@ -297,7 +336,17 @@
                 editable: function (ui) {return gridCellEditable(ui);},
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
-                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
+                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+                postRender:function( ui ){
+                    let ordercompcd = ui.rowData.ORDER_COMP_CD;
+                    if(typeof ordercompcd != 'undefined' && ordercompcd != null && ordercompcd != '' && ordercompcd.indexOf('CMP') < 0) {
+                        $.each(listJson.ORDER_COMP_CD, function (idx,Item) {
+                            if(Item.CODE_NM == ui.rowData.ORDER_COMP_CD) {
+                                ui.rowData.ORDER_COMP_CD = Item.CODE_CD;
+                            }
+                        })
+                    }
+                }
             },
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
@@ -332,13 +381,24 @@
                 },
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
-                ]
+                ],
+                postRender:function( ui ){
+                    let cmpCd = ui.rowData.COMP_CD;
+                    if(typeof cmpCd != 'undefined' && cmpCd != null && cmpCd != '' && cmpCd.indexOf('CMP') < 0) {
+                        $.each(listJson.COMP_CD, function (idx,Item) {
+                            if(Item.CODE_NM == ui.rowData.COMP_CD) {
+                                ui.rowData.COMP_CD = Item.CODE_CD;
+                            }
+                        })
+                    }
+                }
+
             },
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 100, width: 100,
                 editable: function (ui) { return gridCellEditable(ui);},
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',editable: function (ui) { return gridCellEditable(ui);},
+            /*{title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',editable: function (ui) { return gridCellEditable(ui);},
                 minWidth: 100, width: 100,
                 editor: {
                     type: 'select',
@@ -349,12 +409,42 @@
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
+            },*/
+            {title: '재질', width: 60, dataIndx: 'MATERIAL_TYPE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1035')},
+                postRender:function( ui ){
+                    let mt = ui.rowData.MATERIAL_TYPE;
+                    if(typeof mt != 'undefined' && mt != null && mt != '' && mt.indexOf('MTP') < 0) {
+                        $.each(listJson.MATERIAL_TYPE, function (idx,Item) {
+                            if(Item.CODE_NM_KR == ui.rowData.MATERIAL_TYPE) {
+                                ui.rowData.MATERIAL_TYPE = Item.CODE_CD;
+                            }
+                        })
+                    }
+                }
             },
-            {title: '재질', width: 60, dataIndx: 'MATERIAL_TYPE_NM'},
-            {title: '재고수량<br>(EA)', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', format: '#,###'},
+            {title: '재고수량<br>(EA)', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', format: '#,###', editable: function (ui) {
+                    var isEditable = stockManageGridId01.pqGrid('hasClass',{rowIndx: ui.rowIndx, cls: 'pg-new-row'});
+                    if(isEditable) {
+                        return true;
+                    }else {
+                        return false;
+                    }
+                }
+            },
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 minWidth: 100, width: 100,
-                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1049') }
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1049') },
+                postRender:function( ui ){
+                    let WHC = ui.rowData.WAREHOUSE_CD;
+                    if(typeof WHC != 'undefined' && WHC != null && WHC != '' && WHC.indexOf('WHR') < 0) {
+                        $.each(listJson.WARE_HOUSE, function (idx,Item) {
+                            if(Item.CODE_NM_KR == ui.rowData.WAREHOUSE_CD) {
+                                ui.rowData.WAREHOUSE_CD = Item.CODE_CD;
+                            }
+                        })
+                    }
+                }
             },
             {title: '재고위치', dataType: 'string', dataIndx: 'LOC_SEQ', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 minWidth: 100, width: 100,
@@ -370,7 +460,6 @@
                         fnPostAjaxAsync(function (data, callFunctionParam) {
                             ajaxData = data.list;
                         }, warehouseData, '');
-
                         return ajaxData;
                     }
                 },
@@ -403,6 +492,18 @@
 
                         return (index < 0) ? cellData : ajaxData[index].text;
                     }
+                },
+                postRender:function( ui ){
+                    let LS = ui.rowData.LOC_SEQ;
+                    let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                    let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
+                    if(typeof LS != 'undefined' && LS != null && LS != '') {
+                        $.each(listJson.LOC_SEQ, function (idx,Item) {
+                            if(Item.WAREHOUSE_CD == WAREHOUSE_CD && Item.text == ui.rowData.LOC_SEQ) {
+                                ui.rowData.LOC_SEQ = Item.CODE_CD;
+                            }
+                        })
+                    }
                 }
             },
             {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
@@ -434,7 +535,7 @@
             },
             {title: '생성일시', dataType: 'string', dataIndx: 'INSERT_TIME', minWidth: 100, width: 100, editable: false},
             {title: '수정일시', dataType: 'string', dataIndx: 'UPDATE_TIME', minWidth: 100, width: 100, editable: false},
-            {title: '입고/출고', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN_OUT', minWidth: 100, width: 100,
+            {title: '입고/불출', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN_OUT', minWidth: 100, width: 100,
                 styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: false,
                 render: function (ui) {
                     let grid = this;
@@ -446,7 +547,7 @@
                     }
                     let outBtn = '';
                     if (ui.rowData['INSIDE_STOCK_NUM'] != undefined){
-                        outBtn = '<button type="button" class="miniBtn blue" id="INSIDE_STOCK_QTY_OUT_ACTION">출고</button>';
+                        outBtn = '<button type="button" class="miniBtn blue" id="INSIDE_STOCK_QTY_OUT_ACTION">불출</button>';
                     }
                     return inBtn + outBtn;
                 },
@@ -456,17 +557,18 @@
                     //let rowData = ui.rowData;
                     $cell.find('#INSIDE_STOCK_QTY_IN_ACTION').bind('click', function(e) {
                         e.preventDefault();
-                       $("#stock_manage_form").find("#popType").val("GRID_IN");
-                       $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val(ui.rowData['INSIDE_STOCK_NUM']);
-                       $('#stock_manage_pop').modal('show');
+                        $("#stock_manage_form").find("#popType").val("GRID_IN");
+                        $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val(ui.rowData['INSIDE_STOCK_NUM']);
+                        $('#stock_manage_pop').modal('show');
                     });
                     $cell.find('#INSIDE_STOCK_QTY_OUT_ACTION').bind('click', function(e) {
                         e.preventDefault();
                         if (ui.rowData['INSIDE_STOCK_CURR_QTY'] <= 0){
-                            fnAlert(null, "출고할 재고수량이 없습니다.");
+                            fnAlert(null, "불출할 재고수량이 없습니다.");
                         }else{
                             $("#stock_manage_form").find("#popType").val("GRID_OUT");
                             $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val(ui.rowData['INSIDE_STOCK_NUM']);
+                            $("#footer_barcode").hide();
                             $('#stock_manage_pop').modal('show');
                         }
                     });
@@ -513,10 +615,10 @@
                 $("#stockManageFrozen").html(frozenOts);
             },
             cellSave: function (evt, ui) {
-                  if (ui.dataIndx == "WAREHOUSE_CD_NM" && ui.newVal !== ui.oldVal) {
-                      stockManageGridId01.pqGrid("updateRow", { 'rowIndx': ui.rowIndx , row: { 'LOC_SEQ_NM': '' } });
-                  }
-              },
+                if (ui.dataIndx == "WAREHOUSE_CD_NM" && ui.newVal !== ui.oldVal) {
+                    stockManageGridId01.pqGrid("updateRow", { 'rowIndx': ui.rowIndx , row: { 'LOC_SEQ_NM': '' } });
+                }
+            },
             complete: function () {
                 let data = stockManageGridId01.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
@@ -607,7 +709,8 @@
         $("#stock_manage_pop").on('hide.bs.modal', function(){
             fnResetFrom("stock_manage_pop_form");
             $("#stock_manage_form").find("#queryId").val("material.selectInsideStockList");
-           $("#stock_manage_search_btn").trigger("click");
+            $("#footer_barcode").show();
+            $("#stock_manage_search_btn").trigger("click");
         });
         $("#stock_manage_pop").on('show.bs.modal', function(){
             //popType : 그리드입출고 GRID_IN, GRID_OUT, 바코드 BARCODE
@@ -638,7 +741,7 @@
             }else if(popType == "GRID_OUT"){
                 pop_data = {"V_INSIDE_STOCK_NUM":V_INSIDE_STOCK_NUM,"queryId":"material.selectInsideStockPopInfo"};
                 footer_msg = pop_msg_out;
-                pop_title = "재고 출고";
+                pop_title = "재고 불출";
                 $("#stock_manage_pop_form").find("#footer_msg").show();
                 $("#stock_manage_pop_form").find("#WAREHOUSE_CD").attr("disabled", true);
                 $("#stock_manage_pop_form").find("#LOC_SEQ").attr("disabled", true);
@@ -715,7 +818,9 @@
             //     rowIndx: 0,
             //     checkEditable: true
             // });
-            stockManageGridId01.pqGrid('addNodes', [{}], 0);
+            // stockManageGridId01.pqGrid( "addRow",{rowData: {editable: true } });
+            stockManageGridId01.pqGrid('addNodes', [{dataIndx: 'INSIDE_STOCK_CURR_QTY', editable:true}], 0);
+            stockManageGridId01.pqGrid('addClass', { rowIndx: 0, cls: 'pg-new-row' });
 
         });
         $("#stock_manage_delete_btn").click(function () {
@@ -873,7 +978,7 @@
             $('#stock_manage_pop').modal('hide');
         });
         $('#stock_manage_pop_form').find('#inside_stock_pop_close_btn2').on('click', function () {
-                    $('#stock_manage_pop').modal('hide');
+            $('#stock_manage_pop').modal('hide');
         });
         $("#stock_manage_pop_form").find("#WAREHOUSE_CD").change(function(){
             let WAREHOUSE_CD = this.value;
@@ -954,6 +1059,38 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getLocationListWithWarehouse'}
         });
+
+        let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getLocationListWithWarehouse'}};
+        fnPostAjaxAsync(function(data){
+            let optText = "<option value=''><spring:message code='com.form.top.all.option'/></option>";
+            $.each(data.list,function (idx,Item) {
+                optText += "<option class='dep2 "+Item.WAREHOUSE_CD +"' value='" + Item.value + "' >" + Item.CODE_NM +"</option>"
+            });
+            $("#SEL_LOC_SEQ").html(optText);
+            listJson.LOC_SEQ = data.list;
+        }, parameters, '');
+
+        let parameters2 = {'url': '/json-list', 'data': {'queryId': 'dataSource.getOrderCompanyList'}};
+        fnPostAjaxAsync(function(data){
+            listJson.ORDER_COMP_CD = data.list;
+        }, parameters2, '');
+
+        let parameters3 = {'url': '/json-list', 'data': {'queryId': 'dataSource.getBusinessCompanyList'}};
+        fnPostAjaxAsync(function(data){
+            listJson.COMP_CD = data.list;
+        }, parameters3, '');
+
+        $("#SEL_WAREHOUSE_CD").on('change', function () {
+            $("#stock_manage_form").find('.dep2').hide();
+            $('#SEL_LOC_SEQ').prop('selectedIndex', 0);
+            if($(this).val() != '') {
+                $('#SEL_LOC_SEQ').attr('disabled',false);
+                $('#SEL_LOC_SEQ > .' + $(this).val()).show();
+            }else {
+                $("#SEL_LOC_SEQ").attr('disabled',true);
+            }
+        });
+
         // 소재종류
         (function () {
             let comboData = [];
@@ -1077,6 +1214,10 @@
                                     $('#stock_manage_pop').modal('hide');
                                 }else{
                                     fnJsonDataToForm("stock_manage_pop_form", dataInfo2);
+                                    $("#stock_manage_pop_form").find("#USE_BARCODE").val("Y");
+                                    // $("#stock_manage_pop_form").find("#CONTROL_SEQ").val(dataInfo2.CONTROL_SEQ);
+                                    // $("#stock_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(dataInfo2.CONTROL_DETAIL_SEQ);
+                                    // $("#stock_manage_pop_form").find("#ORDER_SEQ").val(dataInfo2.ORDER_SEQ);
                                     $("#stock_manage_pop_form").find("#footer_msg").html(pop_msg_new);
                                     $("#stock_manage_pop_form").find("#ORDER_QTY").val(dataInfo2.ORDER_QTY);
                                     $("#stock_manage_pop_form").find("#ORIGINAL_ORDER_QTY").val(dataInfo2.ORDER_QTY);
@@ -1109,7 +1250,11 @@
                                     afterQty = currentQty;
                                 }
                             }
+                            $("#stock_manage_pop_form").find("#USE_BARCODE").val("Y");
                             $("#stock_manage_pop_form").find("#footer_msg").html(foot_msg);
+                            $("#stock_manage_pop_form").find("#CONTROL_SEQ").val(dataInfo.CONTROL_SEQ);
+                            $("#stock_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(dataInfo.CONTROL_DETAIL_SEQ);
+                            $("#stock_manage_pop_form").find("#ORDER_SEQ").val(dataInfo.ORDER_SEQ);
                             // $("#stock_manage_pop_form").find("#ORDER_QTY").val(dataInfo.ORDER_QTY);
                             $("#stock_manage_pop_form").find("#ORDER_QTY").val(orderQty);
                             $("#stock_manage_pop_form").find("#ORIGINAL_ORDER_QTY").val(orderQty);
@@ -1221,6 +1366,50 @@
             });
 
             saveAs(blob, '재고 관리.xlsx');
+        });
+
+        function resetInput(form, idArr) {
+            $.each(idArr,function (idx,Item) {
+                form.find("#"+Item).val('');
+            });
+        }
+        $('#stock_manage_form').find('#SIZE_TYPE').on('change', function () {
+            const $stockManageForm = $('#stock_manage_form');
+            $stockManageForm.find('.for_diabled').attr('disabled',false);
+            let resetArr = [];
+
+            switch (this.value) {
+                case 'XYZ010':
+                    resetArr = ['SIZE_D_F','SIZE_D_T','SIZE_L_F','SIZE_L_T']
+                    resetInput($stockManageForm,resetArr)
+                    $stockManageForm.find('#SIZE_W').show();
+                    $stockManageForm.find('#SIZE_H').show();
+                    $stockManageForm.find('#SIZE_T').show();
+                    $stockManageForm.find('#SIZE_D').hide();
+                    $stockManageForm.find('#SIZE_L').hide();
+                    break;
+                case 'XYZ020':
+                case 'XYZ030':
+                case 'XYZ040':
+                case 'XYZ050':
+                    resetArr = ['SIZE_W_F','SIZE_W_T','SIZE_H_F','SIZE_H_T','SIZE_T_F','SIZE_T_T']
+                    resetInput($stockManageForm,resetArr)
+                    $stockManageForm.find('#SIZE_W').hide();
+                    $stockManageForm.find('#SIZE_H').hide();
+                    $stockManageForm.find('#SIZE_T').hide();
+                    $stockManageForm.find('#SIZE_D').show();
+                    $stockManageForm.find('#SIZE_L').show();
+                    break;
+                default:
+                    $stockManageForm.find('#SIZE_W').show();
+                    $stockManageForm.find('#SIZE_H').show();
+                    $stockManageForm.find('#SIZE_T').show();
+                    $stockManageForm.find('#SIZE_D').hide();
+                    $stockManageForm.find('#SIZE_L').hide();
+                    resetArr = ['SIZE_W_F','SIZE_W_T','SIZE_H_F','SIZE_H_T','SIZE_T_F','SIZE_T_T','SIZE_D_F','SIZE_D_T','SIZE_L_F','SIZE_L_T']
+                    resetInput($stockManageForm,resetArr)
+                    $stockManageForm.find('.for_diabled').attr('disabled',true);
+            }
         });
     });
 </script>
