@@ -1061,12 +1061,12 @@
 
         let parameters2 = {'url': '/json-list', 'data': {'queryId': 'dataSource.getOrderCompanyList'}};
         fnPostAjaxAsync(function(data){
-            listJson.COMP_CD = data.list;
+            listJson.ORDER_COMP_CD = data.list;
         }, parameters2, '');
 
         let parameters3 = {'url': '/json-list', 'data': {'queryId': 'dataSource.getBusinessCompanyList'}};
         fnPostAjaxAsync(function(data){
-            listJson.ORDER_COMP_CD = data.list;
+            listJson.COMP_CD = data.list;
         }, parameters3, '');
 
         $("#SEL_WAREHOUSE_CD").on('change', function () {
