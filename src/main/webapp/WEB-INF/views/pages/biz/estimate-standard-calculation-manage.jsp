@@ -403,7 +403,13 @@
 
         /* event */
         $('[name=estimate_standard]').on('change', function () {
-            $('#view_tab_10000103 > div.page > div').hide();
+            // $('#view_tab_10000103 > div.page > div').hide();
+            // console.log($('#view_tab_10000103 > div.page > div'))
+            $('#escm0').hide();
+            $('#escm1').hide();
+            $('#escm2').hide();
+            $('#escm3').hide();
+            $('#escm4').hide();
             $('[name=estimate_standard]').val($(this).val()).prop('selected', true);
 
             switch (Number($(this).val())) {
