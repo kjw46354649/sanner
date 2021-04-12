@@ -13,7 +13,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <div class="page estimate">
-    <div class="topWrap">
+    <div class="topWrap out_close_tab">
         <form class="form-inline" id="OUTSIDE_CLOSE_STATUS_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideCloseStatusList">
             <div class="none_gubunWrap row2_topWrap">
@@ -73,7 +73,7 @@
         </form>
     </div>
 
-    <div class="topWrap" style="display: none;">
+    <div class="topWrap out_month_tab" style="display: none;">
         <form class="form-inline" id="MONTH_OUTSIDE_STATUS_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideYearCloseStatusList">
             <div class="none_gubunWrap row2_topWrap">
@@ -445,8 +445,17 @@
         $('#OUTSOURCING_STATUS_TABS').tabs({
             activate: function (event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
-                $('#view_tab_10000303 .topWrap').toggle();
-                $('#out_status_save_id').toggle();
+                // $('#view_tab_10000303 .topWrap').toggle();
+                // $('#out_status_save_id').toggle();
+                if(ui.newPanel.selector == "#OUTSIDE_CLOSE_STATUS") {
+                    $(".out_month_tab").hide();
+                    $('#out_status_save_id').show();
+                    $(".out_close_tab").show();
+                }else {
+                    $(".out_close_tab").hide();
+                    $('#out_status_save_id').hide();
+                    $(".out_month_tab").show();
+                }
             }
         });
 
