@@ -102,6 +102,9 @@ public class MaterialServiceImpl implements MaterialService {
                    hashMap.put("queryId", "material.insertInsideStock");
                    this.innodaleDao.insertGrid(hashMap);
 
+                   // 21.04.12 추가버튼으로 저장한 경우 재고수량 입력가능
+                   hashMap.put("IN_OUT_QTY", hashMap.get("INSIDE_STOCK_CURR_QTY"));
+
                    hashMap.put("queryId", "material.insertInsideStockIn");
                    this.innodaleDao.insertGrid(hashMap);
                }
@@ -150,9 +153,9 @@ public class MaterialServiceImpl implements MaterialService {
             map.put("queryId", "material.insertInsideStockOut");
             this.innodaleDao.create(map);
 
-            if("Y".equals(USE_BARCODE)) {
-                outGoingProcessForBarcodeIn(model,map);
-            }
+//            if("Y".equals(USE_BARCODE)) {
+//                outGoingProcessForBarcodeIn(model,map);
+//            }
 
         }else if("BARCODE".equals(POP_TYPE)){
             String INSIDE_STOCK_NUM = (String) map.get("INSIDE_STOCK_NUM");
@@ -193,9 +196,9 @@ public class MaterialServiceImpl implements MaterialService {
             this.innodaleDao.create(map);
 
             if("Y".equals(USE_BARCODE)) {
-                map.put("queryId", "material.insertInsideStockOut");
-                map.put("IN_OUT_QTY",map.get("ORDER_QTY"));
-                this.innodaleDao.create(map);
+//                map.put("queryId", "material.insertInsideStockOut");
+//                map.put("IN_OUT_QTY",map.get("ORDER_QTY"));
+//                this.innodaleDao.create(map);
 
                 outGoingProcessForBarcodeIn(model,map);
             }

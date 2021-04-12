@@ -177,7 +177,6 @@
     <form class="form-inline" id="stock_manage_pop_form" name="stock_manage_pop_form" role="form">
         <input type="hidden" id="queryId" name="queryId" value="material.selectInsideStockPopInfo">
         <input type="hidden" id="IN_OUT_QTY" name="IN_OUT_QTY" value="0">
-        <input type="hidden" id="ORDER_QTY" name="ORDER_QTY" value="0">
         <input type="hidden" id="ORIGINAL_ORDER_QTY" name="ORIGINAL_ORDER_QTY" value="0">
         <input type="hidden" id="ORIGINAL_POP_STOCK_QTY_AFTER" name="ORIGINAL_POP_STOCK_QTY_AFTER" value="0">
         <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value="">
@@ -255,7 +254,7 @@
                         <td colspan="4" class="bg_green">
                             <button type="button" class="btn_plus" id="inside_stock_qty_plus_btn">더하기</button>
                             <span class="text">
-                            <input type="text" id="ORDER_QTY" value="0" style="border: none; outline: none; background: #e8f9ea; width: 70px; height: 33px; font-size: 19px; text-align: center;">
+                            <input type="text" id="ORDER_QTY" name="ORDER_QTY" value="0" style="border: none; outline: none; background: #e8f9ea; width: 70px; height: 33px; font-size: 19px; text-align: center;">
                         </span>
                             <button type="button" class="btn_minus" id="inside_stock_qty_minus_btn">빼기</button>
                             <button type="button" class="btn_allPlus" id="inside_stock_qty_all_btn">전량</button>
@@ -316,9 +315,9 @@
 
         let pop_msg_new = "재고를 <b>신규 생성</b>하시겠습니까?";
         let pop_msg_in = "<b>입고</b>를 진행하겠습니까?";
-        let pop_msg_out = "<b>출고</b>를 진행하겠습니까?";
+        let pop_msg_out = "<b>불출</b> 진행하겠습니까?";
         let pop_msg_in_done = "<b class=\"block\">입고가 완료되었습니다.</b>추가 진행하려면 바코드를 스캔해주세요";
-        let pop_msg_out_done = "<b class=\"block\">출고가 완료되었습니다.</b>";
+        let pop_msg_out_done = "<b class=\"block\">불출 완료되었습니다.</b>";
 
         /**  리스트 그리드 선언 시작 **/
         $("#stock_manage_form").find("#queryId").val("material.selectInsideStockList");
@@ -424,7 +423,15 @@
                     }
                 }
             },
-            {title: '재고수량<br>(EA)', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', format: '#,###', editable: false},
+            {title: '재고수량<br>(EA)', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', format: '#,###', editable: function (ui) {
+                    var isEditable = stockManageGridId01.pqGrid('hasClass',{rowIndx: ui.rowIndx, cls: 'pg-new-row'});
+                    if(isEditable) {
+                        return true;
+                    }else {
+                        return false;
+                    }
+                }
+            },
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 minWidth: 100, width: 100,
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1049') },
@@ -528,7 +535,7 @@
             },
             {title: '생성일시', dataType: 'string', dataIndx: 'INSERT_TIME', minWidth: 100, width: 100, editable: false},
             {title: '수정일시', dataType: 'string', dataIndx: 'UPDATE_TIME', minWidth: 100, width: 100, editable: false},
-            {title: '입고/출고', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN_OUT', minWidth: 100, width: 100,
+            {title: '입고/불출', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN_OUT', minWidth: 100, width: 100,
                 styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: false,
                 render: function (ui) {
                     let grid = this;
@@ -540,7 +547,7 @@
                     }
                     let outBtn = '';
                     if (ui.rowData['INSIDE_STOCK_NUM'] != undefined){
-                        outBtn = '<button type="button" class="miniBtn blue" id="INSIDE_STOCK_QTY_OUT_ACTION">출고</button>';
+                        outBtn = '<button type="button" class="miniBtn blue" id="INSIDE_STOCK_QTY_OUT_ACTION">불출</button>';
                     }
                     return inBtn + outBtn;
                 },
@@ -557,10 +564,11 @@
                     $cell.find('#INSIDE_STOCK_QTY_OUT_ACTION').bind('click', function(e) {
                         e.preventDefault();
                         if (ui.rowData['INSIDE_STOCK_CURR_QTY'] <= 0){
-                            fnAlert(null, "출고할 재고수량이 없습니다.");
+                            fnAlert(null, "불출할 재고수량이 없습니다.");
                         }else{
                             $("#stock_manage_form").find("#popType").val("GRID_OUT");
                             $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val(ui.rowData['INSIDE_STOCK_NUM']);
+                            $("#footer_barcode").hide();
                             $('#stock_manage_pop').modal('show');
                         }
                     });
@@ -701,6 +709,7 @@
         $("#stock_manage_pop").on('hide.bs.modal', function(){
             fnResetFrom("stock_manage_pop_form");
             $("#stock_manage_form").find("#queryId").val("material.selectInsideStockList");
+            $("#footer_barcode").show();
             $("#stock_manage_search_btn").trigger("click");
         });
         $("#stock_manage_pop").on('show.bs.modal', function(){
@@ -732,7 +741,7 @@
             }else if(popType == "GRID_OUT"){
                 pop_data = {"V_INSIDE_STOCK_NUM":V_INSIDE_STOCK_NUM,"queryId":"material.selectInsideStockPopInfo"};
                 footer_msg = pop_msg_out;
-                pop_title = "재고 출고";
+                pop_title = "재고 불출";
                 $("#stock_manage_pop_form").find("#footer_msg").show();
                 $("#stock_manage_pop_form").find("#WAREHOUSE_CD").attr("disabled", true);
                 $("#stock_manage_pop_form").find("#LOC_SEQ").attr("disabled", true);
@@ -809,7 +818,9 @@
             //     rowIndx: 0,
             //     checkEditable: true
             // });
-            stockManageGridId01.pqGrid('addNodes', [{}], 0);
+            // stockManageGridId01.pqGrid( "addRow",{rowData: {editable: true } });
+            stockManageGridId01.pqGrid('addNodes', [{dataIndx: 'INSIDE_STOCK_CURR_QTY', editable:true}], 0);
+            stockManageGridId01.pqGrid('addClass', { rowIndx: 0, cls: 'pg-new-row' });
 
         });
         $("#stock_manage_delete_btn").click(function () {
@@ -1208,7 +1219,7 @@
                                     // $("#stock_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(dataInfo2.CONTROL_DETAIL_SEQ);
                                     // $("#stock_manage_pop_form").find("#ORDER_SEQ").val(dataInfo2.ORDER_SEQ);
                                     $("#stock_manage_pop_form").find("#footer_msg").html(pop_msg_new);
-                                    // $("#stock_manage_pop_form").find("#ORDER_QTY").val(dataInfo2.ORDER_QTY);
+                                    $("#stock_manage_pop_form").find("#ORDER_QTY").val(dataInfo2.ORDER_QTY);
                                     $("#stock_manage_pop_form").find("#ORIGINAL_ORDER_QTY").val(dataInfo2.ORDER_QTY);
                                     $("#stock_manage_pop_form").find("#ORIGINAL_POP_STOCK_QTY_AFTER").val(dataInfo2.POP_STOCK_QTY_AFTER);
                                     $("#stock_manage_pop_form").find("#WAREHOUSE_CD").val(dataInfo2.WAREHOUSE_CD);
