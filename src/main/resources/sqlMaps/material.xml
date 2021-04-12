@@ -1717,27 +1717,31 @@
     <select id="selectInsideStockList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             A.ORDER_COMP_CD
-          , (SELECT COMP_NM FROM jmes.TBL_COMPANY WHERE COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_CD_NM
-          , A.DRAWING_NUM
-          , A.ITEM_NM
-          , A.INSIDE_STOCK_NUM
-          , A.COMP_CD
-          , (SELECT COMP_NM FROM jmes.TBL_COMPANY WHERE COMP_CD = A.COMP_CD) AS COMP_CD_NM
-          , A.SIZE_TXT
-          , A.MATERIAL_DETAIL
-          , jmes.SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
-          , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) - (SELECT IFNULL(SUM(OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) AS INSIDE_STOCK_CURR_QTY
-          , A.WAREHOUSE_CD
-          , jmes.SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, #{LOGIN_LOCALE}) AS WAREHOUSE_CD_NM
-          , A.LOC_SEQ
-          , (SELECT LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION WHERE WAREHOUSE_CD = A.WAREHOUSE_CD AND LOC_SEQ = A.LOC_SEQ ) AS LOC_SEQ_NM
-          , A.DWG_GFILE_SEQ
-          , A.DXF_GFILE_SEQ
-          , A.IMG_GFILE_SEQ
-          , A.PDF_GFILE_SEQ
-          , jmes.SF_GET_DATE_F(A.INSERT_DT, 'YY', 'M') AS INSERT_TIME
-          , jmes.SF_GET_DATE_F(A.UPDATE_DT, 'YY', 'M') AS UPDATE_TIME
-          , A.NOTE
+            , (SELECT COMP_NM FROM jmes.TBL_COMPANY WHERE COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_CD_NM
+            , A.DRAWING_NUM
+            , A.ITEM_NM
+            , A.INSIDE_STOCK_NUM
+            , A.COMP_CD
+            ,  CASE WHEN A.MATERIAL_TYPE IS NOT NULL THEN SF_GET_CODE_NM('1035', A.MATERIAL_TYPE, #{LOGIN_LOCALE})
+            ELSE SF_GET_ETC_NM('1035', A.MATERIAL_DETAIL)
+            END MATERIAL_TYPE_NM
+            , A.MATERIAL_TYPE
+            , (SELECT COMP_NM FROM jmes.TBL_COMPANY WHERE COMP_CD = A.COMP_CD) AS COMP_CD_NM
+            , A.SIZE_TXT
+            , A.MATERIAL_DETAIL
+            , jmes.SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+            , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) - (SELECT IFNULL(SUM(OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) AS INSIDE_STOCK_CURR_QTY
+            , A.WAREHOUSE_CD
+            , jmes.SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, #{LOGIN_LOCALE}) AS WAREHOUSE_CD_NM
+            , A.LOC_SEQ
+            , (SELECT LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION WHERE WAREHOUSE_CD = A.WAREHOUSE_CD AND LOC_SEQ = A.LOC_SEQ ) AS LOC_SEQ_NM
+            , A.DWG_GFILE_SEQ
+            , A.DXF_GFILE_SEQ
+            , A.IMG_GFILE_SEQ
+            , A.PDF_GFILE_SEQ
+            , jmes.SF_GET_DATE_F(A.INSERT_DT, 'YY', 'M') AS INSERT_TIME
+            , jmes.SF_GET_DATE_F(A.UPDATE_DT, 'YY', 'M') AS UPDATE_TIME
+            , A.NOTE
         FROM jmes.TBL_INSIDE_STOCK A
         WHERE 1=1
         <if test="SEL_COMP_CD !='' and SEL_COMP_CD != null">
@@ -1764,30 +1768,50 @@
         <if test="SEL_LOC_SEQ !='' and SEL_LOC_SEQ != null">
             AND A.LOC_SEQ = #{SEL_LOC_SEQ}
         </if>
-        <if test="SEL_SIZE_TYPE !='' and SEL_SIZE_TYPE != null">
-            AND A.SIZE_TYPE = #{SEL_SIZE_TYPE}
+        <if test="MATERIAL_TYPE !='' and MATERIAL_TYPE != null">
+            AND A.MATERIAL_TYPE = #{MATERIAL_TYPE}
         </if>
-        <if test='SEL_SIZE_SEARCH_TYPE =="1"'>
-            <if test='SEL_SIZE_TYPE =="MSS010"'>
-                AND A.SIZE_W BETWEEN #{SEL_SIZE_SEARCH_TYPE_R_1} and #{SEL_SIZE_SEARCH_TYPE_R_2}
-                AND A.SIZE_H BETWEEN #{SEL_SIZE_SEARCH_TYPE_R_3} and #{SEL_SIZE_SEARCH_TYPE_R_4}
-                AND A.SIZE_T BETWEEN #{SEL_SIZE_SEARCH_TYPE_R_5} and #{SEL_SIZE_SEARCH_TYPE_R_6}
-            </if>
-            <if test='SEL_SIZE_TYPE =="MSS020" or SEL_SIZE_TYPE =="MSS030" or SEL_SIZE_TYPE =="MSS040"'>
-                AND A.SIZE_D BETWEEN #{SEL_SIZE_SEARCH_TYPE_R_1} and #{SEL_SIZE_SEARCH_TYPE_R_2}
-                AND A.SIZE_L BETWEEN #{SEL_SIZE_SEARCH_TYPE_R_3} and #{SEL_SIZE_SEARCH_TYPE_R_4}
-            </if>
-        </if>
-        <if test='SEL_SIZE_SEARCH_TYPE =="2"'>
-            <if test='SEL_SIZE_TYPE =="MSS010"'>
-                AND A.SIZE_W = #{SEL_SIZE_SEARCH_TYPE_E_1}
-                AND A.SIZE_H = #{SEL_SIZE_SEARCH_TYPE_E_2}
-                AND A.SIZE_T = #{SEL_SIZE_SEARCH_TYPE_E_3}
-            </if>
-            <if test='SEL_SIZE_TYPE =="MSS020" or SEL_SIZE_TYPE =="MSS030" or SEL_SIZE_TYPE =="MSS040"'>
-                AND A.SIZE_D = #{SEL_SIZE_SEARCH_TYPE_E_1}
-                AND A.SIZE_L = #{SEL_SIZE_SEARCH_TYPE_E_2}
-            </if>
+        <!--        <if test="SEL_SIZE_TYPE !='' and SEL_SIZE_TYPE != null">-->
+        <!--            AND A.SIZE_TYPE = #{SEL_SIZE_TYPE}-->
+        <!--        </if>-->
+        <if test="SIZE_TYPE != null and SIZE_TYPE != ''">
+            AND A.SIZE_TYPE = #{SIZE_TYPE}
+            <choose>
+                <when test="SIZE_TYPE == 'XYZ010'">
+                    <if test="SIZE_W_F != null and SIZE_W_F != ''">
+                        AND A.SIZE_W >= #{SIZE_W_F}
+                    </if>
+                    <if test="SIZE_W_T != null and SIZE_W_T != ''">
+                        AND A.SIZE_W <![CDATA[ <= ]]> #{SIZE_W_T}
+                    </if>
+                    <if test="SIZE_H_F != null and SIZE_H_F != ''">
+                        AND A.SIZE_H >= #{SIZE_H_F}
+                    </if>
+                    <if test="SIZE_H_T != null and SIZE_H_T != ''">
+                        AND A.SIZE_H <![CDATA[ <= ]]> #{SIZE_H_T}
+                    </if>
+                    <if test="SIZE_T_F != null and SIZE_T_F != ''">
+                        AND A.SIZE_T >= #{SIZE_T_F}
+                    </if>
+                    <if test="SIZE_T_T != null and SIZE_T_T != ''">
+                        AND A.SIZE_T <![CDATA[ <= ]]> #{SIZE_T_T}
+                    </if>
+                </when>
+                <when test="SIZE_TYPE == 'XYZ020' or SIZE_TYPE == 'XYZ030' or SIZE_TYPE == 'XYZ040' or SIZE_TYPE == 'XYZ050'">
+                    <if test="SIZE_D_F != null and SIZE_D_F != ''">
+                        AND A.SIZE_D >= #{SIZE_D_F}
+                    </if>
+                    <if test="SIZE_D_T != null and SIZE_D_T != ''">
+                        AND A.SIZE_D <![CDATA[ <= ]]> #{SIZE_D_T}
+                    </if>
+                    <if test="SIZE_L_F != null and SIZE_L_F != ''">
+                        AND A.SIZE_L >= #{SIZE_L_F}
+                    </if>
+                    <if test="SIZE_L_T != null and SIZE_L_T != ''">
+                        AND A.SIZE_L <![CDATA[ <= ]]> #{SIZE_L_T}
+                    </if>
+                </when>
+            </choose>
         </if>
     </select>
     <select id="selectInsideStockIn_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1806,9 +1830,15 @@
         SELECT A.ABBR_NM
         FROM TBL_CODE A, TBL_CODE B
         WHERE A.HIGH_CD = '1035'
-        AND B.HIGH_CD = '1027'
-        AND A.CODE_CD = B.REF_CD
-        AND B.CODE_CD = #{MATERIAL_DETAIL}
+          AND B.HIGH_CD = '1027'
+          AND A.CODE_CD = B.REF_CD
+          AND B.CODE_CD = #{MATERIAL_DETAIL}
+    </select>
+    <select id="selectInsideStockAbbrNmUseType" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.ABBR_NM
+        FROM jmes.TBL_CODE A
+        WHERE A.HIGH_CD = '1035'
+          AND A.CODE_CD = #{MATERIAL_TYPE}
     </select>
     <select id="selectInsideStockSeq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT CONCAT(#{ORDER_COMP_CD},'-',#{ABBR_NM},'-',LPAD(IFNULL(CONVERT(MAX(SUBSTRING(INSIDE_STOCK_NUM,-4,4)),INT)+1,1),4,'0')) AS INSIDE_STOCK_NUM
@@ -1831,7 +1861,7 @@
             LOC_SEQ, NOTE, INSERT_ID
         )VALUES (
             #{INSIDE_STOCK_NUM}, #{ORDER_COMP_CD}, #{DRAWING_NUM}, #{ITEM_NM}, #{COMP_CD},
-            (SELECT REF_CD FROM jmes.TBL_CODE WHERE HIGH_CD = '1027' AND CODE_CD = #{MATERIAL_DETAIL}), #{MATERIAL_DETAIL},
+            #{MATERIAL_TYPE}, #{MATERIAL_DETAIL},
             #{SIZE_TXT},
             SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
@@ -1900,6 +1930,26 @@
               (SELECT IFNULL(SUM(ORDER_QTY),0) FROM jmes.TBL_CONTROL_PART_ORDER WHERE CONTROL_SEQ = B.CONTROL_SEQ)  AS POP_STOCK_QTY_AFTER
             , (SELECT IFNULL(SUM(ORDER_QTY),0) FROM jmes.TBL_CONTROL_PART_ORDER WHERE CONTROL_SEQ = B.CONTROL_SEQ) AS ORDER_QTY
             , A.CONTROL_SEQ
+            , A.CONTROL_DETAIL_SEQ
+            , (SELECT ORDER_SEQ FROM jmes.TBL_CONTROL_PART_ORDER WHERE CONTROL_SEQ = B.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS ORDER_SEQ
+            ,CASE
+                WHEN C.MATERIAL_TYPE IS NULL THEN (
+                    SELECT MATERIAL_TYPE
+                    FROM TBL_CONTROL_PART
+                    WHERE CONTROL_SEQ = A.CONTROL_SEQ
+                      AND PART_NUM IS NOT NULL
+                    GROUP BY CONTROL_SEQ
+                )ELSE C.MATERIAL_TYPE
+                END AS MATERIAL_TYPE
+            ,CASE
+                WHEN C.MATERIAL_DETAIL IS NULL THEN (
+                    SELECT MATERIAL_DETAIL
+                    FROM TBL_CONTROL_PART
+                    WHERE CONTROL_SEQ = A.CONTROL_SEQ
+                      AND PART_NUM IS NOT NULL
+                    GROUP BY CONTROL_SEQ
+                )ELSE C.MATERIAL_DETAIL
+                END AS MATERIAL_DETAIL
         FROM jmes.TBL_CONTROL_BARCODE A, jmes.TBL_CONTROL_PART B, jmes.TBL_INSIDE_STOCK C
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
         AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
@@ -1910,13 +1960,33 @@
 
     <select id="selectInsideStockPopInfoBarcodeNew" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-              C.MATERIAL_DETAIL, B.ORDER_COMP_CD, C.DRAWING_NUM, R.ITEM_NM, B.COMP_CD
+            B.ORDER_COMP_CD, C.DRAWING_NUM, R.ITEM_NM, B.COMP_CD
             , C.SIZE_TXT, C.SIZE_TYPE, C.SIZE_W, C.SIZE_H, C.SIZE_T, C.SIZE_D, C.SIZE_L
             , '0' AS POP_STOCK_QTY
             , '' AS INSIDE_STOCK_NUM
             , (SELECT IFNULL(SUM(ORDER_QTY),0) FROM jmes.TBL_CONTROL_PART_ORDER WHERE CONTROL_SEQ = B.CONTROL_SEQ) AS POP_STOCK_QTY_AFTER
             , (SELECT IFNULL(SUM(ORDER_QTY),0) FROM jmes.TBL_CONTROL_PART_ORDER WHERE CONTROL_SEQ = B.CONTROL_SEQ) AS ORDER_QTY
             , A.CONTROL_SEQ
+            , A.CONTROL_DETAIL_SEQ
+            , R.ORDER_SEQ
+            ,CASE
+                WHEN C.MATERIAL_TYPE IS NULL THEN (
+                    SELECT MATERIAL_TYPE
+                    FROM TBL_CONTROL_PART
+                    WHERE CONTROL_SEQ = A.CONTROL_SEQ
+                        AND PART_NUM IS NOT NULL
+                    GROUP BY CONTROL_SEQ
+			    )ELSE C.MATERIAL_TYPE
+            END AS MATERIAL_TYPE
+            ,CASE
+			    WHEN C.MATERIAL_DETAIL IS NULL THEN (
+                    SELECT MATERIAL_DETAIL
+                    FROM TBL_CONTROL_PART
+                    WHERE CONTROL_SEQ =  A.CONTROL_SEQ
+                        AND PART_NUM IS NOT NULL
+                    GROUP BY CONTROL_SEQ
+			    )ELSE C.MATERIAL_DETAIL
+            END AS MATERIAL_DETAIL
         FROM jmes.TBL_CONTROL_BARCODE A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C, jmes.TBL_CONTROL_PART_ORDER_MAIN R
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
         AND A.CONTROL_SEQ = C.CONTROL_SEQ
