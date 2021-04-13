@@ -96,7 +96,7 @@
             <div id="annual_sales_status_chart"></div>
         </div>
     </div>
-    <div class="bottom_wrap">
+    <div class="bottom_wrap" style="margin-top: 5px;">
         <div>
             <div class="hWrap">
                 <div class="d-flex align-items-center">
@@ -331,6 +331,7 @@
         const botLeftGridId = 'month_sales_board_botGrid1';
         const botLeftGridColModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
+            {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '발주처명', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주처명', width: 110, dataIndx: 'COMP_NM'},
             {
@@ -387,7 +388,9 @@
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
-            numberCell: {title: 'No.'},
+            numberCell: {show: false},
+            postRenderInterval: -1,
+            trackModel: {on: true},
             // scrollModel: {autoFit: true},
             // selectionModel: {type: 'row', mode: 'single'},
             editable: false,
@@ -397,18 +400,22 @@
             groupModel: leftGroupModel,
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {queryId: 'dataSource.emptyGrid'},
+                postData: {queryId: 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
             },
             summaryTitle: {sum: '{0}'},
+            rowSelect: function (event, ui) {
+                salesClosingHistoryRowIndex = ui.addList[0].rowIndx;
+            },
         };
         const $botLeftGrid = $('#' + botLeftGridId).pqGrid(botLeftGridObj);
         
         const botRightGridId = 'month_sales_board_botGrid2';
         const botRightGridColModel = [
             {title: 'GROUP_KEY', dataType: 'integer', dataIndx: 'GROUP_KEY', hidden: true},
+            {title: 'No.', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '외주업체명', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
             {title: '외주업체명', dataIndx: 'COMP_NM'},
             {title: '월 매입금액', dataType: 'integer', align: 'right', format: '#,###', dataIndx: 'MONTH_AMT', summary: {type: 'sum'}},
@@ -438,7 +445,7 @@
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
-            numberCell: {title: 'No.'},
+            numberCell: {show: false},
             scrollModel: {autoFit: true},
             // selectionModel: {type: 'row', mode: 'single'},
             editable: false,
@@ -449,7 +456,7 @@
             summaryTitle: {sum: '{0}'},
             dataModel: {
                 location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {queryId: 'dataSource.emptyGrid'},
+                postData: {queryId: 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
