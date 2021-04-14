@@ -1298,8 +1298,16 @@
             }
 
             for (let i in list) {
-                if (rowData[list[i]] === undefined || rowData[list[i]] == null || rowData[list[i]] === '' || (rowData[list[i]] != null && typeof rowData[list[i]] == 'object' && !Object.keys(rowData[list[i]]).length)) {
-                    addErrorList(rowData.pq_ri, list[i]);
+                var tempArr = [];
+                for(let i2 in rowData) {
+                    if(i2 != 'ROWNUM' && i2 != 'pq_ri' && rowData[i2] != '' && typeof rowData[i2] != 'undefined') {
+                        tempArr.push(i2);
+                    }
+                }
+                if(tempArr.length > 0) {
+                    if (rowData[list[i]] === undefined || rowData[list[i]] == null || rowData[list[i]] === '' || (rowData[list[i]] != null && typeof rowData[list[i]] == 'object' && !Object.keys(rowData[list[i]]).length)) {
+                        addErrorList(rowData.pq_ri, list[i]);
+                    }
                 }
             }
         };
