@@ -1478,7 +1478,7 @@
             , X.LOC_SEQ
             , X.LOC_NM
             , Z.MATERIAL_ORDER_NUM
-            , jmes.SF_GET_DATE_F(Z.ORDER_DT,'YYYY','') AS ORDER_DT
+            , jmes.SF_GET_DATE_F(X.OUT_DT,'YYYY','') AS ORDER_DT
             , Y.BARCODE_NUM
         FROM ( SELECT B.CONTROL_SEQ
                     , B.CONTROL_DETAIL_SEQ
