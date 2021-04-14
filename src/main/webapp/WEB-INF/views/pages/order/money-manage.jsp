@@ -393,7 +393,7 @@
                 }
             },
             {title: '입금월일', dataType: "string", styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, dataIndx: 'DEPOSIT_DATE',
-                editable: true, editor: { type: 'textbox', init: fnDateEditor }
+                editable: true, editor: { type: 'textbox', init: fnDateEditor_custom }
             },
             {title: '입금액', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'DEPOSIT_AMT',
                 halign: 'center', align: 'right', dataType: 'integer', format: '#,###'},
@@ -428,7 +428,7 @@
 
                     return rowData === undefined ? true : rowData.DEPOSIT_TYPE !== '1';
                 },
-                editor: { type: 'textbox', init: fnDateEditor }
+                editor: { type: 'textbox', init: fnDateEditor_custom }
             },
             {title: '만기어음/지급여부', dataType: 'checkbox', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, dataIndx: 'DUE_PAY_YN',
                 align: 'center',
