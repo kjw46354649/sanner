@@ -225,11 +225,11 @@
             {title: 'MCT_WORK_SEQ', dataType: 'string', dataIndx: 'MCT_WORK_SEQ', hidden:true},
             {title: 'INSPECT_TYPE', dataType: 'string', dataIndx: 'INSPECT_TYPE', hidden:true},
             {title: 'INSPECT_GRADE', dataType: 'string', dataIndx: 'INSPECT_GRADE', hidden:true},
-            {title: '가공완료<br>일시', dataType: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 150, width: 150},
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 150, width: 150},
-            {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 95, width: 95},
-            {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', minWidth: 40, width: 40},
-            {title: '주요 검사', dataType: 'string', dataIndx: 'MAIN_INSPECTION_NM', minWidth: 120, width: 120},
+            {title: '가공완료<br>일시', dataType: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 80, width: 80},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 120, width: 120},
+            {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 80, width: 80},
+            {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', minWidth: 35, width: 35},
+            {title: '주요 검사', dataType: 'string', dataIndx: 'MAIN_INSPECTION_NM', minWidth: 80, width: 80},
             // {title: '카드', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40,
             //     render: function (ui) {
             //         let rowIndx = ui.rowIndx, grid = this;
@@ -253,8 +253,8 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 200, width: 200},
-            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40},
+            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 180, width: 180},
+            {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 35, width: 35},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
@@ -268,17 +268,17 @@
                     });
                 }
             },
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 200, width: 200},
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 210, width: 210},
             // {title: 'WORK_TYPE', dataType: 'string', dataIndx: 'WORK_TYPE', hidden:true},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 120, width: 120},
-            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY_NM', minWidth: 120, width: 120},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 60, width: 60},
+            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY_NM', minWidth: 80, width: 80},
             // {title: 'MATERIAL_TYPE', dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden:true},
             // {title: '소재분류', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', minWidth: 120, width: 120},
-            {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 150, width: 150},
+            {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 120, width: 120},
             // {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden:true},
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 120, width: 120},
-            {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40},
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 120, width: 120},
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 110, width: 110},
+            {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 50, width: 50},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 140, width: 140},
             // {
             //     title: '최근 MCT 실적', datatype: 'string', align: 'center', colModel: [
             //         {title: '날짜', datatype: 'string', dataIndx: 'MCT_WORK_DT', minWidth: 120, width: 120},
@@ -288,22 +288,22 @@
             //     ]
             // },
             {title: '주문 비고사항', dataType: 'string', dataIndx: 'NOTE', minWidth: 120, width: 120},
-            {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 150, width: 150},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 150, width: 150},
+            {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 100, width: 100},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 110, width: 110},
             {
                 title: '최근 품질 실적', datatype: 'string', align: 'center', colModel: [
                     {title: 'seq', datatype: 'string', dataIndx: 'Q_SEQ', minWidth: 40, width: 40},
                     {title: '담당관', datatype: 'string', dataIndx: 'Q_INSPECT_USER_NM', minWidth: 100, width: 100},
-                    {title: '측정방법', datatype: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', minWidth: 120, width: 120},
-                    {title: '등급', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NM', minWidth: 80, width: 80},
-                    {title: '합/불', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', minWidth: 80, width: 80},
-                    {title: '부적합 수량', datatype: 'string', dataIndx: 'Q_ERROR_QTY', minWidth: 80, width: 80},
+                    {title: '측정방법', datatype: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', minWidth: 90, width: 90},
+                    {title: '등급', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NM', minWidth: 60, width: 60},
+                    {title: '합/불', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', minWidth: 65, width: 65},
+                    {title: '부적합 수량', datatype: 'string', dataIndx: 'Q_ERROR_QTY', minWidth: 50, width: 50},
                     // {title: '반품일시', datatype: 'string', dataIndx: 'Q_RETURN_DT', minWidth: 120, width: 120},
-                    {title: '검사코드', datatype: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', minWidth: 120, width: 120},
+                    {title: '검사코드', datatype: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', minWidth: 110, width: 110},
                     {title: '상세 내용', datatype: 'string', dataIndx: 'Q_INSPECT_DESC', minWidth: 300, width: 300},
-                    {title: '발생공정', datatype: 'string', dataIndx: 'Q_ERROR_PROCESS_NM', minWidth: 120, width: 120},
-                    {title: '원인', datatype: 'string', dataIndx: 'Q_ERROR_REASON_NM', minWidth: 120, width: 120},
-                    {title: '조치', datatype: 'string', dataIndx: 'Q_ERROR_ACTION_NM', minWidth: 80, width: 80},
+                    {title: '발생공정', datatype: 'string', dataIndx: 'Q_ERROR_PROCESS_NM', minWidth: 80, width: 80},
+                    {title: '원인', datatype: 'string', dataIndx: 'Q_ERROR_REASON_NM', minWidth: 130, width: 130},
+                    {title: '조치', datatype: 'string', dataIndx: 'Q_ERROR_ACTION_NM', minWidth: 85, width: 85},
                     {title: '조치방안 및 비고', datatype: 'string', dataIndx: 'Q_ERROR_NOTE', minWidth: 120, width: 120},
                     {title: '작성일시', datatype: 'string', dataIndx: 'Q_DT', minWidth: 120, width: 120},
                 ]
@@ -507,7 +507,14 @@
                     '       </h4>';
 
             fnConfirm(null, message, function () {
-                printJS({printable:'/makeCadBarcodePrint', properties: {selectControl: selectControlList}, type:'pdf', showModal:true});
+                var printParam = {
+                    printable:'/makeCadBarcodePrint', properties: {selectControl: selectControlList, flag:'N'}, type:'pdf', showModal:true
+                };
+                if(selectControlPartCount > 1) {
+                    printParam.properties.flag = 'Y';
+                }
+                // printJS({printable:'/makeCadBarcodePrint', properties: {selectControl: selectControlList}, type:'pdf', showModal:true});
+                printJS(printParam);
             });
         });
     });

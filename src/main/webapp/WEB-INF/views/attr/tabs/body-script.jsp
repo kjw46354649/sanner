@@ -1136,6 +1136,16 @@
         });
     };
 
+    const fnDateEditor_custom = function (ui) {
+        let $inp = ui.$cell.find("input"), $grid = $(this);
+        $inp.datepicker({
+            changeMonth: true, changeYear: true, showAnim: '', dateFormat: 'yy-mm-dd',
+            onSelect: function () { this.firstOpen = true; },
+            beforeShow: function (input, inst) {return !this.firstOpen; },
+            onClose: function () { this.focus(); }
+        });
+    };
+
     /**
      * @description 바코드 첫글자 영문 변환
      * @param {string} text
