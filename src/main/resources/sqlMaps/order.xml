@@ -2340,8 +2340,8 @@
             (DEPOSIT_SEQ, COMP_CD, ORDER_COMP_CD, DEPOSIT_DT,
              DEPOSIT_AMT, DEPOSIT_TYPE, DUE_DT, DUE_PAY_YN, DUE_PAY_AMT, NOTE, INSERT_ID)
         VALUES
-            (NEXTVAL(SEQ_MONEY_DEPOSIT), #{COMP_CD}, #{ORDER_COMP_CD}, REPLACE(#{DEPOSIT_DATE}, '/', SPACE(0)),
-             #{DEPOSIT_AMT}, #{DEPOSIT_TYPE}, REPLACE(#{DUE_DATE}, '/', SPACE(0)), IFNULL(#{DUE_PAY_YN}, 'N'), #{DUE_PAY_AMT}, #{NOTE}, 'system');
+            (NEXTVAL(SEQ_MONEY_DEPOSIT), #{COMP_CD}, #{ORDER_COMP_CD}, REPLACE(#{DEPOSIT_DATE}, '-', SPACE(0)),
+             #{DEPOSIT_AMT}, #{DEPOSIT_TYPE}, REPLACE(#{DUE_DATE}, '-', SPACE(0)), IFNULL(#{DUE_PAY_YN}, 'N'), #{DUE_PAY_AMT}, #{NOTE}, 'system');
     </insert>
 
     <update id="updateMoneyManageReceive" parameterType="java.util.HashMap">
