@@ -250,7 +250,8 @@
                         } else if (ui.rowData['OUT_RETURN_TYPE'] == '2') {//반품
                             let data = {
                                 'queryId': 'inspection.deleteOutgoingHistoryReturnCancelStep1,inspection.updateOutFinishStatus',
-                                'INSPECT_SEQ': ui.rowData['KEY_SEQ']
+                                'INSPECT_SEQ': ui.rowData['KEY_SEQ'],
+                                'CONTROL_SEQ': ui.rowData['CONTROL_SEQ']
                             };
                             let parameters = {'url': '/json-manager', 'data': data};
                             fnPostAjax(function (data, callFunctionParam) {
