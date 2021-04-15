@@ -25,8 +25,8 @@ public class TomesCompanyController {
         @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
     })
     @ApiOperation(value = "시스템 업체 정보 조회", notes = "ToMES Portal 시스템에서 사용가능한 업체 정보 리스트를 보여준다..")
-    @GetMapping("/company/order")
-    public ListResult<Map<String, Object>> company() throws Exception {
+    @GetMapping("/order/company")
+    public ListResult<Map<String, Object>> orderCompany() throws Exception {
 
       HashMap<String, Object> paramMap = new HashMap<String, Object>();
 
