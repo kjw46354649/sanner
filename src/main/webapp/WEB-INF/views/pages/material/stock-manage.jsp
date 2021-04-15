@@ -341,7 +341,7 @@
                     let ordercompcd = ui.rowData.ORDER_COMP_CD;
                     if(typeof ordercompcd != 'undefined' && ordercompcd != null && ordercompcd != '' && ordercompcd.indexOf('CMP') < 0) {
                         $.each(listJson.ORDER_COMP_CD, function (idx,Item) {
-                            if(Item.CODE_NM == ui.rowData.ORDER_COMP_CD) {
+                            if(Item.CODE_NM.toUpperCase() == ui.rowData.ORDER_COMP_CD.toUpperCase()) {
                                 ui.rowData.ORDER_COMP_CD = Item.CODE_CD;
                             }
                         })
@@ -386,7 +386,7 @@
                     let cmpCd = ui.rowData.COMP_CD;
                     if(typeof cmpCd != 'undefined' && cmpCd != null && cmpCd != '' && cmpCd.indexOf('CMP') < 0) {
                         $.each(listJson.COMP_CD, function (idx,Item) {
-                            if(Item.CODE_NM == ui.rowData.COMP_CD) {
+                            if(Item.CODE_NM.toUpperCase() == ui.rowData.COMP_CD.toUpperCase()) {
                                 ui.rowData.COMP_CD = Item.CODE_CD;
                             }
                         })
@@ -416,7 +416,7 @@
                     let mt = ui.rowData.MATERIAL_TYPE;
                     if(typeof mt != 'undefined' && mt != null && mt != '' && mt.indexOf('MTP') < 0) {
                         $.each(listJson.MATERIAL_TYPE, function (idx,Item) {
-                            if(Item.CODE_NM_KR == ui.rowData.MATERIAL_TYPE) {
+                            if(Item.CODE_NM_KR.toUpperCase() == ui.rowData.MATERIAL_TYPE.toUpperCase()) {
                                 ui.rowData.MATERIAL_TYPE = Item.CODE_CD;
                             }
                         })
@@ -439,7 +439,7 @@
                     let WHC = ui.rowData.WAREHOUSE_CD;
                     if(typeof WHC != 'undefined' && WHC != null && WHC != '' && WHC.indexOf('WHR') < 0) {
                         $.each(listJson.WARE_HOUSE, function (idx,Item) {
-                            if(Item.CODE_NM_KR == ui.rowData.WAREHOUSE_CD) {
+                            if(Item.CODE_NM_KR.toUpperCase() == ui.rowData.WAREHOUSE_CD.toUpperCase()) {
                                 ui.rowData.WAREHOUSE_CD = Item.CODE_CD;
                             }
                         })
