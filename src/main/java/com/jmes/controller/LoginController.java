@@ -20,6 +20,8 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -64,6 +66,11 @@ public class LoginController {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
         if(loginService.userAuthorizeCheck(request, model, hashMap)){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Map<String,Object> tempMap = (Map<String,Object>)hashMap.get("userInfo");
+            tempMap.put("LOGIN_TIME",sdf.format(new Date()));
+            hashMap.put("userInfo",tempMap);
+
             session.setAttribute("authUserInfo", hashMap.get("userInfo"));
             session.setAttribute("authUserMenu", hashMap.get("userMenu"));
 

@@ -636,13 +636,16 @@
      * @param selectType
      * @param queryId
      */
-    let fnCommCodeDatasourceSelectBoxCreate = function ($formId, selectType, parmamData) {
+    let fnCommCodeDatasourceSelectBoxCreate = function ($formId, selectType, parmamData,callBack) {
         'use strict';
         fnPostAjaxAsync(function (data, callFunctionParam) {
             $formId[0].options.length = 0;
             fnSelectBoxTopSetting($formId, selectType);
             for(let i=0; i < data.list.length; i++){
                 $formId[0].add(new Option(data.list[i].CODE_NM, data.list[i].CODE_CD));
+            }
+            if(typeof callBack != 'undefined') {
+                callBack();
             }
         }, parmamData, '');
     };

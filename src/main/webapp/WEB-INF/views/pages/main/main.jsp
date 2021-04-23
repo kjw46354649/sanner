@@ -14,26 +14,26 @@
 
 <div class="page main">
     <div class="leftWrap">
-        <div class="topWrap">
+        <div class="topWrap" style="padding: 0 0;">
             <div class="searchWrap ">
                 <div class="hWrap">
                     <form class="form-inline" id="operating_rate_and_operation_record_search_form" name="operating_rate_and_operation_record_search_form" role="form">
                         <div class="d-flex align-items-center">
                             <div>
-                                <span class="slt_wrap ml-10">
-                                    <label class="label_50" for="inquiry_target">조회대상</label>
-                                    <select class="wd_70" id="inquiry_target" title="조회대상">
+                                <span class="slt_wrap">
+                                    <label class="label_50_p0" for="inquiry_target">조회대상</label>
+                                    <select class="wd_70" id="inquiry_target" title="조회대상" style="width: 65px !important; padding-left: 5px;">
                                         <option value="process">가공수행</option>
-                                        <option value="cam">CAM설계</option>
+<%--                                        <option value="cam">CAM설계</option>--%>
                                     </select>
                                 </span>
-                                <span class="slt_wrap ml-10">
-                                    <label class="label_50" for="user_id">작업자</label>
-                                    <select class="wd_70" name="USER_ID" id="user_id" title="작업자"></select>
+                                <span class="slt_wrap">
+                                    <label class="label_50_p0" for="user_id" style="width: 40px !important;">작업자</label>
+                                    <select class="wd_70" name="USER_ID" id="user_id" title="작업자" style="padding-left: 5px;"></select>
                                 </span>
-                                <span class="slt_wrap ml-10">
-                                    <label class="label_50" for="factory_area">위치구분</label>
-                                    <select class="wd_70" name="FACTORY_AREA" id="factory_area">
+                                <span class="slt_wrap">
+                                    <label class="label_50_p0" for="factory_area" style="width: 30px !important;">구역</label>
+                                    <select class="wd_70" name="FACTORY_AREA" id="factory_area" style="padding-left: 5px;">
                                         <option value=""><spring:message
                                                 code="com.form.top.all.option"/></option>
                                         <c:forEach var="code" items="${HighCode.H_1005}">
@@ -41,22 +41,29 @@
                                         </c:forEach>
                                     </select>
                                 </span>
-                                <span class="calendar_span">
-                                    <input type="text" title="집계일자" name="BATCH_DT" id="main_aggregation_dt" readonly>
-                                    <button type="button" id="main_aggregation_dt_button">달력선택</button>
+                                <span class="slt_wrap">
+                                    <label class="label_50_p0" for="user_id">집계일자</label>
+                                    <span class="calendar_span">
+                                        <input type="text" title="집계일자" name="BATCH_DT" id="main_aggregation_dt" readonly style="width: 100px; padding: 0 5px;">
+                                        <button type="button" id="main_aggregation_dt_button" style="width: 24px;">달력선택</button>
+                                    </span>
                                 </span>
                             </div>
-                            <div class="ml-auto mr-10">
-                                <button type="button" id="refresh_main_left"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button>
-                            </div>
+<%--                            <div class="ml-auto mr-10">--%>
+<%--                                <button type="button" id="refresh_main_left"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button>--%>
+<%--                            </div>--%>
                         </div>
                     </form>
                 </div>
             </div>
-            <div class="chartWrap hWrap">
+<%--            <div class="chartWrap hWrap">--%>
 <%--                <div class="card">--%>
 <%--                    <div id="chart0"></div>--%>
 <%--                </div>--%>
+<%--            </div>--%>
+            <div class="vGraph">
+                <ul class="vGraph_ul">
+                </ul>
             </div>
             <div class="tableWrap">
                 <div id="grid1">
@@ -77,58 +84,10 @@
         <div class="noticeWrap">
             <div class="hWrap">
                 <h2>게시판</h2>
-                <a href="#a;" class="view_all">전체보기&nbsp;&nbsp;&#62;</a>
+                <button class="view_all" id="dash_board_btn">전체보기&nbsp;&nbsp;&#62;</button>
             </div>
             <div class="conWrap list">
-                <ul>
-                    <li>
-                        <a href="#a;">
-                            <div class="rowList">
-                                <span class="leftText list_title">[공지] 글테스트</span>
-                                <span class="rightText list_date">2020-04-12 오전 10:06</span>
-                            </div>
-                            <div class="rowList">
-                                <span class="leftText list_text ellipsis">고3.중3부터 온라인개학 이르면 4월말부터 대면수업 병행고3.중3부터 온라인개학 이르면 4월말부터 대면수업 병행</span>
-                                <span class="rightText list_write">글쓴이 : <b>최고관리자</b></span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#a;">
-                            <div class="rowList">
-                                <span class="leftText list_title">[공지] 글테스트</span>
-                                <span class="rightText list_date">2020-04-12 오전 10:06</span>
-                            </div>
-                            <div class="rowList">
-                                <span class="leftText list_text ellipsis">고3.중3부터 온라인개학 이르면 4월말부터 대면수업 병행고3.중3부터 온라인개학 이르면 4월말부터 대면수업 병행</span>
-                                <span class="rightText list_write">글쓴이 : <b>최고관리자</b></span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#a;">
-                            <div class="rowList">
-                                <span class="leftText list_title">[공지] 글테스트</span>
-                                <span class="rightText list_date">2020-04-12 오전 10:06</span>
-                            </div>
-                            <div class="rowList">
-                                <span class="leftText list_text ellipsis">고3.중3부터 온라인개학 이르면 4월말부터 대면수업 병행고3.중3부터 온라인개학 이르면 4월말부터 대면수업 병행</span>
-                                <span class="rightText list_write">글쓴이 : <b>최고관리자</b></span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#a;">
-                            <div class="rowList">
-                                <span class="leftText list_title">[공지] 글테스트</span>
-                                <span class="rightText list_date">2020-04-12 오전 10:06</span>
-                            </div>
-                            <div class="rowList">
-                                <span class="leftText list_text ellipsis">고3.중3부터 온라인개학 이르면 4월말부터 대면수업 병행고3.중3부터 온라인개학 이르면 4월말부터 대면수업 병행</span>
-                                <span class="rightText list_write">글쓴이 : <b>최고관리자</b></span>
-                            </div>
-                        </a>
-                    </li>
+                <ul class="board_ul">
                 </ul>
             </div>
         </div>
@@ -137,7 +96,7 @@
         <div class="tableWrap">
             <div class="hWrap">
                 <form class="form-inline" id="main_master_search_form" name="main_master_search_form" role="form">
-                    <input type="hidden" name="queryId" id="queryId" value="main.selectMainTodayMCTList">
+                    <input type="hidden" name="queryId" id="queryId" value="main.selectMainTodayMCTList_new">
                     <div class="d-flex align-items-center">
                         <div>
                             <!-- <h2>가공 대상 List</h2> -->
@@ -165,7 +124,7 @@
                         </div>
                         <div class="ml-auto mr-10">
                             <span class="slt_wrap ml-10">
-                                <input type="checkbox" name="ASSEMBLY_YN" id="assembly_yn" checked><label for="assembly_yn">조립제외</label>
+                                <input type="checkbox" name="ASSEMBLY_YN" id="assembly_yn" style="margin-right: 5px;" checked><label for="assembly_yn">조립제외</label>
                             </span>
                             <button type="button" id="refresh_main_right"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button>
                         </div>
@@ -190,6 +149,7 @@
     let mainLeftGrid2Id = 'main_left_grid_2';
     let $mainMasterGrid;
     let mainMasterGridId = 'main_manager_grid';
+    let login_id = '${authUserInfo.USER_ID}';
 
     $(function () {
         'use strict';
@@ -197,15 +157,17 @@
         $('#operating_rate_and_operation_record_search_form').find('#main_aggregation_dt').datepicker('setDate', '-1D');
 
         fnCommCodeDatasourceSelectBoxCreate($('#operating_rate_and_operation_record_search_form').find('#user_id'), 'all', {
-            'url': '/json-list',
-            'data': {'queryId': 'dataSource.getUserList'}
+                'url': '/json-list',
+                'data': {'queryId': 'dataSource.getUserList'}
+            }, function () {
+                $('#user_id').val(login_id).prop("selected",true);
         });
 
         const leftTopForm = fnFormToJsonArrayData('#operating_rate_and_operation_record_search_form');
         const leftColModel1 = [
             {title: '', dataIndx: 'MCT_WORK_SEQ', hidden: true},
-            {title: '공정', dataIndx: 'PROCESS_TYPE_NM'},
-            {title: '장비<br>No.', dataIndx: 'EQUIP_NM'},
+            {title: '공정', dataIndx: 'PROCESS_TYPE_NM', minWidth: 40, width: 40},
+            {title: '장비<br>번호', dataIndx: 'EQUIP_NM'},
             {
                 title: '', dataIndx: '', minWidth: 25,
                 render: function (ui) {
@@ -225,19 +187,32 @@
             },
             {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 150, align: 'left'},
             {title: '규격', dataIndx: 'SIZE_TXT', width: 85},
-            {title: '', dataIndx: '', minWidth: 25},
+            {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
+                render: function (ui) {
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('#imageView').bind('click', function () {
+                        let rowData = ui.rowData;
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '재질', dataIndx: 'MATERIAL_TYPE_NM'},
-            {title: '작업자', dataIndx: 'WORK_USER_NM'},
-            {title: '착수일시', dataIndx: 'WORK_START_DT', width: 75},
-            {title: '완료일시', dataIndx: 'WORK_FINISH_DT', width: 75},
             {title: '작업<br>수량', dataIndx: 'FINISH_QTY'},
             {title: '불량<br>발생', dataIndx: 'ERROR_QTY'},
-            {title: '검사<br>등급', dataIndx: 'LAST_INSPECT_NM'}
+            {title: '검사<br>등급', dataIndx: 'LAST_INSPECT_NM'},
+            {title: '작업자', dataIndx: 'WORK_USER_NM'},
+            {title: '착수일시', dataIndx: 'WORK_START_DT', width: 75},
+            {title: '완료일시', dataIndx: 'WORK_FINISH_DT', width: 75}
         ];
         const leftPostData1 = $.extend(true, {}, leftTopForm, {queryId: 'main.selectProcessHistoryList-main'});
         const leftObj1 = {
             height: 385,
             collapsible: false, postRenderInterval: -1, //call postRender synchronously.
+            selectionModel: { type: 'row', mode: 'single'},
             resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: leftColModel1,
@@ -251,6 +226,28 @@
             dataReady: function () {
                 const totalRecords = this.option('dataModel.data').length;
                 $('#main_left_grid_1_total_records').html(totalRecords);
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                }
+
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+            },
+            rowSelect: function (evt, ui) {
+                $.each(ui.addList, function (idx,Item) {
+                    if(idx === 0) {
+                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
+                })
             },
             toolbar: false,
         };
@@ -318,10 +315,10 @@
 
         let rightColModel = [
             {title: '가공확정', dataIndx: 'WORK_CONFIRM_DT', width: 75},
-            {title: '긴급<br>보류', dataIndx: 'EMERGENCY_DELAY_NM'},
-            {title: '불량<br>반품', dataIndx: 'ERROR_RETURN_NM'},
+            {title: '긴급<br>보류', dataIndx: 'EMERGENCY_DELAY_NM',minWidth: 35, width: 35},
+            {title: '불량<br>반품', dataIndx: 'ERROR_RETURN_NM',minWidth: 35, width: 35},
             {
-                title: '가공<br>납기', dataIndx: 'INNER_DUE_DT',
+                title: '가공<br>납기', dataIndx: 'INNER_DUE_DT',minWidth: 40, width: 40,
                 render: function (ui) {
                     const rowData = ui.rowData
                     if (rowData.DELAY_YN === 'Y') {
@@ -349,16 +346,30 @@
                     });
                 }
             },
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 150, align: 'left'},
+            {title: '관리번호', dataIndx: 'CONTROL_NUM', minWidth: 150, align: 'left'},
+            {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
+                render: function (ui) {
+                    if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('#imageView').bind('click', function () {
+                        let rowData = ui.rowData;
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM'},
-            {title: '수량', dataIndx: 'PART_QTY', dataType: 'integer', format: '#,###'},
+            {title: '수량', dataIndx: 'PART_QTY', dataType: 'integer', format: '#,###', minWidth: 40, width: 40},
             {title: '규격', dataIndx: 'SIZE_TXT', width: 85},
             {title: '현재위치', dataIndx: 'POP_POSITION_NM', width: 60},
-            {title: '비고', dataIndx: 'NOTE', width: 100}
+            {title: '비고', dataIndx: 'NOTE', minWidth: 150, align: 'left'}
         ];
 
         const rightObj = {
-            height: 800,
+            height: 900,
+            selectionModel: { type: 'row', mode: 'single'},
             collapsible: false, postRenderInterval: -1, //call postRender synchronously.
             resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
@@ -373,6 +384,28 @@
             dataReady: function () {
                 const totalRecords = this.option('dataModel.data').length;
                 $('#main_master_total_records').html(totalRecords);
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                }
+
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+            },
+            rowSelect: function (evt, ui) {
+                $.each(ui.addList, function (idx,Item) {
+                    if(idx === 0) {
+                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
+                })
             },
             toolbar: false,
         };
@@ -448,17 +481,26 @@
         };
 
         const removeChartWrap = function () {
-            $('.chartWrap').empty();
+            // $('.chartWrap').empty();
+            $('.vGraph_ul').empty();
         };
 
         const refreshChart = function (data) {
             for (let i = 0; i < data.list.length; i++) {
                 const rowData = data.list[i];
-                createChartElement(i);
-                createChart(rowData, i);
+                // createChartElement(i);
+                // createChart(rowData, i);
+                if(i == 0) {
+                    rowData.REAL_RATIO = 80;
+                }
+                var spanClass = "down75";
+                if(rowData.REAL_RATIO > 75) {
+                    spanClass = "over75";
+                }
+
+                $(".vGraph_ul").append('<li><span class="gTerm">' + rowData.EQUIP_NM + '</span><span class="gBar" style="height:' + rowData.REAL_RATIO +'%"><span class="'+spanClass+'">'+ rowData.REAL_RATIO +'%</span></span></li>')
             }
         };
-
         const createChartElement = function (index) {
             const $charWrap = $('.chartWrap');
             const valueElement = $('<div class="card"><div id="' + 'chart' + index + '"></div></div>');
@@ -498,6 +540,38 @@
            }, parameter, '');
         };
         loadChartDataList();
+
+        const getBoardList = function () {
+            const parameter = {'url': '/json-list', 'data': {
+                    'queryId':'main.selectBoardListForMain'
+                }
+            };
+
+            fnPostAjax(function (data) {
+                if(data.list.length > 0) {
+                    $.each(data.list, function (idx,Item) {
+                        var board = '<li>';
+                        board += '<a href="/dashBoard/'+Item.BOARD_SEQ +'"';
+                        board += 'onclick="window.open(this.href,';
+                        board += "'_blank',"
+                        board += "'width=1100px,height=610px'); return false;" + '">';
+                        board += '<div class="rowList">';
+                        board += '<span class="leftText list_title">' + Item.BOARD_TITLE + '</span>';
+                        board += '<span class="rightText list_date">' + Item.INSERT_DT + '</span>';
+                        board += '</div>';
+                        board += '<div class="rowList">';
+                        board += '<span class="leftText list_text ellipsis"></span>';
+                        board += '<span class="rightText list_write">작성자 : <b>'+ Item.INSERT_ID +'</b></span>';
+                        board += '</div>';
+                        board += '</a>';
+                        board += '</li>';
+
+                        $(".board_ul").append(board);
+                    })
+                }
+            }, parameter, '');
+        }
+        getBoardList();
 
         const loadLeftGrid = function () {
             const $form = fnFormToJsonArrayData('#operating_rate_and_operation_record_search_form');
@@ -559,6 +633,10 @@
 
         $('#main_aggregation_dt_button').on('click', function () {
             $('#main_aggregation_dt').focus();
+        });
+
+        $('#dash_board_btn').on('click', function () {
+            window.open('/dashBoard','','width=1100px,height=610px');
         });
     });
 </script>

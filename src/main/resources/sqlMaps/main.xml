@@ -6,7 +6,7 @@
     <select id="selectOperatingRateChart" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.EQUIP_SEQ
             , CASE WHEN X.EQUIP_SEQ IS NULL THEN 'Total'
-                   ELSE (SELECT M.EQUIP_NM FROM jmes.TBL_EQUIP M WHERE M.EQUIP_SEQ = X.EQUIP_SEQ)
+                   ELSE (SELECT CONCAT(M.EQUIP_NM,<![CDATA[ '<br> (']]>,jmes.SF_GET_CODE_NM('1005',M.FACTORY_AREA,#{LOGIN_LOCALE}),')') FROM jmes.TBL_EQUIP M WHERE M.EQUIP_SEQ = X.EQUIP_SEQ)
               END AS EQUIP_NM
             , CASE WHEN IFNULL(X.DUTY_TIME,0) = 0 THEN 0 ELSE ROUND(IFNULL(X.WORK_TIME,0) / X.DUTY_TIME * 100,0) END AS REAL_RATIO
         FROM (  SELECT A.EQUIP_SEQ
@@ -21,6 +21,13 @@
                                                     AND M.WORK_USER_ID = #{USER_ID}
                                                 </if>
                                         )
+                    <if test="FACTORY_AREA != null and FACTORY_AREA != ''">
+                        AND A.EQUIP_SEQ IN (
+                        SELECT EQUIP_SEQ
+                        FROM TBL_EQUIP
+                        WHERE FACTORY_AREA = #{FACTORY_AREA}
+                        )
+                    </if>
                 GROUP BY A.EQUIP_SEQ WITH ROLLUP
              ) X
         ORDER BY ISNULL(X.EQUIP_SEQ) DESC, EQUIP_NM
@@ -28,6 +35,7 @@
 
     <select id="selectProcessHistoryList-main" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.MCT_WORK_SEQ
+            , X.IMG_GFILE_SEQ
             , X.CONTROL_SEQ
             , X.CONTROL_DETAIL_SEQ
             , jmes.SF_GET_CODE_NM('1010', X.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM
@@ -55,6 +63,7 @@
                     , A.WORK_START_DT
                     , A.WORK_FINISH_DT
                     , A.FINISH_QTY
+                    , C.IMG_GFILE_SEQ
                     , A.ERROR_QTY
                     , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '1') AS LAST_INSPECT_SEQ
                     , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '2' AND M.INSPECT_GRADE IN ('GRD050','GRD060')) AS LAST_RETURN_SEQ
@@ -68,8 +77,11 @@
                     AND A.EQUIP_SEQ = D.EQUIP_SEQ
                     AND A.DEL_YN = 'N'
                     AND A.WORK_FINISH_DT >= jmes.SF_GET_SHIFT_DAY_TIME('START', DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'))
-                    AND A.WORK_FINISH_DT <![CDATA[ < ]]> jmes.SF_GET_SHIFT_DAY_TIME('END', DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'))
+                    AND A.WORK_FINISH_DT <![CDATA[ <  jmes.SF_GET_SHIFT_DAY_TIME('END', DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'))
 --                     AND A.WORK_FINISH_DT <![CDATA[ < ]]> jmes.SF_GET_SHIFT_DAY_TIME('END', '20210129')
+                    <if test="USER_ID != null and USER_ID != ''">
+                        AND A.WORK_USER_ID = #{USER_ID}
+                    </if>
         	        AND A.EQUIP_SEQ IN (    SELECT M.EQUIP_SEQ
                                             FROM jmes.TBL_BATCH_MCT_WORK_EQUIP M
                                             WHERE M.BATCH_DT = DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
@@ -77,6 +89,13 @@
                                                     AND M.WORK_USER_ID = #{USER_ID}
                                                 </if>
                                         )
+                    <if test="FACTORY_AREA != null and FACTORY_AREA != ''">
+                        AND A.EQUIP_SEQ IN (
+                            SELECT EQUIP_SEQ
+                            FROM TBL_EQUIP
+                            WHERE FACTORY_AREA = #{FACTORY_AREA}
+                        )
+                    </if>
             ) X
         ORDER BY X.WORK_START_DT DESC, X.CONTROL_NUM
     </select>
@@ -161,6 +180,7 @@
             , X.NOTE
             , X.WORK_STATUS_TYPE
             , X.ASSEMBLY_YN
+            , X.IMG_GFILE_SEQ
         FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                     , CASE WHEN B.PART_STATUS = 'PRO002' THEN B.STATUS_DT
                            ELSE (SELECT MAX(M.STATUS_DT) FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO002')
@@ -183,6 +203,7 @@
                     , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY
                     , jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
                     , B.SIZE_TXT
+                    , B.IMG_GFILE_SEQ
                     , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '1') AS INSPECT_SEQ
                     , (SELECT MAX(POP_SEQ) FROM jmes.TBL_POP M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
                     , A.NOTE
@@ -212,4 +233,279 @@
         ORDER BY ISNULL(ERROR_RETURN_NM) ASC, X.INNER_DUE_DT
     </select>
 
+    <select id="selectMainTodayMCTList_new" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.CONTROL_SEQ
+            , X.CONTROL_DETAIL_SEQ
+            , jmes.SF_GET_DATE_F(X.WORK_CONFIRM_DT, '', 'M') AS WORK_CONFIRM_DT
+            , X.EMERGENCY_DELAY_NM
+            , CASE WHEN X.OUT_FINISH_STATUS = 'RLS030' THEN '반품'
+            ELSE (SELECT CASE WHEN COUNT(*) > 0 THEN '불량' END FROM jmes.TBL_INSPECT M WHERE M.INSPECT_SEQ = X.INSPECT_SEQ AND M.INSPECT_GRADE NOT IN ('GRD010','GRD020','GRD030'))
+            END AS ERROR_RETURN_NM
+            , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'','') AS INNER_DUE_DT
+            , CASE WHEN DATE_FORMAT(X.INNER_DUE_DT,'%Y%m%d') <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d') THEN 'Y' ELSE 'N' END AS DELAY_YN
+            , X.WORK_FACTORY_NM
+            , X.PART_STATUS_NM
+            , X.ORDER_COMP_NM
+            , X.CONTROL_NUM
+            , X.WORK_TYPE_NM
+            , X.PART_QTY
+            , X.SIZE_TXT
+            , ( SELECT jmes.SF_GET_CODE_NM('1009', M.POP_POSITION, #{LOGIN_LOCALE}) FROM TBL_POP M WHERE M.POP_SEQ = X.POP_SEQ) AS POP_POSITION_NM    -- 언어조건 확인
+            , X.NOTE
+            , X.ASSEMBLY_YN
+            , X.IMG_GFILE_SEQ
+            , X.OUT_FINISH_STATUS
+        FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.OUT_FINISH_STATUS
+                , CASE WHEN B.PART_STATUS = 'PRO002' THEN B.STATUS_DT
+                       ELSE (SELECT MAX(M.STATUS_DT) FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO002')
+                  END AS WORK_CONFIRM_DT
+                , CASE WHEN A.CONTROL_STATUS = 'ORD005' THEN '보류'
+                       WHEN A.EMERGENCY_YN = 'Y' THEN '긴급'
+                  END AS EMERGENCY_DELAY_NM     <!-- 긴급,보류(보류 우선) -->
+                , ( SELECT COUNT(*)
+                    FROM jmes.TBL_INSPECT M
+                    WHERE M.INSPECT_TYPE = '2'
+                    AND M.INSPECT_GRADE = 'GRD050'
+                    AND M.RETURN_SETTLEMENT_DT IS NULL
+                    AND M.CONTROL_SEQ = A.CONTROL_SEQ
+                ) AS NOT_SETTLEMENT_RETURN_QTY
+                , B.INNER_DUE_DT
+                , jmes.SF_GET_CODE_NM('1014',B.WORK_FACTORY,#{LOGIN_LOCALE}) AS WORK_FACTORY_NM
+                , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+                , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
+                , CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' #', B.PART_NUM) END AS CONTROL_NUM
+                , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY
+                , jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+                , B.SIZE_TXT
+                , B.IMG_GFILE_SEQ
+                , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '1') AS INSPECT_SEQ
+                , (SELECT MAX(POP_SEQ) FROM jmes.TBL_POP M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
+                , A.NOTE
+                , CASE WHEN B.WORK_TYPE = 'WTP020' THEN 'Y' ELSE 'N' END AS ASSEMBLY_YN
+            FROM TBL_CONTROL A, TBL_CONTROL_PART B
+            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND A.CONTROL_STATUS IN ('ORD001','ORD003','ORD005')
+                AND A.DEL_YN = 'N'
+                AND IFNULL( A.OUT_FINISH_STATUS,'RLS010') NOT IN ('RLS020')<!-- 폐기는 제외 -->
+                AND (
+                        (A.OUT_FINISH_DT IS NULL
+                            <choose>
+                                <when test="WORK_STATUS_TYPE == 1">  <!-- 가공전 -->
+                                    AND B.PART_STATUS IN ('PRO002','PRO004','PRO005','PRO021','PRO022','PRO017')
+                                </when>
+                                <when test="WORK_STATUS_TYPE == 2"> <!-- 가공중 -->
+                                    AND B.PART_STATUS IN ('PRO006','PRO007','PRO008','PRO018')
+                                </when>
+                                <otherwise> <!-- 가공완료 -->
+                                    AND B.PART_STATUS IN ('PRO009','PRO012','PRO013','PRO014','PRO015')
+                                </otherwise>
+                            </choose>
+                        )
+                        OR (A.OUT_FINISH_STATUS = 'RLS030') <!-- 반품  -->
+                        OR (A.CONTROL_SEQ IN (
+                                SELECT CONTROL_SEQ
+                                FROM TBL_INSPECT M
+                                WHERE M.INSPECT_GRADE NOT IN ('GRD010','GRD020','GRD030')
+                                    AND M.INSPECT_TYPE NOT IN (2)
+                                    AND M.RETURN_SETTLEMENT_DT IS NULL  <!-- 불량  -->
+                                    AND M.CONTROL_SEQ = A.CONTROL_SEQ
+                                    AND M.CONTROL_DETAIL_SEQ  = B.CONTROL_DETAIL_SEQ
+                                    AND M.INSPECT_NUM = (
+                                        SELECT MAX(INSPECT_NUM)
+                                        FROM TBL_INSPECT N
+                                        WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                        AND M.CONTROL_DETAIL_SEQ = N.CONTROL_DETAIL_SEQ
+                                        GROUP BY M.CONTROL_SEQ , M.CONTROL_DETAIL_SEQ
+                                        ORDER BY M.CONTROL_SEQ
+                                    )
+                            )
+                        )
+                )
+                <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                    AND B.WORK_FACTORY = #{WORK_FACTORY}
+                </if>
+        ) X
+        WHERE 1 = 1
+        <if test="ASSEMBLY_YN != null and ASSEMBLY_YN != ''">
+            AND X.ASSEMBLY_YN = 'N'
+        </if>
+        ORDER BY X.OUT_FINISH_STATUS DESC, ISNULL(ERROR_RETURN_NM) ASC, X.INNER_DUE_DT
+    </select>
+
+    <select id="selectBoardListForMain" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT BOARD_SEQ,
+               BOARD_TYPE,
+               BOARD_TITLE,
+               DATE_FORMAT(INSERT_DT, '%Y-%m-%d %H:%i') AS INSERT_DT,
+               INSERT_ID
+        FROM jmes.TBL_DASH_BOARD_TEMP
+        WHERE DEL_YN = 'N'
+            AND BOARD_TYPE = '1'
+            AND GROUP_IN_NO = '1'
+        LIMIT 4
+    </select>
+
+    <select id="selectBoardList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT BOARD_SEQ,
+               GROUP_SEQ,
+               GROUP_IN_NO,
+               DEPTH,
+               CASE WHEN BOARD_TYPE = 1 THEN '공지'
+                    ELSE '일반'
+               END AS BOARD_TYPE,
+               BOARD_TITLE,
+               BOARD_CONTENTS,
+               DATE_FORMAT(INSERT_DT, '%Y-%m-%d %H:%i') AS INSERT_DT,
+               INSERT_ID
+        FROM jmes.TBL_DASH_BOARD_TEMP
+        WHERE DEL_YN = 'N'
+        <if test="SEARCH_TITLE != null and SEARCH_TITLE != ''">
+            AND BOARD_TITLE LIKE CONCAT('%',#{SEARCH_TITLE},'%')
+        </if>
+        ORDER BY GROUP_SEQ, GROUP_IN_NO, INSERT_DT
+        LIMIT ${PAGE_NUM},${PAGE_SIZE}
+    </select>
+    <select id="getTotalBoardCount" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT COUNT(*) AS TOTAL_COUNT
+        FROM TBL_DASH_BOARD_TEMP
+        WHERE DEL_YN = 'N'
+    </select>
+
+    <select id="selectBoardDetail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT BOARD_SEQ,
+               GROUP_SEQ,
+               GROUP_IN_NO,
+               DEPTH,
+               BOARD_TYPE,
+               BOARD_TITLE,
+               BOARD_CONTENTS,
+               DATE_FORMAT(INSERT_DT, '%Y-%m-%d %H:%i') AS INSERT_DT,
+               INSERT_ID,
+               jmes.SF_GET_USER_NM(INSERT_ID) AS USER_NM,
+               FILE_SEQ_1 , jmes.SF_GET_FILE_ORGINAL_NM(FILE_SEQ_1,'1') AS FILE_NM_1,
+               FILE_SEQ_2 , jmes.SF_GET_FILE_ORGINAL_NM(FILE_SEQ_2,'1') AS FILE_NM_2,
+               FILE_SEQ_3 , jmes.SF_GET_FILE_ORGINAL_NM(FILE_SEQ_3,'1') AS FILE_NM_3
+        FROM jmes.TBL_DASH_BOARD_TEMP
+        WHERE DEL_YN = 'N'
+            AND BOARD_SEQ = #{BOARD_SEQ}
+    </select>
+    <select id="selectBoardComment" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT COMMENT_SEQ,
+               COMMENT_CONTENTS,
+               DATE_FORMAT(INSERT_DT, '%Y-%m-%d %H:%i') AS INSERT_DT,
+               INSERT_ID,
+                jmes.SF_GET_USER_NM(INSERT_ID) AS USER_NM
+        FROM jmes.TBL_DASH_BOARD_COMMENT
+        WHERE DEL_YN = 'N'
+          AND BOARD_SEQ = #{BOARD_SEQ}
+    </select>
+    <select id="selectGroupInNo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT MAX(GROUP_IN_NO + 1) AS GROUP_IN_NO, (#{DEPTH} + 1) AS DEPTH
+        FROM TBL_DASH_BOARD_TEMP
+        WHERE DEL_YN = 'N'
+          AND GROUP_SEQ  = #{GROUP_SEQ}
+          AND DEPTH = #{DEPTH};
+    </select>
+
+    <insert id="insertNewBoard"  parameterType="java.util.HashMap" >
+        INSERT INTO TBL_DASH_BOARD_TEMP(
+           BOARD_SEQ
+           ,GROUP_SEQ
+           ,GROUP_IN_NO
+           ,DEPTH
+           ,BOARD_TYPE
+           ,BOARD_TITLE
+           ,BOARD_CONTENTS
+           ,INSERT_ID
+           <if test="FILE_SEQ_1 != null and FILE_SEQ_1 != ''">
+            ,FILE_SEQ_1
+           </if>
+           <if test="FILE_SEQ_2 != null and FILE_SEQ_2 != ''">
+            ,FILE_SEQ_2
+           </if>
+           <if test="FILE_SEQ_3 != null and FILE_SEQ_3 != ''">
+            ,FILE_SEQ_3
+           </if>
+        )
+        VALUES(
+           NEXTVAL(jmes.SEQ_BOARD_NEW)
+            <choose>
+                <when test="GROUP_SEQ != null and GROUP_SEQ != ''">
+                    ,#{GROUP_SEQ}
+                </when>
+                <otherwise>
+                    ,NEXTVAL(jmes.SEQ_BOARD_GROUP)
+                </otherwise>
+            </choose>
+           ,#{GROUP_IN_NO}
+           ,#{DEPTH}
+           ,#{BOARD_TYPE}
+           ,#{BOARD_TITLE}
+           ,#{BOARD_CONTENTS}
+           ,#{LOGIN_USER_ID}
+           <if test="FILE_SEQ_1 != null and FILE_SEQ_1 != ''">
+            ,#{FILE_SEQ_1}
+           </if>
+           <if test="FILE_SEQ_2 != null and FILE_SEQ_2 != ''">
+            ,#{FILE_SEQ_2}
+           </if>
+           <if test="FILE_SEQ_3 != null and FILE_SEQ_3 != ''">
+            ,#{FILE_SEQ_3}
+           </if>
+        )
+    </insert>
+
+    <update id="updateBoard" parameterType="java.util.HashMap">
+        UPDATE TBL_DASH_BOARD_TEMP
+        SET
+            BOARD_TYPE = #{BOARD_TYPE},
+            BOARD_TITLE = #{BOARD_TITLE},
+            BOARD_CONTENTS = #{BOARD_CONTENTS},
+            UPDATE_ID = #{LOGIN_USER_ID},
+            UPDATE_DT = now()
+            ,FILE_SEQ_1 = #{FILE_SEQ_1}
+            ,FILE_SEQ_2 = #{FILE_SEQ_2}
+            ,FILE_SEQ_3 = #{FILE_SEQ_3}
+        WHERE BOARD_SEQ = #{BOARD_SEQ}
+    </update>
+
+    <update id="deleteBoard" parameterType="java.util.HashMap">
+        UPDATE TBL_DASH_BOARD_TEMP
+        SET
+        DEL_YN = 'Y',
+        UPDATE_ID = #{LOGIN_USER_ID},
+        UPDATE_DT = now()
+        WHERE BOARD_SEQ = #{BOARD_SEQ}
+    </update>
+
+    <insert id="insertComment"  parameterType="java.util.HashMap" >
+        INSERT INTO TBL_DASH_BOARD_COMMENT(
+        BOARD_SEQ
+        ,COMMENT_SEQ
+        ,COMMENT_CONTENTS
+        ,INSERT_ID
+        )
+        VALUES(
+        #{BOARD_SEQ}
+        ,NEXTVAL(jmes.SEQ_COMMENT)
+        ,#{COMMENT_CONTENTS}
+        ,#{LOGIN_USER_ID}
+        )
+    </insert>
+    <update id="updateComment" parameterType="java.util.HashMap">
+        UPDATE TBL_DASH_BOARD_COMMENT
+        SET
+            COMMENT_CONTENTS = #{COMMENT_CONTENTS},
+            UPDATE_ID = #{LOGIN_USER_ID},
+            UPDATE_DT = now()
+        WHERE COMMENT_SEQ = #{COMMENT_SEQ}
+    </update>
+    <update id="deleteComment" parameterType="java.util.HashMap">
+        UPDATE TBL_DASH_BOARD_COMMENT
+        SET
+            DEL_YN = 'Y',
+            UPDATE_ID = #{LOGIN_USER_ID},
+            UPDATE_DT = now()
+        WHERE COMMENT_SEQ = #{COMMENT_SEQ}
+    </update>
 </mapper>
