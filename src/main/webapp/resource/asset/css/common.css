@@ -543,11 +543,11 @@ input[type=number] {
   margin-top: 10px;
 }
 /* Vertical Bar Graph */
-.vGraph{ padding:20px 0;margin: 0 auto;width: auto;height: 200px;}
-.vGraph ul{ margin:5px; padding:0; height:200px; border:1px solid #ddd; border-top:0; border-right:0; font-size:11px; font-family:Tahoma, Geneva, sans-serif; list-style:none;text-align: center;float: left;width: 100%;}
+.vGraph{ padding:20px 0;margin: 0 auto;width: auto;height: 172px;}
+.vGraph ul{ margin:5px; padding:0; height:176px; border:1px solid #ddd; border-top:0; border-right:0; font-size:11px; font-family:Tahoma, Geneva, sans-serif; list-style:none;text-align: center;float: left;width: 98%;white-space: nowrap;overflow: auto;}
 .vGraph ul:after{ content:""; display:block; clear:both;}
-.vGraph li{ display:inline-block; width:12%; height:67%; margin:2% 3% 0 4%; position:relative; text-align:center; white-space:nowrap; border: 1px solid #6c6262}
-.vGraph .gTerm{ position:relative; display:inline-block; width:100%;height: 20px;line-height: 22px; margin:0 -100% -20px 0; padding:134px 0 0 0; vertical-align:bottom; color:#000000; font-weight:bold; font-size: 15px;}
+.vGraph li{ display:inline-block; width:12%; height:121px; margin:2% 3% 0 4%; position:relative; text-align:center; white-space:nowrap; border: 1px solid #6c6262}
+.vGraph .gTerm{ position:relative; display:inline-block; width:100%;height: 8%;line-height: 16px; margin:0 -100% -16% 0; padding:196% 0 0 0; vertical-align:bottom; color:#000000; font-weight:bold; font-size: 15px;}
 .vGraph .gBar{ position:relative; display:inline-block; width:100%; border-bottom:0; background:#335cad; vertical-align:bottom;}
 .vGraph .gBar .down75{ position:absolute; width:100%; top:-35px; left:0; color:#000000;font-size: 18px; font-weight: bold;}
 .vGraph .gBar .over75{ position:absolute; width:100%; top:35px; left:0; color:#FFFFFF;font-size: 18px; font-weight: bold;}
