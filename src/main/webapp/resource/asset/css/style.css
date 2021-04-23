@@ -30,7 +30,7 @@
 .main .leftWrap .topWrap > div { padding: 5px; }
 .main .leftWrap .topWrap .chartWrap { height: 100px; overflow-x: scroll; overflow-y: hidden; white-space: nowrap; }
 .main .leftWrap .topWrap .chartWrap .card { display: inline-block; margin: 10px; }
-.main .leftWrap .topWrap .tableWrap { height: 400px; }
+.main .leftWrap .topWrap .tableWrap { height: 350px; }
 
 .main .leftWrap .hWrap h2 { height: 50px; line-height: 48px; padding-left: 20px; font-size: 16px; font-family: 'NotoKrB'; color: #000; display: inline-block; vertical-align: top; }
 .main .leftWrap .conWrap { padding: 10px 5px 5px; }
@@ -65,7 +65,7 @@
 .main .rightWrap .tableWrap .hWrap .ipu_wrap { display: inline-block; }
 .main .rightWrap .tableWrap .hWrap .ipu_wrap label { }
 .main .hWrap .refresh { float: right; display: inline-block; padding-top: 14px; padding-right: 20px; }
-.main .rightWrap .tableWrap .conWrap { padding: 10px; box-sizing: border-box; height: 935px; }
+.main .rightWrap .tableWrap .conWrap { padding: 10px; box-sizing: border-box; height: 842px; }
 .main .rightWrap .tableWrap .conWrap img { width: 100%; height: 100%; }
 
 /* 견적관리 */

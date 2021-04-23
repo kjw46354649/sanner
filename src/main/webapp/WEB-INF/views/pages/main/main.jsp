@@ -82,7 +82,7 @@
             </div>
         </div>
         <div class="noticeWrap">
-            <div class="hWrap">
+            <div class="hWrap" style="height: 35px;">
                 <h2>게시판</h2>
                 <button class="view_all" id="dash_board_btn">전체보기&nbsp;&nbsp;&#62;</button>
             </div>
@@ -210,7 +210,7 @@
         ];
         const leftPostData1 = $.extend(true, {}, leftTopForm, {queryId: 'main.selectProcessHistoryList-main'});
         const leftObj1 = {
-            height: 385,
+            height: 333,
             collapsible: false, postRenderInterval: -1, //call postRender synchronously.
             selectionModel: { type: 'row', mode: 'single'},
             resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
@@ -292,7 +292,7 @@
         ];
         const leftPostData2 = $.extend(true, {}, leftTopForm, {queryId: 'main.selectCamWorkHistoryList-main'});
         const leftObj2 = {
-            height: 385,
+            height: 383,
             collapsible: false, postRenderInterval: -1, //call postRender synchronously.
             resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
@@ -368,7 +368,7 @@
         ];
 
         const rightObj = {
-            height: 900,
+            height: 814,
             selectionModel: { type: 'row', mode: 'single'},
             collapsible: false, postRenderInterval: -1, //call postRender synchronously.
             resizable: false, showTitle: false, strNoRows: g_noData, rowHtHead: 15, numberCell: {title: 'No.'},
@@ -497,8 +497,11 @@
                 if(rowData.REAL_RATIO > 75) {
                     spanClass = "over75";
                 }
-
-                $(".vGraph_ul").append('<li><span class="gTerm">' + rowData.EQUIP_NM + '</span><span class="gBar" style="height:' + rowData.REAL_RATIO +'%"><span class="'+spanClass+'">'+ rowData.REAL_RATIO +'%</span></span></li>')
+                var tempRatio = rowData.REAL_RATIO
+                if(tempRatio >= 100 ) {
+                    tempRatio = 99.8;
+                }
+                $(".vGraph_ul").append('<li><span class="gTerm">' + rowData.EQUIP_NM + '</span><span class="gBar" style="height:' + tempRatio +'%"><span class="'+spanClass+'">'+ rowData.REAL_RATIO +'%</span></span></li>')
             }
         };
         const createChartElement = function (index) {
