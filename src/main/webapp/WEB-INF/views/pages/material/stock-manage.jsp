@@ -598,6 +598,7 @@
             collapsible: false,
             resizable: false,
             trackModel: {on: true},
+            copyModel: {render: true},
             colModel: stockManageColModel01,
             load: function( event, ui ) {
                 var filterOpts = '<option value=\"\">All Fields</option>';

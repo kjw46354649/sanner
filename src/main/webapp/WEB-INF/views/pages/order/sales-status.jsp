@@ -13,7 +13,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <div class="page estimate">
-    <div class="topWrap">
+    <div class="topWrap sales_closing_history_tab">
         <form class="form-inline" id="SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectSalesClosingHistoryList">
             <div class="none_gubunWrap row2_topWrap">
@@ -69,7 +69,7 @@
             </div>
         </form>
     </div>
-    <div class="topWrap" style="display: none">
+    <div class="topWrap month_sale_status_tab" style="display: none">
         <form class="form-inline" id="MONTH_SALE_STATUS_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectMonthSaleStatusList">
             <div class="none_gubunWrap row2_topWrap">
@@ -429,8 +429,17 @@
         $("#CONTROL_SALES_STATUS_TABS").tabs({
             activate: function(event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
-                $('#view_tab_10000205 .topWrap').toggle();
-                $('#sales_status_save_id').toggle();
+                // $('#view_tab_10000205 .topWrap').toggle();
+                // $('#sales_status_save_id').toggle();
+                if(ui.newPanel.selector == "#CLOSING_HISTORY") {
+                    $(".month_sale_status_tab").hide();
+                    $("#sales_status_save_id").show();
+                    $(".sales_closing_history_tab").show();
+                }else {
+                    $(".sales_closing_history_tab").hide();
+                    $("#sales_status_save_id").hide();
+                    $(".month_sale_status_tab").show();
+                }
             }
         });
 
