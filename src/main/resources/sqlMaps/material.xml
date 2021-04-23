@@ -68,18 +68,31 @@
 				F.ORDER_STATUS AS M_STATUS,
                 CASE
                     WHEN F.ORDER_STATUS IS NOT NULL THEN SF_GET_CODE_NM('1028', F.ORDER_STATUS, #{LOGIN_LOCALE})
-                    ELSE CASE
-                            WHEN EXISTS(SELECT *
+                    WHEN EXISTS(SELECT *
                                         FROM TBL_CONTROL_PART_PROGRESS M
                                         WHERE M.CONTROL_SEQ = B.CONTROL_SEQ
                                           AND M.CONTROL_DETAIL_SEQ= B.CONTROL_DETAIL_SEQ
-                                          AND PART_STATUS IN ('PRO021', 'PRO022')) THEN CASE
-                                                                                            WHEN B.PART_STATUS IN ('PRO021', 'PRO022') THEN jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE})
-                                                                                            ELSE '소재입고'
-                                                                                        END
-                            ELSE '주문대기'
-                         END
+                                          AND PART_STATUS IN ('PRO021', 'PRO022'))
+                         THEN
+                            SF_GET_CODE_NM('1013', (SELECT N.PART_STATUS FROM TBL_CONTROL_PART_PROGRESS N
+                            		WHERE N.CONTROL_SEQ = B.CONTROL_SEQ
+                                      AND N.CONTROL_DETAIL_SEQ= B.CONTROL_DETAIL_SEQ
+                                      AND N.PART_STATUS IN ('PRO021', 'PRO022')
+                                  ORDER BY N.SEQ DESC
+                                  LIMIT 1
+                                 ), #{LOGIN_LOCALE})
+        			ELSE '주문대기'
                 END AS M_STATUS_NM,
+                CASE
+                    WHEN EXISTS(SELECT *
+                                        FROM TBL_CONTROL_PART_PROGRESS M
+                                        WHERE M.CONTROL_SEQ = B.CONTROL_SEQ
+                                          AND M.CONTROL_DETAIL_SEQ= B.CONTROL_DETAIL_SEQ
+                                          AND PART_STATUS IN ('PRO021', 'PRO022'))
+                         THEN
+                            'MST004'
+        			ELSE F.ORDER_STATUS
+                END AS COND_STATUS,
 				SF_GET_DATE_F(F.ORDER_DT, '', 'M') AS M_ORDER_DT,
 				SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'TXT') AS OUT_SIZE_TXT,
                 SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'QTY') AS OUT_QTY, SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'SEQ') MY_MAT_OUT_SEQ,
@@ -121,6 +134,7 @@
 				F.ORDER_QTY-IFNULL(SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'QTY'), 0) AS M_ORDER_QTY,
 				F.ORDER_NOTE AS M_ORDER_NOTE, F.SIZE_TXT AS M_SIZE_TXT,
 				F.ORDER_STATUS AS M_STATUS, SF_GET_CODE_NM('1028', F.ORDER_STATUS, #{LOGIN_LOCALE}) AS M_STATUS_NM,
+			    F.ORDER_STATUS AS COND_STATUS,
 				SF_GET_DATE_F(F.ORDER_DT, '', 'M') AS M_ORDER_DT,
 				SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'TXT') AS OUT_SIZE_TXT,
                 SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'QTY') AS OUT_QTY, SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'SEQ') MY_MAT_OUT_SEQ,
@@ -152,10 +166,10 @@
         </choose>
         <choose>
             <when test="ORDER_STATUS != '' and ORDER_STATUS != null">
-                AND IFNULL(Z.ORDER_STATUS, 'NULL') IN (${ORDER_STATUS})
+                AND IFNULL(Z.COND_STATUS, 'NULL') IN (${ORDER_STATUS})
             </when>
             <otherwise>
-                AND Z.ORDER_STATUS = '' <!-- 아무것도 표시 안 하기 위함 -->
+                AND Z.COND_STATUS = '' <!-- 소재입구(유), (사) 처리를 위해서 COND_STAUTS 사용 -->
             </otherwise>
         </choose>
         <if test="OUTSIDE_YN == null">
