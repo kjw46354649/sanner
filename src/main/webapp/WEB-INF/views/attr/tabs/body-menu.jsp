@@ -15,7 +15,10 @@
             <h1 class="logo"><a href="/main"><span class="invisible">진성정밀 MES 시스템</span></a></h1>
             <div class="profileWrap">
                 <span class="imgWrap"><img src="/image/${authUserInfo.PHOTO_GFILE_SEQ}" alt=""></span>
-                <span class="textWrap"><b>${authUserInfo.USER_NM}</b>님 안녕하세요.</span>
+                <span class="textWrap" style="top:13px;">
+                    <span style="font-size: 12px;">${authUserInfo.LOGIN_TIME}</span><br>
+                    <b>${authUserInfo.USER_NM}</b>님 안녕하세요.
+                </span>
                 <a href="/userLotout"><span class="btnWrap"><button type="button" class="btn"></button></span></a>
             </div>
             <div class="gnbWrap" id="gnbWrap">

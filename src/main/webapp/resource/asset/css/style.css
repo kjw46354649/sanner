@@ -24,7 +24,7 @@
 .login .chk_box label:before{}
 
 /* index */
-.main .leftWrap { float: left; width: 32.5%; padding: 0 1%; }
+.main .leftWrap { float: left; width: 34.5%; padding-left: 1%; }
 .main .leftWrap .topWrap { background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); margin-bottom: 13px; /*IE 5.5-7*/ }
 .main .leftWrap .topWrap .hWrap { padding-bottom: 5px; border-bottom: 1px solid #e2e2e2; }
 .main .leftWrap .topWrap > div { padding: 5px; }
@@ -41,8 +41,8 @@
 .main .leftWrap .conWrap ul li .title .t_date { font-size: 13px; line-height: 40px; font-family: 'NotoKrB'; color:#7d8388; display: inline-block; width: 50%; text-align: right; }
 .main .leftWrap .conWrap ul li .plugWrap { border: 1px solid #e2e2e2; border-top: 0; text-align: center; height: 115px; box-sizing: border-box; }
 .main .leftWrap .conWrap ul li .plugWrap img { width: 100%; height: 100%; }
-.main .leftWrap .hWrap .view_all { width: 70px; display: inline-block; line-height: 48px; font-size: 14px; color: #1050af; font-family: 'NotoKrB'; height: 50px; position: absolute; right: 0; margin-right: 20px; text-align: right; }
-.main .leftWrap .noticeWrap { background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); /*IE 5.5-7*/ }
+.main .leftWrap .hWrap .view_all { width: 70px; display: inline-block; line-height: 48px; font-size: 14px; color: #1050af; font-family: 'NotoKrB'; height: 50px; position: relative; right: 0; margin-right: 20px; text-align: right; float: right;}
+.main .leftWrap .noticeWrap {margin: 0 1%; background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); /*IE 5.5-7*/ }
 .main .leftWrap .list { padding: 10px 20px; }
 .main .noticeWrap .list ul li { width: 100%; height: 51px; background: url(../images/common/bg_notice_list.jpg)repeat-x 0 0; border-radius: 10px; border-left: 1px solid #c8c8c8; border-right: 1px solid #c8c8c8; box-sizing: border-box; margin-bottom: 5px; }
 .main .noticeWrap .list ul li a { display: block; padding: 8px 15px 4px; height: 100%; box-sizing: border-box; }
@@ -54,7 +54,7 @@
 .main .rowList .list_text { font-size: 12px; color: #5f5f5f; }
 .main .rowList .list_write { font-size: 12px; color: #1d1d1d; font-family: 'NotoKrB'; vertical-align: top; }
 .main .rowList .list_write b { color: #0550bf; }
-.main .rightWrap { float: right; width: 64.5%; padding-right: 1%; }
+.main .rightWrap { float: right; width: 64%; padding-right: 0.5%; }
 .main .rightWrap .tableWrap { background: #fff; border: 1px solid #e2e2e2; border-radius: 3px; -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=0, Color=#000000)";/*IE 8*/ -moz-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*FF 3.5+*/ -webkit-box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/*Saf3-4, Chrome, iOS 4.0.2-4.2, Android 2.3+*/ box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=135, Color=#000000); /*IE 5.5-7*/ }
 .main .rightWrap .tableWrap .hWrap { padding: 5px; border-bottom: 1px solid #e2e2e2; }
 .main .rightWrap .tableWrap .hWrap * {vertical-align: middle;}
@@ -65,7 +65,7 @@
 .main .rightWrap .tableWrap .hWrap .ipu_wrap { display: inline-block; }
 .main .rightWrap .tableWrap .hWrap .ipu_wrap label { }
 .main .hWrap .refresh { float: right; display: inline-block; padding-top: 14px; padding-right: 20px; }
-.main .rightWrap .tableWrap .conWrap { padding: 10px; box-sizing: border-box; height: 830px; }
+.main .rightWrap .tableWrap .conWrap { padding: 10px; box-sizing: border-box; height: 935px; }
 .main .rightWrap .tableWrap .conWrap img { width: 100%; height: 100%; }
 
 /* 견적관리 */
