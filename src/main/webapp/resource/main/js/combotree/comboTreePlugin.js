@@ -111,7 +111,7 @@
             itemHtml += '<span class="comboTreeParentPlus">&minus;</span>';
 
         if (this.options.isMultiple)
-            itemHtml += '<span data-id="' + sourceItem.id + '" class="comboTreeItemTitle"><input type="checkbox" id="check' + sourceItem.id + '"><label for="check' + sourceItem.title + '"/>' + sourceItem.title + '</span>';
+            itemHtml += '<span data-id="' + sourceItem.id + '" class="comboTreeItemTitle"><input type="checkbox" id="check' + sourceItem.id + '"><label for="check' + sourceItem.id + '"/>' + sourceItem.title + '</span>';
         else
             itemHtml += '<span data-id="' + sourceItem.id + '" class="comboTreeItemTitle">' + sourceItem.title + '</span>';
 
@@ -240,7 +240,7 @@
     ComboTree.prototype.clearSelection = function () {
         for (i = 0; i < this._selectedItems.length; i++) {
             // $("#" + this.comboTreeId + 'DropDownContainer').find("#check" + this._selectedItems[i].title).prop('checked', false);
-            $("#" + this.comboTreeId + 'DropDownContainer').find("#check" + this.comboTreeId).prop('checked', false);
+            $("#" + this.comboTreeId + 'DropDownContainer').find("#check" + this._selectedItems[i].id).prop('checked', false);
         }
         this._selectedItems = [];
         this._hiddenElemInput.val('');
