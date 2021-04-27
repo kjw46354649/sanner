@@ -20,20 +20,20 @@
                     <form class="form-inline" id="operating_rate_and_operation_record_search_form" name="operating_rate_and_operation_record_search_form" role="form">
                         <div class="d-flex align-items-center">
                             <div>
-                                <span class="slt_wrap">
-                                    <label class="label_50_p0" for="inquiry_target">조회대상</label>
-                                    <select class="wd_70" id="inquiry_target" title="조회대상" style="width: 65px !important; padding-left: 5px;">
-                                        <option value="process">가공수행</option>
-<%--                                        <option value="cam">CAM설계</option>--%>
-                                    </select>
-                                </span>
+<%--                                <span class="slt_wrap">--%>
+<%--                                    <label class="label_50_p0" for="inquiry_target">조회대상</label>--%>
+<%--                                    <select class="wd_70" id="inquiry_target" title="조회대상" style="width: 65px !important; padding-left: 5px;">--%>
+<%--                                        <option value="process">가공수행</option>--%>
+<%--&lt;%&ndash;                                        <option value="cam">CAM설계</option>&ndash;%&gt;--%>
+<%--                                    </select>--%>
+<%--                                </span>--%>
                                 <span class="slt_wrap">
                                     <label class="label_50_p0" for="user_id" style="width: 40px !important;">작업자</label>
-                                    <select class="wd_70" name="USER_ID" id="user_id" title="작업자" style="padding-left: 5px;"></select>
+                                    <select class="wd_100" name="USER_ID" id="user_id" title="작업자" style="padding-left: 5px;"></select>
                                 </span>
                                 <span class="slt_wrap">
                                     <label class="label_50_p0" for="factory_area" style="width: 30px !important;">구역</label>
-                                    <select class="wd_70" name="FACTORY_AREA" id="factory_area" style="padding-left: 5px;">
+                                    <select class="wd_100" name="FACTORY_AREA" id="factory_area" style="padding-left: 5px;">
                                         <option value=""><spring:message
                                                 code="com.form.top.all.option"/></option>
                                         <c:forEach var="code" items="${HighCode.H_1005}">
@@ -621,18 +621,18 @@
             refreshRight();
         });
 
-        $('#inquiry_target').on('change', function () {
-            switch (this.value) {
-                case 'process':
-                    $('.page.main #grid1').show();
-                    $('.page.main #grid2').hide();
-                    break;
-                case 'cam':
-                    $('.page.main #grid1').hide();
-                    $('.page.main #grid2').show();
-                    break;
-            }
-        });
+        // $('#inquiry_target').on('change', function () {
+        //     switch (this.value) {
+        //         case 'process':
+        //             $('.page.main #grid1').show();
+        //             $('.page.main #grid2').hide();
+        //             break;
+        //         case 'cam':
+        //             $('.page.main #grid1').hide();
+        //             $('.page.main #grid2').show();
+        //             break;
+        //     }
+        // });
 
         $('#main_aggregation_dt_button').on('click', function () {
             $('#main_aggregation_dt').focus();
