@@ -2354,7 +2354,7 @@
                     minWidth: 55,
                     width: 55,
                     dataIndx: 'LAST_UNIT_LEAD_TIME',
-                    editable: true
+                    editable: false
                 },
                 {title: '작업자', minWidth: 60, width: 65, datatype: 'string', dataIndx: 'LAST_MCT_WORK_USER', editable: false}
             ]
@@ -2391,7 +2391,6 @@
             if((Item.pq_ri+1) != Item.ROW_NUM) {
                 Item.ROW_NUM = (Item.pq_ri+1)
                 Item.SORT_NUM = (Item.pq_ri+1)
-                console.log(Item)
             }
         })
     }
@@ -2482,6 +2481,8 @@
                         }
 
                         data = mctPlanDetailPopGrid.pqGrid('option', 'dataModel.data');
+                        chageSortNum(data);
+
                         var tempJson = {'updateList': data};
                         let QUERY_ID_ARRAY = {
                             'insertQueryId': [],
@@ -2628,17 +2629,21 @@
 
     $(document).ready(function(){
         $(document).on("blur","#ongoing_work_input",function(event){
+            var planWorkT = $("#mct_plan_detail_pop_form").find("#ongoing_work_input").val();
             let parameter = {
                 'queryId': 'machine.updateOngoingWorkingTime',
                 'EQUIP_SEQ': $("#mct_plan_detail_pop_form").find("#EQUIP_SEQ").val(),
                 'MCT_WORK_SEQ':  $("#mct_plan_detail_pop_form").find("#MCT_WORK_SEQ").val(),
-                'PLAN_WORKING_TIME': $("#mct_plan_detail_pop_form").find("#ongoing_work_input").val()
+                'PLAN_WORKING_TIME': planWorkT
             };
-            let parameters = {'url': '/json-update', 'data': parameter};
-            fnPostAjaxAsync(function (data, callFunctionParam) {
-                var planWorkingTime = timeFormat($("#mct_plan_detail_pop_form").find("#ongoing_work_input").val());
-                $("#mct_plan_detail_pop_form").find("#ongoing_work_input").val(planWorkingTime);
-            }, parameters, '');
+            var onlyNum = /[^0-9]/g;
+            if(!onlyNum.test(planWorkT)) {
+                let parameters = {'url': '/json-update', 'data': parameter};
+                fnPostAjaxAsync(function (data, callFunctionParam) {
+                    var planWorkingTime = timeFormat($("#mct_plan_detail_pop_form").find("#ongoing_work_input").val());
+                    $("#mct_plan_detail_pop_form").find("#ongoing_work_input").val(planWorkingTime);
+                }, parameters, '');
+            }
         })
 
         $(document).on("click",".mct_ongoing_draw",function(e){
