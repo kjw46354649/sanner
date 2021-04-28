@@ -2248,13 +2248,21 @@
                 var stopTime = timeFormat(data.info.TEMP_STOP);
                 var onGoingTime = timeFormat(data.info.ON_GOING);
                 var planWorkingTime = timeFormat(data.info.PLAN_WORKING_TIME);
-
+                var arr = data.info.DRAWING_NUM.split(",");
+                var arr2 = data.info.DRAWING_SEQ.split(",");
 
                 tempHtml = '<td>' + data.info.WORK_USER_NM + '</td>';
                 tempHtml += '<td>' + data.info.WORK_STATUS_NM + '</td>';
                 tempHtml += '<td>' + data.info.CONTROL_NUM + '</td>';
                 tempHtml += '<td> <span  class="shareIcon" name="detailView" style="cursor: pointer" onclick="g_item_detail_pop_view('+ data.info.CONTROL_SEQ+','+data.info.CONTROL_DETAIL_SEQ +','+'null,'+'null)"></span></td>';
-                tempHtml += '<td><div class="drawDiv">' + data.info.DRAWING_NUM + '</div></td>';
+                tempHtml += '<td><div class="drawDiv">'
+                for(var i=0;i<arr.length;i++){
+                    if(i>0) {
+                        tempHtml += '<br>';
+                    }
+                    tempHtml += '<span class="mct_ongoing_draw" style="cursor:pointer;" data-value="'+ arr2[i]+'">' + arr[i] + '</span>';
+                }
+                tempHtml += '</div></td>';
                 tempHtml += '<td>' + data.info.SIZE_TXT + '</td>';
                 tempHtml += '<td>' + data.info.WORK_TYPE_NM + '</td>';
                 tempHtml += '<td>' + data.info.MATERIAL_DETAIL_NM + '</td>';
@@ -2419,6 +2427,8 @@
                             $("#mct_plan_pop_img").attr('src',imgUrl);
                             $("#mct_plan_pop_img").attr('alt',Item.rowData.IMG_GFILE_SEQ);
                             $("#mct_plan_pop_img").attr('data-value', Item.rowData.IMG_GFILE_SEQ);
+                            $("#mct_plan_no_img").hide();
+                            $("#mct_plan_pop_img").show();
                         }
                     })
                 },
@@ -2504,6 +2514,8 @@
                     $("#mct_plan_pop_img").attr('src',imgUrl);
                     $("#mct_plan_pop_img").attr('alt',selRowData.IMG_GFILE_SEQ);
                     $("#mct_plan_pop_img").attr('data-value', selRowData.IMG_GFILE_SEQ);
+                    $("#mct_plan_no_img").hide();
+                    $("#mct_plan_pop_img").show();
                 },
                 refresh : function (evt, ui) {
                     data = mctPlanDetailPopGrid.pqGrid('option', 'dataModel.data');
@@ -2599,6 +2611,8 @@
                                 $("#mct_plan_pop_img").attr('src','/qimage/'+dataInfo.IMG_GFILE_SEQ);
                                 $("#mct_plan_pop_img").attr('alt',dataInfo.IMG_GFILE_SEQ);
                                 $("#mct_plan_pop_img").attr('data-value', dataInfo.IMG_GFILE_SEQ);
+                                $("#mct_plan_no_img").hide();
+                                $("#mct_plan_pop_img").show();
                             }
 
                             $mctPlanDetailPopGrid.pqGrid('refreshDataAndView');
@@ -2625,6 +2639,18 @@
                 var planWorkingTime = timeFormat($("#mct_plan_detail_pop_form").find("#ongoing_work_input").val());
                 $("#mct_plan_detail_pop_form").find("#ongoing_work_input").val(planWorkingTime);
             }, parameters, '');
+        })
+
+        $(document).on("click",".mct_ongoing_draw",function(e){
+            var imgSeq = $(this).data('value');
+            if(typeof imgSeq != 'undefined' && imgSeq != '') {
+                $("#mct_plan_pop_img").attr('src','/qimage/'+imgSeq);
+                $("#mct_plan_pop_img").attr('alt',imgSeq);
+                $("#mct_plan_pop_img").attr('data-value', imgSeq);
+                $("#mct_plan_no_img").hide();
+                $("#mct_plan_pop_img").show();
+            }
+
         })
     });
 
