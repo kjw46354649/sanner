@@ -248,7 +248,7 @@
             str += '    <input type="hidden" name="EQUIP_SEQ" id="EQUIP_SEQ" value="' + equipSeq + '">';
             str += '    <div class="table">';
             str += '        <div class="titleWrap">';
-            str += '            <span class="equipLabel">';
+            str += '            <span class="equipLabel" onclick="g_mct_plan_detail_pop_view('+equipSeq+')">';
             str += '                <span class="ellipsis" id="NC' + order + '_EQUIP_NM" style="width: 32px;">' + equipNm + '</span>';
             str += '                <span class="ellipsis" id="NC' + order + '_WORK_USER_ID" style="width: 42px;"></span>';
             str += '            </span>';
@@ -394,8 +394,17 @@
             },
             change: function (event, ui) {
                 gridChange(this, ui);
-            },
+            }
         };
+        $('html').dblclick(function(e) {
+            if($(e.target).hasClass("pq-cont-inner pq-cont-right")) {
+                if(!$(e.target).hasClass("pq-table-right pq-table")){
+                    var parentLi = $(e.target).parents('li');
+                    var equipSeq = parentLi.find("#EQUIP_SEQ").val();
+                    g_mct_plan_detail_pop_view(equipSeq)
+                }
+            }
+        });
 
         let $processTargetGrid;
         const processTargetGridId = 'PROCESS_TARGET_GRID';
@@ -769,7 +778,7 @@
                     fnAlert(null, '<spring:message code="error.common"/>');
                     return false;
                 }
-                
+
                 refreshMctPlanGrids();
                 refreshTargetGrid1(actionType, data.data);
             }, parameters, '');
@@ -848,11 +857,11 @@
         $('#MCT_PLAN_REFRESH').on('click', function () {
             refreshMctPlanGrids();
         });
-        
+
         $('#MCT_TARGET_REFRESH').on('click', function () {
             refreshTargetGrid();
         });
-        
+
         $('#MCT_PROCESS_TARGET_FORM #COMP_CD,#MCT_PROCESS_TARGET_FORM #POP_POSITION,#MCT_PROCESS_TARGET_FORM #MATERIAL_TYPE,#MCT_PROCESS_TARGET_FORM #CONTROL_NUM_OR_DRAWING_NUM, #MCT_PROCESS_TARGET_FORM #OPTION, #MCT_PROCESS_TARGET_FORM #MATERIAL_KIND').on('change', function () {
             $processTargetGrid.pqGrid('option', 'dataModel.postData', function () {
                 return (fnFormToJsonArrayData('#MCT_PROCESS_TARGET_FORM'));
@@ -886,6 +895,12 @@
             isActiveDrawingView = !isActiveDrawingView;
         });
 
+        $('#mct_plan_detail_pop').on({
+            'hide.bs.modal': function () {
+                refreshMctPlanGrids();
+                refreshTargetGrid();
+            }
+        });
         $(document).on({
             mouseenter: function () {
                 if (isActiveDrawingView) {
@@ -893,7 +908,7 @@
                     const splits = id.split('-');
                     const rowIndx = splits[4];
                     const rowData = $(this).closest('.pq-grid').pqGrid('getRowData', {rowIndx: rowIndx});
-                    
+
                     if (rowData.IMG_GFILE_SEQ) {
                         callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
                     }

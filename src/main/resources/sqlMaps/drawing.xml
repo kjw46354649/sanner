@@ -263,10 +263,26 @@
 
     <insert id="insertMctWorkStart"  parameterType="java.util.HashMap" >
         INSERT INTO jmes.TBL_MCT_WORK
-            (MCT_WORK_SEQ, EQUIP_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, WORK_USER_ID, WORK_STATUS, WORK_START_DT, WORK_RESTART_DT, DEL_YN, INSERT_ID)
+        (MCT_WORK_SEQ, EQUIP_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, WORK_USER_ID, WORK_STATUS, WORK_START_DT, WORK_RESTART_DT, DEL_YN, INSERT_ID
+        <if test="PLAN_WORKING_TIME != null and PLAN_WORKING_TIME !=''">
+            ,PLAN_WORKING_TIME
+        </if>
+        )
         VALUES
-            (NEXTVAL(SEQ_MCT_WORK), #{machineInfo.EQUIP_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, #{userInfo.USER_ID}, 'DBS020', NOW(), NOW(), 'N', #{userInfo.USER_ID})
+        (NEXTVAL(SEQ_MCT_WORK), #{machineInfo.EQUIP_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, #{userInfo.USER_ID}, 'DBS020', NOW(), NOW(), 'N', #{userInfo.USER_ID}
+        <if test="PLAN_WORKING_TIME != null and PLAN_WORKING_TIME !=''">
+            , #{PLAN_WORKING_TIME}
+        </if>
+        )
     </insert>
+
+    <select id="selectWorkingTime" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT WORKING_TIME AS PLAN_WORKING_TIME
+        FROM jmes.TBL_MCT_PLAN
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+          AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+          AND EQUIP_SEQ = #{machineInfo.EQUIP_SEQ}
+    </select>
 
     <update id="updateEquipmentWorker"  parameterType="java.util.HashMap" >
         UPDATE jmes.TBL_EQUIP
