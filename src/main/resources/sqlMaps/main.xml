@@ -338,7 +338,7 @@
                BOARD_TITLE,
                DATE_FORMAT(INSERT_DT, '%Y-%m-%d %H:%i') AS INSERT_DT,
                jmes.SF_GET_USER_NM(INSERT_ID) AS INSERT_ID
-        FROM jmes.TBL_DASH_BOARD_TEMP
+        FROM jmes.TBL_DASH_BOARD
         WHERE DEL_YN = 'N'
             AND BOARD_TYPE = '1'
             AND GROUP_IN_NO = '1'
@@ -358,7 +358,7 @@
                BOARD_CONTENTS,
                DATE_FORMAT(INSERT_DT, '%Y-%m-%d %H:%i') AS INSERT_DT,
                jmes.SF_GET_USER_NM(INSERT_ID) AS INSERT_ID
-        FROM jmes.TBL_DASH_BOARD_TEMP
+        FROM jmes.TBL_DASH_BOARD
         WHERE DEL_YN = 'N'
         <if test="SEARCH_TITLE != null and SEARCH_TITLE != ''">
             AND BOARD_TITLE LIKE CONCAT('%',#{SEARCH_TITLE},'%')
@@ -368,7 +368,7 @@
     </select>
     <select id="getTotalBoardCount" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT COUNT(*) AS TOTAL_COUNT
-        FROM TBL_DASH_BOARD_TEMP
+        FROM TBL_DASH_BOARD
         WHERE DEL_YN = 'N'
     </select>
 
@@ -386,7 +386,7 @@
                FILE_SEQ_1 , jmes.SF_GET_FILE_ORGINAL_NM(FILE_SEQ_1,'1') AS FILE_NM_1,
                FILE_SEQ_2 , jmes.SF_GET_FILE_ORGINAL_NM(FILE_SEQ_2,'1') AS FILE_NM_2,
                FILE_SEQ_3 , jmes.SF_GET_FILE_ORGINAL_NM(FILE_SEQ_3,'1') AS FILE_NM_3
-        FROM jmes.TBL_DASH_BOARD_TEMP
+        FROM jmes.TBL_DASH_BOARD
         WHERE DEL_YN = 'N'
             AND BOARD_SEQ = #{BOARD_SEQ}
     </select>
@@ -402,14 +402,14 @@
     </select>
     <select id="selectGroupInNo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT MAX(GROUP_IN_NO + 1) AS GROUP_IN_NO, (#{DEPTH} + 1) AS DEPTH
-        FROM TBL_DASH_BOARD_TEMP
+        FROM TBL_DASH_BOARD
         WHERE DEL_YN = 'N'
           AND GROUP_SEQ  = #{GROUP_SEQ}
           AND DEPTH = #{DEPTH};
     </select>
 
     <insert id="insertNewBoard"  parameterType="java.util.HashMap" >
-        INSERT INTO TBL_DASH_BOARD_TEMP(
+        INSERT INTO TBL_DASH_BOARD(
            BOARD_SEQ
            ,GROUP_SEQ
            ,GROUP_IN_NO
@@ -457,7 +457,7 @@
     </insert>
 
     <update id="updateBoard" parameterType="java.util.HashMap">
-        UPDATE TBL_DASH_BOARD_TEMP
+        UPDATE TBL_DASH_BOARD
         SET
             BOARD_TYPE = #{BOARD_TYPE},
             BOARD_TITLE = #{BOARD_TITLE},
@@ -471,7 +471,7 @@
     </update>
 
     <update id="deleteBoard" parameterType="java.util.HashMap">
-        UPDATE TBL_DASH_BOARD_TEMP
+        UPDATE TBL_DASH_BOARD
         SET
         DEL_YN = 'Y',
         UPDATE_ID = #{LOGIN_USER_ID},
