@@ -61,7 +61,7 @@
                     <tr>
                         <th>내용</th>
                         <td colspan="5" rowspan="5" style="height: 390px;">
-                            <div style="height: 345px;">
+                            <div style="height: 345px;overflow: scroll;">
                             <c:out value="${boardInfo.BOARD_CONTENTS}" escapeXml="false"></c:out>
                             </div>
                             <c:if test="${not empty boardInfo && boardInfo.INSERT_ID eq authUserInfo.USER_ID}">
