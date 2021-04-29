@@ -24,6 +24,7 @@ import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.nio.file.Files;
 
 @Service
 public class FileUploadServiceImpl implements FileUploadService {
@@ -584,7 +585,8 @@ public class FileUploadServiceImpl implements FileUploadService {
         if(imageWidth > imageHeight){
             ImageUtil.rotate90(tempImagefile, targetfile);
         }else{
-            tempImagefile.renameTo(targetfile);
+            Files.copy(tempImagefile.toPath(), targetfile.toPath());
+//            tempImagefile.renameTo(targetfile);
         }
 
         //ImageUtil.resizeFix(targetfile, targetfile, (int)PDRectangle.A4.getWidth(), (int)PDRectangle.A4.getHeight());
