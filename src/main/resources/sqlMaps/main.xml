@@ -302,23 +302,25 @@
                             </choose>
                         )
                         OR (A.OUT_FINISH_STATUS = 'RLS030') <!-- 반품  -->
-                        OR (A.CONTROL_SEQ IN (
-                                SELECT CONTROL_SEQ
-                                FROM TBL_INSPECT M
-                                WHERE M.INSPECT_GRADE NOT IN ('GRD010','GRD020','GRD030')
-                                    AND M.INSPECT_TYPE NOT IN (2)
-                                    AND M.RETURN_SETTLEMENT_DT IS NULL  <!-- 불량  -->
-                                    AND M.CONTROL_SEQ = A.CONTROL_SEQ
-                                    AND M.CONTROL_DETAIL_SEQ  = B.CONTROL_DETAIL_SEQ
-                                    AND M.INSPECT_NUM = (
-                                        SELECT MAX(INSPECT_NUM)
-                                        FROM TBL_INSPECT N
-                                        WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                        AND M.CONTROL_DETAIL_SEQ = N.CONTROL_DETAIL_SEQ
-                                        GROUP BY M.CONTROL_SEQ , M.CONTROL_DETAIL_SEQ
-                                        ORDER BY M.CONTROL_SEQ
-                                    )
-                            )
+                        OR (
+                            (A.CONTROL_SEQ IN (
+                                    SELECT CONTROL_SEQ
+                                    FROM TBL_INSPECT M
+                                    WHERE M.INSPECT_GRADE NOT IN ('GRD010','GRD020','GRD030')
+                                        AND M.INSPECT_TYPE NOT IN (2)
+                                        AND M.RETURN_SETTLEMENT_DT IS NULL  <!-- 불량  -->
+                                        AND M.CONTROL_SEQ = A.CONTROL_SEQ
+                                        AND M.CONTROL_DETAIL_SEQ  = B.CONTROL_DETAIL_SEQ
+                                        AND M.INSPECT_NUM = (
+                                            SELECT MAX(INSPECT_NUM)
+                                            FROM TBL_INSPECT N
+                                            WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                            AND M.CONTROL_DETAIL_SEQ = N.CONTROL_DETAIL_SEQ
+                                            GROUP BY M.CONTROL_SEQ , M.CONTROL_DETAIL_SEQ
+                                            ORDER BY M.CONTROL_SEQ
+                                        )
+                                )
+                            ) AND A.OUT_FINISH_DT IS NULL
                         )
                 )
                 <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
