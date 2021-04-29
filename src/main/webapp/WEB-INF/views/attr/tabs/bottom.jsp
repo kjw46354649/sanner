@@ -2194,7 +2194,6 @@
 
     function timeFormat(time) {
         var text = "";
-        console.log(time)
         if(typeof time != 'undefined' && time != "" && time != null) {
             if(time >= 60) {
                 if(time % 60 == 0) {
@@ -2434,14 +2433,6 @@
                 dragModel:{
                     on: true,
                     diHelper: [ 'CONTROL_SEQ','MCT_PLAN_SEQ'],
-                    beforeDrop : function () {
-                        data = mctPlanDetailPopGrid.pqGrid('option', 'dataModel.data');
-                        console.log('beforeDrop',data)
-                    },
-                    afterDrop : function () {
-                        data = mctPlanDetailPopGrid.pqGrid('option', 'dataModel.data');
-                        console.log('afterDrop',data)
-                    },
                     cssHelper: {
                         opacity: .7,
                         position: "absolute",
@@ -2540,6 +2531,9 @@
                         var changeList = ui.updateList;
                         if(changeList.length > 0 ) {
                             $.each(changeList, function (idx,Item) {
+                                if(typeof Item.rowData.WORKING_TIME == 'undefined' || Item.rowData.WORKING_TIME == null) {
+                                    Item.rowData.WORKING_TIME = '';
+                                }
                                 tempJson.updateList.push(Item.rowData);
                             })
                             let QUERY_ID_ARRAY = {
@@ -2548,23 +2542,23 @@
                             };
                             tempJson.queryIdList = QUERY_ID_ARRAY;
                             parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(tempJson)}};
-
                             fnPostAjax(function (data, callFunctionParam) {
-                                $mctPlanDetailPopGrid.pqGrid('refreshDataAndView');
+                                $mctPlanDetailPopGrid.pqGrid("updateRow", { 'rowIndx': changeList[0].rowIndx , row: { 'WORKING_TIME': changeList[0].rowData.WORKING_TIME } });
                             }, parameters, '');
 
                         }
                     }else if(ui.source == 'delete') {
                         var deleteList = ui.deleteList;
-                        let parameter = {
-                            'queryId': 'machine.deletePlanList',
-                            'EQUIP_SEQ': deleteList[0].rowData.EQUIP_SEQ,
-                            'MCT_PLAN_SEQ': deleteList[0].rowData.MCT_PLAN_SEQ
-                        };
-                        let parameters = {'url': '/json-update', 'data': parameter};
-                        fnPostAjaxAsync(function (data, callFunctionParam) {
-                            $mctPlanDetailPopGrid.pqGrid('refreshDataAndView');
-                        }, parameters, '');
+                        if(typeof deleteList[0].rowData != 'undefined'){
+                            let parameter = {
+                                'queryId': 'machine.deletePlanList',
+                                'EQUIP_SEQ': deleteList[0].rowData.EQUIP_SEQ,
+                                'MCT_PLAN_SEQ': deleteList[0].rowData.MCT_PLAN_SEQ
+                            };
+                            let parameters = {'url': '/json-update', 'data': parameter};
+                            fnPostAjax(function (data, callFunctionParam) {
+                            }, parameters, '');
+                        }
                     }
                 }
             };
