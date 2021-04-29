@@ -846,7 +846,9 @@
             }
         });
 
-
+        $('#in_warehouse_manage_scan_barcode_popup').on('shown.bs.modal', function() {
+            $("#in_warehouse_manage_scan_barcode_popup_form").find("#inWarehouseManageBarcode").focus();
+        });
 
         $('#in_warehouse_manage_scan_barcode_popup').on('show.bs.modal',function() {
             fnSearchScanTableOnData();

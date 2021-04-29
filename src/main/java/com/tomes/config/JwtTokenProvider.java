@@ -30,7 +30,8 @@ public class JwtTokenProvider { // JWT 토큰을 생성 및 검증 모듈
     // Jwt 토큰 생성
     public String createToken(String compNum, String compCd, String compNm) {
         Claims claims = Jwts.claims().setSubject(compCd);
-        claims.put("compCd", compNum);
+        claims.put("compCd", compCd);
+        claims.put("compNum", compNum);
         claims.put("compNm", compNm);
         Date now = new Date();
         return Jwts.builder()

@@ -31,12 +31,15 @@ public class TomesAuthorizeController {
 
     @ApiOperation(value = "시스템 로그인", notes = "시스템 로그인을 한다.")
     @GetMapping("/login")
-    public SingleResult login(@ApiParam(value = "사업자 번호", required = true) @RequestParam String compNum) throws Exception {
+    public SingleResult login(@ApiParam(value = "사업자 번호", required = true) @RequestParam String compNum,
+                  @ApiParam(value = "업체 코드", required = true) @RequestParam String compCd
+        ) throws Exception {
 
         HashMap<String, Object> paramMap = new HashMap<String, Object>();
 
         paramMap.put("queryId", "tomesMapper.selectPortalLogin");
         paramMap.put("COMP_NUM", compNum);
+        paramMap.put("COMP_CD", compCd);
 
         Map<String, Object> companyInfo = new HashMap<String, Object>();
 
