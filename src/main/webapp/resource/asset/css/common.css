@@ -580,3 +580,5 @@ textarea#editor1 img { max-width: 100%; height: auto; }
   text-align: center;
   box-shadow: 1px 1px #999999;
 }
+
+ #mct_plan_detail_pop_grid .pq-cell-editor {width: 55px !important;}

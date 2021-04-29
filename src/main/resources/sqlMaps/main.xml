@@ -337,11 +337,12 @@
                BOARD_TYPE,
                BOARD_TITLE,
                DATE_FORMAT(INSERT_DT, '%Y-%m-%d %H:%i') AS INSERT_DT,
-               INSERT_ID
+               jmes.SF_GET_USER_NM(INSERT_ID) AS INSERT_ID
         FROM jmes.TBL_DASH_BOARD_TEMP
         WHERE DEL_YN = 'N'
             AND BOARD_TYPE = '1'
             AND GROUP_IN_NO = '1'
+        ORDER BY INSERT_DT DESC
         LIMIT 4
     </select>
 
@@ -356,13 +357,13 @@
                BOARD_TITLE,
                BOARD_CONTENTS,
                DATE_FORMAT(INSERT_DT, '%Y-%m-%d %H:%i') AS INSERT_DT,
-               INSERT_ID
+               jmes.SF_GET_USER_NM(INSERT_ID) AS INSERT_ID
         FROM jmes.TBL_DASH_BOARD_TEMP
         WHERE DEL_YN = 'N'
         <if test="SEARCH_TITLE != null and SEARCH_TITLE != ''">
             AND BOARD_TITLE LIKE CONCAT('%',#{SEARCH_TITLE},'%')
         </if>
-        ORDER BY GROUP_SEQ, GROUP_IN_NO, INSERT_DT
+        ORDER BY FIELD(BOARD_TYPE, 1, 2) ASC, GROUP_SEQ DESC
         LIMIT ${PAGE_NUM},${PAGE_SIZE}
     </select>
     <select id="getTotalBoardCount" parameterType="java.util.HashMap" resultType="java.util.HashMap">

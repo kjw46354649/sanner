@@ -43,17 +43,17 @@
                         <td colspan="5">
                             <c:if test="${not empty boardInfo && not empty boardInfo.FILE_SEQ_1 && boardInfo.FILE_SEQ_1 ne ''}">
                                 <span class="file_span">
-                                    <a href="/downloadfile/${boardInfo.FILE_SEQ_1}" name="FILE" target="_blank">${boardInfo.FILE_NM_1}</a>
+                                    <a href="/downloadGfile/${boardInfo.FILE_SEQ_1}" name="FILE" target="_blank">${boardInfo.FILE_NM_1}</a>
                                 </span>
                             </c:if>
                             <c:if test="${not empty boardInfo && not empty boardInfo.FILE_SEQ_2 && boardInfo.FILE_SEQ_2 ne ''}">
                                 <span class="file_span">
-                                    <a href="/downloadfile/${boardInfo.FILE_SEQ_2}" name="FILE" target="_blank">${boardInfo.FILE_NM_2}</a>
+                                    <a href="/downloadGfile/${boardInfo.FILE_SEQ_2}" name="FILE" target="_blank">${boardInfo.FILE_NM_2}</a>
                                 </span>
                             </c:if>
                             <c:if test="${not empty boardInfo && not empty boardInfo.FILE_SEQ_3 && boardInfo.FILE_SEQ_3 ne ''}">
                                 <span class="file_span">
-                                    <a href="/downloadfile/${boardInfo.FILE_SEQ_3}" name="FILE" target="_blank">${boardInfo.FILE_NM_3}</a>
+                                    <a href="/downloadGfile/${boardInfo.FILE_SEQ_3}" name="FILE" target="_blank">${boardInfo.FILE_NM_3}</a>
                                 </span>
                             </c:if>
                         </td>
@@ -61,7 +61,7 @@
                     <tr>
                         <th>내용</th>
                         <td colspan="5" rowspan="5" style="height: 390px;">
-                            <div style="height: 345px;">
+                            <div style="height: 345px;overflow: scroll;">
                             <c:out value="${boardInfo.BOARD_CONTENTS}" escapeXml="false"></c:out>
                             </div>
                             <c:if test="${not empty boardInfo && boardInfo.INSERT_ID eq authUserInfo.USER_ID}">

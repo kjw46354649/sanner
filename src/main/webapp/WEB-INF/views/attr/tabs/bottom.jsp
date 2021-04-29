@@ -422,7 +422,7 @@
             <div class="btnWrap">
                 <button type="button" class="defaultBtn grayPopGra" id="user_info_pop_close">닫기</button>
                 <button type="button" class="defaultBtn btn-120w red" id="saveUserMasterBtn">저장</button>
-             </div>
+            </div>
         </div>
     </form>
 </div>
@@ -560,6 +560,165 @@
         </div>
     </div>
 </div>
+
+
+<!-- 가공계획수립 상세 layer popup : S -->
+<div class="popup_container mct_plan_detail_pop" id="mct_plan_detail_pop" style="display: none;z-index: 1042;">
+    <div class="layerPopup">
+        <h3>가공계획수립 상세</h3>
+        <button type="button" class="pop_close mt-10 mr-8 close_mct_plan_detail">닫기</button>
+        <div class="qualityWrap">
+            <div class="h_area"></div>
+            <form class="form-inline" id="mct_plan_detail_pop_form" name="mct_plan_detail_pop_form" role="form" onsubmit="return false;">
+                <input type="hidden" id="queryId" name="queryId" value="machine.selectPlanListForDetailPop">
+                <input type="hidden" id="EQUIP_SEQ" name="EQUIP_SEQ" value="">
+                <input type="hidden" id="MCT_WORK_SEQ" name="MCT_WORK_SEQ" value="">
+                <div class="d-flex align-items-center">
+                    <h4 style="font-size: 18px;">가공진행현황</h4>
+                    <div class="btnWrap ml-auto">
+                        <span id="mct_machine_info" class="slt_wrap namePlusSlt rightName">
+                        </span>
+                    </div>
+                </div>
+                <div class="list1">
+                    <table class="rowStyle" style="table-layout: fixed;">
+                        <colgroup>
+                            <col width="10%">
+                            <col width="15%">
+                            <col width="25%">
+                            <col width="5%">
+                            <col width="25%">
+                            <col width="15%">
+                            <col width="10%">
+                            <col width="15%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="15%">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <td id="WORK_USER_NM" class="th_color">작업자</td>
+                            <td id="WORK_STATUS_NM" class="th_color">작업상세</td>
+                            <td id="CONTROL_NUM" class="th_color">작업번호</td>
+                            <td id="INNER_DUE_DT" class="th_color"></td>
+                            <td id="DRAWING_NUM" class="th_color">도면번호</td>
+                            <td id="SIZE_TXT" class="th_color">규격</td>
+                            <td id="WORK_TYPE_NM" class="th_color">작업형태</td>
+                            <td id="MATERIAL_DETAIL_NM" class="th_color">소재종류</td>
+                            <td id="ORDER_QTY_INFO" class="th_color">수량</td>
+                            <td id="INNER_DUE_DT" class="th_color">가공납기</td>
+                            <td id="TEMP_STOP" class="th_color">정지시간</td>
+                            <td id="ON_GOING" class="th_color">진행시간</td>
+                            <td id="PLAN_WORKING_TIME" class="th_color" style="background:#a9d3f5;">예상시간(E/T)</td>
+                        </tr>
+                        <tr style="height: 80px;" id="mct_plan_tbody">
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="leftwrap" style="width: 52%;float: left;height: 610px;">
+                    <div class="tableWrap">
+                        <div class="qualityWrap">
+                            <div class="h_area" style="border-bottom: 0;">
+                                <img id="mct_plan_pop_img" src="" alt="" class="viewer-move" data-value="" style="height: 568px;margin-top: 8px;position: absolute;width: 755px;max-width: none !important;transform: none;left: 2%;">
+                                <div id="mct_plan_no_img" class="nonImgDiv" style="display: none;">
+                                    <span>Not Found Data</span>
+                                </div>
+                            </div>
+                            <h4></h4>
+                            <div class="list4" style="margin-top: 640px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rightwrap" style="width: 47%;float: right;height: 610px;">
+                    <div class="tableWrap">
+                        <ul class="conWrapPop60">
+                            <h4 style="font-size: 18px;">가공계획 LIST
+                                <span id="mct_plan_list_info" class="slt_wrap namePlusSlt rightName">
+
+                                </span>
+                            </h4>
+                            <div id="mct_plan_detail_pop_grid" class="jqx-refresh"></div>
+                        </ul>
+                        <ul class="conWrapPop40" style="text-align: center;">
+                            <div class="barcode barcode_div" id="footer_barcode">
+                                <span class="barcode_label">To Add Plan List,&nbsp;Please Scan Barcode </span>
+                                <span class="barCode" style="margin: 13px 6px 0 0;"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="mct_plan_detail_pop_form_barcode_img"></span>
+                                <span class="barCodeTxt"><input type="text" class="wd_200 hg_35" name="BARCODE_NUM" id="BARCODE_NUM" placeholder=""></span>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="btnWrap">
+            <button type="button" class="defaultBtn grayPopGra close_mct_plan_detail">닫기</button>
+        </div>
+    </div>
+</div>
+<!-- 가공계획수립 상세 layer popup : E -->
+
+
+<!-- 출하스캔 layer popup : S -->
+<div class="popup_container in" id="outgoing_scan_barcode_popup" style="display: none;">
+    <div class="layerPopup" style="height: fit-content;">
+        <h3 style="">
+            <div class="h_area" style="float: left;width: 985px;height: 40px;">
+                <span style="margin-left: 16%;width: 40%;vertical-align: middle;">바코드를 Scan 해주세요</span>
+                <div style="width: 59%;float: right;">
+                    <span class="barCode" style="">
+                        <img id="barCodeImg" src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" style="width: 110px;">
+                    </span>
+                    <span class="barCodeTxt" style="">
+                        <input type="text" class="wd_270_barcode hg_30" id="outgoingScanBarcode" value="" placeholder="도면의 바코드를 스캔해 주세요" style="border: 1px solid #e6e6e6;">
+                    </span>
+                </div>
+            </div>
+        </h3>
+        <form class="form-inline" role="form" id="outgoing_scan_barcode_popup_form" name="outgoing_scan_barcode_popup_form" method="POST">
+            <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehousePop">
+            <input type="hidden" id="TYPE" name="TYPE" value="scan">
+            <input type="hidden" id="MY_MAT_OUT_SEQ" name="MY_MAT_OUT_SEQ" value="">
+            <input type="hidden" id="BARCODE_NUM" name="BARCODE_NUM" value="">
+            <div style="margin: 20px 0 20px 0;">
+                <div style="font-size: 35px;text-align: center;color: blue;">
+                    <span>B21-aaaaaa-aaaaaaaaa</span>
+                    <span>32EA</span>
+                </div>
+                <div style="font-size: 35px;text-align: center;color: #347fd3;">
+                    <span>출고완료</span>
+                </div>
+            </div>
+            <h2>&nbsp;</h2>
+            <div class="list1">
+                <table class="rowStyle" id="outgoingScanPopDynamicTable">
+                    <tbody>
+                    <tr class="">
+                        <th style="width: 30px;">No.</th>
+                        <th style="width: 45px;">형태</th>
+                        <th style="width: 70px;">소재종류</th>
+                        <th style="width: 80px;">규격</th>
+                        <th style="width: 45px">보유수량</th>
+                        <th style="width: 45px">요청수량</th>
+                        <th style="width: 70px;">창고</th>
+                        <th style="width: 70px;">위치</th>
+                        <th>주문번호</th>
+                        <th>요청일시</th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h2>&nbsp;</h2>
+            <div class="btnWrap">
+                <button type="button" class="defaultBtn greenPopGra" data-dismiss="modal">닫기</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 출하스캔 layer popup : E -->
+
 <script type="text/javascript">
 
     let commonAlertPopup = $("#common_alert_popup");
@@ -629,25 +788,25 @@
 
         /** 장비 파일 업로드 */
         $("#user_info_pop_form").find("#user_info_upload").click(function (e) {
-           let userPhotoFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
-           userPhotoFile.trigger("click");
-           userPhotoFile.unbind().change(function () {
-               var input = $(this);
-               var files = input.get(0).files;
+            let userPhotoFile = $("#common_formdata_multi_upload_form").find("#click_singfile_chose_btn");
+            userPhotoFile.trigger("click");
+            userPhotoFile.unbind().change(function () {
+                var input = $(this);
+                var files = input.get(0).files;
 
-               if (files.length > 0) {
-                   let formData = new FormData();
-                   for (var i = 0; i < files.length; i++) {
-                       formData.append("file" + i, files[i]);
-                   }
-                   fnFormDataFileUploadAjax(function (data) {
-                       input.val('');
-                       let fileInfo = data.fileUploadList[0];
-                       $("#user_info_pop_form").find("#PHOTO_GFILE_SRC").attr("src", "/image/" + fileInfo.GFILE_SEQ);
-                       $("#user_info_pop_form").find("#PHOTO_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
-                   }, formData, '');
-               }
-           });
+                if (files.length > 0) {
+                    let formData = new FormData();
+                    for (var i = 0; i < files.length; i++) {
+                        formData.append("file" + i, files[i]);
+                    }
+                    fnFormDataFileUploadAjax(function (data) {
+                        input.val('');
+                        let fileInfo = data.fileUploadList[0];
+                        $("#user_info_pop_form").find("#PHOTO_GFILE_SRC").attr("src", "/image/" + fileInfo.GFILE_SEQ);
+                        $("#user_info_pop_form").find("#PHOTO_GFILE_SEQ").val(fileInfo.GFILE_SEQ);
+                    }, formData, '');
+                }
+            });
         });
 
         $('#user_info_pop_form').find('#saveUserMasterBtn').on('click', function () {
@@ -1065,7 +1224,7 @@
     let orderDetailRowIndx;
     const g_item_detail_pop_view = function (CONTROL_SEQ, CONTROL_DETAIL_SEQ, grid, rowIndx) {
         orderDetailGrid = grid;
-        orderDetailRowIndx = rowIndx;        
+        orderDetailRowIndx = rowIndx;
         const $itemDetailPop = $('#g_item_detail_pop');
         const $itemDetailPopForm = $("#g_item_detail_pop_form");
         (function () {
@@ -1988,7 +2147,7 @@
         } else {
             processingRequirementsTargetRowIndex++;
         }
-        
+
         changeData();
     });
 
@@ -2091,4 +2250,495 @@
         callWindowImageViewer(imgGfileSeq);
     });
     /* event */
+
+    function timeFormat(time) {
+        var text = "";
+        if(typeof time != 'undefined' && time != "" && time != null) {
+            if(time >= 60) {
+                if(time % 60 == 0) {
+                    text = parseInt(time / 60) + 'h';
+                }else {
+                    text = Math.floor(time / 60) + 'h  ' + parseInt(time % 60) + 'm';
+                }
+            }else {
+                text = time + 'm';
+            }
+        }
+        return text;
+    }
+
+    const g_mct_plan_detail_pop_view = function (EQUIP_SEQ) {
+        $("#mct_plan_detail_pop_form").find("#EQUIP_SEQ").val(EQUIP_SEQ);
+        const parameter = {'url': '/json-info', 'data': {
+                'queryId':'machine.selectMachineInfoForDetailPop',
+                'EQUIP_SEQ':EQUIP_SEQ
+            }
+        };
+
+        fnPostAjax(function (data) {
+            var tempHtml = '<label>장비번호 : ' + data.info.EQUIP_NM + '</label>';
+            tempHtml += '<label>장비종류 : ' + data.info.EQUIP_TYPE_NM + '</label>';
+            tempHtml += '<label>설치위치 : ' + data.info.FACTORY_AREA_NM + '</label>';
+            tempHtml += '<label>관리장(정) : ' + data.info.MAIN_USER_NM + '</label>';
+            tempHtml += '<label>관리장(부) : ' + data.info.SUB_USER_NM + '</label>';
+            $("#mct_machine_info").html(tempHtml);
+        }, parameter, '');
+
+        const parameter2 = {'url': '/json-info', 'data': {
+                'queryId':'machine.selectOngoingInfoForDetailPop',
+                'EQUIP_SEQ':EQUIP_SEQ
+            }
+        };
+        fnPostAjax(function (data) {
+            var tempHtml = '';
+            if(data.info != null) {
+                $("#mct_plan_detail_pop_form").find("#MCT_WORK_SEQ").val(data.info.MCT_WORK_SEQ);
+                if(typeof data.info.IMG_GFILE_SEQ != 'undefined' && data.info.IMG_GFILE_SEQ != '' && data.info.IMG_GFILE_SEQ != null) {
+                    $("#mct_plan_pop_img").show();
+                    $("#mct_plan_pop_img").attr('src', '/qimage/'+data.info.IMG_GFILE_SEQ);
+                    $("#mct_plan_pop_img").attr('alt', data.info.IMG_GFILE_SEQ);
+                    $("#mct_plan_pop_img").attr('data-value', data.info.IMG_GFILE_SEQ);
+                    $("#mct_plan_no_img").hide();
+                }else {
+                    $("#mct_plan_pop_img").hide();
+                    $("#mct_plan_no_img").show();
+                }
+                var stopTime = timeFormat(data.info.TEMP_STOP);
+                var onGoingTime = timeFormat(data.info.ON_GOING);
+                var planWorkingTime = timeFormat(data.info.PLAN_WORKING_TIME);
+                var arr = data.info.DRAWING_NUM.split(",");
+                var arr2 = data.info.DRAWING_SEQ.split(",");
+
+                tempHtml = '<td>' + data.info.WORK_USER_NM + '</td>';
+                tempHtml += '<td>' + data.info.WORK_STATUS_NM + '</td>';
+                tempHtml += '<td>' + data.info.CONTROL_NUM + '</td>';
+                tempHtml += '<td> <span  class="shareIcon" name="detailView" style="cursor: pointer" onclick="g_item_detail_pop_view('+ data.info.CONTROL_SEQ+','+data.info.CONTROL_DETAIL_SEQ +','+'null,'+'null)"></span></td>';
+                tempHtml += '<td><div class="drawDiv">'
+                for(var i=0;i<arr.length;i++){
+                    if(i>0) {
+                        tempHtml += '<br>';
+                    }
+                    tempHtml += '<span class="mct_ongoing_draw" style="cursor:pointer;" data-value="'+ arr2[i]+'">' + arr[i] + '</span>';
+                }
+                tempHtml += '</div></td>';
+                tempHtml += '<td>' + data.info.SIZE_TXT + '</td>';
+                tempHtml += '<td>' + data.info.WORK_TYPE_NM + '</td>';
+                tempHtml += '<td>' + data.info.MATERIAL_DETAIL_NM + '</td>';
+                tempHtml += '<td>';
+                if(data.info.ORDER_QTY_INFO != 'N') {
+                    tempHtml += '<span style="color:red;font-weight: bold;">' + data.info.ORDER_QTY_INFO + '&nbsp;</span>';
+                }
+                tempHtml += data.info.CONTROL_PART_QTY + '</td>';
+                tempHtml += '<td>' + data.info.INNER_DUE_DT + '</td>';
+                tempHtml += '<td>' + stopTime + '</td>';
+                tempHtml += '<td>' + onGoingTime + '</td>';
+                tempHtml += '<td><input id="ongoing_work_input" type="text" style="width: 80%;height: 50px;border: none;" value="' + planWorkingTime+ '"/></td>';
+            }else {
+                tempHtml = '<td colspan="13" style="font-size: 18px;">Not Found Data</td>';
+                $("#mct_plan_pop_img").hide();
+                $("#mct_plan_no_img").show();
+            }
+            $("#mct_plan_tbody").html(tempHtml);
+        }, parameter2, '');
+
+
+        $("#mct_plan_detail_pop").modal('show');
+    }
+    let mctPlanDetailPopGrid = $("#mct_plan_detail_pop_grid");
+    let mctPlanDetailPopColModel = [
+        {title: 'ROWNUM', dataIndx: 'ROWNUM', hidden: true},
+        {title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
+        {title: 'IMG_GFILE_SEQ', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
+        {title: 'MCT_PLAN_SEQ', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
+        {title: '가공<br>납기', minWidth: 50, width: 50, dataIndx: 'INNER_DUE_DT', editable: false,
+            render: function (ui) {
+                const rowData = ui.rowData
+                if (rowData.DELAY_YN === 'Y') {
+                    return {style: 'background-color: #ffff00;'};
+                }
+            }
+        },
+        {title: '진행상태', width: 70, dataIndx: 'PART_STATUS', editable: false},
+        {title: '작업번호<br>/규격', align: 'center', minWidth: 165, width: 165, dataIndx: 'CONTROL_NUM_PART_NUM', editable: false,
+            render: function (ui) {
+                const cellData = ui.cellData;
+                if (cellData) {
+                    return cellData.replace(/&lt;/g, '<');
+                }
+            }
+        },
+        {title: '', align: 'center', minWidth: 30, editable: false,
+            render: function (ui) {
+                if (ui.rowData.CONTROL_NUM)
+                    return '<span class="shareIcon" name="detailView" style="cursor: pointer"></span>';
+            },
+            postRender: function (ui) {
+                let grid = this,
+                    $cell = grid.getCell(ui),
+                    rowIndx = ui.rowIndx,
+                    rowData = ui.rowData;
+
+                $cell.find('[name=detailView]').bind('click', function () {
+                    g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
+                });
+            }
+        },
+        {title: '작업형태<br>/소재', dataType: 'string', dataIndx: 'WORK_TYPE_MATERIAL', minWidth: 80, width: 90, editable: false,
+            render: function (ui) {
+                const cellData = ui.cellData;
+                if (cellData) {
+                    return cellData.replace(/&lt;/g, '<');
+                }
+            }
+        },
+        {title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY', minWidth: 40, width: 40, editable: false,
+            render: function (ui) {
+                const rowData = ui.rowData
+                if (rowData.ORDER_QTY_INFO != 'N') {
+                    return '<span><span style="color: red;font-weight: bold">'+ rowData.ORDER_QTY_INFO +'&nbsp;</span>'+rowData.CONTROL_PART_QTY+'</span>';
+                }
+            }
+        },
+        {title: '예상시간<br>(E/T,분)', dataType: 'string', dataIndx: 'WORKING_TIME', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, minWidth: 55, width: 55, editable: true,
+            format: function(val){
+                return (typeof val != 'undefined')?(val+"'"):"";
+            },
+        },
+        {title: '과거수행기록(NC)', align: 'center',
+            colModel: [
+                {title: 'MCT_PLAN_SEQ', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
+                {
+                    title: '1EA L/T',
+                    minWidth: 55,
+                    width: 55,
+                    dataIndx: 'LAST_UNIT_LEAD_TIME',
+                    editable: false
+                },
+                {title: '작업자', minWidth: 60, width: 65, datatype: 'string', dataIndx: 'LAST_MCT_WORK_USER', editable: false}
+            ]
+        },
+        {title: '', minWidth: 30, editable: false,
+            render: function (ui) {
+                // return '<span style="cursor: pointer;color:red;">Θ</span>';
+                return '<span class="ui-icon ui-icon-circle-minus" name="MCT_PLAN_DELETE_BUTTON" style="cursor: pointer"></span>';
+            },
+            postRender: function (ui) {
+                let rowIndx = ui.rowIndx;
+                let grid = this;
+                let $cell = grid.getCell(ui);
+                $cell.find('[name=MCT_PLAN_DELETE_BUTTON]').on('click', function () {
+                    let elementId = grid.element[0].id;
+
+                    $('#' + elementId).pqGrid('deleteRow', {rowIndx: rowIndx});
+                });
+            }
+        },
+    ];
+    let $mctPlanDetailPopGrid;
+
+    $(".close_mct_plan_detail").on('click',function () {
+        $("#mct_plan_detail_pop").modal('hide');
+    })
+
+    $("#mct_plan_pop_img").dblclick(function () {
+        var imgSeq = $(this).data('value');
+        callWindowImageViewer(imgSeq);
+    });
+    function chageSortNum(data) {
+        $.each(data, function (idx,Item) {
+            if((Item.pq_ri+1) != Item.ROW_NUM) {
+                Item.ROW_NUM = (Item.pq_ri+1)
+                Item.SORT_NUM = (Item.pq_ri+1)
+            }
+        })
+    }
+    $('#mct_plan_detail_pop').on({
+        'show.bs.modal': function () {
+            let mctPlanDetailPopObj = {
+                width: 'auto', height: 458,
+                dataModel: {
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
+                    url: "/paramQueryGridSelect",
+                    postData: fnFormToJsonArrayData('mct_plan_detail_pop_form'),
+                    getData: function (dataJSON) {
+                        return {data: dataJSON.data};
+                    }
+                },
+                strNoRows: g_noData,
+                columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
+                scrollModel: {autoFit: true},
+                numberCell: {title: 'No.'},
+                selectionModel: { type: 'row', mode: 'single'} ,
+                swipeModel: {on: false},
+                showTitle: false,
+                collapsible: false,
+                resizable: false,
+                trackModel: {on: true},
+                editModel: {clicksToEdit: 1},
+                colModel: mctPlanDetailPopColModel,
+                rowSelect: function (evt, ui) {
+                    $.each(ui.addList, function (idx,Item) {
+                        if(idx === 0) {
+                            // let imgUrl = '/resource/asset/images/common/'+Item.rowData.IMG_GFILE_SEQ + '.png';
+                            let imgUrl = '/qimage/'+Item.rowData.IMG_GFILE_SEQ;
+                            $("#mct_plan_pop_img").attr('src',imgUrl);
+                            $("#mct_plan_pop_img").attr('alt',Item.rowData.IMG_GFILE_SEQ);
+                            $("#mct_plan_pop_img").attr('data-value', Item.rowData.IMG_GFILE_SEQ);
+                            $("#mct_plan_no_img").hide();
+                            $("#mct_plan_pop_img").show();
+                        }
+                    })
+                },
+                dragModel:{
+                    on: true,
+                    diHelper: [ 'CONTROL_SEQ','MCT_PLAN_SEQ'],
+                    cssHelper: {
+                        opacity: .7,
+                        position: "absolute",
+                        height: 25,
+                        width: 200,
+                        overflow: "hidden",
+                        background: "#fff",
+                        border: "1px solid",
+                        boxShadow: "4px 4px 2px #aaaaaa",
+                        zIndex: 999999
+                    },
+                    clsDnD: 'pq-pop-grid',
+                    tmplHelper: "<div class='pq-border-0 pq-grid-cell' style='pointer-events: none;z-index:999999;'><span class='pq-icon' style='vertical-align:text-bottom;margin:0 5px;z-index:999999;'></span><span></span></div>",
+                    tmplDragN: "<span class='ui-icon ui-icon-grip-dotted-vertical pq-drag-handle' style='cursor:move;position:absolute;left:2px;top:4px;z-index:999999;'>&nbsp;</span>",
+                    tmplDrag: "<span class='ui-icon ui-icon-grip-dotted-vertical pq-drag-handle' style='cursor:move;vertical-align:text-bottom;touch-action:none;float:left;z-index:999999;'>&nbsp;</span>",
+                },
+                dropModel:{
+                    on: true,
+                    accept : '.pq-pop-grid',
+                    drop: function(t, e) {
+                        var n = e.helper.data("Drag"),
+                            r = this,
+                            i = r.Group(),
+                            o = r.Tree(),
+                            a = e.rowData,
+                            l = e.ratioY() <= .5,
+                            s = e.rowIndx + (l ? 0 : 1),
+                            d = function(t) {
+                                var e;
+                                t.isFolder(a) ? (e = a, l || (c = 0)) : (e = t.getParent(a), c = t.getChildren(e).indexOf(a) + (l ? 0 : 1)), h ? t.moveNodes(f, e, c) : t.addNodes(f, e, c)
+                            };
+                        if (n) {
+                            var c, u = n.getUI(),
+                                h = n.grid() == r,
+                                f = u.nodes;
+                            i.isOn() ? d(i) : o.isOn() ? d(o) : h ? r.moveNodes(f, s) : r.addNodes(f, s)
+                        }
+
+                        data = mctPlanDetailPopGrid.pqGrid('option', 'dataModel.data');
+                        chageSortNum(data);
+
+                        var tempJson = {'updateList': data};
+                        let QUERY_ID_ARRAY = {
+                            'insertQueryId': [],
+                            'updateQueryId': ['machine.updatePlanListSortNum'],
+                        };
+                        tempJson.queryIdList = QUERY_ID_ARRAY;
+                        parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(tempJson)}};
+
+                        fnPostAjax(function (data, callFunctionParam) {
+                            // $mctPlanDetailPopGrid.pqGrid('refreshDataAndView');
+                        }, parameters, '');
+                    }
+                },
+                cellKeyDown: function (event, ui) {
+                    const rowIndx = ui.rowIndx;
+                    const sr = this.SelectRow();
+                    const selRowData = this.getRowData({rowIndx: rowIndx});
+                    let nextRowData = "";
+                    if (event.keyCode == $.ui.keyCode.DOWN) {
+                        sr.removeAll();
+                        sr.add({rowIndx: rowIndx + 1});
+                        nextRowData = this.getRowData({rowIndx: rowIndx +1});
+                    } else if (event.keyCode == $.ui.keyCode.UP) {
+                        sr.removeAll();
+                        sr.add({rowIndx: rowIndx - 1});
+                        nextRowData = this.getRowData({rowIndx: rowIndx -1});
+                    }
+                    let imgUrl = '/qimage/';
+                    imgUrl += (typeof nextRowData != 'undefined' && nextRowData != "")?nextRowData.IMG_GFILE_SEQ:selRowData.IMG_GFILE_SEQ;
+                    $("#mct_plan_pop_img").attr('src',imgUrl);
+                    $("#mct_plan_pop_img").attr('alt',selRowData.IMG_GFILE_SEQ);
+                    $("#mct_plan_pop_img").attr('data-value', selRowData.IMG_GFILE_SEQ);
+                    $("#mct_plan_no_img").hide();
+                    $("#mct_plan_pop_img").show();
+                },
+                refresh : function (evt, ui) {
+                    data = mctPlanDetailPopGrid.pqGrid('option', 'dataModel.data');
+                    var totalQty = 0;
+                    var totalTime = 0;
+                    for (var i = 0; i < data.length; i++) {
+                        var row = data[i];
+                        totalQty += parseInt(row.CONTROL_PART_QTY)
+                        if(typeof row.WORKING_TIME != 'undefined' && row.WORKING_TIME != '') {
+                            totalTime += parseInt(row.WORKING_TIME);
+                        }
+                    }
+
+                    var html = '<label style="width: 90px;">대기현황</label><label style="width: 135px;">' + data.length +' Rows  ' + totalQty + ' EA</label>';
+                    html += '<label style="width: 172px;">예상시간합계 : ' + timeFormat(totalTime);
+                    $("#mct_plan_list_info").html(html);
+                },
+                change: function (evt, ui) {
+                    if(ui.source == "edit") {
+                        var tempJson = {'updateList': []};
+                        var changeList = ui.updateList;
+                        if(changeList.length > 0 ) {
+                            $.each(changeList, function (idx,Item) {
+                                if(typeof Item.rowData.WORKING_TIME == 'undefined' || Item.rowData.WORKING_TIME == null) {
+                                    Item.rowData.WORKING_TIME = '';
+                                }
+                                tempJson.updateList.push(Item.rowData);
+                            })
+                            let QUERY_ID_ARRAY = {
+                                'insertQueryId': [],
+                                'updateQueryId': ['machine.updatePlanListForDetailPop'],
+                            };
+                            tempJson.queryIdList = QUERY_ID_ARRAY;
+                            parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(tempJson)}};
+                            fnPostAjax(function (data, callFunctionParam) {
+                                $mctPlanDetailPopGrid.pqGrid("updateRow", { 'rowIndx': changeList[0].rowIndx , row: { 'WORKING_TIME': changeList[0].rowData.WORKING_TIME } });
+                            }, parameters, '');
+
+                        }
+                    }else if(ui.source == 'delete') {
+                        var deleteList = ui.deleteList;
+                        if(typeof deleteList[0].rowData != 'undefined'){
+                            let parameter = {
+                                'queryId': 'machine.deletePlanList',
+                                'EQUIP_SEQ': deleteList[0].rowData.EQUIP_SEQ,
+                                'MCT_PLAN_SEQ': deleteList[0].rowData.MCT_PLAN_SEQ
+                            };
+                            let parameters = {'url': '/json-update', 'data': parameter};
+                            fnPostAjax(function (data, callFunctionParam) {
+                            }, parameters, '');
+                        }
+                    }
+                }
+            };
+            $mctPlanDetailPopGrid = mctPlanDetailPopGrid.pqGrid(mctPlanDetailPopObj);
+            setTimeout(function() {
+                $("#mct_plan_detail_pop_form").find("#BARCODE_NUM").focus();
+            }, 500);
+        },
+        'hide.bs.modal': function () {
+            $mctPlanDetailPopGrid.pqGrid('destroy');
+        }
+    });
+    $("#mct_plan_detail_pop_form").find("#BARCODE_NUM").on({
+        focus: function () {
+            $("#mct_plan_detail_pop_form_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long_on.png");
+        },
+        blur: function () {
+            $("#mct_plan_detail_pop_form_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long.png");
+        },
+        keyup: function (e) {
+            if (e.keyCode == 13) {
+                let BARCODE_NUM = $("#mct_plan_detail_pop_form").find("#BARCODE_NUM").val();
+                let parameters = {
+                    'url': '/json-info',
+                    'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"machine.selectBarcodePlanInfo"}
+                };
+                fnPostAjax(function (data, callFunctionParam) {
+                    let dataInfo = data.info;
+
+                    $("#mct_plan_detail_pop_form").find("#BARCODE_NUM").val("");
+                    if(dataInfo != null) {
+                        let parameters2 = {
+                            'url': '/json-info',
+                            'data': {
+                                "queryId":"machine.selectAlreadyExistPlan",
+                                "CONTROL_SEQ":dataInfo.CONTROL_SEQ,
+                                "EQUIP_SEQ":$("#mct_plan_detail_pop_form").find("#EQUIP_SEQ").val(),
+                                "CONTROL_DETAIL_SEQ":dataInfo.CONTROL_DETAIL_SEQ
+                            }
+                        };
+                        fnPostAjax(function (data) {
+                            if(data.info != null && data.info.COUNT > 0) {
+                                return;
+                            }else {
+                                var json = dataInfo;
+                                json.EQUIP_SEQ = $("#mct_plan_detail_pop_form").find("#EQUIP_SEQ").val();
+
+                                let parameters = {
+                                    'url': '/modifyMctPlan',
+                                    'data': {actionType: 'add', data: JSON.stringify(json)}
+                                };
+                                fnPostAjax(function (data) {
+                                    const flag = data.flag;
+                                    if (flag) {
+                                        fnAlert(null, '<spring:message code="error.common"/>');
+                                        return false;
+                                    }
+                                    if(typeof dataInfo.IMG_GFILE_SEQ != 'undefined' && dataInfo.IMG_GFILE_SEQ != '') {
+                                        $("#mct_plan_pop_img").attr('src','/qimage/'+dataInfo.IMG_GFILE_SEQ);
+                                        $("#mct_plan_pop_img").attr('alt',dataInfo.IMG_GFILE_SEQ);
+                                        $("#mct_plan_pop_img").attr('data-value', dataInfo.IMG_GFILE_SEQ);
+                                        $("#mct_plan_no_img").hide();
+                                        $("#mct_plan_pop_img").show();
+                                    }
+
+                                    let parameters3 = {
+                                        'url': '/json-info',
+                                        'data': {"MCT_PLAN_SEQ":data.data.MCT_PLAN_SEQ, "EQUIP_SEQ":data.data.EQUIP_SEQ,"queryId":"machine.selectPlanListForDetailPop"}
+                                    };
+                                    fnPostAjax(function (data) {
+                                        var rowLength = mctPlanDetailPopGrid.pqGrid('option', 'dataModel.data').length;
+                                        if(data.info != null) {
+                                            $mctPlanDetailPopGrid.pqGrid('addRow', {
+                                                newRow: data.info,
+                                                rowIndx: rowLength,
+                                                checkEditable: false
+                                            });
+                                        }
+                                    }, parameters3, '');
+                                }, parameters, '');
+                            }
+                        }, parameters2, '');
+                    }else {
+                        fnAlert("","가공계획에 추가 할 수 없습니다.");
+                    }
+                },parameters,'');
+            }
+        }
+    });
+
+    $(document).ready(function(){
+        $(document).on("blur","#ongoing_work_input",function(event){
+            var planWorkT = $("#mct_plan_detail_pop_form").find("#ongoing_work_input").val();
+            let parameter = {
+                'queryId': 'machine.updateOngoingWorkingTime',
+                'EQUIP_SEQ': $("#mct_plan_detail_pop_form").find("#EQUIP_SEQ").val(),
+                'MCT_WORK_SEQ':  $("#mct_plan_detail_pop_form").find("#MCT_WORK_SEQ").val(),
+                'PLAN_WORKING_TIME': planWorkT
+            };
+            var onlyNum = /[^0-9]/g;
+            if(!onlyNum.test(planWorkT)) {
+                let parameters = {'url': '/json-update', 'data': parameter};
+                fnPostAjaxAsync(function (data, callFunctionParam) {
+                    var planWorkingTime = timeFormat($("#mct_plan_detail_pop_form").find("#ongoing_work_input").val());
+                    $("#mct_plan_detail_pop_form").find("#ongoing_work_input").val(planWorkingTime);
+                }, parameters, '');
+            }
+        })
+
+        $(document).on("click",".mct_ongoing_draw",function(e){
+            var imgSeq = $(this).data('value');
+            if(typeof imgSeq != 'undefined' && imgSeq != '') {
+                $("#mct_plan_pop_img").attr('src','/qimage/'+imgSeq);
+                $("#mct_plan_pop_img").attr('alt',imgSeq);
+                $("#mct_plan_pop_img").attr('data-value', imgSeq);
+                $("#mct_plan_no_img").hide();
+                $("#mct_plan_pop_img").show();
+            }
+
+        })
+    });
+
+
 </script>

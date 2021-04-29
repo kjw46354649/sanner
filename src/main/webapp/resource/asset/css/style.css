@@ -170,7 +170,7 @@
 .mct .tableWrap ul li .table { width: 500px; height: 200px; box-sizing: border-box; border: 1px solid #9b9b9b; }
 .mct .tableWrap ul li .table .titleWrap { height: 18px; border-bottom: 1px solid #9b9b9b; background: #e7eef7; }
 .mct .tableWrap ul li .table .titleWrap .equipLabel { display: inline-block; padding: 0 5px; }
-.mct .tableWrap ul li .table .titleWrap .equipLabel > span { display: inline-block; width: 30px; font-size: 12px; font-weight: bold; font-family: 'NotoKrR'; }
+.mct .tableWrap ul li .table .titleWrap .equipLabel > span { display: inline-block; width: 30px; font-size: 12px; font-weight: bold; font-family: 'NotoKrR';text-decoration: underline;cursor: pointer; }
 .mct .tableWrap ul li .table .titleWrap .equipLabel > span + span { margin-left: 5px; }
 .mct .tableWrap ul li .table .titleWrap .data_ipt { margin-left: 10px; }
 .mct .tableWrap ul li .table .titleWrap .listTxt { display: inline-block; }

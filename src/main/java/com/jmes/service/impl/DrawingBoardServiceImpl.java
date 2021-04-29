@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class DrawingBoardServiceImpl implements DrawingBoardService {
@@ -24,6 +25,12 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
         /** 이전 작업이 있을 경우 완료 처리 하고 MCT 작업을 추가 한다. **/
 //        hashMap.put("queryId", "drawingMapper.insertMctWorkStart");
 //        innodaleDao.create(hashMap);
+        /** 예상 작업시간 조회 **/
+        hashMap.put("queryId", "drawingMapper.selectWorkingTime");
+        Map<String, Object> tempMap =  innodaleDao.getInfo(hashMap);
+        if(tempMap != null && !tempMap.get("PLAN_WORKING_TIME").equals("")) {
+            hashMap.put("PLAN_WORKING_TIME",tempMap.get("PLAN_WORKING_TIME"));
+        }
 
         /** 신규 MCT 작업을 추가 한다. **/
         hashMap.put("queryId", "drawingMapper.insertMctWorkStart");
