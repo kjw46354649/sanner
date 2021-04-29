@@ -1495,6 +1495,9 @@
         WHERE A.DEL_YN = 'N'
             AND C.DEL_YN = 'N'
             AND E.EQUIP_SEQ = #{EQUIP_SEQ}
+            <if test="MCT_PLAN_SEQ != null and MCT_PLAN_SEQ != ''">
+                AND A.MCT_PLAN_SEQ = #{MCT_PLAN_SEQ}
+            </if>
         ORDER BY A.SORT_NUM
     </select>
     <update id="updateOngoingWorkingTime" parameterType="java.util.HashMap">
@@ -1552,5 +1555,13 @@
             AND B.OUTSIDE_YN = 'N'
             AND B.INNER_WORK_FINISH_DT IS NULL
             AND A.BARCODE_NUM = #{BARCODE_NUM}
+    </select>
+    <select id="selectAlreadyExistPlan" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT COUNT(*) AS COUNT
+        FROM TBL_MCT_PLAN A
+        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+          AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+          AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+          AND A.DEL_YN = 'N'
     </select>
 </mapper>

@@ -658,7 +658,66 @@
         </div>
     </div>
 </div>
-<!-- 주문상세정보 layer popup : E -->
+<!-- 가공계획수립 상세 layer popup : E -->
+
+
+<!-- 출하스캔 layer popup : S -->
+<div class="popup_container in" id="outgoing_scan_barcode_popup" style="display: none;">
+    <div class="layerPopup" style="height: fit-content;">
+        <h3 style="">
+            <div class="h_area" style="float: left;width: 985px;height: 40px;">
+                <span style="margin-left: 16%;width: 40%;vertical-align: middle;">바코드를 Scan 해주세요</span>
+                <div style="width: 59%;float: right;">
+                    <span class="barCode" style="">
+                        <img id="barCodeImg" src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" style="width: 110px;">
+                    </span>
+                    <span class="barCodeTxt" style="">
+                        <input type="text" class="wd_270_barcode hg_30" id="outgoingScanBarcode" value="" placeholder="도면의 바코드를 스캔해 주세요" style="border: 1px solid #e6e6e6;">
+                    </span>
+                </div>
+            </div>
+        </h3>
+        <form class="form-inline" role="form" id="outgoing_scan_barcode_popup_form" name="outgoing_scan_barcode_popup_form" method="POST">
+            <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehousePop">
+            <input type="hidden" id="TYPE" name="TYPE" value="scan">
+            <input type="hidden" id="MY_MAT_OUT_SEQ" name="MY_MAT_OUT_SEQ" value="">
+            <input type="hidden" id="BARCODE_NUM" name="BARCODE_NUM" value="">
+            <div style="margin: 20px 0 20px 0;">
+                <div style="font-size: 35px;text-align: center;color: blue;">
+                    <span>B21-aaaaaa-aaaaaaaaa</span>
+                    <span>32EA</span>
+                </div>
+                <div style="font-size: 35px;text-align: center;color: #347fd3;">
+                    <span>출고완료</span>
+                </div>
+            </div>
+            <h2>&nbsp;</h2>
+            <div class="list1">
+                <table class="rowStyle" id="outgoingScanPopDynamicTable">
+                    <tbody>
+                    <tr class="">
+                        <th style="width: 30px;">No.</th>
+                        <th style="width: 45px;">형태</th>
+                        <th style="width: 70px;">소재종류</th>
+                        <th style="width: 80px;">규격</th>
+                        <th style="width: 45px">보유수량</th>
+                        <th style="width: 45px">요청수량</th>
+                        <th style="width: 70px;">창고</th>
+                        <th style="width: 70px;">위치</th>
+                        <th>주문번호</th>
+                        <th>요청일시</th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h2>&nbsp;</h2>
+            <div class="btnWrap">
+                <button type="button" class="defaultBtn greenPopGra" data-dismiss="modal">닫기</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 출하스캔 layer popup : E -->
 
 <script type="text/javascript">
 
@@ -2483,7 +2542,7 @@
                         parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(tempJson)}};
 
                         fnPostAjax(function (data, callFunctionParam) {
-                            $mctPlanDetailPopGrid.pqGrid('refreshDataAndView');
+                            // $mctPlanDetailPopGrid.pqGrid('refreshDataAndView');
                         }, parameters, '');
                     }
                 },
@@ -2587,32 +2646,60 @@
                 };
                 fnPostAjax(function (data, callFunctionParam) {
                     let dataInfo = data.info;
+
                     $("#mct_plan_detail_pop_form").find("#BARCODE_NUM").val("");
                     if(dataInfo != null) {
-                        var json = dataInfo;
-                        json.EQUIP_SEQ = $("#mct_plan_detail_pop_form").find("#EQUIP_SEQ").val();
-
-                        let parameters = {
-                            'url': '/modifyMctPlan',
-                            'data': {actionType: 'add', data: JSON.stringify(json)}
+                        let parameters2 = {
+                            'url': '/json-info',
+                            'data': {
+                                "queryId":"machine.selectAlreadyExistPlan",
+                                "CONTROL_SEQ":dataInfo.CONTROL_SEQ,
+                                "EQUIP_SEQ":$("#mct_plan_detail_pop_form").find("#EQUIP_SEQ").val(),
+                                "CONTROL_DETAIL_SEQ":dataInfo.CONTROL_DETAIL_SEQ
+                            }
                         };
                         fnPostAjax(function (data) {
-                            const flag = data.flag;
-                            if (flag) {
-                                fnAlert(null, '<spring:message code="error.common"/>');
-                                return false;
-                            }
-                            if(typeof dataInfo.IMG_GFILE_SEQ != 'undefined' && dataInfo.IMG_GFILE_SEQ != '') {
-                                $("#mct_plan_pop_img").attr('src','/qimage/'+dataInfo.IMG_GFILE_SEQ);
-                                $("#mct_plan_pop_img").attr('alt',dataInfo.IMG_GFILE_SEQ);
-                                $("#mct_plan_pop_img").attr('data-value', dataInfo.IMG_GFILE_SEQ);
-                                $("#mct_plan_no_img").hide();
-                                $("#mct_plan_pop_img").show();
-                            }
+                            if(data.info != null && data.info.COUNT > 0) {
+                                return;
+                            }else {
+                                var json = dataInfo;
+                                json.EQUIP_SEQ = $("#mct_plan_detail_pop_form").find("#EQUIP_SEQ").val();
 
-                            $mctPlanDetailPopGrid.pqGrid('refreshDataAndView');
+                                let parameters = {
+                                    'url': '/modifyMctPlan',
+                                    'data': {actionType: 'add', data: JSON.stringify(json)}
+                                };
+                                fnPostAjax(function (data) {
+                                    const flag = data.flag;
+                                    if (flag) {
+                                        fnAlert(null, '<spring:message code="error.common"/>');
+                                        return false;
+                                    }
+                                    if(typeof dataInfo.IMG_GFILE_SEQ != 'undefined' && dataInfo.IMG_GFILE_SEQ != '') {
+                                        $("#mct_plan_pop_img").attr('src','/qimage/'+dataInfo.IMG_GFILE_SEQ);
+                                        $("#mct_plan_pop_img").attr('alt',dataInfo.IMG_GFILE_SEQ);
+                                        $("#mct_plan_pop_img").attr('data-value', dataInfo.IMG_GFILE_SEQ);
+                                        $("#mct_plan_no_img").hide();
+                                        $("#mct_plan_pop_img").show();
+                                    }
 
-                        }, parameters, '');
+                                    let parameters3 = {
+                                        'url': '/json-info',
+                                        'data': {"MCT_PLAN_SEQ":data.data.MCT_PLAN_SEQ, "EQUIP_SEQ":data.data.EQUIP_SEQ,"queryId":"machine.selectPlanListForDetailPop"}
+                                    };
+                                    fnPostAjax(function (data) {
+                                        var rowLength = mctPlanDetailPopGrid.pqGrid('option', 'dataModel.data').length;
+                                        if(data.info != null) {
+                                            $mctPlanDetailPopGrid.pqGrid('addRow', {
+                                                newRow: data.info,
+                                                rowIndx: rowLength,
+                                                checkEditable: false
+                                            });
+                                        }
+                                    }, parameters3, '');
+                                }, parameters, '');
+                            }
+                        }, parameters2, '');
                     }else {
                         fnAlert("","가공계획에 추가 할 수 없습니다.");
                     }
