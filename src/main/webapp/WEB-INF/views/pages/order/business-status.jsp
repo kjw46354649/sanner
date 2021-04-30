@@ -461,7 +461,7 @@
                     });
                 }
             },
-            {title: '수량', dataIndx: 'CONTROL_PART_QTY_INFO', minWidth: 30},
+            {title: '수량', dataIndx: 'CONTROL_ORDER_QTY', minWidth: 30},
             {title: '진행상태', dataIndx: 'PART_STATUS_NM', width: 60}
         ];
 

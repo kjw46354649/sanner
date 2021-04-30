@@ -2958,23 +2958,25 @@
 
     <select id="selectBusinessOverOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <!-- 하단 그리드 3 (납기지연목록) -->
-        SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+        SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ
             , jmes.SF_GET_DATE_F(X.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT
             , X.ORDER_COMP_NM
             , X.IMG_GFILE_SEQ
             , X.CONTROL_PART_INFO
             , X.CONTROL_PART_QTY
             , X.CONTROL_PART_QTY AS CONTROL_PART_QTY_INFO
+            , X.CONTROL_ORDER_QTY
 --             , CONCAT(X.CONTROL_PART_QTY,'ea') AS CONTROL_PART_QTY_INFO
             , X.PART_STATUS_NM
             , X.CHARGE_USER_NM
         FROM (  <!-- 출고일 없는경우 -->
-                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
                     , B.IMG_GFILE_SEQ
                     , C.ORDER_DUE_DT
                     , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
                     , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
                     , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
+                    , C.ORDER_QTY AS CONTROL_ORDER_QTY
                     , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
                     , (SELECT M.USER_NM FROM jmes.TBL_USER M, jmes.TBL_COMPANY N WHERE M.USER_ID = N.CHARGE_USER_ID AND N.COMP_CD = A.ORDER_COMP_CD) AS CHARGE_USER_NM
                 FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
