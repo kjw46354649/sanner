@@ -782,15 +782,19 @@
             , X.CONTROL_DETAIL_SEQ
             , X.CONTROL_NUM
             , X.DRAWING_NUM
+            , X.ORDER_NUM
             , X.IMG_GFILE_SEQ
             , CONCAT(X.ORDER_QTY - X.OUT_QTY, '/', X.ORDER_QTY) AS QTY_INFO
             , X.ORDER_QTY - X.OUT_QTY AS PLAN_QTY
             , X.OUT_QTY
             , X.MY_OUT_PACKING_CNT
+            , X.WORK_TYPE
         FROM (  SELECT B.CONTROL_SEQ
                     , B.CONTROL_DETAIL_SEQ
                     , A.CONTROL_NUM
                     , C.DRAWING_NUM
+                    , C.ORDER_NUM
+                    , B.WORK_TYPE
                     , C.IMG_GFILE_SEQ
                     , jmes.SF_GET_CONTROL_ORDER_QTY(A.CONTROL_SEQ, 0) AS ORDER_QTY
                     , (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM jmes.TBL_OUT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS OUT_QTY

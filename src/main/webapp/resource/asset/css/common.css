@@ -582,3 +582,25 @@ textarea#editor1 img { max-width: 100%; height: auto; }
 }
 
  #mct_plan_detail_pop_grid .pq-cell-editor {width: 55px !important;}
+
+.outgoingTable {
+  font-size: 14px;
+  font-family: 'NotoKrM';
+}
+.table-box-wrap .table-box {position: relative;width: auto; height: 350px; overflow-y: scroll;}
+.table-box-wrap .table-box table {width: 100%; border-collapse: collapse; text-align: center;}
+.table-box-wrap {
+  border: 1px solid #acb9b9;
+}
+.table-box-wrap .table-box table thead tr th {
+  border: 1px solid #acb9b9;
+  font-weight: normal;
+  background:#e8f0f0;
+  color:#162f2f;
+  position: sticky;
+  top: 0;
+  padding: 10px 12px;
+  text-align: center;
+  border-top: 0;
+}
+.table-box-wrap .table-box table tbody tr td{padding: 8px 8px; box-sizing: border-box; border: 1px solid #ddd; word-break: break-all;}
