@@ -1011,7 +1011,14 @@
                 AND H.POP_SEQ = (SELECT MAX(M.POP_SEQ) FROM jmes.TBL_POP M WHERE M.CONTROL_SEQ = H.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ)
         WHERE B.DEL_YN = 'N'
             AND B.CONTROL_STATUS IN ('ORD001', 'ORD003', 'ORD005')
-            AND IFNULL(B.OUT_FINISH_STATUS, SPACE(0)) NOT IN ('RLS010')
+            AND (
+                (IFNULL(B.OUT_FINISH_STATUS, SPACE(0)) NOT IN ('RLS010'))
+                  OR
+                (EXISTS (SELECT 1 FROM jmes.TBL_CAM CM WHERE A.CONTROL_SEQ = CM.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = CM.CONTROL_DETAIL_SEQ AND CM.START_DT IS NOT NULL
+                            AND CM.FINISH_DT IS NULL
+                        )
+                )
+            )
             <if test='SEL_ASSEMBLY == null'>
                 AND A.WORK_TYPE NOT IN ('WTP020')
             </if>
@@ -1055,7 +1062,12 @@
                 )
             </if>
             <if test='SEL_COMPLETED_YN != null'>
-                AND (A.INNER_WORK_FINISH_DT IS NULL OR (E.INSPECT_GRADE = 'GRD040' AND C.OUT_FINISH_DT IS NULL) OR B.OUT_FINISH_STATUS = 'RLS030')
+                AND (A.INNER_WORK_FINISH_DT IS NULL OR (E.INSPECT_GRADE = 'GRD040' AND C.OUT_FINISH_DT IS NULL) OR B.OUT_FINISH_STATUS = 'RLS030'
+                        OR (EXISTS (SELECT 1 FROM jmes.TBL_CAM CM WHERE A.CONTROL_SEQ = CM.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = CM.CONTROL_DETAIL_SEQ AND CM.START_DT IS NOT NULL
+                                                    AND CM.FINISH_DT IS NULL
+                                                )
+                        )
+                    )
             </if>
         ORDER BY
             <if test="INCLUDE_UNALLOCATED_WAIT != null and INCLUDE_UNALLOCATED_WAIT != ''">
