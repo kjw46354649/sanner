@@ -1447,19 +1447,36 @@
                         -- CONCAT(FLOOR(A.PLAN_WORKING_TIME/60),'h ',FLOOR(A.PLAN_WORKING_TIME % 60),'m') AS PLAN_WORKING_TIME,
                         IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0) AS ORIGINAL_SIDE_QTY, -- 대칭_원칭 -->
                         IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0) AS OTHER_SIDE_QTY, -- 대칭_대칭 -->
-                        (SELECT
-                             GROUP_CONCAT(DRAWING_NUM SEPARATOR ',')
-                         FROM TBL_CONTROL_PART_ORDER
-                         WHERE CONTROL_SEQ = A.CONTROL_SEQ
-                           AND CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
-                         ORDER BY CONTROL_SEQ,CONTROL_DETAIL_SEQ
-                        ) AS DRAWING_NUM,
-                        (SELECT GROUP_CONCAT(IMG_GFILE_SEQ SEPARATOR ',')
-                         FROM TBL_CONTROL_PART_ORDER
-                         WHERE CONTROL_SEQ = A.CONTROL_SEQ
-                           AND CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
-                         ORDER BY CONTROL_SEQ,CONTROL_DETAIL_SEQ
-                        ) AS DRAWING_SEQ
+                        CASE WHEN C.WORK_TYPE = 'WTP050' THEN (SELECT
+                                                                   GROUP_CONCAT(DRAWING_NUM SEPARATOR ',')
+                                                               FROM TBL_CONTROL_PART
+                                                               WHERE CONTROL_SEQ = A.CONTROL_SEQ
+                                                                 AND CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                                                               ORDER BY CONTROL_SEQ,CONTROL_DETAIL_SEQ
+                                                        )
+                             ELSE (SELECT
+                                       GROUP_CONCAT(DRAWING_NUM SEPARATOR ',')
+                                   FROM TBL_CONTROL_PART_ORDER
+                                   WHERE CONTROL_SEQ = A.CONTROL_SEQ
+                                     AND CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                                   ORDER BY CONTROL_SEQ,CONTROL_DETAIL_SEQ
+                             )
+                        END DRAWING_NUM,
+                        CASE WHEN C.WORK_TYPE = 'WTP050' THEN (SELECT
+                                                                   GROUP_CONCAT(IMG_GFILE_SEQ SEPARATOR ',')
+                                                               FROM TBL_CONTROL_PART
+                                                               WHERE CONTROL_SEQ = A.CONTROL_SEQ
+                                                                 AND CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                                                               ORDER BY CONTROL_SEQ,CONTROL_DETAIL_SEQ
+                                                        )
+                             ELSE (SELECT
+                                       GROUP_CONCAT(IMG_GFILE_SEQ SEPARATOR ',')
+                                   FROM TBL_CONTROL_PART_ORDER
+                                   WHERE CONTROL_SEQ = A.CONTROL_SEQ
+                                     AND CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                                   ORDER BY CONTROL_SEQ,CONTROL_DETAIL_SEQ
+                             )
+                        END DRAWING_SEQ
                  FROM TBL_MCT_WORK A
                           INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                           INNER JOIN TBL_CONTROL_PART C ON A.CONTROL_SEQ  = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ

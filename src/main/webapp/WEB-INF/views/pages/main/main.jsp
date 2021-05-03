@@ -86,9 +86,7 @@
                 <h2>게시판</h2>
                 <button class="view_all" id="dash_board_btn">전체보기&nbsp;&nbsp;&#62;</button>
             </div>
-            <div class="conWrap list">
-                <ul class="board_ul">
-                </ul>
+            <div class="conWrap list main_board_div">
             </div>
         </div>
     </div>
@@ -553,7 +551,7 @@
             fnPostAjax(function (data) {
                 if(data.list.length > 0) {
                     $.each(data.list, function (idx,Item) {
-                        var board = '<li>';
+                        var board = '<ul class="board_ul"><li>';
                         board += '<a href="/dashBoard/'+Item.BOARD_SEQ +'"';
                         board += 'onclick="window.open(this.href,';
                         board += "'_blank',"
@@ -567,10 +565,14 @@
                         board += '<span class="rightText list_write">작성자 : <b>'+ Item.INSERT_ID +'</b></span>';
                         board += '</div>';
                         board += '</a>';
-                        board += '</li>';
+                        board += '</li></ul>';
 
-                        $(".board_ul").append(board);
+                        $(".main_board_div").append(board);
                     })
+                }else {
+                    var html = '<div style="font-size: 20px;margin-top: 7px;margin-bottom: 10px;text-align: center;height: 204px;border: 1px solid #d9d9d9;border-radius: 8px;box-shadow: 1px 1px #999999;">';
+                    html += '<span style="line-height: 204px;">No Data<span></span></span></div>';
+                    $(".main_board_div").append(html);
                 }
             }, parameter, '');
         }

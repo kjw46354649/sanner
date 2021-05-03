@@ -81,7 +81,7 @@
 
 </style>
 
-<div class="page mct">
+<div class="page mct mct-mange-page">
     <div class="topWrap">
         <form id="MCT_PLAN_MANAGE_SEARCH_FORM" role="form">
             <input type="hidden" name="queryId" id="queryId" value="machine.selectEquipId">
@@ -396,7 +396,7 @@
                 gridChange(this, ui);
             }
         };
-        $('html').dblclick(function(e) {
+        $('.mct-mange-page').dblclick(function(e) {
             if($(e.target).hasClass("pq-cont-inner pq-cont-right")) {
                 if(!$(e.target).hasClass("pq-table-right pq-table")){
                     var parentLi = $(e.target).parents('li');
