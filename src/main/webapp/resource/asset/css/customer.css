@@ -473,4 +473,4 @@ button:disabled {
 .mct_plan_detail_pop .barcode_label {font-size: 17px;float: left;margin-left: 4%;margin-right: 5%;}
 .mct_plan_detail_pop .nonImgDiv {height: 568px;margin-top: 8px;position: absolute;width: 755px;max-width: none !important;transform: none;left: 2%;display: table;line-height: 535px;border: 1px solid #d9d9d9;}
 .mct_plan_detail_pop .nonImgDiv span {font-size: 20px;display: table-cell;text-align: center;line-height: 535px;}
-.mct_plan_detail_pop .drawDiv {height: 80px;overflow: auto;text-align: center;display: block;width: 100%;margin-top: 5px;}
+.mct_plan_detail_pop .drawDiv {height: 80px;overflow: auto;text-align: center;display: block;width: 100%;margin-top: 5px;line-height: 25px;}

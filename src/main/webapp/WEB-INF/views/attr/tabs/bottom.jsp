@@ -2581,6 +2581,11 @@
             $mctPlanDetailPopGrid.pqGrid('destroy');
         }
     });
+    $("#mct_plan_detail_pop_form").find("#mct_plan_detail_pop_form_barcode_img").on('click',function (){
+        setTimeout(function() {
+            $("#mct_plan_detail_pop_form").find("#BARCODE_NUM").focus();
+        }, 100);
+    })
     $("#mct_plan_detail_pop_form").find("#BARCODE_NUM").on({
         focus: function () {
             $("#mct_plan_detail_pop_form_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long_on.png");
