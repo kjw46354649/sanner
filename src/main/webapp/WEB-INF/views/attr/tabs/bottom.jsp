@@ -2240,14 +2240,18 @@
                 tempHtml += '<td>' + data.info.WORK_STATUS_NM + '</td>';
                 tempHtml += '<td>' + data.info.CONTROL_NUM + '</td>';
                 tempHtml += '<td> <span  class="shareIcon" name="detailView" style="cursor: pointer" onclick="g_item_detail_pop_view('+ data.info.CONTROL_SEQ+','+data.info.CONTROL_DETAIL_SEQ +','+'null,'+'null)"></span></td>';
-                tempHtml += '<td><div class="drawDiv">'
+                tempHtml += '<td><div class="drawDiv"><div style="height: 80px;overflow: scroll;text-align: center;vertical-align: middle;display: table-cell;'
+                if(arr.length > 2) {
+                    tempHtml += 'position:absolute;width:200px;';
+                }
+                tempHtml += '">';
                 for(var i=0;i<arr.length;i++){
                     if(i>0) {
                         tempHtml += '<br>';
                     }
-                    tempHtml += '<span class="mct_ongoing_draw" style="cursor:pointer;" data-value="'+ arr2[i]+'">' + arr[i] + '</span>';
+                    tempHtml += '<span class="mct_ongoing_draw" data-value="'+ arr2[i]+'">' + arr[i] + '</span>';
                 }
-                tempHtml += '</div></td>';
+                tempHtml += '</div></div></td>';
                 tempHtml += '<td>' + data.info.SIZE_TXT + '</td>';
                 tempHtml += '<td>' + data.info.WORK_TYPE_NM + '</td>';
                 tempHtml += '<td>' + data.info.MATERIAL_DETAIL_NM + '</td>';
