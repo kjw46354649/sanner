@@ -546,7 +546,8 @@ input[type=number] {
 .vGraph{ padding:20px 0;margin: 0 auto;width: auto;height: 172px;}
 .vGraph ul{ margin:5px; padding:0; height:180px; border:1px solid #ddd; border-top:0; border-right:0; font-size:11px; font-family:Tahoma, Geneva, sans-serif; list-style:none;text-align: center;float: left;width: 98%;white-space: nowrap;overflow: auto;}
 .vGraph ul:after{ content:""; display:block; clear:both;}
-.vGraph li{ display:inline-block; width:12%; height:121px; margin:2% 3% 0 4%; position:relative; text-align:center; white-space:nowrap; border: 1px solid #6c6262}
+/*.vGraph li{ display:inline-block; width:12%; height:121px; margin:2% 3% 0 4%; position:relative; text-align:center; white-space:nowrap; border: 1px solid #6c6262}*/
+.vGraph li{ display:inline-block; width:55px; height:150px; margin:0px 25px 0px 20px; position:relative; text-align:center; white-space:nowrap; vertical-align: middle;}
 .vGraph .gTerm{ position:relative; display:inline-block; width:100%;height: 8%;line-height: 16px; margin:0 -100% -16% 0; padding:196% 0 0 0; vertical-align:bottom; color:#000000; font-weight:bold; font-size: 15px;}
 .vGraph .gBar{ position:relative; display:inline-block; width:100%; border-bottom:0; background:#335cad; vertical-align:bottom;}
 .vGraph .gBar .down75{ position:absolute; width:100%; top:-35px; left:0; color:#000000;font-size: 18px; font-weight: bold;}
@@ -604,3 +605,5 @@ textarea#editor1 img { max-width: 100%; height: auto; }
   border-top: 0;
 }
 .table-box-wrap .table-box table tbody tr td{padding: 8px 8px; box-sizing: border-box; border: 1px solid #ddd; word-break: break-all;}
+
+.select_graph {background: #fc2111 !important;}

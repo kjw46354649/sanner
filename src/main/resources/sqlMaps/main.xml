@@ -5,7 +5,7 @@
 
     <select id="selectOperatingRateChart" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.EQUIP_SEQ
-            , CASE WHEN X.EQUIP_SEQ IS NULL THEN 'Total'
+            , CASE WHEN X.EQUIP_SEQ IS NULL THEN 'Average'
                    ELSE (SELECT CONCAT(M.EQUIP_NM,<![CDATA[ '<br> (']]>,jmes.SF_GET_CODE_NM('1005',M.FACTORY_AREA,#{LOGIN_LOCALE}),')') FROM jmes.TBL_EQUIP M WHERE M.EQUIP_SEQ = X.EQUIP_SEQ)
               END AS EQUIP_NM
             , CASE WHEN IFNULL(X.DUTY_TIME,0) = 0 THEN 0 ELSE ROUND(IFNULL(X.WORK_TIME,0) / X.DUTY_TIME * 100,0) END AS REAL_RATIO
@@ -81,6 +81,9 @@
 --                     AND A.WORK_FINISH_DT <![CDATA[ < ]]> jmes.SF_GET_SHIFT_DAY_TIME('END', '20210129')
                     <if test="USER_ID != null and USER_ID != ''">
                         AND A.WORK_USER_ID = #{USER_ID}
+                    </if>
+                    <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                        AND A.EQUIP_SEQ = #{EQUIP_SEQ}
                     </if>
         	        AND A.EQUIP_SEQ IN (    SELECT M.EQUIP_SEQ
                                             FROM jmes.TBL_BATCH_MCT_WORK_EQUIP M

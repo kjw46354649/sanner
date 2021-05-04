@@ -18,6 +18,7 @@
             <div class="searchWrap ">
                 <div class="hWrap">
                     <form class="form-inline" id="operating_rate_and_operation_record_search_form" name="operating_rate_and_operation_record_search_form" role="form">
+                        <input type="hidden" name="EQUIP_SEQ" id="EQUIP_SEQ" value="">
                         <div class="d-flex align-items-center">
                             <div>
 <%--                                <span class="slt_wrap">--%>
@@ -488,18 +489,25 @@
                 const rowData = data.list[i];
                 // createChartElement(i);
                 // createChart(rowData, i);
-                if(i == 0) {
-                    rowData.REAL_RATIO = 80;
-                }
                 var spanClass = "down75";
                 if(rowData.REAL_RATIO > 75) {
                     spanClass = "over75";
                 }
                 var tempRatio = rowData.REAL_RATIO
                 if(tempRatio >= 100 ) {
-                    tempRatio = 99.8;
+                    tempRatio = 100;
                 }
-                $(".vGraph_ul").append('<li><span class="gTerm">' + rowData.EQUIP_NM + '</span><span class="gBar" style="height:' + tempRatio +'%"><span class="'+spanClass+'">'+ rowData.REAL_RATIO +'%</span></span></li>')
+                var html = '<li><div style="height: 125px;width:100%;border: 1px solid #6c6262;margin: 0px 0px 5px 0px;" class="div_graph" data-value="' +((typeof rowData.EQUIP_SEQ != 'undefined' && rowData.EQUIP_SEQ != null)?rowData.EQUIP_SEQ:'')+ '">';
+                html += '<span class="gBar" style="height:' + tempRatio + '%;top:'+(100-tempRatio) + '%';
+                if(rowData.EQUIP_NM.toLowerCase() == 'average') {
+                    html += ';background:#4a8de3';
+                }
+                html += ';">';
+                html += '<span class="'+spanClass+'">'+ rowData.REAL_RATIO +'%</span></span></div>';
+                html += '<div style="height: 35px;"><span style="font-weight: bold;font-size: 13px;color: #000000;position: relative;">' + rowData.EQUIP_NM ;
+                html += '</span></div></li>';
+                $(".vGraph_ul").append(html);
+                // $(".vGraph_ul").append('<li><span class="gTerm">' + rowData.EQUIP_NM + '</span><span class="gBar" style="height:' + tempRatio +'%"><span class="'+spanClass+'">'+ rowData.REAL_RATIO +'%</span></span></li>')
             }
         };
         const createChartElement = function (index) {
@@ -507,6 +515,9 @@
             const valueElement = $('<div class="card"><div id="' + 'chart' + index + '"></div></div>');
             $charWrap.append(valueElement);
         };
+        function clickGraph() {
+            console.log($(this))
+        }
 
         const createChart = function (rowData, index) {
             Highcharts.chart('chart' + index, Highcharts.merge(gaugeOptions, {
@@ -581,7 +592,7 @@
         const loadLeftGrid = function () {
             const $form = fnFormToJsonArrayData('#operating_rate_and_operation_record_search_form');
             const leftPostData1 = $.extend(true, {}, $form, {queryId: 'main.selectProcessHistoryList-main'});
-            const leftPostData2 = $.extend(true, {}, $form, {queryId: 'main.selectCamWorkHistoryList-main'});
+            // const leftPostData2 = $.extend(true, {}, $form, {queryId: 'main.selectCamWorkHistoryList-main'});
 
             $mainLeftGrid1.pqGrid('option', 'dataModel.postData', function () {
                 return leftPostData1;
@@ -589,10 +600,10 @@
             $mainLeftGrid1.pqGrid('refreshDataAndView');
 
 
-            $mainLeftGrid2.pqGrid('option', 'dataModel.postData', function () {
-                return leftPostData2;
-            });
-            $mainLeftGrid2.pqGrid('refreshDataAndView');
+            // $mainLeftGrid2.pqGrid('option', 'dataModel.postData', function () {
+            //     return leftPostData2;
+            // });
+            // $mainLeftGrid2.pqGrid('refreshDataAndView');
         };
 
         const refreshLeft = function () {
@@ -608,6 +619,7 @@
         };
 
         $('#operating_rate_and_operation_record_search_form').on('change', function () {
+            $("#operating_rate_and_operation_record_search_form").find("#EQUIP_SEQ").val("");
             refreshLeft();
         });
 
@@ -644,4 +656,22 @@
             window.open('/dashBoard','','width=1100px,height=610px');
         });
     });
+    $(document).ready(function(){
+        $(document).on("click",".div_graph",function(e){
+            $(".gBar").removeClass("select_graph");
+            $(this).find(".gBar").addClass("select_graph");
+            var equipSeq = $(this).data('value');
+            $("#operating_rate_and_operation_record_search_form").find("#EQUIP_SEQ").val(equipSeq);
+
+            const $form = fnFormToJsonArrayData('#operating_rate_and_operation_record_search_form');
+            const leftPostData1 = $.extend(true, {}, $form, {queryId: 'main.selectProcessHistoryList-main'});
+            // const leftPostData2 = $.extend(true, {}, $form, {queryId: 'main.selectCamWorkHistoryList-main'});
+
+            $('#main_left_grid_1').pqGrid('option', 'dataModel.postData', function () {
+                return leftPostData1;
+            });
+            $('#main_left_grid_1').pqGrid('refreshDataAndView');
+        })
+    });
+
 </script>
