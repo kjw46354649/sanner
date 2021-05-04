@@ -2990,6 +2990,7 @@
                     AND IFNULL(A.OUT_FINISH_STATUS, SPACE(0)) NOT IN ('RLS020') <!-- 폐기 제외 -->
                     AND A.OUT_FINISH_DT IS NULL
                     AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
+                    AND C.OUT_FINISH_DT IS NULL
             ) X
         ORDER BY X.ORDER_DUE_DT, X.CONTROL_PART_INFO
     </select>
