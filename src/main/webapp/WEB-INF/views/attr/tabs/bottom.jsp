@@ -2692,6 +2692,9 @@
         })
 
         $(document).on("click",".mct_ongoing_draw",function(e){
+            var grid = $("#mct_plan_detail_pop_grid").pqGrid('getInstance').grid;
+            var sr = grid.SelectRow();
+            sr.removeAll();
             var imgSeq = $(this).data('value');
             if(typeof imgSeq != 'undefined' && imgSeq != '') {
                 $("#mct_plan_pop_img").attr('src','/qimage/'+imgSeq);
