@@ -57,15 +57,15 @@
                             <th style="width: 6%;">분류</th>
                             <td>
                                 <select class="wd_70" title="분류" name="BOARD_TYPE" id="BOARD_TYPE" style="font-size: 14px;">
-                                    <option value="1">공지</option>
-                                    <option value="2">일반</option>
+                                    <option value="1" <c:if test="${not empty boardInfo && boardInfo.BOARD_TYPE == 1}">selected</c:if>>공지</option>
+                                    <option value="2" <c:if test="${not empty boardInfo && boardInfo.BOARD_TYPE == 2}">selected</c:if>>일반</option>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <th>첨부파일</th>
                             <td colspan="5">
-                                <input type="file" id="FILE_UPLOAD" value="" >
+                                <input type="file" id="FILE_UPLOAD" value="" multiple>
                                 <div id="file_list_div">
                                     <c:if test="${not empty boardInfo.FILE_SEQ_1 && boardInfo.FILE_SEQ_1 ne ''}">
                                         <span id="file_div_${boardInfo.FILE_SEQ_1}" class="file_span"  data-value="${boardInfo.FILE_SEQ_1}">${boardInfo.FILE_NM_1}
@@ -214,8 +214,7 @@
         $("#dash_board_new_form").find("#FILE_UPLOAD").change(function () {
             var input = $(this);
             var files = input.get(0).files;
-            console.log('files',files)
-            if(fileSeqList.length >= 3) {
+            if(fileSeqList.length + files.length > 3) {
                 fnAlert('','파일은 최대 3개까지 등록하실수 있습니다.');
                 input.val('');
                 return false;
@@ -228,22 +227,27 @@
                     if(fileName.length > 30) {
                         fileName = fileName.substr(0,30) +'...';
                     }
-                    var fileDiv = '<span id="file_div_' + (fileSeqList.length +1 ) + '" class="file_span">'+fileName;
-                    fileDiv += '<button id="delete_file_' + (fileSeqList.length +1) + '" class="del_file_btn" type="button" style="margin-left: 5px;"><span style="font-size: 15px;">×</span></button>';
+                    var fileDiv = '<span id="file_div_' + (fileSeqList.length +1 + i ) + '" class="file_span">'+fileName;
+                    fileDiv += '<button id="delete_file_' + (fileSeqList.length +1 + i) + '" class="del_file_btn" type="button" style="margin-left: 5px;"><span style="font-size: 15px;">×</span></button>';
                     fileDiv += '</span>';
                     $("#file_list_div").append(fileDiv)
-                    formData.append("file" + i, files[i]);
+                    formData.append("file", files[i]);
                 }
                 fnFormDataFileUploadAjax(function (data) {
                     input.val('');
                     let fileInfo = data.fileUploadList[0];
-                    fileSeqList.push(fileInfo.GFILE_SEQ);
-                    var id = 'FILE_SEQ_' + fileSeqList.length;
-                    $("#dash_board_new_form").find("#" + id).val(fileInfo.GFILE_SEQ);
-                    $("#dash_board_new_form").find("#delete_file_"+fileSeqList.length).attr('data-value',fileInfo.GFILE_SEQ);
-                    $("#dash_board_new_form").find("#file_div_"+fileSeqList.length).attr('data-value',fileInfo.GFILE_SEQ);
-                    var active = document.getElementById("file_div_"+fileSeqList.length);
-                    active.id = 'file_div_' + fileInfo.GFILE_SEQ;
+                    let fileUploadList = data.fileUploadList;
+                    for(var i=0;i<fileUploadList.length;i++) {
+                        if(fileSeqList.indexOf(fileUploadList[i].FILE_SEQ) < 0) {
+                            fileSeqList.push(fileUploadList[i].FILE_SEQ);
+                        }
+                        var id = 'FILE_SEQ_' + fileSeqList.length;
+                        $("#dash_board_new_form").find("#" + id).val(fileUploadList[i].FILE_SEQ);
+                        $("#dash_board_new_form").find("#delete_file_"+fileSeqList.length).attr('data-value',fileUploadList[i].FILE_SEQ);
+                        $("#dash_board_new_form").find("#file_div_"+fileSeqList.length).attr('data-value',fileUploadList[i].FILE_SEQ);
+                        var active = document.getElementById("file_div_"+fileSeqList.length);
+                        active.id = 'file_div_' + fileUploadList[i].FILE_SEQ;
+                    }
                 }, formData, '');
             }
         });

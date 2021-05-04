@@ -1193,7 +1193,8 @@
             },
             keyup: function (e) {
                 if (e.keyCode == 13) {
-                    let BARCODE_NUM = $("#stock_manage_pop_form").find("#BARCODE_NUM").val();
+                    // let BARCODE_NUM = $("#stock_manage_pop_form").find("#BARCODE_NUM").val();
+                    let BARCODE_NUM = fnBarcodeKo2En(this.value);
                     let parameters = {
                         'url': '/json-info',
                         'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcode"}

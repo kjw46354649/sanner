@@ -566,6 +566,9 @@
 <div class="popup_container mct_plan_detail_pop" id="mct_plan_detail_pop" style="display: none;z-index: 1042;">
     <div class="layerPopup">
         <h3>가공계획수립 상세</h3>
+        <button type="button" id="mct_plan_pop_refresh" style="margin-left: 85%;vertical-align: bottom;">
+            <img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침">
+        </button>
         <button type="button" class="pop_close mt-10 mr-8 close_mct_plan_detail">닫기</button>
         <div class="qualityWrap">
             <div class="h_area"></div>
@@ -659,65 +662,6 @@
     </div>
 </div>
 <!-- 가공계획수립 상세 layer popup : E -->
-
-
-<!-- 출하스캔 layer popup : S -->
-<div class="popup_container in" id="outgoing_scan_barcode_popup" style="display: none;">
-    <div class="layerPopup" style="height: fit-content;">
-        <h3 style="">
-            <div class="h_area" style="float: left;width: 985px;height: 40px;">
-                <span style="margin-left: 16%;width: 40%;vertical-align: middle;">바코드를 Scan 해주세요</span>
-                <div style="width: 59%;float: right;">
-                    <span class="barCode" style="">
-                        <img id="barCodeImg" src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" style="width: 110px;">
-                    </span>
-                    <span class="barCodeTxt" style="">
-                        <input type="text" class="wd_270_barcode hg_30" id="outgoingScanBarcode" value="" placeholder="도면의 바코드를 스캔해 주세요" style="border: 1px solid #e6e6e6;">
-                    </span>
-                </div>
-            </div>
-        </h3>
-        <form class="form-inline" role="form" id="outgoing_scan_barcode_popup_form" name="outgoing_scan_barcode_popup_form" method="POST">
-            <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehousePop">
-            <input type="hidden" id="TYPE" name="TYPE" value="scan">
-            <input type="hidden" id="MY_MAT_OUT_SEQ" name="MY_MAT_OUT_SEQ" value="">
-            <input type="hidden" id="BARCODE_NUM" name="BARCODE_NUM" value="">
-            <div style="margin: 20px 0 20px 0;">
-                <div style="font-size: 35px;text-align: center;color: blue;">
-                    <span>B21-aaaaaa-aaaaaaaaa</span>
-                    <span>32EA</span>
-                </div>
-                <div style="font-size: 35px;text-align: center;color: #347fd3;">
-                    <span>출고완료</span>
-                </div>
-            </div>
-            <h2>&nbsp;</h2>
-            <div class="list1">
-                <table class="rowStyle" id="outgoingScanPopDynamicTable">
-                    <tbody>
-                    <tr class="">
-                        <th style="width: 30px;">No.</th>
-                        <th style="width: 45px;">형태</th>
-                        <th style="width: 70px;">소재종류</th>
-                        <th style="width: 80px;">규격</th>
-                        <th style="width: 45px">보유수량</th>
-                        <th style="width: 45px">요청수량</th>
-                        <th style="width: 70px;">창고</th>
-                        <th style="width: 70px;">위치</th>
-                        <th>주문번호</th>
-                        <th>요청일시</th>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <h2>&nbsp;</h2>
-            <div class="btnWrap">
-                <button type="button" class="defaultBtn greenPopGra" data-dismiss="modal">닫기</button>
-            </div>
-        </form>
-    </div>
-</div>
-<!-- 출하스캔 layer popup : E -->
 
 <script type="text/javascript">
 
@@ -2266,27 +2210,10 @@
         }
         return text;
     }
-
-    const g_mct_plan_detail_pop_view = function (EQUIP_SEQ) {
-        $("#mct_plan_detail_pop_form").find("#EQUIP_SEQ").val(EQUIP_SEQ);
-        const parameter = {'url': '/json-info', 'data': {
-                'queryId':'machine.selectMachineInfoForDetailPop',
-                'EQUIP_SEQ':EQUIP_SEQ
-            }
-        };
-
-        fnPostAjax(function (data) {
-            var tempHtml = '<label>장비번호 : ' + data.info.EQUIP_NM + '</label>';
-            tempHtml += '<label>장비종류 : ' + data.info.EQUIP_TYPE_NM + '</label>';
-            tempHtml += '<label>설치위치 : ' + data.info.FACTORY_AREA_NM + '</label>';
-            tempHtml += '<label>관리장(정) : ' + data.info.MAIN_USER_NM + '</label>';
-            tempHtml += '<label>관리장(부) : ' + data.info.SUB_USER_NM + '</label>';
-            $("#mct_machine_info").html(tempHtml);
-        }, parameter, '');
-
+    function settingOngoingInfo() {
         const parameter2 = {'url': '/json-info', 'data': {
                 'queryId':'machine.selectOngoingInfoForDetailPop',
-                'EQUIP_SEQ':EQUIP_SEQ
+                'EQUIP_SEQ':$("#mct_plan_detail_pop_form").find("#EQUIP_SEQ").val()
             }
         };
         fnPostAjax(function (data) {
@@ -2313,14 +2240,18 @@
                 tempHtml += '<td>' + data.info.WORK_STATUS_NM + '</td>';
                 tempHtml += '<td>' + data.info.CONTROL_NUM + '</td>';
                 tempHtml += '<td> <span  class="shareIcon" name="detailView" style="cursor: pointer" onclick="g_item_detail_pop_view('+ data.info.CONTROL_SEQ+','+data.info.CONTROL_DETAIL_SEQ +','+'null,'+'null)"></span></td>';
-                tempHtml += '<td><div class="drawDiv">'
+                tempHtml += '<td><div class="drawDiv"><div style="height: 80px;overflow: scroll;text-align: center;vertical-align: middle;display: table-cell;'
+                if(arr.length > 2) {
+                    tempHtml += 'position:absolute;width:200px;';
+                }
+                tempHtml += '">';
                 for(var i=0;i<arr.length;i++){
                     if(i>0) {
                         tempHtml += '<br>';
                     }
-                    tempHtml += '<span class="mct_ongoing_draw" style="cursor:pointer;" data-value="'+ arr2[i]+'">' + arr[i] + '</span>';
+                    tempHtml += '<span class="mct_ongoing_draw" data-value="'+ arr2[i]+'">' + arr[i] + '</span>';
                 }
-                tempHtml += '</div></td>';
+                tempHtml += '</div></div></td>';
                 tempHtml += '<td>' + data.info.SIZE_TXT + '</td>';
                 tempHtml += '<td>' + data.info.WORK_TYPE_NM + '</td>';
                 tempHtml += '<td>' + data.info.MATERIAL_DETAIL_NM + '</td>';
@@ -2340,7 +2271,26 @@
             }
             $("#mct_plan_tbody").html(tempHtml);
         }, parameter2, '');
+    }
 
+    const g_mct_plan_detail_pop_view = function (EQUIP_SEQ) {
+        $("#mct_plan_detail_pop_form").find("#EQUIP_SEQ").val(EQUIP_SEQ);
+        const parameter = {'url': '/json-info', 'data': {
+                'queryId':'machine.selectMachineInfoForDetailPop',
+                'EQUIP_SEQ':EQUIP_SEQ
+            }
+        };
+
+        fnPostAjax(function (data) {
+            var tempHtml = '<label>장비번호 : ' + data.info.EQUIP_NM + '</label>';
+            tempHtml += '<label>장비종류 : ' + data.info.EQUIP_TYPE_NM + '</label>';
+            tempHtml += '<label>설치위치 : ' + data.info.FACTORY_AREA_NM + '</label>';
+            tempHtml += '<label>관리장(정) : ' + data.info.MAIN_USER_NM + '</label>';
+            tempHtml += '<label>관리장(부) : ' + data.info.SUB_USER_NM + '</label>';
+            $("#mct_machine_info").html(tempHtml);
+        }, parameter, '');
+
+        settingOngoingInfo();
 
         $("#mct_plan_detail_pop").modal('show');
     }
@@ -2443,6 +2393,11 @@
     $("#mct_plan_pop_img").dblclick(function () {
         var imgSeq = $(this).data('value');
         callWindowImageViewer(imgSeq);
+    });
+    $("#mct_plan_pop_img").on('click',function () {
+        setTimeout(function() {
+            $("#mct_plan_detail_pop_form").find("#BARCODE_NUM").focus();
+        }, 100);
     });
     function chageSortNum(data) {
         $.each(data, function (idx,Item) {
@@ -2630,6 +2585,11 @@
             $mctPlanDetailPopGrid.pqGrid('destroy');
         }
     });
+    $("#mct_plan_detail_pop_form").find("#mct_plan_detail_pop_form_barcode_img").on('click',function (){
+        setTimeout(function() {
+            $("#mct_plan_detail_pop_form").find("#BARCODE_NUM").focus();
+        }, 100);
+    })
     $("#mct_plan_detail_pop_form").find("#BARCODE_NUM").on({
         focus: function () {
             $("#mct_plan_detail_pop_form_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long_on.png");
@@ -2639,7 +2599,7 @@
         },
         keyup: function (e) {
             if (e.keyCode == 13) {
-                let BARCODE_NUM = $("#mct_plan_detail_pop_form").find("#BARCODE_NUM").val();
+                let BARCODE_NUM = fnBarcodeKo2En(this.value);
                 let parameters = {
                     'url': '/json-info',
                     'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"machine.selectBarcodePlanInfo"}
@@ -2708,6 +2668,10 @@
         }
     });
 
+    $("#mct_plan_pop_refresh").on('click',function () {
+        settingOngoingInfo();
+    })
+
     $(document).ready(function(){
         $(document).on("blur","#ongoing_work_input",function(event){
             var planWorkT = $("#mct_plan_detail_pop_form").find("#ongoing_work_input").val();
@@ -2728,6 +2692,9 @@
         })
 
         $(document).on("click",".mct_ongoing_draw",function(e){
+            var grid = $("#mct_plan_detail_pop_grid").pqGrid('getInstance').grid;
+            var sr = grid.SelectRow();
+            sr.removeAll();
             var imgSeq = $(this).data('value');
             if(typeof imgSeq != 'undefined' && imgSeq != '') {
                 $("#mct_plan_pop_img").attr('src','/qimage/'+imgSeq);

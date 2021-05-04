@@ -96,8 +96,12 @@
                 <label for="outgoingManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
                 <select id="outgoingManageFrozen" name="outgoingManageFrozen">
                 </select>
-                <span class="barCode" id="outgoingBarcodeSpan"><img src="<c:url value="/resource/asset/images/common/img_barcode_long.png"/>" alt="바코드" id="outgoingBarcodeImg"></span>
-                <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode" name="OUTGOING_BARCODE_NUM" id="OUTGOING_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>
+                <button type="button" id="outgoing_pop_btn" style="background-color: #dedede;padding-right: 15px;border: 1px solid #dedede;">
+                    <span class="barCode" id="outgoingBarcodeSpan"><img src="<c:url value="/resource/asset/images/common/img_barcode_long.png"/>" alt="바코드" id="outgoingBarcodeImg"></span>
+                    <span style="font-size: 15px;vertical-align: middle;margin-left: 5px;color: black;">출고등록</span>
+                </button>
+<%--                <span class="barCode" id="outgoingBarcodeSpan"><img src="<c:url value="/resource/asset/images/common/img_barcode_long.png"/>" alt="바코드" id="outgoingBarcodeImg"></span>--%>
+<%--                <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode" name="OUTGOING_BARCODE_NUM" id="OUTGOING_BARCODE_NUM" placeholder="도면의 바코드를 스캔해 주세요"></span>--%>
 <%--                <span class="radio_box">--%>
 <%--                    <input reqcd="R" type="radio" name="OUTGOING_BARCODE_PRINT_TYPE" id="OUTGOING_BARCODE_PRINT_TYPE_1" value="1" checked><label for="OUTGOING_BARCODE_PRINT_TYPE_1">출고</label>--%>
 <%--                </span>--%>
@@ -589,6 +593,86 @@
 </div>
 <!-- 라벨 출력 그리드 버튼 mini popup : E -->
 
+<!-- 출하스캔 layer popup : S -->
+<div class="popup_container in" id="outgoing_scan_barcode_popup" style="display: none;">
+    <div class="layerPopup" style="height: fit-content;width: 1050px;">
+        <h3>
+            <div style="float: left;width: 985px;height: 40px;padding: 10px 0 7px;">
+                <span style="margin-left: 15%;width: 40%;vertical-align: middle;font-size: 28px;line-height: 45px;">바코드를 Scan 하세요</span>
+                <div style="width: 55%;float: right;">
+                    <span class="barCode">
+                        <img id="outgoing_scan_barCodeImg" src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" style="width: 110px;">
+                    </span>
+                    <span class="barCodeTxt" style="margin-left: 13px;">
+                        <input type="text" class="wd_270_barcode hg_45" id="outgoingScanBarcode" value="" placeholder="도면의 바코드를 스캔해 주세요" style="border: 1px solid #e6e6e6;">
+                    </span>
+                </div>
+            </div>
+        </h3>
+        <form class="form-inline" role="form" id="outgoing_scan_barcode_popup_form" name="outgoing_scan_barcode_popup_form" method="POST">
+            <input type="hidden" id="queryId" name="queryId" value="material.selectInWarehousePop">
+            <input type="hidden" id="TYPE" name="TYPE" value="scan">
+            <input type="hidden" id="MY_MAT_OUT_SEQ" name="MY_MAT_OUT_SEQ" value="">
+            <input type="hidden" id="BARCODE_NUM" name="BARCODE_NUM" value="">
+            <div style="margin: 20px 0 20px 0;">
+                <div id="success_div">
+                    <div style="font-size: 35px;text-align: center;color: blue;height: 50px;">
+                        <span class="span_controlNum"></span>
+                        <span class="span_qty"></span>
+                    </div>
+                    <div style="font-size: 35px;text-align: center;color: #347fd3;height: 50px;">
+                        <span class="span_status"></span>
+                    </div>
+                </div>
+                <div id="fail_div" style="display: none;">
+                    <div style="font-size: 35px;text-align: center;color: #db1515;height: 50px;">
+                        <span class="span_controlNum"></span>
+                        <span class="span_qty"></span>
+                    </div>
+                    <div style="font-size: 35px;text-align: center;color: #db1515;height: 50px;">
+                        <span class="span_status"></span>
+                    </div>
+                </div>
+            </div>
+            <h2>&nbsp;</h2>
+            <div class="table-box-wrap">
+                <div class="table-box">
+                    <table class="outgoingTable" id="outgoingScanPopDynamicTable">
+                        <colgroup>
+                            <col width="6%">
+                            <col width="8%">
+                            <col width="6%">
+                            <col width="20%">
+                            <col width="20%">
+                            <col width="14%">
+                            <col width="20%">
+                            <col width="6%">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th style="width:6%;">No.</th>
+                                <th style="width:8%;">처리시간</th>
+                                <th style="width:6%;">결과</th>
+                                <th style="width:20%;">메시지</th>
+                                <th style="width:20%;">관리번호</th>
+                                <th style="width:14%;">발주번호</th>
+                                <th style="width:20%;">도면번호</th>
+                                <th style="width:6%;">수량</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <h2>&nbsp;</h2>
+            <div class="btnWrap">
+                <button type="button" class="defaultBtn greenPopGra" data-dismiss="modal">닫기</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 출하스캔 layer popup : E -->
 <script>
     $(function () {
         'use strict';
@@ -1829,6 +1913,193 @@
             $outgoingManagePopType1Form.find("#outgoing_manage_pop_type_1_form_view_2").html('0');
             $outgoingManagePopType1Form.find("#NEW_OUT_QTY_VIEW").val(qty);
         });
-    });
+        $("#outgoing_pop_btn").on('click',function(e) {
+            $('#outgoing_scan_barcode_popup').modal('show');
+        });
 
+        function fnMakeScanTableTdOnDataFail(msg, data) {
+            let html = '';
+            var table = document.getElementById("outgoingScanPopDynamicTable");
+            var date = new Date();
+            var time = ('00'+date.getHours()).substr(-2)+ ':' + ('00'+date.getMinutes()).substr(-2) + ':' + ('00'+date.getSeconds()).substr(-2);
+            html +='<tr>';
+            html += '<td>' + table.rows.length + '</td>';
+            html += '<td>' + time + '</td>';
+            html += '<td style="color: red;">실패</td>';
+            html += '<td style="color:red;">' + msg + '</td>';
+            html += '<td style="color:red;">'+((typeof data != 'undefined' && data.CONTROL_NUM != '' && data.CONTROL_NUM != null)?data.CONTROL_NUM : '')+'</td>';
+            html += '<td style="color:red;">'+((typeof data != 'undefined' && data.ORDER_NUM != '' && data.ORDER_NUM != null)?data.ORDER_NUM : '')+'</td>';
+            html += '<td style="color:red;">'+((typeof data != 'undefined' && data.DRAWING_NUM != '' && data.DRAWING_NUM != null)?data.DRAWING_NUM : '')+'</td>';
+            html += '<td style="color:red;">'+((typeof data != 'undefined' && data.OUT_QTY != '' && data.OUT_QTY != null)?data.OUT_QTY : '')+'</td>';
+            html += '</tr>';
+
+            $("#outgoingScanPopDynamicTable tbody").append(html);
+        }
+
+        function fnMakeScanTableTdOnDataSuccess(data) {
+            var table = document.getElementById("outgoingScanPopDynamicTable");
+            let html = '';
+            var date = new Date();
+            var time = ('00'+date.getHours()).substr(-2)+ ':' + ('00'+date.getMinutes()).substr(-2) + ':' + ('00'+date.getSeconds()).substr(-2);
+
+            html +='<tr>';
+            html += '<td>' + table.rows.length + '</td>';
+            html += '<td>' + time + '</td>';
+            html += '<td style="color: blue;">성공</td>';
+            html += '<td></td>';
+            html += '<td style="color: blue;">' +data.CONTROL_NUM + '</td>';
+            html += '<td style="color: blue;">' + ((typeof data.ORDER_NUM != 'undefined' && data.ORDER_NUM != null && data.ORDER_NUM != '') ? data.ORDER_NUM : '') + '</td>';
+            html += '<td style="color: blue;">' +data.DRAWING_NUM + '</td>';
+            html += '<td style="color: blue;">' +data.PLAN_QTY + '</td>';
+            html += '</tr>';
+
+            $("#outgoingScanPopDynamicTable tbody").append(html);
+        }
+
+        function resetScanPop() {
+            $(".span_controlNum").text('');
+            $(".span_qty").text('');
+            $(".span_status").text('');
+            $("#outgoingScanPopDynamicTable tbody").empty();
+        }
+        function setDiv(showId, hideId, msg, controlNum, qty) {
+            $("#" + hideId).hide()
+            $("#" + showId).show()
+            $("#" + showId).find(".span_controlNum").text(controlNum)
+            if(qty == 0) {
+                qty = ""
+            }else if(qty > 0) {
+                qty = qty + 'EA';
+            }
+            $("#" + showId).find(".span_qty").text(qty);
+            $("#" + showId).find(".span_status").text(msg);
+        }
+
+        $("#outgoingScanBarcode").on({
+            focus: function () {
+                $("#outgoing_scan_barCodeImg").attr("src", "/resource/asset/images/common/img_barcode_long_on.png");
+            },
+            blur: function () {
+                $("#outgoing_scan_barCodeImg").attr("src", "/resource/asset/images/common/img_barcode_long.png");
+            }
+        });
+
+        $('#outgoing_scan_barcode_popup').on({
+            'show.bs.modal': function () {
+                setTimeout(function() {
+                    $("#outgoingScanBarcode").focus();
+                },100);
+            },'hide.bs.modal': function () {
+                $("#outgoing_manage_search_btn").trigger("click");
+                resetScanPop();
+            }
+        })
+        $("#outgoingScanBarcode").on('keydown', function(e){
+            if (e.keyCode === 13) {
+                const barcodeNum = fnBarcodeKo2En(this.value);
+                const barcodeType = barcodeNum.charAt(0).toUpperCase();
+                let barcodeSql = "";
+                $('#outgoingScanBarcode').val('');
+
+                if (barcodeType === "L") {//라벨
+                    barcodeSql = "inspection.selectOutgoingOutType4";
+                } else if (barcodeType === "C") {//도면
+                    barcodeSql = "inspection.selectOutgoingOutType3";
+                } else if (barcodeType === "O") {//영업도면
+                    barcodeSql = "inspection.selectOutgoingOutType5";
+                } else {
+                    setDiv('fail_div','success_div','알 수 없는 바코드 타입입니다 [' + barcodeNum + ']','','')
+                    fnMakeScanTableTdOnDataFail('알 수 없는 바코드 타입입니다.[' + barcodeNum + ']');
+                    return false;
+                }
+
+                //0. 바코드 정보 가져오기
+                let data = {'queryId': barcodeSql, 'BARCODE_NUM': barcodeNum};
+                let parameters = {'url': '/json-info', 'data': data};
+                fnPostAjaxSound(function (data) {
+                    let dataInfo = data.info;
+                    if (dataInfo == null) {
+                        setDiv('fail_div','success_div','해당 바코드가 존재하지 않습니다','','')
+                        fnMakeScanTableTdOnDataFail('해당 바코드가 존재하지 않습니다.');
+                        return false;
+                    } else {
+                        if (barcodeType === "L") {
+                            // 1. 버튼으로 출고 했을 때 메시지
+                            // 2. 버튼으로 모두 출고 했을 때 처리방법
+                            if (dataInfo.OUT_QTY > 0) {
+                                setDiv('fail_div','success_div','이미 출하처리 되었습니다',dataInfo.CONTROL_NUM,dataInfo.OUT_QTY)
+                                fnMakeScanTableTdOnDataFail('이미 출하처리 되었습니다',dataInfo);
+                                return false;
+                            }
+
+                            if (dataInfo.MY_OUT_PACKING_CNT > 0) {
+                                setDiv('fail_div','success_div','이미 출하처리 되었습니다',dataInfo.CONTROL_NUM,dataInfo.MY_OUT_PACKING_CNT)
+                                fnMakeScanTableTdOnDataFail('이미 출하처리 되었습니다',dataInfo);
+                                return false;
+                            }
+
+                            fnJsonDataToForm("outgoing_manage_pop_type_label_form", dataInfo);
+                            $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_1").html(dataInfo.QTY_INFO);
+                            $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_2").html(dataInfo.REMAIN_PACKING_CNT);
+                            $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_3").html(dataInfo.MY_PACKING_NUM);
+
+                            //. 저장하기
+                            $("#outgoing_manage_pop_type_label_form").find("#queryId").val("inspection.insertOutgoingOutType4,inspection.updateOutgoingOutType4After1,inspection.updateOutgoingOutType4After2,inspection.updateOutgoingOutType4After3,inspection.updateOutFinishStatus");
+                            $("#outgoing_manage_pop_type_label_form").find("#BARCODE_NUM").val(barcodeNum);
+                            let parameters = {
+                                'url': '/json-manager',
+                                'data': $('#outgoing_manage_pop_type_label_form').serialize()
+                            };
+                            fnPostAjaxAsync(function () {
+                                // alertify.notify('출고처리되었습니다', 'success');
+                                setDiv('success_div','fail_div','출고완료',dataInfo.CONTROL_NUM,dataInfo.PLAN_QTY)
+                                fnMakeScanTableTdOnDataSuccess(dataInfo);
+                            }, parameters, '');
+                        } else if (barcodeType === "C" || barcodeType === "O") {
+                            // 파트는 출고대상 X
+                            if(dataInfo.WORK_TYPE == 'WTP050') {
+                                setDiv('fail_div','success_div','파트는 출고대상이 아닙니다',dataInfo.CONTROL_NUM,dataInfo.PLAN_QTY)
+                                fnMakeScanTableTdOnDataFail('파트는 출고대상이 아닙니다');
+                                return  false;
+                            }
+                            if (dataInfo.OUT_QTY > 0) {
+                                setDiv('fail_div','success_div','이미 출하처리 되었습니다',dataInfo.CONTROL_NUM,dataInfo.OUT_QTY)
+                                fnMakeScanTableTdOnDataFail('이미 출하처리 되었습니다',dataInfo);
+                                return false;
+                            }
+                            // TODO: PACKING 단위로 출고 한 후 출고 된 메세지 어떻게 할지
+                            if (dataInfo.MY_OUT_PACKING_CNT > 0) {
+                                setDiv('fail_div','success_div','이미 출하처리 되었습니다',dataInfo.CONTROL_NUM,dataInfo.MY_OUT_PACKING_CNT)
+                                fnMakeScanTableTdOnDataFail('이미 출하처리 되었습니다',dataInfo);
+                                return false;
+                            }
+
+                            fnJsonDataToForm("outgoing_manage_pop_type_control_form", dataInfo);
+
+                            $("#outgoing_manage_pop_type_control_form").find("#outgoing_manage_pop_type_control_form_view_1").html(data.info.QTY_INFO);
+                            $("#outgoing_manage_pop_type_control_form").find("#outgoing_manage_pop_type_control_form_view_2").html("0");
+                            $("#outgoing_manage_pop_type_control_form").find("#outgoing_manage_pop_type_control_form_view_3").html(data.info.PLAN_QTY);
+
+                            //. 저장하기
+                            if (barcodeType === "C") {
+                                $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType3,inspection.updateOutgoingOutType3After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3,inspection.updateOutFinishStatus");
+                            } else if (barcodeType === "O") {
+                                $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType5,inspection.updateOutgoingOutType5After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3,inspection.updateOutFinishStatus");
+                            }
+                            // return ;
+                            let parameters = {
+                                'url': '/json-manager',
+                                'data': $('#outgoing_manage_pop_type_control_form').serialize()
+                            };
+                            fnPostAjaxAsync(function () {
+                                // alertify.notify('출고처리되었습니다', 'success');
+                                setDiv('success_div','fail_div','출고완료',dataInfo.CONTROL_NUM,dataInfo.PLAN_QTY)
+                                fnMakeScanTableTdOnDataSuccess(dataInfo);
+                            }, parameters, '');
+                        }
+                    }
+                }, parameters, '');
+            }
+        });
+    });
 </script>
