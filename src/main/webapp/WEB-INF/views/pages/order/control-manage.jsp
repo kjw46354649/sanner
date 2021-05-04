@@ -559,13 +559,14 @@
                         newRowData.UNIT_FINAL_EST_AMT = null;
                         newRowData.UNIT_FINAL_AMT = null;
                         newRowData.PREV_DRAWING_NUM = null;
+                        newRowData.IS_NEW_ROW = true;
 
                         $orderManagementGrid.pqGrid('addRow', {
                             newRow: newRowData,
                             rowIndx: lastRowIndex + 1,
                             checkEditable: false
                         });
-                        $orderManagementGrid.pqGrid('setSelection', {rowIndx: lastRowIndex + 1});
+                        // $orderManagementGrid.pqGrid('setSelection', {rowIndx: lastRowIndex + 1});
                         event.preventDefault();
                     });
                 }
@@ -1243,6 +1244,8 @@
 
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
+                        cellData = "";
+                        ui.rowData.MATERIAL_DETAIL = "";
                     }
 
                     index = options.findIndex(function (element) {
@@ -1268,6 +1271,9 @@
 
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
+                        ui.cellData = "";
+                        ui.rowData.MATERIAL_KIND = "";
+
                     }
 
                     return {cls: cls, text: controlManageFilterRender(ui)};
@@ -1293,6 +1299,8 @@
 
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
+                        ui.cellData = "";
+                        ui.rowData.SURFACE_TREAT = "";
                     }
 
                     return {cls: cls, text: controlManageFilterRender(ui)};
@@ -2525,7 +2533,6 @@
             prevErrorList = errorList;
             errorList = [];
             let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-
             validationCheck(data);
             changeCellColor(errorList, prevErrorList);
 
@@ -2566,13 +2573,18 @@
 
         $('#CONTROL_MANAGE_DELETE').on('click', function () {
             let list = [];
+            let tempList = [];
             // let controlNumList = [];
             let message;
 
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 let thisRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                list[i] = thisRowData;
                 // controlNumList[i] = thisRowData.CONTROL_NUM;
+                if(typeof thisRowData.IS_NEW_ROW != 'undefined' && thisRowData.IS_NEW_ROW != null && thisRowData.IS_NEW_ROW == true) {
+                    tempList.push({rowIndx : thisRowData.pq_ri})
+                }else {
+                    list.push(thisRowData);
+                }
 
                 if (!(thisRowData.CONTROL_STATUS === undefined || thisRowData.CONTROL_STATUS === null || thisRowData.CONTROL_STATUS === 'ORD002')) {
                     message =
@@ -2584,20 +2596,24 @@
                     return false;
                 }
             }
-
-            //TODO: list.lenth 건수
-            message =
-                '<h4>\n' +
-                '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                '    <span>' + list.length + ' 건이 삭제됩니다. 진행하시겠습니까?</span>\n' +
-                '</h4>';
-            fnConfirm(null, message, function () {
-                let parameters = {'url': '/removeControl', 'data': {data: JSON.stringify(list)}};
-                fnPostAjax(function () {
-                    fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
-                    $orderManagementGrid.pqGrid('refreshDataAndView');
-                }, parameters, '');
-            });
+            if(list.length > 0) {
+                //TODO: list.lenth 건수
+                message =
+                    '<h4>\n' +
+                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <span>' + (list.length + tempList.length) + ' 건이 삭제됩니다. 진행하시겠습니까?</span>\n' +
+                    '</h4>';
+                fnConfirm(null, message, function () {
+                    $orderManagementGrid.pqGrid("deleteRow", {rowList: tempList});
+                    let parameters = {'url': '/removeControl', 'data': {data: JSON.stringify(list)}};
+                    fnPostAjax(function () {
+                        fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
+                        $orderManagementGrid.pqGrid('refreshDataAndView');
+                    }, parameters, '');
+                });
+            }else if(tempList.length > 0) {
+                $orderManagementGrid.pqGrid("deleteRow", {rowList: tempList});
+            }
 
             // let estimateRegisterSubmitConfirm = function (callback) {
             //     commonConfirmPopup.show();
@@ -3157,8 +3173,6 @@
                     }
                 }
             }
-
-            console.log(selectControlList);
 
             const message =
                 '<h4>' +
