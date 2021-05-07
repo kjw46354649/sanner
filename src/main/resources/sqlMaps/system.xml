@@ -1082,4 +1082,48 @@
         WHERE EQUIP_SEQ = #{EQUIP_SEQ}
     </update>
 
+    <select id="selectWorkingDayTimeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER() AS ROW_NUM
+            , DATE_FORMAT(STR_TO_DATE(WORKING_DT,'%Y%m%d'),'%Y/%m/%d') AS WORKING_DT
+            , WORK_FACTORY
+            , SF_GET_CODE_NM('1014', WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
+            , WORKING_TIME
+        FROM jmes.TBL_WORKING_DAY_TIME
+        WHERE STR_TO_DATE(WORKING_DT,'%Y%m%d') BETWEEN STR_TO_DATE(CONCAT(#{WORKING_DAY_TIME_SEARCH_YEAR},'0101'),'%Y%m%d') AND STR_TO_DATE(CONCAT(#{WORKING_DAY_TIME_SEARCH_YEAR},'1231'),'%Y%m%d')
+        ORDER BY WORKING_DT, WORK_FACTORY_NM
+    </select>
+
+    <insert id="insertUpdateWorkingDayTime" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_WORKING_DAY_TIME (
+            WORKING_DT,
+            WORK_FACTORY,
+            WORKING_TIME,
+            INSERT_ID
+        ) VALUES (
+            REPLACE(#{WORKING_DT},'/',SPACE(0)),
+            #{WORK_FACTORY},
+            #{WORKING_TIME},
+            #{LOGIN_USER_ID}
+        )ON DUPLICATE KEY UPDATE
+            WORKING_TIME = #{WORKING_TIME}
+            , WORK_FACTORY = #{WORK_FACTORY}
+            , WORKING_DT = REPLACE(#{WORKING_DT},'/',SPACE(0))
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+    <update id="updateWorkingDayTime" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_WORKING_DAY_TIME
+        SET WORKING_DT = #{WORKING_DT}
+            , WORK_FACTORY = #{WORK_FACTORY}
+            , WORKING_TIME = #{WORKING_TIME}
+            , UPDATE_DT = now()
+            , UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE WORK_FACTORY = #{WORK_FACTORY}
+            AND WORKING_DT = REPLACE(#{WORKING_DT},'/',SPACE(0))
+    </update>
+    <delete id="deleteWorkingDayTime" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_WORKING_DAY_TIME
+        WHERE WORK_FACTORY = #{WORK_FACTORY}
+            AND WORKING_DT = REPLACE(#{WORKING_DT},'/',SPACE(0))
+    </delete>
 </mapper>

@@ -13,4 +13,6 @@ public interface SystemService {
     void managerSystemCompany(Model model, Map<String, Object> map) throws Exception;
 
     void updateWorkingTime(Map<String, Object> map) throws Exception;
+
+    void updateWorkingDayTime(Map<String, Object> map) throws Exception;
 }

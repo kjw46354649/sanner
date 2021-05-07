@@ -29,7 +29,7 @@
                     </span>
                     <span class="slt_wrap">
                         <!-- TODO: -->
-                        <label class="label_100">???</label>
+                        <label class="label_100">조회구분</label>
                         <select class="wd_100" name="asdfasdfasdf" id="asdfasdfasdf">
                             <option value="ORDER">발주처</option>
                             <option value="OUTSIDE">외주업체</option>
@@ -75,6 +75,11 @@
 
                     </div>
                     <div class="ml-auto">
+                        <span class="slt_wrap">
+                            <label class="label_100" for="BOTTOM_INSPECT_GRADE">검사등급</label>
+                            <input type="text" class="wd_200" name="BOTTOM_INSPECT_GRADE" id="BOTTOM_INSPECT_GRADE" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" title="검사등급" readonly>
+                            <input type="hidden" name="SEL_BOTT_INSPECT_GRADE" id="SEL_BOTT_INSPECT_GRADE">
+                        </span>
                         <label for="monthlyQualityBoardFilterKeyword"></label><input type="search" id="monthlyQualityBoardFilterKeyword" placeholder="Enter your keyword">
                         <label for="monthlyQualityBoardFilterColumn"></label><select id="monthlyQualityBoardFilterColumn"></select>
                         <label for="monthlyQualityBoardFilterCondition"></label>
@@ -89,6 +94,9 @@
         </div>
         <div class="conWrap">
             <div id="monthly_quality_board_botGrid"></div>
+            <div class="right_sort">
+                전체 조회 건수 (Total : <span id="monthly_quality_board_bot_total_records" style="color: #00b3ee">0</span>)
+            </div>
         </div>
     </div>
 </div>
@@ -97,6 +105,19 @@
     $(function () {
         'use strict';
         /* init */
+        let comboData = new Array() ;
+        <c:forEach var="vlocale" items="${HighCode.H_1040}">
+        var data1 = new Object() ;
+        data1.id = '${vlocale.CODE_CD}' ;
+        data1.title = '${vlocale.CODE_NM_KR}' ;
+        comboData.push(data1) ;
+        </c:forEach>
+        let bottom_combotree = $("#BOTTOM_INSPECT_GRADE").comboTree({
+            source : comboData,
+            isMultiple: true,
+            cascadeSelect: false
+        })
+
         const D_GRADE = 'GRD040';
         const lastMonth = new Date((new Date()).setMonth(TODAY.getMonth() - 1));
         fnAppendSelectboxYear('monthly_quality_board_start_year', 10);
@@ -115,33 +136,33 @@
             {
                 title: '납품/검사현황', halign: 'center', colModel: [
                     {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
-                    {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
-                    {title: '출고<br>품수', dataIndx: 'PART_CNT'},
-                    {title: '검사<br>품수', dataIndx: 'INSPECT_CNT'},
-                    {title: '검사<br>비율', dataIndx: 'INSPECT_RATIO'},
-                    {title: '합격<br>률', dataIndx: 'PASS_RATIO'},
+                    {title: '발주처', dataIndx: 'ORDER_COMP_NM', minWidth:85},
+                    {title: '출고<br>품수', minWidth:50, maxWidth:55, dataIndx: 'PART_CNT'},
+                    {title: '검사<br>품수', minWidth:50, maxWidth:55, dataIndx: 'INSPECT_CNT'},
+                    {title: '검사<br>비율', minWidth:50, maxWidth:55, dataIndx: 'INSPECT_RATIO'},
+                    {title: '합격<br>률', minWidth:50, maxWidth:55, dataIndx: 'PASS_RATIO'},
                     {
                         title: 'A', halign: 'center', colModel: [
-                            {title: 'CNT', dataIndx: 'A_CNT'},
-                            {title: 'RATIO', dataIndx: 'A_RATIO'},
+                            {title: '품수', dataIndx: 'A_CNT', minWidth:45, maxWidth:45},
+                            {title: '%', dataIndx: 'A_RATIO', minWidth:40, maxWidth:40},
                         ]
                     },
                     {
                         title: 'B', halign: 'center', colModel: [
-                            {title: 'CNT', dataIndx: 'B_CNT'},
-                            {title: 'RATIO', dataIndx: 'B_RATIO'},
+                            {title: '품수', dataIndx: 'B_CNT', minWidth:45, maxWidth:45},
+                            {title: '%', dataIndx: 'B_RATIO', minWidth:40, maxWidth:40},
                         ]
                     },
                     {
                         title: 'C', halign: 'center', colModel: [
-                            {title: 'CNT', dataIndx: 'C_CNT'},
-                            {title: 'RATIO', dataIndx: 'C_RATIO'},
+                            {title: '품수', dataIndx: 'C_CNT', minWidth:45, maxWidth:45},
+                            {title: '%', dataIndx: 'C_RATIO', minWidth:40, maxWidth:40},
                         ]
                     },
                     {
                         title: 'D', halign: 'center', colModel: [
-                            {title: 'CNT', dataIndx: 'D_CNT'},
-                            {title: 'RATIO', dataIndx: 'D_RATIO'},
+                            {title: '품수', dataIndx: 'D_CNT', minWidth:45, maxWidth:45},
+                            {title: '%', dataIndx: 'D_RATIO', minWidth:40, maxWidth:40},
                         ]
                     },
                 ]
@@ -150,8 +171,8 @@
                 title: '반품', halign: 'center', colModel: [
                     {
                         title: 'RT-D', halign: 'center', colModel: [
-                            {title: 'CNT', dataIndx: 'RETURN_CNT'},
-                            {title: 'RATIO', dataIndx: 'RETURN_RATIO'},
+                            {title: '품수', dataIndx: 'RETURN_CNT', minWidth:45, maxWidth:45},
+                            {title: '%', dataIndx: 'RETURN_RATIO', minWidth:40, maxWidth:40},
                         ]
                     }
 
@@ -161,14 +182,16 @@
         const topGridObj = {
             height: '100%',
             collapsible: false,
+            postRenderInterval: -1,
             resizable: false,
             showTitle: false,
             rowHtHead: 15,
             numberCell: {show: false},
             scrollModel: {autoFit: true},
-            selectionModel: {type: 'row', mode: 'single'},
+            trackModel: {on: true},
             editable: false,
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
+            selectionModel: {type: 'row', mode: 'single'},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render:monthlyQualityBoardTopRender},
             // styleHead: {'background': '#ffe699'},
             colModel: topGridColModel,
             dataModel: {
@@ -197,12 +220,20 @@
 
         };
         const $topGrid = $('#' + topGridId).pqGrid(topGridObj);
+
+        function monthlyQualityBoardTopRender(ui) {
+            let val = ui.cellData === undefined ? '' : ui.cellData;
+            if(ui.rowIndx == 0) {
+                ui.style[0] = ui.style[0] + "background-color:#ffff00;";
+            }
+            return val;
+        }
         
         const botGridId = 'monthly_quality_board_botGrid';
         const botGridColModel = [
             {title: '출고<br>일자', maxWidth: 50, dataIndx: 'OUT_FINISH_DT'},
             {title: '가공<br>완료', maxWidth: 50, dataIndx: 'INNER_WORK_FINISH_DT'},
-            {title: '발주처', width: 75, dataIndx: 'ORDER_COMP_NM'},
+            {title: '발주처', minWidth: 85, dataIndx: 'ORDER_COMP_NM'},
             {
                 title: '', minWidth: 30, maxWidth: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
@@ -243,15 +274,24 @@
             {title: '수량', dataIndx: 'PART_QTY'},
             {title: '수행<br>공장', dataIndx: 'WORK_FACTORY_NM'},
             {title: '외주업체', width: 75, dataIndx: 'OUTSIDE_COMP_NM'},
-            {title: '', dataIndx: 'na2'},
             {
                 title: '검사현황', halign: 'center', colModel: [
                     {title: 'Seq.', dataIndx: 'INSPECT_RNUM'},
                     {title: '담당관', width: 65, dataIndx: 'INSPECT_USER_NM'},
-                    {title: '등급', dataIndx: 'INSPECT_GRADE_NM'},
+                    {title: '등급', dataIndx: 'INSPECT_GRADE_NM',
+                        render: function (ui) {
+                            if (ui.rowData.INSPECT_GRADE == 'GRD040' || ui.rowData.INSPECT_GRADE == 'GRD050') {
+                                return {style: 'color: #FF0000'};
+                            }
+                        }
+                    },
                     {title: '수량', dataIndx: 'ERROR_QTY'},
                     {title: '검사코드', width: 115, dataIndx: 'INSPECT_RESULT_NM'},
-                    {title: '상세내용', align: 'left', width: 200, dataIndx: 'INSPECT_DESC'},
+                    {title: '상세내용', align: 'left', width: 200, dataIndx: 'INSPECT_DESC',
+                        render: function (ui) {
+                            return '<span title="' + ui.rowData.INSPECT_DESC+ '">' + ((typeof ui.cellData != 'undefined')? ui.cellData:'')+ '</span>';
+                        }
+                    },
                     {title: '발생공정', width: 60, dataIndx: 'ERROR_PROCESS_NM'},
                     {title: '원인', width: 115, dataIndx: 'ERROR_REASON_NM'},
                     {title: '조치', dataIndx: 'ERROR_ACTION_NM'},
@@ -282,6 +322,10 @@
                     return {data: dataJSON.data};
                 }
             },
+            dataReady: function () {
+                const totalRecords = this.option('dataModel.data').length;
+                $('#monthly_quality_board_bot_total_records').html(totalRecords);
+            },
             sortModel: {on: false},
             complete: function () {
                 // 필터 옵션 생성
@@ -296,6 +340,28 @@
                     }
                 });
                 $('#monthlyQualityBoardFilterColumn').html(filterOpts);
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                }
+
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+            },
+            rowSelect: function (evt, ui) {
+                $.each(ui.addList, function (idx,Item) {
+                    if(idx === 0) {
+                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
+                })
             }
         };
         const $botGrid = $('#' + botGridId).pqGrid(botGridObj);
@@ -303,7 +369,7 @@
         const chart1 = Highcharts.chart('monthly_quality_board_middle_wrap_div_2', {
             chart: {
                 type: 'pie',
-                styledMode: true
+                height: '100%',
             },
             title: {
                 text: '불량유형',
@@ -320,13 +386,17 @@
             },
             plotOptions: {
                 pie: {
-                    size: 150,
+                    size: 105,
                     shadow: false,
                     center: ['50%', '50%'],
                     showInLegend: true,
                     dataLabels: {
-                        enabled: true,
-                        format: '{point.percentage:.0f} %'
+                        format: '<b>{point.percentage:.0f} %</b>',
+                        style: {
+                            fontSize: '13px',
+                            textOutline: '',
+                            color:'#000000'
+                        }
                         // format: '<b>{point.name}</b>: {point.percentage:.1f} %'
                     }
                 }
@@ -339,36 +409,20 @@
                 data: [],
                 // size: '100%',
                 innerSize: '50%',
-                // dataLabels: {
-                //     formatter: function () {
-                //         // display only if larger than 1
-                //         return this.y > 1 ? '<b>' + this.point.name + ':</b> ' +
-                //             this.y + '%' : null;
-                //     }
-                // },
+                dataLabels: {
+                    // formatter: function () {
+                    //   return this.y > 5 ? this.point.name : null;
+                    // },
+                    distance: -10,
+                }
                 // id: 'versions'
-            }],
-            responsive: {
-                rules: [{
-                    condition: {
-                        maxWidth: 400
-                    },
-                    chartOptions: {
-                        series: [{}, {
-                            id: 'versions',
-                            dataLabels: {
-                                enabled: false
-                            }
-                        }]
-                    }
-                }]
-            }
+            }]
         });
 
         const chart2 = Highcharts.chart('monthly_quality_board_middle_wrap_div_3', {
             chart: {
                 type: 'pie',
-                styledMode: true
+                height: '100%',
             },
             title: {
                 text: '발생공정',
@@ -385,13 +439,17 @@
             },
             plotOptions: {
                 pie: {
-                    size: 150,
+                    size: 105,
                     shadow: false,
                     center: ['50%', '50%'],
                     showInLegend: true,
                     dataLabels: {
-                        enabled: true,
-                        format: '{point.percentage:.0f} %'
+                        format: '{point.percentage:.0f} %',
+                        style: {
+                            fontSize: '13px',
+                            textOutline: '',
+                            color:'#000000'
+                        }
                         // format: '<b>{point.name}</b>: {point.percentage:.1f} %'
                     }
                 }
@@ -404,19 +462,14 @@
                 data: [],
                 // size: '100%',
                 innerSize: '50%',
-                // dataLabels: {
-                //     formatter: function () {
-                //         // display only if larger than 1
-                //         return this.y > 1 ? '<b>' + this.point.name + ':</b> ' +
-                //             this.y + '%' : null;
-                //     }
-                // },
-                // id: 'versions'
+                dataLabels: {
+                    distance: -10,
+                },
             }],
             responsive: {
                 rules: [{
                     condition: {
-                        maxWidth: 400
+                        maxWidth: 300
                     },
                     chartOptions: {
                         series: [{}, {
@@ -433,7 +486,7 @@
         const chart3 = Highcharts.chart('monthly_quality_board_middle_wrap_div_4', {
             chart: {
                 type: 'pie',
-                styledMode: true
+                height: '100%',
             },
             title: {
                 text: '발생원인',
@@ -450,13 +503,17 @@
             },
             plotOptions: {
                 pie: {
-                    size: 150,
+                    size: 105,
                     shadow: false,
                     center: ['50%', '50%'],
                     showInLegend: true,
                     dataLabels: {
-                        enabled: true,
-                        format: '{point.percentage:.0f} %'
+                        format: '{point.percentage:.0f} %',
+                        style: {
+                            fontSize: '13px',
+                            textOutline: '',
+                            color:'#000000'
+                        }
                         // format: '<b>{point.name}</b>: {point.percentage:.1f} %'
                     }
                 }
@@ -469,19 +526,19 @@
                 data: [],
                 // size: '100%',
                 innerSize: '50%',
-                // dataLabels: {
-                //     formatter: function () {
-                //         // display only if larger than 1
-                //         return this.y > 1 ? '<b>' + this.point.name + ':</b> ' +
-                //             this.y + '%' : null;
-                //     }
-                // },
-                // id: 'versions'
+                dataLabels: {
+                    distance: -10,
+                    style: {
+                        fontSize: '13px',
+                        textOutline: '',
+                        color:'#000000'
+                    }
+                }
             }],
             responsive: {
                 rules: [{
                     condition: {
-                        maxWidth: 400
+                        maxWidth: 300
                     },
                     chartOptions: {
                         series: [{}, {
@@ -512,7 +569,7 @@
             },
             yAxis: [{ // Primary yAxis
                  title: {
-                    text: '출고품수',
+                    text: '대상품수',
                     style: {
                         color: Highcharts.getOptions().colors[0]
                     }
@@ -524,21 +581,21 @@
                     }
                 }
             }
-            // , { // Secondary yAxis  //TODO: remove secondary
-            //     title: {
-            //         text: 'ratio',
-            //         style: {
-            //             color: Highcharts.getOptions().colors[1]
-            //         }
-            //     },
-            //     labels: {
-            //         format: '{value}%',
-            //         style: {
-            //             color: Highcharts.getOptions().colors[1]
-            //         }
-            //     },
-            //     opposite: true
-            // }
+            , { // Secondary yAxis  //TODO: remove secondary
+                title: {
+                    text: 'RATIO',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                labels: {
+                    format: '{value}%',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                opposite: true
+            }
             ],
             //TODO: legend show false
             legend: {
@@ -557,16 +614,16 @@
                 shared: true
             },
             series: [{
-                name: 'cnt',
+                name: '검사등급',
                 type: 'column',
                 data: [],
                 tooltip: {
                     valueSuffix: 'ea'
                 }
             }, {
-                name: 'ratio',
+                name: '발생률(%)',
                 type: 'spline',
-                // yAxis: 1,
+                yAxis: 1,
                 data: [],
                 tooltip: {
                     valueSuffix: '%'
@@ -700,13 +757,14 @@
                     $('#monthly_quality_board_bot_form > #MATERIAL_TYPE').val(rowData.MATERIAL_TYPE);
                     break;
             }
-
-            $botGrid.pqGrid('option', 'dataModel.postData', function () {
-                const botFormData = fnFormToJsonArrayData('#monthly_quality_board_bot_form');
-                const mergeFormData = $.extend(true, {}, topFormData, botFormData);
-
-                return mergeFormData;
-            });
+            bottom_combotree.clearSelection();
+            setTimeout(function() {
+                var grade = $("#INSPECT_GRADE").val();
+                $('span[data-id="'+grade+'"]').trigger('click')
+                // bottom_combotree.singleItemClick($('span[data-id="'+grade+'"]'));
+            },200);
+            // $('#monthly_quality_board_bot_form').find("#BOTTOM_INSPECT_GRADE").val($("#INSPECT_GRADE").val());
+            $("#monthly_quality_board_bot_form").find("#SEL_BOTT_INSPECT_GRADE").val("'"+$("#INSPECT_GRADE").val()+"'");
         };
 
         const botGridRefreshDataAndView = function () {
@@ -903,12 +961,33 @@
             changeGenerationProcess();
             changeCauses();
             changeAnnualQualityStatus();
+            bottom_combotree.clearSelection();
         });
 
         $('#monthly_quality_board_top_form').find('#RANGE_SEARCH').on('change', function () {
             const isNotChecked = !$(this).prop('checked');
             $('#monthly_quality_board_end_year').prop('disabled', isNotChecked);
             $('#monthly_quality_board_end_month').prop('disabled', isNotChecked);
+        });
+        $('#monthly_quality_board_bot_form').find('#BOTTOM_INSPECT_GRADE').on('change', function () {
+            let SEL_INSPECT_GRADE_SELECT = $("#monthly_quality_board_bot_form").find("#BOTTOM_INSPECT_GRADE").val();
+            let arr = SEL_INSPECT_GRADE_SELECT.trim().split(",");
+            let rtn = "";
+            if(SEL_INSPECT_GRADE_SELECT != ""){
+                $.each(arr, function(row, key) {
+                    let id = $(".ComboTreeItemChlid").find("#check" + key.trim()).parent()[0].dataset.id
+                    rtn += " '" + id + "',";
+                });
+                rtn = rtn.substring(0,rtn.length-1);
+            }
+            $("#monthly_quality_board_bot_form").find("#SEL_BOTT_INSPECT_GRADE").val(rtn);
+            $botGrid.pqGrid('option', 'dataModel.postData', function () {
+                const botFormData = fnFormToJsonArrayData('#monthly_quality_board_bot_form');
+                const mergeFormData = $.extend(true, {}, topFormData, botFormData);
+
+                return mergeFormData;
+            });
+            $botGrid.pqGrid('refreshDataAndView');
         });
 
         $('#monthlyQualityBoardFilterKeyword').on({

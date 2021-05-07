@@ -191,4 +191,15 @@
         ORDER BY MATERIAL_KIND, SEARCH_NM
     </select>
 
+    <select id="getFctList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.CODE_CD AS CODE_CD, B.CODE_NM AS CODE_NM,
+            A.CODE_CD AS `value` , B.CODE_NM AS `text`
+        FROM TBL_CODE A
+                 INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'EN' ELSE 'KR' END
+        WHERE 1 = 1
+          AND A.HIGH_CD = '1014'
+          AND A.DEL_YN = 'N'
+        ORDER BY A.SORT_NUM
+    </select>
 </mapper>
