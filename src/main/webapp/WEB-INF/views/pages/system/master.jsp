@@ -191,7 +191,7 @@
             <div class="d-flex align-items-center mt-10">
                 <div>
                     <span class="slt_wrap">
-                        <label class="label_100">조회년월</label>
+                        <label class="label_65" style="text-align: left;">조회년월</label>
                         <select class="wd_100" name="WORKING_DAY_TIME_SEARCH_YEAR" id="WORKING_DAY_TIME_SEARCH_YEAR">
                         </select>
                     </span>
@@ -565,6 +565,17 @@
 
     const workingDayTimeSettingColModel = [
         {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+        {
+            title: '날짜', dataType: 'date', format: 'yy/mm/dd', dataIndx: 'WORKING_DT',
+            styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+            editor: {
+                type: 'textbox', init: fnDateEditor,
+                getData: function (ui) {
+                    let val = ui.$cell.find('.pq-cell-editor').val();
+                    return fnIsEmpty(val) ? undefined : val;
+                }
+            }
+        },
         {title: '위치', dataIndx: 'WORK_FACTORY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
             editor: {
                 type: 'select', valueIndx: 'value', labelIndx: 'text', options: FAMILY_COMPANY,
@@ -589,17 +600,6 @@
                         });
                     }
                     return (index < 0) ? cellData : FAMILY_COMPANY[index].text;
-                }
-            }
-        },
-        {
-            title: '날짜', dataType: 'date', format: 'yy/mm/dd', dataIndx: 'WORKING_DT',
-            styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-            editor: {
-                type: 'textbox', init: fnDateEditor,
-                getData: function (ui) {
-                    let val = ui.$cell.find('.pq-cell-editor').val();
-                    return fnIsEmpty(val) ? undefined : val;
                 }
             }
         },
