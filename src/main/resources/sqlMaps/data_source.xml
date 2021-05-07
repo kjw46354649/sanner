@@ -200,6 +200,6 @@
         WHERE 1 = 1
           AND A.HIGH_CD = '1014'
           AND A.DEL_YN = 'N'
-        ORDER BY A.SORT_NUM
+        ORDER BY CODE_NM
     </select>
 </mapper>
