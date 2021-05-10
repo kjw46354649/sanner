@@ -2245,7 +2245,7 @@
 
         const validationCheck = function (dataList) {
             workTypeCheck(dataList);
-            drawingNumCheck(dataList);
+            // drawingNumCheck(dataList);
 
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 let rowData = dataList[i];
