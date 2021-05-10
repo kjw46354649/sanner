@@ -309,6 +309,7 @@
             rowHtHead: 15,
             numberCell: {title: 'No.'},
             // scrollModel: {autoFit: true},
+            selectionModel: { type: 'row', mode: 'single'},
             trackModel: {on: true},
             editable: false,
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: monthlyQualityBoardFilterRender},
@@ -384,11 +385,18 @@
                 y: 14,
                 // verticalAlign: 'middle',
             },
+            legend: {
+                // maxHeight:80,
+                // height:80,
+                verticalAlign:'top',
+                y: 135,
+                floating:true
+            },
             plotOptions: {
                 pie: {
                     size: 105,
                     shadow: false,
-                    center: ['50%', '50%'],
+                    center: ['50%', '0%'],
                     showInLegend: true,
                     dataLabels: {
                         format: '<b>{point.percentage:.0f} %</b>',
@@ -437,11 +445,16 @@
                 y: 14,
                 // verticalAlign: 'middle',
             },
+            legend: {
+                verticalAlign:'top',
+                y: 135,
+                floating:true
+            },
             plotOptions: {
                 pie: {
                     size: 105,
                     shadow: false,
-                    center: ['50%', '50%'],
+                    center: ['50%', '0%'],
                     showInLegend: true,
                     dataLabels: {
                         format: '{point.percentage:.0f} %',
@@ -466,21 +479,6 @@
                     distance: -10,
                 },
             }],
-            responsive: {
-                rules: [{
-                    condition: {
-                        maxWidth: 300
-                    },
-                    chartOptions: {
-                        series: [{}, {
-                            id: 'versions',
-                            dataLabels: {
-                                enabled: false
-                            }
-                        }]
-                    }
-                }]
-            }
         });
 
         const chart3 = Highcharts.chart('monthly_quality_board_middle_wrap_div_4', {
@@ -501,11 +499,17 @@
                 y: 14,
                 // verticalAlign: 'middle',
             },
+            legend: {
+                verticalAlign:'top',
+                y: 135,
+                floating:true
+            },
             plotOptions: {
                 pie: {
                     size: 105,
+                    // size : '70%',
                     shadow: false,
-                    center: ['50%', '50%'],
+                    center: ['50%', '0%'],
                     showInLegend: true,
                     dataLabels: {
                         format: '{point.percentage:.0f} %',
@@ -535,21 +539,6 @@
                     }
                 }
             }],
-            responsive: {
-                rules: [{
-                    condition: {
-                        maxWidth: 300
-                    },
-                    chartOptions: {
-                        series: [{}, {
-                            id: 'versions',
-                            dataLabels: {
-                                enabled: false
-                            }
-                        }]
-                    }
-                }]
-            }
         });
 
 
