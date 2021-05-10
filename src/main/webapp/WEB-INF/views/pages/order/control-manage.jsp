@@ -1325,6 +1325,8 @@
 
                             if (rowData.WORK_TYPE === 'WTP020') {
                                 cls = 'bg-lightgray';
+                                ui.cellData = "";
+                                ui.rowData.MATERIAL_FINISH_GRIND = "";
                             }
 
                             return {cls: cls, text: controlManageFilterRender(ui)};
@@ -1345,6 +1347,8 @@
 
                             if (rowData.WORK_TYPE === 'WTP020') {
                                 cls = 'bg-lightgray';
+                                ui.cellData = "";
+                                ui.rowData.MATERIAL_FINISH_HEAT = "";
                             }
 
                             return {cls: cls, text: controlManageFilterRender(ui)};
@@ -1366,6 +1370,8 @@
 
                     if (rowData.WORK_TYPE === 'WTP020') {
                         cls = 'bg-lightgray';
+                        ui.cellData = "";
+                        ui.rowData.MATERIAL_NOTE = "";
                     }
 
                     return {cls: cls, text: controlManageFilterRender(ui)};
