@@ -114,6 +114,7 @@
                     <li id="layout_1_5" style="min-width: 400px;"></li>
                     <li id="layout_1_6" style="min-width: 400px;"></li>
                     <li id="layout_1_7" style="min-width: 400px;"></li>
+                    <li id="layout_1_8" style="min-width: 400px;"></li>
                 </ul>
                 <ul>
                     <li id="layout_2_1" style="min-width: 400px;"></li>
@@ -123,6 +124,7 @@
                     <li id="layout_2_5" style="min-width: 400px;"></li>
                     <li id="layout_2_6" style="min-width: 400px;"></li>
                     <li id="layout_2_7" style="min-width: 400px;"></li>
+                    <li id="layout_2_8" style="min-width: 400px;"></li>
                 </ul>
             </div>
         </div>
