@@ -523,9 +523,10 @@
             {title: '공정<br>종류', dataIndx: 'PROCESS_TYPE_NM'},
             {title: '장비번호', width: 65, dataIndx: 'EQUIP_NM'},
             {title: '규격정보', width: 150, dataIndx: 'EQUIP_SIZE'},
-            {title: 'Working<br>Time', width: 75, dataIndx: 'WORK_TIME', editable: true, styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}},
-            {title: '가동시간', width: 75, dataIndx: 'PAUSE_TIME'},
-            {title: '정지시간', width: 75, dataIndx: 'REPAIR_TIME'},
+            {title: 'Working<br>Time', width: 75, dataIndx: 'DUTY_TIME', editable: false},
+            {title: '가동시간', width: 75, dataIndx: 'WORK_TIME'},
+            {title: '정지시간', width: 75, dataIndx: 'PAUSE_TIME'},
+            {title: '정비시간', width: 75, dataIndx: 'REPAIR_TIME'},
             {title: '실가동률', width: 70, dataIndx: 'REAL_RATIO', dataType: 'integer', format: '#,###%'},
             {title: 'EQUIP_SEQ', width: 70, dataIndx: 'EQUIP_SEQ', hidden: true},
             {

@@ -494,11 +494,15 @@
                     spanClass = "over75";
                 }
                 var tempRatio = rowData.REAL_RATIO
+                var top = 100 - tempRatio;;
                 if(tempRatio >= 100 ) {
                     tempRatio = 100;
+                    top = 100 - tempRatio;
+                }else if(tempRatio < 14) {
+                    top = 88;
                 }
                 var html = '<li><div style="height: 125px;width:100%;border: 1px solid #6c6262;margin: 0px 0px 5px 0px;cursor: pointer;" class="div_graph" data-value="' +((typeof rowData.EQUIP_SEQ != 'undefined' && rowData.EQUIP_SEQ != null)?rowData.EQUIP_SEQ:'')+ '">';
-                html += '<span class="gBar" style="height:' + tempRatio + '%;top:'+(100-tempRatio) + '%';
+                html += '<span class="gBar" style="height:' + tempRatio + '%;top:'+(top) + '%';
                 if(rowData.EQUIP_NM.toLowerCase() == 'average') {
                     html += ';background:#4a8de3';
                 }

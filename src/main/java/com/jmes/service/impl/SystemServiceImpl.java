@@ -242,4 +242,39 @@ public class SystemServiceImpl implements SystemService {
             }
         }
     }
+
+    @Override
+    public void updateWorkingDayTime(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        if (jsonObject != null) {
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+            ArrayList<HashMap<String, Object>> addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
+            ArrayList<HashMap<String, Object>> updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+            ArrayList<HashMap<String, Object>> deleteList = (ArrayList<HashMap<String, Object>>) jsonMap.get("deleteList");
+
+            if (addList.size() > 0) {
+                for (HashMap<String, Object> hashMap : addList) {
+                    hashMap.put("queryId", "systemMapper.insertUpdateWorkingDayTime");
+                    this.innodaleDao.insertGrid(hashMap);
+                }
+            }
+            if (updateList.size() > 0) {
+                for (HashMap<String, Object> hashMap : updateList) {
+                    hashMap.put("queryId", "systemMapper.insertUpdateWorkingDayTime");
+                    this.innodaleDao.updateGrid(hashMap);
+                }
+            }
+            if (deleteList.size() > 0) {
+                for (HashMap<String, Object> hashMap : deleteList) {
+                    hashMap.put("queryId", "systemMapper.deleteWorkingDayTime");
+                    this.innodaleDao.deleteGrid(hashMap);
+                }
+            }
+        }
+
+    }
 }

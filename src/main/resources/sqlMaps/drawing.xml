@@ -281,7 +281,7 @@
         FROM jmes.TBL_MCT_PLAN
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
           AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-          AND EQUIP_SEQ = #{machineInfo.EQUIP_SEQ}
+          AND DEL_YN = 'N'
     </select>
 
     <update id="updateEquipmentWorker"  parameterType="java.util.HashMap" >

@@ -186,6 +186,27 @@
         <div>
             <div id="working_time_setting_grid"></div>
         </div>
+        <form class="form-inline" id="working_day_time_setting_form" role="form">
+            <input type="hidden" name="queryId" id="queryId" value="systemMapper.selectWorkingDayTimeList">
+            <div class="d-flex align-items-center mt-10">
+                <div>
+                    <span class="slt_wrap">
+                        <label class="label_65" style="text-align: left;">조회년월</label>
+                        <select class="wd_100" name="WORKING_DAY_TIME_SEARCH_YEAR" id="WORKING_DAY_TIME_SEARCH_YEAR">
+                        </select>
+                    </span>
+                </div>
+                <div class="ml-auto">
+                    <button type="button" class="defaultBtn btn-50w" name="add_day_time" id="add_day_time">추가</button>
+                    <button type="button" class="defaultBtn btn-50w red" name="delete_day_time" id="delete_day_time">삭제</button>
+                    <button type="button" class="defaultBtn btn-50w green" id="working_day_time_save">저장</button>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <div>
+            <div id="working_day_time_setting_grid"></div>
+        </div>
         <div class="text-center">
             <button class="defaultBtn grayPopGra" name="working_time_setting_pop_close">닫기</button>
         </div>
@@ -265,6 +286,18 @@
         }
         $('#' + id).val(year).prop('selected', true);
     })('production_target_amount_register_year', 3);
+
+    (function (id, severalYears) {
+        $('#' + id).empty();
+        let date = new Date();
+        date.setMonth(date.getMonth() + 1);
+        let year = date.getFullYear();
+
+        for (let i = year - 3; i < year + severalYears; i++) {
+            $('#' + id).append(new Option(i + '년', i));
+        }
+        $('#' + id).val(year).prop('selected', true);
+    })('WORKING_DAY_TIME_SEARCH_YEAR', 2);
 
     let $productionTargetAmountRegisterGrid;
     const productionTargetAmountRegisterGridId = 'production_target_amount_register_grid';
@@ -497,7 +530,7 @@
         }
     ];
     const workingTimeSettingObj = {
-        height: 365,
+        height: 140,
         collapsible: false,
         resizable: false,
         showTitle: false,
@@ -517,6 +550,138 @@
             }
         }
     };
+
+    // Working Day Time 설정
+
+    const FAMILY_COMPANY = fnCommCodeDatasourceGridSelectBoxCreate({
+        'url': '/json-list',
+        'data': {'queryId': 'dataSource.getFctList'}
+    });
+
+    let $workingDayTimeSettingGrid;
+    const workingDayTimeSettingId = 'working_day_time_setting_grid';
+    const workingDayTimeSettingPostData = fnFormToJsonArrayData('#working_day_time_setting_form');
+    let selectedRowIndex = [];
+
+    const workingDayTimeSettingColModel = [
+        {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+        {
+            title: '날짜', dataType: 'date', format: 'yy/mm/dd', dataIndx: 'WORKING_DT',
+            styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+            editor: {
+                type: 'textbox', init: fnDateEditor,
+                getData: function (ui) {
+                    let val = ui.$cell.find('.pq-cell-editor').val();
+                    return fnIsEmpty(val) ? undefined : val;
+                }
+            }
+        },
+        {title: '위치', dataIndx: 'WORK_FACTORY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
+            editor: {
+                type: 'select', valueIndx: 'value', labelIndx: 'text', options: FAMILY_COMPANY,
+                getData: function (ui) {
+                    let val = ui.$cell.find('.pq-cell-editor').val();
+                    return fnIsEmpty(val) ? undefined : val;
+                }
+            },
+            render: function (ui) {
+                let cellData = ui.cellData;
+
+                if (cellData === '' || cellData === undefined) {
+                    return '';
+                } else {
+                    let index = FAMILY_COMPANY.findIndex(function (element) {
+                        return element.text === cellData;
+                    });
+
+                    if (index < 0) {
+                        index = FAMILY_COMPANY.findIndex(function (element) {
+                            return element.value === cellData;
+                        });
+                    }
+                    return (index < 0) ? cellData : FAMILY_COMPANY[index].text;
+                }
+            }
+        },
+        {
+            title: 'WORKING TIME', dataType: 'integer', dataIndx: 'WORKING_TIME', styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+            render: function (ui) {
+                const cellData = ui.cellData;
+                var value = "";
+                if(typeof ui.cellData != 'undefined') {
+                    const hour = Math.trunc(cellData / 60);
+                    const minute = cellData % 60;
+                    value = ((cellData >= 60) ? hour + 'h ' + minute + 'm' : minute + 'm');
+                }
+                return value;
+            }
+        }
+    ];
+    const workingDayTimeSettingObj = {
+        height: 180,
+        collapsible: false,
+        resizable: false,
+        showTitle: false,
+        rowHtHead: 15,
+        numberCell: {title: 'No.', show: false},
+        scrollModel: {autoFit: true},
+        trackModel: {on: true},
+        selectionModel: {type: 'row', mode: 'single'},
+        columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
+        colModel: workingDayTimeSettingColModel,
+        dataModel: {
+            location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+            postData: workingDayTimeSettingPostData,
+            recIndx: 'ROW_NUM',
+            getData: function (dataJSON) {
+                return {data: dataJSON.data};
+            }
+        },
+        rowSelect: function (event, ui) {
+            selectedRowIndex = [];
+            if(ui.addList.length > 0 ) {
+                selectedRowIndex.push(ui.addList[0].rowIndx);
+            }
+        }
+    };
+
+    $("#add_day_time").on('click',function (e) {
+        let data = $workingDayTimeSettingGrid.pqGrid('option', 'dataModel.data');
+        $workingDayTimeSettingGrid.pqGrid('addRow', {newRow: {}, rowIndx: data.length});
+    })
+    $("#delete_day_time").on('click',function (e) {
+        //추가 또는 수정된 값이 있으면 true
+        if(selectedRowIndex.length > 0 ) {
+            let delJson = {'deleteList':[],'addList':[],'updateList':[]}
+            for (let i = 0; i < selectedRowIndex.length; i++) {
+                let rowData = $workingDayTimeSettingGrid.pqGrid("getRowData", {rowIndx: selectedRowIndex[i]});
+                delJson.deleteList.push(rowData);
+            }
+            const parameters = {'url': '/updateWorkingDayTime', 'data': {data: JSON.stringify(delJson)}}
+
+            fnPostAjax(function () {
+                fnAlert(null, '삭제되었습니다.', function () {
+                    $workingDayTimeSettingGrid.pqGrid('refreshDataAndView');
+                });
+            }, parameters, '');
+        }
+    })
+    $("#working_day_time_save").on('click',function (e) {
+        const gridInstance = $workingDayTimeSettingGrid.pqGrid('getInstance').grid;
+        //추가 또는 수정된 값이 있으면 true
+        if (gridInstance.isDirty()) {
+            const changes = gridInstance.getChanges({format: 'byVal'});
+            const parameters = {'url': '/updateWorkingDayTime', 'data': {data: JSON.stringify(changes)}}
+
+            fnPostAjax(function () {
+                fnAlert(null, '<spring:message code="com.alert.default.save.success"/>', function () {
+                    $workingDayTimeSettingGrid.pqGrid('refreshDataAndView');
+                });
+            }, parameters, '');
+        }
+
+    })
+
     // 자재 검색 사이즈 범위 설정
     let $materialSizeInquirySettingGrid;
     let selectedMaterialSizeInquirySettingRowIndex = [];
@@ -711,10 +876,16 @@
 
     $('#working_time_setting_popup').on({
         'show.bs.modal': function () {
+            let date = new Date();
+            date.setMonth(date.getMonth() + 1);
+            let year = date.getFullYear();
+            $('#WORKING_DAY_TIME_SEARCH_YEAR').val(year).prop('selected', true);
             $workingTimeSettingGrid = $('#' + workingTimeSettingId).pqGrid(workingTimeSettingObj);
+            $workingDayTimeSettingGrid = $('#' + workingDayTimeSettingId).pqGrid(workingDayTimeSettingObj);
         },
         'hide.bs.modal': function () {
             $workingTimeSettingGrid.pqGrid('destroy');
+            $workingDayTimeSettingGrid.pqGrid('destroy');
         }
     });
 
@@ -815,5 +986,11 @@
     $('[name=equipment_report_operate_setting_pop_close]').on('click', function () {
         $('#equipment_report_operate_setting_popup').modal('hide');
     });
+    $("#WORKING_DAY_TIME_SEARCH_YEAR").on('change',function (e) {
+        $workingDayTimeSettingGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+            return fnFormToJsonArrayData('#working_day_time_setting_form');
+        });
+        $workingDayTimeSettingGrid.pqGrid("refreshDataAndView");
+    })
 
 </script>
