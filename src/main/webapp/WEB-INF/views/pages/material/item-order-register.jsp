@@ -2209,7 +2209,7 @@
             }
 
             if (!fnIsEmpty(MATERIAL_ORDER_NUM)) {
-                if (ORDER_STATUS === 'MST002' || ORDER_STATUS === 'MST004') {
+                if (ORDER_STATUS === 'MST002' || ORDER_STATUS === 'MST004') { // MST002 : 주문완료 , MST004 : 소재입고
                     itemOrderRegisterPopTopGrid.pqGrid('option', 'colModel', itemOrderRegisterPopTopColModel_disabled);
                 } else {
                     itemOrderRegisterPopTopGrid.pqGrid('option', 'colModel', itemOrderRegisterPopTopColModel_temp);
