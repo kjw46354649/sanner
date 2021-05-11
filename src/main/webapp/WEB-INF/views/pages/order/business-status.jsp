@@ -113,9 +113,6 @@
     let $businessOverOrderListGrid;
     let businessOverOrderListGridId = 'business_over_order_grid';
 
-    /** business Will Over Order Danger grid */
-    /*let $businessOverDangerListGrid;
-    let businessOverDangerListGridId = 'business_over_danger_grid';*/
     let businessCalendar;
 
     $(function () {
@@ -128,13 +125,6 @@
                 , center : 'title'
                 , right : 'prev,next today'
             }
-            //, locale : 'ko' // 한국어 설정이다. 하지만 date Cell 포맷팅이 어려우니 그냥 주석으로
-            // titleFormat: { // will produce something like "Tuesday, September 18, 2018"
-            //     month: '2-digit',
-            //     year: 'numeric',
-            //     day: 'numeric',
-            //     weekday: 'long'
-            // }
             , titleFormat : function(date) { // title 설정
                 return date.date.year +"년 "+(date.date.month +1)+"월";
             }
@@ -199,43 +189,12 @@
         businessCalendar = new FullCalendar.Calendar(businessCalendarEl, businessCalendarProps);
         businessCalendar.render();
 
-        // let loadMonthSalesList = function(event){
-        //     let parameters = {
-        //         'url': '/json-list',
-        //         'data': {'queryId':'orderMapper.businessMonthOutgoingList', 'SEL_CALENDAR_DATE':moment(businessCalendar.getDate()).format('YYYYMM')}
-        //     };
-        //     fnPostAjax(function (data, callFunctionParam) {
-        //
-        //         console.log(data);
-        //
-        //
-        //     }, parameters, '');
-        //
-        // };
-
-        // loadMonthSalesList();
-
         $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker({dateFormat: 'yy/mm/dd'});
         $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker('setDate', 'today');
         fnCommCodeDatasourceSelectBoxCreate($('#business_status_search_form').find('#ORDER_COMP_CD'), 'all', {
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
-
-        // fnCommCodeDatasourceSelectBoxCreate($('#business_status_search_form').find('#ORDER_STAFF_SEQ'), 'all', {
-        //     'url': '/json-list',
-        //     'data': {'queryId': 'dataSource.selectOrderCompChargeList',
-        //         'COMP_CD': $('#business_status_search_form').find("#ORDER_COMP_CD").val(),
-        //     }
-        //     // 'data': {'queryId': 'dataSource.getCompanyStaffList'}
-        // });
-
-        // $('#business_status_search_form').find('#ORDER_COMP_CD').change(function() {
-        //     fnCommCodeDatasourceSelectBoxCreate($('#business_status_search_form').find('#ORDER_STAFF_SEQ'), 'all', {
-        //         'url': '/json-list',
-        //         'data': {'queryId': 'dataSource.getCompanyStaffList', 'COMP_CD': $(this).val()}
-        //     });
-        // });
 
         let businessStatusColModel = [
             {dataIndx: 'IMG_GFILE_SEQ', hidden: true},

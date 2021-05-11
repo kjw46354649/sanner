@@ -228,7 +228,7 @@
             }
             return val;
         }
-        
+
         const botGridId = 'monthly_quality_board_botGrid';
         const botGridColModel = [
             {title: '출고<br>일자', maxWidth: 50, dataIndx: 'OUT_FINISH_DT'},
@@ -274,6 +274,9 @@
             {title: '수량', dataIndx: 'PART_QTY'},
             {title: '수행<br>공장', dataIndx: 'WORK_FACTORY_NM'},
             {title: '외주업체', width: 75, dataIndx: 'OUTSIDE_COMP_NM'},
+            // {title: '수행<br>공장', dataIndx: 'WORK_FACTORY_NM'},    // 임시 감추기 처리 2021.05.07
+            // {title: '외주업체', width: 75, dataIndx: 'OUTSIDE_COMP_NM'},
+            // {title: '', dataIndx: 'na2'},
             {
                 title: '검사현황', halign: 'center', colModel: [
                     {title: 'Seq.', dataIndx: 'INSPECT_RNUM'},
