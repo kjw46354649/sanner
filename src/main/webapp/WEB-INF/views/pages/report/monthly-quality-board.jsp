@@ -241,8 +241,8 @@
             {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '재질', width: 60, dataIndx: 'MATERIAL_TYPE_NM'},
             {title: '수량', dataIndx: 'PART_QTY'},
-            {title: '수행<br>공장', dataIndx: 'WORK_FACTORY_NM'},
-            {title: '외주업체', width: 75, dataIndx: 'OUTSIDE_COMP_NM'},
+            // {title: '수행<br>공장', dataIndx: 'WORK_FACTORY_NM'},    // 임시 감추기 처리 2021.05.07
+            // {title: '외주업체', width: 75, dataIndx: 'OUTSIDE_COMP_NM'},
             {title: '', dataIndx: 'na2'},
             {
                 title: '검사현황', halign: 'center', colModel: [
