@@ -621,7 +621,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="leftwrap" style="width: 52%;float: left;height: 610px;">
+                <div class="leftwrap" style="width: 52%;float: left;height: 600px;">
                     <div class="tableWrap">
                         <div class="qualityWrap">
                             <div class="h_area" style="border-bottom: 0;">
@@ -635,7 +635,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="rightwrap" style="width: 47%;float: right;height: 610px;">
+                <div class="rightwrap" style="width: 47%;float: right;height: 600px;">
                     <div class="tableWrap">
                         <ul class="conWrapPop60">
                             <h4 style="font-size: 18px;">가공계획 LIST
