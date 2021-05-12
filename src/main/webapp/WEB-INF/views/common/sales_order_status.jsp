@@ -569,6 +569,8 @@
             $businessEmergencyListGrid.pqGrid('refreshDataAndView');
             $businessOverOrderListGrid.pqGrid('refreshDataAndView');
             businessCalendar.refetchEvents();
+            var today = new Date();
+            businessCalendar.gotoDate(today);
         });
         $('#business_refresh_timer').on('click', function () {
             $("#timer_pop").show();
@@ -601,6 +603,8 @@
                     $businessEmergencyListGrid.pqGrid('refreshDataAndView');
                     $businessOverOrderListGrid.pqGrid('refreshDataAndView');
                     businessCalendar.refetchEvents();
+                    var today = new Date();
+                    businessCalendar.gotoDate(today);
                 },timer)
             }
         });
