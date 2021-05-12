@@ -708,7 +708,8 @@
                     labelColorId = 'bg-green';
                     break;
                 case '완료':
-                    labelColorId = 'bg-skyblue';
+                    labelColorId = 'bg-real-green';
+                    // labelColorId = 'bg-skyblue';
                     break;
                 case '취소':
                     labelColorId = 'bg-yellow';

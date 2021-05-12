@@ -586,8 +586,8 @@
                 <div class="list1">
                     <table class="rowStyle" style="table-layout: fixed;">
                         <colgroup>
-                            <col width="10%">
                             <col width="15%">
+                            <col width="10%">
                             <col width="25%">
                             <col width="5%">
                             <col width="25%">
@@ -2235,8 +2235,7 @@
                 var planWorkingTime = timeFormat(data.info.PLAN_WORKING_TIME);
                 var arr = data.info.DRAWING_NUM.split(",");
                 var arr2 = data.info.DRAWING_SEQ.split(",");
-
-                tempHtml = '<td>' + data.info.WORK_USER_NM + '</td>';
+                tempHtml = '<td><div class="userWrap"><div class="userImg"><img src="/image/' + data.info.PHOTO_GFILE_SEQ + '"></div><div class="userName"><span class="ko">'+ data.info.WORK_USER_NM + '</span></div></div></td>';
                 tempHtml += '<td>' + data.info.WORK_STATUS_NM + '</td>';
                 tempHtml += '<td>' + data.info.CONTROL_NUM + '</td>';
                 tempHtml += '<td> <span  class="shareIcon" name="detailView" style="cursor: pointer" onclick="g_item_detail_pop_view('+ data.info.CONTROL_SEQ+','+data.info.CONTROL_DETAIL_SEQ +','+'null,'+'null)"></span></td>';
