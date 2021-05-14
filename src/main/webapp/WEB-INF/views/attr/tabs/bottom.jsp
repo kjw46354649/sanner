@@ -2670,6 +2670,7 @@
 
     $("#mct_plan_pop_refresh").on('click',function () {
         settingOngoingInfo();
+        $mctPlanDetailPopGrid.pqGrid('refreshDataAndView');
     })
 
     $(document).ready(function(){
