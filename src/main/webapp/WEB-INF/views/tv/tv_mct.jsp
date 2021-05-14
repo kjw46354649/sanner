@@ -1170,7 +1170,7 @@
 										</div>
 										<div class="tblWrap">
 											<table>
-												<caption>No, 발생일, 발주처, 관리번호, 유형, 수량, 납기, 불량코드, 조치로 구분된 불량/반품 발생 현황(3일간)</caption>
+												<caption>No, 발생일, 발주처, 작업지시번호, 유형, 수량, 납기, 불량코드, 조치로 구분된 불량/반품 발생 현황(3일간)</caption>
 												<colgroup>
 													<col width="64px">
 													<col width="95px">
@@ -1187,7 +1187,7 @@
 														<th>No</th>
 														<th>발생일</th>
 														<th>발주처</th>
-														<th>관리번호</th>
+														<th>작업지시번호</th>
 														<th>검사유형</th>
 														<th>수량</th>
 														<th>가공납기</th>
@@ -1211,7 +1211,7 @@
 										</div>
 										<div class="tblWrap">
 											<table>
-												<caption>No, 납기, 출고일, 발주처, 관리번호, 수량, 진행상태로 구분된 긴급주문 진행현황</caption>
+												<caption>No, 납기, 출고일, 발주처, 작업지시번호, 수량, 진행상태로 구분된 긴급주문 진행현황</caption>
 												<colgroup>
 													<col width="64px">
 													<col width="95px">
@@ -1226,7 +1226,7 @@
 														<th>No</th>
 														<th>가공납기</th>
 														<th>발주처</th>
-														<th>관리번호</th>
+														<th>작업지시번호</th>
 														<th>수량</th>
 														<th>진행상태</th>
 														<th>현재위치</th>
@@ -1248,7 +1248,7 @@
 										</div>
 										<div class="tblWrap">
 											<table>
-												<caption>No, 납기, 출고일, 발주처, 관리번호, 수량, 진행상태, 담당영업으로 내부 가공 지원 리스트</caption>
+												<caption>No, 납기, 출고일, 발주처, 작업지시번호, 수량, 진행상태, 담당영업으로 내부 가공 지원 리스트</caption>
 												<colgroup>
 													<col width="64px">
 													<col width="95px">
@@ -1263,7 +1263,7 @@
 														<th>No</th>
 														<th>가공납기</th>
 														<th>발주처</th>
-														<th>관리번호</th>
+														<th>작업지시번호</th>
 														<th>수량</th>
 														<th>진행상태</th>
 														<th>담당영업</th>

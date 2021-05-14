@@ -194,7 +194,7 @@
                 {title: '긴', minWidth: 25, width: 25, dataType: 'string', aligin: 'center', dataIndx: 'EMERGENCY_YN'},
                 {title: '가공납기', minWidth: 30, width: 85, datatype: 'string', dataIndx: 'INNER_DUE_DT'},
                 {title: '발주업체', minWidth: 30, width: 160, dataType: 'string', dataIndx: 'ORDER_COMP_NM'},
-                {title: '관리번호', minWidth: 30, width: 250, align: 'center', dataType: 'string', dataIndx: 'CONTROL_NUM', },
+                {title: '작업지시번호', minWidth: 30, width: 250, align: 'center', dataType: 'string', dataIndx: 'CONTROL_NUM', },
                 {title: '규격', minWidth: 30, width: 160, dataType: 'string', dataIndx: 'SIZE_TXT', },
                 {title: '수량', minWidth: 30, width: 70, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'},
                 {title: '위치일시', minWidth: 30, width: 120, dataType: 'string', dataIndx: 'POP_DT'},

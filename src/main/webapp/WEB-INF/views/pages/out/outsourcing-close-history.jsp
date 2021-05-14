@@ -46,7 +46,7 @@
                     </li>
                     <li>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
+                            <label class="label_100" for="CONTROL_NUM">작업지시번호</label>
                             <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM">
                         </span>
                         <span class="gubun"></span>
@@ -240,7 +240,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: 180, align: 'left', dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: 180, align: 'left', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', dataIndx: 'PART_NUM'},
             {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,

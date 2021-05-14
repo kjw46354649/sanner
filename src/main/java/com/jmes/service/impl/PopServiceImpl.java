@@ -81,7 +81,7 @@ public class PopServiceImpl implements PopService {
         /** 화면에서 받은 데이터 **/
         String popLocation = (String) hashMap.get("popLocation");
 
-        /** 도면 바코드 코드를 이용하여 도면의 관리번호 정보를 조회한다. **/
+        /** 도면 바코드 코드를 이용하여 도면의 작업지시번호 정보를 조회한다. **/
         hashMap.put("queryId", "popMapper.selectInsertPopPartStatus");
         Map<String, Object> controlPartInfo = innodaleDao.getInfo(hashMap);
 

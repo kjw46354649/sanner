@@ -120,7 +120,7 @@ public class OrderController {
     }
 
     /**
-     * @description 관리번호 병합
+     * @description 작업지시번호 병합
      * @param model
      * @param request
      * @return

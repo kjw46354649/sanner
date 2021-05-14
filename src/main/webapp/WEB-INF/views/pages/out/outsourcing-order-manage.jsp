@@ -50,7 +50,7 @@
                     </li>
                     <li>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
+                            <label class="label_100" for="CONTROL_NUM">작업지시번호</label>
                             <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM">
                         </span>
                         <span class="gubun"></span>
@@ -430,7 +430,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: 180, dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', minWidth: 30, dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
@@ -845,7 +845,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM', editable: true},
+            {title: '작업지시번호', width: 180, dataIndx: 'CONTROL_NUM', editable: true},
             {title: 'OUTSIDE_ORDER_NUM', dataIndx: 'OUTSIDE_ORDER_NUM', hidden: true},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
@@ -1130,7 +1130,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM', editable: true},
+            {title: '작업지시번호', width: 180, dataIndx: 'CONTROL_NUM', editable: true},
             {title: 'OUTSIDE_ORDER_NUM', dataIndx: 'OUTSIDE_ORDER_NUM', hidden: true},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
@@ -1650,7 +1650,7 @@
                     '    <tr>\n' +
                     '        <th rowspan="2" style="' + st_center + font_header + '">No.</th>\n' +
                     '        <th rowspan="2" style="width:80px; ' + st_center + font_header + '">업체명</th>\n' +
-                    '        <th rowspan="2" style="width:200px; ' + st_center + font_header + '">관리번호</th>\n' +
+                    '        <th rowspan="2" style="width:200px; ' + st_center + font_header + '">작업지시번호</th>\n' +
                     '        <th rowspan="2" style="width:30px; ' + st_center + font_header + '">Part</th>\n' +
                     '        <th rowspan="2" style="width:150px; ' + st_center + font_header + '">도면번호</th>\n' +
                     '        <th rowspan="2" style="width:120px; ' + st_center + font_header + '">규격</th>\n' +

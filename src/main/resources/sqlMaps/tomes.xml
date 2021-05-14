@@ -98,7 +98,7 @@
             IFNULL(C.UNIT_FINAL_AMT, SPACE(0)) AS UNIT_FINAL_AMT,  --  최종공급단가 -->
             IFNULL(C.UNIT_FINAL_AMT * C.ORDER_QTY, SPACE(0)) AS FINAL_TOTAL_AMT,  -- 합계 금액 -->
             CASE WHEN D.CLOSE_MONTH IS NOT NULL THEN DATE_FORMAT(STR_TO_DATE(C.OUT_FINISH_DT, '%Y%m%d'), '%Y-%m-%d') ELSE '' END AS CLOSE_MONTH, -- 마감 여부
-            A.CONTROL_NUM  -- 업체 관리번호
+            A.CONTROL_NUM  -- 업체 작업지시번호
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                 AND B.WORK_TYPE NOT IN ('WTP050')

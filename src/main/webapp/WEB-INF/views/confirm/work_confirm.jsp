@@ -37,7 +37,7 @@
                                 <label for="processConfirmFilterColumn"></label>
                                 <select id="processConfirmFilterColumn">
 <%--                                    <option value="">All Fields</option>--%>
-                                    <option value="CONTROL_NUM">관리번호</option>
+                                    <option value="CONTROL_NUM">작업지시번호</option>
                                 </select>
                                 <label for="processConfirmFilterCondition"></label>
                                 <select id="processConfirmFilterCondition">
@@ -253,7 +253,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: '15%', dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: '15%', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
                 render: function (ui) {
@@ -386,7 +386,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: '15%', dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: '15%', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
                 render: function (ui) {
@@ -521,7 +521,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: '15%', dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: '15%', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
                 render: function (ui) {
@@ -645,7 +645,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: '15%', dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: '15%', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
                 render: function (ui) {

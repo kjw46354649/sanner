@@ -76,7 +76,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: 180, dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '도면번호', width: 120, dataIndx: 'DRAWING_NUM'},
             {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',

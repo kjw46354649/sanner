@@ -116,7 +116,7 @@
                 }
             },
             {title: '입고 일시', dataIndx: 'IN_DT', editable: false},
-            {title: '관리번호', dataIndx: '', editable: false}
+            {title: '작업지시번호', dataIndx: '', editable: false}
         ];
 
         let OrderStatusLeftToolbar = {
