@@ -7,14 +7,13 @@
         SELECT A.COMP_CD, A.COMP_NUM, A.COMP_NM, A.COMP_NM2, A.PORTAL_SHOW_YN
         FROM jmes.TBL_COMPANY A
         WHERE 1 = 1
-            AND UPPER(REPLACE(A.COMP_NUM, '-', SPACE(0))) = UPPER(REPLACE(#{COMP_NUM}, '-', SPACE(0)))
             AND A.COMP_CD = #{COMP_CD}
             AND A.DEL_YN ='N'
     </select>
 
     <select id="selectOrderCompanyList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-           	COMP_NUM, COMP_CD, COMP_NM
+            UPPER(REPLACE(COMP_NUM, '-', SPACE(0))) AS COMP_NUM, COMP_CD, COMP_NM
         FROM TBL_COMPANY
         WHERE 1 = 1
             AND ORDER_COMPANY_YN = 'Y'
