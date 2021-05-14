@@ -2300,9 +2300,9 @@
         }
         const registNumCheck = function (dataList) {
             const groupedRegistNum = fnGroupBy(dataList, 'REGIST_NUM');
-            console.log(groupedRegistNum);
+            // console.log(groupedRegistNum);
             $.each(groupedRegistNum, function (idx,Item) {
-                if(idx !== 'undefined' && idx != 'null') {
+                if(idx !== 'undefined' && idx != 'null' && idx != '') {
                     $.each(Item, function (idx2,Item2) {
                         if(Item.length > 1) {
                             addErrorList(Item2.pq_ri, 'REGIST_NUM');
