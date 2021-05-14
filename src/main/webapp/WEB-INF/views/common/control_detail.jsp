@@ -72,7 +72,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: 180, dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', minWidth: 25, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 25, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
@@ -96,6 +96,7 @@
             {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면<br>처리', width: 80, dataIndx: 'SURFACE_TREAT_NM'},
             {title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY'},
+            {title: '접수번호', align: 'left', width: 140, dataIndx: 'REGIST_NUM'},
             {title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM'},
             {title: '수량', dataIndx: 'ORDER_QTY'},
             {

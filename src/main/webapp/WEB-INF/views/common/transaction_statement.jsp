@@ -128,7 +128,8 @@
                     });
                 }
             },
-            {title: '관리번호', dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', dataIndx: 'CONTROL_NUM'},
+            {title: '접수번호', dataIndx: 'REGIST_NUM'},
             {title: '발주번호', dataIndx: 'ORDER_NUM'},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {

@@ -136,7 +136,7 @@
                                 <span name="control_num_arrow" id="left_arrow" data-value="-1" style="cursor: pointer;">
                                     <img src="/resource/asset/images/common/img_left_arrow.png" alt="왼쪽 화살표" style="width: 15px;">
                                 </span>
-                                <span>관리번호</span>
+                                <span>작업지시번호</span>
                                 <span name="control_num_arrow" id="right_arrow" data-value="1" style="cursor: pointer;">
                                     <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표" style="width: 15px;">
                                 </span>
@@ -504,7 +504,7 @@
                             <td id="seq2"></td>
                         </tr>
                         <tr>
-                            <td scope="row">관리번호</td>
+                            <td scope="row">작업지시번호</td>
                             <td></td>
                         </tr>
                         <tr>
@@ -554,8 +554,8 @@
 <div id="drawingPrintDiv" style="display: none">
     <div id="drawingPrintDivHtml">
         <div>
-            <span>동일 관리번호에 도면번호가 다른 대상이 있습니다. 포함하여 출력할까요?</span>
-            <span class="text-blue">대상관리번호</span><br>
+            <span>동일 작업지시번호에 도면번호가 다른 대상이 있습니다. 포함하여 출력할까요?</span>
+            <span class="text-blue">대상작업지시번호</span><br>
             <span class="drawingPrintControlHtml"></span>
         </div>
     </div>
@@ -1674,7 +1674,8 @@
             const colModel = [
                 {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
                 {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-                {title: '관리번호', align: 'left', width: 180, dataIndx: 'CONTROL_PART_INFO'},
+                {title: '작업지시번호', align: 'left', width: 180, dataIndx: 'CONTROL_PART_INFO'},
+                {title: '접수번호', align: 'left', width: 140, dataIndx: 'REGIST_NUM'},
                 {title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM'},
                 {title: '작업형태', dataIndx: 'WORK_TYPE_NM'},
                 {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
@@ -1985,7 +1986,7 @@
         htmlString += '    <td id="seq2">' + seq2 + '</td>';
         htmlString += '</tr>';
         htmlString += '<tr>';
-        htmlString += '    <td scope="row">관리번호</td>';
+        htmlString += '    <td scope="row">작업지시번호</td>';
         htmlString += '    <td>' + controlNum + '</td>';
         htmlString += '</tr>';
         htmlString += '<tr>';

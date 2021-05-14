@@ -43,9 +43,14 @@ public class OrderServiceImpl implements OrderService {
         this.innodaleDao.create(hashMap);
         hashMap.put("queryId", "orderMapper.selectBeforeInsertDuplicationControlList");
         duplicationList = this.innodaleDao.getList(hashMap);
+
+        hashMap.put("queryId", "orderMapper.selectBeforeInsertDuplicationRegistList");
+        List<Map<String, Object>> duplicateRegistList = this.innodaleDao.getList(hashMap);
         if (duplicationList.size() > 0) {
             model.addAttribute("list", duplicationList);
-        } else {
+        }else if(duplicateRegistList.size() > 0) {
+            model.addAttribute("registList", duplicateRegistList);
+        }else {
             hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
             this.innodaleDao.create(hashMap);
         }
@@ -269,7 +274,7 @@ public class OrderServiceImpl implements OrderService {
                 map.put("queryId", "orderMapper.selectHasInOutside");
                 if (this.orderDao.getFlag(map) && !flag) {
                     flag = true;
-                    message = "외주 관리번호는 가공확정을 할수 없습니다.";
+                    message = "외주 작업지시번호는 가공확정을 할수 없습니다.";
                 }
             } else if (type.equals("conversion")) {
                 // 이미 가공확정 됐는지 확인
@@ -326,7 +331,7 @@ public class OrderServiceImpl implements OrderService {
                 }
 
                 if("PRO002".equals(hashMap.get("PART_STATUS"))) {
-                    /** 관리번호 가공 확정인 경우 알람 처리 한다. **/
+                    /** 작업지시번호 가공 확정인 경우 알람 처리 한다. **/
                     hashMap.put("queryId", "common.selectAlarmControlInformation");
                     Map<String, Object> alarmInfo = this.innodaleDao.getInfo(hashMap);
 
@@ -484,7 +489,15 @@ public class OrderServiceImpl implements OrderService {
                     if (this.orderDao.getFlag(hashMap)) {
                         flag = true;
                         //TODO: 문구수정
-                        message = "관리번호 수정시 기존에 존재하는 관리번호가 있으면 저장시 에러가 나도록 해야함";
+                        message = "작업지시번호 수정시 기존에 존재하는 관리번호가 있으면 저장시 에러가 나도록 해야함";
+                        break;
+                    }
+                }
+                if (oldList.get(i).containsKey("REGIST_NUM")) {
+                    hashMap.put("queryId", "orderMapper.selectCheckRegistNumDuplicate");
+                    if (this.orderDao.getFlag(hashMap)) {
+                        flag = true;
+                        message = "이미 등록된 접수번호 입니다.";
                         break;
                     }
                 }

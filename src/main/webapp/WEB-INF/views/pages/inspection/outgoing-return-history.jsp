@@ -19,8 +19,8 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="SEL_CONTROL_NUM">관리번호</label>
-                            <input type="search" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="관리번호">
+                            <label class="label_100" for="SEL_CONTROL_NUM">작업지시번호</label>
+                            <input type="search" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="작업지시번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
@@ -134,6 +134,7 @@
             },
             {title: '발주업체', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 80, width: 120, editable: false},
             {title: '외주가공', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 80, width: 80, editable: false},
+            {title: '접수번호', dataType: 'string', dataIndx: 'REGIST_NUM', minWidth: 140, width: 140, editable: false},
             {title: '발주번호', dataType: 'string', dataIndx: 'ORDER_NUM', minWidth: 120, width: 120, editable: false},
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {
@@ -151,7 +152,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 200, width: 200, editable: false},
+            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 200, width: 200, editable: false},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'

@@ -19,8 +19,8 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="SEL_CONTROL_NUM">관리번호</label>
-                            <input type="search" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="관리번호">
+                            <label class="label_100" for="SEL_CONTROL_NUM">작업지시번호</label>
+                            <input type="search" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="작업지시번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
@@ -285,7 +285,7 @@
                         <col width="15%">
                     </colgroup>
                     <tr>
-                        <th>관리번호</th>
+                        <th>작업지시번호</th>
                         <td id="CONTROL_NUM_VIEW_T" class="red"></td>
                         <th>도면번호</th>
                         <td id="DRAWING_NUM_VIEW_T" class="red"></td>
@@ -363,8 +363,8 @@
                         <col width="5%">
                     </colgroup>
                     <tr>
-                        <th>관리번호</th>
-                        <td colspan="4"><input type="text" name="CONTROL_NUM" id="CONTROL_NUM"  value="" title="관리번호" class="wd_250" readonly></td>
+                        <th>작업지시번호</th>
+                        <td colspan="4"><input type="text" name="CONTROL_NUM" id="CONTROL_NUM"  value="" title="작업지시번호" class="wd_250" readonly></td>
                     </tr>
                     <tr>
                         <th>도면번호</th>
@@ -431,8 +431,8 @@
                         <col style="width: 40px">
                     </colgroup>
                     <tr>
-                        <th>관리번호</th>
-                        <td colspan="4"><input type="text" name="CONTROL_NUM" id="CONTROL_NUM"  value="" title="관리번호" class="wd_250" readonly></td>
+                        <th>작업지시번호</th>
+                        <td colspan="4"><input type="text" name="CONTROL_NUM" id="CONTROL_NUM"  value="" title="작업지시번호" class="wd_250" readonly></td>
                     </tr>
                     <tr>
                         <th>도면번호</th>
@@ -493,8 +493,8 @@
                         <col style="width: 40px">
                     </colgroup>
                     <tr>
-                        <th>관리번호</th>
-                        <td colspan="4"><input type="text" name="CONTROL_NUM" id="CONTROL_NUM"  value="" title="관리번호" class="wd_250" readonly></td>
+                        <th>작업지시번호</th>
+                        <td colspan="4"><input type="text" name="CONTROL_NUM" id="CONTROL_NUM"  value="" title="작업지시번호" class="wd_250" readonly></td>
                     </tr>
                     <tr>
                         <th>도면번호</th>
@@ -553,8 +553,8 @@
                         <col width="5%">
                     </colgroup>
                     <tr>
-                        <th>관리번호</th>
-                        <td colspan="4"><input type="text" name="CONTROL_NUM" id="CONTROL_NUM"  value="" title="관리번호" class="wd_230" readonly></td>
+                        <th>작업지시번호</th>
+                        <td colspan="4"><input type="text" name="CONTROL_NUM" id="CONTROL_NUM"  value="" title="작업지시번호" class="wd_230" readonly></td>
                     </tr>
                     <tr>
                         <th>도면번호</th>
@@ -654,7 +654,7 @@
                                 <th style="width:8%;">처리시간</th>
                                 <th style="width:6%;">결과</th>
                                 <th style="width:20%;">메시지</th>
-                                <th style="width:20%;">관리번호</th>
+                                <th style="width:20%;">작업지시번호</th>
                                 <th style="width:14%;">발주번호</th>
                                 <th style="width:20%;">도면번호</th>
                                 <th style="width:6%;">수량</th>
@@ -727,7 +727,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 170},
+            {title: '작업지시번호', dataIndx: 'CONTROL_NUM', width: 170},
             {title: '파<br>트', dataIndx: 'PART_NUM', minWidth: 30},
             {
                 title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30,
@@ -749,6 +749,7 @@
             {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', width: 80},
             {title: '표면처리', dataIndx: 'SURFACE_TREAT_NM', width: 80},
             {title: '규격', dataIndx: 'SIZE_TXT', width: 100},
+            {title: '접수번호', dataIndx: 'REGIST_NUM', width: 130},
             {title: '발주번호', dataIndx: 'ORDER_NUM', width: 90},
             {title: '발주<br>납기', dataIndx: 'ORDER_DUE_DT', width: 60},
             {
@@ -1078,6 +1079,7 @@
                 }
             },
             {title: '발주처', dataIndx: 'ORDER_COMP_NM', minWidth: 95, width: 95, editable: false},
+            {title: '접수번호', dataIndx: 'REGIST_NUM', minWidth: 130, width: 130, editable: false},
             {title: '발주번호', dataIndx: 'ORDER_NUM', minWidth: 95, width: 95, editable: false},
             {title: '외주업체', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 120, width: 120, editable: false},
             {
@@ -1097,7 +1099,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', minWidth: 140, width: 140, editable: false},
+            {title: '작업지시번호', dataIndx: 'CONTROL_NUM', minWidth: 140, width: 140, editable: false},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'

@@ -219,7 +219,7 @@
                     });
                 }
             },
-            {title: '관리번호', align: 'left', width: 150, dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', align: 'left', width: 150, dataIndx: 'CONTROL_NUM'},
             {
                 title: '', minWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
@@ -235,6 +235,7 @@
                 }
             },
             {title: '수량', dataIndx: 'ORDER_QTY', minWidth: 40},
+            {title: '접수번호', dataIndx: 'REGIST_NUM', width: 130},
             {title: '발주번호', dataIndx: 'ORDER_NUM', width: 95},
             {title: '도면번호', align: 'left', width: 135, dataIndx: 'DRAWING_NUM'},
             {title: '진행상태', dataIndx: 'PART_STATUS', width: 75},
@@ -320,7 +321,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataIndx: 'CONTROL_PART_INFO', width: 180, minWidth: 160},
+            {title: '작업지시번호', dataIndx: 'CONTROL_PART_INFO', width: 180, minWidth: 160},
             {
                 title: '', width: 25, minWidth: 25, dataIndx: 'DRAWING_NUM_BUTTON', editable: false,
                 render: function (ui) {
@@ -405,7 +406,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataIndx: 'CONTROL_PART_INFO', width: 180},
+            {title: '작업지시번호', dataIndx: 'CONTROL_PART_INFO', width: 180},
             {
                 title: '', minWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON', editable: false,
                 render: function (ui) {
@@ -473,7 +474,7 @@
             {title: '납기', dataIndx: 'ORDER_DUE_DT', width: 50},
             {title: '출고', dataIndx: 'DELIVERY_DT', width: 50},
             {title: '발주처', dataIndx: 'ORDER_COMP_NM', width: 80},
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 150},
+            {title: '작업지시번호', dataIndx: 'CONTROL_NUM', width: 150},
             {title: '수량', dataIndx: 'ORDER_QTY', width: 50},
             {title: '진행상태', dataIndx: 'PART_STATUS', width: 80},
             {title: '담당자', dataIndx: 'USER_NM', width: 80}

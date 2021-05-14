@@ -5,8 +5,8 @@
 
     <sql id="control">
         A.CONTROL_SEQ, <!-- 주문관리일련번호 -->
-        A.CONTROL_NUM, <!-- 관리번호 -->
-        A.CONTROL_VER, <!-- 관리번호 버전 -->
+        A.CONTROL_NUM, <!-- 작업지시번호 -->
+        A.CONTROL_VER, <!-- 작업지시번호 버전 -->
         A.COMP_CD, <!-- 사업자 구분 -->
         IFNULL(SF_GET_COMP_NM(A.COMP_CD), SPACE(0)) AS COMP_NM, <!-- 사업자구분 -->
         A.ORDER_COMP_CD, <!-- 발주업체 -->
@@ -109,6 +109,7 @@
     <sql id="controlPartOrder">
         C.ORDER_SEQ,
         C.ORDER_NUM, <!-- 발주번호 -->
+        C.REGIST_NUM, <!-- 접수번호 -->
         SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
         IFNULL(C.ORDER_QTY, SPACE(0)) AS ORDER_QTY, <!-- 발주수량 -->
         SF_GET_DATE_F(C.ORDER_DUE_DT, 'YYYY', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
@@ -260,7 +261,7 @@
             AND A.PRICE_CONFIRM = #{UNIT_PRICE_CONFIRM}
         </if>
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
-             AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
+             AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%') OR C.REGIST_NUM LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
         </if>
         <if test="HIDDEN_COMP_CD != null and HIDDEN_COMP_CD != ''">
              AND A.COMP_CD IN (${HIDDEN_COMP_CD})
@@ -738,6 +739,7 @@
             CONTROL_SEQ,
             CONTROL_DETAIL_SEQ,
             ORDER_SEQ,
+            REGIST_NUM,
             ORDER_NUM,
             ORDER_QTY,
             ORDER_DUE_DT,
@@ -769,6 +771,7 @@
                                             WHERE M.CONTROL_SEQ = #{CONTROL_SEQ}
                                                 AND M.PART_NUM = #{PART_NUM})),
             NEXTVAL(SEQ_CONTROL_PART_ORDER),
+            UPPER(TRIM(#{REGIST_NUM})),
             #{ORDER_NUM},
             #{ORDER_QTY},
             DATE_FORMAT(#{ORDER_DUE_DT}, '%Y%m%d'),
@@ -1005,6 +1008,7 @@
     <update id="updateControlPartOrderFromControlManage" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART_ORDER
         SET
+            REGIST_NUM = UPPER(TRIM(#{REGIST_NUM})),
             ORDER_NUM = #{ORDER_NUM},
             ORDER_QTY = #{ORDER_QTY},
             ORDER_DUE_DT = DATE_FORMAT(#{ORDER_DUE_DT}, '%Y%m%d'),
@@ -1332,7 +1336,7 @@
             C.CONTROL_SEQ,
             C.CONTROL_STATUS,
             B.CONTROL_DETAIL_SEQ,
-            C.CONTROL_NUM, <!-- 관리번호 -->
+            C.CONTROL_NUM, <!-- 작업지시번호 -->
             B.ITEM_NM, <!-- 품명 -->
             B.PART_NUM, <!-- Part -->
             B.DRAWING_NUM,
@@ -1371,7 +1375,7 @@
             C.CONTROL_SEQ,
             C.CONTROL_STATUS,
             B.CONTROL_DETAIL_SEQ,
-            C.CONTROL_NUM, <!-- 관리번호 -->
+            C.CONTROL_NUM, <!-- 작업지시번호 -->
             B.ITEM_NM, <!-- 품명 -->
             B.PART_NUM, <!-- Part -->
             B.DRAWING_NUM,
@@ -1445,7 +1449,7 @@
             CASE WHEN B.PART_NUM IS NULL THEN C.IMG_GFILE_SEQ ELSE B.IMG_GFILE_SEQ END AS ORDER_IMG_GFILE_SEQ,
             CASE WHEN B.PART_NUM IS NULL THEN C.DXF_GFILE_SEQ ELSE B.DXF_GFILE_SEQ END AS ORDER_DXF_GFILE_SEQ,
             CASE WHEN B.PART_NUM IS NULL THEN C.PDF_GFILE_SEQ ELSE B.PDF_GFILE_SEQ END AS ORDER_PDF_GFILE_SEQ,
-            CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' #', B.PART_NUM) END AS CONTROL_PART_NUM, <!-- 관리번호 -->
+            CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' #', B.PART_NUM) END AS CONTROL_PART_NUM, <!-- 작업지시번호 -->
             (SELECT M.INVOICE_NUM FROM TBL_INVOICE_DETAIL M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.ORDER_SEQ =  C.ORDER_SEQ) AS INVOICE_NUM, <!-- 인보이스 번호 -->
             SF_GET_DATE_F(D.CLOSE_DT, 'YYYY', '') AS CLOSE_DT,
             SF_GET_UNIT_SUM_AUTO_AMT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS UNIT_SUM_AUTO_AMT,
@@ -1562,7 +1566,7 @@
             CASE WHEN B.PART_NUM IS NULL THEN C.IMG_GFILE_SEQ ELSE B.IMG_GFILE_SEQ END AS ORDER_IMG_GFILE_SEQ,
             CASE WHEN B.PART_NUM IS NULL THEN C.DXF_GFILE_SEQ ELSE B.DXF_GFILE_SEQ END AS ORDER_DXF_GFILE_SEQ,
             CASE WHEN B.PART_NUM IS NULL THEN C.PDF_GFILE_SEQ ELSE B.PDF_GFILE_SEQ END AS ORDER_PDF_GFILE_SEQ,
-            CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' #', B.PART_NUM) END AS CONTROL_PART_NUM, <!-- 관리번호 -->
+            CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' #', B.PART_NUM) END AS CONTROL_PART_NUM, <!-- 작업지시번호 -->
             (SELECT M.INVOICE_NUM FROM TBL_INVOICE_DETAIL M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.ORDER_SEQ =  C.ORDER_SEQ) AS INVOICE_NUM, <!-- 인보이스 번호 -->
             (SELECT SF_GET_DATE_F(M.CLOSE_DT, 'YYYY', '') FROM TBL_MONTH_CLOSE M, TBL_MONTH_CLOSE_ORDER N WHERE N.COMP_CD = M.COMP_CD AND M.ORDER_COMP_CD = N.ORDER_COMP_CD AND N.CLOSE_MONTH = M.CLOSE_MONTH AND N.CLOSE_VER = M.CLOSE_VER AND N.CONTROL_SEQ = C.CONTROL_SEQ AND N.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND N.ORDER_SEQ = C.ORDER_SEQ ORDER BY N.INSERT_DT DESC LIMIT 1) AS CLOSE_DT,
             SF_GET_UNIT_SUM_AUTO_AMT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS UNIT_SUM_AUTO_AMT,
@@ -2078,8 +2082,9 @@
                 B.CONTROL_DETAIL_SEQ,
                 C.ORDER_SEQ,
                 SF_GET_CODE_NM('1038', A.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
-                A.CONTROL_NUM, <!-- 관리번호 -->
+                A.CONTROL_NUM, <!-- 작업지시번호 -->
                 C.ORDER_NUM, <!-- 발주번호 -->
+                C.REGIST_NUM, <!-- 접수번호 -->
                 C.DRAWING_NUM, <!-- 도면번호 -->
                 B.SIZE_TXT, <!-- 규격 -->
                 IFNULL(SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
@@ -2106,7 +2111,7 @@
                 B.CONTROL_DETAIL_SEQ,
                 C.ORDER_SEQ,
                 SF_GET_CODE_NM('1038', A.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
-                A.CONTROL_NUM, <!-- 관리번호 -->
+                A.CONTROL_NUM, <!-- 작업지시번호 -->
                 C.ORDER_NUM, <!-- 발주번호 -->
                 C.DRAWING_NUM, <!-- 도면번호 -->
                 B.SIZE_TXT, <!-- 규격 -->
@@ -2407,6 +2412,7 @@
             OTHER_SIDE_QTY,
             MATERIAL_FINISH_GRIND,
             MATERIAL_FINISH_HEAT,
+            REGIST_NUM,
             ORDER_NUM,
             ORDER_QTY,
             ORDER_DUE_DT,
@@ -2434,7 +2440,7 @@
             #{item.LABEL_NOTE},
             #{item.MAIN_INSPECTION},
             IFNULL(#{item.EMERGENCY_YN}, 'N'),
-            #{item.CONTROL_NUM},
+            UPPER(TRIM(#{item.CONTROL_NUM})),
             #{item.PART_NUM},
             #{item.DRAWING_NUM},
             #{item.ITEM_NM},
@@ -2454,6 +2460,7 @@
             #{item.OTHER_SIDE_QTY},
             #{item.MATERIAL_FINISH_GRIND},
             #{item.MATERIAL_FINISH_HEAT},
+            UPPER(TRIM(#{item.REGIST_NUM})),
             #{item.ORDER_NUM},
             #{item.ORDER_QTY},
             DATE_FORMAT(#{item.ORDER_DUE_DT}, '%Y%m%d'),
@@ -2480,6 +2487,16 @@
         GROUP BY X.CONTROL_NUM
     </select>
 
+    <select id="selectBeforeInsertDuplicationRegistList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.REGIST_NUM
+        FROM TBL_CONTROL_PART_ORDER X
+        WHERE X.REGIST_NUM IN
+        <foreach collection="list" item="item"  index="index"  open="(" close=")" separator=",">
+            #{item.REGIST_NUM}
+        </foreach>
+        GROUP BY X.REGIST_NUM
+    </select>
+
     <delete id="deleteControlExcel" parameterType="java.util.HashMap">
         DELETE FROM TBL_CONTROL_EXCEL WHERE JOB_SEQ_KEY = #{IN_UID}
     </delete>
@@ -2494,7 +2511,7 @@
             SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
             SF_GET_DATE_F(C.DELIVERY_DT, '', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
             SF_GET_DATE_F(C.OUT_FINISH_DT, '', '') AS OUT_FINISH_DT, <!-- 출고완료일 -->
-            A.CONTROL_NUM, C.ORDER_QTY, C.ORDER_NUM, C.DRAWING_NUM,
+            A.CONTROL_NUM, C.ORDER_QTY, C.ORDER_NUM, C.DRAWING_NUM, C.REGIST_NUM,
             SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS,
             SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION, <!-- 현재 등록된 위치 -->
             H.INSPECT_GRADE, jmes.SF_GET_CODE_NM('1040', H.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 -->
@@ -2697,11 +2714,11 @@
         SELECT
             B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
             (SELECT MAX(G.BARCODE_NUM) FROM TBL_CONTROL_BARCODE G WHERE B.CONTROL_SEQ = G.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ AND G.DEL_YN = 'N') AS BARCODE_NUM,
-            IFNULL(A.CONTROL_VER, SPACE(0)) AS CONTROL_VER, <!-- 관리번호 버전 -->
+            IFNULL(A.CONTROL_VER, SPACE(0)) AS CONTROL_VER, <!-- 작업지시번호 버전 -->
             IFNULL(B.DRAWING_VER, SPACE(0)) AS DRAWING_VER, <!-- 도면번호 버전 -->
             IFNULL(SF_GET_COMP_NM(A.ORDER_COMP_CD), SPACE(0)) AS ORDER_COMP_NM, <!-- 발주업체 -->
-            IFNULL(A.CONTROL_NUM, SPACE(0)) AS CONTROL_NUM, <!-- 관리번호 -->
-            CASE WHEN B.PART_NUM IS NULL THEN IFNULL(A.CONTROL_NUM, SPACE(0)) ELSE CONCAT(IFNULL(A.CONTROL_NUM, SPACE(0)), '#', B.PART_NUM) END AS CONTROL_NUM_PART, <!-- 관리번호 -->
+            IFNULL(A.CONTROL_NUM, SPACE(0)) AS CONTROL_NUM, <!-- 작업지시번호 -->
+            CASE WHEN B.PART_NUM IS NULL THEN IFNULL(A.CONTROL_NUM, SPACE(0)) ELSE CONCAT(IFNULL(A.CONTROL_NUM, SPACE(0)), '#', B.PART_NUM) END AS CONTROL_NUM_PART, <!-- 작업지시번호 -->
             IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 문자열 -->
             IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
             CASE WHEN A.TOTAL_SHEET IS NULL THEN SPACE(0) ELSE A.TOTAL_SHEET END AS TOTAL_SHEET, <!-- 총장 -->
@@ -2721,8 +2738,8 @@
             IFNULL(B.PART_UNIT_QTY, 0) AS PART_UNIT_QTY,
             (SELECT IFNULL(SUM(M.ORDER_QTY), 0) FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ) AS ORDER_QTY,
             CONCAT(IFNULL(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0), SPACE(0)) AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
-            IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1), SPACE(0))AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
-            IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1), SPACE(0)) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
+            IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1), 0)AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
+            IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1), 0) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
             IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'MM', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
             (SELECT M.FILE_PATH FROM TBL_FILE M WHERE M.GFILE_SEQ = B.IMG_GFILE_SEQ) AS IMAGE_PATH,
             IFNULL((SELECT CASE WHEN COUNT(DISTINCT M.DRAWING_NUM) > 1 THEN 'Y' ELSE 'N' END FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ), 'N') AS MULTI_ORDER_YN
@@ -2739,9 +2756,13 @@
 
     <select id="selectControlCadOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT C.ORDER_SEQ
+            , IFNULL(C.REGIST_NUM, SPACE(0)) AS REGIST_NUM
             , IFNULL(C.ORDER_NUM, SPACE(0)) AS ORDER_NUM
             , IFNULL(C.DRAWING_NUM, SPACE(0)) AS DRAWING_NUM
-            , IFNULL(C.ORDER_QTY, SPACE(0)) AS ORDER_QTY
+--             , IFNULL(C.ORDER_QTY, SPACE(0)) AS ORDER_QTY
+            , CASE WHEN C.ORDER_QTY > 9999 THEN 9999
+                   ELSE IFNULL(C.ORDER_QTY,SPACE(0))
+              END ORDER_QTY
             , IFNULL(SF_GET_DATE_F(C.ORDER_DUE_DT, 'MM', ''), SPACE(0)) AS ORDER_DUE_DT <!-- 납기 -->
         FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C
         WHERE 1 = 1
@@ -2891,7 +2912,7 @@
     <update id="updateControlFromControlManage" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL
         SET
-            CONTROL_NUM = #{CONTROL_NUM},
+            CONTROL_NUM = UPPER(#{CONTROL_NUM}),
             COMP_CD = #{COMP_CD},
             ORDER_COMP_CD = #{ORDER_COMP_CD},
             NOTE = #{CONTROL_NOTE},
@@ -3169,6 +3190,13 @@
                         WHERE DEL_YN = 'N'
                             AND CONTROL_NUM = #{CONTROL_NUM}
                       )
+    </select>
+    <select id="selectCheckRegistNumDuplicate" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+        SELECT EXISTS (	SELECT *
+                           FROM TBL_CONTROL_PART_ORDER
+                           WHERE DEL_YN = 'N'
+                             AND REGIST_NUM} = #{REGIST_NUM}
+                   )
     </select>
 
     <select id="selectProcessingRequirementsBasicInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">

@@ -447,6 +447,7 @@
               T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ, T.INSPECT_SEQ
             , T.CONTROL_STATUS_NM
             , T.ORDER_COMP_NM
+            , T.REGIST_NUM
             , T.ORDER_NUM
             , jmes.SF_GET_DATE_F(T.ORDER_DUE_DT,'YY','') AS ORDER_DUE_DT
             , jmes.SF_GET_DATE_F(T.INNER_DUE_DT,'YY','') AS INNER_DUE_DT
@@ -492,6 +493,7 @@
                   X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ, X.INSPECT_SEQ
                 , jmes.SF_GET_CODE_NM('1038', X.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM
                 , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
+                , X.REGIST_NUM
                 , X.ORDER_NUM
                 , X.ORDER_DUE_DT
                 , X.INNER_DUE_DT
@@ -567,6 +569,7 @@
                     , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS INSPECT_SEQ
                     , ( SELECT MAX(M.POP_SEQ) FROM jmes.TBL_POP M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ) AS POP_SEQ
                     , A.ORDER_COMP_CD
+                    , C.REGIST_NUM
                     , C.ORDER_NUM
                     , C.ORDER_DUE_DT
                     , B.INNER_DUE_DT
@@ -1070,6 +1073,7 @@
         SELECT
                T.INSPECT_SEQ, T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ
             , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.ORDER_COMP_CD) AS ORDER_COMP_NM
+            , Z.REGIST_NUM
             , Z.ORDER_NUM
             , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = Y.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
             , X.CONTROL_NUM
@@ -1355,6 +1359,7 @@
             , CASE X.OUT_RETURN_TYPE WHEN '1' THEN '출고' WHEN '2' THEN '반품' ELSE '폐기' END AS OUT_RETURN_TYPE_NM
             , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.ORDER_COMP_CD) AS ORDER_COMP_NM
             , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
+            , X.REGIST_NUM
             , X.ORDER_NUM
             , X.CONTROL_NUM
             , X.DRAWING_NUM
@@ -1374,6 +1379,7 @@
                     , A.CONTROL_DETAIL_SEQ
                     , A.ORDER_SEQ
                     , C.OUTSIDE_COMP_CD
+                    , D.REGIST_NUM
                     , D.ORDER_NUM
                     , B.CONTROL_NUM
                     , B.ORDER_COMP_CD
