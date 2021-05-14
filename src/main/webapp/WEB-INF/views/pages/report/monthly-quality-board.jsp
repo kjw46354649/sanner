@@ -252,7 +252,7 @@
                     });
                 }
             },
-            {title: '관리번호', align: 'left', width: 180,  dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', align: 'left', width: 180,  dataIndx: 'CONTROL_NUM'},
             {title: '도면번호', align: 'left', width: 150,  dataIndx: 'DRAWING_NUM'},
             {
                 title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',

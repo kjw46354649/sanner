@@ -8,6 +8,7 @@ import com.framework.innodale.service.InnodaleService;
 import com.google.zxing.common.BitMatrix;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.pdf.draw.VerticalPositionMark;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -146,13 +147,17 @@ public class PdfPrintMakeController {
         for (Map<String, Object> controlInfo : controlImageList) {
             if (iCount > 0) document.newPage();
 
-            PdfPTable table = new PdfPTable(13);
+            float[] columnWidths = {130, 40, 88, 49, 35, 25, 35, 35, 35, 32, 32, 33, 90, 80, 46, 26 };
+            PdfPTable masterTable = new PdfPTable(columnWidths);
+            masterTable.setWidthPercentage(100);
+            PdfPTable table = new PdfPTable(9);
             table.init();
 
+            table.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.setWidthPercentage(100);
-            table.setWidths(new int[]{22, 2, 15, 15, 5, 9, 9, 8, 5, 3, 4, 4, 7});
+            table.setWidths(new int[]{ 4, 20, 12, 6, 7, 7, 3, 3,6});
 
-            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) controlInfo.get("BARCODE_NUM"), 90, 35);
+            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) controlInfo.get("BARCODE_NUM"),1100, 170);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
             // Converting BitMatrix to Buffered Image
@@ -169,87 +174,221 @@ public class PdfPrintMakeController {
             baos.close();
             Image barcodeImage = Image.getInstance(imageInByte);
 
-            table.addCell(createImageCell(barcodeImage, 1, 2, 40f, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("CONTROL_VER"), 1, 1, mediumNormalFont));
+            String verText = controlInfo.get("CONTROL_VER") + "\n" + controlInfo.get("DRAWING_VER");
+            table.addCell(createCell(verText, 1, 1, smallNormalFont));
+
+            PdfPCell imgCell = createImageCell(barcodeImage,1,1,20f,smallNormalFont);
+            imgCell.setPaddingLeft(1);
+            imgCell.setPaddingRight(1);
+            table.addCell(imgCell);
+
             table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 2, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("WORK_TYPE_NM"), 1, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, mediumNormalFont));
-            if (controlInfo.get("WORK_TYPE_NM").equals("조립")) {
-                table.addCell(createQtyCell((String) controlInfo.get("CONTROL_ORDER_QTY"), 1, 2, mediumBoldFont));
-                table.addCell(createEACell("SET", 1, 2, smallBoldFont));
-            } else if (controlInfo.get("WORK_TYPE_NM").equals("파트")) {
-                table.addCell(createQtyCell1((String) controlInfo.get("CONTROL_ORDER_QTY"), 1, 1, mediumBoldFont));
-                table.addCell(createEACell1("EA", 1, 1, smallBoldFont));
-            } else {
-                table.addCell(createQtyCell((String) controlInfo.get("CONTROL_ORDER_QTY"), 1,2, mediumBoldFont));
-                table.addCell(createEACell("EA", 1, 2, smallBoldFont));
+            table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 2, 1, mediumNormalFont)); // 소재종류
+            table.addCell(createCell((String) controlInfo.get("MAIN_INSPECTION_NM"), 1, 1, mediumNormalFont)); // 주요검사
+
+            Phrase phrase = new Phrase();
+            String orgSide = String.valueOf(controlInfo.get("ORIGINAL_SIDE_QTY"));
+            String otherSide = String.valueOf(controlInfo.get("OTHER_SIDE_QTY"));
+            if(Integer.parseInt(orgSide) > 0 && Integer.parseInt(otherSide) > 0) {
+                phrase.add(
+                        new Chunk("대"+ "\n", smallNormalFont)
+                );
+                phrase.add(new VerticalPositionMark());
             }
-            table.addCell(createCell("원칭", 1, 1, smallNormalFont));
-            table.addCell(createCell("대칭", 1, 1, smallNormalFont));
+            phrase.add(new Chunk((String) controlInfo.get("CONTROL_ORDER_QTY"),mediumBoldFont));
+
+            if (controlInfo.get("WORK_TYPE_NM").equals("조립")) {
+                PdfPCell cell = createCellPhrase(phrase,1,2,Element.ALIGN_BOTTOM,Element.ALIGN_RIGHT);
+                cell.setPaddingBottom(14);
+                cell.setUseAscender(true);
+//                cell.setBorder(Rectangle.TOP);
+                cell.setBorder(Rectangle.BOTTOM | Rectangle.TOP);
+
+                table.addCell(cell);
+                Phrase phrase2 = new Phrase();
+                if(Integer.parseInt(orgSide) > 0 && Integer.parseInt(otherSide) > 0) {
+                    phrase2.add(
+                            new Chunk(""+controlInfo.get("ORIGINAL_SIDE_QTY") + '/' + controlInfo.get("OTHER_SIDE_QTY")+ "\n", smallNormalFont)
+                    );
+                    phrase2.add(new VerticalPositionMark());
+                }
+                phrase2.add(new Chunk("SET",smallBoldFont));
+                cell = createCellPhrase(phrase2,1,2,Element.ALIGN_BOTTOM,Element.ALIGN_CENTER);
+                cell.setPaddingBottom(14);
+                cell.setBorder(Rectangle.BOTTOM | Rectangle.TOP);
+
+                table.addCell(cell);
+            } else if (controlInfo.get("WORK_TYPE_NM").equals("파트")) {
+                PdfPCell cell = createCellPhrase(phrase,1,1,Element.ALIGN_BOTTOM,Element.ALIGN_RIGHT);
+                cell.setUseAscender(true);
+                cell.setBorder(Rectangle.TOP);
+                table.addCell(cell);
+
+                Phrase phrase2 = new Phrase();
+                if(Integer.parseInt(orgSide) > 0 && Integer.parseInt(otherSide) > 0) {
+                    phrase2.add(
+                            new Chunk(""+controlInfo.get("ORIGINAL_SIDE_QTY") + '/' + controlInfo.get("OTHER_SIDE_QTY")+ "\n", smallNormalFont)
+                    );
+                    phrase2.add(new VerticalPositionMark());
+                }
+                phrase2.add(new Chunk("EA",smallBoldFont));
+                cell.setPhrase(phrase2);
+                table.addCell(cell);
+
+//                table.addCell(createEACell1("EA", 1, 1, smallBoldFont));
+            } else {
+                PdfPCell cell = createCellPhrase(phrase,1,2,Element.ALIGN_MIDDLE,Element.ALIGN_RIGHT);
+                cell.setPaddingBottom(8);
+                cell.setUseAscender(true);
+                cell.setBorder(PdfPCell.TOP | PdfPCell.BOTTOM);
+//                cell.setBorder(Rectangle.BOTTOM | Rectangle.TOP);
+
+                table.addCell(cell);
+
+                Phrase phrase2 = new Phrase();
+                if(Integer.parseInt(orgSide) > 0 && Integer.parseInt(otherSide) > 0) {
+                    phrase2.add(
+                            new Chunk(""+controlInfo.get("ORIGINAL_SIDE_QTY") + '/' + controlInfo.get("OTHER_SIDE_QTY")+ "\n", smallNormalFont)
+                    );
+                    phrase2.add(new VerticalPositionMark());
+                }
+                phrase2.add(new Chunk("EA",smallBoldFont));
+                cell = createCellPhrase(phrase2,1,2,Element.ALIGN_BOTTOM,Element.ALIGN_CENTER);
+                cell.setPaddingBottom(14);
+                cell.setBorder(PdfPCell.TOP | PdfPCell.BOTTOM);
+
+                table.addCell(cell);
+//                table.addCell(createEACell("EA", 1, 2, smallBoldFont));
+            }
             table.addCell(createCell("가공납기", 1, 1, smallNormalFont));
 
-            table.addCell(createCell((String) controlInfo.get("DRAWING_VER"), 1, 1, mediumNormalFont));
+            table.addCell(createCell("작업\n번호", 1, 1, smallNormalFont));
             String controlNumPart = (String) controlInfo.get("CONTROL_NUM_PART");
             if (controlNumPart.length() <= 22) {
-                table.addCell(createCell((String) controlInfo.get("CONTROL_NUM_PART"), 2, 1, largeBoldFont));
+                table.addCell(createCell((String) controlInfo.get("CONTROL_NUM_PART"), 1, 1, largeBoldFont));
             } else {
-                table.addCell(createCell((String) controlInfo.get("CONTROL_NUM_PART"), 2, 1, mediumBoldFont));
+                table.addCell(createCell((String) controlInfo.get("CONTROL_NUM_PART"), 1, 1, mediumBoldFont));
             }
-            table.addCell(createCell((String) controlInfo.get("TOTAL_SHEET"), 1, 1, largeNormalFont));
+            table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("WORK_TYPE_NM"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("MATERIAL_TYPE_NM"), 1, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("MAIN_INSPECTION_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, mediumNormalFont));
+//            table.addCell(createCell((String) controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, mediumNormalFont));
+//            table.addCell(createCell((String) controlInfo.get("MAIN_INSPECTION_NM"), 1, 1, mediumNormalFont));
             if (controlInfo.get("WORK_TYPE_NM").equals("파트")) {
                 String partUnit = String.valueOf(controlInfo.get("PART_UNIT_QTY"));
                 String orderQty = String.valueOf(controlInfo.get("ORDER_QTY"));
 
                 table.addCell(createCellPartUnit(partUnit + " × " + orderQty, 2, 1, smallNormalFont));
             }
-            table.addCell(createCell(String.valueOf(controlInfo.get("ORIGINAL_SIDE_QTY")), 1, 1, mediumNormalFont));
-            table.addCell(createCell(String.valueOf(controlInfo.get("OTHER_SIDE_QTY")), 1, 1, mediumNormalFont));
+
             table.addCell(createCell((String) controlInfo.get("INNER_DUE_DT"), 1, 1, mediumBoldFont));
 
-            document.add(table);
-            table.flushContent();
+            PdfPCell cell1 = new PdfPCell();
+            cell1.addElement(table);
+            cell1.setVerticalAlignment(Element.ALIGN_TOP);
+            cell1.setColspan(11);
+            cell1.setBorder(0);
+            cell1.setPadding(0);
+            masterTable.addCell(cell1);
+//            document.add(table);
+//            table.flushContent();
 
             controlInfo.put("queryId", "orderMapper.selectControlCadOrderList");
             List<Map<String, Object>> controlOrderList = innodaleService.getList(controlInfo);
 
             if(controlOrderList != null && controlOrderList.size() > 0){
 
-                PdfPTable drawingInfoTable = new PdfPTable(3);
+                PdfPTable drawingInfoTable = new PdfPTable(2);
                 drawingInfoTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                drawingInfoTable.setWidthPercentage(40f);
-                drawingInfoTable.setWidths(new int[] {60, 80, 30});
+                drawingInfoTable.setWidthPercentage(100);
+                drawingInfoTable.setWidths(new int[] {5, 100});
 
-                drawingInfoTable.addCell(createDrawingInCell("발주번호", 1, 1, smallNormalFont, false, true, true, false));
-                drawingInfoTable.addCell(createDrawingInCell("도면번호", 1, 1, smallNormalFont, false, true, true, true));
-                drawingInfoTable.addCell(createDrawingInCell("수량", 1, 1, smallNormalFont, false, false, true, true));
+//                drawingInfoTable.addCell(createDrawingInCell("발주번호", 1, 1, smallNormalFont, false, true, true, false));
+//                drawingInfoTable.addCell(createDrawingInCell("도면번호", 1, 1, smallNormalFont, false, true, true, true));
+//                drawingInfoTable.addCell(createDrawingInCell("수량", 1, 1, smallNormalFont, false, false, true, true));
 //                drawingInfoTable.addCell(createDrawingInCell("납기", 1, 1, verySmallFont, false, false, false, true));
 
                 int iOrderListSize = controlOrderList.size();
                 int iCnt = 1;
 
                 for (Map<String, Object> controlOrderInfo : controlOrderList) {
+                    PdfPCell backCell = createCell(String.valueOf(iCnt), 1, 1, smallNormalFont);
+                    backCell.setBackgroundColor(BaseColor.WHITE);
+                    drawingInfoTable.addCell(backCell);
+                    Font tempBoldFont = new Font(bf, 6.0f, Font.BOLD);
+                    Font tempNormalFont = new Font(bf, 6.0f, Font.NORMAL);
+                    PdfPCell tempCell = new PdfPCell();
+                    tempCell.setPaddingTop(0);
+                    tempCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                    tempCell.setBorderWidth(0.1f);
+                    tempCell.setPaddingBottom(0);
+                    tempCell.setBackgroundColor(BaseColor.WHITE);
 
                     if (iOrderListSize > iCnt) {
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, smallNormalFont, true, true, true, false));
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, smallNormalFont, true, true, true, true));
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, smallNormalFont, true, false, true, true));
+                        PdfPTable tempTable = new PdfPTable(2);
+                        tempTable.setWidthPercentage(100);
+                        tempTable.setWidths(new int[]{ 70,50});
+
+                        String text = "접수 "+String.valueOf(controlOrderInfo.get("REGIST_NUM"));
+                        PdfPCell inCell = createOrderCell(new Phrase(text,tempBoldFont),1,1);
+                        tempTable.addCell(inCell);
+
+                        text = "발주 "+String.valueOf(controlOrderInfo.get("ORDER_NUM"));
+                        inCell = createOrderCell(new Phrase(text,tempNormalFont),1,1);
+                        inCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                        tempTable.addCell(inCell);
+
+                        text = "도번 "+String.valueOf(controlOrderInfo.get("DRAWING_NUM")) +"  수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
+                        inCell = createOrderCell(new Phrase(text,tempNormalFont),2,1);
+                        tempTable.addCell(inCell);
+
+                        tempCell.addElement(tempTable);
+
+                        drawingInfoTable.addCell(tempCell);
+//                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, smallNormalFont, true, true, true, false));
+//                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, smallNormalFont, true, true, true, true));
+//                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, smallNormalFont, true, false, true, true));
 //                        drawingInfoTable.addCell(createDrawingInCell((String) controlOrderInfo.get("ORDER_DUE_DT"), 1, 1, verySmallFont, true, false, true, true));
                     } else {
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, smallNormalFont, true, true, false, false));
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, smallNormalFont, true, true, false, true));
-                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, smallNormalFont, true, false, false, true));
+                        PdfPTable tempTable = new PdfPTable(2);
+                        tempTable.setWidthPercentage(100);
+                        tempTable.setWidths(new int[]{70,50});
+
+                        String text = "접수 "+String.valueOf(controlOrderInfo.get("REGIST_NUM"));
+                        PdfPCell inCell = createOrderCell(new Phrase(text,tempBoldFont),1,1);
+                        tempTable.addCell(inCell);
+
+                        text = "발주 "+String.valueOf(controlOrderInfo.get("ORDER_NUM"));
+                        inCell = createOrderCell(new Phrase(text,tempNormalFont),1,1);
+                        inCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                        tempTable.addCell(inCell);
+
+                        text = "도번 "+String.valueOf(controlOrderInfo.get("DRAWING_NUM")) +"  수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
+                        inCell = createOrderCell(new Phrase(text,tempNormalFont),2,1);
+                        tempTable.addCell(inCell);
+
+                        tempCell.addElement(tempTable);
+
+                        drawingInfoTable.addCell(tempCell);
+//                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, smallNormalFont, true, true, false, false));
+//                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, smallNormalFont, true, true, false, true));
+//                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, smallNormalFont, true, false, false, true));
 //                        drawingInfoTable.addCell(createDrawingInCell((String) controlOrderInfo.get("ORDER_DUE_DT"), 1, 1, verySmallFont, true, false, false, true));
                     }
                     iCnt++;
                 }
 
-                document.add(drawingInfoTable);
-                drawingInfoTable.flushContent();
+                PdfPCell cell2 = new PdfPCell();
+                cell2.setVerticalAlignment(Element.ALIGN_TOP);
+                cell2.addElement(drawingInfoTable);
+                cell2.setColspan(5);
+                cell2.setBorder(0);
+                cell2.setPadding(0);
+                masterTable.addCell(cell2);
+//                document.add(drawingInfoTable);
+//                drawingInfoTable.flushContent();
+                document.add(masterTable);
 
             }
 
@@ -375,7 +514,7 @@ public class PdfPrintMakeController {
             table.addCell(createCellBackground("수량", 1, 1, headFont, headBackground));
             table.addCell(createCellBackground("요청사항", 2, 1, headFont, headBackground));
             table.addCell(createCellBackground("비고", 1, 1, headFont, headBackground));
-            table.addCell(createCellBackground("관리번호", 1, 1, headFont, headBackground));
+            table.addCell(createCellBackground("작업번호", 1, 1, headFont, headBackground));
 
             for (int i = 0; i < dataList.size(); i++) {
                 String partNum = "";
@@ -672,6 +811,27 @@ public class PdfPrintMakeController {
         cell.setPaddingTop(0);
         cell.setPaddingBottom(0);
         cell.setUseAscender(true);
+        return cell;
+    }
+
+    private static PdfPCell createCellPhrase(Phrase phrase, int colspan, int rowspan, int vertical, int Horizon) {
+        PdfPCell cell = new PdfPCell(phrase);
+        cell.setVerticalAlignment(vertical);
+        cell.setHorizontalAlignment(Horizon);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setFixedHeight(20f);
+        cell.setPaddingTop(0);
+        cell.setPaddingBottom(0);
+        return cell;
+    }
+    private static PdfPCell createOrderCell(Phrase phrase, int colspan, int rowspan) {
+        PdfPCell cell = new PdfPCell(phrase);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setFixedHeight(10f);
+        cell.setBorder(0);
+        cell.setBackgroundColor(BaseColor.WHITE);
         return cell;
     }
 

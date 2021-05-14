@@ -29,7 +29,7 @@
                 <button type="button" class="pop_close cam_work_manage_detail_pop_close mt-10 mr-8">닫기</button>
             </div>
             <div class="qualityWrap">
-                <h4>관리번호</h4>
+                <h4>작업지시번호</h4>
                 <span class="rightSpan" style="float: right;padding-top: 7px;">
                     <button type="button" class="defaultBtn btn-120w" id="mctWorkPopMctResultDetailViewBtn" >상세정보 조회</button>
                     <button type="button" class="defaultBtn btn-120w" id="mctWorkPopMctResultDrawingViewBtn" >도면보기</button>
@@ -45,7 +45,7 @@
                             <col width="20%">
                         </colgroup>
                         <tr>
-                            <th>관리번호</th>
+                            <th>작업지시번호</th>
                             <td id="CONTROL_NUM"></td>
                             <th>수량 (원, 대)</th>
                             <td id="CONTROL_PART_QTY"></td>
@@ -362,7 +362,7 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
+                            <label class="label_100" for="CONTROL_NUM">작업지시번호</label>
                             <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM">
                         </span>
                         <span class="gubun"></span>
@@ -643,8 +643,8 @@
             },
             {title: '가공완료일시', dataIndx: 'INNER_WORK_FINISH_DT', hidden: true},
             {title: '현재위치', dataIndx: 'POP_POSITION', minWidth: 20, width: 80},
-            {title: '관리번호', align: 'left', dataIndx: 'CONTROL_PART_NUM', width: 180},
-            {title: '관리번호', align: 'left', dataIndx: 'CONTROL_NUM', hidden: true},
+            {title: '작업지시번호', align: 'left', dataIndx: 'CONTROL_PART_NUM', width: 180},
+            {title: '작업지시번호', align: 'left', dataIndx: 'CONTROL_NUM', hidden: true},
             {title: '파<br>트', dataIndx: 'PART_NUM', hidden: true},
             {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM', width: 50},
             {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
@@ -913,7 +913,7 @@
                 if (infoData.info) {
                     camWorkManagePop(infoData.info, popOpenFlag);
                 } else {
-                    fnAlert(null, "관리번호를 확인 해 주십시오.");
+                    fnAlert(null, "작업지시번호를 확인 해 주십시오.");
                     return;
                 }
             }, infoParameters, '');
@@ -1067,7 +1067,7 @@
                             camWorkManagePop(infoData.info, false);
                             $mctCamManageSearchBtn.trigger("click");
                         } else {
-                            fnAlert(null, "관리번호를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
+                            fnAlert(null, "작업지시번호를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
                             return;
                         }
                     }, infoParameters, '');
@@ -1158,7 +1158,7 @@
                 if (infoData.info) {
                     camWorkManagePop(infoData.info, false);
                 } else {
-                    fnAlert(null, "관리번호를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
+                    fnAlert(null, "작업지시번호를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
                     return;
                 }
             }, infoParameters, '');

@@ -19,8 +19,8 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="SEL_CONTROL_NUM">관리번호</label>
-                            <input type="search" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="관리번호">
+                            <label class="label_100" for="SEL_CONTROL_NUM">작업지시번호</label>
+                            <input type="search" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="작업지시번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
@@ -209,7 +209,7 @@
                             <col width="15%">
                         </colgroup>
                         <tr>
-                            <th>관리번호</th>
+                            <th>작업지시번호</th>
                             <td id="CONTROL_NUM_VIEW_T" class="red"></td>
                             <th>도면번호</th>
                             <td id="DRAWING_NUM_VIEW_T" class="red"></td>
@@ -332,7 +332,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 180, width: 180, editable: false},
+            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 180, width: 180, editable: false},
             {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40, editable: false},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {

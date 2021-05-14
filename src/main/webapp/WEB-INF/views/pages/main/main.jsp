@@ -184,7 +184,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 150, align: 'left'},
+            {title: '작업지시번호', dataIndx: 'CONTROL_NUM', width: 150, align: 'left'},
             {title: '규격', dataIndx: 'SIZE_TXT', width: 85},
             {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
@@ -274,7 +274,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', width: 150, align: 'left'},
+            {title: '작업지시번호', dataIndx: 'CONTROL_NUM', width: 150, align: 'left'},
             {title: '규격', dataIndx: 'SIZE_TXT', width: 85},
             {title: '수<br>량', dataIndx: 'PART_QTY'},
             {title: 'Step', dataIndx: 'STEP_SEQ'},
@@ -345,7 +345,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', minWidth: 150, align: 'left'},
+            {title: '작업지시번호', dataIndx: 'CONTROL_NUM', minWidth: 150, align: 'left'},
             {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
                     if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>'

@@ -20,8 +20,8 @@
                 <ul>
                     <li>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                            <label class="label_100" for="CONTROL_NUM">접수/작업번호</label>
+                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="작업지시번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -226,7 +226,7 @@
     <div class="modal-dialog" role="document" style="width: 691px; height: 388px">
         <div class="modal-content" style="height: inherit;">
             <div class="modal-header">
-                <h5 class="modal-title" style="font-size: large; font-weight: bold">기준 관리번호를 선택해주세요</h5>
+                <h5 class="modal-title" style="font-size: large; font-weight: bold">기준 작업지시번호를 선택해주세요</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -21.5px">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -420,17 +420,17 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
+            // {
+            //     title: '총장', minWidth: 30, dataType: 'integer', dataIndx: 'TOTAL_SHEET',
+            //     styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+            //     editable: function (ui) {
+            //         let rowData = ui.rowData;
+            //
+            //         return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
+            //     }
+            // },
             {
-                title: '총장', minWidth: 30, dataType: 'integer', dataIndx: 'TOTAL_SHEET',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002';
-                }
-            },
-            {
-                title: '관리번호', align: 'left', width: 180, dataIndx: 'CONTROL_NUM',
+                title: '작업지시번호', align: 'left', width: 180, dataIndx: 'CONTROL_NUM',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#FF0000'},
                 style: {'font-weight': 'bold', 'color': '#000000'},
                 editable: function (ui) {
@@ -537,6 +537,7 @@
                         // 발주
                         newRowData.ORDER_SEQ = null;
                         newRowData.ORDER_NUM = null;
+                        newRowData.REGIST_NUM = null;
                         newRowData.ORDER_QTY = null;
                         newRowData.ORDER_DUE_DT = null;
                         newRowData.DELIVERY_DT = null;
@@ -743,6 +744,7 @@
                                 newRowData.ROW_NUM = totalRecords + 1;
                                 newRowData.ORDER_SEQ = null;
                                 newRowData.ORDER_NUM = null;
+                                newRowData.REGIST_NUM = null;
                                 newRowData.ORDER_DRAWING_NUM = null;
                                 newRowData.ORDER_QTY = null;
                                 newRowData.ORIGINAL_SIDE_QTY = null;
@@ -781,6 +783,28 @@
                         }
                     },
                     {
+                        title: '접수번호', align: 'left', width: 140, dataIndx: 'REGIST_NUM',
+                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                        },
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                                cellData = "";
+                                ui.rowData.REGIST_NUM = "";
+                            }
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    },
+                    {
                         title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM',
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                         editable: function (ui) {
@@ -789,11 +813,14 @@
                             return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         render: function (ui) {
+                            let cellData = ui.cellData;
                             let rowData = ui.rowData;
                             let cls = null;
 
                             if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
                                 cls = 'bg-lightgray';
+                                cellData = "";
+                                ui.rowData.ORDER_NUM = "";
                             }
 
                             return {cls: cls, text: controlManageFilterRender(ui)};
@@ -1893,12 +1920,12 @@
                 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
                 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMT', 'UNIT_FINAL_AMT', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM',
-                'LABEL_NOTE', 'PREV_DRAWING_NUM', 'TOTAL_SHEET', 'SAME_SIDE_YN'
-                // , 'DETAIL_MACHINE_REQUIREMENT'
+                'LABEL_NOTE', 'PREV_DRAWING_NUM', 'SAME_SIDE_YN'
+                // , 'DETAIL_MACHINE_REQUIREMENT', 'TOTAL_SHEET'
             ];
             const normalModeArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD',
-                'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'TOTAL_SHEET', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM',
+                'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM',
                 'DRAWING_NUM_BUTTON', 'ORDER_DRAWING_NUM', 'ORDER_NUM_PLUS_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
                 'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'INVOICE_NUM', 'PART_UNIT_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
                 'CONTROL_PART_QTY', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN',
@@ -1910,10 +1937,11 @@
                 'DRAWING_UP_DT', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT_F', 'DELIVERY_DT', 'CONTROL_PART_INSERT_UPDATE_DT', 'ORDER_IMG_GFILE_SEQ',
                 'EOCLD', 'DNJSCLD', 'SAME_SIDE_YN',
+                // , 'TOTAL_SHEET'
             ];
             const closeModeArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD',
-                'CONTROL_NOTE', 'INVOICE_NUM', 'MAIN_INSPECTION', 'TOTAL_SHEET', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON',
+                'CONTROL_NOTE', 'INVOICE_NUM', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON',
                 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'ORDER_DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
                 'WORK_TYPE', 'OUTSIDE_YN', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL', 'MATERIAL_KIND',
                 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY',
@@ -1927,11 +1955,12 @@
                 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PROJECT_NM', 'ITEM_NM', 'ORDER_STAFF_NM', 'PREV_DRAWING_NUM',
                 'ORDER_IMG_GFILE_SEQ', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT',
                 'OUTSIDE_FINAL_AMT'
+                //, 'TOTAL_SHEET'
             ];
             const allModeArray = [
                 'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD',
                 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'CONTROL_NOTE', 'INVOICE_NUM', 'PROJECT_NM', 'MODULE_NM',
-                'DELIVERY_COMP_NM', 'LABEL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'TOTAL_SHEET',
+                'DELIVERY_COMP_NM', 'LABEL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN',
                 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'ORDER_DRAWING_NUM', 'ITEM_NM',
                 'SIZE_TXT', 'WORK_TYPE', 'EOCLD', 'DNJSCLD', 'SAME_SIDE_YN', 'OUTSIDE_YN', 'WORK_FACTORY',
                 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT',
@@ -1948,6 +1977,7 @@
                 'OUTSIDE_FINAL_AMT', 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT_F', 'OUTSIDE_NOTE', 'UNIT_MATERIAL_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT',
                 'CONTROL_PART_INSERT_UPDATE_DT'
+                //, 'TOTAL_SHEET'
             ];
 
             switch (elementId) {
@@ -2160,8 +2190,9 @@
 
             const controlList = [
                 'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'CONTROL_VER', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE',
-                'MAIN_INSPECTION', 'EMERGENCY_YN', 'TOTAL_SHEET', 'CONTROL_STATUS_NM', 'CONTROL_STATUS_DT',
+                'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_STATUS_NM', 'CONTROL_STATUS_DT',
                 'PRICE_CONFIRM', 'SAME_SIDE_YN', 'CONTROL_MERGE_CHECKBOX'
+                // , 'TOTAL_SHEET'
             ];
             const partList = [
                 'PART_NUM', 'DRAWING_VER', 'DRAWING_UP_DT', 'PREV_DRAWING_NUM',
@@ -2245,6 +2276,8 @@
 
         const validationCheck = function (dataList) {
             workTypeCheck(dataList);
+            registNumCheck(dataList)
+            controlNumCheck(dataList)
             // drawingNumCheck(dataList);
 
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
@@ -2257,7 +2290,32 @@
                 }
             }
         };
-
+        const controlNumCheck = function (dataList) {
+            $.each(dataList, function (idx,Item) {
+                var regexpSpec = /[^A-Za-z0-9\-]/gi;
+                if(regexpSpec.test(Item.CONTROL_NUM)) {
+                    addErrorList(Item.pq_ri, 'CONTROL_NUM');
+                }
+            })
+        }
+        const registNumCheck = function (dataList) {
+            const groupedRegistNum = fnGroupBy(dataList, 'REGIST_NUM');
+            // console.log(groupedRegistNum);
+            $.each(groupedRegistNum, function (idx,Item) {
+                if(idx !== 'undefined' && idx != 'null' && idx != '') {
+                    $.each(Item, function (idx2,Item2) {
+                        if(Item.length > 1) {
+                            addErrorList(Item2.pq_ri, 'REGIST_NUM');
+                        }else {
+                            var regexpSpec = /[^A-Za-z0-9\-]/gi;
+                            if(regexpSpec.test(Item2.REGIST_NUM)) {
+                                addErrorList(Item2.pq_ri, 'REGIST_NUM');
+                            }
+                        }
+                    })
+                }
+            })
+        }
         const workTypeCheck = function (dataList) {
             let groupedControlNum = fnGroupBy(dataList, 'CONTROL_NUM');
 
@@ -2449,8 +2507,8 @@
             const singleList = ['PART_UNIT_QTY']; // 단품
             const assemblyList = ['MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY']; // 조립
             const modifiedList = ['PART_UNIT_QTY']; // 수정
-            const stockList = ['PART_UNIT_QTY', 'ORDER_NUM', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT']; // 재고
-            const partList = ['ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT']; // 파트
+            const stockList = ['PART_UNIT_QTY', 'ORDER_NUM', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'REGIST_NUM']; // 재고
+            const partList = ['ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'REGIST_NUM']; // 파트
 
             switch (rowData.WORK_TYPE) {
                 case 'WTP010':
@@ -2541,15 +2599,15 @@
             let data = $orderManagementGrid.pqGrid('option', 'dataModel.data');
             validationCheck(data);
             changeCellColor(errorList, prevErrorList);
-
             if (errorList.length) {
                 fnAlert(null, errorList.length + '건의 데이터가 올바르지 않습니다.');
                 return false;
             }
 
-            // 관리번호 수정 여부 확인
+            // 작업지시번호 수정 여부 확인
             let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
+            console.log('changes',changes)
             let parameters = {'url': '/validationCheckBeforeSaveFromControl', 'data': {data: JSON.stringify(changes)}};
             let flag = false;
 
@@ -2978,7 +3036,7 @@
             if (noSelectedRowAlert()) return false;
             const gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
             const groupedControlSeq = fnGroupBy(gridData, 'CONTROL_SEQ');
-            let controlSeqList = new Set(); // 선택 된 row 관리번호
+            let controlSeqList = new Set(); // 선택 된 row 작업지시번호
             let controlDetailList = new Set();
             let multiOrderControlNumList = new Set();
             let selectControlList = '';
@@ -2990,7 +3048,7 @@
                 controlSeqList.add(rowData.CONTROL_SEQ);
             }
 
-            // 관리번호
+            // 작업지시번호
             for(let controlSeq of controlSeqList) {
                 // 발주 개수 + 파트 개수
                 for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH =  groupedControlSeq[controlSeq].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
@@ -3021,8 +3079,8 @@
 
             if (multiOrderControlNumList.size > 0) {
                 // 중복제거
-                message = '동일 관리번호에 도면번호가 다른 대상이 있습니다. 포함하여 출력할까요?<br>';
-                message += '<span class="text-blue">대상관리번호</span><br>';
+                message = '동일 작업지시번호에 도면번호가 다른 대상이 있습니다. 포함하여 출력할까요?<br>';
+                message += '<span class="text-blue">대상작업지시번호</span><br>';
                 for (let value of multiOrderControlNumList) {
                     message += '<span class="text-blue">' + value + '</span><br>';
                 }
@@ -3127,7 +3185,7 @@
                     '    <span>선택하신 ' + bCodePrintLen + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
                     '</h4>';
                 fnConfirm(null, message, function () {
-                    fnBarcodePrint(function (data) {
+                    fnBarcodePrFint(function (data) {
                         fnAlert(null, data.message);
                     }, barcodeList, '');
                 });
@@ -3156,7 +3214,7 @@
             if (noSelectedRowAlert()) return false;
             const gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
             const groupedControlSeq = fnGroupBy(gridData, 'CONTROL_SEQ');
-            let controlSeqList = new Set(); // 선택 된 row 관리번호
+            let controlSeqList = new Set(); // 선택 된 row 작업지시번호
             let drawingNumList = new Set();
             let selectControlList = '';
 
@@ -3165,7 +3223,7 @@
 
                 controlSeqList.add(rowData.CONTROL_SEQ);
             }
-            // 관리번호
+            // 작업지시번호
             for(let controlSeq of controlSeqList) {
                 // 발주 개수 + 파트 개수
                 for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH =  groupedControlSeq[controlSeq].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
@@ -3479,9 +3537,10 @@
                         title: '', type: 'checkbox', dataIndx: 'CONTROL_MERGE_CHECKBOX', editable: true,
                         cb: {check: 'Y', uncheck: 'N', maxCheck: 1},
                     },
-                    {title: '관리번호', align: 'left', width: 180, dataIndx: 'CONTROL_NUM'},
+                    {title: '작업지시번호', align: 'left', width: 180, dataIndx: 'CONTROL_NUM'},
                     {title: '파<br>트', minWidth: 30, dataIndx: 'PART_NUM'},
                     {title: '형태', dataIndx: 'WORK_TYPE_NM'},
+                    {title: '접수번호', align: 'left', width: 140, dataIndx: 'REGIST_NUM'},
                     {title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM'},
                     {title: '도면번호', align: 'left', width: 150, dataIndx: 'ORDER_DRAWING_NUM'},
                     {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'}

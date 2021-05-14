@@ -228,18 +228,18 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
+            // {
+            //     title: '총<br>장', minWidth: 30, dataType: 'integer', dataIndx: 'TOTAL_SHEET',
+            //     styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+            //     editor: {
+            //         getData: function (ui) {
+            //             let val = ui.$cell.find('.pq-cell-editor').val();
+            //             return fnIsEmpty(val) ? undefined : val;
+            //         }
+            //     }
+            // },
             {
-                title: '총<br>장', minWidth: 30, dataType: 'integer', dataIndx: 'TOTAL_SHEET',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
-                editor: {
-                    getData: function (ui) {
-                        let val = ui.$cell.find('.pq-cell-editor').val();
-                        return fnIsEmpty(val) ? undefined : val;
-                    }
-                }
-            },
-            {
-                title: '관리번호', align: 'left', width: 180, dataIndx: 'CONTROL_NUM',
+                title: '작업지시번호', align: 'left', width: 180, dataIndx: 'CONTROL_NUM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'red'},
                 style: {'font-weight': 'bold', 'color': 'black'},
                 editor: {
@@ -379,6 +379,16 @@
                 title: '발주정보', align: 'center',
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
                 colModel: [
+                    {
+                        title: '접수번호', align: 'left', width: 130, dataIndx: 'REGIST_NUM',
+                        styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+                        editor: {
+                            getData: function (ui) {
+                                let val = ui.$cell.find('.pq-cell-editor').val();
+                                return fnIsEmpty(val) ? undefined : val;
+                            }
+                        }
+                    },
                     {
                         title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM',
                         styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
@@ -801,12 +811,23 @@
                             $(this).startWaitMe();
                             fnPostAjax(function (data) {
                                 $(this).stopWaitMe();
-                                if (fnIsEmpty(data.list)) {
+                                if(!fnIsEmpty(data.registList) && data.registList.length > 0) {
+                                    let registNumStr = '';
+
+                                    for (let i = 0, LENGTH = data.registList.length; i < LENGTH; i++) {
+                                        registNumStr += data.registList[i].REGIST_NUM;
+
+                                        if (i < LENGTH - 1) {
+                                            registNumStr += ', ';
+                                        }
+                                    }
+                                    fnAlert(null, registNumStr + '<br>이미 등록된 접수 번호입니다.');
+                                }else if(fnIsEmpty(data.list)) {
                                     fnAlert(null, '<spring:message code="com.alert.default.save.success"/>', function () {
                                         window.close();
                                         opener.$orderManagementGrid.pqGrid('refreshDataAndView');
                                     });
-                                } else {
+                                }else {
                                     let controlNumStr = '';
 
                                     for (let i = 0, LENGTH = data.list.length; i < LENGTH; i++) {
@@ -816,7 +837,6 @@
                                             controlNumStr += ', ';
                                         }
                                     }
-
                                     fnAlert(null, controlNumStr + '<br>이미 등록된 주문입니다.');
                                 }
                             }, parameters, '');
@@ -1163,7 +1183,9 @@
         const validationCheck = function (dataList) {
             // sameControlNumCheck(dataList);
             workTypeCheck(dataList);
-            drawingNumCheck(dataList);
+            registNumCheck(dataList)
+            controlNumCheck(dataList)
+            // drawingNumCheck(dataList);
 
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 const rowData = dataList[i];
@@ -1187,7 +1209,32 @@
             }
         };
 
-        // 같은 관리번호 체크
+        const controlNumCheck = function (dataList) {
+            $.each(dataList, function (idx,Item) {
+                var regexpSpec = /[^A-Za-z0-9\-]/gi;
+                if(regexpSpec.test(Item.CONTROL_NUM)) {
+                    addErrorList(Item.pq_ri, 'CONTROL_NUM');
+                }
+            })
+        }
+        const registNumCheck = function (dataList) {
+            const groupedRegistNum = fnGroupBy(dataList, 'REGIST_NUM');
+            $.each(groupedRegistNum, function (idx,Item) {
+                if(idx !== 'undefined' ) {
+                    $.each(Item, function (idx2,Item2) {
+                        if(Item.length > 1) {
+                            addErrorList(Item2.pq_ri, 'REGIST_NUM');
+                        }else {
+                            var regexpSpec = /[^A-Za-z0-9\-]/gi;
+                            if(regexpSpec.test(Item2.REGIST_NUM)) {
+                                addErrorList(Item2.pq_ri, 'REGIST_NUM');
+                            }
+                        }
+                    })
+                }
+            })
+        }
+        // 같은 작업지시번호 체크
         /*const sameControlNumCheck = function (dataList) {
             let array = [];
             let duplicateArray = [];
@@ -1417,8 +1464,8 @@
             const singleList = ['PART_UNIT_QTY']; // 단품
             const assemblyList = ['MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY']; // 조립
             const modifiedList = ['PART_UNIT_QTY']; // 수정
-            const stockList = ['PART_UNIT_QTY', 'ORDER_NUM', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT']; // 재고
-            const partList = ['ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT']; // 파트
+            const stockList = ['PART_UNIT_QTY', 'ORDER_NUM', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT','REGIST_NUM']; // 재고
+            const partList = ['ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT','REGIST_NUM']; // 파트
 
             switch (rowData.WORK_TYPE) {
                 case 'WTP010':

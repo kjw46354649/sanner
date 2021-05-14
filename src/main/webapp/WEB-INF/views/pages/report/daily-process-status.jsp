@@ -202,7 +202,7 @@
                     });
                 }
             },
-            {title: '관리번호', minWidth: 150, maxWidth: 180, dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', minWidth: 150, maxWidth: 180, dataIndx: 'CONTROL_NUM'},
             {
                 title: '', minWidth: 30, maxWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {

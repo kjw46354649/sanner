@@ -52,7 +52,7 @@
                     <li>
                         <span class="ipu_wrap">
                             <label class="label_100" for="CONTROL_NUM_OR_DRAWING_NUM">관리/도면 번호</label>
-                            <input type="search" class="wd_200" name="CONTROL_NUM_OR_DRAWING_NUM" id="CONTROL_NUM_OR_DRAWING_NUM" title="관리번호">
+                            <input type="search" class="wd_200" name="CONTROL_NUM_OR_DRAWING_NUM" id="CONTROL_NUM_OR_DRAWING_NUM" title="작업지시번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -260,7 +260,7 @@
                     {title: '불량원인', width: 100, dataIndx: 'ERROR_REASON'},
                 ]
             },
-            {title: '관리번호', width: 180, align: 'left', dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: 180, align: 'left', dataIndx: 'CONTROL_NUM'},
             {
                 title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false,
                 render: function (ui) {

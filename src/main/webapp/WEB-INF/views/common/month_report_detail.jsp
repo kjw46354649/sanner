@@ -180,7 +180,7 @@
                     });
                 }
             },
-            {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: 180, dataIndx: 'CONTROL_NUM'},
             {
                 title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM',
                 editable: function (ui) {

@@ -460,7 +460,7 @@
                     <div class="middleConts">
                         <div class="tbl">
                             <table>
-                                <caption>관리번호, Part, 수량, 납기로 구분된 테이블</caption>
+                                <caption>작업지시번호, Part, 수량, 납기로 구분된 테이블</caption>
                                 <colgroup>
                                     <col width="383px">
                                     <col width="107px">

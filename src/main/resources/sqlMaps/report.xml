@@ -575,7 +575,7 @@
     <select id="selectMonthlyReportInspectionDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM <!-- 발주 업체 -->
             , SF_GET_CODE_NM('1014', B.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM <!-- 수행 공장 -->
-            , CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' #', B.PART_NUM) END AS CONTROL_NUM <!-- 관리번호 -->
+            , CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' #', B.PART_NUM) END AS CONTROL_NUM <!-- 작업지시번호 -->
             , B.DRAWING_NUM <!-- 도면 번호 -->
             , B.IMG_GFILE_SEQ
             , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY <!-- 발주량 -->

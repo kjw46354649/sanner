@@ -20,8 +20,8 @@
                 <ul>
                     <li>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                            <label class="label_100" for="CONTROL_NUM">작업지시번호</label>
+                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="작업지시번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
@@ -325,8 +325,8 @@
                 }
             },
             {title: '총<br>장', minWidth: 30, dataType: 'integer', dataIndx: 'TOTAL_SHEET'},
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', hidden: true},
-            {title: '관리번호', align: 'left', width: 180, dataIndx: 'CONTROL_PART_NUM'},
+            {title: '작업지시번호', dataIndx: 'CONTROL_NUM', hidden: true},
+            {title: '작업지시번호', align: 'left', width: 180, dataIndx: 'CONTROL_PART_NUM'},
             {
                 title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
@@ -401,6 +401,19 @@
             {
                 title: '발주정보', align: 'center',
                 colModel: [
+                    {
+                        title: '접수번호', align: 'left', width: 140, dataIndx: 'REGIST_NUM',
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls};
+                        }
+                    },
                     {
                         title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM',
                         render: function (ui) {
@@ -1027,7 +1040,7 @@
                 }
             },
             {title: '총<br>장', minWidth: 30, dataType: 'integer', dataIndx: 'TOTAL_SHEET'},
-            {title: '관리번호', align: 'left', width: 180, dataIndx: 'CONTROL_PART_NUM'},
+            {title: '작업지시번호', align: 'left', width: 180, dataIndx: 'CONTROL_PART_NUM'},
             {
                 title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {
@@ -1102,6 +1115,19 @@
             {
                 title: '발주정보', align: 'center',
                 colModel: [
+                    {
+                        title: '접수번호', align: 'left', width: 140, dataIndx: 'REGIST_NUM',
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls};
+                        }
+                    },
                     {
                         title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM',
                         render: function (ui) {
@@ -2048,7 +2074,7 @@
             
             const gridData = $grid.pqGrid('option', 'dataModel.data');
             const groupedControlSeq = fnGroupBy(gridData, 'CONTROL_SEQ');
-            let controlSeqList = new Set(); // 선택 된 row 관리번호
+            let controlSeqList = new Set(); // 선택 된 row 작업지시번호
             let drawingNumList = new Set();
             let selectControlList = '';
             let count = 0;
@@ -2058,7 +2084,7 @@
 
                 controlSeqList.add(rowData.CONTROL_SEQ);
             }
-            // 관리번호
+            // 작업지시번호
             for (let controlSeq of controlSeqList) {
                 // 발주 개수 + 파트 개수
                 for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH = groupedControlSeq[controlSeq].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
@@ -2135,7 +2161,7 @@
             
             const gridData = $grid.pqGrid('option', 'dataModel.data');
             const groupedControlSeq = fnGroupBy(gridData, 'CONTROL_SEQ');
-            let controlSeqList = new Set(); // 선택 된 row 관리번호
+            let controlSeqList = new Set(); // 선택 된 row 작업지시번호
             let controlDetailList = new Set();
             let multiOrderControlNumList = new Set();
             let selectControlList = '';
@@ -2147,7 +2173,7 @@
                 controlSeqList.add(rowData.CONTROL_SEQ);
             }
 
-            // 관리번호
+            // 작업지시번호
             for(let controlSeq of controlSeqList) {
                 // 발주 개수 + 파트 개수
                 for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH =  groupedControlSeq[controlSeq].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
@@ -2174,8 +2200,8 @@
 
             if (multiOrderControlNumList.size > 0) {
                 // 중복제거
-                message = '동일 관리번호에 도면번호가 다른 대상이 있습니다. 포함하여 출력할까요?<br>';
-                message += '<span class="text-blue">대상관리번호</span><br>';
+                message = '동일 작업지시번호에 도면번호가 다른 대상이 있습니다. 포함하여 출력할까요?<br>';
+                message += '<span class="text-blue">대상작업지시번호</span><br>';
                 for (let value of multiOrderControlNumList) {
                     message += '<span class="text-blue">' + value + '</span><br>';
                 }

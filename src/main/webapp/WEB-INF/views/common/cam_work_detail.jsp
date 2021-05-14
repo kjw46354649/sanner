@@ -60,7 +60,7 @@
             {title: 'CAM_SEQ', dataType: 'integer', dataIndx: 'CAM_SEQ', hidden: true},
             {title: '주문확정<br>일자', dataIndx: 'ORDER_CONFIRM_DT'},
             {title: '외<br>주', minWidth: 30, maxWidth: 30, dataIndx: 'OUTSIDE_YN'},
-            {title: '관리번호', width: 180, halign: 'center', align: 'left', dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: 180, halign: 'center', align: 'left', dataIndx: 'CONTROL_NUM'},
             {
                 title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
                 render: function (ui) {

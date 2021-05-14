@@ -101,7 +101,7 @@
                         </span>
                     </li>
                     <li>
-                        <span class="ipu_wrap"><label class="label_100" for="CONTROL_NUM">관리번호</label><input type="search" name="CONTROL_NUM" id="CONTROL_NUM" class="wd_200" value="" title="관리번호"></span>
+                        <span class="ipu_wrap"><label class="label_100" for="CONTROL_NUM">작업지시번호</label><input type="search" name="CONTROL_NUM" id="CONTROL_NUM" class="wd_200" value="" title="작업지시번호"></span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap"><label class="label_100" for="MATERIAL_ORDER_NUM">소재주문번호</label><input type="search" name="MATERIAL_ORDER_NUM" id="MATERIAL_ORDER_NUM" class="wd_200" value="" title="소재주문번호"></span>
                         <span class="gubun"></span>
@@ -325,7 +325,7 @@
                     });
                 }
             },
-            {title: '관리번호', align: 'left', dataIndx: 'CONTROL_PART_NUM', width: 150, editable: false,
+            {title: '작업지시번호', align: 'left', dataIndx: 'CONTROL_PART_NUM', width: 150, editable: false,
                 render: function(ui){
                     let WORK_TYPE = ui.rowData.WORK_TYPE == undefined ? '' : ui.rowData.WORK_TYPE;
                     let returnVal = ui.cellData;
@@ -597,7 +597,7 @@
                 }
             },
             {
-                title: '관리번호', halign: 'center', align: 'left', dataType: 'string', dataIndx: 'CONTROL_PART_NUM', width: 180, editable: false, styleHead: {'font-weight': 'bold','color': 'red'},
+                title: '작업지시번호', halign: 'center', align: 'left', dataType: 'string', dataIndx: 'CONTROL_PART_NUM', width: 180, editable: false, styleHead: {'font-weight': 'bold','color': 'red'},
                 render: function (ui) {
                     let WORK_TYPE = ui.rowData.WORK_TYPE == undefined ? '' : ui.rowData.WORK_TYPE;
                     let returnVal = ui.cellData;
@@ -831,7 +831,7 @@
                 }
             },
             {
-                title: '관리번호', halign: 'center', align: 'left', dataType: 'string', dataIndx: 'CONTROL_PART_NUM', width: 180, editable: false, styleHead: {'font-weight': 'bold','color': 'red'},
+                title: '작업지시번호', halign: 'center', align: 'left', dataType: 'string', dataIndx: 'CONTROL_PART_NUM', width: 180, editable: false, styleHead: {'font-weight': 'bold','color': 'red'},
                 render: function (ui) {
                     let WORK_TYPE = ui.rowData.WORK_TYPE == undefined ? '' : ui.rowData.WORK_TYPE;
                     let returnVal = ui.cellData;
@@ -1039,7 +1039,7 @@
                     });
                 }
             },
-            {title: '관리번호', halign: 'center', align: 'left', dataType: 'string', dataIndx: 'CONTROL_PART_NUM', width: 180, editable: false,
+            {title: '작업지시번호', halign: 'center', align: 'left', dataType: 'string', dataIndx: 'CONTROL_PART_NUM', width: 180, editable: false,
                 render: function(ui){
                     let WORK_TYPE = ui.rowData.WORK_TYPE == undefined ? '' : ui.rowData.WORK_TYPE;
                     let returnVal = ui.cellData;
@@ -1695,31 +1695,43 @@
         $("#itempOrderResgisterBarcodeNum").on('keyup', function(e) {
             if (e.keyCode === 13) {
                 let barcodeNum = fnBarcodeKo2En(this.value);
-                let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeNum};
-                let parameters = {'url': '/json-info', 'data': data};
+                let paramData = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeNum};
+                let parameters = {'url': '/json-info', 'data': paramData};
                 fnPostAjax(function (data) {
                     let BARCODE_YN = data.info.DEL_YN || 'Y';
                     if (BARCODE_YN === 'Y') {
                         fnAlert(null, "유효하지 않은 도면 바코드입니다.");
                     } else {
-                        let CONCAT_SEQ = "'" + data.info.CONTROL_SEQ + data.info.CONTROL_DETAIL_SEQ + "'";
-                        data = {'queryId': "material.selectItemOrderRegisterPopListSeq", 'CONCAT_SEQ': CONCAT_SEQ};
-                        let parameters = {'url': '/json-info', 'data': data};
-                        fnPostAjax(function (data) {
-                            if (data.info) {
-                                let newRowData = fnCloneObj(data.info);
-                                let newRowIndex = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length + 1;
-                                newRowData.ROWNUM = newRowIndex;
 
-                                itemOrderRegisterPopTopGrid.pqGrid('addRow', {
-                                    newRow: newRowData,
-                                    rowIndx: newRowIndex,
-                                    checkEditable: false
-                                });
-                            } else {
-                                fnAlert(null, "유효하지 않은 도면 바코드입니다.");
+                        paramData = {'queryId': "material.selectItemOrderInfo", 'CONTROL_SEQ': data.info.CONTROL_SEQ, 'CONTROL_DETAIL_SEQ':data.info.CONTROL_DETAIL_SEQ};
+                        let parameters2 = {'url': '/json-list', 'data': paramData};
+
+                        fnPostAjax(function (data2) {
+                            if(data2.list.length > 0) {
+                                fnAlert(null, '요청중인 소재주문정보가 존재합니다');
+                                return;
+                            }else {
+                                let CONCAT_SEQ = "'" + data.info.CONTROL_SEQ + data.info.CONTROL_DETAIL_SEQ + "'";
+                                paramData = {'queryId': "material.selectItemOrderRegisterPopListSeq", 'CONCAT_SEQ': CONCAT_SEQ};
+                                let parameters = {'url': '/json-info', 'data': paramData};
+                                fnPostAjax(function (data3) {
+                                    if (data3.info) {
+                                        let newRowData = fnCloneObj(data3.info);
+                                        let newRowIndex = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data').length + 1;
+                                        newRowData.ROWNUM = newRowIndex;
+
+                                        itemOrderRegisterPopTopGrid.pqGrid('addRow', {
+                                            newRow: newRowData,
+                                            rowIndx: newRowIndex,
+                                            checkEditable: false
+                                        });
+                                    } else {
+                                        fnAlert(null, "유효하지 않은 도면 바코드입니다.");
+                                    }
+                                }, parameters, '');
                             }
-                        }, parameters, '');
+                        },parameters2,'');
+
                     }
                 }, parameters, '');
 
