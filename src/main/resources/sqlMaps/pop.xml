@@ -9,7 +9,7 @@
             A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
             CASE WHEN B.EMERGENCY_YN = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN, <!-- 긴급 -->
             jmes.SF_GET_DATE_F(A.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
-            CASE WHEN A.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, ' #', A.PART_NUM) END AS CONTROL_NUM, <!-- 관리번호 -->
+            CASE WHEN A.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, ' #', A.PART_NUM) END AS CONTROL_NUM, <!-- 작업지시번호 -->
             SF_GET_COMP_NM(B.ORDER_COMP_CD) AS ORDER_COMP_NM, <!-- 발주업체 이름 -->
             A.DRAWING_NUM, <!-- 도면 -->
             A.IMG_GFILE_SEQ,

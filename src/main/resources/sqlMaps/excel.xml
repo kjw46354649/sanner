@@ -92,7 +92,7 @@
             B.OUTSIDE_COMP_CD, <!-- 업체 -->
             SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM,<!-- 업체 -->
             B.OUTSIDE_ORDER_NUM, <!-- 발주번호 -->
-            A.CONTROL_NUM, <!-- 관리번호 -->
+            A.CONTROL_NUM, <!-- 작업지시번호 -->
             DATE_FORMAT(STR_TO_DATE(B.OUTSIDE_HOPE_DUE_DT, '%Y%m%d'), '%m월%d일') AS OUTSIDE_HOPE_DUE_DT, <!-- 요망납기 -->
             B.DRAWING_NUM, <!-- 도면번호 -->
             C.ITEM_NM, <!-- 품명 -->
@@ -209,7 +209,7 @@
     <select id="selectControlEstimateDetailListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_NUM, B.PART_NUM) AS ROW_NUM,
-            A.CONTROL_NUM, <!-- 관리번호 -->
+            A.CONTROL_NUM, <!-- 작업지시번호 -->
             CONCAT('(', B.DRAWING_NUM, ')') AS DRAWING_NUM, <!-- 도면번호 -->
             IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
             B.SIZE_TXT, <!-- 규격 -->
