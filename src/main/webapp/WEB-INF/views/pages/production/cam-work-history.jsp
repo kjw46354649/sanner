@@ -48,8 +48,8 @@
                     </li>
                     <li>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">관리번호</label>
-                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="관리번호">
+                            <label class="label_100" for="CONTROL_NUM">작업지시번호</label>
+                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="작업지시번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
@@ -184,7 +184,7 @@
                 <button type="button" class="pop_close cam_work_history_detail_pop_close mt-10 mr-8">닫기</button>
             </div>
             <div class="qualityWrap">
-                <h4>관리번호</h4>
+                <h4>작업지시번호</h4>
                 <span class="rightSpan" style="float: right;padding-top: 7px;">
                     <button type="button" class="defaultBtn btn-120w" id="mctWorkHistoryPopMctResultDetailViewBtn" >상세정보 조회</button>
                     <button type="button" class="defaultBtn btn-120w" id="mctWorkHistoryPopMctResultDrawingViewBtn" >도면보기</button>
@@ -200,7 +200,7 @@
                             <col width="20%">
                         </colgroup>
                         <tr>
-                            <th>관리번호</th>
+                            <th>작업지시번호</th>
                             <td id="CONTROL_NUM"></td>
                             <th>수량 (원, 대)</th>
                             <td id="CONTROL_PART_QTY"></td>
@@ -575,8 +575,8 @@
             {title: '외<br>주', minWidth: 30, dataIndx: 'OUTSIDE_YN'},
             {title: '수행<br>공장', minWidth: 40, dataIndx: 'WORK_FACTORY_NM'},
             {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
-            {title: '관리번호', align: 'left', width: 160, dataIndx: 'CONTROL_NUM', hidden: true},
-            {title: '관리번호', align: 'left', width: 160, dataIndx: 'CONTROL_PART_NUM'},
+            {title: '작업지시번호', align: 'left', width: 160, dataIndx: 'CONTROL_NUM', hidden: true},
+            {title: '작업지시번호', align: 'left', width: 160, dataIndx: 'CONTROL_PART_NUM'},
             {
                 title: '', width: 25, minWidth: 25, dataIndx: 'CONTROL_NUM_BUTTON', editable: false,
                 render: function (ui) {
@@ -1029,7 +1029,7 @@
                 if (infoData.info) {
                     camWorkHistoryPop(infoData.info);
                 } else {
-                    fnAlert(null, "관리번호를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
+                    fnAlert(null, "작업지시번호를 확인 해 주십시오. 실적 등록 대상이 아닙니다.");
                     return;
                 }
             }, infoParameters, '');

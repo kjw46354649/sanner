@@ -108,7 +108,7 @@
         <div>
             <table class="drawing-information-table" id="drawing_information_table">
                 <tr>
-                    <td class="header" colspan="5">관리번호</td>
+                    <td class="header" colspan="5">작업지시번호</td>
                 </tr>
                 <tr>
                     <td colspan="5"></td>
@@ -326,7 +326,7 @@
 <%--                <thead>--%>
 <%--                <tr>--%>
 <%--                    <th scope="col">No</th>--%>
-<%--                    <th scope="col">관리번호</th>--%>
+<%--                    <th scope="col">작업지시번호</th>--%>
 <%--                    <th scope="col">수량</th>--%>
 <%--                    <th scope="col">시간</th>--%>
 <%--                    <th scope="col">P/H</th>--%>
@@ -336,7 +336,7 @@
 <%--                <tbody>--%>
 <%--                <tr>--%>
 <%--                    <td>1</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -344,7 +344,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>2</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -352,7 +352,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>3</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -360,7 +360,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>4</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -368,7 +368,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>5</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -404,7 +404,7 @@
 <%--                <thead>--%>
 <%--                <tr>--%>
 <%--                    <th scope="col">No</th>--%>
-<%--                    <th scope="col">관리번호</th>--%>
+<%--                    <th scope="col">작업지시번호</th>--%>
 <%--                    <th scope="col">수량</th>--%>
 <%--                    <th scope="col">시간</th>--%>
 <%--                    <th scope="col">P/H</th>--%>
@@ -414,7 +414,7 @@
 <%--                <tbody>--%>
 <%--                <tr>--%>
 <%--                    <td>1</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -422,7 +422,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>2</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -430,7 +430,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>3</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -438,7 +438,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>4</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -446,7 +446,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>5</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -482,7 +482,7 @@
 <%--                <thead>--%>
 <%--                <tr>--%>
 <%--                    <th scope="col">No</th>--%>
-<%--                    <th scope="col">관리번호</th>--%>
+<%--                    <th scope="col">작업지시번호</th>--%>
 <%--                    <th scope="col">수량</th>--%>
 <%--                    <th scope="col">시간</th>--%>
 <%--                    <th scope="col">P/H</th>--%>
@@ -492,7 +492,7 @@
 <%--                <tbody>--%>
 <%--                <tr>--%>
 <%--                    <td>1</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -500,7 +500,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>2</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -508,7 +508,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>3</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -516,7 +516,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>4</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -524,7 +524,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>5</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -560,7 +560,7 @@
 <%--                <thead>--%>
 <%--                <tr>--%>
 <%--                    <th scope="col">No</th>--%>
-<%--                    <th scope="col">관리번호</th>--%>
+<%--                    <th scope="col">작업지시번호</th>--%>
 <%--                    <th scope="col">수량</th>--%>
 <%--                    <th scope="col">시간</th>--%>
 <%--                    <th scope="col">P/H</th>--%>
@@ -570,7 +570,7 @@
 <%--                <tbody>--%>
 <%--                <tr>--%>
 <%--                    <td>1</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -578,7 +578,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>2</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -586,7 +586,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>3</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -594,7 +594,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>4</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -602,7 +602,7 @@
 <%--                </tr>--%>
 <%--                <tr>--%>
 <%--                    <td>5</td>--%>
-<%--                    <td>관리번호</td>--%>
+<%--                    <td>작업지시번호</td>--%>
 <%--                    <td>수량</td>--%>
 <%--                    <td>시간</td>--%>
 <%--                    <td>P/H</td>--%>
@@ -948,7 +948,7 @@
         etcPostData = {dataModel: {postData: etcPostData}};
 
         const materialColModel = [
-            {title: '관리번호', width: 180, dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: 180, dataIndx: 'CONTROL_NUM'},
             {title: '수량', dataIndx: 'PART_QTY'},
             {title: '가공시간', minWidth:60, dataIndx: 'WORK_TIME'},
             {title: 'E/C', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_EC_AMT'},
@@ -962,7 +962,7 @@
             },
             {title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: '관리번호', dataIndx: 'CONTROL_NUM', hidden: true},
+            {title: '작업지시번호', dataIndx: 'CONTROL_NUM', hidden: true},
             {title: '규격', dataIndx: 'SIZE_TXT', hidden: true},
             {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', hidden: true},
             // {title: '수량', dataIndx: 'PART_QTY', hidden: true},
@@ -1274,7 +1274,7 @@
 
             if (data) {
                 htmlString += '<tr>';
-                htmlString += '    <td class="header" colspan="5">관리번호</td>';
+                htmlString += '    <td class="header" colspan="5">작업지시번호</td>';
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += data.CONTROL_NUM ? '<td colspan="5">' + data.CONTROL_NUM + '</td>' : '<td colspan="5"></td>';
@@ -1382,7 +1382,7 @@
                 htmlString += '</tr>';
             } else {
                 htmlString += '<tr>';
-                htmlString += '    <td class="header" colspan="5">관리번호</td>';
+                htmlString += '    <td class="header" colspan="5">작업지시번호</td>';
                 htmlString += '</tr>';
                 htmlString += '<tr>';
                 htmlString += '<td colspan="5"></td>';

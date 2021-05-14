@@ -101,7 +101,7 @@
                 </div>
                 <div class="t_area">
                     <div class="t_h">
-                        <span class="list_t" style="width: 194px;">관리번호</span>
+                        <span class="list_t" style="width: 194px;">작업지시번호</span>
                         <span style="width: 292px;">
                             <input id="CONTROL_NUM" name="CONTROL_NUM" type="text" readonly>
                         </span>
@@ -582,7 +582,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM' , minWidth: 180},
+            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_NUM' , minWidth: 180},
             {title: '형태', dataType: 'string', dataIndx: 'MATERIAL_KIND_NM' , minWidth: 60},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM' , minWidth: 100},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 150 } ,
@@ -645,7 +645,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: '10%'},
+            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: '10%'},
             {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', width: 30},
             {title: '수행일시', dataType: 'string', dataIndx: 'REGISTED_DT', minWidth: '14%'}
         ];

@@ -34,7 +34,7 @@ public class InspectionController {
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
         innodaleService.create(hashMap);
 
-        /** 관리번호 확정인 경우 알람 처리 한다. **/
+        /** 작업지시번호 확정인 경우 알람 처리 한다. **/
         hashMap.put("queryId", "common.selectAlarmInspectionInformation");
         Map<String, Object> alarmInfo = this.innodaleService.getInfo(hashMap);
 

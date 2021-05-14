@@ -312,7 +312,7 @@
             {title: 'SORT_NUM', dataType: 'integer', dataIndx: 'SORT_NUM', hidden: true},
             {title: '납기', minWidth: 40, dataIndx: 'INNER_DUE_DT'},
             {
-                title: '관리번호', width: 200, dataIndx: 'CONTROL_NUM',
+                title: '작업지시번호', width: 200, dataIndx: 'CONTROL_NUM',
                 postRender: function (ui) {
                     let grid = this,
                         $cell = grid.getCell(ui);
@@ -474,7 +474,7 @@
                     });
                 }
             },
-            {title: '관리번호', align: 'left', width: 160, dataIndx: 'CONTROL_NUM_PART_NUM'},
+            {title: '작업지시번호', align: 'left', width: 160, dataIndx: 'CONTROL_NUM_PART_NUM'},
             {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {
                 title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',

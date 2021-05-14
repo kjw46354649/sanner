@@ -20,8 +20,8 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
-                           <label class="label_100" for="SEL_CONTROL_NUM">관리번호</label>
-                           <input type="search" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="관리번호">
+                           <label class="label_100" for="SEL_CONTROL_NUM">작업지시번호</label>
+                           <input type="search" class="wd_200" name="SEL_CONTROL_NUM" id="SEL_CONTROL_NUM" title="작업지시번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
@@ -253,7 +253,7 @@
                     });
                 }
             },
-            {title: '관리번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 180, width: 180},
+            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 180, width: 180},
             {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 35, width: 35},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30,
                 render: function (ui) {
