@@ -1674,13 +1674,13 @@
             const colModel = [
                 {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
                 {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-                {title: '작업지시번호', align: 'left', width: 180, dataIndx: 'CONTROL_PART_INFO'},
-                {title: '접수번호', align: 'left', width: 140, dataIndx: 'REGIST_NUM'},
-                {title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM'},
-                {title: '작업형태', dataIndx: 'WORK_TYPE_NM'},
-                {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
+                {title: '작업지시번호', width: 180, dataIndx: 'CONTROL_PART_INFO'},
+                {title: '접수번호', width: 140, dataIndx: 'REGIST_NUM'},
+                {title: '발주번호', width: 100, dataIndx: 'ORDER_NUM'},
+                {title: '작업형태', dataIndx: 'WORK_TYPE_NM', width: 60, maxWidth:60},
+                {title: '도면번호', width: 150, dataIndx: 'DRAWING_NUM'},
                 {
-                    title: 'CAD파일', align: 'center', dataIndx: 'DXF_GFILE_SEQ', width: 25, minWidth: 25, editable: false,
+                    title: 'CAD파일', align: 'center', dataIndx: 'DXF_GFILE_SEQ', width: 90, minWidth: 90, editable: false,
                     render: function (ui) {
                         cellData = ui.cellData;
                         if (cellData) {

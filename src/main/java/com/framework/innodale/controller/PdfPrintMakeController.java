@@ -139,14 +139,12 @@ public class PdfPrintMakeController {
         hashMap.put("selectControlLists", selectControlLists);
         hashMap.put("queryId", "orderMapper.selectControlCadBarcodeList");
         List<Map<String, Object>> controlImageList = innodaleService.getList(hashMap);
-
         int iCount = 0;
 
         document.open();
 
         for (Map<String, Object> controlInfo : controlImageList) {
             if (iCount > 0) document.newPage();
-
             float[] columnWidths = {130, 40, 88, 49, 35, 25, 35, 35, 35, 32, 32, 33, 90, 80, 46, 26 };
             PdfPTable masterTable = new PdfPTable(columnWidths);
             masterTable.setWidthPercentage(100);
@@ -157,7 +155,13 @@ public class PdfPrintMakeController {
             table.setWidthPercentage(100);
             table.setWidths(new int[]{ 4, 20, 12, 6, 7, 7, 3, 3,6});
 
-            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) controlInfo.get("BARCODE_NUM"),1100, 170);
+            int imgWidth = 1100;
+            int imgHeight = 170;
+            if(controlInfo.get("WORK_TYPE_NM").equals("파트")) {
+                imgWidth = 1100;
+                imgHeight = 100;
+            }
+            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) controlInfo.get("BARCODE_NUM"),imgWidth, imgHeight);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
             // Converting BitMatrix to Buffered Image
@@ -232,7 +236,11 @@ public class PdfPrintMakeController {
                     phrase2.add(new VerticalPositionMark());
                 }
                 phrase2.add(new Chunk("EA",smallBoldFont));
-                cell.setPhrase(phrase2);
+                cell = createCellPhrase(phrase2,1,1,Element.ALIGN_BOTTOM,Element.ALIGN_CENTER);
+                cell.setBorder(0);
+                cell.setBorderWidthTop(0.1f);
+//                cell.setPaddingBottom(14);
+//                cell.setPhrase(phrase2);
                 table.addCell(cell);
 
 //                table.addCell(createEACell1("EA", 1, 1, smallBoldFont));
@@ -287,7 +295,11 @@ public class PdfPrintMakeController {
             PdfPCell cell1 = new PdfPCell();
             cell1.addElement(table);
             cell1.setVerticalAlignment(Element.ALIGN_TOP);
-            cell1.setColspan(11);
+            if(controlInfo.get("WORK_TYPE_NM").equals("파트")) {
+                cell1.setColspan(16);
+            }else {
+                cell1.setColspan(11);
+            }
             cell1.setBorder(0);
             cell1.setPadding(0);
             masterTable.addCell(cell1);
@@ -296,7 +308,6 @@ public class PdfPrintMakeController {
 
             controlInfo.put("queryId", "orderMapper.selectControlCadOrderList");
             List<Map<String, Object>> controlOrderList = innodaleService.getList(controlInfo);
-
             if(controlOrderList != null && controlOrderList.size() > 0){
 
                 PdfPTable drawingInfoTable = new PdfPTable(2);
@@ -388,9 +399,9 @@ public class PdfPrintMakeController {
                 masterTable.addCell(cell2);
 //                document.add(drawingInfoTable);
 //                drawingInfoTable.flushContent();
-                document.add(masterTable);
 
             }
+            document.add(masterTable);
 
             if (controlInfo.get("IMAGE_PATH") != null && !"".equals(controlInfo.get("IMAGE_PATH"))) {
 
