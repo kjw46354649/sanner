@@ -888,23 +888,24 @@
 
     /** 화면 이동 처리 **/
     $(document).on('click', '#estimateRegisterPage', function (event) {
-        let timer;
-        let count = 0;
+        let estimateRegisterTimer;
+        let estimateRegisterCount = 0;
         let seq = event.target.dataset.seq;
         // let status = event.target.dataset.status;
         $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
 
         const clickEstimateRegisterReloadBtn = function () {
-            timer = setInterval(function () {
-                $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
-                $("#estimateRegisterReloadBtn").trigger('click');
-
-                if ($('#view_tab_10000102').length > 0 || count > 2) {
-                    clearInterval(timer);
-                } else {
-                    clickEstimateRegisterReloadBtn();
+            estimateRegisterTimer = setInterval(function () {
+                console.log(estimateRegisterCount);
+                if ($('#view_tab_10000102').length > 0 || estimateRegisterCount > 3) {
+                    $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
+                    $("#estimateRegisterReloadBtn").trigger('click');
+                    clearInterval(estimateRegisterTimer);
                 }
-                count++;
+                // else {
+                //     clickEstimateRegisterReloadBtn();
+                // }
+                estimateRegisterCount++;
             }, 1000);
         };
 
