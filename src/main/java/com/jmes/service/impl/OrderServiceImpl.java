@@ -488,8 +488,7 @@ public class OrderServiceImpl implements OrderService {
                     hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
                     if (this.orderDao.getFlag(hashMap)) {
                         flag = true;
-                        //TODO: 문구수정
-                        message = "작업지시번호 수정시 기존에 존재하는 관리번호가 있으면 저장시 에러가 나도록 해야함";
+                        message = "기존에 존재하는 작업지시번호입니다.";
                         break;
                     }
                 }
@@ -537,8 +536,10 @@ public class OrderServiceImpl implements OrderService {
                     this.innodaleDao.insertGrid(hashMap);
                     hashMap.put("queryId", "orderMapper.updateControlAutomaticQuote");
                     this.innodaleDao.updateGrid(hashMap);
-                    hashMap.put("queryId", "orderMapper.createControlPartOrder");
-                    this.innodaleDao.insertGrid(hashMap);
+                    if(hashMap.get("ORDER_QTY") != null) {
+                        hashMap.put("queryId", "orderMapper.createControlPartOrder");
+                        this.innodaleDao.insertGrid(hashMap);
+                    }
                     hashMap.put("queryId", "orderMapper.createControlBarcode");
                     this.innodaleDao.insertGrid(hashMap);
                     hashMap.put("queryId", "orderMapper.createOutBarcode");

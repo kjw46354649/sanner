@@ -593,8 +593,12 @@
                        GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ, M.ORDER_SEQ
                       ) AS OUT_QTY
                     , (SELECT MAX(M.OUT_DT) FROM jmes.TBL_OUT M, jmes.TBL_CONTROL_PART N WHERE M.ORDER_SEQ = C.ORDER_SEQ AND N.CONTROL_SEQ = B.CONTROL_SEQ AND N.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ GROUP BY N.CONTROL_SEQ, N.CONTROL_DETAIL_SEQ, M.ORDER_SEQ) AS ORDER_OUT_DT
-                    , jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS ORIGINAL_SIDE_QTY <!-- 대칭_원칭 -->
-                    , jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1) AS OTHER_SIDE_QTY <!-- 대칭_대칭 -->
+                    , CASE WHEN B.WORK_TYPE = 'WTP050' THEN jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1)
+                           ELSE IFNULL(C.ORIGINAL_SIDE_QTY,SPACE(0))
+                     END AS ORIGINAL_SIDE_QTY <!-- 대칭_원칭 -->
+                    ,  CASE WHEN B.WORK_TYPE = 'WTP050' THEN jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1)
+                            ELSE IFNULL(C.OTHER_SIDE_QTY,SPACE(0))
+                     END AS OTHER_SIDE_QTY <!-- 대칭_대칭 -->
                     , B.INNER_WORK_FINISH_DT
                     , jmes.SF_GET_CODE_NM('1014', B.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
                     , jmes.SF_GET_MATERIAL_RECEIPT_DT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT
@@ -1424,6 +1428,7 @@
                     , A.CONTROL_DETAIL_SEQ
                     , A.ORDER_SEQ
                     , C.OUTSIDE_COMP_CD
+                    , D.REGIST_NUM
                     , D.ORDER_NUM
                     , B.CONTROL_NUM
                     , B.ORDER_COMP_CD
@@ -1468,6 +1473,7 @@
                     , C.CONTROL_DETAIL_SEQ
                     , C.ORDER_SEQ
                     , B.OUTSIDE_COMP_CD
+                    , C.REGIST_NUM
                     , C.ORDER_NUM
                     , A.CONTROL_NUM
                     , A.ORDER_COMP_CD

@@ -2112,6 +2112,7 @@
                 C.ORDER_SEQ,
                 SF_GET_CODE_NM('1038', A.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
                 A.CONTROL_NUM, <!-- 작업지시번호 -->
+                C.REGIST_NUM, <!-- 접수번호 -->
                 C.ORDER_NUM, <!-- 발주번호 -->
                 C.DRAWING_NUM, <!-- 도면번호 -->
                 B.SIZE_TXT, <!-- 규격 -->
