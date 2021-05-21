@@ -920,7 +920,7 @@
                 estimateRegisterTopGrid.pqGrid('option', 'dataModel.postData', function () {
                     return { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
                 });
-                estimateRegisterTopGrid.pqGrid('refreshDataAndView');
+                // estimateRegisterTopGrid.pqGrid('refreshDataAndView');
 
                 postData = { 'queryId': 'estimate.selectEstimateReceiverList', 'EST_SEQ': EST_SEQ };
                 fnRequestGridData(estimateRegisterBotGrid, postData);
