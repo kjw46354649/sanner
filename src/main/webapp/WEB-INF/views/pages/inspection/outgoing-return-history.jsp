@@ -152,7 +152,7 @@
                     });
                 }
             },
-            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 200, width: 200, editable: false},
+            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 170, width: 170, editable: false},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
@@ -167,7 +167,7 @@
                 }
             },
             {title: '도면번호', dataType: 'integer', dataIndx: 'DRAWING_NUM', minWidth: 120, width: 120, editable: true},
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 120, width: 120, editable: false},
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 90, width: 90, editable: false},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 120, width: 120, editable: false},
             {title: '주문수량', dataType: 'integer', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false, format: '#,###'},
             {title: '출고', dataType: 'string', dataIndx: 'OUT_QTY', minWidth: 60, width: 60, editable: false},
@@ -177,7 +177,7 @@
                     {title: '출고', datatype: 'string', dataIndx: 'OUT_PACKING_INFO', minWidth: 60, width: 60, editable: false}
                 ]
             },
-            {title: '반품', dataType: 'string', dataIndx: 'RETURN_QTY', minWidth: 100, width: 100, editable: false},
+            {title: '반품', dataType: 'string', dataIndx: 'RETURN_QTY', minWidth: 80, width: 80, editable: false},
             {title: '등록일시', dataType: 'string', dataIndx: 'INSERT_DT', minWidth: 100, width: 100, editable: false},
             {title: '반품조치일', dataType: 'string', dataIndx: 'RETURN_SETTLEMENT_DT', minWidth: 100, width: 100, editable: false},
             {title: '', align: 'center', dataType: 'string', dataIndx: 'BTN_CANCEL', width: 40, minWidth: 40, editable: false,
@@ -200,7 +200,7 @@
             },
             strNoRows: g_noData,
             columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: outgoingReturnHistoryFilterRender}, filterModel: { mode: 'OR' },
-            scrollModel: {autoFit: true},
+            // scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             //selectionModel: { type: 'row', mode: 'multiple'} ,
             swipeModel: {on: false},
