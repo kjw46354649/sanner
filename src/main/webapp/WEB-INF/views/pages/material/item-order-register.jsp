@@ -1427,7 +1427,8 @@
         let itemOrderRegisterGridCellEditable = function(ui){
             let rowData = itemOrderRegisterLeftGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
             let M_STATUS = rowData.M_STATUS;
-            return M_STATUS !== 'MST002';
+            // return M_STATUS !== 'MST002';
+            return M_STATUS !== 'MST002' && (typeof rowData.M_STATUS != 'undefined' && typeof rowData.MATERIAL_ORDER_NUM != 'undefined');
         };
 
         $('#item_order_register_popup').on({
@@ -2092,51 +2093,64 @@
                     };
                     let parameters = {'url': '/json-list', 'data': parameter};
                     fnPostAjaxAsync(function (data) {
-                        let list = data.list;
-                        let compareCd = list[0].MATERIAL_COMP_CD;
-                        let compCd = '';
-                        let tableList = [];
-                        let innerTable = '';
-
-                        for (let i = 0, LENGTH = list.length; i < LENGTH; i++) {
-                            compCd = list[i].MATERIAL_COMP_CD;
-                            if (compareCd !== compCd) {
-                                innerTable = makeMailInnerTable(tableList);
+                        if(data.list.length == 0 && list.length == 1) {
+                            if(list[0].OUT_QTY == list[0].ORDER_QTY) {
                                 let parameter = {
-                                    'queryId': 'mail.insertItemOrderRegisterPopSubmitMail',
+                                    'queryId': 'material.updateItemOrderRegisterOrderStatus',
                                     'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
-                                    'MATERIAL_COMP_CD': compareCd,
-                                    'INNER_TABLE': innerTable
                                 };
-                                let parameters = {'url': '/json-create', 'data': parameter};
-
-                                tableList = [];
-                                fnPostAjaxAsync(function (data, callFunctionParam) {
+                                let parameters = {'url': '/json-update', 'data': parameter};
+                                fnPostAjaxAsync(function () {
+                                    itemOrderRegisterPopOrderSheet('N');
                                 }, parameters, '');
-
-                                compareCd = compCd;
                             }
-                            tableList.push(list[i]);
-                        }
+                        }else {
+                            let list = data.list;
+                            let compareCd = list[0].MATERIAL_COMP_CD;
+                            let compCd = '';
+                            let tableList = [];
+                            let innerTable = '';
 
-                        innerTable = makeMailInnerTable(tableList);
-                        let parameter = {
-                            'queryId': 'mail.insertItemOrderRegisterPopSubmitMail',
-                            'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
-                            'MATERIAL_COMP_CD': compareCd,
-                            'INNER_TABLE': innerTable
-                        };
-                        let parameters = {'url': '/json-create', 'data': parameter};
-                        fnPostAjaxAsync(function () {
+                            for (let i = 0, LENGTH = list.length; i < LENGTH; i++) {
+                                compCd = list[i].MATERIAL_COMP_CD;
+                                if (compareCd !== compCd) {
+                                    innerTable = makeMailInnerTable(tableList);
+                                    let parameter = {
+                                        'queryId': 'mail.insertItemOrderRegisterPopSubmitMail',
+                                        'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
+                                        'MATERIAL_COMP_CD': compareCd,
+                                        'INNER_TABLE': innerTable
+                                    };
+                                    let parameters = {'url': '/json-create', 'data': parameter};
+
+                                    tableList = [];
+                                    fnPostAjaxAsync(function (data, callFunctionParam) {
+                                    }, parameters, '');
+
+                                    compareCd = compCd;
+                                }
+                                tableList.push(list[i]);
+                            }
+
+                            innerTable = makeMailInnerTable(tableList);
                             let parameter = {
-                                'queryId': 'material.updateItemOrderRegisterOrderStatus',
+                                'queryId': 'mail.insertItemOrderRegisterPopSubmitMail',
                                 'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
+                                'MATERIAL_COMP_CD': compareCd,
+                                'INNER_TABLE': innerTable
                             };
-                            let parameters = {'url': '/json-update', 'data': parameter};
+                            let parameters = {'url': '/json-create', 'data': parameter};
                             fnPostAjaxAsync(function () {
-                                itemOrderRegisterPopOrderSheet('Y');
+                                let parameter = {
+                                    'queryId': 'material.updateItemOrderRegisterOrderStatus',
+                                    'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
+                                };
+                                let parameters = {'url': '/json-update', 'data': parameter};
+                                fnPostAjaxAsync(function () {
+                                    itemOrderRegisterPopOrderSheet('Y');
+                                }, parameters, '');
                             }, parameters, '');
-                        }, parameters, '');
+                        }
                     }, parameters, '');
                 }, parameters, '');
             });

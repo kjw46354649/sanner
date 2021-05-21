@@ -382,6 +382,9 @@
 
                     changeViewColumn($('#VIEW_AMOUNT_INFORMATION').prop('checked'));
                 },
+                selectChange: function (evt, ui) {
+                    // console.log(ui)
+                },
                 cellClick: function (event, ui) {
                     let MATERIAL_ORDER_SEQ = ui.rowData.MATERIAL_ORDER_SEQ;
                     let IN_YN = ui.rowData.IN_YN;
