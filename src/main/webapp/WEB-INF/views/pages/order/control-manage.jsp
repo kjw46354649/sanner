@@ -2050,12 +2050,16 @@
             let list = [];
             let controlStatusList = [];
             let message;
-
+            let outsideFlag = false;
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 list[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                 // 값 변경 전 이상 case 확인하기 위해 배열에 담는다.
                 controlStatusList[i] = list[i].CONTROL_STATUS || undefined;
                 list[i].CONTROL_STATUS = controlStatus;
+
+                if(list[i].OUTSIDE_YN == 'Y' && (list[i].OUTSIDE_STATUS == 'OST001' || list[i].OUTSIDE_STATUS == 'OST003' || list[i].OUTSIDE_STATUS == 'OST004')) {
+                    outsideFlag = true;
+                }
             }
 
             // 중복제거
@@ -2071,6 +2075,15 @@
                     '<h4>\n' +
                     '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                     '    <span>상태변경이 불가한 대상이 있습니다.\n선택목록을 확인해주세요</span>\n' +
+                    '</h4>';
+                fnAlert(null, message);
+                return false;
+            }
+            if(outsideFlag) {
+                message =
+                    '<h4>\n' +
+                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <span>외주가공 중에는 취소가 불가능합니다.\n외주가공 취소 후 진행해주세요.</span>\n' +
                     '</h4>';
                 fnAlert(null, message);
                 return false;
@@ -2733,8 +2746,10 @@
 
         $('#CONTROL_MONTH_CLOSE').on('click', function () {
             let compCdList = [];
+            let list = [];
             let orderCompCdList = [];
             let selectedRowCount = selectedOrderManagementRowIndex.length;
+            let controlStatusFlag = false;
 
             if (noSelectedRowAlert()) {
                 return false;
@@ -2749,9 +2764,14 @@
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-
+                list[i] = rowData;
                 compCdList.push(rowData.COMP_CD);
                 orderCompCdList.push(rowData.ORDER_COMP_CD);
+                if(rowData.CONTROL_STATUS == 'ORD001') {
+                    controlStatusFlag = true;
+                }else {
+                    controlStatusFlag = false;
+                }
             }
 
             // 중복제거
@@ -2765,7 +2785,10 @@
                 fnAlert(null, '선택된 대상들의 발주사와 공급사는 동일해야 합니다.');
                 return false;
             }
-
+            if(!controlStatusFlag) {
+                fnAlert(null, '주문 마감은 주문 확정 이후에 가능합니다.');
+                return false;
+            }
             let url = '/controlMonthClose';
             // 팝업 사이즈
             let nWidth = 1080;

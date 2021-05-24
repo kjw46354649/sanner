@@ -98,7 +98,7 @@
             AND NOT EXISTS (SELECT *
                             FROM TBL_OUTSIDE_CLOSE
                             WHERE CONTROL_SEQ = B.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
-<!--            AND A.CONTROL_STATUS = 'ORD001' 확정 -->
+            AND A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004')  <!-- 확정,마감,종료인것만 나오도록 -->
         <choose>
             <!-- 주문확정일 -->
             <when test="OUTSIDE_SEARCH_CONDITION == 'OSC00'">
