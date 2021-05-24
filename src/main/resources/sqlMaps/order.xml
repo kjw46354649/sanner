@@ -261,7 +261,7 @@
             AND A.PRICE_CONFIRM = #{UNIT_PRICE_CONFIRM}
         </if>
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
-             AND A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%') OR C.REGIST_NUM LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
+             AND (A.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%') OR C.REGIST_NUM LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%'))
         </if>
         <if test="HIDDEN_COMP_CD != null and HIDDEN_COMP_CD != ''">
              AND A.COMP_CD IN (${HIDDEN_COMP_CD})
