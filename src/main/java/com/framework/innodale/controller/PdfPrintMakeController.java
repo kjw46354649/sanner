@@ -327,8 +327,8 @@ public class PdfPrintMakeController {
                     PdfPCell backCell = createCell(String.valueOf(iCnt), 1, 1, smallNormalFont);
                     backCell.setBackgroundColor(BaseColor.WHITE);
                     drawingInfoTable.addCell(backCell);
-                    Font tempBoldFont = new Font(bf, 6.0f, Font.BOLD);
-                    Font tempNormalFont = new Font(bf, 6.0f, Font.NORMAL);
+                    Font tempBoldFont = new Font(bf, 6.5f, Font.BOLD);
+                    Font tempNormalFont = new Font(bf, 6.5f, Font.NORMAL);
                     PdfPCell tempCell = new PdfPCell();
                     tempCell.setPaddingTop(0);
                     tempCell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -339,7 +339,7 @@ public class PdfPrintMakeController {
                     if (iOrderListSize > iCnt) {
                         PdfPTable tempTable = new PdfPTable(2);
                         tempTable.setWidthPercentage(100);
-                        tempTable.setWidths(new int[]{ 70,50});
+                        tempTable.setWidths(new int[]{75,45});
 
                         String text = "접수 "+String.valueOf(controlOrderInfo.get("REGIST_NUM"));
                         PdfPCell inCell = createOrderCell(new Phrase(text,tempBoldFont),1,1);
@@ -364,7 +364,7 @@ public class PdfPrintMakeController {
                     } else {
                         PdfPTable tempTable = new PdfPTable(2);
                         tempTable.setWidthPercentage(100);
-                        tempTable.setWidths(new int[]{70,50});
+                        tempTable.setWidths(new int[]{75,45});
 
                         String text = "접수 "+String.valueOf(controlOrderInfo.get("REGIST_NUM"));
                         PdfPCell inCell = createOrderCell(new Phrase(text,tempBoldFont),1,1);
@@ -843,6 +843,7 @@ public class PdfPrintMakeController {
         cell.setFixedHeight(10f);
         cell.setBorder(0);
         cell.setBackgroundColor(BaseColor.WHITE);
+        cell.setUseAscender(true);
         return cell;
     }
 
