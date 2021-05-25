@@ -273,7 +273,7 @@ public class PdfPrintMakeController {
             table.addCell(createCell("작업\n번호", 1, 1, smallNormalFont));
             String controlNumPart = (String) controlInfo.get("CONTROL_NUM_PART");
             if (controlNumPart.length() <= 22) {
-                table.addCell(createCell((String) controlInfo.get("CONTROL_NUM_PART"), 1, 1, largeBoldFont));
+                table.addCell(createCell((String) controlInfo.get("CONTROL_NUM_PART"), 1, 1, mediumBoldFont));
             } else {
                 table.addCell(createCell((String) controlInfo.get("CONTROL_NUM_PART"), 1, 1, mediumBoldFont));
             }
