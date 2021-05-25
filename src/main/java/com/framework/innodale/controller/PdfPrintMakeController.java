@@ -652,7 +652,8 @@ public class PdfPrintMakeController {
             table.addCell(createCell((String) controlInfo.get("ITEM_NM"), 1, 1, mediumNormalFont));
             table.addCell(createCell("표면", 1, 1, smallBoldFont));
             table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 1, 1, mediumNormalFont));
-            table.addCell(createCell(controlInfo.get("CONTROL_NUM") != null && controlInfo.get("TOTAL_SHEET") != null ? controlInfo.get("CONTROL_NUM") + " / " + controlInfo.get("TOTAL_SHEET"): controlInfo.get("CONTROL_NUM") != null ? (String) controlInfo.get("CONTROL_NUM") : "" + controlInfo.get("TOTAL_SHEET") != null ? (String) controlInfo.get("TOTAL_SHEET") : "", 4, 1, smallNormalFont));
+//            table.addCell(createCell(controlInfo.get("CONTROL_NUM") != null && controlInfo.get("TOTAL_SHEET") != null ? controlInfo.get("CONTROL_NUM") + " / " + controlInfo.get("TOTAL_SHEET"): controlInfo.get("CONTROL_NUM") != null ? (String) controlInfo.get("CONTROL_NUM") : "" + controlInfo.get("TOTAL_SHEET") != null ? (String) controlInfo.get("TOTAL_SHEET") : "", 4, 1, smallNormalFont));
+            table.addCell(createCell(controlInfo.get("REGIST_NUM") != null && controlInfo.get("TOTAL_SHEET") != null ? controlInfo.get("REGIST_NUM") + " / " + controlInfo.get("TOTAL_SHEET"): controlInfo.get("REGIST_NUM") != null ? (String) controlInfo.get("REGIST_NUM") : "" + controlInfo.get("TOTAL_SHEET") != null ? (String) controlInfo.get("TOTAL_SHEET") : "", 4, 1, smallNormalFont));
             document.add(table);
             table.flushContent();
 

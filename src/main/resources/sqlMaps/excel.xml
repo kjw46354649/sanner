@@ -204,6 +204,7 @@
             WHERE A.SEQ <![CDATA[ <= ]]> 25
         ) E
         GROUP BY E.ROWNUM
+        ORDER BY E.ROWNUM, E.CONTROL_NUM, E.ORDER_NUM
     </select>
 
     <select id="selectControlEstimateDetailListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">

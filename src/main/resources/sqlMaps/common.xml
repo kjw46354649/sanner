@@ -214,6 +214,7 @@
             , jmes.SF_GET_SIDE_QTY(B.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1) AS OTHER_SIDE_QTY <!-- 대칭_대칭 -->
             , D.DRAWING_NUM
             , D.IMG_GFILE_SEQ
+            , D.REGIST_NUM
             , D.ORDER_NUM
             , D.MODULE_NM
             , jmes.SF_GET_DATE_F(D.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT
@@ -232,6 +233,7 @@
             AND A.DEL_YN = 'N'
             AND B.DEL_YN = 'N'
             AND A.BARCODE_NUM = #{BARCODE_NUM}
+        ORDER BY B.CONTROL_NUM, D.ORDER_NUM
     </select>
 
     <select id="selectBarcodePrintControlCheck" parameterType="java.util.HashMap" resultType="java.util.HashMap">

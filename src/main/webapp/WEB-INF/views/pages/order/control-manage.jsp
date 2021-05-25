@@ -2620,7 +2620,7 @@
             // 작업지시번호 수정 여부 확인
             let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
-            console.log('changes',changes)
+            // console.log('changes',changes)
             let parameters = {'url': '/validationCheckBeforeSaveFromControl', 'data': {data: JSON.stringify(changes)}};
             let flag = false;
 

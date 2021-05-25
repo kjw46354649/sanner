@@ -2496,11 +2496,13 @@
 
     <select id="selectBeforeInsertDuplicationRegistList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.REGIST_NUM
-        FROM TBL_CONTROL_PART_ORDER X
+        FROM TBL_CONTROL_PART_ORDER X, TBL_CONTROL Y
         WHERE X.REGIST_NUM IN
         <foreach collection="list" item="item"  index="index"  open="(" close=")" separator=",">
             #{item.REGIST_NUM}
         </foreach>
+            AND X.CONTROL_SEQ = Y.CONTROL_SEQ
+            AND Y.DEL_YN = 'N'
         GROUP BY X.REGIST_NUM
     </select>
 
@@ -3200,9 +3202,10 @@
     </select>
     <select id="selectCheckRegistNumDuplicate" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
         SELECT EXISTS (	SELECT *
-                           FROM TBL_CONTROL_PART_ORDER
-                           WHERE DEL_YN = 'N'
-                             AND REGIST_NUM} = #{REGIST_NUM}
+                       FROM TBL_CONTROL A, TBL_CONTROL_PART_ORDER B
+                       WHERE B.REGIST_NUM = #{REGIST_NUM}
+                           AND A.CONTROL_SEQ = B.CONTROL_SEQ
+                           AND A.DEL_YN = 'N'
                    )
     </select>
 
@@ -3298,6 +3301,7 @@
             , C.PROJECT_NM
             , C.MODULE_NM
             , C.DRAWING_NUM
+            , C.REGIST_NUM
             , C.ORDER_NUM
             , C.ITEM_NM
             , B.SIZE_TXT

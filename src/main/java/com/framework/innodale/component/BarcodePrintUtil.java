@@ -159,8 +159,8 @@ public class BarcodePrintUtil {
         bufWriter.write("^FO90,175^FB300,2,1,L,0^A1N^FD" + doNull((String)barcodeInfo.get("MODULE_NM"))+ "^FS");
         bufWriter.write("^FO399,185^A1N^FD납품일자^FS");
         bufWriter.write("^FO485,185^A1N^FD" + doNull((String)barcodeInfo.get("ORDER_DUE_DT"))+ "^FS");
-        bufWriter.write("^FO10,235^A1N^FD작업번호^FS");
-        bufWriter.write("^FO90,235^A1N^FD" + doNull((String)barcodeInfo.get("CONTROL_NUM"))+ "^FS");
+        bufWriter.write("^FO10,235^A1N^FD접수번호^FS");
+        bufWriter.write("^FO90,235^A1N^FD" + doNull((String)barcodeInfo.get("REGIST_NUM"))+ "^FS");
         bufWriter.write("^FO399,235^A1N^FD납 품 처^FS");
         bufWriter.write("^FO485,235^A1N^FD" + doNull((String)barcodeInfo.get("DELIVERY_COMP_NM"))+ "^FS");
 
