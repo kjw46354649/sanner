@@ -1541,6 +1541,9 @@
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
             AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
         </if>
+        <if test="ORDER_NUM != null and ORDER_NUM != ''">
+            AND C.ORDER_NUM LIKE CONCAT('%', #{ORDER_NUM}, '%')
+        </if>
         <if test="COMP_CD != null and COMP_CD != ''">
             AND A.COMP_CD = #{COMP_CD}
         </if>
@@ -1655,6 +1658,9 @@
             AND A.STATUS_DT BETWEEN STR_TO_DATE(CONCAT(#{CONTROL_CLOSE_HISTORY_START_DATE}, '/01'), '%Y/%m/%d %k:%i:%s') AND STR_TO_DATE(CONCAT(LAST_DAY(STR_TO_DATE(#{CONTROL_CLOSE_HISTORY_END_DATE}, '%Y/%m')), '23:59:59'), '%Y-%m-%d %k:%i:%s')
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
             AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
+        </if>
+        <if test="ORDER_NUM != null and ORDER_NUM != ''">
+            AND C.ORDER_NUM LIKE CONCAT('%', #{ORDER_NUM}, '%')
         </if>
         <if test="COMP_CD != null and COMP_CD != ''">
             AND A.COMP_CD = #{COMP_CD}
