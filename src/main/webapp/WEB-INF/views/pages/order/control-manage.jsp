@@ -3208,7 +3208,7 @@
                     '    <span>선택하신 ' + bCodePrintLen + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
                     '</h4>';
                 fnConfirm(null, message, function () {
-                    fnBarcodePrFint(function (data) {
+                    fnBarcodePrint(function (data) {
                         fnAlert(null, data.message);
                     }, barcodeList, '');
                 });
