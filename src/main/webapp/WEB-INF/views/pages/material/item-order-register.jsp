@@ -1945,6 +1945,7 @@
                 fnPostAjax(function (data, callFunctionParam) {
                     fnAlert(null, '취소 완료되었습니다.');
                     $('#item_order_register_popup').modal('hide');
+                    itemOrderRegisterRightGrid.pqGrid('refreshDataAndView');
                 }, parameter, '');
             });
         }

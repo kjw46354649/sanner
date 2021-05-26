@@ -731,7 +731,7 @@
 
     <delete id="deleteItemOrderRegisterOut2" parameterType="java.util.HashMap">
         DELETE FROM TBL_MY_MATERIAL_OUT
-        WHERE MATERIAL_ORDER_SEQ = #{MATERIAL_ORDER_SEQ}
+        WHERE MATERIAL_ORDER_SEQ IN (${MATERIAL_ORDER_SEQ})
     </delete>
 
     <insert id="insertItemOrderRegisterPopSave" parameterType="java.util.HashMap" >
@@ -1381,9 +1381,10 @@
                 AND C.OUT_STATUS = 'OUT001'
             INNER JOIN TBL_MATERIAL_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
             INNER JOIN TBL_CONTROL_PART E ON E.CONTROL_SEQ = D.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
-            INNER JOIN TBL_CONTROL F ON E.CONTROL_SEQ = F.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL F ON E.CONTROL_SEQ = F.CONTROL_SEQ AND F.DEL_YN = 'N'
         WHERE A.DEL_YN ='N'
-        GROUP BY A.WAREHOUSE_CD, A.MATERIAL_KIND, A.MATERIAL_DETAIL, A.SIZE_TXT
+        ORDER BY C.MATERIAL_ORDER_SEQ
+--         GROUP BY A.WAREHOUSE_CD, A.MATERIAL_KIND, A.MATERIAL_DETAIL, A.SIZE_TXT
     </select>
 
     <select id="selectInWarehouseManageOutList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
