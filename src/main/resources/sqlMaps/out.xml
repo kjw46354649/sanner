@@ -18,22 +18,28 @@
             END AS OUTSIDE_REQUEST_DT,
             IFNULL( CASE
                         WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.OUTSIDE_UNIT_AMT
-                                                                    FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                                                                    FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
                                                                     WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                                                        AND O.CONTROL_SEQ = N.CONTROL_SEQ
                                                                         AND M.OUTSIDE_YN = 'Y'
                                                                         AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
                                                                         AND N.CONTROL_STATUS = 'ORD003'
                                                                         AND N.DEL_YN = 'N'
+                                                                        AND O.WORK_TYPE = B.WORK_TYPE
+                                                                        AND N.ORDER_COMP_CD = A.ORDER_COMP_CD
                                                                     ORDER BY M.CONTROL_SEQ DESC
                                                                     LIMIT 1)
                         ELSE (  SELECT M.OUTSIDE_UNIT_AMT
-                                FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                                FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
                                 WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                    AND O.CONTROL_SEQ = N.CONTROL_SEQ
                                     AND M.OUTSIDE_YN = 'Y'
                                     AND M.DRAWING_NUM = B.DRAWING_NUM
                                     AND N.CONTROL_STATUS = 'ORD003'
                                     AND N.DEL_YN = 'N'
                                     AND N.CONTROL_SEQ != B.CONTROL_SEQ
+                                    AND O.WORK_TYPE = B.WORK_TYPE
+                                    AND N.ORDER_COMP_CD = A.ORDER_COMP_CD
                                 ORDER BY M.CONTROL_SEQ DESC
                                 LIMIT 1)
             END, SPACE(0)) AS PREV_OUTSIDE_UNIT_AMT, <!-- 외주 종전가 -->
@@ -438,22 +444,28 @@
             B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS OUTSIDE_TOTAL_AMT,
             IFNULL( CASE
                         WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.OUTSIDE_UNIT_AMT
-                                                                    FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                                                                    FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
                                                                     WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                                                        AND O.CONTROL_SEQ = N.CONTROL_SEQ
                                                                         AND M.OUTSIDE_YN = 'Y'
                                                                         AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
                                                                         AND N.CONTROL_STATUS = 'ORD003'
                                                                         AND N.DEL_YN = 'N'
+                                                                        AND O.WORK_TYPE = B.WORK_TYPE
+                                                                        AND N.ORDER_COMP_CD = A.ORDER_COMP_CD
                                                                     ORDER BY M.CONTROL_SEQ DESC
                                                                     LIMIT 1)
                         ELSE (  SELECT M.OUTSIDE_UNIT_AMT
-                                FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N
+                                FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
                                 WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                    AND O.CONTROL_SEQ = N.CONTROL_SEQ
                                     AND M.OUTSIDE_YN = 'Y'
                                     AND M.DRAWING_NUM = B.DRAWING_NUM
                                     AND N.CONTROL_STATUS = 'ORD003'
                                     AND N.DEL_YN = 'N'
                                     AND N.CONTROL_SEQ != B.CONTROL_SEQ
+                                    AND O.WORK_TYPE = B.WORK_TYPE
+                                    AND N.ORDER_COMP_CD = A.ORDER_COMP_CD
                                 ORDER BY M.CONTROL_SEQ DESC
                                 LIMIT 1)
             END, SPACE(0)) AS PREV_OUTSIDE_UNIT_AMT, <!-- 외주 종전가 -->
