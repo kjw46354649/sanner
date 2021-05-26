@@ -3319,7 +3319,7 @@
             , C.PROJECT_NM
             , C.MODULE_NM
             , C.DRAWING_NUM
-            , C.REGIST_NUM
+            , IFNULL(C.REGIST_NUM,SPACE(0)) AS REGIST_NUM
             , C.ORDER_NUM
             , C.ITEM_NM
             , B.SIZE_TXT
