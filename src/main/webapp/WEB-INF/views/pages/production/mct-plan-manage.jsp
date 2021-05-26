@@ -705,17 +705,20 @@
 
             switch (equipStatus) {
                 case '진행중':
-                    labelColorId = 'bg-green';
+                    // labelColorId = 'bg-green';
+                    labelColorId = 'bg-real-green';
                     break;
                 case '완료':
-                    labelColorId = 'bg-real-green';
+                    labelColorId = 'bg-lightgray';
+                    // labelColorId = 'bg-real-green';
                     // labelColorId = 'bg-skyblue';
                     break;
                 case '취소':
                     labelColorId = 'bg-yellow';
                     break;
                 case '임시중지':
-                    labelColorId = 'bg-orange';
+                    // labelColorId = 'bg-orange';
+                    labelColorId = 'bg-real-yellow';
                     break;
                 default:
                     labelColorId = 'bg-yellow';

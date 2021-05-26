@@ -159,7 +159,7 @@ public class PdfPrintMakeController {
             int imgHeight = 170;
             if(controlInfo.get("WORK_TYPE_NM").equals("파트")) {
                 imgWidth = 1100;
-                imgHeight = 100;
+                imgHeight = 150;
             }
             BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) controlInfo.get("BARCODE_NUM"),imgWidth, imgHeight);
             int width = bitMatrix.getWidth();
@@ -296,7 +296,7 @@ public class PdfPrintMakeController {
             cell1.addElement(table);
             cell1.setVerticalAlignment(Element.ALIGN_TOP);
             if(controlInfo.get("WORK_TYPE_NM").equals("파트")) {
-                cell1.setColspan(16);
+                cell1.setColspan(12);
             }else {
                 cell1.setColspan(11);
             }
@@ -306,100 +306,106 @@ public class PdfPrintMakeController {
 //            document.add(table);
 //            table.flushContent();
 
-            controlInfo.put("queryId", "orderMapper.selectControlCadOrderList");
-            List<Map<String, Object>> controlOrderList = innodaleService.getList(controlInfo);
-            if(controlOrderList != null && controlOrderList.size() > 0){
+            if(controlInfo.get("WORK_TYPE_NM").equals("파트")) {
+                String text = "PART " + controlInfo.get("PART_NUM");
+                PdfPCell cell2 = createCell(text,4,1,new Font(bf, 20f, Font.BOLD));
+                masterTable.addCell(cell2);
+            }else {
+                controlInfo.put("queryId", "orderMapper.selectControlCadOrderList");
+                List<Map<String, Object>> controlOrderList = innodaleService.getList(controlInfo);
+                if(controlOrderList != null && controlOrderList.size() > 0){
 
-                PdfPTable drawingInfoTable = new PdfPTable(2);
-                drawingInfoTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
-                drawingInfoTable.setWidthPercentage(100);
-                drawingInfoTable.setWidths(new int[] {5, 100});
+                    PdfPTable drawingInfoTable = new PdfPTable(2);
+                    drawingInfoTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
+                    drawingInfoTable.setWidthPercentage(100);
+                    drawingInfoTable.setWidths(new int[] {5, 100});
 
 //                drawingInfoTable.addCell(createDrawingInCell("발주번호", 1, 1, smallNormalFont, false, true, true, false));
 //                drawingInfoTable.addCell(createDrawingInCell("도면번호", 1, 1, smallNormalFont, false, true, true, true));
 //                drawingInfoTable.addCell(createDrawingInCell("수량", 1, 1, smallNormalFont, false, false, true, true));
 //                drawingInfoTable.addCell(createDrawingInCell("납기", 1, 1, verySmallFont, false, false, false, true));
 
-                int iOrderListSize = controlOrderList.size();
-                int iCnt = 1;
+                    int iOrderListSize = controlOrderList.size();
+                    int iCnt = 1;
 
-                for (Map<String, Object> controlOrderInfo : controlOrderList) {
-                    PdfPCell backCell = createCell(String.valueOf(iCnt), 1, 1, smallNormalFont);
-                    backCell.setBackgroundColor(BaseColor.WHITE);
-                    drawingInfoTable.addCell(backCell);
-                    Font tempBoldFont = new Font(bf, 6.5f, Font.BOLD);
-                    Font tempNormalFont = new Font(bf, 6.5f, Font.NORMAL);
-                    PdfPCell tempCell = new PdfPCell();
-                    tempCell.setPaddingTop(0);
-                    tempCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-                    tempCell.setBorderWidth(0.1f);
-                    tempCell.setPaddingBottom(0);
-                    tempCell.setBackgroundColor(BaseColor.WHITE);
+                    for (Map<String, Object> controlOrderInfo : controlOrderList) {
+                        PdfPCell backCell = createCell(String.valueOf(iCnt), 1, 1, smallNormalFont);
+                        backCell.setBackgroundColor(BaseColor.WHITE);
+                        drawingInfoTable.addCell(backCell);
+                        Font tempBoldFont = new Font(bf, 6.5f, Font.BOLD);
+                        Font tempNormalFont = new Font(bf, 6.5f, Font.NORMAL);
+                        PdfPCell tempCell = new PdfPCell();
+                        tempCell.setPaddingTop(0);
+                        tempCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                        tempCell.setBorderWidth(0.1f);
+                        tempCell.setPaddingBottom(0);
+                        tempCell.setBackgroundColor(BaseColor.WHITE);
 
-                    if (iOrderListSize > iCnt) {
-                        PdfPTable tempTable = new PdfPTable(2);
-                        tempTable.setWidthPercentage(100);
-                        tempTable.setWidths(new int[]{75,45});
+                        if (iOrderListSize > iCnt) {
+                            PdfPTable tempTable = new PdfPTable(2);
+                            tempTable.setWidthPercentage(100);
+                            tempTable.setWidths(new int[]{75,45});
 
-                        String text = "접수 "+String.valueOf(controlOrderInfo.get("REGIST_NUM"));
-                        PdfPCell inCell = createOrderCell(new Phrase(text,tempBoldFont),1,1);
-                        tempTable.addCell(inCell);
+                            String text = "접수 "+String.valueOf(controlOrderInfo.get("REGIST_NUM"));
+                            PdfPCell inCell = createOrderCell(new Phrase(text,tempBoldFont),1,1);
+                            tempTable.addCell(inCell);
 
-                        text = "발주 "+String.valueOf(controlOrderInfo.get("ORDER_NUM"));
-                        inCell = createOrderCell(new Phrase(text,tempNormalFont),1,1);
-                        inCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-                        tempTable.addCell(inCell);
+                            text = "발주 "+String.valueOf(controlOrderInfo.get("ORDER_NUM"));
+                            inCell = createOrderCell(new Phrase(text,tempNormalFont),1,1);
+                            inCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                            tempTable.addCell(inCell);
 
-                        text = "도번 "+String.valueOf(controlOrderInfo.get("DRAWING_NUM")) +"  수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
-                        inCell = createOrderCell(new Phrase(text,tempNormalFont),2,1);
-                        tempTable.addCell(inCell);
+                            text = "도번 "+String.valueOf(controlOrderInfo.get("DRAWING_NUM")) +"  수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
+                            inCell = createOrderCell(new Phrase(text,tempNormalFont),2,1);
+                            tempTable.addCell(inCell);
 
-                        tempCell.addElement(tempTable);
+                            tempCell.addElement(tempTable);
 
-                        drawingInfoTable.addCell(tempCell);
+                            drawingInfoTable.addCell(tempCell);
 //                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, smallNormalFont, true, true, true, false));
 //                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, smallNormalFont, true, true, true, true));
 //                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, smallNormalFont, true, false, true, true));
 //                        drawingInfoTable.addCell(createDrawingInCell((String) controlOrderInfo.get("ORDER_DUE_DT"), 1, 1, verySmallFont, true, false, true, true));
-                    } else {
-                        PdfPTable tempTable = new PdfPTable(2);
-                        tempTable.setWidthPercentage(100);
-                        tempTable.setWidths(new int[]{75,45});
+                        } else {
+                            PdfPTable tempTable = new PdfPTable(2);
+                            tempTable.setWidthPercentage(100);
+                            tempTable.setWidths(new int[]{75,45});
 
-                        String text = "접수 "+String.valueOf(controlOrderInfo.get("REGIST_NUM"));
-                        PdfPCell inCell = createOrderCell(new Phrase(text,tempBoldFont),1,1);
-                        tempTable.addCell(inCell);
+                            String text = "접수 "+String.valueOf(controlOrderInfo.get("REGIST_NUM"));
+                            PdfPCell inCell = createOrderCell(new Phrase(text,tempBoldFont),1,1);
+                            tempTable.addCell(inCell);
 
-                        text = "발주 "+String.valueOf(controlOrderInfo.get("ORDER_NUM"));
-                        inCell = createOrderCell(new Phrase(text,tempNormalFont),1,1);
-                        inCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-                        tempTable.addCell(inCell);
+                            text = "발주 "+String.valueOf(controlOrderInfo.get("ORDER_NUM"));
+                            inCell = createOrderCell(new Phrase(text,tempNormalFont),1,1);
+                            inCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+                            tempTable.addCell(inCell);
 
-                        text = "도번 "+String.valueOf(controlOrderInfo.get("DRAWING_NUM")) +"  수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
-                        inCell = createOrderCell(new Phrase(text,tempNormalFont),2,1);
-                        tempTable.addCell(inCell);
+                            text = "도번 "+String.valueOf(controlOrderInfo.get("DRAWING_NUM")) +"  수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
+                            inCell = createOrderCell(new Phrase(text,tempNormalFont),2,1);
+                            tempTable.addCell(inCell);
 
-                        tempCell.addElement(tempTable);
+                            tempCell.addElement(tempTable);
 
-                        drawingInfoTable.addCell(tempCell);
+                            drawingInfoTable.addCell(tempCell);
 //                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, smallNormalFont, true, true, false, false));
 //                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, smallNormalFont, true, true, false, true));
 //                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, smallNormalFont, true, false, false, true));
 //                        drawingInfoTable.addCell(createDrawingInCell((String) controlOrderInfo.get("ORDER_DUE_DT"), 1, 1, verySmallFont, true, false, false, true));
+                        }
+                        iCnt++;
                     }
-                    iCnt++;
-                }
 
-                PdfPCell cell2 = new PdfPCell();
-                cell2.setVerticalAlignment(Element.ALIGN_TOP);
-                cell2.addElement(drawingInfoTable);
-                cell2.setColspan(5);
-                cell2.setBorder(0);
-                cell2.setPadding(0);
-                masterTable.addCell(cell2);
+                    PdfPCell cell2 = new PdfPCell();
+                    cell2.setVerticalAlignment(Element.ALIGN_TOP);
+                    cell2.addElement(drawingInfoTable);
+                    cell2.setColspan(5);
+                    cell2.setBorder(0);
+                    cell2.setPadding(0);
+                    masterTable.addCell(cell2);
 //                document.add(drawingInfoTable);
 //                drawingInfoTable.flushContent();
 
+                }
             }
             document.add(masterTable);
 

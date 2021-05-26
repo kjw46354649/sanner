@@ -447,10 +447,11 @@ table.boardList .txtP{color: #7030a0;}
 
 /* background color*/
 .bg-skyblue { background-color: #87ceeb; }
-.bg-real-green { background-color: #afd78f; }
+.bg-real-green { background-color: #98ff46; }
 .bg-green { background-color: #ffd966; }
 .bg-lightgray { background-color: #d3d3d3; }
 .bg-yellow { background-color: #ffff00; }
+.bg-real-yellow { background-color: #ffd966; }
 .bg-lightyellow { background-color: #ffffe0; }
 .bg-orange { background-color: #ffc000; }
 .bg-lightcoral { background-color: #f08080; }
