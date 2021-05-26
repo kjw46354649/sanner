@@ -228,7 +228,8 @@
             },
             {title: '합계금액', minWidth: 65, maxWidth: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
-                title: 'P/H', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PRICE_PER_HOUR',
+                // title: 'P/H', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PRICE_PER_HOUR',
+                title: '계산원가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CP_TOTAL',
                 style: {'color': 'blue'}
             },
             {
