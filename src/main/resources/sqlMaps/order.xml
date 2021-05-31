@@ -1551,7 +1551,7 @@
         WHERE A.DEL_YN = 'N'
             AND A.CONTROL_STATUS = 'ORD003'
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
-            AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
+            AND (UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%') OR UPPER(C.REGIST_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%'))
         </if>
         <if test="ORDER_NUM != null and ORDER_NUM != ''">
             AND C.ORDER_NUM LIKE CONCAT('%', #{ORDER_NUM}, '%')
@@ -1675,7 +1675,7 @@
             AND A.CONTROL_STATUS = 'ORD004'
             AND A.STATUS_DT BETWEEN STR_TO_DATE(CONCAT(#{CONTROL_CLOSE_HISTORY_START_DATE}, '/01'), '%Y/%m/%d %k:%i:%s') AND STR_TO_DATE(CONCAT(LAST_DAY(STR_TO_DATE(#{CONTROL_CLOSE_HISTORY_END_DATE}, '%Y/%m')), '23:59:59'), '%Y-%m-%d %k:%i:%s')
         <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
-            AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
+            AND (UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%') OR UPPER(C.REGIST_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%'))
         </if>
         <if test="ORDER_NUM != null and ORDER_NUM != ''">
             AND C.ORDER_NUM LIKE CONCAT('%', #{ORDER_NUM}, '%')
@@ -2765,6 +2765,7 @@
             IFNULL(B.PART_UNIT_QTY, 0) AS PART_UNIT_QTY,
             (SELECT IFNULL(SUM(M.ORDER_QTY), 0) FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ) AS ORDER_QTY,
             CONCAT(IFNULL(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0), SPACE(0)) AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
+            IFNULL(A.SAME_SIDE_YN,'N') AS SAME_SIDE_YN, <!-- 대칭 여부 -->
             IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1), 0)AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
             IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1), 0) AS OTHER_SIDE_QTY, <!-- 대칭_대칭 -->
             IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'MM', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
@@ -2791,6 +2792,8 @@
                    ELSE IFNULL(C.ORDER_QTY,SPACE(0))
               END ORDER_QTY
             , IFNULL(SF_GET_DATE_F(C.ORDER_DUE_DT, 'MM', ''), SPACE(0)) AS ORDER_DUE_DT <!-- 납기 -->
+            , C.ORIGINAL_SIDE_QTY
+            , C.OTHER_SIDE_QTY
         FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C
         WHERE 1 = 1
             AND C.CONTROL_SEQ = B.CONTROL_SEQ

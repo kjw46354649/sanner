@@ -20,8 +20,8 @@
                 <ul>
                     <li>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">작업지시번호</label>
-                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="작업지시번호">
+                            <label class="label_100" for="CONTROL_NUM">접수/작업번호</label>
+                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="접수/작업번호">
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
