@@ -30,6 +30,7 @@ public class MachineServiceImpl implements MachineService {
     public void managerEquip(Model model, Map<String, Object> map) throws Exception {
 
        String EQUIP_SEQ = (String) map.get("EQUIP_SEQ");
+       String userId = (String)map.get("LOGIN_USER_ID");
 
        //1. insert update 유무 확인
        if("".equals(EQUIP_SEQ)){
@@ -63,6 +64,7 @@ public class MachineServiceImpl implements MachineService {
 
                if (addList.size() > 0) {
                    for (HashMap<String, Object> hashMap : addList) {
+                       hashMap.put("LOGIN_USER_ID", userId);
                        hashMap.put("queryId", "machine.insertMachineMasterHistory");
                        hashMap.put("EQUIP_SEQ", EQUIP_SEQ);
                        this.innodaleDao.insertGrid(hashMap);
@@ -70,6 +72,7 @@ public class MachineServiceImpl implements MachineService {
                }
                if (updateList.size() > 0) {
                    for (HashMap<String, Object> hashMap : updateList) {
+                       hashMap.put("LOGIN_USER_ID", userId);
                        hashMap.put("queryId", "machine.updateMachineMasterHistory");
                        hashMap.put("EQUIP_SEQ", EQUIP_SEQ);
                        this.innodaleDao.updateGrid(hashMap);
@@ -77,6 +80,7 @@ public class MachineServiceImpl implements MachineService {
                }
                if (deleteList.size() > 0) {
                    for (HashMap<String, Object> hashMap : deleteList) {
+                       hashMap.put("LOGIN_USER_ID", userId);
                        hashMap.put("queryId", "machine.deleteMachineMasterHistory");
                        hashMap.put("EQUIP_SEQ", EQUIP_SEQ);
                        this.innodaleDao.deleteGrid(hashMap);
