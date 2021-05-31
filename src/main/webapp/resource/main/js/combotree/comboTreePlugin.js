@@ -111,7 +111,7 @@
             itemHtml += '<span class="comboTreeParentPlus">&minus;</span>';
 
         if (this.options.isMultiple)
-            itemHtml += '<span data-id="' + sourceItem.id + '" class="comboTreeItemTitle"><input type="checkbox" id="check' + sourceItem.title + '"><label for="check' + sourceItem.title + '"/>' + sourceItem.title + '</span>';
+            itemHtml += '<span data-id="' + sourceItem.id + '" class="comboTreeItemTitle"><input type="checkbox" id="check' + sourceItem.id + '"><label for="check' + sourceItem.id + '"/>' + sourceItem.title + '</span>';
         else
             itemHtml += '<span data-id="' + sourceItem.id + '" class="comboTreeItemTitle">' + sourceItem.title + '</span>';
 
