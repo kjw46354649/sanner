@@ -2320,7 +2320,7 @@
                         if(Item.length > 1) {
                             addErrorList(Item2.pq_ri, 'REGIST_NUM');
                         }else {
-                            var regexpSpec = /[^A-Za-z0-9\-]/gi;
+                            var regexpSpec = /[^A-Za-z0-9\-\_]/gi;
                             if(regexpSpec.test(Item2.REGIST_NUM)) {
                                 addErrorList(Item2.pq_ri, 'REGIST_NUM');
                             }

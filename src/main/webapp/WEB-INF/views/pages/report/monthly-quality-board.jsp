@@ -212,7 +212,6 @@
             },
             rowSelect: function (event, ui) {
                 const rowData = ui.addList[0].rowData;
-
                 updateBotPostData(rowData);
                 botGridRefreshDataAndView();
             },
@@ -735,9 +734,8 @@
         };
 
         const updateBotPostData = function (rowData) {
-            fnResetFrom('monthly_quality_board_bot_form');
+            // fnResetFrom('monthly_quality_board_bot_form');
             let asdfasdfasdf = $('#asdfasdfasdf').val();
-
             switch (asdfasdfasdf) {
                 case 'ORDER':
                     $('#monthly_quality_board_bot_form > #ORDER_COMP_CD').val(rowData.ORDER_COMP_CD);
@@ -749,14 +747,6 @@
                     $('#monthly_quality_board_bot_form > #MATERIAL_TYPE').val(rowData.MATERIAL_TYPE);
                     break;
             }
-            bottom_combotree.clearSelection();
-            setTimeout(function() {
-                var grade = $("#INSPECT_GRADE").val();
-                $('span[data-id="'+grade+'"]').trigger('click')
-                // bottom_combotree.singleItemClick($('span[data-id="'+grade+'"]'));
-            },200);
-            // $('#monthly_quality_board_bot_form').find("#BOTTOM_INSPECT_GRADE").val($("#INSPECT_GRADE").val());
-            $("#monthly_quality_board_bot_form").find("#SEL_BOTT_INSPECT_GRADE").val("'"+$("#INSPECT_GRADE").val()+"'");
         };
 
         const botGridRefreshDataAndView = function () {
@@ -944,6 +934,14 @@
         /* event */
         $('#monthly_quality_board_top_form').on('change', function () {
             topFormData = fnFormToJsonArrayData('#monthly_quality_board_top_form');
+            bottom_combotree.clearSelection();
+            setTimeout(function() {
+                var grade = $("#INSPECT_GRADE").val();
+                $('span[data-id="'+grade+'"]').trigger('click')
+                // bottom_combotree.singleItemClick($('span[data-id="'+grade+'"]'));
+            },100);
+            // $('#monthly_quality_board_bot_form').find("#BOTTOM_INSPECT_GRADE").val($("#INSPECT_GRADE").val());
+            $("#monthly_quality_board_bot_form").find("#SEL_BOTT_INSPECT_GRADE").val("'"+$("#INSPECT_GRADE").val()+"'");
             const asdfasdfasdf = $('#asdfasdfasdf').val();
             updateTopPostData(asdfasdfasdf);
             updateTopColModel(asdfasdfasdf);
@@ -953,7 +951,6 @@
             changeGenerationProcess();
             changeCauses();
             changeAnnualQualityStatus();
-            bottom_combotree.clearSelection();
         });
 
         $('#monthly_quality_board_top_form').find('#RANGE_SEARCH').on('change', function () {
@@ -962,17 +959,20 @@
             $('#monthly_quality_board_end_month').prop('disabled', isNotChecked);
         });
         $('#monthly_quality_board_bot_form').find('#BOTTOM_INSPECT_GRADE').on('change', function () {
-            let SEL_INSPECT_GRADE_SELECT = $("#monthly_quality_board_bot_form").find("#BOTTOM_INSPECT_GRADE").val();
-            let arr = SEL_INSPECT_GRADE_SELECT.trim().split(",");
-            let rtn = "";
-            if(SEL_INSPECT_GRADE_SELECT != ""){
-                $.each(arr, function(row, key) {
-                    let id = $(".ComboTreeItemChlid").find("#check" + key.trim()).parent()[0].dataset.id
-                    rtn += " '" + id + "',";
-                });
-                rtn = rtn.substring(0,rtn.length-1);
-            }
-            $("#monthly_quality_board_bot_form").find("#SEL_BOTT_INSPECT_GRADE").val(rtn);
+            let SEL_INSPECT_GRADE_SELECT = $("#monthly_quality_board_bot_form").find("#HIDDEN_BOTTOM_INSPECT_GRADE").val();
+            // let arr = SEL_INSPECT_GRADE_SELECT.trim().split(",");
+            // let rtn = "";
+            // if(SEL_INSPECT_GRADE_SELECT != ""){
+            //     $.each(arr, function(row, key) {
+            //         console.log($(".ComboTreeItemChlid").find("#check" + key.trim()))
+            //         console.log($(".ComboTreeItemChlid").find("#check" + key.trim()).parent()[0])
+            //         console.log($(".ComboTreeItemChlid").find("#check" + key.trim()).parent()[0].dataset)
+            //         let id = $(".ComboTreeItemChlid").find("#check" + key.trim()).parent()[0].dataset.id
+            //         rtn += " '" + id + "',";
+            //     });
+            //     rtn = rtn.substring(0,rtn.length-1);
+            // }
+            $("#monthly_quality_board_bot_form").find("#SEL_BOTT_INSPECT_GRADE").val(SEL_INSPECT_GRADE_SELECT);
             $botGrid.pqGrid('option', 'dataModel.postData', function () {
                 const botFormData = fnFormToJsonArrayData('#monthly_quality_board_bot_form');
                 const mergeFormData = $.extend(true, {}, topFormData, botFormData);

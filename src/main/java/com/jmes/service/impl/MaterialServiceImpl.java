@@ -65,6 +65,7 @@ public class MaterialServiceImpl implements MaterialService {
 
        //1. 재고관리 마스터 정보 저장 I,U,D
        String jsonObject = (String) map.get("stockGrid");
+       String userId = (String)map.get("LOGIN_USER_ID");
        ObjectMapper objectMapper = new ObjectMapper();
        Map<String, Object> jsonMap = null;
 
@@ -98,6 +99,8 @@ public class MaterialServiceImpl implements MaterialService {
                    Map<String, Object> selMap2 = this.innodaleDao.getInfo(hashMap);
                    String INSIDE_STOCK_NUM = (String)selMap2.get("INSIDE_STOCK_NUM");
 
+                   hashMap.put("LOGIN_USER_ID", userId);
+
                    hashMap.put("INSIDE_STOCK_NUM", INSIDE_STOCK_NUM);
                    hashMap.put("queryId", "material.insertInsideStock");
                    this.innodaleDao.insertGrid(hashMap);
@@ -111,6 +114,8 @@ public class MaterialServiceImpl implements MaterialService {
            }
            if (updateList.size() > 0) {
                for (HashMap<String, Object> hashMap : updateList) {
+                   hashMap.put("LOGIN_USER_ID", userId);
+
                    hashMap.put("queryId", "material.updateInsideStock");
                    this.innodaleDao.updateGrid(hashMap);
 

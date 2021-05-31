@@ -153,7 +153,7 @@ public class PdfPrintMakeController {
 
             table.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.setWidthPercentage(100);
-            table.setWidths(new int[]{ 4, 20, 12, 6, 7, 7, 3, 3,6});
+            table.setWidths(new int[]{ 4, 17, 12, 6, 7, 7, 4, 4,6});
 
             int imgWidth = 1100;
             int imgHeight = 170;
@@ -191,9 +191,10 @@ public class PdfPrintMakeController {
             table.addCell(createCell((String) controlInfo.get("MAIN_INSPECTION_NM"), 1, 1, mediumNormalFont)); // 주요검사
 
             Phrase phrase = new Phrase();
+            String sameSideYn = String.valueOf(controlInfo.get("SAME_SIDE_YN"));
             String orgSide = String.valueOf(controlInfo.get("ORIGINAL_SIDE_QTY"));
             String otherSide = String.valueOf(controlInfo.get("OTHER_SIDE_QTY"));
-            if(Integer.parseInt(orgSide) > 0 && Integer.parseInt(otherSide) > 0) {
+            if(sameSideYn.equals("Y")) {
                 phrase.add(
                         new Chunk("대"+ "\n", smallNormalFont)
                 );
@@ -210,9 +211,10 @@ public class PdfPrintMakeController {
 
                 table.addCell(cell);
                 Phrase phrase2 = new Phrase();
-                if(Integer.parseInt(orgSide) > 0 && Integer.parseInt(otherSide) > 0) {
+//                if(Integer.parseInt(orgSide) > 0 && Integer.parseInt(otherSide) > 0) {
+                if(sameSideYn.equals("Y")) {
                     phrase2.add(
-                            new Chunk(""+controlInfo.get("ORIGINAL_SIDE_QTY") + '/' + controlInfo.get("OTHER_SIDE_QTY")+ "\n", smallNormalFont)
+                            new Chunk("("+controlInfo.get("ORIGINAL_SIDE_QTY") + ',' + controlInfo.get("OTHER_SIDE_QTY")+ ")\n", smallNormalFont)
                     );
                     phrase2.add(new VerticalPositionMark());
                 }
@@ -229,9 +231,10 @@ public class PdfPrintMakeController {
                 table.addCell(cell);
 
                 Phrase phrase2 = new Phrase();
-                if(Integer.parseInt(orgSide) > 0 && Integer.parseInt(otherSide) > 0) {
+                if(sameSideYn.equals("Y")) {
+//                if(Integer.parseInt(orgSide) > 0 && Integer.parseInt(otherSide) > 0) {
                     phrase2.add(
-                            new Chunk(""+controlInfo.get("ORIGINAL_SIDE_QTY") + '/' + controlInfo.get("OTHER_SIDE_QTY")+ "\n", smallNormalFont)
+                            new Chunk("("+controlInfo.get("ORIGINAL_SIDE_QTY") + ',' + controlInfo.get("OTHER_SIDE_QTY")+ ")\n", smallNormalFont)
                     );
                     phrase2.add(new VerticalPositionMark());
                 }
@@ -254,9 +257,10 @@ public class PdfPrintMakeController {
                 table.addCell(cell);
 
                 Phrase phrase2 = new Phrase();
-                if(Integer.parseInt(orgSide) > 0 && Integer.parseInt(otherSide) > 0) {
+                if(sameSideYn.equals("Y")) {
+//                if(Integer.parseInt(orgSide) > 0 && Integer.parseInt(otherSide) > 0) {
                     phrase2.add(
-                            new Chunk(""+controlInfo.get("ORIGINAL_SIDE_QTY") + '/' + controlInfo.get("OTHER_SIDE_QTY")+ "\n", smallNormalFont)
+                            new Chunk("("+controlInfo.get("ORIGINAL_SIDE_QTY") + ',' + controlInfo.get("OTHER_SIDE_QTY")+ ")\n", smallNormalFont)
                     );
                     phrase2.add(new VerticalPositionMark());
                 }
@@ -356,6 +360,9 @@ public class PdfPrintMakeController {
                             tempTable.addCell(inCell);
 
                             text = "도번 "+String.valueOf(controlOrderInfo.get("DRAWING_NUM")) +"  수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
+                            if(sameSideYn.equals("Y")) {
+                                text += " (" + controlOrderInfo.get("ORIGINAL_SIDE_QTY") + "," + controlOrderInfo.get("OTHER_SIDE_QTY") + ")";
+                            }
                             inCell = createOrderCell(new Phrase(text,tempNormalFont),2,1);
                             tempTable.addCell(inCell);
 
@@ -381,6 +388,9 @@ public class PdfPrintMakeController {
                             tempTable.addCell(inCell);
 
                             text = "도번 "+String.valueOf(controlOrderInfo.get("DRAWING_NUM")) +"  수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
+                            if(sameSideYn.equals("Y")) {
+                                text += " (" + controlOrderInfo.get("ORIGINAL_SIDE_QTY") + "," + controlOrderInfo.get("OTHER_SIDE_QTY") + ")";
+                            }
                             inCell = createOrderCell(new Phrase(text,tempNormalFont),2,1);
                             tempTable.addCell(inCell);
 
@@ -603,7 +613,7 @@ public class PdfPrintMakeController {
             PdfPTable table = new PdfPTable(11);
             table.init();
             table.setWidthPercentage(100);
-            table.setWidths(new float[]{2.5f, 3.5f, 3.5f, 1.0f, 5.5f, 1.0f, 3.0f, 1.0f, 1.0f, 2.0f, 2.0f});
+            table.setWidths(new float[]{2.5f, 3.0f, 3.0f, 1.0f, 5.5f, 1.0f, 3.0f, 1.0f, 1.0f, 2.5f, 2.5f});
             // 바코드 생성
             BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) controlInfo.get("ORDER_BARCODE_NUM"), 90, 20);
             int width = bitMatrix.getWidth();
@@ -650,16 +660,19 @@ public class PdfPrintMakeController {
             if (controlInfo.get("SAME_SIDE_YN").equals("Y")) {
                 table.addCell(createCellPartUnit((String) controlInfo.get("SIDE_QTY"), 2, 1, mediumNormalFont));
             }
-            table.addCell(createCell(controlInfo.get("INNER_DUE_DT") != null ? "가 " + controlInfo.get("INNER_DUE_DT") : "", 1, 1, mediumNormalFont));
-            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? "발 " + controlInfo.get("ORDER_DUE_DT") : "", 1, 1, mediumNormalFont));
+            table.addCell(createCell(controlInfo.get("REGIST_NUM") != null ? (String) controlInfo.get("REGIST_NUM") : "", 2, 1, mediumNormalFont));
+//            table.addCell(createCell(controlInfo.get("INNER_DUE_DT") != null ? "가 " + controlInfo.get("INNER_DUE_DT") : "", 1, 1, mediumNormalFont));
+//            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? "발 " + controlInfo.get("ORDER_DUE_DT") : "", 1, 1, mediumNormalFont));
             // 3rd line
             table.addCell(createCell((String) controlInfo.get("MODULE_NM"), 2, 1, mediumNormalFont));
             table.addCell(createCell("품명", 1, 1, smallBoldFont));
             table.addCell(createCell((String) controlInfo.get("ITEM_NM"), 1, 1, mediumNormalFont));
             table.addCell(createCell("표면", 1, 1, smallBoldFont));
             table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 1, 1, mediumNormalFont));
-//            table.addCell(createCell(controlInfo.get("CONTROL_NUM") != null && controlInfo.get("TOTAL_SHEET") != null ? controlInfo.get("CONTROL_NUM") + " / " + controlInfo.get("TOTAL_SHEET"): controlInfo.get("CONTROL_NUM") != null ? (String) controlInfo.get("CONTROL_NUM") : "" + controlInfo.get("TOTAL_SHEET") != null ? (String) controlInfo.get("TOTAL_SHEET") : "", 4, 1, smallNormalFont));
-            table.addCell(createCell(controlInfo.get("REGIST_NUM") != null && controlInfo.get("TOTAL_SHEET") != null ? controlInfo.get("REGIST_NUM") + " / " + controlInfo.get("TOTAL_SHEET"): controlInfo.get("REGIST_NUM") != null ? (String) controlInfo.get("REGIST_NUM") : "" + controlInfo.get("TOTAL_SHEET") != null ? String.valueOf(controlInfo.get("TOTAL_SHEET")) : "", 4, 1, smallNormalFont));
+//            table.addCell(createCell(controlInfo.get("REGIST_NUM") != null && controlInfo.get("TOTAL_SHEET") != null ? controlInfo.get("REGIST_NUM") + " / " + controlInfo.get("TOTAL_SHEET"): controlInfo.get("REGIST_NUM") != null ? (String) controlInfo.get("REGIST_NUM") : "" + controlInfo.get("TOTAL_SHEET") != null ? String.valueOf(controlInfo.get("TOTAL_SHEET")) : "", 4, 1, smallNormalFont));
+            Font tempNormalFont = new Font(bf, 8.5f, Font.NORMAL);
+            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? "납기" + controlInfo.get("ORDER_DUE_DT") : "", 2, 1, tempNormalFont));
+            table.addCell(createCell(controlInfo.get("CONTROL_NUM") != null ? "작업번호 " + controlInfo.get("CONTROL_NUM") : "", 2, 1, tempNormalFont));
             document.add(table);
             table.flushContent();
 

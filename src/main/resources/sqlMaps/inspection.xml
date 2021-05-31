@@ -635,7 +635,7 @@
                         AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
                     <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
-                        AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
+                        AND (UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%') OR UPPER(C.REGIST_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%'))
                     </if>
                     <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
                         AND UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
@@ -1413,7 +1413,7 @@
                         AND B.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
                     <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
-                        AND UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
+                        AND (UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%') OR UPPER(D.REGIST_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%'))
                     </if>
                     <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
                         AND UPPER(C.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
@@ -1458,7 +1458,7 @@
                         AND B.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
                     <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
-                        AND UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
+                        AND (UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%') OR UPPER(D.REGIST_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%'))
                     </if>
                     <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
                         AND UPPER(C.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
@@ -1500,7 +1500,7 @@
                         AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
                     <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
-                        AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
+                        AND (UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%') OR UPPER(C.REGIST_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%'))
                     </if>
                     <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
                         AND UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')

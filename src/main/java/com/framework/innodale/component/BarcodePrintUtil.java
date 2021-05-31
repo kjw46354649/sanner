@@ -137,7 +137,7 @@ public class BarcodePrintUtil {
         bufWriter.write("^FO4,4^GB711,390,2^FS");
         bufWriter.write("^FO10,10^BY2^BCN,45,N,N,N^FD" + doNull((String)barcodeInfo.get("BARCODE_NUM"))+ "^FS");
         bufWriter.write("^FO350,4^GB45,57,1^FS");
-        bufWriter.write("^CFJ,23");
+        bufWriter.write("^CFJ,23"); // 폰트 사이즈 조절
         bufWriter.write("^FO365,12^A1N^FD" + barcodeInfo.get("PACKING_NUM")+ "^FS");
         bufWriter.write("^FO365,37^A1N^FD" + barcodeInfo.get("PACKING_CNT")+ "^FS");
         bufWriter.write("^FO470,25^A1N^FD" + doNull((String)barcodeInfo.get("COMP_NM"))+ "^FS");
@@ -146,53 +146,93 @@ public class BarcodePrintUtil {
         bufWriter.write("^FO4,166^GB710,55,1^FS");
         bufWriter.write("^FO4,266^GB710,55,1^FS");
         bufWriter.write("^FO87,60^GB1,332,1^FS");
-        bufWriter.write("^FO394,60^GB85,261,1^FS");
-        bufWriter.write("^FO10,80^A1N^FD품명^FS");
-        bufWriter.write("^FO90,70^FB300,2,1,L,0^A1N^FD" + doNull((String)barcodeInfo.get("ITEM_NM"))+ "^FS");
-        bufWriter.write("^FO399,80^A1N^FD발주업체^FS");
-        bufWriter.write("^FO485,80^A1N^FD" + doNull((String)barcodeInfo.get("ORDER_COMP_NM"))+ "^FS");
+        bufWriter.write("^FO394,60^GB85,375,1^FS");
+        bufWriter.write("^FO10,80^A1N^FD발주업체^FS");
+        bufWriter.write("^FO90,70^FB300,2,1,L,0^A1N^FD" + doNull((String)barcodeInfo.get("ORDER_COMP_NM"))+ "^FS");
+        bufWriter.write("^FO399,80^A1N^FD발주번호^FS");
+        bufWriter.write("^FO485,80^A1N^FD" + doNull((String)barcodeInfo.get("ORDER_NUM"))+ "^FS");
         bufWriter.write("^FO10,130^A1N^FD도면번호^FS");
         bufWriter.write("^FO90,130^A1N^FD" + doNull((String)barcodeInfo.get("DRAWING_NUM"))+ "^FS");
-        bufWriter.write("^FO399,130^A1N^FD발주번호^FS");
-        bufWriter.write("^FO485,130^A1N^FD" + doNull((String)barcodeInfo.get("ORDER_NUM"))+ "^FS");
-        bufWriter.write("^FO10,185^A1N^FD모듈^FS");
-        bufWriter.write("^FO90,175^FB300,2,1,L,0^A1N^FD" + doNull((String)barcodeInfo.get("MODULE_NM"))+ "^FS");
+        bufWriter.write("^FO399,130^A1N^FD품명^FS");
+        bufWriter.write("^FO485,130^A1N^FD" + doNull((String)barcodeInfo.get("ITEM_NM"))+ "^FS");
+        bufWriter.write("^CFJ,18");
+        bufWriter.write("^FO10,185^A1N^FD규격/수량^FS");
+        bufWriter.write("^CFJ,20");
+        bufWriter.write("^FO90,185^FB300,2,1,L,0^A1N^FD" + doNull((String)barcodeInfo.get("SIZE_QTY_INFO"))+ "^FS");
         bufWriter.write("^FO399,185^A1N^FD납품일자^FS");
-        bufWriter.write("^FO485,185^A1N^FD" + doNull((String)barcodeInfo.get("ORDER_DUE_DT"))+ "^FS");
-        bufWriter.write("^FO10,235^A1N^FD접수번호^FS");
-        bufWriter.write("^FO90,235^A1N^FD" + doNull((String)barcodeInfo.get("REGIST_NUM"))+ "^FS");
-        bufWriter.write("^FO399,235^A1N^FD납 품 처^FS");
-        bufWriter.write("^FO485,235^A1N^FD" + doNull((String)barcodeInfo.get("DELIVERY_COMP_NM"))+ "^FS");
-
-        bufWriter.write("^FO10,285^A1N^FD프로젝트^FS");
-
+        bufWriter.write("^F0485,185^A1N^FD" + doNull((String)barcodeInfo.get("ORDER_DUE_DT"))+ "^FS");
+        bufWriter.write("^FO10,235^A1N^FD프로젝트^FS");
         String projectNm = (String)barcodeInfo.get("PROJECT_NM");
         String projectNm_line1 = doNull(getNoteArr(projectNm,1, 37));
         if(!"".equals(projectNm_line1)){
-            bufWriter.write("^FO90,270^A1N^FD"+projectNm_line1+"^FS");
+            bufWriter.write("^FO90,225^A1N^FD"+projectNm_line1+"^FS");
         }
         String projectNm_line2 = doNull(getNoteArr(projectNm,2, 37));
         if(!"".equals(projectNm_line2)){
-            bufWriter.write("^FO90,295^A1N^FD"+projectNm_line2+"^FS");
+            bufWriter.write("^FO90,250^A1N^FD"+projectNm_line2+"^FS");
         }
-        bufWriter.write("^CFJ,18");
-        bufWriter.write("^FO397,285^A1N^FD규격/수량^FS");
-        bufWriter.write("^CFJ,20");
-        bufWriter.write("^FO485,285^A1N^FD" + doNull((String)barcodeInfo.get("SIZE_QTY_INFO"))+ "^FS");
-        bufWriter.write("^FO10,345^A1N^FDRemark^FS");
+
+        bufWriter.write("^FO399,235^A1N^FD납 품 처^FS");
+        bufWriter.write("^FO485,235^A1N^FD" + doNull((String)barcodeInfo.get("DELIVERY_COMP_NM"))+ "^FS");
+
+        bufWriter.write("^FO10,285^A1N^FD작업번호^FS");
+        bufWriter.write("^FO90,285^A1N^FD" + doNull((String)barcodeInfo.get("CONTROL_NUM"))+ "^FS");
+
+        bufWriter.write("^FO397,285^A1N^FD모듈^FS");
+        bufWriter.write("^FO485,285^FB300,2,1,L,0^A1N^FD" + doNull((String)barcodeInfo.get("MODULE_NM"))+ "^FS");
+
+//
+//        bufWriter.write("^FO10,80^A1N^FD품명^FS");
+//        bufWriter.write("^FO90,70^FB300,2,1,L,0^A1N^FD" + doNull((String)barcodeInfo.get("ITEM_NM"))+ "^FS");
+//        bufWriter.write("^FO399,80^A1N^FD발주업체^FS");
+//        bufWriter.write("^FO485,80^A1N^FD" + doNull((String)barcodeInfo.get("ORDER_COMP_NM"))+ "^FS");
+//        bufWriter.write("^FO10,130^A1N^FD도면번호^FS");
+//        bufWriter.write("^FO90,130^A1N^FD" + doNull((String)barcodeInfo.get("DRAWING_NUM"))+ "^FS");
+//        bufWriter.write("^FO399,130^A1N^FD발주번호^FS");
+//        bufWriter.write("^FO485,130^A1N^FD" + doNull((String)barcodeInfo.get("ORDER_NUM"))+ "^FS");
+//
+//        bufWriter.write("^FO399,185^A1N^FD모듈^FS");
+//        bufWriter.write("^FO485,175^FB300,2,1,L,0^A1N^FD" + doNull((String)barcodeInfo.get("MODULE_NM"))+ "^FS");
+//        bufWriter.write("^FO10,185^A1N^FD납품일자^FS");
+//        bufWriter.write("^FO90,185^A1N^FD" + doNull((String)barcodeInfo.get("ORDER_DUE_DT"))+ "^FS");
+//        bufWriter.write("^FO10,235^A1N^FD작업번호^FS");
+//        bufWriter.write("^FO90,235^A1N^FD" + doNull((String)barcodeInfo.get("CONTROL_NUM"))+ "^FS");
+//        bufWriter.write("^FO399,235^A1N^FD납 품 처^FS");
+//        bufWriter.write("^FO485,235^A1N^FD" + doNull((String)barcodeInfo.get("DELIVERY_COMP_NM"))+ "^FS");
+//
+//        bufWriter.write("^FO10,285^A1N^FD프로젝트^FS");
+//
+//        String projectNm = (String)barcodeInfo.get("PROJECT_NM");
+//        String projectNm_line1 = doNull(getNoteArr(projectNm,1, 37));
+//        if(!"".equals(projectNm_line1)){
+//            bufWriter.write("^FO90,270^A1N^FD"+projectNm_line1+"^FS");
+//        }
+//        String projectNm_line2 = doNull(getNoteArr(projectNm,2, 37));
+//        if(!"".equals(projectNm_line2)){
+//            bufWriter.write("^FO90,295^A1N^FD"+projectNm_line2+"^FS");
+//        }
+//        bufWriter.write("^CFJ,18");
+//        bufWriter.write("^FO397,285^A1N^FD규격/수량^FS");
+//        bufWriter.write("^CFJ,20");
+//        bufWriter.write("^FO485,285^A1N^FD" + doNull((String)barcodeInfo.get("SIZE_QTY_INFO"))+ "^FS");
+
+        bufWriter.write("^FO10,345^A1N^FD접수번호^FS");
+        bufWriter.write("^FO90,345^A1N^FD" + doNull((String)barcodeInfo.get("REGIST_NUM"))+ "^FS");
+        bufWriter.write("^FO399,345^A1N^FDRemark^FS");
 
         String remark = (String)barcodeInfo.get("LABEL_NOTE");
-        String line1 = doNull(getNoteArr(remark,1, 68));
+//        String line1 = doNull(getNoteArr(remark,1, 68));
+        String line1 = doNull(getNoteArr(remark,1, 34));
         if(!"".equals(line1)){
-            bufWriter.write("^FO90,325^A1N^FD"+line1+"^FS");
+            bufWriter.write("^FO485,325^A1N^FD"+line1+"^FS");
         }
-        String line2 = doNull(getNoteArr(remark,2, 68));
+        String line2 = doNull(getNoteArr(remark,2, 34));
         if(!"".equals(line2)){
-            bufWriter.write("^FO90,350^A1N^FD"+line2+"^FS");
+            bufWriter.write("^FO485,350^A1N^FD"+line2+"^FS");
         }
-        String line3 = doNull(getNoteArr(remark,3, 68));
+        String line3 = doNull(getNoteArr(remark,3, 34));
         if(!"".equals(line3)){
-            bufWriter.write("^FO90,375^A1N^FD"+line3+"^FS");
+            bufWriter.write("^FO485,375^A1N^FD"+line3+"^FS");
         }
 
 

@@ -182,6 +182,7 @@
                         AND M.HIGH_TYPE = N.HIGH_CD
                         AND M.COMP_TYPE = N.CODE_CD
                         AND N.REF_CD = 'VTP010')
+        ORDER BY COMP_NM
     </select>
 
     <select id="getMaterialTypeForSelectBox" parameterType="java.util.HashMap" resultType="java.util.HashMap">
