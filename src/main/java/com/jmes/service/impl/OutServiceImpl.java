@@ -24,6 +24,7 @@ public class OutServiceImpl implements OutService {
     @Override
     public void removeOutsideOrder(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<HashMap<String, Object>> jsonArray = null;
 
@@ -31,6 +32,8 @@ public class OutServiceImpl implements OutService {
             jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
 
         for (HashMap<String, Object> hashMap : jsonArray) {
+            hashMap.put("LOGIN_USER_ID",userId);
+
             hashMap.put("queryId", "outMapper.removeOutside");
             this.innodaleDao.update(hashMap);
             hashMap.put("queryId", "outMapper.updateOutsideRequestDetailDelete");
@@ -43,6 +46,7 @@ public class OutServiceImpl implements OutService {
     @Override
     public void createOutsideClose(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
         ArrayList<HashMap<String, Object>> listData = null;
@@ -59,6 +63,8 @@ public class OutServiceImpl implements OutService {
 
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
+                hashMap.put("LOGIN_USER_ID",userId);
+
                 hashMap.put("OUTSIDE_STATUS", "OST004");
                 hashMap.put("queryId", "orderMapper.updateControlPart");
                 this.innodaleDao.update(hashMap);
@@ -192,6 +198,7 @@ public class OutServiceImpl implements OutService {
     @Override
     public void removeOutsideClose(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
         ArrayList<HashMap<String, Object>> listData = null;
@@ -208,6 +215,7 @@ public class OutServiceImpl implements OutService {
 
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
+                hashMap.put("LOGIN_USER_ID", userId);
                 hashMap.put("OUTSIDE_STATUS", null);
                 hashMap.put("queryId", "orderMapper.updateControlPart");
                 this.innodaleDao.update(hashMap);
