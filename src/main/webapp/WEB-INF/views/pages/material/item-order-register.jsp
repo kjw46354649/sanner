@@ -1749,50 +1749,104 @@
 
             $("#btnItemOrderRegisterPopSubmit").attr("disabled", true);
         });
-
-        $("#btnItemOrderRegisterPopSave").on('click', _.debounce(function () {
-            $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListNum");
-
-            let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num_temp").val();
-            let ORDER_USER_ID = $("#item_order_register_popup").find("#ORDER_USER_ID").val();
+        const checkMaterialOrderStatus = function (callback) {
             let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
-            for (let tempI = 0, totalRecords = data.length; tempI < totalRecords; tempI++) {
-                itemOrderRegisterPopTopGrid.pqGrid("updateRow", {
-                    'rowIndx': tempI,
-                    row: {'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM, 'ORDER_USER_ID': ORDER_USER_ID}
-                });
-            }
 
-            let gridInstance = itemOrderRegisterPopTopGrid.pqGrid('getInstance').grid;
-            if (gridInstance.isDirty()) {
-                let parameters = {'url': '/itemOrderRegisterPopSave', 'data': {data: JSON.stringify(data)}};
-                fnPostAjaxAsync(function (data) {
-                    if (data.flag === true) {
-                        fnAlert(null, '<srping:message key="error.common"/>');
-                        return false;
+            let controlSeqStr = '';
+            let controlDetailSeqStr = '';
+            for (let i = 0, selectedRowCount = data.length; i < selectedRowCount; i++) {
+                let rowData = data[i];
+                controlSeqStr += rowData.CONTROL_SEQ;
+                controlDetailSeqStr += rowData.CONTROL_DETAIL_SEQ;
+
+                if (i < selectedRowCount - 1) {
+                    controlSeqStr += ',';
+                    controlDetailSeqStr += ',';
+                }
+            }
+            let parameters = {
+                'url': '/json-list',
+                'data': {"CONTROL_SEQ":controlSeqStr,"CONTROL_DETAIL_SEQ":controlDetailSeqStr,"queryId":"material.selectOrderStatusBeforeMaterialOrder"}
+            };
+            fnPostAjaxAsync(function (data, callFunctionParam) {
+                if(data.list.length > 0) {
+                    var flag = false;
+                    $.each(data.list, function(idx,Item) {
+                        if(Item.OUTSIDE_YN == 'Y') { // 외주가공건인 경우.
+                            flag = true;
+                            return;
+                        }else if(Item.CONTROL_STATUS != 'ORD001' ) { // 주문상태가 확정이 아닌경우
+                            flag = true;
+                            return;
+                        }else if(Item.PART_STATUS == 'PRO003') { //가공확정 취소인 경우
+                            flag = true;
+                            return;
+                        }
+                    })
+
+                    if(flag) {
+                        fnAlert('','소재주문이 불가능한 주문 건이 있습니다. 확인해주세요');
+                        // $("#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #OUTSIDE_ORDER_SEARCH").trigger('click');
+                    }
+                    callback(flag);
+                    // return flag;
+                }else {
+                    fnAlert('',"작업지시번호를 확인해주세요.");
+                    callback(true);
+                    // return true;
+                }
+            }, parameters, '');
+        }
+        $("#btnItemOrderRegisterPopSave").on('click', _.debounce(function () {
+            checkMaterialOrderStatus(function(flag) {
+                if(!flag) {
+                    $("#item_order_register_popup_form #queryId").val("selectItemOrderRegisterPopListNum");
+                    let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num_temp").val();
+                    let ORDER_USER_ID = $("#item_order_register_popup").find("#ORDER_USER_ID").val();
+                    let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
+                    for (let tempI = 0, totalRecords = data.length; tempI < totalRecords; tempI++) {
+                        itemOrderRegisterPopTopGrid.pqGrid("updateRow", {
+                            'rowIndx': tempI,
+                            row: {'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM, 'ORDER_USER_ID': ORDER_USER_ID}
+                        });
                     }
 
-                    $("#item_order_register_material_order_num").val(MATERIAL_ORDER_NUM);
-                    $('#item_order_register_popup_form #MATERIAL_ORDER_NUM').val(MATERIAL_ORDER_NUM);
-                    itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.postData', function () {
-                        return (fnFormToJsonArrayData('#item_order_register_popup_form'));
-                    });
-                    itemOrderRegisterPopTopGrid.pqGrid('refreshDataAndView');
+                    let gridInstance = itemOrderRegisterPopTopGrid.pqGrid('getInstance').grid;
+                    if (gridInstance.isDirty()) {
+                        let parameters = {'url': '/itemOrderRegisterPopSave', 'data': {data: JSON.stringify(data)}};
+                        fnPostAjaxAsync(function (data) {
+                            if (data.flag === true) {
+                                fnAlert(null, '<srping:message key="error.common"/>');
+                                return false;
+                            }
 
-                    btnDisabled();
-                    //Popup table 생성
-                    makeInnerTable();
-                }, parameters, '');
-            }
+                            $("#item_order_register_material_order_num").val(MATERIAL_ORDER_NUM);
+                            $('#item_order_register_popup_form #MATERIAL_ORDER_NUM').val(MATERIAL_ORDER_NUM);
+                            itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.postData', function () {
+                                return (fnFormToJsonArrayData('#item_order_register_popup_form'));
+                            });
+                            itemOrderRegisterPopTopGrid.pqGrid('refreshDataAndView');
+
+                            btnDisabled();
+                            //Popup table 생성
+                            makeInnerTable();
+                        }, parameters, '');
+                    }
+                }
+            });
         }, 1000));
 
         $("#btnItemOrderRegisterPopSubmit").on('click', function(){
-            if (materialOrderEmptyRowCheck()) {
-                fnAlert(null, '소재주문 제출시 빈ROW 가 있으면 메세지를...');
-                return false;
-            }
-            //메일 여부
-            itemOrderRegisterPopMail();
+            checkMaterialOrderStatus(function(flag) {
+                if(!flag) {
+                    if (materialOrderEmptyRowCheck()) {
+                        fnAlert(null, '소재주문 제출시 빈ROW 가 있으면 메세지를...');
+                        return false;
+                    }
+                    //메일 여부
+                    itemOrderRegisterPopMail();
+                }
+            });
         });
 
         $("#btnItemOrderRegisterPopDelete").on('click', function() {

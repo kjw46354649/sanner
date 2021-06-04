@@ -1258,4 +1258,14 @@
             AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
 
+    <select id="selectOrderStatusBeforeOutsideRequest" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT IFNULL(A.CONTROL_STATUS,SPACE(0)) AS CONTROL_STATUS
+              , B.OUTSIDE_YN
+              , IFNULL(B.OUTSIDE_STATUS,SPACE(0)) AS OUTSIDE_STATUS
+        FROM TBL_CONTROL A, TBL_CONTROL_PART B
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+          AND A.DEL_YN = 'N'
+          AND A.CONTROL_SEQ IN (${CONTROL_SEQ})
+          AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
+    </select>
 </mapper>
