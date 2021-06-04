@@ -21,6 +21,12 @@
 <body>
 <div style="padding: 10px;">
     <h3 style="font-size: 20px; font-family: 'NotoKrB'; color: #000; display: inline-block;">CAM 작업 관리</h3>
+    <div class="right_float" style="margin-right:15px;">
+        <span class="chk_box">
+            <input type="checkbox" name="ORDER_COMP_CHECK" id="ORDER_COMP_CHECK" checked>
+            <label for="ORDER_COMP_CHECK">발주처 매칭 여부</label>
+        </span>
+    </div>
     <hr style="display: block; border: 1px solid #e0e2e6; margin: 7px;">
 
     <div class="d-flex align-items-center">
@@ -28,6 +34,7 @@
             <form class="form-inline" id="cam_work_detail_form" name="cam_work_detail_form" role="form">
                 <input type="hidden" id="queryId" name="queryId" value="inspection.selectCamWorkDetail"/>
                 <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
+                <input type="hidden" id="ORDER_COMP_YN" name="ORDER_COMP_YN" value=""/>
                 <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
 
                 <input type="hidden" id="ORDER_COMP_CD" name="ORDER_COMP_CD" value=""/>
@@ -382,6 +389,18 @@
 
         $('#cam_work_detail_close').on('click', function () {
             window.close();
+        });
+
+        $('[name=ORDER_COMP_CHECK]').on('change', function () {
+            if($('#ORDER_COMP_CHECK').is(":checked")) {
+                $("#cam_work_detail_form #ORDER_COMP_YN").val("");
+            }else {
+                $("#cam_work_detail_form #ORDER_COMP_YN").val("N");
+            }
+
+            $('#cam_work_detail_form').find('#queryId').val('inspection.selectCamWorkDetail');
+            let postData = fnFormToJsonArrayData('cam_work_detail_form');
+            fnRequestGridData($('#cam_work_detail_grid'), postData);
         });
         /* event */
 
