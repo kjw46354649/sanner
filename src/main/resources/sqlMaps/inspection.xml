@@ -1197,7 +1197,7 @@
 			, J.ORDER_COMP_NM
 			, J.SIZE_TXT
 			, J.MATERIAL_TYPE_NM
-			, J.DRAWING_NUM	
+			, J.DRAWING_NUM
 			, J.IMG_GFILE_SEQ
 			, J.CAD_FILE_SIZE
 			, J.DXF_GFILE_SEQ
@@ -1233,15 +1233,17 @@
                                                                     FROM jmes.TBL_CONTROL M
                                                                         , jmes.TBL_CONTROL_PART N
                                                                     WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                        AND M.ORDER_COMP_CD = J.ORDER_COMP_CD
+                                                                        <if test="ORDER_COMP_YN != null and ORDER_COMP_YN == ''">
+                                                                            AND M.ORDER_COMP_CD = J.ORDER_COMP_CD
+                                                                        </if>
                                                                         AND N.SIZE_TXT = J.SIZE_TXT
                                                                         AND N.CONTROL_SEQ = J.CONTROL_SEQ
                                                                         AND N.CONTROL_DETAIL_SEQ = J.CONTROL_DETAIL_SEQ
-                                                                        AND M.DEL_YN = 'N'                                                                        
+                                                                        AND M.DEL_YN = 'N'
                                                                  )
                ) AS CAM_EXPERIENCE_NOTE <!-- 경험 기록사항 -->
 			, CONCAT(IFNULL(J.HISTORY_NOTE, SPACE(0)), IFNULL(J.NOTE, SPACE(0))) AS CAM_WORK_NOTE <!-- CAM 작업 기록 및 비고 공유 사항 -->
-        FROM (  
+        FROM (
             SELECT G.CONTROL_SEQ
                 , G.CONTROL_DETAIL_SEQ
                 , G.ORDER_CONFIRM_DT
@@ -1320,7 +1322,9 @@
                                                                             , jmes.TBL_CONTROL_PART B
                                                                         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                                                                             AND A.DEL_YN = 'N'
-                                                                            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                                                                            <if test="ORDER_COMP_YN != null and ORDER_COMP_YN == ''">
+                                                                                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                                                                            </if>
                                                                             AND B.SIZE_TXT = #{SIZE_TXT}
                                                                             AND B.MATERIAL_TYPE = #{MATERIAL_TYPE}
                                                                      )
@@ -1350,7 +1354,7 @@
                                     GROUP BY D.CONTROL_SEQ, D.CONTROL_DETAIL_SEQ) E ON D.CONTROL_SEQ = E.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
             ) G LEFT OUTER JOIN jmes.TBL_CAM H ON G.CONTROL_SEQ = H.CONTROL_SEQ AND G.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ
         ) J LEFT OUTER JOIN jmes.TBL_CAM_DETAIL K ON J.CAM_SEQ = K.CAM_SEQ
-        ORDER BY CASE WHEN CONCAT(J.CONTROL_SEQ, J.CONTROL_DETAIL_SEQ) = CONCAT(#{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}) THEN 0 ELSE 1 END, POINT_SUM DESC, J.ORDER_CONFIRM_DT DESC, J.CONTROL_NUM, K.SEQ
+        ORDER BY CASE WHEN CONCAT(J.CONTROL_SEQ, J.CONTROL_DETAIL_SEQ) = CONCAT(#{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}) THEN 0 ELSE 1 END <!-- , POINT_SUM DESC -->, J.ORDER_CONFIRM_DT DESC, J.CONTROL_NUM, K.SEQ
     </select>
     <select id="selectOutgoingHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <!-- 3. 출하 이력관리 쿼리 -->

@@ -131,7 +131,8 @@
                 <select id="outsourcingOrderManageFrozen" name="outsourcingOrderManageFrozen">
                 </select>
             </div>
-            <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#REQUEST_OUTSIDE_POPUP">
+            <button type="button" class="defaultBtn btn-100w" id="BTN_REQUEST_OUTSIDE">
+<%--            <button type="button" class="defaultBtn btn-100w" id="BTN_REQUEST_OUTSIDE" data-toggle="modal" data-target="#REQUEST_OUTSIDE_POPUP">--%>
                 외주가공 요청
             </button>
             <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CANCEL_REQUEST_OUTSIDE_POPUP">
@@ -1860,6 +1861,75 @@
                     break;
             }
         });
+        const checkOutsideOrderStatus = function (callback,type) {
+            let controlSeqStr = '';
+            let controlDetailSeqStr = '';
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                controlSeqStr += rowData.CONTROL_SEQ;
+                controlDetailSeqStr += rowData.CONTROL_DETAIL_SEQ;
+
+                if (i < selectedRowCount - 1) {
+                    controlSeqStr += ',';
+                    controlDetailSeqStr += ',';
+                }
+            }
+            let parameters = {
+                'url': '/json-list',
+                'data': {"CONTROL_SEQ":controlSeqStr,"CONTROL_DETAIL_SEQ":controlDetailSeqStr,"queryId":"outMapper.selectOrderStatusBeforeOutsideRequest"}
+            };
+            fnPostAjaxAsync(function (data, callFunctionParam) {
+                if(data.list.length > 0) {
+                    var flag = false;
+                    var msg = "";
+                    $.each(data.list, function(idx,Item) {
+                        if(type == 'request') {
+                            msg = '외주가공 요청이 불가능한 주문 건이 있습니다. 확인해주세요';
+                            if(Item.OUTSIDE_YN == 'N') { // 외주가공건이 아닌 경우.
+                                flag = true;
+                                return;
+                            }else if(Item.CONTROL_STATUS != 'ORD001' && Item.CONTROL_STATUS != 'ORD003' && Item.CONTROL_STATUS != 'ORD004' ) { // 주문상태가 확정,마감,종료가 아닌경우
+                                flag = true;
+                                return;
+                            }else if(Item.OUTSIDE_STATUS != 'OST002' && Item.OUTSIDE_STATUS != '') { //외주상태가 요청취소, 요청전이 아닌 경우
+                                flag = true;
+                                return;
+                            }
+                        }else {
+                            if(Item.OUTSIDE_STATUS != 'OST002' && Item.OUTSIDE_STATUS != '') { //외주상태가 요청취소, 요청전이 아닌 경우
+                                flag = true;
+                                msg =
+                                '<h4>\n' +
+                                '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                                '    <span>외주발주상태가 빈칸이나 요청취소인 경우에만 가능합니다</span>\n' +
+                                '</h4>';
+                                return;
+                            }
+                        }
+                    })
+
+                    if(flag) {
+                        fnAlert('',msg);
+                        // $("#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #OUTSIDE_ORDER_SEARCH").trigger('click');
+                    }
+                    callback(flag);
+                    // return flag;
+                }else {
+                    fnAlert('',"작업지시번호를 확인해주세요.");
+                    callback(true);
+                    // return true;
+                }
+            }, parameters, '');
+        }
+        $("#BTN_REQUEST_OUTSIDE").on('click',function (e) {
+            checkOutsideOrderStatus(function (flag) {
+                    if(flag){
+                        $("#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #OUTSIDE_ORDER_SEARCH").trigger('click');
+                    }else {
+                        $('#REQUEST_OUTSIDE_POPUP').modal('show');
+                    }
+            },'request');
+        })
 
         $('#REQUEST_OUTSIDE_POPUP').on({
             'show.bs.modal': function (event) {
@@ -2110,30 +2180,40 @@
 
         $('#OUTSIDE_ORDER_MANAGE_DELETE').on('click', function () {
             let list = [];
-
             for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
                 list.push(rowData);
-
-                if (rowData.OUTSIDE_STATUS === 'OST001') {
-                    let messsage =
-                        '<h4>\n' +
-                        '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                        '    <span>외주발주상태가 빈칸이나 요청취소인 경우에만 가능합니다</span>\n' +
-                        '</h4>';
-                    fnAlert(null, messsage);
-                    return false;
-                }
             }
+            //
+            // for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+            //     let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+            //     list.push(rowData);
+            //
+            //     if (rowData.OUTSIDE_STATUS === 'OST001') {
+            //         let messsage =
+            //             '<h4>\n' +
+            //             '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+            //             '    <span>외주발주상태가 빈칸이나 요청취소인 경우에만 가능합니다</span>\n' +
+            //             '</h4>';
+            //         fnAlert(null, messsage);
+            //         return false;
+            //     }
+            // }
+            checkOutsideOrderStatus(function (flag) {
+                if(flag){
+                    $("#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #OUTSIDE_ORDER_SEARCH").trigger('click');
+                    return false;
+                }else {
+                    fnConfirm(null, '<spring:message code="com.alert.default.removeText"/>', function () {
+                        let parameters = {'url': '/removeOutsideOrder', 'data': {data: JSON.stringify(list)}};
 
-            fnConfirm(null, '<spring:message code="com.alert.default.removeText"/>', function () {
-                let parameters = {'url': '/removeOutsideOrder', 'data': {data: JSON.stringify(list)}};
-
-                fnPostAjax(function (data) {
-                    fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
-                    $outsideOrderManageGrid.pqGrid('refreshDataAndView');
-                }, parameters, '');
-            });
+                        fnPostAjax(function (data) {
+                            fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
+                            $outsideOrderManageGrid.pqGrid('refreshDataAndView');
+                        }, parameters, '');
+                    });
+                }
+            },'delete');
         });
 
         $('.pop_close').on('click', function () {
@@ -2293,68 +2373,77 @@
                 return false;
             }
 
-            let receiveEmail = "";
-            let hccEmail = "";
+            checkOutsideOrderStatus(
+                function (flag) {
+                    if(flag){
+                        $("#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #OUTSIDE_ORDER_SEARCH").trigger('click');
+                        return false;
+                    }else {
+                        let receiveEmail = "";
+                        let hccEmail = "";
 
-            for (let i in mailRecipientData) {
-                if (mailRecipientData.hasOwnProperty(i)) {
-                    if (mailRecipientData[i].RECEPTION === 'true') {
-                        if(mailFlag) mailFlag = false;
-                        if(!receiveEmail)
-                            receiveEmail += mailRecipientData[i].STAFF_EMAIL;
-                        else
-                            receiveEmail += "," + mailRecipientData[i].STAFF_EMAIL;
+                        for (let i in mailRecipientData) {
+                            if (mailRecipientData.hasOwnProperty(i)) {
+                                if (mailRecipientData[i].RECEPTION === 'true') {
+                                    if(mailFlag) mailFlag = false;
+                                    if(!receiveEmail)
+                                        receiveEmail += mailRecipientData[i].STAFF_EMAIL;
+                                    else
+                                        receiveEmail += "," + mailRecipientData[i].STAFF_EMAIL;
+                                }
+                                if(mailRecipientData[i].REFERENCE === 'true') {
+                                    if(!hccEmail)
+                                        hccEmail += mailRecipientData[i].STAFF_EMAIL;
+                                    else
+                                        hccEmail += "," + mailRecipientData[i].STAFF_EMAIL;
+
+                                }
+                            }
+                        }
+                        $('#REQUEST_OUTSIDE_MAIL_FORM').find('#RECEIVE_EMAIL').val(receiveEmail);
+                        $('#REQUEST_OUTSIDE_MAIL_FORM').find('#CC_EMAIL').val(hccEmail);
+
+                        if (mailFlag) {
+                            fnAlert(null, '메일 수신자 정보는 필수입니다.');
+                            return false;
+                        }
+
+                        let step1List = $outsideProcessRequestGrid.pqGrid('option', 'dataModel.data');
+                        // 메일 내용
+                        let a = CKEDITOR.instances.REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
+                        // 하단 그리드 테이블로 생성
+                        let b = createMailInnerTable('request', step1List);
+                        let c = a + b;
+                        $('#REQUEST_OUTSIDE_MAIL_FORM #REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
+
+                        let STEP1LIST_LENGTH = step1List.length;
+                        // $('#REQUEST_OUTSIDE_MAIL_FORM #ROW_CNT').val(STEP1LIST_LENGTH);
+                        for (let i = 0; i < STEP1LIST_LENGTH; i++) {
+                            step1List[i].OUTSIDE_COMP_CD = outsideCompCd;
+                        }
+
+                        let step4List = $mailRecipientGrid.pqGrid('option', 'dataModel.data');
+                        let requestMailForm = fnFormToJsonArrayData('#REQUEST_OUTSIDE_MAIL_FORM'); //object
+                        let postData = {
+                            status: 'request',
+                            controlPartList: step1List, // 그리드
+                            mailReceiverList: step4List, // 수신처
+                            requestMailForm: requestMailForm // tbl_outside_request 저장용
+                        };
+                        let parameters = {'url': '/managerRequestOutside', 'data': {data: JSON.stringify(postData)}};
+                        fnPostAjax(function (data, callFunctionParam) {
+                            if (data.result === 'success') {
+                                fnAlert(null, "<spring:message code='com.alert.default.save.success'/>");
+                            } else {
+                                fnAlert(null, 'Error');
+                            }
+
+                            $('#REQUEST_OUTSIDE_POPUP').modal('hide');
+                            $outsideOrderManageGrid.pqGrid('refreshDataAndView');
+                        }, parameters, '');
                     }
-                    if(mailRecipientData[i].REFERENCE === 'true') {
-                        if(!hccEmail)
-                            hccEmail += mailRecipientData[i].STAFF_EMAIL;
-                        else
-                            hccEmail += "," + mailRecipientData[i].STAFF_EMAIL;
-
-                    }
-                }
-            }
-            $('#REQUEST_OUTSIDE_MAIL_FORM').find('#RECEIVE_EMAIL').val(receiveEmail);
-            $('#REQUEST_OUTSIDE_MAIL_FORM').find('#CC_EMAIL').val(hccEmail);
-
-            if (mailFlag) {
-                fnAlert(null, '메일 수신자 정보는 필수입니다.');
-                return false;
-            }
-
-            let step1List = $outsideProcessRequestGrid.pqGrid('option', 'dataModel.data');
-            // 메일 내용
-            let a = CKEDITOR.instances.REQUEST_OUTSIDE_EMAIL_CONTENT_TXT.getData();
-            // 하단 그리드 테이블로 생성
-            let b = createMailInnerTable('request', step1List);
-            let c = a + b;
-            $('#REQUEST_OUTSIDE_MAIL_FORM #REQUEST_OUTSIDE_EMAIL_CONTENT_TXT').val(c);
-
-            let STEP1LIST_LENGTH = step1List.length;
-            // $('#REQUEST_OUTSIDE_MAIL_FORM #ROW_CNT').val(STEP1LIST_LENGTH);
-            for (let i = 0; i < STEP1LIST_LENGTH; i++) {
-                step1List[i].OUTSIDE_COMP_CD = outsideCompCd;
-            }
-
-            let step4List = $mailRecipientGrid.pqGrid('option', 'dataModel.data');
-            let requestMailForm = fnFormToJsonArrayData('#REQUEST_OUTSIDE_MAIL_FORM'); //object
-            let postData = {
-                status: 'request',
-                controlPartList: step1List, // 그리드
-                mailReceiverList: step4List, // 수신처
-                requestMailForm: requestMailForm // tbl_outside_request 저장용
-            };
-            let parameters = {'url': '/managerRequestOutside', 'data': {data: JSON.stringify(postData)}};
-            fnPostAjax(function (data, callFunctionParam) {
-                if (data.result === 'success') {
-                    fnAlert(null, "<spring:message code='com.alert.default.save.success'/>");
-                } else {
-                    fnAlert(null, 'Error');
-                }
-
-                $('#REQUEST_OUTSIDE_POPUP').modal('hide');
-                $outsideOrderManageGrid.pqGrid('refreshDataAndView');
-            }, parameters, '');
+                },'request'
+            )
         }, 500));
 
         $('#REQUEST_OUTSIDE_MAIL_FORM #OUTSIDE_COMP_CD').on('change', function () {

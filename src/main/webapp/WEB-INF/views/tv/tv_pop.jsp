@@ -278,7 +278,7 @@
 													</div>
 												</div>
 											</li>
-											<li class="p_col" id="ARE01_5">
+											<li class="p_col" id="ARE01_5">  
 												<div class="thumb thb_gray">
 													<div class="topDiv">
 														<div class="leftWrap">
