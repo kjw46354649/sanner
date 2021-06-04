@@ -3079,7 +3079,6 @@
 
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 const rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-
                 controlSeqList.add(rowData.CONTROL_SEQ);
             }
 
@@ -3231,13 +3230,35 @@
 
         /** 도면 등록 팝업 호출 **/
         $('#DRAWING_REGISTRATION').on('click', function () {
-            // callCadDrawingUploadPopup('control', 'drawingUploadMapper.manageControlCadFiles');
-            drawingUploadPopupWindow('control', 'drawingUploadMapper.manageControlCadFiles');
+            drawingUploadPopupWindow('control', 'drawingUploadMapper.manageControlCadFiles', '');
         });
         /** 도면 차수 및 변경 처리 **/
         $('#DRAWING_CHANGE').on('click', function () {
-            // callCadDrawingUploadPopup('controlRev', 'drawingUploadMapper.manageControlCadRevFiles');
-            drawingUploadPopupWindow('controlRev', 'drawingUploadMapper.manageControlCadRevFiles');
+            let controlSeqList = new Set(); // 선택 된 row 작업지시번호
+            if (selectedOrderManagementRowIndex.length <= 0) {
+                fnAlert(null, '하나 이상의 작업을 선택해주세요');
+                return false;
+            }
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                 const rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                 if(rowData.ORDER_OUT_FINISH_DT === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD003')
+                     controlSeqList.add(rowData.CONTROL_SEQ);
+            }
+            if (controlSeqList.size <= 0) {
+                fnAlert(null, '확정, 마감 상태의 작업지시번호만 도면 변경이 가능합니다.');
+                return false;
+            }
+            var paramDatas = {'controlList': Array.from(controlSeqList)};
+            var parameters = {
+                'url': '/controlCadRevPrev',
+                'data': {"gridData": JSON.stringify(paramDatas)}
+            };
+            console.log(parameters);
+
+            fnPostAjax(function (data) {
+                console.log(data.workKey);
+                drawingUploadPopupWindow('controlRev', 'drawingUploadMapper.manageControlCadRevFiles', data.workKey);
+            }, parameters, '');
         });
         /** 도면 보기 팝업 호출 */
         $('#CONTROL_MANAGE_DRAWING_VIEW').on('click', function () {
@@ -3255,7 +3276,6 @@
 
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 const rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-
                 controlSeqList.add(rowData.CONTROL_SEQ);
             }
             // 작업지시번호

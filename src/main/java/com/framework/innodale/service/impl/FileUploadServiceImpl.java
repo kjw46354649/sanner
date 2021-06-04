@@ -1,5 +1,7 @@
 package com.framework.innodale.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.component.ImageUtil;
 import com.framework.innodale.dao.InnodaleDao;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -111,14 +114,43 @@ public class FileUploadServiceImpl implements FileUploadService {
         model.addAttribute("GFILE_SEQ", fileSeq);
     }
 
-    /** 임시로 PDF 파일 업로드 하여 이미지 처리 하는 부분 적용 **/
+    /** 주문 파일 리버전 처리전에 먼저 work key와 주문정보를 업로드 처리 한다. **/
+    @Override
+    public String controlCadRevPrev(Map<String, Object> hashMap) throws Exception{
+
+        String workKey = "";
+
+        String jsonObject = (String) hashMap.get("gridData");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+        ArrayList<HashMap<String, Object>> controlList = null;
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<HashMap<String, Object>>() {});
+
+        if (jsonMap.containsKey("controlList")) {
+            controlList = (ArrayList<HashMap<String, Object>>) jsonMap.get("controlList");
+
+            workKey = CommonUtility.getUUIDString("drawing");
+
+            hashMap.put("WORK_KEY", workKey);
+            hashMap.put("controlList", controlList);
+            hashMap.put("queryId", "drawingUploadMapper.manageControlCadRevPrevDataInsert");
+            innodaleDao.create(hashMap);
+        }
+        return workKey;
+    }
+
+    /** 주문 파일 업로드 처리 **/
     @Override
     public void uploadDxfAndPdfCadFilesControlOrder(MultipartHttpServletRequest request, Model model) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
         // Demon Key 생성
-        hashMap.put("WORK_KEY", CommonUtility.getUUIDString("drawing"));
+        if(StringUtils.isEmpty(hashMap.get("WORK_KEY"))){
+            hashMap.put("WORK_KEY", CommonUtility.getUUIDString("drawing"));
+        }
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", new Locale("ko", "KR"));
         String uploadDatePath = formatter.format(new Date()).substring(0, 8) + File.separator + formatter.format(new Date());
@@ -272,8 +304,9 @@ public class FileUploadServiceImpl implements FileUploadService {
                 // 도면 대상 업로드 리스트 및 적둉 대상 작업 리스트 조회
                 hashMap.put("queryId", "procedure.SP_CONTROL_DRAWING_UPLOAD");
             }else{
+                // 도면 대사 관리 번호 저장 처리
                 // 도면 대상 업로드 리스트 및 적둉 대상 작업 리스트 조회
-                hashMap.put("queryId", "procedure.SP_CONTROL_DRAWING_UPLOAD_REV");
+                hashMap.put("queryId", "procedure.SP_CONTROL_DRAWING_UPLOAD_REV_NEW");
             }
             innodaleDao.callProcedureMethod(hashMap);
         }
@@ -486,22 +519,6 @@ public class FileUploadServiceImpl implements FileUploadService {
         model.addAttribute("fileUploadDataList", fileUploadDataList);
     }
 
-    private boolean checkUploadDXF(List<MultipartFile> fileList, String pdfMappingDrawingNum){
-        for(MultipartFile multipartFile:fileList) {
-            String originalFullName = multipartFile.getOriginalFilename();
-            String originalExtName = originalFullName.substring(originalFullName.lastIndexOf(".") + 1).toLowerCase();
-            if("DXF".equalsIgnoreCase(originalExtName)){
-                String mappingDrawingNum = originalFullName.substring(0, originalFullName.lastIndexOf(".")).toUpperCase();
-                if(mappingDrawingNum.indexOf("_") > 0)
-                mappingDrawingNum = mappingDrawingNum.substring(0, mappingDrawingNum.indexOf("_")).toUpperCase();
-                if(mappingDrawingNum.equalsIgnoreCase(pdfMappingDrawingNum)){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     /**
      * 파일 확장자에 따른 컬럼 & 값 셋팅
      * @param fileInfo
@@ -570,7 +587,6 @@ public class FileUploadServiceImpl implements FileUploadService {
         //DPI 설정
         BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
         ImageIOUtil.writeImage(bim, outImageFullPath , 300);
-//        ImageIOUtil.writeImage(bim, inPDFFullPath + ".quality.png" , 300);
 
         bim = pdfRenderer.renderImageWithDPI(0, 70, ImageType.RGB);
         ImageIOUtil.writeImage(bim, outImageFullPath + ".thumbnail.png" , 70);
@@ -586,11 +602,7 @@ public class FileUploadServiceImpl implements FileUploadService {
             ImageUtil.rotate90(tempImagefile, targetfile);
         }else{
             Files.copy(tempImagefile.toPath(), targetfile.toPath());
-//            tempImagefile.renameTo(targetfile);
         }
-
-        //ImageUtil.resizeFix(targetfile, targetfile, (int)PDRectangle.A4.getWidth(), (int)PDRectangle.A4.getHeight());
-
         return 1;
     }
 

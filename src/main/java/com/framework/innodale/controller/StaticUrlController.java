@@ -303,6 +303,7 @@ public class StaticUrlController {
         mav.setViewName("/common/drawing_upload");
         mav.addObject("actionType", map.get("actionType"));
         mav.addObject("queryId", map.get("queryId"));
+        mav.addObject("WORK_KEY", map.get("WORK_KEY"));
 
         return mav;
     }

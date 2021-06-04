@@ -19,6 +19,7 @@
 <form id="drawing_file_upload_form" name="drawing_file_upload_form" method="post">
     <input type="hidden" id="actionType" name="actionType">
     <input type="hidden" id="queryId" name="queryId">
+    <input type="hidden" id="WORK_KEY" name="WORK_KEY">
 </form>
 <!-- 파일 다운로드 공통 Start -->
 <div class="modal" id="common_file_download_upload_pop" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
@@ -2188,7 +2189,7 @@
      * Drawing Upload Popup Window
      **/
     let drawingUploadPopup;
-    const drawingUploadPopupWindow = function (actionType, queryId) {
+    const drawingUploadPopupWindow = function (actionType, queryId, workKey) {
         let drawingForm = document.drawing_file_upload_form;
         // const url = '/drawingUploadPopup?actionType=' + actionType + '&queryId=' + queryId;
         // 팝업 사이즈
@@ -2211,10 +2212,11 @@
         // 최초 클릭이면 팝업을 띄운다.
         if (drawingUploadPopup === undefined || drawingUploadPopup.closed) {
 
+            drawingUploadPopup = window.open('', 'popForm', strOption);
+
             $('#drawing_file_upload_form').find("#actionType").val(actionType);
             $('#drawing_file_upload_form').find("#queryId").val(queryId);
-
-            drawingUploadPopup = window.open('', 'popForm', strOption);
+            $('#drawing_file_upload_form').find("#WORK_KEY").val(workKey);
 
             drawingForm.action = "/drawingUploadPopup";
             drawingForm.target = "popForm";
@@ -2223,8 +2225,10 @@
         } else {
             drawingUploadPopup.focus();
             setTimeout(function() {
+
                 $(drawingUploadPopup.window.document).find("#actionType").val(actionType);
                 $(drawingUploadPopup.window.document).find("#queryId").val(queryId);
+                $(drawingUploadPopup.window.document).find("#WORK_KEY").val(workKey);
 
                 drawingUploadPopup.initDrawingLoad();
             }, 500);

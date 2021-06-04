@@ -15,4 +15,8 @@
         { call jmes.SP_CONTROL_DRAWING_UPLOAD_REV(#{WORK_KEY}) }
     </update>
 
+    <update id="SP_CONTROL_DRAWING_UPLOAD_REV_NEW" statementType="CALLABLE" >
+        { call jmes.SP_CONTROL_DRAWING_UPLOAD_REV_NEW(#{WORK_KEY}) }
+    </update>
+
 </mapper>
