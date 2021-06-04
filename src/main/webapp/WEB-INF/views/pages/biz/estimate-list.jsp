@@ -255,10 +255,10 @@
         ];
 
         let estimateMasterBotColModel= [
-            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150 } ,
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 60 } ,
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 150 } ,
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
+            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150, sortable: false } ,
+            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 60, sortable: false } ,
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 150, sortable: false } ,
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, sortable: false, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
                 },
@@ -271,11 +271,11 @@
                     });
                 }
             },
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100 } ,
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80 } ,
-            {title: 'Part<br>Unit',dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY', width: 50},
-            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', width: 50},
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: false,
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100, sortable: false } ,
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80, sortable: false } ,
+            {title: 'Part<br>Unit',dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY', width: 50, sortable: false},
+            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', width: 50, sortable: false},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', sortable: false, editable: false,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -318,7 +318,7 @@
                     }
                 }
             },*/
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', sortable: false,
                 editor: {
                     type: 'select',
                     valueIndx: "value",
@@ -346,7 +346,7 @@
                     }
                 }
             },
-            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
+            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', sortable: false,
                 editor: {
                     type: 'select',
                     valueIndx: "value",
@@ -374,7 +374,7 @@
                     }
                 }
             },
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', width: 80,
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', width: 80, sortable: false,
                 editor: {
                     type: 'select',
                     valueIndx: "value",
@@ -403,9 +403,9 @@
                 }
 
             },
-            {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE' },
+            {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', sortable: false },
             {title: '소재마감', align: "center", colModel:[
-                    {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', width: 70,
+                    {title: '연마비', dataType: 'string', dataIndx: 'MATERIAL_FINISH_GRIND', width: 70, sortable: false,
                         editor: {
                             type: 'select',
                             valueIndx: "value",
@@ -433,7 +433,7 @@
                             }
                         }
                     },
-                    {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', width: 70,
+                    {title: '열처리', dataType: 'string', dataIndx: 'MATERIAL_FINISH_HEAT', width: 70, sortable: false,
                         editor: {
                             type: 'select',
                             valueIndx: "value",
@@ -462,7 +462,7 @@
                         }
                     },
                 ]},
-            {title: '소재사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+            {title: '소재사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', sortable: false,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "MATERIAL_SUPPLY_YN", id: "MATERIAL_SUPPLY_YN" },
@@ -484,24 +484,24 @@
                     {title:'길이', dataType: 'float', dataIndx: 'SIZE_L_M'}
                 ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
-                    {title: '합계', dataType: 'integer', dataIndx: 'UNIT_SUM_AUTO_AMT', format: '#,###'},
-                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', format: '#,###'},
+                    {title: '합계', dataType: 'integer', dataIndx: 'UNIT_SUM_AUTO_AMT', format: '#,###', sortable: false},
+                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', format: '#,###', sortable: false},
                     // {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###'},
-                    {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###'},
+                    {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###', sortable: false},
                     // {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', format: '#,###'},
-                    {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###'},
+                    {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###', sortable: false},
                     // {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', format: '#,###'},
-                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AUTO_AMT', format: '#,###'},
+                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AUTO_AMT', format: '#,###', sortable: false},
                     // {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
-                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AUTO_AMT', format: '#,###'},
+                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AUTO_AMT', format: '#,###', sortable: false},
                     // {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###'},
-                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###'},
-                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE'}
+                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###', sortable: false},
+                    {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE', sortable: false}
                 ]},
-            {title: '최종견적단가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80},
-            {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE'},
-            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+            {title: '최종견적단가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80, sortable: false},
+            {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80, sortable: false},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', sortable: false},
+            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false, sortable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -515,7 +515,7 @@
                 }
             },
             {
-                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false, sortable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -678,7 +678,6 @@
                     }
                 }
             });
-
             estimateMasterBotGrid.pqGrid("refreshDataAndView");
         };
 

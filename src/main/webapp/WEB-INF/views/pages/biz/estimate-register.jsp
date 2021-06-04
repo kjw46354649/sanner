@@ -224,7 +224,7 @@
             {title: 'SEQ', dataType: 'integer', dataIndx: 'SEQ', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true}, // 주문 -> 견적
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true}, // 주문 -> 견적
-            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+            {title: '프로젝트', dataType: 'string', dataIndx: 'PROJECT_NM', width: 150, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, sortable: false,
                 editable: function (ui) {
                     let rowData = ui.rowData;
                     return (typeof rowData == 'undefined' || typeof rowData.WORK_TYPE == 'undefined' || rowData.WORK_TYPE != 'WTP050');
@@ -239,7 +239,7 @@
                     }
                 }
             } ,
-            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+            {title: '모듈명', dataType: 'string', dataIndx: 'MODULE_NM', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, sortable: false,
                 editable: function (ui) {
                     let rowData = ui.rowData;
                     return (typeof rowData == 'undefined' || typeof rowData.WORK_TYPE == 'undefined' || rowData.WORK_TYPE != 'WTP050');
@@ -254,7 +254,7 @@
                     }
                 }
             } ,
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', width: 170, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, sortable: false,
                 editable: function (ui) {
                     let rowData = ui.rowData;
                     return (typeof rowData == 'undefined' || typeof rowData.WORK_TYPE == 'undefined' || rowData.WORK_TYPE != 'WTP050');
@@ -269,7 +269,7 @@
                     }
                 }
             } ,
-            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false, sortable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
                 },
@@ -282,9 +282,9 @@
                     });
                 }
             },
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 100, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 100, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} } ,
-            {title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', width: 100, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, sortable: false } ,
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 100, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, sortable: false } ,
+            {title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, sortable: false,
                 editable: function (ui) {
                     let rowData = ui.rowData;
                     // grid.addClass( {rowIndx: 2, dataIndx: 'profits', cls: 'pq-delete'} );
@@ -301,7 +301,7 @@
                     }
                 }
             },
-            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+            {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, sortable: false,
                 editable: function (ui) {
                     let rowData = ui.rowData;
                     return (typeof rowData == 'undefined' || typeof rowData.WORK_TYPE == 'undefined' || rowData.WORK_TYPE != 'WTP050');
@@ -320,7 +320,7 @@
                     }
                 }
             },
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true,
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: true, sortable: false,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -350,7 +350,7 @@
                 },
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', sortable: false,
                 editor: { type: 'select', valueIndx: "value", labelIndx: "text", options: fnGetCommCodeGridSelectBox('1027') },
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -386,7 +386,7 @@
                     }
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND',
+            {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND', sortable: false,
                 editor: {
                     type: 'select',
                     valueIndx: "value",
@@ -427,7 +427,7 @@
                     }
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', width: 80,
+            {title: '표면처리', dataType: 'string', dataIndx: 'SURFACE_TREAT', width: 80, sortable: false,
                 editor: {
                     type: 'select',
                     valueIndx: "value",
@@ -469,7 +469,7 @@
                     }
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
-            {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
+            {title: '소재 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, sortable: false,
                 editable: function (ui) {
                     let rowData = ui.rowData;
                     return (typeof rowData != 'undefined' && typeof rowData.WORK_TYPE != 'undefined' && rowData.WORK_TYPE != 'WTP020');
@@ -489,7 +489,7 @@
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 colModel: [
                     {
-                        title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND',
+                        title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND', sortable: false,
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
                         editable: function (ui) {
@@ -527,7 +527,7 @@
                         }
                     },
                     {
-                        title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT',
+                        title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT', sortable: false,
                         styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
                         editable: function (ui) {
@@ -568,7 +568,7 @@
                 ]
             },
             {
-                title: '상세 가공요건', width: 85,
+                title: '상세 가공요건', width: 85, sortable: false,
                 // hidden: true, // 20210331 임시 hidden 처리
                 render: function (ui) {
                     const rowData = ui.rowData;
@@ -587,7 +587,7 @@
                     });
                 }
             },
-            {title: '소재사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN',
+            {title: '소재사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', sortable: false,
                 editor: {
                     type: 'select',
                     mapIndices: { name: "MATERIAL_SUPPLY_YN", id: "MATERIAL_SUPPLY_YN" },
@@ -609,20 +609,20 @@
                     {title:'길이', dataType: 'float', dataIndx: 'SIZE_L_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} }
                 ], hidden: true},
             {title: '자동 계산견적 단가', align: "center", colModel: [
-                    {title: '합계', dataType: 'integer', dataIndx: 'UNIT_SUM_AUTO_AMT', format: '#,###', align: 'right', editable: false},
-                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', format: '#,###', align: 'right', editable: false},
-                    {title: '연마비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###', align: 'right', editable: false},
-                    {title: '열처리', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###', align: 'right', editable: false},
-                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AUTO_AMT', format: '#,###', align: 'right', editable: false},
-                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AUTO_AMT', format: '#,###', align: 'right', editable: false},
-                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right'},
-                    {title: '견적비고', dataType: 'string', dataIndx: 'UNIT_AMT_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'left'}
+                    {title: '합계', dataType: 'integer', dataIndx: 'UNIT_SUM_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
+                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
+                    {title: '연마비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
+                    {title: '열처리', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
+                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
+                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
+                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right', sortable: false},
+                    {title: '견적비고', dataType: 'string', dataIndx: 'UNIT_AMT_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'left', sortable: false}
                 ]
             },
-            {title: '최종견적단가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-            {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80, editable: false},
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+            {title: '최종견적단가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, sortable: false },
+            {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80, editable: false, sortable: false},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, sortable: false },
+            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false, sortable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -636,7 +636,7 @@
                 }
             },
             {
-                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+                title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false, sortable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
                 },
