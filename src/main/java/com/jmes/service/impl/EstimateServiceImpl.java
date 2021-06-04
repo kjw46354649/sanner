@@ -107,6 +107,7 @@ public class EstimateServiceImpl implements EstimateService {
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Map<String, Object>> jsonMap = null;
         Map<String, Object> data = new HashMap<String, Object>();
+        Map<String, ArrayList<Map<String, Object>>> map = new HashMap<String,ArrayList<Map<String, Object>>>();
         data.put("LOGIN_USER_ID", userId);
 
         if (jsonObject != null) {
@@ -117,16 +118,43 @@ public class EstimateServiceImpl implements EstimateService {
         for (int i = 0; i < jsonMap.size(); i++) {
             data = jsonMap.get(i);
 
-            estimateDao.insertEstimateOrderControlMaster(data);
-            estimateDao.insertEstimateOrderControlDetail(data);
-            estimateDao.insertEstimateOrderControlOrder(data);
-            estimateDao.insertEstimateOrderControlBarcode(data);
-            data.put("queryId", "estimate.insertEstimateOrderPartProcess");
-            this.innodaleDao.create(data);
+            ArrayList<Map<String, Object>> tempArr = new ArrayList<Map<String, Object>>();
+            if(map.get((String) data.get("DRAWING_NUM")) != null) {
+                tempArr = map.get((String) data.get("DRAWING_NUM"));
+            }
+            tempArr.add(data);
+            map.put((String) data.get("DRAWING_NUM"),tempArr);
         }
 
-        estimateDao.updateEstimateMasterFinish(data);
+        for (int i = 0; i < jsonMap.size(); i++) {
+            data = jsonMap.get(i);
+            String workType = (String) data.get("WORK_TYPE");
+            if(!workType.equals("WTP050")) {
+                estimateDao.insertEstimateOrderControlMaster(data);
+                estimateDao.insertEstimateOrderControlDetail(data);
+                estimateDao.insertEstimateOrderControlOrder(data);
+                estimateDao.insertEstimateOrderControlBarcode(data);
+                data.put("queryId", "estimate.insertEstimateOrderPartProcess");
+                this.innodaleDao.create(data);
 
+                if(workType.equals("WTP020") && map.get((String) data.get("DRAWING_NUM")) != null) {
+                    ArrayList<Map<String, Object>> tempArr = map.get((String) data.get("DRAWING_NUM"));
+                    int count = 1;
+                    for(Map<String, Object> temp : tempArr) {
+                        if(temp.get("WORK_TYPE").equals("WTP050")) {
+                            temp.put("CONTROL_SEQ",data.get("CONTROL_SEQ"));
+                            temp.put("PART_NUM",count);
+                            estimateDao.insertEstimateOrderControlDetail(temp);
+                            estimateDao.insertEstimateOrderControlBarcode(data);
+                            data.put("queryId", "estimate.insertEstimateOrderPartProcess");
+                            this.innodaleDao.create(data);
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+        estimateDao.updateEstimateMasterFinish(data);
     }
 
     @Override

@@ -273,8 +273,9 @@
             },
             {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', validations: [{ type: 'minLen', value: 1, msg: "Required"}], width: 100 } ,
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 80 } ,
+            {title: 'Part<br>Unit',dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY', width: 50},
             {title: '수량', dataType: 'string', dataIndx: 'ITEM_QTY', width: 50},
-                {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: false,
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE', editable: false,
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -484,11 +485,16 @@
                 ], hidden: true},
             {title: '항목별 견적정보', align: "center", colModel: [
                     {title: '합계', dataType: 'integer', dataIndx: 'UNIT_SUM_AUTO_AMT', format: '#,###'},
-                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###'},
-                    {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', format: '#,###'},
-                    {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', format: '#,###'},
-                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
-                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###'},
+                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', format: '#,###'},
+                    // {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###'},
+                    {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###'},
+                    // {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', format: '#,###'},
+                    {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###'},
+                    // {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', format: '#,###'},
+                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AUTO_AMT', format: '#,###'},
+                    // {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
+                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AUTO_AMT', format: '#,###'},
+                    // {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###'},
                     {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###'},
                     {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE'}
                 ]},
@@ -896,7 +902,7 @@
 
         const clickEstimateRegisterReloadBtn = function () {
             estimateRegisterTimer = setInterval(function () {
-                console.log(estimateRegisterCount);
+                // console.log(estimateRegisterCount);
                 if ($('#view_tab_10000102').length > 0 || estimateRegisterCount > 3) {
                     $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
                     $("#estimateRegisterReloadBtn").trigger('click');

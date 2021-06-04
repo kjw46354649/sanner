@@ -325,7 +325,8 @@
 .layerPopup .list1 .rowStyle tr th.palegoldenrod { background-color: palegoldenrod; }
 .layerPopup .list1 .rowStyle tr th.antiquewhite { background-color: antiquewhite; }
 .layerPopup .list1 .rowStyle tr th.blueviolet { color: blueviolet; }
-.layerPopup .list1 .rowStyle tr td { width: 100%; border: 1px solid #cecece; color: #444; padding: 5px; text-align: center; font-family: 'NotoKrR'; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.layerPopup .list1 .rowStyle tr td {border: 1px solid #cecece; color: #444; padding: 5px; text-align: center; font-family: 'NotoKrR'; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/*.layerPopup .list1 .rowStyle tr td { width: 100%; border: 1px solid #cecece; color: #444; padding: 5px; text-align: center; font-family: 'NotoKrR'; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }*/
 .layerPopup .list1 .rowStyle tr td.red { color: #e71b1b; }
 .layerPopup .list1 .rowStyle tr td.blueviolet { color: blueviolet; }
 .layerPopup .list2 { height: 91px; overflow-y: auto; }
