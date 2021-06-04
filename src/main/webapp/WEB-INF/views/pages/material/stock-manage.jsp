@@ -1279,7 +1279,7 @@
         /** 도면 등록 처리 **/
         $('#stock_manage_drawing_new_btn').on('click', function () {
             // callCadDrawingUploadPopup('inside', 'material.manageStockCadFiles');
-            drawingUploadPopupWindow('inside', 'material.manageStockCadFiles');
+            drawingUploadPopupWindow('inside', 'material.manageStockCadFiles', '');
         });
 
         /** 위치정보관리 팝업 호출 */

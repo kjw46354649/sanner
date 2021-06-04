@@ -48,6 +48,7 @@
                     <input type="hidden" id="actionType" name="actionType" value="${actionType}">
                     <input type="hidden" id="actionUrl" name="actionUrl" value="">
                     <input type="hidden" id="fileGrid" name="fileGrid" value="">
+                    <input type="hidden" id="WORK_KEY" name="WORK_KEY" value="${WORK_KEY}">
                     <div>
                         <div id="common_cad_file_attach_grid" style="margin:auto;"></div>
                         <div class="right_sort fileTableInfoWrap">
@@ -506,6 +507,8 @@
             });
             formData.append('queryId', $('#common_cad_file_attach_form').find("#queryId").val() + "_select");
             formData.append('actionType', $('#common_cad_file_attach_form').find('#actionType').val());
+            formData.append('WORK_KEY', $('#common_cad_file_attach_form').find("#WORK_KEY").val());
+
             uploadControlFiles = [];    // 파일 업로드 정보 초기화
 
             $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
@@ -565,12 +568,6 @@
                 };
                 $("#common_cad_file_attach_form").find("#fileGrid").val(JSON.stringify(changes));
                 let parameters = {'url': '/cadFileConvert', 'data': {data: JSON.stringify(changes)}};
-
-
-                console.log("$cadFileConvertUploadCompletedBtn");
-                console.log(parameters);
-
-
                 fnPostAjax(function (data, callFunctionParam) {
                     fnAlert(null,"<h1>저장되었습니다.</h1>", function () {
                         $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
@@ -609,24 +606,9 @@
         return (fileSize  / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
     }
 
-    // commonCadFileAttachPopup.on('hide.bs.modal',function(e) {
-    //     var actionType = $('#common_cad_file_attach_form').find('#actionType').val();
-    //     if(actionType == 'estimate') {          // 견적 도면 등록
-    //         $("#estimateRegisterReloadBtn").trigger("click");
-    //     }else if(actionType == 'control' || actionType == 'controlRev') {
-    //         $("#CONTROL_MANAGE_SEARCH").trigger("click");
-    //     }else if(actionType == 'inside') {      // 자재 도면 등록
-    //         $("#stock_manage_search_btn").trigger("click");
-    //     }
-    //     uploadControlFiles = [];
-    //     $commonCadFileAttachGrid.pqGrid('destroy');
-    //     $commonCadUploadFileGrid.pqGrid('destroy');
-    // });
-
     function initDrawingLoad(){
 
         let actionType = $('#common_cad_file_attach_form').find('#actionType').val();
-
         $commonCadFileAttachGrid = $('#' + commonCadFileAttachGridId).pqGrid(commonCadFileAttachObj);
 
         if(actionType == 'estimate') {          // 견적 도면 등록
