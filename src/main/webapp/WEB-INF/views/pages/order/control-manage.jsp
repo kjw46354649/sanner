@@ -2237,7 +2237,7 @@
                 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT', 'UNIT_PROCESS_AUTO_AMT',
                 'CONTROL_PART_INSERT_UPDATE_DT',
-                // 'UNIT_SUM_AUTO_AMT'
+                'UNIT_SUM_AUTO_AMT'
             ];
             const includeList = controlList.concat(partList);
 
