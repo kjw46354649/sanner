@@ -373,6 +373,7 @@
             chart: {
                 type: 'pie',
                 height: '100%',
+                styledMode: true
             },
             title: {
                 text: '불량유형',
@@ -380,6 +381,9 @@
                 style: {
                     fontSize: '1.4rem'
                 }
+            },
+            credits: {
+                enabled: false
             },
             subtitle: {
                 text: '20219년 9월',
@@ -401,12 +405,15 @@
                     center: ['50%', '0%'],
                     showInLegend: true,
                     dataLabels: {
-                        format: '<b>{point.percentage:.0f} %</b>',
-                        style: {
-                            fontSize: '13px',
-                            textOutline: '',
-                            color:'#000000'
-                        }
+                        useHTML: true,
+                        // format: '<b>{point.percentage:.0f} %</b>',
+                        format: '<span style="font-weight: bold;color: black;font-size: 13px;">{point.percentage:.0f} %</span>',
+                        // style: {
+                        //     fontSize: '13px',
+                        //     fontWeight: 'bold',
+                        //     textOutline: '',
+                        //     color:'#000000'
+                        // }
                         // format: '<b>{point.name}</b>: {point.percentage:.1f} %'
                     }
                 }
@@ -433,6 +440,7 @@
             chart: {
                 type: 'pie',
                 height: '100%',
+                styledMode: true
             },
             title: {
                 text: '발생공정',
@@ -440,6 +448,9 @@
                 style: {
                     fontSize: '1.4rem'
                 }
+            },
+            credits: {
+                enabled: false
             },
             subtitle: {
                 text: '20219년 9월',
@@ -459,13 +470,14 @@
                     center: ['50%', '0%'],
                     showInLegend: true,
                     dataLabels: {
-                        format: '{point.percentage:.0f} %',
-                        style: {
-                            fontSize: '13px',
-                            textOutline: '',
-                            color:'#000000'
-                        }
-                        // format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        useHTML: true,
+                        // format: '{point.percentage:.0f} %',
+                        format: '<span style="font-weight: bold;color: black;font-size: 13px;">{point.percentage:.0f} %</span>',
+                        // style: {
+                        //     fontSize: '13px',
+                        //     textOutline: '',
+                        //     color:'#000000'
+                        // }
                     }
                 }
             },
@@ -486,7 +498,11 @@
         const chart3 = Highcharts.chart('monthly_quality_board_middle_wrap_div_4', {
             chart: {
                 type: 'pie',
-                height: '100%',
+                height: (screen.availWidth >= 1800)?'100%':'93%',
+                styledMode: true
+            },
+            credits: {
+                enabled: false
             },
             title: {
                 text: '발생원인',
@@ -504,23 +520,24 @@
             legend: {
                 verticalAlign:'top',
                 y: 135,
-                floating:true
+                floating:true,
             },
             plotOptions: {
                 pie: {
                     size: 105,
-                    // size : '70%',
+                    // size: '60%',
                     shadow: false,
                     center: ['50%', '0%'],
                     showInLegend: true,
                     dataLabels: {
-                        format: '{point.percentage:.0f} %',
-                        style: {
-                            fontSize: '13px',
-                            textOutline: '',
-                            color:'#000000'
-                        }
-                        // format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        useHTML: true,
+                        // format: '{point.percentage:.0f} %',
+                        format: '<span style="font-weight: bold;color: black;font-size: 13px;">{point.percentage:.0f} %</span>',
+                        // style: {
+                        //     fontSize: '13px',
+                        //     textOutline: '',
+                        //     color:'#000000'
+                        // }
                     }
                 }
             },
@@ -533,12 +550,7 @@
                 // size: '100%',
                 innerSize: '50%',
                 dataLabels: {
-                    distance: -10,
-                    style: {
-                        fontSize: '13px',
-                        textOutline: '',
-                        color:'#000000'
-                    }
+                    distance: -10
                 }
             }],
         });
@@ -600,6 +612,9 @@
                 borderColor: '#CCC',
                 borderWidth: 1,
                 shadow: false
+            },
+            credits: {
+                enabled: false
             },
             tooltip: {
                 shared: true

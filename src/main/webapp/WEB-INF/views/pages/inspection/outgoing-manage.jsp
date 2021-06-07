@@ -1473,10 +1473,10 @@
 
                 switch (target) {
                     case 'disposal':
-                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.deleteOutgoingDisposal,inspection.updateOutgoingDisposal,inspection.updateOutgoingOutType1After2,inspection.updateOutFinishStatus");
+                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.deleteOutgoingDisposal,inspection.updateOutgoingDisposal,inspection.updateOutgoingOutType1After2,inspection.updateOutFinishStatus,machine.deleteMctPlanAll");
                         break;
                     default:
-                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2,inspection.updateOutgoingOutType1After3,inspection.updateOutFinishStatus");
+                        $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2,inspection.updateOutgoingOutType1After3,inspection.updateOutFinishStatus,machine.deleteMctPlanAll");
                 }
 
                 let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_pop_type_1_form").serialize()};
@@ -1533,7 +1533,7 @@
                     };
                     changes.queryIdList = {
                         'insertQueryId': ['inspection.insertOutgoingOutType2'],
-                        'updateQueryId': ['inspection.updateOutgoingOutType1After1', 'inspection.updateOutgoingOutType1After2', 'inspection.updateOutgoingOutType1After3', 'inspection.updateOutFinishStatus']
+                        'updateQueryId': ['inspection.updateOutgoingOutType1After1', 'inspection.updateOutgoingOutType1After2', 'inspection.updateOutgoingOutType1After3', 'inspection.updateOutFinishStatus', 'machine.deleteMctPlanAll']
                     };
                     let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
@@ -1612,110 +1612,6 @@
                 $('#outgoing_manage_return_form').find("#INSPECT_DESC").attr("readonly", false);
             }
 
-        });
-
-        $("#OUTGOING_BARCODE_NUM").on('keydown', function (e) {
-            if (e.keyCode === 13) {
-                const barcodeNum = fnBarcodeKo2En(this.value);
-                const barcodeType = barcodeNum.charAt(0).toUpperCase();
-                let barcodeSql = "";
-                $("#OUTGOING_BARCODE_NUM").val(""); // 바코드 input 초기화
-
-                if (barcodeType === "L") {//라벨
-                    barcodeSql = "inspection.selectOutgoingOutType4";
-                } else if (barcodeType === "C") {//도면
-                    barcodeSql = "inspection.selectOutgoingOutType3";
-                } else if (barcodeType === "O") {//영업도면
-                    barcodeSql = "inspection.selectOutgoingOutType5";
-                } else {
-                    alertify.notify('알 수 없는 바코드 타입입니다.[' + barcodeNum + ']', 'error');
-                    return false;
-                }
-
-                //0. 바코드 정보 가져오기
-                let data = {'queryId': barcodeSql, 'BARCODE_NUM': barcodeNum};
-                let parameters = {'url': '/json-info', 'data': data};
-                fnPostAjaxSound(function (data) {
-                    let dataInfo = data.info;
-                    if (dataInfo == null) {
-                        alertify.notify('해당 바코드가 존재하지 않습니다', 'error');
-                        return false;
-                    } else {
-                        if (barcodeType === "L") {
-                            // 1. 버튼으로 출고 했을 때 메시지
-                            // 2. 버튼으로 모두 출고 했을 때 처리방법
-                            if (dataInfo.OUT_QTY > 0) {
-                                alertify.notify('이미 출하처리 되었습니다', 'error');
-                                return false;
-                            }
-
-                            if (dataInfo.MY_OUT_PACKING_CNT > 0) {
-                                alertify.notify('이미 출하처리 되었습니다', 'error');
-                                return false;
-                            }
-
-                            fnJsonDataToForm("outgoing_manage_pop_type_label_form", dataInfo);
-                            $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_1").html(dataInfo.QTY_INFO);
-                            $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_2").html(dataInfo.REMAIN_PACKING_CNT);
-                            $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_3").html(dataInfo.MY_PACKING_NUM);
-
-                            //. 저장하기
-                            $("#outgoing_manage_pop_type_label_form").find("#queryId").val("inspection.insertOutgoingOutType4,inspection.updateOutgoingOutType4After1,inspection.updateOutgoingOutType4After2,inspection.updateOutgoingOutType4After3,inspection.updateOutFinishStatus");
-                            $("#outgoing_manage_pop_type_label_form").find("#BARCODE_NUM").val(barcodeNum);
-                            let parameters = {
-                                'url': '/json-manager',
-                                'data': $('#outgoing_manage_pop_type_label_form').serialize()
-                            };
-                            fnPostAjaxAsync(function () {
-                                alertify.notify('출고처리되었습니다', 'success');
-                            }, parameters, '');
-                        } else if (barcodeType === "C" || barcodeType === "O") {
-                            if (dataInfo.OUT_QTY > 0) {
-                                alertify.notify('이미 출하처리 되었습니다', 'error');
-                                return false;
-                            }
-                            // TODO: PACKING 단위로 출고 한 후 출고 된 메세지 어떻게 할지
-                            if (dataInfo.MY_OUT_PACKING_CNT > 0) {
-                                alertify.notify('이미 출하처리 되었습니다', 'error');
-                                return false;
-                            }
-
-                            fnJsonDataToForm("outgoing_manage_pop_type_control_form", dataInfo);
-
-                            $("#outgoing_manage_pop_type_control_form").find("#outgoing_manage_pop_type_control_form_view_1").html(data.info.QTY_INFO);
-                            $("#outgoing_manage_pop_type_control_form").find("#outgoing_manage_pop_type_control_form_view_2").html("0");
-                            $("#outgoing_manage_pop_type_control_form").find("#outgoing_manage_pop_type_control_form_view_3").html(data.info.PLAN_QTY);
-
-                            //. 저장하기
-                            if (barcodeType === "C") {
-                                $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType3,inspection.updateOutgoingOutType3After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3,inspection.updateOutFinishStatus");
-                            } else if (barcodeType === "O") {
-                                $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType5,inspection.updateOutgoingOutType5After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3,inspection.updateOutFinishStatus");
-                            }
-                            let parameters = {
-                                'url': '/json-manager',
-                                'data': $('#outgoing_manage_pop_type_control_form').serialize()
-                            };
-                            fnPostAjaxAsync(function () {
-                                alertify.notify('출고처리되었습니다', 'success');
-                            }, parameters, '');
-                        }
-                    }
-                }, parameters, '');
-            }
-        });
-
-        $("#outgoingBarcodeSpan").on('click', function () {
-            $("#OUTGOING_BARCODE_NUM").focus();
-        });
-
-        $("#OUTGOING_BARCODE_NUM").on({
-            focus: function () {
-                $("#outgoingBarcodeImg").attr("src", "/resource/asset/images/common/img_barcode_long_on.png");
-            },
-            blur: function () {
-                $("#outgoingBarcodeImg").attr("src", "/resource/asset/images/common/img_barcode_long.png");
-            }
         });
 
         fnCommCodeDatasourceSelectBoxCreate($('#outgoing_manage_return_pop').find('#INSPECT_USER_ID'), '', {
@@ -2046,7 +1942,7 @@
                             $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_3").html(dataInfo.MY_PACKING_NUM);
 
                             //. 저장하기
-                            $("#outgoing_manage_pop_type_label_form").find("#queryId").val("inspection.insertOutgoingOutType4,inspection.updateOutgoingOutType4After1,inspection.updateOutgoingOutType4After2,inspection.updateOutgoingOutType4After3,inspection.updateOutFinishStatus");
+                            $("#outgoing_manage_pop_type_label_form").find("#queryId").val("inspection.insertOutgoingOutType4,inspection.updateOutgoingOutType4After1,inspection.updateOutgoingOutType4After2,inspection.updateOutgoingOutType4After3,inspection.updateOutFinishStatus,machine.deleteMctPlanAll");
                             $("#outgoing_manage_pop_type_label_form").find("#BARCODE_NUM").val(barcodeNum);
                             let parameters = {
                                 'url': '/json-manager',
@@ -2084,11 +1980,10 @@
 
                             //. 저장하기
                             if (barcodeType === "C") {
-                                $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType3,inspection.updateOutgoingOutType3After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3,inspection.updateOutFinishStatus");
+                                $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType3,inspection.updateOutgoingOutType3After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3,inspection.updateOutFinishStatus,machine.deleteMctPlanAll");
                             } else if (barcodeType === "O") {
-                                $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType5,inspection.updateOutgoingOutType5After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3,inspection.updateOutFinishStatus");
+                                $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType5,inspection.updateOutgoingOutType5After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3,inspection.updateOutFinishStatus,machine.deleteMctPlanAll");
                             }
-                            // return ;
                             let parameters = {
                                 'url': '/json-manager',
                                 'data': $('#outgoing_manage_pop_type_control_form').serialize()
