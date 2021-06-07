@@ -5,1845 +5,2450 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
-	<link rel="stylesheet" type="text/css" href="/resource/pop/XEIcon/xeicon.min.css">
-	<link rel="stylesheet" href="/resource/pop/css/index.css">
+	<link rel="stylesheet" href="resource/pop/css/index.css">
+	<link rel="stylesheet" href="resource/mct/mct.css">
+	<link rel="stylesheet" href="./resource/pop/XEIcon/xeicon.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<style>
 		*{margin: 0; padding: 0; box-sizing: border-box;}
 		a{text-decoration: none; color: black;}
 		ul,dl,ol { list-style: none;}
-		html { width: 3840px; height: 2160px; overflow: auto; font-family: 'notoB';}
-		body { width: 3840px; height: 2160px;}
 	</style>
 </head>
+
 <body>
 	<section id="containerWrap" class="containerWrap">
+		<!--왼쪽 구역 시작-->
 		<div id="leftContainer" class="leftContainer">
 			<h1 id="mctTitle" class="mctTitle">■ MCT 가공 현황</h1>
-			<!--첫번째 줄 시작-->
-			<div id="contents01" class="contents01">
-				<!--대형 MCT 시작-->
-				<div id="mctBig contentsWrap" class="mctBig contentsWrap">
-					<!--네임 태그-->
-					<div id="titleTag" class="titleTag">대형 MCT</div>
-					<!--진행,대기 상황-->
-					<div id="progressTag" class="progressTag">
-						<span id="progress" class="progress"><span>진행</span> 12 (123EA)</span>
-						<span id="standby" class="standby"><span>대기</span> 12 (123EA)</span>
-					</div>
-
-					<!--대형 MCT 내용 시작-->
+			
+			<!--DMT화면용-->
+			<div id="contents03" class="contents03">
+				<div id="smallMct contentsWrap" class="smallMct contentsWrap">
+					<div id="titleTag" class="titleTag">소형 MCT</div>
 					<div id="infoWrap" class="infoWrap">
-
-						<!--로그인 되어있고 생산 진행중일때-->
-						<div id="info_01 login" class="info_01 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="/resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-
-						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-
-						<!--로그인만 되어있을때-->
-						<div id="info_02 ready" class="info_02 ready">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="/resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인만 되어있을때 끝-->
-
-						<!--로그인 되어있고 일시중지-->
-						<div id="info_03 pause" class="info_03 pause">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent pausePercent" class="progressPercent pausePercent">82%</span>
-								<div id="pauseTime" class="pauseTime">
-									일시중지<br>
-									<span>(23')</span>
-								</div>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="/resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 일시중지 끝-->
-
-						<!--기본상태-->
-						<div id="info_04" class="info_04">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName"></p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-								<!--담당 직원 사진-->
-								<div id="staffImg staffIcon" class="staffImg staffIcon">
-									<img src="resource/pop/images/user.svg" alt="직원아이콘">
-								</div>
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--기본상태-->
-
-					</div>
-					<!--대형 MCT 내용 끝-->
-				</div>
-				<!--대형 MCT 끝-->
-
-
-				<!--소형 MCT1 시작-->
-				<div id="mctSmall_1 contentsWrap" class="mctSmall_1 contentsWrap">
-					<!--네임 태그-->
-					<div id="titleTag" class="titleTag">소형 MCT1</div>
-					<!--진행,대기 상황-->
-					<div id="progressTag" class="progressTag">
-						<span id="progress" class="progress"><span>진행</span> 12 (123EA)</span>
-						<span id="standby" class="standby"><span>대기</span> 12 (123EA)</span>
-					</div>
-				
-					<!--소형 MCT1 내용 시작-->
-					<div id="infoWrap" class="infoWrap">
-				
-						<!--로그인 되어있고 생산 진행중일때-->
-						<div id="info_01 login" class="info_01 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-				
-						<!--로그인만 되어있을때-->
-						<div id="info_02 ready" class="info_02 ready">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-							<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인만 되어있을때 끝-->
-				
-						<!--로그인 되어있고 일시중지-->
-						<div id="info_03 pause" class="info_03 pause">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent pausePercent" class="progressPercent pausePercent">82%</span>
-								<div id="pauseTime" class="pauseTime">
-									일시중지<br>
-									<span>(23')</span>
-								</div>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 일시중지 끝-->
-				
-						<!--기본상태-->
-						<div id="info_04" class="info_04">
-							<!--상단 기계,직원,생산물품-->
-								<div id="nameWrap" class="nameWrap">
-									<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-									<p id="staffName" class="staffName"></p> <!--직원-->
-									<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-								</div>
-								<!--상단 기계,직원,생산물품 끝-->
-								<!--도면-->
-								<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-									<!--담당 직원 사진-->
-									<div id="staffImg staffIcon" class="staffImg staffIcon">
-										<img src="resource/pop/images/user.svg" alt="직원아이콘">
+						<div class="rowWrap">
+							<div id="mctInfo_01" class="mctInfo_01 mctLogin">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+									<span id="mctName" class="mctName login">
+										IM-12
+									</span>
+									<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+										<div id="staffImg" class="staffImg mctStaffImg">
+											<img src="resource/pop/images/staff.jpg" alt="직원사진">
+										</div>
+										<div class="staffInfoWrap">
+											<p class="mctStaffName">홍길동</p>
+											<p class="mctTime">남은시간
+											<br>3h 20m
+											</p>
+										</div>
+									</div>
+									<div id="mctInfoTopRight" class="mctInfoTopRight">
+										<div class="mctMapImg">
+											<img src="resource/pop/images/map.jpg" alt="도면">
+											<div class="mctMapTime">
+												<span>진행 : 11h 21m</span><br>
+												예상 : 14h 23m
+											</div>
+											<span class="progressPercent mctProgressPercent">82%</span>
+										</div>
+										<div class="mctMapBtmInfo login">
+											STEEL 단품 24EA<br>
+											W21-3142123-01 #1
+										</div>
+									</div>
+									<div id="mctInfoBtm" class="mctInfoBtm">
+										<table>
+											<tr>
+												<th>계획 List</th>
+												<th>7 품 546 EA (<span>5h 23m</span>)</th>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+										</table>
 									</div>
 								</div>
-								<!--도면 끝-->
-						</div>
-						<!--기본상태-->
-
-						<div id="info_05 login" class="info_05 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
 							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
+							<!--진행중일때 끝-->
+
+							<!--일시정지 때-->
+							<div id="mctInfo_02" class="mctInfo_02 mctPause">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName pause">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>3h 20m
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/map.jpg" alt="도면">
+										<div class="mctMapTime">
+											<span>진행 : 11h 21m</span><br>
+											예상 : 14h 23m
+										</div>
+										<div id="pauseTime" class="pauseTime">
+											일시중지<br>
+											<span>(23')</span>
+										</div>
+										<span class="progressPercent mctProgressPercent">82%</span>
+									</div>
+									<div class="mctMapBtmInfo pause">
+										STEEL 단품 24EA<br>
+										W21-3142123-01 #1
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA (<span>5h 23m</span>)</th>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--일시정지 끝-->
+
+						<!--기본-->
+						<div id="mctInfo_03" class="mctInfo_03">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>-
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/machine.png" alt="기계">
+										<div class="mctMapTime">
+											<span>진행 : </span><br>
+											예상 : 
+										</div>
+										<span class="progressPercent mctProgressPercent">- %</span>
+									</div>
+									<div class="mctMapBtmInfo">
+										
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA ( - )</th>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--기본 끝-->
+
+						<!--진행중일 때-->
+						<div id="mctInfo_04" class="mctInfo_04 mctLogin">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName login">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>3h 20m
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/map.jpg" alt="도면">
+										<div class="mctMapTime">
+											<span>진행 : 11h 21m</span><br>
+											예상 : 14h 23m
+										</div>
+										<span class="progressPercent mctProgressPercent">82%</span>
+									</div>
+									<div class="mctMapBtmInfo login">
+										STEEL 단품 24EA<br>
+										W21-3142123-01 #1
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA (<span>5h 23m</span>)</th>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--진행중일때 끝-->
+
+						<!--빈공간 때-->
+						<div id="mctInfo_05" class="mctInfo_05 blank">
+							
+						</div>
+						<!--빈공간 끝-->
+
+						<!--기본-->
+						<div id="mctInfo_06" class="mctInfo_06">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>-
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/machine.png" alt="기계">
+										<div class="mctMapTime">
+											<span>진행 : </span><br>
+											예상 : 
+										</div>
+										<span class="progressPercent mctProgressPercent">- %</span>
+									</div>
+									<div class="mctMapBtmInfo">
+										
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA ( - )</th>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--기본 끝-->
+						</div>
+						<!--row끝-->
+						<div class="rowWrap">
+							<div id="mctInfo_01" class="mctInfo_01 mctLogin">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+									<span id="mctName" class="mctName login">
+										IM-12
+									</span>
+									<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+										<div id="staffImg" class="staffImg mctStaffImg">
+											<img src="resource/pop/images/staff.jpg" alt="직원사진">
+										</div>
+										<div class="staffInfoWrap">
+											<p class="mctStaffName">홍길동</p>
+											<p class="mctTime">남은시간
+											<br>3h 20m
+											</p>
+										</div>
+									</div>
+									<div id="mctInfoTopRight" class="mctInfoTopRight">
+										<div class="mctMapImg">
+											<img src="resource/pop/images/map.jpg" alt="도면">
+											<div class="mctMapTime">
+												<span>진행 : 11h 21m</span><br>
+												예상 : 14h 23m
+											</div>
+											<span class="progressPercent mctProgressPercent">82%</span>
+										</div>
+										<div class="mctMapBtmInfo login">
+											STEEL 단품 24EA<br>
+											W21-3142123-01 #1
+										</div>
+									</div>
+									<div id="mctInfoBtm" class="mctInfoBtm">
+										<table>
+											<tr>
+												<th>계획 List</th>
+												<th>7 품 546 EA (<span>5h 23m</span>)</th>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!--진행중일때 끝-->
+
+							<!--일시정지 때-->
+							<div id="mctInfo_02" class="mctInfo_02 mctPause">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName pause">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>3h 20m
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/map.jpg" alt="도면">
+										<div class="mctMapTime">
+											<span>진행 : 11h 21m</span><br>
+											예상 : 14h 23m
+										</div>
+										<div id="pauseTime" class="pauseTime">
+											일시중지<br>
+											<span>(23')</span>
+										</div>
+										<span class="progressPercent mctProgressPercent">82%</span>
+									</div>
+									<div class="mctMapBtmInfo pause">
+										STEEL 단품 24EA<br>
+										W21-3142123-01 #1
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA (<span>5h 23m</span>)</th>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--일시정지 끝-->
+
+						<!--기본-->
+						<div id="mctInfo_03" class="mctInfo_03">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>-
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/machine.png" alt="기계">
+										<div class="mctMapTime">
+											<span>진행 : </span><br>
+											예상 : 
+										</div>
+										<span class="progressPercent mctProgressPercent">- %</span>
+									</div>
+									<div class="mctMapBtmInfo">
+										
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA ( - )</th>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--기본 끝-->
+
+						<!--빈공간 때-->
+						<div id="mctInfo_04" class="mctInfo_04 blank">
+							
+						</div>
+						<!--빈공간 끝-->
+
+						<!--빈공간 때-->
+						<div id="mctInfo_05" class="mctInfo_05 blank">
+							
+						</div>
+						<!--빈공간 끝-->
+
+						<!--기본-->
+						<div id="mctInfo_06" class="mctInfo_06">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>-
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/machine.png" alt="기계">
+										<div class="mctMapTime">
+											<span>진행 : </span><br>
+											예상 : 
+										</div>
+										<span class="progressPercent mctProgressPercent">- %</span>
+									</div>
+									<div class="mctMapBtmInfo">
+										
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA ( - )</th>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--기본 끝-->
+						</div>
+						<!--row끝-->
+						<div class="rowWrap">
+							<div id="mctInfo_01" class="mctInfo_01 mctLogin">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+									<span id="mctName" class="mctName login">
+										IM-12
+									</span>
+									<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+										<div id="staffImg" class="staffImg mctStaffImg">
+											<img src="resource/pop/images/staff.jpg" alt="직원사진">
+										</div>
+										<div class="staffInfoWrap">
+											<p class="mctStaffName">홍길동</p>
+											<p class="mctTime">남은시간
+											<br>3h 20m
+											</p>
+										</div>
+									</div>
+									<div id="mctInfoTopRight" class="mctInfoTopRight">
+										<div class="mctMapImg">
+											<img src="resource/pop/images/map.jpg" alt="도면">
+											<div class="mctMapTime">
+												<span>진행 : 11h 21m</span><br>
+												예상 : 14h 23m
+											</div>
+											<span class="progressPercent mctProgressPercent">82%</span>
+										</div>
+										<div class="mctMapBtmInfo login">
+											STEEL 단품 24EA<br>
+											W21-3142123-01 #1
+										</div>
+									</div>
+									<div id="mctInfoBtm" class="mctInfoBtm">
+										<table>
+											<tr>
+												<th>계획 List</th>
+												<th>7 품 546 EA (<span>5h 23m</span>)</th>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!--진행중일때 끝-->
+
+							<!--일시정지 때-->
+							<div id="mctInfo_02" class="mctInfo_02 mctPause">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName pause">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>3h 20m
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/map.jpg" alt="도면">
+										<div class="mctMapTime">
+											<span>진행 : 11h 21m</span><br>
+											예상 : 14h 23m
+										</div>
+										<div id="pauseTime" class="pauseTime">
+											일시중지<br>
+											<span>(23')</span>
+										</div>
+										<span class="progressPercent mctProgressPercent">82%</span>
+									</div>
+									<div class="mctMapBtmInfo pause">
+										STEEL 단품 24EA<br>
+										W21-3142123-01 #1
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA (<span>5h 23m</span>)</th>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--일시정지 끝-->
+
+						<!--기본-->
+						<div id="mctInfo_03" class="mctInfo_03">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>-
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/machine.png" alt="기계">
+										<div class="mctMapTime">
+											<span>진행 : </span><br>
+											예상 : 
+										</div>
+										<span class="progressPercent mctProgressPercent">- %</span>
+									</div>
+									<div class="mctMapBtmInfo">
+										
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA ( - )</th>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--기본 끝-->
+
+						<!--빈공간 때-->
+						<div id="mctInfo_04" class="mctInfo_04 blank">
+							
+						</div>
+						<!--빈공간 끝-->
+
+						<!--빈공간 때-->
+						<div id="mctInfo_05" class="mctInfo_05 blank">
+							
+						</div>
+						<!--빈공간 끝-->
+
+						<!--빈공간 때-->
+						<div id="mctInfo_06" class="mctInfo_06 blank">
+						
+						</div>
+						<!--빈공간 끝-->
+						</div>
+						<!--row끝-->
+						<div class="rowWrap">
+							<div id="mctInfo_01" class="mctInfo_01 mctLogin">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+									<span id="mctName" class="mctName login">
+										IM-12
+									</span>
+									<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+										<div id="staffImg" class="staffImg mctStaffImg">
+											<img src="resource/pop/images/staff.jpg" alt="직원사진">
+										</div>
+										<div class="staffInfoWrap">
+											<p class="mctStaffName">홍길동</p>
+											<p class="mctTime">남은시간
+											<br>3h 20m
+											</p>
+										</div>
+									</div>
+									<div id="mctInfoTopRight" class="mctInfoTopRight">
+										<div class="mctMapImg">
+											<img src="resource/pop/images/map.jpg" alt="도면">
+											<div class="mctMapTime">
+												<span>진행 : 11h 21m</span><br>
+												예상 : 14h 23m
+											</div>
+											<span class="progressPercent mctProgressPercent">82%</span>
+										</div>
+										<div class="mctMapBtmInfo login">
+											STEEL 단품 24EA<br>
+											W21-3142123-01 #1
+										</div>
+									</div>
+									<div id="mctInfoBtm" class="mctInfoBtm">
+										<table>
+											<tr>
+												<th>계획 List</th>
+												<th>7 품 546 EA (<span>5h 23m</span>)</th>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!--진행중일때 끝-->
+
+							<!--일시정지 때-->
+							<div id="mctInfo_02" class="mctInfo_02 mctPause">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName pause">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>3h 20m
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/map.jpg" alt="도면">
+										<div class="mctMapTime">
+											<span>진행 : 11h 21m</span><br>
+											예상 : 14h 23m
+										</div>
+										<div id="pauseTime" class="pauseTime">
+											일시중지<br>
+											<span>(23')</span>
+										</div>
+										<span class="progressPercent mctProgressPercent">82%</span>
+									</div>
+									<div class="mctMapBtmInfo pause">
+										STEEL 단품 24EA<br>
+										W21-3142123-01 #1
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA (<span>5h 23m</span>)</th>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--일시정지 끝-->
+
+						<!--기본-->
+						<div id="mctInfo_03" class="mctInfo_03">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>-
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/machine.png" alt="기계">
+										<div class="mctMapTime">
+											<span>진행 : </span><br>
+											예상 : 
+										</div>
+										<span class="progressPercent mctProgressPercent">- %</span>
+									</div>
+									<div class="mctMapBtmInfo">
+										
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA ( - )</th>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--기본 끝-->
+
+						<!--기본 때-->
+						<div id="mctInfo_04" class="mctInfo_04">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>-
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/machine.png" alt="기계">
+										<div class="mctMapTime">
+											<span>진행 : </span><br>
+											예상 : 
+										</div>
+										<span class="progressPercent mctProgressPercent">- %</span>
+									</div>
+									<div class="mctMapBtmInfo">
+										
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA ( - )</th>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--기본 끝-->
+
+						<!--빈공간 때-->
+						<div id="mctInfo_05" class="mctInfo_05 blank">
+							
+						</div>
+						<!--빈공간 끝-->
+
+						<!--빈공간-->
+						<div id="mctInfo_06" class="mctInfo_06 blank">
+						
+						</div>
+						<!--빈공간 끝-->
+						</div>
+						<!--row끝-->
+					</div>
+				</div>
+			</div>
+
+			<!--첫번째 줄 시작-->
+			<div id="contents01" class="contents01">
+				<!--소형MCT-->
+				<div id="smallMct contentsWrap" class="smallMct contentsWrap">
+					<div id="titleTag" class="titleTag">소형 MCT</div>
+					<div id="infoWrap" class="infoWrap">
+						<div class="rowWrap">
+							<!--진행중일 때-->
+							<div id="mctInfo_01" class="mctInfo_01 mctLogin">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+									<span id="mctName" class="mctName login">
+										IM-12
+									</span>
+									<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+										<div id="staffImg" class="staffImg mctStaffImg">
+											<img src="resource/pop/images/staff.jpg" alt="직원사진">
+										</div>
+										<div class="staffInfoWrap">
+											<p class="mctStaffName">홍길동</p>
+											<p class="mctTime">남은시간
+											<br>3h 20m
+											</p>
+										</div>
+									</div>
+									<div id="mctInfoTopRight" class="mctInfoTopRight">
+										<div class="mctMapImg">
+											<img src="resource/pop/images/map.jpg" alt="도면">
+											<div class="mctMapTime">
+												<span>진행 : 11h 21m</span><br>
+												예상 : 14h 23m
+											</div>
+											<span class="progressPercent mctProgressPercent">82%</span>
+										</div>
+										<div class="mctMapBtmInfo login">
+											STEEL 단품 24EA<br>
+											W21-3142123-01 #1
+										</div>
+									</div>
+									<div id="mctInfoBtm" class="mctInfoBtm">
+										<table>
+											<tr>
+												<th>계획 List</th>
+												<th>7 품 546 EA (<span>5h 23m</span>)</th>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!--진행중일때 끝-->
+
+							<!--일시정지 때-->
+							<div id="mctInfo_02" class="mctInfo_02 mctPause">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName pause">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>3h 20m
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/map.jpg" alt="도면">
+										<div class="mctMapTime">
+											<span>진행 : 11h 21m</span><br>
+											예상 : 14h 23m
+										</div>
+										<div id="pauseTime" class="pauseTime">
+											일시중지<br>
+											<span>(23')</span>
+										</div>
+										<span class="progressPercent mctProgressPercent">82%</span>
+									</div>
+									<div class="mctMapBtmInfo pause">
+										STEEL 단품 24EA<br>
+										W21-3142123-01 #1
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA (<span>5h 23m</span>)</th>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--일시정지 끝-->
+
+						<!--기본-->
+						<div id="mctInfo_03" class="mctInfo_03">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>-
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/machine.png" alt="기계">
+										<div class="mctMapTime">
+											<span>진행 : </span><br>
+											예상 : 
+										</div>
+										<span class="progressPercent mctProgressPercent">- %</span>
+									</div>
+									<div class="mctMapBtmInfo">
+										
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA ( - )</th>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--기본 끝-->
+
+						<!--진행중일 때-->
+						<div id="mctInfo_04" class="mctInfo_04 mctLogin">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName login">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>3h 20m
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/map.jpg" alt="도면">
+										<div class="mctMapTime">
+											<span>진행 : 11h 21m</span><br>
+											예상 : 14h 23m
+										</div>
+										<span class="progressPercent mctProgressPercent">82%</span>
+									</div>
+									<div class="mctMapBtmInfo login">
+										STEEL 단품 24EA<br>
+										W21-3142123-01 #1
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA (<span>5h 23m</span>)</th>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--진행중일때 끝-->
+
+						<!--일시정지 때-->
+						<div id="mctInfo_05" class="mctInfo_05 mctPause">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName pause">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>3h 20m
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/map.jpg" alt="도면">
+										<div class="mctMapTime">
+											<span>진행 : 11h 21m</span><br>
+											예상 : 14h 23m
+										</div>
+										<div id="pauseTime" class="pauseTime">
+											일시중지<br>
+											<span>(23')</span>
+										</div>
+										<span class="progressPercent mctProgressPercent">82%</span>
+									</div>
+									<div class="mctMapBtmInfo pause">
+										STEEL 단품 24EA<br>
+										W21-3142123-01 #1
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA (<span>5h 23m</span>)</th>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--일시정지 끝-->
+
+						<!--기본-->
+						<div id="mctInfo_06" class="mctInfo_06">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>-
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/machine.png" alt="기계">
+										<div class="mctMapTime">
+											<span>진행 : </span><br>
+											예상 : 
+										</div>
+										<span class="progressPercent mctProgressPercent">- %</span>
+									</div>
+									<div class="mctMapBtmInfo">
+										
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA ( - )</th>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--기본 끝-->
+					</div>
+					<!--row 끝-->
+					
+					<div class="rowWrap">
+						<!--진행중일 때-->
+						<div id="mctInfo_01" class="mctInfo_01 mctLogin">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName login">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>3h 20m
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/map.jpg" alt="도면">
+										<div class="mctMapTime">
+											<span>진행 : 11h 21m</span><br>
+											예상 : 14h 23m
+										</div>
+										<span class="progressPercent mctProgressPercent">82%</span>
+									</div>
+									<div class="mctMapBtmInfo login">
+										STEEL 단품 24EA<br>
+										W21-3142123-01 #1
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA (<span>5h 23m</span>)</th>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--진행중일때 끝-->
+
+						<!--일시정지 때-->
+						<div id="mctInfo_02" class="mctInfo_02 mctPause">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+							<span id="mctName" class="mctName pause">
+								IM-12
+							</span>
+							<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+								<div id="staffImg" class="staffImg mctStaffImg">
 									<img src="resource/pop/images/staff.jpg" alt="직원사진">
 								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
+								<div class="staffInfoWrap">
+									<p class="mctStaffName">홍길동</p>
+									<p class="mctTime">남은시간
+									<br>3h 20m
+									</p>
 								</div>
-								<!--작업진행 시간 끝-->
 							</div>
-							<!--도면 끝-->
+							<div id="mctInfoTopRight" class="mctInfoTopRight">
+								<div class="mctMapImg">
+									<img src="resource/pop/images/map.jpg" alt="도면">
+									<div class="mctMapTime">
+										<span>진행 : 11h 21m</span><br>
+										예상 : 14h 23m
+									</div>
+									<div id="pauseTime" class="pauseTime">
+										일시중지<br>
+										<span>(23')</span>
+									</div>
+									<span class="progressPercent mctProgressPercent">82%</span>
+								</div>
+								<div class="mctMapBtmInfo pause">
+									STEEL 단품 24EA<br>
+									W21-3142123-01 #1
+								</div>
+							</div>
+							<div id="mctInfoBtm" class="mctInfoBtm">
+								<table>
+									<tr>
+										<th>계획 List</th>
+										<th>7 품 546 EA (<span>5h 23m</span>)</th>
+									</tr>
+									<tr>
+										<td>W21-3142123-01 #1</td>
+										<td>ST 단품 24 EA</td>
+									</tr>
+									<tr>
+										<td>W21-3142123-01 #1</td>
+										<td>ST 단품 24 EA</td>
+									</tr>
+									<tr>
+										<td>W21-3142123-01 #1</td>
+										<td>ST 단품 24 EA</td>
+									</tr>
+									<tr>
+										<td>W21-3142123-01 #1</td>
+										<td>ST 단품 24 EA</td>
+									</tr>
+								</table>
+							</div>
 						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
+					</div>
+					<!--일시정지 끝-->
 
-						<div id="info_06 login" class="info_06 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
+					<!--기본-->
+					<div id="mctInfo_03" class="mctInfo_03">
+						<div id="mctInfoWrap" class="mctInfoWrap">
+							<span id="mctName" class="mctName">
+								IM-12
+							</span>
+							<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+								<div id="staffImg" class="staffImg mctStaffImg">
 									<img src="resource/pop/images/staff.jpg" alt="직원사진">
 								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
+								<div class="staffInfoWrap">
+									<p class="mctStaffName">홍길동</p>
+									<p class="mctTime">남은시간
+									<br>-
+									</p>
 								</div>
-								<!--작업진행 시간 끝-->
 							</div>
-							<!--도면 끝-->
+							<div id="mctInfoTopRight" class="mctInfoTopRight">
+								<div class="mctMapImg">
+									<img src="resource/pop/images/machine.png" alt="기계">
+									<div class="mctMapTime">
+										<span>진행 : </span><br>
+										예상 : 
+									</div>
+									<span class="progressPercent mctProgressPercent">- %</span>
+								</div>
+								<div class="mctMapBtmInfo">
+									
+								</div>
+							</div>
+							<div id="mctInfoBtm" class="mctInfoBtm">
+								<table>
+									<tr>
+										<th>계획 List</th>
+										<th>7 품 546 EA ( - )</th>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+								</table>
+							</div>
 						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-				
 					</div>
-					<!--소형 MCT1 내용 끝-->
-				</div>
-				<!--소형 MCT1 끝-->
+					<!--기본 끝-->
 
-			<!--소형 MCT2 시작-->
-			<div id="mctSmall_2 contentsWrap" class="mctSmall_2 contentsWrap">
-				<!--네임 태그-->
-				<div id="titleTag" class="titleTag">소형 MCT2</div>
-				<!--진행,대기 상황-->
-				<div id="progressTag" class="progressTag">
-					<span id="progress" class="progress"><span>진행</span> 12 (123EA)</span>
-					<span id="standby" class="standby"><span>대기</span> 12 (123EA)</span>
-				</div>
-			
-				<!--소형 MCT2 내용 시작-->
-				<div id="infoWrap" class="infoWrap">
-			
-					<!--로그인 되어있고 생산 진행중일때-->
-					<div id="info_01 login" class="info_01 login">
-						<!--상단 기계,직원,생산물품-->
-						<div id="nameWrap" class="nameWrap">
-							<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-							<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-							<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-						</div>
-						<!--상단 기계,직원,생산물품 끝-->
-						<!--도면-->
-						<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-							<!--작업 달성도-->
-							<span id="progressPercent" class="progressPercent">82%</span>
-							<!--담당 직원 사진-->
-							<div id="staffImg" class="staffImg">
-								<img src="resource/pop/images/staff.jpg" alt="직원사진">
-							</div>
-							<!--작업진행 시간-->
-							<div id="progressTime" class="progressTime">
-								<span>11h 33m</span>
-								/ 14h 30m
-							</div>
-							<!--작업진행 시간 끝-->
-						</div>
-						<!--도면 끝-->
-					</div>
-					<!--로그인 되어있고 생산 진행중일때 끝-->
-			
-					<!--로그인만 되어있을때-->
-					<div id="info_02 ready" class="info_02 ready">
-						<!--상단 기계,직원,생산물품-->
-						<div id="nameWrap" class="nameWrap">
-							<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-							<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-							<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-						</div>
-						<!--상단 기계,직원,생산물품 끝-->
-						<!--도면-->
-						<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-						<!--담당 직원 사진-->
-							<div id="staffImg" class="staffImg">
-								<img src="resource/pop/images/staff.jpg" alt="직원사진">
-							</div>
-						</div>
-						<!--도면 끝-->
-					</div>
-					<!--로그인만 되어있을때 끝-->
-			
-					<!--로그인 되어있고 일시중지-->
-					<div id="info_03 pause" class="info_03 pause">
-						<!--상단 기계,직원,생산물품-->
-						<div id="nameWrap" class="nameWrap">
-							<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-							<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-							<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-						</div>
-						<!--상단 기계,직원,생산물품 끝-->
-						<!--도면-->
-						<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-							<!--작업 달성도-->
-							<span id="progressPercent pausePercent" class="progressPercent pausePercent">82%</span>
-							<div id="pauseTime" class="pauseTime">
-								일시중지<br>
-								<span>(23')</span>
-							</div>
-							<!--담당 직원 사진-->
-							<div id="staffImg" class="staffImg">
-								<img src="resource/pop/images/staff.jpg" alt="직원사진">
-							</div>
-							<!--작업진행 시간-->
-							<div id="progressTime" class="progressTime">
-								<span>11h 33m</span>
-								/ 14h 30m
-							</div>
-							<!--작업진행 시간 끝-->
-						</div>
-						<!--도면 끝-->
-					</div>
-					<!--로그인 되어있고 일시중지 끝-->
-			
-					<!--빈공간-->
-					<div id="info_04 blank" class="info_04 blank">
+					<!--빈공간 때-->
+					<div id="mctInfo_04" class="mctInfo_04 blank">
 						
 					</div>
-					<!--빈공간-->
+					<!--빈공간 끝-->
 
-					<div id="info_05 login" class="info_05 login">
-						<!--상단 기계,직원,생산물품-->
-						<div id="nameWrap" class="nameWrap">
-							<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-							<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-							<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-						</div>
-						<!--상단 기계,직원,생산물품 끝-->
-						<!--도면-->
-						<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-							<!--작업 달성도-->
-							<span id="progressPercent" class="progressPercent">82%</span>
-							<!--담당 직원 사진-->
-							<div id="staffImg" class="staffImg">
-								<img src="resource/pop/images/staff.jpg" alt="직원사진">
+					<!--일시정지 때-->
+					<div id="mctInfo_05" class="mctInfo_05 mctPause">
+						<div id="mctInfoWrap" class="mctInfoWrap">
+							<span id="mctName" class="mctName pause">
+								IM-12
+							</span>
+							<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+								<div id="staffImg" class="staffImg mctStaffImg">
+									<img src="resource/pop/images/staff.jpg" alt="직원사진">
+								</div>
+								<div class="staffInfoWrap">
+									<p class="mctStaffName">홍길동</p>
+									<p class="mctTime">남은시간
+									<br>3h 20m
+									</p>
+								</div>
 							</div>
-							<!--작업진행 시간-->
-							<div id="progressTime" class="progressTime">
-								<span>11h 33m</span>
-								/ 14h 30m
+							<div id="mctInfoTopRight" class="mctInfoTopRight">
+								<div class="mctMapImg">
+									<img src="resource/pop/images/map.jpg" alt="도면">
+									<div class="mctMapTime">
+										<span>진행 : 11h 21m</span><br>
+										예상 : 14h 23m
+									</div>
+									<div id="pauseTime" class="pauseTime">
+										일시중지<br>
+										<span>(23')</span>
+									</div>
+									<span class="progressPercent mctProgressPercent">82%</span>
+								</div>
+								<div class="mctMapBtmInfo pause">
+									STEEL 단품 24EA<br>
+									W21-3142123-01 #1
+								</div>
 							</div>
-							<!--작업진행 시간 끝-->
+							<div id="mctInfoBtm" class="mctInfoBtm">
+								<table>
+									<tr>
+										<th>계획 List</th>
+										<th>7 품 546 EA (<span>5h 23m</span>)</th>
+									</tr>
+									<tr>
+										<td>W21-3142123-01 #1</td>
+										<td>ST 단품 24 EA</td>
+									</tr>
+									<tr>
+										<td>W21-3142123-01 #1</td>
+										<td>ST 단품 24 EA</td>
+									</tr>
+									<tr>
+										<td>W21-3142123-01 #1</td>
+										<td>ST 단품 24 EA</td>
+									</tr>
+									<tr>
+										<td>W21-3142123-01 #1</td>
+										<td>ST 단품 24 EA</td>
+									</tr>
+								</table>
+							</div>
 						</div>
-						<!--도면 끝-->
 					</div>
-					<!--로그인 되어있고 생산 진행중일때 끝-->
+					<!--일시정지 끝-->
 
-					<div id="info_06 login" class="info_06 login">
-						<!--상단 기계,직원,생산물품-->
-						<div id="nameWrap" class="nameWrap">
-							<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-							<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-							<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-						</div>
-						<!--상단 기계,직원,생산물품 끝-->
-						<!--도면-->
-						<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-							<!--작업 달성도-->
-							<span id="progressPercent" class="progressPercent">82%</span>
-							<!--담당 직원 사진-->
-							<div id="staffImg" class="staffImg">
-								<img src="resource/pop/images/staff.jpg" alt="직원사진">
+					<!--기본-->
+					<div id="mctInfo_06" class="mctInfo_06">
+						<div id="mctInfoWrap" class="mctInfoWrap">
+							<span id="mctName" class="mctName">
+								IM-12
+							</span>
+							<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+								<div id="staffImg" class="staffImg mctStaffImg">
+									<img src="resource/pop/images/staff.jpg" alt="직원사진">
+								</div>
+								<div class="staffInfoWrap">
+									<p class="mctStaffName">홍길동</p>
+									<p class="mctTime">남은시간
+									<br>-
+									</p>
+								</div>
 							</div>
-							<!--작업진행 시간-->
-							<div id="progressTime" class="progressTime">
-								<span>11h 33m</span>
-								/ 14h 30m
+							<div id="mctInfoTopRight" class="mctInfoTopRight">
+								<div class="mctMapImg">
+									<img src="resource/pop/images/machine.png" alt="기계">
+									<div class="mctMapTime">
+										<span>진행 : </span><br>
+										예상 : 
+									</div>
+									<span class="progressPercent mctProgressPercent">- %</span>
+								</div>
+								<div class="mctMapBtmInfo">
+									
+								</div>
 							</div>
-							<!--작업진행 시간 끝-->
+							<div id="mctInfoBtm" class="mctInfoBtm">
+								<table>
+									<tr>
+										<th>계획 List</th>
+										<th>7 품 546 EA ( - )</th>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+									</tr>
+								</table>
+							</div>
 						</div>
-						<!--도면 끝-->
 					</div>
-					<!--로그인 되어있고 생산 진행중일때 끝-->
-			
+					<!--기본 끝-->
 				</div>
-				<!--소형 MCT2 내용 끝-->
-			</div>
-			<!--소형 MCT2 끝-->
+				<!--row 끝-->
 
+				</div>
+				</div>
+				<!--소형 MCT 끝-->
 			</div>
-			<!--첫번째 줄 끝-->
+			<!--첫번쨰 줄 끝-->
 
 			<!--두번째 줄 시작-->
 			<div id="contents02" class="contents02">
-				<!--선반/연마 -->
-				<div id="grind contentsWrap" class="grind contentsWrap">
-					<!--네임 태그-->
-					<div id="titleTag" class="titleTag">선반/연마</div>
-					<!--진행,대기 상황-->
-					<div id="progressTag" class="progressTag">
-						<span id="progress" class="progress"><span>진행</span> 12 (123EA)</span>
-						<span id="standby" class="standby"><span>대기</span> 12 (123EA)</span>
-					</div>
-
-					<!--선반/연마 내용 시작-->
+				<!--대형 MCT시작-->
+				<div id="bigMct contentsWrap" class="bigMct contentsWrap">
+					<div id="titleTag" class="titleTag">대형 MCT</div>
 					<div id="infoWrap" class="infoWrap">
+						<!--대형 MCT 첫번째 줄 시작-->
+						<div class="rowWrap">
+							<div id="mctInfo_01" class="mctInfo_01 mctLogin">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+									<span id="mctName" class="mctName login">
+										IM-12
+									</span>
+									<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+										<div id="staffImg" class="staffImg mctStaffImg">
+											<img src="resource/pop/images/staff.jpg" alt="직원사진">
+										</div>
+										<div class="staffInfoWrap">
+											<p class="mctStaffName">홍길동</p>
+											<p class="mctTime">남은시간
+											<br>3h 20m
+											</p>
+										</div>
+									</div>
+									<div id="mctInfoTopRight" class="mctInfoTopRight">
+										<div class="mctMapImg">
+											<img src="resource/pop/images/map.jpg" alt="도면">
+											<div class="mctMapTime">
+												<span>진행 : 11h 21m</span><br>
+												예상 : 14h 23m
+											</div>
+											<span class="progressPercent mctProgressPercent">82%</span>
+										</div>
+										<div class="mctMapBtmInfo login">
+											STEEL 단품 24EA<br>
+											W21-3142123-01 #1
+										</div>
+									</div>
+									<div id="mctInfoBtm" class="mctInfoBtm">
+										<table>
+											<tr>
+												<th>계획 List</th>
+												<th>7 품 546 EA (<span>5h 23m</span>)</th>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!--진행중일때 끝-->
 
-						<!--로그인 되어있고 생산 진행중일때-->
-						<div id="info_01 login" class="info_01 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
+							<!--일시정지 때-->
+							<div id="mctInfo_02" class="mctInfo_02 mctPause">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName pause">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>3h 20m
+										</p>
+									</div>
 								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/map.jpg" alt="도면">
+										<div class="mctMapTime">
+											<span>진행 : 11h 21m</span><br>
+											예상 : 14h 23m
+										</div>
+										<div id="pauseTime" class="pauseTime">
+											일시중지<br>
+											<span>(23')</span>
+										</div>
+										<span class="progressPercent mctProgressPercent">82%</span>
+									</div>
+									<div class="mctMapBtmInfo pause">
+										STEEL 단품 24EA<br>
+										W21-3142123-01 #1
+									</div>
 								</div>
-								<!--작업진행 시간 끝-->
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA (<span>5h 23m</span>)</th>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+									</table>
+								</div>
 							</div>
-							<!--도면 끝-->
 						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-
-						<!--로그인만 되어있을때-->
-						<div id="info_02 ready" class="info_02 ready">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인만 되어있을때 끝-->
-
-						<!--로그인 되어있고 일시중지-->
-						<div id="info_03 pause" class="info_03 pause">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent pausePercent" class="progressPercent pausePercent">82%</span>
-								<div id="pauseTime" class="pauseTime">
-									일시중지<br>
-									<span>(23')</span>
-								</div>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 일시중지 끝-->
-
-						<!--빈공간-->
-						<div id="info_04 blank" class="info_04 blank">
-							
-						</div>
-						<!--빈공간-->
-
-						<!--로그인 되어있고 생산 진행중일때-->
-						<div id="info_05 login" class="info_05 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-
-						<!--로그인만 되어있을때-->
-						<div id="info_06 ready" class="info_06 ready">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인만 되어있을때 끝-->
-
-						<!--로그인 되어있고 일시중지-->
-						<div id="info_07 pause" class="info_07 pause">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent pausePercent" class="progressPercent pausePercent">82%</span>
-								<div id="pauseTime" class="pauseTime">
-									일시중지<br>
-									<span>(23')</span>
-								</div>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 일시중지 끝-->
-
-						<!--기본상태-->
-						<div id="info_08" class="info_08">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName"></p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-								<!--담당 직원 사진-->
-								<div id="staffImg staffIcon" class="staffImg staffIcon">
-									<img src="resource/pop/images/user.svg" alt="직원아이콘">
-								</div>
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--기본상태-->
-
+						<!--일시정지 끝-->
 					</div>
-					<!--선반/연마 내용 끝-->
+					<!--대형 MCT 첫번째 줄 끝-->
+					<!--대형 MCT 두번째 줄 시작-->
+					<div class="rowWrap">
+						<!--기본-->
+						<div id="mctInfo_03" class="mctInfo_03">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>-
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/machine.png" alt="기계">
+										<div class="mctMapTime">
+											<span>진행 : </span><br>
+											예상 : 
+										</div>
+										<span class="progressPercent mctProgressPercent">- %</span>
+									</div>
+									<div class="mctMapBtmInfo">
+										
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA ( - )</th>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+											<td>&nbsp;</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--기본 끝-->
+
+						<!--진행중일 때-->
+						<div id="mctInfo_04" class="mctInfo_04 mctLogin">
+							<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName login">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>3h 20m
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/map.jpg" alt="도면">
+										<div class="mctMapTime">
+											<span>진행 : 11h 21m</span><br>
+											예상 : 14h 23m
+										</div>
+										<span class="progressPercent mctProgressPercent">82%</span>
+									</div>
+									<div class="mctMapBtmInfo login">
+										STEEL 단품 24EA<br>
+										W21-3142123-01 #1
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA (<span>5h 23m</span>)</th>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--진행중일때 끝-->
+					</div>
+					<!--row 끝-->
+					</div>
+					<!--대형 MCT두번째 줄 끝-->
 				</div>
-				<!--선반/연마 끝-->
+				<!--대형 MCT끝-->
 
-				<!--밀링 -->
-				<div id="milling contentsWrap" class="milling contentsWrap">
-					<!--네임 태그-->
-					<div id="titleTag" class="titleTag">밀링</div>
-					<!--진행,대기 상황-->
-					<div id="progressTag" class="progressTag">
-						<span id="progress" class="progress"><span>진행</span> 12 (123EA)</span>
-						<span id="standby" class="standby"><span>대기</span> 12 (123EA)</span>
-					</div>
-
-					<!--밀링 내용 시작-->
+				<!--정밀 MCT 시작-->
+				<div id="detailMct contentsWrap" class="detailMct contentsWrap">
+					<div id="titleTag" class="titleTag">정밀 MCT</div>
 					<div id="infoWrap" class="infoWrap">
-
-						<!--로그인 되어있고 생산 진행중일때-->
-						<div id="info_01 login" class="info_01 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
+						<div class="rowWrap">
+							<div id="mctInfo_01" class="mctInfo_01 mctLogin">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+									<span id="mctName" class="mctName login">
+										IM-12
+									</span>
+									<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+										<div id="staffImg" class="staffImg mctStaffImg">
+											<img src="resource/pop/images/staff.jpg" alt="직원사진">
+										</div>
+										<div class="staffInfoWrap">
+											<p class="mctStaffName">홍길동</p>
+											<p class="mctTime">남은시간
+											<br>3h 20m
+											</p>
+										</div>
+									</div>
+									<div id="mctInfoTopRight" class="mctInfoTopRight">
+										<div class="mctMapImg">
+											<img src="resource/pop/images/map.jpg" alt="도면">
+											<div class="mctMapTime">
+												<span>진행 : 11h 21m</span><br>
+												예상 : 14h 23m
+											</div>
+											<span class="progressPercent mctProgressPercent">82%</span>
+										</div>
+										<div class="mctMapBtmInfo login">
+											STEEL 단품 24EA<br>
+											W21-3142123-01 #1
+										</div>
+									</div>
+									<div id="mctInfoBtm" class="mctInfoBtm">
+										<table>
+											<tr>
+												<th>계획 List</th>
+												<th>7 품 546 EA (<span>5h 23m</span>)</th>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+										</table>
+									</div>
 								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
 							</div>
-							<!--도면 끝-->
+							<!--진행중일때 끝-->
 						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-
-						<!--로그인만 되어있을때-->
-						<div id="info_02 ready" class="info_02 ready">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
+						<!--row 끝-->
+						<div class="rowWrap">
+							<!--일시정지 때-->
+							<div id="mctInfo_02" class="mctInfo_02 mctPause">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName pause">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>3h 20m
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/map.jpg" alt="도면">
+										<div class="mctMapTime">
+											<span>진행 : 11h 21m</span><br>
+											예상 : 14h 23m
+										</div>
+										<div id="pauseTime" class="pauseTime">
+											일시중지<br>
+											<span>(23')</span>
+										</div>
+										<span class="progressPercent mctProgressPercent">82%</span>
+									</div>
+									<div class="mctMapBtmInfo pause">
+										STEEL 단품 24EA<br>
+										W21-3142123-01 #1
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA (<span>5h 23m</span>)</th>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+									</table>
 								</div>
 							</div>
-							<!--도면 끝-->
 						</div>
-						<!--로그인만 되어있을때 끝-->
-
-						<!--로그인 되어있고 일시중지-->
-						<div id="info_03 pause" class="info_03 pause">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent pausePercent" class="progressPercent pausePercent">82%</span>
-								<div id="pauseTime" class="pauseTime">
-									일시중지<br>
-									<span>(23')</span>
-								</div>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
+						<!--일시정지 끝-->
 						</div>
-						<!--로그인 되어있고 일시중지 끝-->
-
-						<!--빈공간-->
-						<div id="info_04 blank" class="info_04 blank">
-							
-						</div>
-						<!--빈공간-->
-
-						<!--로그인 되어있고 생산 진행중일때-->
-						<div id="info_05 login" class="info_05 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-
-						<!--로그인만 되어있을때-->
-						<div id="info_06 ready" class="info_06 ready">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인만 되어있을때 끝-->
-
-						<!--로그인 되어있고 일시중지-->
-						<div id="info_07 login" class="info_07 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 일시중지 끝-->
-
-						<!--기본상태-->
-						<div id="info_08" class="info_08">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName"></p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-								<!--담당 직원 사진-->
-								<div id="staffImg staffIcon" class="staffImg staffIcon">
-									<img src="resource/pop/images/user.svg" alt="직원아이콘">
-								</div>
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--기본상태-->
-
+						<!--row 끝-->
 					</div>
-					<!--밀링 내용 끝-->
 				</div>
-				<!--밀링 끝-->
+				<!--정밀 MCT 끝-->
+
+				<!--JST 시작-->
+				<div id="detailMct contentsWrap" class="detailMct contentsWrap">
+					<div id="titleTag" class="titleTag">JST</div>
+					<div id="infoWrap" class="infoWrap">
+						<div class="rowWrap">
+							<div id="mctInfo_01" class="mctInfo_01 mctLogin">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+									<span id="mctName" class="mctName login">
+										IM-12
+									</span>
+									<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+										<div id="staffImg" class="staffImg mctStaffImg">
+											<img src="resource/pop/images/staff.jpg" alt="직원사진">
+										</div>
+										<div class="staffInfoWrap">
+											<p class="mctStaffName">홍길동</p>
+											<p class="mctTime">남은시간
+											<br>3h 20m
+											</p>
+										</div>
+									</div>
+									<div id="mctInfoTopRight" class="mctInfoTopRight">
+										<div class="mctMapImg">
+											<img src="resource/pop/images/map.jpg" alt="도면">
+											<div class="mctMapTime">
+												<span>진행 : 11h 21m</span><br>
+												예상 : 14h 23m
+											</div>
+											<span class="progressPercent mctProgressPercent">82%</span>
+										</div>
+										<div class="mctMapBtmInfo login">
+											STEEL 단품 24EA<br>
+											W21-3142123-01 #1
+										</div>
+									</div>
+									<div id="mctInfoBtm" class="mctInfoBtm">
+										<table>
+											<tr>
+												<th>계획 List</th>
+												<th>7 품 546 EA (<span>5h 23m</span>)</th>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+											<tr>
+												<td>W21-3142123-01 #1</td>
+												<td>ST 단품 24 EA</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!--진행중일때 끝-->
+						</div>
+						<!--row 끝-->
+						<div class="rowWrap">
+							<!--일시정지 때-->
+							<div id="mctInfo_02" class="mctInfo_02 mctPause">
+								<div id="mctInfoWrap" class="mctInfoWrap">
+								<span id="mctName" class="mctName pause">
+									IM-12
+								</span>
+								<div id="mctInfoTopLeft" class="mctInfoTopLeft">
+									<div id="staffImg" class="staffImg mctStaffImg">
+										<img src="resource/pop/images/staff.jpg" alt="직원사진">
+									</div>
+									<div class="staffInfoWrap">
+										<p class="mctStaffName">홍길동</p>
+										<p class="mctTime">남은시간
+										<br>3h 20m
+										</p>
+									</div>
+								</div>
+								<div id="mctInfoTopRight" class="mctInfoTopRight">
+									<div class="mctMapImg">
+										<img src="resource/pop/images/map.jpg" alt="도면">
+										<div class="mctMapTime">
+											<span>진행 : 11h 21m</span><br>
+											예상 : 14h 23m
+										</div>
+										<div id="pauseTime" class="pauseTime">
+											일시중지<br>
+											<span>(23')</span>
+										</div>
+										<span class="progressPercent mctProgressPercent">82%</span>
+									</div>
+									<div class="mctMapBtmInfo pause">
+										STEEL 단품 24EA<br>
+										W21-3142123-01 #1
+									</div>
+								</div>
+								<div id="mctInfoBtm" class="mctInfoBtm">
+									<table>
+										<tr>
+											<th>계획 List</th>
+											<th>7 품 546 EA (<span>5h 23m</span>)</th>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+										<tr>
+											<td>W21-3142123-01 #1</td>
+											<td>ST 단품 24 EA</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--일시정지 끝-->
+						</div>
+						<!--row 끝-->
+					</div>
+				</div>
+				<!--JST 끝-->
 
 			</div>
 			<!--두번째 줄 끝-->
-
-			<!--세번째 줄 시작-->
-			<div id="contents03" class="contents03">
-				<!--정밀 mct-->
-				<div id="mctDetail contentsWrap" class="mctDetail contentsWrap">
-					<!--네임 태그-->
-					<div id="titleTag" class="titleTag">정밀 MCT</div>
-					<!--진행,대기 상황-->
-					<div id="progressTag" class="progressTag">
-						<span id="progress" class="progress"><span>진행</span> 12 (123EA)</span>
-						<span id="standby" class="standby"><span>대기</span> 12 (123EA)</span>
-					</div>
-
-					<!--정밀 MCT 내용 시작-->
-					<div id="infoWrap" class="infoWrap">
-
-						<!--로그인 되어있고 생산 진행중일때-->
-						<div id="info_01 login" class="info_01 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-
-						<!--로그인 되어있고 일시중지-->
-						<div id="info_02 pause" class="info_02 pause">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent pausePercent" class="progressPercent pausePercent">82%</span>
-								<div id="pauseTime" class="pauseTime">
-									일시중지<br>
-									<span>(23')</span>
-								</div>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 일시중지 끝-->
-
-					</div>
-					<!--정밀 MCT 내용 끝-->
-				</div>
-				<!--정밀 mct 끝-->
-
-				<!--알람 시작-->
-				<div id="alarmWrap" class="alarmWrap">
-					<h3>Event Alarm</h3>
-					<div id="alarm" class="alarm">
-						<p>
-						[21/10 14:30:23]
-						소재 입고 : C19-625-0793-08 (29EA)
-						</p>
-						<span>[New]</span>
-						<p>
-							[21/10 14:30:23]
-							소재 입고 : C19-625-0793-08 (29EA)
-						</p>
-						<span>[New]</span>
-						<p>
-							[21/10 14:30:23]
-							소재 입고 : C19-625-0793-08 (29EA)
-						</p>
-						<span>[New]</span>
-						<p>
-							[21/10 14:30:23]
-							소재 입고 : C19-625-0793-08 (29EA)
-						</p>
-						<span>[New]</span>
-						<p>
-							[21/10 14:30:23]
-							소재 입고 : C19-625-0793-08 (29EA)
-						</p>
-						<span>[New]</span>
-						<p>
-							[21/10 14:30:23]
-							소재 입고 : C19-625-0793-08 (29EA)
-						</p>
-						<span>[New]</span>
-						<p>
-							[21/10 14:30:23]
-							소재 입고 : C19-625-0793-08 (29EA)
-						</p>
-						<span>[New]</span>
-						<p>
-							[21/10 14:30:23]
-							소재 입고 : C19-625-0793-08 (29EA)
-						</p>
-						<span>[New]</span>
-						<p>
-							[21/10 14:30:23]
-							소재 입고 : C19-625-0793-08 (29EA)
-						</p>
-						<span>[New]</span>
-					</div>
-				</div>
-				<!--알람 끝-->
-
-				<!--DMT 시작-->
-				<div id="dmt contentsWrap" class="dmt contentsWrap">
-					<!--네임 태그-->
-					<div id="titleTag" class="titleTag">DMT</div>
-					<!--진행,대기 상황-->
-					<div id="progressTag" class="progressTag">
-						<span id="progress" class="progress"><span>진행</span> 12 (123EA)</span>
-						<span id="standby" class="standby"><span>대기</span> 12 (123EA)</span>
-					</div>
-
-					<!--DMT 내용 시작-->
-					<div id="infoWrap" class="infoWrap">
-
-						<!--로그인 되어있고 생산 진행중일때-->
-						<div id="info_01 login" class="info_01 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-
-						<!--로그인만 되어있을때-->
-						<div id="info_02 ready" class="info_02 ready">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인만 되어있을때 끝-->
-
-						<!--로그인 되어있고 일시중지-->
-						<div id="info_03 pause" class="info_03 pause">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent pausePercent" class="progressPercent pausePercent">82%</span>
-								<div id="pauseTime" class="pauseTime">
-									일시중지<br>
-									<span>(23')</span>
-								</div>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 일시중지 끝-->
-
-						<!--기본상태-->
-						<div id="info_04" class="info_04">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName"></p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-								<!--담당 직원 사진-->
-								<div id="staffImg staffIcon" class="staffImg staffIcon">
-									<img src="resource/pop/images/user.svg" alt="직원아이콘">
-								</div>
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--기본상태-->
-
-						<div id="info_05 login" class="info_05 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-
-						<div id="info_06 login" class="info_06 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-
-						<!--로그인 되어있고 생산 진행중일때-->
-						<div id="info_07 login" class="info_07 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-
-						<!--로그인만 되어있을때-->
-						<div id="info_08 ready" class="info_08 ready">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인만 되어있을때 끝-->
-
-						<!--로그인 되어있고 일시중지-->
-						<div id="info_09 pause" class="info_09 pause">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent pausePercent" class="progressPercent pausePercent">82%</span>
-								<div id="pauseTime" class="pauseTime">
-									일시중지<br>
-									<span>(23')</span>
-								</div>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 일시중지 끝-->
-
-						<!--기본상태-->
-						<div id="info_10" class="info_10">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName"></p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-								<!--담당 직원 사진-->
-								<div id="staffImg staffIcon" class="staffImg staffIcon">
-									<img src="resource/pop/images/user.svg" alt="직원아이콘">
-								</div>
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--기본상태-->
-
-						<div id="info_11 login" class="info_11 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-
-						<div id="info_12 login" class="info_12 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-
-						<!--로그인 되어있고 생산 진행중일때-->
-						<div id="info_13 login" class="info_013 login">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent" class="progressPercent">82%</span>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 생산 진행중일때 끝-->
-
-						<!--로그인만 되어있을때-->
-						<div id="info_14 ready" class="info_14 ready">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인만 되어있을때 끝-->
-
-						<!--로그인 되어있고 일시중지-->
-						<div id="info_15 pause" class="info_15 pause">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-								<!--작업 달성도-->
-								<span id="progressPercent pausePercent" class="progressPercent pausePercent">82%</span>
-								<div id="pauseTime" class="pauseTime">
-									일시중지<br>
-									<span>(23')</span>
-								</div>
-								<!--담당 직원 사진-->
-								<div id="staffImg" class="staffImg">
-									<img src="resource/pop/images/staff.jpg" alt="직원사진">
-								</div>
-								<!--작업진행 시간-->
-								<div id="progressTime" class="progressTime">
-									<span>11h 33m</span>
-									/ 14h 30m
-								</div>
-								<!--작업진행 시간 끝-->
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--로그인 되어있고 일시중지 끝-->
-
-						<!--기본상태-->
-						<div id="info_16" class="info_16">
-							<!--상단 기계,직원,생산물품-->
-							<div id="nameWrap" class="nameWrap">
-								<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-								<p id="staffName" class="staffName"></p> <!--직원-->
-								<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-							</div>
-							<!--상단 기계,직원,생산물품 끝-->
-							<!--도면-->
-							<div id="backImg readyImg" class="backImg readyImg"> <!--배경에 도면 삽입-->
-								<!--담당 직원 사진-->
-								<div id="staffImg staffIcon" class="staffImg staffIcon">
-									<img src="resource/pop/images/user.svg" alt="직원아이콘">
-								</div>
-							</div>
-							<!--도면 끝-->
-						</div>
-						<!--기본상태-->
-
-						<!--빈공간-->
-						<div id="info_17 blank" class="info_17 blank">
-						
-						</div>
-						<!--빈공간 끝-->
-
-						<!--빈공간-->
-						<div id="info_18 blank" class="info_18 blank">
-						
-						</div>
-						<!--빈공간 끝-->
-
-					</div>
-					<!--DMT 내용 끝-->
-				</div>
-				<!--DMT 끝-->
-
-			</div>
-			<!--세번째 줄 끝-->
 		</div>
-
-		<!--오른쪽 섹션 시작-->
+		<!--왼쪽 구역 끝-->
+		<!--오른쪽 구역 시작-->
 		<div id="rightContainer" class="rightContainer">
-			<div id="changeBtnWrap" class="changeBtnWrap">
+			<div class="rightBtnWrap">
+				<select id="changeScreen">
+					<option value="jinsung">진성정밀</option>
+					<option value="dmt">DMT</option>
+				</select>
 				<div id="changeBtn" class="changeBtn">
-				화면전환
+					화면전환
 				</div>
 			</div>
-
-			<!--오른쪽 표 시작-->
-			<div id="tableWrap" class="tableWrap">
-				<table id="rightTable" class="rightTable">
-					<tr id="tableTitle" class="tableTitle">
-						<th colspan="3">진행현황</th>
-					</tr>
-					<tr>
-						<th id="tableSubTitle1" class="tableSubTitle1">소재대기</th>
-						<td id="pumm" class="pumm">97품</td>
-						<td id="amount" class="amount">2451 EA</td>
-					</tr>
-					<tr>
-						<th id="tableSubTitle2 tableSubTitle4" class="tableSubTitle2 tableSubTitle4">가공대기</th>
-						<td id="pumm" class="pumm">97품</td>
-						<td id="amount" class="amount">2451 EA</td>
-					</tr>
-					<tr>
-						<th id="tableSubTitle2" class="tableSubTitle2">가공중</th>
-						<td id="pumm" class="pumm">97품</td>
-						<td id="amount" class="amount">2451 EA</td>
-					</tr>
-					<tr>
-						<th id="tableSubTitle2" class="tableSubTitle2">가공완료</th>
-						<td id="pumm" class="pumm">97품</td>
-						<td id="amount" class="amount">2451 EA</td>
-					</tr>
-					<tr>
-						<th id="tableSubTitle1" class="tableSubTitle1">표면/후가공</th>
-						<td id="pumm" class="pumm">97품</td>
-						<td id="amount" class="amount">2451 EA</td>
-					</tr>
-					<tr>
-						<th id="tableSubTitle1" class="tableSubTitle1">출하대기</th>
-						<td id="pumm" class="pumm">97품</td>
-						<td id="amount" class="amount">2451 EA</td>
-					</tr>
-					<tr>
-						<th id="tableSubTitle3" class="tableSubTitle3">반품</th>
-						<td id="pumm" class="pumm">97품</td>
-						<td id="amount" class="amount">2451 EA</td>
-					</tr>
-					<tr>
-						<th id="tableSubTitle3" class="tableSubTitle3">보류</th>
-						<td id="pumm" class="pumm">97품</td>
-						<td id="amount" class="amount">2451 EA</td>
-					</tr>
-				</table>
-			</div>
-			<!--오른쪽 표 끝-->
-
-			<!--JST-->
-			<div id="jst contentsWrap" class="jst contentsWrap">
-				<!--네임 태그-->
-				<div id="titleTag" class="titleTag">JST</div>
-				<!--진행,대기 상황-->
-				<div id="progressTag" class="progressTag">
-					<span id="progress" class="progress"><span>진행</span> 12 (123EA)</span>
-					<span id="standby" class="standby"><span>대기</span> 12 (123EA)</span>
-				</div>
-
-				<!--JST 내용 시작-->
-				<div id="infoWrap" class="infoWrap">
-
-					<!--로그인 되어있고 생산 진행중일때-->
-					<div id="info_01 login" class="info_01 login">
-						<!--상단 기계,직원,생산물품-->
-						<div id="nameWrap" class="nameWrap">
-							<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-							<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-							<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-						</div>
-						<!--상단 기계,직원,생산물품 끝-->
-						<!--도면-->
-						<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-							<!--작업 달성도-->
-							<span id="progressPercent" class="progressPercent">82%</span>
-							<!--담당 직원 사진-->
-							<div id="staffImg" class="staffImg">
-								<img src="resource/pop/images/staff.jpg" alt="직원사진">
-							</div>
-							<!--작업진행 시간-->
-							<div id="progressTime" class="progressTime">
-								<span>11h 33m</span>
-								/ 14h 30m
-							</div>
-							<!--작업진행 시간 끝-->
-						</div>
-						<!--도면 끝-->
-					</div>
-					<!--로그인 되어있고 생산 진행중일때 끝-->
-
-					<!--로그인 되어있고 일시중지-->
-					<div id="info_02 pause" class="info_02 pause">
-						<!--상단 기계,직원,생산물품-->
-						<div id="nameWrap" class="nameWrap">
-							<p id="machineName" class="machineName">IM-12</p> <!--기계-->
-							<p id="staffName" class="staffName">홍길동</p> <!--직원-->
-							<p id="productName" class="productName">STEEL 단품 451EA</p> <!--생산-->
-						</div>
-						<!--상단 기계,직원,생산물품 끝-->
-						<!--도면-->
-						<div id="backImg" class="backImg"> <!--배경에 도면 삽입-->
-							<!--작업 달성도-->
-							<span id="progressPercent pausePercent" class="progressPercent pausePercent">82%</span>
-							<div id="pauseTime" class="pauseTime">
-								일시중지<br>
-								<span>(23')</span>
-							</div>
-							<!--담당 직원 사진-->
-							<div id="staffImg" class="staffImg">
-								<img src="resource/pop/images/staff.jpg" alt="직원사진">
-							</div>
-							<!--작업진행 시간-->
-							<div id="progressTime" class="progressTime">
-								<span>11h 33m</span>
-								/ 14h 30m
-							</div>
-							<!--작업진행 시간 끝-->
-						</div>
-						<!--도면 끝-->
-					</div>
-					<!--로그인 되어있고 일시중지 끝-->
-
-				</div>
-				<!--JST 내용 끝-->
-			
-		</div>
-		<!--JST끝-->
-
-		<!--POP-->
-			<div id="pop contentsWrap" class="pop contentsWrap">
-				<!--네임 태그-->
-				<div id="titleTag" class="titleTag">POP</div>
-
-				<!--POP 내용 시작-->
-				<div id="infoWrap" class="infoWrap">
-
-					<!--사상 시작-->
-					<div id="infoRight1" class="infoRight1">
-						<h3>사상</h3>
-						<div id="infoSection1" class="infoSection1">
-							94품<br>5131EA
-						</div>
-					</div>
-					<!--사상 끝-->
-
-					<!--검사실 시작-->
-					<div id="infoRight2" class="infoRight2">
-						<h3>검사실</h3>
-						<div id="infoSection2" class="infoSection2">
-							94품<br>5131EA
-						</div>
-					</div>
-					<!--검사실 끝-->
-
-					<!--바이브레이터실 시작-->
-					<div id="infoRight3" class="infoRight3">
-						<h3>바이브레이터실</h3>
-						<div id="infoSection3" class="infoSection3">
-							94품<br>5131EA
-						</div>
-					</div>
-					<!--바이브레이터실 끝-->
-
-					<!--교정/마감실 시작-->
-					<div id="infoRight4" class="infoRight4">
-						<h3>교정/마감실</h3>
-						<div id="infoSection4" class="infoSection4">
-							94품<br>5131EA
-						</div>
-					</div>
-					<!--교정/마감실 끝-->
-
-					<!--출하대기장1 시작-->
-					<div id="infoRight5" class="infoRight5">
-						<h3>출하대기장1</h3>
-						<div id="infoSection5" class="infoSection5">
-							94품<br>5131EA
-						</div>
-					</div>
-					<!--출하대기장1 끝-->
-
-					<!--출하대기장2 시작-->
-					<div id="infoRight6" class="infoRight6">
-						<h3>출하대기장2</h3>
-						<div id="infoSection6" class="infoSection6">
-							94품<br>5131EA
-						</div>
-					</div>
-					<!--출하대기장2 끝-->
-
-				</div>
-				<!--POP 내용 끝-->
-			
-		</div>
-		<!--POP끝-->
-		
-		<!--오른쪽 섹션 끝-->
-	</section>
-
-	<!--팝업 시작-->
-	<div id="popupWrap" class="popupWrap popupBackground">
-		<!--팝업위치기준-->
-		<div id="popupContainer" class="popupContainer">
-			<!--팝업내용-->
-			<div id="popup" class="popup">
-				<h3><i class="xi-library-bookmark"></i>장비 상세화면</h3>
-
-				<div id="tableTop" class="tableTop">
-					<h4>가공진행현황</h4>
-					<table id="popHeadTopTable" class="popHeadTopTable">
+			<div class="rightSectionWrap">
+				<div class="rightSection">
+					<!--오른쪽 상단 테이블 시작-->
+					<table class="rightSectionTop">
 						<tr>
-							<td>장비번호 : 1N-1</td>
-							<td>장비종류 : 3축 머시닝 NC</td>
-							<td>설치위치 : 대형 MCT</td>
-							<td>관리장(정) : 홍길동</td>
-							<td>관리자(부) : 김엔씨</td>
+							<th colspan="3">가동률 : <span class="tdColor1">84%</span></th>
+						</tr>
+						<tr>
+							<td>가동</td>
+							<td>정지</td>
+							<td>미가동</td>
+						</tr>
+						<tr>
+							<td class="tdColor1">14대</td>
+							<td class="tdColor2">4대</td>
+							<td>2대</td>
 						</tr>
 					</table>
-				</div>
-				
-				<!--상단 메인 테이블-->
-				<table id="popHeadMid" class="popHeadMid popTable">
-					<colgroup>
-						<col width="4%">
-						<col width="4%">
-						<col width="12.5%">
-						<col width="2%">
-						<col width="12.5%">
-						<col width="9.5%">
-						<col width="8.5%">
-						<col width="8.5%">
-						<col width="8.5%">
-						<col width="8.5%">
-						<col width="8.5%">
-						<col width="8.5%">
-						<col width="8.5%">
-					</colgroup>
-					<tbody>
+					<!--오른쪽 상단 테이블 끝-->
+					<!--오른쪽 중단 테이블 시작-->
+					<table class="rightSectionMid">
 						<tr>
-							<td id="workStaff" class="workStaff th_color">작업자</td>
-							<td id="workStatu" class="workStatu th_color">작업상세</td>
-							<td id="workNum" class="workNum th_color">작업번호</td>
-							<td id="workinner" class="workinner th_color"></td>
-							<td id="mapNum" class="mapNum th_color">도면번호</td>
-							<td id="productSize" class="productSize th_color">규격</td>
-							<td id="workType" class="workType th_color">작업형태</td>
-							<td id="material" class="material th_color">소재종류</td>
-							<td id="orderNum" class="orderNum th_color">수량</td>
-							<td id="processDelivery" class="processDelivery	th_color">가공납기</td>
-							<td id="timeStop" class="timeStop th_color">정지시간</td>
-							<td id="timeRunning" class="timeRunning th_color">진행시간</td>
-							<td id="timeExpect" class="timeExpect th_color">예상시간(E/T)</td>
+							<th class="tdColor2">불량/반품</th>
+							<th class="tdColor2">긴급</th>
+							<th>가공지연</th>
 						</tr>
-						
 						<tr>
-							<td id="workStaffImg" class="workStaffImg ">
-								<div id="staffImgWrap" class="staffImgWrap">
-									<img src="resource/pop/images/staff.jpg" alt="작업자사진">
-								</div>
-								홍길동
-							</td>
-							<td id="running" class="running">진행중</td>
-							<td id="numberWorking" class="numberWorking">B21-258AN0329-0331-02 #1</td>
-							<td id="innerWork" class="innerWork"></td>
-							<td id="mapNumInfo" class="mapNumInfo">
-								<div class="tableScroll">
-									DACV223-DWG-0001<br>
-									DACV223-DWG-0001<br>
-									DACV223-DWG-0003<br>
-									DACV223-DWG-0004<br>
-									DACV223-DWG-0005<br>
-									DACV223-DWG-0006<br>
-								</div>
-							</td>
-							<td id="sizeInfo" class="sizeInfo">1205*300*50</td>
-							<td id="workTypeInfo" class="workTypeInfo">파트</td>
-							<td id="materialInfo" class="materialInfo">AL60</td>
-							<td id="productAmount" class="productAmount">
-								<span>대</span> 42
-							</td>
-							<td id="deliveryDate" class="deliveryDate">4/12</td>
-							<td id="runningStop" class="runningStop">57m</td>
-							<td id="runningTime" class="runningTime">1h 42m</td>
-							<td id="expectTime" class="expectTime">2h 37m</td>
+							<td class="tdColor2">21</td>
+							<td class="tdColor2">42</td>
+							<td>13</td>
 						</tr>
-					</tbody>
-				</table>
-				<!--상단 메인 테이블 끝-->
-				<!--팝업 하단-->
-				<div id="popBtm" class="popBtm">
-					<!--왼쪽-->
-					<div id="popBtmLeft" class="popBtmLeft">
-						<div id="mapImgWrap" class="mapImgWrap">
-							<img src="resource/pop/images/map.jpg" alt="도면">
-						</div>
-					</div>
-					<!--왼쪽-->
-					<!--오른쪽-->
-					<div id="popBtmRight" class="popBtmRight">
-						<div id="tableTop" class="tableTop">
-							<h4>가공계획 List</h4>
-							<table id="popHeadTopTable" class="popHeadTopTable">
-								<tr>
-									<td>대기현황</td>
-									<td>7 Rows 253 EA</td>
-									<td>예상시간 합계 12h 23m</td>
-								</tr>
-							</table>
-						</div>
-						<!--오른쪽 표 시작-->
-						<div id="popBtmTable" class="popBtmTable">
-							<!--표 삽입-->
-						</div>
-						<!--오른쪽 표 끝-->
-					</div>
-					<!--오른쪽 끝-->
-				</div>
-				<!--팝업 하단 끝-->
-				<!--버튼-->
-				<button id="mapDetailBtn" class="mapDetailBtn">도면상세보기</button>
-				<button id="detailCloseBtn" class="detailCloseBtn">닫기</button>
-				<!--버튼 끝-->
-			</div>
-			<!--팝업내용끝-->
-		</div>
-		<!--팝업위치기준-->
-	</div>
-	<!--팝업 끝-->
+					</table>
+					<!--오른쪽 중단 테이블 끝-->
+					<!--오른쪽 하단 그리드 시작-->
+					<div class="rightSectionBtm">
 
-	<!--pop 팝업 시작-->
-	<div id="popPopupWrap" class="popPopupWrap popupBackground">
-		<div id="popupContainer" class="popupContainer">
-			<div id="popPopup" class="popPopup">
-				<h3><i class="xi-library-bookmark"></i>POP 상세 조회</h3>
-				<div id="popSectionWrap" class="popSectionWrap">
-					<div id="popSectionLeft" class="popSectionLeft">
-						<div id="popMap" class="popMap">
-							<img src="resource/pop/images/map.jpg" alt="도면">
-						</div>
 					</div>
-					<div id="popSectionRight" class="popSectionRight">
-						<div id="popRightTop" class="popRightTop">
-							<span>조회대상 : </span>
-							<span>소재대기</span>
-							<span>7 Rows 543 EA</span>
-						</div>
-						<div id="popRightTable" class="popRightTable">
-							<!--표 삽입-->
-						</div>
-					</div>
+					<!--오른쪽 하단 그리드 끝-->
 				</div>
-				<button id="mapDetailBtn" class="mapDetailBtn">도면상세보기</button>
-				<button id="detailCloseBtn" class="detailCloseBtn">닫기</button>
-				<!--버튼 끝-->
 			</div>
 		</div>
-	</div>
-	<!--pop 팝업 끝-->
+		<!--오른쪽 구역 끝-->
+	</section>
 
+		<!--팝업 시작-->
+		<div id="popupWrap" class="popupWrap popupBackground">
+			<!--팝업위치기준-->
+			<div id="popupContainer" class="popupContainer">
+				<!--팝업내용-->
+				<div id="popup" class="popup">
+					<h3><i class="xi-library-bookmark"></i>장비 상세화면</h3>
+	
+					<div id="tableTop" class="tableTop">
+						<h4>가공진행현황</h4>
+						<table id="popHeadTopTable" class="popHeadTopTable">
+							<tr>
+								<td>장비번호 : 1N-1</td>
+								<td>장비종류 : 3축 머시닝 NC</td>
+								<td>설치위치 : 대형 MCT</td>
+								<td>관리장(정) : 홍길동</td>
+								<td>관리자(부) : 김엔씨</td>
+							</tr>
+						</table>
+					</div>
+					
+					<!--상단 메인 테이블-->
+					<table id="popHeadMid" class="popHeadMid popTable">
+						<colgroup>
+							<col width="4%">
+							<col width="4%">
+							<col width="12.5%">
+							<col width="2%">
+							<col width="12.5%">
+							<col width="9.5%">
+							<col width="8.5%">
+							<col width="8.5%">
+							<col width="6%">
+							<col width="8.5%">
+							<col width="8.5%">
+							<col width="8.5%">
+							<col width="8.5%">
+						</colgroup>
+						<tbody>
+							<tr>
+								<td id="workStaff" class="workStaff th_color">작업자</td>
+								<td id="workStatu" class="workStatu th_color">작업상세</td>
+								<td id="workNum" class="workNum th_color">작업번호</td>
+								<td id="workinner" class="workinner th_color"></td>
+								<td id="mapNum" class="mapNum th_color">도면번호</td>
+								<td id="productSize" class="productSize th_color">규격</td>
+								<td id="workType" class="workType th_color">작업형태</td>
+								<td id="material" class="material th_color">소재종류</td>
+								<td id="orderNum" class="orderNum th_color">수량</td>
+								<td id="processDelivery" class="processDelivery	th_color">가공납기</td>
+								<td id="timeStop" class="timeStop th_color">정지시간</td>
+								<td id="timeRunning" class="timeRunning th_color">진행시간</td>
+								<td id="timeExpect" class="timeExpect th_color">예상시간(E/T)</td>
+							</tr>
+							
+							<tr>
+								<td id="workStaffImg" class="workStaffImg ">
+									<div id="staffImgWrap" class="staffImgWrap">
+										<img src="resource/pop/images/staff.jpg" alt="작업자사진">
+									</div>
+									홍길동
+								</td>
+								<td id="running" class="running">진행중</td>
+								<td id="numberWorking" class="numberWorking">B21-258AN0329-0331-02 #1</td>
+								<td id="innerWork" class="innerWork"></td>
+								<td id="mapNumInfo" class="mapNumInfo">
+									<div class="tableScroll">
+										DACV223-DWG-0001<br>
+										DACV223-DWG-0001<br>
+										DACV223-DWG-0003<br>
+										DACV223-DWG-0004<br>
+										DACV223-DWG-0005<br>
+										DACV223-DWG-0006<br>
+									</div>
+								</td>
+								<td id="sizeInfo" class="sizeInfo">1205*300*50</td>
+								<td id="workTypeInfo" class="workTypeInfo">파트</td>
+								<td id="materialInfo" class="materialInfo">AL60</td>
+								<td id="productAmount" class="productAmount">
+									<span>대</span> 42
+								</td>
+								<td id="deliveryDate" class="deliveryDate">4/12</td>
+								<td id="runningStop" class="runningStop">57m</td>
+								<td id="runningTime" class="runningTime">1h 42m</td>
+								<td id="expectTime" class="expectTime">2h 37m</td>
+							</tr>
+						</tbody>
+					</table>
+					<!--상단 메인 테이블 끝-->
+					<!--팝업 하단-->
+					<div id="popBtm" class="popBtm">
+						<!--왼쪽-->
+						<div id="popBtmLeft" class="popBtmLeft">
+							<div id="mapImgWrap" class="mapImgWrap">
+								<img src="resource/pop/images/map.jpg" alt="도면">
+							</div>
+						</div>
+						<!--왼쪽-->
+						<!--오른쪽-->
+						<div id="popBtmRight" class="popBtmRight">
+							<div id="tableTop" class="tableTop">
+								<h4>가공계획 List</h4>
+								<table id="popHeadTopTable" class="popHeadTopTable">
+									<tr>
+										<td>대기현황</td>
+										<td>7 Rows 253 EA</td>
+										<td>예상시간 합계 12h 23m</td>
+									</tr>
+								</table>
+							</div>
+							<!--오른쪽 표 시작-->
+							<div id="popBtmTable" class="popBtmTable">
+								<!--표 삽입-->
+							</div>
+							<!--오른쪽 표 끝-->
+						</div>
+						<!--오른쪽 끝-->
+					</div>
+					<!--팝업 하단 끝-->
+					<!--버튼-->
+					<button id="mapDetailBtn" class="mapDetailBtn">도면상세보기</button>
+					<button id="detailCloseBtn" class="detailCloseBtn">닫기</button>
+					<!--버튼 끝-->
+				</div>
+				<!--팝업내용끝-->
+			</div>
+			<!--팝업위치기준-->
+		</div>
+		<!--팝업 끝-->
 
-	<!--스크립트 수정해야돼 까먹으면 안돼-->
-	<script>
-		$(".login,.pause").on("click",function(){
+	 <script>
+
+		 $("#changeBtn").on("click",function(){
+			 if($("#changeScreen").val() == "dmt"){
+				$("#contents01, #contents02").hide();
+				$("#contents03").show();
+			 }else{
+				$("#contents01, #contents02").show();
+				$("#contents03").hide();
+			 }
+		 });
+
+		 $(".mctLogin, .mctPause").on("click",function(){
 			$("#popupWrap").show();
-		});
-		$("#detailCloseBtn").on("click",function(){
+		 });
+		 $("#detailCloseBtn").on("click",function(){
 			$("#popupWrap").hide();
 		});
-		$(".pop .infoWrap").children("div").on("click",function(){
-			$("#popPopupWrap").show();
-		});
-		$(".detailCloseBtn").on("click",function(){
-			$("#popPopupWrap").hide();
-		});
-
-	</script>
-
+	 </script>
 </body>
 </html>
