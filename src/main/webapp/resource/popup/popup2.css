@@ -1,0 +1,89 @@
+.searchPopup {
+	width: 70%;
+	height: 75%;
+	position: absolute;
+	top: 45%;
+	left: 50%;
+	transform: translate(-55%,-50%);
+	background: #fffbfb;
+	padding: 20px;
+}
+.searchPopup h3 {
+	color: #c00000;
+	font-weight: bold;
+}
+.searchPopup h3 i {
+	color: black;
+}
+.searchPopup .searchPopupWrap {
+	width: 100%;
+	height: 85%;
+	display: flex;
+}
+.searchPopup .stockMapLeft {
+	width: 60%;
+	height: 93%;
+	border: 1px solid #666;
+	overflow: hidden;
+	text-align: center;
+	margin-top: 5%;
+	background: white;
+}
+.searchPopup .searchPopupRight {
+	width: 40%;
+	height: 100%;
+	padding-left: 20px;
+}
+.searchPopup .searchPopupRight .searchPopupRightTop {
+	width: 100%;
+	height: 7%;
+	overflow: hidden;
+	margin: 10px 0;
+	padding: 5px 0;
+}
+.searchPopup .searchPopupRight .searchPopupRightTop h4 {
+	display: inline-block;
+	width: 20%;
+	padding-top: 5px;
+}
+.searchPopup .searchPopupRight .searchPopupRightTop .refreshBtn {
+	background: none;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	vertical-align: top;
+	padding-top: 5px;
+}
+.searchPopup .searchPopupRight .searchPopupRightTop .barcode {
+	display: inline-block;
+	width: 50%;
+	background: #DDD;
+	height: 90%;
+	float: right;
+	padding: 3px;
+	text-align: right;
+}
+.searchPopup .searchPopupRight .searchPopupRightTop .barcode .barCode img{
+	width: 20%;
+	padding-top: 5px;
+}
+.searchPopup .searchPopupRight .searchPopupRightTop .barcode .barCodeTxt {
+	display: inline-block;
+	height: 100%;
+	vertical-align: top;
+}
+.searchPopup .searchPopupRight .searchPopupRightTop .barcode .barCodeTxt input {
+	outline: none;
+	padding: 2px 10px;
+}
+.searchPopup .searchPopupRight .listTable {
+	width: 100%;
+	height: 93%;
+	border: 1px solid blue;
+}
+.searchPopup .stockPopupBtnWrap {
+	margin-top: 35px;
+}
+.mapDetailBtn {
+	background: #deebf7;
+}
