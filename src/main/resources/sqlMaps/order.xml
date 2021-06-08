@@ -1339,6 +1339,7 @@
     <select id="manageControlCadFiles_select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             UUID() AS ROW_NUM,
+            ROW_NUMBER() OVER(ORDER BY C.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS NO,
             C.CONTROL_SEQ,
             C.CONTROL_STATUS,
             B.CONTROL_DETAIL_SEQ,
@@ -1357,6 +1358,7 @@
             AND C.DEL_YN = 'N'
             AND IFNULL(C.CONTROL_STATUS, 'ORD002') IN ('ORD002')    <!-- 확정/종료/마감 완료된 대상은 업로드 불가 추소 & 대기만 업로드 가능 -->
             AND UPPER(B.DRAWING_NUM) = #{MAPPING_STR}
+        ORDER BY C.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
     </select>
 
     <update id="manageControlCadFiles" parameterType="java.util.HashMap">

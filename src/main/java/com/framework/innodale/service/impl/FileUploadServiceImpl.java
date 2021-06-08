@@ -313,9 +313,11 @@ public class FileUploadServiceImpl implements FileUploadService {
         model.addAttribute("result",       "success");
         model.addAttribute("message",      "업로드를 완료 하였습니다.");
 
+        // 업로드 정보
         hashMap.put("queryId", "drawingUploadMapper.selectDrawingUploadFileList");
         model.addAttribute("fileUploadList",     innodaleDao.getList(hashMap));
 
+        // 주문 정보
         hashMap.put("queryId", "drawingUploadMapper.selectDrawingUploadControlDataList");
         model.addAttribute("fileUploadDataList", innodaleDao.getList(hashMap));
     }
