@@ -2217,6 +2217,7 @@
             $('#drawing_file_upload_form').find("#actionType").val(actionType);
             $('#drawing_file_upload_form').find("#queryId").val(queryId);
             $('#drawing_file_upload_form').find("#WORK_KEY").val(workKey);
+            $('#common_cad_reversion_control_list_form').find("#WORK_KEY").val(workKey);
 
             drawingForm.action = "/drawingUploadPopup";
             drawingForm.target = "popForm";
@@ -2229,6 +2230,7 @@
                 $(drawingUploadPopup.window.document).find("#actionType").val(actionType);
                 $(drawingUploadPopup.window.document).find("#queryId").val(queryId);
                 $(drawingUploadPopup.window.document).find("#WORK_KEY").val(workKey);
+                $(drawingUploadPopup.window.document).find("#common_cad_reversion_control_list_form").find("#WORK_KEY").val(workKey);
 
                 drawingUploadPopup.initDrawingLoad();
             }, 500);
