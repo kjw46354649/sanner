@@ -211,7 +211,7 @@
                             <tr>
                                 <th scope="row">약어</th>
                                 <td>
-                                    <input type="text" id=" ABBR_NM" name=" ABBR_NM" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="약어">
+                                    <input type="text" id="ABBR_NM" name="ABBR_NM" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="약어">
                                 </td>
                                 <th scope="row">업체명(Full)</th>
                                 <td>

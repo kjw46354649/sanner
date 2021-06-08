@@ -25,6 +25,7 @@
     <select id="selectDrawingUploadControlDataList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             UUID() AS ROW_NUM,
+            ROW_NUMBER() OVER(ORDER BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.ORDER_SEQ) AS NO,
             A.CONTROL_SEQ, A.CONTROL_NUM, A.CONTROL_DETAIL_SEQ, A.ITEM_NM, A.PART_NUM, A.ORDER_SEQ, A.REGIST_NUM, A.ORDER_NUM,
             A.DRAWING_NUM, A.DRAWING_VER,
             DATE_FORMAT(A.DRAWING_UP_DT, '%Y/%m/%d %H:%i') AS DRAWING_UP_DT,

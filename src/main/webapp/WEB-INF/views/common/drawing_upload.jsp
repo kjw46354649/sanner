@@ -73,7 +73,10 @@
             <!-- CAD 도면 업로드 공통 End -->
         </div>
     </div>
-
+    <form class="" role="form" id="common_cad_reversion_control_list_form" name="common_cad_reversion_control_list_form">
+        <input type="hidden" id="queryId" name="queryId" value="drawingUploadMapper.selectDrawingUploadControlDataList">
+        <input type="hidden" id="WORK_KEY" name="WORK_KEY" value="${WORK_KEY}">
+    </form>
 <script type="text/javascript" src="/resource/plugins/bluebird.min.js"></script>
 <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
 <!-- Bootstrap -->
@@ -276,6 +279,7 @@
     /** 캐드 파일 업로드 시작 스크립트 **/
     let estimateCadFileColModel =  [
         {title: 'ROW_NUM', dataType: 'string', dataIndx: 'ROW_NUM', hidden: true, width: 1, minWidth: 70},
+        {title: 'No.', dataType: 'string', dataIndx: 'NO', width: 50, minWidth: 30},
         {title: 'EST_SEQ', dataType: 'string', dataIndx: 'EST_SEQ', hidden: true, width: 1, minWidth: 70},
         // {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 1, minWidth: 70},
         {title: 'SEQ', dataType: 'string', dataIndx: 'SEQ', hidden: true, width: 1, minWidth: 70},
@@ -300,6 +304,7 @@
 
     let controlCadFileColModel =  [
         {title: 'ROW_NUM', dataType: 'string', dataIndx: 'ROW_NUM', hidden: true, width: 70, minWidth: 70},
+        {title: 'No.', dataType: 'string', dataIndx: 'NO', width: 50, minWidth: 30},
         {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 70, minWidth: 70},
         {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
         // {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 150, minWidth: 100},
@@ -326,6 +331,7 @@
 
     let controlCadRevFileColModel =  [
         {title: 'ROW_NUM', dataType: 'string', dataIndx: 'ROW_NUM', hidden: true, width: 70, minWidth: 70},
+        {title: 'No.', dataType: 'string', dataIndx: 'NO', width: 50, minWidth: 30},
         {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 1, minWidth: 1},
         {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
         // {title: '비고', datatype: 'string', dataIndx: 'UPLOAD_MESSAGE', width: 150, minWidth: 100},
@@ -354,6 +360,7 @@
 
     let insideStockCadFileColModel =  [
         {title: 'ROW_NUM', dataType: 'string', dataIndx: 'ROW_NUM', hidden: true, width: 70, minWidth: 70},
+        {title: 'No.', dataType: 'string', dataIndx: 'NO', width: 50, minWidth: 30},
         {title: 'DXF_GFILE_SEQ', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', hidden: true, width: 70, minWidth: 70},
         {title: 'NEW_DRAWING_NUM', dataType: 'string', dataIndx: 'NEW_DRAWING_NUM', hidden: true, width: 70, minWidth: 70},
         {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true, width: 1, minWidth: 70},
@@ -377,7 +384,8 @@
 
     commonCadFileAttachObj = {
         height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
-        selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false}, editable : false,
+        numberCell: {show: false}, // numberCell: {title: 'No.'},
+        selectionModel : {type: 'row', mode: 'single'}, dragColumns: {enabled: false}, editable : false,
         scrollModel: {autoFit: true}, trackModel: {on: true}, showBottom : true, postRenderInterval: -1, //call postRender synchronously.
         columnTemplate: { align: 'center', halign: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
         colModel: controlCadFileColModel,
@@ -521,7 +529,7 @@
                     $(this).stopWaitMe();
                     return false;
                 }
-                // 도면 번호 없는 경우 삭제 처리
+                // 도면 번호 없는 매핑 데이터 삭제 처리
                 let gridData = $commonCadFileAttachGrid.pqGrid('option', 'dataModel.data')
                 let delKdys = [];
                 $.each(gridData, function (key, rowData) {
@@ -610,6 +618,8 @@
 
         let actionType = $('#common_cad_file_attach_form').find('#actionType').val();
         $commonCadFileAttachGrid = $('#' + commonCadFileAttachGridId).pqGrid(commonCadFileAttachObj);
+        $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
+        // $commonCadFileAttachGrid = $('#' + commonCadFileAttachGridId).pqGrid(commonCadFileAttachObj);
 
         if(actionType == 'estimate') {          // 견적 도면 등록
             $('#common_cad_file_attach_pop').find('#common_cad_file_attach_pop_title').html('견적 도면 등록');
@@ -628,11 +638,17 @@
             $commonCadFileAttachGrid.pqGrid('option', 'colModel', insideStockCadFileColModel);
             $('#common_cad_file_attach_form').find('#actionUrl').val("/uploadInsideStockCadFiles");
         }
-
-        $commonCadFileAttachGrid.pqGrid('refresh');
         $commonCadUploadFileGrid = $('#' + commonCadUploadFileGridId).pqGrid(commonCadUploadFileObj);
         $commonCadUploadFileGrid.pqGrid('refresh');
 
+        if(actionType == 'controlRev') {  // 주문 도면 차수 변경의 경우 선택한 주문 정보를 조회한다.
+            let parameters = {'url': '/json-list', 'data': $("#common_cad_reversion_control_list_form").serialize()};
+            fnPostAjax(function (data) {
+                $commonCadFileAttachGrid.pqGrid('option', {editable: true});
+                $commonCadFileAttachGrid.pqGrid('addNodes', data.list, 0);
+                $commonCadFileAttachGrid.pqGrid('option', {editable: false});   // 수정 여부를 false 처리 한다.
+            }, parameters, '');
+        }
     }
 
     initDrawingLoad();

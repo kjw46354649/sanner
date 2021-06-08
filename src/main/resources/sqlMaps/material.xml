@@ -2178,6 +2178,7 @@
     <select id="manageStockCadFiles_select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             UUID() AS ROWNUM,
+            ROW_NUMBER() OVER(ORDER BY A.INSIDE_STOCK_NUM) AS NO,
             A.INSIDE_STOCK_NUM AS SORTKEY, <!-- 정렬을 위한 조회 -->
             A.INSIDE_STOCK_NUM, <!-- 재고번호 -->
             A.ITEM_NM, <!-- 품명 -->
@@ -2189,6 +2190,7 @@
         WHERE 1 = 1
             /*AND IFNULL(C.CONTROL_STATUS, 'ORD002') IN ('ORD002')*/
             AND UPPER(A.DRAWING_NUM) = #{MAPPING_STR}
+        ORDER BY A.INSIDE_STOCK_NUM
     </select>
 
     <update id="manageStockCadFiles" parameterType="java.util.HashMap">
