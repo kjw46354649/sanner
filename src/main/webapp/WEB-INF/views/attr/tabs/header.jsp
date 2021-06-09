@@ -45,6 +45,7 @@
 <link rel="stylesheet" type="text/css" href="/resource/asset/css/common.css" />
 <link rel="stylesheet" type="text/css" href="/resource/asset/css/layout.css" />
 <link rel="stylesheet" type="text/css" href="/resource/asset/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/resource/pop/XEIcon/xeicon.min.css">
 
 <link rel="stylesheet" type="text/css" href="/resource/asset/css/customer.css" />
 <link rel="stylesheet" type="text/css" href="/resource/plugins/waitme/waitMe.css" />
