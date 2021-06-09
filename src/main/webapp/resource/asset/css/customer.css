@@ -490,7 +490,9 @@ ul, ol , dl { list-style: none;}
 	height: 1080px;
 	background: rgba(0,0,0,0.5);
 	position: fixed;
-	z-index: 100;
+	z-index: 1050;
+	top: 0;
+	left: 0;
 }
 .stockPopup .stockPopupWrap {
 	position: relative;
@@ -515,9 +517,10 @@ ul, ol , dl { list-style: none;}
 	/*color: #c00000;
 	재고불출 popup 색상*/
 	font-weight: bold;
+	font-size: 20px;
 }
 .stockPopupInfo h3 i {
-	color: black;
+	color: #565;
 }
 .stockPopupInfo .barcode {
 	display: inline-block;
@@ -528,10 +531,13 @@ ul, ol , dl { list-style: none;}
 	height: auto;
 	line-height: 25px;
 	vertical-align: middle;
-	margin-left: 236px;
+	margin-left: 290px;
 }
 .stockPopupInfo .barcode_label {
 	font-weight: bold;
+	font-size: 1.2rem;
+	vertical-align: middle;
+	margin-right: 10px;
 }
 .stockPopupInfo .barCode img {
 	width: 10%;
@@ -548,7 +554,7 @@ ul, ol , dl { list-style: none;}
 	background: white;
 	border: 1px solid #555;
 	width: 100%;
-	height: 55%;
+	height: 52%;
 	margin-top: 10px;
 }
 .stockPopupInfo .stockPopupBtm {
@@ -569,6 +575,8 @@ ul, ol , dl { list-style: none;}
 	height: 80%;
 	border-spacing: 0;
 	border-collapse: collapse;
+	background: white;
+	font-size: 1.2rem;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmLeft .trColor {
 	background: #b4c7e7;
@@ -576,8 +584,10 @@ ul, ol , dl { list-style: none;}
 .stockPopupInfo .stockPopupBtm .stockPopupBtmLeft th {
 	width: 25%;
 	background: #DDD;
-	height: 25%;
+	height: 20%;
 	border: 1px solid black;
+	text-align: center;
+  font-weight: bold;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmLeft td {
 	border: 1px solid black;
@@ -596,12 +606,13 @@ ul, ol , dl { list-style: none;}
 }
 .stockPopupBtmLeft .stockPopupBtmLeftInfo span {
 	font-weight: bold;
+	font-size: 1.2rem;
 }
 .stockPopupBtmLeft .stockPopupBtmLeftInfo .stockNum {
 	background: #DDD;
 	outline: none;
-	border: 1px solid #555;
 	height: 30px;
+	text-align: center;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight {
 	width: 55%;
@@ -613,11 +624,15 @@ ul, ol , dl { list-style: none;}
 	border-spacing: 0;
 	border-collapse: collapse;
 	border: 1px solid black;
+	font-size: 1.2rem;
+	background: white;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight table th {
 	width: 15%;
 	background: #bdd7ee;
 	border: 1px solid black;
+	text-align: center;
+	font-weight: bold;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight table td {
 	width: 35%;
@@ -626,6 +641,7 @@ ul, ol , dl { list-style: none;}
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight table td.tdWeight {
 	font-weight: bold;
+	color: black;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight table td.tdCss {
 	color: blue;
@@ -633,7 +649,6 @@ ul, ol , dl { list-style: none;}
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight select {
 	outline: none;
-	font-size: 1rem;
 	border: 0;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight .tdBackColor {
@@ -646,18 +661,20 @@ ul, ol , dl { list-style: none;}
 	display: inline-block;
 	cursor: pointer;
 	color: #0070c0;
+	height: 25px;
+	vertical-align: sub;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight .enterNum .minusBtn {
 	color: #c00000;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight .enterNum input {
-	font-size: 1.2rem;
+	font-size: 1.8rem;
 	width: 100px;
 	outline: none;
 	height: 35px;
 	text-align: center;
 	display: inline-block;
-	vertical-align: text-bottom;
+	vertical-align: unset;
 }
 .stockPopupBtnWrap {
 	width: 100%;
@@ -669,13 +686,14 @@ ul, ol , dl { list-style: none;}
 	display: inline-block;
 	margin: 0 20px;
 	border-radius: 5px;
-	border: 1px solid #555;
 	font-weight: bold;
 	cursor: pointer;
 	width: 100px;
-}
-.stockPopupBtnWrap button:focus {
 	outline: none;
+	background: #DDD;
+	font-size: 1.2rem;
+	height: 30px;
+	line-height: 1;
 }
 .stockPopupBtnWrap .stockBtnSave, .stockPopupBtnWrap .stockBtnSave2, .stockPopupBtnWrap .stockBtnOk{
 	background: #385723;
@@ -687,29 +705,27 @@ ul, ol , dl { list-style: none;}
 }
 .stockPopup2 .stockPopupInfo2 {
 	position: absolute;
-	border: 1px solid black;
 	background: #f9fbfd;
 	width: 25%;
 	height: 25%;
-	top: 50%;
+	top: 45%;
 	left: 50%;
 	transform: translate(-50%,-50%);
-	padding: 45px;
+	padding: 30px;
 	text-align: center;
-	line-height: 30px;
-	font-size: 1rem;
+	line-height: 35px;
+	font-size: 1.4rem;
 	font-weight: bold;
 }
 .stockPopup2 .stockPopupInfo2 .inputWrap {
 	width: 100%;
-	margin-bottom: 10px;
+	margin: 10px 0;
 }
 .stockPopup2 .stockPopupInfo2 .inputWrap select{
 	width: 25%;
 	height: 30px;
 	font-weight: bold;
 	outline: none;
-	font-size: 0.95rem;
 	border: 1px solid #555;
 	cursor: pointer;
 }
@@ -732,6 +748,7 @@ ul, ol , dl { list-style: none;}
 }
 .stockPopup3 .stockPopupInfo3 h3 {
 	text-align: left;
+	font-size: 1.5rem;
 }
 .stockPopup3 .stockPopupInfo3 table {
 	width: 100%;
@@ -740,19 +757,23 @@ ul, ol , dl { list-style: none;}
 	border-spacing: 0;
 	border-collapse: collapse;
 	margin: 20px 0;
+	font-size: 1.3rem;
+	background: white;
 }
 .stockPopup3 .stockPopupInfo3 th {
 	background: #aef254;
 	width: 23%;
 	border: 1px solid black;
+	text-align: center;
 }
 .stockPopup3 .stockPopupInfo3 td {
 	border: 1px solid black;
 	font-weight: normal;
 }
 .stockPopup3 .stockPopupInfo3 td.tdWeight {
-	font-size: 1.4rem;
-	font-weight: bolder;
+	font-size: 1.8rem;
+	font-weight: bold;
+	color: black;
 }
 .stockPopup3 .stockPopupInfo3 td.tdColor {
 	background: #d9f2fb;
@@ -760,7 +781,7 @@ ul, ol , dl { list-style: none;}
 	font-weight: bold;
 }
 .stockPopup3 .stockPopupInfo3 p {
-	font-size: 1.1rem;
+	font-size: 1.5rem;
 	margin-bottom: 10px;
 }
 
@@ -768,24 +789,25 @@ ul, ol , dl { list-style: none;}
 /*210608*/
 .searchPopup {
 	width: 70%;
-	height: 75%;
+	height: 65%;
 	position: absolute;
 	top: 45%;
 	left: 50%;
-	transform: translate(-55%,-50%);
+	transform: translate(-53%,-50%);
 	background: #fffbfb;
 	padding: 20px;
 }
 .searchPopup h3 {
 	color: #c00000;
 	font-weight: bold;
+	font-size: 20px;
 }
 .searchPopup h3 i {
-	color: black;
+	color: #565;
 }
 .searchPopup .searchPopupWrap {
 	width: 100%;
-	height: 85%;
+	height: 83%;
 	display: flex;
 }
 .searchPopup .stockMapLeft {
@@ -794,7 +816,7 @@ ul, ol , dl { list-style: none;}
 	border: 1px solid #666;
 	overflow: hidden;
 	text-align: center;
-	margin-top: 5%;
+	margin-top: 4.45%;
 	background: white;
 }
 .searchPopup .searchPopupRight {
@@ -811,8 +833,10 @@ ul, ol , dl { list-style: none;}
 }
 .searchPopup .searchPopupRight .searchPopupRightTop h4 {
 	display: inline-block;
-	width: 20%;
+	margin-right: 10px;
 	padding-top: 5px;
+	font-size: 1.45rem;
+	font-weight: bold;
 }
 .searchPopup .searchPopupRight .searchPopupRightTop .refreshBtn {
 	background: none;
@@ -826,23 +850,23 @@ ul, ol , dl { list-style: none;}
 	display: inline-block;
 	width: 50%;
 	background: #DDD;
-	height: 90%;
 	float: right;
 	padding: 3px;
 	text-align: right;
 }
 .searchPopup .searchPopupRight .searchPopupRightTop .barcode .barCode img{
 	width: 20%;
-	padding-top: 5px;
+	vertical-align: text-bottom;
 }
 .searchPopup .searchPopupRight .searchPopupRightTop .barcode .barCodeTxt {
 	display: inline-block;
 	height: 100%;
-	vertical-align: top;
 }
 .searchPopup .searchPopupRight .searchPopupRightTop .barcode .barCodeTxt input {
 	outline: none;
 	padding: 2px 10px;
+	vertical-align: unset;
+	height: 95% !important;
 }
 .searchPopup .searchPopupRight .listTable {
 	width: 100%;
@@ -853,5 +877,5 @@ ul, ol , dl { list-style: none;}
 	margin-top: 35px;
 }
 .mapDetailBtn {
-	background: #deebf7;
+	background: #deebf7 !important;
 }
