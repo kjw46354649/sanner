@@ -605,7 +605,7 @@ ul, ol , dl { list-style: none;}
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight table th {
 	width: 15%;
-	background: #bdd7ee;
+	background: #e7eef7;
 	border: 1px solid #aaa;
 	text-align: center;
 	font-weight: bold;
@@ -622,7 +622,7 @@ ul, ol , dl { list-style: none;}
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight table td.tdCss {
 	color: blue;
-	background: #00ffff;
+	background: #d9f2fb;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight select {
 	outline: none;
@@ -673,7 +673,7 @@ ul, ol , dl { list-style: none;}
 	font-weight: normal;
 }
 .stockPopupBtnWrap .stockBtnSave, .stockPopupBtnWrap .stockBtnSave2, .stockPopupBtnWrap .stockBtnOk{
-	background: #385723;
+	background: #4d8d1a;
 }
 
 .stockPopup2, .stockPopup3{
@@ -717,7 +717,7 @@ ul, ol , dl { list-style: none;}
 .stockPopup3 .stockPopupInfo3 {
 	width: 25%;
 	height: 40%;
-	background: #bdd7ee;
+	background: #e7eef7;
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -743,7 +743,7 @@ ul, ol , dl { list-style: none;}
 	background: white;
 }
 .stockPopup3 .stockPopupInfo3 th {
-	background: #aef254;
+	background: #e8f9ea;
 	width: 23%;
 	border: 1px solid #AAA;
 	text-align: center;
