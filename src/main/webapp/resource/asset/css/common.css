@@ -169,6 +169,8 @@ option { font-size: 12px; }
 .yellow{background: #ffc63a !important; border: 1px solid #ffc63a !important; color: #fff !important;}
 .purple{background: #73139b !important; border:1px solid #73139b !important; color:#fff !important;}
 .gray{background: #adb5b2 !important; border:1px solid #adb5b2 !important; color:#000 !important;}
+.lightGray{background: #d9d9d9 !important; border:1px solid #d9d9d9 !important; color:#000 !important;}
+.brown{background: #6f3c0b !important; border:1px solid #6f3c0b !important; color:#fff !important;}
 
 
 .graBtn { height: 40px; padding: 0 20px 0 40px; color: #fff; font-size: 15px; line-height: 40px; position: relative; border-radius: 3px; background: -webkit-gradient(linear, 90deg, color-stop(5%, 43934B), color-stop(5%, 4EAB57));/* Chrome,Safari4+ */ background: -webkit-linear-gradient(90deg, #43934B 5%, #4EAB57 5%);/* Chrome10+,Safari5.1+ */ }
