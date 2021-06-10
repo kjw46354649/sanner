@@ -21,4 +21,6 @@ public interface EstimateDao {
     void insertEstimateOrderControlOrder(Map<String, Object> map) throws SQLException;
 
     void insertEstimateOrderControlBarcode(Map<String, Object> map) throws SQLException;
+
+    void insertEstimateOrderOutBarcode(Map<String, Object> map) throws SQLException;
 }

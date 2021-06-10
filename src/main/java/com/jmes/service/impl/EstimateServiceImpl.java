@@ -128,12 +128,14 @@ public class EstimateServiceImpl implements EstimateService {
 
         for (int i = 0; i < jsonMap.size(); i++) {
             data = jsonMap.get(i);
+            data.put("LOGIN_USER_ID", userId);
             String workType = (String) data.get("WORK_TYPE");
             if(!workType.equals("WTP050")) {
                 estimateDao.insertEstimateOrderControlMaster(data);
                 estimateDao.insertEstimateOrderControlDetail(data);
                 estimateDao.insertEstimateOrderControlOrder(data);
                 estimateDao.insertEstimateOrderControlBarcode(data);
+                estimateDao.insertEstimateOrderOutBarcode(data);
                 data.put("queryId", "estimate.insertEstimateOrderPartProcess");
                 this.innodaleDao.create(data);
 
@@ -144,6 +146,7 @@ public class EstimateServiceImpl implements EstimateService {
                         if(temp.get("WORK_TYPE").equals("WTP050")) {
                             temp.put("CONTROL_SEQ",data.get("CONTROL_SEQ"));
                             temp.put("PART_NUM",count);
+                            temp.put("LOGIN_USER_ID", userId);
                             estimateDao.insertEstimateOrderControlDetail(temp);
                             estimateDao.insertEstimateOrderControlBarcode(data);
                             data.put("queryId", "estimate.insertEstimateOrderPartProcess");
