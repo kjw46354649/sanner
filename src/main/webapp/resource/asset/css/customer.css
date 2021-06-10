@@ -483,7 +483,7 @@ button:disabled {
 
 /*210607*/
 
-*{margin: 0; padding: 0; box-sizing: border-box;}
+
 ul, ol , dl { list-style: none;}
 .stockPopup, .stockPopup2, .stockPopup3, .stockSearchPopup {
 	width: 1980px;
@@ -537,12 +537,13 @@ ul, ol , dl { list-style: none;}
 }
 .stockPopupInfo .barcode_label {
 	font-weight: bold;
-	font-size: 1.2rem;
+	font-size: 1.4rem;
 	vertical-align: middle;
 	margin-right: 10px;
 }
 .stockPopupInfo .barCode img {
-	width: 10%;
+	width: 15%;
+	margin: 0 5px;
 }
 .stockPopupInfo .barCodeTxt {
 	display: inline-block;
@@ -683,15 +684,16 @@ ul, ol , dl { list-style: none;}
 	position: absolute;
 	background: #f9fbfd;
 	width: 25%;
-	height: 25%;
+	height: 23%;
 	top: 45%;
 	left: 50%;
 	transform: translate(-50%,-50%);
-	padding: 30px;
+	padding: 30px 0 0;
 	text-align: center;
 	line-height: 35px;
 	font-size: 1.4rem;
 	font-weight: bold;
+	color: black;
 }
 .stockPopup2 .stockPopupInfo2 .inputWrap {
 	width: 90%;
@@ -729,7 +731,7 @@ ul, ol , dl { list-style: none;}
 }
 .stockPopup3 .stockPopupInfo3 h3 {
 	text-align: left;
-	font-size: 1.5rem;
+	font-size: 20px;
 	color: black;
 }
 .stockPopup3 .stockPopupInfo3 table {
@@ -842,6 +844,7 @@ ul, ol , dl { list-style: none;}
 .searchPopup .searchPopupRight .searchPopupRightTop .barcode .barCode img{
 	width: 20%;
 	vertical-align: text-bottom;
+	margin: 0px 7px -2px 0;
 }
 .searchPopup .searchPopupRight .searchPopupRightTop .barcode .barCodeTxt {
 	display: inline-block;
@@ -857,6 +860,7 @@ ul, ol , dl { list-style: none;}
 	width: 100%;
 	height: 93%;
 	border: 1px solid blue;
+	margin-top: -10px;
 }
 .searchPopup .stockPopupBtnWrap {
 	margin-top: 35px;
