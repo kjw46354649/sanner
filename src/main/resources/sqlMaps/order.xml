@@ -2747,7 +2747,7 @@
             IFNULL(B.DRAWING_VER, '0') AS DRAWING_VER, <!-- 도면번호 버전 -->
             IFNULL(SF_GET_COMP_NM(A.ORDER_COMP_CD), SPACE(0)) AS ORDER_COMP_NM, <!-- 발주업체 -->
             IFNULL(A.CONTROL_NUM, SPACE(0)) AS CONTROL_NUM, <!-- 작업지시번호 -->
-            CASE WHEN B.PART_NUM IS NULL THEN IFNULL(A.CONTROL_NUM, SPACE(0)) ELSE CONCAT(IFNULL(A.CONTROL_NUM, SPACE(0)), '#', B.PART_NUM) END AS CONTROL_NUM_PART, <!-- 작업지시번호 -->
+            CASE WHEN B.PART_NUM IS NULL THEN IFNULL(A.CONTROL_NUM, SPACE(0)) ELSE CONCAT(IFNULL(A.CONTROL_NUM, SPACE(0)), ' #', B.PART_NUM) END AS CONTROL_NUM_PART, <!-- 작업지시번호 -->
             IFNULL(B.SIZE_TXT, SPACE(0)) AS SIZE_TXT, <!-- 규격 문자열 -->
             IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
             CASE WHEN A.TOTAL_SHEET IS NULL THEN SPACE(0) ELSE A.TOTAL_SHEET END AS TOTAL_SHEET, <!-- 총장 -->
@@ -2758,6 +2758,11 @@
                  WHEN B.SURFACE_TREAT IS NULL AND B.MATERIAL_NOTE IS NOT NULL THEN
                     B.MATERIAL_NOTE
             END AS SURFACE_TREAT_NM, <!-- 표면처리 -->
+            CASE WHEN C.REF_CD = 'Y'
+                    THEN IFNULL(SF_GET_CODE_NM('1035', B.MATERIAL_TYPE, #{LOGIN_LOCALE}), SPACE(0))
+                 ELSE
+                    IFNULL(SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0))
+            END AS MATERIAL_NM, <!-- 재질의 표시여부에 따른 소재 종류 선택에 따른 표시 처리 -->
             IFNULL(SF_GET_CODE_NM('1035', B.MATERIAL_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_TYPE_NM, <!-- 재질 -->
             IFNULL(SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류 -->
             IFNULL(SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
@@ -2773,14 +2778,15 @@
             IFNULL(SF_GET_DATE_F(B.INNER_DUE_DT, 'MM', ''), SPACE(0)) AS INNER_DUE_DT, <!-- 가공납기 -->
             (SELECT M.FILE_PATH FROM TBL_FILE M WHERE M.GFILE_SEQ = B.IMG_GFILE_SEQ) AS IMAGE_PATH,
             IFNULL((SELECT CASE WHEN COUNT(DISTINCT M.DRAWING_NUM) > 1 THEN 'Y' ELSE 'N' END FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ), 'N') AS MULTI_ORDER_YN
-        FROM TBL_CONTROL A, TBL_CONTROL_PART B
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND CONCAT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN
+                    <foreach collection="selectControlLists" item="bean" index="index"  open="(" close=")" separator=",">
+                        #{bean}
+                    </foreach>
+            LEFT OUTER JOIN jmes.TBL_CODE C ON B.MATERIAL_TYPE = C.CODE_CD AND C.HIGH_CD = '1035'
         WHERE 1 = 1
-            AND A.CONTROL_SEQ = B.CONTROL_SEQ
             AND A.DEL_YN = 'N'
-            AND CONCAT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN
-            <foreach collection="selectControlLists" item="bean" index="index"  open="(" close=")" separator=",">
-                #{bean}
-            </foreach>
         ORDER BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
     </select>
 

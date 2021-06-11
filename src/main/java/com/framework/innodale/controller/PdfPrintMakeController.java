@@ -120,10 +120,6 @@ public class PdfPrintMakeController {
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
         BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
-//        float small = 7.0f;
-//        float medium = 10.0f;
-//        float large = 12.0f;
-
         Font verySmallFont = new Font(bf, verySmall, Font.NORMAL);
         Font smallNormalFont = new Font(bf, small, Font.NORMAL);
         Font smallBoldFont = new Font(bf, small, Font.BOLD);
@@ -145,15 +141,16 @@ public class PdfPrintMakeController {
 
         for (Map<String, Object> controlInfo : controlImageList) {
             if (iCount > 0) document.newPage();
-            float[] columnWidths = {130, 40, 88, 49, 35, 25, 35, 35, 35, 32, 32, 33, 90, 80, 46, 26 };
+
+            float[] columnWidths = {220, 80};
             PdfPTable masterTable = new PdfPTable(columnWidths);
             masterTable.setWidthPercentage(100);
+
             PdfPTable table = new PdfPTable(9);
             table.init();
-
             table.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.setWidthPercentage(100);
-            table.setWidths(new int[]{ 4, 17, 12, 6, 7, 7, 4, 4,6});
+            table.setWidths(new int[]{4, 17, 12, 7, 7, 7, 4, 4, 6});
 
             int imgWidth = 1100;
             int imgHeight = 170;
@@ -206,12 +203,10 @@ public class PdfPrintMakeController {
                 PdfPCell cell = createCellPhrase(phrase,1,2,Element.ALIGN_BOTTOM,Element.ALIGN_RIGHT);
                 cell.setPaddingBottom(14);
                 cell.setUseAscender(true);
-//                cell.setBorder(Rectangle.TOP);
                 cell.setBorder(Rectangle.BOTTOM | Rectangle.TOP);
 
                 table.addCell(cell);
                 Phrase phrase2 = new Phrase();
-//                if(Integer.parseInt(orgSide) > 0 && Integer.parseInt(otherSide) > 0) {
                 if(sameSideYn.equals("Y")) {
                     phrase2.add(
                             new Chunk("("+controlInfo.get("ORIGINAL_SIDE_QTY") + ',' + controlInfo.get("OTHER_SIDE_QTY")+ ")\n", smallNormalFont)
@@ -232,7 +227,6 @@ public class PdfPrintMakeController {
 
                 Phrase phrase2 = new Phrase();
                 if(sameSideYn.equals("Y")) {
-//                if(Integer.parseInt(orgSide) > 0 && Integer.parseInt(otherSide) > 0) {
                     phrase2.add(
                             new Chunk("("+controlInfo.get("ORIGINAL_SIDE_QTY") + ',' + controlInfo.get("OTHER_SIDE_QTY")+ ")\n", smallNormalFont)
                     );
@@ -242,23 +236,18 @@ public class PdfPrintMakeController {
                 cell = createCellPhrase(phrase2,1,1,Element.ALIGN_BOTTOM,Element.ALIGN_CENTER);
                 cell.setBorder(0);
                 cell.setBorderWidthTop(0.1f);
-//                cell.setPaddingBottom(14);
-//                cell.setPhrase(phrase2);
                 table.addCell(cell);
 
-//                table.addCell(createEACell1("EA", 1, 1, smallBoldFont));
             } else {
                 PdfPCell cell = createCellPhrase(phrase,1,2,Element.ALIGN_MIDDLE,Element.ALIGN_RIGHT);
                 cell.setPaddingBottom(8);
                 cell.setUseAscender(true);
                 cell.setBorder(PdfPCell.TOP | PdfPCell.BOTTOM);
-//                cell.setBorder(Rectangle.BOTTOM | Rectangle.TOP);
 
                 table.addCell(cell);
 
                 Phrase phrase2 = new Phrase();
                 if(sameSideYn.equals("Y")) {
-//                if(Integer.parseInt(orgSide) > 0 && Integer.parseInt(otherSide) > 0) {
                     phrase2.add(
                             new Chunk("("+controlInfo.get("ORIGINAL_SIDE_QTY") + ',' + controlInfo.get("OTHER_SIDE_QTY")+ ")\n", smallNormalFont)
                     );
@@ -270,7 +259,6 @@ public class PdfPrintMakeController {
                 cell.setBorder(PdfPCell.TOP | PdfPCell.BOTTOM);
 
                 table.addCell(cell);
-//                table.addCell(createEACell("EA", 1, 2, smallBoldFont));
             }
             table.addCell(createCell("가공납기", 1, 1, smallNormalFont));
 
@@ -283,51 +271,35 @@ public class PdfPrintMakeController {
             }
             table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("WORK_TYPE_NM"), 1, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("MATERIAL_TYPE_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("MATERIAL_NM"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, mediumNormalFont));
-//            table.addCell(createCell((String) controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, mediumNormalFont));
-//            table.addCell(createCell((String) controlInfo.get("MAIN_INSPECTION_NM"), 1, 1, mediumNormalFont));
             if (controlInfo.get("WORK_TYPE_NM").equals("파트")) {
                 String partUnit = String.valueOf(controlInfo.get("PART_UNIT_QTY"));
                 String orderQty = String.valueOf(controlInfo.get("ORDER_QTY"));
-
                 table.addCell(createCellPartUnit(partUnit + " × " + orderQty, 2, 1, smallNormalFont));
             }
-
             table.addCell(createCell((String) controlInfo.get("INNER_DUE_DT"), 1, 1, mediumBoldFont));
-
             PdfPCell cell1 = new PdfPCell();
             cell1.addElement(table);
             cell1.setVerticalAlignment(Element.ALIGN_TOP);
-            if(controlInfo.get("WORK_TYPE_NM").equals("파트")) {
-                cell1.setColspan(12);
-            }else {
-                cell1.setColspan(11);
-            }
             cell1.setBorder(0);
             cell1.setPadding(0);
             masterTable.addCell(cell1);
-//            document.add(table);
-//            table.flushContent();
 
             if(controlInfo.get("WORK_TYPE_NM").equals("파트")) {
                 String text = "PART " + controlInfo.get("PART_NUM");
-                PdfPCell cell2 = createCell(text,4,1,new Font(bf, 20f, Font.BOLD));
+                PdfPCell cell2 = createCell(text,1,1,new Font(bf, 20f, Font.BOLD));
                 masterTable.addCell(cell2);
             }else {
                 controlInfo.put("queryId", "orderMapper.selectControlCadOrderList");
                 List<Map<String, Object>> controlOrderList = innodaleService.getList(controlInfo);
+
                 if(controlOrderList != null && controlOrderList.size() > 0){
 
                     PdfPTable drawingInfoTable = new PdfPTable(2);
                     drawingInfoTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
                     drawingInfoTable.setWidthPercentage(100);
-                    drawingInfoTable.setWidths(new int[] {5, 100});
-
-//                drawingInfoTable.addCell(createDrawingInCell("발주번호", 1, 1, smallNormalFont, false, true, true, false));
-//                drawingInfoTable.addCell(createDrawingInCell("도면번호", 1, 1, smallNormalFont, false, true, true, true));
-//                drawingInfoTable.addCell(createDrawingInCell("수량", 1, 1, smallNormalFont, false, false, true, true));
-//                drawingInfoTable.addCell(createDrawingInCell("납기", 1, 1, verySmallFont, false, false, false, true));
+                    drawingInfoTable.setWidths(new int[] {5, 80});
 
                     int iOrderListSize = controlOrderList.size();
                     int iCnt = 1;
@@ -336,8 +308,10 @@ public class PdfPrintMakeController {
                         PdfPCell backCell = createCell(String.valueOf(iCnt), 1, 1, smallNormalFont);
                         backCell.setBackgroundColor(BaseColor.WHITE);
                         drawingInfoTable.addCell(backCell);
-                        Font tempBoldFont = new Font(bf, 6.5f, Font.BOLD);
-                        Font tempNormalFont = new Font(bf, 6.5f, Font.NORMAL);
+
+                        Font normalTempFont = new Font(bf, 5.0f, Font.NORMAL);
+                        Font mediumTempBoldFont = new Font(bf, 10.0f, Font.BOLD);
+
                         PdfPCell tempCell = new PdfPCell();
                         tempCell.setPaddingTop(0);
                         tempCell.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -346,61 +320,45 @@ public class PdfPrintMakeController {
                         tempCell.setBackgroundColor(BaseColor.WHITE);
 
                         if (iOrderListSize > iCnt) {
-                            PdfPTable tempTable = new PdfPTable(2);
+                            PdfPTable tempTable = new PdfPTable(1);
                             tempTable.setWidthPercentage(100);
-                            tempTable.setWidths(new int[]{75,45});
+                            tempTable.setWidths(new int[]{80});
 
-                            String text = "접수 "+String.valueOf(controlOrderInfo.get("REGIST_NUM"));
-                            PdfPCell inCell = createOrderCell(new Phrase(text,tempBoldFont),1,1);
+                            String text = String.valueOf(controlOrderInfo.get("REGIST_NUM"));
+                            PdfPCell inCell = createOrderHighCell(new Phrase(text, mediumTempBoldFont),1,1);
                             tempTable.addCell(inCell);
 
-                            text = "발주 "+String.valueOf(controlOrderInfo.get("ORDER_NUM"));
-                            inCell = createOrderCell(new Phrase(text,tempNormalFont),1,1);
-                            inCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-                            tempTable.addCell(inCell);
-
-                            text = "도번 "+String.valueOf(controlOrderInfo.get("DRAWING_NUM")) +"  수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
+                            text = "수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
                             if(sameSideYn.equals("Y")) {
                                 text += " (" + controlOrderInfo.get("ORIGINAL_SIDE_QTY") + "," + controlOrderInfo.get("OTHER_SIDE_QTY") + ")";
                             }
-                            inCell = createOrderCell(new Phrase(text,tempNormalFont),2,1);
+                            text += " " + String.valueOf(controlOrderInfo.get("DRAWING_NUM"));
+                            inCell = createOrderCell(new Phrase(text,normalTempFont),1,1);
                             tempTable.addCell(inCell);
 
                             tempCell.addElement(tempTable);
-
                             drawingInfoTable.addCell(tempCell);
-//                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, smallNormalFont, true, true, true, false));
-//                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, smallNormalFont, true, true, true, true));
-//                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, smallNormalFont, true, false, true, true));
-//                        drawingInfoTable.addCell(createDrawingInCell((String) controlOrderInfo.get("ORDER_DUE_DT"), 1, 1, verySmallFont, true, false, true, true));
                         } else {
-                            PdfPTable tempTable = new PdfPTable(2);
+                            // 발주와 1:1 매칭
+                            PdfPTable tempTable = new PdfPTable(1);
                             tempTable.setWidthPercentage(100);
-                            tempTable.setWidths(new int[]{75,45});
+                            tempTable.setWidths(new int[]{80});
 
-                            String text = "접수 "+String.valueOf(controlOrderInfo.get("REGIST_NUM"));
-                            PdfPCell inCell = createOrderCell(new Phrase(text,tempBoldFont),1,1);
+//                            String text = "B4B4B4B4B4B4B4B4B4B4B4B4";
+                            String text = String.valueOf(controlOrderInfo.get("REGIST_NUM"));
+                            PdfPCell inCell = createOrderHighCell(new Phrase(text, mediumTempBoldFont),1,1);
                             tempTable.addCell(inCell);
 
-                            text = "발주 "+String.valueOf(controlOrderInfo.get("ORDER_NUM"));
-                            inCell = createOrderCell(new Phrase(text,tempNormalFont),1,1);
-                            inCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-                            tempTable.addCell(inCell);
-
-                            text = "도번 "+String.valueOf(controlOrderInfo.get("DRAWING_NUM")) +"  수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
+                            text = "수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
                             if(sameSideYn.equals("Y")) {
                                 text += " (" + controlOrderInfo.get("ORIGINAL_SIDE_QTY") + "," + controlOrderInfo.get("OTHER_SIDE_QTY") + ")";
                             }
-                            inCell = createOrderCell(new Phrase(text,tempNormalFont),2,1);
+                            text += " " + String.valueOf(controlOrderInfo.get("DRAWING_NUM"));
+                            inCell = createOrderCell(new Phrase(text, normalTempFont),1,1);
                             tempTable.addCell(inCell);
 
                             tempCell.addElement(tempTable);
-
                             drawingInfoTable.addCell(tempCell);
-//                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_NUM")), 1, 1, smallNormalFont, true, true, false, false));
-//                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("DRAWING_NUM")), 1, 1, smallNormalFont, true, true, false, true));
-//                        drawingInfoTable.addCell(createDrawingInCell(String.valueOf(controlOrderInfo.get("ORDER_QTY")), 1, 1, smallNormalFont, true, false, false, true));
-//                        drawingInfoTable.addCell(createDrawingInCell((String) controlOrderInfo.get("ORDER_DUE_DT"), 1, 1, verySmallFont, true, false, false, true));
                         }
                         iCnt++;
                     }
@@ -408,13 +366,10 @@ public class PdfPrintMakeController {
                     PdfPCell cell2 = new PdfPCell();
                     cell2.setVerticalAlignment(Element.ALIGN_TOP);
                     cell2.addElement(drawingInfoTable);
-                    cell2.setColspan(5);
+                    cell2.setColspan(2);
                     cell2.setBorder(0);
                     cell2.setPadding(0);
                     masterTable.addCell(cell2);
-//                document.add(drawingInfoTable);
-//                drawingInfoTable.flushContent();
-
                 }
             }
             document.add(masterTable);
@@ -613,7 +568,7 @@ public class PdfPrintMakeController {
             PdfPTable table = new PdfPTable(11);
             table.init();
             table.setWidthPercentage(100);
-            table.setWidths(new float[]{2.5f, 3.0f, 3.0f, 1.0f, 5.5f, 1.0f, 3.0f, 1.0f, 1.0f, 2.5f, 2.5f});
+            table.setWidths(new float[]{2.5f, 3.0f, 3.0f, 1.0f, 5.5f, 1.0f, 3.0f, 1.0f, 1.0f, 0.7f, 4.3f});
             // 바코드 생성
             BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) controlInfo.get("ORDER_BARCODE_NUM"), 90, 20);
             int width = bitMatrix.getWidth();
@@ -671,8 +626,8 @@ public class PdfPrintMakeController {
             table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 1, 1, mediumNormalFont));
 //            table.addCell(createCell(controlInfo.get("REGIST_NUM") != null && controlInfo.get("TOTAL_SHEET") != null ? controlInfo.get("REGIST_NUM") + " / " + controlInfo.get("TOTAL_SHEET"): controlInfo.get("REGIST_NUM") != null ? (String) controlInfo.get("REGIST_NUM") : "" + controlInfo.get("TOTAL_SHEET") != null ? String.valueOf(controlInfo.get("TOTAL_SHEET")) : "", 4, 1, smallNormalFont));
             Font tempNormalFont = new Font(bf, 8.5f, Font.NORMAL);
-            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? "납기" + controlInfo.get("ORDER_DUE_DT") : "", 2, 1, tempNormalFont));
-            table.addCell(createCell(controlInfo.get("CONTROL_NUM") != null ? "작업번호 " + controlInfo.get("CONTROL_NUM") : "", 2, 1, tempNormalFont));
+            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? controlInfo.get("ORDER_DUE_DT") + "-" + controlInfo.get("ORDER_DUE_DT"): "", 3, 1, tempNormalFont));
+            table.addCell(createCell(controlInfo.get("CONTROL_NUM") != null ? controlInfo.get("CONTROL_NUM") + "" : "", 1, 1, tempNormalFont));
             document.add(table);
             table.flushContent();
 
@@ -856,11 +811,23 @@ public class PdfPrintMakeController {
         cell.setPaddingBottom(0);
         return cell;
     }
+
     private static PdfPCell createOrderCell(Phrase phrase, int colspan, int rowspan) {
         PdfPCell cell = new PdfPCell(phrase);
         cell.setColspan(colspan);
         cell.setRowspan(rowspan);
-        cell.setFixedHeight(10f);
+        cell.setFixedHeight(8.0f);
+        cell.setBorder(0);
+        cell.setBackgroundColor(BaseColor.WHITE);
+        cell.setUseAscender(true);
+        return cell;
+    }
+
+    private static PdfPCell createOrderHighCell(Phrase phrase, int colspan, int rowspan) {
+        PdfPCell cell = new PdfPCell(phrase);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setFixedHeight(12f);
         cell.setBorder(0);
         cell.setBackgroundColor(BaseColor.WHITE);
         cell.setUseAscender(true);
