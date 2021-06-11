@@ -123,6 +123,12 @@
                             <%--                            </select>--%>
                         </div>
                         <span class="ipu_wrap right_float">
+                            <span class="mr-10" id="locationBarcodeSpan">
+                                <img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="locationBarcodeImg">
+                            </span>
+                            <span class="mr-10">
+                                <input type="text" class="wd_150" name="LOCATION_BARCODE_NUM" id="LOCATION_BARCODE_NUM" placeholder="위치바코드">
+                            </span>
                             <button type="button" id="STOCK_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="stock_manage_search_btn">검색</button>
                         </span>
@@ -151,10 +157,16 @@
                 <label for="stockManageFrozen" class="label_50" style="font-size: 15px;">Fix</label>
                 <select id="stockManageFrozen" name="stockManageFrozen">
                 </select>
-                <button type="button" class="defaultBtn" id="stock_manage_new_btn">재고 입고</button>
+<%--                <button type="button" class="defaultBtn" id="stock_manage_new_btn">재고 입고</button>--%>
                 <button type="button" class="defaultBtn" id="stock_manage_area_info_btn">위치정보관리</button>
+                <button type="button" class="defaultBtn" id="stock_test_btn1">2</button>
+                <button type="button" class="defaultBtn" id="stock_test_btn2">3</button>
+                <button type="button" class="defaultBtn" id="stock_test_btn3">4</button>
                 <div class="rightSpan">
-                    <button type="button" class="defaultBtn radius" id="stock_manage_drawing_new_btn">도면 등록</button>
+                    <button type="button" class="defaultBtn blue radius" id="stock_manage_new_btn">신규생성/입고</button>
+                    <button type="button" class="defaultBtn brown radius">불출</button>
+                    <button type="button" class="defaultBtn lightGray radius" id="stock_manage_drawing_print_btn" style="background-color: #d9d9d9;">재고도면 출력</button>
+<%--                    <button type="button" class="defaultBtn radius" id="stock_manage_drawing_new_btn">도면 등록</button>--%>
                     <button type="button" class="defaultBtn radius" id="stock_manage_add_btn">추가</button>
                     <button type="button" class="defaultBtn radius red" id="stock_manage_delete_btn">삭제</button>
                     <button type="button" class="defaultBtn radius green" id="stock_manage_save_btn">저장</button>
@@ -162,18 +174,34 @@
             </div>
         </div>
         <div class="tableWrap" style="padding: 10px 0;">
-            <div class="conWrap">
+            <div class="conMainWrap">
                 <div id="stock_manage_grid"></div>
                 <div class="right_sort">
                     전체 조회 건수 (Total : <span id="stock_manage_grid_records" style="color: #00b3ee">0</span>)
+                </div>
+            </div>
+            <div>
+                <span style="font-size: 1.6rem;">불출 요청 현황</span>
+            </div>
+            <br/>
+            <div class="conWrap">
+                <div id="stock_manage_grid02"></div>
+                <div class="right_sort">
+                    전체 조회 건수 (Total : <span id="stock_manage_grid02_records" style="color: #00b3ee">0</span>)
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<form id="stock_manage_hidden_form" name="stock_manage_hidden_form">
+    <input type="hidden" id="queryId" name="queryId" value="material.selectStockRequestList"/>
+    <input type="hidden" id="MY_MAT_STOCK_SEQ" name="MY_MAT_STOCK_SEQ"/>
+    <input type="hidden" id="MATERIAL_COMP_CD" name="MATERIAL_COMP_CD"/>
+</form>
+
 <!-- 재고입고 mini popup : S -->
-<div class="popup_container" id="stock_manage_pop" style="display: none;">
+<div class="popup_container" id="stock_manage_pop_old" style="display: none;">
     <form class="form-inline" id="stock_manage_pop_form" name="stock_manage_pop_form" role="form">
         <input type="hidden" id="queryId" name="queryId" value="material.selectInsideStockPopInfo">
         <input type="hidden" id="IN_OUT_QTY" name="IN_OUT_QTY" value="0">
@@ -282,8 +310,199 @@
 </div>
 <!-- 재고입고 mini popup : E -->
 
+<!--재고생성/입고 팝업-->
+<div id="stock_manage_pop" class="popup_container" style="display: none;">
+    <div class="stockPopupWrap">
+        <div class="stockPopupInfo">
+            <h3><i class="xi-library-bookmark"></i> 재고생성 / 입고</h3>
+            <div class="barcode barcode_div" id="footer_barcode">
+                <span class="barcode_label">Please Scan Barcode </span>
+                <span class="barCode">
+						<img src="resource/asset/images/common/img_barcode_long.png" alt="바코드" id="mct_plan_detail_pop_form_barcode_img">
+					</span>
+                <span class="barCodeTxt">
+						<input type="text" class="wd_200 hg_35" name="BARCODE_NUM" id="BARCODE_NUM" placeholder="도면의 바코드를 스캔해주세요">
+					</span>
+            </div>
+            <div class="stockMap">
+                <!--도면-->
+            </div>
+            <div class="stockPopupBtm">
+                <div class="stockPopupBtmLeft">
+                    <div class="stockPopupBtmLeftInfo">
+                        <span>작업/재고번호</span>&nbsp;&nbsp;&nbsp;
+                        <input type="text" class="stockNum">
+                    </div>
+                    <div class="stockPopupBtmLeftTable">
+                        <!--grid-->
+                    </div>
+                </div>
+                <div class="stockPopupBtmRight">
+                    <table>
+                        <tr>
+                            <th>재고번호</th>
+                            <td class="tdBackColor tdWeight">IN-0067</td>
+                            <th>구분</th>
+                            <td class="tdWeight tdCss">신규생성</td>
+                        </tr>
+                        <tr>
+                            <th>발주처</th>
+                            <td>
+                                <select>
+                                    <option value="inno">이노비즈</option>
+                                    <option value="">발주처2</option>
+                                </select>
+                            </td>
+                            <th>사업자</th>
+                            <td>
+                                <select>
+                                    <option value="">진성정밀</option>
+                                    <option value="">사업자2</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>소재</th>
+                            <td>
+                                <select>
+                                    <option value="a160">AL60</option>
+                                    <option value="">소재2</option>
+                                </select>
+                            </td>
+                            <th>규격</th>
+                            <td>53*54*10</td>
+                        </tr>
+                        <tr>
+                            <th>품명</th>
+                            <td colspan="3">PLATE FOR STORECKR</td>
+                        </tr>
+                        <tr>
+                            <th>입고수량</th>
+                            <td colspan="3" class="enterNum">
+                                <i class="xi-minus-circle xi-2x minusBtn" id="minusBtn"></i>
+                                <input type="number" value="0" id="enterNumVal">
+                                <i class="xi-plus-circle xi-2x plusBtn" id="plusBtn"></i>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="stockPopupBtnWrap">
+                <button id="stockBtnClose" class="stockBtnClose">닫기</button>
+                <button id="stockBtnSave" class="stockBtnSave">저장</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!--두번째 단계 팝업-->
+<div id="stockPopup2" class="stockPopup2" style="display: none;">
+    <div class="stockPopupWrap">
+        <div class="stockPopupInfo2">
+            <p>입고 위치를 지정해주세요.</p>
+            <p>Pleas select the location</p>
+            <span class="barCode">
+					<img src="resource/asset/images/common/img_barcode_long.png" alt="바코드" id="mct_plan_detail_pop_form_barcode_img">
+				</span>
+            <div class="inputWrap">
+                <label for="warehouse">창고</label>
+                <select id="warehouse" class="warehouse">
+                    <option value="">재고창고</option>
+                    <option value="">창고종류</option>
+                    <option value="">창고종류</option>
+                </select>
+                <label for="where">위치</label>
+                <select id="where" class="where">
+                    <option value="">재고-1-B</option>
+                    <option value="">위치종류</option>
+                    <option value="">위치종류</option>
+                </select>
+            </div>
+            <div class="stockPopupBtnWrap">
+                <button id="stockBtnCancel" class="stockBtnCancel">취소</button>
+                <button id="stockBtnSave2" class="stockBtnSave2">저장</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div id="stockPopup3" class="stockPopup3" style="display: none;">
+    <div class="stockPopupWrap">
+        <div class="stockPopupInfo3">
+            <h3><i class="xi-library-bookmark"></i> 재고생성 / 입고</h3>
+            <table>
+                <tr>
+                    <th>재고번호</th>
+                    <td colspan="3" class="tdWeight">IN-0067</td>
+                </tr>
+                <tr>
+                    <th>소재</th>
+                    <td>AL60</td>
+                    <th>규격</th>
+                    <td>53*54*10</td>
+                </tr>
+                <tr>
+                    <th>구분</th>
+                    <td colspan="3" class="tdColor">신규 재고 생성</td>
+                </tr>
+                <tr>
+                    <th>입고수량</th>
+                    <td colspan="3" class="tdColor"></td>
+                </tr>
+                <tr>
+                    <th>창고/위치</th>
+                    <td colspan="3" class="tdColor"></td>
+                </tr>
+                <tr>
+                    <th>남는재고수량</th>
+                    <td colspan="3"></td>
+                </tr>
+            </table>
+            <p>입고를 진행하시겠습니까?</p>
+            <div class="stockPopupBtnWrap">
+                <button id="stockBtnCancel2" class="stockBtnCancel2">취소</button>
+                <button id="stockBtnOk" class="stockBtnOk">확인<span>(5)</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="stockSearchPopup" class="stockSearchPopup" style="display: none;">
+    <div class="stockPopupWrap">
+        <div class="searchPopup">
+            <h3><i class="xi-library-bookmark"></i> 재고 매칭 검색 및 지정</h3>
+            <div class="searchPopupWrap">
+                <div class="stockMapLeft">
+                    <!--도면삽입-->
+                </div>
+                <div class="searchPopupRight">
+                    <div class="searchPopupRightTop">
+                        <h4><i class="xi-library-bookmark"></i> 매칭 List</h4>
+                        <button type="button" id="mct_plan_pop_refresh" class="refreshBtn">
+                            <img src="./resource/asset/images/common/btn_refresh.png" alt="새로고침">
+                        </button>
+                        <div class="barcode barcode_div" id="footer_barcode">
+								<span class="barCode">
+									<img src="resource/asset/images/common/img_barcode_long.png" alt="바코드" id="mct_plan_detail_pop_form_barcode_img">
+								</span>
+                            <span class="barCodeTxt">
+									<input type="text" class="wd_200 hg_35" name="BARCODE_NUM" id="BARCODE_NUM" placeholder="도면의 바코드를 스캔해주세요">
+								</span>
+                        </div>
+                    </div>
+                    <div class="listTable">
+                        <!--gird삽입-->
+                    </div>
+                </div>
+            </div>
+            <div class="stockPopupBtnWrap">
+                <button id="mapDetailBtn" class="mapDetailBtn">도면상세보기</button>
+                <button id="stockBtnClose4" class="stockBtnClose">닫기</button>
+                <button id="stockBtnSave" class="stockBtnSave">저장</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(function () {
         'use strict';
@@ -309,9 +528,13 @@
         let selectedRowIndex = [];
 
         let stockManageGridId01 = $("#stock_manage_grid");
+        let stockManageGridId02 = $("#stock_manage_grid02");
         let stockManageColModel01;
+        let stockManageColModel02;
         let stockManagePostData01;
+        let stockManagePostData02;
         let stockManageObj01;
+        let stockManageObj02;
 
         let pop_msg_new = "재고를 <b>신규 생성</b>하시겠습니까?";
         let pop_msg_in = "<b>입고</b>를 진행하겠습니까?";
@@ -323,6 +546,7 @@
         $("#stock_manage_form").find("#queryId").val("material.selectInsideStockList");
         stockManagePostData01 = fnFormToJsonArrayData('#stock_manage_form');
         stockManageColModel01 = [
+            {title: '재고번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 150, width: 150, editable: false},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_CD',  minWidth: 110, width: 110,
                 editor: {
                     type: 'select',
@@ -348,6 +572,28 @@
                     }
                 }
             },
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 100, width: 100,
+                editable: function (ui) { return gridCellEditable(ui);},
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+            },
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',editable: function (ui) { return gridCellEditable(ui);},
+                minWidth: 100, width: 100,
+                editor: {
+                    type: 'select',
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1027')
+                },
+                validations: [
+                    { type: 'minLen', value: 1, msg: "Required" }
+                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
+            },
+            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', minWidth: 170, width: 170,
+                editable: function (ui) { return gridCellEditable(ui);},
+                validations: [
+                    { type: 'minLen', value: 1, msg: "Required" }
+                ], styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+            },
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
@@ -361,68 +607,6 @@
                     });
                 }
             },
-            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 150, width: 150,
-                editable: function (ui) { return gridCellEditable(ui);},
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
-            },
-            {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', minWidth: 200, width: 200,
-                editable: function (ui) { return gridCellEditable(ui);},
-                validations: [
-                    { type: 'minLen', value: 1, msg: "Required" }
-                ], styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
-            },
-            {title: '재고번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 150, width: 150, editable: false},
-            {title: '사업자구분', dataType: 'string', dataIndx: 'COMP_CD', minWidth: 120, width: 120, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
-                editor: {
-                    type: 'select',
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}})
-                },
-                validations: [
-                    { type: 'minLen', value: 1, msg: "Required" }
-                ],
-                postRender:function( ui ){
-                    let cmpCd = ui.rowData.COMP_CD;
-                    if(typeof cmpCd != 'undefined' && cmpCd != null && cmpCd != '' && cmpCd.indexOf('CMP') < 0) {
-                        $.each(listJson.COMP_CD, function (idx,Item) {
-                            if(Item.CODE_NM.toUpperCase() == ui.rowData.COMP_CD.toUpperCase()) {
-                                ui.rowData.COMP_CD = Item.CODE_CD;
-                            }
-                        })
-                    }
-                }
-
-            },
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 100, width: 100,
-                editable: function (ui) { return gridCellEditable(ui);},
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
-            },
-            /*{title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',editable: function (ui) { return gridCellEditable(ui);},
-                minWidth: 100, width: 100,
-                editor: {
-                    type: 'select',
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1027')
-                },
-                validations: [
-                    { type: 'minLen', value: 1, msg: "Required" }
-                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
-            },*/
-            {title: '재질', width: 60, dataIndx: 'MATERIAL_TYPE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
-                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1035')},
-                postRender:function( ui ){
-                    let mt = ui.rowData.MATERIAL_TYPE;
-                    if(typeof mt != 'undefined' && mt != null && mt != '' && mt.indexOf('MTP') < 0) {
-                        $.each(listJson.MATERIAL_TYPE, function (idx,Item) {
-                            if(Item.CODE_NM_KR.toUpperCase() == ui.rowData.MATERIAL_TYPE.toUpperCase()) {
-                                ui.rowData.MATERIAL_TYPE = Item.CODE_CD;
-                            }
-                        })
-                    }
-                }
-            },
             {title: '재고수량<br>(EA)', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', format: '#,###', editable: function (ui) {
                     var isEditable = stockManageGridId01.pqGrid('hasClass',{rowIndx: ui.rowIndx, cls: 'pg-new-row'});
                     if(isEditable) {
@@ -432,6 +616,7 @@
                     }
                 }
             },
+
             {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_CD', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 minWidth: 100, width: 100,
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1049') },
@@ -506,7 +691,46 @@
                     }
                 }
             },
-            {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 150, width: 150,
+                editable: function (ui) { return gridCellEditable(ui);},
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+            },
+            {title: '사업자구분', dataType: 'string', dataIndx: 'COMP_CD', minWidth: 100, width: 100, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
+                editor: {
+                    type: 'select',
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}})
+                },
+                validations: [
+                    { type: 'minLen', value: 1, msg: "Required" }
+                ],
+                postRender:function( ui ){
+                    let cmpCd = ui.rowData.COMP_CD;
+                    if(typeof cmpCd != 'undefined' && cmpCd != null && cmpCd != '' && cmpCd.indexOf('CMP') < 0) {
+                        $.each(listJson.COMP_CD, function (idx,Item) {
+                            if(Item.CODE_NM.toUpperCase() == ui.rowData.COMP_CD.toUpperCase()) {
+                                ui.rowData.COMP_CD = Item.CODE_CD;
+                            }
+                        })
+                    }
+                }
+
+            },
+            /*{title: '재질', width: 60, dataIndx: 'MATERIAL_TYPE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1035')},
+                postRender:function( ui ){
+                    let mt = ui.rowData.MATERIAL_TYPE;
+                    if(typeof mt != 'undefined' && mt != null && mt != '' && mt.indexOf('MTP') < 0) {
+                        $.each(listJson.MATERIAL_TYPE, function (idx,Item) {
+                            if(Item.CODE_NM_KR.toUpperCase() == ui.rowData.MATERIAL_TYPE.toUpperCase()) {
+                                ui.rowData.MATERIAL_TYPE = Item.CODE_CD;
+                            }
+                        })
+                    }
+                }
+            },*/
+            /*{title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
                 },
@@ -518,7 +742,7 @@
                         fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
                     });
                 }
-            },
+            },*/
             {
                 title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
@@ -533,8 +757,7 @@
                     });
                 }
             },
-            {title: '생성일시', dataType: 'string', dataIndx: 'INSERT_TIME', minWidth: 100, width: 100, editable: false},
-            {title: '수정일시', dataType: 'string', dataIndx: 'UPDATE_TIME', minWidth: 100, width: 100, editable: false},
+            {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 100, width: 100, editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {title: '입고/불출', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN_OUT', minWidth: 100, width: 100,
                 styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: false,
                 render: function (ui) {
@@ -543,11 +766,11 @@
                     let rowData = ui.rowData;
                     let inBtn = '';
                     if (ui.rowData['INSIDE_STOCK_NUM'] != undefined){
-                        inBtn = '<button type="button" class="miniBtn orange" id="INSIDE_STOCK_QTY_IN_ACTION">입고</button>' + '&nbsp;';
+                        inBtn = '<button type="button" class="miniBtn blue" id="INSIDE_STOCK_QTY_IN_ACTION">입고</button>' + '&nbsp;';
                     }
                     let outBtn = '';
                     if (ui.rowData['INSIDE_STOCK_NUM'] != undefined){
-                        outBtn = '<button type="button" class="miniBtn blue" id="INSIDE_STOCK_QTY_OUT_ACTION">불출</button>';
+                        outBtn = '<button type="button" class="miniBtn brown" id="INSIDE_STOCK_QTY_OUT_ACTION">불출</button>';
                     }
                     return inBtn + outBtn;
                 },
@@ -559,6 +782,7 @@
                         e.preventDefault();
                         $("#stock_manage_form").find("#popType").val("GRID_IN");
                         $("#stock_manage_form").find("#V_INSIDE_STOCK_NUM").val(ui.rowData['INSIDE_STOCK_NUM']);
+                        $('#stock_manage_pop').modal('show');
                         $('#stock_manage_pop').modal('show');
                     });
                     $cell.find('#INSIDE_STOCK_QTY_OUT_ACTION').bind('click', function(e) {
@@ -574,10 +798,11 @@
                     });
                 }
             },
-            {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 250, width: 250, editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
+            {title: '생성일시', dataType: 'string', dataIndx: 'INSERT_TIME', minWidth: 100, width: 100, editable: false},
+            {title: '수정일시', dataType: 'string', dataIndx: 'UPDATE_TIME', minWidth: 100, width: 100, editable: false}
         ];
         stockManageGridId01.pqGrid({
-            height: 700,
+            height: 438,
             postRenderInterval: -1, //call postRender synchronously.
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'INSIDE_STOCK_NUM',
@@ -694,6 +919,69 @@
             //     }
             // }
         });
+        stockManageColModel02 = [
+            {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: 'INSIDE_STOCK_SEQ', dataType: 'integer', dataIndx: 'INSIDE_STOCK_SEQ', hidden: true},
+            // {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
+            {title: '작업지시번호', align: 'center', width: 180, dataIndx: 'CONTROL_NUM'},
+            {title: '요청수량', dataType: 'integer', align: 'center', width: 50, dataIndx: 'REQUEST_QTY'},
+            {title: '재고번호', minWidth: 120, dataIndx: 'INSIDE_STOCK_NUM'},
+            {title: '발주처', minWidth: 110, dataIndx: 'ORDER_COMP_NM'},
+            {title: '규격', minWidth: 120, dataIndx: 'SIZE_TXT'},
+            {title: '소재종류', minWidth: 100, dataIndx: 'MATERIAL_DETAIL'},
+            {title: '재고수량', width: 50, dataIndx: 'INSIDE_STOCK_CURR_QTY'},
+            {title: '남는수량', width: 50, dataIndx: 'INSIDE_STOCK_REMAIN_QTY'},
+            {title: '품명', width: 170, dataIndx: 'ITEM_NM'},
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
+            {title: '창고명', align: 'center', width: 100, dataIndx: 'WAREHOUSE_CD_NM'},
+            {title: '재고위치', align: 'center', width: 100, dataIndx: 'LOC_NM'},
+            {title: '사업자구분', align: 'center', width: 100, dataIndx: 'COMP_CD_NM'},
+            {title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ'},
+            {title: '요청일시', align: 'center', dataType: 'string', width: 100, dataIndx: 'REQUEST_DT'}
+        ];
+
+
+        stockManageObj02 = {
+            height: 200, width: "auto", minHeight: "auto",
+            selectionModel: { type: 'row', mode: 'single'}, rowHtHead: 15, numberCell: {title: 'No.'},
+            swipeModel: {on: false}, trackModel: {on: true},
+            strNoRows: g_noData,
+            collapsible: false, resizable: false, flexWidth: false, showTitle: false,
+            postRenderInterval: -1, //call postRender synchronously.
+            // scrollModel: { autoFit: true },
+            columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
+            colModel: stockManageColModel02,
+            dataModel: {
+                location: "remote", dataType: "json", method: "POST", recIndx: 'CONTROL_NUM',
+                url: "/paramQueryGridSelect",
+                postData: fnFormToJsonArrayData('stock_manage_hidden_form'),
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            dataReady: function (event, ui) {
+                let data = stockManageGridId02.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#stock_manage_grid02_records').html(totalRecords);
+            },
+            toolbar: false,
+        };
+        stockManageGridId02.pqGrid(stockManageObj02);
+
         /**  현황관리(GRID01) 그리드 선언 끝 **/
 
         let gridCellEditable = function(ui){
@@ -1368,6 +1656,16 @@
             });
 
             saveAs(blob, '재고 관리.xlsx');
+        });
+        $("#stock_test_btn1").on('click',function (){
+            $("#stockPopup2").modal('show');
+        });
+
+        $("#stock_test_btn2").on('click',function (){
+            $("#stockPopup3").modal('show');
+        });
+        $("#stock_test_btn3").on('click',function (){
+            $("#stockSearchPopup").modal('show');
         });
 
         function resetInput(form, idArr) {

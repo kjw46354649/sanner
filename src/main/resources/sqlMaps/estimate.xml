@@ -296,7 +296,7 @@
             #{ORDER_COMP_CD} AS ORDER_COMP_CD, #{ORDER_STAFF_SEQ} AS ORDER_STAFF_SEQ, #{COMP_CD} AS COMP_CD, #{EST_USER_ID} AS EST_USER_ID,
             #{EST_TITLE} AS EST_TITLE, 'EST010' AS EST_STATUS,
             CONCAT('[견적서송부 ', IFNULL(EST_NUM, SPACE(0)), SPACE(1), IFNULL(EST_TITLE, SPACE(0))) AS EMAIL_TITLE,
-            #{EMAIL_CONTENT} AS EMAIL_CONTENT, #{GFILE_SEQ}, 'N' AS DEL_YN, NOW() AS INSERT_DT, NULL AS INSERT_ID
+            #{EMAIL_CONTENT} AS EMAIL_CONTENT, #{GFILE_SEQ}, 'N' AS DEL_YN, NOW() AS INSERT_DT, #{LOGIN_USER_ID} AS INSERT_ID
         FROM (
             SELECT
                 0 AS EST_VER, EST_TITLE,
@@ -653,6 +653,26 @@
 												)
         WHERE 1=1
             AND A.EST_SEQ = #{EST_SEQ}
+    </insert>
+
+    <insert id="insertEstimateOrderOutBarcode" parameterType="java.util.HashMap">
+        INSERT IGNORE INTO TBL_OUT_BARCODE
+            (BARCODE_NUM, CONTROL_SEQ, CONTROL_DETAIL_SEQ, ORDER_SEQ, PACKING_NUM, INSERT_ID)
+        SELECT
+            CONCAT('L',LPAD(NEXTVAL(SEQ_BARCODE),9,'0')) AS BARCODE_NUM,
+            B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.ORDER_SEQ, 1 AS PACKING_NUM, #{LOGIN_USER_ID}
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART_ORDER B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND B.CONTROL_DETAIL_SEQ NOT IN (
+                    SELECT D.CONTROL_DETAIL_SEQ
+                    FROM TBL_CONTROL C
+                         INNER JOIN TBL_CONTROL_PART_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ
+                         INNER JOIN TBL_OUT_BARCODE E ON D.CONTROL_SEQ = E.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+                                AND D.ORDER_SEQ = E.ORDER_SEQ
+                    WHERE C.EST_SEQ = #{EST_SEQ}
+                )
+        WHERE 1=1
+          AND A.EST_SEQ = #{EST_SEQ}
     </insert>
 
     <insert id="insertEstimateOrderPartProcess" parameterType="java.util.HashMap">

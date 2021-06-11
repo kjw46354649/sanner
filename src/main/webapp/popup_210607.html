@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="resource/asset/css/customer.css">
+	<link rel="stylesheet" href="resource/pop/XEIcon/xeicon.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<!--재고생성/입고 팝업-->
+<div id="stockPopup" class="stockPopup">
+	<div class="stockPopupWrap">
+		<div class="stockPopupInfo stockPopupInfoOut stockPopupInfoEnter">
+							<!--신규생성 및 기본 클라스 stockPopupInfo-->
+							<!--재고 불출 시 stockPopupInfoOut-->
+							<!--입고 시 stockPopupInfoEnter-->
+			<h3><i class="xi-library-bookmark"></i> 재고생성 / 입고</h3>
+			<div class="barcode barcode_div" id="footer_barcode">
+				<span class="barcode_label">Please Scan Barcode </span>
+				<span class="barCode">
+					<img src="resource/asset/images/common/img_barcode_long.png" alt="바코드" id="mct_plan_detail_pop_form_barcode_img">
+				</span>
+				<span class="barCodeTxt">
+					<input type="text" class="wd_200 hg_35" name="BARCODE_NUM" id="BARCODE_NUM" placeholder="도면의 바코드를 스캔해주세요">
+				</span>
+			</div>
+			<div class="stockMap">
+				<!--도면-->
+			</div>
+			<div class="stockPopupBtm">
+				<div class="stockPopupBtmLeft">
+					<div class="stockPopupBtmLeftInfo">
+						<span>작업/재고번호</span>&nbsp;&nbsp;&nbsp;
+						<input type="text" class="stockNum">
+					</div>
+					<div class="stockPopupBtmLeftTable">
+						<!--grid-->       
+					</div>
+				</div>
+				<div class="stockPopupBtmRight">
+					<table>
+						<tr>
+							<th>재고번호</th>
+							<td class="tdBackColor tdWeight">IN-0067</td>
+							<th>구분</th>
+							<td class="tdWeight tdCss">신규생성</td>
+						</tr>
+						<tr>
+							<th>발주처</th>
+							<td>
+								<select>
+									<option value="inno">이노비즈</option>
+									<option value="">발주처2</option>
+								</select>
+							</td>
+							<th>사업자</th>
+							<td>
+								<select>
+									<option value="">진성정밀</option>
+									<option value="">사업자2</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th>소재</th>
+							<td>
+								<select>
+									<option value="a160">AL60</option>
+									<option value="">소재2</option>
+								</select>
+							</td>
+							<th>규격</th>
+							<td>53*54*10</td>
+						</tr>
+						<tr>
+							<th>품명</th>
+							<td colspan="3">PLATE FOR STORECKR</td>
+						</tr>
+						<tr>
+							<th>입고수량</th>
+							<td colspan="3" class="enterNum">
+								<i class="xi-minus-circle xi-2x minusBtn" id="minusBtn"></i>
+								<input type="number" value="0" id="enterNumVal">
+								<i class="xi-plus-circle xi-2x plusBtn" id="plusBtn"></i>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="stockPopupBtnWrap">
+				<button id="stockBtnClose" class="stockBtnClose">닫기</button>
+				<button id="stockBtnSave" class="stockBtnSave">저장</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--두번째 단계 팝업-->
+<div id="stockPopup2" class="stockPopup2">
+	<div class="stockPopupWrap">
+		<div class="stockPopupInfo2">
+			<p>입고 위치를 지정해주세요.</p>
+			<p>Pleas select the location</p>
+			<span class="barCode">
+				<img src="resource/asset/images/common/img_barcode_long.png" alt="바코드" id="mct_plan_detail_pop_form_barcode_img">
+			</span>
+			<div class="inputWrap">
+				<label for="warehouse">창고</label>
+				<select id="warehouse" class="warehouse">
+					<option value="">재고창고</option>
+					<option value="">창고종류</option>
+					<option value="">창고종류</option>
+				</select>
+				<label for="where">위치</label>
+				<select id="where" class="where">
+					<option value="">재고-1-B</option>
+					<option value="">위치종류</option>
+					<option value="">위치종류</option>
+				</select>
+			</div>
+			<div class="stockPopupBtnWrap">
+				<button id="stockBtnCancel" class="stockBtnCancel">취소</button>
+				<button id="stockBtnSave2" class="stockBtnSave2">저장</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="stockPopup3" class="stockPopup3">
+	<div class="stockPopupWrap">
+		<div class="stockPopupInfo3 stockPopupOut stockPopupEnter">
+							<!--신규생성 및 기본 stockPopupInfo3-->
+							<!--재고 불출시 클라스 stockPopupOut-->
+							<!--입고 시 클라스 stockPopupEnter-->
+			<h3><i class="xi-library-bookmark"></i> 재고생성 / 입고</h3>
+			<table>
+				<tr>
+					<th>재고번호</th>
+					<td colspan="3" class="tdWeight">IN-0067</td>
+				</tr>
+				<tr>
+					<th>소재</th>
+					<td>AL60</td>
+					<th>규격</th>
+					<td>53*54*10</td>
+				</tr>
+				<tr>
+					<th>구분</th>
+					<td colspan="3" class="tdColor">신규 재고 생성</td>
+				</tr>
+				<tr>
+					<th>입고수량</th>
+					<td colspan="3" class="tdColor"></td>
+				</tr>
+				<tr>
+					<th>창고/위치</th>
+					<td colspan="3" class="tdColor"></td>
+				</tr>
+				<tr>
+					<th>남는재고수량</th>
+					<td colspan="3"></td>
+				</tr>
+			</table>
+			<p><span>입고</span>를 진행하시겠습니까?</p>
+			<div class="stockPopupBtnWrap">
+				<button id="stockBtnCancel2" class="stockBtnCancel2">취소</button>
+				<button id="stockBtnOk" class="stockBtnOk">확인<span>(5)</span></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+	<script>
+		let plusBtn = document.getElementById("plusBtn");
+		let minusBtn = document.getElementById("minusBtn");
+		plusBtn.addEventListener("click",function(){
+			$("#enterNumVal").val(Number($("#enterNumVal").val())+1);
+		});
+		minusBtn.addEventListener("click",function(){
+			$("#enterNumVal").val(Number($("#enterNumVal").val())-1);
+		});
+
+		$("#stockBtnClose").on("click",function(){
+			$("#stockPopup").hide();
+		});
+		$("#stockBtnSave").on("click",function(){
+			$("#stockPopup2").show();
+		});
+		$("#stockBtnCancel").on("click",function(){
+			$("#stockPopup2").hide();
+		});
+		$("#stockBtnSave2").on("click",function(){
+			$("#stockPopup3").show();
+		});
+		$("#stockBtnCancel2").on("click",function(){
+			$("#stockPopup3").hide();
+		});
+		$("#stockBtnOk").on("click",function(){
+			$("#stockPopup, #stockPopup2, #stockPopup3").hide();
+		});
+		
+	</script>
+</body>
+</html>

@@ -23,7 +23,7 @@ div[class^="contents0"] {
 }
 .infoWrap {
 	width: 100%;
-	height: 96%;
+	height: 96.5%;
 	padding: 20px;
 }
 .infoWrap .rowWrap {
@@ -161,6 +161,7 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table {
 	border-collapse: collapse;
 	border-spacing: 0;
 	border: 0;
+	font-size: 1.2rem;
 }
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table th {
 	background: #005da2;
@@ -318,6 +319,7 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 	.infoWrap {
 		padding: 5px;
 		margin-top: 5px;
+		height: 96%;
 	}
 	div[class^="mctInfo_"] {
 		padding: 4px;
@@ -351,6 +353,7 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 		height: 50%;
 		padding-top: 2px;
 		z-index: 9;
+		border: 1px solid black;
 	}
 	div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .mctProgressPercent {
 		top: 60%;
@@ -364,6 +367,7 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 	}
 	div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm {
 		margin-top: 5px;
+		height: 43%;
 	}
 	div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table {
 		font-size: 0.3rem;
@@ -423,13 +427,19 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 	}
 	.popHeadTopTable {
 		width: 900px;
-		font-size: 0.9rem;
+		font-size: 0.85rem;
+		border: 1px solid #002060;
+		border-collapse:separate;
+	}
+	.popHeadTopTable td {
+		border: 1px solid #002060;
+		border-collapse: collapse;
 	}
 	.tableTop > h4 {
 		font-size: 1rem;
 	}
 	.popTable {
-		font-size: 0.9rem;
+		font-size: 0.85rem;
 	}
 	.workStaffImg .staffImgWrap {
 		width: 50px;
