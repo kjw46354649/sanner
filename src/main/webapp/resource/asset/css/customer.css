@@ -501,8 +501,6 @@ ul, ol , dl { list-style: none;}
 }
 .stockPopupWrap .stockPopupInfo {
 	background: #f9fbfd;
-	/*background: #fffbfb;
-	재고불출 popup 배경색상*/
 	width: 45%;
 	height: 75%;
 	position: absolute;
@@ -511,13 +509,24 @@ ul, ol , dl { list-style: none;}
 	transform: translate(-65%,-30%);
 	padding: 1%;
 }
+.stockPopupWrap .stockPopupInfoOut {
+	background: #fffbfb;
+	/*재고불출 popup 배경색상*/
+}
+.stockPopupWrap .stockPopupInfoEnter {
+	background: #f9fbfd;
+}
 .stockPopupInfo h3 {
 	display: inline-block;
 	color: blue;
-	/*color: #c00000;
-	재고불출 popup 색상*/
 	font-weight: bold;
 	font-size: 20px;
+}
+.stockPopupInfoOut h3 {
+	color: #C00000;
+}
+.stockPopupInfoEnter h3 {
+	color: blue;
 }
 .stockPopupInfo h3 i {
 	color: #565;
@@ -626,6 +635,14 @@ ul, ol , dl { list-style: none;}
 	color: blue;
 	background: #d9f2fb;
 }
+.stockPopupInfoOut .stockPopupBtm .stockPopupBtmRight table td.tdCss {
+	color: red;
+	background: #e2efda;
+}
+.stockPopupInfoEnter .stockPopupBtm .stockPopupBtmRight table td.tdCss {
+	color: blue;
+	background: #f6eb61;
+}
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight select {
 	outline: none;
 	border: 0;
@@ -730,6 +747,13 @@ ul, ol , dl { list-style: none;}
 	font-weight: bold;
 	font-size: 1rem;
 }
+.stockPopup3 .stockPopupOut {
+	background: #fee5e2;
+	/*재고불출 배경색*/
+}
+.stockPopup3 .stockPopupEnter {
+	background: #e7eef7;
+}
 .stockPopup3 .stockPopupInfo3 h3 {
 	text-align: left;
 	font-size: 20px;
@@ -766,11 +790,29 @@ ul, ol , dl { list-style: none;}
 	color: blue;
 	font-weight: bold;
 }
+.stockPopup3 .stockPopupOut td.tdColor {
+	background-color: #e2efda;
+	color: red;
+}
+.stockPopup3 .stockPopupEnter td.tdColor {
+	background-color: #f6eb61;
+	color: blue;
+}
 .stockPopup3 .stockPopupInfo3 p {
 	font-size: 1.5rem;
 	margin-bottom: 10px;
 	color: black;
 }
+.stockPopup3 .stockPopupInfo3 p span {
+	color: blue;
+}
+.stockPopup3 .stockPopupOut p span {
+	color: red;
+}
+.stockPopup3 .stockPopupEnter p span {
+	color: blue;
+}
+
 
 
 /*210608*/
