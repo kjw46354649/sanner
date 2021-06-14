@@ -150,7 +150,7 @@ public class PdfPrintMakeController {
             table.init();
             table.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.setWidthPercentage(100);
-            table.setWidths(new int[]{4, 17, 12, 7, 7, 7, 4, 4, 6});
+            table.setWidths(new int[]{3, 17, 12, 7, 7, 7, 4, 5, 6});
 
             int imgWidth = 1100;
             int imgHeight = 170;
@@ -189,8 +189,6 @@ public class PdfPrintMakeController {
 
             Phrase phrase = new Phrase();
             String sameSideYn = String.valueOf(controlInfo.get("SAME_SIDE_YN"));
-            String orgSide = String.valueOf(controlInfo.get("ORIGINAL_SIDE_QTY"));
-            String otherSide = String.valueOf(controlInfo.get("OTHER_SIDE_QTY"));
             if(sameSideYn.equals("Y")) {
                 phrase.add(
                         new Chunk("대"+ "\n", smallNormalFont)
