@@ -14,7 +14,11 @@ a { color: black; text-decoration: none;}
 	width: 100%;
 	height: 100vh;
 	position: relative;
-	background: white;
+	background: #2d5886;
+	background: -webkit-linear-gradient(top,#2d5886, #1a3464);
+	background: -moz-linear-gradient(top,#2d5886, #1a3464);
+	background: -o-linear-gradient(top,#2d5886, #1a3464);
+	background: linear-gradient(180deg, #2d5886, #1a3464);
 }
 .containerWrap .leftContainer {
 		width: 80%;
@@ -25,7 +29,7 @@ a { color: black; text-decoration: none;}
 			margin: 10px 40px 0px;
 			display: inline-block;
 			font-size: 2.8rem;
-			color: black;
+			color: white;
 		}
 		div[class^="contents0"] {
 			height: 27%;
@@ -76,7 +80,7 @@ a { color: black; text-decoration: none;}
 			}
 				.titleTag {
 					display: inline-block;
-					background-color: #DDD;
+					background-color: white;
 					padding: 5px 30px;
 					border: 1px  solid #888;
 					border-bottom: none;
@@ -98,11 +102,14 @@ a { color: black; text-decoration: none;}
 				}
 					.progress, .standby {
 						display: inline-block;
-						border: 2px solid rgb(166, 222, 255);
-						background: #DDD;
+						/*border: 2px solid rgb(166, 222, 255);
+						background: #DDD;*/
+						background: rgb(207, 237, 255);
 						padding: 3px 5px;
 						margin-right: 5px;
-						box-shadow:inset 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+					}
+					.standby {
+						background: rgb(245, 252, 184);
 					}
 						.progress span {
 							color: blue;
@@ -262,6 +269,9 @@ a { color: black; text-decoration: none;}
 					background: url(../images/message.png) no-repeat center left;
 					background-size: auto;
 				}
+				/*.alarm .test {
+					background: none;
+				}*/
 				.alarm span {
 					color: red;
 				}
@@ -278,7 +288,8 @@ a { color: black; text-decoration: none;}
 		}
 			.changeBtn {
 				display: inline-block;
-				background: #005da2;
+				/*background: #005da2;*/
+				background: #c2e9fb;
 				font-size: 2.2rem;
 				padding: 5px 55px;
 				height: 60px;
@@ -286,9 +297,9 @@ a { color: black; text-decoration: none;}
 				margin-top: 40px;
 				cursor: pointer;
 			}
-				.changeBtn a {
+				/*.changeBtn a {
 					color: white;
-				}
+				}*/
 		.tableWrap {
 			width: 100%;
 			margin: 12px 0 60px;
@@ -314,7 +325,8 @@ a { color: black; text-decoration: none;}
 					text-align: center;
 				}
 				.tableTitle {
-					background: #002060;
+					/*background: #002060;*/
+					background: #ff7761;
 					color: white;
 					text-align: center;
 					height: 94px;
@@ -518,7 +530,7 @@ a { color: black; text-decoration: none;}
 							.popBtmTable {
 								width: 100%;
 								height: 1000px;
-								border: 1px solid green;
+								border: 1px solid #888;
 							}
 						.mapDetailBtn, .detailCloseBtn {
 							font-family: 'notoB';
