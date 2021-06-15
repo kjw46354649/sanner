@@ -1899,6 +1899,7 @@
             , A.DRAWING_NUM
             , A.ITEM_NM
             , A.INSIDE_STOCK_NUM
+            , A.INSIDE_STOCK_SEQ
             , A.COMP_CD
             ,  CASE WHEN A.MATERIAL_TYPE IS NOT NULL THEN SF_GET_CODE_NM('1035', A.MATERIAL_TYPE, #{LOGIN_LOCALE})
             ELSE SF_GET_ETC_NM('1035', A.MATERIAL_DETAIL)
@@ -1908,7 +1909,7 @@
             , A.SIZE_TXT
             , A.MATERIAL_DETAIL
             , jmes.SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
-            , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) - (SELECT IFNULL(SUM(OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) AS INSIDE_STOCK_CURR_QTY
+            , (SELECT IFNULL(SUM(B.IN_QTY),0) FROM jmes.TBL_INSIDE_IN B WHERE B.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(C.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT C WHERE C.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ AND C.OUT_STATUS = 'OUT002') AS INSIDE_STOCK_CURR_QTY
             , A.WAREHOUSE_CD
             , jmes.SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, #{LOGIN_LOCALE}) AS WAREHOUSE_CD_NM
             , A.LOC_SEQ
@@ -2014,20 +2015,23 @@
     </select>
     <select id="selectInsideStockAbbrNmUseType" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.ABBR_NM
-        FROM jmes.TBL_CODE A
-        WHERE A.HIGH_CD = '1035'
-          AND A.CODE_CD = #{MATERIAL_TYPE}
+        FROM jmes.TBL_COMPANY A
+        WHERE A.DEL_YN = 'N'
+          AND A.COMP_CD = #{ORDER_COMP_CD}
     </select>
     <select id="selectInsideStockSeq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT CONCAT(#{ORDER_COMP_CD},'-',#{ABBR_NM},'-',LPAD(IFNULL(CONVERT(MAX(SUBSTRING(INSIDE_STOCK_NUM,-4,4)),INT)+1,1),4,'0')) AS INSIDE_STOCK_NUM
+        SELECT CONCAT(#{ABBR_NM},'-',LPAD(IFNULL(CONVERT(MAX(SUBSTRING(INSIDE_STOCK_NUM,-4,4)),INT)+1,1),4,'0')) AS INSIDE_STOCK_NUM
         FROM jmes.TBL_INSIDE_STOCK
-        WHERE INSIDE_STOCK_NUM LIKE CONCAT(#{ORDER_COMP_CD},'-',#{ABBR_NM},'-','%')
+        WHERE INSIDE_STOCK_NUM LIKE CONCAT(#{ABBR_NM},'-','%')
     </select>
     <insert id="insertInsideStock" parameterType="java.util.HashMap">
+        <selectKey keyProperty="INSIDE_STOCK_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(jmes.SEQ_INSIDE_STOCK) FROM DUAL
+        </selectKey>
         INSERT INTO jmes.TBL_INSIDE_STOCK
         (
-            INSIDE_STOCK_NUM, ORDER_COMP_CD, DRAWING_NUM, ITEM_NM, COMP_CD,
-            MATERIAL_TYPE, MATERIAL_DETAIL,
+            INSIDE_STOCK_SEQ, INSIDE_STOCK_NUM, ORDER_COMP_CD, DRAWING_NUM, ITEM_NM, COMP_CD,
+            MATERIAL_TYPE, MATERIAL_DETAIL, IMG_GFILE_SEQ, PDF_GFILE_SEQ, DXF_GFILE_SEQ,
             SIZE_TXT,
             SIZE_TYPE,
             SIZE_W,
@@ -2036,10 +2040,11 @@
             SIZE_D,
             SIZE_L,
             WAREHOUSE_CD,
-            LOC_SEQ, NOTE, INSERT_ID
+            LOC_SEQ, NOTE, INSERT_ID,
+            BARCODE_NUM
         )VALUES (
-            #{INSIDE_STOCK_NUM}, #{ORDER_COMP_CD}, #{DRAWING_NUM}, #{ITEM_NM}, #{COMP_CD},
-            #{MATERIAL_TYPE}, #{MATERIAL_DETAIL},
+            #{INSIDE_STOCK_SEQ}, #{INSIDE_STOCK_NUM}, #{ORDER_COMP_CD}, #{DRAWING_NUM}, #{ITEM_NM}, #{COMP_CD},
+            SF_GET_ETC_CD('1027', #{MATERIAL_DETAIL}), #{MATERIAL_DETAIL}, #{IMG_GFILE_SEQ}, #{PDF_GFILE_SEQ}, #{DXF_GFILE_SEQ},
             #{SIZE_TXT},
             SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
@@ -2048,7 +2053,8 @@
             SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
             #{WAREHOUSE_CD},
-            #{LOC_SEQ}, #{NOTE}, #{LOGIN_USER_ID}
+            #{LOC_SEQ}, #{NOTE}, #{LOGIN_USER_ID},
+            CONCAT('S',LPAD(NEXTVAL(SEQ_BARCODE),9,'0'))
         )
     </insert>
     <update id="updateInsideStock" parameterType="java.util.HashMap">
@@ -2067,78 +2073,190 @@
             , LOC_SEQ = #{LOC_SEQ}
             , UPDATE_DT = NOW()
             , UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
+        WHERE INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
     </update>
     <insert id="insertInsideStockIn" parameterType="java.util.HashMap">
-        INSERT INTO jmes.TBL_INSIDE_IN (INSIDE_IN_SEQ, INSIDE_STOCK_NUM, IN_QTY, CONTROL_SEQ, INSERT_ID)
+        INSERT INTO jmes.TBL_INSIDE_IN (INSIDE_IN_SEQ, INSIDE_STOCK_NUM, INSIDE_STOCK_SEQ, IN_QTY, CONTROL_SEQ, CONTROL_DETAIL_SEQ, INSERT_ID)
         SELECT NEXTVAL(jmes.SEQ_INSIDE_IN)
         , #{INSIDE_STOCK_NUM}
+        , #{INSIDE_STOCK_SEQ}
         , #{IN_OUT_QTY}
         , #{CONTROL_SEQ}
+        , #{CONTROL_DETAIL_SEQ}
         , #{LOGIN_USER_ID}
         FROM DUAL
         WHERE #{IN_OUT_QTY} > 0
     </insert>
     <insert id="insertInsideStockOut" parameterType="java.util.HashMap">
-      INSERT INTO jmes.TBL_INSIDE_OUT (INSIDE_OUT_SEQ, INSIDE_STOCK_NUM, OUT_QTY, INSERT_ID)
-      VALUES ( NEXTVAL(jmes.SEQ_INSIDE_OUT), #{INSIDE_STOCK_NUM}, #{IN_OUT_QTY}, #{LOGIN_USER_ID} )
+      INSERT INTO jmes.TBL_INSIDE_OUT (
+        INSIDE_OUT_SEQ,
+        INSIDE_STOCK_SEQ,
+        INSIDE_STOCK_NUM,
+        OUT_STATUS,
+        OUT_QTY,
+        OUT_DT,
+        INSERT_ID
+      )
+      VALUES (
+        NEXTVAL(jmes.SEQ_INSIDE_OUT),
+        #{INSIDE_STOCK_SEQ},
+        #{INSIDE_STOCK_NUM},
+        'OUT002',
+        #{IN_OUT_QTY},
+        now(),
+        #{LOGIN_USER_ID}
+      )
     </insert>
+    <update id="updateInsideStockOut" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_INSIDE_OUT
+        SET OUT_QTY = #{IN_OUT_QTY},
+            OUT_STATUS = 'OUT002',
+            OUT_DT = now(),
+            UPDATE_DT = now(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
+    </update>
     <select id="selectInsideStockPopInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             A.DRAWING_NUM
+            , CASE
+                WHEN #{TYPE} = 'GRID_OUT' THEN '출고대상'
+                WHEN #{TYPE} = 'BARCODE_OUT' THEN '출고대상'
+                ELSE '입고대상'
+             END TYPE
+            , CASE
+                WHEN #{TYPE} = 'GRID_OUT' THEN 'RED'
+                WHEN #{TYPE} = 'BARCODE_OUT' THEN 'RED'
+                ELSE 'YELLOW'
+             END COLOR
             , A.INSIDE_STOCK_NUM
+            , A.INSIDE_STOCK_SEQ
             , A.SIZE_TXT
+            , A.ITEM_NM
             , A.WAREHOUSE_CD
+            , A.ORDER_COMP_CD
+            , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
+            , A.COMP_CD
+            , SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM
+            , A.MATERIAL_DETAIL
+            , A.IMG_GFILE_SEQ
+            , A.DXF_GFILE_SEQ
+            , A.PDF_GFILE_SEQ
             , jmes.SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, #{LOGIN_LOCALE}) AS WAREHOUSE_CD_NM
             , A.LOC_SEQ
-            , (SELECT LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION WHERE WAREHOUSE_CD = A.WAREHOUSE_CD AND LOC_SEQ = A.LOC_SEQ ) AS LOC_SEQ_NM
-            , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) - (SELECT IFNULL(SUM(OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) AS POP_STOCK_QTY
-            , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) - (SELECT IFNULL(SUM(OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT WHERE INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) AS POP_STOCK_QTY_AFTER
+            , (SELECT F.LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION F WHERE F.WAREHOUSE_CD = A.WAREHOUSE_CD AND F.LOC_SEQ = A.LOC_SEQ ) AS LOC_NM
+            , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN B WHERE B.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(D.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT D WHERE D.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ AND D.OUT_STATUS = 'OUT002') AS INSIDE_STOCK_CURR_QTY
+            , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN B WHERE B.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(D.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT D WHERE D.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ AND D.OUT_STATUS = 'OUT002') AS POP_STOCK_QTY
+            , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN C WHERE C.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(E.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT E WHERE E.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ AND E.OUT_STATUS = 'OUT002') AS POP_STOCK_QTY_AFTER
             , '0' AS ORDER_QTY
             , '' AS CONTROL_SEQ
+            , '' AS CONTROL_NUM
+            , '' AS CONTROL_DETAIL_SEQ
         FROM jmes.TBL_INSIDE_STOCK A
-        WHERE A.INSIDE_STOCK_NUM = #{V_INSIDE_STOCK_NUM}
+        WHERE 1=1
+        <choose>
+            <when test="BARCODE_NUM != null and BARCODE_NUM != ''">
+                AND A.BARCODE_NUM = #{BARCODE_NUM}
+            </when>
+            <otherwise>
+                AND A.INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
+            </otherwise>
+        </choose>
     </select>
     <select id="selectInsideStockPopInfoBarcode" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-              C.DRAWING_NUM, C.INSIDE_STOCK_NUM, C.SIZE_TXT
-            , C.WAREHOUSE_CD, C.LOC_SEQ
-            , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = C.INSIDE_STOCK_NUM) - (SELECT IFNULL(SUM(OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT WHERE INSIDE_STOCK_NUM = C.INSIDE_STOCK_NUM) AS POP_STOCK_QTY
-            , (SELECT IFNULL(SUM(IN_QTY),0) FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = C.INSIDE_STOCK_NUM) - (SELECT IFNULL(SUM(OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT WHERE INSIDE_STOCK_NUM = C.INSIDE_STOCK_NUM) +
-              (SELECT IFNULL(SUM(ORDER_QTY),0) FROM jmes.TBL_CONTROL_PART_ORDER WHERE CONTROL_SEQ = B.CONTROL_SEQ)  AS POP_STOCK_QTY_AFTER
-            , (SELECT IFNULL(SUM(ORDER_QTY),0) FROM jmes.TBL_CONTROL_PART_ORDER WHERE CONTROL_SEQ = B.CONTROL_SEQ) AS ORDER_QTY
-            , A.CONTROL_SEQ
-            , A.CONTROL_DETAIL_SEQ
-            , (SELECT ORDER_SEQ FROM jmes.TBL_CONTROL_PART_ORDER WHERE CONTROL_SEQ = B.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS ORDER_SEQ
-            ,CASE
-                WHEN C.MATERIAL_TYPE IS NULL THEN (
-                    SELECT MATERIAL_TYPE
-                    FROM TBL_CONTROL_PART
-                    WHERE CONTROL_SEQ = A.CONTROL_SEQ
-                      AND PART_NUM IS NOT NULL
-                    GROUP BY CONTROL_SEQ
-                )ELSE C.MATERIAL_TYPE
-                END AS MATERIAL_TYPE
-            ,CASE
-                WHEN C.MATERIAL_DETAIL IS NULL THEN (
-                    SELECT MATERIAL_DETAIL
-                    FROM TBL_CONTROL_PART
-                    WHERE CONTROL_SEQ = A.CONTROL_SEQ
-                      AND PART_NUM IS NOT NULL
-                    GROUP BY CONTROL_SEQ
-                )ELSE C.MATERIAL_DETAIL
-                END AS MATERIAL_DETAIL
-        FROM jmes.TBL_CONTROL_BARCODE A, jmes.TBL_CONTROL_PART B, jmes.TBL_INSIDE_STOCK C
+             C.DRAWING_NUM, C.INSIDE_STOCK_NUM, C.SIZE_TXT, C.IMG_GFILE_SEQ, C.PDF_GFILE_SEQ, C.DXF_GFILE_SEQ
+             , '유사재고' AS TYPE
+             , 'YELLOW' AS COLOR
+             , C.WAREHOUSE_CD, C.LOC_SEQ
+             , C.INSIDE_STOCK_SEQ
+             , X.CONTROL_NUM
+             , C.ORDER_COMP_CD
+             , (SELECT LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION Z WHERE Z.WAREHOUSE_CD = C.WAREHOUSE_CD AND Z.LOC_SEQ = C.LOC_SEQ ) AS LOC_NM
+             , SF_GET_COMP_NM(C.ORDER_COMP_CD) AS ORDER_COMP_NM
+             , C.COMP_CD
+             , SF_GET_COMP_NM(C.COMP_CD) AS COMP_NM
+             , C.ITEM_NM
+             , SUM(Y.ORDER_QTY) AS ORDER_QTY
+             , SUM(Y.ORDER_QTY) AS ORG_ORDER_QTY
+             , (SELECT IFNULL(SUM(D.IN_QTY),0) FROM jmes.TBL_INSIDE_IN D WHERE D.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(E.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT E WHERE E.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ AND E.OUT_STATUS = 'OUT002') AS INSIDE_STOCK_CURR_QTY
+             , (SELECT IFNULL(SUM(D.IN_QTY),0) FROM jmes.TBL_INSIDE_IN D WHERE D.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(E.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT E WHERE E.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ AND E.OUT_STATUS = 'OUT002') AS POP_STOCK_QTY
+             , (SELECT IFNULL(SUM(F.IN_QTY),0) FROM jmes.TBL_INSIDE_IN F WHERE F.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(G.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT G WHERE G.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ AND G.OUT_STATUS = 'OUT002') + IFNULL(SUM(Y.ORDER_QTY),0) AS POP_STOCK_QTY_AFTER
+             , A.CONTROL_SEQ
+             , A.CONTROL_DETAIL_SEQ
+             ,CASE
+                  WHEN C.MATERIAL_TYPE IS NULL THEN B.MATERIAL_TYPE
+                  ELSE C.MATERIAL_TYPE
+              END AS MATERIAL_TYPE
+             ,CASE
+                  WHEN C.MATERIAL_DETAIL IS NULL THEN B.MATERIAL_DETAIL
+                  ELSE C.MATERIAL_DETAIL
+              END AS MATERIAL_DETAIL
+        FROM jmes.TBL_CONTROL_BARCODE A, jmes.TBL_CONTROL_PART B, jmes.TBL_INSIDE_STOCK C, jmes.TBL_CONTROL X, jmes.TBL_CONTROL_PART_ORDER Y
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-        AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-        AND B.DRAWING_NUM = C.DRAWING_NUM
-        AND A.DEL_YN = 'N'
-        AND A.BARCODE_NUM = #{BARCODE_NUM}
+          AND X.CONTROL_SEQ = A.CONTROL_SEQ
+          AND Y.CONTROL_SEQ  = A.CONTROL_SEQ
+          AND Y.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+          AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+          AND X.DEL_YN = 'N'
+          AND A.DEL_YN = 'N'
+          AND B.MATERIAL_DETAIL = C.MATERIAL_DETAIL
+          AND B.SIZE_TXT = C.SIZE_TXT
+          AND A.BARCODE_NUM = #{BARCODE_NUM}
+        GROUP BY C.INSIDE_STOCK_NUM
+    </select>
+    <select id="selectInsideStockPopInfoOutBarcode" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT B.IMG_GFILE_SEQ
+             , B.PDF_GFILE_SEQ
+             , '출고대상' AS TYPE
+             , 'RED' AS COLOR
+             , C.CONTROL_NUM
+             , E.INSIDE_STOCK_SEQ
+             , D.INSIDE_OUT_SEQ
+             , IFNULL(E.INSIDE_STOCK_NUM,'요청 대상 없음') AS INSIDE_STOCK_NUM
+             , E.LOC_SEQ
+             , (SELECT Z.LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION Z WHERE Z.WAREHOUSE_CD = E.WAREHOUSE_CD AND Z.LOC_SEQ = E.LOC_SEQ ) AS LOC_NM
+             , E.ORDER_COMP_CD
+             , SF_GET_COMP_NM(E.ORDER_COMP_CD) AS ORDER_COMP_NM
+             , E.COMP_CD
+             , SF_GET_COMP_NM(E.COMP_CD) AS COMP_NM
+             , IFNULL(E.ITEM_NM,SPACE(0)) AS ITEM_NM
+             , IFNULL(D.REQUEST_QTY,SPACE(0)) AS ORDER_QTY
+             , IFNULL(D.REQUEST_QTY,SPACE(0)) AS ORG_ORDER_QTY
+             , CASE
+                    WHEN D.INSIDE_STOCK_SEQ IS NULL THEN SPACE(0)
+                    ELSE (SELECT IFNULL(SUM(F.IN_QTY),0) FROM jmes.TBL_INSIDE_IN F WHERE F.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(G.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT G WHERE G.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ AND G.OUT_STATUS = 'OUT002')
+               END INSIDE_STOCK_CURR_QTY
+             , CASE
+    	            WHEN D.INSIDE_STOCK_SEQ IS NULL THEN SPACE(0)
+    	            ELSE (SELECT IFNULL(SUM(H.IN_QTY),0) FROM jmes.TBL_INSIDE_IN H WHERE H.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(I.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT I WHERE I.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ AND I.OUT_STATUS = 'OUT002')
+               END POP_STOCK_QTY
+             , CASE
+    	            WHEN D.INSIDE_STOCK_SEQ IS NULL THEN SPACE(0)
+    	            ELSE (SELECT IFNULL(SUM(H.IN_QTY),0) FROM jmes.TBL_INSIDE_IN H WHERE H.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(I.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT I WHERE I.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ AND I.OUT_STATUS = 'OUT002') - IFNULL(D.REQUEST_QTY,0)
+               END POP_STOCK_QTY_AFTER
+             , A.CONTROL_SEQ
+             , A.CONTROL_DETAIL_SEQ
+             , E.MATERIAL_DETAIL
+             , IFNULL(E.SIZE_TXT, SPACE(0)) AS SIZE_TXT
+        FROM TBL_CONTROL_BARCODE A
+                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                 INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ = A.CONTROL_SEQ AND C.DEL_YN = 'N'
+                 LEFT OUTER JOIN TBL_INSIDE_OUT D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                 LEFT OUTER JOIN TBL_INSIDE_STOCK E ON D.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ
+        WHERE A.DEL_YN = 'N'
+          AND A.BARCODE_NUM = #{BARCODE_NUM}
     </select>
 
     <select id="selectInsideStockPopInfoBarcodeNew" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            B.ORDER_COMP_CD, C.DRAWING_NUM, R.ITEM_NM, B.COMP_CD
+            (SELECT CONCAT(ABBR_NM,'-XXXX') FROM TBL_COMPANY tc WHERE tc.COMP_CD = B.ORDER_COMP_CD AND tc.DEL_YN = 'N') AS INSIDE_STOCK_NUM
+            , (SELECT ABBR_NM FROM TBL_COMPANY tc WHERE tc.COMP_CD = B.ORDER_COMP_CD AND tc.DEL_YN = 'N') AS ABBR_NM
+            , '신규생성' AS TYPE
+            , 'BLUE' AS COLOR
+            , B.ORDER_COMP_CD, C.DRAWING_NUM, R.ITEM_NM, B.COMP_CD, B.CONTROL_NUM, C.IMG_GFILE_SEQ, C.DXF_GFILE_SEQ, C.PDF_GFILE_SEQ
             , C.SIZE_TXT, C.SIZE_TYPE, C.SIZE_W, C.SIZE_H, C.SIZE_T, C.SIZE_D, C.SIZE_L
             , '0' AS POP_STOCK_QTY
             , '' AS INSIDE_STOCK_NUM
@@ -2177,19 +2295,19 @@
 
     <select id="manageStockCadFiles_select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            UUID() AS ROWNUM,
-            ROW_NUMBER() OVER(ORDER BY A.INSIDE_STOCK_NUM) AS NO,
-            A.INSIDE_STOCK_NUM AS SORTKEY, <!-- 정렬을 위한 조회 -->
-            A.INSIDE_STOCK_NUM, <!-- 재고번호 -->
-            A.ITEM_NM, <!-- 품명 -->
-            A.DRAWING_NUM,
-            #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
-            #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
-            #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ
+        UUID() AS ROWNUM,
+        ROW_NUMBER() OVER(ORDER BY A.INSIDE_STOCK_NUM) AS NO,
+        A.INSIDE_STOCK_NUM AS SORTKEY, <!-- 정렬을 위한 조회 -->
+        A.INSIDE_STOCK_NUM, <!-- 재고번호 -->
+        A.INSIDE_STOCK_SEQ,
+        A.ITEM_NM, <!-- 품명 -->
+        A.DRAWING_NUM,
+        #{DXF_GFILE_SEQ} AS DXF_GFILE_SEQ,
+        #{PDF_GFILE_SEQ} AS PDF_GFILE_SEQ,
+        #{IMG_GFILE_SEQ} AS IMG_GFILE_SEQ
         FROM TBL_INSIDE_STOCK A
         WHERE 1 = 1
-            /*AND IFNULL(C.CONTROL_STATUS, 'ORD002') IN ('ORD002')*/
-            AND UPPER(A.DRAWING_NUM) = #{MAPPING_STR}
+        AND A.INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
         ORDER BY A.INSIDE_STOCK_NUM
     </select>
 
@@ -2202,7 +2320,7 @@
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE
-            INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
+            INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
     </update>
 
     <!--<update id="manageStockCadFiles" parameterType="java.util.HashMap">
@@ -2287,5 +2405,69 @@
           AND A.DEL_YN = 'N'
           AND A.CONTROL_SEQ IN (${CONTROL_SEQ})
           AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
+    </select>
+    <select id="selectStockRequestList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT B.CONTROL_NUM, C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, A.INSIDE_STOCK_SEQ, A.INSIDE_STOCK_NUM, A.REQUEST_QTY, A.INSIDE_STOCK_SEQ,
+               E.ORDER_COMP_CD, SF_GET_COMP_NM(E.ORDER_COMP_CD) AS ORDER_COMP_NM, E.SIZE_TXT, E.MATERIAL_DETAIL,
+               SF_GET_CODE_NM('1027', E.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM,
+               E.COMP_CD, SF_GET_COMP_NM(E.COMP_CD) AS COMP_CD_NM,
+               SF_GET_CODE_NM('1049', E.WAREHOUSE_CD, #{LOGIN_LOCALE}) AS WAREHOUSE_NM,
+               (SELECT X.LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION X WHERE X.WAREHOUSE_CD = E.WAREHOUSE_CD AND X.LOC_SEQ = E.LOC_SEQ ) AS LOC_NM,
+               ((SELECT IFNULL(SUM(F.IN_QTY),0) FROM jmes.TBL_INSIDE_IN F WHERE F.INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) - (SELECT IFNULL(SUM(G.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT G WHERE G.INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM AND G.OUT_STATUS = 'OUT002')) AS INSIDE_STOCK_CURR_QTY,
+               E.ITEM_NM, E.LOC_SEQ, E.PDF_GFILE_SEQ, jmes.SF_GET_DATE_F(A.REQUEST_DT, 'YY', 'M') AS REQUEST_DT,
+               ((SELECT IFNULL(SUM(F.IN_QTY),0) FROM jmes.TBL_INSIDE_IN F WHERE F.INSIDE_STOCK_NUM = A.INSIDE_STOCK_NUM) - A.REQUEST_QTY) AS INSIDE_STOCK_REMAIN_QTY
+        FROM TBL_INSIDE_OUT A
+             INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N'
+             INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+             INNER JOIN TBL_CONTROL_PART_ORDER D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+             INNER JOIN TBL_INSIDE_STOCK E ON A.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ
+        WHERE A.DEL_YN = 'N'
+          AND A.OUT_STATUS = 'OUT001'
+    </select>
+
+    <select id="selectWarehouseInfoByLocBarcode" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            WAREHOUSE_CD , SF_GET_CODE_NM('1049', WAREHOUSE_CD, #{LOGIN_LOCALE}) AS WAREHOUSE_NM,
+            LOC_SEQ, LOC_NM, LOC_DESC, LOC_USE,
+            CASE WHEN UPDATE_DT IS NOT NULL THEN jmes.SF_GET_DATE_F(UPDATE_DT,'YY','M')
+            ELSE jmes.SF_GET_DATE_F(INSERT_DT,'YY','M')
+            END AS UPDATE_DT
+        FROM TBL_WAREHOUSE_LOCATION
+        WHERE 1=1
+            AND DEL_YN = 'N'
+            <if test="LOC_BARCODE !='' and LOC_BARCODE != null">
+                AND CONCAT(WAREHOUSE_CD,'_',LPAD(LOC_SEQ,4,'0')) = #{LOC_BARCODE}
+            </if>
+    </select>
+
+    <select id="selectStockCadBarcodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.INSIDE_STOCK_NUM
+            , A.INSIDE_STOCK_SEQ
+            , jmes.SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+            , A.BARCODE_NUM
+            , A.SIZE_TXT
+            , A.ITEM_NM
+            , A.WAREHOUSE_CD
+            , A.ORDER_COMP_CD
+            , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
+            , A.COMP_CD
+            , SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM
+            , A.MATERIAL_DETAIL
+            , A.IMG_GFILE_SEQ
+            , A.DXF_GFILE_SEQ
+            , A.PDF_GFILE_SEQ
+            , jmes.SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, #{LOGIN_LOCALE}) AS WAREHOUSE_CD_NM
+            , A.LOC_SEQ
+            , (SELECT F.LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION F WHERE F.WAREHOUSE_CD = A.WAREHOUSE_CD AND F.LOC_SEQ = A.LOC_SEQ ) AS LOC_NM
+            , DATE_FORMAT(A.INSERT_DT,'%Y-%m-%d') AS INSERT_DT
+            , (SELECT M.FILE_PATH FROM TBL_FILE M WHERE M.GFILE_SEQ = A.IMG_GFILE_SEQ) AS IMAGE_PATH
+        FROM jmes.TBL_INSIDE_STOCK A
+        WHERE 1=1
+            AND A.INSIDE_STOCK_SEQ IN
+            <foreach collection="selectStockList" item="bean" index="index"  open="(" close=")" separator=",">
+                #{bean}
+            </foreach>
+        ORDER BY A.INSIDE_STOCK_SEQ
     </select>
 </mapper>

@@ -58,7 +58,10 @@ public class BarcodeServiceImpl implements BarcodeService {
                     } else if ("C".equals(barcodeType)) {//도면
                         barcodeMap.put("queryId", "common.selectBarcodePrintInfoControl");
                         barcodeMap = this.innodaleDao.getInfo(barcodeMap);
-                    } else {
+                    }else if("W".equals(barcodeType)) {
+                        barcodeMap.put("queryId", "common.selectBarcodePrintInfoWareHouse");
+                        barcodeMap = this.innodaleDao.getInfo(barcodeMap);
+                    }else {
                         barcodeMap = null;
                     }
 

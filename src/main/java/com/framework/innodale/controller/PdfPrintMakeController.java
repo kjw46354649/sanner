@@ -645,6 +645,101 @@ public class PdfPrintMakeController {
         document.close();
     }
 
+    @RequestMapping(value = "/makeStockDrawingPrint", method = RequestMethod.POST)
+    public void makeStockDrawingPrint(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        response.setContentType("application/pdf");
+        OutputStream out = response.getOutputStream();
+
+        String jsonObject = (String) hashMap.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        // 문서 만들기
+        Document document = new Document(PageSize.A4);
+        document.setMargins(15, 15, 15, 15);
+        // 한글 처리를 위한 글꼴 설정 추가
+        String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
+        BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+
+        Font smallNormalFont = new Font(bf, saleSmall, Font.NORMAL);
+        Font smallBoldFont = new Font(bf, small, Font.BOLD);
+        Font mediumNormalFont = new Font(bf, 9.5f, Font.NORMAL);
+        Font mediumBoldFont = new Font(bf, 9.5f, Font.BOLD);
+        Font largeBoldFont = new Font(bf, 15.0f, Font.BOLD);
+
+        PdfWriter.getInstance(document, out);
+
+        String[] selectStockList = ((String) jsonMap.get("selectStockList")).split("\\|");
+        hashMap.put("selectStockList", selectStockList);
+        hashMap.put("queryId", "material.selectStockCadBarcodeList");
+        List<Map<String, Object>> stockInfoList = innodaleService.getList(hashMap);
+
+        int iCount = 0;
+
+        document.open();
+
+        for (Map<String, Object> stockInfo : stockInfoList) {
+            if (iCount > 0) document.newPage();
+
+            PdfPTable table = new PdfPTable(8);
+            table.init();
+            table.setWidthPercentage(100);
+            table.setWidths(new float[]{4.0f, 2.5f, 5.5f, 1.5f, 3.5f, 2.5f, 3.5f, 5.0f});
+            // 바코드 생성
+            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) stockInfo.get("BARCODE_NUM"), 2320, 800);
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+            // Converting BitMatrix to Buffered Image
+            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    image.setRGB(x, y, bitMatrix.get(x, y) ? BLACK : WHITE);
+                }
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", baos);
+            baos.flush();
+            byte[] imageInByte = baos.toByteArray();
+            baos.close();
+            Image barcodeImage = Image.getInstance(imageInByte);
+            // 1st line
+            table.addCell(createCell("재고도면", 1, 2, largeBoldFont));
+            table.addCell(createCell("재고번호", 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) stockInfo.get("INSIDE_STOCK_NUM"), 1, 1, mediumBoldFont));
+            table.addCell(createCell("소재", 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) stockInfo.get("MATERIAL_DETAIL_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell("등록일시", 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) stockInfo.get("INSERT_DT"), 1, 1, mediumNormalFont));
+            table.addCell(createImageCell(barcodeImage, 1, 2, 20.0f, mediumNormalFont));
+            // 2nd line
+            table.addCell(createCell("품명", 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) stockInfo.get("ITEM_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell("규격", 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) stockInfo.get("SIZE_TXT"), 1, 1, mediumNormalFont));
+            table.addCell(createCell("발주처", 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) stockInfo.get("ORDER_COMP_NM"), 1, 1, mediumNormalFont));
+
+            document.add(table);
+            table.flushContent();
+
+            if (stockInfo.get("IMAGE_PATH") != null && !stockInfo.get("IMAGE_PATH").equals("")) {
+                try {
+                    Image pngImage = Image.getInstance((String) stockInfo.get("IMAGE_PATH") + ".print.png");
+                    pngImage.setAbsolutePosition(15, 10);
+                    pngImage.scaleAbsolute(PageSize.A4.getWidth() - 30, PageSize.A4.getHeight() - 90);
+                    document.add(pngImage);
+                } catch (Exception e){
+                    log.error(e.getMessage(), e.getCause());
+                    e.printStackTrace();
+                }
+            }
+            iCount++;
+        }
+        document.close();
+    }
+
     private static PdfPCell createCell(String content, int colspan, int rowspan, Font font) {
         PdfPCell cell = new PdfPCell(new Phrase(content, font));
         cell.setVerticalAlignment(Element.ALIGN_MIDDLE);

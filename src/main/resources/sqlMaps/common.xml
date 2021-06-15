@@ -236,6 +236,20 @@
         ORDER BY B.CONTROL_NUM, D.ORDER_NUM
     </select>
 
+    <select id="selectBarcodePrintInfoWareHouse" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        -- 출고라벨
+        SELECT A.WAREHOUSE_CD
+             , jmes.SF_GET_CODE_NM('1049', A.WAREHOUSE_CD, #{LOGIN_LOCALE}) AS WAREHOUSE_CD_NM
+             , A.LOC_SEQ
+             , A.LOC_USE
+             , A.LOC_NM
+             , CONCAT(A.WAREHOUSE_CD,'_',LPAD(A.LOC_SEQ,4,'0')) AS LOC_BARCODE
+        FROM jmes.TBL_WAREHOUSE_LOCATION A
+        WHERE A.DEL_YN = 'N'
+            AND CONCAT('W',A.LOC_SEQ) = UPPER(#{BARCODE_NUM})
+        ORDER BY A.WAREHOUSE_CD, A.LOC_SEQ
+    </select>
+
     <select id="selectBarcodePrintControlCheck" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
         	X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, IFNULL(X.CONTROL_STATUS, SPACE(0)) AS CONTROL_STATUS, IFNULL(X.PART_STATUS, SPACE(0)) AS PART_STATUS,

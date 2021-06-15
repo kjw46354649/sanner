@@ -453,7 +453,6 @@ public class FileUploadServiceImpl implements FileUploadService {
                     fileUploadList.add(fileInfo);
                 }
             }
-
             for(String mappingDrawingNum : mappingNumList){
 
                 HashMap<String, Object> fileInfo = new HashMap<String, Object>();
@@ -466,7 +465,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                 if(pngGfileKeyHashMap.containsKey(mappingDrawingNum))
                     fileInfo.put("IMG_GFILE_SEQ", pngGfileKeyHashMap.get(mappingDrawingNum));
 
-                fileInfo.put("MAPPING_STR", mappingDrawingNum);
+                fileInfo.put("INSIDE_STOCK_SEQ", (String)hashMap.get("INSIDE_STOCK_SEQ"));
                 fileInfo.put("queryId", paramQueryId);    // 연결 주문 정보 조회
                 List<Map<String, Object>> controlList = innodaleDao.getList(fileInfo);
 

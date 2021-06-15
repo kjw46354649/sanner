@@ -162,9 +162,10 @@
                 <button type="button" class="defaultBtn btn-100w" id="NEW_ORDER_REGISTRATION">신규 주문 등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_REGISTRATION">도면 등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
-                <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>
+                <button type="button" class="defaultBtn btn-70w" id="MATCH_STOCK">재고충당</button>
+                <button type="button" class="defaultBtn btn-70w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_LIST_PRINT">견적List출력</button>
-                <button type="button" class="defaultBtn btn-100w" id="TRANSACTION_STATEMENT">거래명세표</button>
+                <button type="button" class="defaultBtn btn-70w" id="TRANSACTION_STATEMENT">거래명세표</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CONFIRMATION" data-control_status="ORD001" style="color: blue;">확정</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002" style="color: #FF0000;">취소</button>
                 <button type="button" class="defaultBtn btn-50w" id="CONTROL_MONTH_CLOSE">마감</button>
@@ -261,6 +262,43 @@
 </form>
 
 <input type="button" id="ATTACHMENT_BUTTON" style="display: none;">
+
+<div id="stockMatchPopup" class="stockSearchPopup" style="display: none;">
+    <div class="stockPopupWrap">
+        <div class="searchPopup">
+            <h3><i class="xi-library-bookmark"></i> 재고 매칭 검색 및 지정</h3>
+            <div class="searchPopupWrap">
+                <div class="stockMapLeft">
+                    <!--도면삽입-->
+                </div>
+                <div class="searchPopupRight">
+                    <div class="searchPopupRightTop">
+                        <h4><i class="xi-library-bookmark"></i> 매칭 List</h4>
+                        <button type="button" id="stock_match_pop_refresh" class="refreshBtn">
+                            <img src="./resource/asset/images/common/btn_refresh.png" alt="새로고침">
+                        </button>
+                        <div class="barcode barcode_div">
+                            <span class="barCode">
+                                <img src="resource/asset/images/common/img_barcode_long.png" alt="바코드" id="stock_match_barcode_img">
+                            </span>
+                            <span class="barCodeTxt">
+                                <input type="text" class="wd_200 hg_35" id="STOCK_MATCH_BARCODE_NUM" placeholder="도면의 바코드를 스캔해주세요">
+                            </span>
+                        </div>
+                    </div>
+                    <div class="listTable">
+                        <!--gird삽입-->
+                    </div>
+                </div>
+            </div>
+            <div class="stockPopupBtnWrap">
+                <button id="mapDetailBtn" class="mapDetailBtn">도면상세보기</button>
+                <button id="stockBtnClose4" class="stockBtnClose">닫기</button>
+                <button id="stockBtnSave" class="stockBtnSave">저장</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     var $orderManagementGrid;
@@ -668,6 +706,14 @@
                 ]
             },
             {
+                title: '재고충당', align: 'center',
+                colModel: [
+                    {title: '재고번호', dataType: 'String', dataIndx: 'INSIDE_STOCK_NUM', width: 100, minWidth: 100},
+                    {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'STOCK_REQUEST_QTY', width: 40, minWidth: 40},
+                    {title: '불출', dataType: 'integer', format: '#,###', dataIndx: 'STOCK_OUT_QTY', width: 40, minWidth: 40}
+                ]
+            },
+            {
                 title: '외주', minWidth: 30, dataIndx: 'OUTSIDE_YN',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
                 editable: function (ui) {
@@ -943,6 +989,21 @@
                             }
 
                             return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    },
+                    {
+                        title: '재고', minWidth: 30, dataIndx: 'INSIDE_STOCK_YN',
+                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                        editable: function (ui) {
+                            let rowData = ui.rowData;
+
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                        },
+                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+
+                            return cellData === 'Y' ? cellData : '';
                         }
                     },
                     {
@@ -1920,7 +1981,8 @@
                 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
                 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMT', 'UNIT_FINAL_AMT', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM',
-                'LABEL_NOTE', 'PREV_DRAWING_NUM', 'SAME_SIDE_YN'
+                'LABEL_NOTE', 'PREV_DRAWING_NUM', 'SAME_SIDE_YN',
+                'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','INSIDE_STOCK_YN'
                 // , 'DETAIL_MACHINE_REQUIREMENT', 'TOTAL_SHEET'
             ];
             const normalModeArray = [
@@ -1937,6 +1999,7 @@
                 'DRAWING_UP_DT', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT_F', 'DELIVERY_DT', 'CONTROL_PART_INSERT_UPDATE_DT', 'ORDER_IMG_GFILE_SEQ',
                 'EOCLD', 'DNJSCLD', 'SAME_SIDE_YN',
+                'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','INSIDE_STOCK_YN'
                 // , 'TOTAL_SHEET'
             ];
             const closeModeArray = [
@@ -1954,7 +2017,8 @@
                 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT',
                 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PROJECT_NM', 'ITEM_NM', 'ORDER_STAFF_NM', 'PREV_DRAWING_NUM',
                 'ORDER_IMG_GFILE_SEQ', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT',
-                'OUTSIDE_FINAL_AMT'
+                'OUTSIDE_FINAL_AMT',
+                'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','INSIDE_STOCK_YN'
                 //, 'TOTAL_SHEET'
             ];
             const allModeArray = [
@@ -1976,7 +2040,8 @@
                 'ETC_GFILE_SEQ', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT',
                 'OUTSIDE_FINAL_AMT', 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT_F', 'OUTSIDE_NOTE', 'UNIT_MATERIAL_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT',
-                'CONTROL_PART_INSERT_UPDATE_DT'
+                'CONTROL_PART_INSERT_UPDATE_DT',
+                'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','INSIDE_STOCK_YN'
                 //, 'TOTAL_SHEET'
             ];
 
@@ -3409,6 +3474,38 @@
 
         $orderManagementGrid = $('#' + gridId).pqGrid(obj);
         /* init */
+
+
+        $('#MATCH_STOCK').on('click', function (e) {
+            if (selectedOrderManagementRowIndex.length <= 0) {
+                fnAlert(null, '하나 이상의 작업을 선택해주세요');
+                return false;
+            }else {
+                $("#stockMatchPopup").modal('show');
+            }
+        });
+        $('#stockBtnClose4').on('click', function (e) {
+            $("#stockMatchPopup").modal('hide');
+        })
+
+        $("#stockMatchPopup").on({
+            'show.bs.modal': function () {
+                $("#STOCK_MATCH_BARCODE_NUM").focus();
+            },'hide.bs.modal': function () {
+
+            }
+        });
+        $("#STOCK_MATCH_BARCODE_NUM").on({
+            focus: function () {
+                $("#stock_match_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long_on.png");
+            },
+            blur: function () {
+                $("#stock_match_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long.png");
+            },
+            keydown: function (e) {
+
+            }
+        });
 
         $('#ESTIMATE_REGISTER_FROM_CONTROL').on('click', function (event) {
             if (noSelectedRowAlert()) {

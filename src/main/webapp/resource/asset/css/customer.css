@@ -601,6 +601,7 @@ ul, ol , dl { list-style: none;}
 	height: 30px;
 	text-align: center;
 }
+
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight {
 	width: 55%;
 	height: 100%;
@@ -648,7 +649,7 @@ ul, ol , dl { list-style: none;}
 	border: 0;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight .tdBackColor {
-	background: #CCC;
+	background: #ddd;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight .enterNum {
 	vertical-align: middle;
@@ -911,4 +912,17 @@ ul, ol , dl { list-style: none;}
 .mapDetailBtn {
 	background: #d6e5ff !important;
 	color: #555 !important;
+}
+.completePopup {
+	width: 20%;
+	height: 11%;
+	position: absolute;
+	top: 45%;
+	left: 50%;
+	transform: translate(-55%,-50%);
+	background: #fffbfb;
+	padding: 20px;
+}
+.redText {
+	color:red !important;
 }

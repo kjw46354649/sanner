@@ -33,6 +33,8 @@
                 <form class="" role="form" id="common_file_download_form" name="common_file_download_form" method="POST">
                     <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
                     <input type="hidden" id="callElement" name="callElement" value="">
+                    <input type="hidden" id="TYPE" name="TYPE" value="">
+                    <input type="hidden" id="INSIDE_STOCK_SEQ" name="INSIDE_STOCK_SEQ" value="">
                     <input type="hidden" id="deleteYn" name="deleteYn" value="">
                     <div id="common_file_download_upload_grid" style="margin:auto;"></div>
                     <div class="right_sort fileTableInfoWrap">
@@ -320,8 +322,17 @@
                     </div>
                 </div>
             </div>
-            <div class="h_area mb-10">
-
+            <div class="h_area">
+                <input type="search" id="locationPopFilterKeyword" placeholder="Enter your keyword">
+                <select id="locationPopFilterColumn"></select>
+                <select id="locationPopFilterCondition">
+                    <c:forEach var="code" items="${HighCode.H_1083}">
+                        <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                    </c:forEach>
+                </select>
+                <div class="d-inline right_float">
+                    <button type="button" class="defaultBtn btn-120w" id="btnLocationLabelPrint">라벨 출력</button>
+                </div>
             </div>
             <h2>&nbsp;</h2>
             <div class="tableWrap">
@@ -951,8 +962,16 @@
                 if(file.upload != 'disable') //삭제하지 않은 이미지만 업로드 항목으로 추가
                     formData.append('file', file, file.name);
             });
-            formData.append('queryId', $('#common_cad_file_attach_form').find("#queryId").val() + "_select");
+            console.log($('#common_cad_file_attach_form').find("#queryId").val())
             formData.append('GFILE_SEQ', GfileSeq);
+            var actionUrl = '';
+            var queryId = $('#common_cad_file_attach_form').find("#queryId").val() + "_select";
+            if($('#common_file_download_form').find("#TYPE").val() == 'STOCK_UPLOAD') {
+                actionUrl = '/uploadInsideStockCadFiles';
+                queryId = 'material.manageStockCadFiles_select';
+                formData.append('INSIDE_STOCK_SEQ', $("#common_file_download_form").find("#INSIDE_STOCK_SEQ").val());
+            }
+            formData.append('queryId', queryId);
 
             uploadControlFiles = [];    // 파일 업로드 정보 초기화
             fnFormDataFileUploadAjax(function (data) {
@@ -962,11 +981,26 @@
                     fnAlert(null, "주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
                     return false;
                 }
+
+                console.log('fnFormDataFileUploadAjax',data);
+
+                if($('#common_file_download_form').find("#TYPE").val() == 'STOCK_UPLOAD' && data.fileUploadDataList.length > 0) {
+                    $.each(data.fileUploadDataList, function(idx,Item) {
+                        let parameter = {
+                            'queryId': 'material.manageStockCadFiles',
+                            'INSIDE_STOCK_SEQ': $("#common_file_download_form #INSIDE_STOCK_SEQ").val(),
+                            'PDF_GFILE_SEQ': Item.PDF_GFILE_SEQ,
+                            'IMG_GFILE_SEQ': Item.IMG_GFILE_SEQ
+                    };
+                        let parameters = {'url': '/json-update', 'data': parameter};
+                        fnPostAjaxAsync('', parameters, '');
+                    })
+                }
                 let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GFILE_SEQ };
                 fnRequestGridData(commonFileDownUploadGrid, postData);
                 $("#common_file_download_form").find("#GFILE_SEQ").val(GFILE_SEQ);
                 fnAlert(null,"파일 업로드가 완료 되었습니다.");
-            }, formData, '');
+            }, formData, actionUrl);
         }
     });
     /** 파일 업로드 스크립트 종료 **/
@@ -1602,12 +1636,15 @@
     /**  공통 제품상세 정보  끝 **/
 
     /** 공통 창고 팝업 Start **/
+    let commonWarehouseSelectedRowIndex;
+    // let warehouseList = fnGetCommCodeGridSelectBox('1049');
+    let warehouseList = "${HighCode.H_1049}";
     let commonWarehouseManageGrid = $("#common_warehouse_manage_grid");
     let commonWarehouseManageModel= [
         {title: '창고명', dataType: 'string', dataIndx: 'WAREHOUSE_NM', minWidth: 80 ,editable: false},
-        {title: '위치명', dataType: 'string', dataIndx: 'LOC_NM', minWidth: 90 },
-        {title: '위치 설명', dataType: 'string', dataIndx: 'LOC_DESC', minWidth: 120 },
-        {title: '용도', dataType: 'string', dataIndx: 'LOC_USE', minWidth: 150} ,
+        {title: '위치명', dataType: 'string', dataIndx: 'LOC_NM', minWidth: 90, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+        {title: '위치 설명', dataType: 'string', dataIndx: 'LOC_DESC', minWidth: 120, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
+        {title: '용도', dataType: 'string', dataIndx: 'LOC_USE', minWidth: 150, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}} ,
         {title: '업데이트 일시', dataType: 'date', dataIndx: 'UPDATE_DT', minWidth: 110, editable: false},
         {title: '작성자', dataType: 'string', dataIndx: 'INSERT_ID', minWidth: 100, editable: false},
         {title: '', dataType: 'string', dataIndx: 'WAREHOUSE_CD', hidden: true}
@@ -1626,23 +1663,110 @@
         columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
         scrollModel: {autoFit: false},
         numberCell: {width: 30, title: "No", show: true },
-        selectionModel: { type: 'row', mode: 'single'} ,
+        // selectionModel: { type: 'row', mode: 'multiple'} ,
         swipeModel: {on: false},
         collapsible: false,
         strNoRows: g_noData,
         resizable: false,
         trackModel: {on: true},
         colModel: commonWarehouseManageModel,
-        rowSelect: function (event, ui) {
-            let LOC_SEQ = ui.addList[0].rowData.LOC_SEQ;
+        load: function( event, ui ) {
+            var filterOpts = '<option value=\"\">All Fields</option>';
+            var frozenOts = '<option value="0">Selected</option>';
+            this.getColModel().forEach(function(column){
+                let hiddenYn = column.hidden == undefined ? true : false;
+                if(hiddenYn && column.title){
+                    filterOpts +='<option value="'+column.dataIndx+'">'+column.title+'</option>';
+                    frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                }
+            });
+            $("#locationPopFilterColumn").empty();
+            $("#locationPopFilterColumn").html(filterOpts);
+            $("#stockManageFrozen").empty();
+            $("#stockManageFrozen").html(frozenOts);
+        },
+        // rowSelect: function (event, ui) {
+        //     let LOC_SEQ = ui.addList[0].rowData.LOC_SEQ;
+        //
+        //     $("#common_warehouse_manage_popup_form #LOC_SEQ").val(LOC_SEQ);
+        // },
+        selectChange: function (event, ui) {
+            commonWarehouseSelectedRowIndex = [];
+            for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+                let firstRow = ui.selection._areas[i].r1;
+                let lastRow = ui.selection._areas[i].r2;
 
-            $("#common_warehouse_manage_popup_form #LOC_SEQ").val(LOC_SEQ);
+                for (let i = firstRow; i <= lastRow; i++) commonWarehouseSelectedRowIndex.push(i);
+            }
         },
         complete: function(event, ui) {
             this.flex();
             let data = commonWarehouseManageGrid.pqGrid('option', 'dataModel.data');
 
             $('#common_warehouse_manage_grid_records').html(data.length);
+        },
+        change: function (evt, ui) {
+            if (ui.source === 'paste') {
+                let rowListConvert = [];
+
+                for (let i = 0, addListLength = ui.addList.length; i < addListLength; i++) {
+                    const newRowData = ui.addList[i].newRow;
+                    let wareHouseCd = null;
+
+                    // 단가확인
+                    if (newRowData.WAREHOUSE_NM !== undefined) {
+                        let index = warehouseList.findIndex(function (element) {
+                            return element.text === newRowData.WAREHOUSE_NM;
+                        });
+                        if (index >= 0) wareHouseCd = warehouseList[index].value;
+                    }
+
+                    ui.addList[i].newRow.WAREHOUSE_NM = wareHouseCd;
+                }
+
+                for (let i = 0, updateLength = ui.updateList.length; i < updateLength; i++) {
+                    const newRowData = ui.updateList[i].newRow;
+                    const rowIndx = ui.updateList[i].rowIndx;
+                    let tempNewRow = {};
+                    let wareHouseCd = null;
+
+                    // 단가확인
+                    if (newRowData.WAREHOUSE_NM !== undefined) {
+                        let index = warehouseList.findIndex(function (element) {
+                            return element.text === newRowData.WAREHOUSE_NM;
+                        });
+                        if (index >= 0) {
+                            wareHouseCd = warehouseList[index].value;
+                            tempNewRow.WAREHOUSE_NM = wareHouseCd;
+                        }
+                    }
+
+                    let tempObject = {
+                        rowIndx: rowIndx,
+                        newRow: tempNewRow
+                    };
+                    rowListConvert.push(tempObject);
+                }
+
+                commonWarehouseManageGrid.pqGrid('updateRow', {rowList: rowListConvert});
+            }
+        },
+        beforePaste: function (evt, ui) {
+            let CM = this.getColModel(),
+                rows = ui.rows,
+                area = ui.areas[0],
+                //r1 = area.r1,
+                c1 = area.c1;
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i];
+                for (let j = 0; j < row.length; j++) {
+                    let column = CM[j + c1],
+                        dt = column.dataType;
+                    if (dt == 'integer' || dt == 'float') {
+                        row[j] = row[j].replace(/[^(\d|\.)]/g, '');
+                    }
+                }
+            }
         }
     }
     function fnCommonWarehouse() {
@@ -1659,7 +1783,32 @@
         });
         commonWarehouseManageGrid.pqGrid('refreshDataAndView');
     });
-
+    $("#btnLocationLabelPrint").on('click', function () {
+        var locList = [];
+        if(typeof commonWarehouseSelectedRowIndex != 'undefined' && commonWarehouseSelectedRowIndex.length > 0) {
+            for (let i = 0, selectedRowCount = commonWarehouseSelectedRowIndex.length; i < selectedRowCount; i++) {
+                console.log(commonWarehouseManageGrid.pqGrid('getRowData', {rowIndx: commonWarehouseSelectedRowIndex[i]}).LOC_SEQ)
+                var locSeq = commonWarehouseManageGrid.pqGrid('getRowData', {rowIndx: commonWarehouseSelectedRowIndex[i]}).LOC_SEQ;
+                if(typeof locSeq != 'undefined') {
+                    locList.push("W"+locSeq);
+                }
+            }
+        }
+        if (locList.length) {
+            let message =
+                '<h4>\n' +
+                '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                '    <span>선택하신 ' + locList.length + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
+                '</h4>';
+            fnConfirm(null, message, function () {
+                fnBarcodePrint(function (data) {
+                    fnAlert(null, data.message);
+                }, locList, '');
+            });
+        } else {
+            fnAlert(null, '출력할 바코드가 존재 하지 않습니다.');
+        }
+    });
     $("#btnCommonWarehouseManageAdd").on('click', function(){
         let WAREHOUSE_CD = $("#common_warehouse_manage_popup_form #WAREHOUSE_CD option:selected").val();
         let WAREHOUSE_NM = $("#common_warehouse_manage_popup_form #WAREHOUSE_CD option:selected").text();
@@ -1671,24 +1820,11 @@
     });
 
     $("#btnCommonWarehouseManageRemove").on('click', function () {
-        const data = commonWarehouseManageGrid.pqGrid('option', 'dataModel.data');
-        const value = $("#common_warehouse_manage_popup_form #LOC_SEQ").val();
-        let rowIndx;
-
-        for (let i = 0; i < data.length; i++) {
-            let rowData = data[i];
-
-            if (rowData['LOC_SEQ'] == value) {
-                rowIndx = i;
-                break;
-            }
-        }
-
-        if (rowIndx) {
+        if(typeof commonWarehouseSelectedRowIndex != 'undefined' && commonWarehouseSelectedRowIndex.length > 0) {
             fnConfirm(null, '<spring:message code="com.alert.default.removeText"/>', function () {
                 const deleteQuery = 'material.deleteCommonWarehouseManage'
 
-                fnDeletePQGrid(commonWarehouseManageGrid, [rowIndx], deleteQuery);
+                fnDeletePQGrid(commonWarehouseManageGrid, commonWarehouseSelectedRowIndex, deleteQuery);
             });
         }
     });
