@@ -278,7 +278,7 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 	height: 75.5%;
 }
 
-@media(max-width:1980px){
+@media(max-width:1920px){
 	html {
 		font-family: 'notoM';
 		overflow: hidden;
