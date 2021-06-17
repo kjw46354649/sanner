@@ -264,40 +264,46 @@
 <input type="button" id="ATTACHMENT_BUTTON" style="display: none;">
 
 <div id="stockMatchPopup" class="stockSearchPopup" style="display: none;">
-    <div class="stockPopupWrap">
-        <div class="searchPopup">
-            <h3><i class="xi-library-bookmark"></i> 재고 매칭 검색 및 지정</h3>
-            <div class="searchPopupWrap">
-                <div class="stockMapLeft">
-                    <!--도면삽입-->
-                </div>
-                <div class="searchPopupRight">
-                    <div class="searchPopupRightTop">
-                        <h4><i class="xi-library-bookmark"></i> 매칭 List</h4>
-                        <button type="button" id="stock_match_pop_refresh" class="refreshBtn">
-                            <img src="./resource/asset/images/common/btn_refresh.png" alt="새로고침">
-                        </button>
-                        <div class="barcode barcode_div">
-                            <span class="barCode">
-                                <img src="resource/asset/images/common/img_barcode_long.png" alt="바코드" id="stock_match_barcode_img">
-                            </span>
-                            <span class="barCodeTxt">
-                                <input type="text" class="wd_200 hg_35" id="STOCK_MATCH_BARCODE_NUM" placeholder="도면의 바코드를 스캔해주세요">
-                            </span>
+    <form class="form-inline" id="stock_match_pop_form" name="stock_match_pop_form" role="form" onsubmit="return false;">
+        <input type="hidden" id="queryId" name="queryId" value="orderMapper.selectMatchStockList">
+        <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value="">
+        <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
+        <div class="stockPopupWrap">
+            <div class="searchPopup">
+                <h3><i class="xi-library-bookmark"></i> 재고 매칭 검색 및 지정</h3>
+                <div class="searchPopupWrap">
+                    <div class="stockMapLeft">
+                        <!--도면삽입-->
+                        <img id="match_stock_img" src="/resource/main/blank.jpg" style="width: 100%;height: 100%;">
+                    </div>
+                    <div class="searchPopupRight">
+                        <div class="searchPopupRightTop">
+                            <h4><i class="xi-library-bookmark"></i> 매칭 List</h4>
+                            <button type="button" id="stock_match_pop_refresh" class="refreshBtn">
+                                <img src="./resource/asset/images/common/btn_refresh.png" alt="새로고침">
+                            </button>
+                            <div class="barcode barcode_div">
+                                <span class="barCode">
+                                    <img src="resource/asset/images/common/img_barcode_long.png" alt="바코드" id="stock_match_barcode_img">
+                                </span>
+                                <span class="barCodeTxt">
+                                    <input type="text" class="wd_200 hg_35" id="STOCK_MATCH_BARCODE_NUM" placeholder="도면의 바코드를 스캔해주세요">
+                                </span>
+                            </div>
+                        </div>
+                        <div id="match_stock_grid" class="listTable">
+                            <!--gird삽입-->
                         </div>
                     </div>
-                    <div class="listTable">
-                        <!--gird삽입-->
-                    </div>
+                </div>
+                <div class="stockPopupBtnWrap">
+                    <button id="matchStockDetailBtn" class="mapDetailBtn">도면상세보기</button>
+                    <button id="stockBtnClose4" class="stockBtnClose">닫기</button>
+                    <button id="matchStockBtnSave" class="stockBtnSave">저장</button>
                 </div>
             </div>
-            <div class="stockPopupBtnWrap">
-                <button id="mapDetailBtn" class="mapDetailBtn">도면상세보기</button>
-                <button id="stockBtnClose4" class="stockBtnClose">닫기</button>
-                <button id="stockBtnSave" class="stockBtnSave">저장</button>
-            </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <script>
@@ -1002,8 +1008,14 @@
                         editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                         render: function (ui) {
                             let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null;
 
-                            return cellData === 'Y' ? cellData : '';
+                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                            }
+
+                            return {cls: cls, text: (cellData === 'Y' ? cellData : '')};
                         }
                     },
                     {
@@ -3475,13 +3487,261 @@
         $orderManagementGrid = $('#' + gridId).pqGrid(obj);
         /* init */
 
+        let matchStockGrid = $("#match_stock_grid");
+        let gridCellEditable = function(ui){
+            let rowData = matchStockGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+            let OUT_STATUS = rowData["OUT_STATUS"];
+            let RNUM = rowData["RNUM"];
+            if(OUT_STATUS == 'OUT002') {
+                return false;
+            }else if(typeof RNUM != 'undefined' && RNUM != '' && RNUM != null) {
+                return false;
+            }else {
+                return true;
+            }
+        }
+
+        let matchStockColModel = [
+            {title: 'RNUM', dataType: 'integer', dataIndx: 'RNUM', hidden: true},
+            {title: 'CONTROL_NUM', dataType: 'string', dataIndx: 'CONTROL_NUM', hidden: true},
+            {title: 'OUT_STATUS', dataType: 'string', dataIndx: 'OUT_STATUS', hidden: true},
+            {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
+            {title: 'ORDER_QTY', dataType: 'integer', dataIndx: 'ORDER_QTY', hidden: true},
+            {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: 'INSIDE_STOCK_SEQ', dataType: 'integer', dataIndx: 'INSIDE_STOCK_SEQ', hidden: true},
+            {title: 'INSIDE_OUT_SEQ', dataType: 'integer', dataIndx: 'INSIDE_OUT_SEQ', hidden: true},
+            {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
+            {
+                dataIndx: 'CHECK_BOX',
+                dataType: 'bool',
+                hidden: true,
+                editable: function (ui) {return gridCellEditable(ui);}
+            },
+            {title:'No', width: 40, dataIndx: "RNUM", cbId: 'CHECK_BOX', type: "checkbox", useLabel: true,
+                editable: function (ui) {return gridCellEditable(ui);},
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
+                        return {text: rowData.RNUM, style : 'background-color: #d6e5ff; font-weight: bold;'};
+                    }
+                    if(rowData.OUT_STATUS == 'OUT002') {
+                        // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
+                        return {cls: 'disabled', style: 'background-color: #d7d7d7;'};
+                    }
+                },
+                postRender: function (ui) {
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    let rowData = ui.rowData;
+                    if(typeof rowData.REQUEST_QTY != 'undefined' && rowData.REQUEST_QTY != null && rowData.REQUEST_QTY != '') {
+                        $cell.find('input[type=checkbox]').prop('checked', true);
+                        ui.rowData.CHECK_BOX = true;
+                    }
+                }
+            },
+            {title: '작업번호<br>재고번호', minWidth: 140, dataIndx: 'INSIDE_STOCK_NUM',
+                editable: false,
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
+                        return {text: rowData.CONTROL_NUM, style : 'background-color: #d6e5ff; font-weight: bold;'};
+                    }
+                    if(rowData.OUT_STATUS == 'OUT002') {
+                        // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
+                        return {style: 'background-color: #d7d7d7;'};
+                    }
+                }
+            },
+            {title: '소재', minWidth: 80, dataIndx: 'MATERIAL_DETAIL_NM',
+                editable: false,
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
+                        return {style : 'background-color: #d6e5ff; font-weight: bold;'};
+                    }
+                    if(rowData.OUT_STATUS == 'OUT002') {
+                        // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
+                        return {style: 'background-color: #d7d7d7;'};
+                    }
+                }
+            },
+            {title: '규격', minWidth: 90, dataIndx: 'SIZE_TXT',
+                editable: false,
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
+                        return {style : 'background-color: #d6e5ff; font-weight: bold;'};
+                    }
+                    if(rowData.OUT_STATUS == 'OUT002') {
+                        // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
+                        return {style: 'background-color: #d7d7d7;'};
+                    }
+                }
+            },
+            {title: '주문수량<br>불출요청', width: 50, dataType: 'integer', dataIndx: 'REQUEST_QTY',
+                editable: function (ui) {return gridCellEditable(ui);},
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
+                    let $row = grid.getRow(ui);
+
+                    if(rowData.OUT_STATUS == 'OUT002') {
+                        // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
+                        return {style: 'background-color: #d7d7d7;'};
+                    }else if(rowData.RNUM == "") {
+                        if(ui.cellData != null && ui.cellData > 0) {
+                            ui.rowData.CHECK_BOX = true;
+                            $row.find('input[type=checkbox]').prop('checked', true);
+                        }else {
+                            ui.rowData.CHECK_BOX = false;
+                            $row.find('input[type=checkbox]').prop('checked', false);
+                        }
+                        return {style : 'background-color: #fff599;'};
+                    }else {
+                        return {style : 'background-color: #d6e5ff; font-weight: bold;'};
+                    }
+                }
+            },
+            {title: '불출일자', width: 70, dataType: 'string', dataIndx: 'OUT_DT',
+                editable: false,
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
+                        return {style : 'background-color: #d6e5ff; font-weight: bold;'};
+                    }
+                    if(rowData.OUT_STATUS == 'OUT002') {
+                        // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
+                        return {style: 'background-color: #d7d7d7;'};
+                    }
+                }
+            },
+            {title: '현재<br>재고', width: 50, dataType: 'integer', dataIndx: 'CURR_QTY',
+                editable: false,
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
+                        return {style : 'background-color: #d6e5ff; font-weight: bold;'};
+                    }
+                    if(rowData.OUT_STATUS == 'OUT002') {
+                        // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
+                        return {style: 'background-color: #d7d7d7;'};
+                    }
+                }
+            }
+            // {title: '창고명', align: 'center', width: 100, dataIndx: 'WAREHOUSE_CD_NM'},
+        ];
+
+        let matchStockObj = {
+            height: "93%", width: "auto",
+            selectionModel: { type: 'row', mode: 'single'}, rowHtHead: 15,
+            swipeModel: {on: false}, trackModel: {on: true},
+            strNoRows: g_noData,
+            collapsible: false, resizable: false, flexWidth: false, showTitle: false,
+            postRenderInterval: -1, //call postRender synchronously.
+            // scrollModel: { autoFit: true },
+            columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
+            colModel: matchStockColModel,
+            dataModel: {
+                location: "remote", dataType: "json", method: "POST", recIndx: 'RNUM',
+                url: "/paramQueryGridSelect",
+                postData: fnFormToJsonArrayData('stock_match_pop_form'),
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            toolbar: false,
+            rowSelect: function (event, ui) {
+                var rowData = ui.addList[0].rowData;
+                if(typeof rowData.IMG_GFILE_SEQ != 'undefined' && rowData.IMG_GFILE_SEQ != ''){
+                    $("#match_stock_img").attr("src", '/qimage/' + rowData.IMG_GFILE_SEQ);
+                    $("#stock_match_pop_form").find("#GFILE_SEQ").val(rowData.IMG_GFILE_SEQ);
+                }else {
+                    $("#match_stock_img").attr("src", '/resource/main/blank.jpg');
+                    $("#stock_match_pop_form").find("#GFILE_SEQ").val("");
+                }
+            }
+        };
+        matchStockGrid.pqGrid(matchStockObj);
+
+        $('#matchStockDetailBtn').on('click', function (e) {
+            let gFileSeq = $("#stock_match_pop_form").find("#GFILE_SEQ").val();
+            if(gFileSeq != '') {
+                callWindowImageViewer(gFileSeq);
+            }
+        })
+        $('#matchStockBtnSave').on('click', function (e) {
+            let gridInstance = matchStockGrid.pqGrid('getInstance').grid;
+            let changes = gridInstance.getChanges({format: 'byVal'});
+            let duplChk = {};
+            var flag = false;
+            var dupFlag = false;
+            $.each(changes.updateList, function (idx,Item) {
+                var id = Item.CONTROL_SEQ + '_' + Item.CONTROL_DETAIL_SEQ;
+                if(Item.CHECK_BOX) {
+                    if(Item.REQUEST_QTY == null || Item.REQUEST_QTY == '' || typeof Item.REQUEST_QTY == 'undefined' || Item.REQUEST_QTY <= 0) {
+                        flag = true;
+                        return;
+                    }
+
+                    if(typeof duplChk[id] == 'undefined' || duplChk[id] == null) {
+                        duplChk[id] = [idx];
+                    }else {
+                        duplChk[id].push(idx);
+                        dupFlag = true;
+                        return;
+                    }
+                }
+            })
+
+            if(dupFlag) {
+                fnAlert(null,'불출 요청은 파트단위당 1개의 재고번호만 가능합니다.');
+                return;
+            }
+
+            if(flag) {
+                fnAlert(null,'불출 요청 수량을 확인해주세요.');
+                return;
+            }else {
+                let parameters = {'url': '/matchStockSave', 'data': {data: JSON.stringify(changes)}};
+
+                fnPostAjaxAsync(function (data) {
+                    if (data.flag) {
+                        fnAlert(null, data.message);
+                        return false;
+                    }
+
+                    fnAlert(null, '<spring:message code="com.alert.default.save.success"/>');
+                    matchStockGrid.pqGrid('refreshDataAndView');
+                }, parameters, '');
+
+            }
+        })
+        $('#stock_match_pop_refresh').on('click', function (e) {
+            matchStockGrid.pqGrid('option', 'dataModel.postData', function () {
+                return { 'queryId': 'orderMapper.selectMatchStockList', 'CONTROL_SEQ': $("#stock_match_pop_form").find("#CONTROL_SEQ").val()};
+            });
+            matchStockGrid.pqGrid('refreshDataAndView');
+        })
 
         $('#MATCH_STOCK').on('click', function (e) {
             if (selectedOrderManagementRowIndex.length <= 0) {
                 fnAlert(null, '하나 이상의 작업을 선택해주세요');
                 return false;
             }else {
+                let rowCnt = "";
+                let CONTROL_SEQ = "";
+                for (let i = 0; i < selectedOrderManagementRowIndex.length; i++) {
+                    let rowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: selectedOrderManagementRowIndex[i]});
+                    CONTROL_SEQ += rowData["CONTROL_SEQ"] + ",";
+                }
+                CONTROL_SEQ = CONTROL_SEQ.substr(0, CONTROL_SEQ.length - 1);
+                $("#stock_match_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
+
                 $("#stockMatchPopup").modal('show');
+                $("#STOCK_MATCH_BARCODE_NUM").focus();
             }
         });
         $('#stockBtnClose4').on('click', function (e) {
@@ -3490,7 +3750,11 @@
 
         $("#stockMatchPopup").on({
             'show.bs.modal': function () {
-                $("#STOCK_MATCH_BARCODE_NUM").focus();
+
+                matchStockGrid.pqGrid('option', 'dataModel.postData', function () {
+                    return { 'queryId': 'orderMapper.selectMatchStockList', 'CONTROL_SEQ': $("#stock_match_pop_form").find("#CONTROL_SEQ").val()};
+                });
+                matchStockGrid.pqGrid('refreshDataAndView');
             },'hide.bs.modal': function () {
 
             }
@@ -3503,7 +3767,46 @@
                 $("#stock_match_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long.png");
             },
             keydown: function (e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                    let BARCODE_NUM = fnBarcodeKo2En(this.value);
+                    let parameters = {
+                        'url': '/json-info',
+                        'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"common.selectControlBarcodeInfo"}
+                    };
+                    fnPostAjax(function (data, callFunctionParam) {
+                        if(data.info != null) {
+                            let parameters2 = {
+                                'url': '/json-list',
+                                'data': {"CONTROL_SEQ":data.info.CONTROL_SEQ,"queryId":"orderMapper.selectMatchStockList"}
+                            };
+                            fnPostAjax(function (data2, callFunctionParam) {
+                                var lastIdx = matchStockGrid.pqGrid('option', 'dataModel.data').length - 1;
+                                let rNumData = matchStockGrid.pqGrid('getData', {dataIndx: ['RNUM']});
 
+                                var addRowCounter = matchStockGrid.pqGrid('option', 'dataModel.data').length + 1;
+                                if(data2.list.length > 0) {
+                                    $.each(data2.list, function(idx,Item) {
+                                        if(Item.SORT == 1) {
+                                            Item.RNUM = parseInt(rNumData[rNumData.length-1].RNUM) + 1
+                                        }
+                                        matchStockGrid.pqGrid('addRow', {
+                                            newRow: Item,
+                                            rowIndx: addRowCounter,
+                                            checkEditable: false
+                                        })
+                                        addRowCounter++;
+                                    })
+
+                                    matchStockGrid.pqGrid('refreshView');
+                                }
+                            }, parameters2, '');
+                        }else {
+                            fnAlert(null, "해당 바코드가 존재하지 않습니다.");
+                        }
+                        $("#STOCK_MATCH_BARCODE_NUM").val('');
+                    }, parameters, '');
+                }
             }
         });
 

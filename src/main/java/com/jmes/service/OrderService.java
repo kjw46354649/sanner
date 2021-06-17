@@ -31,4 +31,6 @@ public interface OrderService {
     void saveFromControlManage(Model model, Map<String, Object> map) throws Exception;
 
     void processingRequirementsControlSave(Model model, Map<String, Object> map)  throws Exception;
+
+    void matchStockSave(Model model, Map<String, Object> map) throws Exception;
 }

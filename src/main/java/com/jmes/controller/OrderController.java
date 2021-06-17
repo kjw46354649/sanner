@@ -182,4 +182,13 @@ public class OrderController {
 
         return "jsonView";
     }
+
+    @RequestMapping(value = "/matchStockSave", method = RequestMethod.POST)
+    public String matchStockSave(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.matchStockSave(model, map);
+
+        return "jsonView";
+    }
 }
