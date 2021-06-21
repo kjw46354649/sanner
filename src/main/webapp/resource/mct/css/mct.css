@@ -58,10 +58,10 @@ div[class^="mctInfo_"] .mctName {
 	background: #CCC;
 	display: block;
 	padding: 5px 15px;
-	width: 30%;
+	width: 28%;
 	height: 10%;
 	position: absolute;
-	left: 0%;
+	left: 2%;
 	top: 2.4%;
 	font-size: 1.5rem;
 }
@@ -342,6 +342,9 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 	div[class^="mctInfo_"] .mctName {
 		padding: 3px 5px;
 		font-size: 10px;
+		left: 4px;
+		width: 27.5%;
+		top: 4px;
 	}
 	.staffImg {
 		width: 25px;
@@ -368,7 +371,7 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 		height: 50%;
 		z-index: 9;
 		border: 1px solid black;
-		padding-top: 1px;
+		padding-top: 3.5px;
 	}
 	div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .mctProgressPercent {
 		top: 60%;
@@ -378,7 +381,7 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 	div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapBtmInfo {
 		font-size: 10px;
 		height: 30%;
-		padding: 0;
+		padding: 1%;
 	}
 	div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm {
 		margin-top: 5px;
