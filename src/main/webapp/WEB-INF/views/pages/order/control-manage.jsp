@@ -1126,7 +1126,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') && (rowData.INSIDE_STOCK_YN != 'Y');
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -3016,6 +3016,7 @@
             let compCdList = [];
             let orderCompCdList = [];
             let invoiceNumList = [];
+            let flagStock = false;
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
@@ -3024,6 +3025,10 @@
                 compCdList.push(rowData.COMP_CD);
                 orderCompCdList.push(rowData.ORDER_COMP_CD);
                 invoiceNumList.push(rowData.INVOICE_NUM);
+                if(rowData.INSIDE_STOCK_YN == 'Y') {
+                    flagStock = true;
+                    return;
+                }
             }
             // 중복제거
             controlSeqList = [...new Set(controlSeqList)];
@@ -3031,6 +3036,10 @@
             orderCompCdList = [...new Set(orderCompCdList)];
             invoiceNumList = [...new Set(invoiceNumList)];
 
+            if(flagStock) {
+                fnAlert(null, '재고대상은 거래명세표 출력이 불가합니다.');
+                return false;
+            }
             if (controlSeqList.length === 0) {
                 fnAlert(null, '에러!');
                 return false;

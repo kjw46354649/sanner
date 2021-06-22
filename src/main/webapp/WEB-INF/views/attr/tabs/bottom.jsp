@@ -153,15 +153,15 @@
                         <tr>
                             <th>도면번호</th>
                             <td id="DRAWING_NUM" class="red"></td>
-                            <th>규격</th>
-                            <td id="SIZE_TXT"></td>
+                            <th>재고번호</th>
+                            <td id="INSIDE_STOCK"></td>
                             <th class="antiquewhite">진행상태</th>
                             <td id="PART_STATUS_NM"></td>
                         </tr>
                         <tr>
                             <th>품명</th>
                             <td id="ITEM_NM"></td>
-                            <th>소재종류</th>
+                            <th>소재/규격</th>
                             <td id="MATERIAL_DETAIL_NM"></td>
                             <th class="antiquewhite">현재위치</th>
                             <td id="POP_POSITION_NM"></td>
@@ -1298,12 +1298,12 @@
 
                 $itemDetailPopForm.find("#DRAWING_NUM").attr('title', dataInfo.DRAWING_NUM);
                 $itemDetailPopForm.find("#DRAWING_NUM").html(dataInfo.DRAWING_NUM);
-                $itemDetailPopForm.find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
+                $itemDetailPopForm.find("#INSIDE_STOCK").html(dataInfo.STOCK_TXT);
                 $itemDetailPopForm.find("#PART_STATUS_NM").html(dataInfo.PART_STATUS_NM);
 
                 $itemDetailPopForm.find("#ITEM_NM").attr('title', dataInfo.ITEM_NM);
                 $itemDetailPopForm.find("#ITEM_NM").html(dataInfo.ITEM_NM);
-                $itemDetailPopForm.find("#MATERIAL_DETAIL_NM").html(dataInfo.MATERIAL_DETAIL_NM || '' + materialFinishHeatSpanElement);
+                $itemDetailPopForm.find("#MATERIAL_DETAIL_NM").html((dataInfo.MATERIAL_DETAIL_NM || '' + materialFinishHeatSpanElement)  + ((dataInfo.MATERIAL_DETAIL_NM == null && materialFinishHeatSpanElement == '')? '':' / ') + dataInfo.SIZE_TXT);
                 $itemDetailPopForm.find("#POP_POSITION_NM").html(dataInfo.POP_POSITION_NM);
 
                 $itemDetailPopForm.find("#MODULE_NM").attr('title', dataInfo.MODULE_NM);

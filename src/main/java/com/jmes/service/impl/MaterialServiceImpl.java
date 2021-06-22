@@ -234,13 +234,12 @@ public class MaterialServiceImpl implements MaterialService {
         model.addAttribute("message",message);
     }
 
-    @Override // 바코드로 소재입고시, 출고까지 진행
+    @Override // 바코드로 재고입고시, 출고까지 진행 (단, 해당 작업지시건의 주문중 재고가 Y인것만 출고처리)
     public void outGoingProcessForBarcodeIn(Model model, Map<String, Object> map) throws Exception {
-        map.put("queryId", "inspection.insertOutgoingOutType1");
-        map.put("NEW_OUT_QTY",map.get("ORDER_QTY"));
+        map.put("queryId", "material.insertOutgoingInStockManage1");
         this.innodaleDao.create(map);
 
-        map.put("queryId", "inspection.updateOutgoingOutType1After1");
+        map.put("queryId", "material.updateOutgoingOutInStockManage1");
         this.innodaleDao.update(map);
 
         map.put("queryId", "inspection.updateOutgoingOutType1After2");
@@ -365,5 +364,47 @@ public class MaterialServiceImpl implements MaterialService {
             }
         }
     }
+
+    @Override
+    public void cancelInsideStock(Model model, Map<String, Object> map) throws Exception {
+        String CONTROL_SEQ = (String)map.get("CONTROL_SEQ"); // 바코드 사용여부
+        String TYPE_CODE = (String)map.get("TYPE_CODE"); // 타입
+        Boolean flag = false;
+        String message = "";
+
+        try {
+            if("OUT".equals(TYPE_CODE)) { //todo INSIDE_OUT에서 제거
+                map.put("queryId", "material.deleteInsideStockOut");
+                this.innodaleDao.remove(map);
+            }else if("IN".equals(TYPE_CODE)) { //todo INSIDE_IN에서 제거, 도면으로 입고한 경우 출고된 데이터까지 원복
+
+                map.put("queryId", "material.deleteInsideStockIn");
+                this.innodaleDao.remove(map);
+
+                if(!"".equals(CONTROL_SEQ)) {
+                    map.put("queryId", "material.deleteInsideStockOutgoing");
+                    this.innodaleDao.remove(map);
+
+                    map.put("queryId", "material.updateInsideStockOutgoingPartOrder");
+                    this.innodaleDao.update(map);
+
+                    map.put("queryId", "material.updateInsideStockOutgoingControl1");
+                    this.innodaleDao.update(map);
+
+                    map.put("queryId", "material.updateInsideStockOutgoingPart");
+                    this.innodaleDao.update(map);
+
+                    map.put("queryId", "material.updateInsideStockOutgoingControl2");
+                    this.innodaleDao.update(map);
+                }
+            }
+        }catch (Exception e) {
+            flag = true;
+        }
+
+        model.addAttribute("flag",flag);
+        model.addAttribute("message",message);
+    }
+
 
 }

@@ -287,6 +287,12 @@
             , FIRST_PART_CONTROL_DETAIL_SEQ
 	        , D.PREV_PART_CONTROL_DETAIL_SEQ
 	        , D.NEXT_PART_CONTROL_DETAIL_SEQ
+            , Z.INSIDE_STOCK_NUM
+            , Z.REQUEST_QTY
+            , Z.OUT_QTY
+            , CASE WHEN Z.INSIDE_STOCK_NUM IS NOT NULL THEN CONCAT(Z.INSIDE_STOCK_NUM,' (요',IFNULL(Z.REQUEST_QTY,0),', 충', IFNULL(Z.OUT_QTY,0),')')
+                   ELSE SPACE(0)
+              END STOCK_TXT
         FROM jmes.TBL_CONTROL A
             INNER JOIN jmes.TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
             INNER JOIN jmes.TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = A.CONTROL_SEQ
@@ -307,6 +313,11 @@
                         			, CASE WHEN WORK_TYPE = 'WTP050' THEN LEAD(M.CONTROL_DETAIL_SEQ) OVER(PARTITION BY M.WORK_TYPE ORDER BY M.PART_NUM) END AS NEXT_PART_CONTROL_DETAIL_SEQ
                                 FROM jmes.TBL_CONTROL_PART M
                                 WHERE M.CONTROL_SEQ = #{CONTROL_SEQ} ) D ON D.CONTROL_SEQ = B.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN (
+                SELECT X.INSIDE_STOCK_NUM, Y.CONTROL_SEQ, Y.CONTROL_DETAIL_SEQ, Y.REQUEST_QTY, Y.OUT_QTY
+                FROM TBL_INSIDE_STOCK X
+                    INNER JOIN TBL_INSIDE_OUT Y ON X.INSIDE_STOCK_SEQ = Y.INSIDE_STOCK_SEQ
+            ) Z ON Z.CONTROL_SEQ = B.CONTROL_SEQ AND Z.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
         WHERE A.DEL_YN = 'N'
             AND B.CONTROL_SEQ = #{CONTROL_SEQ}
             AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
@@ -460,7 +471,11 @@
             , T.SURFACE_TREAT_NM
             , T.SIZE_TXT
             , T.ORDER_QTY
-            , T.OUT_QTY
+--             , T.OUT_QTY
+            , CASE WHEN T.INSIDE_STOCK_YN = 'Y' THEN SPACE(0)
+                   ELSE T.OUT_QTY
+              END OUT_QTY
+            , T.INSIDE_STOCK_YN
             , jmes.SF_GET_DATE_F(T.OUT_FINISH_DT,'YY','') AS OUT_FINISH_DT
             , T.RETURN_QTY
             , jmes.SF_GET_DATE_F(T.RETURN_LAST_DT,'YY','') AS RETURN_LAST_DT
@@ -561,7 +576,8 @@
                 , X.CONTROL_CONFIRM_DT
                 , X.CONTROL_CLOSE_DT
                 , X.SCRAP_YN
-            FROM (
+                , X.INSIDE_STOCK_YN
+        FROM (
                 SELECT
                     A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
                     , A.CONTROL_STATUS
@@ -624,7 +640,8 @@
                                                 AND AA.CONTROL_SEQ = BB.CONTROL_SEQ
                                                 AND BB.ORDER_STATUS = 'ORD003')) AS CONTROL_CLOSE_DT <!-- 확정 일자 -->
                     , C.SCRAP_YN
-                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
+                    , C.INSIDE_STOCK_YN
+        FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
                 WHERE B.CONTROL_SEQ = A.CONTROL_SEQ
                     AND C.CONTROL_SEQ = A.CONTROL_SEQ
                     AND A.DEL_YN = 'N'
@@ -725,8 +742,8 @@
         SET
             A.OUT_FINISH_DT = CASE WHEN A.OUT_FINISH_DT IS NULL THEN NOW() ELSE A.OUT_FINISH_DT END
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-        AND EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ)
-          AND NOT EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.OUT_FINISH_DT IS NULL)
+            AND EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ)
+            AND NOT EXISTS( SELECT 1 FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.OUT_FINISH_DT IS NULL)
     </update>
     <update id="updateOutgoingOutType1After3" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_CONTROL_PART A
@@ -1362,6 +1379,7 @@
         SELECT X.KEY_SEQ
             , X.CONTROL_SEQ
             , X.CONTROL_DETAIL_SEQ
+            , X.INSIDE_STOCK_YN
             , X.ORDER_SEQ
             , X.OUT_RETURN_TYPE
             , CASE X.OUT_RETURN_TYPE WHEN '1' THEN '출고' WHEN '2' THEN '반품' ELSE '폐기' END AS OUT_RETURN_TYPE_NM
@@ -1374,7 +1392,10 @@
             , jmes.SF_GET_CODE_NM('1027', X.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
             , X.SIZE_TXT
             , X.ORDER_QTY
-            , X.OUT_QTY
+--             , X.OUT_QTY
+            , CASE WHEN X.INSIDE_STOCK_YN = 'Y' THEN SPACE(0)
+                   ELSE X.OUT_QTY
+              END OUT_QTY
             , CASE WHEN X.OUT_RETURN_TYPE = '1' AND X.PACKING_NUM IS NOT NULL THEN X.PACKING_CNT END AS PACKING_CNT
             , CASE WHEN X.OUT_RETURN_TYPE = '1' AND X.PACKING_NUM IS NOT NULL THEN CONCAT(X.PACKING_NUM,'/',X.PACKING_CNT) END AS OUT_PACKING_INFO
             , X.RETURN_QTY
@@ -1401,6 +1422,7 @@
                     , NULL AS RETURN_QTY
                     , A.INSERT_DT
                     , '' AS RETURN_SETTLEMENT_DT
+                    , D.INSIDE_STOCK_YN
                 FROM jmes.TBL_OUT A
                     , jmes.TBL_CONTROL B
                     , jmes.TBL_CONTROL_PART C
@@ -1446,6 +1468,7 @@
                     , A.ERROR_QTY AS RETURN_QTY
                     , A.INSERT_DT
                     , A.RETURN_SETTLEMENT_DT
+                    , D.INSIDE_STOCK_YN
                 FROM jmes.TBL_INSPECT A
                     , jmes.TBL_CONTROL B
                     , jmes.TBL_CONTROL_PART C
@@ -1491,6 +1514,7 @@
                     , NULL AS RETURN_QTY
                     , C.OUT_FINISH_DT
                     , NULL AS RETURN_SETTLEMENT_DT
+                    , C.INSIDE_STOCK_YN
 				FROM TBL_CONTROL A
 					, TBL_CONTROL_PART B
 					, TBL_CONTROL_PART_ORDER C

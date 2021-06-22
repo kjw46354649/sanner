@@ -374,6 +374,14 @@
             {title: '규격_세로', dataIndx: 'SIZE_H', minWidth: 90, width: 90, editable: false, hidden: true },
             {title: '규격_두께', dataIndx: 'SIZE_T', minWidth: 90, width: 90, editable: false, hidden: true },
             {title: '발주량', dataIndx: 'ORDER_QTY', minWidth: 50, width: 50, editable: false},
+            {
+                title: '재고충당', align: 'center',
+                colModel: [
+                    {title: '재고번호', dataType: 'String', dataIndx: 'INSIDE_STOCK_NUM', width: 100, minWidth: 100},
+                    {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'STOCK_REQUEST_QTY', width: 40, minWidth: 40},
+                    {title: '불출', dataType: 'integer', format: '#,###', dataIndx: 'STOCK_OUT_QTY', width: 40, minWidth: 40}
+                ]
+            },
             {title: '소재<br>주문상태', dataIndx: 'M_STATUS_NM', width: 70, editable: false},
             {title: '소재 주문번호', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, editable: false,
                 render: function (ui) {
@@ -624,7 +632,8 @@
             {
                 title: '주문대상 관리정보', align: 'center', colModel: [
                     {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 110, editable: false},
-                    {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false}
+                    {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
+                    {title: '충당요청', dataType: 'string', dataIndx: 'STOCK_REQUEST_QTY', minWidth: 40, width: 40, editable: false}
                 ]
             },
             {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
@@ -858,7 +867,8 @@
             {
                 title: '주문대상 관리정보', align: 'center', colModel: [
                     {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 110, editable: false},
-                    {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false}
+                    {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
+                    {title: '충당요청', dataType: 'string', dataIndx: 'STOCK_REQUEST_QTY', minWidth: 40, width: 40, editable: false}
                 ]
             },
             {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
@@ -1066,7 +1076,8 @@
             {
                 title: '주문대상 관리정보', align: 'center', colModel: [
                     {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 110, editable: false},
-                    {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false}
+                    {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
+                    {title: '충당요청', dataType: 'string', dataIndx: 'STOCK_REQUEST_QTY', minWidth: 40, width: 40, editable: false}
                 ]
             },
             {title: '소재형태', dataType: 'string', dataIndx: 'MATERIAL_KIND' , editable: false,

@@ -1114,10 +1114,10 @@
                     if(popType == 'GRID_OUT'|| popType == 'BARCODE_OUT') {
                         $("#POP_GUBUN").html("출고");
                         $("#stock_manage_pop").find(".stockPopupInfo").addClass('stockPopupInfoOut');
-                        $("#stock_manage_pop_form").find("#ORDER_QTY").val(rowData.ORDER_QTY);
+                        // $("#stock_manage_pop_form").find("#ORDER_QTY").val(rowData.ORDER_QTY);
                     }else {
                         $("#POP_GUBUN").html("입고");
-                        $("#stock_manage_pop_form").find("#ORDER_QTY").val(0);
+                        // $("#stock_manage_pop_form").find("#ORDER_QTY").val(0);
                         $("#stock_manage_pop").find(".stockPopupInfo").addClass('stockPopupInfoEnter');
                     }
                     $(".stockPopupBtmRight .edit_td").addClass('tdBackColor');
@@ -1144,15 +1144,18 @@
                         $(".stockPopupBtmRight .edit_sel").attr("disabled", false);
                         $("#POP_GUBUN").html(rowData.TYPE);
                     }
-                    $("#stock_manage_pop_form").find("#ORDER_QTY").val(rowData.ORDER_QTY);
-                    $("#stock_manage_pop_form").find("#ORG_ORDER_QTY").val(rowData.ORDER_QTY);
+                    // $("#stock_manage_pop_form").find("#ORDER_QTY").val(rowData.ORDER_QTY);
+                    // $("#stock_manage_pop_form").find("#ORG_ORDER_QTY").val(rowData.ORDER_QTY);
                     $("#stock_manage_pop_form").find("#INSIDE_STOCK_SEQ").val('');
                     $("#stock_manage_pop_form").find("#INSIDE_STOCK_NUM").val('');
                 }
                 if($("#stock_manage_pop_form").find("#CONTROL_SEQ").val() != '') {
                     $("#POP_CONTROL_NUM").val(rowData.CONTROL_NUM);
+                    $("#stock_manage_pop_form").find("#ORDER_QTY").val(rowData.ORDER_QTY);
+                    $("#stock_manage_pop_form").find("#ORG_ORDER_QTY").val(rowData.ORDER_QTY);
                 }else {
                     $("#POP_CONTROL_NUM").val(rowData.INSIDE_STOCK_NUM);
+                    $("#stock_manage_pop_form").find("#ORDER_QTY").val(0);
                 }
                 $("#stock_manage_pop_form").find("#IMG_GFILE_SEQ").val(rowData.IMG_GFILE_SEQ);
                 $("#stock_manage_pop_form").find("#ITEM_NM").val(rowData.ITEM_NM);
@@ -1854,7 +1857,6 @@
 
                             }, parameters, '');
                         }else {
-                            $("#stock_manage_pop_form").find("#USE_BARCODE").val("Y");
                             let parameters = {
                                 'url': '/json-list',
                                 'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcode"}
@@ -1869,6 +1871,7 @@
                                     'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcodeNew"}
                                 };
                                 fnPostAjax(function (data2, callFunctionParam) {
+                                    $("#stock_manage_pop_form").find("#USE_BARCODE").val("Y");
 
                                     let dataInfo2 = data2.info;
                                     if(dataInfo2 == null ) {
@@ -1935,13 +1938,13 @@
                     $("#stock_pop_in").modal('show');
                 }
             }else {
-                if(typeof controlSeq != 'undefined' && controlSeq != '' && controlSeq != null) {
-                    $("#stock_pop_location").modal('show');
-                    setTimeout(function (){
-                        $("#POP_LOC_BARCODE_NUM").focus();
-                    },50);
-                }else if(typeof insideSeq != 'undefined' && insideSeq != '' && insideSeq != null) {
+                if (typeof insideSeq != 'undefined' && insideSeq != '' && insideSeq != null) {
                     $("#stock_pop_in").modal('show');
+                } else if (typeof controlSeq != 'undefined' && controlSeq != '' && controlSeq != null) {
+                    $("#stock_pop_location").modal('show');
+                    setTimeout(function () {
+                        $("#POP_LOC_BARCODE_NUM").focus();
+                    }, 50);
                 }
             }
         })

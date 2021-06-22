@@ -1039,7 +1039,8 @@
             UNIT_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
             UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
             UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
+            UPDATE_ID = #{LOGIN_USER_ID},
+            INSIDE_STOCK_YN = #{INSIDE_STOCK_YN}
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
               AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
               AND ORDER_SEQ = #{ORDER_SEQ}
