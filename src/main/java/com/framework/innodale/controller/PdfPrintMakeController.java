@@ -146,11 +146,11 @@ public class PdfPrintMakeController {
             PdfPTable masterTable = new PdfPTable(columnWidths);
             masterTable.setWidthPercentage(100);
 
-            PdfPTable table = new PdfPTable(9);
+            PdfPTable table = new PdfPTable(10);
             table.init();
             table.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.setWidthPercentage(100);
-            table.setWidths(new int[]{3, 17, 12, 7, 7, 7, 4, 5, 6});
+            table.setWidths(new int[]{3, 17, 12, 7, 7, 7, 4, 5, 3, 3});
 
             int imgWidth = 1100;
             int imgHeight = 170;
@@ -195,7 +195,11 @@ public class PdfPrintMakeController {
                 );
                 phrase.add(new VerticalPositionMark());
             }
-            phrase.add(new Chunk((String) controlInfo.get("CONTROL_ORDER_QTY"),mediumBoldFont));
+            String qtyTxt = (String) controlInfo.get("CONTROL_ORDER_QTY");
+            if(controlInfo.get("INSIDE_STOCK_YN").equals("Y")) {
+                qtyTxt += ("+" + String.valueOf(controlInfo.get("STOCK_REQUEST_QTY")));
+            }
+            phrase.add(new Chunk(qtyTxt,mediumBoldFont));
 
             if (controlInfo.get("WORK_TYPE_NM").equals("조립")) {
                 PdfPCell cell = createCellPhrase(phrase,1,2,Element.ALIGN_BOTTOM,Element.ALIGN_RIGHT);
@@ -238,8 +242,9 @@ public class PdfPrintMakeController {
 
             } else {
                 PdfPCell cell = createCellPhrase(phrase,1,2,Element.ALIGN_MIDDLE,Element.ALIGN_RIGHT);
-                cell.setPaddingBottom(8);
-                cell.setUseAscender(true);
+                cell.setPaddingBottom(0);
+                cell.setPaddingLeft(2);
+//                cell.setUseAscender(true);
                 cell.setBorder(PdfPCell.TOP | PdfPCell.BOTTOM);
 
                 table.addCell(cell);
@@ -258,7 +263,18 @@ public class PdfPrintMakeController {
 
                 table.addCell(cell);
             }
-            table.addCell(createCell("가공납기", 1, 1, smallNormalFont));
+            if(controlInfo.get("INSIDE_STOCK_YN").equals("Y")) {
+                Phrase phr = new Phrase();
+                String qty = String.valueOf(controlInfo.get("STOCK_REQUEST_QTY"));
+                PdfPCell tCell = createCell(("충당\n재고" ), 1, 1, smallNormalFont);
+                tCell.setBorder(PdfPCell.LEFT | PdfPCell.TOP | PdfPCell.BOTTOM);
+                PdfPCell tCell2 = createCell(qty, 1, 1, mediumNormalFont);
+                tCell2.setBorder(PdfPCell.TOP | PdfPCell.BOTTOM);
+                table.addCell(tCell);
+                table.addCell(tCell2);
+            }else {
+                table.addCell(createCell("가공납기", 2, 1, smallNormalFont));
+            }
 
             table.addCell(createCell("작업\n번호", 1, 1, smallNormalFont));
             String controlNumPart = (String) controlInfo.get("CONTROL_NUM_PART");
@@ -276,7 +292,7 @@ public class PdfPrintMakeController {
                 String orderQty = String.valueOf(controlInfo.get("ORDER_QTY"));
                 table.addCell(createCellPartUnit(partUnit + " × " + orderQty, 2, 1, smallNormalFont));
             }
-            table.addCell(createCell((String) controlInfo.get("INNER_DUE_DT"), 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) controlInfo.get("INNER_DUE_DT"), 2, 1, mediumBoldFont));
             PdfPCell cell1 = new PdfPCell();
             cell1.addElement(table);
             cell1.setVerticalAlignment(Element.ALIGN_TOP);
