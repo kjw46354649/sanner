@@ -323,6 +323,9 @@ public class PdfPrintMakeController {
                             tempTable.setWidths(new int[]{80});
 
                             String text = String.valueOf(controlOrderInfo.get("REGIST_NUM"));
+                            if(controlOrderInfo.get("INSIDE_STOCK_YN").equals("Y")) {
+                                text = "[재고]";
+                            }
                             PdfPCell inCell = createOrderHighCell(new Phrase(text, mediumTempBoldFont),1,1);
                             tempTable.addCell(inCell);
 
@@ -344,6 +347,9 @@ public class PdfPrintMakeController {
 
 //                            String text = "B4B4B4B4B4B4B4B4B4B4B4B4";
                             String text = String.valueOf(controlOrderInfo.get("REGIST_NUM"));
+                            if(controlOrderInfo.get("INSIDE_STOCK_YN").equals("Y")) {
+                                text = "[재고]";
+                            }
                             PdfPCell inCell = createOrderHighCell(new Phrase(text, mediumTempBoldFont),1,1);
                             tempTable.addCell(inCell);
 
