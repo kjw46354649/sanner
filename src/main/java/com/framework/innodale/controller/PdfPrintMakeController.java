@@ -646,7 +646,7 @@ public class PdfPrintMakeController {
             table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 1, 1, mediumNormalFont));
 //            table.addCell(createCell(controlInfo.get("REGIST_NUM") != null && controlInfo.get("TOTAL_SHEET") != null ? controlInfo.get("REGIST_NUM") + " / " + controlInfo.get("TOTAL_SHEET"): controlInfo.get("REGIST_NUM") != null ? (String) controlInfo.get("REGIST_NUM") : "" + controlInfo.get("TOTAL_SHEET") != null ? String.valueOf(controlInfo.get("TOTAL_SHEET")) : "", 4, 1, smallNormalFont));
             Font tempNormalFont = new Font(bf, 8.5f, Font.NORMAL);
-            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? controlInfo.get("ORDER_DUE_DT") + "-" + controlInfo.get("ORDER_DUE_DT"): "", 3, 1, tempNormalFont));
+            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? controlInfo.get("INNER_DUE_DT") + "-" + controlInfo.get("ORDER_DUE_DT"): "", 3, 1, tempNormalFont));
             table.addCell(createCell(controlInfo.get("CONTROL_NUM") != null ? controlInfo.get("CONTROL_NUM") + "" : "", 1, 1, tempNormalFont));
             document.add(table);
             table.flushContent();
