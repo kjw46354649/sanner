@@ -323,18 +323,17 @@
                 selectedGrid = $(this.element.context);
             },
             cellKeyDown: function (event, ui) {
-                const rowIndx = ui.rowIndx;
+                let rowIndx = ui.rowIndx;
                 const sr = this.SelectRow();
-                const selRowData = this.getRowData({rowIndx: rowIndx});
-
-                if (event.keyCode == $.ui.keyCode.DOWN) {
-                    sr.removeAll();
-                    sr.add({rowIndx: rowIndx + 1});
-                } else if (event.keyCode == $.ui.keyCode.UP) {
-                    sr.removeAll();
-                    sr.add({rowIndx: rowIndx - 1});
+                const totalRecords = this.option('dataModel.data').length;
+                if (event.keyCode == $.ui.keyCode.DOWN && rowIndx < totalRecords) {
+                    rowIndx++;
+                } else if (event.keyCode == $.ui.keyCode.UP && rowIndx > 0) {
+                    rowIndx--;
                 }
-
+                sr.removeAll();
+                sr.add({rowIndx: rowIndx});
+                const selRowData = this.getRowData({rowIndx: rowIndx});
                 callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
@@ -467,18 +466,17 @@
                 selectedGrid = $(this.element.context);
             },
             cellKeyDown: function (event, ui) {
-                const rowIndx = ui.rowIndx;
+                let rowIndx = ui.rowIndx;
                 const sr = this.SelectRow();
-                const selRowData = this.getRowData({rowIndx: rowIndx});
-
-                if (event.keyCode == $.ui.keyCode.DOWN) {
-                    sr.removeAll();
-                    sr.add({rowIndx: rowIndx + 1});
-                } else if (event.keyCode == $.ui.keyCode.UP) {
-                    sr.removeAll();
-                    sr.add({rowIndx: rowIndx - 1});
+                const totalRecords = this.option('dataModel.data').length;
+                if (event.keyCode == $.ui.keyCode.DOWN && rowIndx < totalRecords) {
+                    rowIndx++;
+                } else if (event.keyCode == $.ui.keyCode.UP && rowIndx > 0) {
+                    rowIndx--;
                 }
-
+                sr.removeAll();
+                sr.add({rowIndx: rowIndx});
+                const selRowData = this.getRowData({rowIndx: rowIndx});
                 callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
@@ -596,18 +594,17 @@
                 selectedGrid = $(this.element.context);
             },
             cellKeyDown: function (event, ui) {
-                const rowIndx = ui.rowIndx;
+                let rowIndx = ui.rowIndx;
                 const sr = this.SelectRow();
-                const selRowData = this.getRowData({rowIndx: rowIndx});
-
-                if (event.keyCode == $.ui.keyCode.DOWN) {
-                    sr.removeAll();
-                    sr.add({rowIndx: rowIndx + 1});
-                } else if (event.keyCode == $.ui.keyCode.UP) {
-                    sr.removeAll();
-                    sr.add({rowIndx: rowIndx - 1});
+                const totalRecords = this.option('dataModel.data').length;
+                if (event.keyCode == $.ui.keyCode.DOWN && rowIndx < totalRecords) {
+                    rowIndx++;
+                } else if (event.keyCode == $.ui.keyCode.UP && rowIndx > 0) {
+                    rowIndx--;
                 }
-
+                sr.removeAll();
+                sr.add({rowIndx: rowIndx});
+                const selRowData = this.getRowData({rowIndx: rowIndx});
                 callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
@@ -723,18 +720,17 @@
                 selectedGrid = $(this.element.context);
             },
             cellKeyDown: function (event, ui) {
-                const rowIndx = ui.rowIndx;
+                let rowIndx = ui.rowIndx;
                 const sr = this.SelectRow();
-                const selRowData = this.getRowData({rowIndx: rowIndx});
-
-                if (event.keyCode == $.ui.keyCode.DOWN) {
-                    sr.removeAll();
-                    sr.add({rowIndx: rowIndx + 1});
-                } else if (event.keyCode == $.ui.keyCode.UP) {
-                    sr.removeAll();
-                    sr.add({rowIndx: rowIndx - 1});
+                const totalRecords = this.option('dataModel.data').length;
+                if (event.keyCode == $.ui.keyCode.DOWN && rowIndx < totalRecords) {
+                    rowIndx++;
+                } else if (event.keyCode == $.ui.keyCode.UP && rowIndx > 0) {
+                    rowIndx--;
                 }
-
+                sr.removeAll();
+                sr.add({rowIndx: rowIndx});
+                const selRowData = this.getRowData({rowIndx: rowIndx});
                 callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };

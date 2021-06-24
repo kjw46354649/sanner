@@ -258,7 +258,11 @@ public class PdfPrintMakeController {
 
                 table.addCell(cell);
             }
-            table.addCell(createCell("가공납기", 1, 1, smallNormalFont));
+            if(controlInfo.get("EMERGENCY_BARCODE_NM").equals("긴급")) {
+                table.addCell(createCell((String)controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, smallBoldFont));
+            }else{
+                table.addCell(createCell("가공납기", 1, 1, smallNormalFont));
+            }
 
             table.addCell(createCell("작업\n번호", 1, 1, smallNormalFont));
             String controlNumPart = (String) controlInfo.get("CONTROL_NUM_PART");

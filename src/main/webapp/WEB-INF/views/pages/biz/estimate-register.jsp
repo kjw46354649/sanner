@@ -974,7 +974,6 @@
                         const ITEM_QTY = parseFloat(data.ITEM_QTY) || 0;
                         let calculateEstimateAmt = data.UNIT_FINAL_EST_AMT || data.UNIT_SUM_AUTO_AMT || 0;
                         calculateEstimateAmt *= ITEM_QTY;
-
                         if (calculateEstimateAmt > 0) {
                             estimateRegisterTopGrid.pqGrid("updateRow", { 'rowIndx': rowIndx , row: { 'DTL_AMOUNT': calculateEstimateAmt }, checkEditable: false });
                         }
