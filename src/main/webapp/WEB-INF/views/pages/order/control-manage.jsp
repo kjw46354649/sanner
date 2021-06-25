@@ -3096,6 +3096,11 @@
             let controlSeqList = [];
             let controlSeqStr = '';
 
+            if (selectedOrderManagementRowIndex.length <= 0) {
+                fnAlert(null, '하나 이상의 작업을 선택해주세요');
+                return false;
+            }
+
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
 

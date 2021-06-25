@@ -146,11 +146,11 @@ public class PdfPrintMakeController {
             PdfPTable masterTable = new PdfPTable(columnWidths);
             masterTable.setWidthPercentage(100);
 
-            PdfPTable table = new PdfPTable(9);
+            PdfPTable table = new PdfPTable(10);
             table.init();
             table.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.setWidthPercentage(100);
-            table.setWidths(new int[]{3, 17, 12, 7, 7, 7, 4, 5, 6});
+            table.setWidths(new int[]{3, 17, 12, 7, 7, 7, 4, 5, 3, 3});
 
             int imgWidth = 1100;
             int imgHeight = 170;
@@ -195,7 +195,11 @@ public class PdfPrintMakeController {
                 );
                 phrase.add(new VerticalPositionMark());
             }
-            phrase.add(new Chunk((String) controlInfo.get("CONTROL_ORDER_QTY"),mediumBoldFont));
+            String qtyTxt = (String) controlInfo.get("CONTROL_ORDER_QTY");
+            if(controlInfo.get("INSIDE_STOCK_YN").equals("Y")) {
+                qtyTxt += ("+" + String.valueOf(controlInfo.get("STOCK_REQUEST_QTY")));
+            }
+            phrase.add(new Chunk(qtyTxt,mediumBoldFont));
 
             if (controlInfo.get("WORK_TYPE_NM").equals("조립")) {
                 PdfPCell cell = createCellPhrase(phrase,1,2,Element.ALIGN_BOTTOM,Element.ALIGN_RIGHT);
@@ -238,8 +242,9 @@ public class PdfPrintMakeController {
 
             } else {
                 PdfPCell cell = createCellPhrase(phrase,1,2,Element.ALIGN_MIDDLE,Element.ALIGN_RIGHT);
-                cell.setPaddingBottom(8);
-                cell.setUseAscender(true);
+                cell.setPaddingBottom(0);
+                cell.setPaddingLeft(2);
+//                cell.setUseAscender(true);
                 cell.setBorder(PdfPCell.TOP | PdfPCell.BOTTOM);
 
                 table.addCell(cell);
@@ -258,10 +263,19 @@ public class PdfPrintMakeController {
 
                 table.addCell(cell);
             }
-            if(controlInfo.get("EMERGENCY_BARCODE_NM").equals("긴급")) {
-                table.addCell(createCell((String)controlInfo.get("EMERGENCY_BARCODE_NM"), 1, 1, smallBoldFont));
+            if(controlInfo.get("INSIDE_STOCK_YN").equals("Y")) {
+                Phrase phr = new Phrase();
+                String qty = String.valueOf(controlInfo.get("STOCK_REQUEST_QTY"));
+                PdfPCell tCell = createCell(("충당\n재고" ), 1, 1, smallNormalFont);
+                tCell.setBorder(PdfPCell.LEFT | PdfPCell.TOP | PdfPCell.BOTTOM);
+                PdfPCell tCell2 = createCell(qty, 1, 1, mediumNormalFont);
+                tCell2.setBorder(PdfPCell.TOP | PdfPCell.BOTTOM);
+                table.addCell(tCell);
+                table.addCell(tCell2);
+            }else if(controlInfo.get("EMERGENCY_BARCODE_NM").equals("긴급")) {
+                table.addCell(createCell((String)controlInfo.get("EMERGENCY_BARCODE_NM"), 2, 1, smallBoldFont));
             }else{
-                table.addCell(createCell("가공납기", 1, 1, smallNormalFont));
+                table.addCell(createCell("가공납기", 2, 1, smallNormalFont));
             }
 
             table.addCell(createCell("작업\n번호", 1, 1, smallNormalFont));
@@ -280,7 +294,7 @@ public class PdfPrintMakeController {
                 String orderQty = String.valueOf(controlInfo.get("ORDER_QTY"));
                 table.addCell(createCellPartUnit(partUnit + " × " + orderQty, 2, 1, smallNormalFont));
             }
-            table.addCell(createCell((String) controlInfo.get("INNER_DUE_DT"), 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) controlInfo.get("INNER_DUE_DT"), 2, 1, mediumBoldFont));
             PdfPCell cell1 = new PdfPCell();
             cell1.addElement(table);
             cell1.setVerticalAlignment(Element.ALIGN_TOP);
@@ -327,6 +341,9 @@ public class PdfPrintMakeController {
                             tempTable.setWidths(new int[]{80});
 
                             String text = String.valueOf(controlOrderInfo.get("REGIST_NUM"));
+                            if(controlOrderInfo.get("INSIDE_STOCK_YN").equals("Y")) {
+                                text = "[재고]";
+                            }
                             PdfPCell inCell = createOrderHighCell(new Phrase(text, mediumTempBoldFont),1,1);
                             tempTable.addCell(inCell);
 
@@ -348,6 +365,9 @@ public class PdfPrintMakeController {
 
 //                            String text = "B4B4B4B4B4B4B4B4B4B4B4B4";
                             String text = String.valueOf(controlOrderInfo.get("REGIST_NUM"));
+                            if(controlOrderInfo.get("INSIDE_STOCK_YN").equals("Y")) {
+                                text = "[재고]";
+                            }
                             PdfPCell inCell = createOrderHighCell(new Phrase(text, mediumTempBoldFont),1,1);
                             tempTable.addCell(inCell);
 
@@ -636,6 +656,101 @@ public class PdfPrintMakeController {
             if (controlInfo.get("IMAGE_PATH") != null && !controlInfo.get("IMAGE_PATH").equals("")) {
                 try {
                     Image pngImage = Image.getInstance((String) controlInfo.get("IMAGE_PATH") + ".print.png");
+                    pngImage.setAbsolutePosition(15, 10);
+                    pngImage.scaleAbsolute(PageSize.A4.getWidth() - 30, PageSize.A4.getHeight() - 90);
+                    document.add(pngImage);
+                } catch (Exception e){
+                    log.error(e.getMessage(), e.getCause());
+                    e.printStackTrace();
+                }
+            }
+            iCount++;
+        }
+        document.close();
+    }
+
+    @RequestMapping(value = "/makeStockDrawingPrint", method = RequestMethod.POST)
+    public void makeStockDrawingPrint(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        response.setContentType("application/pdf");
+        OutputStream out = response.getOutputStream();
+
+        String jsonObject = (String) hashMap.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        // 문서 만들기
+        Document document = new Document(PageSize.A4);
+        document.setMargins(15, 15, 15, 15);
+        // 한글 처리를 위한 글꼴 설정 추가
+        String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
+        BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+
+        Font smallNormalFont = new Font(bf, saleSmall, Font.NORMAL);
+        Font smallBoldFont = new Font(bf, small, Font.BOLD);
+        Font mediumNormalFont = new Font(bf, 9.5f, Font.NORMAL);
+        Font mediumBoldFont = new Font(bf, 9.5f, Font.BOLD);
+        Font largeBoldFont = new Font(bf, 15.0f, Font.BOLD);
+
+        PdfWriter.getInstance(document, out);
+
+        String[] selectStockList = ((String) jsonMap.get("selectStockList")).split("\\|");
+        hashMap.put("selectStockList", selectStockList);
+        hashMap.put("queryId", "material.selectStockCadBarcodeList");
+        List<Map<String, Object>> stockInfoList = innodaleService.getList(hashMap);
+
+        int iCount = 0;
+
+        document.open();
+
+        for (Map<String, Object> stockInfo : stockInfoList) {
+            if (iCount > 0) document.newPage();
+
+            PdfPTable table = new PdfPTable(8);
+            table.init();
+            table.setWidthPercentage(100);
+            table.setWidths(new float[]{4.0f, 2.5f, 5.5f, 1.5f, 3.5f, 2.5f, 3.5f, 5.0f});
+            // 바코드 생성
+            BitMatrix bitMatrix = CreateBarcodeStream.generateCode128BarcodeImage((String) stockInfo.get("BARCODE_NUM"), 2320, 800);
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+            // Converting BitMatrix to Buffered Image
+            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    image.setRGB(x, y, bitMatrix.get(x, y) ? BLACK : WHITE);
+                }
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", baos);
+            baos.flush();
+            byte[] imageInByte = baos.toByteArray();
+            baos.close();
+            Image barcodeImage = Image.getInstance(imageInByte);
+            // 1st line
+            table.addCell(createCell("재고도면", 1, 2, largeBoldFont));
+            table.addCell(createCell("재고번호", 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) stockInfo.get("INSIDE_STOCK_NUM"), 1, 1, mediumBoldFont));
+            table.addCell(createCell("소재", 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) stockInfo.get("MATERIAL_DETAIL_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell("등록일시", 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) stockInfo.get("INSERT_DT"), 1, 1, mediumNormalFont));
+            table.addCell(createImageCell(barcodeImage, 1, 2, 20.0f, mediumNormalFont));
+            // 2nd line
+            table.addCell(createCell("품명", 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) stockInfo.get("ITEM_NM"), 1, 1, mediumNormalFont));
+            table.addCell(createCell("규격", 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) stockInfo.get("SIZE_TXT"), 1, 1, mediumNormalFont));
+            table.addCell(createCell("발주처", 1, 1, mediumBoldFont));
+            table.addCell(createCell((String) stockInfo.get("ORDER_COMP_NM"), 1, 1, mediumNormalFont));
+
+            document.add(table);
+            table.flushContent();
+
+            if (stockInfo.get("IMAGE_PATH") != null && !stockInfo.get("IMAGE_PATH").equals("")) {
+                try {
+                    Image pngImage = Image.getInstance((String) stockInfo.get("IMAGE_PATH") + ".print.png");
                     pngImage.setAbsolutePosition(15, 10);
                     pngImage.scaleAbsolute(PageSize.A4.getWidth() - 30, PageSize.A4.getHeight() - 90);
                     document.add(pngImage);

@@ -258,7 +258,7 @@
         ORDER BY E.ROWNUM, E.CONTROL_NUM, E.ORDER_NUM
     </select>
 
-    <select id="selectControlEstimateDetailListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    <select id="selectControlEstimateDetailListExcel_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_NUM, B.PART_NUM) AS ROW_NUM,
             A.CONTROL_NUM, <!-- 작업지시번호 -->
@@ -304,6 +304,65 @@
                                 ORDER BY M.CONTROL_SEQ DESC
                                 LIMIT 1)
                     END, SPACE(0)) AS PREV_UNIT_FINAL_AMT,    <!-- 종전가 -->
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+        WHERE 1 = 1
+            AND A.DEL_YN = 'N'
+            AND A.CONTROL_SEQ IN (${CONTROL_SEQ})
+        ORDER BY A.CONTROL_NUM, B.PART_NUM
+    </select>
+
+    <select id="selectControlEstimateDetailListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER (ORDER BY A.CONTROL_NUM, B.PART_NUM) AS ROW_NUM,
+            A.CONTROL_NUM, <!-- 작업지시번호 -->
+            CONCAT('(', B.DRAWING_NUM, ')') AS DRAWING_NUM, <!-- 도면번호 -->
+            IFNULL(B.PART_NUM, SPACE(0)) AS PART_NUM, <!-- Part -->
+            B.SIZE_TXT, <!-- 규격 -->
+            IFNULL(SF_GET_CODE_NM('1029', B.MATERIAL_KIND, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_KIND_NM, <!-- 소재 형태 -->
+            '', <!-- 소재 형태 -->
+            SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
+            IFNULL(SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 이름 -->
+            IFNULL(SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM, <!-- 소재 종류  -->
+            '', <!-- 소재 종류 -->
+            IFNULL(SF_GET_CODE_NM('1039', B.SURFACE_TREAT, #{LOGIN_LOCALE}), SPACE(0)) AS SURFACE_TREAT_NM, <!-- 표면처리 -->
+            '', <!-- 표면 처리 -->
+            IFNULL(SF_GET_CODE_NM('1058', B.MATERIAL_FINISH_GRIND, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_FINISH_GRIND_NM, <!-- 연마 -->
+            '', <!-- 연마 -->
+            B.UNIT_MATERIAL_FINISH_HEAT_AMT, <!-- 열 처리 -->
+            B.UNIT_PROCESS_AMT, <!-- 가공비 -->
+            B.UNIT_ETC_AMT, <!-- 기타 추가 -->
+            B.UNIT_AMT_NOTE, <!-- 항목별단가_견적비고 -->
+            CASE IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)
+                    WHEN 0 THEN SPACE(0)
+                ELSE IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)
+            END AS CALC_EST_UNIT_COST, <!-- 계산 견적가 -->
+            C.UNIT_FINAL_EST_AMT, <!-- 최종 견적가 -->
+            IFNULL( CASE
+                        WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (
+                            SELECT M.UNIT_FINAL_AMT
+                            FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
+                            WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                AND N.CONTROL_STATUS = 'ORD003'
+                                AND N.DEL_YN = 'N'
+                                AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
+                            ORDER BY M.CONTROL_SEQ DESC
+                            LIMIT 1
+                        )
+                        ELSE (
+                            SELECT M.UNIT_FINAL_AMT
+                            FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
+                            WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                AND N.CONTROL_STATUS = 'ORD003'
+                                AND N.DEL_YN = 'N'
+                                AND N.CONTROL_SEQ != B.CONTROL_SEQ
+                                AND M.DRAWING_NUM = B.DRAWING_NUM
+                            ORDER BY M.CONTROL_SEQ DESC
+                            LIMIT 1
+                        )
+                    END, SPACE(0)
+            ) AS PREV_UNIT_FINAL_AMT    <!-- 종전가 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
