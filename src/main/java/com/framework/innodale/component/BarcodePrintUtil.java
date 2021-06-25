@@ -34,6 +34,8 @@ public class BarcodePrintUtil {
                 getBOut(bufWriter, barcodeInfo);
             }else if("C".equals(barcodeType)) {//도면
                 getBControl(bufWriter, barcodeInfo);
+            }else if("W".equals(barcodeType)) {//창고위치 라벨
+                getWOut(bufWriter,barcodeInfo);
             }
 //            System.out.println("barcodePrint bufWriter=" + bufWriter.toString());
             bufWriter.newLine();
@@ -236,10 +238,39 @@ public class BarcodePrintUtil {
             bufWriter.write("^FO485,375^A1N^FD"+line3+"^FS");
         }
 
-
-
         bufWriter.write("^XZ");
 
+    }
+
+    public static void getWOut(BufferedWriter bufWriter, Map<String, Object> barcodeInfo) throws IOException{
+        //라벨
+        bufWriter.write("^XA");
+        bufWriter.write("^CI28");
+        bufWriter.write("^SEE:UHANGUL.DAT^FS");
+        bufWriter.write("^CW1,E:KFONT3.FNT^CI26^FS");
+//        bufWriter.write("^FO410,20^GFA,231,231,7,,::3PFE,3PFE4,1PFE4,1PFC8,0PFC8,0PF9,J01F87E0F9,J03F8FE1F2,J03F1FC002,J07F1FC004,J07E3IFC4,J0FE3IFC8,I01FC7IF88,I01FC7IF9,0043F8JF1,0063F0JF2,003FFI0FE2,003FEI0FE4,001FE781FC4,001FC7C1F88,I0FCJF88,I0F8JF1,I071JF1,I071IFE2,I023IFE2,J03IFC4,O04,O08,OF,,^FS");
+        bufWriter.write("^FO4,4^GB711,390,2^FS");
+        bufWriter.write("^CFJ,30"); // 폰트 사이즈 조절
+        bufWriter.write("^FO30,40^A1N^FDWareHouse^FS");
+        bufWriter.write("^FO230,40^A1N^FD" + doNull((String)barcodeInfo.get("WAREHOUSE_CD_NM"))+ "^FS");
+        bufWriter.write("^FO4,90^GB710,95,1^FS");
+        bufWriter.write("^FO4,270^GB710,130,1^FS");
+//        bufWriter.write("^FO4,240^GB710,80,1^FS");
+//        bufWriter.write("^FO4,266^GB710,55,1^FS");
+
+
+        bufWriter.write("^FO210,4^GB1,230,1^FS"); // 세로라인
+//        bufWriter.write("^FO394,60^GB85,375,1^FS");
+
+        bufWriter.write("^FO30,120^A1N^FDLocNm^FS");
+        bufWriter.write("^FO230,120^A1N^FD" + doNull((String)barcodeInfo.get("LOC_NM"))+ "^FS");
+
+        bufWriter.write("^FO30,210^A1N^FDLocUse^FS");
+        bufWriter.write("^FO230,210^A1N^FD" + doNull((String)barcodeInfo.get("LOC_USE"))+ "^FS");
+
+        bufWriter.write("^FO45,280^BY4^BCN,95,N,N,N^FD" + doNull(String.valueOf(barcodeInfo.get("LOC_BARCODE")))+ "^FS");
+
+        bufWriter.write("^XZ");
 
     }
 

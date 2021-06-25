@@ -133,7 +133,8 @@
         IFNULL(C.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
         IFNULL(C.OTHER_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY,   <!-- 대칭_대칭 -->
         IFNULL(C.UNIT_FINAL_EST_AMT, SPACE(0)) AS UNIT_FINAL_EST_AMT,   <!-- 최종견적단가 -->
-        IFNULL(C.UNIT_FINAL_AMT, SPACE(0)) AS UNIT_FINAL_AMT <!-- 최종공급단가 -->
+        IFNULL(C.UNIT_FINAL_AMT, SPACE(0)) AS UNIT_FINAL_AMT, <!-- 최종공급단가 -->
+        IFNULL(C.INSIDE_STOCK_YN,'N') AS INSIDE_STOCK_YN
     </sql>
 
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -185,7 +186,10 @@
             SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', 'M') AS OUTSIDE_IN_DT_F,
             (SELECT SF_GET_DATE_F(M.CLOSE_DT, 'YYYY', '') FROM TBL_MONTH_CLOSE M, TBL_MONTH_CLOSE_ORDER N WHERE N.COMP_CD = M.COMP_CD AND M.ORDER_COMP_CD = N.ORDER_COMP_CD AND N.CLOSE_MONTH = M.CLOSE_MONTH AND N.CLOSE_VER = M.CLOSE_VER AND N.CONTROL_SEQ = C.CONTROL_SEQ AND N.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND N.ORDER_SEQ = C.ORDER_SEQ ORDER BY N.INSERT_DT DESC LIMIT 1) AS CLOSE_DT,
             SF_GET_DATE_F(CASE WHEN IFNULL(TIMESTAMPDIFF(SECOND, B.INSERT_DT, B.UPDATE_DT), -1) <![CDATA[ < ]]> 0 THEN B.INSERT_DT ELSE B.UPDATE_DT END, 'YY', 'M') AS CONTROL_PART_INSERT_UPDATE_DT, <!-- 등록/업데이트 일시 -->
-            (SELECT M.BARCODE_NUM FROM TBL_CONTROL_BARCODE M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N') AS CONTROL_BARCODE_NUM
+            (SELECT M.BARCODE_NUM FROM TBL_CONTROL_BARCODE M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N') AS CONTROL_BARCODE_NUM,
+            IFNULL(D.INSIDE_STOCK_NUM,SPACE(0)) AS INSIDE_STOCK_NUM,
+            IFNULL(D.REQUEST_QTY,SPACE(0)) AS STOCK_REQUEST_QTY,
+            IFNULL(D.OUT_QTY,SPACE(0)) AS STOCK_OUT_QTY
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             <if test="HIDDEN_WORK_TYPE != null and HIDDEN_WORK_TYPE != ''">
@@ -243,6 +247,7 @@
                 </choose>
             </if>
             LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_INSIDE_OUT D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
         WHERE A.DEL_YN = 'N'
             AND (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002', 'ORD005'))
         <choose>
@@ -768,6 +773,7 @@
             UNIT_FINAL_EST_AMT,
             UNIT_FINAL_AMT,
             ORDER_BARCODE_NUM,
+            INSIDE_STOCK_YN,
             INSERT_ID
         )
         SELECT
@@ -800,6 +806,7 @@
             REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
             REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
             CONCAT('O',LPAD(NEXTVAL(SEQ_ORDER_BARCODE),9,'0')),
+            IFNULL(#{INSIDE_STOCK_YN},'N'),
             #{LOGIN_USER_ID}
         FROM DUAL
         WHERE NOT EXISTS (  SELECT *
@@ -1032,7 +1039,8 @@
             UNIT_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
             UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
             UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
+            UPDATE_ID = #{LOGIN_USER_ID},
+            INSIDE_STOCK_YN = #{INSIDE_STOCK_YN}
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
               AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
               AND ORDER_SEQ = #{ORDER_SEQ}
@@ -2771,6 +2779,8 @@
             IFNULL(SF_GET_CODE_NM('1059', A.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
             IFNULL(B.PART_UNIT_QTY, 0) AS PART_UNIT_QTY,
             (SELECT IFNULL(SUM(M.ORDER_QTY), 0) FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ) AS ORDER_QTY,
+            (SELECT IFNULL(M.INSIDE_STOCK_YN, 'N') FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS INSIDE_STOCK_YN,
+            (SELECT IFNULL(SUM(M.REQUEST_QTY),0) FROM jmes.TBL_INSIDE_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS STOCK_REQUEST_QTY,
             CONCAT(IFNULL(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0), SPACE(0)) AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
             IFNULL(A.SAME_SIDE_YN,'N') AS SAME_SIDE_YN, <!-- 대칭 여부 -->
             IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1), 0)AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
@@ -2802,6 +2812,7 @@
             , IFNULL(SF_GET_DATE_F(C.ORDER_DUE_DT, 'MM', ''), SPACE(0)) AS ORDER_DUE_DT <!-- 납기 -->
             , C.ORIGINAL_SIDE_QTY
             , C.OTHER_SIDE_QTY
+            , IFNULL(C.INSIDE_STOCK_YN,'N') AS INSIDE_STOCK_YN
         FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C
         WHERE 1 = 1
             AND C.CONTROL_SEQ = B.CONTROL_SEQ
@@ -3438,5 +3449,108 @@
                             WHERE M.CONTROL_SEQ = #{CONTROL_SEQ}
                          )
     </insert>
-
+    <select id="selectMatchStockList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT IFNULL(Z.RNUM,SPACE(0)) AS RNUM,
+            Z.CONTROL_NUM, Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ, Z.SIZE_TXT, Z.MATERIAL_DETAIL, Z.MATERIAL_DETAIL_NM, '' AS CHECK_BOX,
+            IFNULL(Z.INSIDE_OUT_SEQ,SPACE(0)) AS INSIDE_OUT_SEQ,
+            Z.ORDER_QTY, Z.INSIDE_STOCK_NUM, Z.SORT, Z.OUT_QTY, DATE_FORMAT(Z.OUT_DT, '%Y/%m/%d') AS OUT_DT, IFNULL(Z.OUT_STATUS,'OUT001') AS OUT_STATUS, Z.CURR_QTY, Z.REQUEST_QTY, IFNULL(Z.IMG_GFILE_SEQ,SPACE(0)) AS IMG_GFILE_SEQ, Z.INSIDE_STOCK_SEQ
+        FROM (
+                 SELECT ROW_NUMBER() OVER(ORDER BY A.CONTROL_NUM) AS RNUM, A.CONTROL_NUM, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.SIZE_TXT, B.MATERIAL_DETAIL, SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM,
+                        SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS ORDER_QTY,
+                        '' AS INSIDE_STOCK_NUM, 1 AS SORT, SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS REQUEST_QTY, '' AS OUT_QTY, '' AS OUT_DT, '' AS OUT_STATUS, '' AS CURR_QTY, B.IMG_GFILE_SEQ, '' AS INSIDE_OUT_SEQ, '' AS INSIDE_STOCK_SEQ
+                 FROM TBL_CONTROL A
+                          INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                 WHERE 1=1
+                    <choose>
+                        <when test="CONTROL_SEQ != '' and CONTROL_SEQ != null">
+                            AND A.CONTROL_SEQ IN (${CONTROL_SEQ})
+                        </when>
+                        <otherwise>
+                            AND A.CONTROL_SEQ = ''
+                        </otherwise>
+                    </choose>
+                    AND A.DEL_YN = 'N'
+                 GROUP BY B.CONTROL_SEQ
+                 UNION ALL
+                 SELECT '' AS RNUM, A.CONTROL_NUM, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.SIZE_TXT, B.MATERIAL_DETAIL, SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, 'KO') AS MATERIAL_DETAIL_NM, '' AS ORDER_QTY,
+                     D.INSIDE_STOCK_NUM, 2 AS SORT, E.REQUEST_QTY, E.OUT_QTY, E.OUT_DT, E.OUT_STATUS,
+                     (SELECT IFNULL(SUM(H.IN_QTY),0) FROM jmes.TBL_INSIDE_IN H WHERE H.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(I.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT I WHERE I.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ AND I.OUT_STATUS = 'OUT002') AS CURR_QTY,
+                     D.IMG_GFILE_SEQ, E.INSIDE_OUT_SEQ, D.INSIDE_STOCK_SEQ
+                 FROM TBL_CONTROL A
+                    INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                    INNER JOIN TBL_INSIDE_STOCK D ON CASE WHEN B.MATERIAL_DETAIL IS NULL THEN D.SIZE_TXT = B.SIZE_TXT
+                                                          ELSE D.MATERIAL_DETAIL = B.MATERIAL_DETAIL AND B.SIZE_TXT = D.SIZE_TXT END
+                    INNER JOIN TBL_INSIDE_OUT E ON D.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ AND E.CONTROL_SEQ = B.CONTROL_SEQ AND E.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                 WHERE 1=1
+                    <choose>
+                        <when test="CONTROL_SEQ != '' and CONTROL_SEQ != null">
+                            AND A.CONTROL_SEQ IN (${CONTROL_SEQ})
+                        </when>
+                        <otherwise>
+                            AND A.CONTROL_SEQ = ''
+                        </otherwise>
+                    </choose>
+                    AND A.DEL_YN = 'N'
+                 GROUP BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, D.INSIDE_STOCK_NUM
+                 UNION ALL
+                 SELECT '' AS RNUM, A.CONTROL_NUM, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.SIZE_TXT, B.MATERIAL_DETAIL, SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM, '' AS ORDER_QTY,
+                        D.INSIDE_STOCK_NUM, 2 AS SORT, '' AS REQUEST_QTY, '' AS OUT_QTY, '' AS OUT_DT, '' AS OUT_STATUS,
+                        (SELECT IFNULL(SUM(H.IN_QTY),0) FROM jmes.TBL_INSIDE_IN H WHERE H.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(I.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT I WHERE I.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ AND I.OUT_STATUS = 'OUT002') AS CURR_QTY,
+                        D.IMG_GFILE_SEQ, '' AS INSIDE_OUT_SEQ, D.INSIDE_STOCK_SEQ
+                 FROM TBL_CONTROL A
+                          INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                          INNER JOIN TBL_INSIDE_STOCK D ON CASE WHEN B.MATERIAL_DETAIL IS NULL THEN D.SIZE_TXT = B.SIZE_TXT
+                                                                ELSE D.MATERIAL_DETAIL = B.MATERIAL_DETAIL AND B.SIZE_TXT = D.SIZE_TXT END
+                WHERE 1=1
+                   <choose>
+                       <when test="CONTROL_SEQ != '' and CONTROL_SEQ != null">
+                           AND A.CONTROL_SEQ IN (${CONTROL_SEQ})
+                       </when>
+                        <otherwise>
+                            AND A.CONTROL_SEQ = ''
+                        </otherwise>
+                   </choose>
+                    AND A.DEL_YN = 'N'
+                    AND NOT EXISTS (
+                        SELECT 1
+                        FROM TBL_INSIDE_OUT Y
+                        WHERE Y.CONTROL_SEQ = B.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                    )
+                 GROUP BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, D.INSIDE_STOCK_NUM
+             ) Z
+        ORDER BY Z.CONTROL_NUM, Z.SORT, Z.INSIDE_STOCK_NUM
+    </select>
+    <insert id="insertRequestStock" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_INSIDE_OUT (
+            INSIDE_OUT_SEQ,
+            INSIDE_STOCK_SEQ,
+            INSIDE_STOCK_NUM,
+            CONTROL_SEQ,
+            CONTROL_DETAIL_SEQ,
+            OUT_STATUS,
+            REQUEST_QTY,
+            REQUEST_DT,
+            REQUEST_ID,
+            INSERT_ID
+        )
+        VALUES (
+           NEXTVAL(jmes.SEQ_INSIDE_OUT),
+           #{INSIDE_STOCK_SEQ},
+           #{INSIDE_STOCK_NUM},
+           #{CONTROL_SEQ},
+           #{CONTROL_DETAIL_SEQ},
+           'OUT001',
+           #{REQUEST_QTY},
+           now(),
+           #{LOGIN_USER_ID},
+           #{LOGIN_USER_ID}
+       )
+    </insert>
+    <update id="updateRequestStock" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_INSIDE_OUT
+        SET REQUEST_QTY = #{REQUEST_QTY},
+            UPDATE_DT = now(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE INSIDE_OUT_SEQ = #{INSIDE_OUT_SEQ}
+    </update>
 </mapper>

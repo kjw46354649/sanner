@@ -62,4 +62,13 @@ public class MaterialController {
 
         return "jsonView";
     }
+
+    @RequestMapping(value = "/cancelInsideStock", method = RequestMethod.POST)
+    public String cancelInsideStock(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.materialService.cancelInsideStock(model, map);
+
+        return "jsonView";
+    }
 }

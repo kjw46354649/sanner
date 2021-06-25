@@ -627,4 +627,74 @@ public class OrderServiceImpl implements OrderService {
 
         model.addAttribute("flag", flag);
     }
+
+    @Override
+    public void matchStockSave(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        ArrayList<HashMap<String, Object>> addList = null;
+        ArrayList<HashMap<String, Object>> updateList = null;
+
+        Boolean flag = false;
+        String message = "";
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("addList"))
+            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
+
+        if (jsonMap.containsKey("updateList"))
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+        if (addList != null && addList.size() > 0) {
+            for (HashMap<String, Object> hashMap : addList) {
+                try {
+                    String insideOutSeq = (String)hashMap.get("INSIDE_OUT_SEQ");
+                    Boolean checkBox = (Boolean)hashMap.get("CHECK_BOX");
+                    String rnum = (String)hashMap.get("RNUM");
+                    hashMap.put("LOGIN_USER_ID",userId);
+                    if("".equals(rnum) && checkBox) {
+                        if("".equals(insideOutSeq)){
+                            hashMap.put("queryId", "orderMapper.insertRequestStock");
+                            this.innodaleDao.insertGrid(hashMap);
+                        }else {
+                            hashMap.put("queryId", "orderMapper.updateRequestStock");
+                            this.innodaleDao.updateGrid(hashMap);
+                        }
+                    }
+                } catch (Exception e) {
+                    flag = true;
+                    message = "에러가 발생하였습니다";
+                }
+            }
+        }
+        if (updateList != null && updateList.size() > 0) {
+            for (HashMap<String, Object> hashMap : updateList) {
+                try {
+                    String insideOutSeq = (String)hashMap.get("INSIDE_OUT_SEQ");
+                    Boolean checkBox = (Boolean)hashMap.get("CHECK_BOX");
+                    hashMap.put("LOGIN_USER_ID",userId);
+                    if(checkBox) {
+                        if("".equals(insideOutSeq)){
+                            hashMap.put("queryId", "orderMapper.insertRequestStock");
+                            this.innodaleDao.insertGrid(hashMap);
+                        }else {
+                            hashMap.put("queryId", "orderMapper.updateRequestStock");
+                            this.innodaleDao.updateGrid(hashMap);
+                        }
+                    }
+                } catch (Exception e) {
+                    flag = true;
+                    message = "에러가 발생하였습니다";
+                }
+            }
+        }
+
+        model.addAttribute("flag", flag);
+        model.addAttribute("message", message);
+    }
 }

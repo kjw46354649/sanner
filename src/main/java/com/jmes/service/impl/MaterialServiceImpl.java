@@ -63,53 +63,63 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public void managerInsideStock(Model model, Map<String, Object> map) throws Exception {
 
-       //1. 재고관리 마스터 정보 저장 I,U,D
-       String jsonObject = (String) map.get("stockGrid");
-       String userId = (String)map.get("LOGIN_USER_ID");
-       ObjectMapper objectMapper = new ObjectMapper();
-       Map<String, Object> jsonMap = null;
+        //1. 재고관리 마스터 정보 저장 I,U,D
+        String jsonObject = (String) map.get("stockGrid");
+        String userId = (String)map.get("LOGIN_USER_ID");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
 
-       if (jsonObject != null){
-           jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+        Boolean flag = false;
+        String message = "";
 
-           ArrayList<HashMap<String, Object>> addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
-           ArrayList<HashMap<String, Object>> updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
-           //ArrayList<HashMap<String, Object>> deleteList = (ArrayList<HashMap<String, Object>>) jsonMap.get("deleteList");
+        if (jsonObject != null){
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-           if (addList.size() > 0) {
-               for (HashMap<String, Object> hashMap : addList) {
+            ArrayList<HashMap<String, Object>> addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
+            ArrayList<HashMap<String, Object>> updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+            //ArrayList<HashMap<String, Object>> deleteList = (ArrayList<HashMap<String, Object>>) jsonMap.get("deleteList");
 
-                   hashMap.put("queryId", "material.selectInsideStockAbbrNmUseType");
-                   Map<String, Object> selMap1 = this.innodaleDao.getInfo(hashMap);
+            if (addList.size() > 0) {
+                for (HashMap<String, Object> hashMap : addList) {
+                    if(!flag) {
+                        hashMap.put("queryId", "material.selectInsideStockAbbrNmUseType");
+                        Map<String, Object> selMap1 = this.innodaleDao.getInfo(hashMap);
 
-                   String ABBR_NM = (String)selMap1.get("ABBR_NM");
-                   if(ABBR_NM == null || "".equals(ABBR_NM)){//디비 값 체크
-                       model.addAttribute("result",		"fail");
-                       throw new Exception("managerEquip addList Error ABBR_NM NULL");
-                   }
+                        if(selMap1 == null || selMap1.get("ABBR_NM") == null || "".equals(selMap1.get("ABBR_NM"))){//디비 값 체크
+                            model.addAttribute("result",		"fail");
+                            flag = true;
+                            message = "업체 약어명을 등록해주세요.";
+//                       throw new Exception("managerEquip addList Error ABBR_NM NULL");
+                        }else {
+                            String ABBR_NM = (String)selMap1.get("ABBR_NM");
 
-                   String ORDER_COMP_CD = (String)hashMap.get("ORDER_COMP_CD");
-                   if(ORDER_COMP_CD == null || "".equals(ORDER_COMP_CD)){//그리드 값 체크
-                       model.addAttribute("result",		"fail");
-                       throw new Exception("managerEquip addList Error ORDER_COMP_CD NULL");
-                   }
+                            String ORDER_COMP_CD = (String)hashMap.get("ORDER_COMP_CD");
+                            if(ORDER_COMP_CD == null || "".equals(ORDER_COMP_CD)){//그리드 값 체크
+                                model.addAttribute("result",		"fail");
+                                flag = true;
+                                message = "발주처를 입력해주세요.";
+//                       throw new Exception("managerEquip addList Error ORDER_COMP_CD NULL");
+                            }else {
+                                hashMap.put("queryId", "material.selectInsideStockSeq");
+                                hashMap.put("ABBR_NM", ABBR_NM);
+                                Map<String, Object> selMap2 = this.innodaleDao.getInfo(hashMap);
+                                String INSIDE_STOCK_NUM = (String)selMap2.get("INSIDE_STOCK_NUM");
 
-                   hashMap.put("queryId", "material.selectInsideStockSeq");
-                   hashMap.put("ABBR_NM", ABBR_NM);
-                   Map<String, Object> selMap2 = this.innodaleDao.getInfo(hashMap);
-                   String INSIDE_STOCK_NUM = (String)selMap2.get("INSIDE_STOCK_NUM");
+                                hashMap.put("LOGIN_USER_ID", userId);
 
-                   hashMap.put("LOGIN_USER_ID", userId);
+                                hashMap.put("INSIDE_STOCK_NUM", INSIDE_STOCK_NUM);
+                                hashMap.put("queryId", "material.insertInsideStock");
+                                this.innodaleDao.insertGrid(hashMap);
 
-                   hashMap.put("INSIDE_STOCK_NUM", INSIDE_STOCK_NUM);
-                   hashMap.put("queryId", "material.insertInsideStock");
-                   this.innodaleDao.insertGrid(hashMap);
+                                // 21.04.12 추가버튼으로 저장한 경우 재고수량 입력가능
+                                hashMap.put("IN_OUT_QTY", hashMap.get("INSIDE_STOCK_CURR_QTY"));
 
-                   // 21.04.12 추가버튼으로 저장한 경우 재고수량 입력가능
-                   hashMap.put("IN_OUT_QTY", hashMap.get("INSIDE_STOCK_CURR_QTY"));
+                                hashMap.put("queryId", "material.insertInsideStockIn");
+                                this.innodaleDao.insertGrid(hashMap);
+                            }
 
-                   hashMap.put("queryId", "material.insertInsideStockIn");
-                   this.innodaleDao.insertGrid(hashMap);
+                        }
+                    }
                }
            }
            if (updateList.size() > 0) {
@@ -131,7 +141,8 @@ public class MaterialServiceImpl implements MaterialService {
                }
            }*/
         }
-        model.addAttribute("result",		"success");
+        model.addAttribute("flag",flag);
+        model.addAttribute("message",message);
     }
 
     /**
@@ -145,6 +156,9 @@ public class MaterialServiceImpl implements MaterialService {
         //popType : 그리드입출고 GRID_IN, GRID_OUT, 바코드 BARCODE
         String POP_TYPE = (String) map.get("POP_TYPE");
         String USE_BARCODE = (String)map.get("USE_BARCODE"); // 바코드 사용여부
+        String CONTROL_SEQ = (String)map.get("CONTROL_SEQ"); // 바코드 사용여부
+        Boolean flag = false;
+        String message = "";
         if("GRID_IN".equals(POP_TYPE)){
 
             map.put("queryId", "material.updateInsideStockPop");
@@ -153,14 +167,15 @@ public class MaterialServiceImpl implements MaterialService {
             map.put("queryId", "material.insertInsideStockIn");
             this.innodaleDao.create(map);
 
-        }else if("GRID_OUT".equals(POP_TYPE)){
+        }else if("GRID_OUT".equals(POP_TYPE) || "BARCODE_OUT".equals(POP_TYPE)){
 
-            map.put("queryId", "material.insertInsideStockOut");
-            this.innodaleDao.create(map);
-
-//            if("Y".equals(USE_BARCODE)) {
-//                outGoingProcessForBarcodeIn(model,map);
-//            }
+            if(!"".equals(CONTROL_SEQ)) {
+                map.put("queryId", "material.updateInsideStockOut");
+                this.innodaleDao.update(map);
+            }else {
+                map.put("queryId", "material.insertInsideStockOut");
+                this.innodaleDao.create(map);
+            }
 
         }else if("BARCODE".equals(POP_TYPE)){
             String INSIDE_STOCK_NUM = (String) map.get("INSIDE_STOCK_NUM");
@@ -171,27 +186,33 @@ public class MaterialServiceImpl implements MaterialService {
 //                map.put("queryId", "material.selectInsideStockAbbrNm");
                 Map<String, Object> selMap1 = this.innodaleDao.getInfo(map);
 
-                String ABBR_NM = (String)selMap1.get("ABBR_NM");
-                if(ABBR_NM == null || "".equals(ABBR_NM)){//디비 값 체크
-                    model.addAttribute("result",		"fail");
-                    throw new Exception("managerEquip addList Error ABBR_NM NULL");
+                if(selMap1 == null || selMap1.get("ABBR_NM") == null || "".equals(selMap1.get("ABBR_NM"))){//디비 값 체크
+//                    model.addAttribute("result",		"fail");
+                    flag = true;
+                    message = "업체 약어명을 등록해주세요.";
+//                    throw new Exception("managerEquip addList Error ABBR_NM NULL");
+                }else {
+                    String ABBR_NM = (String)selMap1.get("ABBR_NM");
+
+                    String ORDER_COMP_CD = (String)map.get("ORDER_COMP_CD");
+                    if(ORDER_COMP_CD == null || "".equals(ORDER_COMP_CD)){//그리드 값 체크
+                        flag = true;
+                        message = "발주처를 입력해주세요.";
+//                        model.addAttribute("result",		"fail");
+//                        throw new Exception("managerEquip addList Error ORDER_COMP_CD NULL");
+                    }else {
+                        map.put("queryId", "material.selectInsideStockSeq");
+                        map.put("ABBR_NM", ABBR_NM);
+                        Map<String, Object> selMap2 = this.innodaleDao.getInfo(map);
+                        String V_INSIDE_STOCK_NUM = (String)selMap2.get("INSIDE_STOCK_NUM");
+
+                        map.put("INSIDE_STOCK_NUM", V_INSIDE_STOCK_NUM);
+                        map.put("queryId", "material.insertInsideStock");
+                        this.innodaleDao.create(map);
+                        model.addAttribute("INSIDE_STOCK_NUM",		V_INSIDE_STOCK_NUM);
+                    }
                 }
 
-                String ORDER_COMP_CD = (String)map.get("ORDER_COMP_CD");
-                if(ORDER_COMP_CD == null || "".equals(ORDER_COMP_CD)){//그리드 값 체크
-                    model.addAttribute("result",		"fail");
-                    throw new Exception("managerEquip addList Error ORDER_COMP_CD NULL");
-                }
-
-                map.put("queryId", "material.selectInsideStockSeq");
-                map.put("ABBR_NM", ABBR_NM);
-                Map<String, Object> selMap2 = this.innodaleDao.getInfo(map);
-                String V_INSIDE_STOCK_NUM = (String)selMap2.get("INSIDE_STOCK_NUM");
-
-                map.put("INSIDE_STOCK_NUM", V_INSIDE_STOCK_NUM);
-                map.put("queryId", "material.insertInsideStock");
-                this.innodaleDao.create(map);
-                model.addAttribute("INSIDE_STOCK_NUM",		V_INSIDE_STOCK_NUM);
             }else{
                 map.put("queryId", "material.updateInsideStockPop");
                 this.innodaleDao.update(map);
@@ -209,16 +230,16 @@ public class MaterialServiceImpl implements MaterialService {
             }
         }
 
-        model.addAttribute("result",		"success");
+        model.addAttribute("flag",flag);
+        model.addAttribute("message",message);
     }
 
-    @Override // 바코드로 소재입고시, 출고까지 진행
+    @Override // 바코드로 재고입고시, 출고까지 진행 (단, 해당 작업지시건의 주문중 재고가 Y인것만 출고처리)
     public void outGoingProcessForBarcodeIn(Model model, Map<String, Object> map) throws Exception {
-        map.put("queryId", "inspection.insertOutgoingOutType1");
-        map.put("NEW_OUT_QTY",map.get("ORDER_QTY"));
+        map.put("queryId", "material.insertOutgoingInStockManage1");
         this.innodaleDao.create(map);
 
-        map.put("queryId", "inspection.updateOutgoingOutType1After1");
+        map.put("queryId", "material.updateOutgoingOutInStockManage1");
         this.innodaleDao.update(map);
 
         map.put("queryId", "inspection.updateOutgoingOutType1After2");
@@ -343,5 +364,47 @@ public class MaterialServiceImpl implements MaterialService {
             }
         }
     }
+
+    @Override
+    public void cancelInsideStock(Model model, Map<String, Object> map) throws Exception {
+        String CONTROL_SEQ = (String)map.get("CONTROL_SEQ"); // 바코드 사용여부
+        String TYPE_CODE = (String)map.get("TYPE_CODE"); // 타입
+        Boolean flag = false;
+        String message = "";
+
+        try {
+            if("OUT".equals(TYPE_CODE)) { //todo INSIDE_OUT에서 제거
+                map.put("queryId", "material.deleteInsideStockOut");
+                this.innodaleDao.remove(map);
+            }else if("IN".equals(TYPE_CODE)) { //todo INSIDE_IN에서 제거, 도면으로 입고한 경우 출고된 데이터까지 원복
+
+                map.put("queryId", "material.deleteInsideStockIn");
+                this.innodaleDao.remove(map);
+
+                if(!"".equals(CONTROL_SEQ)) {
+                    map.put("queryId", "material.deleteInsideStockOutgoing");
+                    this.innodaleDao.remove(map);
+
+                    map.put("queryId", "material.updateInsideStockOutgoingPartOrder");
+                    this.innodaleDao.update(map);
+
+                    map.put("queryId", "material.updateInsideStockOutgoingControl1");
+                    this.innodaleDao.update(map);
+
+                    map.put("queryId", "material.updateInsideStockOutgoingPart");
+                    this.innodaleDao.update(map);
+
+                    map.put("queryId", "material.updateInsideStockOutgoingControl2");
+                    this.innodaleDao.update(map);
+                }
+            }
+        }catch (Exception e) {
+            flag = true;
+        }
+
+        model.addAttribute("flag",flag);
+        model.addAttribute("message",message);
+    }
+
 
 }
