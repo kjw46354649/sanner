@@ -1767,46 +1767,55 @@
             let controlDetailSeqStr = '';
             for (let i = 0, selectedRowCount = data.length; i < selectedRowCount; i++) {
                 let rowData = data[i];
-                controlSeqStr += rowData.CONTROL_SEQ;
-                controlDetailSeqStr += rowData.CONTROL_DETAIL_SEQ;
+
+                if(typeof rowData.CONTROL_SEQ != 'undefined' && typeof rowData.CONTROL_DETAIL_SEQ != 'undefined') {
+                    controlSeqStr += rowData.CONTROL_SEQ;
+                    controlDetailSeqStr += rowData.CONTROL_DETAIL_SEQ;
+                }
 
                 if (i < selectedRowCount - 1) {
                     controlSeqStr += ',';
                     controlDetailSeqStr += ',';
                 }
             }
-            let parameters = {
-                'url': '/json-list',
-                'data': {"CONTROL_SEQ":controlSeqStr,"CONTROL_DETAIL_SEQ":controlDetailSeqStr,"queryId":"material.selectOrderStatusBeforeMaterialOrder"}
-            };
-            fnPostAjaxAsync(function (data, callFunctionParam) {
-                if(data.list.length > 0) {
-                    var flag = false;
-                    $.each(data.list, function(idx,Item) {
-                        if(Item.OUTSIDE_YN == 'Y') { // 외주가공건인 경우.
-                            flag = true;
-                            return;
-                        }else if(Item.CONTROL_STATUS != 'ORD001' ) { // 주문상태가 확정이 아닌경우
-                            flag = true;
-                            return;
-                        }else if(Item.PART_STATUS == 'PRO003') { //가공확정 취소인 경우
-                            flag = true;
-                            return;
-                        }
-                    })
 
-                    if(flag) {
-                        fnAlert('','소재주문이 불가능한 주문 건이 있습니다. 확인해주세요');
-                        // $("#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #OUTSIDE_ORDER_SEARCH").trigger('click');
+            if(controlSeqStr == "" && controlDetailSeqStr == "") {
+                callback(false);
+            }else {
+                let parameters = {
+                    'url': '/json-list',
+                    'data': {"CONTROL_SEQ":controlSeqStr,"CONTROL_DETAIL_SEQ":controlDetailSeqStr,"queryId":"material.selectOrderStatusBeforeMaterialOrder"}
+                };
+                fnPostAjaxAsync(function (data, callFunctionParam) {
+                    if(data.list.length > 0) {
+                        var flag = false;
+                        $.each(data.list, function(idx,Item) {
+                            if(Item.OUTSIDE_YN == 'Y') { // 외주가공건인 경우.
+                                flag = true;
+                                return;
+                            }else if(Item.CONTROL_STATUS != 'ORD001' ) { // 주문상태가 확정이 아닌경우
+                                flag = true;
+                                return;
+                            }else if(Item.PART_STATUS == 'PRO003') { //가공확정 취소인 경우
+                                flag = true;
+                                return;
+                            }
+                        })
+
+                        if(flag) {
+                            fnAlert('','소재주문이 불가능한 주문 건이 있습니다. 확인해주세요');
+                            // $("#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #OUTSIDE_ORDER_SEARCH").trigger('click');
+                        }
+                        callback(flag);
+                        // return flag;
+                    }else {
+                        fnAlert('',"작업지시번호를 확인해주세요.");
+                        callback(true);
+                        // return true;
                     }
-                    callback(flag);
-                    // return flag;
-                }else {
-                    fnAlert('',"작업지시번호를 확인해주세요.");
-                    callback(true);
-                    // return true;
-                }
-            }, parameters, '');
+                }, parameters, '');
+
+            }
         }
         $("#btnItemOrderRegisterPopSave").on('click', _.debounce(function () {
             checkMaterialOrderStatus(function(flag) {

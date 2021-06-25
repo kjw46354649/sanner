@@ -3531,7 +3531,7 @@
                 hidden: true,
                 editable: function (ui) {return gridCellEditable(ui);}
             },
-            {title:'No', width: 40, dataIndx: "RNUM", cbId: 'CHECK_BOX', type: "checkbox", useLabel: true,
+            {title:'No', width: 30, maxWidth: 30, dataIndx: "RNUM", cbId: 'CHECK_BOX', type: "checkbox", useLabel: true,
                 editable: function (ui) {return gridCellEditable(ui);},
                 render: function (ui) {
                     let rowData = ui.rowData;
@@ -3617,7 +3617,7 @@
                     }
                 }
             },
-            {title: '불출일자', width: 70, dataType: 'string', dataIndx: 'OUT_DT',
+            {title: '불출수량', width: 50, dataType: 'string', dataIndx: 'OUT_QTY',
                 editable: false,
                 render: function (ui) {
                     let rowData = ui.rowData;
