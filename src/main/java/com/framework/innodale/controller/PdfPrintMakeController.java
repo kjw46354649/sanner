@@ -273,7 +273,7 @@ public class PdfPrintMakeController {
                 table.addCell(tCell);
                 table.addCell(tCell2);
             }else if(controlInfo.get("EMERGENCY_BARCODE_NM").equals("긴급")) {
-                table.addCell(createCell((String)controlInfo.get("EMERGENCY_BARCODE_NM"), 2, 1, smallBoldFont));
+                table.addCell(createCell((String)controlInfo.get("EMERGENCY_BARCODE_NM"), 2, 1, mediumBoldFont));
             }else{
                 table.addCell(createCell("가공납기", 2, 1, smallNormalFont));
             }
