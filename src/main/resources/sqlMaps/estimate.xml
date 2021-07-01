@@ -117,24 +117,28 @@
             A.ORDER_STAFF_SEQ,SF_GET_STAFF_NM(A.ORDER_STAFF_SEQ) AS ORDER_STAFF_NM,
             A.ETC_GFILE_SEQ, A.DEL_YN, A.INSERT_ID, A.UPDATE_DT, A.UPDATE_ID,
             COUNT(B.SEQ) AS DTL_CNT, A.EST_USER_ID, SF_GET_USER_NM(A.EST_USER_ID) AS EST_USER,
+--             SUM( CASE
+--                     WHEN WORK_TYPE = 'WTP050' THEN 0
+--                     WHEN UNIT_FINAL_EST_AMT IS NOT NULL THEN UNIT_FINAL_EST_AMT * ITEM_QTY
+--                     WHEN WORK_TYPE = 'WTP020' THEN (
+--                         SELECT
+--                             SUM((IFNULL(PART_UNIT_QTY * UNIT_MATERIAL_AUTO_AMT, SPACE(0))
+--                                                         + IFNULL(PART_UNIT_QTY * UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, SPACE(0))
+--                                                         + IFNULL(PART_UNIT_QTY * UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, SPACE(0))
+--                                                         + IFNULL(PART_UNIT_QTY * UNIT_SURFACE_AUTO_AMT, SPACE(0))
+--                                                         + IFNULL(PART_UNIT_QTY * UNIT_PROCESS_AUTO_AMT, SPACE(0))
+--                                                         + IFNULL(UNIT_ETC_AMT, 0)) * PART_UNIT_QTY)
+--                         FROM TBL_ESTIMATE_DETAIL C
+--                         WHERE C.EST_SEQ = A.EST_SEQ
+--                             AND B.DRAWING_NUM = C.DRAWING_NUM
+--                             AND C.WORK_TYPE <![CDATA[ <> ]]> 'WTP020'
+--                             AND C.WORK_TYPE = 'WTP050'
+--                      )
+--                     ELSE (IFNULL(UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, 0) + IFNULL(UNIT_SURFACE_AUTO_AMT, 0) + IFNULL(UNIT_PROCESS_AUTO_AMT, 0) + IFNULL(UNIT_ETC_AMT, 0)) * ITEM_QTY
+--             END) AS DTL_AMOUNT,
             SUM( CASE
-                    WHEN WORK_TYPE = 'WTP050' THEN 0
-                    WHEN UNIT_FINAL_EST_AMT IS NOT NULL THEN UNIT_FINAL_EST_AMT * ITEM_QTY
-                    WHEN WORK_TYPE = 'WTP020' THEN (
-                        SELECT
-                            SUM((IFNULL(PART_UNIT_QTY * UNIT_MATERIAL_AUTO_AMT, SPACE(0))
-                                                        + IFNULL(PART_UNIT_QTY * UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, SPACE(0))
-                                                        + IFNULL(PART_UNIT_QTY * UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, SPACE(0))
-                                                        + IFNULL(PART_UNIT_QTY * UNIT_SURFACE_AUTO_AMT, SPACE(0))
-                                                        + IFNULL(PART_UNIT_QTY * UNIT_PROCESS_AUTO_AMT, SPACE(0))
-                                                        + IFNULL(UNIT_ETC_AMT, 0)) * PART_UNIT_QTY)
-                        FROM TBL_ESTIMATE_DETAIL C
-                        WHERE C.EST_SEQ = A.EST_SEQ
-                            AND B.DRAWING_NUM = C.DRAWING_NUM
-                            AND C.WORK_TYPE <![CDATA[ <> ]]> 'WTP020'
-                            AND C.WORK_TYPE = 'WTP050'
-                     )
-                    ELSE (IFNULL(UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, 0) + IFNULL(UNIT_SURFACE_AUTO_AMT, 0) + IFNULL(UNIT_PROCESS_AUTO_AMT, 0) + IFNULL(UNIT_ETC_AMT, 0)) * ITEM_QTY
+                     WHEN UNIT_FINAL_EST_AMT IS NOT NULL THEN UNIT_FINAL_EST_AMT * ITEM_QTY
+                     ELSE 0
             END) AS DTL_AMOUNT,
             SF_GET_DATE_F(A.INSERT_DT,'YY','M') AS INSERT_DT,
             CASE WHEN (SELECT COUNT(*) FROM TBL_CONTROL WHERE EST_SEQ = A.EST_SEQ AND DEL_YN ='N') > 0 THEN 'Y' ELSE 'N' END CONTROL_YN,

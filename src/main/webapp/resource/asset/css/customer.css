@@ -563,7 +563,7 @@ ul, ol , dl { list-style: none;}
 	outline: none;
 }
 .stockPopupInfo .stockMap {
-	background: url(../../pop/images/test1.png) no-repeat center;
+	background: url(../../main/blank.jpg) no-repeat center;
   background-size: 866px 379px;
 	border: 1px solid #aaa;
 	width: 100%;
