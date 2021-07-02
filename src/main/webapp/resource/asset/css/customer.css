@@ -766,7 +766,7 @@ ul, ol , dl { list-style: none;}
 	border-spacing: 0;
 	border-collapse: collapse;
 	margin: 20px 0;
-	font-size: 1.3rem;
+	font-size: 1.5rem;
 	background: white;
 }
 .stockPopup3 .stockPopupInfo3 th {
@@ -799,7 +799,7 @@ ul, ol , dl { list-style: none;}
 	color: blue;
 }
 .stockPopup3 .stockPopupInfo3 p {
-	font-size: 1.5rem;
+	font-size: 1.8rem;
 	margin-bottom: 10px;
 	color: black;
 }

@@ -1193,7 +1193,7 @@
             rowSelect: function (event, ui) {
                 if(ui.addList.length > 0) {
                     var rowData = ui.addList[0].rowData;
-                    console.log(rowData)
+                    // console.log(rowData)
                     if(typeof rowData != 'undefined') {
                         $("#stock_manage_pop").find(".stockPopupInfo").removeClass('stockPopupInfoEnter');
                         $("#stock_manage_pop").find(".stockPopupInfo").removeClass('stockPopupInfoOut');
@@ -1525,7 +1525,7 @@
                     'data': {"stockGrid": JSON.stringify(changes)}
                 };
                 fnPostAjax(function (data, callFunctionParam) {
-                    console.log(data)
+                    // console.log(data)
                     if(data.flag) {
                         fnAlert(null, data.message);
                     }else {
@@ -2010,8 +2010,8 @@
             $("#stock_manage_pop_form").find("#POP_TYPE").val($("#stock_manage_form").find("#popType").val());
             $("#stock_manage_pop_form").find("#IN_OUT_QTY").val($("#stock_manage_pop_form").find("#ORDER_QTY").val());
 
-            console.log($('#stock_manage_pop_form').serialize());
-            return;
+            // console.log($('#stock_manage_pop_form').serialize());
+
             let parameters = {
                 'url': '/managerInsideStockPop',
                 'data': $('#stock_manage_pop_form').serialize()
@@ -2404,7 +2404,7 @@
                             parameters.data.queryId = "material.selectInsideStockCheckOut";
                         }
                         fnPostAjax(function (data, callFunctionParam) {
-                            console.log(data);
+                            // console.log(data);
                             if(data.info != null && data.info.flag == 1) {
 
                                 let parameters2 = {
