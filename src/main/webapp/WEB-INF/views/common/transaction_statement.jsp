@@ -203,12 +203,12 @@
         let compCdList = [];
         let orderCompCdList = [];
         // let invoiceNumList = [];
-        let controlSeqStr = '';
+        let controlSeqStr = "";
 
         for (let i = 0; i < selectedRowCount; i++) {
             let rowData = opener.$orderManagementGrid.pqGrid('getRowData', {rowIndx: opener.selectedOrderManagementRowIndex[i]});
 
-            controlSeqList.push(rowData.CONTROL_SEQ);
+            controlSeqList.push(rowData.CONTROL_SEQ + "" + rowData.CONTROL_DETAIL_SEQ + rowData.ORDER_SEQ);
             compCdList.push(rowData.COMP_CD);
             orderCompCdList.push(rowData.ORDER_COMP_CD);
             // invoiceNumList.push(rowData.INVOICE_NUM);
@@ -219,12 +219,14 @@
         orderCompCdList = [...new Set(orderCompCdList)];
 
         for (let i = 0; i < controlSeqList.length; i++) {
-            controlSeqStr += controlSeqList[i];
+            // controlSeqStr += controlSeqList[i];
+            controlSeqStr += "'" + controlSeqList[i]+ "',";
 
             if (i < controlSeqList.length - 1) {
-                controlSeqStr += ',';
+                // controlSeqStr += ',';
             }
         }
+        controlSeqStr = controlSeqStr.substr(0, controlSeqStr.length - 1);
 
         $('#TRANSACTION_STATEMENT_FORM > #COMP_CD').val(compCdList[0]);
         $('#TRANSACTION_STATEMENT_FORM > #ORDER_COMP_CD').val(orderCompCdList[0]);

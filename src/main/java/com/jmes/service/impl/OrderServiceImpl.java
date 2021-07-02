@@ -686,6 +686,18 @@ public class OrderServiceImpl implements OrderService {
                             hashMap.put("queryId", "orderMapper.updateRequestStock");
                             this.innodaleDao.updateGrid(hashMap);
                         }
+                    }else {
+                        if(!"".equals(insideOutSeq)) {
+                            hashMap.put("queryId", "orderMapper.selectRequestStockStatus");
+                            Map<String,Object> tempData = this.innodaleDao.getInfo(hashMap);
+                            if(tempData.get("OUT_STATUS").equals("OUT002")) {
+                                flag = true;
+                                message = "불출 완료된 건은 취소 불가합니다.";
+                            }else {
+                                hashMap.put("queryId", "orderMapper.deleteRequestStock");
+                                this.innodaleDao.remove(hashMap);
+                            }
+                        }
                     }
                 } catch (Exception e) {
                     flag = true;

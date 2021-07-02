@@ -567,12 +567,12 @@ ul, ol , dl { list-style: none;}
   background-size: 866px 379px;
 	border: 1px solid #aaa;
 	width: 100%;
-	height: 52%;
+	height: 59%;
 	margin-top: 10px;
 }
 .stockPopupInfo .stockPopupBtm {
 	width: 100%;
-	height: 35%;
+	height: 29%;
 	padding: 13px 0 7px;
 	display: flex;
 }
@@ -583,7 +583,6 @@ ul, ol , dl { list-style: none;}
 	padding-right: 20px;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmLeft .stockPopupBtmLeftTable {
-	border: 1px solid #AAA;
 	width: 100%;
 	height: 80%;
 }

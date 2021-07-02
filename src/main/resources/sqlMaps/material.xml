@@ -60,8 +60,8 @@
 				SF_GET_DATE_F(B.INNER_DUE_DT, '', '') AS INNER_DUE_DT,
 				SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS ORDER_QTY,
 				F.MATERIAL_COMP_CD AS M_COMP_CD, SF_GET_COMP_NM(F.MATERIAL_COMP_CD) AS M_COMP_NM,
-				CASE WHEN F.ORDER_QTY IS NOT NULL THEN F.ORDER_QTY
-				    ELSE SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ)-IFNULL(SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'QTY'), 0)
+				CASE WHEN F.ORDER_QTY IS NOT NULL THEN F.ORDER_QTY - IFNULL(G.OUT_QTY,0)
+				    ELSE SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) - IFNULL(SF_GET_STOCK_OUT(F.MATERIAL_ORDER_SEQ, 'QTY'), 0) - IFNULL(G.OUT_QTY,0)
 				END AS M_ORDER_QTY,
                 F.ORDER_NOTE AS M_ORDER_NOTE,
                 CASE WHEN F.SIZE_TXT IS NOT NULL THEN F.SIZE_TXT ELSE B.SIZE_TXT END AS M_SIZE_TXT,
@@ -1942,7 +1942,23 @@
             , jmes.SF_GET_DATE_F(A.INSERT_DT, 'YY', 'M') AS INSERT_TIME
             , jmes.SF_GET_DATE_F(A.UPDATE_DT, 'YY', 'M') AS UPDATE_TIME
             , A.NOTE
+            , Y.TYPE AS LATEST_STOCK_TYPE
+            , Y.QTY AS LATEST_STOCK_QTY
+            , jmes.SF_GET_DATE_F(Y.DT, 'YY', 'M') AS LATEST_STOCK_DT
+            , Y.CONTROL_NUM AS LATEST_STOCK_CONTROL_NUM
         FROM jmes.TBL_INSIDE_STOCK A
+            LEFT OUTER JOIN (
+                SELECT X.*
+                FROM (
+                    SELECT B.IN_DT AS DT, B.IN_QTY AS QTY, '입고' AS TYPE, B.INSIDE_STOCK_SEQ, (SELECT CONTROL_NUM FROM TBL_CONTROL M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ) AS CONTROL_NUM
+                    FROM TBL_INSIDE_IN B
+                    UNION ALL
+                    SELECT C.OUT_DT AS DT, C.OUT_QTY AS QTY, '불출' AS TYPE, C.INSIDE_STOCK_SEQ,  (SELECT CONTROL_NUM FROM TBL_CONTROL M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ) AS CONTROL_NUM
+                    FROM TBL_INSIDE_OUT C
+                    WHERE C.OUT_STATUS = 'OUT002'
+                ) X
+                ORDER BY X.DT DESC
+            ) Y ON Y.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ
         WHERE 1=1
         <if test="SEL_COMP_CD !='' and SEL_COMP_CD != null">
             AND A.COMP_CD = #{SEL_COMP_CD}
@@ -1950,17 +1966,17 @@
         <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
             AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
         </if>
-        <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
-            AND A.DRAWING_NUM LIKE CONCAT('%', #{SEL_DRAWING_NUM}, '%')
-        </if>
         <if test="SEL_ITEM_NM !='' and SEL_ITEM_NM != null">
             AND A.ITEM_NM LIKE CONCAT('%', #{SEL_ITEM_NM}, '%')
         </if>
-        <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null"> <!-- FIXME -->
-            AND A.CONTROL_SEQ IN (SELECT CONTROL_SEQ FROM jmes.TBL_CONTROL B WHERE B.CONTROL_NUM LIKE CONCAT('%', #{SEL_CONTROL_NUM}, '%'))
+        <if test="SEL_INSIDE_STOCK_NUM !='' and SEL_INSIDE_STOCK_NUM != null">
+            AND A.INSIDE_STOCK_NUM LIKE CONCAT('%', #{SEL_INSIDE_STOCK_NUM}, '%')
+        </if>
+        <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
+            AND Y.CONTROL_NUM LIKE CONCAT('%', #{SEL_CONTROL_NUM}, '%')
         </if>
         <if test="HIDDEN_SEL_MATERIAL_DETAIL != '' and HIDDEN_SEL_MATERIAL_DETAIL != null">
-                AND A.MATERIAL_DETAIL IN (${HIDDEN_SEL_MATERIAL_DETAIL})
+            AND A.MATERIAL_DETAIL IN (${HIDDEN_SEL_MATERIAL_DETAIL})
         </if>
         <if test="SEL_WAREHOUSE_CD !='' and SEL_WAREHOUSE_CD != null">
             AND A.WAREHOUSE_CD = #{SEL_WAREHOUSE_CD}
@@ -2013,6 +2029,7 @@
                 </when>
             </choose>
         </if>
+        GROUP BY A.INSIDE_STOCK_SEQ
     </select>
     <select id="selectInsideStockIn_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT COUNT(*) AS CNT FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
@@ -2135,9 +2152,7 @@
             OUT_DT = now(),
             UPDATE_DT = now(),
             UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-            AND INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
+        WHERE INSIDE_OUT_SEQ = #{INSIDE_OUT_SEQ}
     </update>
     <select id="selectInsideStockPopInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
@@ -2443,8 +2458,7 @@
              INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
              INNER JOIN TBL_CONTROL_PART_ORDER D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
              INNER JOIN TBL_INSIDE_STOCK E ON A.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ
-        WHERE A.DEL_YN = 'N'
-          AND A.OUT_STATUS = 'OUT001'
+        WHERE A.OUT_STATUS = 'OUT001'
     </select>
 
     <select id="selectWarehouseInfoByLocBarcode" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -2540,7 +2554,7 @@
             FROM TBL_INSIDE_IN A
                 INNER JOIN TBL_INSIDE_STOCK B ON A.INSIDE_STOCK_SEQ = B.INSIDE_STOCK_SEQ
             UNION ALL
-            SELECT C.INSERT_DT, jmes.SF_GET_DATE_F(C.INSERT_DT, 'YY', 'M') AS INSERT_TIME, D.INSIDE_STOCK_NUM, D.IMG_GFILE_SEQ, C.INSIDE_OUT_SEQ AS SEQ, C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, D.INSIDE_STOCK_SEQ,
+            SELECT C.OUT_DT AS INSERT_DT, jmes.SF_GET_DATE_F(C.OUT_DT, 'YY', 'M') AS INSERT_TIME, D.INSIDE_STOCK_NUM, D.IMG_GFILE_SEQ, C.INSIDE_OUT_SEQ AS SEQ, C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, D.INSIDE_STOCK_SEQ,
                 D.WAREHOUSE_CD, jmes.SF_GET_CODE_NM('1049', D.WAREHOUSE_CD, #{LOGIN_LOCALE}) AS WAREHOUSE_CD_NM,
                 D.LOC_SEQ, (SELECT LOC_NM FROM jmes.TBL_WAREHOUSE_LOCATION WHERE WAREHOUSE_CD = D.WAREHOUSE_CD AND LOC_SEQ = D.LOC_SEQ ) AS LOC_SEQ_NM,
                 D.ORDER_COMP_CD, (SELECT COMP_NM FROM jmes.TBL_COMPANY WHERE COMP_CD = D.ORDER_COMP_CD) AS ORDER_COMP_CD_NM,
@@ -2574,6 +2588,9 @@
             </if>
             <if test="SEL_ITEM_NM !='' and SEL_ITEM_NM != null">
                 AND Z.ITEM_NM LIKE CONCAT('%', #{SEL_ITEM_NM}, '%')
+            </if>
+            <if test="SEL_NOTE !='' and SEL_NOTE != null">
+                AND Z.NOTE LIKE CONCAT('%', #{SEL_NOTE}, '%')
             </if>
             <if test="SEL_INOUT_WAREHOUSE_CD !='' and SEL_INOUT_WAREHOUSE_CD != null">
                 AND Z.WAREHOUSE_CD = #{SEL_INOUT_WAREHOUSE_CD}

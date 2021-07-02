@@ -196,8 +196,10 @@ public class PdfPrintMakeController {
                 phrase.add(new VerticalPositionMark());
             }
             String qtyTxt = (String) controlInfo.get("CONTROL_ORDER_QTY");
-            if(controlInfo.get("INSIDE_STOCK_YN").equals("Y")) {
-                qtyTxt += ("+" + String.valueOf(controlInfo.get("STOCK_REQUEST_QTY")));
+            String insideStockQty = String.valueOf(controlInfo.get("INSIDE_STOCK_QTY"));
+            if(Integer.parseInt(insideStockQty) > 0) {
+                qtyTxt = (Integer.parseInt(qtyTxt) - Integer.parseInt(insideStockQty)) + "";
+                qtyTxt += ("+" + String.valueOf(controlInfo.get("INSIDE_STOCK_QTY")));
             }
             phrase.add(new Chunk(qtyTxt,mediumBoldFont));
 
@@ -263,7 +265,8 @@ public class PdfPrintMakeController {
 
                 table.addCell(cell);
             }
-            if(controlInfo.get("INSIDE_STOCK_YN").equals("Y")) {
+            String stockRequestQty = String.valueOf(controlInfo.get("STOCK_REQUEST_QTY"));
+            if(Integer.parseInt(stockRequestQty) > 0) {
                 Phrase phr = new Phrase();
                 String qty = String.valueOf(controlInfo.get("STOCK_REQUEST_QTY"));
                 PdfPCell tCell = createCell(("충당\n재고" ), 1, 1, smallNormalFont);

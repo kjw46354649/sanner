@@ -157,6 +157,7 @@ public class MaterialServiceImpl implements MaterialService {
         String POP_TYPE = (String) map.get("POP_TYPE");
         String USE_BARCODE = (String)map.get("USE_BARCODE"); // 바코드 사용여부
         String CONTROL_SEQ = (String)map.get("CONTROL_SEQ"); // 바코드 사용여부
+        String INSIDE_OUT_SEQ = (String)map.get("INSIDE_OUT_SEQ"); // 바코드 사용여부
         Boolean flag = false;
         String message = "";
         if("GRID_IN".equals(POP_TYPE)){
@@ -169,7 +170,7 @@ public class MaterialServiceImpl implements MaterialService {
 
         }else if("GRID_OUT".equals(POP_TYPE) || "BARCODE_OUT".equals(POP_TYPE)){
 
-            if(!"".equals(CONTROL_SEQ)) {
+            if(!"".equals(INSIDE_OUT_SEQ)) {
                 map.put("queryId", "material.updateInsideStockOut");
                 this.innodaleDao.update(map);
             }else {

@@ -268,6 +268,7 @@
         <input type="hidden" id="queryId" name="queryId" value="orderMapper.selectMatchStockList">
         <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value="">
         <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
+        <input type="hidden" id="SAVE_YN" name="SAVE_YN" value="N">
         <div class="stockPopupWrap">
             <div class="searchPopup">
                 <h3><i class="xi-library-bookmark"></i> 재고 매칭 검색 및 지정</h3>
@@ -2312,7 +2313,7 @@
                 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT', 'UNIT_PROCESS_AUTO_AMT',
                 'CONTROL_PART_INSERT_UPDATE_DT',
-                'UNIT_SUM_AUTO_AMT'
+                'UNIT_SUM_AUTO_AMT', 'INSIDE_STOCK_NUM', 'STOCK_REQUEST_QTY', 'STOCK_OUT_QTY'
             ];
             const includeList = controlList.concat(partList);
 
@@ -2703,7 +2704,14 @@
                 fnAlert(null, errorList.length + '건의 데이터가 올바르지 않습니다.');
                 return false;
             }
-
+            const groupedControlNum = fnGroupBy(data, 'CONTROL_NUM');
+            for (let controlNum in groupedControlNum) {
+                let groupedInstock = fnGroupBy(groupedControlNum[controlNum], 'INSIDE_STOCK_YN');
+                if(typeof groupedInstock["Y"] != 'undefined' && groupedInstock["Y"].length >= 2) {
+                    fnAlert("","하나의 작업번호에 재고는 1개만 설정 가능합니다.");
+                    return false;
+                }
+            }
             // 작업지시번호 수정 여부 확인
             let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
@@ -3027,7 +3035,6 @@
                 invoiceNumList.push(rowData.INVOICE_NUM);
                 if(rowData.INSIDE_STOCK_YN == 'Y') {
                     flagStock = true;
-                    return;
                 }
             }
             // 중복제거
@@ -3518,6 +3525,7 @@
             {title: 'CONTROL_NUM', dataType: 'string', dataIndx: 'CONTROL_NUM', hidden: true},
             {title: 'OUT_STATUS', dataType: 'string', dataIndx: 'OUT_STATUS', hidden: true},
             {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
+            {title: 'CONTROL_PART_INFO', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', hidden: true},
             {title: 'ORDER_QTY', dataType: 'integer', dataIndx: 'ORDER_QTY', hidden: true},
             {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
@@ -3536,20 +3544,24 @@
                 render: function (ui) {
                     let rowData = ui.rowData;
                     if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return {text: rowData.RNUM, style : 'background-color: #d6e5ff; font-weight: bold;'};
+                        return {text: rowData.RNUM, style : 'background-color: #ffe0e0; font-weight: bold;'};
                     }
                     if(rowData.OUT_STATUS == 'OUT002') {
                         // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
                         return {cls: 'disabled', style: 'background-color: #d7d7d7;'};
                     }
-                },
-                postRender: function (ui) {
+                }
+                ,postRender: function (ui) {
                     let grid = this;
                     let $cell = grid.getCell(ui);
                     let rowData = ui.rowData;
-                    if(typeof rowData.REQUEST_QTY != 'undefined' && rowData.REQUEST_QTY != null && rowData.REQUEST_QTY != '') {
+
+                    if(typeof rowData.INSIDE_OUT_SEQ != 'undefined' && rowData.INSIDE_OUT_SEQ != null && rowData.INSIDE_OUT_SEQ != '') {
                         $cell.find('input[type=checkbox]').prop('checked', true);
                         ui.rowData.CHECK_BOX = true;
+                    }else {
+                        ui.rowData.CHECK_BOX = $cell.find('input[type=checkbox]').prop('checked');
+                        ui.cellData = $cell.find('input[type=checkbox]').prop('checked');
                     }
                 }
             },
@@ -3558,7 +3570,7 @@
                 render: function (ui) {
                     let rowData = ui.rowData;
                     if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return {text: rowData.CONTROL_NUM, style : 'background-color: #d6e5ff; font-weight: bold;'};
+                        return {text: rowData.CONTROL_PART_INFO, style : 'background-color: #ffe0e0; font-weight: bold;'};
                     }
                     if(rowData.OUT_STATUS == 'OUT002') {
                         // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
@@ -3571,7 +3583,7 @@
                 render: function (ui) {
                     let rowData = ui.rowData;
                     if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return {style : 'background-color: #d6e5ff; font-weight: bold;'};
+                        return {style : 'background-color: #ffe0e0; font-weight: bold;'};
                     }
                     if(rowData.OUT_STATUS == 'OUT002') {
                         // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
@@ -3584,7 +3596,7 @@
                 render: function (ui) {
                     let rowData = ui.rowData;
                     if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return {style : 'background-color: #d6e5ff; font-weight: bold;'};
+                        return {style : 'background-color: #ffe0e0; font-weight: bold;'};
                     }
                     if(rowData.OUT_STATUS == 'OUT002') {
                         // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
@@ -3613,7 +3625,7 @@
                         }
                         return {style : 'background-color: #fff599;'};
                     }else {
-                        return {style : 'background-color: #d6e5ff; font-weight: bold;'};
+                        return {style : 'background-color: #ffe0e0; font-weight: bold;'};
                     }
                 }
             },
@@ -3622,7 +3634,7 @@
                 render: function (ui) {
                     let rowData = ui.rowData;
                     if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return {style : 'background-color: #d6e5ff; font-weight: bold;'};
+                        return {style : 'background-color: #ffe0e0; font-weight: bold;'};
                     }
                     if(rowData.OUT_STATUS == 'OUT002') {
                         // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
@@ -3635,7 +3647,7 @@
                 render: function (ui) {
                     let rowData = ui.rowData;
                     if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return {style : 'background-color: #d6e5ff; font-weight: bold;'};
+                        return {style : 'background-color: #ffe0e0; font-weight: bold;'};
                     }
                     if(rowData.OUT_STATUS == 'OUT002') {
                         // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
@@ -3693,10 +3705,10 @@
             $.each(changes.updateList, function (idx,Item) {
                 var id = Item.CONTROL_SEQ + '_' + Item.CONTROL_DETAIL_SEQ;
                 if(Item.CHECK_BOX) {
-                    if(Item.REQUEST_QTY == null || Item.REQUEST_QTY == '' || typeof Item.REQUEST_QTY == 'undefined' || Item.REQUEST_QTY <= 0) {
-                        flag = true;
-                        return;
-                    }
+                    // if(Item.REQUEST_QTY == null || Item.REQUEST_QTY == '' || typeof Item.REQUEST_QTY == 'undefined' || Item.REQUEST_QTY <= 0) {
+                    //     flag = true;
+                    //     return;
+                    // }
 
                     if(typeof duplChk[id] == 'undefined' || duplChk[id] == null) {
                         duplChk[id] = [idx];
@@ -3712,11 +3724,10 @@
                 fnAlert(null,'불출 요청은 파트단위당 1개의 재고번호만 가능합니다.');
                 return;
             }
-
-            if(flag) {
-                fnAlert(null,'불출 요청 수량을 확인해주세요.');
-                return;
-            }else {
+            // if(flag) {
+            //     fnAlert(null,'불출 요청 수량을 확인해주세요.');
+            //     return;
+            // }else {
                 let parameters = {'url': '/matchStockSave', 'data': {data: JSON.stringify(changes)}};
 
                 fnPostAjaxAsync(function (data) {
@@ -3724,12 +3735,13 @@
                         fnAlert(null, data.message);
                         return false;
                     }
-
-                    fnAlert(null, '<spring:message code="com.alert.default.save.success"/>');
-                    matchStockGrid.pqGrid('refreshDataAndView');
+                    $("#stock_match_pop_form").find("#SAVE_YN").val("Y");
+                    fnAlert(null, '<spring:message code="com.alert.default.save.success"/>',function (){
+                        $("#stockMatchPopup").modal('hide')
+                    });
                 }, parameters, '');
 
-            }
+            // }
         })
         $('#stock_match_pop_refresh').on('click', function (e) {
             matchStockGrid.pqGrid('option', 'dataModel.postData', function () {
@@ -3745,11 +3757,18 @@
             }else {
                 let rowCnt = "";
                 let CONTROL_SEQ = "";
+                let controlSeqList = [];
                 for (let i = 0; i < selectedOrderManagementRowIndex.length; i++) {
                     let rowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: selectedOrderManagementRowIndex[i]});
-                    CONTROL_SEQ += rowData["CONTROL_SEQ"] + ",";
+                    controlSeqList.push(rowData.CONTROL_SEQ)
+                }
+                controlSeqList = [...new Set(controlSeqList)];
+
+                for (let i = 0; i < controlSeqList.length; i++) {
+                    CONTROL_SEQ += controlSeqList[i] + ",";
                 }
                 CONTROL_SEQ = CONTROL_SEQ.substr(0, CONTROL_SEQ.length - 1);
+
                 $("#stock_match_pop_form").find("#CONTROL_SEQ").val(CONTROL_SEQ);
 
                 $("#stockMatchPopup").modal('show');
@@ -3767,8 +3786,13 @@
                     return { 'queryId': 'orderMapper.selectMatchStockList', 'CONTROL_SEQ': $("#stock_match_pop_form").find("#CONTROL_SEQ").val()};
                 });
                 matchStockGrid.pqGrid('refreshDataAndView');
+                setTimeout(function (){
+                    matchStockGrid.pqGrid('setSelection', {rowIndx: 0});
+                },300);
             },'hide.bs.modal': function () {
-
+                if($("#stock_match_pop_form").find("#SAVE_YN").val() == "Y"){
+                    $("#CONTROL_MANAGE_SEARCH").trigger('click');
+                }
             }
         });
         $("#STOCK_MATCH_BARCODE_NUM").on({
