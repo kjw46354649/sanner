@@ -279,7 +279,7 @@
             <ul class="smallTabMenuTabs">
                 <li class="active"><a href="#STOCK_MANGE_TAB1" data-toggle="tab" aria-expanded="true">재고관리</a></li>
                 <li><a href="#STOCK_MANGE_TAB2" data-toggle="tab" aria-expanded="false">재고 수불이력</a></li>
-                <div class="d-inline right_float stock_manage_div">
+                <div class="d-inline right_float stock_manage_div" style="margin-top: 2px;">
                     <input type="search" id="stockManageFilterKeyword" placeholder="Enter your keyword">
                     <select id="stockManageFilterColumn"></select>
                     <select id="stockManageFilterCondition">
@@ -300,7 +300,7 @@
                     <button type="button" class="defaultBtn radius red" id="stock_manage_delete_btn">삭제</button>
                     <button type="button" class="defaultBtn radius green" id="stock_manage_save_btn">저장</button>
                 </div>
-                <div class="d-inline right_float stock_inout_div" style="display: none;">
+                <div class="d-inline right_float stock_inout_div" style="display: none;margin-top: 2px;">
                     <input type="search" id="stockInoutFilterKeyword" placeholder="Enter your keyword">
                     <select id="stockInoutFilterColumn"></select>
                     <select id="stockInoutFilterCondition">
@@ -313,7 +313,7 @@
                     </select>
                 </div>
             </ul>
-            <div class="tab-content">
+            <div class="tab-content" style="margin-top: 4px;">
                 <ul class="active" id="STOCK_MANGE_TAB1">
                     <div class="conMainWrap">
                         <div id="stock_manage_grid"></div>
@@ -1033,6 +1033,23 @@
             {title: 'INSIDE_STOCK_SEQ', dataType: 'integer', dataIndx: 'INSIDE_STOCK_SEQ', hidden: true},
             // {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: '작업지시번호', align: 'center', width: 180, dataIndx: 'CONTROL_NUM'},
+            {
+                title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
+                    });
+                }
+            },
             {title: '요청수량', dataType: 'integer', align: 'center', width: 50, dataIndx: 'REQUEST_QTY'},
             {title: '재고번호', minWidth: 120, dataIndx: 'INSIDE_STOCK_NUM'},
             {title: '발주처', minWidth: 110, dataIndx: 'ORDER_COMP_NM'},
@@ -1205,7 +1222,7 @@
                         if(typeof rowData.INSIDE_STOCK_SEQ != 'undefined') {
                             // $("#stock_manage_pop_form").find("#ORDER_QTY").val(0);
                             if(popType == 'GRID_OUT'|| popType == 'BARCODE_OUT') {
-                                $("#POP_GUBUN").html("출고");
+                                $("#POP_GUBUN").html("불출");
                                 $("#stock_manage_pop").find(".stockPopupInfo").addClass('stockPopupInfoOut');
                                 // $("#stock_manage_pop_form").find("#ORDER_QTY").val(rowData.ORDER_QTY);
                             }else {
@@ -1552,6 +1569,9 @@
             }, parameters, '');
 
 
+        });
+        $('#locationBarcodeSpan').on('click', function () {
+            $("#LOCATION_BARCODE_NUM").focus();
         });
         $('#stock_manage_out_btn').on('click', function () {
             $("#stock_manage_form").find("#popType").val("BARCODE_OUT");
@@ -1991,7 +2011,7 @@
             $("#stock_manage_pop_form").find("#IN_OUT_QTY").val($("#stock_manage_pop_form").find("#ORDER_QTY").val());
 
             console.log($('#stock_manage_pop_form').serialize());
-
+            return;
             let parameters = {
                 'url': '/managerInsideStockPop',
                 'data': $('#stock_manage_pop_form').serialize()

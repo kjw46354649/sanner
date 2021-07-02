@@ -3550,7 +3550,7 @@
            #{CONTROL_SEQ},
            #{CONTROL_DETAIL_SEQ},
            'OUT001',
-           #{REQUEST_QTY},
+           IFNULL(#{REQUEST_QTY},0),
            now(),
            #{LOGIN_USER_ID},
            #{LOGIN_USER_ID}
