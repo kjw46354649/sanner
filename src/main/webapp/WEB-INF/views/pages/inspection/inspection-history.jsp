@@ -277,7 +277,7 @@
             {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 120, width: 120},
             // {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden:true},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 110, width: 110},
-            {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 50, width: 50},
+            {title: '발주<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 50, width: 50},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 140, width: 140},
             // {
             //     title: '최근 MCT 실적', datatype: 'string', align: 'center', colModel: [

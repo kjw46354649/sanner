@@ -222,12 +222,8 @@ public class MaterialServiceImpl implements MaterialService {
             map.put("queryId", "material.insertInsideStockIn");
             this.innodaleDao.create(map);
 
-            if("Y".equals(USE_BARCODE)) {
-//                map.put("queryId", "material.insertInsideStockOut");
-//                map.put("IN_OUT_QTY",map.get("ORDER_QTY"));
-//                this.innodaleDao.create(map);
-
-                outGoingProcessForBarcodeIn(model,map);
+            if("Y".equals(USE_BARCODE)) { // 바코드로 재고입고시 출고프로세스 제거 (21/07/05)
+//                outGoingProcessForBarcodeIn(model,map);
             }
         }
 
@@ -377,27 +373,27 @@ public class MaterialServiceImpl implements MaterialService {
             if("OUT".equals(TYPE_CODE)) { //todo INSIDE_OUT에서 제거
                 map.put("queryId", "material.deleteInsideStockOut");
                 this.innodaleDao.remove(map);
-            }else if("IN".equals(TYPE_CODE)) { //todo INSIDE_IN에서 제거, 도면으로 입고한 경우 출고된 데이터까지 원복
+            }else if("IN".equals(TYPE_CODE)) { //
 
                 map.put("queryId", "material.deleteInsideStockIn");
                 this.innodaleDao.remove(map);
 
-                if(!"".equals(CONTROL_SEQ)) {
-                    map.put("queryId", "material.deleteInsideStockOutgoing");
-                    this.innodaleDao.remove(map);
-
-                    map.put("queryId", "material.updateInsideStockOutgoingPartOrder");
-                    this.innodaleDao.update(map);
-
-                    map.put("queryId", "material.updateInsideStockOutgoingControl1");
-                    this.innodaleDao.update(map);
-
-                    map.put("queryId", "material.updateInsideStockOutgoingPart");
-                    this.innodaleDao.update(map);
-
-                    map.put("queryId", "material.updateInsideStockOutgoingControl2");
-                    this.innodaleDao.update(map);
-                }
+//                if(!"".equals(CONTROL_SEQ)) { //바코드로 재고입고시 출고프로세스 제거로 해당 로직도 제거 (21/07/05)
+//                    map.put("queryId", "material.deleteInsideStockOutgoing");
+//                    this.innodaleDao.remove(map);
+//
+//                    map.put("queryId", "material.updateInsideStockOutgoingPartOrder");
+//                    this.innodaleDao.update(map);
+//
+//                    map.put("queryId", "material.updateInsideStockOutgoingControl1");
+//                    this.innodaleDao.update(map);
+//
+//                    map.put("queryId", "material.updateInsideStockOutgoingPart");
+//                    this.innodaleDao.update(map);
+//
+//                    map.put("queryId", "material.updateInsideStockOutgoingControl2");
+//                    this.innodaleDao.update(map);
+//                }
             }
         }catch (Exception e) {
             flag = true;

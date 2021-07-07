@@ -373,7 +373,8 @@
             {title: '규격_가로', dataIndx: 'SIZE_W', minWidth: 90, width: 90, editable: false, hidden: true },
             {title: '규격_세로', dataIndx: 'SIZE_H', minWidth: 90, width: 90, editable: false, hidden: true },
             {title: '규격_두께', dataIndx: 'SIZE_T', minWidth: 90, width: 90, editable: false, hidden: true },
-            {title: '발주량', dataIndx: 'ORDER_QTY', minWidth: 50, width: 50, editable: false},
+            {title: '수량<br>추가', dataIndx: 'ADDITIONAL_QTY', minWidth: 50, width: 50, editable: false},
+            {title: '발주<br>수량', dataIndx: 'ORDER_QTY', minWidth: 50, width: 50, editable: false},
             {
                 title: '재고충당', align: 'center',
                 colModel: [
@@ -632,7 +633,8 @@
             {
                 title: '주문대상 관리정보', align: 'center', colModel: [
                     {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 110, editable: false},
-                    {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
+                    {title: '추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', minWidth: 40, width: 40, editable: false},
+                    {title: '발주', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
                     {title: '충당요청', dataType: 'string', dataIndx: 'STOCK_REQUEST_QTY', minWidth: 40, width: 40, editable: false}
                 ]
             },
@@ -867,7 +869,8 @@
             {
                 title: '주문대상 관리정보', align: 'center', colModel: [
                     {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 110, editable: false},
-                    {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
+                    {title: '추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', minWidth: 40, width: 40, editable: false},
+                    {title: '발주', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
                     {title: '충당요청', dataType: 'string', dataIndx: 'STOCK_REQUEST_QTY', minWidth: 40, width: 40, editable: false}
                 ]
             },

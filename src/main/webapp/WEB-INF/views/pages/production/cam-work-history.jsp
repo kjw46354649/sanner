@@ -286,7 +286,7 @@
                             <input type="hidden" id="CAM_WORK_SEQ_01" name="CAM_WORK_SEQ_01" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_01" name="CAM_WORK_GFILE_SEQ_01" value="">
                         </li>
-                        <li style="list-style-type: none; float: left; padding-left: 5px;">
+                        <li style="list-style-type: none; float: left; padding-left: 4px;">
                             <table class="mctWorkStyle" idx="02">
                                 <colgroup>
                                     <col width="20%">
@@ -328,7 +328,7 @@
                             <input type="hidden" id="CAM_WORK_SEQ_02" name="CAM_WORK_SEQ_02" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_02" name="CAM_WORK_GFILE_SEQ_02" value="">
                         </li>
-                        <li style="list-style-type: none; float: left; padding-left: 5px;">
+                        <li style="list-style-type: none; float: left; padding-left: 4px;">
                             <table class="mctWorkStyle" idx="03">
                                 <colgroup>
                                     <col width="20%">
@@ -370,7 +370,7 @@
                             <input type="hidden" id="CAM_WORK_SEQ_03" name="CAM_WORK_SEQ_03" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_03" name="CAM_WORK_GFILE_SEQ_03" value="">
                         </li>
-                        <li style="list-style-type: none; float: left; padding-right: 5px;">
+                        <li style="list-style-type: none; float: left; padding-left: 5px;">
                             <table class="mctWorkStyle" idx="04">
                                 <colgroup>
                                     <col width="20%">
@@ -412,7 +412,7 @@
                             <input type="hidden" id="CAM_WORK_SEQ_04" name="CAM_WORK_SEQ_04" value="">
                             <input type="hidden" id="CAM_WORK_GFILE_SEQ_04" name="CAM_WORK_GFILE_SEQ_04" value="">
                         </li>
-                        <li style="list-style-type: none; float: left; padding-right: 5px;">
+                        <li style="list-style-type: none; float: left; padding-left: 5px;">
                             <table class="mctWorkStyle" idx="05">
                                 <colgroup>
                                     <col width="20%">
@@ -613,7 +613,8 @@
                     });
                 }
             },
-            {title: '주문<br>수량', width: 50, dataIndx: 'CONTROL_PART_QTY'},
+            {title: '수량<br>추가', width: 50, dataIndx: 'ADDITIONAL_QTY'},
+            {title: '발주<br>수량', width: 50, dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: 'CAD 파일', align: 'center',
                 colModel: [
@@ -647,7 +648,7 @@
             },
             {
                 title: 'CAM 작업 실적', align: 'center', colModel: [
-                    {title: 'Steps', width: 50, datatype: 'integer', dataIndx: 'CAM_STEP'},
+                    {title: 'Step', width: 50, datatype: 'integer', dataIndx: 'CAM_STEP'},
                     {title: '위치', dataIndx: 'WORK_DIRECTION'},
                     {title: '작업내용', width: 70, dataIndx: 'WORK_DESC'},
                     {title: '단위수량', width: 50, datatype: 'integer', dataIndx: 'DESIGN_QTY'},
@@ -1048,6 +1049,9 @@
             $("#cam_work_history_pop_form").find("#CONTROL_NUM").html("<p style='color:blue;'>" + controlNum + "<p/>");
             let controlPartQty = numberWithCommas(rowData.CONTROL_PART_QTY);
             if (rowData.ORIGINAL_SIDE_QTY) controlPartQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.OTHER_SIDE_QTY + ") </span>";
+            if(rowData.ADDITIONAL_QTY > 0) {
+                controlPartQty += (' + ' + rowData.ADDITIONAL_QTY);
+            }
             $("#cam_work_history_pop_form").find("#CONTROL_PART_QTY").html(controlPartQty || '');
             let dueOutDt = rowData.INNER_DUE_DT;
             switch (rowData.EMERGENCY_HOLD) {

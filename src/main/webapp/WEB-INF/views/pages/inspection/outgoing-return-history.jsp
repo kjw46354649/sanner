@@ -169,7 +169,7 @@
             {title: '도면번호', dataType: 'integer', dataIndx: 'DRAWING_NUM', minWidth: 120, width: 120, editable: true},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 90, width: 90, editable: false},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 120, width: 120, editable: false},
-            {title: '주문수량', dataType: 'integer', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false, format: '#,###'},
+            {title: '발주<br>수량', dataType: 'integer', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false, format: '#,###'},
             {title: '출고', dataType: 'string', dataIndx: 'OUT_QTY', minWidth: 60, width: 60, editable: false},
             {
                 title: '포장단위', datatype: 'string', align: 'center', colModel: [

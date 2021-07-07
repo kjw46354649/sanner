@@ -277,7 +277,7 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '주문<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
+            {title: '발주<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
             {title: '발주<br>납기', width: '5%', dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
             {title: '가공<br>납기', width: '5%', dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT'},
             {title: '작업<br>형태', width: '5%', dataIndx: 'WORK_TYPE_NM'},
@@ -424,7 +424,7 @@
             {title: '소재<br>종류', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면<br>처리', dataIndx: 'SURFACE_TREAT_NM'},
             {title: '열<br>처리', minWidth: 40, width: 40, maxWidth: 40, dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
-            {title: '주문<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
+            {title: '발주<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
             {title: '가공확정일시', width: '7.5%', dataType: 'date', dataIndx: 'CONTROL_STATUS_DT'}
         ];
         const topRightObj = {
@@ -555,7 +555,7 @@
             {title: '소재<br>종류', width: '5%', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면<br>처리', width: '7.5%',  dataIndx: 'SURFACE_TREAT_NM'},
             {title: '열<br>처리', minWidth: 40, width: 40, maxWidth: 40, dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
-            {title: '주문<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'}
+            {title: '발주<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'}
         ];
         const botLeftObj = {
             height: '90%',
@@ -680,7 +680,7 @@
             {title: '규격', width: '5%', dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면<br>처리', dataIndx: 'SURFACE_TREAT_NM'},
-            {title: '주문<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
+            {title: '발주<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
             {title: '가공완료<br>일시', width: '7.5%', dataIndx: 'INNER_WORK_FINISH_DT'},
         ];
         const botRightObj = {

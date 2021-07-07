@@ -103,7 +103,8 @@
         IFNULL(SF_GET_DATE_F(B.OUTSIDE_STATUS_DT, '', 'M'), SPACE(0)) AS OUTSIDE_STATUS_DT, <!-- 외주 상태변경일시 -->
         IFNULL(SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', ''), SPACE(0)) AS OUTSIDE_IN_DT, <!-- 외주 입고일시 -->
         IFNULL(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), SPACE(0)) AS CONTROL_PART_QTY,
-        IFNULL(SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', 'M'), SPACE(0)) AS INNER_WORK_FINISH_DT
+        IFNULL(SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', 'M'), SPACE(0)) AS INNER_WORK_FINISH_DT,
+        IFNULL(B.ADDITIONAL_QTY, SPACE(0)) AS ADDITIONAL_QTY
     </sql>
 
     <sql id="controlPartOrder">
@@ -133,8 +134,7 @@
         IFNULL(C.ORIGINAL_SIDE_QTY, SPACE(0)) AS ORIGINAL_SIDE_QTY, <!-- 대칭_원칭 -->
         IFNULL(C.OTHER_SIDE_QTY, SPACE(0)) AS OTHER_SIDE_QTY,   <!-- 대칭_대칭 -->
         IFNULL(C.UNIT_FINAL_EST_AMT, SPACE(0)) AS UNIT_FINAL_EST_AMT,   <!-- 최종견적단가 -->
-        IFNULL(C.UNIT_FINAL_AMT, SPACE(0)) AS UNIT_FINAL_AMT, <!-- 최종공급단가 -->
-        IFNULL(C.INSIDE_STOCK_YN,'N') AS INSIDE_STOCK_YN
+        IFNULL(C.UNIT_FINAL_AMT, SPACE(0)) AS UNIT_FINAL_AMT <!-- 최종공급단가 -->
     </sql>
 
     <select id="selectControlManageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -773,7 +773,6 @@
             UNIT_FINAL_EST_AMT,
             UNIT_FINAL_AMT,
             ORDER_BARCODE_NUM,
-            INSIDE_STOCK_YN,
             INSERT_ID
         )
         SELECT
@@ -806,7 +805,6 @@
             REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
             REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
             CONCAT('O',LPAD(NEXTVAL(SEQ_ORDER_BARCODE),9,'0')),
-            IFNULL(#{INSIDE_STOCK_YN},'N'),
             #{LOGIN_USER_ID}
         FROM DUAL
         WHERE NOT EXISTS (  SELECT *
@@ -921,6 +919,9 @@
         </if>
         <if test="PART_UNIT_QTY != null and PART_UNIT_QTY != ''">
             PART_UNIT_QTY = #{PART_UNIT_QTY},
+        </if>
+        <if test="ADDITIONAL_QTY != null and ADDITIONAL_QTY != ''">
+            ADDITIONAL_QTY = #{ADDITIONAL_QTY},
         </if>
         <if test="UNIT_MATERIAL_AMT != null and UNIT_MATERIAL_AMT != ''">
             UNIT_MATERIAL_AMT = REPLACE(#{UNIT_MATERIAL_AMT}, ',', SPACE(0)),
@@ -1039,8 +1040,7 @@
             UNIT_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
             UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
             UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID},
-            INSIDE_STOCK_YN = #{INSIDE_STOCK_YN}
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
               AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
               AND ORDER_SEQ = #{ORDER_SEQ}
@@ -2132,7 +2132,7 @@
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050' <!-- Part 부속은 제외(작업형태 파트) -->
-                INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND C.INSIDE_STOCK_YN = 'N'
+                INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ
             WHERE 1 = 1
                 AND A.DEL_YN = 'N'
                 AND CONCAT(A.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.ORDER_SEQ) IN (${CONTROL_SEQ_STR})
@@ -2161,7 +2161,7 @@
             FROM TBL_CONTROL A
                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050' <!-- Part 부속은 제외(작업형태 파트) -->
-                INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND C.INSIDE_STOCK_YN = 'N'
+                INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ
                 INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
                                                    AND C.ORDER_SEQ = D.ORDER_SEQ
                                                    AND D.INVOICE_NUM = #{INVOICE_NUM}
@@ -2442,6 +2442,7 @@
             SURFACE_TREAT,
             MATERIAL_NOTE,
             PART_UNIT_QTY,
+            ADDITIONAL_QTY,
             SAME_SIDE_YN,
             ORIGINAL_SIDE_QTY,
             OTHER_SIDE_QTY,
@@ -2490,6 +2491,7 @@
             #{item.SURFACE_TREAT},
             #{item.MATERIAL_NOTE},
             #{item.PART_UNIT_QTY},
+            #{item.ADDITIONAL_QTY},
             IFNULL(#{item.SAME_SIDE_YN}, 'N'),
             #{item.ORIGINAL_SIDE_QTY},
             #{item.OTHER_SIDE_QTY},
@@ -2778,9 +2780,8 @@
             IFNULL(SF_GET_CODE_NM('1058', B.MATERIAL_FINISH_HEAT, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
             IFNULL(SF_GET_CODE_NM('1059', A.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION_NM, <!-- 주요검사품 -->
             IFNULL(B.PART_UNIT_QTY, 0) AS PART_UNIT_QTY,
+            IFNULL(B.ADDITIONAL_QTY, 0) AS ADDITIONAL_QTY,
             (SELECT IFNULL(SUM(M.ORDER_QTY), 0) FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ) AS ORDER_QTY,
-            IFNULL((SELECT IFNULL(SUM(M.ORDER_QTY),0) FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.INSIDE_STOCK_YN = 'Y'),0) AS INSIDE_STOCK_QTY,
---             IFNULL((SELECT IFNULL(M.INSIDE_STOCK_YN, 'N') FROM jmes.TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ),'N') AS INSIDE_STOCK_YN,
             IFNULL((SELECT IFNULL(SUM(M.REQUEST_QTY),0) FROM jmes.TBL_INSIDE_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ),0) AS STOCK_REQUEST_QTY,
             CONCAT(IFNULL(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0), SPACE(0)) AS CONTROL_ORDER_QTY, <!-- 주문 수량 -->
             IFNULL(A.SAME_SIDE_YN,'N') AS SAME_SIDE_YN, <!-- 대칭 여부 -->
@@ -2813,7 +2814,6 @@
             , IFNULL(SF_GET_DATE_F(C.ORDER_DUE_DT, 'MM', ''), SPACE(0)) AS ORDER_DUE_DT <!-- 납기 -->
             , C.ORIGINAL_SIDE_QTY
             , C.OTHER_SIDE_QTY
-            , IFNULL(C.INSIDE_STOCK_YN,'N') AS INSIDE_STOCK_YN
         FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C
         WHERE 1 = 1
             AND C.CONTROL_SEQ = B.CONTROL_SEQ
@@ -2931,6 +2931,7 @@
             SURFACE_TREAT = #{SURFACE_TREAT},
             MATERIAL_NOTE = #{MATERIAL_NOTE},
             PART_UNIT_QTY = #{PART_UNIT_QTY},
+            ADDITIONAL_QTY = #{ADDITIONAL_QTY},
             MATERIAL_FINISH_GRIND = #{MATERIAL_FINISH_GRIND},
             MATERIAL_FINISH_HEAT = #{MATERIAL_FINISH_HEAT},
             UNIT_MATERIAL_AMT = #{UNIT_MATERIAL_AMT},
@@ -3249,13 +3250,6 @@
                            AND A.DEL_YN = 'N'
                    )
     </select>
-    <select id="selectCheckInsideStockList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.ORDER_SEQ, A.INSIDE_STOCK_YN, A.ORDER_QTY
-        FROM TBL_CONTROL_PART_ORDER A
-        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
-          AND A.INSIDE_STOCK_YN = 'Y'
-    </select>
-
     <select id="selectProcessingRequirementsBasicInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             A.CONTROL_NUM

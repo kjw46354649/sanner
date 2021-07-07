@@ -221,7 +221,7 @@
                             <td id="ITEM_NM_VIEW_T"></td>
                             <th>가공납기</th>
                             <td id="INNER_DUE_DT_VIEW_T" ></td>
-                            <th>수량(원칭,대칭)</th>
+                            <th>발주수량</th>
                             <td id="ORDER_QTY_INFO_VIEW_T"></td>
                         </tr>
                         <tr>
@@ -354,7 +354,7 @@
             {title: '작업형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 70, width: 70, editable: false},
             // {title: 'MATERIAL_TYPE', dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden:true},
             {title: '소재분류', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', minWidth: 110, width: 110, editable: false},
-            {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 50, editable: false,
+            {title: '발주<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 50, editable: false,
                 render: function (ui) {
                     let cellData = ui.cellData;
 

@@ -196,10 +196,9 @@ public class PdfPrintMakeController {
                 phrase.add(new VerticalPositionMark());
             }
             String qtyTxt = (String) controlInfo.get("CONTROL_ORDER_QTY");
-            String insideStockQty = String.valueOf(controlInfo.get("INSIDE_STOCK_QTY"));
-            if(Integer.parseInt(insideStockQty) > 0) {
-                qtyTxt = (Integer.parseInt(qtyTxt) - Integer.parseInt(insideStockQty)) + "";
-                qtyTxt += ("+" + String.valueOf(controlInfo.get("INSIDE_STOCK_QTY")));
+            String additionalQty = String.valueOf(controlInfo.get("ADDITIONAL_QTY"));
+            if(Integer.parseInt(additionalQty) > 0) {
+                qtyTxt += ("+" + additionalQty);
             }
             phrase.add(new Chunk(qtyTxt,mediumBoldFont));
 
@@ -344,9 +343,6 @@ public class PdfPrintMakeController {
                             tempTable.setWidths(new int[]{80});
 
                             String text = String.valueOf(controlOrderInfo.get("REGIST_NUM"));
-                            if(controlOrderInfo.get("INSIDE_STOCK_YN").equals("Y")) {
-                                text = "[재고]";
-                            }
                             PdfPCell inCell = createOrderHighCell(new Phrase(text, mediumTempBoldFont),1,1);
                             tempTable.addCell(inCell);
 
@@ -368,9 +364,6 @@ public class PdfPrintMakeController {
 
 //                            String text = "B4B4B4B4B4B4B4B4B4B4B4B4";
                             String text = String.valueOf(controlOrderInfo.get("REGIST_NUM"));
-                            if(controlOrderInfo.get("INSIDE_STOCK_YN").equals("Y")) {
-                                text = "[재고]";
-                            }
                             PdfPCell inCell = createOrderHighCell(new Phrase(text, mediumTempBoldFont),1,1);
                             tempTable.addCell(inCell);
 

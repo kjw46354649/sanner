@@ -557,8 +557,9 @@
                 editable: true
             },
             {title: '입고일시', width: 100, dataIndx: 'OUTSIDE_IN_DT2'},
+            {title: '수량<br>추가', dataType: 'integer', dataIndx: 'ADDITIONAL_QTY'},
             {
-                title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY',
+                title: '발주<br>수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY',
                 render: function (ui) {
                     const cellData = ui.cellData || 0;
 
@@ -910,7 +911,8 @@
             },
             {title: 'ORIGINAL_SIDE_QTY', dataIndx: 'DNJSCLD', hidden: true},
             {title: 'OTHER_SIDE_QTY', dataIndx: 'EOCLD', hidden: true},
-            {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '수량<br>추가', dataIndx: 'ADDITIONAL_QTY'},
+            {title: '발주<br>수량', dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: '소재<br>제공', minWidth: 30, width: 40, dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
@@ -1195,7 +1197,8 @@
             },
             {title: 'ORIGINAL_SIDE_QTY', dataIndx: 'DNJSCLD', hidden: true},
             {title: 'OTHER_SIDE_QTY', dataIndx: 'EOCLD', hidden: true},
-            {title: '수량', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '수량<br>추가', dataIndx: 'ADDITIONAL_QTY'},
+            {title: '발주<br>수량', dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 render: function (ui) {
@@ -1704,10 +1707,14 @@
                 '        <td style="' + st_center + '">' + list[i].SURFACE_TREAT_NM + '</td>\n' +
                 '        <td style="' + st_center + '">' + outsideMaterialSupplyYnChecked + '</td>\n' +
                 '        <td style="' + st_center + '">' + sideQtyYnChecked + '</td>\n';
+                let tempQty = parseInt(list[i].CONTROL_PART_QTY);
+                if(typeof list[i].ADDITIONAL_QTY != 'undefined' && list[i].ADDITIONAL_QTY != null && list[i].ADDITIONAL_QTY != '') {
+                    tempQty += parseInt(list[i].ADDITIONAL_QTY);
+                }
                 if (fnIsEmpty(sideQtyText)) {
-                    table += '        <td style="' + st_center + '">' + list[i].CONTROL_PART_QTY + '</td>\n';
+                    table += '        <td style="' + st_center + '">' + tempQty + '</td>\n';
                 } else {
-                    table += '        <td style="' + st_center + '">' + list[i].CONTROL_PART_QTY + ' ' + sideQtyText + '</td>\n';
+                    table += '        <td style="' + st_center + '">' + tempQty + ' ' + sideQtyText + '</td>\n';
                 }
                 table +=
                 '        <td style="' + st_center + '">' + outsideRequestFinishYnChecked + '</td>\n' +

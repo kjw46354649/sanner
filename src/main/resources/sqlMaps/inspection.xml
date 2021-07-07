@@ -224,10 +224,14 @@
             , C.PROJECT_NM  <!-- 프로젝트 -->
             , C.MODULE_NM
             , jmes.SF_GET_CODE_NM('1059', A.MAIN_INSPECTION, #{LOGIN_LOCALE}) AS MAIN_INSPECTION_NM <!-- 주요검사품 -->
-            , CASE WHEN jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) > 0 THEN (CASE WHEN A.SAME_SIDE_YN = 'Y' THEN CONCAT(jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), ' / ', IFNULL(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0),' (',IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1),0),',',IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1),0),')')
-                                                                                                         ELSE CONCAT(jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), ' / ', jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ))
-                                                                                                    END)
-                   ELSE jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE})
+            , CASE WHEN jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) > 0 AND IFNULL(B.ADDITIONAL_QTY,0) > 0 AND A.SAME_SIDE_YN = 'Y' THEN (
+                    CONCAT(jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), ' / ', IFNULL(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0),' (',IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1),0),',',IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1),0),') + ', B.ADDITIONAL_QTY)
+                )
+                WHEN jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) > 0 AND IFNULL(B.ADDITIONAL_QTY,0) > 0 THEN (
+                    CONCAT(jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), ' / ', jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ),' + ', B.ADDITIONAL_QTY)
+                )
+                WHEN jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) > 0 THEN CONCAT(jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), ' / ', jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ))
+                ELSE jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE})
             END AS WORK_TYPE_NM_ORDER_QTY_INFO
             , B.SIZE_TXT
             , jmes.SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
@@ -471,11 +475,7 @@
             , T.SURFACE_TREAT_NM
             , T.SIZE_TXT
             , T.ORDER_QTY
---             , T.OUT_QTY
-            , CASE WHEN T.INSIDE_STOCK_YN = 'Y' THEN SPACE(0)
-                   ELSE T.OUT_QTY
-              END OUT_QTY
-            , T.INSIDE_STOCK_YN
+            , T.OUT_QTY
             , jmes.SF_GET_DATE_F(T.OUT_FINISH_DT,'YY','') AS OUT_FINISH_DT
             , T.RETURN_QTY
             , jmes.SF_GET_DATE_F(T.RETURN_LAST_DT,'YY','') AS RETURN_LAST_DT
@@ -576,7 +576,6 @@
                 , X.CONTROL_CONFIRM_DT
                 , X.CONTROL_CLOSE_DT
                 , X.SCRAP_YN
-                , X.INSIDE_STOCK_YN
         FROM (
                 SELECT
                     A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
@@ -640,7 +639,6 @@
                                                 AND AA.CONTROL_SEQ = BB.CONTROL_SEQ
                                                 AND BB.ORDER_STATUS = 'ORD003')) AS CONTROL_CLOSE_DT <!-- 확정 일자 -->
                     , C.SCRAP_YN
-                    , C.INSIDE_STOCK_YN
         FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
                 WHERE B.CONTROL_SEQ = A.CONTROL_SEQ
                     AND C.CONTROL_SEQ = A.CONTROL_SEQ
@@ -1328,7 +1326,7 @@
                         , B.MATERIAL_TYPE
                         , jmes.SF_GET_CODE_NM('1035', B.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM
                         , jmes.SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
-                        , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
+                        , (jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0)) AS CONTROL_PART_QTY
                         , (SELECT M.FILE_SIZE FROM jmes.TBL_FILE M WHERE M.GFILE_SEQ = B.DXF_GFILE_SEQ) AS CAD_FILE_SIZE
                     FROM jmes.TBL_CONTROL A
                         , jmes.TBL_CONTROL_PART B
@@ -1379,7 +1377,6 @@
         SELECT X.KEY_SEQ
             , X.CONTROL_SEQ
             , X.CONTROL_DETAIL_SEQ
-            , X.INSIDE_STOCK_YN
             , X.ORDER_SEQ
             , X.OUT_RETURN_TYPE
             , CASE X.OUT_RETURN_TYPE WHEN '1' THEN '출고' WHEN '2' THEN '반품' ELSE '폐기' END AS OUT_RETURN_TYPE_NM
@@ -1392,9 +1389,7 @@
             , jmes.SF_GET_CODE_NM('1027', X.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
             , X.SIZE_TXT
             , X.ORDER_QTY
---             , X.OUT_QTY
-            , CASE WHEN X.INSIDE_STOCK_YN = 'Y' THEN SPACE(0)
-                   ELSE X.OUT_QTY
+            , X.OUT_QTY
               END OUT_QTY
             , CASE WHEN X.OUT_RETURN_TYPE = '1' AND X.PACKING_NUM IS NOT NULL THEN X.PACKING_CNT END AS PACKING_CNT
             , CASE WHEN X.OUT_RETURN_TYPE = '1' AND X.PACKING_NUM IS NOT NULL THEN CONCAT(X.PACKING_NUM,'/',X.PACKING_CNT) END AS OUT_PACKING_INFO
@@ -1422,7 +1417,6 @@
                     , NULL AS RETURN_QTY
                     , A.INSERT_DT
                     , '' AS RETURN_SETTLEMENT_DT
-                    , D.INSIDE_STOCK_YN
                 FROM jmes.TBL_OUT A
                     , jmes.TBL_CONTROL B
                     , jmes.TBL_CONTROL_PART C
@@ -1468,7 +1462,6 @@
                     , A.ERROR_QTY AS RETURN_QTY
                     , A.INSERT_DT
                     , A.RETURN_SETTLEMENT_DT
-                    , D.INSIDE_STOCK_YN
                 FROM jmes.TBL_INSPECT A
                     , jmes.TBL_CONTROL B
                     , jmes.TBL_CONTROL_PART C
@@ -1514,7 +1507,6 @@
                     , NULL AS RETURN_QTY
                     , C.OUT_FINISH_DT
                     , NULL AS RETURN_SETTLEMENT_DT
-                    , C.INSIDE_STOCK_YN
 				FROM TBL_CONTROL A
 					, TBL_CONTROL_PART B
 					, TBL_CONTROL_PART_ORDER C

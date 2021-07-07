@@ -309,31 +309,31 @@
                     <br/>
                     <table>
                         <tbody>
-                        <tr>
-                            <td class="modal-end-dialog-table-header-end" style="width:30%;"><srping:message key="drawing.board.label.15"/></td>
-                            <td class="modal-end-dialog-table-header-end" style="width:30%; color: red"><srping:message key="drawing.board.label.16"/></td>
-                            <td class="modal-end-dialog-table-header-end" style="width:40%;"><srping:message key="drawing.board.label.17"/></td>
-                        </tr>
-                        <tr>
-                            <td class="modal-end-dialog-table-contents-end">
-                                <button type="button" style="padding-right: 0px; position: absolute; right: 680px; top: 144px;" class="btn_plus" id="complete_success_qty_pop_plus_btn">더하기</button>
-                                <span class="text" style="padding-right: 23px; font-size: 40px; position: absolute; right: 547px; top: 146px;" id="completeControlCompleteQtyHtml">0</span>
-                                <button type="button" style="position: absolute; right: 517px; top: 144px;" class="btn_minus" id="complete_success_qty_pop_minus_btn">빼기</button>
-                            </td>
-                            <td class="modal-end-dialog-table-contents-end">
-                                <button type="button" style="position: absolute; right: 465px; top: 144px;" class="btn_plus" id="complete_fail_qty_pop_plus_btn">더하기</button>
-                                <span class="text" style="padding-right: 23px; font-size: 40px; position: absolute; right: 335px; top: 146px;" id="completeControlFailQtyHtml">1</span>
-                                <button type="button" class="btn_minus" style="position: absolute; right: 305px; top: 144px;" id="complete_fail_qty_pop_minus_btn">빼기</button>
-                            </td>
-                            <td class="modal-end-dialog-table-contents-end">
-                                <select id="ERROR_REASON" name="ERROR_REASON" style="width: 276px;">
-                                    <option value="" selected><srping:message key="com.frm.select.default.option"/></option>
-                                    <c:forEach var="code" items="${errorReasonList}">
-                                        <option value="${code.CODE_CD}">${code.CODE_NM}</option>
-                                    </c:forEach>
-                                </select>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td class="modal-end-dialog-table-header-end" style="width:30%;"><srping:message key="drawing.board.label.15"/></td>
+                                <td class="modal-end-dialog-table-header-end" style="width:30%; color: red"><srping:message key="drawing.board.label.16"/></td>
+                                <td class="modal-end-dialog-table-header-end" style="width:40%;"><srping:message key="drawing.board.label.17"/></td>
+                            </tr>
+                            <tr>
+                                <td class="modal-end-dialog-table-contents-end">
+                                    <button type="button" style="padding-right: 0px; position: absolute; right: 680px; top: 144px;" class="btn_plus" id="complete_success_qty_pop_plus_btn">더하기</button>
+                                    <span class="text" style="font-size: 40px; right: 547px; top: 146px; text-align: center;" id="completeControlCompleteQtyHtml">0</span>
+                                    <button type="button" style="position: absolute; right: 517px; top: 144px;" class="btn_minus" id="complete_success_qty_pop_minus_btn">빼기</button>
+                                </td>
+                                <td class="modal-end-dialog-table-contents-end">
+                                    <button type="button" style="position: absolute; right: 465px; top: 144px;" class="btn_plus" id="complete_fail_qty_pop_plus_btn">더하기</button>
+                                    <span class="text" style="font-size: 40px; right: 335px; top: 146px; text-align: center;" id="completeControlFailQtyHtml">1</span>
+                                    <button type="button" class="btn_minus" style="position: absolute; right: 305px; top: 144px;" id="complete_fail_qty_pop_minus_btn">빼기</button>
+                                </td>
+                                <td class="modal-end-dialog-table-contents-end">
+                                    <select id="ERROR_REASON" name="ERROR_REASON" style="width: 276px;">
+                                        <option value="" selected><srping:message key="com.frm.select.default.option"/></option>
+                                        <c:forEach var="code" items="${errorReasonList}">
+                                            <option value="${code.CODE_CD}">${code.CODE_NM}</option>
+                                        </c:forEach>
+                                    </select>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <br/>
@@ -459,11 +459,11 @@
                     </div>
                     <div class="middleConts">
                         <div class="tbl">
-                            <table>
+                            <table style="table-layout: fixed;">
                                 <caption>작업지시번호, Part, 수량, 납기로 구분된 테이블</caption>
                                 <colgroup>
-                                    <col width="383px">
-                                    <col width="107px">
+                                    <col width="325px">
+                                    <col width="120px">
 <%--                                    <col width="111px">--%>
                                     <col width="107px">
                                 </colgroup>

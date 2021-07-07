@@ -1891,44 +1891,65 @@
 
                             }, parameters, '');
                         }else {
-                            let parameters = {
-                                'url': '/json-list',
-                                'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcode"}
+                            let parameters3 = {
+                                'url': '/json-info',
+                                'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockNumBarcodeIn"}
                             };
+                            fnPostAjax(function (data3, callFunctionParam) {
+                                if(data3.info != null) {
+                                    $("#stockPopup_title").html("재고생성 / 입고");
+                                    $("#pop_qty_txt").html("입고수량");
+                                    stockManageGridId03.pqGrid('option', 'dataModel.postData', function () {
+                                        return { 'queryId': 'material.selectInsideStockPopInfo', 'INSIDE_STOCK_SEQ': data3.info.INSIDE_STOCK_SEQ};
+                                    });
+                                    stockManageGridId03.pqGrid('refreshDataAndView');
 
-                            fnPostAjax(function (data, callFunctionParam) {
-                                fnResetFrom("stock_manage_pop_form");
+                                    setTimeout(function () {
+                                        stockManageGridId03.pqGrid('setSelection', {rowIndx: 0});
+                                    },150)
 
-                                let dataList = data.list;
-                                let parameters2 = {
-                                    'url': '/json-info',
-                                    'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcodeNew"}
-                                };
-                                fnPostAjax(function (data2, callFunctionParam) {
-                                    $("#stock_manage_pop_form").find("#USE_BARCODE").val("Y");
+                                }else {
+                                    let parameters = {
+                                        'url': '/json-list',
+                                        'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcode"}
+                                    };
 
-                                    let dataInfo2 = data2.info;
-                                    if(dataInfo2 == null ) {
-                                        fnAlert(null, "도면번호가 존재하지 않습니다.");
+                                    fnPostAjax(function (data, callFunctionParam) {
                                         fnResetFrom("stock_manage_pop_form");
-                                        $('#stock_manage_pop').modal('hide');
-                                    }else{
-                                        if(typeof dataInfo2.ABBR_NM == 'undefined' || dataInfo2.ABBR_NM == '' || dataInfo2.ABBR_NM == null ) {
-                                            fnAlert(null,"업체 약어명을 등록해주세요.");
-                                            return false;
-                                        }else {
-                                            tempDataList.push(dataInfo2);
-                                        }
-                                    }
 
-                                    if(dataList.length > 0) {
-                                        $.each(dataList, function (idx, Item) {
-                                            tempDataList.push(Item);
-                                        })
-                                    }
-                                    settingPopGrid(tempDataList);
-                                }, parameters2, '');
-                            }, parameters, '');
+                                        let dataList = data.list;
+                                        let parameters2 = {
+                                            'url': '/json-info',
+                                            'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcodeNew"}
+                                        };
+                                        fnPostAjax(function (data2, callFunctionParam) {
+                                            $("#stock_manage_pop_form").find("#USE_BARCODE").val("Y");
+
+                                            let dataInfo2 = data2.info;
+                                            if(dataInfo2 == null ) {
+                                                fnAlert(null, "도면번호가 존재하지 않습니다.");
+                                                fnResetFrom("stock_manage_pop_form");
+                                                $('#stock_manage_pop').modal('hide');
+                                            }else{
+                                                if(typeof dataInfo2.ABBR_NM == 'undefined' || dataInfo2.ABBR_NM == '' || dataInfo2.ABBR_NM == null ) {
+                                                    fnAlert(null,"업체 약어명을 등록해주세요.");
+                                                    return false;
+                                                }else {
+                                                    tempDataList.push(dataInfo2);
+                                                }
+                                            }
+
+                                            if(dataList.length > 0) {
+                                                $.each(dataList, function (idx, Item) {
+                                                    tempDataList.push(Item);
+                                                })
+                                            }
+                                            settingPopGrid(tempDataList);
+                                        }, parameters2, '');
+                                    }, parameters, '');
+                                }
+                            }, parameters3, '');
+
                         }
                     }else if(barcodeType == 'S') {
                         fnResetFrom("stock_manage_pop_form");

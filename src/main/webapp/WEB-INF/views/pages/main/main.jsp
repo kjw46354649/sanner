@@ -359,7 +359,8 @@
                 }
             },
             {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM'},
-            {title: '수량', dataIndx: 'PART_QTY', dataType: 'integer', format: '#,###', minWidth: 40, width: 40},
+            {title: '수량<br>추가', dataIndx: 'ADDITIONAL_QTY', dataType: 'integer', format: '#,###', minWidth: 40, width: 40},
+            {title: '발주<br>수량', dataIndx: 'PART_QTY', dataType: 'integer', format: '#,###', minWidth: 40, width: 40},
             {title: '규격', dataIndx: 'SIZE_TXT', width: 85},
             {title: '현재위치', dataIndx: 'POP_POSITION_NM', width: 60},
             {title: '비고', dataIndx: 'NOTE', minWidth: 150, align: 'left'}

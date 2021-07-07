@@ -727,7 +727,7 @@
                     });
                 }
             },
-            {title: '작업지시번호', dataIndx: 'CONTROL_NUM', width: 170},
+            {title: '작업지시번호', dataIndx: 'CONTROL_NUM', width: 150},
             {title: '파<br>트', dataIndx: 'PART_NUM', minWidth: 30},
             {
                 title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30,
@@ -758,7 +758,7 @@
                     {title: '대칭', dataType: 'integer', dataIndx: 'OTHER_SIDE_QTY', minWidth: 40}
                 ]
             },
-            {title: '주문<br>수량', dataIndx: 'ORDER_QTY', minWidth: 40},
+            {title: '발주<br>수량', dataIndx: 'ORDER_QTY', minWidth: 40},
             {title: '출고<br>수량', dataIndx: 'OUT_QTY', minWidth: 40, format: '#,###'},
             {title: '출고<br>일시', dataIndx: 'OUT_FINISH_DT', width: 60},
             {

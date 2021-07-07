@@ -219,7 +219,7 @@
                     });
                 }
             },
-            {title: '작업지시번호', width: 150, dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: 135, dataIndx: 'CONTROL_NUM'},
             {
                 title: '', minWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {

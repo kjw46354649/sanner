@@ -244,7 +244,7 @@
                     });
                 }
             },
-            {title: '작업지시번호', width: '23%', dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: '20%', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
                 render: function (ui) {
@@ -268,7 +268,7 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '주문<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
+            {title: '발주<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
             {title: '발주<br>납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT'},
             {title: '가공<br>납기', minWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT'},
             {title: '작업<br>형태', minWidth: 40, dataIndx: 'WORK_TYPE_NM'},
@@ -375,7 +375,7 @@
                     });
                 }
             },
-            {title: '작업지시번호', width: '23%', dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: '20%', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
                 render: function (ui) {
@@ -414,7 +414,7 @@
             {title: '소재<br>종류', width: '5%', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면<br>처리', width: '10%',  dataIndx: 'SURFACE_TREAT_NM'},
             {title: '열<br>처리', minWidth: 40, width: 40, maxWidth: 40, dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
-            {title: '주문<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
+            {title: '발주<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
             {title: '가공확정일시', width: '10%', dataType: 'date', dataIndx: 'CONTROL_STATUS_DT'}
         ];
         const topRightObj = {
@@ -508,7 +508,7 @@
                     });
                 }
             },
-            {title: '작업지시번호', width: '23%', dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: '20%', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
                 render: function (ui) {
@@ -544,7 +544,7 @@
             {title: '소재<br>종류', width: '5%', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면<br>처리', width: '10%',  dataIndx: 'SURFACE_TREAT_NM'},
 			{title: '열<br>처리', minWidth: 40, width: 40, maxWidth: 40, dataIndx: 'MATERIAL_FINISH_HEAT_NM'},
-            {title: '주문<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'}
+            {title: '발주<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'}
         ];
         const botLeftObj = {
             height: '85%',
@@ -630,7 +630,7 @@
                     });
                 }
             },
-            {title: '작업지시번호', width: '23%', dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: '20%', dataIndx: 'CONTROL_NUM'},
             {title: '파<br>트', minWidth: 30, width: 30, maxWidth: 30, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'IMG_GFILE_SEQ', 
                 render: function (ui) {
@@ -668,7 +668,7 @@
             {title: '규격', width: '10%', dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', width: '5%', dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면<br>처리', width: '10%',  dataIndx: 'SURFACE_TREAT_NM'},
-            {title: '주문<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
+            {title: '발주<br>수량', maxWidth: 30, dataIndx: 'CONTROL_PART_QTY'},
             {title: '가공완료<br>일시', width: '10%', dataIndx: 'INNER_WORK_FINISH_DT'},
         ];
         const botRightObj = {

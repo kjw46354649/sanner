@@ -252,6 +252,7 @@
             , X.CONTROL_NUM
             , X.WORK_TYPE_NM
             , X.PART_QTY
+            , IFNULL(X.ADDITIONAL_QTY,SPACE(0)) AS ADDITIONAL_QTY
             , X.SIZE_TXT
             , ( SELECT jmes.SF_GET_CODE_NM('1009', M.POP_POSITION, #{LOGIN_LOCALE}) FROM TBL_POP M WHERE M.POP_SEQ = X.POP_SEQ) AS POP_POSITION_NM    -- 언어조건 확인
             , X.NOTE
@@ -278,6 +279,7 @@
                 , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
                 , CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' #', B.PART_NUM) END AS CONTROL_NUM
                 , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY
+                , B.ADDITIONAL_QTY
                 , jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
                 , B.SIZE_TXT
                 , B.IMG_GFILE_SEQ

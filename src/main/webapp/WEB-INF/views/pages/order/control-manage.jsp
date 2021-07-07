@@ -704,7 +704,24 @@
                     }
                 }
             },
-            {title: '주문<br>수량', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_PART_QTY'},
+            {title: '수량<br>추가', dataType: 'integer', format: '#,###', dataIndx: 'ADDITIONAL_QTY',
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE != 'WTP020' && rowData.WORK_TYPE != 'WTP040';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+
+                    if (rowData.WORK_TYPE == 'WTP020' || rowData.WORK_TYPE == 'WTP040') {
+                        let cls = 'bg-lightgray';
+
+                        return {cls: cls};
+                    }
+                }
+            },
+            {title: '발주<br>수량', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: '대칭', align: 'center',
                 colModel: [
@@ -999,25 +1016,6 @@
                         }
                     },
                     {
-                        title: '재고', minWidth: 30, dataIndx: 'INSIDE_STOCK_YN',
-                        styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                        editable: function (ui) {
-                            let rowData = ui.rowData;
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') && (typeof rowData.OUT_QTY == 'undefined');
-                        },
-                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let rowData = ui.rowData;
-                            let cls = null;
-                            if (rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') {
-                                cls = 'bg-lightgray';
-                            }
-
-                            return {cls: cls, text: (cellData === 'Y' ? cellData : '')};
-                        }
-                    },
-                    {
                         title: '출고', dataIndx: 'OUT_QTY',
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -1127,7 +1125,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050') && (rowData.INSIDE_STOCK_YN != 'Y');
+                            return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP040' || rowData.WORK_TYPE === 'WTP050');
                         },
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -1993,7 +1991,7 @@
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
                 'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMT', 'UNIT_FINAL_AMT', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM',
                 'LABEL_NOTE', 'PREV_DRAWING_NUM', 'SAME_SIDE_YN',
-                'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','INSIDE_STOCK_YN'
+                'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','ADDITIONAL_QTY'
                 // , 'DETAIL_MACHINE_REQUIREMENT', 'TOTAL_SHEET'
             ];
             const normalModeArray = [
@@ -2010,7 +2008,7 @@
                 'DRAWING_UP_DT', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
                 'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT_F', 'DELIVERY_DT', 'CONTROL_PART_INSERT_UPDATE_DT', 'ORDER_IMG_GFILE_SEQ',
                 'EOCLD', 'DNJSCLD', 'SAME_SIDE_YN',
-                'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','INSIDE_STOCK_YN'
+                'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','ADDITIONAL_QTY'
                 // , 'TOTAL_SHEET'
             ];
             const closeModeArray = [
@@ -2029,7 +2027,7 @@
                 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PROJECT_NM', 'ITEM_NM', 'ORDER_STAFF_NM', 'PREV_DRAWING_NUM',
                 'ORDER_IMG_GFILE_SEQ', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT',
                 'OUTSIDE_FINAL_AMT',
-                'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','INSIDE_STOCK_YN'
+                'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','ADDITIONAL_QTY'
                 //, 'TOTAL_SHEET'
             ];
             const allModeArray = [
@@ -2052,7 +2050,7 @@
                 'OUTSIDE_FINAL_AMT', 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT_F', 'OUTSIDE_NOTE', 'UNIT_MATERIAL_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT',
                 'CONTROL_PART_INSERT_UPDATE_DT',
-                'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','INSIDE_STOCK_YN'
+                'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','ADDITIONAL_QTY'
                 //, 'TOTAL_SHEET'
             ];
 
@@ -2313,7 +2311,7 @@
                 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT', 'UNIT_PROCESS_AUTO_AMT',
                 'CONTROL_PART_INSERT_UPDATE_DT',
-                'UNIT_SUM_AUTO_AMT', 'INSIDE_STOCK_NUM', 'STOCK_REQUEST_QTY', 'STOCK_OUT_QTY'
+                'UNIT_SUM_AUTO_AMT', 'INSIDE_STOCK_NUM', 'STOCK_REQUEST_QTY', 'STOCK_OUT_QTY','ADDITIONAL_QTY'
             ];
             const includeList = controlList.concat(partList);
 
@@ -2704,14 +2702,6 @@
                 fnAlert(null, errorList.length + '건의 데이터가 올바르지 않습니다.');
                 return false;
             }
-            const groupedControlNum = fnGroupBy(data, 'CONTROL_NUM');
-            for (let controlNum in groupedControlNum) {
-                let groupedInstock = fnGroupBy(groupedControlNum[controlNum], 'INSIDE_STOCK_YN');
-                if(typeof groupedInstock["Y"] != 'undefined' && groupedInstock["Y"].length >= 2) {
-                    fnAlert("","하나의 작업번호에 재고는 1개만 설정 가능합니다.");
-                    return false;
-                }
-            }
             // 작업지시번호 수정 여부 확인
             let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
@@ -3024,7 +3014,6 @@
             let compCdList = [];
             let orderCompCdList = [];
             let invoiceNumList = [];
-            let flagStock = false;
 
             for (let i = 0; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
@@ -3033,9 +3022,6 @@
                 compCdList.push(rowData.COMP_CD);
                 orderCompCdList.push(rowData.ORDER_COMP_CD);
                 invoiceNumList.push(rowData.INVOICE_NUM);
-                if(rowData.INSIDE_STOCK_YN == 'Y') {
-                    flagStock = true;
-                }
             }
             // 중복제거
             controlSeqList = [...new Set(controlSeqList)];
@@ -3043,10 +3029,6 @@
             orderCompCdList = [...new Set(orderCompCdList)];
             invoiceNumList = [...new Set(invoiceNumList)];
 
-            if(flagStock) {
-                fnAlert(null, '재고대상은 거래명세표 출력이 불가합니다.');
-                return false;
-            }
             if (controlSeqList.length === 0) {
                 fnAlert(null, '에러!');
                 return false;
@@ -3543,8 +3525,10 @@
                 editable: function (ui) {return gridCellEditable(ui);},
                 render: function (ui) {
                     let rowData = ui.rowData;
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
                     if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return {text: rowData.RNUM, style : 'background-color: #ffe0e0; font-weight: bold;'};
+                        return {text: rowData.RNUM, cls : 'matchGrid_lightRed'};
                     }
                     if(rowData.OUT_STATUS == 'OUT002') {
                         // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
@@ -3569,8 +3553,10 @@
                 editable: false,
                 render: function (ui) {
                     let rowData = ui.rowData;
+                    let grid = this;
+                    let $cell = grid.getCell(ui);
                     if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return {text: rowData.CONTROL_PART_INFO, style : 'background-color: #ffe0e0; font-weight: bold;'};
+                        return {text: rowData.CONTROL_PART_INFO, cls : 'matchGrid_lightRed'};
                     }
                     if(rowData.OUT_STATUS == 'OUT002') {
                         // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
@@ -3583,7 +3569,7 @@
                 render: function (ui) {
                     let rowData = ui.rowData;
                     if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return {style : 'background-color: #ffe0e0; font-weight: bold;'};
+                        return { cls : 'matchGrid_lightRed'};
                     }
                     if(rowData.OUT_STATUS == 'OUT002') {
                         // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
@@ -3596,7 +3582,7 @@
                 render: function (ui) {
                     let rowData = ui.rowData;
                     if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return {style : 'background-color: #ffe0e0; font-weight: bold;'};
+                        return { cls : 'matchGrid_lightRed'};
                     }
                     if(rowData.OUT_STATUS == 'OUT002') {
                         // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
@@ -3625,7 +3611,7 @@
                         }
                         return {style : 'background-color: #fff599;'};
                     }else {
-                        return {style : 'background-color: #ffe0e0; font-weight: bold;'};
+                        return { cls : 'matchGrid_lightRed'};
                     }
                 }
             },
@@ -3634,7 +3620,7 @@
                 render: function (ui) {
                     let rowData = ui.rowData;
                     if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return {style : 'background-color: #ffe0e0; font-weight: bold;'};
+                        return { cls : 'matchGrid_lightRed'};
                     }
                     if(rowData.OUT_STATUS == 'OUT002') {
                         // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
@@ -3647,7 +3633,7 @@
                 render: function (ui) {
                     let rowData = ui.rowData;
                     if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return {style : 'background-color: #ffe0e0; font-weight: bold;'};
+                        return { cls : 'matchGrid_lightRed'};
                     }
                     if(rowData.OUT_STATUS == 'OUT002') {
                         // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
@@ -3678,15 +3664,58 @@
             },
             toolbar: false,
             rowSelect: function (event, ui) {
-                var rowData = ui.addList[0].rowData;
-                if(typeof rowData.IMG_GFILE_SEQ != 'undefined' && rowData.IMG_GFILE_SEQ != ''){
-                    $("#match_stock_img").attr("src", '/qimage/' + rowData.IMG_GFILE_SEQ);
-                    $("#stock_match_pop_form").find("#GFILE_SEQ").val(rowData.IMG_GFILE_SEQ);
-                }else {
-                    $("#match_stock_img").attr("src", '/resource/main/blank.jpg');
-                    $("#stock_match_pop_form").find("#GFILE_SEQ").val("");
+                let dataArr = ['RNUM','INSIDE_STOCK_NUM','MATERIAL_DETAIL_NM','SIZE_TXT','REQUEST_QTY','OUT_QTY','CURR_QTY']
+                if(ui.addList.length > 0) {
+                    var rowData = ui.addList[0].rowData;
+
+                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
+                        $.each(dataArr,function (idx, Item) {
+                            matchStockGrid.pqGrid('removeClass', {rowIndx: rowData.pq_ri, dataIndx: Item, cls: 'matchGrid_lightRed'} );
+                            matchStockGrid.pqGrid('addClass', {rowIndx: rowData.pq_ri, dataIndx: Item, cls: 'matchGrid_selected'} );
+                        })
+                    }
+                    if(typeof rowData.IMG_GFILE_SEQ != 'undefined' && rowData.IMG_GFILE_SEQ != ''){
+                        $("#match_stock_img").attr("src", '/qimage/' + rowData.IMG_GFILE_SEQ);
+                        $("#stock_match_pop_form").find("#GFILE_SEQ").val(rowData.IMG_GFILE_SEQ);
+                    }else {
+                        $("#match_stock_img").attr("src", '/resource/main/blank.jpg');
+                        $("#stock_match_pop_form").find("#GFILE_SEQ").val("");
+                    }
                 }
-            }
+                if(ui.deleteList.length > 0) {
+                    var beforeRowData = ui.deleteList[0].rowData;
+                    if(typeof beforeRowData.RNUM != 'undefined' && beforeRowData.RNUM != null && beforeRowData.RNUM != '') {
+                        $.each(dataArr,function (idx, Item) {
+                            matchStockGrid.pqGrid('removeClass', {rowIndx: beforeRowData.pq_ri, dataIndx: Item, cls: 'matchGrid_selected'} );
+                            matchStockGrid.pqGrid('addClass', {rowIndx: beforeRowData.pq_ri, dataIndx: Item, cls: 'matchGrid_lightRed'} );
+                        })
+                    }
+                }
+            },
+            cellKeyDown: function (event, ui) {
+                const rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+                let nextRowData = "";
+                if (event.keyCode == $.ui.keyCode.DOWN) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx + 1});
+                    nextRowData = this.getRowData({rowIndx: rowIndx +1});
+                } else if (event.keyCode == $.ui.keyCode.UP) {
+                    sr.removeAll();
+                    sr.add({rowIndx: rowIndx - 1});
+                    nextRowData = this.getRowData({rowIndx: rowIndx -1});
+                }
+                if(typeof nextRowData != 'undefined' && nextRowData != null && nextRowData != '') {
+                    if(typeof nextRowData.IMG_GFILE_SEQ != 'undefined' && nextRowData.IMG_GFILE_SEQ != ''){
+                        $("#match_stock_img").attr("src", '/qimage/' + nextRowData.IMG_GFILE_SEQ);
+                        $("#stock_match_pop_form").find("#GFILE_SEQ").val(nextRowData.IMG_GFILE_SEQ);
+                    }else {
+                        $("#match_stock_img").attr("src", '/resource/main/blank.jpg');
+                        $("#stock_match_pop_form").find("#GFILE_SEQ").val("");
+                    }
+                }
+            },
         };
         matchStockGrid.pqGrid(matchStockObj);
 
@@ -3781,6 +3810,8 @@
 
         $("#stockMatchPopup").on({
             'show.bs.modal': function () {
+                matchStockGrid.pqGrid(matchStockObj);
+                $("#stock_match_pop_form").find("#SAVE_YN").val("N");
 
                 matchStockGrid.pqGrid('option', 'dataModel.postData', function () {
                     return { 'queryId': 'orderMapper.selectMatchStockList', 'CONTROL_SEQ': $("#stock_match_pop_form").find("#CONTROL_SEQ").val()};
@@ -3790,6 +3821,7 @@
                     matchStockGrid.pqGrid('setSelection', {rowIndx: 0});
                 },300);
             },'hide.bs.modal': function () {
+                matchStockGrid.pqGrid('destroy');
                 if($("#stock_match_pop_form").find("#SAVE_YN").val() == "Y"){
                     $("#CONTROL_MANAGE_SEARCH").trigger('click');
                 }

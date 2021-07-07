@@ -925,3 +925,5 @@ ul, ol , dl { list-style: none;}
 .redText {
 	color:red !important;
 }
+.matchGrid_lightRed{background-color: #ffe0e0 !important; font-weight: bold;}
+.matchGrid_selected{background-color: #d9e8f4 !important; font-weight: bold;}
