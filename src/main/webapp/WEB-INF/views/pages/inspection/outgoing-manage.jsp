@@ -1743,6 +1743,7 @@
         });
 
         $('#SEL_OUTGOING_DATE_TYPE').val(4); // 확정일자 Default 검색조건
+        $('#SEL_OUTGOING_DATE_TYPE option[value=4]').prop('selected',true);
 
         $('#SEL_OUTGOING_DATE_TYPE').on('change', function () {
             const $selOutgoingTerm = $('[name=SEL_OUTGOING_TERM]');
