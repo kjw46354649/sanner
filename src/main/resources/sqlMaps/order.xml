@@ -3480,8 +3480,8 @@
                      D.IMG_GFILE_SEQ, E.INSIDE_OUT_SEQ, D.INSIDE_STOCK_SEQ
                  FROM TBL_CONTROL A
                     INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                    INNER JOIN TBL_INSIDE_STOCK D ON CASE WHEN B.MATERIAL_DETAIL IS NULL THEN D.SIZE_TXT = B.SIZE_TXT
-                                                          ELSE D.MATERIAL_DETAIL = B.MATERIAL_DETAIL AND B.SIZE_TXT = D.SIZE_TXT END
+                    INNER JOIN TBL_INSIDE_STOCK D ON CASE WHEN B.MATERIAL_TYPE IS NULL THEN D.SIZE_TXT = B.SIZE_TXT
+                                                          ELSE D.MATERIAL_TYPE = B.MATERIAL_TYPE AND B.SIZE_TXT = D.SIZE_TXT END
                     INNER JOIN TBL_INSIDE_OUT E ON D.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ AND E.CONTROL_SEQ = B.CONTROL_SEQ AND E.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
                  WHERE 1=1
                     <choose>
@@ -3501,8 +3501,8 @@
                         D.IMG_GFILE_SEQ, '' AS INSIDE_OUT_SEQ, D.INSIDE_STOCK_SEQ
                  FROM TBL_CONTROL A
                           INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                          INNER JOIN TBL_INSIDE_STOCK D ON CASE WHEN B.MATERIAL_DETAIL IS NULL THEN D.SIZE_TXT = B.SIZE_TXT
-                                                                ELSE D.MATERIAL_DETAIL = B.MATERIAL_DETAIL AND B.SIZE_TXT = D.SIZE_TXT END
+                          INNER JOIN TBL_INSIDE_STOCK D ON CASE WHEN B.MATERIAL_TYPE IS NULL THEN D.SIZE_TXT = B.SIZE_TXT
+                                                                ELSE D.MATERIAL_TYPE = B.MATERIAL_TYPE AND B.SIZE_TXT = D.SIZE_TXT END
                 WHERE 1=1
                    <choose>
                        <when test="CONTROL_SEQ != '' and CONTROL_SEQ != null">

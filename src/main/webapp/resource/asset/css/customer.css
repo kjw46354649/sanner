@@ -502,9 +502,9 @@ ul, ol , dl { list-style: none;}
 .stockPopupWrap .stockPopupInfo {
 	background: #f9fbfd;
 	width: 45%;
-	height: 75%;
+	height: 81%;
 	position: absolute;
-	top: 30%;
+	top: 33%;
 	left: 55%;
 	transform: translate(-65%,-30%);
 	padding: 1%;
@@ -563,16 +563,16 @@ ul, ol , dl { list-style: none;}
 	outline: none;
 }
 .stockPopupInfo .stockMap {
-	background: url(../../main/blank.jpg) no-repeat center;
-  background-size: 866px 379px;
+	/*background: url(../../main/blank.jpg) no-repeat center;*/
+  	/*background-size: 100% 100%;*/
 	border: 1px solid #aaa;
 	width: 100%;
-	height: 59%;
+	height: 66%;
 	margin-top: 10px;
 }
 .stockPopupInfo .stockPopupBtm {
 	width: 100%;
-	height: 29%;
+	height: 23%;
 	padding: 13px 0 7px;
 	display: flex;
 }
@@ -613,6 +613,9 @@ ul, ol , dl { list-style: none;}
 	border: 1px solid #aaa;
 	font-size: 1.2rem;
 	background: white;
+}
+.stockPopupInfo .stockPopupBtm .stockPopupBtmRight .trHeight {
+	height: 18%;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight table th {
 	width: 15%;

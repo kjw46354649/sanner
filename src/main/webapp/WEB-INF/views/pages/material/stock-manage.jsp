@@ -410,8 +410,9 @@
                         <input type="text" class="wd_200 hg_35" name="STOCK_BARCODE_NUM" id="STOCK_BARCODE_NUM" placeholder=""/>
                     </span>
                 </div>
-                <div id="POP_DRAWING_IMG" class="stockMap">
+                <div class="stockMap">
                     <!--도면-->
+                    <img id="POP_DRAWING_IMG" src="/resource/main/blank.jpg" style="width: 100%;height: 100%;max-width: 100%;max-height: 100%;">
                 </div>
                 <div class="stockPopupBtm">
                     <div class="stockPopupBtmLeft">
@@ -426,13 +427,13 @@
                     </div>
                     <div class="stockPopupBtmRight">
                         <table>
-                            <tr>
+                            <tr class="trHeight">
                                 <th>재고번호</th>
                                 <td class="tdBackColor tdWeight" id="POP_INSIDE_STOCK_NUM"></td>
                                 <th>구분</th>
                                 <td class="tdWeight tdCss" id="POP_GUBUN"></td>
                             </tr>
-                            <tr>
+                            <tr class="trHeight">
                                 <th>발주처</th>
                                 <td class="edit_td">
                                     <select id="POP_SEL_ORDER_COMP_CD" class="edit_sel">
@@ -444,7 +445,7 @@
                                     </select>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr class="trHeight">
                                 <th>소재</th>
                                 <td class="edit_td">
                                     <select id="POP_MATERIAL_DETAIL" class="edit_sel">
@@ -457,7 +458,7 @@
                                 <th>규격</th>
                                 <td id="POP_SIZE_TXT" class="edit_td"></td>
                             </tr>
-                            <tr>
+                            <tr class="trHeight">
                                 <th>품명</th>
                                 <td colspan="3" id="POP_ITEM_NM" class="edit_td"></td>
                             </tr>
@@ -580,22 +581,44 @@
         'use strict';
         let testList = '<c:out value="${HighCode.H_1049}"/>';
         let listHigh = [];
-        let listJson = {"WARE_HOUSE":[],"MATERIAL_TYPE":[],"LOC_SEQ":[],"ORDER_COMP_CD":[],"COMP_CD":[]};
+        let listJson = {"WARE_HOUSE":[],"MATERIAL_TYPE":[],"LOC_SEQ":[],"ORDER_COMP_CD":[],"COMP_CD":[],"MATERIAL_DETAIL":[]};
         <c:forEach var="vlocale" items="${HighCode.H_1049}">
-            var tmpJson = {
-                "CODE_NM_KR" : "${vlocale.CODE_NM_KR}",
-                "CODE_CD":"${vlocale.CODE_CD}"
-            }
-            listJson.WARE_HOUSE.push(tmpJson);
+        var tmpJson = {
+            "CODE_NM_KR" : "${vlocale.CODE_NM_KR}",
+            "value" : "${vlocale.CODE_CD}",
+            "text" : "${vlocale.CODE_NM_KR}",
+            "CODE_CD":"${vlocale.CODE_CD}"
+        }
+        listJson.WARE_HOUSE.push(tmpJson);
         </c:forEach>
 
         <c:forEach var="vlocale" items="${HighCode.H_1035}">
         var tmpJson = {
             "CODE_NM_KR" : "${vlocale.CODE_NM_KR}",
+            "value" : "${vlocale.CODE_CD}",
+            "text" : "${vlocale.CODE_NM_KR}",
             "CODE_CD":"${vlocale.CODE_CD}"
         }
         listJson.MATERIAL_TYPE.push(tmpJson);
         </c:forEach>
+
+        <c:forEach var="vlocale" items="${HighCode.H_1027}">
+        var tmpJson = {
+            "CODE_NM_KR" : "${vlocale.CODE_NM_KR}",
+            "value" : "${vlocale.CODE_CD}",
+            "text" : "${vlocale.CODE_NM_KR}",
+            "CODE_CD":"${vlocale.CODE_CD}"
+        }
+        listJson.MATERIAL_DETAIL.push(tmpJson);
+        </c:forEach>
+        let WAREHOUSE_LIST;
+        let warehouseData = {
+            "url" : '/json-list',
+            'data' :{"queryId": 'dataSource.getLocationListWithWarehouse'}
+        };
+        fnPostAjaxAsync(function (data, callFunctionParam) {
+            WAREHOUSE_LIST = data.list;
+        }, warehouseData, '');
 
         let selectedRowIndex = [];
 
@@ -650,17 +673,7 @@
                 editable: function (ui) {return gridCellEditable(ui);},
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
-                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'},
-                postRender:function( ui ){
-                    let ordercompcd = ui.rowData.ORDER_COMP_CD;
-                    if(typeof ordercompcd != 'undefined' && ordercompcd != null && ordercompcd != '' && ordercompcd.indexOf('CMP') < 0) {
-                        $.each(listJson.ORDER_COMP_CD, function (idx,Item) {
-                            if(Item.CODE_NM.toUpperCase() == ui.rowData.ORDER_COMP_CD.toUpperCase()) {
-                                ui.rowData.ORDER_COMP_CD = Item.CODE_CD;
-                            }
-                        })
-                    }
-                }
+                ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 100, width: 100,
                 editable: function (ui) { return gridCellEditable(ui);},
@@ -724,15 +737,21 @@
                     options: function(ui) {
                         let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                         let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
-                        let warehouseData = {
-                            "url" : '/json-list',
-                            'data' :{"queryId": 'dataSource.getLocationListWithWarehouse', "WAREHOUSE_CD" : WAREHOUSE_CD}
-                        };
-                        let ajaxData = "";
-                        fnPostAjaxAsync(function (data, callFunctionParam) {
-                            ajaxData = data.list;
-                        }, warehouseData, '');
-                        return ajaxData;
+
+                        if(typeof WAREHOUSE_LIST != 'undefined' && WAREHOUSE_LIST != null && WAREHOUSE_LIST != '') {
+                            const warehouseGroup = fnGroupBy(WAREHOUSE_LIST, 'WAREHOUSE_CD');
+                            return warehouseGroup[WAREHOUSE_CD];
+                        }else {
+                            let warehouseData = {
+                                "url" : '/json-list',
+                                'data' :{"queryId": 'dataSource.getLocationListWithWarehouse', "WAREHOUSE_CD" : WAREHOUSE_CD}
+                            };
+                            let ajaxData = "";
+                            fnPostAjaxAsync(function (data, callFunctionParam) {
+                                ajaxData = data.list;
+                            }, warehouseData, '');
+                            return ajaxData;
+                        }
                     }
                 },
                 render: function (ui) {
@@ -742,27 +761,29 @@
                     } else {
                         let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                         let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
-                        let warehouseData = {
-                            "url" : '/json-list',
-                            'data' :{"queryId": 'dataSource.getLocationListWithWarehouse', "WAREHOUSE_CD" : WAREHOUSE_CD}
-                        };
                         let ajaxData = "";
 
-                        fnPostAjaxAsync(function (data, callFunctionParam) {
-                            ajaxData = data.list;
-                        }, warehouseData, '');
+                        if(typeof WAREHOUSE_LIST != 'undefined' && WAREHOUSE_LIST != null && WAREHOUSE_LIST != '') {
+                            const warehouseGroup = fnGroupBy(WAREHOUSE_LIST, 'WAREHOUSE_CD');
+                            ajaxData = warehouseGroup[WAREHOUSE_CD];
+                        }else {
+                            let warehouseData = {
+                                "url" : '/json-list',
+                                'data' :{"queryId": 'dataSource.getLocationListWithWarehouse', "WAREHOUSE_CD" : WAREHOUSE_CD}
+                            };
 
-                        let index = ajaxData.findIndex(function (element) {
-                            return element.text === cellData;
+                            fnPostAjaxAsync(function (data, callFunctionParam) {
+                                ajaxData = data.list;
+                            }, warehouseData, '');
+                        }
+                        let text = "";
+                        $.each(ajaxData,function (idx,Item) {
+                            if(Item.text == cellData || Item.value == cellData) {
+                                text = Item.text;
+                            }
                         });
 
-                        if (index < 0) {
-                            index = ajaxData.findIndex(function (element) {
-                                return element.value == cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : ajaxData[index].text;
+                        return (text == '') ? cellData : text;
                     }
                 },
                 postRender:function( ui ){
@@ -792,17 +813,6 @@
                 validations: [
                     { type: 'minLen', value: 1, msg: "Required" }
                 ],
-                postRender:function( ui ){
-                    let cmpCd = ui.rowData.COMP_CD;
-                    if(typeof cmpCd != 'undefined' && cmpCd != null && cmpCd != '' && cmpCd.indexOf('CMP') < 0) {
-                        $.each(listJson.COMP_CD, function (idx,Item) {
-                            if(Item.CODE_NM.toUpperCase() == ui.rowData.COMP_CD.toUpperCase()) {
-                                ui.rowData.COMP_CD = Item.CODE_CD;
-                            }
-                        })
-                    }
-                }
-
             },
             /*{title: '재질', width: 60, dataIndx: 'MATERIAL_TYPE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1035')},
@@ -975,6 +985,63 @@
                 }
             },
             change: function (evt, ui) {
+                if (ui.source === 'paste') {
+                    let updateListLength = ui.updateList.length;
+
+                    for (let i = 0; i < updateListLength; i++) {
+                        let newRowData = ui.updateList[i].newRow;
+                        let rowIndx = ui.updateList[i].rowIndx;
+
+                        // 사업자 구분
+                        if (newRowData.hasOwnProperty('COMP_CD')) {
+                            let index = listJson.COMP_CD.findIndex(function (element) {
+                                return element.text === newRowData.COMP_CD;
+                            });
+
+                            if (index < 0) {
+                                index = listJson.COMP_CD.findIndex(function (element) {
+                                    return element.value === newRowData.COMP_CD;
+                                });
+                            }
+                            stockManageGridId01.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'COMP_CD': listJson.COMP_CD[index].value}
+                            });
+                        }
+                        // 발주업체
+                        if (newRowData.hasOwnProperty('ORDER_COMP_CD')) {
+                            let index = listJson.ORDER_COMP_CD.findIndex(function (element) {
+                                return element.text === newRowData.ORDER_COMP_CD;
+                            });
+
+                            if (index < 0) {
+                                index = listJson.ORDER_COMP_CD.findIndex(function (element) {
+                                    return element.value === newRowData.ORDER_COMP_CD;
+                                });
+                            }
+                            stockManageGridId01.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'ORDER_COMP_CD': listJson.ORDER_COMP_CD[index].value}
+                            });
+                        }
+                        // 소재종류
+                        if (newRowData.hasOwnProperty('MATERIAL_DETAIL')) {
+                            let index = listJson.MATERIAL_DETAIL.findIndex(function (element) {
+                                return element.text === newRowData.MATERIAL_DETAIL;
+                            });
+
+                            if (index < 0) {
+                                index = listJson.MATERIAL_DETAIL.findIndex(function (element) {
+                                    return element.value === newRowData.MATERIAL_DETAIL;
+                                });
+                            }
+                            stockManageGridId01.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'MATERIAL_DETAIL': listJson.MATERIAL_DETAIL[index].value}
+                            });
+                        }
+                    }
+                }
                 if(ui.source == "edit") {
                     let WAREHOUSE_CD = ui.updateList[0].newRow.WAREHOUSE_CD == undefined ? "" : ui.updateList[0].newRow.WAREHOUSE_CD;
                     if(WAREHOUSE_CD != "") {
@@ -1205,7 +1272,12 @@
                         $("#POP_INSIDE_STOCK_NUM").html(rowData.INSIDE_STOCK_NUM);
                         $("#POP_ITEM_NM").html(rowData.ITEM_NM);
                         $("#POP_SIZE_TXT").html(rowData.SIZE_TXT);
-                        $("#POP_DRAWING_IMG").css({'background':'url(/image/'+ rowData.IMG_GFILE_SEQ+ ')','background-repeat':'no-repeat','background-position':'center','background-size':'100% 100%'});
+                        if(typeof rowData.IMG_GFILE_SEQ != 'undefined' && rowData.IMG_GFILE_SEQ != ''){
+                            // $("#POP_DRAWING_IMG").css({'background':'url(/image/'+ rowData.IMG_GFILE_SEQ+ ')','background-repeat':'no-repeat','background-position':'center','background-size':'100% 100%'});
+                            $("#POP_DRAWING_IMG").attr("src", '/image/' + rowData.IMG_GFILE_SEQ);
+                        }else {
+                            $("#POP_DRAWING_IMG").attr("src", '/resource/main/blank.jpg');
+                        }
                         $('#POP_SEL_ORDER_COMP_CD option[value='+rowData.ORDER_COMP_CD +']').prop('selected',true);
                         $('#POP_SEL_COMP_CD option[value='+rowData.COMP_CD +']').prop('selected',true);
                         $('#POP_MATERIAL_DETAIL option[value='+rowData.MATERIAL_DETAIL +']').prop('selected',true);
@@ -1290,8 +1362,8 @@
                 sr.removeAll();
                 sr.add({rowIndx: rowIndx});
                 const selRowData = this.getRowData({rowIndx: rowIndx});
-                if(typeof selRowData != 'undefined') {
-                    $("#POP_DRAWING_IMG").css({'background':'url(/image/'+ selRowData.IMG_GFILE_SEQ+ ')','background-repeat':'no-repeat','background-position':'center','background-size':'866px 424px'});
+                if(typeof selRowData != 'undefined' && typeof selRowData.IMG_GFILE_SEQ != 'undefined') {
+                    $("#POP_DRAWING_IMG").attr("src", '/image/' + selRowData.IMG_GFILE_SEQ);
                 }
             },
             toolbar: false,
@@ -1435,8 +1507,7 @@
                 $("#POP_GUBUN").html('');
                 $("#POP_ITEM_NM").html('');
                 $("#POP_SIZE_TXT").html('');
-                $("#POP_DRAWING_IMG").css({'background':'url()','background-repeat':'no-repeat','background-position':'center','background-size':'866px 424px'});
-
+                $("#POP_DRAWING_IMG").attr("src", '/resource/main/blank.jpg');
 
                 fnResetFrom("stock_manage_pop_form");
                 $("#stock_manage_form").find("#queryId").val("material.selectInsideStockList");
@@ -1987,14 +2058,14 @@
             if(popType == 'GRID_OUT' || popType == 'BARCODE_OUT') {
                 if((typeof controlSeq != 'undefined' && controlSeq != '')|| (typeof insideSeq != 'undefined' && insideSeq != '')){
                     if(orderQty > popStockQty) {
-                        fnConfirm(null,"불출 수량이 재고 수량보다 많습니다. 불출을 진행하시겠습니까?",function () {
-                            $("#stock_pop_in").modal('show');
-                        })
+                        fnAlert(null,"불출 수량이 재고 수량보다 많습니다. 수량 확인바랍니다.");
+                        return;
                     }else {
                         $("#stock_pop_in").modal('show');
                     }
                 }else {
                     fnAlert("","불출 정보를 확인해주세요.");
+                    return;
                 }
             }else {
                 if (typeof insideSeq != 'undefined' && insideSeq != '' && insideSeq != null) {
@@ -2269,15 +2340,21 @@
                     options: function(ui) {
                         let rowData = stockInoutGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                         let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
-                        let warehouseData = {
-                            "url" : '/json-list',
-                            'data' :{"queryId": 'dataSource.getLocationListWithWarehouse', "WAREHOUSE_CD" : WAREHOUSE_CD}
-                        };
-                        let ajaxData = "";
-                        fnPostAjaxAsync(function (data, callFunctionParam) {
-                            ajaxData = data.list;
-                        }, warehouseData, '');
-                        return ajaxData;
+
+                        if(typeof WAREHOUSE_LIST != 'undefined' && WAREHOUSE_LIST != null && WAREHOUSE_LIST != '') {
+                            const warehouseGroup = fnGroupBy(WAREHOUSE_LIST, 'WAREHOUSE_CD');
+                            return warehouseGroup[WAREHOUSE_CD];
+                        }else {
+                            let warehouseData = {
+                                "url" : '/json-list',
+                                'data' :{"queryId": 'dataSource.getLocationListWithWarehouse', "WAREHOUSE_CD" : WAREHOUSE_CD}
+                            };
+                            let ajaxData = "";
+                            fnPostAjaxAsync(function (data, callFunctionParam) {
+                                ajaxData = data.list;
+                            }, warehouseData, '');
+                            return ajaxData;
+                        }
                     }
                 },
                 render: function (ui) {
@@ -2287,27 +2364,29 @@
                     } else {
                         let rowData = stockInoutGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                         let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
-                        let warehouseData = {
-                            "url" : '/json-list',
-                            'data' :{"queryId": 'dataSource.getLocationListWithWarehouse', "WAREHOUSE_CD" : WAREHOUSE_CD}
-                        };
                         let ajaxData = "";
 
-                        fnPostAjaxAsync(function (data, callFunctionParam) {
-                            ajaxData = data.list;
-                        }, warehouseData, '');
+                        if(typeof WAREHOUSE_LIST != 'undefined' && WAREHOUSE_LIST != null && WAREHOUSE_LIST != '') {
+                            const warehouseGroup = fnGroupBy(WAREHOUSE_LIST, 'WAREHOUSE_CD');
+                            ajaxData = warehouseGroup[WAREHOUSE_CD];
+                        }else {
+                            let warehouseData = {
+                                "url" : '/json-list',
+                                'data' :{"queryId": 'dataSource.getLocationListWithWarehouse', "WAREHOUSE_CD" : WAREHOUSE_CD}
+                            };
 
-                        let index = ajaxData.findIndex(function (element) {
-                            return element.text === cellData;
+                            fnPostAjaxAsync(function (data, callFunctionParam) {
+                                ajaxData = data.list;
+                            }, warehouseData, '');
+                        }
+                        let text = "";
+                        $.each(ajaxData,function (idx,Item) {
+                            if(Item.text == cellData || Item.value == cellData) {
+                                text = Item.text;
+                            }
                         });
 
-                        if (index < 0) {
-                            index = ajaxData.findIndex(function (element) {
-                                return element.value == cellData;
-                            });
-                        }
-
-                        return (index < 0) ? cellData : ajaxData[index].text;
+                        return (text == '') ? cellData : text;
                     }
                 },
                 postRender:function( ui ){
