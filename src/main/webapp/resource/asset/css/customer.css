@@ -502,7 +502,7 @@ ul, ol , dl { list-style: none;}
 .stockPopupWrap .stockPopupInfo {
 	background: #f9fbfd;
 	width: 45%;
-	height: 81%;
+	height: 84%;
 	position: absolute;
 	top: 33%;
 	left: 55%;
@@ -572,7 +572,7 @@ ul, ol , dl { list-style: none;}
 }
 .stockPopupInfo .stockPopupBtm {
 	width: 100%;
-	height: 23%;
+	height: 22%;
 	padding: 13px 0 7px;
 	display: flex;
 }

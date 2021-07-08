@@ -3519,9 +3519,9 @@
                 dataIndx: 'CHECK_BOX',
                 dataType: 'bool',
                 hidden: true,
-                editable: function (ui) {return gridCellEditable(ui);}
+                editable: true
             },
-            {title:'No', width: 30, maxWidth: 30, dataIndx: "RNUM", cbId: 'CHECK_BOX', type: "checkbox", useLabel: true,
+            {title:'No', width: 30, maxWidth: 30, dataIndx: "RNUM", cbId: 'CHECK_BOX', type: "checkbox",
                 editable: function (ui) {return gridCellEditable(ui);},
                 render: function (ui) {
                     let rowData = ui.rowData;
@@ -3534,6 +3534,7 @@
                         // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
                         return {cls: 'disabled', style: 'background-color: #d7d7d7;'};
                     }
+                    return {cls :''};
                 }
                 ,postRender: function (ui) {
                     let grid = this;
@@ -3597,9 +3598,7 @@
                     let grid = this;
                     let $cell = grid.getCell(ui);
                     let $row = grid.getRow(ui);
-
                     if(rowData.OUT_STATUS == 'OUT002') {
-                        // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
                         return {style: 'background-color: #d7d7d7;'};
                     }else if(rowData.RNUM == "") {
                         if(ui.cellData != null && ui.cellData > 0) {
@@ -3641,7 +3640,6 @@
                     }
                 }
             }
-            // {title: '창고명', align: 'center', width: 100, dataIndx: 'WAREHOUSE_CD_NM'},
         ];
 
         let matchStockObj = {
@@ -3670,7 +3668,9 @@
 
                     if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
                         $.each(dataArr,function (idx, Item) {
-                            matchStockGrid.pqGrid('removeClass', {rowIndx: rowData.pq_ri, dataIndx: Item, cls: 'matchGrid_lightRed'} );
+                            if(matchStockGrid.pqGrid('hasClass', {rowIndx: rowData.pq_ri, cls: 'matchGrid_lightRed'})) {
+                                matchStockGrid.pqGrid('removeClass', {rowIndx: rowData.pq_ri, dataIndx: Item, cls: 'matchGrid_lightRed'} );
+                            }
                             matchStockGrid.pqGrid('addClass', {rowIndx: rowData.pq_ri, dataIndx: Item, cls: 'matchGrid_selected'} );
                         })
                     }
