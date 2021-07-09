@@ -182,45 +182,51 @@ public class MaterialServiceImpl implements MaterialService {
             String INSIDE_STOCK_NUM = (String) map.get("INSIDE_STOCK_NUM");
 
             if("".equals(INSIDE_STOCK_NUM)){ // 새로 등록하는 케이스
+                String TEMP_INSIDE_STOCK_NUM = (String) map.get("TEMP_INSIDE_STOCK_NUM");
+                if(!"".equals(TEMP_INSIDE_STOCK_NUM)) {
+                    map.put("queryId", "material.selectTempInsideStockNum");
+                    Map<String, Object> tempInfo = this.innodaleDao.getInfo(map);
 
-                map.put("queryId", "material.selectInsideStockAbbrNmUseType");
-//                map.put("queryId", "material.selectInsideStockAbbrNm");
-                Map<String, Object> selMap1 = this.innodaleDao.getInfo(map);
-
-                if(selMap1 == null || selMap1.get("ABBR_NM") == null || "".equals(selMap1.get("ABBR_NM"))){//디비 값 체크
-//                    model.addAttribute("result",		"fail");
-                    flag = true;
-                    message = "업체 약어명을 등록해주세요.";
-//                    throw new Exception("managerEquip addList Error ABBR_NM NULL");
-                }else {
-                    String ABBR_NM = (String)selMap1.get("ABBR_NM");
-
-                    String ORDER_COMP_CD = (String)map.get("ORDER_COMP_CD");
-                    if(ORDER_COMP_CD == null || "".equals(ORDER_COMP_CD)){//그리드 값 체크
+                    if(tempInfo == null) {
                         flag = true;
-                        message = "발주처를 입력해주세요.";
-//                        model.addAttribute("result",		"fail");
-//                        throw new Exception("managerEquip addList Error ORDER_COMP_CD NULL");
-                    }else {
-                        map.put("queryId", "material.selectInsideStockSeq");
-                        map.put("ABBR_NM", ABBR_NM);
-                        Map<String, Object> selMap2 = this.innodaleDao.getInfo(map);
-                        String V_INSIDE_STOCK_NUM = (String)selMap2.get("INSIDE_STOCK_NUM");
-
-                        map.put("INSIDE_STOCK_NUM", V_INSIDE_STOCK_NUM);
-                        map.put("queryId", "material.insertInsideStock");
-                        this.innodaleDao.create(map);
-                        model.addAttribute("INSIDE_STOCK_NUM",		V_INSIDE_STOCK_NUM);
+                        message = "이미 등록된 재고번호입니다.";
                     }
                 }
+                if(!flag) {
+                    map.put("queryId", "material.selectInsideStockAbbrNmUseType");
+                    Map<String, Object> selMap1 = this.innodaleDao.getInfo(map);
 
+                    if(selMap1 == null || selMap1.get("ABBR_NM") == null || "".equals(selMap1.get("ABBR_NM"))){//디비 값 체크
+                        flag = true;
+                        message = "업체 약어명을 등록해주세요.";
+                    }else {
+                        String ABBR_NM = (String)selMap1.get("ABBR_NM");
+
+                        String ORDER_COMP_CD = (String)map.get("ORDER_COMP_CD");
+                        if(ORDER_COMP_CD == null || "".equals(ORDER_COMP_CD)){//그리드 값 체크
+                            flag = true;
+                            message = "발주처를 입력해주세요.";
+                        }else {
+                            map.put("queryId", "material.selectInsideStockSeq");
+                            map.put("ABBR_NM", ABBR_NM);
+                            Map<String, Object> selMap2 = this.innodaleDao.getInfo(map);
+                            String V_INSIDE_STOCK_NUM = (String)selMap2.get("INSIDE_STOCK_NUM");
+
+                            map.put("INSIDE_STOCK_NUM", V_INSIDE_STOCK_NUM);
+                            map.put("queryId", "material.insertInsideStock");
+                            this.innodaleDao.create(map);
+                            model.addAttribute("INSIDE_STOCK_NUM",		V_INSIDE_STOCK_NUM);
+                        }
+                    }
+                }
             }else{
                 map.put("queryId", "material.updateInsideStockPop");
                 this.innodaleDao.update(map);
             }
-
-            map.put("queryId", "material.insertInsideStockIn");
-            this.innodaleDao.create(map);
+            if(!flag) {
+                map.put("queryId", "material.insertInsideStockIn");
+                this.innodaleDao.create(map);
+            }
 
             if("Y".equals(USE_BARCODE)) { // 바코드로 재고입고시 출고프로세스 제거 (21/07/05)
 //                outGoingProcessForBarcodeIn(model,map);

@@ -2308,7 +2308,12 @@
 
     <select id="selectInsideStockPopInfoBarcodeNew" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            (SELECT CONCAT(ABBR_NM,'-XXXX') FROM TBL_COMPANY tc WHERE tc.COMP_CD = B.ORDER_COMP_CD AND tc.DEL_YN = 'N') AS INSIDE_STOCK_NUM
+--             (SELECT CONCAT(ABBR_NM,'-XXXX') FROM TBL_COMPANY tc WHERE tc.COMP_CD = B.ORDER_COMP_CD AND tc.DEL_YN = 'N') AS INSIDE_STOCK_NUM
+            (SELECT CONCAT(Y.ABBR_NM,'-',LPAD(IFNULL(MAX(SUBSTRING_INDEX(X.INSIDE_STOCK_NUM , '-', -1 )), 0) +1, 4, '0'))
+               FROM TBL_INSIDE_STOCK X
+                        INNER JOIN TBL_COMPANY Y ON X.ORDER_COMP_CD = Y.COMP_CD
+               WHERE X.ORDER_COMP_CD = B.ORDER_COMP_CD
+            ) AS INSIDE_STOCK_NUM
             , (SELECT ABBR_NM FROM TBL_COMPANY tc WHERE tc.COMP_CD = B.ORDER_COMP_CD AND tc.DEL_YN = 'N') AS ABBR_NM
             , '신규생성' AS TYPE
             , 'BLUE' AS COLOR
@@ -2347,6 +2352,11 @@
             AND A.DEL_YN = 'N'
             AND B.DEL_YN = 'N'
             AND A.BARCODE_NUM = #{BARCODE_NUM}
+    </select>
+    <select id="selectTempInsideStockNum" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT 1
+        FROM jmes.TBL_INSIDE_STOCK A
+        WHERE A.INSIDE_STOCK_NUM = #{TEMP_INSIDE_STOCK_NUM}
     </select>
     <select id="selectInsideStockNumBarcodeIn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT B.INSIDE_STOCK_NUM, B.INSIDE_STOCK_SEQ

@@ -2653,7 +2653,7 @@
                     , SUM(Q.YEAR_PART_QTY) AS YEAR_PART_QTY
                 FROM ( SELECT A.CLOSE_MONTH, A.CLOSE_VER, B.COMP_CD, C.OUTSIDE_COMP_CD
                             , COUNT(A.CONTROL_SEQ) AS YEAR_PART_CNT
-                            , SUM((jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) + IFNULL(A.ADDITIONAL_QTY,0))) AS YEAR_PART_QTY
+                            , SUM((jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) + IFNULL(C.ADDITIONAL_QTY,0))) AS YEAR_PART_QTY
                         FROM jmes.TBL_OUTSIDE_CLOSE A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
                         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                             AND A.CONTROL_SEQ = C.CONTROL_SEQ
@@ -2680,7 +2680,7 @@
                                         , SUM(Q.MONTH_PART_QTY) AS MONTH_PART_QTY
                                     FROM ( SELECT A.CLOSE_MONTH, A.CLOSE_VER, B.COMP_CD, C.OUTSIDE_COMP_CD
                                                 , COUNT(A.CONTROL_SEQ) AS MONTH_PART_CNT
-                                                , SUM((jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0))) AS MONTH_PART_QTY
+                                                , SUM((jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) + IFNULL(C.ADDITIONAL_QTY,0))) AS MONTH_PART_QTY
                                             FROM jmes.TBL_OUTSIDE_CLOSE A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
                                             WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                                                 AND A.CONTROL_SEQ = C.CONTROL_SEQ

@@ -387,6 +387,7 @@
         <input type="hidden" id="INSIDE_STOCK_SEQ" name="INSIDE_STOCK_SEQ" value="">
         <input type="hidden" id="INSIDE_OUT_SEQ" name="INSIDE_OUT_SEQ" value="">
         <input type="hidden" id="INSIDE_STOCK_NUM" name="INSIDE_STOCK_NUM" value="">
+        <input type="hidden" id="TEMP_INSIDE_STOCK_NUM" name="TEMP_INSIDE_STOCK_NUM" value="">
         <input type="hidden" name="POP_TYPE" id="POP_TYPE" value="">
         <input type="hidden" name="USE_BARCODE" id="USE_BARCODE" value="">
 <%--        <input type="hidden" name="MATERIAL_TYPE" id="MATERIAL_TYPE" value="">--%>
@@ -1330,6 +1331,9 @@
                             // $("#stock_manage_pop_form").find("#ORG_ORDER_QTY").val(rowData.ORDER_QTY);
                             $("#stock_manage_pop_form").find("#INSIDE_STOCK_SEQ").val('');
                             $("#stock_manage_pop_form").find("#INSIDE_STOCK_NUM").val('');
+                            if(typeof rowData.INSIDE_STOCK_NUM != 'undefined') {
+                                $("#stock_manage_pop_form").find("#TEMP_INSIDE_STOCK_NUM").val(rowData.INSIDE_STOCK_NUM);
+                            }
                         }
                         if($("#stock_manage_pop_form").find("#CONTROL_SEQ").val() != '') {
                             $("#POP_CONTROL_NUM").val(rowData.CONTROL_NUM);
@@ -2108,6 +2112,7 @@
                 'url': '/managerInsideStockPop',
                 'data': $('#stock_manage_pop_form').serialize()
             };
+            console.log($('#stock_manage_pop_form').serialize());
             fnPostAjax(function (data, callFunctionParam) {
                 $("#completePopup").modal('show');
 
