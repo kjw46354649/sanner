@@ -725,12 +725,22 @@
             },
             cellKeyDown: function (event, ui) {
                 let rowIndx = ui.rowIndx;
+                const currRow = this.getRowData({rowIndx: ui.rowIndx});
                 const sr = this.SelectRow();
                 const totalRecords = this.option('dataModel.data').length;
+                let groupNo = fnGroupBy(this.option('dataModel.data'),'NO');
                 if (event.keyCode == $.ui.keyCode.DOWN && rowIndx < totalRecords) {
-                    rowIndx++;
+                    // rowIndx++;
+                    if(typeof groupNo[currRow.NO + 1] != 'undefined') {
+                        let nextRow = groupNo[currRow.NO+1][0];
+                        rowIndx = nextRow.pq_ri;
+                    }
                 } else if (event.keyCode == $.ui.keyCode.UP && rowIndx > 0) {
-                    rowIndx--;
+                    // rowIndx--;
+                    if(typeof groupNo[currRow.NO - 1] != 'undefined') {
+                        let nextRow = groupNo[currRow.NO-1][0];
+                        rowIndx = nextRow.pq_ri;
+                    }
                 }
                 sr.removeAll();
                 sr.add({rowIndx: rowIndx});
@@ -802,7 +812,7 @@
                  'MATERIAL_TYPE_NM', 'DRAWING_NUM', 'IMG_GFILE_SEQ', 'CONTROL_PART_QTY', 'CAD_FILE_SIZE', 'DXF_GFILE_SEQ',
                  'MATERIAL_DETAIL_NM', 'MATERIAL_KIND_NM', 'MATERAIL_ORDER_SIZE', 'NC_WORK_TIME', 'TOTAL_WORK_TIME',
                  // 'CAM_STEP', 'WORK_DIRECTION', 'WORK_DESC', 'DESIGN_QTY', '', 'WORK_USER_NM',
-                 'CAM_EXPERIENCE_NOTE', 'CAM_WORK_NOTE'
+                 'CAM_EXPERIENCE_NOTE', 'CAM_WORK_NOTE', 'ADDITIONAL_QTY'
              ];
             const includeList = controlList.concat(partList);
 
