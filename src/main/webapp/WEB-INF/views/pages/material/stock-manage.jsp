@@ -908,7 +908,7 @@
                 }
             },
             {title: '생성일시', dataType: 'string', dataIndx: 'INSERT_TIME', minWidth: 100, width: 100, editable: false},
-            {title: '수정일시', dataType: 'string', dataIndx: 'UPDATE_TIME', minWidth: 100, width: 100, editable: false},
+            // {title: '수정일시', dataType: 'string', dataIndx: 'UPDATE_TIME', minWidth: 100, width: 100, editable: false},
             {
                 title: '최근실적', align: 'center', editable: false,
                 colModel: [
@@ -1946,7 +1946,7 @@
                                 if(typeof data.info.INSIDE_OUT_SEQ == 'undefined' || data.info.INSIDE_OUT_SEQ == '') {
                                     let parameters2 = {
                                         'url': '/json-list',
-                                        'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcode"}
+                                        'data': {"TYPE":poptype,"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcode"}
                                     };
                                     fnPostAjax(function (data2, callFunctionParam) {
                                         if(data2.list.length > 0) {
@@ -1982,7 +1982,7 @@
                                 }else {
                                     let parameters = {
                                         'url': '/json-list',
-                                        'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcode"}
+                                        'data': {"TYPE":poptype,"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcode"}
                                     };
 
                                     fnPostAjax(function (data, callFunctionParam) {

@@ -2116,6 +2116,38 @@
             , UPDATE_ID = #{LOGIN_USER_ID}
         WHERE INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
     </update>
+    <insert id="insertInsideStockOut" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_INSIDE_OUT (
+            INSIDE_OUT_SEQ,
+            INSIDE_STOCK_SEQ,
+            INSIDE_STOCK_NUM,
+            OUT_STATUS,
+            OUT_QTY,
+            OUT_DT,
+            <if test="CONTROL_SEQ != null and CONTROL_SEQ !=''">
+                CONTROL_SEQ,
+            </if>
+            <if test="CONTROL_DETAIL_SEQ != null and CONTROL_DETAIL_SEQ !=''">
+                CONTROL_DETAIL_SEQ,
+            </if>
+            INSERT_ID
+        )
+        VALUES (
+            NEXTVAL(jmes.SEQ_INSIDE_OUT),
+            #{INSIDE_STOCK_SEQ},
+            #{INSIDE_STOCK_NUM},
+            'OUT002',
+            #{IN_OUT_QTY},
+            now(),
+            <if test="CONTROL_SEQ != null and CONTROL_SEQ !=''">
+                #{CONTROL_SEQ},
+            </if>
+            <if test="CONTROL_DETAIL_SEQ != null and CONTROL_DETAIL_SEQ !=''">
+                #{CONTROL_DETAIL_SEQ},
+            </if>
+            #{LOGIN_USER_ID}
+        )
+    </insert>
     <insert id="insertInsideStockIn" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_INSIDE_IN (INSIDE_IN_SEQ, INSIDE_STOCK_NUM, INSIDE_STOCK_SEQ, IN_QTY, CONTROL_SEQ, CONTROL_DETAIL_SEQ, INSERT_ID)
         SELECT NEXTVAL(jmes.SEQ_INSIDE_IN)
@@ -2127,26 +2159,6 @@
         , #{LOGIN_USER_ID}
         FROM DUAL
         WHERE #{IN_OUT_QTY} > 0
-    </insert>
-    <insert id="insertInsideStockOut" parameterType="java.util.HashMap">
-      INSERT INTO jmes.TBL_INSIDE_OUT (
-        INSIDE_OUT_SEQ,
-        INSIDE_STOCK_SEQ,
-        INSIDE_STOCK_NUM,
-        OUT_STATUS,
-        OUT_QTY,
-        OUT_DT,
-        INSERT_ID
-      )
-      VALUES (
-        NEXTVAL(jmes.SEQ_INSIDE_OUT),
-        #{INSIDE_STOCK_SEQ},
-        #{INSIDE_STOCK_NUM},
-        'OUT002',
-        #{IN_OUT_QTY},
-        now(),
-        #{LOGIN_USER_ID}
-      )
     </insert>
     <update id="updateInsideStockOut" parameterType="java.util.HashMap">
         UPDATE jmes.TBL_INSIDE_OUT
@@ -2222,7 +2234,11 @@
              , SUM(Y.ORDER_QTY) AS ORG_ORDER_QTY
              , (SELECT IFNULL(SUM(D.IN_QTY),0) FROM jmes.TBL_INSIDE_IN D WHERE D.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(E.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT E WHERE E.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ AND E.OUT_STATUS = 'OUT002') AS INSIDE_STOCK_CURR_QTY
              , (SELECT IFNULL(SUM(D.IN_QTY),0) FROM jmes.TBL_INSIDE_IN D WHERE D.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(E.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT E WHERE E.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ AND E.OUT_STATUS = 'OUT002') AS POP_STOCK_QTY
-             , (SELECT IFNULL(SUM(F.IN_QTY),0) FROM jmes.TBL_INSIDE_IN F WHERE F.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(G.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT G WHERE G.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ AND G.OUT_STATUS = 'OUT002') + IFNULL(SUM(Y.ORDER_QTY),0) AS POP_STOCK_QTY_AFTER
+             , CASE WHEN (#{TYPE} = 'GRID_OUT' OR #{TYPE} = 'BARCODE_OUT') THEN (
+                    (SELECT IFNULL(SUM(F.IN_QTY),0) FROM jmes.TBL_INSIDE_IN F WHERE F.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(G.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT G WHERE G.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ AND G.OUT_STATUS = 'OUT002') - IFNULL(SUM(Y.ORDER_QTY),0)
+                )
+                ELSE (SELECT IFNULL(SUM(F.IN_QTY),0) FROM jmes.TBL_INSIDE_IN F WHERE F.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(G.OUT_QTY),0) FROM jmes.TBL_INSIDE_OUT G WHERE G.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ AND G.OUT_STATUS = 'OUT002') + IFNULL(SUM(Y.ORDER_QTY),0)
+             END AS POP_STOCK_QTY_AFTER
              , A.CONTROL_SEQ
              , A.CONTROL_DETAIL_SEQ
              ,CASE
@@ -2551,7 +2567,7 @@
                 B.SIZE_TXT, B.MATERIAL_DETAIL, jmes.SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM, B.ITEM_NM,
                 B.COMP_CD, (SELECT COMP_NM FROM jmes.TBL_COMPANY WHERE COMP_CD = B.COMP_CD) AS COMP_CD_NM,
                 B.NOTE, '입고' AS TYPE, A.IN_QTY AS QTY, 'IN' AS TYPE_CODE,
-                (SELECT F.CONTROL_NUM FROM TBL_CONTROL F WHERE F.CONTROL_SEQ = A.CONTROL_SEQ) AS CONTROL_NUM, SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS REQUEST_QTY,
+                (SELECT F.CONTROL_NUM FROM TBL_CONTROL F WHERE F.CONTROL_SEQ = A.CONTROL_SEQ) AS CONTROL_NUM, SPACE(0) AS REQUEST_QTY,
                 B.SIZE_D, B.SIZE_H, B.SIZE_L, B.SIZE_T, B.SIZE_W,
                 CASE WHEN A.INSIDE_IN_SEQ = (
                     SELECT MAX(H.INSIDE_IN_SEQ)
