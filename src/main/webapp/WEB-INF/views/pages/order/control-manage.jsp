@@ -3509,11 +3509,10 @@
             {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
             {title: 'CONTROL_PART_INFO', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', hidden: true},
             {title: 'ORDER_QTY', dataType: 'integer', dataIndx: 'ORDER_QTY', hidden: true},
-            {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: 'INSIDE_STOCK_SEQ', dataType: 'integer', dataIndx: 'INSIDE_STOCK_SEQ', hidden: true},
-            {title: 'INSIDE_OUT_SEQ', dataType: 'integer', dataIndx: 'INSIDE_OUT_SEQ', hidden: true},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, editable: false},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, editable: false},
+            {title: 'INSIDE_STOCK_SEQ', dataType: 'integer', dataIndx: 'INSIDE_STOCK_SEQ', hidden: true, editable: false},
+            {title: 'INSIDE_OUT_SEQ', dataType: 'integer', dataIndx: 'INSIDE_OUT_SEQ', hidden: true, editable: false},
             {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
             {
                 dataIndx: 'CHECK_BOX',
@@ -3541,7 +3540,10 @@
                     let $cell = grid.getCell(ui);
                     let rowData = ui.rowData;
 
-                    if(typeof rowData.INSIDE_OUT_SEQ != 'undefined' && rowData.INSIDE_OUT_SEQ != null && rowData.INSIDE_OUT_SEQ != '') {
+                    if(typeof rowData.REQUEST_QTY == 'undefined' || rowData.REQUEST_QTY == null || rowData.REQUEST_QTY =='') {
+                        $cell.find('input[type=checkbox]').prop('checked', false);
+                        ui.rowData.CHECK_BOX = false;
+                    }else if(typeof rowData.INSIDE_OUT_SEQ != 'undefined' && rowData.INSIDE_OUT_SEQ != null && rowData.INSIDE_OUT_SEQ != '') {
                         $cell.find('input[type=checkbox]').prop('checked', true);
                         ui.rowData.CHECK_BOX = true;
                     }else {
@@ -3600,7 +3602,7 @@
                     let $row = grid.getRow(ui);
                     if(rowData.OUT_STATUS == 'OUT002') {
                         return {style: 'background-color: #d7d7d7;'};
-                    }else if(rowData.RNUM == "") {
+                    }else if( typeof rowData.RNUM == 'undefined' || rowData.RNUM == "" || rowData.RNUM == null) {
                         if(ui.cellData != null && ui.cellData > 0) {
                             ui.rowData.CHECK_BOX = true;
                             $row.find('input[type=checkbox]').prop('checked', true);
@@ -3753,25 +3755,20 @@
                 fnAlert(null,'불출 요청은 파트단위당 1개의 재고번호만 가능합니다.');
                 return;
             }
-            // if(flag) {
-            //     fnAlert(null,'불출 요청 수량을 확인해주세요.');
-            //     return;
-            // }else {
-                let parameters = {'url': '/matchStockSave', 'data': {data: JSON.stringify(changes)}};
+            let parameters = {'url': '/matchStockSave', 'data': {data: JSON.stringify(changes)}};
 
-                fnPostAjaxAsync(function (data) {
-                    if (data.flag) {
-                        fnAlert(null, data.message);
-                        return false;
-                    }
-                    $("#stock_match_pop_form").find("#SAVE_YN").val("Y");
-                    fnAlert(null, '<spring:message code="com.alert.default.save.success"/>',function (){
-                        $("#stockMatchPopup").modal('hide')
-                    });
-                }, parameters, '');
-
-            // }
+            fnPostAjaxAsync(function (data) {
+                if (data.flag) {
+                    fnAlert(null, data.message);
+                    return false;
+                }
+                $("#stock_match_pop_form").find("#SAVE_YN").val("Y");
+                fnAlert(null, '<spring:message code="com.alert.default.save.success"/>',function (){
+                    $("#stockMatchPopup").modal('hide')
+                });
+            }, parameters, '');
         })
+
         $('#stock_match_pop_refresh').on('click', function (e) {
             matchStockGrid.pqGrid('option', 'dataModel.postData', function () {
                 return { 'queryId': 'orderMapper.selectMatchStockList', 'CONTROL_SEQ': $("#stock_match_pop_form").find("#CONTROL_SEQ").val()};
