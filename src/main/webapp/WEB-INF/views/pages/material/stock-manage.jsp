@@ -1118,14 +1118,14 @@
                     });
                 }
             },
-            {title: '요청수량', dataType: 'integer', align: 'center', width: 50, dataIndx: 'REQUEST_QTY'},
-            {title: '재고번호', minWidth: 120, dataIndx: 'INSIDE_STOCK_NUM'},
-            {title: '발주처', minWidth: 110, dataIndx: 'ORDER_COMP_NM'},
-            {title: '규격', minWidth: 120, dataIndx: 'SIZE_TXT'},
-            {title: '소재종류', minWidth: 100, dataIndx: 'MATERIAL_DETAIL_NM'},
-            {title: '재고수량', width: 50, dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY'},
-            {title: '남는수량', width: 50, dataType: 'integer', dataIndx: 'INSIDE_STOCK_REMAIN_QTY'},
-            {title: '품명', width: 170, dataIndx: 'ITEM_NM'},
+            {title: '요청수량', dataType: 'integer', align: 'center', width: 50, dataIndx: 'REQUEST_QTY', editable: false},
+            {title: '재고번호', minWidth: 120, dataIndx: 'INSIDE_STOCK_NUM', editable: false},
+            {title: '발주처', minWidth: 110, dataIndx: 'ORDER_COMP_NM', editable: false},
+            {title: '규격', minWidth: 120, dataIndx: 'SIZE_TXT', editable: false},
+            {title: '소재종류', minWidth: 100, dataIndx: 'MATERIAL_DETAIL_NM', editable: false},
+            {title: '재고수량', width: 50, dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', editable: false},
+            {title: '남는수량', width: 50, dataType: 'integer', dataIndx: 'INSIDE_STOCK_REMAIN_QTY', editable: false},
+            {title: '품명', width: 170, dataIndx: 'ITEM_NM', editable: false},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
@@ -1139,9 +1139,9 @@
                     });
                 }
             },
-            {title: '창고명', align: 'center', width: 100, dataIndx: 'WAREHOUSE_NM'},
-            {title: '재고위치', align: 'center', width: 100, dataIndx: 'LOC_NM'},
-            {title: '사업자구분', align: 'center', width: 100, dataIndx: 'COMP_CD_NM'},
+            {title: '창고명', align: 'center', width: 100, dataIndx: 'WAREHOUSE_NM', editable: false},
+            {title: '재고위치', align: 'center', width: 100, dataIndx: 'LOC_NM', editable: false},
+            {title: '사업자구분', align: 'center', width: 100, dataIndx: 'COMP_CD_NM', editable: false},
             {
                 title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false, sortable: false,
                 render: function (ui) {
@@ -1156,7 +1156,7 @@
                     });
                 }
             },
-            {title: '요청일시', align: 'center', dataType: 'string', width: 100, dataIndx: 'REQUEST_DT'}
+            {title: '요청일시', align: 'center', dataType: 'string', width: 100, dataIndx: 'REQUEST_DT', editable: false}
         ];
 
 
