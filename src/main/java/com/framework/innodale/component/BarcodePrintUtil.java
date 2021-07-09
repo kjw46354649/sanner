@@ -257,13 +257,13 @@ public class BarcodePrintUtil {
         bufWriter.write("^FO40,110^GB640,180,1^FS");
         bufWriter.write("^FO315,290^GB1,80,1^FS");// 세로라인
 
-        bufWriter.write("^CFJ,135"); // 폰트 사이즈 조절
-        bufWriter.write("^FO130,140^A1N^FD" + doNull((String)barcodeInfo.get("LOC_NM"))+ "^FS");
+        bufWriter.write("^CFJ,120"); // 폰트 사이즈 조절
+        bufWriter.write("^FO105,145^A1N^FD" + doNull((String)barcodeInfo.get("LOC_NM"))+ "^FS");
 
         bufWriter.write("^CFJ,45"); // 폰트 사이즈 조절
-        bufWriter.write("^FO140,315^A1N^FD" + doNull((String)barcodeInfo.get("LOC_USE"))+ "^FS");
+        bufWriter.write("^FO140,310^A1N^FD" + doNull((String)barcodeInfo.get("LOC_USE"))+ "^FS");
 
-        bufWriter.write("^FO330,303^BY2^BCN,55,N,N,N^FD" + doNull(String.valueOf(barcodeInfo.get("LOC_BARCODE")))+ "^FS");
+        bufWriter.write("^FO335,303^BY2^BCN,55,N,N,N^FD" + doNull(String.valueOf(barcodeInfo.get("LOC_BARCODE")))+ "^FS");
 
         bufWriter.write("^XZ");
     }
