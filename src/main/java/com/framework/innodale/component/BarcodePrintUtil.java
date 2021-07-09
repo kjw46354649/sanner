@@ -248,32 +248,24 @@ public class BarcodePrintUtil {
         bufWriter.write("^CI28");
         bufWriter.write("^SEE:UHANGUL.DAT^FS");
         bufWriter.write("^CW1,E:KFONT3.FNT^CI26^FS");
-//        bufWriter.write("^FO410,20^GFA,231,231,7,,::3PFE,3PFE4,1PFE4,1PFC8,0PFC8,0PF9,J01F87E0F9,J03F8FE1F2,J03F1FC002,J07F1FC004,J07E3IFC4,J0FE3IFC8,I01FC7IF88,I01FC7IF9,0043F8JF1,0063F0JF2,003FFI0FE2,003FEI0FE4,001FE781FC4,001FC7C1F88,I0FCJF88,I0F8JF1,I071JF1,I071IFE2,I023IFE2,J03IFC4,O04,O08,OF,,^FS");
-        bufWriter.write("^FO4,4^GB711,390,2^FS");
-        bufWriter.write("^CFJ,30"); // 폰트 사이즈 조절
-        bufWriter.write("^FO30,40^A1N^FD창고명^FS");
-        bufWriter.write("^FO230,40^A1N^FD" + doNull((String)barcodeInfo.get("WAREHOUSE_CD_NM"))+ "^FS");
-        bufWriter.write("^FO4,90^GB710,95,1^FS");
-        bufWriter.write("^FO4,270^GB710,130,1^FS");
-//        bufWriter.write("^FO4,240^GB710,80,1^FS");
-//        bufWriter.write("^FO4,266^GB710,55,1^FS");
+        bufWriter.write("^FO575,45^GFA,696,696,12,,:::::00YF,007WFE04,007WFE08,003WFC,003WFC1,003WF81,001WF82,001WF04,I0WF04,O07FF07FF00FE08,O07FE07FF01FE08,O0FFE0FFE01FC1,O0FFC0FFC01FC1,N01FFC1FFCJ02,N01FF81FF8J02,N03FF83FF8J04,N03FF03FFK04,N07FE07KFE08,N0FFE07KFE08,N0FFC0LFC1,M01FFC0LFC1,M01FF81LF82,M03FF81LF82,J01003FF03LF04,K0C07FF03LF04,K0E0FFE07KFE08,K070FFE07KFE08,K079FFCJ01FFC1,K03IFCJ01FFC1,K03IF8J03FF82,K01IFK03FF82,K01IF07F007FF04,L0FFE0FF007FE04,L0FFE1FE00FFE08,L07FC1FE01FFC,L07FC1LFC1,L03F83LF83,L03F83LF82,L01F07LF,L01F07LF04,M0E0LFE0C,M0E0LFE08,M041LFC1,N01LFC1,V02,:V04,07TF8,,:::^FS");
+        bufWriter.write("^FO40,30^GB640,340,2^FS");
 
+        bufWriter.write("^CFJ,50"); // 폰트 사이즈 조절
+        bufWriter.write("^FO270,55^A1N^FD" + doNull((String)barcodeInfo.get("WAREHOUSE_CD_NM"))+ "^FS");
 
-        bufWriter.write("^FO210,4^GB1,265,1^FS"); // 세로라인
-//        bufWriter.write("^FO394,60^GB85,375,1^FS");
+        bufWriter.write("^FO40,110^GB640,180,1^FS");
+        bufWriter.write("^FO315,290^GB1,80,1^FS");// 세로라인
 
-        bufWriter.write("^FO30,120^A1N^FD위치명^FS");
-        bufWriter.write("^FO230,120^A1N^FD" + doNull((String)barcodeInfo.get("LOC_NM"))+ "^FS");
+        bufWriter.write("^CFJ,135"); // 폰트 사이즈 조절
+        bufWriter.write("^FO130,140^A1N^FD" + doNull((String)barcodeInfo.get("LOC_NM"))+ "^FS");
 
-        bufWriter.write("^FO30,210^A1N^FD용도^FS");
-        bufWriter.write("^FO230,210^A1N^FD" + doNull((String)barcodeInfo.get("LOC_USE"))+ "^FS");
+        bufWriter.write("^CFJ,45"); // 폰트 사이즈 조절
+        bufWriter.write("^FO140,315^A1N^FD" + doNull((String)barcodeInfo.get("LOC_USE"))+ "^FS");
 
-        bufWriter.write("^FO45,280^BY4^BCN,95,N,N,N^FD" + doNull(String.valueOf(barcodeInfo.get("LOC_BARCODE")))+ "^FS");
+        bufWriter.write("^FO330,303^BY2^BCN,55,N,N,N^FD" + doNull(String.valueOf(barcodeInfo.get("LOC_BARCODE")))+ "^FS");
 
         bufWriter.write("^XZ");
-
-        System.out.println(bufWriter.toString());
-
     }
 
     public static String doNull(String val) {
