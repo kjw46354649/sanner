@@ -187,7 +187,7 @@ public class MaterialServiceImpl implements MaterialService {
                     map.put("queryId", "material.selectTempInsideStockNum");
                     Map<String, Object> tempInfo = this.innodaleDao.getInfo(map);
 
-                    if(tempInfo == null) {
+                    if(tempInfo != null) {
                         flag = true;
                         message = "이미 등록된 재고번호입니다.";
                     }

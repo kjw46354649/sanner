@@ -2106,24 +2106,26 @@
             $("#stock_manage_pop_form").find("#POP_TYPE").val($("#stock_manage_form").find("#popType").val());
             $("#stock_manage_pop_form").find("#IN_OUT_QTY").val($("#stock_manage_pop_form").find("#ORDER_QTY").val());
 
-            // console.log($('#stock_manage_pop_form').serialize());
-
             let parameters = {
                 'url': '/managerInsideStockPop',
                 'data': $('#stock_manage_pop_form').serialize()
             };
-            console.log($('#stock_manage_pop_form').serialize());
+            // console.log($('#stock_manage_pop_form').serialize());
             fnPostAjax(function (data, callFunctionParam) {
-                $("#completePopup").modal('show');
+                if(data.flag) {
+                    fnAlert(null,data.message);
+                }else {
+                    $("#completePopup").modal('show');
 
-                setTimeout(function () {
-                    $("#completePopup").modal('hide');
-                    $("#stock_pop_in").modal('hide');
-                    $("#stock_pop_location").modal('hide');
-                    $("#stock_manage_pop").modal('hide');
+                    setTimeout(function () {
+                        $("#completePopup").modal('hide');
+                        $("#stock_pop_in").modal('hide');
+                        $("#stock_pop_location").modal('hide');
+                        $("#stock_manage_pop").modal('hide');
 
-                    stockManageGridId02.pqGrid('refreshDataAndView');
-                },1000);
+                        stockManageGridId02.pqGrid('refreshDataAndView');
+                    },1000);
+                }
 
             }, parameters, '');
         });
