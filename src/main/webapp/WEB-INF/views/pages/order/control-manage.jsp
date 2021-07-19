@@ -3504,6 +3504,7 @@
 
         let matchStockColModel = [
             {title: 'RNUM', dataType: 'integer', dataIndx: 'RNUM', hidden: true},
+            {title: 'RNUM_SUB', dataType: 'integer', dataIndx: 'RNUM_SUB', hidden: true},
             {title: 'CONTROL_NUM', dataType: 'string', dataIndx: 'CONTROL_NUM', hidden: true},
             {title: 'OUT_STATUS', dataType: 'string', dataIndx: 'OUT_STATUS', hidden: true},
             {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
@@ -3655,7 +3656,7 @@
             columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
             colModel: matchStockColModel,
             dataModel: {
-                location: "remote", dataType: "json", method: "POST", recIndx: 'RNUM',
+                location: "remote", dataType: "json", method: "POST", recIndx: 'RNUM_SUB',
                 url: "/paramQueryGridSelect",
                 postData: fnFormToJsonArrayData('stock_match_pop_form'),
                 getData: function (dataJSON) {
@@ -3848,6 +3849,8 @@
                             fnPostAjax(function (data2, callFunctionParam) {
                                 var lastIdx = matchStockGrid.pqGrid('option', 'dataModel.data').length - 1;
                                 let rNumData = matchStockGrid.pqGrid('getData', {dataIndx: ['RNUM']});
+                                let rNumSubData = matchStockGrid.pqGrid('getData', {dataIndx: ['RNUM_SUB']});
+                                let matRSub = parseInt(rNumSubData[rNumSubData.length-1].RNUM_SUB) + 1
 
                                 var addRowCounter = matchStockGrid.pqGrid('option', 'dataModel.data').length + 1;
                                 if(data2.list.length > 0) {
@@ -3855,6 +3858,9 @@
                                         if(Item.SORT == 1) {
                                             Item.RNUM = parseInt(rNumData[rNumData.length-1].RNUM) + 1
                                         }
+                                        Item.RNUM_SUB = matRSub
+                                        matRSub = matRSub + 1
+
                                         matchStockGrid.pqGrid('addRow', {
                                             newRow: Item,
                                             rowIndx: addRowCounter,

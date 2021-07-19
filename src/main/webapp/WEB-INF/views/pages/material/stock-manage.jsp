@@ -437,7 +437,7 @@
                             <tr class="trHeight">
                                 <th>발주처</th>
                                 <td class="edit_td">
-                                    <select id="POP_SEL_ORDER_COMP_CD" class="edit_sel">
+                                    <select id="POP_SEL_ORDER_COMP_CD" class="edit_sel" style="width: 80%;">
                                     </select>
                                 </td>
                                 <th>사업자</th>
@@ -1404,6 +1404,7 @@
         $("#stock_pop_location").on({
             'show.bs.modal': function () {
                 $("#stock_manage_pop_form").find("#WAREHOUSE_CD").val($("#POP_WAREHOUSE :selected").val());
+                $("#stock_manage_pop_form").find("#LOC_SEQ").val($("#POP_LOC_SEQ :selected").val());
             }
         });
 
@@ -1723,6 +1724,23 @@
             }
         });
 
+        $("#POP_SEL_ORDER_COMP_CD").on('change', function () {
+            if($(this).val() != '') {
+                $("#stock_manage_pop_form").find("#ORDER_COMP_CD").val($(this).val())
+            }
+        });
+
+        $("#POP_SEL_COMP_CD").on('change', function () {
+            if($(this).val() != '') {
+                $("#stock_manage_pop_form").find("#COMP_CD").val($(this).val())
+            }
+        });
+        $("#POP_MATERIAL_DETAIL").on('change', function () {
+            if($(this).val() != '') {
+                $("#stock_manage_pop_form").find("#MATERIAL_DETAIL").val($(this).val())
+            }
+        });
+
         // 소재종류
         (function () {
             let comboData = [];
@@ -1806,13 +1824,13 @@
             let popType = $("#stock_manage_form").find("#popType").val();
             if(popType == "BARCODE" || popType == "GRID_IN"){//입고
                 if(type == "PLUS"){
-                    if(CONTROL_SEQ != '' && parseInt(POP_ORDER_QTY)+1 > ORG_ORDER_QTY) {
-                        fnAlert(null,"수량을 확인해 주세요.");
-                        return;
-                    }else {
+                    // if(CONTROL_SEQ != '' && parseInt(POP_ORDER_QTY)+1 > ORG_ORDER_QTY) {
+                    //     fnAlert(null,"수량을 확인해 주세요.");
+                    //     return;
+                    // }else {
                         POP_ORDER_QTY = parseInt(POP_ORDER_QTY)+1;
                         POP_STOCK_QTY_AFTER = parseInt(POP_STOCK_QTY) + POP_ORDER_QTY;
-                    }
+                    // }
                 }else if(type == "MINUS"){
                     // console.log("MINUS POP_ORDER_QTY",parseInt(POP_ORDER_QTY));
                     if(parseInt(POP_ORDER_QTY) > 0){

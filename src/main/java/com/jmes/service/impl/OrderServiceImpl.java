@@ -653,7 +653,7 @@ public class OrderServiceImpl implements OrderService {
         if (addList != null && addList.size() > 0) {
             for (HashMap<String, Object> hashMap : addList) {
                 try {
-                    String insideOutSeq = (String)hashMap.get("INSIDE_OUT_SEQ");
+                    String insideOutSeq = String.valueOf(hashMap.get("INSIDE_OUT_SEQ"));
                     Boolean checkBox = (Boolean)hashMap.get("CHECK_BOX");
                     String rnum = (String)hashMap.get("RNUM");
                     hashMap.put("LOGIN_USER_ID",userId);
