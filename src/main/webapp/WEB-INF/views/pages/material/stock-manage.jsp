@@ -1551,19 +1551,19 @@
                 return;
             }
             let rowCnt = "";
-            let INSIDE_STOCK_NUM = "";
+            let INSIDE_STOCK_SEQ = "";
             for (let i = 0; i < selectedRowIndex.length; i++) {
                 let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: selectedRowIndex[i]});
-                INSIDE_STOCK_NUM += "'" + rowData["INSIDE_STOCK_NUM"] + "',";
+                INSIDE_STOCK_SEQ += "'" + rowData["INSIDE_STOCK_SEQ"] + "',";
             }
-            INSIDE_STOCK_NUM = INSIDE_STOCK_NUM.substr(0, INSIDE_STOCK_NUM.length - 1);
+            INSIDE_STOCK_SEQ = INSIDE_STOCK_SEQ.substr(0, INSIDE_STOCK_SEQ.length - 1);
 
             let deleteData = {
                 "url": '/json-info',
                 'data':
                     {
                         "queryId": 'material.selectInsideStockIn',
-                        "INSIDE_STOCK_NUM": INSIDE_STOCK_NUM
+                        "INSIDE_STOCK_SEQ": INSIDE_STOCK_SEQ
                     }
             };
             fnPostAjaxAsync(function (data, callFunctionParam) {
@@ -1576,8 +1576,9 @@
                 return;
             } else {
                 fnConfirm(null, "선택한 대상의 모든 정보가 삭제됩니다.<br>진행하시겠습니까?", function () {
-                    fnDeletePQGrid(stockManageGridId01, selectedRowIndex, "material.deleteInsideStock_old");
-                    $("#stock_manage_search_btn").trigger("click");
+                    fnDeletePQGrid(stockManageGridId01, selectedRowIndex, "material.deleteInsideStock", function () {
+                        $("#stock_manage_search_btn").trigger("click");
+                    });
                 });
             }
         });

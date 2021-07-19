@@ -971,6 +971,22 @@
                 let totalRecords = data.length;
                 $('#outgoing_manage_grid_records').html(totalRecords);
             },
+            cellKeyDown: function (event, ui) {
+                let rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const totalRecords = this.option('dataModel.data').length;
+                if (event.keyCode == $.ui.keyCode.DOWN && rowIndx < totalRecords) {
+                    rowIndx++;
+                } else if (event.keyCode == $.ui.keyCode.UP && rowIndx > 0) {
+                    rowIndx--;
+                }
+                sr.removeAll();
+                sr.add({rowIndx: rowIndx});
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+                if(typeof selRowData != 'undefined' && typeof selRowData.IMG_GFILE_SEQ != 'undefined') {
+                    callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                }
+            },
             selectChange: function (event, ui) {
                 outgoingManageSelectedRowIndex = [];
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {

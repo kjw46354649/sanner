@@ -142,7 +142,7 @@ public class PdfPrintMakeController {
         for (Map<String, Object> controlInfo : controlImageList) {
             if (iCount > 0) document.newPage();
 
-            float[] columnWidths = {220, 80};
+            float[] columnWidths = {240, 60};
             PdfPTable masterTable = new PdfPTable(columnWidths);
             masterTable.setWidthPercentage(100);
 
@@ -150,7 +150,7 @@ public class PdfPrintMakeController {
             table.init();
             table.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.setWidthPercentage(100);
-            table.setWidths(new int[]{3, 17, 12, 7, 7, 7, 4, 5, 3, 3});
+            table.setWidths(new int[]{3, 17, 12, 7, 7, 7, 7, 4, 3, 3});
 
             int imgWidth = 1100;
             int imgHeight = 170;

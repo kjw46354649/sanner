@@ -423,7 +423,7 @@ button:disabled {
 #common_alert_popup .modal-body { position: relative;  padding: 15px 15px 25px 15px;}
 #common_alert_popup .modal-body h4{ font-size: 1.5em; }
 
-.popupTableDiv table.materialSupply { border: 1px solid #CECECE; color: #444; }
+.popupTableDiv table.materialSupply { border: 1px solid #CECECE; color: #444; width: 99%; }
 .popupTableDiv table.materialSupply tr td { height: 20px; padding: 5px 10px; text-align: center; font-family: 'NotoKrM'; font-size: 1.4rem; }
 .popupTableDiv table.materialSupply .text-right { text-align: right; }
 .popupTableDiv table.materialSupply .bg-title { border: 1px solid #CECECE; background-color: #F3FEFF; }

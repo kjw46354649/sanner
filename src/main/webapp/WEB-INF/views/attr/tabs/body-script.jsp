@@ -513,7 +513,7 @@
      * @param {array} selectedRowIndex
      * @param {string} QUERY_ID
      */
-    let fnDeletePQGrid = function (grid, selectedRowIndex, QUERY_ID) {
+    let fnDeletePQGrid = function (grid, selectedRowIndex, QUERY_ID, callback) {
         'use strict';
         let parameters;
         let rowDataArray = [];
@@ -534,6 +534,9 @@
                 }
 
                 grid.pqGrid('deleteRow', {rowList: rowListConvert});
+            }
+            if(typeof callback != 'undefined' && callback != null) {
+                callback();
             }
         }, parameters, '');
     };

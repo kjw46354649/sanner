@@ -2038,13 +2038,10 @@
         SELECT COUNT(*) AS CNT FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
     </select>
     <select id="selectInsideStockIn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT COUNT(*) AS CNT FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_NUM IN(${INSIDE_STOCK_NUM})
+        SELECT COUNT(*) AS CNT FROM jmes.TBL_INSIDE_IN WHERE INSIDE_STOCK_SEQ IN(${INSIDE_STOCK_SEQ})
     </select>
-    <delete id="deleteInsideStock_old" parameterType="java.util.HashMap">
-        DELETE FROM jmes.TBL_INSIDE_STOCK WHERE INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
-    </delete>
     <delete id="deleteInsideStock" parameterType="java.util.HashMap">
-        DELETE FROM jmes.TBL_INSIDE_STOCK WHERE INSIDE_STOCK_NUM IN(${INSIDE_STOCK_NUM})
+        DELETE FROM jmes.TBL_INSIDE_STOCK WHERE INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
     </delete>
     <select id="selectInsideStockAbbrNm" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.ABBR_NM
@@ -2745,4 +2742,16 @@
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
     </update>
+    <select id="selectInsideStockInOutList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT Z.SEQ
+        FROM (
+            SELECT A.INSIDE_IN_SEQ AS SEQ
+            FROM TBL_INSIDE_IN A
+            WHERE A.INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
+            UNION ALL
+            SELECT B.INSIDE_OUT_SEQ AS SEQ
+            FROM TBL_INSIDE_OUT B
+            WHERE B.INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
+        ) Z
+    </select>
 </mapper>
