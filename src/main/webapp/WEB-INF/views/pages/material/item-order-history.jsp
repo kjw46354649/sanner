@@ -245,9 +245,7 @@
                 ], styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '검사 비고', dataType: 'string', dataIndx: 'INSPECT_NOTE', width: 100,
-                editable: function (ui) {
-                    return ui.rowData.IN_YN !== 'Y';
-                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}
+                editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}
             },
             {title: '입고', dataType: 'string', dataIndx: 'IN_YN', minWidth: 35, editable: false,
                 render: function(ui){
