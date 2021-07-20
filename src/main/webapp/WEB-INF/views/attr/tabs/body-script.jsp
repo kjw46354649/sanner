@@ -919,6 +919,15 @@
             }, 500);
         }
     }
+    function callWindowImageViewerDupl(imageSeq) {
+        var windowImageViewerDupl = window.open("/imageViewer", "", "width=1024, height=768, resizable = no, scrollbars = no");
+        windowImageViewerDupl.onload = function () {
+            setTimeout(function () {
+                $(windowImageViewerDupl.window.document).find("#image_seq").val(imageSeq);
+                windowImageViewerDupl.onImageViewStart();
+            }, 500);
+        };
+    }
 
     /* 모달 Print 팝업 호출 */
     function callWindowModalDrawingPopup(){

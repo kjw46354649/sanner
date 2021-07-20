@@ -237,7 +237,7 @@
             {title: '합계금액', minWidth: 65, maxWidth: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
                 // title: 'P/H', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PRICE_PER_HOUR',
-                title: '계산원가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CP_TOTAL',
+                title: '계산원가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CP_TOTAL', minWidth: 75,
                 style: {'color': 'blue'}
             },
             {
@@ -264,11 +264,11 @@
             height: '94%',
             collapsible: false,
             postRenderInterval: -1,
-            resizable: false,
+            resizable: true,
             showTitle: false,
             rowHtHead: 15,
             numberCell: {title: 'No.'},
-            scrollModel: {autoFit: true},
+            scrollModel: {autoFit: false},
             trackModel: {on: true},
             // selectionModel: {type: 'row', mode: 'single'},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
@@ -283,6 +283,22 @@
             editorKeyDown: function(evt, ui){
                 if (evt.keyCode === 13) { //enter key.
                     evt.originalEvent.keyCode = 40; //disguise down key.
+                }
+            },
+            cellKeyDown: function (event, ui) {
+                let rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const totalRecords = this.option('dataModel.data').length;
+                if (event.keyCode == $.ui.keyCode.DOWN && rowIndx < totalRecords) {
+                    rowIndx++;
+                } else if (event.keyCode == $.ui.keyCode.UP && rowIndx > 0) {
+                    rowIndx--;
+                }
+                sr.removeAll();
+                sr.add({rowIndx: rowIndx});
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+                if(typeof selRowData != 'undefined' && typeof selRowData.IMG_GFILE_SEQ != 'undefined') {
+                    callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
                 }
             },
         };

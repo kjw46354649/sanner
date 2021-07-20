@@ -384,6 +384,14 @@ public class MaterialServiceImpl implements MaterialService {
                 map.put("queryId", "material.deleteInsideStockIn");
                 this.innodaleDao.remove(map);
 
+                map.put("queryId", "material.selectInsideStockInOutList");
+                List<Map<String, Object>> inOutList = this.innodaleDao.getList(map);
+
+                if(inOutList.size() == 0) {
+                    map.put("queryId", "material.deleteInsideStock");
+                    this.innodaleDao.remove(map);
+                }
+
 //                if(!"".equals(CONTROL_SEQ)) { //바코드로 재고입고시 출고프로세스 제거로 해당 로직도 제거 (21/07/05)
 //                    map.put("queryId", "material.deleteInsideStockOutgoing");
 //                    this.innodaleDao.remove(map);
