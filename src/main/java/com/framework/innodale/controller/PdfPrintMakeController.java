@@ -145,7 +145,7 @@ public class PdfPrintMakeController {
             String additionalQty = String.valueOf(controlInfo.get("ADDITIONAL_QTY"));
             float[] columnWidths = {220, 80};
             if(Integer.parseInt(additionalQty) > 0) {
-                columnWidths = new float[] {242, 58};
+                columnWidths = new float[] {235, 65};
             }
             PdfPTable masterTable = new PdfPTable(columnWidths);
             masterTable.setWidthPercentage(100);
@@ -155,7 +155,7 @@ public class PdfPrintMakeController {
             table.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.setWidthPercentage(100);
             if(Integer.parseInt(additionalQty) > 0) {
-                table.setWidths(new int[]{3, 17, 12, 7, 7, 7, 7, 6, 3, 3});
+                table.setWidths(new int[]{3, 16, 12, 5, 7, 7, 7, 6, 3, 3});
             }else {
                 table.setWidths(new int[]{3, 17, 12, 7, 7, 7, 4, 5, 3, 3});
             }
