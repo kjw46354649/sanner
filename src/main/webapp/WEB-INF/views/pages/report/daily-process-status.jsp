@@ -219,22 +219,22 @@
                 }
             },
             {title: '가공<br>납기', minWidth: 40, maxWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT'},
-            {title: '수량<br>추가', minWidth: 40, maxWidth: 40, dataIndx: 'ADDITIONAL_QTY'},
+            {title: '수량<br>추가', minWidth: 40, dataIndx: 'ADDITIONAL_QTY'},
             {title: '발주<br>수량', minWidth: 40, maxWidth: 40, dataIndx: 'PART_QTY'},
             {title: '가공완료<br>일시', minWidth: 75, maxWidth: 75, dataIndx: 'INNER_WORK_FINISH_DT'},
-            {title: '소요<br>시간(분)', align: 'right', maxWidth: 55, dataIndx: 'WORK_TIME'},
+            {title: '소요<br>시간(분)', align: 'right', minWidth: 55, dataIndx: 'WORK_TIME'},
             {
-                title: '예상단가', minWidth: 65, maxWidth: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT', editable: true,
+                title: '예상단가', minWidth: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT', editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
             {
                 title: '단가정보', align: 'center', colModel: [
-                    {title: '종전가', maxWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT', hidden: true},
-                    {title: '견적가', maxWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', hidden: true},
-                    {title: '공급가', maxWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', hidden: true}
+                    {title: '종전가', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT', hidden: true},
+                    {title: '견적가', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', hidden: true},
+                    {title: '공급가', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', hidden: true}
                 ]
             },
-            {title: '합계금액', minWidth: 65, maxWidth: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
+            {title: '합계금액', minWidth: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
                 // title: 'P/H', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PRICE_PER_HOUR',
                 title: '계산원가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CP_TOTAL', minWidth: 75,
@@ -242,15 +242,15 @@
             },
             {
                 title: '계산원가 단가', align: 'center', colModel: [
-                    {title: '소재비', maxWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', hidden: true},
-                    {title: '연마비', maxWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', hidden: true},
-                    {title: '열처리', maxWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', hidden: true},
-                    {title: '표면처리', maxWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AUTO_AMT', hidden: true}
+                    {title: '소재비', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', hidden: true},
+                    {title: '연마비', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', hidden: true},
+                    {title: '열처리', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', hidden: true},
+                    {title: '표면처리', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AUTO_AMT', hidden: true}
                 ]
             },
             {
                 title: '검사결과', align: 'center', colModel: [
-                    {title: '등급', minWidth: 30, maxWidth: 40, dataIndx: 'INSPECT_GRADE_NM'},
+                    {title: '등급', minWidth: 30, dataIndx: 'INSPECT_GRADE_NM'},
                     {title: '검사코드', maxWidth: 95, dataIndx: 'INSPECT_RESULT_NM'}
                 ]
             },
