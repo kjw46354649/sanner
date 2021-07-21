@@ -142,11 +142,8 @@ public class PdfPrintMakeController {
         for (Map<String, Object> controlInfo : controlImageList) {
             if (iCount > 0) document.newPage();
 
-            String additionalQty = String.valueOf(controlInfo.get("ADDITIONAL_QTY"));
-            float[] columnWidths = {220, 80};
-            if(Integer.parseInt(additionalQty) > 0) {
-                columnWidths = new float[] {235, 65};
-            }
+//            String additionalQty = String.valueOf(controlInfo.get("ADDITIONAL_QTY"));
+            float[] columnWidths = {222, 78};
             PdfPTable masterTable = new PdfPTable(columnWidths);
             masterTable.setWidthPercentage(100);
 
@@ -154,11 +151,7 @@ public class PdfPrintMakeController {
             table.init();
             table.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.setWidthPercentage(100);
-            if(Integer.parseInt(additionalQty) > 0) {
-                table.setWidths(new int[]{3, 16, 12, 5, 7, 7, 7, 6, 3, 3});
-            }else {
-                table.setWidths(new int[]{3, 17, 12, 7, 7, 7, 4, 5, 3, 3});
-            }
+            table.setWidths(new int[]{3, 17, 12, 7, 7, 7, 4, 6, 3, 3});
 
             int imgWidth = 1100;
             int imgHeight = 170;
@@ -205,9 +198,9 @@ public class PdfPrintMakeController {
             }
             String qtyTxt = (String) controlInfo.get("CONTROL_ORDER_QTY");
 
-            if(Integer.parseInt(additionalQty) > 0) {
-                qtyTxt += ("+" + additionalQty);
-            }
+//            if(Integer.parseInt(additionalQty) > 0) {
+//                qtyTxt += ("+" + additionalQty);
+//            }
             phrase.add(new Chunk(qtyTxt,mediumBoldFont));
 
             if (controlInfo.get("WORK_TYPE_NM").equals("조립")) {
