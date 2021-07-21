@@ -709,7 +709,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002') && rowData.WORK_TYPE != 'WTP020' && rowData.WORK_TYPE != 'WTP040';
+                    return rowData.WORK_TYPE != 'WTP020' && rowData.WORK_TYPE != 'WTP040';
                 },
                 render: function (ui) {
                     let rowData = ui.rowData;
