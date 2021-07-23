@@ -2706,6 +2706,14 @@
             let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
             // console.log('changes',changes)
+            $.each(changes.oldList,function (idx,Item) {
+                $.each(Item,function (idx2,Item2) {
+                    if(typeof Item2 == 'undefined') {
+                        changes.oldList[idx][idx2] = "";
+                    }
+                })
+            });
+
             let parameters = {'url': '/validationCheckBeforeSaveFromControl', 'data': {data: JSON.stringify(changes)}};
             let flag = false;
 

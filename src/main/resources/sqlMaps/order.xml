@@ -1022,6 +1022,66 @@
     <update id="updateControlPartOrderFromControlManage" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART_ORDER
         SET
+            <if test="REGIST_NUM != null and REGIST_NUM != ''">
+                REGIST_NUM = UPPER(TRIM(#{REGIST_NUM})),
+            </if>
+            <if test="ORDER_NUM != null and ORDER_NUM != ''">
+                ORDER_NUM = #{ORDER_NUM},
+            </if>
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (ORDER_QTY != null and ORDER_QTY != '')">
+                ORDER_QTY = #{ORDER_QTY},
+            </if>
+            <if test="ORDER_DUE_DT != null and ORDER_DUE_DT != ''">
+                ORDER_DUE_DT = DATE_FORMAT(#{ORDER_DUE_DT}, '%Y%m%d'),
+            </if>
+            <if test="DELIVERY_DT != null and DELIVERY_DT != ''">
+                DELIVERY_DT = DATE_FORMAT(#{DELIVERY_DT}, '%Y%m%d'),
+            </if>
+            <if test="PROJECT_NM != null and PROJECT_NM != ''">
+                PROJECT_NM = #{PROJECT_NM},
+            </if>
+            <if test="MODULE_NM != null and MODULE_NM != ''">
+                MODULE_NM = #{MODULE_NM},
+            </if>
+            <if test="DELIVERY_COMP_NM != null and DELIVERY_COMP_NM != ''">
+                DELIVERY_COMP_NM = #{DELIVERY_COMP_NM},
+            </if>
+            <if test="LABEL_NOTE != null and LABEL_NOTE != ''">
+                LABEL_NOTE = #{LABEL_NOTE},
+            </if>
+            <if test="ORDER_STAFF_SEQ != null and ORDER_STAFF_SEQ != ''">
+                ORDER_STAFF_SEQ = #{ORDER_STAFF_SEQ},
+            </if>
+            <if test="DESIGNER_NM != null and DESIGNER_NM != ''">
+                DESIGNER_NM = #{DESIGNER_NM},
+            </if>
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (ORDER_DRAWING_NUM != null and ORDER_DRAWING_NUM != '')">
+                DRAWING_NUM = #{ORDER_DRAWING_NUM},
+            </if>
+            <if test="ITEM_NM != null and ITEM_NM != ''">
+                ITEM_NM = #{ITEM_NM},
+            </if>
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (ORIGINAL_SIDE_QTY != null and ORIGINAL_SIDE_QTY != '')">
+                ORIGINAL_SIDE_QTY = REPLACE(#{ORIGINAL_SIDE_QTY}, ',', SPACE(0)),
+            </if>
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (OTHER_SIDE_QTY != null and OTHER_SIDE_QTY != '')">
+                OTHER_SIDE_QTY = REPLACE(#{OTHER_SIDE_QTY}, ',', SPACE(0)),
+            </if>
+            <if test="UNIT_FINAL_EST_AMT != null and UNIT_FINAL_EST_AMT != ''">
+                UNIT_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
+            </if>
+            <if test="UNIT_FINAL_AMT != null and UNIT_FINAL_AMT != ''">
+                UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
+            </if>
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+          AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+          AND ORDER_SEQ = #{ORDER_SEQ}
+    </update>
+    <update id="updateControlPartOrderFromControlManage_old" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART_ORDER
+        SET
             REGIST_NUM = UPPER(TRIM(#{REGIST_NUM})),
             ORDER_NUM = #{ORDER_NUM},
             ORDER_QTY = #{ORDER_QTY},
@@ -2895,26 +2955,121 @@
                         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ AND B.CONTROL_STATUS IN ('ORD001', 'ORD002') AND B.DEL_YN = 'N')
     </update>
 
-    <update id="updateControlPartFromCloseHistory" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART_ORDER
+    <update id="updateControlPartFromControlManage" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
         SET
-            UNIT_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT, jdbcType=VARCHAR}, ',', SPACE(0)),
-            UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT, jdbcType=VARCHAR}, ',', SPACE(0)),
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (PART_NUM != null and PART_NUM != '')">
+                PART_NUM = #{PART_NUM},
+            </if>
+            <if test="ORDER_DRAWING_NUM != null and ORDER_DRAWING_NUM != ''">
+                DRAWING_NUM = #{ORDER_DRAWING_NUM},
+            </if>
+            <if test="PREV_DRAWING_NUM != null and PREV_DRAWING_NUM != ''">
+                PREV_DRAWING_NUM = #{PREV_DRAWING_NUM},
+            </if>
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (WORK_TYPE != null and WORK_TYPE != '')">
+                WORK_TYPE = #{WORK_TYPE},
+            </if>
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (OUTSIDE_YN != null and OUTSIDE_YN != '')">
+                OUTSIDE_YN = #{OUTSIDE_YN},
+            </if>
+            <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                WORK_FACTORY = CASE WHEN #{WORK_FACTORY} = 'null' THEN NULL ELSE #{WORK_FACTORY} END,
+            </if>
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (MATERIAL_SUPPLY_YN != null and MATERIAL_SUPPLY_YN != '')">
+                MATERIAL_SUPPLY_YN = IFNULL(#{MATERIAL_SUPPLY_YN}, 'N'),
+            </if>
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (INNER_DUE_DT != null and INNER_DUE_DT != '')">
+                INNER_DUE_DT = DATE_FORMAT(#{INNER_DUE_DT}, '%Y%m%d'),
+            </if>
+            <if test="SIZE_TXT != null and SIZE_TXT != ''">
+                SIZE_TXT = #{SIZE_TXT},
+                SIZE_TYPE = SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}),
+                SIZE_W = SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
+                SIZE_H = SF_GET_SIZE_TXT('SIZE_H', #{SIZE_TXT}),
+                SIZE_T = SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
+                SIZE_D = SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}),
+                SIZE_L = SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
+            </if>
+            <if test="MATERIAL_DETAIL != null and MATERIAL_DETAIL != ''">
+                MATERIAL_DETAIL = #{MATERIAL_DETAIL},
+                MATERIAL_TYPE = SF_GET_ETC_CD('1027', #{MATERIAL_DETAIL}),
+            </if>
+            <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
+                MATERIAL_KIND = #{MATERIAL_KIND},
+            </if>
+            <if test="SURFACE_TREAT != null and SURFACE_TREAT != ''">
+                SURFACE_TREAT = #{SURFACE_TREAT},
+            </if>
+            <if test="MATERIAL_NOTE != null and MATERIAL_NOTE != ''">
+                MATERIAL_NOTE = #{MATERIAL_NOTE},
+            </if>
+            <if test="PART_UNIT_QTY != null and PART_UNIT_QTY != ''">
+                PART_UNIT_QTY = #{PART_UNIT_QTY},
+            </if>
+            <if test="ADDITIONAL_QTY != null and ADDITIONAL_QTY != ''">
+                ADDITIONAL_QTY = #{ADDITIONAL_QTY},
+            </if>
+            <if test="MATERIAL_FINISH_GRIND != null and MATERIAL_FINISH_GRIND != ''">
+                MATERIAL_FINISH_GRIND = #{MATERIAL_FINISH_GRIND},
+            </if>
+            <if test="MATERIAL_FINISH_HEAT != null and MATERIAL_FINISH_HEAT != ''">
+                MATERIAL_FINISH_HEAT = #{MATERIAL_FINISH_HEAT},
+            </if>
+            <if test="UNIT_MATERIAL_AMT != null and UNIT_MATERIAL_AMT != ''">
+                UNIT_MATERIAL_AMT = #{UNIT_MATERIAL_AMT},
+            </if>
+            <if test="UNIT_MATERIAL_FINISH_GRIND_AMT != null and UNIT_MATERIAL_FINISH_GRIND_AMT != ''">
+                UNIT_MATERIAL_FINISH_GRIND_AMT = #{UNIT_MATERIAL_FINISH_GRIND_AMT},
+            </if>
+            <if test="UNIT_MATERIAL_FINISH_HEAT_AMT != null and UNIT_MATERIAL_FINISH_HEAT_AMT != ''">
+                UNIT_MATERIAL_FINISH_HEAT_AMT = #{UNIT_MATERIAL_FINISH_HEAT_AMT},
+            </if>
+            <if test="UNIT_SURFACE_AMT != null and UNIT_SURFACE_AMT != ''">
+                UNIT_SURFACE_AMT = #{UNIT_SURFACE_AMT},
+            </if>
+            <if test="UNIT_PROCESS_AMT != null and UNIT_PROCESS_AMT != ''">
+                UNIT_PROCESS_AMT = #{UNIT_PROCESS_AMT},
+            </if>
+            <if test="UNIT_ETC_AMT != null and UNIT_ETC_AMT != ''">
+                UNIT_ETC_AMT = #{UNIT_ETC_AMT},
+            </if>
+            <if test="UNIT_AMT_NOTE != null and UNIT_AMT_NOTE != ''">
+                UNIT_AMT_NOTE = #{UNIT_AMT_NOTE},
+            </if>
+            <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
+                ETC_GFILE_SEQ = #{ETC_GFILE_SEQ},
+            </if>
+            OUTSIDE_HOPE_DUE_DT = CASE WHEN OUTSIDE_YN = 'Y' AND OUTSIDE_HOPE_DUE_DT IS NULL THEN DATE_FORMAT(DATE_SUB(INNER_DUE_DT, INTERVAL 1 DAY), '%Y%m%d') ELSE OUTSIDE_HOPE_DUE_DT END,
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE 1 = 1
             AND CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        <choose>
+            <when test="CONTROL_DETAIL_SEQ != null and CONTROL_DETAIL_SEQ != ''">
+                AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            </when>
+            <otherwise>
+                AND CONTROL_DETAIL_SEQ = (
+                    SELECT A.CONTROL_DETAIL_SEQ
+                    FROM TBL_CONTROL_PART A
+                    WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+                    AND A.PART_NUM = #{PART_NUM}
+                )
+            </otherwise>
+        </choose>
     </update>
 
-    <update id="updateControlPartFromControlManage" parameterType="java.util.HashMap">
+    <update id="updateControlPartFromControlManage_old" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET
             PART_NUM = #{PART_NUM},
             DRAWING_NUM = #{ORDER_DRAWING_NUM},
             PREV_DRAWING_NUM = #{PREV_DRAWING_NUM},
             WORK_TYPE = #{WORK_TYPE},
-            OUTSIDE_YN = IFNULL(#{OUTSIDE_YN}, 'N'),
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (OUTSIDE_EDIT != null)">
+                OUTSIDE_YN = #{OUTSIDE_YN},
+            </if>
             WORK_FACTORY = CASE WHEN #{WORK_FACTORY} = 'null' THEN NULL ELSE #{WORK_FACTORY} END,
             MATERIAL_SUPPLY_YN = IFNULL(#{MATERIAL_SUPPLY_YN}, 'N'),
             INNER_DUE_DT = DATE_FORMAT(#{INNER_DUE_DT}, '%Y%m%d'),
@@ -2946,21 +3101,64 @@
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE 1 = 1
-            AND CONTROL_SEQ = #{CONTROL_SEQ}
+        AND CONTROL_SEQ = #{CONTROL_SEQ}
         <choose>
             <when test="CONTROL_DETAIL_SEQ != null and CONTROL_DETAIL_SEQ != ''">
                 AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
             </when>
             <otherwise>
                 AND CONTROL_DETAIL_SEQ = (  SELECT A.CONTROL_DETAIL_SEQ
-                                            FROM TBL_CONTROL_PART A
-                                            WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
-                                            AND A.PART_NUM = #{PART_NUM})
+                FROM TBL_CONTROL_PART A
+                WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+                AND A.PART_NUM = #{PART_NUM})
             </otherwise>
         </choose>
     </update>
 
+    <update id="updateControlPartFromCloseHistory" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART_ORDER
+        SET
+            UNIT_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT, jdbcType=VARCHAR}, ',', SPACE(0)),
+            UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT, jdbcType=VARCHAR}, ',', SPACE(0)),
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE 1 = 1
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
     <update id="updateControlFromControlManage" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL
+        SET
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (CONTROL_NUM != null and CONTROL_NUM != '')">
+                CONTROL_NUM = UPPER(#{CONTROL_NUM}),
+            </if>
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (COMP_CD != null and COMP_CD != '')">
+                COMP_CD = #{COMP_CD},
+            </if>
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (ORDER_COMP_CD != null and ORDER_COMP_CD != '')">
+                ORDER_COMP_CD = #{ORDER_COMP_CD},
+            </if>
+            <if test="CONTROL_NOTE != null and CONTROL_NOTE != ''">
+                NOTE = #{CONTROL_NOTE},
+            </if>
+            <if test="MAIN_INSPECTION != null and MAIN_INSPECTION != ''">
+                MAIN_INSPECTION = #{MAIN_INSPECTION},
+            </if>
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (EMERGENCY_YN != null and EMERGENCY_YN != '')">
+                EMERGENCY_YN = IFNULL(#{EMERGENCY_YN}, 'N'),
+            </if>
+            <if test="PRICE_CONFIRM != null and PRICE_CONFIRM != ''">
+                PRICE_CONFIRM = #{PRICE_CONFIRM},
+            </if>
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (SAME_SIDE_YN != null and SAME_SIDE_YN != '')">
+                SAME_SIDE_YN = IFNULL(#{SAME_SIDE_YN}, 'N'),
+            </if>
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+    </update>
+
+    <update id="updateControlFromControlManage_old" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL
         SET
             CONTROL_NUM = UPPER(#{CONTROL_NUM}),

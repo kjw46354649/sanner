@@ -62,6 +62,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void removeControl(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<HashMap<String, Object>> jsonArray = null;
 
@@ -69,6 +70,7 @@ public class OrderServiceImpl implements OrderService {
             jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
 
         for (HashMap<String, Object> hashMap : jsonArray) {
+            hashMap.put("LOGIN_USER_ID",userId);
             hashMap.put("queryId", "orderMapper.removeControl");
             this.innodaleDao.remove(hashMap);
         }
@@ -77,6 +79,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void managerControlStatus(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<HashMap<String, Object>> jsonArray = null;
 
@@ -84,6 +87,7 @@ public class OrderServiceImpl implements OrderService {
             jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
 
         for (HashMap<String, Object> hashMap : jsonArray) {
+            hashMap.put("LOGIN_USER_ID",userId);
 
             hashMap.put("queryId", "orderMapper.updateControlRevision");
             this.innodaleDao.update(hashMap);
@@ -148,6 +152,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void removeMonthClose(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
         ArrayList<HashMap<String, Object>> listData = null;
@@ -164,6 +169,7 @@ public class OrderServiceImpl implements OrderService {
 
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
+                hashMap.put("LOGIN_USER_ID",userId);
                 hashMap.put("CONTROL_STATUS", "ORD001");
                 hashMap.put("queryId", "orderMapper.deleteMonthCloseOrder");
                 this.innodaleDao.remove(hashMap);
@@ -351,6 +357,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void mergeControl(Model model, Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
 
@@ -380,6 +387,7 @@ public class OrderServiceImpl implements OrderService {
         // 주문관리 Part 저장
         if (controlPartList != null && controlPartList.size() > 0) {
             for (HashMap<String, Object> hashMap : controlPartList) {
+                hashMap.put("LOGIN_USER_ID",userId);
                 if (action.equals("CHECK")) {
                     // 주문상태가 대기 또는 취소가 아닌지 확인
                     hashMap.put("queryId", "orderMapper.selectHasControlStatusConfirm");
@@ -511,11 +519,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void saveFromControlManage(Model model, Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
+        System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< LOGIN : " + userId);
+
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
 
         ArrayList<HashMap<String, Object>> addList = null;
         ArrayList<HashMap<String, Object>> updateList = null;
+        ArrayList<HashMap<String, Object>> oldList = null;
 
         Boolean flag = false;
         String message = "";
@@ -529,8 +541,12 @@ public class OrderServiceImpl implements OrderService {
         if (jsonMap.containsKey("updateList"))
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
 
+        if (jsonMap.containsKey("oldList"))
+            oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
+
         if (addList != null && addList.size() > 0) {
             for (HashMap<String, Object> hashMap : addList) {
+                hashMap.put("LOGIN_USER_ID",userId);
                 try {
                     hashMap.put("queryId", "orderMapper.createControlPart");
                     this.innodaleDao.insertGrid(hashMap);
@@ -551,16 +567,40 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         if (updateList != null && updateList.size() > 0) {
-            for (HashMap<String, Object> hashMap : updateList) {
+            for(int i = 0; i < updateList.size(); i++) {
+                HashMap<String, Object> hashMap = updateList.get(i);
+                HashMap<String, Object> oldMap = oldList.get(i);
+                HashMap<String, Object> tempMap = new HashMap<>();
+                tempMap.put("LOGIN_USER_ID",userId);
+
+                Set<String> keys = oldMap.keySet();
+                Iterator iterator = keys.iterator();
+                // 수정한 값만 업데이트 하도록 키값 추출
+                while (iterator.hasNext()) {
+                    String key = (String)iterator.next();
+                    tempMap.put(key,hashMap.get(key));
+                }
+                tempMap.put("CONTROL_SEQ",hashMap.get("CONTROL_SEQ"));
+                tempMap.put("CONTROL_DETAIL_SEQ",hashMap.get("CONTROL_DETAIL_SEQ"));
+                tempMap.put("PART_NUM",hashMap.get("PART_NUM"));
+                tempMap.put("ORDER_SEQ",hashMap.get("ORDER_SEQ"));
+                if(hashMap.get("CONTROL_STATUS") != null) {
+                    tempMap.put("CONTROL_STATUS",hashMap.get("CONTROL_STATUS"));
+                }
+
                 try {
-                    hashMap.put("queryId", "orderMapper.updateControlFromControlManage");
-                    this.innodaleDao.updateGrid(hashMap);
-                    hashMap.put("queryId", "orderMapper.updateControlPartFromControlManage");
-                    this.innodaleDao.updateGrid(hashMap);
-                    hashMap.put("queryId", "orderMapper.updateControlAutomaticQuote");
-                    this.innodaleDao.updateGrid(hashMap);
-                    hashMap.put("queryId", "orderMapper.updateControlPartOrderFromControlManage");
-                    this.innodaleDao.updateGrid(hashMap);
+                    tempMap.put("queryId", "orderMapper.updateControlFromControlManage");
+                    this.innodaleDao.updateGrid(tempMap);
+
+                    tempMap.put("queryId", "orderMapper.updateControlPartFromControlManage");
+                    this.innodaleDao.updateGrid(tempMap);
+
+                    tempMap.put("queryId", "orderMapper.updateControlAutomaticQuote");
+                    this.innodaleDao.updateGrid(tempMap);
+
+                    tempMap.put("queryId", "orderMapper.updateControlPartOrderFromControlManage");
+                    this.innodaleDao.updateGrid(tempMap);
+
 //                hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
 //                this.innodaleDao.create(hashMap);
                 } catch (Exception e) {
@@ -577,6 +617,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void processingRequirementsControlSave(Model model, Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
         ArrayList<HashMap<String, Object>> addList = null;
@@ -603,6 +644,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             if (addList != null && addList.size() > 0) {
                 for (HashMap<String, Object> hashMap : addList) {
+                    hashMap.put("LOGIN_USER_ID",userId);
                     hashMap.put("CONTROL_SEQ", seq1);
                     hashMap.put("CONTROL_DETAIL_SEQ", seq2);
                     hashMap.put("queryId", "orderMapper.insertControlPartProcess");
@@ -613,6 +655,7 @@ public class OrderServiceImpl implements OrderService {
             }
             if (updateList != null && updateList.size() > 0) {
                 for (HashMap<String, Object> hashMap : updateList) {
+                    hashMap.put("LOGIN_USER_ID",userId);
                     hashMap.put("CONTROL_SEQ", seq1);
                     hashMap.put("CONTROL_DETAIL_SEQ", seq2);
                     hashMap.put("queryId", "orderMapper.insertControlPartProcess");
