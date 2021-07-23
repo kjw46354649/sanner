@@ -1022,10 +1022,10 @@
     <update id="updateControlPartOrderFromControlManage" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART_ORDER
         SET
-            <if test="REGIST_NUM != null and REGIST_NUM != ''">
+            <if test="REGIST_NUM != null">
                 REGIST_NUM = UPPER(TRIM(#{REGIST_NUM})),
             </if>
-            <if test="ORDER_NUM != null and ORDER_NUM != ''">
+            <if test="ORDER_NUM != null">
                 ORDER_NUM = #{ORDER_NUM},
             </if>
             <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (ORDER_QTY != null and ORDER_QTY != '')">
@@ -1037,28 +1037,28 @@
             <if test="DELIVERY_DT != null and DELIVERY_DT != ''">
                 DELIVERY_DT = DATE_FORMAT(#{DELIVERY_DT}, '%Y%m%d'),
             </if>
-            <if test="PROJECT_NM != null and PROJECT_NM != ''">
+            <if test="PROJECT_NM != null">
                 PROJECT_NM = #{PROJECT_NM},
             </if>
-            <if test="MODULE_NM != null and MODULE_NM != ''">
+            <if test="MODULE_NM != null">
                 MODULE_NM = #{MODULE_NM},
             </if>
-            <if test="DELIVERY_COMP_NM != null and DELIVERY_COMP_NM != ''">
+            <if test="DELIVERY_COMP_NM != null">
                 DELIVERY_COMP_NM = #{DELIVERY_COMP_NM},
             </if>
-            <if test="LABEL_NOTE != null and LABEL_NOTE != ''">
+            <if test="LABEL_NOTE != null">
                 LABEL_NOTE = #{LABEL_NOTE},
             </if>
             <if test="ORDER_STAFF_SEQ != null and ORDER_STAFF_SEQ != ''">
                 ORDER_STAFF_SEQ = #{ORDER_STAFF_SEQ},
             </if>
-            <if test="DESIGNER_NM != null and DESIGNER_NM != ''">
+            <if test="DESIGNER_NM != null">
                 DESIGNER_NM = #{DESIGNER_NM},
             </if>
             <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (ORDER_DRAWING_NUM != null and ORDER_DRAWING_NUM != '')">
                 DRAWING_NUM = #{ORDER_DRAWING_NUM},
             </if>
-            <if test="ITEM_NM != null and ITEM_NM != ''">
+            <if test="ITEM_NM != null">
                 ITEM_NM = #{ITEM_NM},
             </if>
             <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (ORIGINAL_SIDE_QTY != null and ORIGINAL_SIDE_QTY != '')">
@@ -1067,10 +1067,10 @@
             <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (OTHER_SIDE_QTY != null and OTHER_SIDE_QTY != '')">
                 OTHER_SIDE_QTY = REPLACE(#{OTHER_SIDE_QTY}, ',', SPACE(0)),
             </if>
-            <if test="UNIT_FINAL_EST_AMT != null and UNIT_FINAL_EST_AMT != ''">
+            <if test="UNIT_FINAL_EST_AMT != null">
                 UNIT_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
             </if>
-            <if test="UNIT_FINAL_AMT != null and UNIT_FINAL_AMT != ''">
+            <if test="UNIT_FINAL_AMT != null">
                 UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
             </if>
             UPDATE_DT = NOW(),
@@ -3001,7 +3001,7 @@
             <if test="SURFACE_TREAT != null and SURFACE_TREAT != ''">
                 SURFACE_TREAT = #{SURFACE_TREAT},
             </if>
-            <if test="MATERIAL_NOTE != null and MATERIAL_NOTE != ''">
+            <if test="MATERIAL_NOTE != null">
                 MATERIAL_NOTE = #{MATERIAL_NOTE},
             </if>
             <if test="PART_UNIT_QTY != null and PART_UNIT_QTY != ''">
@@ -3034,7 +3034,7 @@
             <if test="UNIT_ETC_AMT != null and UNIT_ETC_AMT != ''">
                 UNIT_ETC_AMT = #{UNIT_ETC_AMT},
             </if>
-            <if test="UNIT_AMT_NOTE != null and UNIT_AMT_NOTE != ''">
+            <if test="UNIT_AMT_NOTE != null">
                 UNIT_AMT_NOTE = #{UNIT_AMT_NOTE},
             </if>
             <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
@@ -3138,7 +3138,7 @@
             <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (ORDER_COMP_CD != null and ORDER_COMP_CD != '')">
                 ORDER_COMP_CD = #{ORDER_COMP_CD},
             </if>
-            <if test="CONTROL_NOTE != null and CONTROL_NOTE != ''">
+            <if test="CONTROL_NOTE != null">
                 NOTE = #{CONTROL_NOTE},
             </if>
             <if test="MAIN_INSPECTION != null and MAIN_INSPECTION != ''">
