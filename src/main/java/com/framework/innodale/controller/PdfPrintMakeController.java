@@ -151,7 +151,7 @@ public class PdfPrintMakeController {
             table.init();
             table.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.setWidthPercentage(100);
-            table.setWidths(new int[]{4, 17, 14, 8, 9, 8, 4, 6, 4, 4});
+            table.setWidths(new int[]{4, 19, 13, 7, 9, 8, 4, 6, 4, 4});
 
             int imgWidth = 1100;
             int imgHeight = 170;
