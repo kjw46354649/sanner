@@ -75,7 +75,8 @@
                                                         , DATE_FORMAT(DATE_ADD(B.INNER_WORK_FINISH_DT, INTERVAL -1 * (CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2) AS INT) * 60 + CAST(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2) AS INT)) MINUTE),'%Y%m%d') AS WORKING_FINISH_DT
                                                         , 1 AS PART_CNT
                                                         , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY
-                                                        , IFNULL(D.UNIT_FINAL_AMT, IFNULL(D.UNIT_FINAL_EST_AMT,  IFNULL(CASE WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN ( SELECT M.UNIT_FINAL_AMT
+                                                        , IFNULL(B.FORECAST_UNIT_AMT, 0) AS FORECAST_UNIT_AMT
+                                                        <!--, IFNULL(D.UNIT_FINAL_AMT, IFNULL(D.UNIT_FINAL_EST_AMT,  IFNULL(CASE WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN ( SELECT M.UNIT_FINAL_AMT
                                                                                                                                                                         FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
                                                                                                                                                                         WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                                                                                                                                                             AND N.CONTROL_STATUS = 'ORD003'
@@ -92,7 +93,7 @@
                                                                                                                                         AND M.DRAWING_NUM = B.DRAWING_NUM
                                                                                                                                     ORDER BY M.CONTROL_SEQ DESC
                                                                                                                                     LIMIT 1)
-                                                                                                                        END, IFNULL(B.FORECAST_UNIT_AMT,0)))) AS FORECAST_UNIT_AMT
+                                                                                                                        END, IFNULL(B.FORECAST_UNIT_AMT,0)))) AS FORECAST_UNIT_AMT -->
                                                         , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
                                                         , CASE WHEN C.INSPECT_GRADE = 'GRD040' THEN 1 ELSE 0 END AS ERROR_CNT
                                                         , CASE WHEN C.INSPECT_GRADE = 'GRD040' THEN C.ERROR_QTY ELSE 0 END AS ERROR_QTY

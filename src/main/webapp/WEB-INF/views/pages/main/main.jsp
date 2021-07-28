@@ -324,7 +324,7 @@
                     }
                 }
             },
-            {title: '공장<br>구분', dataIndx: 'WORK_FACTORY_NM'},
+            {title: '공장<br>구분', dataIndx: 'WORK_FACTORY_NM',minWidth: 45, width: 45},
             {title: '진행상태', dataIndx: 'PART_STATUS_NM', width: 70},
             {title: '발주업체', dataIndx: 'ORDER_COMP_NM', width: 60},
             {
@@ -358,12 +358,19 @@
                     });
                 }
             },
-            {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM'},
-            {title: '수량<br>추가', dataIndx: 'ADDITIONAL_QTY', dataType: 'integer', format: '#,###', minWidth: 40, width: 40},
+            {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM', width: 45, minWidth: 45},
+            {title: '수량<br>추가', dataIndx: 'ADDITIONAL_QTY', dataType: 'integer', format: '#,###', minWidth: 35, width: 35},
             {title: '발주<br>수량', dataIndx: 'PART_QTY', dataType: 'integer', format: '#,###', minWidth: 40, width: 40},
             {title: '규격', dataIndx: 'SIZE_TXT', width: 85},
             {title: '현재위치', dataIndx: 'POP_POSITION_NM', width: 60},
-            {title: '비고', dataIndx: 'NOTE', minWidth: 150, align: 'left'}
+            {title: '비고', dataIndx: 'NOTE', minWidth: 105, align: 'left'},
+            {
+                title: '재고충당', align: 'center',
+                colModel: [
+                    {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'STOCK_REQUEST_QTY', width: 40, minWidth: 40},
+                    {title: '불출', dataType: 'integer', format: '#,###', dataIndx: 'STOCK_OUT_QTY', width: 40, minWidth: 40}
+                ]
+            }
         ];
 
         const rightObj = {

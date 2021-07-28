@@ -259,6 +259,8 @@
             , X.ASSEMBLY_YN
             , X.IMG_GFILE_SEQ
             , X.OUT_FINISH_STATUS
+            , Z.REQUEST_QTY AS STOCK_REQUEST_QTY
+            , Z.OUT_QTY AS STOCK_OUT_QTY
         FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.OUT_FINISH_STATUS
                 , CASE WHEN B.PART_STATUS = 'PRO002' THEN B.STATUS_DT
                        ELSE (SELECT MAX(M.STATUS_DT) FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO002')
@@ -300,9 +302,26 @@
                                 </when>
                                 <when test="WORK_STATUS_TYPE == 2"> <!-- 가공중 -->
                                     AND B.PART_STATUS IN ('PRO006','PRO007','PRO008','PRO018')
+                                    AND NOT EXISTS (
+                                        SELECT 1
+                                        FROM TBL_CONTROL_PART_PROGRESS tcpp
+                                        WHERE tcpp.CONTROL_SEQ = B.CONTROL_SEQ
+                                            AND tcpp.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                            AND tcpp.PART_STATUS IN ('PRO009','PRO019')
+                                    )
                                 </when>
                                 <otherwise> <!-- 가공완료 -->
-                                    AND B.PART_STATUS IN ('PRO009','PRO012','PRO013','PRO014','PRO015')
+                                    AND (B.PART_STATUS IN ('PRO009','PRO012','PRO013','PRO014','PRO015')
+                                        OR (
+                                            EXISTS(
+                                                SELECT 1
+                                                FROM TBL_CONTROL_PART_PROGRESS tcpp
+                                                WHERE tcpp.CONTROL_SEQ = B.CONTROL_SEQ
+                                                    AND tcpp.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                                    AND tcpp.PART_STATUS IN ('PRO009','PRO019')
+                                            )
+                                        )
+                                    )
                                 </otherwise>
                             </choose>
                         )
@@ -332,6 +351,7 @@
                     AND B.WORK_FACTORY = #{WORK_FACTORY}
                 </if>
         ) X
+        LEFT OUTER JOIN TBL_INSIDE_OUT Z ON Z.CONTROL_SEQ = X.CONTROL_SEQ AND Z.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
         WHERE 1 = 1
         <if test="ASSEMBLY_YN != null and ASSEMBLY_YN != ''">
             AND X.ASSEMBLY_YN = 'N'
