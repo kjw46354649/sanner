@@ -100,18 +100,8 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
          * Part 상태를 변경한다.
          * Progress 상태를 먼저 변경하고 Part Status 상태를 매칭 하여 맞춘다.
          **/
-
-        // partStatus를 변경하기전에, 가공완료 이력이 있는지 확인.
-        // 가공완료 이력이 있는 상태에서 가공을 끝낸 경우, PRO008(공정완료)이 아닌 PRO009(가공완료)로 상태 업데이트.
-        hashMap.put("queryId","drawingMapper.selectPartProgressCheck");
-        List<Map<String, Object>> tempList = innodaleDao.getList(hashMap);
-        String partStatus = "PRO008";
-        if(tempList.size() > 0) {
-            partStatus = "PRO009";
-        }
-
         hashMap.put("queryId", "drawingMapper.createDrawingBoardControlPartProgress");
-        hashMap.put("PART_STATUS", partStatus);
+        hashMap.put("PART_STATUS", "PRO008");
         innodaleDao.create(hashMap);
 
         hashMap.put("queryId", "drawingMapper.updateDrawingBoardControlPartStatusMapping");

@@ -443,13 +443,6 @@
             #{userInfo.USER_ID}
         )
     </insert>
-    <select id="selectPartProgressCheck" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT A.PART_STATUS, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
-        FROM TBL_CONTROL_PART_PROGRESS A
-        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
-          AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-          AND A.PART_STATUS = 'PRO009'
-    </select>
 
     <update id="updateDrawingBoardControlPartStatusMapping" parameterType="java.util.HashMap" >
         UPDATE TBL_CONTROL_PART A
