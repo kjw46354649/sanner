@@ -302,13 +302,15 @@
                                 </when>
                                 <when test="WORK_STATUS_TYPE == 2"> <!-- 가공중 -->
                                     AND B.PART_STATUS IN ('PRO006','PRO007','PRO008','PRO018')
-                                    AND NOT EXISTS (
-                                        SELECT 1
-                                        FROM TBL_CONTROL_PART_PROGRESS tcpp
-                                        WHERE tcpp.CONTROL_SEQ = B.CONTROL_SEQ
-                                            AND tcpp.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                            AND tcpp.PART_STATUS IN ('PRO009','PRO019')
-                                    )
+                                    AND CASE WHEN B.PART_STATUS = 'PRO007' THEN 1=1
+                                             WHEN B.PART_STATUS = 'PRO008' THEN NOT EXISTS (
+                                                SELECT 1
+                                                FROM TBL_CONTROL_PART_PROGRESS tcpp
+                                                WHERE tcpp.CONTROL_SEQ = B.CONTROL_SEQ
+                                                    AND tcpp.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                                    AND tcpp.PART_STATUS IN ('PRO009','PRO019')
+                                            )
+                                    END
                                 </when>
                                 <otherwise> <!-- 가공완료 -->
                                     AND (B.PART_STATUS IN ('PRO009','PRO012','PRO013','PRO014','PRO015')
@@ -322,6 +324,7 @@
                                             )
                                         )
                                     )
+                                    AND B.PART_STATUS != 'PRO007'
                                 </otherwise>
                             </choose>
                         )
