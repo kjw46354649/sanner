@@ -8,1212 +8,492 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>J-MES POP(Point Of Production)</title>
+	<title>J-MES POP(Point Of Production)</title>
 	<!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
 	<link rel="shortcut icon" href="/favicon.ico">
 	<!-- Chrome, Safari, IE -->
+	<link rel="stylesheet" type="text/css" href="/resource/pop/XEIcon/xeicon.min.css">
+	<link rel="stylesheet" href="/resource/pop/css/index2.css">
+	<link rel="stylesheet" type="text/css" href="/resource/plugins/paramquery/themes/bootstrap/pqgrid.css" />
+	<link rel="stylesheet" type="text/css" href="/resource/plugins/paramquery/pqgrid.ui.min.css" />
+	<link rel="stylesheet" type="text/css" href="/resource/plugins/paramquery/pqgrid.min.css" />
+	<link rel="stylesheet" type="text/css" href="/resource/plugins/paramquery/pqSelect/pqselect.min.css" />
+	<link rel="stylesheet" type="text/css" href="/resource/asset/css/customer.css" />
+	<link rel="stylesheet" type="text/css" href="/resource/asset/css/common.css" />
 	<link rel="icon" href="/favicon.ico">
-    <link href="/resource/asset/css/tvreset.css" rel="stylesheet" type="text/css" />
-    <link href="/resource/asset/css/webFont.css" rel="stylesheet" type="text/css" />
-    <link href="/resource/asset/css/common.css" rel="stylesheet" type="text/css" />
-    <link href="/resource/asset/css/layout.css" rel="stylesheet" type="text/css" />
-    <link href="/resource/asset/css/tv2.css" rel="stylesheet" type="text/css" />
 	<!-- alertify -->
 	<link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/alertify.css" />
 	<link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/themes/default.css" />
 
 	<link rel="stylesheet" type="text/css" href="/resource/plugins/animate-css/animate.css" />
 
-    <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
+	<script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
+	<script type="text/javascript" src="/resource/asset/js/front.js"></script>
+	<script type="text/javascript" src="/resource/plugins/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/resource/plugins/bluebird.min.js"></script>
 	<!-- alertify -->
 	<script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
+	<script type="text/javascript" src='/resource/main/js/bootstrap.js'></script>
+
+	<script type="text/javascript" src="/resource/plugins/paramquery/pqgrid.min.js" ></script>
+	<script type="text/javascript" src="/resource/plugins/paramquery/localize/pq-localize-en.js"></script>
+	<script type="text/javascript" src="/resource/plugins/paramquery/jsZip-2.5.0/jszip.min.js" ></script>
+	<script type="text/javascript" src="/resource/plugins/paramquery/resize/jquery.resize.js" ></script
+	<script type="text/javascript" src="/resource/plugins/paramquery/pqTouch/pqtouch.min.js" ></script>
+	<script type="text/javascript" src="/resource/plugins/paramquery/pqSelect/pqselect.min.js" ></script>
 
 	<!-- socket -->
 	<script type="text/javascript" src='/resource/plugins/socket/sockjs.min.js'></script>
 	<script type="text/javascript" src='/resource/plugins/stomp/stomp.min.js'></script>
 	<style type="text/css">
-
-			@keyframes border-pulse {
-				0% { border-color: orangered; }
-			}
-
-			.blink_box {
-			    animation: border-pulse 1s infinite linear;
-			}
-
-			@keyframes key-background {
-				0% { background-color: orange; color: white }
-			}
-
-			.blink_background {
-			    animation: key-background 1s infinite linear;
-			}
+		*{margin: 0; padding: 0; box-sizing: border-box;}
+		a{text-decoration: none; color: black;}
+		ul,dl,ol { list-style: none;}
+		div.pq-grid * {font-size: 1.4rem;}
+		.pq-grid-header-table>.pq-grid-row>.pq-grid-number-cell {background: #d8edf0;}
 	</style>
 </head>
+
 <body>
-	<div class="bodyWrap">
-		<div class="header">
-			<div>
-				<div style="">
-					<h1>Point Of Production</h1><a href="javascript:getAllData();" class="refresh">refresh</a>
+<section id="containerWrap" class="containerWrap">
+	<div id="leftContainer" class="leftContainer">
+		<h1 id="mctTitle" class="mctTitle"><i class="xi-bookmark"></i>Point Of Production</h1>
+		<!--첫번째 줄 시작-->
+		<div id="contents01" class="contents01">
+			<!--대형 MCT 시작-->
+			<div id="mctBig contentsWrap" class="mctBig contentsWrap">
+				<!--네임 태그-->
+				<div class="titleTag">대형 MCT</div>
+				<!--진행,대기 상황-->
+				<div class="progressTag">
+					<span id="ARE02_WORK" class="progress"><span>진행</span></span>
+					<span id="ARE02_WAIT" class="standby"><span>대기</span></span>
 				</div>
-				<div style="float: right; margin: -50px; padding-right: 95px;">
-					<form id="goMct" name="goMct" method="post" action="/tv/mct">
-						<button type="submit" id="reserveSaveBtn" class="tvReservePopBtn blue">MCT 가공현황</button>
-					</form>
+
+				<!--대형 MCT 내용 시작-->
+				<div id="ARE02" class="infoWrap">
 				</div>
+				<!--대형 MCT 내용 끝-->
+			</div>
+			<!--대형 MCT 끝-->
+
+
+			<!--소형 MCT1 시작-->
+			<div id="contentsWrap" class="mctSmall contentsWrap">
+				<!--네임 태그-->
+				<div class="titleTag">소형 MCT</div>
+				<!--진행,대기 상황-->
+				<div class="progressTag">
+					<span id="ARE01_WORK" class="progress"><span>진행</span></span>
+					<span id="ARE01_WAIT" class="standby"><span>대기</span></span>
+				</div>
+
+				<!--소형 MCT1 내용 시작-->
+				<div id="ARE01" class="infoWrap">
+				</div>
+				<!--소형 MCT1 내용 끝-->
+			</div>
+			<!--소형 MCT1 끝-->
+		</div>
+		<!--첫번째 줄 끝-->
+
+		<!--두번째 줄 시작-->
+		<div id="contents02" class="contents02">
+			<!--선반/연마 -->
+			<div id="grind contentsWrap" class="grind contentsWrap">
+				<!--네임 태그-->
+				<div id="titleTag" class="titleTag">선반/연마</div>
+				<!--진행,대기 상황-->
+				<div class="progressTag">
+					<span id="ARE04_WORK" class="progress"><span>진행</span></span>
+					<span id="ARE04_WAIT" class="standby"><span>대기</span></span>
+				</div>
+
+				<!--선반/연마 내용 시작-->
+				<div id="ARE04" class="infoWrap">
+				</div>
+				<!--선반/연마 내용 끝-->
+			</div>
+			<!--선반/연마 끝-->
+
+			<!--밀링 -->
+			<div id="milling contentsWrap" class="milling contentsWrap">
+				<!--네임 태그-->
+				<div id="titleTag" class="titleTag">밀링</div>
+				<!--진행,대기 상황-->
+				<div class="progressTag">
+					<span id="ARE03_WORK" class="progress"><span>진행</span></span>
+					<span id="ARE03_WAIT" class="standby"><span>대기</span></span>
+				</div>
+
+				<!--밀링 내용 시작-->
+				<div id="ARE03" class="infoWrap">
+				</div>
+				<!--밀링 내용 끝-->
+			</div>
+			<!--밀링 끝-->
+
+		</div>
+		<!--두번째 줄 끝-->
+
+		<!--세번째 줄 시작-->
+		<div id="contents03" class="contents03">
+			<!--정밀 mct-->
+			<div id="mctDetail contentsWrap" class="mctDetail contentsWrap">
+				<!--네임 태그-->
+				<div id="titleTag" class="titleTag">정밀 MCT</div>
+				<!--진행,대기 상황-->
+				<div class="progressTag">
+					<span id="ARE11_WORK" class="progress"><span>진행</span></span>
+					<span id="ARE11_WAIT" class="standby"><span>대기</span></span>
+				</div>
+
+				<!--정밀 MCT 내용 시작-->
+				<div id="ARE11" class="infoWrap">
+				</div>
+				<!--정밀 MCT 내용 끝-->
+			</div>
+			<!--정밀 mct 끝-->
+
+			<!--알람 시작-->
+			<div id="alarmWrap" class="alarmWrap">
+				<h3>Event Alarm</h3>
+				<div id="alarm_list" class="alarm">
+				</div>
+			</div>
+			<!--알람 끝-->
+
+			<!--DMT 시작-->
+			<div id="dmt contentsWrap" class="dmt contentsWrap">
+				<!--네임 태그-->
+				<div id="titleTag" class="titleTag">DMT</div>
+				<!--진행,대기 상황-->
+				<div id="progressTag" class="progressTag">
+					<span id="ARE06_WORK" class="progress"><span>진행</span></span>
+					<span id="ARE06_WAIT" class="standby"><span>대기</span></span>
+				</div>
+
+				<!--DMT 내용 시작-->
+				<div id="ARE06" class="infoWrap">
+
+				</div>
+				<!--DMT 내용 끝-->
+			</div>
+			<!--DMT 끝-->
+
+		</div>
+		<!--세번째 줄 끝-->
+	</div>
+
+	<!--오른쪽 섹션 시작-->
+	<div id="rightContainer" class="rightContainer">
+		<div id="changeBtnWrap" class="changeBtnWrap">
+			<div id="changeBtn" class="changeBtn">
+				<a href="">화면전환</a>
 			</div>
 		</div>
-		<section class="contents pop">
-			<div class="popWrap">
-				<ul class="oneDepthRow">
-					<!--1줄 시작 -->
-					<li class="oneDepthIB">
-						<ul class="twoDepthCol">
-							<!--1줄  1단 시작 -->
-							<li class="twoDepthIB pro27">
-								<div class="conWrap" style="width: 930px">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">대형MCT</a></li>
-										</ul>
-									</div>
-									<div class="page tab1" style="width: 880px">
-										<ul class="p_row">
-											<li class="p_col" id="ARE02_1" >
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black"></div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px"  alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE02_2">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black"></div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_2.png" alt="선반"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">-</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" style="height: 398px;position: absolute;left: 630px;width:25.1%;">
-												<div class="list" style="height: 100%">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt">대형MCT(<sapn id="CNT_POP030">0</sapn>)</span>
-													</div>
-													<ul id="POP030" data-cnt="12"></ul>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row">
-											<li class="p_col" id="ARE02_3">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-대형3</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_1.png" alt="연마"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE02_4">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-대형4</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_2.png" alt="선반"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">-</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
 
-							</li>
-							<!--1줄  1단 마지막 -->
+		<!--오른쪽 표 시작-->
+		<div id="tableWrap" class="tableWrap">
+			<table id="rightTable" class="rightTable">
+				<tr id="tableTitle" class="tableTitle">
+					<th colspan="3">진행현황</th>
+				</tr>
+				<tr>
+					<th class="tableSubTitle1">소재대기</th>
+					<td id="PRO004_CNT" class="pumm"></td>
+					<td id="PRO004_QTY" class="amount"></td>
+				</tr>
+				<tr>
+					<th class="tableSubTitle2 tableSubTitle4">가공대기</th>
+					<td id="PRO002_CNT" class="pumm"></td>
+					<td id="PRO002_QTY" class="amount"></td>
+				</tr>
+				<tr>
+					<th class="tableSubTitle2">가공중</th>
+					<td id="PRO007_CNT" class="pumm"></td>
+					<td id="PRO007_QTY" class="amount"></td>
+				</tr>
+				<tr>
+					<th class="tableSubTitle2">가공완료</th>
+					<td id="PRO009_CNT" class="pumm"></td>
+					<td id="PRO009_QTY" class="amount"></td>
+				</tr>
+				<tr>
+					<th class="tableSubTitle1">표면/후가공</th>
+					<td id="PRO01214_CNT" class="pumm"></td>
+					<td id="PRO01214_QTY" class="amount"></td>
+				</tr>
+				<tr>
+					<th class="tableSubTitle1">출하대기</th>
+					<td id="PRO01315_CNT" class="pumm"></td>
+					<td id="PRO01315_QTY" class="amount"></td>
+				</tr>
+				<tr>
+					<th class="tableSubTitle3">반품</th>
+					<td id="RETURN_CNT" class="pumm"></td>
+					<td id="RETURN_QTY" class="amount"></td>
+				</tr>
+				<tr>
+					<th class="tableSubTitle3">보류</th>
+					<td id="PENDING_CNT" class="pumm"></td>
+					<td id="PENDING_QTY" class="amount"></td>
+				</tr>
+			</table>
+		</div>
+		<!--오른쪽 표 끝-->
 
-							<!--1줄  2단 시작 -->
-							<li class="twoDepthIB pro60">
-								<div class="conWrap" style="width: 2435px;">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">소형MCT</a></li>
-										</ul>
-									</div>
-									<div class="page tab1">
-										<ul class="p_row">
-											<li class="p_col" id="ARE01_1">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-1</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum">9999'</span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_2">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-2</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_logoff.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">9Log off</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_3">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-3</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">8</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-
-											<li class="p_col" style="height: 400px;position: absolute;left: 966px;width:240px;">
-												<div class="list" style="height: 100%">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt" >소형MCT1(<sapn id="CNT_POP010">0</sapn>)</span>
-													</div>
-													<ul id="POP010" data-cnt="12"></ul>
-												</div>
-											</li>
-											<li class="p_col" style="width: 240px;">
-												<div class="list">
-													<div class="nodata"></div>
-													<!--공간차지하기위해서 틀만 만들어놓음-->
-												</div>
-											</li>
-
-											<li class="p_col" id="ARE01_4">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-4</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">7</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_5">  
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-5</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_logoff.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">6Log off</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_6">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-6</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_logoff.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">5Log off</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" style="height: 400px;position: absolute;left: 2150px;width:240px;">
-												<div class="list" style="height: 100%">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt">소형MCT2(<sapn id="CNT_POP020">0</sapn>)</span>
-													</div>
-													<ul id="POP020" data-cnt="12"></ul>
-												</div>
-											</li>
-										</ul>
-
-										<ul class="p_row">
-											<li class="p_col" id="ARE01_7">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-7</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">4</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_8">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-8</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_logoff.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">3Log off</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_9">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-9</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">2</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" style="margin-right: 0px;">
-												<div class="nodata"></div>
-											</li>
-											<li class="p_col" style="margin-right: 17px;">
-												<div class="nodata"></div>
-											</li>
-											<li class="p_col" id="ARE01_10">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-10</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">1</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_11">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-11</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">0</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</li>
-							<!--1줄  2단 마지막 -->
-
-							<!--1줄  3단 시작 -->
-							<li class="twoDepthIB pro10" style="position: absolute;left: 3470px;">
-								<div class="conWrap" style="width: 86%;height: 2034px;">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">외부</a></li>
-										</ul>
-									</div>
-									<div class="page tab1" style="height: 1934px;">
-										<ul class="p_row" style="margin-bottom: 42.5px; padding-left: 20px;">
-											<li class="p_col">
-												<div class="list" style="height: 572px">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt" >후가공(<sapn id="CNT_POP150">0</sapn>)</span>
-													</div>
-													<ul id="POP150" data-cnt="19"></ul>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row" style="margin-bottom: 42.5px; padding-left: 20px;">
-											<li class="p_col">
-												<div class="list" style="height: 572px">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt" >표면처리(<sapn id="CNT_POP160">0</sapn>)</span>
-													</div>
-													<ul id="POP160" data-cnt="19"></ul>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row" style="padding-left: 20px;">
-											<li class="p_col">
-												<div class="list" style="height: 572px">
-													<div class="titleWrap">
-<!--														<span class="f_txt">POP</span>-->
-														<span class="s_txt" style="width: 239px;">외주진행(<sapn id="CNT_POP9991">0</sapn>)</span>
-													</div>
-													<ul id="POP9991" data-cnt="19"></ul>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</li>
-							<!--1줄  3단 마지막 -->
-
-						</ul>
-					</li>
-					<!--1줄 마지막 -->
-
-					<!--2줄 시작 -->
-					<li class="oneDepthIB">
-						<ul class="twoDepthCol">
-							<!-- 2줄 1단 시작 -->
-							<li class="twoDepthIB pro27">
-								<div class="conWrap" style="width: 930px">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">선반/연마</a></li>
-										</ul>
-									</div>
-									<div class="page tab1" style="width: 880px">
-										<ul class="p_row" >
-											<li class="p_col" id="ARE04_1">
-												<div class="thumb thb_blue">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_blue">선반-1</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_1.png" alt="연마"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_green">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE04_2">
-												<div class="thumb thb_blue">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_blue">연마-1</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_1.png" alt="연마"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_green">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" style="height: 600px;position: absolute;left: 630px;width:24.1%;">
-												<div class="list" style="height: 100%">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt">선반/연마실(<sapn id="CNT_POP060">0</sapn>)</span>
-													</div>
-													<ul id="POP060" data-cnt="20"></ul>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row">
-											<li class="p_col" id="ARE04_3">
-												<div class="thumb thb_blue">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_blue">선반-2</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_1.png" alt="연마"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_green">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE04_4">
-												<div class="thumb thb_blue">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_blue">연마-2</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_2.png" alt="선반"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">-</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_green">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row">
-											<li class="p_col" id="ARE04_5">
-												<div class="thumb thb_blue">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_blue">선반-3</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_1.png" alt="연마"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_green">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE04_6">
-												<div class="thumb thb_blue">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_blue">연마-3</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_2.png" alt="선반"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">-</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_green">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-
-							</li>
-							<!-- 2줄 1단 마지막 -->
-
-							<!-- 2줄 2단 시작 -->
-							<li class="twoDepthIB pro29" style="margin-right: 10px;">
-								<div class="conWrap">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">밀링/사상</a></li>
-										</ul>
-									</div>
-									<div class="page tab1">
-										<ul class="p_row">
-											<li class="p_col" id="ARE03_1">
-												<div class="thumb thb_green">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_green">밀링-1</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_green">
-														<span class="proName" style="width: 190px"></span>
-														<span class="proNum" ></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE03_2">
-												<div class="thumb thb_green">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_green">밀링-2</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_2.png" alt="선반"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">-</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_green">
-														<span class="proName" style="width: 190px"></span>
-														<span class="proNum" ></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE03_3">
-												<div class="thumb thb_green">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_green">밀링-3</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_2.png" alt="선반"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">-</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_green">
-														<span class="proName" style="width: 190px"></span>
-														<span class="proNum" ></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" style="height: 605px;position: absolute;left: 870px;width: 240px">
-												<div class="list" style="height: 100%;">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt"  >사상(<sapn id="CNT_POP050">0</sapn>)</span>
-													</div>
-													<ul id="POP050" data-cnt="19"></ul>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row">
-											<li class="p_col" id="ARE03_4">
-												<div class="thumb thb_green">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_green">밀링-4</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_1.png" alt="연마"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_green">
-														<span class="proName" style="width: 190px"></span>
-														<span class="proNum" ></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE03_5">
-												<div class="thumb thb_green">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_green">밀링-5</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_2.png" alt="선반"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">-</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_green">
-														<span class="proName" style="width: 190px"></span>
-														<span class="proNum" ></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" style="height: 396px;position: absolute;left: 605px;width: 267px">
-												<div class="list" style="height: 100%;width: 252px;">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt" >밀링(<sapn id="CNT_POP040">0</sapn>)</span>
-													</div>
-													<ul id="POP040" data-cnt="12"></ul>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row">
-											<li class="p_col" id="ARE03_6">
-												<div class="thumb thb_green">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_green">밀링-6</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_1.png" alt="연마"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_green">
-														<span class="proName" style="width: 190px"></span>
-														<span class="proNum" ></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE03_7">
-												<div class="thumb thb_green">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_green">밀링-7</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_2.png" alt="선반"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">-</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_green">
-														<span class="proName" style="width: 190px"></span>
-														<span class="proNum" ></span>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-
-							</li>
-							<!-- 2줄 2단 마지막 -->
-
-							<!-- 2줄 3단 시작 -->
-							<li class="twoDepthIB pro10" style="margin-right: 10px;">
-								<div class="conWrap" style="width: 380px;">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">JST</a></li>
-										</ul>
-									</div>
-									<div class="page tab1">
-										<ul class="p_row">
-											<li class="p_col" id="ARE05_1">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">2-NC-1</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row">
-											<li class="p_col" id="ARE05_2">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">2-NC-2</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row">
-											<li class="p_col">
-												<div class="list" style="height: 180px;width: 286px;">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt">JST(<sapn id="CNT_POP080">0</sapn>)</span>
-													</div>
-													<ul id="POP080" data-cnt="5"></ul>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</li>
-							<!-- 2줄 3단 마지막 -->
-
-							<!-- 2줄 4단 시작 -->
-							<li class="twoDepthIB pro19">
-								<div class="conWrap" style="width: 890px;">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">DMT</a></li>
-										</ul>
-									</div>
-									<div class="page tab1">
-										<ul class="p_row" >
-											<li class="p_col" id="ARE06_1">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">3-NC1</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName" style="width: 190px"></span>
-														<span class="proNum" ></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE06_2">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">3-NC2</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_2.png" alt="선반"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">-</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName" style="width: 190px"></span>
-														<span class="proNum" ></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" style="height: 605px;position: absolute;left: 600px;width: 240px;">
-												<div class="list" style="height: 100%">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt">DMT(<sapn id="CNT_POP090">0</sapn>)</span>
-													</div>
-													<ul id="POP090" data-cnt="19"></ul>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row">
-											<li class="p_col" id="ARE06_3">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">3-NC3</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_1.png" alt="연마"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName" style="width: 190px"></span>
-														<span class="proNum" ></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE06_4">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">3-NC4</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_2.png" alt="선반"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap">-</div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName" style="width: 190px"></span>
-														<span class="proNum" ></span>
-													</div>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row">
-											<li class="p_col">
-												<div class="nodata"></div>
-											</li>
-											<li class="p_col" id="ARE06_5">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">3-NC5</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_1.png" alt="연마"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName" style="width: 190px"></span>
-														<span class="proNum" ></span>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-
-							</li>
-							<!-- 2줄 4단 마지막 -->
-
-						</ul>
-					</li>
-					<!--2줄 마지막 -->
-
-					<!--3줄 시작 -->
-					<li class="oneDepthIB">
-						<ul class="twoDepthCol">
-							<!--3줄 1단 이벤트 알람 시작 -->
-							<li class="twoDepthIB pro27">
-								<div class="alarm">
-									<h2>Event Alarm</h2>
-									<ul id="alarm_list"></ul>
-								</div>
-							</li>
-							<!--3줄 1단 이벤트 알람 마지막 -->
-
-							<!--3줄 2단 정밀mct 시작 -->
-							<li class="twoDepthIB pro620" style="margin-right: 25px;">
-								<div class="conWrap">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">정밀MCT</a></li>
-										</ul>
-									</div>
-									<div class="page tab1">
-										<ul class="p_row">
-											<li class="p_col"  id="ARE11_1" style="height: 250px;">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-정밀1</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_3.png" alt="NCT"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" style="height: 520px;position: absolute;left: 345px;width: 240px">
-												<div class="list" style="height: 100%">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt">정밀MCT(<sapn id="CNT_POP070">0</sapn>)</span>
-													</div>
-													<ul id="POP070" data-cnt="17"></ul>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row">
-											<li class="p_col"  id="ARE11_2" style="height: 250px;">
-												<div class="thumb thb_gray">
-													<div class="topDiv">
-														<div class="leftWrap">
-															<div class="txtWrap tab_black">NC-정밀2</div>
-															<div class="imgWrap"><img src="/resource/asset/images/tv/img_thumb_1.png" alt="연마"></div>
-														</div>
-														<div class="rightWrap">
-															<div class="profileWrap">
-																<span><img src="/resource/asset/images/tv/img_nopic.png" width="75px" height="75px" alt=""></span></div>
-															<div class="nameWrap"></div>
-														</div>
-													</div>
-													<div class="bottomDiv pro_blue">
-														<span class="proName"></span>
-														<span class="proNum"></span>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-
-							</li>
-							<!--3줄 2단 정밀mct 마지막 -->
-
-							<!--3줄 3단  시작 -->
-							<li class="twoDepthIB pro14" style="margin-right: 25px;">
-								<div class="conWrap">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">교정/마감실</a></li>
-										</ul>
-									</div>
-									<div class="page tab1" style="padding-bottom: 0px;">
-										<ul class="p_row" style="padding: 15px;">
-											<li class="p_col">
-												<div class="list" style="height: 209px;">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt">교정/마감실(<sapn id="CNT_POP130">0</sapn>)</span>
-													</div>
-													<ul id="POP130" data-cnt="6"></ul>
-												</div>
-											</li>
-											<li class="p_col">
-												<div class="list" style="height: 209px;">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt">바이브레터실(<sapn id="CNT_POP140">0</sapn>)</span>
-													</div>
-													<ul id="POP140" data-cnt="6"></ul>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-								<div class="conWrap" style="margin-top: 20px;">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">기타</a></li>
-										</ul>
-									</div>
-									<div class="page tab1" style="padding-bottom: 3px;">
-										<ul class="p_row" style="padding: 14px;">
-											<li class="p_col">
-												<div class="list" style="height: 153px;">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt">2층창고(<sapn id="CNT_POP170">0</sapn>)</span>
-													</div>
-													<ul id="POP170" data-cnt="4"></ul>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</li>
-							<!--3줄 3단  마지막 -->
-
-							<!--3줄 4단  시작 -->
-							<li class="twoDepthIB pro13" style="margin-right: 25px;">
-								<div class="conWrap" style="height: 670px;">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">출하대기장</a></li>
-										</ul>
-									</div>
-									<div class="page tab1">
-										<ul class="p_row">
-											<li class="p_col" style="width: 48.0%">
-												<div class="list" style="height: 516px">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt">출하대기장(<sapn id="CNT_POP110">0</sapn>)</span>
-													</div>
-													<ul id="POP110" data-cnt="17"></ul>
-												</div>
-											</li>
-											<li class="p_col" style="width: 48.0%">
-												<div class="list" style="height: 516px">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt">출하대기장(<sapn id="CNT_POP120">0</sapn>)</span>
-													</div>
-													<ul id="POP120" data-cnt="17"></ul>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-
-							</li>
-							<!--3줄 4단  마지막 -->
-
-							<!--3줄 5단  시작 -->
-							<li class="twoDepthIB pro13" >
-								<div class="conWrap" style="height: 670px;">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">검사실</a></li>
-										</ul>
-									</div>
-									<div class="page tab1">
-										<ul class="p_row">
-											<li class="p_col" style="width: 48.0%">
-												<div class="list" style="height: 516px">
-													<div class="titleWrap">
-														<span class="f_txt">POP</span>
-														<span class="s_txt">검사실(<sapn id="CNT_POP100">0</sapn>)</span>
-													</div>
-													<ul id="POP100" data-cnt="17"></ul>
-												</div>
-											</li>
-											<li class="p_col" style="width: 48.0%">
-												<div class="list" style="height: 516px">
-													<div class="titleWrap">
-														<span class="s_txt" style="width: 239px;">소재대기(<sapn id="CNT_POP9992">0</sapn>)</span>
-													</div>
-													<ul id="POP9992" data-cnt="17"></ul>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-
-							</li>
-							<!--3줄 5단  마지막 -->
-
-						</ul>
-					</li>
-					<!--3줄 마지막 -->
-				</ul>
+		<!--JST-->
+		<div id="jst contentsWrap" class="jst contentsWrap">
+			<!--네임 태그-->
+			<div id="titleTag" class="titleTag">JST</div>
+			<!--진행,대기 상황-->
+			<div class="progressTag">
+				<span id="ARE05_WORK" class="progress"><span>진행</span></span>
+				<span id="ARE05_WAIT" class="standby"><span>대기</span></span>
 			</div>
-		</section>
-	</div>
-<script>
 
+			<!--JST 내용 시작-->
+			<div id="ARE05" class="infoWrap">
+
+			</div>
+			<!--JST 내용 끝-->
+
+		</div>
+		<!--JST끝-->
+
+		<!--POP-->
+		<div id="pop contentsWrap" class="pop contentsWrap">
+			<!--네임 태그-->
+			<div id="titleTag" class="titleTag">POP</div>
+
+			<!--POP 내용 시작-->
+			<div id="infoWrap" class="infoWrap">
+				<!--사상 시작-->
+				<div id="infoRight1" data-seq="POP050" class="infoRight1">
+					<h3>사상</h3>
+					<div id="POP050" class="infoSection1">
+					</div>
+				</div>
+				<!--사상 끝-->
+
+				<!--검사실 시작-->
+				<div id="infoRight2" data-seq="POP100" class="infoRight2">
+					<h3>검사실</h3>
+					<div id="POP100" class="infoSection2">
+					</div>
+				</div>
+				<!--검사실 끝-->
+
+				<!--바이브레이터실 시작-->
+				<div id="infoRight3" data-seq="POP140" class="infoRight3">
+					<h3>바이브레이터실</h3>
+					<div id="POP140" class="infoSection3">
+					</div>
+				</div>
+				<!--바이브레이터실 끝-->
+
+				<!--교정/마감실 시작-->
+				<div id="infoRight4" data-seq="POP130" class="infoRight4">
+					<h3>교정/마감실</h3>
+					<div id="POP130" class="infoSection4">
+					</div>
+				</div>
+				<!--교정/마감실 끝-->
+
+				<!--출하대기장1 시작-->
+				<div id="infoRight5" data-seq="POP110" class="infoRight5">
+					<h3>출하대기장1</h3>
+					<div id="POP110" class="infoSection5">
+					</div>
+				</div>
+				<!--출하대기장1 끝-->
+
+				<!--출하대기장2 시작-->
+				<div id="infoRight6" data-seq="POP120" class="infoRight6">
+					<h3>출하대기장2</h3>
+					<div id="POP120" class="infoSection6">
+					</div>
+				</div>
+				<!--출하대기장2 끝-->
+
+			</div>
+			<!--POP 내용 끝-->
+
+		</div>
+		<!--POP끝-->
+
+		<!--오른쪽 섹션 끝-->
+</section>
+
+<form class="form-inline" id="pop_machine_form" name="pop_machine_form" role="form" onsubmit="return false;">
+	<input type="hidden" id="queryId" name="queryId" value="machine.selectPlanListForDetailPop">
+	<input type="hidden" id="EQUIP_SEQ" name="EQUIP_SEQ" value="">
+	<input type="hidden" id="MCT_WORK_SEQ" name="MCT_WORK_SEQ" value="">
+	<input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
+</form>
+<!--팝업 시작-->
+<div id="popupWrap" class="popupWrap popupBackground" style="display: none;">
+	<!--팝업위치기준-->
+	<div id="popupContainer" class="popupContainer">
+		<!--팝업내용-->
+		<div id="popup" class="popup">
+			<h3><i class="xi-library-bookmark"></i>장비 상세화면</h3>
+			<div id="tableTop" class="tableTop">
+				<h4>가공진행현황</h4>
+				<table id="popHeadTopTable" class="popHeadTopTable">
+					<tr>
+						<td>장비번호 : 1N-1</td>
+						<td>장비종류 : 3축 머시닝 NC</td>
+						<td>설치위치 : 대형 MCT</td>
+						<td>관리장(정) : 홍길동</td>
+						<td>관리자(부) : 김엔씨</td>
+					</tr>
+				</table>
+			</div>
+			<!--상단 메인 테이블-->
+			<table id="popHeadMid" class="popHeadMid popTable">
+				<colgroup>
+					<col width="4%">
+					<col width="4%">
+					<col width="12.5%">
+					<col width="12.5%">
+					<col width="9.5%">
+					<col width="6%">
+					<col width="6%">
+					<col width="6%">
+					<col width="6%">
+					<col width="8.5%">
+					<col width="8.5%">
+					<col width="8.5%">
+				</colgroup>
+				<tbody>
+					<tr>
+						<td id="workStaff" class="workStaff th_color">작업자</td>
+						<td id="workStatu" class="workStatu th_color">작업상세</td>
+						<td id="workNum" class="workNum th_color">작업번호</td>
+						<td id="mapNum" class="mapNum th_color">도면번호</td>
+						<td id="productSize" class="productSize th_color">규격</td>
+						<td id="workType" class="workType th_color">작업형태</td>
+						<td id="material" class="material th_color">소재종류</td>
+						<td id="orderNum" class="orderNum th_color">수량</td>
+						<td id="processDelivery" class="processDelivery	th_color">가공납기</td>
+						<td id="timeStop" class="timeStop th_color">정지시간</td>
+						<td id="timeRunning" class="timeRunning th_color">진행시간</td>
+						<td id="timeExpect" class="timeExpect th_color">예상시간(E/T)</td>
+					</tr>
+					<tr id="machine_popup_tbody">
+						<td id="workStaffImg" class="workStaffImg ">
+							<div id="staffImgWrap" class="staffImgWrap">
+								<img src="/resource/pop/images/staff.jpg" alt="작업자사진">
+							</div>
+							홍길동
+						</td>
+						<td id="running" class="running">진행중</td>
+						<td id="numberWorking" class="numberWorking">B21-258AN0329-0331-02 #1</td>
+						<td id="innerWork" class="innerWork"></td>
+						<td id="mapNumInfo" class="mapNumInfo">
+							<div class="tableScroll">
+								DACV223-DWG-0001<br>
+								DACV223-DWG-0001<br>
+								DACV223-DWG-0003<br>
+								DACV223-DWG-0004<br>
+								DACV223-DWG-0005<br>
+								DACV223-DWG-0006<br>
+							</div>
+						</td>
+						<td id="sizeInfo" class="sizeInfo">1205*300*50</td>
+						<td id="workTypeInfo" class="workTypeInfo">파트</td>
+						<td id="materialInfo" class="materialInfo">AL60</td>
+						<td id="productAmount" class="productAmount">
+							<span>대</span> 42
+						</td>
+						<td id="deliveryDate" class="deliveryDate">4/12</td>
+						<td id="runningStop" class="runningStop">57m</td>
+						<td id="runningTime" class="runningTime">1h 42m</td>
+						<td id="expectTime" class="expectTime">2h 37m</td>
+					</tr>
+				</tbody>
+			</table>
+			<!--상단 메인 테이블 끝-->
+			<!--팝업 하단-->
+			<div id="popBtm" class="popBtm">
+				<!--왼쪽-->
+				<div id="popBtmLeft" class="popBtmLeft">
+					<div class="mapImgWrap">
+						<img id="mapImgWrap" src="/resource/main/blank.jpg" alt="도면">
+					</div>
+				</div>
+				<!--왼쪽-->
+				<!--오른쪽-->
+				<div id="popBtmRight" class="popBtmRight">
+					<div id="tableTop" class="tableTop">
+						<h4>가공계획 List</h4>
+						<table class="popHeadTopTable">
+							<tr id="popBtmGridHead">
+								<td>대기현황</td>
+								<td>7 Rows 253 EA</td>
+								<td>예상시간 합계 12h 23m</td>
+							</tr>
+						</table>
+					</div>
+					<!--오른쪽 표 시작-->
+					<div id="pop_machine_grid" class="popBtmTable">
+						<!--표 삽입-->
+					</div>
+					<!--오른쪽 표 끝-->
+				</div>
+				<!--오른쪽 끝-->
+			</div>
+			<!--팝업 하단 끝-->
+			<!--버튼-->
+			<button id="machinePopDetailBtn" class="popMapDetailBtn">도면상세보기</button>
+			<button id="detailCloseBtn" class="detailCloseBtn">닫기</button>
+			<!--버튼 끝-->
+		</div>
+		<!--팝업내용끝-->
+	</div>
+	<!--팝업위치기준-->
+</div>
+<!--팝업 끝-->
+
+<form class="form-inline" id="pop_search_form" name="pop_search_form" role="form" onsubmit="return false;">
+	<input type="hidden" id="queryId" name="queryId" value="tvMapper.selectTvPopList">
+	<input type="hidden" id="POP_POSITION" name="POP_POSITION" value="">
+	<input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
+</form>
+<!--pop 팝업 시작-->
+<div id="popPopupWrap" class="popPopupWrap popupBackground" style="display:none;">
+	<div id="popupContainer" class="popupContainer">
+		<div id="popPopup" class="popPopup">
+			<h3><i class="xi-library-bookmark"></i>POP 상세 조회</h3>
+			<div id="popRightTop" class="popRightTop">
+				<span>조회대상 : </span>
+				<span id="popSearchType">소재대기</span>
+				<span id="popSearchCnt" style="text-align: right;">7 Rows 543 EA</span>
+			</div>
+			<div id="popSectionWrap" class="popSectionWrap">
+				<div id="popSectionLeft" class="popSectionLeft">
+					<div class="popMap">
+						<img id="popMapImg" src="/resource/main/blank.jpg" alt="도면">
+					</div>
+				</div>
+				<div id="popSectionRight" class="popSectionRight">
+					<div id="popPopGrid" class="popRightTable">
+						<!--표 삽입-->
+					</div>
+				</div>
+			</div>
+			<button id="popMapDetailBtn" class="popMapDetailBtn">도면상세보기</button>
+			<button id="detailCloseBtn" class="detailCloseBtn">닫기</button>
+			<!--버튼 끝-->
+		</div>
+	</div>
+</div>
+<!--pop 팝업 끝-->
+
+<script>
 	/**
 	 * @title {String or DOMElement} The dialog title.
 	 * @message {String or DOMElement} The dialog contents.
@@ -1241,6 +521,74 @@
 			'movable': false,
 			'transitionOff': true
 		}).show().autoOk(60);
+	};
+	let fnPostAjax = function (callFunction, params, callFunctionParam) {
+		'use strict';
+		let callback = $.Callbacks();
+		let param = $.extend({url: null, data: ''}, params || {});
+
+		$.ajax({
+			type: 'POST',
+			url: param.url,
+			dataType: 'json',
+			data: param.data,
+			success: function (data, textStatus, jqXHR) {
+				if (textStatus === 'success') {
+					// if (data.exception === null) {
+					callback.add(callFunction);
+					callback.fire(data, callFunctionParam);
+					// } else {
+					<%--alert('<spring:message code='com.alert.default.failText' />');--%>
+					// }
+				} else {
+					// alert('fail=[' + json.msg + ']111');
+				}
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+				// alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
+				// if (errorThrown == 'Forbidden') {
+				//     $(this).fnHiddenFormPageAction('/');
+				// }
+			}
+		});
+	};
+	let fnFormToJsonArrayData = function (formid) {
+		if(formid.indexOf("#") == -1) formid = "#"+formid;
+		let elementArray = {};
+		let formArr = $(formid).serializeArray();
+		for(let i=0; i < formArr.length; i++) {
+			let tmp = formArr[i];
+			let name = tmp.name;
+			let value = "";
+			if(name != null){
+				let $ctrl = $(formid).find('[name='+name+']');
+				if ($ctrl.is('select')){
+					value = $ctrl.val();
+				} else if ($ctrl.is('textarea')) {
+					value = $ctrl.val();
+				} else {
+					switch($ctrl.attr("type")) {
+						case "text":
+						case "number":
+						case "date":
+						case "password":
+						case "hidden":
+						case "search":
+							value = $ctrl.val();
+							break;
+						case "checkbox":
+							if($ctrl.prop('checked')) value = true;
+							else value = false;
+							break;
+						case 'radio':
+							value = $("input:radio[name=" + name + "]:checked").val();
+							break;
+					}
+				}
+				elementArray[name] = value;
+			}
+		}
+		return elementArray;
 	};
 
 	let windowImageViewer;
@@ -1292,34 +640,23 @@
 					$('[id^=POP]').each(function () {
 						$(this).empty();
 					});
-					$('[id^=ARE]').each(function () {
-						$(this).find(".leftWrap").removeClass('');
-						$(this).find(".leftWrap").find(".txtWrap").html('');
-						$(this).find(".rightWrap").find(".nameWrap").html('Log off');
-						$(this).find(".rightWrap").find("img").attr("src", "/resource/asset/images/tv/img_logoff.png");
-						$(this).find(".proName").html('');
-						$(this).find(".proName").removeClass("ellipsis");
-						$(this).find(".proNum").html('');
-					});
 
 					if (pop_list1 != '') {//pop
 						for (let i = 0; i < pop_list1.length; i++) {
 							let pop_position = pop_list1[i].POP_POSITION;
-							let control_part_info = pop_list1[i].CONTROL_PART_INFO;
 							let total_cnt = pop_list1[i].TOTAL_CNT;
-							let image_seq = pop_list1[i].IMG_GFILE_SEQ;
+							let total_qty = pop_list1[i].TOTAL_QTY;
 
-							setPopData(pop_position, control_part_info, total_cnt, image_seq);
+							setPopData(pop_position, total_cnt, total_qty);
 						}
 					}
-					if (pop_list2 != '') {//소재대기
+					if (pop_list2 != '') {//진행현황 (소재대기, 가공대기, 가공중, 가공완료, 표면/후가공)
 						for (let i = 0; i < pop_list2.length; i++) {
-							let pop_position = 'POP9992';
-							let control_part_info = pop_list2[i].CONTROL_PART_INFO;
-							let total_cnt = pop_list2[i].TOTAL_CNT;
-							let image_seq = pop_list2[i].IMG_GFILE_SEQ;
+							let partStatus = pop_list2[i].PART_STATUS;
+							$('#'+partStatus+'_CNT').html(pop_list2[i].TOTAL_CNT + ' 품')
+							$('#'+partStatus+'_QTY').html(pop_list2[i].TOTAL_QTY + ' EA')
 
-							setPopData(pop_position, control_part_info, total_cnt, image_seq);
+							// setPopData(pop_position, control_part_info, total_cnt, image_seq);
 						}
 					}
 					if (pop_list3 != '') {//외주
@@ -1329,46 +666,72 @@
 							let total_cnt = pop_list3[i].TOTAL_CNT;
 							let image_seq = pop_list3[i].IMG_GFILE_SEQ;
 
-							setPopData(pop_position, control_part_info, total_cnt, image_seq);
+							// setPopData(pop_position, control_part_info, total_cnt, image_seq);
 						}
 					}
 					//2공장 MCT, 기타 진행해야 함.
 
-                    if (m_list != '') {//장비
-                        for (let i = 0; i < m_list.length; i++) {
-                            let factory_area = m_list[i].FACTORY_AREA;
-                            let layout_sort = m_list[i].LAYOUT_SORT;
-                            let equip_nm = m_list[i].EQUIP_NM;
+					if (m_list != '') {//장비
+						for (let i = 0; i < m_list.length; i++) {
+							let factory_area = m_list[i].FACTORY_AREA;
+							let layout_sort = m_list[i].LAYOUT_SORT;
+							let equip_nm = m_list[i].EQUIP_NM;
+							let img_gfile_seq = m_list[i].IMG_GFILE_SEQ;
+							let material_type = ((m_list[i].MATERIAL_TYPE_NM != undefined) ?m_list[i].MATERIAL_TYPE_NM:'');
+							let work_type_nm = ((m_list[i].WORK_TYPE_NM != undefined) ?m_list[i].WORK_TYPE_NM:'');
+							let part_qty = ((m_list[i].PART_QTY != undefined) ?m_list[i].PART_QTY:'');
 
-                            let control_part_info = m_list[i].CONTROL_PART_INFO;
+							let control_part_info = m_list[i].CONTROL_PART_INFO;
 							let working_time = m_list[i].WORKING_TIME;
 							let user_nm = m_list[i].USER_NM;
 							let user_photo_gfile_seq = m_list[i].USER_PHOTO_GFILE_SEQ;
 
-							let $target = $("#" + factory_area+"_"+layout_sort);
+							$("#"+factory_area + '_WORK').html('<span>진행</span> ' + m_list[i].WORK_TOTAL);
+							$("#"+factory_area + '_WAIT').html('<span>대기</span> ' + m_list[i].WAIT_TOTAL);
+
+							let $target = $("#" + factory_area);
 							if($target.length > 0){
-								if(equip_nm != undefined) {
-									$target.find(".leftWrap").find(".txtWrap").html(equip_nm);
-									if(m_list[i].WORK_STATUS)
-										$target.find(".leftWrap").addClass(m_list[i].WORK_STATUS);
+								let mHtml = '<div id="' + (factory_area + '_' + layout_sort) + '" class="info_0'+ i +' '+ m_list[i].WORK_STATUS + '" data-seq="'+m_list[i].EQUIP_SEQ +'">';
+								mHtml += '<div class="nameWrap">';
+								mHtml += '<p id="machineName" class="machineName">' + ((equip_nm != undefined)? equip_nm:'') + '</p>';
+								mHtml += '<p id="staffName" class="staffName">' + ((user_nm != undefined)? user_nm:'') + '</p>';
+								mHtml += '<p id="productName" class="productName">'+ material_type+'&nbsp;'+work_type_nm+'&nbsp;'+part_qty + '</p>';
+								mHtml += '</div>';
+
+								if(img_gfile_seq != undefined) {
+									mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg" style="background:url(/image/' + img_gfile_seq + ');background-repeat:no-repeat;background-position:center;">';
+								}else {
+									mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg '+ m_list[i].MACHINE_ICON+'">';
 								}
-								if(user_nm != undefined) {
-									$target.find(".rightWrap").find(".nameWrap").html(user_nm);
+								if(m_list[i].PLAN_WORKING_TIME != undefined) {
+									mHtml += '<span class="progressPercent">82%</span>';
 								}
 								if(user_photo_gfile_seq != undefined){
-									$target.find(".rightWrap").find("img").attr("src", "/image/" + user_photo_gfile_seq);
+									mHtml += '<div class="staffImg">';
+									mHtml += '<img src="/image/'+user_photo_gfile_seq +'" alt="직원사진">';
+								}else {
+									mHtml += '<div class="staffImg staffIcon">';
+									mHtml += '<img src="/resource/pop/images/user.svg" alt="직원사진">';
 								}
-								if(control_part_info != undefined) {
-									var controlPartHtml = "<a href=\"javascript:callWindowImageViewer(\'"+m_list[i].IMG_GFILE_SEQ+"\');\" >" + control_part_info + "</a>";
-									$target.find(".proName").html(controlPartHtml);
-									$target.find(".proName").addClass("ellipsis");
-								}
-								if(working_time != undefined) {
-									$target.find(".proNum").html(working_time + "'");
-								}
+								mHtml += '</div>';
+								mHtml += '<div class="progressTime">';
+								mHtml += '<span id="time_"'+(factory_area + '_' + layout_sort)+' >'+((m_list[i].WORKING_TIME != undefined)?m_list[i].WORKING_TIME:'-') + '</span>' + ((m_list[i].PLAN_WORKING_TIME != undefined)?(' / ' + m_list[i].PLAN_WORKING_TIME):'');
+								mHtml += '</div>';
+								mHtml += '</div>';
+								mHtml += '</div>';
+
+								$target.append(mHtml);
+								// if(control_part_info != undefined) {
+								// 	var controlPartHtml = "<a href=\"javascript:callWindowImageViewer(\'"+m_list[i].IMG_GFILE_SEQ+"\');\" >" + control_part_info + "</a>";
+								// 	$target.find(".proName").html(controlPartHtml);
+								// 	$target.find(".proName").addClass("ellipsis");
+								// }
+								// if(working_time != undefined) {
+								// 	$target.find(".proNum").html(working_time + "'");
+								// }
 							}
-                        }
-                    }
+						}
+					}
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
@@ -1503,35 +866,32 @@
 			});
 		};
 
-		let setPopData = function (popPosition, liInfo, totalCnt, imageSeq) {
+		let setPopData = function (popPosition, totalCnt, total_qty) {
 			if (popPosition != "") {
-				let maxCnt = $("#" + popPosition).attr("data-cnt");
-				let targetCnt = $("#" + popPosition).find("li").length;
-				if (maxCnt > targetCnt) {
-					$("#" + popPosition).append('<a href="javascript:callWindowImageViewer(' + imageSeq + ');"><li id="' + popPosition + "_" + liInfo + '" class="ellipsis" >' + liInfo + '</li></a>');
-				}
-				$("#CNT_" + popPosition).html(totalCnt);
+				var html = totalCnt + '품<br>' + total_qty + 'EA';
+				$("#" + popPosition).html(html);
 			}
 		};
 
 		/** 일반 알람 처리 **/
 		let alarmMessageProcess = function(messageData){
-			let maxCnt = 8;
+			let maxCnt = 9;
 			if (messageData) {
 				let messageKey = randomKey();
-				let messBody = messageData.content02 + " -> " + messageData.content03;
-				if(messageData.content04) messBody += "     (" + messageData.content04 + ")";
+				let messBody = messageData.content03 + " : " + messageData.content02;
+				// if(messageData.content04) messBody += "     (" + messageData.content04 + ")";
 				if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
-				let alarmMsg  = '<li id=' + messageKey + ' class="alarmList blink_background">';
-					alarmMsg += '	<span class="dateTxt">'+ messageData.content01 +'</span>';
-					alarmMsg += '	<span class="progressTxt ellipsis"><b>' + messBody + ' </b></span>';
-					alarmMsg += '</li>';
+				let alarmMsg  = '<p id=' + messageKey + ' class="alarmList">';
+				alarmMsg += messageData.content01;
+				alarmMsg += messBody;
+				alarmMsg += '</p>';
+				alarmMsg += '<span id="new_'+messageKey + '">[New]</span>';
 				// $("#alarm_list").prepend($(alarmMsg).fadeIn(2000));
 				$("#alarm_list").prepend($(alarmMsg));
 
 				setTimeout(function() {
-					$("#" + messageKey).removeClass("blink_background");
-				}, 5000);
+					$("#new_" + messageKey).remove();
+				}, 30000);
 			}
 		};
 
@@ -1561,22 +921,28 @@
 			let $target = $("#" + messageData.factoryArea + "_" + messageData.equipPosition);
 			switch (actionType){
 				case 'DB_CANCEL' :
-			    case 'DB_COMPLETE' :
-					$target.find(".proName").html('');
+				case 'DB_COMPLETE' :
+					$target.find(".productName").html('');
 					$target.find(".proNum").html('');
-					$target.find(".leftWrap").removeClass("machine-run-background machine-pause-background");
-			        break;
+					$target.removeClass("login");
+					$target.removeClass("pause");
+					break;
 				case 'DB_PAUSE' :
-					$target.find(".leftWrap").removeClass("machine-run-background");
-					$target.find(".leftWrap").addClass("machine-pause-background");
+					$target.removeClass("login");
+					$target.addClass("pause");
 					break;
 				case 'DB_START' :
-					var controlPartHtml = "<a href=\"javascript:callWindowImageViewer(\'"+messageData.imageSeq+"\');\" >" + messageData.content02 + "</a>";
-					$target.find(".proName").html(controlPartHtml);
-					$target.find(".proNum").html(messageData.sMinute + "'");
+					$("#img_"+messageData.factoryArea + "_" + messageData.equipPosition).css({
+						'background':'url(/image/' + messageData.imageSeq + ')',
+						'background-repeat':'no-repeat',
+						'background-position':'center'
+					})
+					$target.find("#time"+messageData.factoryArea + "_" + messageData.equipPosition).html(messageData.sMinute + "m");
+					$target.addClass("login");
+					$target.removeClass("pause");
 				case 'DB_RESTART' :
-					$target.find(".leftWrap").removeClass("machine-pause-background");
-					$target.find(".leftWrap").addClass("machine-run-background");
+					$target.addClass("login");
+					$target.removeClass("pause");
 					break;
 			}
 			$target.addClass("blink_box");
@@ -1591,38 +957,48 @@
 				let actionType = messageData.actionType;
 				let $target = $("#" + messageData.factoryArea + "_" + messageData.equipPosition);
 				if(actionType === 'WK_LOGIN') {
-					if (messageData.userNm != undefined) $target.find(".rightWrap").find(".nameWrap").html(messageData.userNm);
-					if (messageData.userImageSeq != undefined) $target.find(".rightWrap").find("img").attr("src", "/image/" + messageData.userImageSeq);
+					if (messageData.userNm != undefined) $target.find(".nameWrap").find(".staffName").html(messageData.userNm);
+					if (messageData.userImageSeq != undefined) $target.find(".staffImg").find("img").attr("src", "/image/" + messageData.userImageSeq);
 				}else{
-					if (messageData.userNm != undefined) $target.find(".rightWrap").find(".nameWrap").html('Log off');
-					if (messageData.userImageSeq != undefined) $target.find(".rightWrap").find("img").attr("src", "/resource/asset/images/tv/img_logoff.png");
+					if (messageData.userNm != undefined) $target.find(".nameWrap").find(".staffName").html('');
+					if (messageData.userImageSeq != undefined) $target.find(".staffImg").find("img").attr("src", "/resource/pop/images/user.svg");
 				}
-				$target.addClass("blink_box");
-				setTimeout(function() {
-					$target.removeClass("blink_box");
-				}, 5000);
+				var today = new Date();
+				var content01 = '[' +('00'+(today.getMonth()+1)).substr(-2) + '/' + today.getDate() + '&nbsp;'+ ('00'+today.getHours()).substr(-2) + ':'+('00'+today.getMinutes()).substr(-2)+':'+('00'+today.getSeconds()).substr(-2)+']&nbsp;';
+
+				var messageTemp = {
+					'content01':content01,
+					'content02':((actionType === 'WK_LOGIN')?'Log On':'Log Off'),
+					'content03':messageData.equipNm + ' (' + messageData.userNm +')',
+					'content04':messageData.userNm
+				}
+				alarmMessageProcess(messageTemp);
 			}
 		};
 
 		let iConnectCount = 0;
 		function jmesConnect() {
-		    let socket = new SockJS('/jmes-ws');
-		    stompClient = Stomp.over(socket);
+			let socket = new SockJS('/jmes-ws');
+			stompClient = Stomp.over(socket);
 			stompClient.connect({}, (frame) => {
-		        stompClient.subscribe('/topic/pop', function (notificationMessage) {
-		            let messageData = JSON.parse(notificationMessage.body);
-		            popMessageProcess(messageData);
-		        });
+				stompClient.subscribe('/topic/pop', function (notificationMessage) {
+					let messageData = JSON.parse(notificationMessage.body);
+					console.log('/topic/pop',messageData)
+					popMessageProcess(messageData);
+				});
 				stompClient.subscribe('/topic/drawing', function (notificationMessage) {
 					let messageData = JSON.parse(notificationMessage.body);
+					console.log('/topic/drawing',messageData)
 					drawingMessageProcess(messageData);
 				});
 				stompClient.subscribe('/topic/worker', function (notificationMessage) {
 					let messageData = JSON.parse(notificationMessage.body);
+					console.log('/topic/worker',messageData)
 					workerMessageProcess(messageData);
 				});
 				stompClient.subscribe('/topic/alarm', function (notificationMessage) {
 					let messageData = JSON.parse(notificationMessage.body);
+					console.log('/topic/alarm',messageData)
 					alarmMessageProcess(messageData);
 				});
 			}, () => {
@@ -1673,7 +1049,410 @@
 		reloadTimer();
 		timer();
 	});
+	$("#detailCloseBtn").on("click",function(){
+		$("#popupWrap").modal('hide');
+	});
+	$(".pop .infoWrap").children("div").on("click",function(){
+		console.log($(this).data('seq'))
+		$("#pop_search_form").find("#POP_POSITION").val($(this).data('seq'));
+		$("#popPopupWrap").modal('show');
+	});
+	$(".detailCloseBtn").on("click",function(){
+		$("#popPopupWrap").modal('hide');
+	});
 
+	let popPopGrid = $("#popPopGrid");
+	let $popPopGrid;
+	let popPopColModel = [
+		{title: 'ROWNUM', dataIndx: 'ROWNUM', hidden: true},
+		{title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
+		{title: 'IMG_GFILE_SEQ', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
+		{title: 'MCT_PLAN_SEQ', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
+		{title: '가공 납기', minWidth: 50, width: 50, dataIndx: 'INNER_DUE_DT', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'},
+			render: function (ui) {
+				const rowData = ui.rowData
+				if (rowData.DELAY_YN === 'Y') {
+					return {style: 'background-color: #ffff00;'};
+				}
+			}
+		},
+		{title: '진행상태', width: 70, dataIndx: 'PART_STATUS_NM', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'}},
+		{title: '작업번호 / 규격', align: 'center', minWidth: 330, width: 330, dataIndx: 'CONTROL_NUM_PART_NUM', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'},
+			render: function (ui) {
+				const cellData = ui.cellData;
+				if (cellData) {
+					return cellData.replace(/&lt;/g, '<');
+				}
+			}
+		},
+		{title: '작업형태 / 소재', dataType: 'string', dataIndx: 'WORK_TYPE_MATERIAL', maxWidth:180, minWidth: 100, width: 100, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'},
+			render: function (ui) {
+				const cellData = ui.cellData;
+				if (cellData) {
+					return cellData.replace(/&lt;/g, '<');
+				}
+			}
+		},
+		{title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY', maxWidth:100, minWidth: 40, width: 40, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'},
+			render: function (ui) {
+				const rowData = ui.rowData
+				if (rowData.ORDER_QTY_INFO != 'N') {
+					return '<span><span style="color: red;font-weight: bold">'+ rowData.ORDER_QTY_INFO +'&nbsp;</span>'+rowData.CONTROL_PART_QTY+'</span>';
+				}
+			}
+		},
+		{title: '최근가공현황', align: 'center', styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'},
+			colModel: [
+				{title: '공정', minWidth: 60, width: 65, datatype: 'string', dataIndx: 'RECENTLY_PROCESS_TYPE_NM', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'}},
+				{title: '작업자', minWidth: 60, width: 65, datatype: 'string', dataIndx: 'RECENTLY_WORK_USER_NM', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'}},
+				{
+					title: 'RT',
+					minWidth: 55,
+					width: 55,
+					dataIndx: 'RECENTLY_WORKING_TIME',
+					editable: false,
+					styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'}
+				}
+			]
+		},
+		{title: '외주가공', width: 70, dataIndx: 'OUTSIDE_COMP_NM', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'}}
+	];
+	let popPopObj;
+
+	$('#popPopupWrap').on({
+		'show.bs.modal': function () {
+			popPopObj = {
+				width: 'auto', height: 'auto',
+				dataModel: {
+					location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
+					url: "/tv/paramQueryGridSelect",
+					postData: fnFormToJsonArrayData('pop_search_form'),
+					getData: function (dataJSON) {
+						return {data: dataJSON.data};
+					}
+				},
+				strNoRows: '<div style="font-size:35px;margin-top:10px;">No Data</div>',
+				columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
+				scrollModel: {autoFit: true},
+				numberCell: {width: 60, title: "No. ", show: true},
+				selectionModel: { type: 'row', mode: 'single'} ,
+				swipeModel: {on: false},
+				showTitle: false,
+				collapsible: false,
+				resizable: true,
+				trackModel: {on: true},
+				colModel: popPopColModel,
+				rowSelect: function (evt, ui) {
+					$.each(ui.addList, function (idx,Item) {
+						if(idx === 0) {
+							// let imgUrl = '/resource/asset/images/common/'+Item.rowData.IMG_GFILE_SEQ + '.png';
+							let imgUrl = '/qimage/'+Item.rowData.IMG_GFILE_SEQ;
+							$("#popMapImg").attr('src',imgUrl);
+							$("#popMapImg").attr('alt',Item.rowData.IMG_GFILE_SEQ);
+							$("#popMapImg").attr('data-value', Item.rowData.IMG_GFILE_SEQ);
+
+							$("#pop_search_form").find("#GFILE_SEQ").val(Item.rowData.IMG_GFILE_SEQ);
+						}
+					})
+				},
+				cellKeyDown: function (event, ui) {
+					const rowIndx = ui.rowIndx;
+					const sr = this.SelectRow();
+					const selRowData = this.getRowData({rowIndx: rowIndx});
+					let nextRowData = "";
+					if (event.keyCode == $.ui.keyCode.DOWN) {
+						sr.removeAll();
+						sr.add({rowIndx: rowIndx + 1});
+						nextRowData = this.getRowData({rowIndx: rowIndx +1});
+					} else if (event.keyCode == $.ui.keyCode.UP) {
+						sr.removeAll();
+						sr.add({rowIndx: rowIndx - 1});
+						nextRowData = this.getRowData({rowIndx: rowIndx -1});
+					}
+					let imgUrl = '/qimage/';
+					imgUrl += (typeof nextRowData != 'undefined' && nextRowData != "")?nextRowData.IMG_GFILE_SEQ:selRowData.IMG_GFILE_SEQ;
+					$("#popMapImg").attr('src',imgUrl);
+					$("#popMapImg").attr('alt',selRowData.IMG_GFILE_SEQ);
+					$("#popMapImg").attr('data-value', selRowData.IMG_GFILE_SEQ);
+					$("#pop_search_form").find("#GFILE_SEQ").val(selRowData.IMG_GFILE_SEQ);
+				},
+				refresh : function (evt, ui) {
+					data = popPopGrid.pqGrid('option', 'dataModel.data');
+					var totalQty = 0;
+					for (var i = 0; i < data.length; i++) {
+						var row = data[i];
+						totalQty += parseInt(row.CONTROL_PART_QTY)
+					}
+
+					var text = data.length +' Rows  ' + totalQty + ' EA';
+					$("#popSearchCnt").text(text);
+					$("#popSearchType").html(data[0].POP_NM);
+				}
+			};
+
+			$popPopGrid = popPopGrid.pqGrid(popPopObj);
+
+			setTimeout(function (){
+				popPopGrid.pqGrid('setSelection', {rowIndx: 0});
+			},500);
+		},'hide.bs.modal': function () {
+			$popPopGrid.pqGrid('destroy');
+		}
+	});
+
+	$("#machinePopDetailBtn").on("click",function(){
+		let gFileSeq = $("#pop_machine_form").find("#GFILE_SEQ").val();
+		if(gFileSeq != '') {
+			callWindowImageViewer(gFileSeq);
+		}
+	});
+	$("#popMapDetailBtn").on("click",function(){
+		let gFileSeq = $("#pop_search_form").find("#GFILE_SEQ").val();
+		if(gFileSeq != '') {
+			callWindowImageViewer(gFileSeq);
+		}
+	});
+
+	$(document).ready(function(){
+		function timeFormat(time) {
+			var text = "";
+			if(typeof time != 'undefined' && time != "" && time != null) {
+				if(time >= 60) {
+					if(time % 60 == 0) {
+						text = parseInt(time / 60) + 'h';
+					}else {
+						text = Math.floor(time / 60) + 'h  ' + parseInt(time % 60) + 'm';
+					}
+				}else {
+					text = time + 'm';
+				}
+			}
+			return text;
+		}
+
+		let popMachineGrid = $("#pop_machine_grid");
+		let $popMachineGrid;
+		let popMachineColModel = [
+			{title: 'ROWNUM', dataIndx: 'ROWNUM', hidden: true},
+			{title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
+			{title: 'IMG_GFILE_SEQ', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
+			{title: 'MCT_PLAN_SEQ', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
+			{title: '가공 납기', minWidth: 50, width: 50, dataIndx: 'INNER_DUE_DT', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'},
+				render: function (ui) {
+					const rowData = ui.rowData
+					if (rowData.DELAY_YN === 'Y') {
+						return {style: 'background-color: #ffff00;'};
+					}
+				}
+			},
+			{title: '진행상태', width: 70, dataIndx: 'PART_STATUS', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'}},
+			{title: '작업번호 / 규격', align: 'center', minWidth: 165, width: 165, dataIndx: 'CONTROL_NUM_PART_NUM', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'},
+				render: function (ui) {
+					const cellData = ui.cellData;
+					if (cellData) {
+						return cellData.replace(/&lt;/g, '<');
+					}
+				}
+			},
+			{title: '작업형태 / 소재', dataType: 'string', dataIndx: 'WORK_TYPE_MATERIAL', minWidth: 80, width: 180, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'},
+				render: function (ui) {
+					const cellData = ui.cellData;
+					if (cellData) {
+						return cellData.replace(/&lt;/g, '<');
+					}
+				}
+			},
+			{title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY', minWidth: 40, width: 40, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'},
+				render: function (ui) {
+					const rowData = ui.rowData
+					if (rowData.ORDER_QTY_INFO != 'N') {
+						return '<span><span style="color: red;font-weight: bold">'+ rowData.ORDER_QTY_INFO +'&nbsp;</span>'+rowData.CONTROL_PART_QTY+'</span>';
+					}
+				}
+			},
+			{title: '예상시간 (E/T,분)', dataType: 'string', dataIndx: 'WORKING_TIME', minWidth: 55, width: 55, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'blue', 'font-size':'1.4rem'},
+				format: function(val){
+					return (typeof val != 'undefined')?(val+"'"):"";
+				},
+			},
+			{title: '과거수행기록(NC)', align: 'center', styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'},
+				colModel: [
+					{title: 'MCT_PLAN_SEQ', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
+					{
+						title: '1EA L/T',
+						minWidth: 55,
+						width: 55,
+						dataIndx: 'LAST_UNIT_LEAD_TIME',
+						editable: false,
+						styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'}
+					},
+					{title: '작업자', minWidth: 60, width: 65, datatype: 'string', dataIndx: 'LAST_MCT_WORK_USER', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'}}
+				]
+			}
+		];
+		let popMachineObj;
+
+		function settingOngoingInfo(equipSeq) {
+			const parameter2 = {'url': '/tv/json-info', 'data': {
+					'queryId':'machine.selectOngoingInfoForDetailPop',
+					'EQUIP_SEQ':equipSeq
+				}
+			};
+			fnPostAjax(function (data) {
+				var tempHtml = '';
+				if(data.info != null) {
+					if(typeof data.info.IMG_GFILE_SEQ != 'undefined' && data.info.IMG_GFILE_SEQ != '' && data.info.IMG_GFILE_SEQ != null) {
+						$("#mapImgWrap").attr('src', '/qimage/'+data.info.IMG_GFILE_SEQ);
+						$("#mapImgWrap").attr('alt', data.info.IMG_GFILE_SEQ);
+						$("#mapImgWrap").attr('data-value', data.info.IMG_GFILE_SEQ);
+						$("#pop_machine_form").find("#GFILE_SEQ").val(data.info.IMG_GFILE_SEQ);
+					}else {
+						$("#mapImgWrap").attr('src', '/resource/main/blank.jpg');
+						$("#pop_machine_form").find("#GFILE_SEQ").val('');
+					}
+					var stopTime = timeFormat(data.info.TEMP_STOP);
+					var onGoingTime = timeFormat(data.info.ON_GOING);
+					var planWorkingTime = timeFormat(data.info.PLAN_WORKING_TIME);
+					var arr = data.info.DRAWING_NUM.split(",");
+					var arr2 = data.info.DRAWING_SEQ.split(",");
+					tempHtml = '<td class="workStaffImg"><div class="staffImgWrap"><img src="/image/' + data.info.PHOTO_GFILE_SEQ + '"></div>'+ data.info.WORK_USER_NM + '</td>';
+					tempHtml += '<td>' + data.info.WORK_STATUS_NM + '</td>';
+					tempHtml += '<td class="numberWorking">' + data.info.CONTROL_NUM + '</td>';
+					tempHtml += '<td><div class="tableScroll">';
+					for(var i=0;i<arr.length;i++){
+						if(i>0) {
+							tempHtml += '<br>';
+						}
+						tempHtml += '<span data-value="'+ arr2[i]+'">' + arr[i] + '</span>';
+					}
+					tempHtml += '</div></td>';
+					tempHtml += '<td class="sizeInfo">' + data.info.SIZE_TXT + '</td>';
+					tempHtml += '<td class="workTypeInfo">' + data.info.WORK_TYPE_NM + '</td>';
+					tempHtml += '<td class="materialInfo">' + data.info.MATERIAL_DETAIL_NM + '</td>';
+					tempHtml += '<td class="productAmount">';
+					if(data.info.ORDER_QTY_INFO != 'N') {
+						tempHtml += '<span>' + data.info.ORDER_QTY_INFO + '&nbsp;</span>';
+					}
+					tempHtml += data.info.CONTROL_PART_QTY + '</td>';
+					tempHtml += '<td class="deliveryDate">' + data.info.INNER_DUE_DT + '</td>';
+					tempHtml += '<td class="runningStop"">' + stopTime + '</td>';
+					tempHtml += '<td class="runningTime">' + onGoingTime + '</td>';
+					tempHtml += '<td class="expectTime">' + planWorkingTime+ '</td>';
+				}else {
+					tempHtml = '<td colspan="12" style="font-size: 35px;height: 141px;">Not Found Data</td>';
+					$("#mapImgWrap").attr('src', '/resource/main/blank.jpg');
+					$("#pop_machine_form").find("#GFILE_SEQ").val('');
+				}
+				$("#machine_popup_tbody").html(tempHtml);
+			}, parameter2, '');
+		}
+
+		$(document).on("click",".login,.pause",function(event){
+			console.log($(this).data('seq'))
+			var equipSeq = $(this).data('seq');
+			$("#pop_machine_form").find("#EQUIP_SEQ").val(equipSeq);
+			const parameter = {'url': '/tv/json-info', 'data': {
+					'queryId':'machine.selectMachineInfoForDetailPop',
+					'EQUIP_SEQ':equipSeq
+				}
+			};
+			fnPostAjax(function (data) {
+				var tempHtml = '<tr>'
+				tempHtml += '<td>장비번호 : ' + data.info.EQUIP_NM + '</td>';
+				tempHtml += '<td>장비종류 : ' + data.info.EQUIP_TYPE_NM + '</td>';
+				tempHtml += '<td>설치위치 : ' + data.info.FACTORY_AREA_NM + '</td>';
+				tempHtml += '<td>관리장(정) : ' + data.info.MAIN_USER_NM + '</td>';
+				tempHtml += '<td>관리장(부) : ' + data.info.SUB_USER_NM + '</td>';
+				tempHtml += '</tr>';
+				$("#popHeadTopTable").html(tempHtml);
+			}, parameter, '');
+
+			settingOngoingInfo(equipSeq);
+
+			$('#popupWrap').modal('show');
+		})
+		$('#popupWrap').on({
+			'show.bs.modal': function () {
+				popMachineObj = {
+					width: 'auto', height: 'auto',
+					dataModel: {
+						location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
+						url: "/tv/paramQueryGridSelect",
+						postData: fnFormToJsonArrayData('pop_machine_form'),
+						getData: function (dataJSON) {
+							return {data: dataJSON.data};
+						}
+					},
+					strNoRows: '<div style="font-size:35px;margin-top:10px;">No Data</div>',
+					columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
+					scrollModel: {autoFit: true},
+					numberCell: {width: 60, title: "No. ", show: true},
+					selectionModel: { type: 'row', mode: 'single'} ,
+					swipeModel: {on: false},
+					showTitle: false,
+					collapsible: false,
+					resizable: false,
+					trackModel: {on: true},
+					editModel: {clicksToEdit: 1},
+					colModel: popMachineColModel,
+					rowSelect: function (evt, ui) {
+						$.each(ui.addList, function (idx,Item) {
+							if(idx === 0) {
+								// let imgUrl = '/resource/asset/images/common/'+Item.rowData.IMG_GFILE_SEQ + '.png';
+								let imgUrl = '/qimage/'+Item.rowData.IMG_GFILE_SEQ;
+								$("#mapImgWrap").attr('src',imgUrl);
+								$("#mapImgWrap").attr('alt',Item.rowData.IMG_GFILE_SEQ);
+								$("#mapImgWrap").attr('data-value', Item.rowData.IMG_GFILE_SEQ);
+
+								$("#pop_machine_form").find("#GFILE_SEQ").val(Item.rowData.IMG_GFILE_SEQ);
+							}
+						})
+					},
+					cellKeyDown: function (event, ui) {
+						const rowIndx = ui.rowIndx;
+						const sr = this.SelectRow();
+						const selRowData = this.getRowData({rowIndx: rowIndx});
+						let nextRowData = "";
+						if (event.keyCode == $.ui.keyCode.DOWN) {
+							sr.removeAll();
+							sr.add({rowIndx: rowIndx + 1});
+							nextRowData = this.getRowData({rowIndx: rowIndx +1});
+						} else if (event.keyCode == $.ui.keyCode.UP) {
+							sr.removeAll();
+							sr.add({rowIndx: rowIndx - 1});
+							nextRowData = this.getRowData({rowIndx: rowIndx -1});
+						}
+						let imgUrl = '/qimage/';
+						imgUrl += (typeof nextRowData != 'undefined' && nextRowData != "")?nextRowData.IMG_GFILE_SEQ:selRowData.IMG_GFILE_SEQ;
+						$("#mapImgWrap").attr('src',imgUrl);
+						$("#mapImgWrap").attr('alt',selRowData.IMG_GFILE_SEQ);
+						$("#mapImgWrap").attr('data-value', selRowData.IMG_GFILE_SEQ);
+						$("#pop_machine_form").find("#GFILE_SEQ").val(selRowData.IMG_GFILE_SEQ);
+					},
+					refresh : function (evt, ui) {
+						data = popMachineGrid.pqGrid('option', 'dataModel.data');
+						var totalQty = 0;
+						var totalTime = 0;
+						for (var i = 0; i < data.length; i++) {
+							var row = data[i];
+							totalQty += parseInt(row.CONTROL_PART_QTY)
+							if(typeof row.WORKING_TIME != 'undefined' && row.WORKING_TIME != '') {
+								totalTime += parseInt(row.WORKING_TIME);
+							}
+						}
+
+						var html = '<td>대기현황</td><td>' + data.length +' Rows  ' + totalQty + ' EA</td>';
+						html += '<td>예상시간합계 : ' + timeFormat(totalTime) + '</td>';
+						$("#popBtmGridHead").html(html);
+					}
+				};
+				$popMachineGrid = popMachineGrid.pqGrid(popMachineObj);
+			},
+			'hide.bs.modal': function () {
+				$popMachineGrid.pqGrid('destroy');
+			}
+		});
+	});
 </script>
 </body>
 </html>

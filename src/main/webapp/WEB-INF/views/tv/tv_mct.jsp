@@ -8,1289 +8,364 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>J-MES MCT 가동현황</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J-MES MCT 가공현황</title>
 	<!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
 	<link rel="shortcut icon" href="/favicon.ico">
 	<!-- Chrome, Safari, IE -->
 	<link rel="icon" href="/favicon.ico">
-    <link href="/resource/asset/css/tvreset.css" rel="stylesheet" type="text/css" />
-    <link href="/resource/asset/css/webFont.css" rel="stylesheet" type="text/css" />
-    <link href="/resource/asset/css/common.css" rel="stylesheet" type="text/css" />
-    <link href="/resource/asset/css/layout.css" rel="stylesheet" type="text/css" />
-    <link href="/resource/asset/css/tv.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="/resource/pop/css/index2.css">
+	<link rel="stylesheet" href="/resource/mct/css/mct.css">
+	<link rel="stylesheet" href="/resource/pop/XEIcon/xeicon.min.css">
+	<link rel="stylesheet" type="text/css" href="/resource/plugins/paramquery/themes/bootstrap/pqgrid.css" />
+	<link rel="stylesheet" type="text/css" href="/resource/plugins/paramquery/pqgrid.ui.min.css" />
+	<link rel="stylesheet" type="text/css" href="/resource/plugins/paramquery/pqgrid.min.css" />
+	<link rel="stylesheet" type="text/css" href="/resource/plugins/paramquery/pqSelect/pqselect.min.css" />
+	<link rel="stylesheet" type="text/css" href="/resource/asset/css/customer.css" />
+	<link rel="stylesheet" type="text/css" href="/resource/asset/css/common.css" />
 	<!-- alertify -->
 	<link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/alertify.css" />
 	<link rel="stylesheet" type="text/css" href="/resource/plugins/alertifyjs/css/themes/default.css" />
 
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
+	<script type="text/javascript" src="/resource/asset/js/front.js"></script>
+	<script type="text/javascript" src="/resource/plugins/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/resource/plugins/bluebird.min.js"></script>
 	<!-- alertify -->
 	<script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
+	<script type="text/javascript" src='/resource/main/js/bootstrap.js'></script>
+
+	<script type="text/javascript" src="/resource/plugins/paramquery/pqgrid.min.js" ></script>
+	<script type="text/javascript" src="/resource/plugins/paramquery/localize/pq-localize-en.js"></script>
+	<script type="text/javascript" src="/resource/plugins/paramquery/jsZip-2.5.0/jszip.min.js" ></script>
+	<script type="text/javascript" src="/resource/plugins/paramquery/resize/jquery.resize.js" ></script
+	<script type="text/javascript" src="/resource/plugins/paramquery/pqTouch/pqtouch.min.js" ></script>
+	<script type="text/javascript" src="/resource/plugins/paramquery/pqSelect/pqselect.min.js" ></script>
 
 	<!-- socket -->
 	<script type="text/javascript" src='/resource/plugins/socket/sockjs.min.js'></script>
 	<script type="text/javascript" src='/resource/plugins/stomp/stomp.min.js'></script>
+	<style>
+		*{margin: 0; padding: 0; box-sizing: border-box;}
+		a{text-decoration: none; color: black;}
+		ul,dl,ol { list-style: none;}
+		.pq-grid-header-table>.pq-grid-row>.pq-grid-number-cell {background: #d8edf0;}
+	</style>
 </head>
 <body>
-	<div class="bodyWrap mct">
-		<div class="header">
-			<div class="left">
-				<h1 class="title">MCT 가동 및 주요 현황</h1>
-				<div class="infoTit infoContsWrap">
-					<div class="infoCont">
-						<span>현재</span>
-<%--						<span class="txtB">82%</span>--%>
-						<span class="txtB" id="nowRate"></span>
-					</div>
-					<div class="infoCont">
-						<span>3일간 평균</span>
-						<span class="txtR" id="dayRate"></span>
-					</div>
-					<div class="infoCont">
-						<span>月 평균</span>
-						<span class="txtR" id="monthRate"></span>
+	<section id="containerWrap" class="containerWrap">
+		<!--왼쪽 구역 시작-->
+		<div id="leftContainer" class="leftContainer">
+			<h1 id="mctTitle" class="mctTitle"><i class="xi-bookmark"></i>MCT 가공 현황</h1>
+
+			<!--DMT화면용-->
+			<div id="contents03" class="contents03">
+				<div id="smallMct contentsWrap" class="smallMct contentsWrap">
+					<div id="titleTag" class="titleTag">DMT</div>
+					<div id="infoWrap" class="infoWrap">
+						<div id="ARE06_1"class="rowWrap">
+						</div>
+						<!--row끝-->
+						<div id="ARE06_2" class="rowWrap">
+						</div>
+						<!--row끝-->
+						<div id="ARE06_3" class="rowWrap">
+						</div>
+						<!--row끝-->
+						<div id="ARE06_4" class="rowWrap">
+						</div>
+						<!--row끝-->
 					</div>
 				</div>
-				<a href="/tv/mct" class="refresh">refresh</a>
 			</div>
-			<div class="right">
-				<form id="goMct" name="goMct" method="post" action="/tv/pop">
-					<button type="submit" id="reserveSaveBtn" class="tvReservePopBtn blue">전체 가공현황</button>
-				</form>
+
+			<!--첫번째 줄 시작-->
+			<div id="contents01" class="contents01">
+				<!--소형MCT-->
+				<div id="smallMct contentsWrap" class="smallMct contentsWrap">
+					<div id="titleTag" class="titleTag">소형 MCT</div>
+					<div id="infoWrap" class="infoWrap">
+						<div id="ARE01_1" class="rowWrap">
+						</div>
+						<!--row 끝-->
+						<div id="ARE01_2" class="rowWrap">
+						</div>
+						<!--row 끝-->
+
+					</div>
+				</div>
+				<!--소형 MCT 끝-->
+			</div>
+			<!--첫번쨰 줄 끝-->
+
+			<!--두번째 줄 시작-->
+			<div id="contents02" class="contents02">
+				<!--대형 MCT시작-->
+				<div id="bigMct contentsWrap" class="bigMct contentsWrap">
+					<div id="titleTag" class="titleTag">대형 MCT</div>
+					<div id="infoWrap" class="infoWrap">
+						<!--대형 MCT 첫번째 줄 시작-->
+						<div id="ARE02_1" class="rowWrap">
+						</div>
+						<!--대형 MCT 첫번째 줄 끝-->
+						<!--대형 MCT 두번째 줄 시작-->
+						<div id="ARE02_2" class="rowWrap">
+						</div>
+						<!--row 끝-->
+					</div>
+					<!--대형 MCT두번째 줄 끝-->
+				</div>
+				<!--대형 MCT끝-->
+
+				<!--정밀 MCT 시작-->
+				<div id="detailMct contentsWrap" class="detailMct contentsWrap">
+					<div id="titleTag" class="titleTag">정밀 MCT</div>
+					<div id="infoWrap" class="infoWrap">
+						<div id="ARE11_1" class="rowWrap">
+						</div>
+						<!--row 끝-->
+						<div id="ARE11_2" class="rowWrap">
+						</div>
+						<!--row 끝-->
+					</div>
+				</div>
+				<!--정밀 MCT 끝-->
+
+				<!--JST 시작-->
+				<div id="detailMct contentsWrap" class="detailMct contentsWrap">
+					<div id="titleTag" class="titleTag">JST</div>
+					<div id="infoWrap" class="infoWrap">
+						<div id="ARE05_1" class="rowWrap">
+						</div>
+						<!--row 끝-->
+						<div id="ARE05_2"  class="rowWrap">
+						</div>
+						<!--row 끝-->
+					</div>
+				</div>
+				<!--JST 끝-->
+
+			</div>
+			<!--두번째 줄 끝-->
+		</div>
+		<!--왼쪽 구역 끝-->
+		<!--오른쪽 구역 시작-->
+		<div id="rightContainer" class="rightContainer">
+			<div class="rightBtnWrap">
+				<select id="changeScreen">
+					<option value="jinsung">진성정밀</option>
+					<option value="dmt">DMT</option>
+				</select>
+				<div id="changeBtn" class="changeBtn">
+					<a href="">화면전환</a>
+				</div>
+			</div>
+			<div class="rightSectionWrap">
+				<div class="rightSection">
+					<!--오른쪽 상단 테이블 시작-->
+					<table class="rightSectionTop">
+						<tr>
+							<th colspan="3">가동률 : <span id="NOW_RATE" class="tdColor1">84%</span></th>
+						</tr>
+						<tr>
+							<td>가동</td>
+							<td>정지</td>
+							<td>미가동</td>
+						</tr>
+						<tr>
+							<td id="RUN" class="tdColor1">0대</td>
+							<td id="STOP" class="tdColor2">0대</td>
+							<td id="NOT_RUN">0대</td>
+						</tr>
+					</table>
+					<!--오른쪽 상단 테이블 끝-->
+					<!--오른쪽 중단 테이블 시작-->
+					<table class="rightSectionMid">
+						<tr>
+							<th class="tdColor2">불량/반품</th>
+							<th class="tdColor2">긴급</th>
+							<th>가공지연</th>
+						</tr>
+						<tr>
+							<td id="totalReturn" class="tdColor2"></td>
+							<td id="totalEmergency" class="tdColor2"></td>
+							<td id="totalLate"></td>
+						</tr>
+					</table>
+					<!--오른쪽 중단 테이블 끝-->
+					<!--오른쪽 하단 그리드 시작-->
+					<div id="mct_main_grid" class="rightSectionBtm">
+
+					</div>
+					<!--오른쪽 하단 그리드 끝-->
+				</div>
 			</div>
 		</div>
-		<section class="contents pop ty2">
-			<div class="popWrap">
-				<ul class="oneDepthRow">
-					<li class="oneDepthIB">
-						<ul class="twoDepthCol">
-							<li class="twoDepthIB pro">
-								<div class="conWrap">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">소형MCT</a></li>
-										</ul>
-									</div>
-									<div class="page tab1">
-										<ul class="p_row">
-											<li class="p_col" id="ARE01_1_1">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on machine-run-background">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB ellipsis"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-																<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_1_2">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_1_3">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-																<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_1_4">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap ty2 on">
-															<a href="#a;">
-																<span class="nodata"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-																<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_1_5">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_1_6">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-																<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_1_7">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-																<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row">
-											<li class="p_col" id="ARE01_2_1">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap ty2 on">
-															<a href="#a;">
-																<span class="nodata"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_2_2">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap ty2 on">
-															<a href="#a;">
-																<span class="nodata"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-																<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_2_3">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_2_4">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_2_5">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_2_6">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col" id="ARE01_2_7">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-<%--									<div class="percentWrap">--%>
-<%--										<span class="txtB"> </span>--%>
-<%--										<span class="txtR">&nbsp;</span>--%>
-<%--										<span>&nbsp;</span>--%>
-<%--									</div>--%>
+		<!--오른쪽 구역 끝-->
+	</section>
+
+	<form class="form-inline" id="mct_machine_form" name="mct_machine_form" role="form" onsubmit="return false;">
+		<input type="hidden" id="queryId" name="queryId" value="machine.selectPlanListForDetailPop">
+		<input type="hidden" id="EQUIP_SEQ" name="EQUIP_SEQ" value="">
+		<input type="hidden" id="MCT_WORK_SEQ" name="MCT_WORK_SEQ" value="">
+		<input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
+	</form>
+	<!--팝업 시작-->
+	<div id="popupWrap" class="popupWrap popupBackground" style="display: none;">
+		<!--팝업위치기준-->
+		<div id="popupContainer" class="popupContainer">
+			<!--팝업내용-->
+			<div id="popup" class="popup">
+				<h3><i class="xi-library-bookmark"></i>장비 상세화면</h3>
+				<div id="tableTop" class="tableTop">
+					<h4>가공진행현황</h4>
+					<table id="popHeadTopTable" class="popHeadTopTable">
+						<tr>
+							<td>장비번호 : 1N-1</td>
+							<td>장비종류 : 3축 머시닝 NC</td>
+							<td>설치위치 : 대형 MCT</td>
+							<td>관리장(정) : 홍길동</td>
+							<td>관리자(부) : 김엔씨</td>
+						</tr>
+					</table>
+				</div>
+
+				<!--상단 메인 테이블-->
+				<table id="popHeadMid" class="popHeadMid popTable">
+					<colgroup>
+						<col width="4%">
+						<col width="4%">
+						<col width="12.5%">
+						<col width="12.5%">
+						<col width="9.5%">
+						<col width="6%">
+						<col width="6%">
+						<col width="6%">
+						<col width="6%">
+						<col width="8.5%">
+						<col width="8.5%">
+						<col width="8.5%">
+					</colgroup>
+					<tbody>
+						<tr>
+							<td id="workStaff" class="workStaff th_color">작업자</td>
+							<td id="workStatu" class="workStatu th_color">작업상세</td>
+							<td id="workNum" class="workNum th_color">작업번호</td>
+							<td id="mapNum" class="mapNum th_color">도면번호</td>
+							<td id="productSize" class="productSize th_color">규격</td>
+							<td id="workType" class="workType th_color">작업형태</td>
+							<td id="material" class="material th_color">소재종류</td>
+							<td id="orderNum" class="orderNum th_color">수량</td>
+							<td id="processDelivery" class="processDelivery	th_color">가공납기</td>
+							<td id="timeStop" class="timeStop th_color">정지시간</td>
+							<td id="timeRunning" class="timeRunning th_color">진행시간</td>
+							<td id="timeExpect" class="timeExpect th_color">예상시간(E/T)</td>
+						</tr>
+
+						<tr id="machine_popup_tbody">
+							<td id="workStaffImg" class="workStaffImg ">
+								<div id="staffImgWrap" class="staffImgWrap">
+									<img src="resource/pop/images/staff.jpg" alt="작업자사진">
 								</div>
-							</li>
-						</ul>
-					</li>
-					<!--2줄 시작-->
-					<li class="oneDepthIB">
-						<ul class="twoDepthCol">
-							<li class="twoDepthIB pro30">
-								<div class="conWrap2">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">대형MCT</a></li>
-										</ul>
-									</div>
-									<div class="page tab1">
-										<ul class="p_row" style="padding:21px 20px 0;">
-											<li class="p_col" id="ARE02_1_1">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-																<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col"  id="ARE02_1_2" style="margin-left:11px;">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row"  style="padding:21px 20px 0;">
-											<li class="p_col" id="ARE02_2_1" >
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap ty2 on">
-															<a href="#a;">
-																<span class="nodata"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col"  id="ARE02_2_2" style="margin-left:11px;">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap ty2 on">
-															<a href="#a;">
-																<span class="nodata"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-																<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-<%--									<div class="percentWrap">--%>
-<%--										<span class="txtB"> </span>--%>
-<%--										<span class="txtR">&nbsp;</span>--%>
-<%--										<span>&nbsp;</span>--%>
-<%--									</div>--%>
+								홍길동
+							</td>
+							<td id="running" class="running">진행중</td>
+							<td id="numberWorking" class="numberWorking">B21-258AN0329-0331-02 #1</td>
+							<td id="mapNumInfo" class="mapNumInfo">
+								<div class="tableScroll">
+									DACV223-DWG-0001<br>
+									DACV223-DWG-0001<br>
+									DACV223-DWG-0003<br>
+									DACV223-DWG-0004<br>
+									DACV223-DWG-0005<br>
+									DACV223-DWG-0006<br>
 								</div>
-							</li>
-							<li class="twoDepthIB pro16">
-								<div class="conWrap2">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">정밀MCT</a></li>
-										</ul>
-									</div>
-									<div class="page tab1">
-										<ul class="p_row" style="padding:21px 20px 0;">
-											<li class="p_col" id="ARE11_1_1">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-																<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row" style="padding:21px 20px 0;">
-											<li class="p_col" id="ARE11_2_1">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap ty2 on">
-															<a href="#a;">
-																<span class="nodata"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-<%--									<div class="percentWrap">--%>
-<%--										<span class="txtB"> </span>--%>
-<%--										<span class="txtR">&nbsp;</span>--%>
-<%--										<span>&nbsp;</span>--%>
-<%--									</div>--%>
-								</div>
-							</li>
-							<li class="twoDepthIB pro16">
-								<div class="conWrap2">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">JST</a></li>
-										</ul>
-									</div>
-									<div class="page tab1">
-										<ul class="p_row" style="padding:21px 20px 0;">
-											<li class="p_col" id="ARE05_1_1">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-																<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row" style="padding:21px 20px 0;">
-											<li class="p_col" id="ARE05_2_1">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap ty2 on">
-															<a href="#a;">
-																<span class="nodata"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-<%--									<div class="percentWrap">--%>
-<%--										<span class="txtB"> </span>--%>
-<%--										<span class="txtR">&nbsp;</span>--%>
-<%--										<span>&nbsp;</span>--%>
-<%--									</div>--%>
-								</div>
-							</li>
-							<li class="twoDepthIB pro30">
-								<div class="conWrap2">
-									<div class="tabmenu">
-										<ul>
-											<li><a href="#a;">DMT</a></li>
-										</ul>
-									</div>
-									<div class="page tab1">
-										<ul class="p_row" style="padding:21px 20px 0;">
-											<li class="p_col" id="ARE06_1_1">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-																<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col"  id="ARE06_1_2" style="margin-left:11px;">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col"  id="ARE06_1_3" style="margin-left:11px;">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-										<ul class="p_row" style="padding:21px 20px 0;">
-											<li class="p_col" id="ARE06_2_1">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap ty2 on">
-															<a href="#a;">
-																<span class="nodata"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col"  id="ARE06_2_2" style="margin-left:11px;">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap ty2 on">
-															<a href="#a;">
-																<span class="nodata"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-														<div class="inWrap">
-																<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span class="txtB ty2"></span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li class="p_col"  id="ARE06_2_3" style="margin-left:11px;">
-												<div class="statusWrap">
-													<div class="statusBar">
-														<div class="inBox"></div>
-														<div class="inBox"></div>
-														<div class="inBox">
-															<div></div>
-															<div class="txtY"></div>
-														</div>
-													</div>
-													<div class="statusConts">
-														<div class="inWrap on">
-															<a href="#a;">
-																<span><br></span>
-																<span><span class="txtB"></span><br></span>
-																<span></span>
-																<span><span class="txtR"></span><br>(<span class="txtB ty2"></span>)</span>
-															</a>
-														</div>
-													</div>
-												</div>
-											</li>
-										</ul>
-									</div>
-<%--									<div class="percentWrap">--%>
-<%--										<span class="txtB"> </span>--%>
-<%--										<span class="txtR">&nbsp;</span>--%>
-<%--										<span>&nbsp;</span>--%>
-<%--									</div>--%>
-								</div>
-							</li>
-						</ul>
-					</li>
-					<li class="oneDepthIB">
-						<ul class="twoDepthCol">
-							<li class="twoDepthIB pro">
-								<div class="statusTblWrap">
-									<div class="statusTblBox w1260">
-										<div class="tblTitWrap">
-											<div class="tblTit"><span>불량/반품</span> 발생 현황 <span id="grid1_total">(total: 0)</span></div>
-										</div>
-										<div class="tblWrap">
-											<table>
-												<caption>No, 발생일, 발주처, 작업지시번호, 유형, 수량, 납기, 불량코드, 조치로 구분된 불량/반품 발생 현황(3일간)</caption>
-												<colgroup>
-													<col width="64px">
-													<col width="95px">
-													<col width="115px">
-													<col width="219px">
-													<col width="74px">
-													<col width="74px">
-													<col width="74px">
-													<col width="150px">
-													<col width="95px">
-												</colgroup>
-												<thead>
-													<tr>
-														<th>No</th>
-														<th>발생일</th>
-														<th>발주처</th>
-														<th>작업지시번호</th>
-														<th>검사유형</th>
-														<th>수량</th>
-														<th>가공납기</th>
-														<th>불량코드</th>
-														<th>조치</th>
-													</tr>
-												</thead>
-												<tbody id="grid1">
-													<tr><td><div class="nodata"></div></td></tr>
-													<tr><td><div class="nodata"></div></td></tr>
-													<tr><td><div class="nodata"></div></td></tr>
-													<tr><td><div class="nodata"></div></td></tr>
-													<tr><td><div class="nodata"></div></td></tr>
-												</tbody>
-											</table>
-										</div>
-									</div>
-									<div class="statusTblBox w1100">
-										<div class="tblTitWrap">
-											<div class="tblTit ty2"><span>긴급</span>주문 진행현황<span id="grid2_total">(total: 0)</span></div>
-										</div>
-										<div class="tblWrap">
-											<table>
-												<caption>No, 납기, 출고일, 발주처, 작업지시번호, 수량, 진행상태로 구분된 긴급주문 진행현황</caption>
-												<colgroup>
-													<col width="64px">
-													<col width="95px">
-													<col width="145px">
-													<col width="115px">
-													<col width="169px">
-													<col width="74px">
-													<col width="138px">
-												</colgroup>
-												<thead>
-													<tr>
-														<th>No</th>
-														<th>가공납기</th>
-														<th>발주처</th>
-														<th>작업지시번호</th>
-														<th>수량</th>
-														<th>진행상태</th>
-														<th>현재위치</th>
-													</tr>
-												</thead>
-												<tbody id="grid2">
-													<tr><td><div class="nodata"></div></td></tr>
-													<tr><td><div class="nodata"></div></td></tr>
-													<tr><td><div class="nodata"></div></td></tr>
-													<tr><td><div class="nodata"></div></td></tr>
-													<tr><td><div class="nodata"></div></td></tr>
-												</tbody>
-											</table>
-										</div>
-									</div>
-									<div class="statusTblBox w1150">
-										<div class="tblTitWrap">
-											<div class="tblTit ty3">가공 <span>지연</span> 목록<span id="grid3_total">(total: 0)</span></div>
-										</div>
-										<div class="tblWrap">
-											<table>
-												<caption>No, 납기, 출고일, 발주처, 작업지시번호, 수량, 진행상태, 담당영업으로 내부 가공 지원 리스트</caption>
-												<colgroup>
-													<col width="64px">
-													<col width="95px">
-													<col width="115px">
-													<col width="219px">
-													<col width="74px">
-													<col width="150px">
-													<col width="103px">
-												</colgroup>
-												<thead>
-													<tr>
-														<th>No</th>
-														<th>가공납기</th>
-														<th>발주처</th>
-														<th>작업지시번호</th>
-														<th>수량</th>
-														<th>진행상태</th>
-														<th>담당영업</th>
-													</tr>
-												</thead>
-												<tbody id="grid3">
-													<tr><td><div class="nodata"></div></td></tr>
-													<tr><td><div class="nodata"></div></td></tr>
-													<tr><td><div class="nodata"></div></td></tr>
-													<tr><td><div class="nodata"></div></td></tr>
-													<tr><td><div class="nodata"></div></td></tr>
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</li>
-				</ul>
+							</td>
+							<td id="sizeInfo" class="sizeInfo">1205*300*50</td>
+							<td id="workTypeInfo" class="workTypeInfo">파트</td>
+							<td id="materialInfo" class="materialInfo">AL60</td>
+							<td id="productAmount" class="productAmount">
+								<span>대</span> 42
+							</td>
+							<td id="deliveryDate" class="deliveryDate">4/12</td>
+							<td id="runningStop" class="runningStop">57m</td>
+							<td id="runningTime" class="runningTime">1h 42m</td>
+							<td id="expectTime" class="expectTime">2h 37m</td>
+						</tr>
+					</tbody>
+				</table>
+				<!--상단 메인 테이블 끝-->
+				<!--팝업 하단-->
+				<div id="popBtm" class="popBtm">
+					<!--왼쪽-->
+					<div id="popBtmLeft" class="popBtmLeft">
+						<div class="mapImgWrap">
+							<img id="mapImgWrap" src="resource/pop/images/map.jpg" alt="도면">
+						</div>
+					</div>
+					<!--왼쪽-->
+					<!--오른쪽-->
+					<div id="popBtmRight" class="popBtmRight">
+						<div id="tableTop" class="tableTop">
+							<h4>가공계획 List</h4>
+							<table id="popHeadTopTable" class="popHeadTopTable">
+								<tr id="popBtmGridHead">
+									<td>대기현황</td>
+									<td>7 Rows 253 EA</td>
+									<td>예상시간 합계 12h 23m</td>
+								</tr>
+							</table>
+						</div>
+						<!--오른쪽 표 시작-->
+						<div id="mct_machine_grid" class="popBtmTable">
+							<!--표 삽입-->
+						</div>
+						<!--오른쪽 표 끝-->
+					</div>
+					<!--오른쪽 끝-->
+				</div>
+				<!--팝업 하단 끝-->
+				<!--버튼-->
+				<button id="machineMctDetailBtn" class="popMapDetailBtn">도면상세보기</button>
+				<button id="detailCloseBtn" class="detailCloseBtn">닫기</button>
+				<!--버튼 끝-->
 			</div>
-		</section>
+			<!--팝업내용끝-->
+		</div>
+		<!--팝업위치기준-->
 	</div>
+	<!--팝업 끝-->
+	<form class="form-inline" id="mct_main_form" name="mct_main_form" role="form" onsubmit="return false;">
+		<input type="hidden" id="queryId" name="queryId" value="tvMapper.selectMctGridList">
+		<input type="hidden" id="EQUIP_SEQ" name="EQUIP_SEQ" value="">
+		<input type="hidden" id="MCT_WORK_SEQ" name="MCT_WORK_SEQ" value="">
+		<input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
+	</form>
 <script>
+	$("#detailCloseBtn").on("click",function(){
+		$("#popupWrap").modal('hide');
+	});
+	$("#machineMctDetailBtn").on("click",function(){
+		let gFileSeq = $("#mct_machine_form").find("#GFILE_SEQ").val();
+		if(gFileSeq != '') {
+			callWindowImageViewer(gFileSeq);
+		}
+	});
+
+	$("#changeScreen").change(function(){
+		if($("#changeScreen").val() == "dmt"){
+			$("#contents01, #contents02").hide();
+			$("#contents03").show();
+		}else{
+			$("#contents01, #contents02").show();
+			$("#contents03").hide();
+		}
+	});
 
 	let windowImageViewer;
 	let machineListData;
+	let machineAreListData;
 
     function callWindowImageViewer(imageSeq)
     {
@@ -1329,7 +404,74 @@
 			'transitionOff': true
 		}).show();
 	};
+	let fnPostAjax = function (callFunction, params, callFunctionParam) {
+		'use strict';
+		let callback = $.Callbacks();
+		let param = $.extend({url: null, data: ''}, params || {});
 
+		$.ajax({
+			type: 'POST',
+			url: param.url,
+			dataType: 'json',
+			data: param.data,
+			success: function (data, textStatus, jqXHR) {
+				if (textStatus === 'success') {
+					// if (data.exception === null) {
+					callback.add(callFunction);
+					callback.fire(data, callFunctionParam);
+					// } else {
+					<%--alert('<spring:message code='com.alert.default.failText' />');--%>
+					// }
+				} else {
+					// alert('fail=[' + json.msg + ']111');
+				}
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+				// alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
+				// if (errorThrown == 'Forbidden') {
+				//     $(this).fnHiddenFormPageAction('/');
+				// }
+			}
+		});
+	};
+	let fnFormToJsonArrayData = function (formid) {
+		if(formid.indexOf("#") == -1) formid = "#"+formid;
+		let elementArray = {};
+		let formArr = $(formid).serializeArray();
+		for(let i=0; i < formArr.length; i++) {
+			let tmp = formArr[i];
+			let name = tmp.name;
+			let value = "";
+			if(name != null){
+				let $ctrl = $(formid).find('[name='+name+']');
+				if ($ctrl.is('select')){
+					value = $ctrl.val();
+				} else if ($ctrl.is('textarea')) {
+					value = $ctrl.val();
+				} else {
+					switch($ctrl.attr("type")) {
+						case "text":
+						case "number":
+						case "date":
+						case "password":
+						case "hidden":
+						case "search":
+							value = $ctrl.val();
+							break;
+						case "checkbox":
+							if($ctrl.prop('checked')) value = true;
+							else value = false;
+							break;
+						case 'radio':
+							value = $("input:radio[name=" + name + "]:checked").val();
+							break;
+					}
+				}
+				elementArray[name] = value;
+			}
+		}
+		return elementArray;
+	};
 	const fnConfirm = function (title, message) {
 		alertify.confirm().setting({
 			'title': title,
@@ -1339,6 +481,16 @@
 			'movable': false,
 			'transitionOff': true
 		}).show().autoOk(60);
+	};
+	const fnGroupBy = function (objectArray, property) {
+		return objectArray.reduce(function (acc, obj) {
+			var key = obj[property];
+			if (!acc[key]) {
+				acc[key] = [];
+			}
+			acc[key].push(obj);
+			return acc;
+		}, {});
 	};
 
 	$(function () {
@@ -1356,29 +508,29 @@
 					}
 
 					machineListData = data.mct_info_list;//mct info
+					machineAreListData = data.mct_list;
 					// let mct_list = data.mct_list;//mct
 
 					//init
 					$('[id^=ARE]').each(function () {
-						$(this).find(".inBox:nth-child(1)").html('&nbsp;');
-						$(this).find(".inBox:nth-child(2)").html('&nbsp;');
-						$(this).find(".inBox:nth-child(3)").find('div:nth-child(1)').html('&nbsp;');
-						$(this).find(".inBox:nth-child(3)").find('div:nth-child(2)').html('&nbsp;');
-						$(this).find(".statusWrap").hide();
-						$(this).find(".statusConts").empty();
+						// $(this).find(".inBox:nth-child(1)").html('&nbsp;');
+						// $(this).find(".inBox:nth-child(2)").html('&nbsp;');
+						// $(this).find(".inBox:nth-child(3)").find('div:nth-child(1)').html('&nbsp;');
+						// $(this).find(".inBox:nth-child(3)").find('div:nth-child(2)').html('&nbsp;');
+						// $(this).find(".statusWrap").hide();
+						// $(this).find(".statusConts").empty();
 					});
 
 					//mct info
 					getReLoadWorkData('init');
 
-					createGrid1(data.grid_list1);	//불량/반품
-					createGrid2(data.grid_list2);	//긴급주문
-					createGrid3(data.grid_list3);	//납기지연목록
+					// createGrid1(data.grid_list1);	//오른쪽 통합그리드
 
 					var rateInfo = data.mct_rate;
-					$('#nowRate').html(rateInfo.NOW_RATE);
-					$('#dayRate').html(rateInfo.DAY_RATE);
-					$('#monthRate').html(rateInfo.MONTH_RATE);
+					$('#NOW_RATE').html(rateInfo.NOW_RATE);
+					$('#RUN').html(rateInfo.RUN + '대');
+					$('#STOP').html(rateInfo.STOP + '대');
+					$('#NOT_RUN').html(rateInfo.NOT_RUN + '대');
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
@@ -1388,7 +540,134 @@
 
 		let getReLoadWorkData = function (sType) {
 			'use strict';
+			let groups = fnGroupBy(machineListData,'FACTORY_AREA');
+			console.log('groups',groups);
 
+			if(sType === 'init') {
+				$.each(groups,function (idx,Item) {
+					if(idx == 'ARE01' || idx == 'ARE06') {
+						if(Item.length % 6 != 0) {
+							var first = Math.ceil(Item.length / 6);
+							var add = (parseInt(first) * 6) - Item.length;
+							for(var i=0;i<add;i++) {
+								var json = {
+									EQUIP_NM : 'BLANK',
+									FACTORY_AREA : Item[0].FACTORY_AREA
+								};
+								groups[idx].push(json);
+							}
+						}
+					}
+					$.each(Item,function (idx2,Item2) {
+						var html = '';
+						if(Item2.EQUIP_NM == 'BLANK') {
+							html = '<div class="mctInfo_'+idx2+' blank"></div>';
+						}else {
+							html = '<div class="mctInfo_'+idx2+' mct'+Item2.WORK_STATUS +'" data-seq="'+Item2.EQUIP_SEQ+'">';
+							html += '<div class="mctInfoWrap">';
+							html += '<span class="mctName '+ Item2.WORK_STATUS + '">' + Item2.EQUIP_NM + '</span>';
+							html += '<div class="mctInfoTopLeft">';
+							html += '	<div class="staffImg mctStaffImg">';
+							if(typeof Item2.PHOTO_GFILE_SEQ != 'undefined') {
+								html += '		<img src="/qimage/'+Item2.PHOTO_GFILE_SEQ + '" alt="직원사진">';
+							}else {
+								html += '		<img src="/resource/pop/images/user.svg" alt="직원사진">';
+							}
+							html += '	</div>';
+							html += '	<div class="staffInfoWrap">';
+							html += '		<p class="mctStaffName">'+((typeof Item2.USER_NM != 'undefined')? Item2.USER_NM : '') +'</p>';
+							html += '		<p class="mctTime">남은시간';
+							html += '		<br>-';
+							html += '		</p>';
+							html += '	</div>';
+							html += '</div>';
+							html += '<div class="mctInfoTopRight">';
+							html += '	<div class="mctMapImg">';
+							if(Item2.WORK_PLAN_TYPE == 1 && typeof Item2.IMG_GFILE_SEQ != 'undefined') {
+								html += '		<img src="/qimage/'+Item2.IMG_GFILE_SEQ +'" alt="도면">';
+							}else {
+								html += '		<img src="/resource/pop/images/machine.png" alt="도면">';
+							}
+							html += '		<div class="mctMapTime">';
+							html += '			<span>진행 : '+Item2.WORKING_TIME_FORMAT + '</span><br>예상 : ' + ((typeof Item2.PLAN_WORKING_TIME_FORMAT != 'undefined')?Item2.PLAN_WORKING_TIME_FORMAT:'');
+							html += '		</div>';
+							if(Item2.WORK_STATUS == 'pause') {
+								html += '<div id="pauseTime" class="pauseTime">';
+								html += '	일시중지<br>';
+								var startStopDt = new Date(Item2.WORK_TEMP_STOP_DT);
+								var today = new Date();
+								var diff = today - startStopDt;
+								console.log(startStopDt)
+								console.log(diff)
+								var hour = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+								var minute = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+								console.log(hour + "h " + minute + "m");
+								html += '<span>' + hour + 'h ' + minute + 'm' + '</span>';
+								html += '</div>';
+							}
+							html += '		<span class="progressPercent mctProgressPercent">'+ Item2.PERCENT + '</span>';
+							html += '	</div>';
+							html += '	<div class="mctMapBtmInfo '+ Item2.WORK_STATUS + '">';
+							html +=  ((typeof Item2.CUR_TEXT != 'undefined')?Item2.CUR_TEXT:'') + '<br>' + ((typeof Item2.CONTROL_PART_INFO != 'undefined')?Item2.CONTROL_PART_INFO:'');
+							html += '	</div>';
+							html += '</div>';
+							html += '<div class="mctInfoBtm">';
+							html += '	<table id="EQUIP_PLAN_'+ Item2.EQUIP_SEQ + '">';
+							html += '	<colgroup>';
+							html += '		<col width="58%">';
+							html += '		<col width="42%">';
+							html += '	</colgroup>';
+							html += '		<tr>';
+							html += '			<th>계획 List</th>';
+							html += '			<th>'+Item2.TOTAL_CNT +'품 '+Item2.TOTAL_PART_QTY +' EA (<span>'+Item2.TOTAL_PLAN_WORKING_TIME_FORMAT +'</span>)</th>';
+							html += '		</tr>';
+							html += '		<tr>';
+							html += '			<td>&nbsp;</td>';
+							html += '			<td>&nbsp;</td>';
+							html += '		</tr>';
+							html += '		<tr>';
+							html += '			<td>&nbsp;</td>';
+							html += '			<td>&nbsp;</td>';
+							html += '		</tr>';
+							html += '		<tr>';
+							html += '			<td>&nbsp;</td>';
+							html += '			<td>&nbsp;</td>';
+							html += '		</tr>';
+							html += '		<tr>';
+							html += '			<td>&nbsp;</td>';
+							html += '			<td>&nbsp;</td>';
+							html += '		</tr>';
+							html += '	</table>';
+							html += '</div>';
+							html += '</div>';
+							html += '</div>';
+						}
+
+						if(Item2.FACTORY_AREA == 'ARE01' || Item2.FACTORY_AREA == 'ARE06') {
+							if(idx2 < 6) {
+								$("#"+Item2.FACTORY_AREA + '_1').append(html);
+							}else if(idx2 < 12) {
+								$("#"+Item2.FACTORY_AREA + '_2').append(html);
+							}else {
+								$("#"+Item2.FACTORY_AREA + '_3').append(html);
+							}
+						}else {
+							$("#"+Item2.FACTORY_AREA + '_' + Item2.LAYOUT_ROW).append(html);
+						}
+					})
+				})
+				let groups2 = fnGroupBy(machineAreListData,'EQUIP_SEQ');
+				$.each(groups2,function (idx,Item) {
+					$.each(Item,function (idx2,Item2) {
+						$("#EQUIP_PLAN_"+Item2.EQUIP_SEQ).find('tr').eq((idx2+1)).remove();
+						var html = '<tr>';
+						html += '	<td>' + Item2.CONTROL_PART_INFO + '</td>';
+						html += '	<td>' + Item2.MATERIAL_TYPE_NM +'&nbsp;'+ Item2.WORK_TYPE_NM + '&nbsp;'+ Item2.PART_QTY + ' EA' + '</td>';
+						html += '</tr>';
+						$("#EQUIP_PLAN_"+Item2.EQUIP_SEQ).find('tr').eq(0).after(html);
+					})
+				})
+			}
 			//mct info
 			if (machineListData != '') {
 				for (let i = 0; i < machineListData.length; i++) {
@@ -1400,11 +679,6 @@
 					let layout_col = machineListData[i].LAYOUT_COL;
 					let user_nm = machineListData[i].USER_NM;
 
-					if(sType === 'init') {
-						$("#" + factory_area + "_" + layout_row + "_" + layout_col).find(".statusWrap").show();
-						$("#" + factory_area + "_" + layout_row + "_" + layout_col).find(".inBox:nth-child(1)").html(equip_nm);
-						$("#" + factory_area + "_" + layout_row + "_" + layout_col).find(".inBox:nth-child(2)").html(user_nm);
-					}
 					// 장비의 작업 정보 조회
 					getReLoadDrawingData(equip_seq, factory_area, layout_row, layout_col);
 
@@ -1423,8 +697,6 @@
 						return;
 					}
 					createGrid1(data.grid_list1);	//불량/반품
-					createGrid2(data.grid_list2);	//긴급주문
-					createGrid3(data.grid_list3);	//납기지연목록
 
 					var rateInfo = data.mct_rate;
 					$('#nowRate').html(rateInfo.NOW_RATE);
@@ -1523,125 +795,100 @@
 			});
 		};
 
+		let mctMainGrid = $("#mct_main_grid");
+		let $mctMainGrid;
+		let mctMainColModel = [
+			{title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
+			{title: 'IMG_GFILE_SEQ', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
+			{title: 'RANK', dataIndx: 'RANK', hidden: true},
+			{title: '구분', minWidth: 35, width: 35, dataIndx: 'TITLE', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'},
+				render: function (ui) {
+					const rowData = ui.rowData
+					if (rowData.RANK == 1 || rowData.RANK == 2) {
+						return {style: 'background-color: #ae301f; color:white;'};
+					}else if(rowData.RANK == 3) {
+						return {style: 'background-color: #ffff00; color:#be1600;'};
+					}else {
+						return {style: 'background-color: #f5e397; color:#be1600;'};
+					}
+				}
+			},
+			{title: '납기', minWidth: 45, width: 45, dataIndx: 'INNER_DUE_DT', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'}},
+			{title: '작업번호', align: 'center', minWidth: 165, width: 165, dataIndx: 'CONTROL_TEXT', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'},
+				render: function (ui) {
+					const cellData = ui.cellData;
+					if (cellData) {
+						return cellData.replace(/&lt;/g, '<');
+					}
+				}
+			},
+			{title: '진행상태',minWidth: 60, width: 60, dataIndx: 'PART_STATUS_NM', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'},
+				render:function (ui) {
+					const cellData = ui.cellData;
+					let partStatus = ui.rowData.PART_STATUS;
+					var text = "";
+					var style = "";
+					if(typeof partStatus != 'undefined' && partStatus != null && (partStatus == 'PRO002' || partStatus == 'PRO005')) {
+						style = "color:red; font-weight:bold;";
+					}
+					if(typeof cellData != 'undefined' && cellData.length > 4) {
+						text = cellData.substring(0,4) + '<br>' + cellData.substring(4,cellData.length);
+					}
+					return {text:((text != "")?text:cellData),style: style};
+				}
+			}
+		];
+		let mctMainObj= {
+			width: 'auto', height: 'auto',
+			dataModel: {
+				location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
+				url: "/tv/paramQueryGridSelect",
+				postData: fnFormToJsonArrayData('mct_main_form'),
+				getData: function (dataJSON) {
+					return {data: dataJSON.data};
+				}
+			},
+			strNoRows: '<div style="font-size:1.4rem;">No Data</div>',
+			columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
+			scrollModel: {autoFit: true},
+			numberCell: {width: 30, title: "No. ", show: false},
+			selectionModel: { type: 'row', mode: 'single'} ,
+			swipeModel: {on: false},
+			showTitle: false,
+			collapsible: false,
+			resizable: true,
+			trackModel: {on: true},
+			colModel: mctMainColModel,
+			rowSelect: function (evt, ui) {
+				$.each(ui.addList, function (idx,Item) {
+					if(idx === 0) {
+						callWindowImageViewer(Item.rowData.IMG_GFILE_SEQ);
+					}
+				})
+			},
+			refresh : function (evt, ui) {
+				var data = mctMainGrid.pqGrid('option', 'dataModel.data');
+				var totalReturn = 0;
+				var totalEmergency = 0;
+				var totalLate = 0;
+				for (var i = 0; i < data.length; i++) {
+					var row = data[i];
+					if(row.RANK == 1 || row.RANK == 2) {
+						totalReturn++;
+					}else if(row.RANK == 3) {
+						totalEmergency++;
+					}else if(row.RANK == 4) {
+						totalLate++;
+					}
+				}
+				$("#totalReturn").html(totalReturn);
+				$("#totalEmergency").html(totalEmergency);
+				$("#totalLate").html(totalLate);
+			}
+		};
+		$mctMainGrid = mctMainGrid.pqGrid(mctMainObj);
 		let createGrid1 = function(grid_list1){
-			$("#grid1").empty();
-			if (grid_list1 != '') {
-				let totalCount = 0;
-				for (let i = 0; i < grid_list1.length; i++) {
-					totalCount = grid_list1[i].TOTAL_COUNT;
-					let inspect_dt = grid_list1[i].INSPECT_DT == undefined ? "" : grid_list1[i].INSPECT_DT;
-					let order_comp_nm = grid_list1[i].ORDER_COMP_NM == undefined ? "" : grid_list1[i].ORDER_COMP_NM;
-					let control_part_info = grid_list1[i].CONTROL_PART_INFO == undefined ? "" : grid_list1[i].CONTROL_PART_INFO;
-					let error_type = grid_list1[i].ERROR_TYPE == undefined ? "" : grid_list1[i].ERROR_TYPE;
-					let error_qty_info = grid_list1[i].ERROR_QTY_INFO == undefined ? "" : grid_list1[i].ERROR_QTY_INFO;
-					let inner_due_dt = grid_list1[i].INNER_DUE_DT == undefined ? "" : grid_list1[i].INNER_DUE_DT;
-					let inspect_result_nm = grid_list1[i].INSPECT_RESULT_NM == undefined ? "" : grid_list1[i].INSPECT_RESULT_NM;
-					let error_action_nm = grid_list1[i].ERROR_ACTION_NM == undefined ? "" : grid_list1[i].ERROR_ACTION_NM;
-					let imageSeq =( grid_list1[i].IMG_GFILE_SEQ != undefined ) ? grid_list1[i].IMG_GFILE_SEQ : '' ;
 
-					let grid1Html = '<tr>';
-						grid1Html += '<td>' + (i+1) +'</td>';
-						grid1Html += '<td>'+ inspect_dt + '</td>';
-						grid1Html += '<td>'+ order_comp_nm + '</td>';
-						grid1Html += '<td class="alignLeft ellipsis" ><a href="javascript:callWindowImageViewer(' + imageSeq + ');">'+ control_part_info + '</a></td>';
-						grid1Html += '<td class="txtR">'+ error_type + '</td>';
-						grid1Html += '<td class="txtR">'+ error_qty_info + '</td>';
-						grid1Html += '<td>'+ inner_due_dt + '</td>';
-						grid1Html += '<td>'+ inspect_result_nm + '</td>';
-						grid1Html += '<td class="ellipsis">'+ error_action_nm + '</td>';
-						grid1Html += '</tr>';
-
-					$("#grid1").append(grid1Html);
-					if((i+1) == 5){
-						break;
-					}
-				}
-				$("#grid1_total").html("(total: " + totalCount + ")");
-			} else {
-				for (let i = 0; i < 5; i++) {
-					let grid1Html = '<tr><td colspan="8"></td></tr>';
-					$("#grid1").append(grid1Html);
-				}
-				$("#grid1_total").html("(total: 0)");
-			}
-		};
-
-		let createGrid2 = function(grid_list2){
-			$("#grid2").empty();
-			if (grid_list2 != '') {
-				let totalCount = 0;
-				for (let i = 0; i < grid_list2.length; i++) {
-					totalCount = grid_list2[i].TOTAL_COUNT;
-					let inner_due_dt = grid_list2[i].INNER_DUE_DT == undefined ? "" : grid_list2[i].INNER_DUE_DT;
-					let order_comp_nm = grid_list2[i].ORDER_COMP_NM == undefined ? "" : grid_list2[i].ORDER_COMP_NM;
-					let control_part_info = grid_list2[i].CONTROL_PART_INFO == undefined ? "" : grid_list2[i].CONTROL_PART_INFO;
-					let control_part_qty_info = grid_list2[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list2[i].CONTROL_PART_QTY_INFO;
-					let part_status_nm = grid_list2[i].PART_STATUS_NM == undefined ? "" : grid_list2[i].PART_STATUS_NM;
-					let pop_position_nm = grid_list2[i].POP_POSITION_NM == undefined ? "" : grid_list2[i].POP_POSITION_NM;
-					let imageSeq =( grid_list2[i].IMG_GFILE_SEQ != undefined ) ? grid_list2[i].IMG_GFILE_SEQ : '' ;
-
-					let grid2Html = '<tr>';
-						grid2Html += '<td>' + (i+1) +'</td>';
-						grid2Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
-						grid2Html += '<td class="ellipsis">'+ order_comp_nm + '</td>';
-						grid2Html += '<td class="alignLeft ellipsis"><a href="javascript:callWindowImageViewer(' + imageSeq + ');">'+ control_part_info + '</a></td>';
-						grid2Html += '<td>'+ control_part_qty_info + '</td>';
-						grid2Html += '<td class="ellipsis">'+ part_status_nm + '</td>';
-						grid2Html += '<td>'+ pop_position_nm + '</td>';
-						grid2Html += '</tr>';
-
-					$("#grid2").append(grid2Html);
-					if((i+1) == 5){
-						break;
-					}
-				}
-				$("#grid2_total").html("(total: " + totalCount + ")");
-			}  else {
-				for (let i = 0; i < 5; i++) {
-					let grid2Html = '<tr><td colspan="8"></td></tr>';
-					$("#grid2").append(grid2Html);
-				}
-				$("#grid2_total").html("(total: 0)");
-			}
-		};
-
-		let createGrid3 = function(grid_list3){
-			$("#grid3").empty();
-			if (grid_list3 != '') {
-				let totalCount = 0;
-				for (let i = 0; i < grid_list3.length; i++) {
-
-					totalCount = grid_list3[i].TOTAL_COUNT;
-					let inner_due_dt = grid_list3[i].INNER_DUE_DT == undefined ? "" : grid_list3[i].INNER_DUE_DT;
-					let order_comp_nm = grid_list3[i].ORDER_COMP_NM == undefined ? "" : grid_list3[i].ORDER_COMP_NM;
-					let control_part_info = grid_list3[i].CONTROL_PART_INFO == undefined ? "" : grid_list3[i].CONTROL_PART_INFO;
-					let control_part_qty_info = grid_list3[i].CONTROL_PART_QTY_INFO == undefined ? "" : grid_list3[i].CONTROL_PART_QTY_INFO;
-					let part_status_nm = grid_list3[i].PART_STATUS_NM == undefined ? "" : grid_list3[i].PART_STATUS_NM;
-					let charge_user_nm = grid_list3[i].CHARGE_USER_NM == undefined ? "" : grid_list3[i].CHARGE_USER_NM;
-					let imageSeq =( grid_list3[i].IMG_GFILE_SEQ != undefined ) ? grid_list3[i].IMG_GFILE_SEQ : '' ;
-
-					let grid3Html = '<tr>';
-						grid3Html += '<td>' + (i+1) +'</td>';
-						grid3Html += '<td class="txtR bold">'+ inner_due_dt + '</td>';
-						grid3Html += '<td class="alignLeft ellipsis">'+ order_comp_nm + '</td>';
-						grid3Html += '<td class="alignLeft ellipsis" ><a href="javascript:callWindowImageViewer(' + imageSeq + ');">'+ control_part_info + '</a></td>';
-						grid3Html += '<td>'+ control_part_qty_info + '</td>';
-						grid3Html += '<td>'+ part_status_nm + '</td>';
-						grid3Html += '<td>'+ charge_user_nm + '</td>';
-						grid3Html += '</tr>';
-					$("#grid3").append(grid3Html);
-					if((i+1) == 5){
-						break;
-					}
-				}
-				$("#grid3_total").html("(total: " + totalCount + ")");
-			} else {
-				for (let i = 0; i < 5; i++) {
-					let grid3Html = '<tr><td colspan="8"></td></tr>';
-					$("#grid3").append(grid3Html);
-				}
-				$("#grid3_total").html("(total: 0)");
-			}
 		};
 
 		/** 작업자 로그인 정보 실시간 처리 **/
@@ -1716,6 +963,250 @@
 		workSchedulerTimer();
 		reloadTimer();
 	});
+	$(document).ready(function(){
+		function timeFormat(time) {
+			var text = "";
+			if(typeof time != 'undefined' && time != "" && time != null) {
+				if(time >= 60) {
+					if(time % 60 == 0) {
+						text = parseInt(time / 60) + 'h';
+					}else {
+						text = Math.floor(time / 60) + 'h  ' + parseInt(time % 60) + 'm';
+					}
+				}else {
+					text = time + 'm';
+				}
+			}
+			return text;
+		}
+
+		let mctMachineGrid = $("#mct_machine_grid");
+		let $mctMachineGrid;
+		let mctMachineColModel = [
+			{title: 'ROWNUM', dataIndx: 'ROWNUM', hidden: true},
+			{title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
+			{title: 'IMG_GFILE_SEQ', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
+			{title: 'MCT_PLAN_SEQ', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
+			{title: '가공 납기', minWidth: 50, width: 50, dataIndx: 'INNER_DUE_DT', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'},
+				render: function (ui) {
+					const rowData = ui.rowData
+					if (rowData.DELAY_YN === 'Y') {
+						return {style: 'background-color: #ffff00;'};
+					}
+				}
+			},
+			{title: '진행상태', width: 70, dataIndx: 'PART_STATUS', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'}},
+			{title: '작업번호 / 규격', align: 'center', minWidth: 165, width: 165, dataIndx: 'CONTROL_NUM_PART_NUM', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'},
+				render: function (ui) {
+					const cellData = ui.cellData;
+					if (cellData) {
+						return cellData.replace(/&lt;/g, '<');
+					}
+				}
+			},
+			{title: '작업형태 / 소재', dataType: 'string', dataIndx: 'WORK_TYPE_MATERIAL', minWidth: 80, maxWidth:120, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'},
+				render: function (ui) {
+					const cellData = ui.cellData;
+					if (cellData) {
+						return cellData.replace(/&lt;/g, '<');
+					}
+				}
+			},
+			{title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY', minWidth: 40, width: 40, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'},
+				render: function (ui) {
+					const rowData = ui.rowData
+					if (rowData.ORDER_QTY_INFO != 'N') {
+						return '<span><span style="color: red;font-weight: bold">'+ rowData.ORDER_QTY_INFO +'&nbsp;</span>'+rowData.CONTROL_PART_QTY+'</span>';
+					}
+				}
+			},
+			{title: '예상시간<br>(E/T,분)', dataType: 'string', dataIndx: 'WORKING_TIME', minWidth: 55, width: 65, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'blue'},
+				format: function(val){
+					return (typeof val != 'undefined')?(val+"'"):"";
+				},
+			},
+			{title: '과거수행기록(NC)', align: 'center', styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'},
+				colModel: [
+					{title: 'MCT_PLAN_SEQ', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
+					{
+						title: '1EA L/T',
+						minWidth: 55,
+						width: 55,
+						dataIndx: 'LAST_UNIT_LEAD_TIME',
+						editable: false,
+						styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'}
+					},
+					{title: '작업자', minWidth: 60, width: 65, datatype: 'string', dataIndx: 'LAST_MCT_WORK_USER', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'}}
+				]
+			}
+		];
+		let mctMachineObj;
+
+
+		function settingOngoingInfo(equipSeq) {
+			const parameter2 = {'url': '/tv/json-info', 'data': {
+					'queryId':'machine.selectOngoingInfoForDetailPop',
+					'EQUIP_SEQ':equipSeq
+				}
+			};
+			fnPostAjax(function (data) {
+				var tempHtml = '';
+				if(data.info != null) {
+					if(typeof data.info.IMG_GFILE_SEQ != 'undefined' && data.info.IMG_GFILE_SEQ != '' && data.info.IMG_GFILE_SEQ != null) {
+						$("#mapImgWrap").attr('src', '/qimage/'+data.info.IMG_GFILE_SEQ);
+						$("#mapImgWrap").attr('alt', data.info.IMG_GFILE_SEQ);
+						$("#mapImgWrap").attr('data-value', data.info.IMG_GFILE_SEQ);
+						$("#mct_machine_form").find("#GFILE_SEQ").val(data.info.IMG_GFILE_SEQ);
+					}else {
+						$("#mapImgWrap").attr('src', '/resource/main/blank.jpg');
+						$("#mct_machine_form").find("#GFILE_SEQ").val('');
+					}
+					var stopTime = timeFormat(data.info.TEMP_STOP);
+					var onGoingTime = timeFormat(data.info.ON_GOING);
+					var planWorkingTime = timeFormat(data.info.PLAN_WORKING_TIME);
+					var arr = data.info.DRAWING_NUM.split(",");
+					var arr2 = data.info.DRAWING_SEQ.split(",");
+					tempHtml = '<td class="workStaffImg"><div class="staffImgWrap"><img src="/image/' + data.info.PHOTO_GFILE_SEQ + '"></div>'+ data.info.WORK_USER_NM + '</td>';
+					tempHtml += '<td>' + data.info.WORK_STATUS_NM + '</td>';
+					tempHtml += '<td class="numberWorking">' + data.info.CONTROL_NUM + '</td>';
+					tempHtml += '<td><div class="tableScroll">';
+					for(var i=0;i<arr.length;i++){
+						if(i>0) {
+							tempHtml += '<br>';
+						}
+						tempHtml += '<span data-value="'+ arr2[i]+'">' + arr[i] + '</span>';
+					}
+					tempHtml += '</div></td>';
+					tempHtml += '<td class="sizeInfo">' + data.info.SIZE_TXT + '</td>';
+					tempHtml += '<td class="workTypeInfo">' + data.info.WORK_TYPE_NM + '</td>';
+					tempHtml += '<td class="materialInfo">' + data.info.MATERIAL_DETAIL_NM + '</td>';
+					tempHtml += '<td class="productAmount">';
+					if(data.info.ORDER_QTY_INFO != 'N') {
+						tempHtml += '<span>' + data.info.ORDER_QTY_INFO + '&nbsp;</span>';
+					}
+					tempHtml += data.info.CONTROL_PART_QTY + '</td>';
+					tempHtml += '<td class="deliveryDate">' + data.info.INNER_DUE_DT + '</td>';
+					tempHtml += '<td class="runningStop"">' + stopTime + '</td>';
+					tempHtml += '<td class="runningTime">' + onGoingTime + '</td>';
+					tempHtml += '<td class="expectTime">' + planWorkingTime+ '</td>';
+				}else {
+					tempHtml = '<td colspan="12" style="font-size: 35px;height: 141px;">Not Found Data</td>';
+					$("#mapImgWrap").attr('src', '/resource/main/blank.jpg');
+					$("#mct_machine_form").find("#GFILE_SEQ").val('');
+				}
+				$("#machine_popup_tbody").html(tempHtml);
+			}, parameter2, '');
+		}
+
+		$(document).on("click",".mctlogin,.mctpause",function(event){
+			var equipSeq = $(this).data('seq');
+			$("#mct_machine_form").find("#EQUIP_SEQ").val(equipSeq);
+			const parameter = {'url': '/tv/json-info', 'data': {
+					'queryId':'machine.selectMachineInfoForDetailPop',
+					'EQUIP_SEQ':equipSeq
+				}
+			};
+			fnPostAjax(function (data) {
+				var tempHtml = '<tr>'
+				tempHtml += '<td>장비번호 : ' + data.info.EQUIP_NM + '</td>';
+				tempHtml += '<td>장비종류 : ' + data.info.EQUIP_TYPE_NM + '</td>';
+				tempHtml += '<td>설치위치 : ' + data.info.FACTORY_AREA_NM + '</td>';
+				tempHtml += '<td>관리장(정) : ' + data.info.MAIN_USER_NM + '</td>';
+				tempHtml += '<td>관리장(부) : ' + data.info.SUB_USER_NM + '</td>';
+				tempHtml += '</tr>';
+				$("#popHeadTopTable").html(tempHtml);
+			}, parameter, '');
+
+			settingOngoingInfo(equipSeq);
+
+			$('#popupWrap').modal('show');
+		});
+
+
+		$('#popupWrap').on({
+			'show.bs.modal': function () {
+				mctMachineObj = {
+					width: 'auto', height: 'auto',
+					dataModel: {
+						location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
+						url: "/tv/paramQueryGridSelect",
+						postData: fnFormToJsonArrayData('mct_machine_form'),
+						getData: function (dataJSON) {
+							return {data: dataJSON.data};
+						}
+					},
+					strNoRows: '<div style="font-size:1.4rem;">No Data</div>',
+					columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
+					scrollModel: {autoFit: true},
+					numberCell: {width: 35, title: "No. ", show: true},
+					selectionModel: { type: 'row', mode: 'single'} ,
+					swipeModel: {on: false},
+					showTitle: false,
+					collapsible: false,
+					resizable: false,
+					trackModel: {on: true},
+					editModel: {clicksToEdit: 1},
+					colModel: mctMachineColModel,
+					rowSelect: function (evt, ui) {
+						$.each(ui.addList, function (idx,Item) {
+							if(idx === 0) {
+								// let imgUrl = '/resource/asset/images/common/'+Item.rowData.IMG_GFILE_SEQ + '.png';
+								let imgUrl = '/qimage/'+Item.rowData.IMG_GFILE_SEQ;
+								$("#mapImgWrap").attr('src',imgUrl);
+								$("#mapImgWrap").attr('alt',Item.rowData.IMG_GFILE_SEQ);
+								$("#mapImgWrap").attr('data-value', Item.rowData.IMG_GFILE_SEQ);
+
+								$("#mct_machine_form").find("#GFILE_SEQ").val(Item.rowData.IMG_GFILE_SEQ);
+							}
+						})
+					},
+					cellKeyDown: function (event, ui) {
+						const rowIndx = ui.rowIndx;
+						const sr = this.SelectRow();
+						const selRowData = this.getRowData({rowIndx: rowIndx});
+						let nextRowData = "";
+						if (event.keyCode == $.ui.keyCode.DOWN) {
+							sr.removeAll();
+							sr.add({rowIndx: rowIndx + 1});
+							nextRowData = this.getRowData({rowIndx: rowIndx +1});
+						} else if (event.keyCode == $.ui.keyCode.UP) {
+							sr.removeAll();
+							sr.add({rowIndx: rowIndx - 1});
+							nextRowData = this.getRowData({rowIndx: rowIndx -1});
+						}
+						let imgUrl = '/qimage/';
+						imgUrl += (typeof nextRowData != 'undefined' && nextRowData != "")?nextRowData.IMG_GFILE_SEQ:selRowData.IMG_GFILE_SEQ;
+						$("#mapImgWrap").attr('src',imgUrl);
+						$("#mapImgWrap").attr('alt',selRowData.IMG_GFILE_SEQ);
+						$("#mapImgWrap").attr('data-value', selRowData.IMG_GFILE_SEQ);
+						$("#mct_machine_form").find("#GFILE_SEQ").val(selRowData.IMG_GFILE_SEQ);
+					},
+					refresh : function (evt, ui) {
+						data = mctMachineGrid.pqGrid('option', 'dataModel.data');
+						var totalQty = 0;
+						var totalTime = 0;
+						for (var i = 0; i < data.length; i++) {
+							var row = data[i];
+							totalQty += parseInt(row.CONTROL_PART_QTY)
+							if(typeof row.WORKING_TIME != 'undefined' && row.WORKING_TIME != '') {
+								totalTime += parseInt(row.WORKING_TIME);
+							}
+						}
+
+						var html = '<td>대기현황</td><td>' + data.length +' Rows  ' + totalQty + ' EA</td>';
+						html += '<td>예상시간합계 : ' + timeFormat(totalTime) + '</td>';
+						$("#popBtmGridHead").html(html);
+					}
+				};
+				$mctMachineGrid = mctMachineGrid.pqGrid(mctMachineObj);
+			},
+			'hide.bs.modal': function () {
+				$mctMachineGrid.pqGrid('destroy');
+			}
+		});
+	});
+
+
 </script>
 </body>
 </html>

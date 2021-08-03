@@ -3,24 +3,133 @@
 
 <mapper namespace="tvMapper">
 
+
     <select id="selectTvPopList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT Z.POP_SEQ
+            , Z.POP_POSITION
+            , Z.POP_NM
+            , Z.CONTROL_SEQ
+            , Z.CONTROL_DETAIL_SEQ
+            , Z.CONTROL_PART_INFO
+            , Z.TOTAL_CNT
+            , Z.TOTAL_QTY
+            , Z.IMG_GFILE_SEQ
+            , Z.CONTROL_PART_QTY
+            , Z.PART_STATUS_NM
+            , Z.PART_STATUS
+            , Z.INNER_DUE_DT
+            , Z.CONTROL_NUM_PART_NUM
+            , Z.WORK_TYPE_MATERIAL
+            , Z.OUTSIDE_COMP_NM
+            , Z.ORDER_QTY_INFO
+            , Y.RECENTLY_WORK_TYPE AS RECENTLY_PROCESS_TYPE_NM
+            , Y.WORK_USER_NM AS RECENTLY_WORK_USER_NM
+            , CASE
+                WHEN Z.PART_STATUS != 'PRO007' AND Y.WORK_TIME IS NOT NULL THEN
+                CONCAT(TRUNCATE(IFNULL(Y.WORK_TIME,0)/3600,0),'h ',TRUNCATE((IFNULL(Y.WORK_TIME,0)%3600)/60,0),'m')
+                ELSE SPACE(0)
+            END RECENTLY_WORKING_TIME
+        FROM (
+            SELECT B.POP_SEQ
+                , B.POP_POSITION
+                , SF_GET_CODE_NM(1009,B.POP_POSITION,#{LOGIN_LOCALE}) AS POP_NM
+                , B.CONTROL_SEQ
+                , B.CONTROL_DETAIL_SEQ
+                , CASE WHEN D.PART_NUM IS NULL THEN C.CONTROL_NUM ELSE CONCAT(C.CONTROL_NUM,'#',D.PART_NUM) END AS CONTROL_PART_INFO
+                , COUNT(*) OVER (PARTITION BY B.POP_POSITION) AS TOTAL_CNT
+                , SUM(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ)) OVER (PARTITION BY B.POP_POSITION) AS TOTAL_QTY
+                , D.IMG_GFILE_SEQ
+                , SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
+                , SF_GET_PART_STATUS_NM(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+                , D.PART_STATUS
+                , SF_GET_DATE_F(D.INNER_DUE_DT,'','') AS INNER_DUE_DT
+                , CASE WHEN D.PART_NUM IS NULL THEN CONCAT(C.CONTROL_NUM, <![CDATA[ '<br>' ]]>, D.SIZE_TXT) ELSE CONCAT(C.CONTROL_NUM, ' #', D.PART_NUM, <![CDATA[ '<br>' ]]>,D.SIZE_TXT) END AS CONTROL_NUM_PART_NUM
+                , CONCAT(jmes.SF_GET_CODE_NM('1033', D.WORK_TYPE, #{LOGIN_LOCALE}), <![CDATA[ '<br>' ]]>,SF_GET_CODE_NM('1027', D.MATERIAL_DETAIL, #{LOGIN_LOCALE})) AS WORK_TYPE_MATERIAL
+                , IFNULL(SF_GET_COMP_NM(D.OUTSIDE_COMP_CD), SPACE(0)) AS OUTSIDE_COMP_NM
+                , CASE WHEN IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(D.PART_UNIT_QTY, 1), 0) = 0 AND IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(D.PART_UNIT_QTY, 1), 0) > 0 THEN '대'
+                       ELSE 'N'
+                END AS ORDER_QTY_INFO
+            FROM (
+                SELECT M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ, MAX(M.POP_SEQ) AS POP_SEQ
+                FROM jmes.TBL_POP M
+                WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
+                    WHERE O.CONTROL_SEQ = M.CONTROL_SEQ AND O.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
+                        AND N.CONTROL_SEQ = O.CONTROL_SEQ
+                        AND N.DEL_YN = 'N'
+                        AND N.OUT_FINISH_DT IS NOT NULL
+                )
+                GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
+            ) A, jmes.TBL_POP B, jmes.TBL_CONTROL C, jmes.TBL_CONTROL_PART D
+            WHERE A.POP_SEQ = B.POP_SEQ
+                AND B.CONTROL_SEQ = C.CONTROL_SEQ
+                AND B.CONTROL_SEQ = D.CONTROL_SEQ
+                <if test="POP_POSITION != null and POP_POSITION != ''">
+                    AND B.POP_POSITION = #{POP_POSITION}
+                </if>
+                AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                AND C.DEL_YN = 'N'
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM jmes.TBL_CONTROL_PART E
+                    WHERE D.CONTROL_SEQ = E.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+                        AND E.PART_STATUS = 'PRO018' AND E.WORK_TYPE = 'WTP050'
+                )
+        ) Z
+        LEFT OUTER JOIN (
+            SELECT
+                IFNULL(SF_GET_CODE_NM('1010', G.PROCESS_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS RECENTLY_WORK_TYPE, F.WORK_USER_ID,jmes.SF_GET_DRAWING_WORK_TIME('WORK',F.MCT_WORK_SEQ) AS WORK_TIME,
+                F.CONTROL_SEQ, F.CONTROL_DETAIL_SEQ, H.USER_NM AS WORK_USER_NM
+            FROM TBL_MCT_WORK F
+                INNER JOIN jmes.TBL_EQUIP G ON F.EQUIP_SEQ = G.EQUIP_SEQ
+                INNER JOIN jmes.TBL_USER H ON F.WORK_USER_ID = H.USER_ID
+            WHERE F.DEL_YN = 'N'
+                AND F.MCT_WORK_SEQ = (
+                    SELECT MAX(X.MCT_WORK_SEQ) FROM TBL_MCT_WORK X
+                    WHERE  X.DEL_YN = 'N'
+                        AND X.CONTROL_SEQ = F.CONTROL_SEQ
+                        AND X.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
+                    GROUP BY X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+                )
+        ) Y ON Y.CONTROL_SEQ = Z.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ
+        ORDER BY Z.POP_SEQ
+        <if test="LIMIT != null and LIMIT != ''">
+            LIMIT ${LIMIT}
+        </if>
+    </select>
+    <select id="selectTvPopList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- POP Info
         SELECT B.POP_SEQ
             , B.POP_POSITION
+            , SF_GET_CODE_NM('1009',B.POP_POSITION,#{LOGIN_LOCALE}) AS POP_NM
             , B.CONTROL_SEQ
             , B.CONTROL_DETAIL_SEQ
             , CASE WHEN D.PART_NUM IS NULL THEN C.CONTROL_NUM ELSE CONCAT(C.CONTROL_NUM,'#',D.PART_NUM) END AS CONTROL_PART_INFO
             , COUNT(*) OVER (PARTITION BY B.POP_POSITION) AS TOTAL_CNT
+            , SUM(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ)) OVER (PARTITION BY B.POP_POSITION) AS TOTAL_QTY
             , D.IMG_GFILE_SEQ
+            , SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
+            , SF_GET_PART_STATUS_NM(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS
+            , SF_GET_DATE_F(D.INNER_DUE_DT,'','') AS INNER_DUE_DT
+            , CASE WHEN D.PART_NUM IS NULL THEN CONCAT(C.CONTROL_NUM, <![CDATA[ '<br>' ]]>,D.SIZE_TXT) ELSE CONCAT(C.CONTROL_NUM, ' #', D.PART_NUM, <![CDATA[ '<br>' ]]>,D.SIZE_TXT) END AS CONTROL_NUM_PART_NUM
+            , CONCAT(jmes.SF_GET_CODE_NM('1033', D.WORK_TYPE, #{LOGIN_LOCALE}), <![CDATA[ '<br>' ]]>,SF_GET_CODE_NM('1027', D.MATERIAL_DETAIL, #{LOGIN_LOCALE})) AS WORK_TYPE_MATERIAL
+            , CASE WHEN IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(D.PART_UNIT_QTY, 1), 0) = 0 AND IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(D.PART_UNIT_QTY, 1), 0) > 0 THEN '대'
+                   ELSE 'N'
+             END AS ORDER_QTY_INFO
+            , IFNULL(SF_GET_COMP_NM(D.OUTSIDE_COMP_CD), SPACE(0)) AS OUTSIDE_COMP_NM
         FROM (  SELECT M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ, MAX(M.POP_SEQ) AS POP_SEQ
                 FROM jmes.TBL_POP M
-                WHERE NOT EXISTS (SELECT 1 FROM jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
+                WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
                     WHERE O.CONTROL_SEQ = M.CONTROL_SEQ AND O.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
-                      AND N.CONTROL_SEQ = O.CONTROL_SEQ
-                      AND N.DEL_YN = 'N'
-                      AND N.OUT_FINISH_DT IS NOT NULL)
-                GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
-             ) A, jmes.TBL_POP B, jmes.TBL_CONTROL C, jmes.TBL_CONTROL_PART D
+                        AND N.CONTROL_SEQ = O.CONTROL_SEQ
+                        AND N.DEL_YN = 'N'
+                        AND N.OUT_FINISH_DT IS NOT NULL
+                )
+            GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
+        ) A, jmes.TBL_POP B, jmes.TBL_CONTROL C, jmes.TBL_CONTROL_PART D
         WHERE A.POP_SEQ = B.POP_SEQ
             AND B.CONTROL_SEQ = C.CONTROL_SEQ
             AND B.CONTROL_SEQ = D.CONTROL_SEQ
@@ -30,8 +139,8 @@
             AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
             AND C.DEL_YN = 'N'
             AND NOT EXISTS (SELECT 1 FROM jmes.TBL_CONTROL_PART E
-                          WHERE D.CONTROL_SEQ = E.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
-                              AND E.PART_STATUS = 'PRO018' AND E.WORK_TYPE = 'WTP050'
+                WHERE D.CONTROL_SEQ = E.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+                AND E.PART_STATUS = 'PRO018' AND E.WORK_TYPE = 'WTP050'
             )
         ORDER BY B.POP_SEQ DESC
         <if test="LIMIT != null and LIMIT != ''">
@@ -42,13 +151,13 @@
     <select id="selectTvPopList2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- 소재대기
         SELECT CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM,'#',B.PART_NUM) END AS CONTROL_PART_INFO
-            , B.IMG_GFILE_SEQ
-            , COUNT(*) OVER () AS TOTAL_CNT
+             , B.IMG_GFILE_SEQ
+             , COUNT(*) OVER () AS TOTAL_CNT
         FROM  jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-            AND A.DEL_YN = 'N'
-            AND A.OUT_FINISH_DT IS NULL
-            AND B.PART_STATUS = 'PRO004'
+          AND A.DEL_YN = 'N'
+          AND A.OUT_FINISH_DT IS NULL
+          AND B.PART_STATUS = 'PRO004'
         ORDER BY A.CONTROL_SEQ DESC
     </select>
 
@@ -56,17 +165,101 @@
         -- 외주진행
         SELECT
             CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM,'#',B.PART_NUM) END AS CONTROL_PART_INFO
-            , B.IMG_GFILE_SEQ
-            , COUNT(*) OVER () AS TOTAL_CNT
+             , B.IMG_GFILE_SEQ
+             , COUNT(*) OVER () AS TOTAL_CNT
         FROM  jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-            AND A.DEL_YN = 'N'
-            AND A.OUT_FINISH_DT IS NULL
-            AND B.PART_STATUS = 'PRO001'
+          AND A.DEL_YN = 'N'
+          AND A.OUT_FINISH_DT IS NULL
+          AND B.PART_STATUS = 'PRO001'
         ORDER BY A.CONTROL_SEQ DESC
     </select>
 
     <select id="selectTvMachineList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        -- 장비
+        SELECT X.EQUIP_SEQ
+            , X.EQUIP_ID
+            , X.EQUIP_NM
+            , CASE WHEN X.PROCESS_TYPE = 'MPR010' THEN 'readyImgNct'
+                   WHEN X.PROCESS_TYPE = 'MPR020' THEN 'readyImgMilling'
+                   WHEN X.PROCESS_TYPE = 'MPR030' THEN 'readyImgGrinding'
+                   WHEN X.PROCESS_TYPE = 'MPR040' THEN 'readyImgTurnning'
+                   ELSE 'readyImg'
+            END MACHINE_ICON
+            , X.PHOTO_GFILE_SEQ AS EQUIP_PHOTO_GFILE_SEQ
+            , X.FACTORY_AREA
+            , X.LAYOUT_SORT
+            , Y.CONTROL_PART_INFO
+--             , Y.WORKING_TIME
+            , CASE WHEN TRUNCATE(IFNULL(Y.WORKING_TIME,0)/3600,0) <![CDATA[ < ]]> 1 THEN CONCAT(TRUNCATE((IFNULL(Y.WORKING_TIME,0)%3600)/60,0),'m') ELSE CONCAT(TRUNCATE(IFNULL(Y.WORKING_TIME,0)/3600,0),'h ',TRUNCATE((IFNULL(Y.WORKING_TIME,0)%3600)/60,0),'m') END AS WORKING_TIME
+            , Y.PLAN_WORKING_TIME
+            , CASE WHEN Y.WORK_STATUS = 'DBS010' THEN 'pause'
+                   WHEN Y.WORK_STATUS = 'DBS020' THEN 'login'
+                   ELSE SPACE(0)
+              END WORK_STATUS
+            , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS USER_NM
+            , (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS USER_PHOTO_GFILE_SEQ
+            , Y.IMG_GFILE_SEQ
+            , Y.WORK_TYPE
+            , SF_GET_CODE_NM('1033',Y.WORK_TYPE,#{LOGIN_LOCALE}) AS WORK_TYPE_NM
+            , Y.MATERIAL_TYPE
+            , jmes.SF_GET_CODE_NM('1035', Y.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM
+            , Y.MATERIAL_DETAIL
+            , jmes.SF_GET_CODE_NM('1027', Y.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+            , CONCAT(Y.PART_QTY,'EA') AS PART_QTY
+            ,(
+                SELECT CONVERT(CONVERT(CONCAT(SPACE(0),COUNT(*), ' (',IFNULL(SUM(jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ)),0),'EA)') USING BINARY) USING utf8) AS TOTAL
+                FROM jmes.TBL_MCT_WORK A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C, TBL_EQUIP D
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND A.WORK_STATUS = 'DBS010'
+                    AND B.OUT_FINISH_DT IS NULL
+                    AND A.DEL_YN = 'N'
+                    AND B.DEL_YN = 'N'
+                    ANd A.EQUIP_SEQ = D.EQUIP_SEQ
+                    AND D.FACTORY_AREA = X.FACTORY_AREA
+            ) AS WAIT_TOTAL
+            ,(
+                SELECT CONVERT(CONVERT(CONCAT(SPACE(0),COUNT(*), ' (',IFNULL(SUM(jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ)),0),'EA)') USING BINARY) USING utf8) AS TOTAL
+                FROM jmes.TBL_MCT_WORK A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C, TBL_EQUIP D
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND A.WORK_STATUS = 'DBS020'
+                    AND B.OUT_FINISH_DT IS NULL
+                    AND A.DEL_YN = 'N'
+                    AND B.DEL_YN = 'N'
+                    ANd A.EQUIP_SEQ = D.EQUIP_SEQ
+                    AND D.FACTORY_AREA = X.FACTORY_AREA
+            ) AS WORK_TOTAL
+        FROM jmes.TBL_EQUIP X
+            LEFT OUTER JOIN (
+                SELECT A.EQUIP_SEQ, A.WORK_STATUS
+                , SF_GET_DRAWING_WORK_TIME('W_MINUTE', A.MCT_WORK_SEQ) AS WORKING_TIME
+                , A.PLAN_WORKING_TIME
+                , CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, '#', C.PART_NUM) END AS CONTROL_PART_INFO
+                , C.IMG_GFILE_SEQ
+                , C.WORK_TYPE
+                , C.MATERIAL_DETAIL
+                , C.MATERIAL_TYPE
+                , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
+                FROM jmes.TBL_MCT_WORK A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
+                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                AND A.WORK_STATUS IN ('DBS010', 'DBS020')
+--                 AND B.OUT_FINISH_DT IS NULL
+                AND A.DEL_YN = 'N'
+                AND B.DEL_YN = 'N'
+                GROUP BY A.EQUIP_SEQ
+            ) Y ON X.EQUIP_SEQ = Y.EQUIP_SEQ
+        WHERE X.EQUIP_KIND = '1'
+            AND X.DEL_YN = 'N'
+            AND X.LAYOUT_SORT IS NOT NULL
+        ORDER BY X.FACTORY_AREA, X.LAYOUT_SORT
+    </select>
+    <select id="selectTvMachineList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- 장비
         SELECT X.EQUIP_SEQ
             , X.EQUIP_ID
@@ -79,7 +272,7 @@
             , CASE WHEN Y.WORK_STATUS = 'DBS010' THEN 'machine-pause-background'
                    WHEN Y.WORK_STATUS = 'DBS020' THEN 'machine-run-background'
                    ELSE SPACE(0)
-              END WORK_STATUS
+            END WORK_STATUS
             , (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS USER_NM
             , (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS USER_PHOTO_GFILE_SEQ
             , Y.IMG_GFILE_SEQ
@@ -110,20 +303,167 @@
         FROM jmes.kjw_test
         WHERE SEQ > cast(#{SEQ} as unsigned)
     </select>
-
     <select id="selectMctAreInfoList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            X.EQUIP_SEQ, EQUIP_ID, EQUIP_NM,
+            (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS USER_NM,
+            (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS PHOTO_GFILE_SEQ,
+            FACTORY_AREA, LAYOUT_ROW, LAYOUT_COL,
+            IFNULL(Y.TOTAL_CNT,0) AS TOTAL_CNT,
+            IFNULL(Y.TOTAL_PART_QTY,0) AS TOTAL_PART_QTY,
+            Y.TOTAL_PLAN_WORKING_TIME,
+            CASE WHEN Y.TOTAL_PLAN_WORKING_TIME IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(Y.TOTAL_PLAN_WORKING_TIME,0)/60,0),'h ',TRUNCATE((IFNULL(Y.TOTAL_PLAN_WORKING_TIME,0)%60),0),'m')
+                 ELSE '-'
+                END TOTAL_PLAN_WORKING_TIME_FORMAT,
+            CASE WHEN Y.WORK_PLAN_TYPE = 1 THEN Y.CONTROL_PART_INFO
+                 ELSE ''
+                END AS CONTROL_PART_INFO,
+            Y.WORK_PLAN_TYPE,
+            Y.WORKING_TIME,
+            Y.WORK_TEMP_STOP_DT,
+            CASE WHEN Y.WORKING_TIME IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(Y.WORKING_TIME,0)/60,0),'h ',TRUNCATE((IFNULL(Y.WORKING_TIME,0)%60),0),'m')
+                 ELSE '-'
+            END WORKING_TIME_FORMAT,
+            CASE WHEN Y.PLAN_WORKING_TIME IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(Y.PLAN_WORKING_TIME,0)/60,0),'h ',TRUNCATE((IFNULL(Y.PLAN_WORKING_TIME,0)%60),0),'m')
+                 ELSE '-'
+            END PLAN_WORKING_TIME_FORMAT,
+            CASE WHEN (Y.PLAN_WORKING_TIME IS NOT NULL AND Y.PLAN_WORKING_TIME > 0) THEN CONCAT(ROUND((Y.WORKING_TIME/Y.PLAN_WORKING_TIME) * 100),'%')
+                 ELSE '-'
+            END PERCENT,
+            Y.MATERIAL_DETAIL_NM,
+            Y.MATERIAL_TYPE_NM,
+            Y.WORK_TYPE_NM,
+            Y.PART_QTY,
+            Y.IMG_GFILE_SEQ,
+            CASE WHEN Y.WORK_PLAN_TYPE = '1' THEN CONCAT(IFNULL(Y.MATERIAL_TYPE_NM,SPACE(0)),SPACE(1),IFNULL(Y.WORK_TYPE_NM,SPACE(0)),SPACE(1),IFNULL(Y.PART_QTY,SPACE(0)),CASE WHEN Y.PART_QTY IS NULL THEN SPACE(0) ELSE 'EA' END)
+                 ELSE ''
+            END AS CUR_TEXT,
+            CASE WHEN Y.WORK_STATUS = 'DBS010' THEN 'pause'
+                 WHEN Y.WORK_STATUS = 'DBS020' THEN 'login'
+                 ELSE SPACE(0)
+            END WORK_STATUS
+        FROM jmes.TBL_EQUIP X
+         LEFT OUTER JOIN (
+            SELECT COUNT(*) AS TOTAL_CNT
+                 , SUM(T.PART_QTY) AS TOTAL_PART_QTY
+                 , SUM(T.PLAN_WORKING_TIME) AS TOTAL_PLAN_WORKING_TIME
+                 , T.CONTROL_SEQ
+                 , T.CONTROL_DETAIL_SEQ
+                 , T.WORK_PLAN_TYPE
+                 , T.KEY_SEQ
+                 , T.EQUIP_SEQ
+                 , T.INNER_DUE_DT
+                 , T.WORK_USER_ID
+                 , T.WORK_TYPE_NM
+                 , T.CONTROL_PART_INFO
+                 , T.SIZE_TXT
+                 , T.MATERIAL_DETAIL_NM
+                 , T.MATERIAL_TYPE_NM
+                 , T.PART_QTY
+                 , T.WORKING_TIME
+                 , T.PLAN_WORKING_TIME
+                 , T.IMG_GFILE_SEQ
+                 , T.WORK_STATUS
+                 , T.WORK_TEMP_STOP_DT
+            FROM (    -- 드로잉보드 진행
+                     SELECT '1' AS WORK_PLAN_TYPE
+                          , C.CONTROL_SEQ
+                          , C.CONTROL_DETAIL_SEQ
+                          , A.MCT_WORK_SEQ AS KEY_SEQ
+                          , A.EQUIP_SEQ
+                          , C.INNER_DUE_DT
+                          , A.WORK_USER_ID
+                          , jmes.SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+                          , CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, '#', C.PART_NUM) END AS CONTROL_PART_INFO
+                          , C.SIZE_TXT
+                          , jmes.SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+                          , jmes.SF_GET_CODE_NM('1035', C.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM
+                          , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
+                          , SF_GET_DRAWING_WORK_TIME('W_MINUTE', A.MCT_WORK_SEQ) AS WORKING_TIME
+                          , IFNULL(A.PLAN_WORKING_TIME,0) AS PLAN_WORKING_TIME
+                          , C.IMG_GFILE_SEQ
+                          , A.WORK_STATUS
+                          , A.WORK_TEMP_STOP_DT
+                     FROM jmes.TBL_MCT_WORK A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
+                     WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                       AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                       AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                       AND A.WORK_STATUS IN ('DBS010', 'DBS020')
+                       AND A.DEL_YN = 'N'
+                       AND B.DEL_YN = 'N'
+                       AND EXISTS (SELECT 1 FROM jmes.TBL_EQUIP D WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
+                                                                    AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                         )
+                     UNION ALL
+                     -- PLAN
+                     SELECT '2' AS WORK_PLAN_TYPE
+                          , C.CONTROL_SEQ
+                          , C.CONTROL_DETAIL_SEQ
+                          , A.MCT_PLAN_SEQ AS KEY_SEQ
+                          , A.EQUIP_SEQ
+                          , C.INNER_DUE_DT
+                          , '' AS WORK_USER_ID
+                          , jmes.SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+                          , CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, '#', C.PART_NUM) END AS CONTROL_PART_INFO
+                          , '' AS SIZE_TXT
+                          , '' AS MATERIAL_DETAIL_NM
+                          , '' AS MATERIAL_TYPE_NM
+                          , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
+                          , 0 AS WORKING_TIME
+--                           , IFNULL(A.WORKING_TIME,0) AS PLAN_WORKING_TIME
+                          , SUM(IFNULL(A.WORKING_TIME,0)) AS PLAN_WORKING_TIME
+                          , C.IMG_GFILE_SEQ
+                          , '' AS WORK_STATUS
+                          , '' AS WORK_TEMP_STOP_DT
+                     FROM jmes.TBL_MCT_PLAN A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
+                     WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                       AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                       AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                       AND A.DEL_YN = 'N'
+                       AND B.DEL_YN = 'N'
+                       AND EXISTS (SELECT 1 FROM jmes.TBL_EQUIP D WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
+                                                                    AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                         )
+                     GROUP BY A.EQUIP_SEQ
+                 ) T
+                 GROUP BY T.EQUIP_SEQ
+            ) Y ON Y.EQUIP_SEQ = X.EQUIP_SEQ
+        WHERE EQUIP_KIND = '1'
+          AND DEL_YN = 'N'
+          AND LAYOUT_ROW IS NOT NULL
+          AND LAYOUT_COL IS NOT NULL
+        ORDER BY FACTORY_AREA, LAYOUT_ROW, LAYOUT_COL
+    </select>
+    <select id="selectMctAreInfoList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             EQUIP_SEQ, EQUIP_ID, EQUIP_NM,
             (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS USER_NM,
+            (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID) AS PHOTO_GFILE_SEQ,
             FACTORY_AREA, LAYOUT_ROW, LAYOUT_COL
         FROM jmes.TBL_EQUIP X
         WHERE EQUIP_KIND = '1'
-            AND DEL_YN = 'N'
-            AND LAYOUT_ROW IS NOT NULL
-            AND LAYOUT_COL IS NOT NULL
+          AND DEL_YN = 'N'
+          AND LAYOUT_ROW IS NOT NULL
+          AND LAYOUT_COL IS NOT NULL
         ORDER BY FACTORY_AREA, LAYOUT_ROW, LAYOUT_COL
     </select>
     <select id="selectMctAreList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.EQUIP_SEQ,
+               jmes.SF_GET_CODE_NM('1035', C.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM,
+               CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, '#', C.PART_NUM) END AS CONTROL_PART_INFO,
+               jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY,
+               jmes.SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+        FROM jmes.TBL_MCT_PLAN A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+          AND A.CONTROL_SEQ = C.CONTROL_SEQ
+          AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+          AND A.DEL_YN = 'N'
+          AND B.DEL_YN = 'N'
+          AND EXISTS (SELECT 1 FROM jmes.TBL_EQUIP D WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
+                                                       AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+            );
+    </select>
+    <select id="selectMctAreList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- 상단 (MCT...)
         SELECT X.EQUIP_SEQ
             , X.EQUIP_ID
@@ -150,99 +490,183 @@
             , Y.IMG_GFILE_SEQ
             , Y.WORK_STATUS
         FROM jmes.TBL_EQUIP X
-                LEFT OUTER JOIN ( SELECT COUNT(*) OVER (PARTITION BY T.EQUIP_SEQ) AS TOTAL_CNT
-                                        , SUM(T.PART_QTY) OVER (PARTITION BY T.EQUIP_SEQ) AS TOTAL_PART_QTY
-                                        , SUM(PLAN_WORKING_TIME) OVER (PARTITION BY T.EQUIP_SEQ) AS TOTAL_PLAN_WORKING_TIME
-                                        , T.CONTROL_SEQ
-                                        , T.CONTROL_DETAIL_SEQ
-                                        , T.WORK_PLAN_TYPE
-                                        , T.KEY_SEQ
-                                        , T.EQUIP_SEQ
-                                        , T.INNER_DUE_DT
-                                        , T.WORK_USER_ID
-                                        , T.WORK_TYPE_NM
-                                        , T.CONTROL_PART_INFO
-                                        , T.SIZE_TXT
-                                        , T.MATERIAL_DETAIL_NM
-                                        , T.PART_QTY
-                                        , T.WORKING_TIME
-                                        , T.PLAN_WORKING_TIME
-                                        , T.IMG_GFILE_SEQ
-                                        , T.WORK_STATUS
-                                  FROM (    -- 드로잉보드 진행
-                                            SELECT '1' AS WORK_PLAN_TYPE
-                                                , C.CONTROL_SEQ
-                                                , C.CONTROL_DETAIL_SEQ
-                                                , A.MCT_WORK_SEQ AS KEY_SEQ
-                                                , A.EQUIP_SEQ
-                                                , C.INNER_DUE_DT
-                                                , A.WORK_USER_ID
-                                                , jmes.SF_GET_CODE_NM('1033', C.WORK_TYPE, 'KR') AS WORK_TYPE_NM
-                                                , CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, '#', C.PART_NUM) END AS CONTROL_PART_INFO
-                                                , C.SIZE_TXT
-                                                , jmes.SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM
-                                                , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
-                                                , SF_GET_DRAWING_WORK_TIME('W_MINUTE', A.MCT_WORK_SEQ) AS WORKING_TIME
-                                                , 0 AS PLAN_WORKING_TIME
-                                                , C.IMG_GFILE_SEQ
-                                                , A.WORK_STATUS
-                                            FROM jmes.TBL_MCT_WORK A
-                                                , jmes.TBL_CONTROL B
-                                                , jmes.TBL_CONTROL_PART C
-                                            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                                                AND A.CONTROL_SEQ = C.CONTROL_SEQ
-                                                AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                                                AND A.WORK_STATUS IN ('DBS010', 'DBS020')
-                                                <!-- AND B.OUT_FINISH_DT IS NULL -->
-                                                AND A.DEL_YN = 'N'
-                                                AND B.DEL_YN = 'N'
-                                                <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
-                                                    AND A.EQUIP_SEQ = #{EQUIP_SEQ}
-                                                </if>
-                                                AND EXISTS (SELECT 1 FROM jmes.TBL_EQUIP D WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
-                                                    AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
-                                                )
-                                            UNION ALL
-                                            -- PLAN
-                                            SELECT '2' AS WORK_PLAN_TYPE
-                                                , C.CONTROL_SEQ
-                                                , C.CONTROL_DETAIL_SEQ
-                                                , A.MCT_PLAN_SEQ AS KEY_SEQ
-                                                , A.EQUIP_SEQ
-                                                , C.INNER_DUE_DT
-                                                , '' AS WORK_USER_ID
-                                                , jmes.SF_GET_CODE_NM('1033', C.WORK_TYPE, 'KR') AS WORK_TYPE_NM
-                                                , CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, '#', C.PART_NUM) END AS CONTROL_PART_INFO
-                                                , C.SIZE_TXT
-                                                , jmes.SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, 'KR') AS MATERIAL_DETAIL_NM
-                                                , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
-                                                , 0 AS WORKING_TIME
-                                                , IFNULL(A.WORKING_TIME,0) AS PLAN_WORKING_TIME
-                                                , C.IMG_GFILE_SEQ
-                                                , '' AS WORK_STATUS
-                                            FROM jmes.TBL_MCT_PLAN A
-                                                , jmes.TBL_CONTROL B
-                                                , jmes.TBL_CONTROL_PART C
-                                            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                                                AND A.CONTROL_SEQ = C.CONTROL_SEQ
-                                                AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                                                <!-- AND B.OUT_FINISH_DT IS NULL -->
-                                                AND A.DEL_YN = 'N'
-                                                AND B.DEL_YN = 'N'
-                                                <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
-                                                    AND A.EQUIP_SEQ = #{EQUIP_SEQ}
-                                                </if>
-                                                AND EXISTS (SELECT 1 FROM jmes.TBL_EQUIP D WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
-                                                    AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
-                                                )
-                                        ) T
-                                   ) Y
-                            ON X.EQUIP_SEQ = Y.EQUIP_SEQ
+            LEFT OUTER JOIN (
+                SELECT COUNT(*) OVER (PARTITION BY T.EQUIP_SEQ) AS TOTAL_CNT
+                    , SUM(T.PART_QTY) OVER (PARTITION BY T.EQUIP_SEQ) AS TOTAL_PART_QTY
+                    , SUM(PLAN_WORKING_TIME) OVER (PARTITION BY T.EQUIP_SEQ) AS TOTAL_PLAN_WORKING_TIME
+                    , T.CONTROL_SEQ
+                    , T.CONTROL_DETAIL_SEQ
+                    , T.WORK_PLAN_TYPE
+                    , T.KEY_SEQ
+                    , T.EQUIP_SEQ
+                    , T.INNER_DUE_DT
+                    , T.WORK_USER_ID
+                    , T.WORK_TYPE_NM
+                    , T.CONTROL_PART_INFO
+                    , T.SIZE_TXT
+                    , T.MATERIAL_DETAIL_NM
+                    , T.PART_QTY
+                    , T.WORKING_TIME
+                    , T.PLAN_WORKING_TIME
+                    , T.IMG_GFILE_SEQ
+                    , T.WORK_STATUS
+                FROM (    -- 드로잉보드 진행
+                    SELECT '1' AS WORK_PLAN_TYPE
+                        , C.CONTROL_SEQ
+                        , C.CONTROL_DETAIL_SEQ
+                        , A.MCT_WORK_SEQ AS KEY_SEQ
+                        , A.EQUIP_SEQ
+                        , C.INNER_DUE_DT
+                        , A.WORK_USER_ID
+                        , jmes.SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+                        , CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, '#', C.PART_NUM) END AS CONTROL_PART_INFO
+                        , C.SIZE_TXT
+                        , jmes.SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+                        , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
+                        , SF_GET_DRAWING_WORK_TIME('W_MINUTE', A.MCT_WORK_SEQ) AS WORKING_TIME
+                        , 0 AS PLAN_WORKING_TIME
+                        , C.IMG_GFILE_SEQ
+                        , A.WORK_STATUS
+                    FROM jmes.TBL_MCT_WORK A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
+                    WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                        AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                        AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                        AND A.WORK_STATUS IN ('DBS010', 'DBS020')
+                        <!-- AND B.OUT_FINISH_DT IS NULL -->
+                        AND A.DEL_YN = 'N'
+                        AND B.DEL_YN = 'N'
+                        <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                            AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+                        </if>
+                        AND EXISTS (SELECT 1 FROM jmes.TBL_EQUIP D WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
+                            AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                        )
+                    UNION ALL
+                    -- PLAN
+                    SELECT '2' AS WORK_PLAN_TYPE
+                        , C.CONTROL_SEQ
+                        , C.CONTROL_DETAIL_SEQ
+                        , A.MCT_PLAN_SEQ AS KEY_SEQ
+                        , A.EQUIP_SEQ
+                        , C.INNER_DUE_DT
+                        , '' AS WORK_USER_ID
+                        , jmes.SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+                        , CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, '#', C.PART_NUM) END AS CONTROL_PART_INFO
+                        , C.SIZE_TXT
+                        , jmes.SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+                        , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
+                        , 0 AS WORKING_TIME
+                        , IFNULL(A.WORKING_TIME,0) AS PLAN_WORKING_TIME
+                        , C.IMG_GFILE_SEQ
+                        , '' AS WORK_STATUS
+                    FROM jmes.TBL_MCT_PLAN A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
+                    WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                        AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                        AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                        <!-- AND B.OUT_FINISH_DT IS NULL -->
+                        AND A.DEL_YN = 'N'
+                        AND B.DEL_YN = 'N'
+                        <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                            AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+                        </if>
+                        AND EXISTS (SELECT 1 FROM jmes.TBL_EQUIP D WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
+                            AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                        )
+                ) T
+            ) Y
+        ON X.EQUIP_SEQ = Y.EQUIP_SEQ
         WHERE Y.KEY_SEQ IS NOT NULL
-            <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
-                AND X.EQUIP_SEQ = #{EQUIP_SEQ}
-            </if>
+        <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+            AND X.EQUIP_SEQ = #{EQUIP_SEQ}
+        </if>
         ORDER BY X.FACTORY_AREA, X.LAYOUT_ROW, X.LAYOUT_COL, Y.WORK_PLAN_TYPE, Y.INNER_DUE_DT, Y.CONTROL_PART_INFO
+    </select>
+
+    <select id="selectMctGridList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT Z.*
+        FROM (
+            SELECT
+                4 AS RANK, '지연' AS TITLE, COUNT(*) OVER (PARTITION BY 1) AS TOTAL_COUNT
+                , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                , DATE_FORMAT(STR_TO_DATE(B.INNER_DUE_DT,'%Y%m%d'),'%m/%d') AS INNER_DUE_DT
+                , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+                , CONCAT(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ),' EA') AS CONTROL_PART_QTY_INFO
+                , CONCAT(jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), <![CDATA[ '<br>' ]]>,IFNULL(jmes.SF_GET_CODE_NM('1035', B.MATERIAL_TYPE, #{LOGIN_LOCALE}),SPACE(1)),SPACE(1),jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}),SPACE(1),jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ),' EA') AS CONTROL_TEXT
+                , B.PART_STATUS
+                , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+                , B.IMG_GFILE_SEQ
+            FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND A.DEL_YN = 'N'
+                AND A.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
+                AND A.OUT_FINISH_DT IS NULL
+                AND B.INNER_WORK_FINISH_DT IS NULL
+                AND B.INNER_DUE_DT <![CDATA[ <= ]]> DATE_FORMAT(NOW(),'%Y%m%d')
+            UNION ALL
+            SELECT
+                3 AS RANK, '긴급' AS TITLE, COUNT(*) OVER (PARTITION BY 1) AS TOTAL_COUNT
+                , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                , DATE_FORMAT(STR_TO_DATE(B.INNER_DUE_DT,'%Y%m%d'),'%m/%d') AS INNER_DUE_DT
+                , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+                , CONCAT(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ),' EA') AS CONTROL_PART_QTY_INFO
+                , CONCAT(jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), <![CDATA[ '<br>' ]]>,IFNULL(jmes.SF_GET_CODE_NM('1035', B.MATERIAL_TYPE, #{LOGIN_LOCALE}),SPACE(1)),SPACE(1),jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}),SPACE(1),jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ),' EA') AS CONTROL_TEXT
+                , B.PART_STATUS
+                , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+                , B.IMG_GFILE_SEQ
+            FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                AND A.DEL_YN = 'N'
+                AND A.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
+                AND A.EMERGENCY_YN = 'Y'
+                AND A.OUT_FINISH_DT IS NULL
+                AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
+                AND B.INNER_WORK_FINISH_DT IS NULL
+            UNION ALL
+            SELECT
+                1 AS RANK, '불량' AS TITLE, COUNT(*) OVER (PARTITION BY 1) AS TOTAL_COUNT
+                , A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
+                , DATE_FORMAT(STR_TO_DATE(C.INNER_DUE_DT,'%Y%m%d'),'%m/%d') AS INNER_DUE_DT
+                , jmes.SF_GET_CONTROL_PART_INFO(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+                , CONCAT(jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ),' EA') AS CONTROL_PART_QTY_INFO
+                , CONCAT(jmes.SF_GET_CONTROL_PART_INFO(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ), <![CDATA[ '<br>' ]]>,IFNULL(jmes.SF_GET_CODE_NM('1035', C.MATERIAL_TYPE, #{LOGIN_LOCALE}),SPACE(1)),SPACE(1),jmes.SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}),SPACE(1),jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ),' EA') AS CONTROL_TEXT
+                , C.PART_STATUS
+                , jmes.SF_GET_PART_STATUS_NM(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+                , C.IMG_GFILE_SEQ
+            FROM jmes.TBL_INSPECT A
+                INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N' AND B.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
+                INNER JOIN jmes.TBL_CONTROL_PART C ON B.CONTROL_SEQ= C.CONTROL_SEQ
+                INNER JOIN jmes.TBL_CONTROL_PART_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                    AND A.ORDER_SEQ = D.ORDER_SEQ AND D.OUT_FINISH_DT IS NULL
+            WHERE A.INSPECT_TYPE = '1' AND A.INSPECT_GRADE = 'GRD040'
+                AND A.INSPECT_SEQ = (
+                    SELECT MAX(B.INSPECT_SEQ)
+                    FROM jmes.TBL_INSPECT B
+                    WHERE B.INSPECT_TYPE = '1' AND A.CONTROL_SEQ = B.CONTROL_SEQ
+                        AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                    GROUP BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                )
+            UNION ALL
+            SELECT
+                2 AS RANK, '반품' AS TITLE, COUNT(*) OVER (PARTITION BY 1) AS TOTAL_COUNT
+                , A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
+                , DATE_FORMAT(STR_TO_DATE(C.INNER_DUE_DT,'%Y%m%d'),'%m/%d') AS INNER_DUE_DT
+                , jmes.SF_GET_CONTROL_PART_INFO(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+                , CONCAT(jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ),' EA') AS CONTROL_PART_QTY_INFO
+                , CONCAT(jmes.SF_GET_CONTROL_PART_INFO(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ), <![CDATA[ '<br>' ]]>,IFNULL(jmes.SF_GET_CODE_NM('1035', C.MATERIAL_TYPE, #{LOGIN_LOCALE}),SPACE(1)),SPACE(1),jmes.SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}),SPACE(1),jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ),' EA') AS CONTROL_TEXT
+                , C.PART_STATUS
+                , jmes.SF_GET_PART_STATUS_NM(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+                , C.IMG_GFILE_SEQ
+            FROM jmes.TBL_INSPECT A
+                INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N' AND B.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
+                INNER JOIN jmes.TBL_CONTROL_PART C ON B.CONTROL_SEQ= C.CONTROL_SEQ
+                INNER JOIN jmes.TBL_CONTROL_PART_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                    AND A.ORDER_SEQ = D.ORDER_SEQ
+            WHERE A.INSPECT_TYPE = '2' AND A.RETURN_SETTLEMENT_DT IS NULL
+        ) Z
+        ORDER BY RANK, CASE WHEN Z.PART_STATUS = 'PRO002' THEN 1
+                            WHEN Z.PART_STATUS = 'PRO005' THEN 2
+                            ELSE 3 END,
+                 Z.INNER_DUE_DT
     </select>
 
     <select id="selectMctGrid1List" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -250,132 +674,235 @@
         SELECT
             COUNT(*) OVER (PARTITION BY 1) AS TOTAL_COUNT
             , jmes.SF_GET_DATE_F(Z.INSERT_DT,'YY','') AS INSPECT_DT
-            , ( SELECT N.COMP_NM
-                FROM jmes.TBL_CONTROL M, jmes.TBL_COMPANY N
-                WHERE M.ORDER_COMP_CD = N.COMP_CD
-                    AND M.CONTROL_SEQ = Z.CONTROL_SEQ) AS ORDER_COMP_NM
-            , jmes.SF_GET_CONTROL_PART_INFO(Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
-            , CASE WHEN Z.INSPECT_TYPE = '1' THEN '불량'
-                   WHEN Z.INSPECT_TYPE = '2' THEN '반품'
-              END AS ERROR_TYPE
-            , Z.ERROR_QTY, CONCAT(Z.ERROR_QTY,'ea') AS ERROR_QTY_INFO
-            , (SELECT jmes.SF_GET_DATE_F(M.INNER_DUE_DT,'YY','') FROM jmes.TBL_CONTROL_PART M WHERE M.CONTROL_SEQ = Z.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ) AS INNER_DUE_DT
-            , CASE WHEN Z.INSPECT_TYPE = '1' THEN jmes.SF_GET_CODE_NM('1020', Z.INSPECT_RESULT, 'KR')
-                   WHEN Z.INSPECT_TYPE = '2' THEN jmes.SF_GET_CODE_NM('1021', Z.INSPECT_RESULT, 'KR')
-              END AS INSPECT_RESULT_NM
-            , jmes.SF_GET_CODE_NM('1025', Z.ERROR_ACTION, 'KR') AS ERROR_ACTION_NM
-            , Z.IMG_GFILE_SEQ
+             , ( SELECT N.COMP_NM
+                 FROM jmes.TBL_CONTROL M, jmes.TBL_COMPANY N
+                 WHERE M.ORDER_COMP_CD = N.COMP_CD
+                   AND M.CONTROL_SEQ = Z.CONTROL_SEQ) AS ORDER_COMP_NM
+             , jmes.SF_GET_CONTROL_PART_INFO(Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+             , CASE WHEN Z.INSPECT_TYPE = '1' THEN '불량'
+                    WHEN Z.INSPECT_TYPE = '2' THEN '반품'
+            END AS ERROR_TYPE
+             , Z.ERROR_QTY, CONCAT(Z.ERROR_QTY,'ea') AS ERROR_QTY_INFO
+             , (SELECT jmes.SF_GET_DATE_F(M.INNER_DUE_DT,'YY','') FROM jmes.TBL_CONTROL_PART M WHERE M.CONTROL_SEQ = Z.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ) AS INNER_DUE_DT
+             , CASE WHEN Z.INSPECT_TYPE = '1' THEN jmes.SF_GET_CODE_NM('1020', Z.INSPECT_RESULT, #{LOGIN_LOCALE})
+                    WHEN Z.INSPECT_TYPE = '2' THEN jmes.SF_GET_CODE_NM('1021', Z.INSPECT_RESULT, #{LOGIN_LOCALE})
+            END AS INSPECT_RESULT_NM
+             , jmes.SF_GET_CODE_NM('1025', Z.ERROR_ACTION, #{LOGIN_LOCALE}) AS ERROR_ACTION_NM
+             , Z.IMG_GFILE_SEQ
         FROM (
-        	SELECT
-        		A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.INSPECT_TYPE, A.ERROR_QTY, A.INSPECT_RESULT, A.ERROR_ACTION, A.INSERT_DT,
-        	    C.IMG_GFILE_SEQ
-        	FROM jmes.TBL_INSPECT A
-                INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-        	        AND B.DEL_YN = 'N' AND B.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
-        	    INNER JOIN jmes.TBL_CONTROL_PART C ON B.CONTROL_SEQ= C.CONTROL_SEQ
-        	    INNER JOIN jmes.TBL_CONTROL_PART_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-        	        AND A.ORDER_SEQ = D.ORDER_SEQ AND D.OUT_FINISH_DT IS NULL
-        	WHERE A.INSPECT_TYPE = '1' AND A.INSPECT_GRADE = 'GRD040'
-        		AND A.INSPECT_SEQ = (SELECT MAX(B.INSPECT_SEQ) FROM jmes.TBL_INSPECT B WHERE B.INSPECT_TYPE = '1' AND A.CONTROL_SEQ = B.CONTROL_SEQ
-        			AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-        			GROUP BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
-        		)
-        	UNION ALL
-        	SELECT
-        		A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.INSPECT_TYPE, A.ERROR_QTY, A.INSPECT_RESULT, A.ERROR_ACTION, A.INSERT_DT,
-        	    C.IMG_GFILE_SEQ
-        	FROM jmes.TBL_INSPECT A
-                INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND B.DEL_YN = 'N' AND B.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
-                    AND B.OUT_FINISH_DT IS NULL
-                INNER JOIN jmes.TBL_CONTROL_PART C ON B.CONTROL_SEQ= C.CONTROL_SEQ
-                INNER JOIN jmes.TBL_CONTROL_PART_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-                    AND A.ORDER_SEQ = D.ORDER_SEQ AND D.OUT_FINISH_DT IS NULL
-        	WHERE A.INSPECT_TYPE = '2' AND A.RETURN_SETTLEMENT_DT IS NULL
-        )Z
+                 SELECT
+                     A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.INSPECT_TYPE, A.ERROR_QTY, A.INSPECT_RESULT, A.ERROR_ACTION, A.INSERT_DT,
+                     C.IMG_GFILE_SEQ
+                 FROM jmes.TBL_INSPECT A
+                          INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                     AND B.DEL_YN = 'N' AND B.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
+                          INNER JOIN jmes.TBL_CONTROL_PART C ON B.CONTROL_SEQ= C.CONTROL_SEQ
+                          INNER JOIN jmes.TBL_CONTROL_PART_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                     AND A.ORDER_SEQ = D.ORDER_SEQ AND D.OUT_FINISH_DT IS NULL
+                 WHERE A.INSPECT_TYPE = '1' AND A.INSPECT_GRADE = 'GRD040'
+                   AND A.INSPECT_SEQ = (SELECT MAX(B.INSPECT_SEQ) FROM jmes.TBL_INSPECT B WHERE B.INSPECT_TYPE = '1' AND A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                                                            AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                        GROUP BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                 )
+                 UNION ALL
+                 SELECT
+                     A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.INSPECT_TYPE, A.ERROR_QTY, A.INSPECT_RESULT, A.ERROR_ACTION, A.INSERT_DT,
+                     C.IMG_GFILE_SEQ
+                 FROM jmes.TBL_INSPECT A
+                          INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                     AND B.DEL_YN = 'N' AND B.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
+                     AND B.OUT_FINISH_DT IS NULL
+                          INNER JOIN jmes.TBL_CONTROL_PART C ON B.CONTROL_SEQ= C.CONTROL_SEQ
+                          INNER JOIN jmes.TBL_CONTROL_PART_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                     AND A.ORDER_SEQ = D.ORDER_SEQ AND D.OUT_FINISH_DT IS NULL
+                 WHERE A.INSPECT_TYPE = '2' AND A.RETURN_SETTLEMENT_DT IS NULL
+             )Z
         GROUP BY Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ, Z.INSPECT_TYPE
         ORDER BY Z.INSERT_DT DESC
-        LIMIT 5
+            LIMIT 5
     </select>
     <select id="selectMctGrid2List" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- 하단 그리드 2 (긴급주문 진행현황)
         SELECT
             COUNT(*) OVER (PARTITION BY 1) AS TOTAL_COUNT
         	, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
-            , jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT
-            , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
-            , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
-            , CONCAT(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ),'ea') AS CONTROL_PART_QTY_INFO
-            , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, 'KR') AS PART_STATUS_NM
-            , jmes.SF_GET_CODE_NM('1009', C.POP_POSITION, 'KR') AS POP_POSITION_NM
-            , B.IMG_GFILE_SEQ
+             , jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT
+             , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
+             , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+             , CONCAT(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ),'ea') AS CONTROL_PART_QTY_INFO
+             , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+             , jmes.SF_GET_CODE_NM('1009', C.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION_NM
+             , B.IMG_GFILE_SEQ
         FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
-        	LEFT OUTER JOIN jmes.TBL_POP C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-        		AND C.POP_SEQ = (SELECT MAX(D.POP_SEQ) FROM jmes.TBL_POP D WHERE C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-        					GROUP BY D.CONTROL_SEQ, D.CONTROL_DETAIL_SEQ)
+                                     LEFT OUTER JOIN jmes.TBL_POP C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            AND C.POP_SEQ = (SELECT MAX(D.POP_SEQ) FROM jmes.TBL_POP D WHERE C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                             GROUP BY D.CONTROL_SEQ, D.CONTROL_DETAIL_SEQ)
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-            -- AND A.CONTROL_STATUS IN ('ORD001','ORD003')
-            AND A.DEL_YN = 'N'
-            AND A.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
-            AND A.EMERGENCY_YN = 'Y'
-            AND A.OUT_FINISH_DT IS NULL
-            AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
-            AND B.INNER_WORK_FINISH_DT IS NULL
+          -- AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+          AND A.DEL_YN = 'N'
+          AND A.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
+          AND A.EMERGENCY_YN = 'Y'
+          AND A.OUT_FINISH_DT IS NULL
+          AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
+          AND B.INNER_WORK_FINISH_DT IS NULL
         ORDER BY B.INNER_DUE_DT, A.ORDER_COMP_CD, A.CONTROL_NUM
-        LIMIT 5
+            LIMIT 5
     </select>
     <select id="selectMctGrid3List" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- 하단 그리드 3 (가공지연목록)
         SELECT
             COUNT(*) OVER (PARTITION BY 1) AS TOTAL_COUNT
             , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
-            , jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT
-            , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
-            , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
-            , CONCAT(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ),' ea') AS CONTROL_PART_QTY_INFO
-            , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, 'KR') AS PART_STATUS_NM
-            , (SELECT M.USER_NM FROM jmes.TBL_USER M, jmes.TBL_COMPANY N WHERE M.USER_ID = N.CHARGE_USER_ID AND N.COMP_CD = A.ORDER_COMP_CD) AS CHARGE_USER_NM
-            , B.IMG_GFILE_SEQ
+             , jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT
+             , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
+             , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+             , CONCAT(jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ),' ea') AS CONTROL_PART_QTY_INFO
+             , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+             , (SELECT M.USER_NM FROM jmes.TBL_USER M, jmes.TBL_COMPANY N WHERE M.USER_ID = N.CHARGE_USER_ID AND N.COMP_CD = A.ORDER_COMP_CD) AS CHARGE_USER_NM
+             , B.IMG_GFILE_SEQ
         FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-            AND A.DEL_YN = 'N'
-            AND A.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
-            AND A.OUT_FINISH_DT IS NULL
-            AND B.INNER_WORK_FINISH_DT IS NULL
-            AND B.INNER_DUE_DT <![CDATA[ <= ]]> DATE_FORMAT(NOW(),'%Y%m%d')
+          AND A.DEL_YN = 'N'
+          AND A.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
+          AND A.OUT_FINISH_DT IS NULL
+          AND B.INNER_WORK_FINISH_DT IS NULL
+          AND B.INNER_DUE_DT <![CDATA[ <= ]]> DATE_FORMAT(NOW(),'%Y%m%d')
         ORDER BY B.INNER_DUE_DT, A.ORDER_COMP_CD, A.CONTROL_NUM
-        LIMIT 5
+            LIMIT 5
     </select>
 
     <select id="selectMctInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-          MAX(CASE WHEN Z.TITLE = '1' THEN Z.RUNNING_RATE END) AS NOW_RATE,
-          MAX(CASE WHEN Z.TITLE = '2' THEN Z.RUNNING_RATE END) AS DAY_RATE,
-          MAX(CASE WHEN Z.TITLE = '3' THEN Z.RUNNING_RATE END) AS MONTH_RATE
+            CONVERT(CONVERT(IFNULL(MAX(CASE WHEN Z.TITLE = 'NOW_RATE' THEN Z.CNT END),'0%') USING BINARY) USING utf8) AS NOW_RATE,
+            CONVERT(CONVERT(IFNULL(MAX(CASE WHEN Z.TITLE = 'RUN' THEN Z.CNT END),0) USING BINARY) USING utf8) AS RUN,
+            CONVERT(CONVERT(IFNULL(MAX(CASE WHEN Z.TITLE = 'NOT_RUN' THEN Z.CNT END),0) USING BINARY) USING utf8) AS NOT_RUN,
+            CONVERT(CONVERT(IFNULL(MAX(CASE WHEN Z.TITLE = 'STOP' THEN Z.CNT END),0) USING BINARY) USING utf8) AS STOP
         FROM (
-        	SELECT
-        		'1' AS TITLE, CONCAT(ROUND(IFNULL(((SUM(CASE WHEN B.MCT_WORK_SEQ IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*)) * 100), 0), 0), '%') AS RUNNING_RATE
-        	FROM jmes.TBL_EQUIP A
-        		LEFT OUTER JOIN jmes.TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.DEL_YN = 'N'
-        			AND B.WORK_STATUS IN ('DBS010', 'DBS020')
-        	WHERE 1 = 1
-        		AND A.EQUIP_KIND = '1' AND A.DEL_YN = 'N'
-        		AND A.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
-        	UNION ALL
-        	SELECT
-        		'2' AS TITLE, CONCAT(ROUND(IFNULL(((SUM(WORK_TIME) / SUM(DUTY_TIME)) * 100), 0), 0), '%') AS RUNNING_RATE
-        	FROM jmes.TBL_BATCH_MCT_WORK A
-        	WHERE 1 = 1
-        		AND A.BATCH_DT BETWEEN DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -4 DAY), '%Y%m%d') AND DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 DAY), '%Y%m%d')
-        		AND A.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
-        	UNION ALL
-        	SELECT
-        		'3' AS TITLE, CONCAT(ROUND(IFNULL(((SUM(WORK_TIME) / SUM(DUTY_TIME)) * 100), 0), 0), '%') AS RUNNING_RATE
-        	FROM jmes.TBL_BATCH_MCT_WORK A
-        	WHERE 1 = 1
-        		AND DATE_FORMAT(STR_TO_DATE(A.BATCH_DT, '%Y%m%d'), '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 DAY), '%Y%m')
-        		AND A.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+            SELECT 'NOW_RATE' AS TITLE, CONCAT(ROUND(IFNULL(((SUM(CASE WHEN B.MCT_WORK_SEQ IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*)) * 100), 0), 0), '%') AS CNT
+            FROM jmes.TBL_EQUIP A
+                LEFT OUTER JOIN jmes.TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.DEL_YN = 'N'
+                    AND B.WORK_STATUS IN ('DBS010', 'DBS020')
+            WHERE 1 = 1
+                AND A.EQUIP_KIND = '1' AND A.DEL_YN = 'N'
+                AND LAYOUT_ROW IS NOT NULL
+                AND LAYOUT_COL IS NOT NULL
+                AND A.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+            UNION
+            SELECT 'RUN' AS TITLE, COUNT(*) OVER () AS CNT
+            FROM TBL_EQUIP A
+                INNER JOIN TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.WORK_STATUS = 'DBS020'
+            WHERE A.EQUIP_KIND = '1'
+                AND A.DEL_YN = 'N'
+                AND A.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                AND LAYOUT_ROW IS NOT NULL
+                AND LAYOUT_COL IS NOT NULL
+            GROUP BY A.EQUIP_SEQ
+            UNION
+            SELECT 'STOP' AS TITLE, COUNT(*) OVER () AS CNT
+            FROM TBL_EQUIP A
+                INNER JOIN TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.WORK_STATUS = 'DBS010'
+            WHERE A.EQUIP_KIND = '1'
+                AND A.DEL_YN = 'N'
+                AND A.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                AND LAYOUT_ROW IS NOT NULL
+                AND LAYOUT_COL IS NOT NULL
+            GROUP BY A.EQUIP_SEQ
+            UNION
+            SELECT 'NOT_RUN' AS TITLE, COUNT(*) OVER () AS CNT
+            FROM TBL_EQUIP A
+            WHERE A.EQUIP_KIND = '1'
+                AND A.DEL_YN = 'N'
+                AND LAYOUT_ROW IS NOT NULL
+                AND LAYOUT_COL IS NOT NULL
+                AND A.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM TBL_MCT_WORK B
+                    WHERE B.EQUIP_SEQ = A.EQUIP_SEQ
+                        AND B.WORK_STATUS IN ('DBS010','DBS020')
+                )
+            GROUP BY A.EQUIP_SEQ
         ) Z
     </select>
 
+    <select id="selectMctInfo_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            MAX(CASE WHEN Z.TITLE = '1' THEN Z.RUNNING_RATE END) AS NOW_RATE,
+            MAX(CASE WHEN Z.TITLE = '2' THEN Z.RUNNING_RATE END) AS DAY_RATE,
+            MAX(CASE WHEN Z.TITLE = '3' THEN Z.RUNNING_RATE END) AS MONTH_RATE
+        FROM (
+                 SELECT
+                     '1' AS TITLE, CONCAT(ROUND(IFNULL(((SUM(CASE WHEN B.MCT_WORK_SEQ IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*)) * 100), 0), 0), '%') AS RUNNING_RATE
+                 FROM jmes.TBL_EQUIP A
+                          LEFT OUTER JOIN jmes.TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.DEL_YN = 'N'
+                     AND B.WORK_STATUS IN ('DBS010', 'DBS020')
+                 WHERE 1 = 1
+                   AND A.EQUIP_KIND = '1' AND A.DEL_YN = 'N'
+                   AND A.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                 UNION ALL
+                 SELECT
+                     '2' AS TITLE, CONCAT(ROUND(IFNULL(((SUM(WORK_TIME) / SUM(DUTY_TIME)) * 100), 0), 0), '%') AS RUNNING_RATE
+                 FROM jmes.TBL_BATCH_MCT_WORK A
+                 WHERE 1 = 1
+                   AND A.BATCH_DT BETWEEN DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -4 DAY), '%Y%m%d') AND DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 DAY), '%Y%m%d')
+                   AND A.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                 UNION ALL
+                 SELECT
+                     '3' AS TITLE, CONCAT(ROUND(IFNULL(((SUM(WORK_TIME) / SUM(DUTY_TIME)) * 100), 0), 0), '%') AS RUNNING_RATE
+                 FROM jmes.TBL_BATCH_MCT_WORK A
+                 WHERE 1 = 1
+                   AND DATE_FORMAT(STR_TO_DATE(A.BATCH_DT, '%Y%m%d'), '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 DAY), '%Y%m')
+                   AND A.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+             ) Z
+    </select>
+    <select id="selectTvPopStatusList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM,'#',B.PART_NUM) END AS CONTROL_PART_INFO
+             , B.PART_STATUS
+             , IFNULL(SUM(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ)),0) AS TOTAL_QTY
+             , COUNT(*) AS TOTAL_CNT
+        FROM  jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+          AND A.DEL_YN = 'N'
+          AND A.OUT_FINISH_DT IS NULL
+        GROUP BY B.PART_STATUS
+        ORDER BY A.CONTROL_SEQ DESC
+    </select>
+    <select id="selectTvPopPending" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM,'#',B.PART_NUM) END AS CONTROL_PART_INFO
+             , 'PENDING' AS PART_STATUS
+            , IFNULL(SUM(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ)),0) AS TOTAL_QTY
+            , COUNT(*) AS TOTAL_CNT
+        FROM  jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+            AND A.DEL_YN = 'N'
+            AND A.OUT_FINISH_DT IS NULL
+            AND A.CONTROL_STATUS = 'ORD005'
+        ORDER BY A.CONTROL_SEQ DESC
+    </select>
+    <select id="selectTvPopReturn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM,'#',B.PART_NUM) END AS CONTROL_PART_INFO
+             , 'RETURN' AS PART_STATUS
+             , IFNULL(SUM(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ)),0) AS TOTAL_QTY
+             , COUNT(*) AS TOTAL_CNT
+        FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+          AND A.DEL_YN = 'N'
+          AND A.OUT_FINISH_STATUS = 'RLS030'
+        ORDER BY A.CONTROL_SEQ DESC
+    </select>
+    <select id="selectTvPopWaitOutGoing" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM,'#',B.PART_NUM) END AS CONTROL_PART_INFO
+             , 'WAITOUT' AS PART_STATUS
+             , IFNULL(SUM(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ)),0) AS TOTAL_QTY
+             , COUNT(*) AS TOTAL_CNT
+        FROM  jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_INSPECT C
+        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+          AND C.CONTROL_SEQ  = B.CONTROL_SEQ
+          AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+          AND A.DEL_YN = 'N'
+          AND C.INSPECT_GRADE IN ('GRD010','GRD020','GRD030')
+          AND A.OUT_FINISH_DT IS NULL
+          AND A.OUT_FINISH_STATUS IS NULL
+        ORDER BY A.CONTROL_SEQ DESC
+    </select>
 </mapper>
