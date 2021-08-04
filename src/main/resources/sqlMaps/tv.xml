@@ -328,7 +328,7 @@
                  ELSE '-'
             END PLAN_WORKING_TIME_FORMAT,
             CASE WHEN (Y.PLAN_WORKING_TIME IS NOT NULL AND Y.PLAN_WORKING_TIME > 0) THEN CONCAT(ROUND((Y.WORKING_TIME/Y.PLAN_WORKING_TIME) * 100),'%')
-                 ELSE '-'
+                 ELSE ''
             END PERCENT,
             Y.MATERIAL_DETAIL_NM,
             Y.MATERIAL_TYPE_NM,

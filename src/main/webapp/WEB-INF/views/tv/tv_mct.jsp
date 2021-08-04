@@ -540,136 +540,163 @@
 
 		let getReLoadWorkData = function (sType) {
 			'use strict';
-			let groups = fnGroupBy(machineListData,'FACTORY_AREA');
-			console.log('groups',groups);
+			if (machineListData != '') {
+				let groups = fnGroupBy(machineListData,'FACTORY_AREA');
+				console.log('groups',groups);
 
-			if(sType === 'init') {
-				$.each(groups,function (idx,Item) {
-					if(idx == 'ARE01' || idx == 'ARE06') {
-						if(Item.length % 6 != 0) {
-							var first = Math.ceil(Item.length / 6);
-							var add = (parseInt(first) * 6) - Item.length;
-							for(var i=0;i<add;i++) {
-								var json = {
-									EQUIP_NM : 'BLANK',
-									FACTORY_AREA : Item[0].FACTORY_AREA
-								};
-								groups[idx].push(json);
+				if(sType === 'init') {
+					$.each(groups,function (idx,Item) {
+						if(idx == 'ARE01' || idx == 'ARE06') {
+							if(Item.length % 6 != 0) {
+								var first = Math.ceil(Item.length / 6);
+								var add = (parseInt(first) * 6) - Item.length;
+								for(var i=0;i<add;i++) {
+									var json = {
+										EQUIP_NM : 'BLANK',
+										FACTORY_AREA : Item[0].FACTORY_AREA
+									};
+									groups[idx].push(json);
+								}
 							}
 						}
-					}
-					$.each(Item,function (idx2,Item2) {
-						var html = '';
-						if(Item2.EQUIP_NM == 'BLANK') {
-							html = '<div class="mctInfo_'+idx2+' blank"></div>';
-						}else {
-							html = '<div class="mctInfo_'+idx2+' mct'+Item2.WORK_STATUS +'" data-seq="'+Item2.EQUIP_SEQ+'">';
-							html += '<div class="mctInfoWrap">';
-							html += '<span class="mctName '+ Item2.WORK_STATUS + '">' + Item2.EQUIP_NM + '</span>';
-							html += '<div class="mctInfoTopLeft">';
-							html += '	<div class="staffImg mctStaffImg">';
-							if(typeof Item2.PHOTO_GFILE_SEQ != 'undefined') {
-								html += '		<img src="/qimage/'+Item2.PHOTO_GFILE_SEQ + '" alt="직원사진">';
+						$.each(Item,function (idx2,Item2) {
+							var html = '';
+							if(Item2.EQUIP_NM == 'BLANK') {
+								html = '<div class="mctInfo_'+idx2+' blank"></div>';
 							}else {
-								html += '		<img src="/resource/pop/images/user.svg" alt="직원사진">';
-							}
-							html += '	</div>';
-							html += '	<div class="staffInfoWrap">';
-							html += '		<p class="mctStaffName">'+((typeof Item2.USER_NM != 'undefined')? Item2.USER_NM : '') +'</p>';
-							html += '		<p class="mctTime">남은시간';
-							html += '		<br>-';
-							html += '		</p>';
-							html += '	</div>';
-							html += '</div>';
-							html += '<div class="mctInfoTopRight">';
-							html += '	<div class="mctMapImg">';
-							if(Item2.WORK_PLAN_TYPE == 1 && typeof Item2.IMG_GFILE_SEQ != 'undefined') {
-								html += '		<img src="/qimage/'+Item2.IMG_GFILE_SEQ +'" alt="도면">';
-							}else {
-								html += '		<img src="/resource/pop/images/machine.png" alt="도면">';
-							}
-							html += '		<div class="mctMapTime">';
-							html += '			<span>진행 : '+Item2.WORKING_TIME_FORMAT + '</span><br>예상 : ' + ((typeof Item2.PLAN_WORKING_TIME_FORMAT != 'undefined')?Item2.PLAN_WORKING_TIME_FORMAT:'');
-							html += '		</div>';
-							if(Item2.WORK_STATUS == 'pause') {
-								html += '<div id="pauseTime" class="pauseTime">';
-								html += '	일시중지<br>';
-								var startStopDt = new Date(Item2.WORK_TEMP_STOP_DT);
-								var today = new Date();
-								var diff = today - startStopDt;
-								console.log(startStopDt)
-								console.log(diff)
-								var hour = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-								var minute = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-								console.log(hour + "h " + minute + "m");
-								html += '<span>' + hour + 'h ' + minute + 'm' + '</span>';
+								html = '<div id="EQUIP_'+ Item2.EQUIP_SEQ + '" class="mctInfo_'+idx2+' mct'+Item2.WORK_STATUS +'" data-seq="'+Item2.EQUIP_SEQ+'">';
+								html += '<div class="mctInfoWrap">';
+								html += '<span class="mctName '+ Item2.WORK_STATUS + '">' + Item2.EQUIP_NM + '</span>';
+								html += '<div class="mctInfoTopLeft">';
+								html += '	<div class="staffImg mctStaffImg">';
+								if(typeof Item2.PHOTO_GFILE_SEQ != 'undefined') {
+									html += '		<img src="/qimage/'+Item2.PHOTO_GFILE_SEQ + '" alt="직원사진">';
+								}else {
+									html += '		<img src="/resource/pop/images/user.svg" alt="직원사진">';
+								}
+								html += '	</div>';
+								html += '	<div class="staffInfoWrap">';
+								html += '		<p class="mctStaffName">'+((typeof Item2.USER_NM != 'undefined')? Item2.USER_NM : '') +'</p>';
+								html += '		<p class="mctTime">남은시간';
+								html += '		<br>-';
+								html += '		</p>';
+								html += '	</div>';
+								html += '</div>';
+								html += '<div class="mctInfoTopRight">';
+								html += '	<div class="mctMapImg">';
+								if(Item2.WORK_PLAN_TYPE == 1 && typeof Item2.IMG_GFILE_SEQ != 'undefined') {
+									html += '		<img src="/qimage/'+Item2.IMG_GFILE_SEQ +'" alt="도면">';
+								}else {
+									html += '		<img src="/resource/pop/images/machine.png" alt="도면">';
+								}
+								html += '		<div class="mctMapTime">';
+								html += '			<span>진행 : '+Item2.WORKING_TIME_FORMAT + '</span><br>예상 : ' + ((typeof Item2.PLAN_WORKING_TIME_FORMAT != 'undefined')?Item2.PLAN_WORKING_TIME_FORMAT:'');
+								html += '		</div>';
+								if(Item2.WORK_STATUS == 'pause') {
+									html += '<div id="pauseTime" class="pauseTime">';
+									html += '	일시중지<br>';
+									var startStopDt = new Date(Item2.WORK_TEMP_STOP_DT);
+									var today = new Date();
+									var diff = today - startStopDt;
+									var hour = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+									var minute = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+									html += '<span>' + hour + 'h ' + minute + 'm' + '</span>';
+									html += '</div>';
+								}
+								html += '		<span class="progressPercent mctProgressPercent">'+ ((typeof Item2.PERCENT != 'undefined')?Item2.PERCENT:'') + '</span>';
+								html += '	</div>';
+								html += '	<div class="mctMapBtmInfo '+ Item2.WORK_STATUS + '">';
+								html +=  ((typeof Item2.CUR_TEXT != 'undefined')?Item2.CUR_TEXT:'') + '<br>' + ((typeof Item2.CONTROL_PART_INFO != 'undefined')?Item2.CONTROL_PART_INFO:'');
+								html += '	</div>';
+								html += '</div>';
+								html += '<div class="mctInfoBtm">';
+								html += '	<table id="EQUIP_PLAN_'+ Item2.EQUIP_SEQ + '">';
+								html += '	<colgroup>';
+								html += '		<col width="58%">';
+								html += '		<col width="42%">';
+								html += '	</colgroup>';
+								html += '		<tr>';
+								html += '			<th>계획 List</th>';
+								html += '			<th>'+Item2.TOTAL_CNT +'품 '+Item2.TOTAL_PART_QTY +' EA (<span>'+Item2.TOTAL_PLAN_WORKING_TIME_FORMAT +'</span>)</th>';
+								html += '		</tr>';
+								html += '		<tr>';
+								html += '			<td>&nbsp;</td>';
+								html += '			<td>&nbsp;</td>';
+								html += '		</tr>';
+								html += '		<tr>';
+								html += '			<td>&nbsp;</td>';
+								html += '			<td>&nbsp;</td>';
+								html += '		</tr>';
+								html += '		<tr>';
+								html += '			<td>&nbsp;</td>';
+								html += '			<td>&nbsp;</td>';
+								html += '		</tr>';
+								html += '		<tr>';
+								html += '			<td>&nbsp;</td>';
+								html += '			<td>&nbsp;</td>';
+								html += '		</tr>';
+								html += '	</table>';
+								html += '</div>';
+								html += '</div>';
 								html += '</div>';
 							}
-							html += '		<span class="progressPercent mctProgressPercent">'+ Item2.PERCENT + '</span>';
-							html += '	</div>';
-							html += '	<div class="mctMapBtmInfo '+ Item2.WORK_STATUS + '">';
-							html +=  ((typeof Item2.CUR_TEXT != 'undefined')?Item2.CUR_TEXT:'') + '<br>' + ((typeof Item2.CONTROL_PART_INFO != 'undefined')?Item2.CONTROL_PART_INFO:'');
-							html += '	</div>';
-							html += '</div>';
-							html += '<div class="mctInfoBtm">';
-							html += '	<table id="EQUIP_PLAN_'+ Item2.EQUIP_SEQ + '">';
-							html += '	<colgroup>';
-							html += '		<col width="58%">';
-							html += '		<col width="42%">';
-							html += '	</colgroup>';
-							html += '		<tr>';
-							html += '			<th>계획 List</th>';
-							html += '			<th>'+Item2.TOTAL_CNT +'품 '+Item2.TOTAL_PART_QTY +' EA (<span>'+Item2.TOTAL_PLAN_WORKING_TIME_FORMAT +'</span>)</th>';
-							html += '		</tr>';
-							html += '		<tr>';
-							html += '			<td>&nbsp;</td>';
-							html += '			<td>&nbsp;</td>';
-							html += '		</tr>';
-							html += '		<tr>';
-							html += '			<td>&nbsp;</td>';
-							html += '			<td>&nbsp;</td>';
-							html += '		</tr>';
-							html += '		<tr>';
-							html += '			<td>&nbsp;</td>';
-							html += '			<td>&nbsp;</td>';
-							html += '		</tr>';
-							html += '		<tr>';
-							html += '			<td>&nbsp;</td>';
-							html += '			<td>&nbsp;</td>';
-							html += '		</tr>';
-							html += '	</table>';
-							html += '</div>';
-							html += '</div>';
-							html += '</div>';
-						}
 
-						if(Item2.FACTORY_AREA == 'ARE01' || Item2.FACTORY_AREA == 'ARE06') {
-							if(idx2 < 6) {
-								$("#"+Item2.FACTORY_AREA + '_1').append(html);
-							}else if(idx2 < 12) {
-								$("#"+Item2.FACTORY_AREA + '_2').append(html);
+							if(Item2.FACTORY_AREA == 'ARE01' || Item2.FACTORY_AREA == 'ARE06') {
+								if(idx2 < 6) {
+									$("#"+Item2.FACTORY_AREA + '_1').append(html);
+								}else if(idx2 < 12) {
+									$("#"+Item2.FACTORY_AREA + '_2').append(html);
+								}else {
+									$("#"+Item2.FACTORY_AREA + '_3').append(html);
+								}
 							}else {
-								$("#"+Item2.FACTORY_AREA + '_3').append(html);
+								$("#"+Item2.FACTORY_AREA + '_' + Item2.LAYOUT_ROW).append(html);
 							}
-						}else {
-							$("#"+Item2.FACTORY_AREA + '_' + Item2.LAYOUT_ROW).append(html);
+						})
+					})
+					let groups2 = fnGroupBy(machineAreListData,'EQUIP_SEQ');
+					$.each(groups2,function (idx,Item) {
+						$.each(Item,function (idx2,Item2) {
+							$("#EQUIP_PLAN_"+Item2.EQUIP_SEQ).find('tr').eq((idx2+1)).remove();
+							var html = '<tr>';
+							html += '	<td>' + Item2.CONTROL_PART_INFO + '</td>';
+							html += '	<td>' + Item2.MATERIAL_TYPE_NM +'&nbsp;'+ Item2.WORK_TYPE_NM + '&nbsp;'+ Item2.PART_QTY + ' EA' + '</td>';
+							html += '</tr>';
+							$("#EQUIP_PLAN_"+Item2.EQUIP_SEQ).find('tr').eq(0).after(html);
+						})
+					})
+				}else {
+
+					$.ajax({
+						type: 'POST', url: "/tv/mct/mctAreInfo", dataType: 'json', data: {},
+						success: function (data, textStatus, jqXHR) {
+							if (textStatus !== 'success' || data == null) {
+								fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+								return;
+							}
+							console.log('data',data);
+							if(data.mct_info_list.length > 0) {
+								$.each(data.mct_info_list, function (idx,Item) {
+									if(Item.WORK_STATUS == 'pause') {
+										var startStopDt = new Date(Item.WORK_TEMP_STOP_DT);
+										var today = new Date();
+										var diff = today - startStopDt;
+										var hour = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+										var minute = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+										$("#EQUIP_"+ Item.EQUIP_SEQ).find(".pauseTime").find("span").text(hour + 'h ' + minute + 'm');
+									}
+									$("#EQUIP_"+ Item.EQUIP_SEQ).find(".mctMapTime").find("span").text(Item.WORKING_TIME_FORMAT);
+									console.log($("#EQUIP_"+ Item.EQUIP_SEQ).find(".mctMapTime"))
+								})
+							}
+						},
+						error: function (jqXHR, textStatus, errorThrown) {
+							fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						}
-					})
-				})
-				let groups2 = fnGroupBy(machineAreListData,'EQUIP_SEQ');
-				$.each(groups2,function (idx,Item) {
-					$.each(Item,function (idx2,Item2) {
-						$("#EQUIP_PLAN_"+Item2.EQUIP_SEQ).find('tr').eq((idx2+1)).remove();
-						var html = '<tr>';
-						html += '	<td>' + Item2.CONTROL_PART_INFO + '</td>';
-						html += '	<td>' + Item2.MATERIAL_TYPE_NM +'&nbsp;'+ Item2.WORK_TYPE_NM + '&nbsp;'+ Item2.PART_QTY + ' EA' + '</td>';
-						html += '</tr>';
-						$("#EQUIP_PLAN_"+Item2.EQUIP_SEQ).find('tr').eq(0).after(html);
-					})
-				})
-			}
-			//mct info
-			if (machineListData != '') {
+					});
+
+				}
+
 				for (let i = 0; i < machineListData.length; i++) {
 
 					let equip_seq = machineListData[i].EQUIP_SEQ;
@@ -680,7 +707,7 @@
 					let user_nm = machineListData[i].USER_NM;
 
 					// 장비의 작업 정보 조회
-					getReLoadDrawingData(equip_seq, factory_area, layout_row, layout_col);
+					// getReLoadDrawingData(equip_seq, factory_area, layout_row, layout_col);
 
 				}
 			}
@@ -696,10 +723,13 @@
 						fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
-					createGrid1(data.grid_list1);	//불량/반품
+					createGrid1();	//불량/반품
 
 					var rateInfo = data.mct_rate;
-					$('#nowRate').html(rateInfo.NOW_RATE);
+					$('#NOW_RATE').html(rateInfo.NOW_RATE);
+					$('#RUN').html(rateInfo.RUN + '대');
+					$('#STOP').html(rateInfo.STOP + '대');
+					$('#NOT_RUN').html(rateInfo.NOT_RUN + '대');
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
@@ -887,8 +917,9 @@
 			}
 		};
 		$mctMainGrid = mctMainGrid.pqGrid(mctMainObj);
-		let createGrid1 = function(grid_list1){
 
+		let createGrid1 = function(){
+			$mctMainGrid.pqGrid('refreshDataAndView');
 		};
 
 		/** 작업자 로그인 정보 실시간 처리 **/
@@ -961,7 +992,7 @@
 		jmesConnect();
 		gridSchedulerTimer();
 		workSchedulerTimer();
-		reloadTimer();
+		// reloadTimer();
 	});
 	$(document).ready(function(){
 		function timeFormat(time) {

@@ -168,21 +168,36 @@ public class TvController {
        return "jsonView";
    }
 
+    @RequestMapping(value = "/tv/mct/mctAreInfo", method = RequestMethod.POST)
+    public String mctAreInfo(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        hashMap.put("queryId","tvMapper.selectMctAreInfoList");//mct info
+        List<Map<String, Object>> mct_info_list = this.innodaleService.getList(hashMap);
+        model.addAttribute("mct_info_list", mct_info_list);
+
+        hashMap.put("queryId","tvMapper.selectMctAreList");//mct info
+        List<Map<String, Object>> mct_list = this.innodaleService.getList(hashMap);
+        model.addAttribute("mct_list", mct_list);
+
+        return "jsonView";
+    }
+
    @RequestMapping(value = "/tv/mct/gridDataList", method = RequestMethod.POST)
    public String gridDataList(Model model, HttpServletRequest request, HttpSession session) throws Exception {
        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
-        hashMap.put("queryId","tvMapper.selectMctGrid1List");//불량/반품
-        List<Map<String, Object>> grid_list1 = this.innodaleService.getList(hashMap);
-        model.addAttribute("grid_list1", grid_list1);
-
-       hashMap.put("queryId","tvMapper.selectMctGrid2List");//긴급주문
-       List<Map<String, Object>> grid_list2 = this.innodaleService.getList(hashMap);
-       model.addAttribute("grid_list2", grid_list2);
-
-       hashMap.put("queryId","tvMapper.selectMctGrid3List");//납기지연 목록
-       List<Map<String, Object>> grid_list3 = this.innodaleService.getList(hashMap);
-       model.addAttribute("grid_list3", grid_list3);
+//        hashMap.put("queryId","tvMapper.selectMctGrid1List");//불량/반품
+//        List<Map<String, Object>> grid_list1 = this.innodaleService.getList(hashMap);
+//        model.addAttribute("grid_list1", grid_list1);
+//
+//       hashMap.put("queryId","tvMapper.selectMctGrid2List");//긴급주문
+//       List<Map<String, Object>> grid_list2 = this.innodaleService.getList(hashMap);
+//       model.addAttribute("grid_list2", grid_list2);
+//
+//       hashMap.put("queryId","tvMapper.selectMctGrid3List");//납기지연 목록
+//       List<Map<String, Object>> grid_list3 = this.innodaleService.getList(hashMap);
+//       model.addAttribute("grid_list3", grid_list3);
 
        hashMap.put("queryId","tvMapper.selectMctInfo");//mct가동률 및 기타.
        Map<String, Object> mct_info = this.innodaleService.getInfo(hashMap);
