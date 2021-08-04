@@ -222,11 +222,11 @@
 					<h4>가공진행현황</h4>
 					<table id="popHeadTopTable" class="popHeadTopTable">
 						<tr>
-							<td>장비번호 : 1N-1</td>
-							<td>장비종류 : 3축 머시닝 NC</td>
-							<td>설치위치 : 대형 MCT</td>
-							<td>관리장(정) : 홍길동</td>
-							<td>관리자(부) : 김엔씨</td>
+							<td>장비번호 : </td>
+							<td>장비종류 : </td>
+							<td>설치위치 : </td>
+							<td>관리장(정) : </td>
+							<td>관리자(부) : </td>
 						</tr>
 					</table>
 				</div>
@@ -268,30 +268,22 @@
 								<div id="staffImgWrap" class="staffImgWrap">
 									<img src="resource/pop/images/staff.jpg" alt="작업자사진">
 								</div>
-								홍길동
 							</td>
-							<td id="running" class="running">진행중</td>
-							<td id="numberWorking" class="numberWorking">B21-258AN0329-0331-02 #1</td>
+							<td id="running" class="running"></td>
+							<td id="numberWorking" class="numberWorking"></td>
 							<td id="mapNumInfo" class="mapNumInfo">
 								<div class="tableScroll">
-									DACV223-DWG-0001<br>
-									DACV223-DWG-0001<br>
-									DACV223-DWG-0003<br>
-									DACV223-DWG-0004<br>
-									DACV223-DWG-0005<br>
-									DACV223-DWG-0006<br>
 								</div>
 							</td>
-							<td id="sizeInfo" class="sizeInfo">1205*300*50</td>
-							<td id="workTypeInfo" class="workTypeInfo">파트</td>
-							<td id="materialInfo" class="materialInfo">AL60</td>
+							<td id="sizeInfo" class="sizeInfo"></td>
+							<td id="workTypeInfo" class="workTypeInfo"></td>
+							<td id="materialInfo" class="materialInfo"></td>
 							<td id="productAmount" class="productAmount">
-								<span>대</span> 42
 							</td>
-							<td id="deliveryDate" class="deliveryDate">4/12</td>
-							<td id="runningStop" class="runningStop">57m</td>
-							<td id="runningTime" class="runningTime">1h 42m</td>
-							<td id="expectTime" class="expectTime">2h 37m</td>
+							<td id="deliveryDate" class="deliveryDate"></td>
+							<td id="runningStop" class="runningStop"></td>
+							<td id="runningTime" class="runningTime"></td>
+							<td id="expectTime" class="expectTime"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -312,8 +304,8 @@
 							<table id="popHeadTopTable" class="popHeadTopTable">
 								<tr id="popBtmGridHead">
 									<td>대기현황</td>
-									<td>7 Rows 253 EA</td>
-									<td>예상시간 합계 12h 23m</td>
+									<td></td>
+									<td>예상시간 합계 :</td>
 								</tr>
 							</table>
 						</div>
@@ -345,6 +337,11 @@
 <script>
 	$("#detailCloseBtn").on("click",function(){
 		$("#popupWrap").modal('hide');
+	});
+	$("#popupWrap").on("click",function(e){
+		if($(e.target).hasClass('popupContainer')) {
+			$("#popupWrap").modal('hide');
+		}
 	});
 	$("#machineMctDetailBtn").on("click",function(){
 		let gFileSeq = $("#mct_machine_form").find("#GFILE_SEQ").val();
@@ -542,7 +539,6 @@
 			'use strict';
 			if (machineListData != '') {
 				let groups = fnGroupBy(machineListData,'FACTORY_AREA');
-				console.log('groups',groups);
 
 				if(sType === 'init') {
 					$.each(groups,function (idx,Item) {
@@ -576,7 +572,7 @@
 								}
 								html += '	</div>';
 								html += '	<div class="staffInfoWrap">';
-								html += '		<p class="mctStaffName">'+((typeof Item2.USER_NM != 'undefined')? Item2.USER_NM : '') +'</p>';
+								html += '		<p class="mctStaffName">'+((typeof Item2.USER_NM != 'undefined')? Item2.USER_NM : '-') +'</p>';
 								html += '		<p class="mctTime">남은시간';
 								html += '		<br>' + Item2.REMAIN_TIME;
 								html += '		</p>';
@@ -752,7 +748,6 @@
 					}
 					let $target = $("#EQUIP_" + equipSeq);
 					let mct_list = data.mct_drawing_list; //mct
-					console.log(mct_list)
 					if (mct_list != '') {
 						$.each(mct_list,function (idx,Item) {
 							if($target.hasClass('mctlogin')) {
@@ -796,14 +791,11 @@
 								var hour = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 								var minute = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
-								console.log($target.find(".pauseTime").length)
 								if($target.find(".pauseTime").length > 0) {
 									html = "일시중지<br>";
 									html += "<span>" + hour + "h " + minute + "m" + "</span>";
 									$target.find(".pauseTime").html(html)
 								}else {
-									console.log("?????????")
-									console.log($target.find(".mctMapTime"))
 									html = '<div id="pauseTime" class="pauseTime">';
 									html += '	일시중지<br>';
 									html += '<span>' + hour + 'h ' + minute + 'm' + '</span>';
@@ -944,12 +936,10 @@
 			stompClient.connect({}, (frame) => {
 				stompClient.subscribe('/topic/drawing', function (notificationMessage) { // 드로잉 보드 가공시작, 일시정지, 작업재개, 작업완료, 작업취소
 					let messageData = JSON.parse(notificationMessage.body);
-					console.log('/topic/drawing',messageData)
 					getReLoadDrawingData(messageData.equipSeq, messageData.factoryArea, messageData.equipRow, messageData.equipCol);
 				});
 				stompClient.subscribe('/topic/worker', function (notificationMessage) { // 드로잉 보드 로그인, 로그아웃
 					let messageData = JSON.parse(notificationMessage.body);
-					console.log('/topic/worker',messageData)
 					workerMessageProcess(messageData);
 				});
 		    }, () => {

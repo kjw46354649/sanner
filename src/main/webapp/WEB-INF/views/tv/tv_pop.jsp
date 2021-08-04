@@ -334,9 +334,9 @@
 	<input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
 </form>
 <!--팝업 시작-->
-<div id="popupWrap" class="popupWrap popupBackground" style="display: none;">
+<div id="machinePopupWrap" class="popupWrap popupBackground" style="display: none;">
 	<!--팝업위치기준-->
-	<div id="popupContainer" class="popupContainer">
+	<div id="machinePopupContainer" class="popupContainer">
 		<!--팝업내용-->
 		<div id="popup" class="popup">
 			<h3><i class="xi-library-bookmark"></i>장비 상세화면</h3>
@@ -344,11 +344,11 @@
 				<h4>가공진행현황</h4>
 				<table id="popHeadTopTable" class="popHeadTopTable">
 					<tr>
-						<td>장비번호 : 1N-1</td>
-						<td>장비종류 : 3축 머시닝 NC</td>
-						<td>설치위치 : 대형 MCT</td>
-						<td>관리장(정) : 홍길동</td>
-						<td>관리자(부) : 김엔씨</td>
+						<td>장비번호 : </td>
+						<td>장비종류 : </td>
+						<td>설치위치 : </td>
+						<td>관리장(정) : </td>
+						<td>관리자(부) : </td>
 					</tr>
 				</table>
 			</div>
@@ -388,31 +388,25 @@
 							<div id="staffImgWrap" class="staffImgWrap">
 								<img src="/resource/pop/images/staff.jpg" alt="작업자사진">
 							</div>
-							홍길동
+
 						</td>
-						<td id="running" class="running">진행중</td>
-						<td id="numberWorking" class="numberWorking">B21-258AN0329-0331-02 #1</td>
+						<td id="running" class="running"></td>
+						<td id="numberWorking" class="numberWorking"></td>
 						<td id="innerWork" class="innerWork"></td>
 						<td id="mapNumInfo" class="mapNumInfo">
 							<div class="tableScroll">
-								DACV223-DWG-0001<br>
-								DACV223-DWG-0001<br>
-								DACV223-DWG-0003<br>
-								DACV223-DWG-0004<br>
-								DACV223-DWG-0005<br>
-								DACV223-DWG-0006<br>
 							</div>
 						</td>
-						<td id="sizeInfo" class="sizeInfo">1205*300*50</td>
-						<td id="workTypeInfo" class="workTypeInfo">파트</td>
-						<td id="materialInfo" class="materialInfo">AL60</td>
+						<td id="sizeInfo" class="sizeInfo"></td>
+						<td id="workTypeInfo" class="workTypeInfo"></td>
+						<td id="materialInfo" class="materialInfo"></td>
 						<td id="productAmount" class="productAmount">
-							<span>대</span> 42
+							<span></span>
 						</td>
-						<td id="deliveryDate" class="deliveryDate">4/12</td>
-						<td id="runningStop" class="runningStop">57m</td>
-						<td id="runningTime" class="runningTime">1h 42m</td>
-						<td id="expectTime" class="expectTime">2h 37m</td>
+						<td id="deliveryDate" class="deliveryDate"></td>
+						<td id="runningStop" class="runningStop"></td>
+						<td id="runningTime" class="runningTime"></td>
+						<td id="expectTime" class="expectTime"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -433,8 +427,8 @@
 						<table class="popHeadTopTable">
 							<tr id="popBtmGridHead">
 								<td>대기현황</td>
-								<td>7 Rows 253 EA</td>
-								<td>예상시간 합계 12h 23m</td>
+								<td></td>
+								<td>예상시간 합계 :</td>
 							</tr>
 						</table>
 					</div>
@@ -449,7 +443,7 @@
 			<!--팝업 하단 끝-->
 			<!--버튼-->
 			<button id="machinePopDetailBtn" class="popMapDetailBtn">도면상세보기</button>
-			<button id="detailCloseBtn" class="detailCloseBtn">닫기</button>
+			<button id="machinePopCloseBtn" class="detailCloseBtn">닫기</button>
 			<!--버튼 끝-->
 		</div>
 		<!--팝업내용끝-->
@@ -465,13 +459,13 @@
 </form>
 <!--pop 팝업 시작-->
 <div id="popPopupWrap" class="popPopupWrap popupBackground" style="display:none;">
-	<div id="popupContainer" class="popupContainer">
+	<div id="popPopupContainer" class="popupContainer">
 		<div id="popPopup" class="popPopup">
 			<h3><i class="xi-library-bookmark"></i>POP 상세 조회</h3>
 			<div id="popRightTop" class="popRightTop">
 				<span>조회대상 : </span>
-				<span id="popSearchType">소재대기</span>
-				<span id="popSearchCnt" style="text-align: right;">7 Rows 543 EA</span>
+				<span id="popSearchType"></span>
+				<span id="popSearchCnt" style="text-align: right;"></span>
 			</div>
 			<div id="popSectionWrap" class="popSectionWrap">
 				<div id="popSectionLeft" class="popSectionLeft">
@@ -486,7 +480,7 @@
 				</div>
 			</div>
 			<button id="popMapDetailBtn" class="popMapDetailBtn">도면상세보기</button>
-			<button id="detailCloseBtn" class="detailCloseBtn">닫기</button>
+			<button id="popPopCloseBtn" class="detailCloseBtn">닫기</button>
 			<!--버튼 끝-->
 		</div>
 	</div>
@@ -1049,15 +1043,25 @@
 		reloadTimer();
 		timer();
 	});
-	$("#detailCloseBtn").on("click",function(){
-		$("#popupWrap").modal('hide');
+	$("#machinePopCloseBtn").on("click",function(){
+		$("#machinePopupWrap").modal('hide');
+	});
+	$("#popPopupContainer").on("click",function(e){
+		if($(e.target).hasClass('popupContainer')) {
+			$("#popPopupWrap").modal('hide');
+		}
+	});
+	$("#machinePopupContainer").on("click",function(e){
+		if($(e.target).hasClass('popupContainer')) {
+			$("#machinePopupWrap").modal('hide');
+		}
 	});
 	$(".pop .infoWrap").children("div").on("click",function(){
 		console.log($(this).data('seq'))
 		$("#pop_search_form").find("#POP_POSITION").val($(this).data('seq'));
 		$("#popPopupWrap").modal('show');
 	});
-	$(".detailCloseBtn").on("click",function(){
+	$("#popPopCloseBtn").on("click",function(){
 		$("#popPopupWrap").modal('hide');
 	});
 
@@ -1191,7 +1195,6 @@
 			};
 
 			$popPopGrid = popPopGrid.pqGrid(popPopObj);
-
 			setTimeout(function (){
 				popPopGrid.pqGrid('setSelection', {rowIndx: 0});
 			},500);
@@ -1369,9 +1372,9 @@
 
 			settingOngoingInfo(equipSeq);
 
-			$('#popupWrap').modal('show');
+			$('#machinePopupWrap').modal('show');
 		})
-		$('#popupWrap').on({
+		$('#machinePopupWrap').on({
 			'show.bs.modal': function () {
 				popMachineObj = {
 					width: 'auto', height: 'auto',
