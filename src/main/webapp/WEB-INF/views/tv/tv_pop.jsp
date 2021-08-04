@@ -190,7 +190,7 @@
 	<div id="rightContainer" class="rightContainer">
 		<div id="changeBtnWrap" class="changeBtnWrap">
 			<div id="changeBtn" class="changeBtn">
-				<a href="">화면전환</a>
+				<a href="/tv/mct">화면전환</a>
 			</div>
 		</div>
 

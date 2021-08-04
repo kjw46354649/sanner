@@ -210,7 +210,7 @@ public class TvController {
    public String machineDrawingData(Model model, HttpServletRequest request, HttpSession session) throws Exception {
        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
 
-       hashMap.put("queryId","tvMapper.selectMctAreList");//mct info
+       hashMap.put("queryId","tvMapper.selectMctAreInfoList");//mct info
        List<Map<String, Object>> mct_drawing_list = this.innodaleService.getList(hashMap);
        model.addAttribute("mct_drawing_list", mct_drawing_list);
 

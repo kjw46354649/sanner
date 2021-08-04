@@ -330,6 +330,9 @@
             CASE WHEN (Y.PLAN_WORKING_TIME IS NOT NULL AND Y.PLAN_WORKING_TIME > 0) THEN CONCAT(ROUND((Y.WORKING_TIME/Y.PLAN_WORKING_TIME) * 100),'%')
                  ELSE ''
             END PERCENT,
+            CASE WHEN (Y.PLAN_WORKING_TIME IS NOT NULL AND Y.PLAN_WORKING_TIME > 0 AND Y.PLAN_WORKING_TIME >= Y.WORKING_TIME) THEN CONCAT(TRUNCATE(IFNULL((Y.PLAN_WORKING_TIME - Y.WORKING_TIME),0)/60,0),'h ',TRUNCATE((IFNULL((Y.PLAN_WORKING_TIME - Y.WORKING_TIME),0)%60),0),'m')
+                 ELSE '-'
+            END REMAIN_TIME,
             Y.MATERIAL_DETAIL_NM,
             Y.MATERIAL_TYPE_NM,
             Y.WORK_TYPE_NM,
@@ -430,6 +433,9 @@
             ) Y ON Y.EQUIP_SEQ = X.EQUIP_SEQ
         WHERE EQUIP_KIND = '1'
           AND DEL_YN = 'N'
+          <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+            AND X.EQUIP_SEQ = #{EQUIP_SEQ}
+          </if>
           AND LAYOUT_ROW IS NOT NULL
           AND LAYOUT_COL IS NOT NULL
         ORDER BY FACTORY_AREA, LAYOUT_ROW, LAYOUT_COL
@@ -448,8 +454,8 @@
         ORDER BY FACTORY_AREA, LAYOUT_ROW, LAYOUT_COL
     </select>
     <select id="selectMctAreList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT A.EQUIP_SEQ,
-               jmes.SF_GET_CODE_NM('1035', C.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM,
+        SELECT A.EQUIP_SEQ, A.SORT_NUM, ROW_NUMBER() OVER(PARTITION BY A.EQUIP_SEQ ORDER BY A.SORT_NUM) AS ROWNUM,
+               IFNULL(jmes.SF_GET_CODE_NM('1035', C.MATERIAL_TYPE, #{LOGIN_LOCALE}),SPACE(1)) AS MATERIAL_TYPE_NM,
                CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, '#', C.PART_NUM) END AS CONTROL_PART_INFO,
                jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY,
                jmes.SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
@@ -461,7 +467,8 @@
           AND B.DEL_YN = 'N'
           AND EXISTS (SELECT 1 FROM jmes.TBL_EQUIP D WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
                                                        AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
-            );
+            )
+        ORDER BY A.EQUIP_SEQ, A.SORT_NUM
     </select>
     <select id="selectMctAreList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- 상단 (MCT...)
@@ -790,7 +797,7 @@
             UNION
             SELECT 'RUN' AS TITLE, COUNT(*) OVER () AS CNT
             FROM TBL_EQUIP A
-                INNER JOIN TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.WORK_STATUS = 'DBS020'
+                INNER JOIN TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.WORK_STATUS = 'DBS020' AND B.DEL_YN = 'N'
             WHERE A.EQUIP_KIND = '1'
                 AND A.DEL_YN = 'N'
                 AND A.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')

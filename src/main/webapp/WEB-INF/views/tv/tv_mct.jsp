@@ -158,7 +158,7 @@
 					<option value="dmt">DMT</option>
 				</select>
 				<div id="changeBtn" class="changeBtn">
-					<a href="">화면전환</a>
+					<a href="/tv/pop">화면전환</a>
 				</div>
 			</div>
 			<div class="rightSectionWrap">
@@ -166,7 +166,7 @@
 					<!--오른쪽 상단 테이블 시작-->
 					<table class="rightSectionTop">
 						<tr>
-							<th colspan="3">가동률 : <span id="NOW_RATE" class="tdColor1">84%</span></th>
+							<th colspan="3">가동률 : <span id="NOW_RATE" class="tdColor1"></span></th>
 						</tr>
 						<tr>
 							<td>가동</td>
@@ -578,7 +578,7 @@
 								html += '	<div class="staffInfoWrap">';
 								html += '		<p class="mctStaffName">'+((typeof Item2.USER_NM != 'undefined')? Item2.USER_NM : '') +'</p>';
 								html += '		<p class="mctTime">남은시간';
-								html += '		<br>-';
+								html += '		<br>' + Item2.REMAIN_TIME;
 								html += '		</p>';
 								html += '	</div>';
 								html += '</div>';
@@ -657,12 +657,8 @@
 					let groups2 = fnGroupBy(machineAreListData,'EQUIP_SEQ');
 					$.each(groups2,function (idx,Item) {
 						$.each(Item,function (idx2,Item2) {
-							$("#EQUIP_PLAN_"+Item2.EQUIP_SEQ).find('tr').eq((idx2+1)).remove();
-							var html = '<tr>';
-							html += '	<td>' + Item2.CONTROL_PART_INFO + '</td>';
-							html += '	<td>' + Item2.MATERIAL_TYPE_NM +'&nbsp;'+ Item2.WORK_TYPE_NM + '&nbsp;'+ Item2.PART_QTY + ' EA' + '</td>';
-							html += '</tr>';
-							$("#EQUIP_PLAN_"+Item2.EQUIP_SEQ).find('tr').eq(0).after(html);
+							$("#EQUIP_PLAN_"+Item2.EQUIP_SEQ).find('tr').eq(Item2.ROWNUM).find('td').eq(0).text(Item2.CONTROL_PART_INFO);
+							$("#EQUIP_PLAN_"+Item2.EQUIP_SEQ).find('tr').eq(Item2.ROWNUM).find('td').eq(1).html(Item2.MATERIAL_TYPE_NM +'&nbsp;'+ Item2.WORK_TYPE_NM + '&nbsp;'+ Item2.PART_QTY + ' EA');
 						})
 					})
 				}else {
@@ -674,7 +670,6 @@
 								fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 								return;
 							}
-							console.log('data',data);
 							if(data.mct_info_list.length > 0) {
 								$.each(data.mct_info_list, function (idx,Item) {
 									if(Item.WORK_STATUS == 'pause') {
@@ -685,9 +680,16 @@
 										var minute = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 										$("#EQUIP_"+ Item.EQUIP_SEQ).find(".pauseTime").find("span").text(hour + 'h ' + minute + 'm');
 									}
-									$("#EQUIP_"+ Item.EQUIP_SEQ).find(".mctMapTime").find("span").text(Item.WORKING_TIME_FORMAT);
-									console.log($("#EQUIP_"+ Item.EQUIP_SEQ).find(".mctMapTime"))
+									$("#EQUIP_"+ Item.EQUIP_SEQ).find(".mctMapTime").find("span").text('진행 : ' + Item.WORKING_TIME_FORMAT);
+									var html = "남은시간<br>" + Item.REMAIN_TIME;
+									$("#EQUIP_"+ Item.EQUIP_SEQ).find(".mctTime").html(html);
 								})
+							}
+							if(data.mct_list.length > 0) {
+								$.each(data.mct_list, function (idx,Item) {
+									$("#EQUIP_PLAN_"+Item.EQUIP_SEQ).find('tr').eq(Item.ROWNUM).find('td').eq(0).text(Item.CONTROL_PART_INFO)
+									$("#EQUIP_PLAN_"+Item.EQUIP_SEQ).find('tr').eq(Item.ROWNUM).find('td').eq(1).html(Item.MATERIAL_TYPE_NM +'&nbsp;'+ Item.WORK_TYPE_NM + '&nbsp;'+ Item.PART_QTY + ' EA')
+								});
 							}
 						},
 						error: function (jqXHR, textStatus, errorThrown) {
@@ -748,75 +750,76 @@
 						fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
-					let $target = $("#" + factoryArea + "_" + equipRow + "_" + equipCol);
-					$target.find(".statusConts").empty();
+					let $target = $("#EQUIP_" + equipSeq);
 					let mct_list = data.mct_drawing_list; //mct
+					console.log(mct_list)
 					if (mct_list != '') {
+						$.each(mct_list,function (idx,Item) {
+							if($target.hasClass('mctlogin')) {
+								$target.find(".mctName").removeClass("login");
+								$target.find(".mctMapBtmInfo").removeClass("login");
+								$target.removeClass('mctlogin');
+							}
+							if($target.hasClass('mctpause')){
+								$target.find(".mctName").removeClass("pause");
+								$target.find(".mctMapBtmInfo").removeClass("pause");
+								$target.removeClass('mctpause');
+							}
+							$target.addClass('mct'+Item.WORK_STATUS);
+							$target.find(".mctName").addClass(Item.WORK_STATUS);
+							$target.find(".mctMapBtmInfo").addClass(Item.WORK_STATUS);
 
-						let total_cnt_info = mct_list[0].TOTAL_CNT_INFO;
-						let total_part_qty_info = mct_list[0].TOTAL_PART_QTY_INFO;
-						let total_plan_working_time_info = mct_list[0].TOTAL_PLAN_WORKING_TIME_INFO;//여기까지 상단
-
-						$target.find(".inBox:nth-child(3)").find('div:nth-child(1)').html(total_cnt_info + '&nbsp;' + total_part_qty_info);
-						$target.find(".inBox:nth-child(3)").find('div:nth-child(2)').html(total_plan_working_time_info);
-
-						for (let i = 0; i < mct_list.length; i++) {
-
-							let work_plan_type = ( mct_list[i].WORK_PLAN_TYPE != undefined ) ? mct_list[i].WORK_PLAN_TYPE : '' ;//1:작동중, 나머지:계획
-							let inner_due_dt = ( mct_list[i].INNER_DUE_DT != undefined ) ? mct_list[i].INNER_DUE_DT : '' ;
-							let work_type_nm = ( mct_list[i].WORK_TYPE_NM != undefined ) ? mct_list[i].WORK_TYPE_NM : '' ;
-							let control_part_info = ( mct_list[i].CONTROL_PART_INFO != undefined ) ? mct_list[i].CONTROL_PART_INFO : '' ;
-							let size_txt = ( mct_list[i].SIZE_TXT != undefined ) ? mct_list[i].SIZE_TXT : '' ;
-							let material_detail_nm =( mct_list[i].MATERIAL_DETAIL_NM != undefined ) ? mct_list[i].MATERIAL_DETAIL_NM : '' ;
-							let part_qty = ( mct_list[i].PART_QTY != undefined ) ? mct_list[i].PART_QTY : '' ;
-							let working_time_info = ( mct_list[i].WORKING_TIME_INFO != undefined ) ? mct_list[i].WORKING_TIME_INFO : '' ;
-							let plan_working_time_info =( mct_list[i].PLAN_WORKING_TIME_INFO != undefined ) ? mct_list[i].PLAN_WORKING_TIME_INFO : '' ;
-							let imageSeq =( mct_list[i].IMG_GFILE_SEQ != undefined ) ? mct_list[i].IMG_GFILE_SEQ : '' ;
-							let workStatus =( mct_list[i].WORK_STATUS != undefined ) ? mct_list[i].WORK_STATUS : '' ;
-
-							let divHtml = '';
-								if(work_plan_type == 1) {
-									if(workStatus == "DBS020")
-										divHtml +=  '<div class="inWrap machine-run-background">';
-									else if(workStatus == "DBS010")
-										divHtml +=  '<div class="inWrap machine-pause-background">';
-								}else{
-									divHtml +=  '<div class="inWrap">';
-								}
-								divHtml += '<a href="javascript:callWindowImageViewer(' + imageSeq + ');">';
-								divHtml += '	<span>'+inner_due_dt+'<br>'+work_type_nm+'</span>';
-								divHtml += '	<span><span class="txtB ellipsis" style="font-size: 17px;">'+control_part_info+'</span><br>'+size_txt+'&nbsp;&nbsp;'+material_detail_nm+'</span>';
-								divHtml += '	<span>'+part_qty+'</span>';
-								// divHtml += '	<span><span class="txtR">'+working_time_info+'</span><br><span class="txtB ty2">'+plan_working_time_info+'</span></span>';
-								if(work_plan_type == 1) {
-									divHtml += '	<span><span class="txtR">'+working_time_info+'</span></span>';
-								} else if(work_plan_type == 2) {
-									divHtml += '	<span><span class="txtB ty2">'+plan_working_time_info+'</span></span>';
-								}
-								divHtml += '</a>';
-								divHtml += '</div>';
-
-							if($target.find(".statusConts").find('.inWrap').length >= 4){
-							}else{
-								if(work_plan_type == 1){
-									$target.find(".statusConts").prepend(divHtml);
-									$target.find(".statusConts").find('.inWrap:nth-child(1)').addClass("on");
-								}else{
-									$target.find(".statusConts").append(divHtml);
-								}
+							if(typeof Item.PHOTO_GFILE_SEQ != 'undefined') {
+								$target.find(".mctStaffImg").find("img").attr("src","/qimage/" + Item.PHOTO_GFILE_SEQ);
+							}else {
+								$target.find(".mctStaffImg").find("img").attr("src","/resource/pop/images/user.svg");
 							}
 
-						}
-						//현재 가동중인게 없을경우 넣어준다 공간. 색 다르게
-						$('.statusConts').each(function () {
-							if($(this).find(".statusConts").find('.inWrap').length >= 4){
-							}else{
-								if($(this).find(".on").length == 0){
-									let emptyHtml = '<div class="inWrap ty2 on"><a href="#a;"><span class="nodata"></span></a></div>';
-									$(this).prepend(emptyHtml);
+							if(typeof Item.IMG_GFILE_SEQ != 'undefined') {
+								$target.find(".mctStaffName").text(Item.USER_NM);
+							}else {
+								$target.find(".mctStaffName").text("-");
+							}
+
+							if(Item.WORK_PLAN_TYPE == 1 && typeof Item.IMG_GFILE_SEQ != 'undefined') {
+								$target.find(".mctMapImg").find("img").attr("src","/qimage/" + Item.IMG_GFILE_SEQ);
+							}else {
+								$target.find(".mctMapImg").find("img").attr("src","/resource/pop/images/machine.png");
+							}
+							var html = "<span> 진행 : " + Item.WORKING_TIME_FORMAT + "</span><br>예상 : " +  ((typeof Item.PLAN_WORKING_TIME_FORMAT != 'undefined')?Item.PLAN_WORKING_TIME_FORMAT:'');
+							$target.find(".mctMapTime").html(html);
+
+							if(Item.WORK_STATUS == 'pause') {
+								var startStopDt = new Date(Item.WORK_TEMP_STOP_DT);
+								var today = new Date();
+								var diff = today - startStopDt;
+								var hour = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+								var minute = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+								console.log($target.find(".pauseTime").length)
+								if($target.find(".pauseTime").length > 0) {
+									html = "일시중지<br>";
+									html += "<span>" + hour + "h " + minute + "m" + "</span>";
+									$target.find(".pauseTime").html(html)
+								}else {
+									console.log("?????????")
+									console.log($target.find(".mctMapTime"))
+									html = '<div id="pauseTime" class="pauseTime">';
+									html += '	일시중지<br>';
+									html += '<span>' + hour + 'h ' + minute + 'm' + '</span>';
+									html += '</div>';
+									$target.find(".mctMapTime").after(html);
+								}
+							}else {
+								if($target.find(".pauseTime").length > 0) {
+									$target.find(".pauseTime").remove();
 								}
 							}
-						});
+							$target.find(".mctProgressPercent").text(((typeof Item.PERCENT != 'undefined')?Item.PERCENT:''));
+							html = ((typeof Item.CUR_TEXT != 'undefined')?Item.CUR_TEXT:'') + '<br>' + ((typeof Item.CONTROL_PART_INFO != 'undefined')?Item.CONTROL_PART_INFO:'');
+							$target.find(".mctMapBtmInfo").html(html);
+
+						})
 					}
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
@@ -926,11 +929,11 @@
 		let workerMessageProcess = function(messageData){
 			if(messageData){
 				let actionType = messageData.actionType;
-				let $target = $("#" + messageData.factoryArea + "_" + messageData.equipRow + "_" + messageData.equipCol);
+				let $target = $("#EQUIP_" + messageData.equipSeq);
 				if(actionType === 'WK_LOGIN') {
-					$target.find(".inBox:nth-child(2)").html(messageData.userNm);
+					$("#EQUIP_"+ messageData.equipSeq).find(".mctStaffName").text(messageData.userNm);
 				}else{
-					$target.find(".inBox:nth-child(2)").html('&nbsp;');
+					$("#EQUIP_"+ messageData.equipSeq).find(".mctStaffName").text("-");
 				}
 			}
 		};
@@ -939,12 +942,14 @@
 		    let socket = new SockJS('/jmes-ws');
 		    stompClient = Stomp.over(socket);
 			stompClient.connect({}, (frame) => {
-				stompClient.subscribe('/topic/drawing', function (notificationMessage) {
+				stompClient.subscribe('/topic/drawing', function (notificationMessage) { // 드로잉 보드 가공시작, 일시정지, 작업재개, 작업완료, 작업취소
 					let messageData = JSON.parse(notificationMessage.body);
+					console.log('/topic/drawing',messageData)
 					getReLoadDrawingData(messageData.equipSeq, messageData.factoryArea, messageData.equipRow, messageData.equipCol);
 				});
-				stompClient.subscribe('/topic/worker', function (notificationMessage) {
+				stompClient.subscribe('/topic/worker', function (notificationMessage) { // 드로잉 보드 로그인, 로그아웃
 					let messageData = JSON.parse(notificationMessage.body);
+					console.log('/topic/worker',messageData)
 					workerMessageProcess(messageData);
 				});
 		    }, () => {
