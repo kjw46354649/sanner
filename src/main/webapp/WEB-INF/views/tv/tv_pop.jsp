@@ -925,6 +925,7 @@
 				case 'DB_RESTART' :
 					$target.addClass("login");
 					$target.removeClass("pause");
+					$target.removeClass("pausePercent");
 					$target.find(".pauseTime").remove();
 					break;
 			}
