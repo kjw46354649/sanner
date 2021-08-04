@@ -90,9 +90,9 @@ public class TvController {
 
         model.addAttribute("pop_list2", pop_list2);
 
-        hashMap.put("queryId","tvMapper.selectTvPopList3");//외주진행
-        List<Map<String, Object>> pop_list3 = this.innodaleService.getList(hashMap);
-        model.addAttribute("pop_list3", pop_list3);
+//        hashMap.put("queryId","tvMapper.selectTvPopList3");//외주진행
+//        List<Map<String, Object>> pop_list3 = this.innodaleService.getList(hashMap);
+//        model.addAttribute("pop_list3", pop_list3);
 
         hashMap.put("queryId","tvMapper.selectTvMachineList");//장비
         List<Map<String, Object>> m_list = this.innodaleService.getList(hashMap);
@@ -109,13 +109,13 @@ public class TvController {
         List<Map<String, Object>> m_list = this.innodaleService.getList(hashMap);
         model.addAttribute("m_list", m_list);
 
-        hashMap.put("queryId","tvMapper.selectTvPopList2");//소재대기
-        List<Map<String, Object>> pop_list2 = this.innodaleService.getList(hashMap);
-        model.addAttribute("pop_list2", pop_list2);
+//        hashMap.put("queryId","tvMapper.selectTvPopList2");//소재대기
+//        List<Map<String, Object>> pop_list2 = this.innodaleService.getList(hashMap);
+//        model.addAttribute("pop_list2", pop_list2);
 
-        hashMap.put("queryId","tvMapper.selectTvPopList3");//외주진행
-        List<Map<String, Object>> pop_list3 = this.innodaleService.getList(hashMap);
-        model.addAttribute("pop_list3", pop_list3);
+//        hashMap.put("queryId","tvMapper.selectTvPopList3");//외주진행
+//        List<Map<String, Object>> pop_list3 = this.innodaleService.getList(hashMap);
+//        model.addAttribute("pop_list3", pop_list3);
 
         return "jsonView";
     }

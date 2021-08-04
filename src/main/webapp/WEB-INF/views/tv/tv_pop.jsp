@@ -623,8 +623,7 @@
 					}
 
 					let pop_list1 = data.pop_list1;//pop
-					let pop_list2 = data.pop_list2;//소재대기
-					let pop_list3 = data.pop_list3;//외주진행
+					let pop_list2 = data.pop_list2;//진행현황
 					let m_list = data.m_list;//장비
 
 					//init
@@ -650,19 +649,9 @@
 							$('#'+partStatus+'_CNT').html(pop_list2[i].TOTAL_CNT + ' 품')
 							$('#'+partStatus+'_QTY').html(pop_list2[i].TOTAL_QTY + ' EA')
 
-							// setPopData(pop_position, control_part_info, total_cnt, image_seq);
 						}
 					}
-					if (pop_list3 != '') {//외주
-						for (let i = 0; i < pop_list3.length; i++) {
-							let pop_position = 'POP9991';
-							let control_part_info = pop_list3[i].CONTROL_PART_INFO;
-							let total_cnt = pop_list3[i].TOTAL_CNT;
-							let image_seq = pop_list3[i].IMG_GFILE_SEQ;
 
-							// setPopData(pop_position, control_part_info, total_cnt, image_seq);
-						}
-					}
 					//2공장 MCT, 기타 진행해야 함.
 
 					if (m_list != '') {//장비
@@ -675,8 +664,6 @@
 							let work_type_nm = ((m_list[i].WORK_TYPE_NM != undefined) ?m_list[i].WORK_TYPE_NM:'');
 							let part_qty = ((m_list[i].PART_QTY != undefined) ?m_list[i].PART_QTY:'');
 
-							let control_part_info = m_list[i].CONTROL_PART_INFO;
-							let working_time = m_list[i].WORKING_TIME;
 							let user_nm = m_list[i].USER_NM;
 							let user_photo_gfile_seq = m_list[i].USER_PHOTO_GFILE_SEQ;
 
@@ -697,8 +684,18 @@
 								}else {
 									mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg '+ m_list[i].MACHINE_ICON+'">';
 								}
-								if(m_list[i].PLAN_WORKING_TIME != undefined) {
-									mHtml += '<span class="progressPercent">82%</span>';
+
+								mHtml += '<span class="progressPercent '+((m_list[i].WORK_STATUS == 'pause')?'pausePercent':'') + '">'+ ((m_list[i].PERCENT != undefined)?m_list[i].PERCENT:'') + '</span>';
+
+								if(m_list[i].WORK_STATUS == 'pause') {
+									mHtml += '<div id="pauseTime" class="pauseTime">';
+									mHtml += '일시중지<br>';
+									var startStopDt = new Date(m_list[i].WORK_TEMP_STOP_DT);
+									var today = new Date();
+									var diff = today - startStopDt;
+									var minute = Math.floor((diff) / (1000 * 60));
+									mHtml += '<span>('+minute +'\')</span>';
+									mHtml += '</div>';
 								}
 								if(user_photo_gfile_seq != undefined){
 									mHtml += '<div class="staffImg">';
@@ -709,20 +706,12 @@
 								}
 								mHtml += '</div>';
 								mHtml += '<div class="progressTime">';
-								mHtml += '<span id="time_"'+(factory_area + '_' + layout_sort)+' >'+((m_list[i].WORKING_TIME != undefined)?m_list[i].WORKING_TIME:'-') + '</span>' + ((m_list[i].PLAN_WORKING_TIME != undefined)?(' / ' + m_list[i].PLAN_WORKING_TIME):'');
+								mHtml += '<span>'+((m_list[i].WORKING_TIME != undefined)?m_list[i].WORKING_TIME:'-') + '</span>' + ((m_list[i].PLAN_WORKING_TIME != undefined)?(' / ' + m_list[i].PLAN_WORKING_TIME):'');
 								mHtml += '</div>';
 								mHtml += '</div>';
 								mHtml += '</div>';
 
 								$target.append(mHtml);
-								// if(control_part_info != undefined) {
-								// 	var controlPartHtml = "<a href=\"javascript:callWindowImageViewer(\'"+m_list[i].IMG_GFILE_SEQ+"\');\" >" + control_part_info + "</a>";
-								// 	$target.find(".proName").html(controlPartHtml);
-								// 	$target.find(".proName").addClass("ellipsis");
-								// }
-								// if(working_time != undefined) {
-								// 	$target.find(".proNum").html(working_time + "'");
-								// }
 							}
 						}
 					}
@@ -742,28 +731,7 @@
 						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
-					let pop_list2 = data.pop_list2;//소재대기
-					if (pop_list2 != '') {//소재대기
-						let pop_position = 'POP9992';
-						$("#" + pop_position).empty();
-						for (let i = 0; i < pop_list2.length; i++) {
-							let control_part_info = pop_list2[i].CONTROL_PART_INFO;
-							let total_cnt = pop_list2[i].TOTAL_CNT;
-							let image_seq = pop_list2[i].IMG_GFILE_SEQ;
-							setPopData(pop_position, control_part_info, total_cnt, image_seq);
-						}
-					}
-					let pop_list3 = data.pop_list3;//외주진행
-					if (pop_list3 != '') {//외주
-						let pop_position = 'POP9991';
-						$("#" + pop_position).empty();
-						for (let i = 0; i < pop_list3.length; i++) {
-							let control_part_info = pop_list3[i].CONTROL_PART_INFO;
-							let total_cnt = pop_list3[i].TOTAL_CNT;
-							let image_seq = pop_list3[i].IMG_GFILE_SEQ;
-							setPopData(pop_position, control_part_info, total_cnt, image_seq);
-						}
-					}
+
 					let m_list = data.m_list;//장비
 					$('[id^=ARE]').each(function () {
 						$(this).find(".proName").html('');
@@ -924,19 +892,40 @@
 				case 'DB_PAUSE' :
 					$target.removeClass("login");
 					$target.addClass("pause");
+					if($target.find(".pauseTime").length <= 0) {
+						var html = '<div id="pauseTime" class="pauseTime">';
+						html += '일시중지<br>';
+						html += '<span>(0\')</span>';
+						html += '</div>';
+
+						$target.find(".progressPercent").after(html);
+					}
 					break;
 				case 'DB_START' :
-					$("#img_"+messageData.factoryArea + "_" + messageData.equipPosition).css({
-						'background':'url(/image/' + messageData.imageSeq + ')',
-						'background-repeat':'no-repeat',
-						'background-position':'center'
-					})
-					$target.find("#time"+messageData.factoryArea + "_" + messageData.equipPosition).html(messageData.sMinute + "m");
-					$target.addClass("login");
-					$target.removeClass("pause");
+					const parameter2 = {'url': '/tv/json-info', 'data': {
+							'queryId':'tvMapper.selectTvMachineList',
+							'EQUIP_SEQ':messageData.equipSeq
+						}
+					};
+					fnPostAjax(function (data) {
+						console.log(data);
+
+						$("#img_"+messageData.factoryArea + "_" + messageData.equipPosition).css({
+							'background':'url(/image/' + messageData.imageSeq + ')',
+							'background-repeat':'no-repeat',
+							'background-position':'center'
+						})
+						$target.find(".productName").html(data.info.MATERIAL_TYPE_NM + '&nbsp;' + data.info.WORK_TYPE_NM + '&nbsp;' + data.info.PART_QTY );
+						var html = '<span>' + data.info.WORKING_TIME + '</span> / ' + data.info.PLAN_WORKING_TIME;
+						$target.find(".progressTime").html(html);
+						$target.addClass("login");
+						$target.removeClass("pause");
+
+					}, parameter2, '');
 				case 'DB_RESTART' :
 					$target.addClass("login");
 					$target.removeClass("pause");
+					$target.find(".pauseTime").remove();
 					break;
 			}
 			$target.addClass("blink_box");
@@ -1351,7 +1340,6 @@
 		}
 
 		$(document).on("click",".login,.pause",function(event){
-			console.log($(this).data('seq'))
 			var equipSeq = $(this).data('seq');
 			$("#pop_machine_form").find("#EQUIP_SEQ").val(equipSeq);
 			const parameter = {'url': '/tv/json-info', 'data': {
