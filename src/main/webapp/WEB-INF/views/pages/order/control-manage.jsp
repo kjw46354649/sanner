@@ -2909,6 +2909,7 @@
         });
 
         $('#CONTROL_MANAGE_SEARCH').on('click', function () {
+            selectedOrderManagementRowIndex = [];
             $orderManagementGrid.pqGrid('option', 'dataModel.postData', function () {
                 return (fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM'));
             });
@@ -3827,7 +3828,9 @@
                     matchStockGrid.pqGrid('setSelection', {rowIndx: 0});
                 },300);
             },'hide.bs.modal': function () {
-                matchStockGrid.pqGrid('destroy');
+                if ($('#match_stock_grid').pqGrid('instance')) {
+                    matchStockGrid.pqGrid('destroy');
+                }
                 if($("#stock_match_pop_form").find("#SAVE_YN").val() == "Y"){
                     $("#CONTROL_MANAGE_SEARCH").trigger('click');
                 }
