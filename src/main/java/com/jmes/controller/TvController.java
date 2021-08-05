@@ -48,51 +48,8 @@ public class TvController {
         List<Map<String, Object>> pop_list1 = this.innodaleService.getList(hashMap);
         model.addAttribute("pop_list1", pop_list1);
 
-        hashMap.put("queryId","tvMapper.selectTvPopStatusList");// 소재대기(PRO004), 가공대기(PRO002), 가공중(PRO007), 가공완료(PRO009), 표면/후가공(PRO012,PRO014)
-        List<Map<String, Object>> pop_list2 = this.innodaleService.getList(hashMap);
-        int sumCnt = 0;
-        int sumCnt2 = 0;
-        int sumQty = 0;
-        int sumQty2 = 0;
-        for(Map<String, Object> temp : pop_list2) {
-            if(temp.get("PART_STATUS") != null) {
-                String partStatus = (String) temp.get("PART_STATUS");
-                if("PRO012".equals(partStatus) || "PRO014".equals(partStatus)) {
-                    sumCnt += Integer.parseInt(String.valueOf(temp.get("TOTAL_CNT")));
-                    sumQty += Integer.parseInt(String.valueOf(temp.get("TOTAL_QTY")));
-                }
-                if("PRO013".equals(partStatus) || "PRO015".equals(partStatus)) {
-                    sumCnt2 += Integer.parseInt(String.valueOf(temp.get("TOTAL_CNT")));
-                    sumQty2 += Integer.parseInt(String.valueOf(temp.get("TOTAL_QTY")));
-                }
-            }
-        }
-        Map<String, Object> tempMap = new HashMap<>();
-        tempMap.put("PART_STATUS","PRO01214");
-        tempMap.put("TOTAL_QTY",sumQty);
-        tempMap.put("TOTAL_CNT",sumCnt);
-
-        Map<String, Object> tempMap2 = new HashMap<>();
-        tempMap2.put("PART_STATUS","PRO01315");
-        tempMap2.put("TOTAL_QTY",sumQty2);
-        tempMap2.put("TOTAL_CNT",sumCnt2);
-
-        pop_list2.add(tempMap);
-        pop_list2.add(tempMap2);
-
-        hashMap.put("queryId","tvMapper.selectTvPopReturn");// 반품
-        List<Map<String, Object>> tempList = this.innodaleService.getList(hashMap);
-        pop_list2.addAll(tempList);
-
-        hashMap.put("queryId","tvMapper.selectTvPopPending");// 보류
-        tempList = this.innodaleService.getList(hashMap);
-        pop_list2.addAll(tempList);
-
+        List<Map<String, Object>> pop_list2 = getPopStatusList(hashMap);
         model.addAttribute("pop_list2", pop_list2);
-
-//        hashMap.put("queryId","tvMapper.selectTvPopList3");//외주진행
-//        List<Map<String, Object>> pop_list3 = this.innodaleService.getList(hashMap);
-//        model.addAttribute("pop_list3", pop_list3);
 
         hashMap.put("queryId","tvMapper.selectTvMachineList");//장비
         List<Map<String, Object>> m_list = this.innodaleService.getList(hashMap);
@@ -109,13 +66,8 @@ public class TvController {
         List<Map<String, Object>> m_list = this.innodaleService.getList(hashMap);
         model.addAttribute("m_list", m_list);
 
-//        hashMap.put("queryId","tvMapper.selectTvPopList2");//소재대기
-//        List<Map<String, Object>> pop_list2 = this.innodaleService.getList(hashMap);
-//        model.addAttribute("pop_list2", pop_list2);
-
-//        hashMap.put("queryId","tvMapper.selectTvPopList3");//외주진행
-//        List<Map<String, Object>> pop_list3 = this.innodaleService.getList(hashMap);
-//        model.addAttribute("pop_list3", pop_list3);
+        List<Map<String, Object>> pop_list2 = getPopStatusList(hashMap);
+        model.addAttribute("pop_list2", pop_list2);
 
         return "jsonView";
     }
@@ -127,6 +79,16 @@ public class TvController {
         hashMap.put("queryId","tvMapper.selectTvPopList");//장비
         List<Map<String, Object>> m_list = this.innodaleService.getList(hashMap);
         model.addAttribute("pop_list", m_list);
+
+        return "jsonView";
+    }
+
+    @RequestMapping(value = "/tv/pop/statusData", method = RequestMethod.POST)
+    public String statusData(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        List<Map<String, Object>> pop_list2 = getPopStatusList(hashMap);
+        model.addAttribute("pop_list2", pop_list2);
 
         return "jsonView";
     }
@@ -229,6 +191,53 @@ public class TvController {
         List<Map<String, Object>> list = this.innodaleService.getList(hashMap);
         model.addAttribute("data", list);
         return "jsonView";
+    }
+
+    public List<Map<String, Object>> getPopStatusList(Map<String, Object> hashMap) throws Exception {
+        Map<String,Object> copyMap = hashMap;
+
+        copyMap.put("queryId","tvMapper.selectTvPopStatusList");// 소재대기(PRO004), 가공대기(PRO002), 가공중(PRO007), 가공완료(PRO009), 표면/후가공(PRO012,PRO014)
+        List<Map<String, Object>> tempList = this.innodaleService.getList(copyMap);
+
+        int sumCnt = 0;
+        int sumCnt2 = 0;
+        int sumQty = 0;
+        int sumQty2 = 0;
+        for(Map<String, Object> temp : tempList) {
+            if(temp.get("PART_STATUS") != null) {
+                String partStatus = (String) temp.get("PART_STATUS");
+                if("PRO012".equals(partStatus) || "PRO014".equals(partStatus)) {
+                    sumCnt += Integer.parseInt(String.valueOf(temp.get("TOTAL_CNT")));
+                    sumQty += Integer.parseInt(String.valueOf(temp.get("TOTAL_QTY")));
+                }
+                if("PRO013".equals(partStatus) || "PRO015".equals(partStatus)) {
+                    sumCnt2 += Integer.parseInt(String.valueOf(temp.get("TOTAL_CNT")));
+                    sumQty2 += Integer.parseInt(String.valueOf(temp.get("TOTAL_QTY")));
+                }
+            }
+        }
+        Map<String, Object> tempMap = new HashMap<>();
+        tempMap.put("PART_STATUS","PRO01214");
+        tempMap.put("TOTAL_QTY",sumQty);
+        tempMap.put("TOTAL_CNT",sumCnt);
+
+        Map<String, Object> tempMap2 = new HashMap<>();
+        tempMap2.put("PART_STATUS","PRO01315");
+        tempMap2.put("TOTAL_QTY",sumQty2);
+        tempMap2.put("TOTAL_CNT",sumCnt2);
+
+        tempList.add(tempMap);
+        tempList.add(tempMap2);
+
+        hashMap.put("queryId","tvMapper.selectTvPopReturn");// 반품
+        List<Map<String, Object>> tempList1 = this.innodaleService.getList(hashMap);
+        tempList.addAll(tempList1);
+
+        hashMap.put("queryId","tvMapper.selectTvPopPending");// 보류
+        tempList1 = this.innodaleService.getList(hashMap);
+        tempList.addAll(tempList1);
+
+        return tempList;
     }
 
 }
