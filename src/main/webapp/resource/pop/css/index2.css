@@ -508,7 +508,11 @@ a { color: black; text-decoration: none;}
 									border: 1px solid #666;
 								}
 									.staffImgWrap > img {
+										width: 100%;
+									}
+									.mctNonLogin {
 										width: 80%;
+										margin-top: 10%;
 									}
 								.running {
 									color: blue;
