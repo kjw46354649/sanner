@@ -566,7 +566,7 @@
 								html += '<div class="mctInfoTopLeft">';
 								html += '	<div class="staffImg mctStaffImg">';
 								if(typeof Item2.PHOTO_GFILE_SEQ != 'undefined') {
-									html += '		<img src="/qimage/'+Item2.PHOTO_GFILE_SEQ + '" alt="직원사진">';
+									html += '		<img src="/image/'+Item2.PHOTO_GFILE_SEQ + '" alt="직원사진">';
 								}else {
 									html += '		<img src="/resource/pop/images/user.svg" alt="직원사진">';
 								}
@@ -765,7 +765,7 @@
 							$target.find(".mctMapBtmInfo").addClass(Item.WORK_STATUS);
 
 							if(typeof Item.PHOTO_GFILE_SEQ != 'undefined') {
-								$target.find(".mctStaffImg").find("img").attr("src","/qimage/" + Item.PHOTO_GFILE_SEQ);
+								$target.find(".mctStaffImg").find("img").attr("src","/image/" + Item.PHOTO_GFILE_SEQ);
 							}else {
 								$target.find(".mctStaffImg").find("img").attr("src","/resource/pop/images/user.svg");
 							}

@@ -662,7 +662,7 @@
 							mHtml += '</div>';
 
 							if(img_gfile_seq != undefined && img_gfile_seq != '') {
-								mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg ' + m_list[i].MACHINE_ICON + '" style="background:url(/image/' + img_gfile_seq + ');background-repeat:no-repeat;background-position:center;">';
+								mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg ' + m_list[i].MACHINE_ICON + '" style="background:url(/image/' + img_gfile_seq + ');background-repeat:no-repeat;background-position:center;background-size: cover;">';
 							}else {
 								mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg '+ m_list[i].MACHINE_ICON+'">';
 							}
@@ -680,7 +680,7 @@
 								mHtml += '</div>';
 							}
 							if(user_photo_gfile_seq != undefined && user_photo_gfile_seq != ''){
-								mHtml += '<div class="staffImg staffIcon">';
+								mHtml += '<div class="staffImg">';
 								mHtml += '<img src="/image/'+user_photo_gfile_seq +'" alt="직원사진">';
 							}else {
 								mHtml += '<div class="staffImg staffIcon">';
@@ -755,6 +755,7 @@
 										{
 											'background':'url(/image/'+img_gfile_seq +')',
 											'background-repeat':'no-repeat',
+											'background-size':'cover',
 											'background-position':'center'
 										}
 								);
@@ -792,8 +793,12 @@
 							}
 
 							if(user_photo_gfile_seq != undefined){
+								$target.find(".staffImg").removeClass("staffIcon");
 								$target.find(".staffImg").find("img").attr("src","/image/"+user_photo_gfile_seq);
 							}else {
+								if(!$target.find(".staffImg").hasClass("staffIcon")) {
+									$target.find(".staffImg").addClass("staffIcon");
+								}
 								$target.find(".staffImg").find("img").attr("src","/resource/pop/images/user.svg");
 							}
 
@@ -932,6 +937,7 @@
 							$("#img_"+messageData.factoryArea + "_" + messageData.equipPosition).css({
 								'background':'url(/image/' + data.info.IMG_GFILE_SEQ + ')',
 								'background-repeat':'no-repeat',
+								'background-size':'cover',
 								'background-position':'center'
 							})
 						}
@@ -977,11 +983,15 @@
 				let actionType = messageData.actionType;
 				let $target = $("#" + messageData.factoryArea + "_" + messageData.equipPosition);
 				if(actionType === 'WK_LOGIN') {
+					$target.find(".staffImg").removeClass("staffIcon");
 					if (messageData.userNm != undefined) $target.find(".nameWrap").find(".staffName").html(messageData.userNm);
 					if (messageData.userImageSeq != undefined) $target.find(".staffImg").find("img").attr("src", "/image/" + messageData.userImageSeq);
 				}else{
 					if (messageData.userNm != undefined) $target.find(".nameWrap").find(".staffName").html('');
 					if (messageData.userImageSeq != undefined) $target.find(".staffImg").find("img").attr("src", "/resource/pop/images/user.svg");
+					if(!$target.find(".staffImg").hasClass("staffIcon")) {
+						$target.find(".staffImg").addClass("staffIcon");
+					}
 				}
 				var today = new Date();
 				var content01 = '[' +('00'+(today.getMonth()+1)).substr(-2) + '/' + today.getDate() + '&nbsp;'+ ('00'+today.getHours()).substr(-2) + ':'+('00'+today.getMinutes()).substr(-2)+':'+('00'+today.getSeconds()).substr(-2)+']&nbsp;';
