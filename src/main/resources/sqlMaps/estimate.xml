@@ -347,7 +347,7 @@
             EMAIL_CONTENT = #{EMAIL_CONTENT},
             ETC_GFILE_SEQ = #{GFILE_SEQ},
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
 
     <insert id="insertEstimateDetail" parameterType="java.util.HashMap">
@@ -436,10 +436,11 @@
             UPDATE_ID = #{LOGIN_USER_ID}
     </insert>
 
+    <!-- 현재 미사용 쿼리 -->
     <update id="updateEstimateMaster"  parameterType="java.util.HashMap">
         UPDATE TBL_ESTIMATE
         SET
-            EST_NUM = #{EST_NUM},
+--             EST_NUM = #{EST_NUM},
             ORDER_COMP_CD = #{ORDER_COMP_CD},
             ORDER_STAFF_SEQ = #{ORDER_STAFF_SEQ},
             COMP_CD = #{COMP_CD},
@@ -448,11 +449,12 @@
             EST_STATUS = #{EST_STATUS},
             DEL_YN = #{DEL_YN},
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE EST_SEQ = #{EST_SEQ}
             AND EST_VER = #{EST_VER}
     </update>
 
+    <!-- 현재 미사용 쿼리 -->
     <update id="updateEstimateDetail"  parameterType="java.util.HashMap">
         UPDATE TBL_ESTIMATE_DETAIL
         SET PROJECT_NM = #{PROJECT_NM},
@@ -491,7 +493,7 @@
         SET
             ETC_GFILE_SEQ = NULL,
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE EST_SEQ = #{EST_SEQ}
     </update>
 
@@ -749,7 +751,7 @@
             SEND_DT = NOW(),
             MAIL_BOX_SEQ = #{MAIL_BOX_SEQ},
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE EST_SEQ = #{EST_SEQ}
     </update>
 
@@ -759,7 +761,7 @@
             SEND_DT = NOW(),
             MAIL_BOX_SEQ = #{MAIL_BOX_SEQ},
             UPDATE_DT = NOW(),
-            UPDATE_ID = NULL
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE EST_SEQ = #{EST_SEQ}
     </update>
     <select id="selectEstimateInfoFromControl" parameterType="java.util.HashMap" resultType="java.util.HashMap">
