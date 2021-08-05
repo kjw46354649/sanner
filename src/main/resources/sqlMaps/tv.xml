@@ -214,11 +214,10 @@
             , CONCAT(Y.PART_QTY,'EA') AS PART_QTY
             ,(
                 SELECT CONVERT(CONVERT(CONCAT(SPACE(0),COUNT(*), ' (',IFNULL(SUM(jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ)),0),'EA)') USING BINARY) USING utf8) AS TOTAL
-                FROM jmes.TBL_MCT_WORK A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C, TBL_EQUIP D
+                FROM jmes.TBL_MCT_PLAN A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C, TBL_EQUIP D
                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND A.CONTROL_SEQ = C.CONTROL_SEQ
                     AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                    AND A.WORK_STATUS = 'DBS010'
                     AND B.OUT_FINISH_DT IS NULL
                     AND A.DEL_YN = 'N'
                     AND B.DEL_YN = 'N'
@@ -235,6 +234,7 @@
                     AND B.OUT_FINISH_DT IS NULL
                     AND A.DEL_YN = 'N'
                     AND B.DEL_YN = 'N'
+                    AND D.DEL_YN = 'N'
                     ANd A.EQUIP_SEQ = D.EQUIP_SEQ
                     AND D.FACTORY_AREA = X.FACTORY_AREA
             ) AS WORK_TOTAL

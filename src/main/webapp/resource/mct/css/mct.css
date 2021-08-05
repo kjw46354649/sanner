@@ -470,6 +470,9 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 	.tableScroll {
 		height: 70px;
 	}
+	.tableScrollCell {
+		height: 70px;
+	}
 	.popBtm {
 		height: 71%;
 		margin-bottom: 10px;

@@ -1095,14 +1095,14 @@
 					tempHtml = '<td class="workStaffImg"><div class="staffImgWrap"><img src="/image/' + data.info.PHOTO_GFILE_SEQ + '"></div>'+ data.info.WORK_USER_NM + '</td>';
 					tempHtml += '<td>' + data.info.WORK_STATUS_NM + '</td>';
 					tempHtml += '<td class="numberWorking">' + data.info.CONTROL_NUM + '</td>';
-					tempHtml += '<td><div class="tableScroll">';
+					tempHtml += '<td><div class="tableScroll"><div class="tableScrollCell">';
 					for(var i=0;i<arr.length;i++){
 						if(i>0) {
 							tempHtml += '<br>';
 						}
-						tempHtml += '<span data-value="'+ arr2[i]+'">' + arr[i] + '</span>';
+						tempHtml += '<span class="machine_ongoing_draw" data-value="'+ arr2[i]+'">' + arr[i] + '</span>';
 					}
-					tempHtml += '</div></td>';
+					tempHtml += '</div></div></td>';
 					tempHtml += '<td class="sizeInfo">' + data.info.SIZE_TXT + '</td>';
 					tempHtml += '<td class="workTypeInfo">' + data.info.WORK_TYPE_NM + '</td>';
 					tempHtml += '<td class="materialInfo">' + data.info.MATERIAL_DETAIL_NM + '</td>';
@@ -1147,6 +1147,19 @@
 
 			$('#popupWrap').modal('show');
 		});
+		$(document).on("click",".machine_ongoing_draw",function(e){
+			var grid = $("#mct_machine_grid").pqGrid('getInstance').grid;
+			var sr = grid.SelectRow();
+			sr.removeAll();
+			var imgSeq = $(this).data('value');
+			if(typeof imgSeq != 'undefined' && imgSeq != '') {
+				$("#mapImgWrap").attr('src','/qimage/'+imgSeq);
+				$("#mapImgWrap").attr('alt',imgSeq);
+				$("#mapImgWrap").attr('data-value', imgSeq);
+
+				$("#mct_machine_form").find("#GFILE_SEQ").val(imgSeq);
+			}
+		})
 
 
 		$('#popupWrap').on({
@@ -1227,7 +1240,9 @@
 				$mctMachineGrid = mctMachineGrid.pqGrid(mctMachineObj);
 			},
 			'hide.bs.modal': function () {
-				$mctMachineGrid.pqGrid('destroy');
+				if ($('#mct_machine_grid').pqGrid('instance')) {
+					$mctMachineGrid.pqGrid('destroy');
+				}
 			}
 		});
 	});

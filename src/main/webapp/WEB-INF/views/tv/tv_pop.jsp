@@ -627,9 +627,6 @@
 					let m_list = data.m_list;//장비
 
 					//init
-					$('[id^=CNT_POP]').each(function () {
-						$(this).html('0');
-					});
 					$('[id^=POP]').each(function () {
 						$(this).empty();
 					});
@@ -769,57 +766,22 @@
 			'use strict';
 			$.ajax({
 				type: 'POST', url: "/tv/pop/popLocationData", dataType: 'json',
-				data: {"POP_POSITION":popLocation, "LIMIT":limit},
+				data: {},
 				success: function (data, textStatus, jqXHR) {
 					if (textStatus !== 'success' || data == null) {
 						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
-					$("#" + popLocation).empty();
 
 					let pop_list = data.pop_list; //pop
-					if (pop_list[0]) {//pop
-						let pop_position = pop_list[0].POP_POSITION;
+					if (pop_list != '') {//pop
 						for (let i = 0; i < pop_list.length; i++) {
-							let control_part_info = pop_list[i].CONTROL_PART_INFO;
+							let pop_position = pop_list[i].POP_POSITION;
 							let total_cnt = pop_list[i].TOTAL_CNT;
-							let image_seq = pop_list[i].IMG_GFILE_SEQ;
-							setPopData(pop_position, control_part_info, total_cnt, image_seq);
+							let total_qty = pop_list[i].TOTAL_QTY;
+
+							setPopData(pop_position, total_cnt, total_qty);
 						}
-					}
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
-				}
-			});
-		};
-
-		let getPopLocationBackgroundData = function (popLocation, limit, controlNum) {
-			'use strict';
-			$.ajax({
-				type: 'POST', url: "/tv/pop/popLocationData", dataType: 'json',
-				data: {"POP_POSITION":popLocation, "LIMIT":limit},
-				success: function (data, textStatus, jqXHR) {
-					if (textStatus !== 'success' || data == null) {
-						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
-						return;
-					}
-					$("#" + popLocation).empty();
-
-					let pop_list = data.pop_list; //pop
-					if (pop_list[0]) {//pop
-						let pop_position = pop_list[0].POP_POSITION;
-						for (let i = 0; i < pop_list.length; i++) {
-							let control_part_info = pop_list[i].CONTROL_PART_INFO;
-							let total_cnt = pop_list[i].TOTAL_CNT;
-							let image_seq = pop_list[i].IMG_GFILE_SEQ;
-							setPopData(pop_position, control_part_info, total_cnt, image_seq);
-						}
-
-						$("#" + controlNum).addClass("blink_background");
-						setTimeout(function() {
-							$("#" + controlNum).removeClass("blink_background");
-						}, 5000);
 					}
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
@@ -861,19 +823,7 @@
 		let popMessageProcess = function(messageData){
 			alarmMessageProcess(messageData);
 
-			let popPosition = messageData.popPosition;
-			let prePopPosition = messageData.prePopPosition;
-			let controlNum = popPosition + "_" + messageData.content02;
-
-			// $("#" + popPosition).removeClass("animated flash");
-			let limit = $("#" + popPosition).attr("data-cnt");
-
-			if(prePopPosition){
-				let preLimit = $("#" + prePopPosition).attr("data-cnt");
-				// $("#" + prePopPosition).removeClass("animated flash");
-				getPopLocationData(prePopPosition, preLimit);
-			}
-			getPopLocationBackgroundData(popPosition, limit, controlNum);
+			getPopLocationData();
 		};
 
 		/** DRAWING BOARD 정보 실시간 처리 **/
@@ -929,10 +879,6 @@
 					$target.find(".pauseTime").remove();
 					break;
 			}
-			$target.addClass("blink_box");
-			setTimeout(function() {
-				$target.removeClass("blink_box");
-			}, 5000);
 		};
 
 		/** 작업자 로그인 정보 실시간 처리 **/
@@ -1189,7 +1135,9 @@
 				popPopGrid.pqGrid('setSelection', {rowIndx: 0});
 			},500);
 		},'hide.bs.modal': function () {
-			$popPopGrid.pqGrid('destroy');
+			if ($('#popPopGrid').pqGrid('instance')) {
+				$popPopGrid.pqGrid('destroy');
+			}
 		}
 	});
 
@@ -1222,6 +1170,19 @@
 			}
 			return text;
 		}
+		$(document).on("click",".machine_ongoing_draw",function(e){
+			var grid = $("#pop_machine_grid").pqGrid('getInstance').grid;
+			var sr = grid.SelectRow();
+			sr.removeAll();
+			var imgSeq = $(this).data('value');
+			if(typeof imgSeq != 'undefined' && imgSeq != '') {
+				$("#mapImgWrap").attr('src','/qimage/'+imgSeq);
+				$("#mapImgWrap").attr('alt',imgSeq);
+				$("#mapImgWrap").attr('data-value', imgSeq);
+
+				$("#pop_machine_form").find("#GFILE_SEQ").val(imgSeq);
+			}
+		})
 
 		let popMachineGrid = $("#pop_machine_grid");
 		let $popMachineGrid;
@@ -1311,14 +1272,14 @@
 					tempHtml = '<td class="workStaffImg"><div class="staffImgWrap"><img src="/image/' + data.info.PHOTO_GFILE_SEQ + '"></div>'+ data.info.WORK_USER_NM + '</td>';
 					tempHtml += '<td>' + data.info.WORK_STATUS_NM + '</td>';
 					tempHtml += '<td class="numberWorking">' + data.info.CONTROL_NUM + '</td>';
-					tempHtml += '<td><div class="tableScroll">';
+					tempHtml += '<td><div class="tableScroll"><div class="tableScrollCell">';
 					for(var i=0;i<arr.length;i++){
 						if(i>0) {
 							tempHtml += '<br>';
 						}
-						tempHtml += '<span data-value="'+ arr2[i]+'">' + arr[i] + '</span>';
+						tempHtml += '<span class="machine_ongoing_draw" data-value="'+ arr2[i]+'">' + arr[i] + '</span>';
 					}
-					tempHtml += '</div></td>';
+					tempHtml += '</div></div></td>';
 					tempHtml += '<td class="sizeInfo">' + data.info.SIZE_TXT + '</td>';
 					tempHtml += '<td class="workTypeInfo">' + data.info.WORK_TYPE_NM + '</td>';
 					tempHtml += '<td class="materialInfo">' + data.info.MATERIAL_DETAIL_NM + '</td>';
