@@ -527,6 +527,10 @@
 			dataType: 'json',
 			data: param.data,
 			success: function (data, textStatus, jqXHR) {
+				if (textStatus !== 'success' || data == null) {
+					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+					return;
+				}
 				if (textStatus === 'success') {
 					// if (data.exception === null) {
 					callback.add(callFunction);
@@ -539,10 +543,7 @@
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				// alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
-				// if (errorThrown == 'Forbidden') {
-				//     $(this).fnHiddenFormPageAction('/');
-				// }
+				fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 			}
 		});
 	};
@@ -611,184 +612,242 @@
 	$(function () {
 
 		let getInitData = function () {
-			'use strict';
+			const parameter = {'url': '/tv/pop/data', 'data': {}};
+			fnPostAjax(function (data) {
+				// console.log('getInitData',data);
+				let pop_list1 = data.pop_list1;//pop
+				let pop_list2 = data.pop_list2;//진행현황
+				let m_list = data.m_list;//장비
 
-			$.ajax({
-				type: 'POST', url: "/tv/pop/data", dataType: 'json',
-				data: {},
-				success: function (data, textStatus, jqXHR) {
-					if (textStatus !== 'success' || data === null) {
-						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
-						return;
+				$('[id^=POP]').each(function () {
+					$(this).empty();
+				});
+
+				if (pop_list1 != '') {//pop
+					for (let i = 0; i < pop_list1.length; i++) {
+						let pop_position = pop_list1[i].POP_POSITION;
+						let total_cnt = pop_list1[i].TOTAL_CNT;
+						let total_qty = pop_list1[i].TOTAL_QTY;
+
+						setPopData(pop_position, total_cnt, total_qty);
 					}
-
-					let pop_list1 = data.pop_list1;//pop
-					let pop_list2 = data.pop_list2;//진행현황
-					let m_list = data.m_list;//장비
-
-					//init
-					$('[id^=POP]').each(function () {
-						$(this).empty();
-					});
-
-					if (pop_list1 != '') {//pop
-						for (let i = 0; i < pop_list1.length; i++) {
-							let pop_position = pop_list1[i].POP_POSITION;
-							let total_cnt = pop_list1[i].TOTAL_CNT;
-							let total_qty = pop_list1[i].TOTAL_QTY;
-
-							setPopData(pop_position, total_cnt, total_qty);
-						}
-					}
-					if (pop_list2 != '') {//진행현황 (소재대기, 가공대기, 가공중, 가공완료, 표면/후가공)
-						for (let i = 0; i < pop_list2.length; i++) {
-							let partStatus = pop_list2[i].PART_STATUS;
-							$('#'+partStatus+'_CNT').html(pop_list2[i].TOTAL_CNT + ' 품')
-							$('#'+partStatus+'_QTY').html(pop_list2[i].TOTAL_QTY + ' EA')
-
-						}
-					}
-
-					//2공장 MCT, 기타 진행해야 함.
-
-					if (m_list != '') {//장비
-						for (let i = 0; i < m_list.length; i++) {
-							let factory_area = m_list[i].FACTORY_AREA;
-							let layout_sort = m_list[i].LAYOUT_SORT;
-							let equip_nm = m_list[i].EQUIP_NM;
-							let img_gfile_seq = m_list[i].IMG_GFILE_SEQ;
-							let material_type = ((m_list[i].MATERIAL_TYPE_NM != undefined) ?m_list[i].MATERIAL_TYPE_NM:'');
-							let work_type_nm = ((m_list[i].WORK_TYPE_NM != undefined) ?m_list[i].WORK_TYPE_NM:'');
-							let part_qty = ((m_list[i].PART_QTY != undefined) ?m_list[i].PART_QTY:'');
-
-							let user_nm = m_list[i].USER_NM;
-							let user_photo_gfile_seq = m_list[i].USER_PHOTO_GFILE_SEQ;
-
-							$("#"+factory_area + '_WORK').html('<span>진행</span> ' + m_list[i].WORK_TOTAL);
-							$("#"+factory_area + '_WAIT').html('<span>대기</span> ' + m_list[i].WAIT_TOTAL);
-
-							let $target = $("#" + factory_area);
-							if($target.length > 0){
-								let mHtml = '<div id="' + (factory_area + '_' + layout_sort) + '" class="info_0'+ i +' '+ m_list[i].WORK_STATUS + '" data-seq="'+m_list[i].EQUIP_SEQ +'">';
-								mHtml += '<div class="nameWrap">';
-								mHtml += '<p id="machineName" class="machineName">' + ((equip_nm != undefined)? equip_nm:'') + '</p>';
-								mHtml += '<p id="staffName" class="staffName">' + ((user_nm != undefined)? user_nm:'') + '</p>';
-								mHtml += '<p id="productName" class="productName">'+ material_type+'&nbsp;'+work_type_nm+'&nbsp;'+part_qty + '</p>';
-								mHtml += '</div>';
-
-								if(img_gfile_seq != undefined) {
-									mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg" style="background:url(/image/' + img_gfile_seq + ');background-repeat:no-repeat;background-position:center;">';
-								}else {
-									mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg '+ m_list[i].MACHINE_ICON+'">';
-								}
-
-								mHtml += '<span class="progressPercent '+((m_list[i].WORK_STATUS == 'pause')?'pausePercent':'') + '">'+ ((m_list[i].PERCENT != undefined)?m_list[i].PERCENT:'') + '</span>';
-
-								if(m_list[i].WORK_STATUS == 'pause') {
-									mHtml += '<div id="pauseTime" class="pauseTime">';
-									mHtml += '일시중지<br>';
-									var startStopDt = new Date(m_list[i].WORK_TEMP_STOP_DT);
-									var today = new Date();
-									var diff = today - startStopDt;
-									var minute = Math.floor((diff) / (1000 * 60));
-									mHtml += '<span>('+minute +'\')</span>';
-									mHtml += '</div>';
-								}
-								if(user_photo_gfile_seq != undefined){
-									mHtml += '<div class="staffImg">';
-									mHtml += '<img src="/image/'+user_photo_gfile_seq +'" alt="직원사진">';
-								}else {
-									mHtml += '<div class="staffImg staffIcon">';
-									mHtml += '<img src="/resource/pop/images/user.svg" alt="직원사진">';
-								}
-								mHtml += '</div>';
-								mHtml += '<div class="progressTime">';
-								mHtml += '<span>'+((m_list[i].WORKING_TIME != undefined)?m_list[i].WORKING_TIME:'-') + '</span>' + ((m_list[i].PLAN_WORKING_TIME != undefined)?(' / ' + m_list[i].PLAN_WORKING_TIME):'');
-								mHtml += '</div>';
-								mHtml += '</div>';
-								mHtml += '</div>';
-
-								$target.append(mHtml);
-							}
-						}
-					}
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 				}
-			});
+				if (pop_list2 != '') {//진행현황 (소재대기, 가공대기, 가공중, 가공완료, 표면/후가공)
+					setStatusData(pop_list2);
+				}
+
+				if (m_list != '') {//장비
+					for (let i = 0; i < m_list.length; i++) {
+						let factory_area = m_list[i].FACTORY_AREA;
+						let layout_sort = m_list[i].LAYOUT_SORT;
+						let equip_nm = m_list[i].EQUIP_NM;
+						let img_gfile_seq = m_list[i].IMG_GFILE_SEQ;
+						let material_type = ((m_list[i].MATERIAL_TYPE_NM != undefined && m_list[i].MATERIAL_TYPE_NM != '') ?m_list[i].MATERIAL_TYPE_NM:'');
+						let work_type_nm = ((m_list[i].WORK_TYPE_NM != undefined && m_list[i].WORK_TYPE_NM != '') ?m_list[i].WORK_TYPE_NM:'');
+						let part_qty = ((m_list[i].PART_QTY != undefined && m_list[i].PART_QTY != '') ?m_list[i].PART_QTY:'');
+
+						let user_nm = m_list[i].USER_NM;
+						let user_photo_gfile_seq = m_list[i].USER_PHOTO_GFILE_SEQ;
+
+						$("#"+factory_area + '_WORK').html('<span>진행</span> ' + m_list[i].WORK_TOTAL);
+						$("#"+factory_area + '_WAIT').html('<span>대기</span> ' + m_list[i].WAIT_TOTAL);
+
+						let $target = $("#" + factory_area);
+						if($target.length > 0){
+							let mHtml = '<div id="' + (factory_area + '_' + layout_sort) + '" class="info_0'+ i +' '+ m_list[i].WORK_STATUS + '" data-seq="'+m_list[i].EQUIP_SEQ +'">';
+							mHtml += '<div class="nameWrap">';
+							mHtml += '<p class="machineName">' + ((equip_nm != undefined)? equip_nm:'') + '</p>';
+							mHtml += '<p class="staffName">' + ((user_nm != undefined)? user_nm:'') + '</p>';
+							mHtml += '<p class="productName">'+ material_type+'&nbsp;'+work_type_nm+'&nbsp;'+part_qty + '</p>';
+							mHtml += '</div>';
+
+							if(img_gfile_seq != undefined && img_gfile_seq != '') {
+								mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg ' + m_list[i].MACHINE_ICON + '" style="background:url(/image/' + img_gfile_seq + ');background-repeat:no-repeat;background-position:center;">';
+							}else {
+								mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg '+ m_list[i].MACHINE_ICON+'">';
+							}
+
+							mHtml += '<span class="progressPercent '+((m_list[i].WORK_STATUS == 'pause')?'pausePercent':'') + '">'+ ((m_list[i].PERCENT != undefined)?m_list[i].PERCENT:'') + '</span>';
+
+							if(m_list[i].WORK_STATUS == 'pause') {
+								mHtml += '<div id="pauseTime" class="pauseTime">';
+								mHtml += '일시중지<br>';
+								var startStopDt = new Date(m_list[i].WORK_TEMP_STOP_DT);
+								var today = new Date();
+								var diff = today - startStopDt;
+								var minute = Math.floor((diff) / (1000 * 60));
+								mHtml += '<span>('+minute +'\')</span>';
+								mHtml += '</div>';
+							}
+							if(user_photo_gfile_seq != undefined && user_photo_gfile_seq != ''){
+								mHtml += '<div class="staffImg staffIcon">';
+								mHtml += '<img src="/image/'+user_photo_gfile_seq +'" alt="직원사진">';
+							}else {
+								mHtml += '<div class="staffImg staffIcon">';
+								mHtml += '<img src="/resource/pop/images/user.svg" alt="직원사진">';
+							}
+							mHtml += '</div>';
+							if(m_list[i].WORKING_TIME != undefined && m_list[i].WORKING_TIME != '') {
+								mHtml += '<div class="progressTime">';
+								mHtml += '<span>'+ m_list[i].WORKING_TIME + '</span>';
+								if(m_list[i].PLAN_WORKING_TIME != undefined && m_list[i].PLAN_WORKING_TIME != ''){
+									mHtml += (' / ' + m_list[i].PLAN_WORKING_TIME)
+								}
+								mHtml += '</div>';
+							}
+							mHtml += '</div>';
+							mHtml += '</div>';
+
+							$target.append(mHtml);
+						}
+					}
+				}
+			}, parameter, '');
 		};
 
 		let getWorkDrawingData = function () {
-			'use strict';
-			$.ajax({
-				type: 'POST', url: "/tv/pop/schedulerPopDrawingData", dataType: 'json', data: {},
-				success: function (data, textStatus, jqXHR) {
-					if (textStatus !== 'success' || data == null) {
-						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
-						return;
+			const parameter = {'url': '/tv/pop/schedulerPopDrawingData', 'data': {}};
+
+			fnPostAjax(function (data) {
+				// console.log('getWorkDrawingData',data);
+				let m_list = data.m_list;//장비
+				let pop_list2 = data.pop_list2;//장비
+
+				if (pop_list2 != '') {//진행현황 (소재대기, 가공대기, 가공중, 가공완료, 표면/후가공)
+					for (let i = 0; i < pop_list2.length; i++) {
+						let partStatus = pop_list2[i].PART_STATUS;
+						$('#'+partStatus+'_CNT').html(pop_list2[i].TOTAL_CNT + ' 품')
+						$('#'+partStatus+'_QTY').html(pop_list2[i].TOTAL_QTY + ' EA')
+
 					}
+				}
 
-					let m_list = data.m_list;//장비
-					$('[id^=ARE]').each(function () {
-						$(this).find(".proName").html('');
-						$(this).find(".proName").removeClass("ellipsis");
-						$(this).find(".proNum").html('');
-					});
-					if (m_list != '') {//장비
-						for (let i = 0; i < m_list.length; i++) {
-							let factory_area = m_list[i].FACTORY_AREA;
-							let layout_sort = m_list[i].LAYOUT_SORT;
-							let control_part_info = m_list[i].CONTROL_PART_INFO;
-							let working_time = m_list[i].WORKING_TIME;
+				if (m_list != '') {//장비
+					for (let i = 0; i < m_list.length; i++) {
+						let factory_area = m_list[i].FACTORY_AREA;
+						let layout_sort = m_list[i].LAYOUT_SORT;
+						let equip_nm = m_list[i].EQUIP_NM;
+						let img_gfile_seq = m_list[i].IMG_GFILE_SEQ;
+						let material_type = ((m_list[i].MATERIAL_TYPE_NM != undefined) ?m_list[i].MATERIAL_TYPE_NM:'');
+						let work_type_nm = ((m_list[i].WORK_TYPE_NM != undefined) ?m_list[i].WORK_TYPE_NM:'');
+						let part_qty = ((m_list[i].PART_QTY != undefined) ?m_list[i].PART_QTY:'');
 
-							let $target = $("#" + factory_area+"_"+layout_sort);
-							if($target.length > 0){
-								if(control_part_info != undefined) {
-									var controlPartHtml = "<a href=\"javascript:callWindowImageViewer(\'"+m_list[i].IMG_GFILE_SEQ+"\');\" >" + control_part_info + "</a>";
-									$target.find(".proName").addClass("ellipsis");
-									$target.find(".proName").html(controlPartHtml);
-								}
-								if(working_time != undefined) {
-									$target.find(".proNum").html(working_time + "'");
+						let user_nm = m_list[i].USER_NM;
+						let user_photo_gfile_seq = m_list[i].USER_PHOTO_GFILE_SEQ;
+
+						$("#"+factory_area + '_WORK').html('<span>진행</span> ' + m_list[i].WORK_TOTAL);
+						$("#"+factory_area + '_WAIT').html('<span>대기</span> ' + m_list[i].WAIT_TOTAL);
+
+						let $target = $("#" + factory_area+"_"+layout_sort);
+						if($target.length > 0){
+							$target.removeClass("login")
+							$target.removeClass("pause")
+
+							$target.addClass(m_list[i].WORK_STATUS);
+
+							$target.find(".machineName").text(((equip_nm != undefined)? equip_nm:''));
+							$target.find(".staffName").text(((user_nm != undefined)? user_nm:''));
+							$target.find(".productName").html(material_type+'&nbsp;'+work_type_nm+'&nbsp;'+part_qty);
+
+
+							if(img_gfile_seq != undefined) {
+								$("#img_"+factory_area+"_"+layout_sort).css(
+										{
+											'background':'url(/image/'+img_gfile_seq +')',
+											'background-repeat':'no-repeat',
+											'background-position':'center'
+										}
+								);
+							}else {
+								$("#img_"+factory_area+"_"+layout_sort).css({'background':''});
+								if(!$("#img_"+factory_area+"_"+layout_sort).hasClass(m_list[i].MACHINE_ICON)) {
+									$("#img_"+factory_area+"_"+layout_sort).addClass(m_list[i].MACHINE_ICON);
 								}
 							}
+							$target.find(".progressPercent").text(((m_list[i].PERCENT != undefined)?m_list[i].PERCENT:''));
+
+							if(m_list[i].WORK_STATUS == 'pause') {
+								if(!$target.find(".progressPercent").hasClass("pausePercent")) {
+									$target.find(".progressPercent").addClass("pausePercent");
+								}
+								var startStopDt = new Date(m_list[i].WORK_TEMP_STOP_DT);
+								var today = new Date();
+								var diff = today - startStopDt;
+								var minute = Math.floor((diff) / (1000 * 60));
+								var html = '';
+								if($target.find(".pauseTime").length > 0) {
+									html = '일시중지<br>';
+									html += '<span>(' + minute + '\')</span>';
+									$target.find(".pauseTime").html(html)
+								}else {
+									html = '<div id="pauseTime" class="pauseTime">';
+									html += '	일시중지<br>';
+									html += '<span>(' + minute + '\')</span>';
+									html += '</div>';
+									$target.find(".progressPercent").after(html);
+								}
+							}else {
+								$target.find(".progressPercent").removeClass("pausePercent");
+								$target.find(".pauseTime").remove();
+							}
+
+							if(user_photo_gfile_seq != undefined){
+								$target.find(".staffImg").find("img").attr("src","/image/"+user_photo_gfile_seq);
+							}else {
+								$target.find(".staffImg").find("img").attr("src","/resource/pop/images/user.svg");
+							}
+
+							if(m_list[i].WORKING_TIME != undefined && m_list[i].WORKING_TIME != '') {
+								var timeHtml = '';
+								if($target.find(".progressTime") > 0) {
+									timeHtml = '<span>' + m_list[i].WORKING_TIME + '</span>';
+									if(m_list[i].PLAN_WORKING_TIME != undefined && m_list[i].PLAN_WORKING_TIME != '') {
+										timeHtml += ' / ' + m_list[i].PLAN_WORKING_TIME;
+									}
+									$target.find(".progressTime").html(timeHtml);
+								}else {
+									timeHtml = '<div class="progressTime">';
+									timeHtml += '	<span>' + m_list[i].WORKING_TIME + '</span>';
+									if(m_list[i].PLAN_WORKING_TIME != undefined && m_list[i].PLAN_WORKING_TIME != '') {
+										timeHtml += ' / ' + m_list[i].PLAN_WORKING_TIME;
+									}
+									timeHtml += '</div>';
+									$target.find(".staffImg").after(timeHtml);
+								}
+							}
+
 						}
 					}
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 				}
-			});
+			}, parameter, '');
 		};
 
-		let getPopLocationData = function (popLocation, limit) {
-			'use strict';
-			$.ajax({
-				type: 'POST', url: "/tv/pop/popLocationData", dataType: 'json',
-				data: {},
-				success: function (data, textStatus, jqXHR) {
-					if (textStatus !== 'success' || data == null) {
-						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
-						return;
-					}
+		let getPopLocationData = function () {
+			const parameter = {'url': '/tv/pop/popLocationData', 'data': {}};
+			fnPostAjax(function (data) {
+				let pop_list = data.pop_list; //pop
 
-					let pop_list = data.pop_list; //pop
-					if (pop_list != '') {//pop
-						for (let i = 0; i < pop_list.length; i++) {
-							let pop_position = pop_list[i].POP_POSITION;
-							let total_cnt = pop_list[i].TOTAL_CNT;
-							let total_qty = pop_list[i].TOTAL_QTY;
+				if (pop_list != '') {//pop
+					for (let i = 0; i < pop_list.length; i++) {
+						let pop_position = pop_list[i].POP_POSITION;
+						let total_cnt = pop_list[i].TOTAL_CNT;
+						let total_qty = pop_list[i].TOTAL_QTY;
 
-							setPopData(pop_position, total_cnt, total_qty);
-						}
+						setPopData(pop_position, total_cnt, total_qty);
 					}
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 				}
-			});
+			}, parameter, '');
 		};
+
+		let getStatusData = function () {
+			const parameter = {'url': '/tv/pop/statusData', 'data': {}};
+			fnPostAjax(function (data) {
+				// console.log('getStatusData',data);
+				if(data.pop_list2 != '') {
+					setStatusData(data.pop_list2);
+				}
+			}, parameter, '');
+		}
 
 		let setPopData = function (popPosition, totalCnt, total_qty) {
 			if (popPosition != "") {
@@ -796,6 +855,14 @@
 				$("#" + popPosition).html(html);
 			}
 		};
+
+		let setStatusData = function (list) {
+			for (let i = 0; i < list.length; i++) {
+				let partStatus = list[i].PART_STATUS;
+				$('#'+partStatus+'_CNT').html(list[i].TOTAL_CNT + ' 품')
+				$('#'+partStatus+'_QTY').html(list[i].TOTAL_QTY + ' EA')
+			}
+		}
 
 		/** 일반 알람 처리 **/
 		let alarmMessageProcess = function(messageData){
@@ -829,6 +896,8 @@
 		/** DRAWING BOARD 정보 실시간 처리 **/
 		let drawingMessageProcess = function(messageData){
 			alarmMessageProcess(messageData);
+			getStatusData();
+
 			let actionType = messageData.actionType;
 			let $target = $("#" + messageData.factoryArea + "_" + messageData.equipPosition);
 			switch (actionType){
@@ -838,6 +907,7 @@
 					$target.find(".proNum").html('');
 					$target.removeClass("login");
 					$target.removeClass("pause");
+					$("#img_"+messageData.factoryArea+"_"+messageData.equipPosition).css({'background':''});
 					break;
 				case 'DB_PAUSE' :
 					$target.removeClass("login");
@@ -858,16 +928,36 @@
 						}
 					};
 					fnPostAjax(function (data) {
-						console.log(data);
+						if(data.info.IMG_GFILE_SEQ != undefined && data.info.IMG_GFILE_SEQ != '') {
+							$("#img_"+messageData.factoryArea + "_" + messageData.equipPosition).css({
+								'background':'url(/image/' + data.info.IMG_GFILE_SEQ + ')',
+								'background-repeat':'no-repeat',
+								'background-position':'center'
+							})
+						}
+						var pName = ((data.info.MATERIAL_TYPE_NM != undefined)?data.info.MATERIAL_TYPE_NM:'') + '&nbsp;';
+						pName += ((data.info.WORK_TYPE_NM != undefined)?data.info.WORK_TYPE_NM:'') + '&nbsp;';
+						pName += ((data.info.PART_QTY != undefined)?data.info.PART_QTY:'');
+						$target.find(".productName").html(pName);
 
-						$("#img_"+messageData.factoryArea + "_" + messageData.equipPosition).css({
-							'background':'url(/image/' + messageData.imageSeq + ')',
-							'background-repeat':'no-repeat',
-							'background-position':'center'
-						})
-						$target.find(".productName").html(data.info.MATERIAL_TYPE_NM + '&nbsp;' + data.info.WORK_TYPE_NM + '&nbsp;' + data.info.PART_QTY );
-						var html = '<span>' + data.info.WORKING_TIME + '</span> / ' + data.info.PLAN_WORKING_TIME;
-						$target.find(".progressTime").html(html);
+						if(data.info.WORKING_TIME != undefined && data.info.WORKING_TIME != '') {
+							var html = '';
+							if($target.find(".progressTime") > 0) {
+								html = '<span>' + data.info.WORKING_TIME + '</span>';
+								if(data.info.PLAN_WORKING_TIME != undefined && data.info.PLAN_WORKING_TIME != '') {
+									html += ' / ' + data.info.PLAN_WORKING_TIME;
+								}
+								$target.find(".progressTime").html(html);
+							}else {
+								html = '<div class="progressTime">';
+								html += '	<span>' + data.info.WORKING_TIME + '</span>';
+								if(data.info.PLAN_WORKING_TIME != undefined && data.info.PLAN_WORKING_TIME != '') {
+									html += ' / ' + data.info.PLAN_WORKING_TIME;
+								}
+								html += '</div>';
+								$target.find(".staffImg").after(html);
+							}
+						}
 						$target.addClass("login");
 						$target.removeClass("pause");
 
@@ -976,7 +1066,7 @@
 
 		getInitData();
 		jmesConnect();
-		reloadTimer();
+		// reloadTimer();
 		timer();
 	});
 	$("#machinePopCloseBtn").on("click",function(){
@@ -993,7 +1083,6 @@
 		}
 	});
 	$(".pop .infoWrap").children("div").on("click",function(){
-		console.log($(this).data('seq'))
 		$("#pop_search_form").find("#POP_POSITION").val($(this).data('seq'));
 		$("#popPopupWrap").modal('show');
 	});
