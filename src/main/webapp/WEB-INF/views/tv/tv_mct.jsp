@@ -564,11 +564,12 @@
 								html += '<div class="mctInfoWrap">';
 								html += '<span class="mctName '+ Item2.WORK_STATUS + '">' + Item2.EQUIP_NM + '</span>';
 								html += '<div class="mctInfoTopLeft">';
-								html += '	<div class="staffImg mctStaffImg">';
 								if(typeof Item2.PHOTO_GFILE_SEQ != 'undefined') {
+									html += '	<div class="staffImg mctStaffImg">';
 									html += '		<img src="/image/'+Item2.PHOTO_GFILE_SEQ + '" alt="직원사진">';
 								}else {
-									html += '		<img src="/resource/pop/images/user.svg" class="mctNonLogin" alt="직원사진">';
+									html += '	<div class="staffImg mctStaffImg staffIcon">';
+									html += '		<img src="/resource/pop/images/user.svg" alt="직원사진">';
 								}
 								html += '	</div>';
 								html += '	<div class="staffInfoWrap">';
@@ -765,11 +766,11 @@
 							$target.find(".mctMapBtmInfo").addClass(Item.WORK_STATUS);
 
 							if(typeof Item.PHOTO_GFILE_SEQ != 'undefined') {
-								$target.find(".mctStaffImg").find("img").removeClass("mctNonLogin");
+								$target.find(".mctStaffImg").removeClass("staffIcon");
 								$target.find(".mctStaffImg").find("img").attr("src","/image/" + Item.PHOTO_GFILE_SEQ);
 							}else {
-								if(!$target.find(".mctStaffImg").find("img").hasClass("mctNonLogin")) {
-									$target.find(".mctStaffImg").find("img").addClass("mctNonLogin");
+								if(!$target.find(".mctStaffImg").hasClass("staffIcon")) {
+									$target.find(".mctStaffImg").addClass("staffIcon");
 								}
 								$target.find(".mctStaffImg").find("img").attr("src","/resource/pop/images/user.svg");
 							}

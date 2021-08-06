@@ -662,7 +662,7 @@
 							mHtml += '</div>';
 
 							if(img_gfile_seq != undefined && img_gfile_seq != '') {
-								mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg ' + m_list[i].MACHINE_ICON + '" style="background:url(/image/' + img_gfile_seq + ');background-repeat:no-repeat;background-position:center;background-size: cover;">';
+								mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg ' + m_list[i].MACHINE_ICON + '" style="background:url(/qimage/' + img_gfile_seq + ');background-repeat:no-repeat;background-position:center;background-size: cover;">';
 							}else {
 								mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg '+ m_list[i].MACHINE_ICON+'">';
 							}
@@ -753,7 +753,7 @@
 							if(img_gfile_seq != undefined) {
 								$("#img_"+factory_area+"_"+layout_sort).css(
 										{
-											'background':'url(/image/'+img_gfile_seq +')',
+											'background':'url(/qimage/'+img_gfile_seq +')',
 											'background-repeat':'no-repeat',
 											'background-size':'cover',
 											'background-position':'center'
@@ -935,7 +935,7 @@
 					fnPostAjax(function (data) {
 						if(data.info.IMG_GFILE_SEQ != undefined && data.info.IMG_GFILE_SEQ != '') {
 							$("#img_"+messageData.factoryArea + "_" + messageData.equipPosition).css({
-								'background':'url(/image/' + data.info.IMG_GFILE_SEQ + ')',
+								'background':'url(/qimage/' + data.info.IMG_GFILE_SEQ + ')',
 								'background-repeat':'no-repeat',
 								'background-size':'cover',
 								'background-position':'center'
