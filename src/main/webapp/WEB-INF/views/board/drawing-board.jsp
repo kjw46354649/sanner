@@ -863,10 +863,11 @@
 
                     let returnCode = data.returnCode;
                     let curStatus = $("#curStatus").val();
-
                     if (returnCode == "RET00") {
                         if (curStatus == "stop") {
-                            startWork(data.info);
+                            if($("#drawing_worker_scan_popup").css('display') == 'none') {
+                                startWork(data.info);
+                            }
                         } else if (curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()) {
                             $("#workCompletelBtn").trigger('click');
                         } else {
