@@ -743,7 +743,16 @@
                     });
                 }
             },
-            {title: '도면번호', dataIndx: 'DRAWING_NUM', width: 170},
+            {title: '도면번호', dataIndx: 'DRAWING_NUM', width: 170,
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.bind("click", function () {
+                        let rowData = ui.rowData;
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                    });
+                }
+            },
             {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM', minWidth: 40},
             // {title: 'MATERIAL_DETAIL', dataIndx: 'MATERIAL_DETAIL', hidden:true},
             {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', width: 80},
@@ -1015,55 +1024,8 @@
                         $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
                         $("#outgoing_manage_search_btn").trigger("click");
                     }, parameters, '');
-
-
-                    /*let data = {
-                        'queryId': 'inspection.updateControlPartOrderPackingCnt',
-                        'CONTROL_SEQ': row.CONTROL_SEQ,
-                        'CONTROL_DETAIL_SEQ': row.CONTROL_DETAIL_SEQ,
-                        'ORDER_SEQ': row.ORDER_SEQ,
-                        'PACKING_CNT': newRow.PACKING_CNT
-                    };
-                    let parameters = {'url': '/json-create', 'data': data };
-                    fnPostAjax(function (data, callFunctionParam) {
-                        $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
-                        $("#outgoing_manage_search_btn").trigger("click");
-                    }, parameters, '');*/
                 }
             }
-            /*, cellClick: function (event, ui) {
-                 let rowIndx = ui.rowIndx, $grid = this;
-                 if (ui.rowData['ORDER_SEQ'] !== undefined && ui.rowData['ORDER_SEQ'] >0) {
-                     if (ui.dataIndx == 'MANUAL_OUT') {
-                         fnResetFrom("outgoing_manage_pop_type_1_form");
-                         $("#outgoing_manage_pop_type_1_form").find("#CONTROL_SEQ").val(ui.rowData['CONTROL_SEQ']);
-                         $("#outgoing_manage_pop_type_1_form").find("#CONTROL_DETAIL_SEQ").val(ui.rowData['CONTROL_DETAIL_SEQ']);
-                         $("#outgoing_manage_pop_type_1_form").find("#ORDER_SEQ").val(ui.rowData['ORDER_SEQ']);
-                         $('#outgoing_manage_pop_type_1').modal('show');
-
-                     }
-                     if (ui.dataIndx == 'MANUAL_RETURN') {
-                         fnResetFrom("outgoing_manage_return_form");
-                         $("#outgoing_manage_return_form").find("#CONTROL_SEQ").val(ui.rowData['CONTROL_SEQ']);
-                         $("#outgoing_manage_return_form").find("#CONTROL_DETAIL_SEQ").val(ui.rowData['CONTROL_DETAIL_SEQ']);
-                         $("#outgoing_manage_return_form").find("#ORDER_SEQ").val(ui.rowData['ORDER_SEQ']);
-                         $('#outgoing_manage_return_pop').modal('show');
-                     }
-                     if (ui.dataIndx == 'MANUAL_LABEL') {
-
-                         /!*그리드에 바코드 하나
-                         let formData = new Array();
-                         formData[0] = ui.rowData['BARCODE_NUM'];*!/
-
-                         fnResetFrom("outgoing_manage_pop_label_type_1_form");
-                         $("#outgoing_manage_pop_label_type_1_form").find("#CONTROL_SEQ").val(ui.rowData['CONTROL_SEQ']);
-                         $("#outgoing_manage_pop_label_type_1_form").find("#CONTROL_DETAIL_SEQ").val(ui.rowData['CONTROL_DETAIL_SEQ']);
-                         $("#outgoing_manage_pop_label_type_1_form").find("#ORDER_SEQ").val(ui.rowData['ORDER_SEQ']);
-                         $('#outgoing_manage_pop_label_type_1').modal('show');
-                     }
-                 }
-
-             }*/
         });
         /**  리스트 그리드 선언 끝 **/
 
