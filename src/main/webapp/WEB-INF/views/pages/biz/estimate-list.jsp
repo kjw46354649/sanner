@@ -891,30 +891,30 @@
         }, parameters, '');
     });
 
+    let estimateRegisterTimer;
+    const clickEstimateRegisterReloadBtn = function (seq) {
+        let estimateRegisterCount = 0;
+        estimateRegisterTimer = setInterval(function () {
+            // console.log(estimateRegisterCount);
+            if ($('#view_tab_10000102').length > 0 || estimateRegisterCount > 3) {
+                $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
+                $("#estimateRegisterReloadBtn").trigger('click');
+                clearInterval(estimateRegisterTimer);
+            }
+            // else {
+            //     clickEstimateRegisterReloadBtn();
+            // }
+            estimateRegisterCount++;
+        }, 500);
+    };
+
     /** 화면 이동 처리 **/
     $(document).on('click', '#estimateRegisterPage', function (event) {
-        let estimateRegisterTimer;
-        let estimateRegisterCount = 0;
         let seq = event.target.dataset.seq;
         // let status = event.target.dataset.status;
         $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
-
-        const clickEstimateRegisterReloadBtn = function () {
-            estimateRegisterTimer = setInterval(function () {
-                // console.log(estimateRegisterCount);
-                if ($('#view_tab_10000102').length > 0 || estimateRegisterCount > 3) {
-                    $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
-                    $("#estimateRegisterReloadBtn").trigger('click');
-                    clearInterval(estimateRegisterTimer);
-                }
-                // else {
-                //     clickEstimateRegisterReloadBtn();
-                // }
-                estimateRegisterCount++;
-            }, 1000);
-        };
-
-        clickEstimateRegisterReloadBtn();
+        $("estimate_register_top_grid").find(".pq-loading").show();
+        clickEstimateRegisterReloadBtn(seq);
     });
 
 

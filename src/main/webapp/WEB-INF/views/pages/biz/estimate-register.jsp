@@ -750,9 +750,11 @@
                     estimateRegisterFileGrid.pqGrid(estimateRegisterFileObj);
                     estimateRegisterFileGrid.pqGrid('refresh');
                 }
-                let data = estimateRegisterFileGrid.pqGrid('option', 'dataModel.data');
-                let totalRecords = data.length;
-                $('#estimate_register_file_grid_records').html(totalRecords);
+                if($("#estimate_register_file_grid").hasClass('pq-grid')) {
+                    let data = estimateRegisterFileGrid.pqGrid('option', 'dataModel.data');
+                    let totalRecords = data.length;
+                    $('#estimate_register_file_grid_records').html(totalRecords);
+                }
             },
         };
 
@@ -786,6 +788,7 @@
                 let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
 
                 $('#estimate_register_top_grid_records').html(data.length);
+                $("estimate_register_top_grid").find(".pq-loading").hide();
             },
             beforePaste: function (evt, ui) {
                 let CM = this.getColModel(),
@@ -1035,8 +1038,10 @@
 
             // 파일 업로드
             estimateRegisterFileGrid.pqGrid(estimateRegisterFileObj);
-            estimateRegisterFileGrid.pqGrid('option', 'colModel', estimateRegisterFileModel);
-            estimateRegisterFileGrid.pqGrid('option', 'height', '111').pqGrid('refresh');
+            if($("#estimate_register_bot_grid").hasClass('pq-grid')) {
+                estimateRegisterFileGrid.pqGrid('option', 'colModel', estimateRegisterFileModel);
+                estimateRegisterFileGrid.pqGrid('option', 'height', '111').pqGrid('refresh');
+            }
         };
 
 
@@ -1086,17 +1091,23 @@
 
                 postData = { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
                 // fnRequestGridData(estimateRegisterTopGrid, postData);
-                $("#estimate_register_top_grid").pqGrid('option', 'dataModel.postData', function () {
-                    return { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
-                });
-                $("#estimate_register_top_grid").pqGrid('refreshDataAndView');
+                if($('#estimate_register_top_grid').hasClass('pq-grid')){
+                    $("#estimate_register_top_grid").pqGrid('option', 'dataModel.postData', function () {
+                        return { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
+                    });
+                    $("#estimate_register_top_grid").pqGrid('refreshDataAndView');
+                }
 
-                postData = { 'queryId': 'estimate.selectEstimateReceiverList', 'EST_SEQ': EST_SEQ };
-                fnRequestGridData(estimateRegisterBotGrid, postData);
+                if($('#estimate_register_bot_grid').hasClass('pq-grid')) {
+                    postData = { 'queryId': 'estimate.selectEstimateReceiverList', 'EST_SEQ': EST_SEQ };
+                    fnRequestGridData(estimateRegisterBotGrid, postData);
+                }
 
                 if(typeof GfileKey != 'undefined' && GfileKey != '') {
-                    postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
-                    fnRequestGridData(estimateRegisterFileGrid, postData);
+                    if($('#estimate_register_file_grid').hasClass('pq-grid')) {
+                        postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
+                        fnRequestGridData(estimateRegisterFileGrid, postData);
+                    }
                 }
 
                 CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(contextVal);
