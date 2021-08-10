@@ -783,28 +783,21 @@
             title: false,
             strNoRows: '',
             copyModel: {render: true},
-            dataReady: function (event, ui) {
-                if(!$("#estimate_register_top_grid").find(".pq-loading").hasClass("pq-loading-custom")) {
-                    $("#estimate_register_top_grid").find(".pq-loading").addClass("pq-loading-custom");
-                }
-            },
             render: function (event, ui) {
-                if(!$("#estimate_register_top_grid").find(".pq-loading").hasClass("pq-loading-custom")) {
-                    $("#estimate_register_top_grid").find(".pq-loading").addClass("pq-loading-custom");
-                }
-            },
-            refresh: function (event, ui) {
+                // console.log('render')
                 if(!$("#estimate_register_top_grid").find(".pq-loading").hasClass("pq-loading-custom")) {
                     $("#estimate_register_top_grid").find(".pq-loading").addClass("pq-loading-custom");
                 }
             },
             load: function (event, ui) {
+                // console.log('load')
                 if(!$("#estimate_register_top_grid").find(".pq-loading").hasClass("pq-loading-custom")) {
                     $("#estimate_register_top_grid").find(".pq-loading").addClass("pq-loading-custom");
                 }
             },
             complete: function (event, ui) {
                 // this.flex();
+                // console.log('complete')
                 let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
                 $('#estimate_register_top_grid_records').html(data.length);
                 if(data.length == 0) {
