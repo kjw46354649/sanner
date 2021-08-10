@@ -758,7 +758,7 @@
             },
         };
 
-        estimateRegisterTopGrid.pqGrid({
+        let estimateRegisterTopObj = {
             height: 383,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'ROW_NUM',
@@ -781,14 +781,36 @@
             colModel: estimateRegisterTopColModel,
             showTitle: false,
             title: false,
-            strNoRows: g_noData,
+            strNoRows: '',
             copyModel: {render: true},
+            dataReady: function (event, ui) {
+                if(!$("#estimate_register_top_grid").find(".pq-loading").hasClass("pq-loading-custom")) {
+                    $("#estimate_register_top_grid").find(".pq-loading").addClass("pq-loading-custom");
+                }
+            },
+            render: function (event, ui) {
+                if(!$("#estimate_register_top_grid").find(".pq-loading").hasClass("pq-loading-custom")) {
+                    $("#estimate_register_top_grid").find(".pq-loading").addClass("pq-loading-custom");
+                }
+            },
+            refresh: function (event, ui) {
+                if(!$("#estimate_register_top_grid").find(".pq-loading").hasClass("pq-loading-custom")) {
+                    $("#estimate_register_top_grid").find(".pq-loading").addClass("pq-loading-custom");
+                }
+            },
+            load: function (event, ui) {
+                if(!$("#estimate_register_top_grid").find(".pq-loading").hasClass("pq-loading-custom")) {
+                    $("#estimate_register_top_grid").find(".pq-loading").addClass("pq-loading-custom");
+                }
+            },
             complete: function (event, ui) {
-                this.flex();
+                // this.flex();
                 let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
-
                 $('#estimate_register_top_grid_records').html(data.length);
-                $("estimate_register_top_grid").find(".pq-loading").hide();
+                if(data.length == 0) {
+                    $("#estimate_register_top_grid").find(".pq-grid-norows").html("Not Found Data");
+                }
+                $("#estimate_register_top_grid").find(".pq-loading").removeClass("pq-loading-custom");
             },
             beforePaste: function (evt, ui) {
                 let CM = this.getColModel(),
@@ -992,7 +1014,8 @@
                     estimateRegisterTopGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
                 }
             }
-        });
+        }
+        estimateRegisterTopGrid.pqGrid(estimateRegisterTopObj);
 
         selectEstimateBotList('');
         btnDisabled('');
@@ -1087,10 +1110,7 @@
                     $("#estimate_register_info_form #SEND_DT").val(list.SEND_DT);
                     $("#estimate_register_info_form #GFILE_SEQ").val(GfileKey);
                 }
-                //$("#EMAIL_CONTENT_TXT").val(list.EMAIL_CONTENT);
 
-                postData = { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
-                // fnRequestGridData(estimateRegisterTopGrid, postData);
                 if($('#estimate_register_top_grid').hasClass('pq-grid')){
                     $("#estimate_register_top_grid").pqGrid('option', 'dataModel.postData', function () {
                         return { 'queryId': 'estimate.selectEstimateDetailList', 'EST_SEQ': EST_SEQ };
@@ -1123,6 +1143,7 @@
         }
 
         $(document).on('click', '#estimateRegisterReloadBtn', function(){
+            $("#estimate_register_top_grid").find(".pq-grid-norows").html("");
             estimateRegisterReloadPageData();
         });
 

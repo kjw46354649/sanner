@@ -913,7 +913,6 @@
         let seq = event.target.dataset.seq;
         // let status = event.target.dataset.status;
         $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
-        $("estimate_register_top_grid").find(".pq-loading").show();
         clickEstimateRegisterReloadBtn(seq);
     });
 
