@@ -229,15 +229,54 @@
             },
             {
                 title: '단가정보', align: 'center', colModel: [
-                    {title: '종전가', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT', hidden: true},
-                    {title: '견적가', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', hidden: true},
-                    {title: '공급가', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', hidden: true}
+                    {title: '종전가', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PREV_UNIT_FINAL_AMT', hidden: true,
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                                cellData = "";
+                                ui.rowData.PREV_UNIT_FINAL_AMT = "";
+                            }
+                            return {cls: cls, text: cellData};
+                        }
+                    },
+                    {title: '견적가', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT', hidden: true,
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                                cellData = "";
+                                ui.rowData.UNIT_FINAL_EST_AMT = "";
+                            }
+                            return {cls: cls, text: cellData};
+                        }
+                    },
+                    {title: '공급가', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT', hidden: true,
+                        render: function (ui) {
+                            let cellData = ui.cellData;
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            if (rowData.WORK_TYPE === 'WTP050') {
+                                cls = 'bg-lightgray';
+                                cellData = "";
+                                ui.rowData.UNIT_FINAL_AMT = "";
+                            }
+                            return {cls: cls, text: cellData};
+                        }
+                    }
                 ]
             },
             {title: '합계금액', minWidth: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
                 // title: 'P/H', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PRICE_PER_HOUR',
-                title: '계산원가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CP_TOTAL', minWidth: 75,
+                title: '계산가공원가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CP_TOTAL', minWidth: 75,
                 style: {'color': 'blue'}
             },
             {
