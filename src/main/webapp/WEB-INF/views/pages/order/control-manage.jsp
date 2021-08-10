@@ -1505,7 +1505,7 @@
                 }
             },
             {
-                title: '변경전 도면번호', align: 'left', width: 120, dataIndx: 'PREV_DRAWING_NUM',
+                title: '종전가 도면번호', align: 'left', width: 120, dataIndx: 'PREV_DRAWING_NUM',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
