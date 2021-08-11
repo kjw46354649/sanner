@@ -2427,9 +2427,9 @@
                     $("#mct_plan_pop_img").hide();
                     $("#mct_plan_no_img").show();
                 }
-                var stopTime = timeFormat(data.info.TEMP_STOP);
-                var onGoingTime = timeFormat(data.info.ON_GOING);
-                var planWorkingTime = timeFormat(data.info.PLAN_WORKING_TIME);
+                var stopTime = ((typeof data.info.TEMP_STOP != 'undefined' && data.info.TEMP_STOP != null)?data.info.TEMP_STOP:'');
+                var onGoingTime = ((typeof data.info.ON_GOING != 'undefined' && data.info.ON_GOING != null)?data.info.ON_GOING:'');
+                var planWorkingTime = ((typeof data.info.PLAN_WORKING_TIME != 'undefined' && data.info.PLAN_WORKING_TIME != null)?data.info.PLAN_WORKING_TIME:'');
                 var arr = data.info.DRAWING_NUM.split(",");
                 var arr2 = data.info.DRAWING_SEQ.split(",");
                 tempHtml = '<td><div class="userWrap"><div class="userImg"><img src="/image/' + data.info.PHOTO_GFILE_SEQ + '"></div><div class="userName"><span class="ko">'+ data.info.WORK_USER_NM + '</span></div></div></td>';

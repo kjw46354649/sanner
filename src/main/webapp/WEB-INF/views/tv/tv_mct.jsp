@@ -1093,9 +1093,9 @@
 						$("#mapImgWrap").attr('src', '/resource/main/blank.jpg');
 						$("#mct_machine_form").find("#GFILE_SEQ").val('');
 					}
-					var stopTime = timeFormat(data.info.TEMP_STOP);
-					var onGoingTime = timeFormat(data.info.ON_GOING);
-					var planWorkingTime = timeFormat(data.info.PLAN_WORKING_TIME);
+					var stopTime = ((typeof data.info.TEMP_STOP != 'undefined' && data.info.TEMP_STOP != null)?data.info.TEMP_STOP:'');
+					var onGoingTime = ((typeof data.info.ON_GOING != 'undefined' && data.info.ON_GOING != null)?data.info.ON_GOING:'');
+					var planWorkingTime = ((typeof data.info.PLAN_WORKING_TIME != 'undefined' && data.info.PLAN_WORKING_TIME != null)?data.info.PLAN_WORKING_TIME:'');
 					var arr = data.info.DRAWING_NUM.split(",");
 					var arr2 = data.info.DRAWING_SEQ.split(",");
 					tempHtml = '<td class="workStaffImg"><div class="staffImgWrap"><img src="/image/' + data.info.PHOTO_GFILE_SEQ + '"></div>'+ data.info.WORK_USER_NM + '</td>';
