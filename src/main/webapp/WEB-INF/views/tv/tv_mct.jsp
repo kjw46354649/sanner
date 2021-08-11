@@ -1036,7 +1036,7 @@
 					}
 				}
 			},
-			{title: '작업형태 / 소재', dataType: 'string', dataIndx: 'WORK_TYPE_MATERIAL', minWidth: 80, maxWidth:120, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'},
+			{title: '작업형태 / 소재', dataType: 'string', dataIndx: 'WORK_TYPE_MATERIAL', minWidth: 80, width:120, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'},
 				render: function (ui) {
 					const cellData = ui.cellData;
 					if (cellData) {

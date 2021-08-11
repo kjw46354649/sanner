@@ -1299,7 +1299,7 @@
 				}
 			},
 			{title: '진행상태', width: 70, dataIndx: 'PART_STATUS', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'}},
-			{title: '작업번호 / 규격', align: 'center', minWidth: 165, width: 165, dataIndx: 'CONTROL_NUM_PART_NUM', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'},
+			{title: '작업번호 / 규격', align: 'center', minWidth: 165, width: 185, dataIndx: 'CONTROL_NUM_PART_NUM', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'},
 				render: function (ui) {
 					const cellData = ui.cellData;
 					if (cellData) {
@@ -1307,7 +1307,7 @@
 					}
 				}
 			},
-			{title: '작업형태 / 소재', dataType: 'string', dataIndx: 'WORK_TYPE_MATERIAL', minWidth: 80, width: 180, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'},
+			{title: '작업형태 / 소재', dataType: 'string', dataIndx: 'WORK_TYPE_MATERIAL', minWidth: 80, width: 160, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black', 'font-size':'1.4rem'},
 				render: function (ui) {
 					const cellData = ui.cellData;
 					if (cellData) {
