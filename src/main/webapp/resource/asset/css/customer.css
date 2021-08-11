@@ -930,3 +930,58 @@ ul, ol , dl { list-style: none;}
 }
 .matchGrid_lightRed{background-color: #ffe0e0 !important; font-weight: bold;}
 .matchGrid_selected{background-color: #d9e8f4 !important; font-weight: bold;}
+
+.custom-loading {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	left: 0;
+	top: 0
+}
+.custom-loading-bg {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 10;
+	opacity: 0;
+}
+.custom-loading > .custom-loading-mask {
+	background: #ffffff;
+	border-color: #aaaaaa;
+	color: #333;
+}
+
+div.custom-loading-mask {
+	width: 100px;
+	height: 25px;
+	z-index: 8;
+	padding: 5px;
+	position: absolute;
+	left: 50%;
+	top: 51.2%;
+	margin-left: -50px;
+	margin-top: -13px;
+	box-sizing: content-box;
+}
+div.custom-loading-mask > div {
+	border-color: #c6c6c6 !important;
+	background-color: #fff;
+}
+
+div.custom-loading-mask > div {
+	border: 1px solid transparent;
+	padding-top: 0;
+	padding-right: 6px;
+	padding-left: 29px;
+	line-height: 23px;
+	background-image: url(../images/loading.gif);
+	background-position: 6px;
+	background-repeat: no-repeat;
+	white-space: nowrap;
+	word-wrap: normal
+}
+
+
+

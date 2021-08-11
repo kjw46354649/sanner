@@ -139,6 +139,12 @@
                 </div>
             </div>
             <div class="conMainWrap">
+                <div id="custom_loading" class="custom-loading" style="display: none;">
+                    <div class="custom-loading-bg"></div>
+                    <div class="custom-loading-mask ui-state-highlight">
+                        <div>Loading...</div>
+                    </div>
+                </div>
                 <div id="estimate_register_top_grid" class="jqx-refresh"></div>
                 <div class="right_sort">
                     전체 조회 건수 (Total : <span id="estimate_register_top_grid_records" style="color: #00b3ee">0</span>)
@@ -783,27 +789,19 @@
             title: false,
             strNoRows: '',
             copyModel: {render: true},
-            render: function (event, ui) {
-                // console.log('render')
-                if(!$("#estimate_register_top_grid").find(".pq-loading").hasClass("pq-loading-custom")) {
-                    $("#estimate_register_top_grid").find(".pq-loading").addClass("pq-loading-custom");
-                }
-            },
-            load: function (event, ui) {
-                // console.log('load')
-                if(!$("#estimate_register_top_grid").find(".pq-loading").hasClass("pq-loading-custom")) {
-                    $("#estimate_register_top_grid").find(".pq-loading").addClass("pq-loading-custom");
-                }
-            },
             complete: function (event, ui) {
                 // this.flex();
                 // console.log('complete')
                 let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
                 $('#estimate_register_top_grid_records').html(data.length);
+                var time = 800;
                 if(data.length == 0) {
                     $("#estimate_register_top_grid").find(".pq-grid-norows").html("Not Found Data");
+                    time = 500;
                 }
-                $("#estimate_register_top_grid").find(".pq-loading").removeClass("pq-loading-custom");
+                setTimeout(function (){
+                    $("#custom_loading").hide();
+                },time);
             },
             beforePaste: function (evt, ui) {
                 let CM = this.getColModel(),
@@ -1137,6 +1135,7 @@
 
         $(document).on('click', '#estimateRegisterReloadBtn', function(){
             $("#estimate_register_top_grid").find(".pq-grid-norows").html("");
+            $("#custom_loading").show();
             estimateRegisterReloadPageData();
         });
 
