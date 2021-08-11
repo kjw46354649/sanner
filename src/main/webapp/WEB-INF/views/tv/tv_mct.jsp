@@ -50,6 +50,7 @@
 		*{margin: 0; padding: 0; box-sizing: border-box;}
 		a{text-decoration: none; color: black;}
 		ul,dl,ol { list-style: none;}
+		div.pq-grid * {font-size: 1.4rem;}
 		.pq-grid-header-table>.pq-grid-row>.pq-grid-number-cell {background: #d8edf0;}
 	</style>
 </head>
@@ -831,7 +832,7 @@
 			{title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
 			{title: 'IMG_GFILE_SEQ', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
 			{title: 'RANK', dataIndx: 'RANK', hidden: true},
-			{title: '구분', minWidth: 35, width: 35, dataIndx: 'TITLE', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'},
+			{title: '구분', minWidth: 35, maxWidth: 80, width: 35, dataIndx: 'TITLE', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'},
 				render: function (ui) {
 					const rowData = ui.rowData
 					if (rowData.RANK == 1 || rowData.RANK == 2) {
@@ -843,8 +844,8 @@
 					}
 				}
 			},
-			{title: '납기', minWidth: 45, width: 45, dataIndx: 'INNER_DUE_DT', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'}},
-			{title: '작업번호', align: 'center', minWidth: 165, width: 165, dataIndx: 'CONTROL_TEXT', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'},
+			{title: '납기', minWidth: 45, maxWidth: 115, width: 45, dataIndx: 'INNER_DUE_DT', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'}},
+			{title: '작업번호', align: 'center', minWidth: 165, maxWidth: 350, width: 165, dataIndx: 'CONTROL_TEXT', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'},
 				render: function (ui) {
 					const cellData = ui.cellData;
 					if (cellData) {
@@ -852,7 +853,7 @@
 					}
 				}
 			},
-			{title: '진행상태',minWidth: 60, width: 60, dataIndx: 'PART_STATUS_NM', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'},
+			{title: '진행상태',minWidth: 60, maxWidth: 170, width: 60, dataIndx: 'PART_STATUS_NM', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'},
 				render:function (ui) {
 					const cellData = ui.cellData;
 					let partStatus = ui.rowData.PART_STATUS;
@@ -869,7 +870,7 @@
 			}
 		];
 		let mctMainObj= {
-			width: 'auto', height: 'auto',
+			width: '100%', height: 'auto',
 			dataModel: {
 				location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
 				url: "/tv/paramQueryGridSelect",
