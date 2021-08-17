@@ -275,7 +275,7 @@
                 <div class="searchPopupWrap">
                     <div class="stockMapLeft">
                         <!--도면삽입-->
-                        <img id="match_stock_img" src="/resource/main/blank.jpg" style="width: 100%;height: 100%;">
+                        <img id="match_stock_img" src="/resource/main/blank.jpg" style="width: 100%;height: 100%;max-height: inherit;max-width: inherit;">
                     </div>
                     <div class="searchPopupRight">
                         <div class="searchPopupRightTop">
@@ -295,12 +295,12 @@
                         <div id="match_stock_grid" class="listTable">
                             <!--gird삽입-->
                         </div>
+                        <div class="stockPopupBtnWrap">
+                            <button id="matchStockDetailBtn" class="mapDetailBtn">도면상세보기</button>
+                            <button id="stockBtnClose4" class="stockBtnClose">닫기</button>
+                            <button id="matchStockBtnSave" class="stockBtnSave">저장</button>
+                        </div>
                     </div>
-                </div>
-                <div class="stockPopupBtnWrap">
-                    <button id="matchStockDetailBtn" class="mapDetailBtn">도면상세보기</button>
-                    <button id="stockBtnClose4" class="stockBtnClose">닫기</button>
-                    <button id="matchStockBtnSave" class="stockBtnSave">저장</button>
                 </div>
             </div>
         </div>
@@ -3655,7 +3655,7 @@
         ];
 
         let matchStockObj = {
-            height: "93%", width: "auto",
+            height: 550, width: "auto",
             selectionModel: { type: 'row', mode: 'single'}, rowHtHead: 15,
             swipeModel: {on: false}, trackModel: {on: true},
             strNoRows: g_noData,

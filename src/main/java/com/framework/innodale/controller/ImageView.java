@@ -1,14 +1,16 @@
 package com.framework.innodale.controller;
 
+import com.framework.innodale.component.ImageUtil;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -36,10 +38,32 @@ public class ImageView extends AbstractView {
             fileName = (String)fileInfo.get("FILE_PATH");
         }
         // InputStream in = getClass().getResourceAsStream(fileName);
-        InputStream in = new FileInputStream(new File(fileName));
-        FileCopyUtils.copy(in, out);
+
+        File imgFile = new File(fileName);
+        BufferedImage rotateImg = null;
+
+        BufferedImage img = ImageIO.read(imgFile);
+        if(img.getHeight() >= img.getWidth()) {
+            // 이미지 회전시키기 시계방향 270도 (반시계 90)
+            rotateImg = new BufferedImage(img.getHeight(),img.getWidth(),img.getType());
+            Graphics2D g2d = rotateImg.createGraphics();
+            g2d.translate(0,img.getWidth());
+            g2d.rotate(Math.toRadians(270));
+            g2d.drawImage(img,0,0,null);
+
+            ImageIO.write(rotateImg,"png",out);
+        }else {
+            byte[] buf = Files.readAllBytes(Paths.get(fileName));
+            out.write(buf);
+        }
 
         out.flush();
+
+        img.flush();
+
+        if(rotateImg != null) {
+            rotateImg.flush();
+        }
     }
 
 }
