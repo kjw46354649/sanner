@@ -241,7 +241,7 @@
                     AND A.CONTROL_SEQ = C.CONTROL_SEQ
                     AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.WORK_STATUS = 'DBS020'
-                    AND B.OUT_FINISH_DT IS NULL
+--                     AND B.OUT_FINISH_DT IS NULL
                     AND A.DEL_YN = 'N'
                     AND B.DEL_YN = 'N'
                     AND D.DEL_YN = 'N'

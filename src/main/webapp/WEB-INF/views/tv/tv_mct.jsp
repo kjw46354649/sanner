@@ -596,7 +596,7 @@
 									var startStopDt = new Date(Item2.WORK_TEMP_STOP_DT);
 									var today = new Date();
 									var diff = today - startStopDt;
-									var hour = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+									var hour = Math.floor((diff) / (1000 * 60 * 60));
 									var minute = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 									html += '<span>' + hour + 'h ' + minute + 'm' + '</span>';
 									html += '</div>';
