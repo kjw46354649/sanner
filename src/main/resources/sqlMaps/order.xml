@@ -1111,7 +1111,8 @@
             ROW_NUMBER () OVER () AS ROW_NUM,
             <include refid="control"/>,
             <include refid="controlPart"/>,
-            SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT
+            SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT,
+            IFNULL(C.REGIST_NUM,SPACE(0)) AS REGIST_NUM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = A.CONTROL_SEQ
@@ -1334,7 +1335,8 @@
             <include refid="control"/>,
             <include refid="controlPart"/>,
             SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT,
-            SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION <!-- 현재 등록된 위치 -->
+            SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION, <!-- 현재 등록된 위치 -->
+            IFNULL(C.REGIST_NUM, SPACE(0)) AS REGIST_NUM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = A.CONTROL_SEQ
@@ -1363,7 +1365,8 @@
             ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM) AS ROW_NUM,
             <include refid="control"/>,
             <include refid="controlPart"/>,
-            SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT
+            SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT,
+            IFNULL(C.REGIST_NUM,SPACE(0)) AS REGIST_NUM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = A.CONTROL_SEQ
@@ -1388,7 +1391,8 @@
             <include refid="controlPart"/>,
             SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT,
             SF_GET_CODE_NM('1040', D.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM,
-            SF_GET_CODE_NM('1009', E.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION <!-- 현재 등록된 위치 -->
+            SF_GET_CODE_NM('1009', E.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION, <!-- 현재 등록된 위치 -->
+            IFNULL(C.REGIST_NUM, SPACE(0)) AS REGIST_NUM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
             INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = A.CONTROL_SEQ
@@ -2610,11 +2614,14 @@
             SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
             SF_GET_DATE_F(C.DELIVERY_DT, '', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
             SF_GET_DATE_F(C.OUT_FINISH_DT, '', '') AS OUT_FINISH_DT, <!-- 출고완료일 -->
-            A.CONTROL_NUM, C.ORDER_QTY, C.ORDER_NUM, C.DRAWING_NUM, C.REGIST_NUM,
+            A.CONTROL_NUM, C.ORDER_QTY, C.ORDER_NUM, C.DRAWING_NUM, IFNULL(C.REGIST_NUM,SPACE(0)) AS REGIST_NUM,
             SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS,
             SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION, <!-- 현재 등록된 위치 -->
             H.INSPECT_GRADE, jmes.SF_GET_CODE_NM('1040', H.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 -->
-            G.USER_NM, F.STAFF_NM
+            G.USER_NM, F.STAFF_NM,
+            A.CONTROL_VER,
+            B.SIZE_TXT,
+            jmes.SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL AND B.WORK_TYPE NOT IN ('WTP050') <!-- 21.03.30 작업형태 '파트'인것 제외 -->
             INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ
@@ -3188,6 +3195,12 @@
        --     , CONCAT(X.CONTROL_PART_QTY,'ea') AS CONTROL_PART_QTY_INFO
            , X.PART_STATUS_NM
            , CASE WHEN X.RETURN_QTY IS NULL THEN '긴급' ELSE '반품' END AS TYPE_NM
+           , X.CONTROL_PART_INFO AS CONTROL_NUM
+           , X.CONTROL_VER
+           , X.MATERIAL_DETAIL_NM
+           , IFNULL(X.REGIST_NUM,SPACE(0)) AS REGIST_NUM
+           , X.SIZE_TXT
+           , X.DRAWING_NUM
        FROM (   --  출고일 없는경우 -->
                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                    , B.IMG_GFILE_SEQ
@@ -3203,7 +3216,12 @@
        					AND I.CONTROL_SEQ = C.CONTROL_SEQ AND I.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND I.ORDER_SEQ = C.ORDER_SEQ
        					AND I.INSPECT_TYPE = '2'
        					AND I.RETURN_SETTLEMENT_DT IS NULL
-       			) AS RETURN_QTY
+       			   ) AS RETURN_QTY
+                   , A.CONTROL_VER
+                   , B.SIZE_TXT
+                   , jmes.SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+                   , C.REGIST_NUM
+                   , B.DRAWING_NUM
                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -3239,6 +3257,12 @@
 --             , CONCAT(X.CONTROL_PART_QTY,'ea') AS CONTROL_PART_QTY_INFO
             , X.PART_STATUS_NM
             , X.CHARGE_USER_NM
+            , X.CONTROL_PART_INFO AS CONTROL_NUM
+            , X.CONTROL_VER
+            , X.MATERIAL_DETAIL_NM
+            , IFNULL(X.REGIST_NUM,SPACE(0)) AS REGIST_NUM
+            , X.SIZE_TXT
+            , X.DRAWING_NUM
         FROM (  <!-- 출고일 없는경우 -->
                 SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
                     , B.IMG_GFILE_SEQ
@@ -3249,6 +3273,11 @@
                     , C.ORDER_QTY AS CONTROL_ORDER_QTY
                     , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
                     , (SELECT M.USER_NM FROM jmes.TBL_USER M, jmes.TBL_COMPANY N WHERE M.USER_ID = N.CHARGE_USER_ID AND N.COMP_CD = A.ORDER_COMP_CD) AS CHARGE_USER_NM
+                    , A.CONTROL_VER
+                    , B.SIZE_TXT
+                    , jmes.SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+                    , C.REGIST_NUM
+                    , B.DRAWING_NUM
                 FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND B.CONTROL_SEQ = C.CONTROL_SEQ

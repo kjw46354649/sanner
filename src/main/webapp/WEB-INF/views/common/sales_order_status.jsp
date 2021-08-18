@@ -12,7 +12,7 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <jsp:include page="/WEB-INF/views/attr/tabs/header.jsp"/>
-<jsp:include page="/WEB-INF/views/attr/common/body-script.jsp"/>
+<jsp:include page="/WEB-INF/views/attr/tabs/body-script.jsp"/>
 <%--<jsp:include page="/WEB-INF/views/attr/tabs/body-menu.jsp"/>--%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -284,7 +284,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('[name=imageView]').bind('click', function () {
                         let rowData = ui.rowData;
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     });
                 }
             },
@@ -385,7 +385,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('[name=imageView]').bind('click', function () {
                         let rowData = ui.rowData;
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     });
                 }
             },
@@ -469,7 +469,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('[name=imageView]').bind('click', function () {
                         let rowData = ui.rowData;
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     });
                 }
             },

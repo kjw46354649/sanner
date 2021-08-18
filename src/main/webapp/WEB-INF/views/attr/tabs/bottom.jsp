@@ -445,10 +445,32 @@
         <input type="hidden" id="gFileSeq" name="gFileSeq" value="">
         <div>
             <div>
-                <img id="drawingImage" style='width: 785px;height: 610px;' src="/resource/main/blank.jpg">
+                <img id="drawingImage" style='width: 862.66px;height: 610px;' src="/resource/main/blank.jpg">
             </div>
-            <div style="padding: 10px 2px 5px 0px; float: right;">
-                <button type="button" class="defaultBtn greenPopGra" id="common_quick_drawing_detail_view">상세보기</button>
+            <div style="padding: 3px 2px 5px 0px; float: left;">
+                <table class="quick_drawing_table">
+                    <tbody>
+                        <tr>
+                            <th>접수 번호</th>
+                            <td id="QUICK_DRAWING_REGIST_NUM" style="width: 30%;"></td>
+                            <th>도면번호</th>
+                            <td id="QUICK_DRAWING_NUM" colspan="3"></td>
+                            <th>Rev.</th>
+                            <td id="QUICK_DRAWING_REV" style="width: 7%;"></td>
+                        </tr>
+                        <tr class="trHeight">
+                            <th>작업 번호</th>
+                            <td id="QUICK_DRAWING_CONTROL_NUM"></td>
+                            <th>규격</th>
+                            <td id="QUICK_DRAWING_SIZE_TXT" colspan="2"></td>
+                            <th>소재</th>
+                            <td id="QUICK_DRAWING_MATERIAL_DETAIL" colspan="2"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="padding: 3px 0px 5px 0px; float: right;">
+                <button type="button" class="defaultBtn greenPopGra" id="common_quick_drawing_detail_view" style="height: 60px;font-size: 1.5rem;font-weight: bold;">상세보기</button>
             </div>
         </div>
     </form>
@@ -746,8 +768,8 @@
             autoOpen:false, //자동으로 열리지않게
             position:[100,200], //x,y  값을 지정
             //"center", "left", "right", "top", "bottom"
-            width : "800",            // dialog 넓이 지정
-            height : "700",        // dialog 높이 지정
+            width : "880",            // dialog 넓이 지정
+            height : "720",        // dialog 높이 지정
             modal:false, //모달대화상자
             resizable:false, //크기 조절 못하게
             open: function( event, ui ) {

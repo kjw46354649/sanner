@@ -10,7 +10,7 @@
     <title>진성정밀 MES 시스템</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <jsp:include page="/WEB-INF/views/attr/tabs/header.jsp"/>
-    <jsp:include page="/WEB-INF/views/attr/common/body-script.jsp"></jsp:include>
+    <jsp:include page="/WEB-INF/views/attr/tabs/body-script.jsp"></jsp:include>
 </head>
 <body>
     <div id="waitMeContainerDiv">
@@ -264,7 +264,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('[name=imageView]').bind('click', function () {
                         let rowData = ui.rowData;
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     });
                 }
             },
@@ -396,7 +396,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('[name=imageView]').bind('click', function () {
                         let rowData = ui.rowData;
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     });
                 }
             },
@@ -530,7 +530,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('[name=imageView]').bind('click', function () {
                         let rowData = ui.rowData;
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     });
                 }
             },
@@ -653,7 +653,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('[name=imageView]').bind('click', function () {
                         let rowData = ui.rowData;
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     });
                 }
             },

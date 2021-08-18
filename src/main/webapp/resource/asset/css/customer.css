@@ -983,5 +983,26 @@ div.custom-loading-mask > div {
 	word-wrap: normal
 }
 
+.quick_drawing_table {
+	width: 745px;
+	font-size: 13px;
+	border: 1px solid #aaa;
+}
 
 
+.quick_drawing_table th {
+	width: 10%;
+	background: #e7eef7;
+	border: 1px solid #aaa;
+	text-align: center;
+	font-weight: bold;
+	color: black;
+}
+.quick_drawing_table td {
+	border: 1px solid #aaa;
+	text-align: center;
+}
+
+.quick_drawing_table tr {
+	height: 30px;
+}

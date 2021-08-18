@@ -474,7 +474,7 @@
                     });
                 }
             },
-            {title: '작업지시번호', align: 'left', width: 160, dataIndx: 'CONTROL_NUM_PART_NUM'},
+            {title: '작업지시번호', align: 'left', width: 160, dataIndx: 'CONTROL_PART_NUM'},
             {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
             {
                 title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
@@ -487,7 +487,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('#imageView').bind('click', function () {
                         let rowData = ui.rowData;
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     });
                 }
             },
@@ -917,7 +917,7 @@
                     const rowData = $(this).closest('.pq-grid').pqGrid('getRowData', {rowIndx: rowIndx});
 
                     if (rowData.IMG_GFILE_SEQ) {
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     }
                 }
             }
@@ -932,7 +932,7 @@
                     const rowData = $(this).closest('.pq-grid').pqGrid('getRowData', {rowIndx: rowIndx});
 
                     if (rowData.IMG_GFILE_SEQ) {
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     }
                 }
             }

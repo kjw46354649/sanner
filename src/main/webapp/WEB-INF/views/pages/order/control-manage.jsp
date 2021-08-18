@@ -915,7 +915,7 @@
                                 $cell = grid.getCell(ui);
                             $cell.find('#imageView').bind('click', function () {
                                 let rowData = ui.rowData;
-                                callQuickDrawingImageViewer(rowData.ORDER_IMG_GFILE_SEQ);
+                                callQuickDrawingImageViewer(rowData.ORDER_IMG_GFILE_SEQ, rowData);
                             });
                         }
                     },

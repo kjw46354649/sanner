@@ -50,6 +50,8 @@
                 , X.OUT_FINISH_DT
                 , X.NOT_RETURN_SETTLEMENT_CNT
                 , X.WORK_FINISH_DT
+                , X.REGIST_NUM
+                , X.CONTROL_VER
             FROM (
                     SELECT
                           B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.ORDER_COMP_CD
@@ -65,6 +67,8 @@
                         , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS INSPECT_SEQ
                         , A.OUT_FINISH_DT
                         , (SELECT COUNT(*) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.INSPECT_TYPE = '2' AND M.RETURN_SETTLEMENT_DT IS NULL) AS NOT_RETURN_SETTLEMENT_CNT
+                        , C.REGIST_NUM
+                        , A.CONTROL_VER
                     FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER_MAIN C
                     WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                         AND A.CONTROL_SEQ = C.CONTROL_SEQ
@@ -457,7 +461,7 @@
 
     <select id="selectOutgoingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-              T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ, T.INSPECT_SEQ
+              T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ, T.INSPECT_SEQ, T.CONTROL_VER
             , T.CONTROL_STATUS_NM
             , T.ORDER_COMP_NM
             , T.REGIST_NUM
@@ -503,7 +507,7 @@
             , T.SCRAP_YN
         FROM (
             SELECT
-                  X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ, X.INSPECT_SEQ
+                  X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ, X.INSPECT_SEQ, X.CONTROL_VER
                 , jmes.SF_GET_CODE_NM('1038', X.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM
                 , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
                 , X.REGIST_NUM
@@ -576,7 +580,7 @@
                 , X.SCRAP_YN
         FROM (
                 SELECT
-                    A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
+                    A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_SEQ, A.CONTROL_VER
                     , A.CONTROL_STATUS
                     , (SELECT MAX(M.MCT_WORK_SEQ) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N') AS MCT_WORK_SEQ
                     , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS INSPECT_SEQ
@@ -1088,7 +1092,7 @@
 
     <select id="selectOutgoingReturnCompleteList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-               T.INSPECT_SEQ, T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ
+               T.INSPECT_SEQ, T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ, X.CONTROL_VER
             , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = X.ORDER_COMP_CD) AS ORDER_COMP_NM
             , Z.REGIST_NUM
             , Z.ORDER_NUM
@@ -1373,6 +1377,7 @@
         <!-- 3. 출하 이력관리 쿼리 -->
         <!-- 기능설계서에서 누적칼럼 없애고 반품조치일 추가 -->
         SELECT X.KEY_SEQ
+            , X.CONTROL_VER
             , X.CONTROL_SEQ
             , X.CONTROL_DETAIL_SEQ
             , X.ORDER_SEQ
@@ -1396,6 +1401,7 @@
             , jmes.SF_GET_OUT_RETURN_LAST_YN(X.OUT_RETURN_TYPE, X.KEY_SEQ) AS LAST_YN
         FROM (  SELECT A.OUT_SEQ AS KEY_SEQ
                     , '1' AS OUT_RETURN_TYPE
+                    , B.CONTROL_VER
                     , A.CONTROL_SEQ
                     , A.CONTROL_DETAIL_SEQ
                     , A.ORDER_SEQ
@@ -1441,6 +1447,7 @@
                 UNION ALL
                 SELECT A.INSPECT_SEQ AS KEY_SEQ
                     , '2' AS OUT_RETURN_TYPE
+                    , B.CONTROL_VER
                     , A.CONTROL_SEQ
                     , A.CONTROL_DETAIL_SEQ
                     , A.ORDER_SEQ
@@ -1486,6 +1493,7 @@
                 UNION ALL
                 SELECT C.ORDER_SEQ AS KEY_SEQ
 					, '3' AS OUT_RETURN_TYPE
+                    , A.CONTROL_VER
                     , C.CONTROL_SEQ
                     , C.CONTROL_DETAIL_SEQ
                     , C.ORDER_SEQ
@@ -1562,6 +1570,8 @@
             , W.ERROR_NOTE AS Q_ERROR_NOTE
             , jmes.SF_GET_DATE_F(W.INSERT_DT,'YY','M') AS Q_DT
             , V.IMG_GFILE_SEQ
+            , V.CONTROL_VER
+            , (SELECT X.REGIST_NUM FROM TBL_CONTROL_PART_ORDER_MAIN X WHERE X.CONTROL_SEQ = V.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = V.CONTROL_DETAIL_SEQ) AS REGIST_NUM
         FROM (  SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
                     , CASE WHEN IFNULL(X.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN
                     , jmes.SF_GET_CODE_NM('1059', X.MAIN_INSPECTION, #{LOGIN_LOCALE}) MAIN_INSPECTION_NM
@@ -1584,6 +1594,7 @@
                     , X.SIZE_TXT
                     , X.NOTE
                     , X.IMG_GFILE_SEQ
+                    , X.CONTROL_VER
                 FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                             , A.ORDER_COMP_CD , A.EMERGENCY_YN , A.MAIN_INSPECTION
                             , B.WORK_FACTORY
@@ -1593,6 +1604,7 @@
                             , B.PART_UNIT_QTY, B.SIZE_TXT, A.NOTE, B.INNER_WORK_FINISH_DT
                             , (SELECT MAX(M.POP_SEQ) FROM jmes.TBL_POP M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
                             , B.IMG_GFILE_SEQ
+                            , A.CONTROL_VER
                         FROM jmes.TBL_CONTROL A
                             , jmes.TBL_CONTROL_PART B
                         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ

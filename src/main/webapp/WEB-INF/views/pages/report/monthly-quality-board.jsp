@@ -264,7 +264,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find('#imageView').bind('click', function () {
                         let rowData = ui.rowData;
-                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ);
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     });
                 }
             },
@@ -277,6 +277,7 @@
             // {title: '외주업체', width: 75, dataIndx: 'OUTSIDE_COMP_NM'},
             // {title: '', dataIndx: 'na2'},
             {
+
                 title: '검사현황', halign: 'center', colModel: [
                     {title: 'Seq.', dataIndx: 'INSPECT_RNUM'},
                     {title: '담당관', width: 65, dataIndx: 'INSPECT_USER_NM'},
