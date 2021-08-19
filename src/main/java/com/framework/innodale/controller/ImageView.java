@@ -43,7 +43,7 @@ public class ImageView extends AbstractView {
         BufferedImage rotateImg = null;
 
         BufferedImage img = ImageIO.read(imgFile);
-        if(img.getHeight() >= img.getWidth()) {
+        if(img.getHeight() >= (img.getWidth() + 300)) {
             // 이미지 회전시키기 시계방향 270도 (반시계 90)
             rotateImg = new BufferedImage(img.getHeight(),img.getWidth(),img.getType());
             Graphics2D g2d = rotateImg.createGraphics();
