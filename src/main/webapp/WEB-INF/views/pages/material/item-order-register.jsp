@@ -662,7 +662,13 @@
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL' , validations: [{ type: 'minLen', value: 1, msg: "Required"}],
-                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1027') },
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text',
+                    options: function (ui) {
+                        let rowData = ui.rowData;
+
+                        return fnGetCommCodeGridSelectBoxEtc('1027', rowData.MATERIAL_TYPE);
+                    }
+                },
                 render: function (ui) {
                     let cellData = ui.cellData;
                     if (cellData === '' || cellData === undefined) {
