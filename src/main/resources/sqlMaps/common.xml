@@ -77,7 +77,10 @@
     <select id="selectGfileFileImageInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH, B.FILE_SIZE,
-            SF_GET_DATE_F(B.INSERT_DT,'YYYY','') AS INSERT_DT
+            SF_GET_DATE_F(B.INSERT_DT,'YYYY','') AS INSERT_DT,
+            CASE WHEN UPPER(B.FILE_PATH) LIKE UPPER('/home/admin/datadir/upload/etc%') THEN 'ETC'
+                 ELSE 'CAD'
+                END PHOTO_TYPE
         FROM jmes.TBL_FILE_GROUP A
             INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
         WHERE A.GFILE_SEQ  = #{GFILE_SEQ}
@@ -86,7 +89,10 @@
     <select id="selectQuickGfileFileImageInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, CONCAT(B.FILE_PATH, '.thumbnail.png') AS FILE_PATH,
-            TIME_PATH, B.FILE_SIZE, SF_GET_DATE_F(B.INSERT_DT,'YYYY','') AS INSERT_DT
+            TIME_PATH, B.FILE_SIZE, SF_GET_DATE_F(B.INSERT_DT,'YYYY','') AS INSERT_DT,
+            CASE WHEN UPPER(B.FILE_PATH) LIKE UPPER('/home/admin/datadir/upload/etc%') THEN 'ETC'
+                 ELSE 'CAD'
+                END PHOTO_TYPE
         FROM jmes.TBL_FILE_GROUP A
             INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
         WHERE A.GFILE_SEQ  = #{GFILE_SEQ}

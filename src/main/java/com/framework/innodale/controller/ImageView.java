@@ -33,9 +33,11 @@ public class ImageView extends AbstractView {
         OutputStream out = res.getOutputStream();
 
         String fileName = (String)model.get("blank_image");
+        String photoType = "";
 
         if(fileInfo != null && fileInfo.containsKey("FILE_PATH") && Files.exists(Paths.get((String)fileInfo.get("FILE_PATH"))) ){
             fileName = (String)fileInfo.get("FILE_PATH");
+            photoType = (String)fileInfo.get("PHOTO_TYPE");
         }
         // InputStream in = getClass().getResourceAsStream(fileName);
 
@@ -43,7 +45,7 @@ public class ImageView extends AbstractView {
         BufferedImage rotateImg = null;
 
         BufferedImage img = ImageIO.read(imgFile);
-        if(img.getHeight() >= (img.getWidth() + 300)) {
+        if(!"ETC".equals(photoType) && img.getHeight() >= img.getWidth()) {
             // 이미지 회전시키기 시계방향 270도 (반시계 90)
             rotateImg = new BufferedImage(img.getHeight(),img.getWidth(),img.getType());
             Graphics2D g2d = rotateImg.createGraphics();
