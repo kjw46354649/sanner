@@ -2677,6 +2677,7 @@
             FROM TBL_INSIDE_OUT H
                 INNER JOIN TBL_INSIDE_STOCK I ON H.INSIDE_STOCK_SEQ = I.INSIDE_STOCK_SEQ
             WHERE I.INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
+              AND H.OUT_STATUS = 'OUT002'
         )) AS flag
         FROM DUAL
     </select>
