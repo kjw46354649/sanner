@@ -175,18 +175,21 @@ public class OutServiceImpl implements OutService {
                 // 외주가공 요청 수신자 저장
                 if (flag) {
                     if (mailReceiverList != null && mailReceiverList.size() > 0) {
-                        for (HashMap<String, Object> hashMap : mailReceiverList) {
-                            hashMap.put("OUTSIDE_REQUEST_SEQ", outsideRequestSeq);
-                            hashMap.put("queryId", "outMapper.createOutsideRequestReceiver");
-                            this.innodaleDao.create(hashMap);
-                        }
-                        // 메일 발송
                         String reception = (String) requestMailForm.get("RECEIVE_EMAIL");
                         String reference = (String) requestMailForm.get("CC_EMAIL");
-                        requestMailForm.put("RECEPTION", reception);
-                        requestMailForm.put("REFERENCE", reference);
-                        requestMailForm.put("queryId", "mail.insertOutsideRequestSubmitMail");
-                        this.innodaleDao.create(requestMailForm);
+
+                        if(!"".equals(reception)) { //메일 수신처 정보가 없는 경우, 메일발송X
+                            for (HashMap<String, Object> hashMap : mailReceiverList) {
+                                hashMap.put("OUTSIDE_REQUEST_SEQ", outsideRequestSeq);
+                                hashMap.put("queryId", "outMapper.createOutsideRequestReceiver");
+                                this.innodaleDao.create(hashMap);
+                            }
+                            // 메일 발송
+                            requestMailForm.put("RECEPTION", reception);
+                            requestMailForm.put("REFERENCE", reference);
+                            requestMailForm.put("queryId", "mail.insertOutsideRequestSubmitMail");
+                            this.innodaleDao.create(requestMailForm);
+                        }
                     }
                 }
             }
