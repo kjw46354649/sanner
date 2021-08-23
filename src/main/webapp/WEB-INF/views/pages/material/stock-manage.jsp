@@ -374,7 +374,7 @@
 <input type="button" id="stockInoutFileUpload" style="display: none;">
 
 <!--재고생성/입고 팝업-->
-<div id="stock_manage_pop" class="popup_container" style="display: none;">
+<div id="stock_manage_pop" class="stockSearchPopup" style="display: none;">
     <form class="form-inline" id="stock_manage_pop_form" name="stock_manage_pop_form" role="form" onsubmit="return false;">
         <input type="hidden" id="queryId" name="queryId" value="material.selectInsideStockPopInfo">
         <input type="hidden" id="IN_OUT_QTY" name="IN_OUT_QTY" value="0">
@@ -398,85 +398,100 @@
         <input type="hidden" name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" value="">
         <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD" value="">
         <input type="hidden" name="COMP_CD" id="COMP_CD" value="">
+        <input type="hidden" name="NOTE" id="NOTE" value="">
 
         <div class="stockPopupWrap">
             <div class="stockPopupInfo">
                 <h3 id="stockPopup_title"><i class="xi-library-bookmark"></i> 재고생성 / 입고</h3>
-                <div class="barcode barcode_div" id="footer_barcode">
-                    <span class="barcode_label">Please Scan Barcode </span>
-                    <span class="barCode">
-                        <img src="resource/asset/images/common/img_barcode_long.png" alt="바코드" id="stock_manage_pop_form_barcode_img">
-                    </span>
-                    <span class="barCodeTxt">
-                        <input type="text" class="wd_200 hg_35" name="STOCK_BARCODE_NUM" id="STOCK_BARCODE_NUM" placeholder=""/>
-                    </span>
-                </div>
-                <div class="stockMap">
-                    <!--도면-->
-                    <img id="POP_DRAWING_IMG" src="/resource/main/blank.jpg" style="width: 100%;height: 100%;max-width: 100%;max-height: 100%;">
-                </div>
-                <div class="stockPopupBtm">
-                    <div class="stockPopupBtmLeft">
-                        <div class="stockPopupBtmLeftInfo">
-                            <span>작업/재고번호</span>&nbsp;&nbsp;&nbsp;
-                            <input type="text" class="stockNum" id="POP_CONTROL_NUM" readonly>
+                <div class="searchPopupWrap">
+                    <div class="stockMapLeft">
+                        <img id="POP_DRAWING_IMG" src="/resource/main/blank.jpg" style="width: 100%;height: 100%;max-width: 100%;max-height: 100%;">
+                    </div>
+                    <div class="searchPopupRight">
+                        <div class="searchPopupRightTop">
+                            <div class="barcode barcode_div" id="footer_barcode">
+                                <span class="barcode_label">Please Scan Barcode </span>
+                                <span class="barCode">
+                                <img src="resource/asset/images/common/img_barcode_long.png" alt="바코드" id="stock_manage_pop_form_barcode_img">
+                            </span>
+                                <span class="barCodeTxt">
+                                <input type="text" class="wd_200 hg_35" name="STOCK_BARCODE_NUM" id="STOCK_BARCODE_NUM" placeholder=""/>
+                            </span>
+                            </div>
                         </div>
-                        <div class="stockPopupBtmLeftTable">
-                            <!--grid-->
-                            <div id="stock_manage_grid03"></div>
+                        <div class="stockPopupBtm">
+                            <div class="stockPopupBtmLeft">
+                                <div class="stockPopupBtmLeftInfo">
+                                    <span>작업/재고번호</span>&nbsp;&nbsp;&nbsp;
+                                    <input type="text" class="stockNum" id="POP_CONTROL_NUM" readonly>
+                                </div>
+                                <div class="stockPopupBtmLeftTable">
+                                    <!--grid-->
+                                    <div id="stock_manage_grid03"></div>
+                                </div>
+                            </div>
+                            <div class="stockPopupBtmRight">
+                                <table>
+                                    <tr class="trHeight">
+                                        <th>재고번호</th>
+                                        <td class="tdBackColor tdWeight" id="POP_INSIDE_STOCK_NUM"></td>
+                                        <th>구분</th>
+                                        <td class="tdWeight tdCss" id="POP_GUBUN"></td>
+                                    </tr>
+                                    <tr class="trHeight">
+                                        <th>발주처</th>
+                                        <td class="edit_td">
+                                            <select id="POP_SEL_ORDER_COMP_CD" class="edit_sel" style="width: 80%;">
+                                            </select>
+                                        </td>
+                                        <th>사업자</th>
+                                        <td class="edit_td">
+                                            <select id="POP_SEL_COMP_CD" class="edit_sel">
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr class="trHeight">
+                                        <th>소재</th>
+                                        <td class="edit_td">
+                                            <select id="POP_MATERIAL_DETAIL" class="edit_sel">
+                                                <option value="">선택</option>
+                                                <c:forEach var="code" items="${HighCode.H_1027}">
+                                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </td>
+                                        <th>규격</th>
+                                        <td id="POP_SIZE_TXT" class="edit_td"></td>
+                                    </tr>
+                                    <tr class="trHeight">
+                                        <th>품명</th>
+                                        <td colspan="3" id="POP_ITEM_NM" class="edit_td"></td>
+                                    </tr>
+                                    <tr class="trHeight">
+                                        <th>비고</th>
+                                        <td class="edit_td">
+                                            <input id="pop_note_input" type="text" style="border: 0;">
+                                        </td>
+                                        <th>재고위치</th>
+                                        <td class="tdBackColor" id="POP_LOCATION">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th id="pop_qty_txt">입고수량</th>
+                                        <td colspan="3" class="enterNum">
+                                            <i class="xi-minus-circle xi-2x minusBtn" id="inside_stock_qty_minus_btn"></i>
+                                            <input type="number" value="0" id="ORDER_QTY">
+                                            <i class="xi-plus-circle xi-2x plusBtn" id="inside_stock_qty_plus_btn"></i>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="stockPopupBtnWrap">
+                                <button id="stockBtnClose" class="stockBtnClose">닫기</button>
+                                <button id="stockPopBtnSave1" class="stockBtnSave">저장</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="stockPopupBtmRight">
-                        <table>
-                            <tr class="trHeight">
-                                <th>재고번호</th>
-                                <td class="tdBackColor tdWeight" id="POP_INSIDE_STOCK_NUM"></td>
-                                <th>구분</th>
-                                <td class="tdWeight tdCss" id="POP_GUBUN"></td>
-                            </tr>
-                            <tr class="trHeight">
-                                <th>발주처</th>
-                                <td class="edit_td">
-                                    <select id="POP_SEL_ORDER_COMP_CD" class="edit_sel" style="width: 80%;">
-                                    </select>
-                                </td>
-                                <th>사업자</th>
-                                <td class="edit_td">
-                                    <select id="POP_SEL_COMP_CD" class="edit_sel">
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr class="trHeight">
-                                <th>소재</th>
-                                <td class="edit_td">
-                                    <select id="POP_MATERIAL_DETAIL" class="edit_sel">
-                                        <option value="">선택</option>
-                                        <c:forEach var="code" items="${HighCode.H_1027}">
-                                            <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                                        </c:forEach>
-                                    </select>
-                                </td>
-                                <th>규격</th>
-                                <td id="POP_SIZE_TXT" class="edit_td"></td>
-                            </tr>
-                            <tr class="trHeight">
-                                <th>품명</th>
-                                <td colspan="3" id="POP_ITEM_NM" class="edit_td"></td>
-                            </tr>
-                            <tr>
-                                <th id="pop_qty_txt">입고수량</th>
-                                <td colspan="3" class="enterNum">
-                                    <i class="xi-minus-circle xi-2x minusBtn" id="inside_stock_qty_minus_btn"></i>
-                                    <input type="number" value="0" id="ORDER_QTY">
-                                    <i class="xi-plus-circle xi-2x plusBtn" id="inside_stock_qty_plus_btn"></i>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="stockPopupBtnWrap">
-                    <button id="stockBtnClose" class="stockBtnClose">닫기</button>
-                    <button id="stockPopBtnSave1" class="stockBtnSave">저장</button>
                 </div>
             </div>
         </div>
@@ -1248,7 +1263,7 @@
             flexWidth: false,
             showTitle: false,
             postRenderInterval: -1, //call postRender synchronously.
-            // scrollModel: { autoFit: true },
+            scrollModel: { autoFit: true },
             columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
             colModel: stockManageColModel03,
             dataModel: {
@@ -1305,6 +1320,7 @@
                                 $("#stock_manage_pop").find(".stockPopupInfo").addClass('stockPopupInfoEnter');
                             }
                             $(".stockPopupBtmRight .edit_td").addClass('tdBackColor');
+                            $("#pop_note_input").attr("disabled",true);
                             $(".stockPopupBtmRight .edit_sel").attr("disabled", true);
                             $("#stock_manage_pop_form").find("#INSIDE_STOCK_SEQ").val(rowData.INSIDE_STOCK_SEQ);
                             $("#stock_manage_pop_form").find("#INSIDE_STOCK_NUM").val(rowData.INSIDE_STOCK_NUM);
@@ -1319,6 +1335,7 @@
                                 $("#stock_manage_pop_form").find("#ORDER_QTY").attr("disabled", true);
                                 $("#stock_manage_pop").find(".stockPopupInfo").addClass('stockPopupInfoOut');
                                 $(".stockPopupBtmRight .edit_td").addClass('tdBackColor');
+                                $("#pop_note_input").attr("disabled",true);
                                 $(".stockPopupBtmRight .edit_sel").attr("disabled", true);
                                 $("#POP_SEL_ORDER_COMP_CD option:eq(0)").prop("selected", true);
                                 $("#POP_SEL_COMP_CD option:eq(0)").prop("selected", true);
@@ -1326,6 +1343,7 @@
                             }else {
                                 $(".stockPopupBtmRight .edit_td").removeClass('tdBackColor');
                                 $(".stockPopupBtmRight .edit_sel").attr("disabled", false);
+                                $("#pop_note_input").attr("disabled",false);
                                 $("#POP_GUBUN").html(rowData.TYPE);
                             }
                             // $("#stock_manage_pop_form").find("#ORDER_QTY").val(rowData.ORDER_QTY);
@@ -1350,6 +1368,8 @@
                         $("#stock_manage_pop_form").find("#ORDER_COMP_CD").val(rowData.ORDER_COMP_CD);
                         $("#stock_manage_pop_form").find("#SIZE_TXT").val(rowData.SIZE_TXT);
                         $("#stock_manage_pop_form").find("#COMP_CD").val(rowData.COMP_CD);
+                        $("#stock_manage_pop_form").find("#pop_note_input").val(((typeof rowData.NOTE != 'undefined')?rowData.NOTE:''));
+                        $("#stock_manage_pop_form").find("#POP_LOCATION").text(((typeof rowData.LOC_NM != 'undefined')?rowData.LOC_NM:''));
                         $("#stock_manage_pop_form").find("#POP_STOCK_QTY").val(rowData.POP_STOCK_QTY);
                         $("#stock_manage_pop_form").find("#POP_STOCK_QTY_AFTER").val(POP_STOCK_QTY_AFTER);
                     }
@@ -1513,6 +1533,8 @@
                 $("#POP_GUBUN").html('');
                 $("#POP_ITEM_NM").html('');
                 $("#POP_SIZE_TXT").html('');
+                $("#stock_manage_pop_form").find("#POP_LOCATION").text("");
+                $("#pop_note_input").val("");
                 $("#POP_DRAWING_IMG").attr("src", '/resource/main/blank.jpg');
 
                 fnResetFrom("stock_manage_pop_form");
@@ -2125,6 +2147,7 @@
 
             $("#stock_manage_pop_form").find("#POP_TYPE").val($("#stock_manage_form").find("#popType").val());
             $("#stock_manage_pop_form").find("#IN_OUT_QTY").val($("#stock_manage_pop_form").find("#ORDER_QTY").val());
+            $("#stock_manage_pop_form").find("#NOTE").val($("#pop_note_input").val());
 
             let parameters = {
                 'url': '/managerInsideStockPop',

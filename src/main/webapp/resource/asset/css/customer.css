@@ -501,13 +501,39 @@ ul, ol , dl { list-style: none;}
 }
 .stockPopupWrap .stockPopupInfo {
 	background: #f9fbfd;
-	width: 45%;
-	height: 84%;
+	width: 77%;
+	height: 67%;
 	position: absolute;
-	top: 33%;
-	left: 55%;
-	transform: translate(-65%,-30%);
-	padding: 1%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-53%,-50%);
+	padding: 20px 20px 10px 20px;
+}
+.stockPopupInfo .searchPopupWrap {
+	width: 100%;
+	height: 92%;
+	display: flex;
+}
+.stockPopupInfo .stockMapLeft {
+	width: 62%;
+	height: 100%;
+	border: 1px solid #AAA;
+	overflow: hidden;
+	text-align: center;
+	margin-top: 1%;
+	background: white;
+}
+.stockPopupInfo .searchPopupRight {
+	width: 37%;
+	height: 100%;
+	padding-left: 20px;
+}
+.stockPopupInfo .searchPopupRight .searchPopupRightTop {
+	width: 100%;
+	height: 6%;
+	overflow: hidden;
+	margin: 10px 0;
+	padding: 5px 0;
 }
 .stockPopupWrap .stockPopupInfoOut {
 	background: #fffbfb;
@@ -531,36 +557,40 @@ ul, ol , dl { list-style: none;}
 .stockPopupInfo h3 i {
 	color: #565;
 }
-.stockPopupInfo .barcode {
+
+.stockPopupInfo .searchPopupRight .searchPopupRightTop .barcode {
 	display: inline-block;
+	width: 100%;
+	height: 100%;
 	background: #DDD;
-	text-align: center;
-	width: auto;
-	padding: 3px;
-	height: auto;
-	line-height: 25px;
-	vertical-align: middle;
-	position: absolute;
-	right: 20px;
-  top: 10px;
+	float: left;
+	text-align: left;
 }
+
 .stockPopupInfo .barcode_label {
 	font-weight: bold;
-	font-size: 1.4rem;
-	vertical-align: middle;
-	margin-right: 10px;
+	font-size: 1.8rem;
+	vertical-align: text-bottom;
+	margin: 0px 10px 0px 10px;
 }
 .stockPopupInfo .barCode img {
 	width: 15%;
-	margin: 0 5px;
+	vertical-align: text-bottom;
+	margin: 4px 5px 0px 6px;
 }
 .stockPopupInfo .barCodeTxt {
 	display: inline-block;
-	height: 100%;
+	height: 90%;
+	width: 48%;
+	vertical-align: top;
+	margin-top: 3px;
 }
 .stockPopupInfo .barCodeTxt input {
-	padding: 3px 10px;
 	outline: none;
+	padding: 2px 10px;
+	vertical-align: unset;
+	height: 95% !important;
+	width: 100% !important;
 }
 .stockPopupInfo .stockMap {
 	/*background: url(../../main/blank.jpg) no-repeat center;*/
@@ -572,38 +602,43 @@ ul, ol , dl { list-style: none;}
 }
 .stockPopupInfo .stockPopupBtm {
 	width: 100%;
-	height: 22%;
-	padding: 13px 0 7px;
-	display: flex;
+	height: 88%;
+	padding: 5px 0 5px;
+	display: inline-block;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmLeft {
-	width: 45%;
-	height: 100%;
+	width: 100%;
+	height: 45%;
 	text-align: center;
-	padding-right: 20px;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmLeft .stockPopupBtmLeftTable {
 	width: 100%;
 	height: 80%;
 }
 .stockPopupBtmLeft .stockPopupBtmLeftInfo {
-	height: 20%;
+	height: 15%;
+	width: 100%;
 	text-align: right;
+	margin: 5px 0;
 }
 .stockPopupBtmLeft .stockPopupBtmLeftInfo span {
 	font-weight: bold;
-	font-size: 1.2rem;
+	font-size: 1.4rem;
+	float: left;
 }
 .stockPopupBtmLeft .stockPopupBtmLeftInfo .stockNum {
 	background: #DDD;
 	outline: none;
 	height: 30px;
 	text-align: center;
+	width: 80%;
+	margin-right: 1%;
 }
 
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight {
-	width: 55%;
-	height: 100%;
+	width: 100%;
+	height: 48%;
+	margin: 5px 0;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight table {
 	width: 100%;
@@ -615,7 +650,7 @@ ul, ol , dl { list-style: none;}
 	background: white;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight .trHeight {
-	height: 18%;
+	height: 16%;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight table th {
 	width: 15%;
@@ -823,7 +858,7 @@ ul, ol , dl { list-style: none;}
 	width: 77%;
 	height: 67%;
 	position: absolute;
-	top: 48%;
+	top: 50%;
 	left: 50%;
 	transform: translate(-53%,-50%);
 	background: #fffbfb;
