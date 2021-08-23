@@ -993,7 +993,7 @@
                 sr.add({rowIndx: rowIndx});
                 const selRowData = this.getRowData({rowIndx: rowIndx});
                 if(typeof selRowData != 'undefined' && typeof selRowData.IMG_GFILE_SEQ != 'undefined') {
-                    callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
                 }
             },
             selectChange: function (event, ui) {

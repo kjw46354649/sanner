@@ -1685,7 +1685,7 @@
                     for (let i = firstRow; i <= lastRow; i++) selectedOrderManagementRowIndex.push(i);
                     if (firstRow === lastRow) {
                         let selRowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: firstRow});
-                        callQuickRowChangeDrawingImageViewer(selRowData.ORDER_IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                        callQuickRowChangeDrawingImageViewer(selRowData.ORDER_IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
                     }
                 }
                 amountSummaryHtml();

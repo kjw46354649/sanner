@@ -162,6 +162,7 @@ a { color: black; text-decoration: none;}
 						.nameWrap {
 							width: 100%;
 							display: flex;
+							height: 10%;
 						}
 						 .nameWrap p {
 							 color: white;
@@ -219,7 +220,7 @@ a { color: black; text-decoration: none;}
 							}
 							.progressTime {
 								position: absolute;
-								width: 180px;
+								width: 150px;
 								height: 25px;
 								bottom: 5px;
 								right: 5px;

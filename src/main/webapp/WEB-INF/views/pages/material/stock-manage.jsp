@@ -1135,6 +1135,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
+                        rowData.CONTROL_NUM = "";
                         callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     });
                 }
@@ -2342,6 +2343,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
+                        rowData.CONTROL_NUM = "";
                         callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     });
                 }
@@ -2568,8 +2570,8 @@
             columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: stockInoutFilterRender}, filterModel: { mode: 'OR' },
             //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
-            //selectionModel: { type: 'row', mode: 'single'} ,
-            selectionModel: { type: 'cell', mode: 'multiple'} ,
+            selectionModel: { type: 'row', mode: 'single'} ,
+            // selectionModel: { type: 'cell', mode: 'multiple'} ,
             scrollModel: {autoFit: true},
             swipeModel: {on: false},
             showTitle: false,

@@ -330,12 +330,12 @@
                 sr.removeAll();
                 sr.add({rowIndx: rowIndx});
                 const selRowData = this.getRowData({rowIndx: rowIndx});
-                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
             rowSelect: function (evt, ui) {
                 $.each(ui.addList, function (idx,Item) {
                     if(idx === 0) {
-                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ,Item.rowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
                     }
                 })
             },
@@ -415,7 +415,7 @@
             rowSelect: function (evt, ui) {
                 $.each(ui.addList, function (idx,Item) {
                     if(idx === 0) {
-                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ,Item.rowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
                     }
                 })
             },
@@ -431,7 +431,7 @@
                 sr.removeAll();
                 sr.add({rowIndx: rowIndx});
                 const selRowData = this.getRowData({rowIndx: rowIndx});
-                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
             toolbar: false,
         };
@@ -499,7 +499,7 @@
             rowSelect: function (evt, ui) {
                 $.each(ui.addList, function (idx,Item) {
                     if(idx === 0) {
-                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ,Item.rowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
                     }
                 })
             },
@@ -515,7 +515,7 @@
                 sr.removeAll();
                 sr.add({rowIndx: rowIndx});
                 const selRowData = this.getRowData({rowIndx: rowIndx});
-                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
             toolbar: false,
         };

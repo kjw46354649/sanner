@@ -885,7 +885,7 @@
         let isOpen = $("#common_quick_drawing_popup").dialog("isOpen");
         $("#common_quick_drawing_form").find("#gFileSeq").val(imageSeq);
         $("#common_quick_drawing_form").find("#drawingImage").attr("src", '/qimage/' + imageSeq);
-        if(typeof rowData != 'undefined') {
+        if(typeof rowData != 'undefined' && typeof imageSeq != 'undefined') {
             $("#common_quick_drawing_form").find("#QUICK_DRAWING_REGIST_NUM").text(((typeof rowData.REGIST_NUM != 'undefined')?rowData.REGIST_NUM:''));
             $("#common_quick_drawing_form").find("#QUICK_DRAWING_NUM").text(((typeof rowData.DRAWING_NUM != 'undefined')?rowData.DRAWING_NUM:''));
             $("#common_quick_drawing_form").find("#QUICK_DRAWING_REV").text(((typeof rowData.CONTROL_VER != 'undefined')?rowData.CONTROL_VER:''));
@@ -909,13 +909,32 @@
         }
     }
 
-    function callQuickRowChangeDrawingImageViewer(imageSeq)
+    function callQuickRowChangeDrawingImageViewer(imageSeq, rowData)
     {
         // 팝업창이 열려 있는 경우만 처리
         let isOpen = $("#common_quick_drawing_popup").dialog("isOpen");
         if(isOpen) {
             $("#common_quick_drawing_form").find("#gFileSeq").val(imageSeq);
             $("#common_quick_drawing_form").find("#drawingImage").attr("src", '/qimage/' + imageSeq);
+            if(typeof rowData != 'undefined' && typeof imageSeq != 'undefined') {
+                $("#common_quick_drawing_form").find("#QUICK_DRAWING_REGIST_NUM").text(((typeof rowData.REGIST_NUM != 'undefined')?rowData.REGIST_NUM:''));
+                $("#common_quick_drawing_form").find("#QUICK_DRAWING_NUM").text(((typeof rowData.DRAWING_NUM != 'undefined')?rowData.DRAWING_NUM:''));
+                $("#common_quick_drawing_form").find("#QUICK_DRAWING_REV").text(((typeof rowData.CONTROL_VER != 'undefined')?rowData.CONTROL_VER:''));
+                if(typeof rowData.CONTROL_PART_NUM != 'undefined') {
+                    $("#common_quick_drawing_form").find("#QUICK_DRAWING_CONTROL_NUM").text(rowData.CONTROL_PART_NUM);
+                }else {
+                    $("#common_quick_drawing_form").find("#QUICK_DRAWING_CONTROL_NUM").text(((typeof rowData.CONTROL_NUM != 'undefined')?rowData.CONTROL_NUM:''));
+                }
+                $("#common_quick_drawing_form").find("#QUICK_DRAWING_SIZE_TXT").text(((typeof rowData.SIZE_TXT != 'undefined')?rowData.SIZE_TXT:''));
+                $("#common_quick_drawing_form").find("#QUICK_DRAWING_MATERIAL_DETAIL").text(((typeof rowData.MATERIAL_DETAIL_NM != 'undefined')?rowData.MATERIAL_DETAIL_NM:''));
+            }else {
+                $("#common_quick_drawing_form").find("#QUICK_DRAWING_REGIST_NUM").text("");
+                $("#common_quick_drawing_form").find("#QUICK_DRAWING_NUM").text("");
+                $("#common_quick_drawing_form").find("#QUICK_DRAWING_REV").text("");
+                $("#common_quick_drawing_form").find("#QUICK_DRAWING_CONTROL_NUM").text("");
+                $("#common_quick_drawing_form").find("#QUICK_DRAWING_SIZE_TXT").text("");
+                $("#common_quick_drawing_form").find("#QUICK_DRAWING_MATERIAL_DETAIL").text("");
+            }
         }
     }
 

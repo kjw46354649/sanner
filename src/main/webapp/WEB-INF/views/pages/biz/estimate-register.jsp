@@ -829,7 +829,7 @@
                     if(firstRow === lastRow){
                         let selRowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: firstRow});
                         $("#estimate_register_info_form").find("#GFILE_SEQ").val(selRowData.IMG_GFILE_SEQ);
-                        callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                        callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
                     }
                 }
             },

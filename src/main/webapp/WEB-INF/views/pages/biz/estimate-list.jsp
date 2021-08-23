@@ -636,7 +636,7 @@
                 editable: false,
                 copyModel: {render: true},
                 complete: function (event, ui) {
-                    this.flex();
+                    // this.flex();
                     let data = estimateMasterBotGrid.pqGrid('option', 'dataModel.data');
 
                     $('#estimate_master_bot_grid_records').html(data.length);

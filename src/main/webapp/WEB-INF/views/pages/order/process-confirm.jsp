@@ -324,7 +324,7 @@
                 sr.removeAll();
                 sr.add({rowIndx: rowIndx});
                 const selRowData = this.getRowData({rowIndx: rowIndx});
-                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
         let $processConfirmGrid;
@@ -466,7 +466,7 @@
                 sr.removeAll();
                 sr.add({rowIndx: rowIndx});
                 const selRowData = this.getRowData({rowIndx: rowIndx});
-                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
         let $outsideGrid;
@@ -593,7 +593,7 @@
                 sr.removeAll();
                 sr.add({rowIndx: rowIndx});
                 const selRowData = this.getRowData({rowIndx: rowIndx});
-                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
         let $processCompleteGrid;
@@ -718,7 +718,7 @@
                 sr.removeAll();
                 sr.add({rowIndx: rowIndx});
                 const selRowData = this.getRowData({rowIndx: rowIndx});
-                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
         };
 
