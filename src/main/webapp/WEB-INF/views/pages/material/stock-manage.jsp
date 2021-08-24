@@ -427,7 +427,7 @@
                                 </div>
                                 <div class="stockPopupBtmLeftTable">
                                     <!--grid-->
-                                    <div id="stock_manage_grid03"></div>
+                                    <div id="stock_manage_grid03" style="font-size: 1.2rem;"></div>
                                 </div>
                             </div>
                             <div class="stockPopupBtmRight">
@@ -984,13 +984,6 @@
                 let totalRecords = data.length;
                 $('#stock_manage_grid_records').html(totalRecords);
             },
-            /*rowSelect: function (event, ui) {
-                selectedRowIndex = [];
-                let selectList = ui.addList;
-                for (let i = 0; i < selectList.length; i++) {
-                    selectedRowIndex.push(selectList[i].rowIndx);
-                }
-            },*/
             selectChange: function (event, ui) {
                 selectedRowIndex = [];
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
@@ -998,6 +991,10 @@
                     let lastRow = ui.selection._areas[i].r2;
 
                     for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
+                    if (firstRow === lastRow) {
+                        let selRowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: firstRow});
+                        callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);
+                    }
                 }
             },
             change: function (evt, ui) {
@@ -1089,26 +1086,6 @@
                     return;
                 }*/
             }
-            // ,cellClick: function (event, ui) {
-            //     let rowIndx = ui.rowIndx, $grid = this;
-            //     if (ui.rowData['INSIDE_STOCK_NUM'] != undefined){
-            //         if (ui.dataIndx == 'INSIDE_STOCK_QTY_IN') {//입고
-            //             $("#stock_manage_form").find("#popType").val("GRID_IN");
-            //             $("#stock_manage_form").find("#V_INSIDE_STOCK_SEQ").val(ui.rowData['INSIDE_STOCK_NUM']);
-            //             $('#stock_manage_pop').modal('show');
-            //         }
-            //         if (ui.dataIndx == 'INSIDE_STOCK_QTY_OUT') {//출고
-            //
-            //             if (ui.rowData['INSIDE_STOCK_CURR_QTY'] <= 0){
-            //                 alert("출고할 재고수량이 없습니다.");
-            //             }else{
-            //                 $("#stock_manage_form").find("#popType").val("GRID_OUT");
-            //                 $("#stock_manage_form").find("#V_INSIDE_STOCK_SEQ").val(ui.rowData['INSIDE_STOCK_NUM']);
-            //                 $('#stock_manage_pop').modal('show');
-            //             }
-            //         }
-            //     }
-            // }
         });
         stockManageColModel02 = [
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
@@ -1150,7 +1127,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        rowData.CONTROL_NUM = "";
+                        rowData.CONTROL_PART_NUM = "";
                         callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     });
                 }
@@ -1192,6 +1169,23 @@
                 postData: fnFormToJsonArrayData('stock_manage_hidden_form'),
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
+                }
+            },
+            cellKeyDown: function (event, ui) {
+                let rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const totalRecords = this.option('dataModel.data').length;
+                if (event.keyCode == $.ui.keyCode.DOWN && rowIndx < totalRecords) {
+                    rowIndx++;
+                } else if (event.keyCode == $.ui.keyCode.UP && rowIndx > 0) {
+                    rowIndx--;
+                }
+                sr.removeAll();
+                sr.add({rowIndx: rowIndx});
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+                if(typeof selRowData != 'undefined' && typeof selRowData.IMG_GFILE_SEQ != 'undefined') {
+                    selRowData.CONTROL_PART_NUM = "";
+                    callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
                 }
             },
             dataReady: function (event, ui) {
@@ -2366,7 +2360,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find("#imageView").bind("click", function () {
                         let rowData = ui.rowData;
-                        rowData.CONTROL_NUM = "";
+                        rowData.CONTROL_PART_NUM = "";
                         callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                     });
                 }
@@ -2628,34 +2622,41 @@
                 let totalRecords = data.length;
                 $('#stock_in_out_grid_records').html(totalRecords);
             },
-            /*rowSelect: function (event, ui) {
-                selectedRowIndex = [];
-                let selectList = ui.addList;
-                for (let i = 0; i < selectList.length; i++) {
-                    selectedRowIndex.push(selectList[i].rowIndx);
+            // selectChange: function (event, ui) {
+            //     selectedRowIndex = [];
+            //     for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
+            //         let firstRow = ui.selection._areas[i].r1;
+            //         let lastRow = ui.selection._areas[i].r2;
+            //
+            //         for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
+            //     }
+            // },
+            cellKeyDown: function (event, ui) {
+                let rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const totalRecords = this.option('dataModel.data').length;
+                if (event.keyCode == $.ui.keyCode.DOWN && rowIndx < totalRecords) {
+                    rowIndx++;
+                } else if (event.keyCode == $.ui.keyCode.UP && rowIndx > 0) {
+                    rowIndx--;
                 }
-            },*/
-            selectChange: function (event, ui) {
-                selectedRowIndex = [];
-                for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
-                    let firstRow = ui.selection._areas[i].r1;
-                    let lastRow = ui.selection._areas[i].r2;
-
-                    for (let i = firstRow; i <= lastRow; i++) selectedRowIndex.push(i);
+                sr.removeAll();
+                sr.add({rowIndx: rowIndx});
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+                if(typeof selRowData != 'undefined' && typeof selRowData.IMG_GFILE_SEQ != 'undefined') {
+                    selRowData.CONTROL_PART_NUM = "";
+                    callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
                 }
             },
-            change: function (evt, ui) {
-                if(ui.source == "edit") {
-                    let WAREHOUSE_CD = ui.updateList[0].newRow.WAREHOUSE_CD == undefined ? "" : ui.updateList[0].newRow.WAREHOUSE_CD;
-                    if(WAREHOUSE_CD != "") {
-                        let rowIndx = ui.updateList[0].rowIndx;
-                        stockInoutGridId01.pqGrid('updateRow', {rowIndx: rowIndx, row: {"LOC_SEQ": ""}});
-                    }
-                }
-            },
-            cellClick: function (event, ui) {
-                let rowIndx = ui.rowIndx, $grid = this;
-            }
+            // change: function (evt, ui) {
+            //     if(ui.source == "edit") {
+            //         let WAREHOUSE_CD = ui.updateList[0].newRow.WAREHOUSE_CD == undefined ? "" : ui.updateList[0].newRow.WAREHOUSE_CD;
+            //         if(WAREHOUSE_CD != "") {
+            //             let rowIndx = ui.updateList[0].rowIndx;
+            //             stockInoutGridId01.pqGrid('updateRow', {rowIndx: rowIndx, row: {"LOC_SEQ": ""}});
+            //         }
+            //     }
+            // },
         });
         /**  현황관리(GRID01) 그리드 선언 끝 **/
 

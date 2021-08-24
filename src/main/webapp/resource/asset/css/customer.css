@@ -633,6 +633,7 @@ ul, ol , dl { list-style: none;}
 	text-align: center;
 	width: 80%;
 	margin-right: 1%;
+	font-size: 1.4rem;
 }
 
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight {
@@ -646,7 +647,7 @@ ul, ol , dl { list-style: none;}
 	border-spacing: 0;
 	border-collapse: collapse;
 	border: 1px solid #aaa;
-	font-size: 1.2rem;
+	font-size: 1.3rem;
 	background: white;
 }
 .stockPopupInfo .stockPopupBtm .stockPopupBtmRight .trHeight {
