@@ -378,9 +378,9 @@
             {
                 title: '재고충당', align: 'center',
                 colModel: [
-                    {title: '재고번호', dataType: 'String', dataIndx: 'INSIDE_STOCK_NUM', width: 100, minWidth: 100},
-                    {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'STOCK_REQUEST_QTY', width: 40, minWidth: 40},
-                    {title: '불출', dataType: 'integer', format: '#,###', dataIndx: 'STOCK_OUT_QTY', width: 40, minWidth: 40}
+                    {title: '재고번호', dataType: 'String', dataIndx: 'INSIDE_STOCK_NUM', width: 100, minWidth: 100, editable: false},
+                    {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'STOCK_REQUEST_QTY', width: 40, minWidth: 40, editable: false},
+                    {title: '불출', dataType: 'integer', format: '#,###', dataIndx: 'STOCK_OUT_QTY', width: 40, minWidth: 40, editable: false}
                 ]
             },
             {title: '소재<br>주문상태', dataIndx: 'M_STATUS_NM', width: 70, editable: false},
@@ -1869,7 +1869,6 @@
             checkMaterialOrderStatus(function(flag) {
                 if(!flag) {
                     if (materialOrderEmptyRowCheck()) {
-                        fnAlert(null, '소재주문 제출시 빈ROW 가 있으면 메세지를...');
                         return false;
                     }
                     //메일 여부
@@ -2135,16 +2134,19 @@
 
         const materialOrderEmptyRowCheck = function () {
             const gridData = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data')
-            let returnVal = false;
 
             for (let i = 0, LENGTH = gridData.length; i < LENGTH; i++) {
                 if (Object.keys(gridData[i]).length < 8) {
-                    returnVal = true;
-                    break;
+                    fnAlert(null, '소재 주문 제출이 불가합니다.');
+                    return true;
+                }
+                if(typeof gridData[i].M_COMP_CD == 'undefined' || gridData[i].M_COMP_CD == null || gridData[i].M_COMP_CD == '') {
+                    fnAlert(null, '소재 주문 업체를 선택해주세요');
+                    return true;
                 }
             }
 
-            return returnVal;
+            return false;
         };
 
         function itemOrderRegisterPopMail() {
