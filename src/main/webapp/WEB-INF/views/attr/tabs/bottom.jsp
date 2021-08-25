@@ -1000,7 +1000,7 @@
                     processFlag = false;
                 }
             }
-            console.log($('#common_cad_file_attach_form').find("#queryId").val())
+            // console.log($('#common_cad_file_attach_form').find("#queryId").val())
             formData.append('GFILE_SEQ', GfileSeq);
             var actionUrl = '';
             var queryId = $('#common_cad_file_attach_form').find("#queryId").val() + "_select";
@@ -1021,7 +1021,7 @@
                         return false;
                     }
 
-                    console.log('fnFormDataFileUploadAjax',data);
+                    // console.log('fnFormDataFileUploadAjax',data);
 
                     if($('#common_file_download_form').find("#TYPE").val() == 'STOCK_UPLOAD' && data.fileUploadDataList.length > 0) {
                         $.each(data.fileUploadDataList, function(idx,Item) {
