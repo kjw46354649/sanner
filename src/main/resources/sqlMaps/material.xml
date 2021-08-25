@@ -2694,10 +2694,16 @@
         )) AS flag
         FROM DUAL
     </select>
-    <delete id="deleteInsideStockOut" parameterType="java.util.HashMap">
-        DELETE FROM jmes.TBL_INSIDE_OUT
+    <update id="updateCancelInsideStockOut" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_INSIDE_OUT
+        SET
+            OUT_STATUS = 'OUT001',
+            OUT_QTY = null,
+            OUT_DT = null,
+            UPDATE_DT = now(),
+            UPDATE_ID = #{LOGIN_USER_ID}
         WHERE INSIDE_OUT_SEQ = #{SEQ}
-    </delete>
+    </update>
     <delete id="deleteInsideStockIn" parameterType="java.util.HashMap">
         DELETE FROM jmes.TBL_INSIDE_IN
         WHERE INSIDE_IN_SEQ = #{SEQ}

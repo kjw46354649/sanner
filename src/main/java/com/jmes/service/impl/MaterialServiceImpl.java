@@ -377,8 +377,8 @@ public class MaterialServiceImpl implements MaterialService {
 
         try {
             if("OUT".equals(TYPE_CODE)) { //todo INSIDE_OUT에서 제거
-                map.put("queryId", "material.deleteInsideStockOut");
-                this.innodaleDao.remove(map);
+                map.put("queryId", "material.updateCancelInsideStockOut");
+                this.innodaleDao.update(map);
             }else if("IN".equals(TYPE_CODE)) { //
 
                 map.put("queryId", "material.deleteInsideStockIn");
