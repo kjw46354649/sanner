@@ -906,7 +906,7 @@
         }
     ];
 
-    let uploadFileSize = 0;
+    let orgFileSize = 0;
     let commonFileDownUploadObj = {
         height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
         selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
@@ -929,7 +929,7 @@
             $.each(data,function (idx,Item) {
                 fileSize += Item.FILE_SIZE;
             })
-            uploadFileSize = fileSize;
+            orgFileSize = fileSize;
             $('#filedownloadTotalCount').html(totalRecords);
         },
     };
@@ -980,6 +980,7 @@
         $(this).removeClass('drag-over');
         let cadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
         let GfileSeq = $("#common_file_download_form").find("#GFILE_SEQ").val();
+        let uploadFileSize = 0;
         for(let i = 0; i < cadFiles.length; i++) {
             let file = cadFiles[i];
             uploadControlFiles.push(file); //업로드 목록에 추가
@@ -994,7 +995,7 @@
             });
             var processFlag = true;
             if($("#common_file_download_form").find("#callElement").val() == 'REQUEST_OUTSIDE_FILE_UPLOAD' || $("#common_file_download_form").find("#callElement").val() == 'CANCEL_REQUEST_OUTSIDE_FILE_UPLOAD') {
-                if(uploadFileSize > (22 * 1024 * 1024)) { // 파일사이즈가 22mb를 넘을경우
+                if(orgFileSize + uploadFileSize > (22 * 1024 * 1024)) { // 파일사이즈가 22mb를 넘을경우
                     fnAlert(null, "파일 첨부는 최대 22MB까지 가능합니다.");
                     processFlag = false;
                 }
