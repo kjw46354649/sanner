@@ -2253,6 +2253,17 @@
         });
 
         $('#CANCEL_REQUEST_OUTSIDE_SAVE_SUBMIT').on('click', _.debounce(function (){
+            let cancelFileData = $cancelRequestOutsideFileGrid.pqGrid('option', 'dataModel.data');
+
+            var fileSize = 0;
+            $.each(cancelFileData,function (idx,Item) {
+                fileSize += Item.FILE_SIZE;
+            })
+            if(fileSize > (22 * 1024 * 1024)) {
+                fnAlert(null, "파일 첨부는 최대 22MB까지 가능합니다.");
+                return false;
+            }
+
             cancelRequestOutsideConfirm();
         }, 500));
         /* 가공 취소 요청 */
@@ -2394,6 +2405,15 @@
 
             if (!outsideCompCd) {
                 fnAlert(null, '요청 외주 업체가 없습니다.');
+                return false;
+            }
+            let fileData = $requestOutsideFileGrid.pqGrid('option', 'dataModel.data');
+            var fileSize = 0;
+            $.each(fileData,function (idx,Item) {
+                fileSize += Item.FILE_SIZE;
+            })
+            if(fileSize > (22 * 1024 * 1024)) {
+                fnAlert(null, "파일 첨부는 최대 22MB까지 가능합니다.");
                 return false;
             }
 

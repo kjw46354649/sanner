@@ -906,6 +906,7 @@
         }
     ];
 
+    let uploadFileSize = 0;
     let commonFileDownUploadObj = {
         height: 200, collapsible: false, resizable: true, showTitle: false, // pageModel: {type: "remote"},
         selectionModel : {type: 'row', mode: 'single'}, numberCell: {title: 'No.'}, dragColumns: {enabled: false},
@@ -924,6 +925,11 @@
         dataReady: function (event, ui) {
             let data = commonFileDownUploadGrid.pqGrid('option', 'dataModel.data');
             let totalRecords = data.length;
+            let fileSize = 0;
+            $.each(data,function (idx,Item) {
+                fileSize += Item.FILE_SIZE;
+            })
+            uploadFileSize = fileSize;
             $('#filedownloadTotalCount').html(totalRecords);
         },
     };
@@ -981,9 +987,18 @@
         if (uploadControlFiles.length > 0) { // file upload
             let formData = new FormData();
             $.each(uploadControlFiles, function(i, file) {
-                if(file.upload != 'disable') //삭제하지 않은 이미지만 업로드 항목으로 추가
+                if(file.upload != 'disable') {//삭제하지 않은 이미지만 업로드 항목으로 추가
                     formData.append('file', file, file.name);
+                    uploadFileSize += file.size;
+                }
             });
+            var processFlag = true;
+            if($("#common_file_download_form").find("#callElement").val() == 'REQUEST_OUTSIDE_FILE_UPLOAD' || $("#common_file_download_form").find("#callElement").val() == 'CANCEL_REQUEST_OUTSIDE_FILE_UPLOAD') {
+                if(uploadFileSize > (22 * 1024 * 1024)) { // 파일사이즈가 22mb를 넘을경우
+                    fnAlert(null, "파일 첨부는 최대 22MB까지 가능합니다.");
+                    processFlag = false;
+                }
+            }
             console.log($('#common_cad_file_attach_form').find("#queryId").val())
             formData.append('GFILE_SEQ', GfileSeq);
             var actionUrl = '';
@@ -996,33 +1011,36 @@
             formData.append('queryId', queryId);
 
             uploadControlFiles = [];    // 파일 업로드 정보 초기화
-            fnFormDataFileUploadAjax(function (data) {
-                let fileUploadList = data.fileUploadList;
-                let GFILE_SEQ = fileUploadList[0].GFILE_SEQ;
-                if (fileUploadList.length <= 0) {
-                    fnAlert(null, "주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
-                    return false;
-                }
+            if(processFlag) {
+                fnFormDataFileUploadAjax(function (data) {
+                    let fileUploadList = data.fileUploadList;
+                    let GFILE_SEQ = fileUploadList[0].GFILE_SEQ;
+                    if (fileUploadList.length <= 0) {
+                        fnAlert(null, "주문 정보가 없습니다. 주문 정보를 확인 해 주세요.");
+                        return false;
+                    }
 
-                console.log('fnFormDataFileUploadAjax',data);
+                    console.log('fnFormDataFileUploadAjax',data);
 
-                if($('#common_file_download_form').find("#TYPE").val() == 'STOCK_UPLOAD' && data.fileUploadDataList.length > 0) {
-                    $.each(data.fileUploadDataList, function(idx,Item) {
-                        let parameter = {
-                            'queryId': 'material.manageStockCadFiles',
-                            'INSIDE_STOCK_SEQ': $("#common_file_download_form #INSIDE_STOCK_SEQ").val(),
-                            'PDF_GFILE_SEQ': Item.PDF_GFILE_SEQ,
-                            'IMG_GFILE_SEQ': Item.IMG_GFILE_SEQ
-                    };
-                        let parameters = {'url': '/json-update', 'data': parameter};
-                        fnPostAjaxAsync('', parameters, '');
-                    })
-                }
-                let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GFILE_SEQ };
-                fnRequestGridData(commonFileDownUploadGrid, postData);
-                $("#common_file_download_form").find("#GFILE_SEQ").val(GFILE_SEQ);
-                fnAlert(null,"파일 업로드가 완료 되었습니다.");
-            }, formData, actionUrl);
+                    if($('#common_file_download_form').find("#TYPE").val() == 'STOCK_UPLOAD' && data.fileUploadDataList.length > 0) {
+                        $.each(data.fileUploadDataList, function(idx,Item) {
+                            let parameter = {
+                                'queryId': 'material.manageStockCadFiles',
+                                'INSIDE_STOCK_SEQ': $("#common_file_download_form #INSIDE_STOCK_SEQ").val(),
+                                'PDF_GFILE_SEQ': Item.PDF_GFILE_SEQ,
+                                'IMG_GFILE_SEQ': Item.IMG_GFILE_SEQ
+                            };
+                            let parameters = {'url': '/json-update', 'data': parameter};
+                            fnPostAjaxAsync('', parameters, '');
+                        })
+                    }
+                    let postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GFILE_SEQ };
+                    fnRequestGridData(commonFileDownUploadGrid, postData);
+                    $("#common_file_download_form").find("#GFILE_SEQ").val(GFILE_SEQ);
+                    fnAlert(null,"파일 업로드가 완료 되었습니다.");
+                }, formData, actionUrl);
+
+            }
         }
     });
     /** 파일 업로드 스크립트 종료 **/
