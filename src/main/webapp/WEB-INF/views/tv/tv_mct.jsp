@@ -585,7 +585,7 @@
 								if(Item2.WORK_PLAN_TYPE == 1 && typeof Item2.IMG_GFILE_SEQ != 'undefined') {
 									html += '		<img src="/qimage/'+Item2.IMG_GFILE_SEQ +'" alt="도면">';
 								}else {
-									html += '		<img src="/resource/pop/images/machine.png" alt="도면">';
+									html += '		<img src="/resource/asset/images/tv/img_thumb_3.png" class="machineImg" alt="도면">';
 								}
 								html += '		<div class="mctMapTime">';
 								html += '			<span>진행 : '+Item2.WORKING_TIME_FORMAT + '</span><br>예상 : ' + ((typeof Item2.PLAN_WORKING_TIME_FORMAT != 'undefined')?Item2.PLAN_WORKING_TIME_FORMAT:'');
@@ -783,9 +783,13 @@
 							}
 
 							if(Item.WORK_PLAN_TYPE == 1 && typeof Item.IMG_GFILE_SEQ != 'undefined') {
+								$target.find(".mctMapImg").find("img").removeClass('machineImg');
 								$target.find(".mctMapImg").find("img").attr("src","/qimage/" + Item.IMG_GFILE_SEQ);
 							}else {
-								$target.find(".mctMapImg").find("img").attr("src","/resource/pop/images/machine.png");
+								if(!$target.find(".mctMapImg").find("img").hasClass('machineImg')) {
+									$target.find(".mctMapImg").find("img").addClass('machineImg');
+								}
+								$target.find(".mctMapImg").find("img").attr("src","/resource/asset/images/tv/img_thumb_3.png");
 							}
 							var html = "<span> 진행 : " + Item.WORKING_TIME_FORMAT + "</span><br>예상 : " +  ((typeof Item.PLAN_WORKING_TIME_FORMAT != 'undefined')?Item.PLAN_WORKING_TIME_FORMAT:'');
 							$target.find(".mctMapTime").html(html);

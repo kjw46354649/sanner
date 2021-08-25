@@ -897,11 +897,23 @@
 
 			getPopLocationData();
 		};
+		let getSectionCnt = function (equipSeq) {
+			const parameter2 = {'url': '/tv/json-info', 'data': {
+					'queryId':'tvMapper.selectTvMachineList',
+					'EQUIP_SEQ':equipSeq
+				}
+			};
+			fnPostAjax(function (data) {
+				$("#"+data.info.FACTORY_AREA + '_WORK').html('<span>진행</span> ' + data.info.WORK_TOTAL);
+				$("#"+data.info.FACTORY_AREA + '_WAIT').html('<span>대기</span> ' + data.info.WAIT_TOTAL);
+			}, parameter2, '');
+		}
 
 		/** DRAWING BOARD 정보 실시간 처리 **/
 		let drawingMessageProcess = function(messageData){
 			alarmMessageProcess(messageData);
 			getStatusData();
+			getSectionCnt(messageData.equipSeq);
 
 			let actionType = messageData.actionType;
 			let $target = $("#" + messageData.factoryArea + "_" + messageData.equipPosition);
