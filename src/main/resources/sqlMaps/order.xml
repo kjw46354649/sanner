@@ -2614,16 +2614,18 @@
             SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT, <!-- 발주납기 -->
             SF_GET_DATE_F(C.DELIVERY_DT, '', '') AS DELIVERY_DT, <!-- 발주정보_납품확인 -->
             SF_GET_DATE_F(C.OUT_FINISH_DT, '', '') AS OUT_FINISH_DT, <!-- 출고완료일 -->
-            A.CONTROL_NUM, C.ORDER_QTY, C.ORDER_NUM, C.DRAWING_NUM, IFNULL(C.REGIST_NUM,SPACE(0)) AS REGIST_NUM,
+            C.ORDER_QTY, C.ORDER_NUM, C.DRAWING_NUM, IFNULL(C.REGIST_NUM,SPACE(0)) AS REGIST_NUM,
             SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS,
             SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS LAST_POP_POSITION, <!-- 현재 등록된 위치 -->
             H.INSPECT_GRADE, jmes.SF_GET_CODE_NM('1040', H.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 -->
             G.USER_NM, F.STAFF_NM,
             A.CONTROL_VER,
             B.SIZE_TXT,
-            jmes.SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+            jmes.SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM,
+            jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM,
+            CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM,'#',B.PART_NUM) END AS CONTROL_NUM
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_NUM IS NULL AND B.WORK_TYPE NOT IN ('WTP050') <!-- 21.03.30 작업형태 '파트'인것 제외 -->
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE NOT IN ('WTP020') <!-- 21.03.30 작업형태 '파트'인것 제외, 21.08.27 조립제외, 파트표기 -->
             INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ
                 <if test="INNER_DUE_DT != null and INNER_DUE_DT != ''">
                     AND C.ORDER_DUE_DT = REPLACE(#{INNER_DUE_DT}, '/', SPACE(0))
@@ -2644,7 +2646,7 @@
         <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
         </if>
-        ORDER BY A.CONTROL_NUM, C.ORDER_NUM, C.DRAWING_NUM
+        ORDER BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_NUM, C.DRAWING_NUM
     </select>
 
     <select id="businessMonthOutgoingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -2665,7 +2667,7 @@
                     , SUM(CASE WHEN C.OUT_FINISH_DT IS NOT NULL THEN 1 ELSE 0 END) AS OUT_FINISH_CNT
                     , COUNT(*) AS ORDER_CNT
                 FROM jmes.TBL_CONTROL A
-                    INNER JOIN jmes.TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ AND B.PART_NUM IS NULL AND B.WORK_TYPE NOT IN ('WTP050') <!-- 21.03.30 작업형태 '파트'인것 제외 -->
+                    INNER JOIN jmes.TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ AND B.WORK_TYPE NOT IN ('WTP020') <!-- 21.03.30 작업형태 '파트'인것 제외, 21.08.27 조립제외, 파트표기 -->
                     INNER JOIN jmes.TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = A.CONTROL_SEQ
                         AND C.ORDER_DUE_DT BETWEEN #{SEL_START_DATE} AND #{SEL_END_DATE}
                 WHERE 1 = 1
@@ -3264,33 +3266,30 @@
             , X.SIZE_TXT
             , X.DRAWING_NUM
         FROM (  <!-- 출고일 없는경우 -->
-                SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
-                    , B.IMG_GFILE_SEQ
-                    , C.ORDER_DUE_DT
-                    , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
-                    , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
-                    , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
-                    , C.ORDER_QTY AS CONTROL_ORDER_QTY
-                    , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
-                    , (SELECT M.USER_NM FROM jmes.TBL_USER M, jmes.TBL_COMPANY N WHERE M.USER_ID = N.CHARGE_USER_ID AND N.COMP_CD = A.ORDER_COMP_CD) AS CHARGE_USER_NM
-                    , A.CONTROL_VER
-                    , B.SIZE_TXT
-                    , jmes.SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
-                    , C.REGIST_NUM
-                    , B.DRAWING_NUM
-                FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B, jmes.TBL_CONTROL_PART_ORDER C
-                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND B.CONTROL_SEQ = C.CONTROL_SEQ
-                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                    AND B.PART_NUM IS NULL
-                    AND B.WORK_TYPE NOT IN ('WTP050') <!-- 21.03.30 작업형태 '파트'인것 제외 -->
-                    AND A.DEL_YN = 'N'
-                    AND A.CONTROL_STATUS IN ('ORD001','ORD003')
-                    AND IFNULL(A.OUT_FINISH_STATUS, SPACE(0)) NOT IN ('RLS020') <!-- 폐기 제외 -->
-                    AND A.OUT_FINISH_DT IS NULL
-                    AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
-                    AND C.OUT_FINISH_DT IS NULL
-            ) X
+            SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
+                , B.IMG_GFILE_SEQ
+                , C.ORDER_DUE_DT
+                , (SELECT M.COMP_NM FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = A.ORDER_COMP_CD) AS ORDER_COMP_NM
+                , jmes.SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+                , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
+                , C.ORDER_QTY AS CONTROL_ORDER_QTY
+                , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+                , (SELECT M.USER_NM FROM jmes.TBL_USER M, jmes.TBL_COMPANY N WHERE M.USER_ID = N.CHARGE_USER_ID AND N.COMP_CD = A.ORDER_COMP_CD) AS CHARGE_USER_NM
+                , A.CONTROL_VER
+                , B.SIZE_TXT
+                , jmes.SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+                , C.REGIST_NUM
+                , B.DRAWING_NUM
+            FROM TBL_CONTROL A
+                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE NOT IN ('WTP020') <!-- 21.03.30 작업형태 '파트'인것 제외, 21.08.27 조립제외 파트표기 -->
+                INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ
+            WHERE A.DEL_YN = 'N'
+                AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+                AND IFNULL(A.OUT_FINISH_STATUS, SPACE(0)) NOT IN ('RLS020') -- 폐기 제외 -->
+                AND A.OUT_FINISH_DT IS NULL
+                AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d')
+                AND C.OUT_FINISH_DT IS NULL
+        ) X
         ORDER BY X.ORDER_DUE_DT, X.CONTROL_PART_INFO
     </select>
 

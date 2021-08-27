@@ -288,10 +288,11 @@
                     });
                 }
             },
+            {title: '형태', dataIndx: 'WORK_TYPE_NM', minWidth: 45},
             {title: '수량', dataIndx: 'ORDER_QTY', minWidth: 30},
             {title: '접수번호', dataIndx: 'REGIST_NUM', minWidth: 130},
-            {title: '발주번호', dataIndx: 'ORDER_NUM', minWidth: 90},
-            {title: '도면번호', align: 'left', width: 128, dataIndx: 'DRAWING_NUM'},
+            // {title: '발주번호', dataIndx: 'ORDER_NUM', minWidth: 90},
+            // {title: '도면번호', align: 'left', width: 128, dataIndx: 'DRAWING_NUM'},
             {title: '진행상태', dataIndx: 'PART_STATUS', width: 72},
             {title: '현재위치', dataIndx: 'LAST_POP_POSITION', width: 63},
             {title: '검사', dataIndx: 'INSPECT_GRADE_NM', minWidth: 30}
