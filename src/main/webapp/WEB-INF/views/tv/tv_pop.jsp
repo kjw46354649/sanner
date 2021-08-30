@@ -52,6 +52,19 @@
 		ul,dl,ol { list-style: none;}
 		div.pq-grid * {font-size: 1.4rem;}
 		.pq-grid-header-table>.pq-grid-row>.pq-grid-number-cell {background: #d8edf0;}
+
+		@-webkit-keyframes blink {
+			0% { background: #9be15d;}
+			50% { background: #ffd200;}
+			100% { background: #9be15d;}
+		}
+
+		@keyframes blink {
+			0% { background: #9be15d;}
+			50% { background: #ffd200;}
+			100% { background: #9be15d;}
+		}
+
 	</style>
 </head>
 
@@ -274,6 +287,7 @@
 				<div id="infoRight1" data-seq="POP050" class="infoRight1">
 					<h3>사상</h3>
 					<div id="POP050" class="infoSection1">
+						0품<br>0EA
 					</div>
 				</div>
 				<!--사상 끝-->
@@ -282,6 +296,7 @@
 				<div id="infoRight2" data-seq="POP100" class="infoRight2">
 					<h3>검사실</h3>
 					<div id="POP100" class="infoSection2">
+						0품<br>0EA
 					</div>
 				</div>
 				<!--검사실 끝-->
@@ -290,6 +305,7 @@
 				<div id="infoRight3" data-seq="POP140" class="infoRight3">
 					<h3>바이브레이터실</h3>
 					<div id="POP140" class="infoSection3">
+						0품<br>0EA
 					</div>
 				</div>
 				<!--바이브레이터실 끝-->
@@ -298,6 +314,7 @@
 				<div id="infoRight4" data-seq="POP130" class="infoRight4">
 					<h3>교정/마감실</h3>
 					<div id="POP130" class="infoSection4">
+						0품<br>0EA
 					</div>
 				</div>
 				<!--교정/마감실 끝-->
@@ -306,6 +323,7 @@
 				<div id="infoRight5" data-seq="POP110" class="infoRight5">
 					<h3>출하대기장1</h3>
 					<div id="POP110" class="infoSection5">
+						0품<br>0EA
 					</div>
 				</div>
 				<!--출하대기장1 끝-->
@@ -314,6 +332,7 @@
 				<div id="infoRight6" data-seq="POP120" class="infoRight6">
 					<h3>출하대기장2</h3>
 					<div id="POP120" class="infoSection6">
+						0품<br>0EA
 					</div>
 				</div>
 				<!--출하대기장2 끝-->
@@ -619,10 +638,6 @@
 				let pop_list2 = data.pop_list2;//진행현황
 				let m_list = data.m_list;//장비
 
-				$('[id^=POP]').each(function () {
-					$(this).empty();
-				});
-
 				if (pop_list1 != '') {//pop
 					for (let i = 0; i < pop_list1.length; i++) {
 						let pop_position = pop_list1[i].POP_POSITION;
@@ -637,68 +652,74 @@
 				}
 
 				if (m_list != '') {//장비
+					// console.log('m_list',m_list);
+					m_list.splice(9,0,{BLANK:'Y', FACTORY_AREA:'ARE01'});
 					for (let i = 0; i < m_list.length; i++) {
-						let factory_area = m_list[i].FACTORY_AREA;
-						let layout_sort = m_list[i].LAYOUT_SORT;
-						let equip_nm = m_list[i].EQUIP_NM;
-						let img_gfile_seq = m_list[i].IMG_GFILE_SEQ;
-						let material_type = ((m_list[i].MATERIAL_TYPE_NM != undefined && m_list[i].MATERIAL_TYPE_NM != '') ?m_list[i].MATERIAL_TYPE_NM:'');
-						let work_type_nm = ((m_list[i].WORK_TYPE_NM != undefined && m_list[i].WORK_TYPE_NM != '') ?m_list[i].WORK_TYPE_NM:'');
-						let part_qty = ((m_list[i].PART_QTY != undefined && m_list[i].PART_QTY != '') ?m_list[i].PART_QTY:'');
+						if(m_list[i].BLANK == 'Y') {
+							$("#"+m_list[i].FACTORY_AREA).append('<div class="info_" style="background: none;"></div>');
+						}else {
+							let factory_area = m_list[i].FACTORY_AREA;
+							let layout_sort = m_list[i].LAYOUT_SORT;
+							let equip_nm = m_list[i].EQUIP_NM;
+							let img_gfile_seq = m_list[i].IMG_GFILE_SEQ;
+							let material_type = ((m_list[i].MATERIAL_TYPE_NM != undefined && m_list[i].MATERIAL_TYPE_NM != '') ?m_list[i].MATERIAL_TYPE_NM:'');
+							let work_type_nm = ((m_list[i].WORK_TYPE_NM != undefined && m_list[i].WORK_TYPE_NM != '') ?m_list[i].WORK_TYPE_NM:'');
+							let part_qty = ((m_list[i].PART_QTY != undefined && m_list[i].PART_QTY != '') ?m_list[i].PART_QTY:'');
 
-						let user_nm = m_list[i].USER_NM;
-						let user_photo_gfile_seq = m_list[i].USER_PHOTO_GFILE_SEQ;
+							let user_nm = m_list[i].USER_NM;
+							let user_photo_gfile_seq = m_list[i].USER_PHOTO_GFILE_SEQ;
 
-						$("#"+factory_area + '_WORK').html('<span>진행</span> ' + m_list[i].WORK_TOTAL);
-						$("#"+factory_area + '_WAIT').html('<span>대기</span> ' + m_list[i].WAIT_TOTAL);
+							$("#"+factory_area + '_WORK').html('<span>진행</span> ' + m_list[i].WORK_TOTAL);
+							$("#"+factory_area + '_WAIT').html('<span>대기</span> ' + m_list[i].WAIT_TOTAL);
 
-						let $target = $("#" + factory_area);
-						if($target.length > 0){
-							let mHtml = '<div id="' + (factory_area + '_' + layout_sort) + '" class="info_0'+ i +' '+ m_list[i].WORK_STATUS + '" data-seq="'+m_list[i].EQUIP_SEQ +'">';
-							mHtml += '<div class="nameWrap">';
-							mHtml += '<p class="machineName">' + ((equip_nm != undefined)? equip_nm:'') + '</p>';
-							mHtml += '<p class="staffName">' + ((user_nm != undefined)? user_nm:'') + '</p>';
-							mHtml += '<p class="productName">'+ material_type+'&nbsp;'+work_type_nm+'&nbsp;'+part_qty + '</p>';
-							mHtml += '</div>';
-
-							if(img_gfile_seq != undefined && img_gfile_seq != '') {
-								mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg ' + m_list[i].MACHINE_ICON + '" style="background:url(/qimage/' + img_gfile_seq + ');background-repeat:no-repeat;background-position:center;background-size: cover;">';
-							}else {
-								mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg '+ m_list[i].MACHINE_ICON+'">';
-							}
-
-							mHtml += '<span class="progressPercent '+((m_list[i].WORK_STATUS == 'pause')?'pausePercent':'') + '">'+ ((m_list[i].PERCENT != undefined)?m_list[i].PERCENT:'') + '</span>';
-
-							if(m_list[i].WORK_STATUS == 'pause') {
-								mHtml += '<div id="pauseTime" class="pauseTime">';
-								mHtml += '일시중지<br>';
-								var startStopDt = new Date(m_list[i].WORK_TEMP_STOP_DT);
-								var today = new Date();
-								var diff = today - startStopDt;
-								var minute = Math.floor((diff) / (1000 * 60));
-								mHtml += '<span>('+minute +'\')</span>';
+							let $target = $("#" + factory_area);
+							if($target.length > 0){
+								let mHtml = '<div id="' + (factory_area + '_' + layout_sort) + '" class="info_0'+ i +' '+ m_list[i].WORK_STATUS + '" data-seq="'+m_list[i].EQUIP_SEQ +'">';
+								mHtml += '<div class="nameWrap">';
+								mHtml += '<p class="machineName">' + ((equip_nm != undefined)? equip_nm:'') + '</p>';
+								mHtml += '<p class="staffName">' + ((user_nm != undefined)? user_nm:'') + '</p>';
+								mHtml += '<p class="productName">'+ material_type+'&nbsp;'+work_type_nm+'&nbsp;'+part_qty + '</p>';
 								mHtml += '</div>';
-							}
-							if(user_photo_gfile_seq != undefined && user_photo_gfile_seq != ''){
-								mHtml += '<div class="staffImg">';
-								mHtml += '<img src="/image/'+user_photo_gfile_seq +'" alt="직원사진">';
-							}else {
-								mHtml += '<div class="staffImg staffIcon">';
-								mHtml += '<img src="/resource/pop/images/user.svg" alt="직원사진">';
-							}
-							mHtml += '</div>';
-							if(m_list[i].WORKING_TIME != undefined && m_list[i].WORKING_TIME != '') {
-								mHtml += '<div class="progressTime">';
-								mHtml += '<span>'+ m_list[i].WORKING_TIME + '</span>';
-								if(m_list[i].PLAN_WORKING_TIME != undefined && m_list[i].PLAN_WORKING_TIME != ''){
-									mHtml += (' / ' + m_list[i].PLAN_WORKING_TIME)
+
+								if(img_gfile_seq != undefined && img_gfile_seq != '') {
+									mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg ' + m_list[i].MACHINE_ICON + '" style="background:url(/qimage/' + img_gfile_seq + ');background-repeat:no-repeat;background-position:center;background-size: cover;">';
+								}else {
+									mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg '+ m_list[i].MACHINE_ICON+'">';
+								}
+
+								mHtml += '<span class="progressPercent '+((m_list[i].WORK_STATUS == 'pause')?'pausePercent':'') + '">'+ ((m_list[i].PERCENT != undefined)?m_list[i].PERCENT:'') + '</span>';
+
+								if(m_list[i].WORK_STATUS == 'pause') {
+									mHtml += '<div id="pauseTime" class="pauseTime">';
+									mHtml += '일시중지<br>';
+									var startStopDt = new Date(m_list[i].WORK_TEMP_STOP_DT);
+									var today = new Date();
+									var diff = today - startStopDt;
+									var minute = Math.floor((diff) / (1000 * 60));
+									mHtml += '<span>('+minute +'\')</span>';
+									mHtml += '</div>';
+								}
+								if(user_photo_gfile_seq != undefined && user_photo_gfile_seq != ''){
+									mHtml += '<div class="staffImg">';
+									mHtml += '<img src="/image/'+user_photo_gfile_seq +'" alt="직원사진">';
+								}else {
+									mHtml += '<div class="staffImg staffIcon">';
+									mHtml += '<img src="/resource/pop/images/user.svg" alt="직원사진">';
 								}
 								mHtml += '</div>';
-							}
-							mHtml += '</div>';
-							mHtml += '</div>';
+								if(m_list[i].WORKING_TIME != undefined && m_list[i].WORKING_TIME != '') {
+									mHtml += '<div class="progressTime">';
+									mHtml += '<span>'+ m_list[i].WORKING_TIME + '</span>';
+									if(m_list[i].PLAN_WORKING_TIME != undefined && m_list[i].PLAN_WORKING_TIME != ''){
+										mHtml += (' / ' + m_list[i].PLAN_WORKING_TIME)
+									}
+									mHtml += '</div>';
+								}
+								mHtml += '</div>';
+								mHtml += '</div>';
 
-							$target.append(mHtml);
+								$target.append(mHtml);
+							}
 						}
 					}
 				}
@@ -728,9 +749,9 @@
 						let layout_sort = m_list[i].LAYOUT_SORT;
 						let equip_nm = m_list[i].EQUIP_NM;
 						let img_gfile_seq = m_list[i].IMG_GFILE_SEQ;
-						let material_type = ((m_list[i].MATERIAL_TYPE_NM != undefined) ?m_list[i].MATERIAL_TYPE_NM:'');
-						let work_type_nm = ((m_list[i].WORK_TYPE_NM != undefined) ?m_list[i].WORK_TYPE_NM:'');
-						let part_qty = ((m_list[i].PART_QTY != undefined) ?m_list[i].PART_QTY:'');
+						let material_type = ((typeof m_list[i].MATERIAL_TYPE_NM != 'undefined') ?m_list[i].MATERIAL_TYPE_NM:'');
+						let work_type_nm = ((typeof m_list[i].WORK_TYPE_NM != 'undefined') ?m_list[i].WORK_TYPE_NM:'');
+						let part_qty = ((typeof m_list[i].PART_QTY != 'undefined') ?m_list[i].PART_QTY:'');
 
 						let user_nm = m_list[i].USER_NM;
 						let user_photo_gfile_seq = m_list[i].USER_PHOTO_GFILE_SEQ;
@@ -745,12 +766,12 @@
 
 							$target.addClass(m_list[i].WORK_STATUS);
 
-							$target.find(".machineName").text(((equip_nm != undefined)? equip_nm:''));
-							$target.find(".staffName").text(((user_nm != undefined)? user_nm:''));
+							$target.find(".machineName").text(((typeof equip_nm != 'undefined')? equip_nm:''));
+							$target.find(".staffName").text(((typeof user_nm != 'undefined')? user_nm:''));
 							$target.find(".productName").html(material_type+'&nbsp;'+work_type_nm+'&nbsp;'+part_qty);
 
 
-							if(img_gfile_seq != undefined) {
+							if(typeof img_gfile_seq != 'undefined') {
 								$("#img_"+factory_area+"_"+layout_sort).css(
 										{
 											'background':'url(/qimage/'+img_gfile_seq +')',
@@ -792,7 +813,7 @@
 								$target.find(".pauseTime").remove();
 							}
 
-							if(user_photo_gfile_seq != undefined){
+							if(typeof user_photo_gfile_seq != 'undefined'){
 								$target.find(".staffImg").removeClass("staffIcon");
 								$target.find(".staffImg").find("img").attr("src","/image/"+user_photo_gfile_seq);
 							}else {
@@ -801,10 +822,9 @@
 								}
 								$target.find(".staffImg").find("img").attr("src","/resource/pop/images/user.svg");
 							}
-
-							if(m_list[i].WORKING_TIME != undefined && m_list[i].WORKING_TIME != '') {
+							if(typeof m_list[i].WORKING_TIME != 'undefined' && m_list[i].WORKING_TIME != '') {
 								var timeHtml = '';
-								if($target.find(".progressTime") > 0) {
+								if($target.find(".progressTime").length > 0) {
 									timeHtml = '<span>' + m_list[i].WORKING_TIME + '</span>';
 									if(m_list[i].PLAN_WORKING_TIME != undefined && m_list[i].PLAN_WORKING_TIME != '') {
 										timeHtml += ' / ' + m_list[i].PLAN_WORKING_TIME;
@@ -987,6 +1007,12 @@
 					$target.find(".pauseTime").remove();
 					break;
 			}
+			if(!$target.hasClass("blink")) {
+				$target.addClass("blink");
+				setTimeout(function() {
+					$target.removeClass("blink");
+				},4000)
+			}
 		};
 
 		/** 작업자 로그인 정보 실시간 처리 **/
@@ -999,10 +1025,12 @@
 					if (messageData.userNm != undefined) $target.find(".nameWrap").find(".staffName").html(messageData.userNm);
 					if (messageData.userImageSeq != undefined) $target.find(".staffImg").find("img").attr("src", "/image/" + messageData.userImageSeq);
 				}else{
-					if (messageData.userNm != undefined) $target.find(".nameWrap").find(".staffName").html('');
-					if (messageData.userImageSeq != undefined) $target.find(".staffImg").find("img").attr("src", "/resource/pop/images/user.svg");
-					if(!$target.find(".staffImg").hasClass("staffIcon")) {
-						$target.find(".staffImg").addClass("staffIcon");
+					if(!$target.hasClass("login")) {
+						if (messageData.userNm != undefined) $target.find(".nameWrap").find(".staffName").html('');
+						if (messageData.userImageSeq != undefined) $target.find(".staffImg").find("img").attr("src", "/resource/pop/images/user.svg");
+						if(!$target.find(".staffImg").hasClass("staffIcon")) {
+							$target.find(".staffImg").addClass("staffIcon");
+						}
 					}
 				}
 				var today = new Date();
@@ -1237,14 +1265,17 @@
 
 					var text = data.length +' Rows  ' + totalQty + ' EA';
 					$("#popSearchCnt").text(text);
-					$("#popSearchType").html(data[0].POP_NM);
-				}
+				},
+				complete: function (event, ui) {
+					setTimeout(function (){
+						popPopGrid.pqGrid('setSelection', {rowIndx: 0});
+					},300);
+				},
 			};
 
+			var pop = $("#pop_search_form").find("#POP_POSITION").val();
+			$("#popSearchType").html($("#" + pop).parent().find("h3").text());
 			$popPopGrid = popPopGrid.pqGrid(popPopObj);
-			setTimeout(function (){
-				popPopGrid.pqGrid('setSelection', {rowIndx: 0});
-			},500);
 		},'hide.bs.modal': function () {
 			if ($('#popPopGrid').pqGrid('instance')) {
 				$popPopGrid.pqGrid('destroy');

@@ -32,6 +32,7 @@
         FROM (
             SELECT B.POP_SEQ
                 , B.POP_POSITION
+                , B.POP_DT
                 , SF_GET_CODE_NM(1009,B.POP_POSITION,#{LOGIN_LOCALE}) AS POP_NM
                 , B.CONTROL_SEQ
                 , B.CONTROL_DETAIL_SEQ
@@ -65,6 +66,7 @@
             WHERE A.POP_SEQ = B.POP_SEQ
                 AND B.CONTROL_SEQ = C.CONTROL_SEQ
                 AND B.CONTROL_SEQ = D.CONTROL_SEQ
+                AND C.CONTROL_STATUS NOT IN ('ORD004')
                 <if test="POP_POSITION != null and POP_POSITION != ''">
                     AND B.POP_POSITION = #{POP_POSITION}
                 </if>
@@ -93,10 +95,7 @@
                     GROUP BY X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
                 )
         ) Y ON Y.CONTROL_SEQ = Z.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ
-        ORDER BY Z.POP_SEQ
-        <if test="LIMIT != null and LIMIT != ''">
-            LIMIT ${LIMIT}
-        </if>
+        ORDER BY Z.POP_DT DESC
     </select>
     <select id="selectTvPopList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- POP Info
@@ -207,12 +206,12 @@
                    WHEN Y.WORK_STATUS = 'DBS020' THEN 'login'
                    ELSE SPACE(0)
               END WORK_STATUS
-            , CASE WHEN Y.WORK_USER_ID IS NOT NULL THEN (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Y.WORK_USER_ID)
-                   ELSE (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID)
-             END AS USER_NM
-            , CASE WHEN Y.WORK_USER_ID IS NOT NULL THEN (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = Y.WORK_USER_ID)
-                   ELSE (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = Y.WORK_USER_ID)
-             END AS USER_PHOTO_GFILE_SEQ
+            , CASE WHEN X.LOGIN_USER_ID IS NOT NULL THEN jmes.SF_GET_USER_NM(X.LOGIN_USER_ID)
+                   WHEN Y.WORK_STATUS = 'DBS020'    THEN jmes.SF_GET_USER_NM(X.UPDATE_ID)
+              END AS USER_NM
+            , CASE WHEN X.LOGIN_USER_ID IS NOT NULL THEN (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID)
+                   WHEN Y.WORK_STATUS = 'DBS020'    THEN (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.UPDATE_ID)
+              END AS USER_PHOTO_GFILE_SEQ
             , Y.IMG_GFILE_SEQ
             , Y.WORK_TYPE
             , Y.WORK_TEMP_STOP_DT
@@ -223,16 +222,51 @@
             , jmes.SF_GET_CODE_NM('1027', Y.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
             , CONCAT(Y.PART_QTY,'EA') AS PART_QTY
             ,(
-                SELECT CONVERT(CONVERT(CONCAT(SPACE(0),COUNT(*), ' (',IFNULL(SUM(jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ)),0),'EA)') USING BINARY) USING utf8) AS TOTAL
-                FROM jmes.TBL_MCT_PLAN A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C, TBL_EQUIP D
-                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND A.CONTROL_SEQ = C.CONTROL_SEQ
-                    AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                    AND B.OUT_FINISH_DT IS NULL
-                    AND A.DEL_YN = 'N'
-                    AND B.DEL_YN = 'N'
-                    ANd A.EQUIP_SEQ = D.EQUIP_SEQ
-                    AND D.FACTORY_AREA = X.FACTORY_AREA
+                SELECT CONVERT(CONVERT(CONCAT(SPACE(0),COUNT(*), ' (',IFNULL(SUM(jmes.SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ)),0),'EA)') USING BINARY) USING utf8) AS TOTA
+                FROM jmes.TBL_CONTROL_PART A
+                    INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.OUT_FINISH_DT IS NULL AND B.DEL_YN = 'N' AND B.CONTROL_STATUS NOT IN ('ORD004')
+                    INNER JOIN jmes.TBL_POP C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                        AND C.POP_SEQ = (
+                            SELECT MAX(K.POP_SEQ)
+                            FROM jmes.TBL_POP K
+                            WHERE K.CONTROL_SEQ = C.CONTROL_SEQ AND K.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                            GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ
+                        )
+                    LEFT OUTER JOIN jmes.TBL_POP D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                        AND D.POP_SEQ = (
+                            SELECT LAG(K.POP_SEQ, 1) OVER(PARTITION BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ ORDER BY K.POP_SEQ) AS POP_SEQ
+                            FROM jmes.TBL_POP K
+                            WHERE K.CONTROL_SEQ = D.CONTROL_SEQ
+                                AND K.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                            ORDER BY K.POP_SEQ DESC LIMIT 1
+                        )
+                WHERE 1 = 1
+                    AND NOT EXISTS (SELECT 1 FROM jmes.TBL_CONTROL_PART E
+                        WHERE A.CONTROL_SEQ = E.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+                        AND E.PART_STATUS = 'PRO018' AND E.WORK_TYPE = 'WTP050'
+                    )
+                    AND NOT EXISTS (
+                        SELECT 1
+                        FROM TBL_MCT_WORK F
+                        WHERE F.CONTROL_SEQ = A.CONTROL_SEQ
+                            AND F.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                            AND F.DEL_YN = 'N'
+                            AND F.WORK_STATUS = 'DBS020'
+                    )
+                    AND (
+                        CASE
+                            WHEN X.FACTORY_AREA = 'ARE01' THEN C.POP_POSITION IN ('POP010','POP020')
+                            WHEN X.FACTORY_AREA = 'ARE02' THEN C.POP_POSITION = 'POP030'
+                            WHEN X.FACTORY_AREA = 'ARE03' THEN C.POP_POSITION IN ('POP040','POP050')
+                            WHEN X.FACTORY_AREA = 'ARE04' THEN C.POP_POSITION = 'POP060'
+                            WHEN X.FACTORY_AREA = 'ARE05' THEN C.POP_POSITION = 'POP080'
+                            WHEN X.FACTORY_AREA = 'ARE06' THEN C.POP_POSITION = 'POP200'
+                            WHEN X.FACTORY_AREA = 'ARE07' THEN C.POP_POSITION IN ('POP110','POP120')
+                            WHEN X.FACTORY_AREA = 'ARE08' THEN C.POP_POSITION = 'POP100'
+                            WHEN X.FACTORY_AREA = 'ARE09' THEN C.POP_POSITION = 'POP130'
+                            WHEN X.FACTORY_AREA = 'ARE11' THEN C.POP_POSITION = 'POP070'
+                        END
+                    )
             ) AS WAIT_TOTAL
             ,(
                 SELECT CONVERT(CONVERT(CONCAT(SPACE(0),COUNT(*), ' (',IFNULL(SUM(jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ)),0),'EA)') USING BINARY) USING utf8) AS TOTAL
@@ -333,11 +367,11 @@
                  WHEN X.PROCESS_TYPE = 'MPR040' THEN 'TURNNING'
                  ELSE 'DEFAULT'
             END MACHINE_ICON,
-            CASE WHEN Y.WORK_USER_ID IS NOT NULL THEN (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = Y.WORK_USER_ID)
-                 ELSE (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID)
+            CASE WHEN X.LOGIN_USER_ID IS NOT NULL THEN (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID)
+                 WHEN Y.WORK_STATUS = 'DBS020'    THEN (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.UPDATE_ID)
             END AS USER_NM,
-            CASE WHEN Y.WORK_USER_ID IS NOT NULL THEN (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = Y.WORK_USER_ID)
-                 ELSE (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID)
+            CASE WHEN X.LOGIN_USER_ID IS NOT NULL THEN (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID)
+                 WHEN Y.WORK_STATUS = 'DBS020'    THEN (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.UPDATE_ID)
             END AS PHOTO_GFILE_SEQ,
             FACTORY_AREA, LAYOUT_ROW, LAYOUT_COL,
             IFNULL(Y.TOTAL_CNT,0) AS TOTAL_CNT,
@@ -467,9 +501,8 @@
           <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
             AND X.EQUIP_SEQ = #{EQUIP_SEQ}
           </if>
-          AND LAYOUT_ROW IS NOT NULL
-          AND LAYOUT_COL IS NOT NULL
-        ORDER BY FACTORY_AREA, LAYOUT_ROW, LAYOUT_COL
+          AND LAYOUT_SORT IS NOT NULL
+        ORDER BY FACTORY_AREA, LAYOUT_SORT
     </select>
     <select id="selectMctAreInfoList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT

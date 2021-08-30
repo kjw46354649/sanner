@@ -509,16 +509,6 @@
 					machineAreListData = data.mct_list;
 					// let mct_list = data.mct_list;//mct
 
-					//init
-					$('[id^=ARE]').each(function () {
-						// $(this).find(".inBox:nth-child(1)").html('&nbsp;');
-						// $(this).find(".inBox:nth-child(2)").html('&nbsp;');
-						// $(this).find(".inBox:nth-child(3)").find('div:nth-child(1)').html('&nbsp;');
-						// $(this).find(".inBox:nth-child(3)").find('div:nth-child(2)').html('&nbsp;');
-						// $(this).find(".statusWrap").hide();
-						// $(this).find(".statusConts").empty();
-					});
-
 					//mct info
 					getReLoadWorkData('init');
 
@@ -543,18 +533,29 @@
 
 				if(sType === 'init') {
 					$.each(groups,function (idx,Item) {
-						if(idx == 'ARE01' || idx == 'ARE06') {
-							if(Item.length % 6 != 0) {
-								var first = Math.ceil(Item.length / 6);
-								var add = (parseInt(first) * 6) - Item.length;
-								for(var i=0;i<add;i++) {
-									var json = {
-										EQUIP_NM : 'BLANK',
-										FACTORY_AREA : Item[0].FACTORY_AREA
-									};
-									groups[idx].push(json);
-								}
+						if(idx == 'ARE06' || idx == 'ARE01') {
+							var sort_arr = [4,9,10,15,16,17,22,23];
+							if(idx == 'ARE01') {
+								sort_arr = [9];
 							}
+							var json = {
+								EQUIP_NM : 'BLANK',
+								FACTORY_AREA : Item[0].FACTORY_AREA
+							};
+							for(var i=0;i<sort_arr.length;i++) {
+								groups[idx].splice(sort_arr[i],0,json);
+							}
+							// if(Item.length % 6 != 0) {
+							// 	var first = Math.ceil(Item.length / 6);
+							// 	var add = (parseInt(first) * 6) - Item.length;
+							// 	for(var i=0;i<add;i++) {
+							// 		var json = {
+							// 			EQUIP_NM : 'BLANK',
+							// 			FACTORY_AREA : Item[0].FACTORY_AREA
+							// 		};
+							// 		groups[idx].push(json);
+							// 	}
+							// }
 						}
 						$.each(Item,function (idx2,Item2) {
 							var html = '';
@@ -644,8 +645,10 @@
 									$("#"+Item2.FACTORY_AREA + '_1').append(html);
 								}else if(idx2 < 12) {
 									$("#"+Item2.FACTORY_AREA + '_2').append(html);
-								}else {
+								}else if(idx2 < 18) {
 									$("#"+Item2.FACTORY_AREA + '_3').append(html);
+								}else {
+									$("#"+Item2.FACTORY_AREA + '_4').append(html);
 								}
 							}else {
 								$("#"+Item2.FACTORY_AREA + '_' + Item2.LAYOUT_ROW).append(html);
@@ -935,7 +938,9 @@
 				if(actionType === 'WK_LOGIN') {
 					$("#EQUIP_"+ messageData.equipSeq).find(".mctStaffName").text(messageData.userNm);
 				}else{
-					$("#EQUIP_"+ messageData.equipSeq).find(".mctStaffName").text("-");
+					if(!$("#EQUIP_"+ messageData.equipSeq).hasClass("mctlogin")) {
+						$("#EQUIP_"+ messageData.equipSeq).find(".mctStaffName").text("-");
+					}
 				}
 			}
 		};
