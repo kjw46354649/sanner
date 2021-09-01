@@ -3231,14 +3231,14 @@
                     AND A.DEL_YN = 'N'
                     AND B.PART_NUM IS NULL
                     AND B.WORK_TYPE NOT IN ('WTP050')   <!-- 21.03.30 작업형태 '파트'인것 제외 -->
-                    AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+--                     AND A.CONTROL_STATUS IN ('ORD001','ORD003')
                     AND (
-                    		(A.EMERGENCY_YN = 'Y' AND C.ORDER_DUE_DT <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d'))
+                            (A.EMERGENCY_YN = 'Y' AND A.CONTROL_STATUS NOT IN ('ORD004') AND A.OUT_FINISH_DT IS NULL) <!-- 21.09.01  1) 미출고 2) 종료아님 3) 납기상관없음 -->
                     	OR
                     		(EXISTS (SELECT 1 FROM jmes.TBL_INSPECT D WHERE 1 = 1
         	            		AND D.CONTROL_SEQ = C.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND D.ORDER_SEQ = C.ORDER_SEQ
         						AND D.INSPECT_TYPE = '2'
-        						AND D.RETURN_SETTLEMENT_DT IS NULL)
+        						AND D.RETURN_SETTLEMENT_DT IS NULL) <!-- 21.09.01 반품은 상태 상관없이, 반품에 대한 처리가 완료되지 않았으면 무조건 나와야함 -->
         					)
         			)
                     AND IFNULL(A.OUT_FINISH_STATUS, 'RLS030') NOT IN ('RLS010', 'RLS020')
