@@ -1629,8 +1629,8 @@
             <if test="SEL_INSPECT_METHOD !='' and SEL_INSPECT_METHOD != null">
                 AND W.INSPECT_METHOD = #{SEL_INSPECT_METHOD}   <!-- 측정방식('1060') -->
             </if>
-            <if test="SEL_INSPECT_GRADE !='' and SEL_INSPECT_GRADE != null">
-                AND W.INSPECT_GRADE IN (${SEL_INSPECT_GRADE})    <!-- 검사결과등급(복수) -->
+            <if test="HIDDEN_SEL_INSPECT_GRADE_SELECT !='' and HIDDEN_SEL_INSPECT_GRADE_SELECT != null">
+                AND W.INSPECT_GRADE IN (${HIDDEN_SEL_INSPECT_GRADE_SELECT})    <!-- 검사결과등급(복수) -->
             </if>
             <if test="SEL_INSPECT_RESULT !='' and SEL_INSPECT_RESULT != null">
                 AND W.INSPECT_RESULT = #{SEL_INSPECT_RESULT}            <!-- 불량코드 ('1020','1021') -->

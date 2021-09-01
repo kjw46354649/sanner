@@ -365,17 +365,17 @@
         });
         /**  리스트 그리드 선언 끝 **/
         $("#inspection_history_search_btn").on('click', function(){
-            let SEL_INSPECT_GRADE_SELECT = $("#inspection_history_form").find("#SEL_INSPECT_GRADE_SELECT").val();
-            let arr = SEL_INSPECT_GRADE_SELECT.trim().split(",");
-            let rtn = "";
-            if(SEL_INSPECT_GRADE_SELECT != ""){
-                $.each(arr, function(row, key) {
-                    let id = $(".ComboTreeItemChlid").find("#check" + key.trim()).parent()[0].dataset.id
-                    rtn += " '" + id + "',";
-                });
-                rtn = rtn.substring(0,rtn.length-1);
-            }
-            $("#inspection_history_form").find("#SEL_INSPECT_GRADE").val(rtn);
+            // let SEL_INSPECT_GRADE_SELECT = $("#inspection_history_form").find("#SEL_INSPECT_GRADE_SELECT").val();
+            // let arr = SEL_INSPECT_GRADE_SELECT.trim().split(",");
+            // let rtn = "";
+            // if(SEL_INSPECT_GRADE_SELECT != ""){
+            //     $.each(arr, function(row, key) {
+            //         let id = $(".ComboTreeItemChlid").find("#check" + key.trim()).parent()[0].dataset.id
+            //         rtn += " '" + id + "',";
+            //     });
+            //     rtn = rtn.substring(0,rtn.length-1);
+            // }
+            // $("#inspection_history_form").find("#SEL_INSPECT_GRADE").val(rtn);
 
             inspectionHistoryGridId01.pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('#inspection_history_form');
