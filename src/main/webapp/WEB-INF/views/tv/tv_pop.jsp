@@ -942,6 +942,7 @@
 				case 'DB_COMPLETE' :
 					$target.find(".productName").html('');
 					$target.find(".proNum").html('');
+					$target.find(".progressTime").remove();
 					$target.removeClass("login");
 					$target.removeClass("pause");
 					$("#img_"+messageData.factoryArea+"_"+messageData.equipPosition).css({'background':''});
