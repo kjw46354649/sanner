@@ -1061,10 +1061,10 @@
             <if test="ITEM_NM != null">
                 ITEM_NM = #{ITEM_NM},
             </if>
-            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (ORIGINAL_SIDE_QTY != null and ORIGINAL_SIDE_QTY != '')">
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002')">
                 ORIGINAL_SIDE_QTY = REPLACE(#{ORIGINAL_SIDE_QTY}, ',', SPACE(0)),
             </if>
-            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (OTHER_SIDE_QTY != null and OTHER_SIDE_QTY != '')">
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002')">
                 OTHER_SIDE_QTY = REPLACE(#{OTHER_SIDE_QTY}, ',', SPACE(0)),
             </if>
             <if test="UNIT_FINAL_EST_AMT != null">

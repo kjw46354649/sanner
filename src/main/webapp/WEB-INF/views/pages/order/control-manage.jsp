@@ -2131,7 +2131,7 @@
                 // 값 변경 전 이상 case 확인하기 위해 배열에 담는다.
                 controlStatusList[i] = list[i].CONTROL_STATUS || undefined;
                 list[i].CONTROL_STATUS = controlStatus;
-                if(list[i].OUTSIDE_YN == 'Y' && (list[i].OUTSIDE_STATUS == 'OST001' || list[i].OUTSIDE_STATUS == 'OST003' || list[i].OUTSIDE_STATUS == 'OST004')) {
+                if(list[i].OUTSIDE_YN == 'Y' && (list[i].OUTSIDE_STATUS == 'OST001' || list[i].OUTSIDE_STATUS == 'OST003')) {
                     outsideFlag = true;
                 }
                 if(typeof list[i].CLOSE_DT != 'undefined' && list[i].CLOSE_DT != null && list[i].CLOSE_DT != '') {
