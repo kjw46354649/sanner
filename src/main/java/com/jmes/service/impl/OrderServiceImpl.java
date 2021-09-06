@@ -701,7 +701,7 @@ public class OrderServiceImpl implements OrderService {
                     String rnum = (String)hashMap.get("RNUM");
                     hashMap.put("LOGIN_USER_ID",userId);
                     if("".equals(rnum) && checkBox) {
-                        if("".equals(insideOutSeq)){
+                        if("".equals(insideOutSeq) || insideOutSeq == null){
                             hashMap.put("queryId", "orderMapper.insertRequestStock");
                             this.innodaleDao.insertGrid(hashMap);
                         }else {
@@ -722,7 +722,7 @@ public class OrderServiceImpl implements OrderService {
                     Boolean checkBox = (Boolean)hashMap.get("CHECK_BOX");
                     hashMap.put("LOGIN_USER_ID",userId);
                     if(checkBox) {
-                        if("".equals(insideOutSeq)){
+                        if("".equals(insideOutSeq) || insideOutSeq == null){
                             hashMap.put("queryId", "orderMapper.insertRequestStock");
                             this.innodaleDao.insertGrid(hashMap);
                         }else {
