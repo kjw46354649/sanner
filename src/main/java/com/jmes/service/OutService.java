@@ -12,4 +12,6 @@ public interface OutService {
     void managerRequestOutside(Model model, Map<String, Object> map) throws Exception;
 
     void removeOutsideClose(Map<String, Object> map)  throws Exception;
+
+    void createOutGoing(Map<String, Object> map)  throws Exception;
 }

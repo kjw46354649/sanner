@@ -14,12 +14,19 @@
 </form>
 <form id="estimate_version_up_sequence_form">
     <input type="hidden" id="hidden_est_seq" name="hidden_est_seq">
-    <input type="hidden" id="hidden_control_seq" name="hidden_control_seq">
+<%--    <input type="hidden" id="hidden_control_seq" name="hidden_control_seq">--%>
+    <input type="hidden" id="hidden_order_seq" name="hidden_order_seq">
 </form>
 <form id="drawing_file_upload_form" name="drawing_file_upload_form" method="post">
     <input type="hidden" id="actionType" name="actionType">
     <input type="hidden" id="queryId" name="queryId">
     <input type="hidden" id="WORK_KEY" name="WORK_KEY">
+    <input type="hidden" id="INSIDE_STOCK_SEQ_STR" name="INSIDE_STOCK_SEQ_STR">
+</form>
+<form id="drawing_revision_pop_form" name="drawing_revision_pop_form" method="post">
+    <input type="hidden" id="ORDER_SEQ" name="ORDER_SEQ">
+    <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ">
+    <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ">
 </form>
 <!-- 파일 다운로드 공통 Start -->
 <div class="modal" id="common_file_download_upload_pop" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
@@ -199,7 +206,7 @@
                             <td id="MATERIAL_IN_DT"></td>
                         </tr>
                         <tr>
-                            <th class="palegoldenrod">주문 확정</th>
+                            <th class="palegoldenrod">작업 확정</th>
                             <td id="CONTROL_CONFIRM_DT"></td>
                             <th>외주요청 일시</th>
                             <td id="OUTSIDE_PROCESS_CONFIRM_DT"></td>
@@ -505,7 +512,7 @@
 
 <div class="modal" id="processingRequirementsModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <div class="modal-content" style="width: 500px">
+        <div class="modal-content" style="width: 650px">
             <div class="modal-header">
                 <h5 class="modal-title" style="font-size: large; font-weight: bold">가공요건 입력 / 가공비 계산</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -21.5px">
@@ -524,59 +531,201 @@
                 <div>
                     <table class="basic_information">
                         <colgroup>
-                            <col width="15">
-                            <col width="85">
+                            <col width="10">
+                            <col width="40">
+                            <col width="10">
+                            <col width="40">
                         </colgroup>
-                        <thead>
-                        <tr>
-                            <td colspan="2">기본정보</td>
-                        </tr>
-                        </thead>
                         <tbody>
-                        <tr style="display: none;">
-                            <td id="seq1"></td>
-                            <td id="seq2"></td>
-                        </tr>
-                        <tr>
-                            <td scope="row">작업지시번호</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td scope="row">도면번호</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td scope="row">재질</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td scope="row">규격</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td scope="row">규격 Level</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td scope="row">기본가공비</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td scope="row">총가공비</td>
-                            <td></td>
-                        </tr>
+                            <tr style="display: none;">
+                                <td id="seq1"></td>
+                                <td id="seq2"></td>
+                                <td id="seq3"></td>
+                                <td id="seq4"></td>
+                            </tr>
+                            <tr>
+                                <td scope="row">작업번호</td>
+                                <td></td>
+                                <td scope="row">도면번호</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td scope="row">접수번호</td>
+                                <td></td>
+                                <td scope="row">소재/작업형태</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td scope="row">규격</td>
+                                <td></td>
+                                <td scope="row">표면처리</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td scope="row">규격 Level</td>
+                                <td></td>
+                                <td scope="row">기본가공비</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td scope="row" colspan="2" class="darkBrown">가공비 Total</td>
+                                <td colspan="2"></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
                 <br>
-                <div>
-                    <form id="processing_requirements_form" role="form" onsubmit="return false;">
-                        <input type="hidden" name="TYPE" id="TYPE">
-                        <input type="hidden" name="WORK_TYPE" id="WORK_TYPE">
-                        <input type="hidden" name="SEQ1" id="SEQ1">
-                        <input type="hidden" name="SEQ2" id="SEQ2">
-                    </form>
-                    <div id="processing_requirements_grid"></div>
+                <div class="d-flex">
+                    <div style="width: 50%;">
+                        <div>
+                            <span style="font-size: 1.5rem;font-family: 'NotoKrB';color: #535759;">일반가공 요건</span>
+                        </div>
+                        <form id="processing_requirements_form" role="form" onsubmit="return false;">
+                            <input type="hidden" name="TYPE" id="TYPE">
+                            <input type="hidden" name="WORK_TYPE" id="WORK_TYPE">
+                            <input type="hidden" name="SEQ1" id="SEQ1">
+                            <input type="hidden" name="SEQ2" id="SEQ2">
+                            <div id="processing_requirements_grid"></div>
+                        </form>
+                    </div>
+                    <div style="width: 45%; margin-left: 5%;">
+                        <div>
+                            <span style="font-size: 1.5rem;font-family: 'NotoKrB';color: #535759;">특수가공 요건</span>
+                        </div>
+                        <div style="height: 26%;">
+                            <table class="rightTopTable">
+                                <colgroup>
+                                    <col width="15">
+                                    <col width="85">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <td>Level1</td>
+                                        <td>Level2</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td >연마</td>
+                                        <td>
+                                            <div style="display: flex;flex-wrap: wrap;">
+                                                <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
+                                                    <input name="FNL020" id="FNL020" type="checkbox">
+                                                    <label for="FNL020"> 평면</label>
+                                                </span>
+                                                <span class="chk_box"  style="margin-left: 8px; margin-right: 0px;">
+                                                    <input name="FNL_TEMP" id="FNL_TEMP" type="checkbox">
+                                                    <label for="FNL_TEMP"> 양면</label>
+                                                </span>
+                                                <span class="chk_box"  style="margin-left: 8px; margin-right: 0px;">
+                                                    <input name="FNL021" id="FNL021" type="checkbox">
+                                                    <label for="FNL021"> 평탄도</label>
+                                                </span>
+                                                <span class="chk_box"  style="margin-left: 8px; margin-right: 0px;">
+                                                    <input name="FNL022" id="FNL022" type="checkbox" >
+                                                    <label for="FNL022"> 원통</label>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>열처리</td>
+                                        <td>
+                                            <div style="display: flex;flex-wrap: wrap;">
+                                                <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
+                                                    <input name="FNL030" id="FNL030" type="checkbox" >
+                                                    <label for="FNL030"> 열처리</label>
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>각가공</td>
+                                        <td>
+                                            <div style="display: flex;flex-wrap: wrap;">
+                                                <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
+                                                    <input name="FNL010" id="FNL010" type="checkbox" >
+                                                    <label for="FNL010"> T맞춤</label>
+                                                </span>
+                                                <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
+                                                    <input name="FNL0101" id="FNL0101" type="checkbox" >
+                                                    <label for="FNL0101"> 각가공</label>
+                                                </span>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="height: 67%; margin-top: 4.5%;">
+                            <table class="rightBotTable">
+                                <colgroup>
+                                    <col width="15">
+                                    <col width="85">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <td class="titleTd" colspan="2">
+                                            <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
+                                                <input name="CHECK_GRIND_PROCESS" id="CHECK_GRIND_PROCESS" type="checkbox">
+                                                <label for="CHECK_GRIND_PROCESS">연마 - 평면연마</label>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>규격 Size</td>
+                                        <td>300 * 200 *100</td>
+                                    </tr>
+                                    <tr>
+                                        <td>한쪽면</td>
+                                        <td>335 cm2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>단가</td>
+                                        <td>100</td>
+                                    </tr>
+                                    <tr>
+                                        <td>계산값</td>
+                                        <td>10000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="titleTd" colspan="2">
+                                            <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
+                                                <input name="CHECK_ANGLE_PROCESS" id="CHECK_ANGLE_PROCESS" type="checkbox">
+                                                <label for="CHECK_ANGLE_PROCESS">각가공 - T맞춤</label>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>규격 Size</td>
+                                        <td>300 * 200 *100</td>
+                                    </tr>
+                                    <tr>
+                                        <td>한쪽면</td>
+                                        <td>335 cm2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>단가</td>
+                                        <td>100</td>
+                                    </tr>
+                                    <tr>
+                                        <td>계산값</td>
+                                        <td>10,000</td>
+                                    </tr>
+                                    <tr style="height: 35px;">
+                                        <td style="background-color: white;" colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="darkBrown">Sub Total</td>
+                                        <td>10,000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer" style="text-align: center !important">
@@ -1004,7 +1153,8 @@
             formData.append('GFILE_SEQ', GfileSeq);
             var actionUrl = '';
             var queryId = $('#common_cad_file_attach_form').find("#queryId").val() + "_select";
-            if($('#common_file_download_form').find("#TYPE").val() == 'STOCK_UPLOAD') {
+            var type = $('#common_file_download_form').find("#TYPE").val();
+            if(type == 'STOCK_UPLOAD') {
                 actionUrl = '/uploadInsideStockCadFiles';
                 queryId = 'material.manageStockCadFiles_select';
                 formData.append('INSIDE_STOCK_SEQ', $("#common_file_download_form").find("#INSIDE_STOCK_SEQ").val());
@@ -1021,15 +1171,16 @@
                         return false;
                     }
 
-                    // console.log('fnFormDataFileUploadAjax',data);
+                    // console.log('fnFormDataFileUploadAjax',fnFormToJsonArrayDatadata);
 
-                    if($('#common_file_download_form').find("#TYPE").val() == 'STOCK_UPLOAD' && data.fileUploadDataList.length > 0) {
+                    if(type == 'STOCK_UPLOAD' && data.fileUploadDataList.length > 0) {
                         $.each(data.fileUploadDataList, function(idx,Item) {
                             let parameter = {
                                 'queryId': 'material.manageStockCadFiles',
                                 'INSIDE_STOCK_SEQ': $("#common_file_download_form #INSIDE_STOCK_SEQ").val(),
-                                'PDF_GFILE_SEQ': Item.PDF_GFILE_SEQ,
-                                'IMG_GFILE_SEQ': Item.IMG_GFILE_SEQ
+                                'PDF_GFILE_SEQ' : Item.PDF_GFILE_SEQ,
+                                'IMG_GFILE_SEQ' : Item.IMG_GFILE_SEQ,
+                                'DXF_GFILE_SEQ' : Item.DXF_GFILE_SEQ
                             };
                             let parameters = {'url': '/json-update', 'data': parameter};
                             fnPostAjaxAsync('', parameters, '');
@@ -2014,9 +2165,74 @@
                 processingRequirementsTargetGrid = estimateRegisterTopGrid;
                 processingRequirementsTargetRowIndex = Number(estimateRegisterSelectedRowIndex);
             } else if ($processingRequirementsType === 'CONTROL') {
-                processingRequirementsTargetGrid = $orderManagementGrid;
-                processingRequirementsTargetRowIndex = Number(selectedOrderManagementRowIndex[0]);
+                processingRequirementsTargetGrid = $controlManagementGrid;
+                processingRequirementsTargetRowIndex = Number(selectedControlManagementRowIndex[0]);
             }
+
+            const processingRequirementsSpecialGrid = 'processing_requirements_special_grid';
+            const processingRequirementsSpecialColModel = [
+                {title: 'Level1', dataIndx: 'LEVEL_1', style: {'background': '#fff2cc', 'font-weight': 'bold'}},
+                {title: 'Level2', dataIndx: 'LEVEL_2', align: 'left', style: {'background': '#fff2cc', 'font-weight': 'bold'}}
+            ];
+            const processingRequirementsSpecialObj = {
+                height: 'auto',
+                collapsible: false,
+                showTitle: false,
+                strNoRows: g_noData,
+                // rowHtHead: 15,
+                sortModel: {on: false},
+                copyModel: {render: true},
+                numberCell: {show: false},
+                trackModel: {on: true},
+                editable: false,
+                columnTemplate: {
+                    align: 'center', halign: 'center', hvalign: 'center', valign: 'center',
+                    styleHead: {'background':'#ffd966'}
+                },
+                editModel: {clicksToEdit: 1},
+                colModel: processingRequirementsSpecialColModel,
+                scrollModel: {autoFit: true},
+                dataModel: {
+                    location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                    postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
+                    getData: function (dataJSON) {
+                        return {data: dataJSON.data};
+                    }
+                },
+            }
+            const processingRequirementsSpecialSubGrid = 'processing_requirements_special_sub_grid';
+            const processingRequirementsSpecialSubColModel = [
+                {title: '연마 - 평면연마', dataIndx: 'LEVEL_1', style: {'background': '#fff2cc', 'font-weight': 'bold'}},
+                {title: '각가공 - T맞춤', dataIndx: 'LEVEL_1', style: {'background': '#fff2cc', 'font-weight': 'bold'}}
+            ]
+            const processingRequirementsSpecialSubObj = {
+                height: 'auto',
+                collapsible: false,
+                showTitle: false,
+                strNoRows: g_noData,
+                // rowHtHead: 15,
+                sortModel: {on: false},
+                copyModel: {render: true},
+                numberCell: {show: false},
+                trackModel: {on: true},
+                editable: false,
+                columnTemplate: {
+                    align: 'center', halign: 'center', hvalign: 'center', valign: 'center',
+                    styleHead: {'background':'#ffd966'}
+                },
+                editModel: {clicksToEdit: 1},
+                colModel: processingRequirementsSpecialSubColModel,
+                scrollModel: {autoFit: true},
+                dataModel: {
+                    location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                    postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
+                    getData: function (dataJSON) {
+                        return {data: dataJSON.data};
+                    }
+                },
+
+            }
+
 
             const processingRequirementsGridId = 'processing_requirements_grid';
             const processingRequirementsColModel = [
@@ -2024,27 +2240,29 @@
                 {title: 'CALC_SEQ', dataType: 'integer', dataIndx: 'CALC_SEQ', hidden: true},
                 {title: 'GROUP_CD', dataIndx: 'GROUP_CD', hidden: true},
                 {title: 'FACTOR_CD', dataIndx: 'FACTOR_CD', hidden: true},
-                {
-                    title: '가공요건정보', align: 'center', styleHead: {'background':'#ffd966'}, colModel: [
-                        {title: '항목1', dataIndx: 'LEVEL_1', style: {'background': '#fff2cc', 'font-weight': 'bold'}},
-                        {title: '항목2', dataIndx: 'LEVEL_2', align: 'left', style: {'background': '#fff2cc', 'font-weight': 'bold'}},
-                        {
-                            title: 'Count', dataType: 'integer', format: '#,###', dataIndx: 'PROCESS_CNT',
-                            editable: function () {
-                                return $('#processing_requirements_form').find('#WORK_TYPE').val() !== 'WTP020';
-                            },
-                            render: function () {
-                                if ($('#processing_requirements_form').find('#WORK_TYPE').val() === 'WTP020'){
-                                    return {style: 'background: #dbdbdb'};
-                                }
-                            }
-                        },
-                        {
-                            title: 'Cost', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT',
-                            style: {'background': '#dbdbdb'}
-                        },
-                    ]
+                {title: '항목1', dataIndx: 'LEVEL_1', style: {'background': '#fff2cc', 'font-weight': 'bold'},
+                    render: function (ui) {
+                        if(ui.cellData == 'Sub Total') {
+                            return {cls : 'darkBrown'};
+                        }
+                    }
                 },
+                {title: '항목2', dataIndx: 'LEVEL_2', align: 'left', style: {'background': '#fff2cc', 'font-weight': 'bold'}},
+                {
+                    title: 'Count', dataType: 'integer', format: '#,###', dataIndx: 'PROCESS_CNT',
+                    editable: function () {
+                        return $('#processing_requirements_form').find('#WORK_TYPE').val() !== 'WTP020';
+                    },
+                    render: function () {
+                        if ($('#processing_requirements_form').find('#WORK_TYPE').val() === 'WTP020'){
+                            return {style: 'background: #dbdbdb'};
+                        }
+                    }
+                },
+                {
+                    title: 'Cost', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT',
+                    style: {'background': '#dbdbdb'}
+                }
             ];
             const processingRequirementsObj = {
                 height: 500,
@@ -2059,7 +2277,7 @@
                 editable: false,
                 columnTemplate: {
                     align: 'center', halign: 'center', hvalign: 'center', valign: 'center',
-                    styleHead: {'background':'#ffd966'}
+                    styleHead: {'background':'#5e3d11', 'color':'white'}
                 },
                 editModel: {clicksToEdit: 1},
                 colModel: processingRequirementsColModel,
@@ -2078,7 +2296,7 @@
                         const processCntTotal = lastRow ? lastRow.PROCESS_CNT : '';
                         const costTotal = lastRow ? lastRow.TOTAL : '';
                         const array = [
-                            {LEVEL_1: '추가가공비 합계', PROCESS_CNT: processCntTotal, UNIT_AMT: costTotal}
+                            {LEVEL_1: 'Sub Total', PROCESS_CNT: processCntTotal, UNIT_AMT: costTotal}
                         ];
 
                         return array;
@@ -2216,34 +2434,36 @@
         htmlString += '<tr style="display: none;">';
         htmlString += '    <td id="seq1">' + seq1 + '</td>';
         htmlString += '    <td id="seq2">' + seq2 + '</td>';
+        htmlString += '    <td id="seq3">' + '' + '</td>';
+        htmlString += '    <td id="seq4">' + '' + '</td>';
         htmlString += '</tr>';
         htmlString += '<tr>';
-        htmlString += '    <td scope="row">작업지시번호</td>';
+        htmlString += '    <td scope="row">작업번호</td>';
         htmlString += '    <td>' + controlNum + '</td>';
-        htmlString += '</tr>';
-        htmlString += '<tr>';
         htmlString += '    <td scope="row">도면번호</td>';
         htmlString += '    <td>' + drawingNum + img + '</td>';
         htmlString += '</tr>';
         htmlString += '<tr>';
-        htmlString += '    <td scope="row">재질</td>';
-        htmlString += '    <td>' + materialTypeNm + '</td>';
+        htmlString += '    <td scope="row">접수번호</td>';
+        htmlString += '    <td>' + '' + '</td>';
+        htmlString += '    <td scope="row">소재/작업형태</td>';
+        htmlString += '    <td>' + '' + '</td>';
         htmlString += '</tr>';
         htmlString += '<tr>';
         htmlString += '    <td scope="row">규격</td>';
         htmlString += '    <td>' + sizeTxt + '</td>';
+        htmlString += '    <td scope="row">표면처리</td>';
+        htmlString += '    <td>' + '' + '</td>';
         htmlString += '</tr>';
         htmlString += '<tr>';
         htmlString += '    <td scope="row">규격 Level</td>';
         htmlString += '    <td>' + level + '</td>';
-        htmlString += '</tr>';
-        htmlString += '<tr>';
         htmlString += '    <td scope="row">기본가공비</td>';
         htmlString += '    <td>' + unitBasicAmt + '</td>';
         htmlString += '</tr>';
         htmlString += '<tr>';
-        htmlString += '    <td scope="row">총가공비</td>';
-        htmlString += '    <td>' + totalProcessingCost + '</td>'; //FIXME:
+        htmlString += '    <td scope="row" colspan="2" style="background-color: #5e3d11;color: white;font-weight: 500;">가공비 Total</td>';
+        htmlString += '    <td colspan="2">' + totalProcessingCost + '</td>'; //FIXME:
         htmlString += '</tr>';
 
         $('.basic_information > tbody').html(htmlString);
@@ -2257,7 +2477,7 @@
         if (!(fnIsEmpty(processingRequirementsTargetGrid) && fnIsEmpty(processingRequirementsTargetRowIndex))) {
             gridInstance = processingRequirementsTargetGrid.pqGrid('getInstance').grid;
 
-            if ($('#processing_requirements_form').find('#TYPE').val() === 'CONTROL') {
+            if ($('#processing_requirements_form').find('#TYPE').val() === 'CONTROL' || $('#processing_requirements_form').find('#TYPE').val() === 'ORDER') {
                 //TODO: 첫 번째 행 또는 마지막 행이 복수 주문일 경우 버튼 안 보이게
                 rowDataPrev = gridInstance.getRowData({rowIndx: processingRequirementsTargetRowIndex + -1});
                 rowDataNext = gridInstance.getRowData({rowIndx: processingRequirementsTargetRowIndex + 1});
@@ -2366,11 +2586,11 @@
      * Drawing Upload Popup Window
      **/
     let drawingUploadPopup;
-    const drawingUploadPopupWindow = function (actionType, queryId, workKey) {
+    const drawingUploadPopupWindow = function (actionType, queryId, workKey, insideSeqStr) {
         let drawingForm = document.drawing_file_upload_form;
         // const url = '/drawingUploadPopup?actionType=' + actionType + '&queryId=' + queryId;
         // 팝업 사이즈
-        const nWidth = 1000;
+        const nWidth = 1100;
         const nHeight = 550;
         const winWidth = document.body.clientWidth;
         const winHeight = document.body.clientHeight;
@@ -2395,6 +2615,9 @@
             $('#drawing_file_upload_form').find("#queryId").val(queryId);
             $('#drawing_file_upload_form').find("#WORK_KEY").val(workKey);
             $('#common_cad_reversion_control_list_form').find("#WORK_KEY").val(workKey);
+            if(actionType == 'inside') {
+                $('#drawing_file_upload_form').find("#INSIDE_STOCK_SEQ_STR").val(insideSeqStr);
+            }
 
             drawingForm.action = "/drawingUploadPopup";
             drawingForm.target = "popForm";
@@ -2420,12 +2643,62 @@
     function callDrawingUploadPopupWindow(actionType){
         if(actionType == 'estimate') {          // 견적 도면 등록
             $("#estimateRegisterReloadBtn").trigger("click");
-        }else if(actionType == 'control' || actionType == 'controlRev') {
+        }else if(actionType == 'controlPart' || actionType == 'controlRev') {
             $("#CONTROL_MANAGE_SEARCH").trigger("click");
+        }else if(actionType == 'order') {
+            $("#ORDER_MANAGE_SEARCH").trigger("click");
         }else if(actionType == 'inside') {      // 자재 도면 등록
             $("#stock_manage_search_btn").trigger("click");
         }
     }
+
+    let drawingRevPopup;
+    const drawingRevPopupWindow = function (orderSeq, controlSeq, controlDetailSeq) {
+        let drawingForm = document.drawing_revision_pop_form;
+        // const url = '/drawingUploadPopup?actionType=' + actionType + '&queryId=' + queryId;
+        // 팝업 사이즈
+        const nWidth = 1280;
+        const nHeight = 685;
+        const winWidth = document.body.clientWidth;
+        const winHeight = document.body.clientHeight;
+        const winX = window.screenX || window.screenLeft || 0;
+        const winY = window.screenY || window.screenTop || 0;
+        const nLeft = winX + (winWidth - nWidth) / 2;
+        const nTop = winY + (winHeight - nHeight) / 2;
+
+        let strOption = '';
+        strOption += 'left=' + nLeft + 'px,';
+        strOption += 'top=' + nTop + 'px,';
+        strOption += 'width=' + nWidth + 'px,';
+        strOption += 'height=' + nHeight + 'px,';
+        strOption += 'toolbar=no,menubar=no,location=no,resizable=no,status=yes';
+
+        // 최초 클릭이면 팝업을 띄운다.
+        if (drawingRevPopup === undefined || drawingRevPopup.closed) {
+
+            drawingRevPopup = window.open('', 'popForm', strOption);
+
+            $('#drawing_revision_pop_form').find("#ORDER_SEQ").val(orderSeq);
+            $('#drawing_revision_pop_form').find("#CONTROL_SEQ").val(controlSeq);
+            $('#drawing_revision_pop_form').find("#CONTROL_DETAIL_SEQ").val(controlDetailSeq);
+
+            drawingForm.action = "/drawingRevPop";
+            drawingForm.target = "popForm";
+            drawingForm.submit();
+
+        } else {
+            drawingRevPopup.focus();
+            setTimeout(function() {
+
+                $(drawingRevPopup.window.document).find("#ORDER_SEQ").val(orderSeq);
+                $(drawingRevPopup.window.document).find("#CONTROL_SEQ").val(controlSeq);
+                $(drawingRevPopup.window.document).find("#CONTROL_DETAIL_SEQ").val(controlDetailSeq);
+
+                drawingRevPopup.initDrawingLoad();
+            }, 500);
+        }
+    }
+
 
     $(document).on('click', '.basic_information #imageView', function () {
         const imgGfileSeq = $(this).data('value');

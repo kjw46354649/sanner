@@ -132,7 +132,9 @@ option { font-size: 12px; }
 .defaultBtn~.defaultBtn { }
 .defaultBtn { height: 27px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; display: inline-block; text-align: center; padding: 0 20px; border: 1px solid #e5e5e5; box-sizing: border-box; }
 .defaultBtn.btn-50w { display: inline-block; overflow: hidden; width: 50px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
+.defaultBtn.btn-60w { display: inline-block; overflow: hidden; width: 60px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 .defaultBtn.btn-70w { display: inline-block; overflow: hidden; width: 70px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
+.defaultBtn.btn-80w { display: inline-block; overflow: hidden; width: 80px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 .defaultBtn.btn-100w { display: inline-block; overflow: hidden; width: 100px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 .defaultBtn.btn-120w { display: inline-block; overflow: hidden; width: 120px; height: 27px; margin: 0 5px; padding: 0 10px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 
@@ -160,7 +162,7 @@ option { font-size: 12px; }
 
 .smallBtn { height: 24px; padding: 0 20px; font-size: 12px; color: #000; background: #fcfcfc; line-height: 22px; font-family: 'NotoKrM'; display: inline-block; text-align: center; border: 1px solid #afafaf; border-radius: 2px; box-sizing: border-box; }
 
-.blue { color: #fff !important; background: #59a8e4 !important; border: 1px solid #3371a0 !important; }
+.blue { color: #fff !important; background: #59a8e4 !important; border: 1px solid #599bce !important; }
 .black { color: #fff !important; background: #454545 !important; border: 1px solid #454545 !important; }
 .sky { color: #0a2032 !important; background: #add6f6 !important; border: 1px solid #85b3d8 !important; }
 .red{background: #9b1313 !important; color: #fff !important; border: 1px solid #9b1313 !important;}
@@ -171,6 +173,7 @@ option { font-size: 12px; }
 .gray{background: #adb5b2 !important; border:1px solid #adb5b2 !important; color:#000 !important;}
 .lightGray{background: #d9d9d9 !important; border:1px solid #d9d9d9 !important; color:#000 !important;}
 .brown{background: #6f3c0b !important; border:1px solid #6f3c0b !important; color:#fff !important;}
+.darkBrown{background: #5e3d11 !important; font-weight:500 !important; color:#fff !important;}
 
 
 .graBtn { height: 40px; padding: 0 20px 0 40px; color: #fff; font-size: 15px; line-height: 40px; position: relative; border-radius: 3px; background: -webkit-gradient(linear, 90deg, color-stop(5%, 43934B), color-stop(5%, 4EAB57));/* Chrome,Safari4+ */ background: -webkit-linear-gradient(90deg, #43934B 5%, #4EAB57 5%);/* Chrome10+,Safari5.1+ */ }
@@ -365,6 +368,7 @@ table.boardList .txtP{color: #7030a0;}
 .mr-20{margin-right: 20px !important}
 .mr-30{margin-right: 30px !important}
 
+.mt-05{margin-top: 5px !important}
 .mt-10{margin-top: 10px !important}
 .mt-15{margin-top: 15px !important}
 .mt-20{margin-top: 20px !important}
@@ -450,15 +454,18 @@ table.boardList .txtP{color: #7030a0;}
 /* background color*/
 .bg-skyblue { background-color: #87ceeb; }
 .bg-real-green { background-color: #98ff46; }
+.bg-light-green {background-color: #d4ffbd; font-weight: bold;}
 .bg-green { background-color: #ffd966; }
 .bg-lightgray { background-color: #d3d3d3; }
 .bg-yellow { background-color: #ffff00; }
 .bg-real-yellow { background-color: #ffd966; }
 .bg-lightyellow { background-color: #ffffe0; }
+.bg-light-yellow2 {background-color: #ffffcb;font-weight: bold;}
 .bg-orange { background-color: #ffc000; }
 .bg-lightcoral { background-color: #f08080; }
 .bg-moccasin {background-color: #ffe4b5; }
 .bg-white {background-color: #ffffff; }
+.bg-light-red {background-color: #ffc1c1; color: #a20000; font-weight: bold;}
 
 .pq-grid-col, .pq-grid-row>.pq-grid-cell {
   overflow: hidden;
@@ -493,6 +500,8 @@ table.boardList .txtP{color: #7030a0;}
 .circleMinusIcon { display: inline-block; width: 16px;height: 16px; background: url(../images/common/minuscirclelinear.png) no-repeat; background-size: 16px; }
 .floppyDiskAble { display: inline-block; width: 17px;height: 17px; background: url(../images/common/floppy_disk_able.png) no-repeat; background-size: 17px; }
 .floppyDiskDisable { display: inline-block; width: 17px;height: 17px; background: url(../images/common/floppy_disk_disalbe.png) no-repeat; background-size: 17px; }
+.pdfGrayImageIcon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/icon_pdf_gray.png) no-repeat; background-size: 17px; }
+.pdfBlueImageIcon { display: inline-block; width: 17px;height: 17px; background: url(../images/common/icon_pdf_blue.png) no-repeat; background-size: 17px; }
 
 .blink {
   -webkit-animation: blink 1s linear 1s infinite normal;

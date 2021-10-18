@@ -11,12 +11,24 @@
         { call jmes.SP_CONTROL_DRAWING_UPLOAD(#{WORK_KEY}) }
     </update>
 
+    <update id="SP_CONTROL_DRAWING_UPLOAD_TEMP" statementType="CALLABLE" >
+        { call jmes.SP_CONTROL_DRAWING_UPLOAD_TEMP(#{WORK_KEY}) }
+    </update>
+
     <update id="SP_CONTROL_DRAWING_UPLOAD_REV" statementType="CALLABLE" >
         { call jmes.SP_CONTROL_DRAWING_UPLOAD_REV(#{WORK_KEY}) }
     </update>
 
     <update id="SP_CONTROL_DRAWING_UPLOAD_REV_NEW" statementType="CALLABLE" >
         { call jmes.SP_CONTROL_DRAWING_UPLOAD_REV_NEW(#{WORK_KEY}) }
+    </update>
+
+    <update id="SP_CONTROL_DRAWING_UPLOAD_PART" statementType="CALLABLE" >
+        { call jmes.SP_CONTROL_DRAWING_UPLOAD_PART(#{WORK_KEY}) }
+    </update>
+
+    <update id="SP_CONTROL_DRAWING_UPLOAD_STOCK" statementType="CALLABLE" >
+        { call jmes.SP_CONTROL_DRAWING_UPLOAD_STOCK(#{WORK_KEY}) }
     </update>
 
 </mapper>

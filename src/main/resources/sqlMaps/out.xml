@@ -18,7 +18,7 @@
             END AS OUTSIDE_REQUEST_DT,
             IFNULL( CASE
                         WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.OUTSIDE_UNIT_AMT
-                                                                    FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
+                                                                    FROM TBL_CONTROL_PART M, TBL_CONTROL N, TBL_CONTROL_PART O
                                                                     WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                                                         AND O.CONTROL_SEQ = N.CONTROL_SEQ
                                                                         AND M.OUTSIDE_YN = 'Y'
@@ -30,7 +30,7 @@
                                                                     ORDER BY M.CONTROL_SEQ DESC
                                                                     LIMIT 1)
                         ELSE (  SELECT M.OUTSIDE_UNIT_AMT
-                                FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
+                                FROM TBL_CONTROL_PART M, TBL_CONTROL N, TBL_CONTROL_PART O
                                 WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                     AND O.CONTROL_SEQ = N.CONTROL_SEQ
                                     AND M.OUTSIDE_YN = 'Y'
@@ -379,7 +379,7 @@
     </insert>
 
     <insert id="createOutsideCloseHistory" parameterType="java.util.HashMap" >
-        INSERT INTO jmes.TBL_OUTSIDE_CLOSE_HISTORY (
+        INSERT INTO TBL_OUTSIDE_CLOSE_HISTORY (
             HISTORY_SEQ,
             HISTORY_DT,
             CLOSE_MONTH,
@@ -445,7 +445,7 @@
             B.OUTSIDE_UNIT_AMT * (SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0)) AS OUTSIDE_TOTAL_AMT,
             IFNULL( CASE
                         WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.OUTSIDE_UNIT_AMT
-                                                                    FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
+                                                                    FROM TBL_CONTROL_PART M, TBL_CONTROL N, TBL_CONTROL_PART O
                                                                     WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                                                         AND O.CONTROL_SEQ = N.CONTROL_SEQ
                                                                         AND M.OUTSIDE_YN = 'Y'
@@ -457,7 +457,7 @@
                                                                     ORDER BY M.CONTROL_SEQ DESC
                                                                     LIMIT 1)
                         ELSE (  SELECT M.OUTSIDE_UNIT_AMT
-                                FROM jmes.TBL_CONTROL_PART M, jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
+                                FROM TBL_CONTROL_PART M, TBL_CONTROL N, TBL_CONTROL_PART O
                                 WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
                                     AND O.CONTROL_SEQ = N.CONTROL_SEQ
                                     AND M.OUTSIDE_YN = 'Y'
@@ -652,7 +652,7 @@
     </select>
 
     <update id="updateOutsideCloseNote" parameterType="java.util.HashMap">
-        UPDATE jmes.TBL_OUTSIDE_CLOSE_NOTE
+        UPDATE TBL_OUTSIDE_CLOSE_NOTE
         SET
             CLOSE_NOTE = #{CLOSE_NOTE},
             FINAL_NEGO_AMT = #{FINAL_NEGO_AMT}
@@ -1099,7 +1099,7 @@
     </insert>
 
     <insert id="createMailAttachCadFilePlus" parameterType="java.util.HashMap">
-        INSERT INTO jmes.TBL_FILE
+        INSERT INTO TBL_FILE
         (FILE_SEQ, FILE_NM, FILE_PATH, TIME_PATH, ORGINAL_FILE_NM, FILE_TYPE, FILE_EXT, FILE_SIZE,
             FILE_KIND, GFILE_SEQ, INSERT_ID)
         SELECT
@@ -1108,7 +1108,7 @@
         FROM (
         	SELECT
                 A.FILE_NM, A.FILE_PATH, A.TIME_PATH, A.ORGINAL_FILE_NM, A.FILE_TYPE, A.FILE_EXT, A.FILE_SIZE, A.FILE_KIND
-        	FROM jmes.TBL_FILE A, jmes.TBL_CONTROL_PART B
+        	FROM TBL_FILE A, TBL_CONTROL_PART B
         	WHERE B.CONTROL_SEQ = #{CONTROL_SEQ} AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ} AND A.GFILE_SEQ = B.DXF_GFILE_SEQ
         ) Z
     </insert>
@@ -1270,5 +1270,17 @@
           AND A.DEL_YN = 'N'
           AND A.CONTROL_SEQ IN (${CONTROL_SEQ})
           AND B.CONTROL_DETAIL_SEQ IN (${CONTROL_DETAIL_SEQ})
+    </select>
+    <select id="selectControlListUseOrderSeq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.REGIST_NUM, A.ORDER_NUM, A.ORDER_QTY, B.ORDER_QTY AS CONTROL_ORDER_QTY, A.OUT_FINISH_DT AS ORDER_FINISH_DT,
+               B.OUT_FINISH_DT AS CONTROL_ORDER_FINISH_DT, C.OUT_FINISH_DT AS CONTROL_FINISH_DT,
+               C.CONTROL_NUM, C.OUT_FINISH_STATUS AS CONTROL_FINISH_STATUS, A.OUT_FINISH_STATUS AS ORDER_FINISH_STATUS,
+               A.ORDER_SEQ, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
+               IFNULL((SELECT SUM(X.OUT_QTY) FROM TBL_OUT X WHERE X.CONTROL_SEQ = B.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND X.ORDER_SEQ = B.ORDER_SEQ),0) AS OUT_QTY
+        FROM TBL_ORDER A
+             INNER JOIN TBL_CONTROL_PART_ORDER B ON A.ORDER_SEQ = B.ORDER_SEQ
+             INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND C.DEL_YN = 'N' AND C.OUT_FINISH_DT IS NULL
+        WHERE A.DEL_YN = 'N'
+          AND A.ORDER_SEQ = #{ORDER_SEQ}
     </select>
 </mapper>

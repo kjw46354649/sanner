@@ -236,7 +236,7 @@
                     if (ui.dataIndx == 'BTN_CANCEL') {
                         if (ui.rowData['OUT_RETURN_TYPE'] == '1') {//출고
                             let data = {
-                                'queryId': 'inspection.deleteOutgoingHistoryInspectionCancelStep1,inspection.updateOutgoingHistoryInspectionCancelStep2,inspection.updateOutgoingHistoryInspectionCancelStep3,inspection.updateOutFinishStatus',
+                                'queryId': 'inspection.deleteOutgoingHistoryInspectionCancelStep1,inspection.updateOutgoingHistoryInspectionCancelStep2,inspection.updateOutgoingHistoryInspectionCancelStep3,inspection.updateOutFinishStatus,inspection.updateOrderOutFinishStatusCancel',
                                 'OUT_SEQ': ui.rowData['KEY_SEQ'],
                                 'CONTROL_SEQ': ui.rowData['CONTROL_SEQ'],
                                 'CONTROL_DETAIL_SEQ': ui.rowData['CONTROL_DETAIL_SEQ'],
@@ -250,9 +250,11 @@
                             }, parameters, '');
                         } else if (ui.rowData['OUT_RETURN_TYPE'] == '2') {//반품
                             let data = {
-                                'queryId': 'inspection.deleteOutgoingHistoryReturnCancelStep1,inspection.updateOutFinishStatus',
+                                // 'queryId': 'inspection.deleteOutgoingHistoryReturnCancelStep1,inspection.updateOutFinishStatus',
+                                'queryId': 'inspection.deleteOutgoingHistoryReturnCancelStep1,inspection.updateOutFinishStatus,inspection.updateOrderOutFinishStatus',
                                 'INSPECT_SEQ': ui.rowData['KEY_SEQ'],
-                                'CONTROL_SEQ': ui.rowData['CONTROL_SEQ']
+                                'CONTROL_SEQ': ui.rowData['CONTROL_SEQ'],
+                                'ORDER_SEQ': ui.rowData['ORDER_SEQ']
                             };
                             let parameters = {'url': '/json-manager', 'data': data};
                             fnPostAjax(function (data, callFunctionParam) {
@@ -262,10 +264,11 @@
                             }, parameters, '');
                         } else if (ui.rowData['OUT_RETURN_TYPE'] == '3') {//폐기
                             let data = {
-                                'queryId': 'inspection.updateOutgoingCancelDisposal,inspection.updateOutgoingHistoryInspectionCancelStep3,inspection.updateOutFinishStatus',
+                                // 'queryId': 'inspection.updateOutgoingCancelDisposal,inspection.updateOutgoingHistoryInspectionCancelStep3,inspection.updateOutFinishStatus',
+                                'queryId': 'inspection.updateOutgoingCancelDisposalOrderVer,inspection.updateOutgoingHistoryInspectionCancelStep3OrderVer,inspection.updateOutFinishStatusUseOrderSeq,inspection.updateOrderOutFinishStatusCancel',
                                 // 'OUT_SEQ': ui.rowData['KEY_SEQ'],
-                                'CONTROL_SEQ': ui.rowData['CONTROL_SEQ'],
-                                'CONTROL_DETAIL_SEQ': ui.rowData['CONTROL_DETAIL_SEQ'],
+                                // 'CONTROL_SEQ': ui.rowData['CONTROL_SEQ'],
+                                // 'CONTROL_DETAIL_SEQ': ui.rowData['CONTROL_DETAIL_SEQ'],
                                 'ORDER_SEQ': ui.rowData['ORDER_SEQ']
                             };
                             let parameters = {'url': '/json-manager', 'data': data};

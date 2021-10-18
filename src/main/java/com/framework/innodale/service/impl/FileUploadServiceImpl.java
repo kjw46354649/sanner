@@ -123,19 +123,45 @@ public class FileUploadServiceImpl implements FileUploadService {
         String jsonObject = (String) hashMap.get("gridData");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
-        ArrayList<HashMap<String, Object>> controlList = null;
+        ArrayList<HashMap<String, Object>> orderList = null;
 
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<HashMap<String, Object>>() {});
 
-        if (jsonMap.containsKey("controlList")) {
-            controlList = (ArrayList<HashMap<String, Object>>) jsonMap.get("controlList");
+        if (jsonMap.containsKey("orderList")) {
+            orderList = (ArrayList<HashMap<String, Object>>) jsonMap.get("orderList");
 
             workKey = CommonUtility.getUUIDString("drawing");
 
             hashMap.put("WORK_KEY", workKey);
-            hashMap.put("controlList", controlList);
+            hashMap.put("orderList", orderList);
             hashMap.put("queryId", "drawingUploadMapper.manageControlCadRevPrevDataInsert");
+            innodaleDao.create(hashMap);
+        }
+        return workKey;
+    }
+
+    @Override
+    public String controlCadPartPrev(Map<String, Object> hashMap) throws Exception{
+
+        String workKey = "";
+
+        String jsonObject = (String) hashMap.get("gridData");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+        ArrayList<HashMap<String, Object>> controlDetailList = null;
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<HashMap<String, Object>>() {});
+
+        if (jsonMap.containsKey("controlDetailList")) {
+            controlDetailList = (ArrayList<HashMap<String, Object>>) jsonMap.get("controlDetailList");
+
+            workKey = CommonUtility.getUUIDString("drawing");
+
+            hashMap.put("WORK_KEY", workKey);
+            hashMap.put("controlDetailList", controlDetailList);
+            hashMap.put("queryId", "drawingUploadMapper.manageControlCadPartPrevDataInsert");
             innodaleDao.create(hashMap);
         }
         return workKey;
@@ -160,6 +186,8 @@ public class FileUploadServiceImpl implements FileUploadService {
         ArrayList<HashMap<String, Object>> fileUploadList = new ArrayList<HashMap<String, Object>>();
         ArrayList<HashMap<String, Object>> fileUploadDataList = new ArrayList<HashMap<String, Object>>();
         Iterator<String> itr = (Iterator<String>)request.getFileNames();
+
+        String actionType = (String)hashMap.get("actionType");
 
         if(itr.hasNext()) {
 
@@ -298,12 +326,14 @@ public class FileUploadServiceImpl implements FileUploadService {
                 hashMap.remove("IMG_GFILE_SEQ");
 
             }
-
-            String actionType = (String)hashMap.get("actionType");
-            if("control".equals(actionType)){
+            if("order".equals(actionType)){
                 // 도면 대상 업로드 리스트 및 적둉 대상 작업 리스트 조회
                 hashMap.put("queryId", "procedure.SP_CONTROL_DRAWING_UPLOAD");
-            }else{
+            }else if("controlPart".equals(actionType)) {
+                hashMap.put("queryId", "procedure.SP_CONTROL_DRAWING_UPLOAD_PART");
+            }else if("inside".equals(actionType)) {
+                hashMap.put("queryId", "procedure.SP_CONTROL_DRAWING_UPLOAD_STOCK");
+            }else {
                 // 도면 대사 관리 번호 저장 처리
                 // 도면 대상 업로드 리스트 및 적둉 대상 작업 리스트 조회
                 hashMap.put("queryId", "procedure.SP_CONTROL_DRAWING_UPLOAD_REV_NEW");
@@ -318,7 +348,11 @@ public class FileUploadServiceImpl implements FileUploadService {
         model.addAttribute("fileUploadList",     innodaleDao.getList(hashMap));
 
         // 주문 정보
-        hashMap.put("queryId", "drawingUploadMapper.selectDrawingUploadControlDataList");
+        if("controlRev".equals(actionType)) {
+            hashMap.put("queryId", "drawingUploadMapper.selectDrawingUploadControlRevList");
+        }else {
+            hashMap.put("queryId", "drawingUploadMapper.selectDrawingUploadControlDataList");
+        }
         model.addAttribute("fileUploadDataList", innodaleDao.getList(hashMap));
     }
 

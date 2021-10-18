@@ -33,4 +33,18 @@ public interface OrderService {
     void processingRequirementsControlSave(Model model, Map<String, Object> map)  throws Exception;
 
     void matchStockSave(Model model, Map<String, Object> map) throws Exception;
+
+    void validationCheckBeforeSaveFromOrder(Model model, Map<String, Object> map) throws Exception;
+
+    void saveFromOrderManage(Model model, Map<String, Object> map) throws Exception;
+
+    void removeOrder(Map<String, Object> map) throws Exception;
+
+    void managerOrderStatus(Map<String, Object> map) throws Exception;
+
+    void validationCheckBeforeCreateControl(Model model, Map<String, Object> map) throws Exception;
+
+    void createNewControl(Model model, Map<String, Object> map) throws Exception;
+
+    void createNewStockControl(Model model, Map<String, Object> map) throws Exception;
 }

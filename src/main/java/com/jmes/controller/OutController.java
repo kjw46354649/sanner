@@ -64,4 +64,13 @@ public class OutController {
 
         return "jsonView";
     }
+
+    @RequestMapping(value = "/createOutGoing", method = RequestMethod.POST)
+    public String createOutGoing(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.outService.createOutGoing(map);
+
+        return "jsonView";
+    }
 }

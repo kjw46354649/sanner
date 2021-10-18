@@ -69,7 +69,12 @@ public class PdfPrintMakeController {
         Map<String, Object> jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
         String[] selectControlLists = ((String) jsonMap.get("selectControl")).split("\\|");
         hashMap.put("selectControlLists", selectControlLists);
-        hashMap.put("queryId", "orderMapper.selectControlDrawingInfoList");
+        String type = (String)jsonMap.get("printType");
+        if("order".equals(type)) {
+            hashMap.put("queryId", "orderMapper.selectOrderDrawingInfoList");
+        }else {
+            hashMap.put("queryId", "orderMapper.selectControlDrawingInfoList");
+        }
         List<Map<String, Object>> imageList = innodaleService.getList(hashMap);
 
         // 문서 만들기
@@ -155,7 +160,7 @@ public class PdfPrintMakeController {
 
             int imgWidth = 1100;
             int imgHeight = 170;
-            if(controlInfo.get("WORK_TYPE_NM").equals("파트")) {
+            if(controlInfo.get("WORK_TYPE").equals("WTP050")) { // 파트
                 imgWidth = 1100;
                 imgHeight = 150;
             }
@@ -203,14 +208,14 @@ public class PdfPrintMakeController {
 //            }
             phrase.add(new Chunk(qtyTxt,mediumBoldFont));
 
-            if (controlInfo.get("WORK_TYPE_NM").equals("조립")) {
+            if (controlInfo.get("WORK_TYPE").equals("WTP020")) { // 조립
                 phrase.add(new Chunk(" SET",smallBoldFont));
                 PdfPCell cell = createCellPhrase(phrase,2,2,Element.ALIGN_MIDDLE,Element.ALIGN_CENTER);
                 cell.setPaddingBottom(14);
                 cell.setBorder(PdfPCell.TOP | PdfPCell.BOTTOM);
 
                 table.addCell(cell);
-            } else if (controlInfo.get("WORK_TYPE_NM").equals("파트")) {
+            } else if (controlInfo.get("WORK_TYPE").equals("WTP050")) { // 파트
                 phrase.add(new Chunk(" EA" + "\n",smallBoldFont));
                 phrase.add(new VerticalPositionMark());
 
@@ -234,7 +239,6 @@ public class PdfPrintMakeController {
             }
             String stockRequestQty = String.valueOf(controlInfo.get("STOCK_REQUEST_QTY"));
             if(Integer.parseInt(stockRequestQty) > 0) {
-                Phrase phr = new Phrase();
                 String qty = String.valueOf(controlInfo.get("STOCK_REQUEST_QTY"));
                 PdfPCell tCell = createCell(("충당\n재고" ), 1, 1, smallNormalFont);
                 tCell.setBorder(PdfPCell.LEFT | PdfPCell.TOP | PdfPCell.BOTTOM);
@@ -267,9 +271,23 @@ public class PdfPrintMakeController {
             cell1.setPadding(0);
             masterTable.addCell(cell1);
 
-            if(controlInfo.get("WORK_TYPE_NM").equals("파트")) {
+            if(controlInfo.get("WORK_TYPE").equals("WTP050")) { // 파트
                 String text = "PART " + controlInfo.get("PART_NUM");
                 PdfPCell cell2 = createCell(text,1,1,new Font(bf, 20f, Font.BOLD));
+                masterTable.addCell(cell2);
+            }else if(controlInfo.get("WORK_TYPE").equals("WTP040") && controlInfo.get("INSIDE_STOCK_NUM") != null && !"".equals(controlInfo.get("INSIDE_STOCK_NUM"))) { // 재고
+                Font tempFont = new Font(bf, saleSmall, Font.NORMAL);
+                Font tempBoldFont = new Font(bf, saleSmall, Font.BOLD);
+
+                Phrase phr = new Phrase();
+                phr.add(new Chunk("재고번호 ",tempFont));
+                phr.add(new Chunk(controlInfo.get("INSIDE_STOCK_NUM") + "\n\n",tempBoldFont));
+
+                phr.add(new Chunk("품명 " + controlInfo.get("ITEM_NM"),tempFont));
+
+                PdfPCell cell2 = createCellPhrase(phr,1,1,Element.ALIGN_MIDDLE,Element.ALIGN_LEFT);
+                cell2.setPaddingLeft(5);
+
                 masterTable.addCell(cell2);
             }else {
                 controlInfo.put("queryId", "orderMapper.selectControlCadOrderList");
@@ -534,8 +552,8 @@ public class PdfPrintMakeController {
 
         PdfWriter.getInstance(document, out);
 
-        String[] selectControlLists = ((String) jsonMap.get("selectControlList")).split("\\|");
-        hashMap.put("selectControlLists", selectControlLists);
+        String[] selectOrderLists = ((String) jsonMap.get("selectOrderList")).split("\\|");
+        hashMap.put("selectOrderLists", selectOrderLists);
         hashMap.put("queryId", "orderMapper.selectControlSalesCadBarcodeList");
         List<Map<String, Object>> controlInfoList = innodaleService.getList(hashMap);
 
@@ -607,8 +625,9 @@ public class PdfPrintMakeController {
             table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 1, 1, mediumNormalFont));
 //            table.addCell(createCell(controlInfo.get("REGIST_NUM") != null && controlInfo.get("TOTAL_SHEET") != null ? controlInfo.get("REGIST_NUM") + " / " + controlInfo.get("TOTAL_SHEET"): controlInfo.get("REGIST_NUM") != null ? (String) controlInfo.get("REGIST_NUM") : "" + controlInfo.get("TOTAL_SHEET") != null ? String.valueOf(controlInfo.get("TOTAL_SHEET")) : "", 4, 1, smallNormalFont));
             Font tempNormalFont = new Font(bf, 8.5f, Font.NORMAL);
-            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? controlInfo.get("INNER_DUE_DT") + "-" + controlInfo.get("ORDER_DUE_DT"): "", 3, 1, tempNormalFont));
-            table.addCell(createCell(controlInfo.get("CONTROL_NUM") != null ? controlInfo.get("CONTROL_NUM") + "" : "", 1, 1, tempNormalFont));
+            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? ""+controlInfo.get("ORDER_DUE_DT"): "", 2, 1, tempNormalFont));
+//            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? controlInfo.get("INNER_DUE_DT") + "-" + controlInfo.get("ORDER_DUE_DT"): "", 3, 1, tempNormalFont));
+            table.addCell(createCell(controlInfo.get("CONTROL_NUM") != null ? controlInfo.get("CONTROL_NUM") + "" : "", 2, 1, tempNormalFont));
             document.add(table);
             table.flushContent();
 
@@ -721,6 +740,246 @@ public class PdfPrintMakeController {
             iCount++;
         }
         document.close();
+    }
+
+    @RequestMapping(value = "/makeEstimateDrawingPrint", method = RequestMethod.POST) // 견적도면
+    public void makeEstimateDrawingPrint(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+
+        response.setContentType("application/pdf");
+        OutputStream out = response.getOutputStream();
+
+        String jsonObject = (String) hashMap.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        // 문서 만들기
+        Document document = new Document(PageSize.A4);
+        document.setMargins(20, 20, 15, 20);
+        // 한글 처리를 위한 글꼴 설정 추가
+        String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
+        BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+
+        Font smallNormalFont = new Font(bf, saleSmall, Font.NORMAL);
+        Font smallBoldFont = new Font(bf, small, Font.BOLD);
+        Font mediumNormalFont = new Font(bf, 8.0f, Font.NORMAL);
+        Font mediumNormalFont2 = new Font(bf, 7.4f, Font.NORMAL);
+        Font mediumBoldFont = new Font(bf, 8.0f, Font.BOLD);
+        Font largeBoldFont = new Font(bf, 12.0f, Font.BOLD);
+
+        PdfWriter.getInstance(document, out);
+
+        String[] selectOrderList = ((String) jsonMap.get("selectOrderList")).split("\\|");
+//        hashMap.put("selectOrderLists", selectOrderList);
+//        hashMap.put("queryId", "orderMapper.selectEstimateCadInfo");
+//        List<Map<String, Object>> orderInfoList = innodaleService.getList(hashMap);
+
+        int iCount = 0;
+
+        document.open();
+
+        for(int i=0;i<selectOrderList.length;i++) {
+            if (iCount > 0) document.newPage();
+
+            hashMap.put("ORDER_SEQ",selectOrderList[i]);
+            hashMap.put("queryId", "orderMapper.selectEstimateCadInfo");
+            Map<String,Object> orderInfo = innodaleService.getInfo(hashMap);
+
+            PdfPTable table = new PdfPTable(25);
+            table.init();
+            table.setWidthPercentage(100);
+            table.setWidths(new float[]{3.5f, 3.0f, 3.0f, 4.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 2.5f, 2.5f, 4.5f, 4.5f, 2.5f, 2.5f});
+
+            // 1st line
+            table.addCell(createRotateCell("견적도면", 1, 3, largeBoldFont, 90));
+            table.addCell(createRotateCell("접번 " + (String)orderInfo.get("REGIST_NUM"), 1, 3, mediumNormalFont, 90));
+            String sizeTxt = orderInfo.get("SIZE_TXT") + "\n";
+            if(orderInfo.get("MATERIAL_DETAIL_NM") != null) {
+                sizeTxt += orderInfo.get("MATERIAL_DETAIL_NM") + " / ";
+            }
+            if(orderInfo.get("WORK_TYPE_NM") != null) {
+                sizeTxt += orderInfo.get("WORK_TYPE_NM");
+            }
+            table.addCell(createRotateCell(sizeTxt, 1, 3, mediumNormalFont, 90));
+
+            String autoAmt = "";
+            if(orderInfo.get("UNIT_MATERIAL_AUTO_AMT") != null) {
+                autoAmt += ("소재 " + orderInfo.get("UNIT_MATERIAL_AUTO_AMT") + "\n");
+            }
+            if(orderInfo.get("UNIT_SURFACE_AUTO_AMT") != null) {
+                autoAmt += ("표면 " + orderInfo.get("UNIT_SURFACE_AUTO_AMT") + "\n");
+            }
+            if(orderInfo.get("SIZE_LEVEL") != null && orderInfo.get("UNIT_BASIC_AMT") != null) {
+                autoAmt += ("Lv." + orderInfo.get("SIZE_LEVEL") + " " + orderInfo.get("UNIT_BASIC_AMT")  + "\n");
+            }
+            table.addCell(createRotateCell(autoAmt, 1, 3, mediumNormalFont, 90));
+
+            for(int j=1;j<=15;j++) {
+                String mapkey = "DATA_VALUE_" + j;
+                table.addCell(createRotateCell(orderInfo.get(mapkey) != null ? ""+orderInfo.get(mapkey): "", 1, 1, mediumNormalFont2, 90, 15f));
+            }
+
+            table.addCell(createRotateCell( orderInfo.get("PROCESS_TOTAL") != null ? "가공비 "+orderInfo.get("PROCESS_TOTAL"): "가공비", 1, 3, mediumNormalFont, 90));
+            table.addCell(createRotateColorCell("특수가공", 1, 3, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+            table.addCell(createRotateCell("", 1, 3, mediumNormalFont, 90));
+            table.addCell(createRotateCell("", 1, 3, mediumNormalFont, 90));
+            table.addCell(createRotateCell("가공합계", 1, 3, mediumBoldFont, 90));
+            table.addCell(createRotateCell("전체", 1, 3, mediumBoldFont, 90));
+
+            String[] columnList = {"밀링", "TAP", "일반", "정밀", "15T 이하", "15T 초과", "15T 이하", "15T 초과", "15T 이하", "15T 초과", "일반 Hole", "TAP", "공차 Hole", "특수 Hole", "C/B" };
+            for(int j=0;j<columnList.length;j++) {
+                PdfPCell tempCell = createRotateCell(columnList[j], 1, 1, mediumNormalFont2, 90, 38f);
+                tempCell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+                tempCell.setPaddingBottom(2);
+                table.addCell(tempCell);
+            }
+
+            table.addCell(createRotateColorCell("가공면수", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+            table.addCell(createRotateColorCell("치수공차", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+            table.addCell(createRotateColorCell("외곽가공", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+            table.addCell(createRotateColorCell("일반포켓", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+            table.addCell(createRotateColorCell("관통포켓", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+            table.addCell(createRotateColorCell("드릴가공", 5, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+
+            document.add(table);
+            table.flushContent();
+
+            if (orderInfo.get("IMAGE_PATH") != null && !orderInfo.get("IMAGE_PATH").equals("")) {
+                try {
+                    Image pngImage = Image.getInstance((String) orderInfo.get("IMAGE_PATH") + ".print.png");
+                    pngImage.setAbsolutePosition(15, 10);
+                    pngImage.scaleAbsolute(PageSize.A4.getWidth() - 40, PageSize.A4.getHeight() - 95);
+                    pngImage.setRotationDegrees(180);
+                    document.add(pngImage);
+                } catch (Exception e){
+                    log.error(e.getMessage(), e.getCause());
+                    e.printStackTrace();
+                }
+            }
+            iCount++;
+        }
+
+//        for (Map<String, Object> orderInfo : orderInfoList) {
+//            if (iCount > 0) document.newPage();
+//
+//            PdfPTable table = new PdfPTable(25);
+//            table.init();
+//            table.setWidthPercentage(100);
+//            table.setWidths(new float[]{3.5f, 2.5f, 3.5f, 4.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 2.5f, 2.5f, 4.5f, 4.5f, 2.5f, 2.5f});
+//
+//            // 1st line
+//            table.addCell(createRotateCell("견적도면", 1, 3, largeBoldFont, 90));
+//            table.addCell(createRotateCell("접번", 1, 3, mediumNormalFont, 90));
+//            table.addCell(createRotateCell("소재", 1, 3, mediumNormalFont, 90));
+//            table.addCell(createRotateCell("소재비", 1, 3, mediumNormalFont, 90));
+//
+//            table.addCell(createRotateCell("2", 1, 1, mediumNormalFont, 90, 18f)); // 가공-밀링
+//            table.addCell(createRotateCell("1", 1, 1, mediumNormalFont, 90, 18f)); // 가공-TAP
+//            table.addCell(createRotateCell("1", 1, 1, mediumNormalFont, 90, 18f)); // 치수공차-일반
+//            table.addCell(createRotateCell("3", 1, 1, mediumNormalFont, 90, 18f)); // 치수공차-정밀
+//            table.addCell(createRotateCell("3", 1, 1, mediumNormalFont, 90, 18f)); // 외곽가공-15T이하
+//            table.addCell(createRotateCell("2", 1, 1, mediumNormalFont, 90, 18f)); // 외곽가공-15T초과
+//            table.addCell(createRotateCell("3", 1, 1, mediumNormalFont, 90, 18f)); // 일반포켓-15T이하
+//            table.addCell(createRotateCell("2", 1, 1, mediumNormalFont, 90, 18f)); // 일반포켓-15T초과
+//            table.addCell(createRotateCell("3", 1, 1, mediumNormalFont, 90, 18f)); // 관통포켓-15T이하
+//            table.addCell(createRotateCell("2", 1, 1, mediumNormalFont, 90, 18f)); // 관통포켓-15T초과
+//            table.addCell(createRotateCell("2", 1, 1, mediumNormalFont, 90, 18f)); // 드릴가공-일반 Hole
+//            table.addCell(createRotateCell("124", 1, 1, mediumNormalFont, 90, 18f)); // 드릴가공-TAP
+//            table.addCell(createRotateCell("1", 1, 1, mediumNormalFont, 90, 18f)); // 드릴가공-공차 Hole
+//            table.addCell(createRotateCell("1", 1, 1, mediumNormalFont, 90, 18f)); // 드릴가공-특수 Hole
+//            table.addCell(createRotateCell("", 1, 1, mediumNormalFont, 90, 18f)); // 드릴가공-C/B
+//
+//            table.addCell(createRotateCell("가공비 135,000", 1, 3, mediumNormalFont, 90));
+//            table.addCell(createRotateColorCell("특수가공", 1, 3, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+//            table.addCell(createRotateCell("연마-평면연마", 1, 3, mediumNormalFont, 90));
+//            table.addCell(createRotateCell("각가공-T맞춤", 1, 3, mediumNormalFont, 90));
+//            table.addCell(createRotateCell("가공합계 315,000", 1, 3, mediumBoldFont, 90));
+//            table.addCell(createRotateCell("전체 895,000", 1, 3, mediumBoldFont, 90));
+//
+//            table.addCell(createRotateCell("밀링", 1, 1, mediumNormalFont, 90, 28f));
+//            table.addCell(createRotateCell("TAP", 1, 1, mediumNormalFont, 90, 28f));
+//            table.addCell(createRotateCell("일반", 1, 1, mediumNormalFont, 90, 28f));
+//            table.addCell(createRotateCell("정밀", 1, 1, mediumNormalFont, 90, 28f));
+//            table.addCell(createRotateCell("15T 이하", 1, 1, mediumNormalFont, 90, 28f));
+//            table.addCell(createRotateCell("15T 초과", 1, 1, mediumNormalFont, 90, 28f));
+//            table.addCell(createRotateCell("15T 이하", 1, 1, mediumNormalFont, 90, 28f));
+//            table.addCell(createRotateCell("15T 초과", 1, 1, mediumNormalFont, 90, 28f));
+//            table.addCell(createRotateCell("15T 이하", 1, 1, mediumNormalFont, 90, 28f));
+//            table.addCell(createRotateCell("15T 초과", 1, 1, mediumNormalFont, 90, 28f));
+//            table.addCell(createRotateCell("일반 Hole", 1, 1, mediumNormalFont, 90, 28f));
+//            table.addCell(createRotateCell("TAP", 1, 1, mediumNormalFont, 90, 28f));
+//            table.addCell(createRotateCell("공차 Hole", 1, 1, mediumNormalFont, 90, 28f));
+//            table.addCell(createRotateCell("특수 Hole", 1, 1, mediumNormalFont, 90, 28f));
+//            table.addCell(createRotateCell("C/B", 1, 1, mediumNormalFont, 90, 28f));
+//
+//            table.addCell(createRotateColorCell("가공면수", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+//            table.addCell(createRotateColorCell("치수공차", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+//            table.addCell(createRotateColorCell("외곽가공", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+//            table.addCell(createRotateColorCell("일반포켓", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+//            table.addCell(createRotateColorCell("관통포켓", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+//            table.addCell(createRotateColorCell("드릴가공", 5, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+//
+//            document.add(table);
+//            table.flushContent();
+//
+//            if (orderInfo.get("IMAGE_PATH") != null && !orderInfo.get("IMAGE_PATH").equals("")) {
+//                try {
+//                    Image pngImage = Image.getInstance((String) orderInfo.get("IMAGE_PATH") + ".print.png");
+//                    pngImage.setAbsolutePosition(15, 10);
+//                    pngImage.scaleAbsolute(PageSize.A4.getWidth() - 30, PageSize.A4.getHeight() - 90);
+//                    pngImage.setRotationDegrees(180);
+//                    document.add(pngImage);
+//                } catch (Exception e){
+//                    log.error(e.getMessage(), e.getCause());
+//                    e.printStackTrace();
+//                }
+//            }
+//            iCount++;
+//        }
+        document.close();
+    }
+
+    private static PdfPCell createRotateCell(String content, int colspan, int rowspan, Font font, int degree, float height) {
+        PdfPCell cell = new PdfPCell(new Phrase(content, font));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setFixedHeight(height);
+        cell.setPaddingTop(0);
+        cell.setPaddingBottom(0);
+        cell.setUseAscender(true);
+        cell.setRotation(degree);
+        return cell;
+    }
+
+    private static PdfPCell createRotateColorCell(String content, int colspan, int rowspan, Font font, int degree, BaseColor color) {
+        PdfPCell cell = new PdfPCell(new Phrase(content, font));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setFixedHeight(22f);
+        cell.setPaddingTop(0);
+        cell.setPaddingBottom(0);
+        cell.setUseAscender(true);
+        cell.setRotation(degree);
+        cell.setBackgroundColor(color);
+        return cell;
+    }
+
+    private static PdfPCell createRotateCell(String content, int colspan, int rowspan, Font font, int degree) {
+        PdfPCell cell = new PdfPCell(new Phrase(content, font));
+        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setColspan(colspan);
+        cell.setRowspan(rowspan);
+        cell.setFixedHeight(22f);
+        cell.setPaddingTop(0);
+        cell.setPaddingBottom(0);
+        cell.setUseAscender(true);
+        cell.setRotation(degree);
+        return cell;
     }
 
     private static PdfPCell createCell(String content, int colspan, int rowspan, Font font) {

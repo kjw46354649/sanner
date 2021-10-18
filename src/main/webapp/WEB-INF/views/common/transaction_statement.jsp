@@ -27,7 +27,7 @@
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlTransactionStatementList">
             <input type="hidden" name="COMP_CD" id="COMP_CD">
             <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
-            <input type="hidden" name="CONTROL_SEQ_STR" id="CONTROL_SEQ_STR">
+            <input type="hidden" name="ORDER_SEQ_STR" id="ORDER_SEQ_STR">
             <input type="hidden" name="INVOICE_NUM" id="INVOICE_NUM_INPUT">
             <!-- 기본 정보 -->
             <div style="margin-bottom: 10px;">
@@ -95,7 +95,7 @@
 <form id="transaction_statement_excel_download" method="POST">
     <input type="hidden" id="sqlId" name="sqlId" value="selectTransactionStatementInfoExcel:selectTransactionStatementListExcel"/>
     <input type="hidden" id="mapInputId" name="mapInputId" value="info:data"/>
-    <input type="hidden" id="paramName" name="paramName" value="CONTROL_SEQ_STR:COMP_CD:ORDER_COMP_CD:INVOICE_NUM"/>
+    <input type="hidden" id="paramName" name="paramName" value="ORDER_SEQ_STR:COMP_CD:ORDER_COMP_CD:INVOICE_NUM"/>
     <input type="hidden" id="paramData" name="paramData" value=""/>
     <input type="hidden" id="template" name="template" value="transaction_statement_template"/>
 </form>
@@ -111,7 +111,7 @@
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
-            {title: '주문상태', dataIndx: 'CONTROL_STATUS_NM'},
+            {title: '주문<br>상태', dataIndx: 'ORDER_STATUS_NM', width: 30},
             {title: '', align: 'center', dataIndx: '', width: 25, minWidth: 25, editable: false, hidden: true,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
@@ -129,8 +129,8 @@
                 }
             },
             {title: '작업지시번호', dataIndx: 'CONTROL_NUM'},
-            {title: '접수번호', dataIndx: 'REGIST_NUM'},
-            {title: '발주번호', dataIndx: 'ORDER_NUM'},
+            {title: '접수번호', dataIndx: 'REGIST_NUM', width: 160},
+            {title: '발주번호', dataIndx: 'ORDER_NUM', width: 160},
             {title: '', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
@@ -144,14 +144,14 @@
                     });
                 }
             },
-            {title: '도면번호', align: 'left', dataIndx: 'DRAWING_NUM'},
-            {title: '규격', dataIndx: 'SIZE_TXT'},
-            {title: '작업형태', dataIndx: 'WORK_TYPE_NM'},
-            {title: '수량', dataType: 'integer', dataIndx: 'CONTROL_ORDER_QTY'},
+            {title: '도면번호', align: 'left', dataIndx: 'DRAWING_NUM', width: 140},
+            {title: '규격', dataIndx: 'SIZE_TXT', width: 100},
+            {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM', width: 60},
+            {title: '수량', dataType: 'integer', dataIndx: 'CONTROL_ORDER_QTY', width: 40},
             {title: '공급단가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
             {title: '금액 계', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
-                title: '포장수량', dataType: 'integer', format: '#,###', dataIndx: 'PACKING_CNT', editable: true,
+                title: '포장수량', dataType: 'integer', format: '#,###', dataIndx: 'PACKING_CNT', editable: true, width: 40,
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
             },
             {
@@ -184,8 +184,11 @@
                     return {data: dataJSON.data};
                 }
             },
-            complete: function() {
-                this.flex();
+            // complete: function() {
+            //     this.flex();
+            // },
+            load: function() {
+                autoMerge(this, true);
             },
             selectChange: function (event, ui) {
                 selectedTransactionStatementRowIndex = [];
@@ -199,38 +202,38 @@
         };
 
         let selectedRowCount = opener.selectedOrderManagementRowIndex.length;
-        let controlSeqList = [];
+        let orderSeqList = [];
         let compCdList = [];
         let orderCompCdList = [];
         // let invoiceNumList = [];
-        let controlSeqStr = "";
+        let orderSeqStr = "";
 
         for (let i = 0; i < selectedRowCount; i++) {
             let rowData = opener.$orderManagementGrid.pqGrid('getRowData', {rowIndx: opener.selectedOrderManagementRowIndex[i]});
 
-            controlSeqList.push(rowData.CONTROL_SEQ + "" + rowData.CONTROL_DETAIL_SEQ + rowData.ORDER_SEQ);
+            orderSeqList.push(rowData.ORDER_SEQ);
             compCdList.push(rowData.COMP_CD);
             orderCompCdList.push(rowData.ORDER_COMP_CD);
             // invoiceNumList.push(rowData.INVOICE_NUM);
         }
         // 중복제거
-        controlSeqList = [...new Set(controlSeqList)];
+        orderSeqList = [...new Set(orderSeqList)];
         compCdList = [...new Set(compCdList)];
         orderCompCdList = [...new Set(orderCompCdList)];
 
-        for (let i = 0; i < controlSeqList.length; i++) {
-            // controlSeqStr += controlSeqList[i];
-            controlSeqStr += "'" + controlSeqList[i]+ "',";
+        for (let i = 0; i < orderSeqList.length; i++) {
+            // orderSeqStr += orderSeqList[i];
+            orderSeqStr += "'" + orderSeqList[i]+ "',";
 
-            if (i < controlSeqList.length - 1) {
-                // controlSeqStr += ',';
+            if (i < orderSeqList.length - 1) {
+                // orderSeqStr += ',';
             }
         }
-        controlSeqStr = controlSeqStr.substr(0, controlSeqStr.length - 1);
+        orderSeqStr = orderSeqStr.substr(0, orderSeqStr.length - 1);
 
         $('#TRANSACTION_STATEMENT_FORM > #COMP_CD').val(compCdList[0]);
         $('#TRANSACTION_STATEMENT_FORM > #ORDER_COMP_CD').val(orderCompCdList[0]);
-        $('#TRANSACTION_STATEMENT_FORM > #CONTROL_SEQ_STR').val(controlSeqStr);
+        $('#TRANSACTION_STATEMENT_FORM > #ORDER_SEQ_STR').val(orderSeqStr);
 
         let postData = fnFormToJsonArrayData('#TRANSACTION_STATEMENT_FORM');
         postData.queryId = 'orderMapper.selectControlTransactionStatementInfo';
@@ -277,15 +280,15 @@
                 return false;
             }
 
-            let selectControlList = '';
+            let selectOrderList = '';
 
             for (let i = 0, selectedRowCount = selectedTransactionStatementRowIndex.length; i < selectedRowCount; i++) {
                 const rowData = $transactionStatementGrid.pqGrid('getRowData', {rowIndx: selectedTransactionStatementRowIndex[i]});
 
-                selectControlList += String(rowData.CONTROL_SEQ) + String(rowData.CONTROL_DETAIL_SEQ) + '|';
+                selectOrderList += String(rowData.ORDER_SEQ) + '|';
             }
 
-            printJS({printable:'/makeSalesDrawingPrint', properties: {selectControlList: selectControlList}, type:'pdf', showModal:true});
+            printJS({printable:'/makeSalesDrawingPrint', properties: {selectOrderList: selectOrderList}, type:'pdf', showModal:true});
         });
         // 라벨 출력
         $('#TRANSACTION_STATEMENT_LABEL_PRINT').on('click', function () {
@@ -295,9 +298,7 @@
             for (let i = 0, DATA_LENGTH = data.length; i < DATA_LENGTH; i++) {
                 let rowData = data[i];
                 let postData = {
-                    'queryId': 'inspection.selectOutgoingLabelType2',
-                    'CONTROL_SEQ': rowData.CONTROL_SEQ,
-                    'CONTROL_DETAIL_SEQ': rowData.CONTROL_DETAIL_SEQ,
+                    'queryId': 'inspection.selectOutgoingLabelType4',
                     'ORDER_SEQ': rowData.ORDER_SEQ
                 };
                 let parameter = {'url': '/json-list', 'data': postData};
@@ -398,11 +399,11 @@
         }, 1000));
         // 엑셀 출력
         $('#TRANSACTION_STATEMENT_EXPORT').on('click', function () {
-            let controlSeqList = [];
+            let orderSeqList = [];
             let compCdList = [];
             let orderCompCdList = [];
             let invoiceNumList = [];
-            let controlSeqStr = '';
+            let orderSeqStr = '';
             let data = $transactionStatementGrid.pqGrid('option', 'dataModel.data');
 
             for (let i = 0, selectedRowCount = opener.selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
@@ -423,23 +424,23 @@
             }
 
             for (let i = 0, DATA_LENGTH = data.length; i < DATA_LENGTH; i++) {
-                controlSeqList[i] = data[i].CONTROL_SEQ;
+                orderSeqList[i] = data[i].ORDER_SEQ;
             }
 
             // 중복제거
-            controlSeqList = [...new Set(controlSeqList)];
+            orderSeqList = [...new Set(orderSeqList)];
             compCdList = [...new Set(compCdList)];
             orderCompCdList = [...new Set(orderCompCdList)];
 
-            for (let i = 0; i < controlSeqList.length; i++) {
-                controlSeqStr += controlSeqList[i];
+            for (let i = 0; i < orderSeqList.length; i++) {
+                orderSeqStr += orderSeqList[i];
 
-                if (i < controlSeqList.length - 1) {
-                    controlSeqStr += ',';
+                if (i < orderSeqList.length - 1) {
+                    orderSeqStr += ',';
                 }
             }
 
-            $('#transaction_statement_excel_download #paramData').val(controlSeqStr + ':' + compCdList[0] + ':' + orderCompCdList[0] + ':' + invoiceNumList[0]);
+            $('#transaction_statement_excel_download #paramData').val(orderSeqStr + ':' + compCdList[0] + ':' + orderCompCdList[0] + ':' + invoiceNumList[0]);
             fnReportFormToHiddenFormPageAction('transaction_statement_excel_download', '/downloadExcel');
         });
 
@@ -452,6 +453,56 @@
                 e.preventDefault();
             }
         });
+
+        const autoMerge = function (grid, refresh) {
+            let mergeCellList = [],
+                colModelList = grid.getColModel(),
+                i = colModelList.length,
+                data = grid.option('dataModel.data');
+            const orderList = ['ORDER_STATUS_NM', 'REGIST_NUM', 'ORDER_NUM', 'IMG_GFILE_SEQ', 'DRAWING_NUM',
+                'SIZE_TXT', 'WORK_TYPE_NM', 'CONTROL_ORDER_QTY', 'UNIT_FINAL_AMT', 'TOTAL_AMT', 'PACKING_CNT',
+                'NOTE'
+            ];
+            const includeList = orderList;
+
+            while (i--) {
+                let dataIndx = colModelList[i].dataIndx,
+                    rc = 1,
+                    j = data.length;
+
+                if (includeList.includes(dataIndx)) {
+                    while (j--) {
+                        let controlNum = data[j]['REGIST_NUM'],
+                            controlNumPrev = data[j - 1] ? data[j - 1]['REGIST_NUM'] : undefined,
+                            cellData = data[j][dataIndx] || '',
+                            cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] || '' : undefined;
+
+                        if (orderList.includes(dataIndx)) {
+                            if (controlNum === controlNumPrev) {
+                                // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
+                                if (cellDataPrev !== undefined && cellData == cellDataPrev) {
+                                    rc++;
+                                }
+                            } else if (rc > 1) {
+                                /**
+                                 * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
+                                 * c1: colIndx of first column. 첫 번째 열의 colIndx.
+                                 * rc: number of rows in the range. 범위 내 행 수.
+                                 * cc: number of columns in the range. 범위 내 열 수.
+                                 */
+                                mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
+                                rc = 1;
+                            }
+                        }
+                    }
+                }
+            }
+
+            grid.option('mergeCells', mergeCellList);
+            if (refresh) {
+                grid.refreshView();
+            }
+        };
         /* event */
     });
 </script>

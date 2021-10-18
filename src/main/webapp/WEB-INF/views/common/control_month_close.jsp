@@ -139,16 +139,38 @@
             collapsible: false,
             resizable: false,
             showTitle: false,
+            swipeModel: {on: false},
             rowHtHead: 15,
+            copyModel: {render: true},
+            trackModel: {on: true},
             scrollModel: {autoFit: true},
             dragColumns: {enabled: false},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
             colModel: controlMonthCloseRightColModel,
             dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect', recIndx: 'ROW_NUM',
                 postData: {'queryId': 'dataSource.emptyGrid'},
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
+                }
+            },
+            postRenderInterval: -1, //call postRender synchronously.
+            beforePaste: function (evt, ui) {
+                console.log('beforePaste')
+                let CM = this.getColModel(),
+                    rows = ui.rows,
+                    area = ui.areas[0],
+                    //r1 = area.r1,
+                    c1 = area.c1;
+                for (let i = 0; i < rows.length; i++) {
+                    let row = rows[i];
+                    for (let j = 0; j < row.length; j++) {
+                        let column = CM[j + c1],
+                            dt = column.dataType;
+                        if (dt === 'integer' || dt === 'float') {
+                            row[j] = row[j].replace(/[^(\d|.)]/g, '');
+                        }
+                    }
                 }
             }
         };
@@ -232,7 +254,7 @@
 
                 if (rowData.ORDER_SEQ) {
                     let tempObject = {
-                        CONTROL_STATUS: rowData.CONTROL_STATUS,
+                        ORDER_STATUS: rowData.ORDER_STATUS,
                         CONTROL_SEQ: rowData.CONTROL_SEQ,
                         CONTROL_DETAIL_SEQ: rowData.CONTROL_DETAIL_SEQ,
                         ORDER_SEQ: rowData.ORDER_SEQ,

@@ -6,16 +6,16 @@
     <select id="selectOperatingRateChart" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.EQUIP_SEQ
             , CASE WHEN X.EQUIP_SEQ IS NULL THEN 'Average'
-                   ELSE (SELECT CONCAT(M.EQUIP_NM,<![CDATA[ '<br> (']]>,jmes.SF_GET_CODE_NM('1005',M.FACTORY_AREA,#{LOGIN_LOCALE}),')') FROM jmes.TBL_EQUIP M WHERE M.EQUIP_SEQ = X.EQUIP_SEQ)
+                   ELSE (SELECT CONCAT(M.EQUIP_NM,<![CDATA[ '<br> (']]>,SF_GET_CODE_NM('1005',M.FACTORY_AREA,#{LOGIN_LOCALE}),')') FROM TBL_EQUIP M WHERE M.EQUIP_SEQ = X.EQUIP_SEQ)
               END AS EQUIP_NM
             , CASE WHEN IFNULL(X.DUTY_TIME,0) = 0 THEN 0 ELSE ROUND(IFNULL(X.WORK_TIME,0) / X.DUTY_TIME * 100,0) END AS REAL_RATIO
         FROM (  SELECT A.EQUIP_SEQ
                     , SUM(A.DUTY_TIME) AS DUTY_TIME
                     , SUM(A.WORK_TIME) AS WORK_TIME
-                FROM jmes.TBL_BATCH_MCT_WORK A
+                FROM TBL_BATCH_MCT_WORK A
                 WHERE A.BATCH_DT = DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
                     AND A.EQUIP_SEQ IN (    SELECT M.EQUIP_SEQ
-                                            FROM jmes.TBL_BATCH_MCT_WORK_EQUIP M
+                                            FROM TBL_BATCH_MCT_WORK_EQUIP M
                                             WHERE M.BATCH_DT = DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
                                                 <if test="USER_ID != null and USER_ID != ''">
                                                     AND M.WORK_USER_ID = #{USER_ID}
@@ -38,22 +38,22 @@
             , X.IMG_GFILE_SEQ
             , X.CONTROL_SEQ
             , X.CONTROL_DETAIL_SEQ
-            , jmes.SF_GET_CODE_NM('1010', X.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM
+            , SF_GET_CODE_NM('1010', X.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM
             , X.EQUIP_NM
             , X.CONTROL_NUM
             , (SELECT Y.REGIST_NUM FROM TBL_CONTROL_PART_ORDER_MAIN Y WHERE Y.CONTROL_SEQ = X.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ) AS REGIST_NUM
             , X.SIZE_TXT
             , X.DRAWING_NUM
             , X.CONTROL_VER
-            , jmes.SF_GET_CODE_NM('1027', X.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
-            , jmes.SF_GET_CODE_NM('1035', X.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM
-            , jmes.SF_GET_USER_NM(X.WORK_USER_ID) AS WORK_USER_NM
-            , jmes.SF_GET_DATE_F(X.WORK_START_DT,'','M') AS WORK_START_DT
-            , jmes.SF_GET_DATE_F(X.WORK_FINISH_DT,'','M') AS WORK_FINISH_DT
+            , SF_GET_CODE_NM('1027', X.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+            , SF_GET_CODE_NM('1035', X.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM
+            , SF_GET_USER_NM(X.WORK_USER_ID) AS WORK_USER_NM
+            , SF_GET_DATE_F(X.WORK_START_DT,'','M') AS WORK_START_DT
+            , SF_GET_DATE_F(X.WORK_FINISH_DT,'','M') AS WORK_FINISH_DT
             , X.FINISH_QTY
             , X.ERROR_QTY
-            , CASE WHEN X.LAST_RETURN_SEQ > X.LAST_INSPECT_SEQ THEN (SELECT jmes.SF_GET_CODE_NM('1040', M.INSPECT_GRADE, #{LOGIN_LOCALE}) FROM jmes.TBL_INSPECT M WHERE M.INSPECT_SEQ = X.LAST_RETURN_SEQ )
-                   ELSE (SELECT jmes.SF_GET_CODE_NM('1040', M.INSPECT_GRADE, #{LOGIN_LOCALE}) FROM jmes.TBL_INSPECT M WHERE M.INSPECT_SEQ = X.LAST_INSPECT_SEQ )
+            , CASE WHEN X.LAST_RETURN_SEQ > X.LAST_INSPECT_SEQ THEN (SELECT SF_GET_CODE_NM('1040', M.INSPECT_GRADE, #{LOGIN_LOCALE}) FROM TBL_INSPECT M WHERE M.INSPECT_SEQ = X.LAST_RETURN_SEQ )
+                   ELSE (SELECT SF_GET_CODE_NM('1040', M.INSPECT_GRADE, #{LOGIN_LOCALE}) FROM TBL_INSPECT M WHERE M.INSPECT_SEQ = X.LAST_INSPECT_SEQ )
               END AS LAST_INSPECT_NM
         FROM (  SELECT A.MCT_WORK_SEQ
                     , A.CONTROL_SEQ
@@ -72,20 +72,20 @@
                     , A.FINISH_QTY
                     , C.IMG_GFILE_SEQ
                     , A.ERROR_QTY
-                    , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '1') AS LAST_INSPECT_SEQ
-                    , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '2' AND M.INSPECT_GRADE IN ('GRD050','GRD060')) AS LAST_RETURN_SEQ
-                FROM jmes.TBL_MCT_WORK A
+                    , (SELECT MAX(M.INSPECT_SEQ) FROM TBL_INSPECT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '1') AS LAST_INSPECT_SEQ
+                    , (SELECT MAX(M.INSPECT_SEQ) FROM TBL_INSPECT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '2' AND M.INSPECT_GRADE IN ('GRD050','GRD060')) AS LAST_RETURN_SEQ
+                FROM TBL_MCT_WORK A
                     , TBL_CONTROL B
                     , TBL_CONTROL_PART C
-                    , jmes.TBL_EQUIP D
+                    , TBL_EQUIP D
                 WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND A.CONTROL_SEQ = C.CONTROL_SEQ
                     AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND A.EQUIP_SEQ = D.EQUIP_SEQ
                     AND A.DEL_YN = 'N'
-                    AND A.WORK_FINISH_DT >= jmes.SF_GET_SHIFT_DAY_TIME('START', DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'))
-                    AND A.WORK_FINISH_DT <![CDATA[ <  jmes.SF_GET_SHIFT_DAY_TIME('END', DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'))
---                     AND A.WORK_FINISH_DT <![CDATA[ < ]]> jmes.SF_GET_SHIFT_DAY_TIME('END', '20210129')
+                    AND A.WORK_FINISH_DT >= SF_GET_SHIFT_DAY_TIME('START', DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'))
+                    AND A.WORK_FINISH_DT <![CDATA[ <  SF_GET_SHIFT_DAY_TIME('END', DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'))
+--                     AND A.WORK_FINISH_DT <![CDATA[ < ]]> SF_GET_SHIFT_DAY_TIME('END', '20210129')
                     <if test="USER_ID != null and USER_ID != ''">
                         AND A.WORK_USER_ID = #{USER_ID}
                     </if>
@@ -93,7 +93,7 @@
                         AND A.EQUIP_SEQ = #{EQUIP_SEQ}
                     </if>
         	        AND A.EQUIP_SEQ IN (    SELECT M.EQUIP_SEQ
-                                            FROM jmes.TBL_BATCH_MCT_WORK_EQUIP M
+                                            FROM TBL_BATCH_MCT_WORK_EQUIP M
                                             WHERE M.BATCH_DT = DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
                                                 <if test="USER_ID != null and USER_ID != ''">
                                                     AND M.WORK_USER_ID = #{USER_ID}
@@ -114,15 +114,15 @@
         SELECT Y.CAM_SEQ
             , Y.CONTROL_SEQ
             , Y.CONTROL_DETAIL_SEQ
-            , jmes.SF_GET_DATE_F(Y.FINISH_DT,'','M') AS FINISH_DT
-            , jmes.SF_GET_DATE_F(Y.INNER_DUE_DT,'','') AS INNER_DUE_DT
+            , SF_GET_DATE_F(Y.FINISH_DT,'','M') AS FINISH_DT
+            , SF_GET_DATE_F(Y.INNER_DUE_DT,'','') AS INNER_DUE_DT
             , Y.CONTROL_NUM
             , Y.SIZE_TXT
             , Y.SIZE_TXT
             , Y.PART_QTY
             , Y.STEP_SEQ
-            , jmes.SF_GET_CODE_NM('1080', Y.WORK_DIRECTION, #{LOGIN_LOCALE}) AS WORK_DIRECTION_NM
-            , jmes.SF_GET_CODE_NM('1010', Z.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM
+            , SF_GET_CODE_NM('1080', Y.WORK_DIRECTION, #{LOGIN_LOCALE}) AS WORK_DIRECTION_NM
+            , SF_GET_CODE_NM('1010', Z.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM
             , Z.EQUIP_NM
         FROM (  SELECT X.CAM_SEQ
                     , X.CONTROL_SEQ
@@ -134,7 +134,7 @@
                     , X.PART_QTY
                     , X.STEP_SEQ
                     , X.WORK_DIRECTION
-                    , ( SELECT M.EQUIP_SEQ FROM jmes.TBL_MCT_WORK M WHERE M.MCT_WORK_SEQ = X.MCT_WORK_SEQ) AS EQUIP_SEQ
+                    , ( SELECT M.EQUIP_SEQ FROM TBL_MCT_WORK M WHERE M.MCT_WORK_SEQ = X.MCT_WORK_SEQ) AS EQUIP_SEQ
                 FROM (  SELECT A.CAM_SEQ
                             , A.CONTROL_SEQ
                             , A.CONTROL_DETAIL_SEQ
@@ -142,25 +142,25 @@
                             , C.INNER_DUE_DT
                             , CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, ' #', C.PART_NUM) END AS CONTROL_NUM
                             , C.SIZE_TXT
-                            , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
+                            , SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
                             , D.SEQ AS STEP_SEQ
                             , D.WORK_DIRECTION
-                            , (SELECT MAX(M.MCT_WORK_SEQ) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N' AND M.WORK_STATUS <![CDATA[ <> ]]> 'DBS040' ) AS MCT_WORK_SEQ  -- 추가조건 확인(WORK_STATUS OR WORK_FINISH_DT...)
-                        FROM jmes.TBL_CAM A
+                            , (SELECT MAX(M.MCT_WORK_SEQ) FROM TBL_MCT_WORK M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N' AND M.WORK_STATUS <![CDATA[ <> ]]> 'DBS040' ) AS MCT_WORK_SEQ  -- 추가조건 확인(WORK_STATUS OR WORK_FINISH_DT...)
+                        FROM TBL_CAM A
                             , TBL_CONTROL B
                             , TBL_CONTROL_PART C
-                            , jmes.TBL_CAM_DETAIL D
+                            , TBL_CAM_DETAIL D
                         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                             AND A.CONTROL_SEQ = C.CONTROL_SEQ
                             AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                             AND A.CAM_SEQ = D.CAM_SEQ
-                            AND A.FINISH_DT >= jmes.SF_GET_SHIFT_DAY_TIME('START', DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'))
-                            AND A.FINISH_DT <![CDATA[ < ]]> jmes.SF_GET_SHIFT_DAY_TIME('END', DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'))
+                            AND A.FINISH_DT >= SF_GET_SHIFT_DAY_TIME('START', DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'))
+                            AND A.FINISH_DT <![CDATA[ < ]]> SF_GET_SHIFT_DAY_TIME('END', DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'))
                     ) X
-            ) Y, jmes.TBL_EQUIP Z
+            ) Y, TBL_EQUIP Z
         WHERE Y.EQUIP_SEQ = Z.EQUIP_SEQ
             AND Y.EQUIP_SEQ IN (    SELECT M.EQUIP_SEQ
-                                    FROM jmes.TBL_BATCH_MCT_WORK_EQUIP M
+                                    FROM TBL_BATCH_MCT_WORK_EQUIP M
                                     WHERE M.BATCH_DT = DATE_FORMAT(#{BATCH_DT}, '%Y%m%d')
                                         <if test="USER_ID != null and USER_ID != ''">
                                             AND M.WORK_USER_ID = #{USER_ID}
@@ -172,12 +172,12 @@
     <select id="selectMainTodayMCTList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.CONTROL_SEQ
             , X.CONTROL_DETAIL_SEQ
-            , jmes.SF_GET_DATE_F(X.WORK_CONFIRM_DT, '', 'M') AS WORK_CONFIRM_DT
+            , SF_GET_DATE_F(X.WORK_CONFIRM_DT, '', 'M') AS WORK_CONFIRM_DT
             , X.EMERGENCY_DELAY_NM
             , CASE WHEN IFNULL(X.NOT_SETTLEMENT_RETURN_QTY,0) > 0 THEN '반품'
-                   ELSE (SELECT CASE WHEN COUNT(*) > 0 THEN '불량' END FROM jmes.TBL_INSPECT M WHERE M.INSPECT_SEQ = X.INSPECT_SEQ AND M.INSPECT_GRADE = 'GRD040')
+                   ELSE (SELECT CASE WHEN COUNT(*) > 0 THEN '불량' END FROM TBL_INSPECT M WHERE M.INSPECT_SEQ = X.INSPECT_SEQ AND M.INSPECT_GRADE = 'GRD040')
               END AS ERROR_RETURN_NM
-            , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'','') AS INNER_DUE_DT
+            , SF_GET_DATE_F(X.INNER_DUE_DT,'','') AS INNER_DUE_DT
             , CASE WHEN DATE_FORMAT(X.INNER_DUE_DT,'%Y%m%d') <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d') THEN 'Y' ELSE 'N' END AS DELAY_YN
             , X.WORK_FACTORY_NM
             , X.PART_STATUS_NM
@@ -186,7 +186,7 @@
             , X.WORK_TYPE_NM
             , X.PART_QTY
             , X.SIZE_TXT
-            , ( SELECT jmes.SF_GET_CODE_NM('1009', M.POP_POSITION, #{LOGIN_LOCALE}) FROM TBL_POP M WHERE M.POP_SEQ = X.POP_SEQ) AS POP_POSITION_NM    -- 언어조건 확인
+            , ( SELECT SF_GET_CODE_NM('1009', M.POP_POSITION, #{LOGIN_LOCALE}) FROM TBL_POP M WHERE M.POP_SEQ = X.POP_SEQ) AS POP_POSITION_NM    -- 언어조건 확인
             , X.NOTE
             , X.WORK_STATUS_TYPE
             , X.ASSEMBLY_YN
@@ -199,23 +199,23 @@
                            WHEN A.EMERGENCY_YN = 'Y' THEN '긴급'
                       END AS EMERGENCY_DELAY_NM     <!-- 긴급,보류(보류 우선) -->
                     , ( SELECT COUNT(*)
-                        FROM jmes.TBL_INSPECT M
+                        FROM TBL_INSPECT M
                         WHERE M.INSPECT_TYPE = '2'
                             AND M.INSPECT_GRADE = 'GRD050'
                             AND M.RETURN_SETTLEMENT_DT IS NULL
                             AND M.CONTROL_SEQ = A.CONTROL_SEQ
                       ) AS NOT_SETTLEMENT_RETURN_QTY
                     , B.INNER_DUE_DT
-                    , jmes.SF_GET_CODE_NM('1014',B.WORK_FACTORY,#{LOGIN_LOCALE}) AS WORK_FACTORY_NM
-                    , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+                    , SF_GET_CODE_NM('1014',B.WORK_FACTORY,#{LOGIN_LOCALE}) AS WORK_FACTORY_NM
+                    , SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
                     , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
                     , CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' #', B.PART_NUM) END AS CONTROL_NUM
-                    , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY
-                    , jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+                    , SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY
+                    , SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
                     , B.SIZE_TXT
                     , B.IMG_GFILE_SEQ
-                    , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '1') AS INSPECT_SEQ
-                    , (SELECT MAX(POP_SEQ) FROM jmes.TBL_POP M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
+                    , (SELECT MAX(M.INSPECT_SEQ) FROM TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '1') AS INSPECT_SEQ
+                    , (SELECT MAX(POP_SEQ) FROM TBL_POP M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
                     , A.NOTE
                     , CASE WHEN B.PART_STATUS IN ('PRO002','PRO004','PRO005','PRO021','PRO022','PRO017') THEN '1'
                            WHEN B.PART_STATUS IN ('PRO006','PRO007','PRO008','PRO018') THEN '2'
@@ -246,12 +246,12 @@
     <select id="selectMainTodayMCTList_new" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.CONTROL_SEQ
             , X.CONTROL_DETAIL_SEQ
-            , jmes.SF_GET_DATE_F(X.WORK_CONFIRM_DT, '', 'M') AS WORK_CONFIRM_DT
+            , SF_GET_DATE_F(X.WORK_CONFIRM_DT, '', 'M') AS WORK_CONFIRM_DT
             , X.EMERGENCY_DELAY_NM
             , CASE WHEN X.OUT_FINISH_STATUS = 'RLS030' THEN '반품'
-            ELSE (SELECT CASE WHEN COUNT(*) > 0 THEN '불량' END FROM jmes.TBL_INSPECT M WHERE M.INSPECT_SEQ = X.INSPECT_SEQ AND M.INSPECT_GRADE NOT IN ('GRD010','GRD020','GRD030'))
+            ELSE (SELECT CASE WHEN COUNT(*) > 0 THEN '불량' END FROM TBL_INSPECT M WHERE M.INSPECT_SEQ = X.INSPECT_SEQ AND M.INSPECT_GRADE NOT IN ('GRD010','GRD020','GRD030'))
             END AS ERROR_RETURN_NM
-            , jmes.SF_GET_DATE_F(X.INNER_DUE_DT,'','') AS INNER_DUE_DT
+            , SF_GET_DATE_F(X.INNER_DUE_DT,'','') AS INNER_DUE_DT
             , CASE WHEN DATE_FORMAT(X.INNER_DUE_DT,'%Y%m%d') <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d') THEN 'Y' ELSE 'N' END AS DELAY_YN
             , X.WORK_FACTORY_NM
             , X.PART_STATUS_NM
@@ -261,7 +261,7 @@
             , X.PART_QTY
             , IFNULL(X.ADDITIONAL_QTY,SPACE(0)) AS ADDITIONAL_QTY
             , X.SIZE_TXT
-            , ( SELECT jmes.SF_GET_CODE_NM('1009', M.POP_POSITION, #{LOGIN_LOCALE}) FROM TBL_POP M WHERE M.POP_SEQ = X.POP_SEQ) AS POP_POSITION_NM    -- 언어조건 확인
+            , ( SELECT SF_GET_CODE_NM('1009', M.POP_POSITION, #{LOGIN_LOCALE}) FROM TBL_POP M WHERE M.POP_SEQ = X.POP_SEQ) AS POP_POSITION_NM    -- 언어조건 확인
             , X.NOTE
             , X.ASSEMBLY_YN
             , X.IMG_GFILE_SEQ
@@ -270,7 +270,7 @@
             , Z.OUT_QTY AS STOCK_OUT_QTY
             , X.CONTROL_VER
             , X.DRAWING_NUM
-            , jmes.SF_GET_CODE_NM('1027',X.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+            , SF_GET_CODE_NM('1027',X.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
             , (SELECT Y.REGIST_NUM FROM TBL_CONTROL_PART_ORDER_MAIN Y WHERE Y.CONTROL_SEQ = X.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ) AS REGIST_NUM
         FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.OUT_FINISH_STATUS
                 , CASE WHEN B.PART_STATUS = 'PRO002' THEN B.STATUS_DT
@@ -280,24 +280,24 @@
                        WHEN A.EMERGENCY_YN = 'Y' THEN '긴급'
                   END AS EMERGENCY_DELAY_NM     <!-- 긴급,보류(보류 우선) -->
                 , ( SELECT COUNT(*)
-                    FROM jmes.TBL_INSPECT M
+                    FROM TBL_INSPECT M
                     WHERE M.INSPECT_TYPE = '2'
                     AND M.INSPECT_GRADE = 'GRD050'
                     AND M.RETURN_SETTLEMENT_DT IS NULL
                     AND M.CONTROL_SEQ = A.CONTROL_SEQ
                 ) AS NOT_SETTLEMENT_RETURN_QTY
                 , B.INNER_DUE_DT
-                , jmes.SF_GET_CODE_NM('1014',B.WORK_FACTORY,#{LOGIN_LOCALE}) AS WORK_FACTORY_NM
-                , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+                , SF_GET_CODE_NM('1014',B.WORK_FACTORY,#{LOGIN_LOCALE}) AS WORK_FACTORY_NM
+                , SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
                 , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
                 , CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' #', B.PART_NUM) END AS CONTROL_NUM
-                , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY
+                , SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY
                 , B.ADDITIONAL_QTY
-                , jmes.SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+                , SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
                 , B.SIZE_TXT
                 , B.IMG_GFILE_SEQ
-                , (SELECT MAX(M.INSPECT_SEQ) FROM jmes.TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '1') AS INSPECT_SEQ
-                , (SELECT MAX(POP_SEQ) FROM jmes.TBL_POP M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
+                , (SELECT MAX(M.INSPECT_SEQ) FROM TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '1') AS INSPECT_SEQ
+                , (SELECT MAX(POP_SEQ) FROM TBL_POP M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
                 , A.NOTE
                 , CASE WHEN B.WORK_TYPE = 'WTP020' THEN 'Y' ELSE 'N' END AS ASSEMBLY_YN
                 , A.CONTROL_VER
@@ -381,8 +381,8 @@
                BOARD_TYPE,
                BOARD_TITLE,
                DATE_FORMAT(INSERT_DT, '%Y-%m-%d %H:%i') AS INSERT_DT,
-               jmes.SF_GET_USER_NM(INSERT_ID) AS INSERT_ID
-        FROM jmes.TBL_DASH_BOARD
+               SF_GET_USER_NM(INSERT_ID) AS INSERT_ID
+        FROM TBL_DASH_BOARD
         WHERE DEL_YN = 'N'
             AND BOARD_TYPE = '1'
             AND GROUP_IN_NO = '1'
@@ -401,8 +401,8 @@
                BOARD_TITLE,
                BOARD_CONTENTS,
                DATE_FORMAT(INSERT_DT, '%Y-%m-%d %H:%i') AS INSERT_DT,
-               jmes.SF_GET_USER_NM(INSERT_ID) AS INSERT_ID
-        FROM jmes.TBL_DASH_BOARD
+               SF_GET_USER_NM(INSERT_ID) AS INSERT_ID
+        FROM TBL_DASH_BOARD
         WHERE DEL_YN = 'N'
         <if test="SEARCH_TITLE != null and SEARCH_TITLE != ''">
             AND BOARD_TITLE LIKE CONCAT('%',#{SEARCH_TITLE},'%')
@@ -426,12 +426,12 @@
                BOARD_CONTENTS,
                DATE_FORMAT(INSERT_DT, '%Y-%m-%d %H:%i') AS INSERT_DT,
                INSERT_ID,
-               jmes.SF_GET_USER_NM(INSERT_ID) AS USER_NM,
+               SF_GET_USER_NM(INSERT_ID) AS USER_NM,
                FILE_SEQ_1 , FILE_SEQ_2, FILE_SEQ_3,
                (SELECT ORGINAL_FILE_NM FROM TBL_FILE M WHERe M.FILE_SEQ = FILE_SEQ_1) AS FILE_NM_1,
                (SELECT ORGINAL_FILE_NM FROM TBL_FILE M WHERe M.FILE_SEQ = FILE_SEQ_2) AS FILE_NM_2,
                (SELECT ORGINAL_FILE_NM FROM TBL_FILE M WHERe M.FILE_SEQ = FILE_SEQ_3) AS FILE_NM_3
-        FROM jmes.TBL_DASH_BOARD
+        FROM TBL_DASH_BOARD
         WHERE DEL_YN = 'N'
             AND BOARD_SEQ = #{BOARD_SEQ}
     </select>
@@ -440,8 +440,8 @@
                COMMENT_CONTENTS,
                DATE_FORMAT(INSERT_DT, '%Y-%m-%d %H:%i') AS INSERT_DT,
                INSERT_ID,
-                jmes.SF_GET_USER_NM(INSERT_ID) AS USER_NM
-        FROM jmes.TBL_DASH_BOARD_COMMENT
+                SF_GET_USER_NM(INSERT_ID) AS USER_NM
+        FROM TBL_DASH_BOARD_COMMENT
         WHERE DEL_YN = 'N'
           AND BOARD_SEQ = #{BOARD_SEQ}
     </select>
@@ -474,13 +474,13 @@
            </if>
         )
         VALUES(
-           NEXTVAL(jmes.SEQ_BOARD_NEW)
+           NEXTVAL(SEQ_BOARD_NEW)
             <choose>
                 <when test="GROUP_SEQ != null and GROUP_SEQ != ''">
                     ,#{GROUP_SEQ}
                 </when>
                 <otherwise>
-                    ,NEXTVAL(jmes.SEQ_BOARD_GROUP)
+                    ,NEXTVAL(SEQ_BOARD_GROUP)
                 </otherwise>
             </choose>
            ,#{GROUP_IN_NO}
@@ -533,7 +533,7 @@
         )
         VALUES(
         #{BOARD_SEQ}
-        ,NEXTVAL(jmes.SEQ_COMMENT)
+        ,NEXTVAL(SEQ_COMMENT)
         ,#{COMMENT_CONTENTS}
         ,#{LOGIN_USER_ID}
         )

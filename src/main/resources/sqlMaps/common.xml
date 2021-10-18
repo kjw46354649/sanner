@@ -209,6 +209,37 @@
     </select>
 
     <select id="selectBarcodePrintInfoOut" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.BARCODE_NUM
+             , A.PACKING_NUM
+             , B.PACKING_CNT
+             , (SELECT IFNULL(M.COMP_NM2, M.COMP_NM)  FROM TBL_COMPANY M WHERE M.COMP_CD = B.COMP_CD) AS COMP_NM
+             , B.ITEM_NM
+             , (SELECT IFNULL(M.COMP_NM2, M.COMP_NM) FROM TBL_COMPANY M WHERE M.COMP_CD = B.ORDER_COMP_CD) AS ORDER_COMP_NM
+             , B.ORIGINAL_SIDE_QTY * B.ORDER_QTY AS ORIGINAL_SIDE_QTY
+             , B.OTHER_SIDE_QTY  * B.ORDER_QTY  AS OTHER_SIDE_QTY
+             , B.DRAWING_NUM
+             , B.IMG_GFILE_SEQ
+             , B.REGIST_NUM
+             , B.ORDER_NUM
+             , B.MODULE_NM
+             , jmes.SF_GET_DATE_F(B.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT
+             , (SELECT GROUP_CONCAT(Y.CONTROL_NUM SEPARATOR ',' )
+                FROM TBL_CONTROL_PART_ORDER X
+                    INNER JOIN TBL_CONTROL Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.DEL_YN = 'N'
+                WHERE X.ORDER_SEQ = A.ORDER_SEQ
+                ) AS CONTROL_NUM
+             , B.DELIVERY_COMP_NM
+             , B.PROJECT_NM
+             , CONCAT(B.SIZE_TXT, ' / ', IFNULL(B.ORDER_QTY, 0), 'EA') AS SIZE_QTY_INFO
+             , B.LABEL_NOTE
+        FROM TBL_OUT_BARCODE A, TBL_ORDER B
+        WHERE A.ORDER_SEQ = B.ORDER_SEQ
+            AND A.DEL_YN = 'N'
+            AND B.DEL_YN = 'N'
+            AND A.BARCODE_NUM = #{BARCODE_NUM}
+        ORDER BY A.ORDER_SEQ ;
+    </select>
+    <select id="selectBarcodePrintInfoOut_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- 출고라벨
         SELECT A.BARCODE_NUM
             , A.PACKING_NUM

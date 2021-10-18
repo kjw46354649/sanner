@@ -191,4 +191,66 @@ public class OrderController {
 
         return "jsonView";
     }
+
+    @RequestMapping(value = "/validationCheckBeforeSaveFromOrder", method = RequestMethod.POST)
+    public String validationCheckBeforeSaveFromOrder(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.validationCheckBeforeSaveFromOrder(model, map);
+
+        return "jsonView";
+    }
+
+    @RequestMapping(value = "/saveFromOrderManage", method = RequestMethod.POST)
+    public String saveFromOrderManage(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.saveFromOrderManage(model, map);
+
+        return "jsonView";
+    }
+    @RequestMapping(value = "/removeOrder", method = RequestMethod.POST)
+    public String removeOrder(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.removeOrder(map);
+
+        return "jsonView";
+    }
+
+    @RequestMapping(value = "/managerOrderStatus", method = RequestMethod.POST)
+    public String managerOrderStatus(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.managerOrderStatus(map);
+
+        return "jsonView";
+    }
+
+    @RequestMapping(value = "/validationCheckBeforeCreateControl", method = RequestMethod.POST)
+    public String validationCheckBeforeCreateControl(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.validationCheckBeforeCreateControl(model, map);
+
+        return "jsonView";
+    }
+
+    @RequestMapping(value = "/createNewControl", method = RequestMethod.POST)
+    public String createNewControl(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.createNewControl(model, map);
+
+        return "jsonView";
+    }
+
+    @RequestMapping(value = "/createNewStockControl", method = RequestMethod.POST)
+    public String createNewStockControl(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.createNewStockControl(model, map);
+
+        return "jsonView";
+    }
 }
