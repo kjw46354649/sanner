@@ -5042,7 +5042,8 @@
             IMG_GFILE_SEQ,
             VIEW_GFILE_SEQ,
             MATERIAL_FINISH_GRIND_YN,
-            MATERIAL_FINISH_HEAT_YN
+            MATERIAL_FINISH_HEAT_YN,
+            ORDER_BARCODE_NUM
         )
         SELECT
             NEXTVAL(SEQ_DUMMY),
@@ -5088,7 +5089,8 @@
             A.IMG_GFILE_SEQ,
             A.VIEW_GFILE_SEQ,
             A.MATERIAL_FINISH_GRIND_YN,
-            A.MATERIAL_FINISH_HEAT_YN
+            A.MATERIAL_FINISH_HEAT_YN,
+            A.ORDER_BARCODE_NUM
         FROM TBL_ORDER A
         WHERE A.ORDER_SEQ = #{ORDER_SEQ}
     </insert>

@@ -2603,6 +2603,7 @@
             if (noSelectedRowAlert()) return false;
 
             let barcodeList = [];
+            let orderSeqList = [];
             let selectedRowCount = selectedOrderManagementRowIndex.length;
 
             for (let i = 0; i < selectedRowCount; i++) {
@@ -2612,10 +2613,13 @@
                     fnAlert(null, '주문상태 확정 이후 출력 가능합니다');
                     return false;
                 }
-
+                orderSeqList.push(rowData.ORDER_SEQ);
+            }
+            orderSeqList = [...new Set(orderSeqList)];
+            for (let i = 0; i < orderSeqList.length; i++) {
                 let postData = {
                     'queryId': 'inspection.selectOutgoingLabelType4',
-                    'ORDER_SEQ': rowData.ORDER_SEQ
+                    'ORDER_SEQ': orderSeqList[i]
                 };
                 let parameter = {'url': '/json-list', 'data': postData};
                 fnPostAjaxAsync(function (data) {
@@ -2624,6 +2628,7 @@
                     }
                 }, parameter, '');
             }
+
             let bCodePrintLen = barcodeList.length;
             if (bCodePrintLen) {
                 let message =

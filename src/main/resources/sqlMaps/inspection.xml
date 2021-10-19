@@ -1133,12 +1133,13 @@
         WHERE A.ORDER_SEQ = #{ORDER_SEQ}
     </insert>
     <update id="updateControlPartOrderPackingCnt1" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART_ORDER SET PACKING_CNT = #{PACKING_CNT}
-        , UPDATE_DT = NOW()
-        , UPDATE_ID = #{LOGIN_USER_ID}
+        UPDATE TBL_CONTROL_PART_ORDER
+        SET PACKING_CNT = #{PACKING_CNT}
+            , UPDATE_DT = NOW()
+            , UPDATE_ID = #{LOGIN_USER_ID}
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-        AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-        AND ORDER_SEQ = #{ORDER_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND ORDER_SEQ = #{ORDER_SEQ}
     </update>
     <update id="updateControlPartOrderPackingCnt2" parameterType="java.util.HashMap">
         UPDATE TBL_OUT_BARCODE
@@ -1236,6 +1237,26 @@
         AND EXISTS( SELECT 1 FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ)
         AND NOT EXISTS( SELECT 1 FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.OUT_FINISH_DT IS NULL)
     </update>
+    <select id="selectOutgoingOutType4OrderVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.ORDER_SEQ,
+               B.DRAWING_NUM,
+               B.IMG_GFILE_SEQ,
+               B.ORDER_NUM,
+               B.REGIST_NUM,
+               A.PACKING_NUM,
+               CONCAT(B.ORDER_QTY,'(',B.PACKING_CNT ,')') AS QTY_INFO,
+               (B.PACKING_CNT - (SELECT COUNT(M.PACKING_NUM) FROM TBL_OUT M WHERE M.ORDER_SEQ = A.ORDER_SEQ) - 1) AS REMAIN_PACKING_CNT,
+               CONCAT(A.PACKING_NUM,'/',B.PACKING_CNT) AS MY_PACKING_NUM,
+               (SELECT IFNULL(SUM(M.OUT_QTY), 0) FROM TBL_OUT M WHERE M.ORDER_SEQ = A.ORDER_SEQ) AS OUT_QTY,
+               (SELECT COUNT(M.PACKING_NUM) FROM TBL_OUT M WHERE M.ORDER_SEQ = A.ORDER_SEQ AND M.PACKING_NUM = A.PACKING_NUM) AS MY_OUT_PACKING_CNT
+        FROM TBL_OUT_BARCODE A
+                 INNER JOIN TBL_ORDER B ON A.ORDER_SEQ = B.ORDER_SEQ AND B.DEL_YN = 'N'
+                 INNER JOIN TBL_CONTROL_PART_ORDER C ON B.ORDER_SEQ = C.ORDER_SEQ
+                 INNER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND D.DEL_YN = 'N'
+        WHERE A.DEL_YN = 'N'
+          AND A.BARCODE_NUM = #{BARCODE_NUM}
+        GROUP BY B.REGIST_NUM
+    </select>
 
     <select id="selectOutgoingOutType4" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.CONTROL_SEQ
@@ -1278,6 +1299,19 @@
                     AND A.BARCODE_NUM = #{BARCODE_NUM}
              ) X
     </select>
+    <insert id="insertOutgoingOutType4OrderVer" parameterType="java.util.HashMap">
+        INSERT INTO TBL_OUT (OUT_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, ORDER_SEQ, PACKING_NUM, INSERT_ID)
+        SELECT NEXTVAL(OUT_SEQ) AS OUT_SEQ,
+           B.CONTROL_SEQ,
+           B.CONTROL_DETAIL_SEQ,
+           B.ORDER_SEQ,
+           #{PACKING_NUM},
+           #{LOGIN_USER_ID}
+        FROM TBL_ORDER A
+            INNER JOIN TBL_CONTROL_PART_ORDER B ON A.ORDER_SEQ = B.ORDER_SEQ
+        WHERE A.DEL_YN = 'N'
+            AND A.ORDER_SEQ = #{ORDER_SEQ}
+    </insert>
     <insert id="insertOutgoingOutType4" parameterType="java.util.HashMap">
         INSERT INTO TBL_OUT (OUT_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, ORDER_SEQ, PACKING_NUM, INSERT_ID)
         SELECT NEXTVAL(OUT_SEQ) AS OUT_SEQ
@@ -1291,6 +1325,11 @@
           AND IFNULL(DEL_YN,'N') = 'N'
           AND NOT EXISTS (SELECT 1 FROM TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ AND (M.PACKING_NUM IS NULL OR M.PACKING_NUM = A.PACKING_NUM))
     </insert>
+    <update id="updateOutgoingOutType4After1OrderVer" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART_ORDER A
+        SET A.OUT_FINISH_DT = NOW()
+        WHERE A.ORDER_SEQ = #{ORDER_SEQ}
+    </update>
     <update id="updateOutgoingOutType4After1" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART_ORDER A
         SET A.OUT_FINISH_DT = NOW()
@@ -1317,7 +1356,50 @@
             AND EXISTS( SELECT 1 FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ)
             AND NOT EXISTS( SELECT 1 FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.OUT_FINISH_DT IS NULL)
     </update>
-
+    <select id="selectOutgoingOutType5OrderVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT D.CONTROL_NUM
+            , D.DRAWING_NUM
+            , D.ORDER_NUM
+            , D.REGIST_NUM
+            , D.CONTROL_SEQ
+            , D.CONTROL_DETAIL_SEQ
+            , D.ORDER_SEQ
+            , D.ORDER_QTY
+            , D.PACKING_CNT
+            , D.OUT_QTY
+            , D.ORDER_BARCODE_NUM
+            , CONCAT(D.ORDER_QTY - D.OUT_QTY, '/', D.ORDER_QTY) AS QTY_INFO
+            , D.ORDER_QTY - D.OUT_QTY AS PLAN_QTY
+            , D.MY_OUT_PACKING_CNT
+        FROM (
+            SELECT
+                C.CONTROL_NUM
+                , B.DRAWING_NUM
+                , B.ORDER_NUM
+                , B.REGIST_NUM
+                , '' AS CONTROL_SEQ
+                , '' AS CONTROL_DETAIL_SEQ
+                , A.ORDER_SEQ
+                , B.ORDER_QTY
+                , B.PACKING_CNT
+                , (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM TBL_OUT M WHERE M.ORDER_SEQ = A.ORDER_SEQ) AS OUT_QTY
+                , (SELECT COUNT(PACKING_NUM) FROM TBL_OUT M WHERE M.ORDER_SEQ = A.ORDER_SEQ) AS MY_OUT_PACKING_CNT
+                , A.ORDER_BARCODE_NUM
+            FROM TBL_CONTROL_PART_ORDER A
+                INNER JOIN TBL_ORDER B ON A.ORDER_SEQ = B.ORDER_SEQ AND B.DEL_YN = 'N'
+                INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ = A.CONTROL_SEQ AND C.DEL_YN = 'N'
+            WHERE 1=1
+            <choose>
+                <when test="BARCODE_NUM != null and BARCODE_NUM != ''">
+                    AND A.ORDER_BARCODE_NUM = #{BARCODE_NUM}
+                </when>
+                <when test="ORDER_SEQ != null and ORDER_SEQ != ''">
+                    AND A.ORDER_SEQ = #{ORDER_SEQ}
+                </when>
+            </choose>
+        ) D
+        GROUP BY D.REGIST_NUM
+    </select>
     <select id="selectOutgoingOutType5" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
         	D.CONTROL_NUM
