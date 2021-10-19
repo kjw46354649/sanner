@@ -2048,7 +2048,7 @@
 
                                 //. 저장하기
                                 if (barcodeType === "C") {
-                                    $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType3,inspection.updateOutgoingOutType3After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3,inspection.updateOutFinishDt,inspection.updateOutFinishStatus,inspection.updateOrderOutFinishStatus,machine.deleteMctPlanAll");
+                                    $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType3,inspection.updateOutgoingOutType3After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3,inspection.updateOutFinishDtForBarcode,inspection.updateOutFinishStatus,inspection.updateOrderOutFinishStatusForBarcode,machine.deleteMctPlanAll");
                                 } else if (barcodeType === "O") {
                                     $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType5,inspection.updateOutgoingOutType5After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3,inspection.updateOutFinishDt,inspection.updateOutFinishStatus,inspection.updateOrderOutFinishStatus,machine.deleteMctPlanAll");
                                 }

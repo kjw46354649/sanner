@@ -94,8 +94,8 @@
             },
             {title: '작업<br>형태', width: 70, dataIndx: 'WORK_TYPE_NM'},
             {title: '규격', width: 110, dataIndx: 'SIZE_TXT'},
-            {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL'},
-            {title: '표면처리', width: 80, dataIndx: 'SURFACE_TREAT'},
+            {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL_NM'},
+            {title: '표면처리', width: 80, dataIndx: 'SURFACE_TREAT_NM'},
             {title: '수량<br>추가', dataIndx: 'ADDITIONAL_QTY'},
             {title: '발주<br>수량', dataIndx: 'CONTROL_PART_QTY'},
             {

@@ -565,15 +565,19 @@
 <div id="stock_pop_location" class="stockPopup2" style="display: none;">
     <div class="stockPopupWrap">
         <div class="stockPopupInfo2">
-            <p>입고 위치를 지정해주세요.</p>
-            <p>Pleas select the location</p>
-            <span class="barCode">
-                <img src="resource/asset/images/common/img_barcode_long.png" id="stock_pop_location_barcode_img" alt="바코드">
-            </span>
-            <span class="barCodeTxt">
-                <input type="text" class="wd_200 hg_35" name="POP_LOC_BARCODE_NUM" id="POP_LOC_BARCODE_NUM" placeholder=""/>
-            </span>
-            <div class="inputWrap">
+            <div style="height: 33%;">
+                <p style="height: 43%;">입고 위치를 지정해주세요.</p>
+                <p>Pleas select the location</p>
+            </div>
+            <div style="height: 17%;">
+                <span class="barCode">
+                    <img src="resource/asset/images/common/img_barcode_long.png" id="stock_pop_location_barcode_img" alt="바코드">
+                </span>
+                <span class="barCodeTxt">
+                    <input type="text" class="wd_200 hg_35" name="POP_LOC_BARCODE_NUM" id="POP_LOC_BARCODE_NUM" placeholder=""/>
+                </span>
+            </div>
+            <div class="inputWrap" style="height: 11%;">
                 <label for="POP_WAREHOUSE">창고</label>
                 <select id="POP_WAREHOUSE" class="warehouse">
                     <c:forEach var="vlocale" items="${HighCode.H_1049}">
@@ -2372,13 +2376,13 @@
             let popType = $("#stock_manage_form").find("#popType").val();
             if(popType == "BARCODE" || popType == "GRID_IN"){//입고
                 if(type == "PLUS"){
-                    // if(CONTROL_SEQ != '' && parseInt(POP_ORDER_QTY)+1 > ORG_ORDER_QTY) {
-                    //     fnAlert(null,"수량을 확인해 주세요.");
-                    //     return;
-                    // }else {
-                    POP_ORDER_QTY = parseInt(POP_ORDER_QTY)+1;
-                    POP_STOCK_QTY_AFTER = parseInt(POP_STOCK_QTY) + POP_ORDER_QTY;
-                    // }
+                    if(CONTROL_SEQ != '' && parseInt(POP_ORDER_QTY)+1 > ORG_ORDER_QTY) {
+                        fnAlert(null,"수량을 확인해 주세요.");
+                        return;
+                    }else {
+                        POP_ORDER_QTY = parseInt(POP_ORDER_QTY)+1;
+                        POP_STOCK_QTY_AFTER = parseInt(POP_STOCK_QTY) + POP_ORDER_QTY;
+                    }
                 }else if(type == "MINUS"){
                     // console.log("MINUS POP_ORDER_QTY",parseInt(POP_ORDER_QTY));
                     if(parseInt(POP_ORDER_QTY) > 0){
@@ -2541,7 +2545,10 @@
                                     $("#stockPopup_title").html("재고생성 / 입고");
                                     $("#pop_qty_txt").html("입고수량");
                                     stockManageGridId03.pqGrid('option', 'dataModel.postData', function () {
-                                        return { 'queryId': 'material.selectInsideStockPopInfo', 'INSIDE_STOCK_SEQ': data3.info.INSIDE_STOCK_SEQ};
+                                        return { 'queryId': 'material.selectInsideStockPopInfo', 'INSIDE_STOCK_SEQ': data3.info.INSIDE_STOCK_SEQ,
+                                            'CONTROL_SEQ':data3.info.CONTROL_SEQ, 'CONTROL_DETAIL_SEQ':data3.info.CONTROL_DETAIL_SEQ,
+                                            'ORDER_QTY':data3.info.ORDER_QTY
+                                        };
                                     });
                                     stockManageGridId03.pqGrid('refreshDataAndView');
 

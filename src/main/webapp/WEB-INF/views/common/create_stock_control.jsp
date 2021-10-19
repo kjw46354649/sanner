@@ -799,6 +799,9 @@
         });
 
         $('#CREATE_STOCK_CONTROL').on('click', function () {
+            prevErrorList = errorList;
+            errorList = [];
+
             let data = $createStockControlGrid.pqGrid('option', 'dataModel.data');
 
             validationCheck(data);

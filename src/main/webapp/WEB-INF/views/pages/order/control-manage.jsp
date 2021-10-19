@@ -1909,7 +1909,7 @@
                 'PART_NUM', 'DRAWING_VER', 'DRAWING_UP_DT', 'PREV_DRAWING_NUM',
                 'WORK_TYPE', 'CONTROL_PART_QTY', 'DNJSCLD', 'EOCLD', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT',
                 'SIZE_TXT', 'SIZE_TYPE', 'SIZE_W', 'SIZE_H', 'SIZE_T', 'SIZE_D', 'SIZE_L',
-                'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
+                'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE','MATERIAL_TYPE','SPECIAL_TREATMENT',
                 'PART_UNIT_QTY', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
                 'UNIT_SURFACE_AMT',
                 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'DETAIL_MACHINE_REQUIREMENT',
@@ -2444,6 +2444,10 @@
                 return false;
             }
 
+            if (selectedControlManagementRowIndex.length <= 0) {
+                fnAlert(null, '하나 이상의 작업을 선택해주세요');
+                return false;
+            }
             let selectedRowCount = selectedControlManagementRowIndex.length;
 
             for (let i = 0; i < selectedRowCount; i++) {
@@ -2984,7 +2988,7 @@
                 hidden: true,
                 editable: true
             },
-            {title:'No', dataIndx: "RNUM", cbId: 'CHECK_BOX', type: "checkbox", sortable:false,
+            {title:'No', minWidth: 35, dataIndx: "RNUM", cbId: 'CHECK_BOX', type: "checkbox", sortable:false,
                 editable: function (ui) {return gridCellEditable(ui);},
                 render: function (ui) {
                     let rowData = ui.rowData;
@@ -3016,7 +3020,7 @@
                     }
                 }
             },
-            {title: '작업번호<br>재고번호', minWidth: 140, dataIndx: 'INSIDE_STOCK_NUM', sortable:false,
+            {title: '작업번호<br>재고번호', minWidth: 135, dataIndx: 'INSIDE_STOCK_NUM', sortable:false,
                 editable: false,
                 render: function (ui) {
                     let rowData = ui.rowData;
@@ -3097,7 +3101,7 @@
                 title: '재고현황', align: 'center', sortable:false,
                 colModel: [
                     {
-                        title: '예약', dataType: 'integer', dataIndx: 'INSIDE_STOCK_REQUEST_QTY', minWidth: 40, sortable:false,
+                        title: '예약', dataType: 'integer', dataIndx: 'INSIDE_STOCK_REQUEST_QTY', minWidth: 35, sortable:false,
                         editable: false,
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -3111,7 +3115,7 @@
                         }
                     },
                     {
-                        title: '현)재고', dataType: 'integer', dataIndx: 'CURR_QTY', minWidth: 40, sortable:false,
+                        title: '현)재고', dataType: 'integer', dataIndx: 'CURR_QTY', minWidth: 45, sortable:false,
                         editable: false,
                         render: function (ui) {
                             let rowData = ui.rowData;
@@ -3174,7 +3178,7 @@
         ];
 
         let matchStockObj = {
-            height: 550, width: "auto",
+            height: '81%', width: "auto",
             selectionModel: { type: 'row', mode: 'single'}, rowHtHead: 15,
             swipeModel: {on: false}, trackModel: {on: true},
             sortModel: {on: false},

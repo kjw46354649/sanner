@@ -901,6 +901,8 @@ public class OrderServiceImpl implements OrderService {
                     tempMap.put(key,hashMap.get(key));
                 }
                 tempMap.put("ORDER_SEQ",hashMap.get("ORDER_SEQ"));
+                tempMap.put("ORIGINAL_SIDE_QTY",hashMap.get("ORIGINAL_SIDE_QTY"));
+                tempMap.put("OTHER_SIDE_QTY",hashMap.get("OTHER_SIDE_QTY"));
                 if(hashMap.get("CONTROL_STATUS") != null) {
                     tempMap.put("ORDER_STATUS",hashMap.get("ORDER_STATUS"));
                 }
@@ -924,7 +926,7 @@ public class OrderServiceImpl implements OrderService {
         model.addAttribute("message", message);
     }
     @Override
-    public void removeOrder(Map<String, Object> map) throws Exception {
+    public void removeOrder(Model model, Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -933,11 +935,32 @@ public class OrderServiceImpl implements OrderService {
         if (jsonObject != null)
             jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
 
+        boolean flag = false;
+        String message = "";
         for (HashMap<String, Object> hashMap : jsonArray) {
             hashMap.put("LOGIN_USER_ID",userId);
-            hashMap.put("queryId", "orderMapper.removeOrder");
-            this.innodaleDao.remove(hashMap);
+            if(!flag) {
+                hashMap.put("queryId", "orderMapper.selectBeforeRemoveOrder1");
+                List<Map<String, Object>> orderStatusList = this.innodaleDao.getList(hashMap);
+                if(orderStatusList.size() > 0) {
+                    flag = true;
+                    message = "확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능합니다";
+                }else {
+                    hashMap.put("queryId", "orderMapper.selectBeforeRemoveOrder2");
+                    List<Map<String, Object>> controlList = this.innodaleDao.getList(hashMap);
+
+                    if(controlList.size() > 0) {
+                        flag = true;
+                        message = "작업이 연계된 접수건은 삭제가 불가합니다.";
+                    }else {
+                        hashMap.put("queryId", "orderMapper.removeOrder");
+                        this.innodaleDao.remove(hashMap);
+                    }
+                }
+            }
         }
+        model.addAttribute("flag",flag);
+        model.addAttribute("message",message);
     }
 
     @Override
@@ -980,7 +1003,6 @@ public class OrderServiceImpl implements OrderService {
         ArrayList<HashMap<String, Object>> addList = null;
         ArrayList<HashMap<String, Object>> updateList = null;
         ArrayList<HashMap<String, Object>> resultList = new ArrayList<>();
-        ArrayList<HashMap<String, Object>> totalList = new ArrayList<>();
         HashMap<String, Object> groupMap = new HashMap<>();
 
         boolean flag = false;
@@ -989,20 +1011,11 @@ public class OrderServiceImpl implements OrderService {
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-        if (jsonMap.containsKey("oldList"))
-            oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
-
-        if (jsonMap.containsKey("addList")) {
-            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
-            totalList.addAll(addList);
-        }
-
         if (jsonMap.containsKey("updateList")) {
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
-            totalList.addAll(updateList);
         }
-
-        for(HashMap<String, Object> tempMap : totalList) {
+        for(int i=0;i<updateList.size();i++) {
+            HashMap<String, Object> tempMap = updateList.get(i);
             String controlNum = (String) tempMap.get("CONTROL_NUM");
             ArrayList<HashMap<String, Object>> groupList = new ArrayList<>();
             if(groupMap.containsKey(controlNum)) {
@@ -1012,47 +1025,9 @@ public class OrderServiceImpl implements OrderService {
             groupMap.put(controlNum,groupList);
         }
 
-        if (addList != null && addList.size() > 0) {
-            for (HashMap<String, Object> hashMap : addList) {
-                hashMap.put("LOGIN_USER_ID",userId);
-                hashMap.put("VALIDATION_RESULT", "SUCCESS");
-                String controlNum = (String) hashMap.get("CONTROL_NUM");
-
-                if (hashMap.containsKey("REGIST_NUM") && hashMap.containsKey("CONTROL_NUM")) {
-                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
-                    if(this.orderDao.getFlag(hashMap)) {
-                        flag = true;
-                        hashMap.put("VALIDATION_RESULT", "RS_EXISTS");
-                    }
-                    ArrayList<HashMap<String, Object>> mergeList = (ArrayList<HashMap<String, Object>>) groupMap.get(controlNum);
-                    if(mergeList.size() >= 2) {
-                        for(HashMap<String, Object> temp : mergeList) {
-                            if(temp.get("ROW_NUM") != hashMap.get("ROW_NUM")) {
-                                String[] checkColumn = {"WORK_TYPE", "MATERIAL_SUPPLY_YN","MAIN_INSPECTION","SAME_SIDE_YN","SIZE_TXT","MATERIAL_DETAIL","MATERIAL_KIND","SURFACE_TREAT","SPECIAL_TREATMENT"};
-                                Boolean mergeFlag = false;
-
-                                for(String column : checkColumn) {
-                                    if(!temp.get(column).equals(hashMap.get(column))) {
-                                        mergeFlag = true;
-                                    }
-                                }
-
-                                if(mergeFlag) {
-                                    flag = true;
-                                    hashMap.put("VALIDATION_RESULT", "RS_EXISTS");
-                                }else {
-                                    hashMap.put("VALIDATION_RESULT", "RS_MERGE");
-                                }
-                            }
-                        }
-                    }
-                }
-                resultList.add(hashMap);
-            }
-        }
-
         if (updateList != null && updateList.size() > 0) {
-            for (HashMap<String, Object> hashMap : updateList) {
+            for(int j=0;j<updateList.size();j++) {
+                HashMap<String, Object> hashMap = updateList.get(j);
                 hashMap.put("LOGIN_USER_ID",userId);
                 hashMap.put("VALIDATION_RESULT", "SUCCESS");
                 String controlNum = (String) hashMap.get("CONTROL_NUM");
@@ -1065,20 +1040,27 @@ public class OrderServiceImpl implements OrderService {
                     }
                     ArrayList<HashMap<String, Object>> mergeList = (ArrayList<HashMap<String, Object>>) groupMap.get(controlNum);
                     if(mergeList.size() >= 2) {
-                        for(HashMap<String, Object> temp : mergeList) {
-                            if(temp.get("ROW_NUM") != hashMap.get("ROW_NUM") && !hashMap.get("VALIDATION_RESULT").equals("RS_MERGE")) {
+                        for(int i=0;i<mergeList.size();i++) {
+                            HashMap<String, Object> temp = mergeList.get(i);
+                            if(temp.get("ROW_NUM") != hashMap.get("ROW_NUM") && !hashMap.get("VALIDATION_RESULT").equals("RS_EXISTS") && !hashMap.get("VALIDATION_RESULT").equals("RS_MERGE")) {
                                 String[] checkColumn = {"WORK_TYPE", "MATERIAL_SUPPLY_YN","MAIN_INSPECTION","SAME_SIDE_YN","SIZE_TXT","MATERIAL_DETAIL","MATERIAL_KIND","SURFACE_TREAT","SPECIAL_TREATMENT"};
                                 Boolean mergeFlag = false;
 
                                 for(String column : checkColumn) {
-                                    if((temp.get(column) != null && hashMap.get(column) != null) && !temp.get(column).equals(hashMap.get(column))) {
+                                    if(temp.get(column) == null) {
+                                        temp.put(column,"");
+                                    }
+                                    if(hashMap.get(column) == null) {
+                                        hashMap.put(column,"");
+                                    }
+                                    if(!temp.get(column).equals(hashMap.get(column)) && !mergeFlag) {
                                         mergeFlag = true;
                                     }
                                 }
 
                                 if(mergeFlag) {
                                     flag = true;
-                                    hashMap.put("VALIDATION_RESULT", "RS_EXISTS");
+                                    hashMap.put("VALIDATION_RESULT", "RS_EXISTS2");
                                 }else {
                                     hashMap.put("VALIDATION_RESULT", "RS_MERGE");
                                 }

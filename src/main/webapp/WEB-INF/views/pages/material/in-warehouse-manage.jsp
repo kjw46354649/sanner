@@ -281,7 +281,7 @@
         <div class="tableWrap jmestabs" id="in_warehouse_manage_tabs">
             <ul class="smallTabMenuTabs">
                 <li class="active"><a href="#IN_WAREHOUSE_MANAGE_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a></li>
-                <li><a href="#IN_WAREHOUSE_MANAGE_TAB2" data-toggle="tab" aria-expanded="false">불출이력</a></li>
+                <li><a href="#IN_WAREHOUSE_MANAGE_TAB2" data-toggle="tab" aria-expanded="false">수불이력</a></li>
                 <div class="d-inline right_float" id="IN_WAREHOUSE_MANAGE_BUTTON" style="font-weight: normal;">
                     <input type="search" id="inWarehouseManageFilterKeyword" placeholder="Enter your keyword">
                     <select id="inWarehouseManageFilterColumn"></select>
@@ -547,7 +547,11 @@
             {title: '입고', dataType: 'string', dataIndx: 'IN_QTY', minWidth: "3%" ,styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
             {title: '불출요청', dataType: 'string', dataIndx: '', minWidth: "5%" , editable: false,
                 render: function(ui){
-                    return '<button type="button" id="inWarehouseOutPop" class="miniBtn blue">불출</button>';
+                    let disabled = '';
+                    if(typeof ui.rowData.NEW_ROW != 'undefined' && ui.rowData.NEW_ROW) {
+                        disabled = 'disabled';
+                    }
+                    return '<button type="button" id="inWarehouseOutPop" class="miniBtn blue" '+disabled +'>불출</button>';
                 },
                 postRender: function (ui) {
                     let grid = this;
@@ -999,7 +1003,7 @@
         /** 버튼 처리 **/
         $("#btnInWarehouseManageAdd").on('click', function(){
             let rowCnt = inWarehouseManageManageGrid01.pqGrid('option', 'dataModel.data').length;
-            inWarehouseManageManageGrid01.pqGrid('addNodes', [{}], 0);
+            inWarehouseManageManageGrid01.pqGrid('addNodes', [{'NEW_ROW':true}], 0);
         });
 
         $("#btnInWarehouseManageRemove").on('click', function(){

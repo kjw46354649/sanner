@@ -38,7 +38,7 @@ public interface OrderService {
 
     void saveFromOrderManage(Model model, Map<String, Object> map) throws Exception;
 
-    void removeOrder(Map<String, Object> map) throws Exception;
+    void removeOrder(Model model, Map<String, Object> map) throws Exception;
 
     void managerOrderStatus(Map<String, Object> map) throws Exception;
 

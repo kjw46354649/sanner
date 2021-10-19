@@ -4305,11 +4305,13 @@
             A.REGIST_NUM, A.DRAWING_NUM,
             A.IMG_GFILE_SEQ, A.DXF_GFILE_SEQ, A.PDF_GFILE_SEQ,
             A.ORDER_NUM, A.ORDER_QTY,
-            A.ORIGINAL_SIDE_QTY, A.OTHER_SIDE_QTY,
+            IFNULL(A.ORIGINAL_SIDE_QTY,SPACE(0)) AS ORIGINAL_SIDE_QTY,
+            IFNULL(A.OTHER_SIDE_QTY,SPACE(0)) AS OTHER_SIDE_QTY,
             SF_GET_DATE_F(A.ORDER_DUE_DT,'','') AS ORDER_DUE_DT, A.WORK_TYPE,
             A.MATERIAL_SUPPLY_YN, A.MAIN_INSPECTION,
             IFNULL(SF_GET_CODE_NM('1059', A.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION_NM,
             A.SAME_SIDE_YN, A.SIZE_TXT,
+            SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM,
             A.MATERIAL_DETAIL, A.MATERIAL_KIND, A.MATERIAL_TYPE,
             A.SURFACE_TREAT, A.MATERIAL_FINISH_GRIND_YN,
             A.MATERIAL_FINISH_HEAT_YN, SF_GET_DATE_F(A.DELIVERY_DT,'','') AS DELIVERY_DT,
@@ -4323,7 +4325,7 @@
             A.ITEM_NM, A.ORDER_STAFF_SEQ,
             B.ORDER_SEQ, B.CONTROL_NUM,
             (SELECT Q.INVOICE_NUM FROM TBL_INVOICE_DETAIL Q WHERE Q.ORDER_SEQ = A.ORDER_SEQ) AS INVOICE_NUM,
-            B.DRAWING_VER, B.DRAWING_UP_DT,
+            B.DRAWING_VER, B.DRAWING_UP_DT, B.DRAWING_VER AS CONTROL_VER,
             B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
             B.PART_STATUS, A.UNIT_MATERIAL_AUTO_AMT,
             A.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, A.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT,
@@ -4655,10 +4657,10 @@
             <if test="(ORDER_STATUS == null or ORDER_STATUS == 'REG002') and (ORDER_QTY != null and ORDER_QTY != '')">
                 ORDER_QTY = #{ORDER_QTY},
             </if>
-            <if test="(ORDER_STATUS == null or ORDER_STATUS == 'REG002')">
+            <if test="(ORDER_STATUS == null or ORDER_STATUS == 'REG002') and (ORIGINAL_SIDE_QTY != '')">
                 ORIGINAL_SIDE_QTY = REPLACE(#{ORIGINAL_SIDE_QTY}, ',', SPACE(0)),
             </if>
-            <if test="(ORDER_STATUS == null or ORDER_STATUS == 'REG002')">
+            <if test="(ORDER_STATUS == null or ORDER_STATUS == 'REG002') and (OTHER_SIDE_QTY != '')">
                 OTHER_SIDE_QTY = REPLACE(#{OTHER_SIDE_QTY}, ',', SPACE(0)),
             </if>
             <if test="ORDER_DUE_DT != null and ORDER_DUE_DT != ''">
@@ -4728,8 +4730,22 @@
             <if test="DESIGNER_NM != null">
                 DESIGNER_NM = #{DESIGNER_NM},
             </if>
-            MATERIAL_FINISH_GRIND_YN = CASE WHEN #{SPECIAL_TREATMENT} = 'MATERIAL_FINISH_GRIND_YN' THEN 'Y' ELSE 'N' END,
-            MATERIAL_FINISH_HEAT_YN = CASE WHEN #{SPECIAL_TREATMENT} = 'MATERIAL_FINISH_HEAT_YN' THEN 'Y' ELSE 'N' END,
+            <if test="SPECIAL_TREATMENT != null">
+                <choose>
+                    <when test="SPECIAL_TREATMENT == 'MATERIAL_FINISH_GRIND_YN'">
+                        MATERIAL_FINISH_GRIND_YN = 'Y',
+                        MATERIAL_FINISH_HEAT_YN = NULL,
+                    </when>
+                    <when test="SPECIAL_TREATMENT == 'MATERIAL_FINISH_HEAT_YN'">
+                        MATERIAL_FINISH_GRIND_YN = NULL,
+                        MATERIAL_FINISH_HEAT_YN = 'Y',
+                    </when>
+                    <otherwise>
+                        MATERIAL_FINISH_GRIND_YN = NULL,
+                        MATERIAL_FINISH_HEAT_YN = NULL,
+                    </otherwise>
+                </choose>
+            </if>
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE ORDER_SEQ = #{ORDER_SEQ}
@@ -4743,6 +4759,19 @@
                    )
     </select>
 
+    <select id="selectBeforeRemoveOrder1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.ORDER_SEQ
+        FROM TBL_ORDER A
+        WHERE A.ORDER_SEQ = #{ORDER_SEQ}
+            AND A.ORDER_STATUS IN ('REG001','REG003')
+    </select>
+    <select id="selectBeforeRemoveOrder2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.ORDER_SEQ
+        FROM TBL_ORDER A
+                 INNER JOIN TBL_CONTROL_PART_ORDER B ON A.ORDER_SEQ = B.ORDER_SEQ
+                 INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND C.DEL_YN = 'N'
+        WHERE A.ORDER_SEQ = #{ORDER_SEQ}
+    </select>
     <update id="removeOrder" parameterType="java.util.HashMap">
         UPDATE TBL_ORDER
         SET

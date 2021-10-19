@@ -210,10 +210,10 @@ public class OrderController {
         return "jsonView";
     }
     @RequestMapping(value = "/removeOrder", method = RequestMethod.POST)
-    public String removeOrder(HttpServletRequest request) throws Exception {
+    public String removeOrder(Model model, HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
 
-        this.orderService.removeOrder(map);
+        this.orderService.removeOrder(model, map);
 
         return "jsonView";
     }

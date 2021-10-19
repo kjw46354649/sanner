@@ -1674,7 +1674,7 @@
         const requiredCheck = function (rowData) {
             let list;
             // 21.09.09 개선 버전에서는 주문관리화면에서 작업형태 - 단품, 조립, 수정만 생성가능함
-            const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'REGIST_NUM', 'ORDER_NUM', 'DRAWING_NUM', 'ORDER_DUE_DT', 'SIZE_TXT', 'ORDER_QTY', 'WORK_TYPE', 'MATERIAL_KIND', 'SURFACE_TREAT'];
+            const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'REGIST_NUM', 'DRAWING_NUM', 'ORDER_DUE_DT', 'SIZE_TXT', 'ORDER_QTY', 'WORK_TYPE', 'MATERIAL_KIND', 'SURFACE_TREAT'];
             const modifiedList = ['MATERIAL_SUPPLY_YN']; // 수정
 
             if(rowData.WORK_TYPE == 'WTP030') {
@@ -1966,9 +1966,14 @@
                 fnConfirm(null, message, function () {
                     $orderManagementGrid.pqGrid("deleteRow", {rowList: tempList});
                     let parameters = {'url': '/removeOrder', 'data': {data: JSON.stringify(list)}};
-                    fnPostAjax(function () {
-                        fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
-                        $orderManagementGrid.pqGrid('refreshDataAndView');
+                    fnPostAjax(function (data) {
+                        if(data.flag) {
+                            fnAlert(null, data.message);
+                        }else {
+                            fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
+                            $orderManagementGrid.pqGrid('refreshDataAndView');
+
+                        }
                     }, parameters, '');
                 });
             }else if(tempList.length > 0) {

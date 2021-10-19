@@ -1786,6 +1786,10 @@
                     controlSeqStr += ',';
                     controlDetailSeqStr += ',';
                 }
+                if(rowData.M_ORDER_QTY <= 0) {
+                    fnAlert(null, "주문수량이 0개인 작업이 존재합니다.");
+                    return false;
+                }
             }
 
             if(controlSeqStr == "" && controlDetailSeqStr == "") {

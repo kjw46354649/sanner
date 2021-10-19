@@ -121,9 +121,9 @@
             {title: '재고번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 100, width: 100, editable: false},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT',minWidth: 110, width: 110},
             {title: '소재', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 90, width: 90, editable: false},
-            {title: '대칭', dataType: 'string', dataIndx: 'SAME_SIDE_YN', minWidth: 50, width: 50, editable: false},
+            {title: '대칭', dataType: 'string', dataIndx: 'SAME_SIDE_YN', minWidth: 30, width: 30, editable: false},
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', minWidth: 120, width: 120, editable: false},
-            {title: '편성일시', dataType: 'string', dataIndx: 'INSERT_DT', minWidth: 80, width: 80, editable: false}
+            {title: '편성일시', dataType: 'string', dataIndx: 'INSERT_DT', minWidth: 100, width: 100, editable: false}
         ];
         let stockEquipInfoObj = {
             height: 150,

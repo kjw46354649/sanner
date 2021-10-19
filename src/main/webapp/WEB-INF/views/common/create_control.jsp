@@ -664,6 +664,10 @@
                             text = '번호존재 Merge 불가';
                             cls = 'bg-light-red';
                             break;
+                        case 'RS_EXISTS2':
+                            text = '번호존재 Merge 불가';
+                            cls = 'bg-light-red';
+                            break;
                         case 'RS_MERGE':
                             text = '번호존재. Merge 가능';
                             cls = 'bg-light-yellow2';
@@ -1939,6 +1943,7 @@
 
             let gridInstance = $createControlGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
+            changes.updateList = changes.updateList.concat(changes.addList);
 
             let parameters = {'url': '/validationCheckBeforeCreateControl', 'data': {data: JSON.stringify(changes)}};
             let flag = false;
