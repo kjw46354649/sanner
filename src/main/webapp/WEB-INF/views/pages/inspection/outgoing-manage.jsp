@@ -39,7 +39,7 @@
                             <select class="wd_100" name="SEL_OUTGOING_DATE_TYPE" id="SEL_OUTGOING_DATE_TYPE">
                                <option value=""><spring:message code="com.form.top.sel.option"/></option>
                                 <c:forEach var="vlocale" items="${HighCode.H_1066}">
-                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                    <option value="${vlocale.CODE_CD}" <c:if test="${vlocale.CODE_CD eq '4'}">selected</c:if> >${vlocale.CODE_NM_KR}</option>
                                 </c:forEach>
                             </select>
                         </span>
@@ -1055,6 +1055,13 @@
                     if (firstRow === lastRow) {
                         let selRowData = outgoingManageGridId01.pqGrid("getRowData", {rowIndx: firstRow});
                         callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);
+                    }else {
+                        let selFirstRowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: firstRow});
+                        let selLastRowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: lastRow});
+
+                        if(selFirstRowData.REGIST_NUM == selLastRowData.REGIST_NUM) {
+                            callQuickRowChangeDrawingImageViewer(selFirstRowData.IMG_GFILE_SEQ,selFirstRowData);
+                        }
                     }
                 }
             },
@@ -1795,8 +1802,8 @@
             $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY').val(NEW_OUT_QTY);
         });
 
-        $('#SEL_OUTGOING_DATE_TYPE').val(4); // 확정일자 Default 검색조건
-        $('#SEL_OUTGOING_DATE_TYPE option[value=4]').prop('selected',true);
+        // $('#SEL_OUTGOING_DATE_TYPE').val(4); // 확정일자 Default 검색조건
+        // $('#SEL_OUTGOING_DATE_TYPE option[value=4]').prop('selected',true);
 
         $('#SEL_OUTGOING_DATE_TYPE').on('change', function () {
             const $selOutgoingTerm = $('[name=SEL_OUTGOING_TERM]');

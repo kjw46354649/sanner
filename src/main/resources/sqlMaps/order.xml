@@ -4694,8 +4694,8 @@
             <if test="MATERIAL_KIND != null and MATERIAL_KIND != ''">
                 MATERIAL_KIND = #{MATERIAL_KIND},
             </if>
-            <if test="SURFACE_TREAT != null and SURFACE_TREAT != ''">
-                SURFACE_TREAT = #{SURFACE_TREAT},
+            <if test="SURFACE_TREAT != null">
+                SURFACE_TREAT = IFNULL(#{SURFACE_TREAT},'SAL000'),
             </if>
             <if test="DELIVERY_DT != null and DELIVERY_DT != ''">
                 DELIVERY_DT = DATE_FORMAT(#{DELIVERY_DT}, '%Y%m%d'),

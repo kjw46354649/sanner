@@ -976,11 +976,19 @@
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
                     let firstRow = ui.selection._areas[i].r1;
                     let lastRow = ui.selection._areas[i].r2;
+
                     for (let i = firstRow; i <= lastRow; i++) selectedOrderManagementRowIndex.push(i);
                     if (firstRow === lastRow) {
                         let selRowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: firstRow});
                         callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData); // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
                         // callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);
+                    }else {
+                        let selFirstRowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: firstRow});
+                        let selLastRowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: lastRow});
+
+                        if(selFirstRowData.REGIST_NUM == selLastRowData.REGIST_NUM) {
+                            callQuickRowChangeDrawingImageViewer(selFirstRowData.IMG_GFILE_SEQ,selFirstRowData);
+                        }
                     }
                 }
                 amountSummaryHtml();
@@ -1674,7 +1682,7 @@
         const requiredCheck = function (rowData) {
             let list;
             // 21.09.09 개선 버전에서는 주문관리화면에서 작업형태 - 단품, 조립, 수정만 생성가능함
-            const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'REGIST_NUM', 'DRAWING_NUM', 'ORDER_DUE_DT', 'SIZE_TXT', 'ORDER_QTY', 'WORK_TYPE', 'MATERIAL_KIND', 'SURFACE_TREAT'];
+            const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'REGIST_NUM', 'DRAWING_NUM', 'ORDER_DUE_DT', 'SIZE_TXT', 'ORDER_QTY', 'WORK_TYPE', 'MATERIAL_KIND'];
             const modifiedList = ['MATERIAL_SUPPLY_YN']; // 수정
 
             if(rowData.WORK_TYPE == 'WTP030') {
