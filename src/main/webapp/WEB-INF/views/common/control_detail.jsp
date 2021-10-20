@@ -134,7 +134,31 @@
             load: function () {
                 let data = $detailListViewGrid.pqGrid('option', 'dataModel.data');
                 $('#DETAIL_LIST_VIEW_RECORDS').html(data.length);
-            }
+            },
+            rowSelect: function (evt, ui) {
+                $.each(ui.addList, function (idx,Item) {
+                    if(idx === 0) {
+                        callQuickRowChangeDrawingImageViewer(Item.rowData.IMG_GFILE_SEQ,Item.rowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+                    }
+                })
+            },
+            cellClick: function (event, ui) {
+                if(ui.rowData.IMG_GFILE_SEQ) callQuickRowChangeDrawingImageViewer(ui.rowData.IMG_GFILE_SEQ,ui.rowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+            },
+            cellKeyDown: function (event, ui) {
+                let rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const totalRecords = this.option('dataModel.data').length;
+                if (event.keyCode == $.ui.keyCode.DOWN && rowIndx < totalRecords) {
+                    rowIndx++;
+                } else if (event.keyCode == $.ui.keyCode.UP && rowIndx > 0) {
+                    rowIndx--;
+                }
+                sr.removeAll();
+                sr.add({rowIndx: rowIndx});
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+            },
         };
        const $detailListViewGrid = $('#' + detailListViewGridId).pqGrid(detailListViewObj);
         /* function */

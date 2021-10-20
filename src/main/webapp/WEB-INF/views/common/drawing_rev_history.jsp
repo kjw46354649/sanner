@@ -152,7 +152,21 @@
                         }
                     }
                 })
-            }
+            },
+            cellKeyDown: function (event, ui) {
+                let rowIndx = ui.rowIndx;
+                const sr = this.SelectRow();
+                const totalRecords = this.option('dataModel.data').length;
+                if (event.keyCode == $.ui.keyCode.DOWN && rowIndx < totalRecords) {
+                    rowIndx++;
+                } else if (event.keyCode == $.ui.keyCode.UP && rowIndx > 0) {
+                    rowIndx--;
+                }
+                sr.removeAll();
+                sr.add({rowIndx: rowIndx});
+                const selRowData = this.getRowData({rowIndx: rowIndx});
+                callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
+            },
         };
         $drawingRevGrid = $('#' + popupGridId).pqGrid(popupObj);
 

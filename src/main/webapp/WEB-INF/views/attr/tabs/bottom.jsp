@@ -512,7 +512,8 @@
 
 <div class="modal" id="processingRequirementsModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <div class="modal-content" style="width: 650px">
+        <div class="modal-content" style="width: 450px">
+<%--        <div class="modal-content" style="width: 650px">--%>
             <div class="modal-header">
                 <h5 class="modal-title" style="font-size: large; font-weight: bold">가공요건 입력 / 가공비 계산</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -21.5px">
@@ -576,7 +577,7 @@
                 </div>
                 <br>
                 <div class="d-flex">
-                    <div style="width: 50%;">
+                    <div style="width: 100%;">
                         <div>
                             <span style="font-size: 1.5rem;font-family: 'NotoKrB';color: #535759;">일반가공 요건</span>
                         </div>
@@ -588,7 +589,7 @@
                             <div id="processing_requirements_grid"></div>
                         </form>
                     </div>
-                    <div style="width: 45%; margin-left: 5%;">
+                    <div style="width: 45%; margin-left: 5%;display: none;">
                         <div>
                             <span style="font-size: 1.5rem;font-family: 'NotoKrB';color: #535759;">특수가공 요건</span>
                         </div>

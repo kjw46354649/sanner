@@ -394,6 +394,7 @@
     <input type="hidden" id="ORDER_COMP_CD" name="ORDER_COMP_CD"/>
     <input type="hidden" id="SEL_ITEM_NM" name="SEL_ITEM_NM"/>
     <input type="hidden" id="WAREHOUSE_CD" name="WAREHOUSE_CD"/>
+    <input type="hidden" id="SEL_EQUIP" name="SEL_EQUIP"/>
     <input type="hidden" id="LOC_SEQ" name="LOC_SEQ"/>
     <input type="hidden" id="MATERIAL_DETAIL" name="MATERIAL_DETAIL"/>
     <input type="hidden" id="SIZE_TYPE" name="SIZE_TYPE"/>
@@ -904,7 +905,7 @@
                 }
             },
             {title: '재고위치', dataType: 'string', dataIndx: 'LOC_SEQ', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
-                minWidth: 90, width: 90,
+                minWidth: 80, width: 80,
                 editor: { type: 'select', valueIndx: "value", labelIndx: "text",
                     options: function(ui) {
                         let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
@@ -1053,6 +1054,7 @@
                 }
             },
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 100, width: 100, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed'}},
+            {title: '장비그룹', dataType: 'string',align: 'left', dataIndx: 'STOCK_EQUIP_NM', minWidth: 100, width: 100, editable: false},
             {title: '입고/불출', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN_OUT', minWidth: 100, width: 100,
                 styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: false,
                 render: function (ui) {
@@ -1540,6 +1542,7 @@
                             $(".stockPopupBtmRight .edit_td").addClass('tdBackColor');
                             $("#pop_note_input").attr("disabled",true);
                             $(".stockPopupBtmRight .edit_sel").attr("disabled", true);
+                            $(".stockPopupBtmRight .comboTreeArrowBtn").attr("disabled", true);
                             $("#stock_manage_pop_form").find("#INSIDE_STOCK_SEQ").val(rowData.INSIDE_STOCK_SEQ);
                             $("#stock_manage_pop_form").find("#INSIDE_STOCK_NUM").val(rowData.INSIDE_STOCK_NUM);
                             $('#POP_WAREHOUSE option[value='+rowData.WAREHOUSE_CD +']').prop('selected',true);
@@ -1555,12 +1558,14 @@
                                 $(".stockPopupBtmRight .edit_td").addClass('tdBackColor');
                                 $("#pop_note_input").attr("disabled",true);
                                 $(".stockPopupBtmRight .edit_sel").attr("disabled", true);
+                                $(".stockPopupBtmRight .comboTreeArrowBtn").attr("disabled", true);
                                 $("#POP_SEL_ORDER_COMP_CD option:eq(0)").prop("selected", true);
                                 $("#POP_SEL_COMP_CD option:eq(0)").prop("selected", true);
                                 $("#POP_MATERIAL_DETAIL option:eq(0)").prop("selected", true);
                             }else {
                                 $(".stockPopupBtmRight .edit_td").removeClass('tdBackColor');
                                 $(".stockPopupBtmRight .edit_sel").attr("disabled", false);
+                                $(".stockPopupBtmRight .comboTreeArrowBtn").attr("disabled", false);
                                 $("#pop_note_input").attr("disabled",false);
                                 $("#POP_GUBUN").html(rowData.TYPE);
                             }
@@ -2555,7 +2560,7 @@
                                     setTimeout(function () {
                                         stockManageGridId03.pqGrid('setSelection', {rowIndx: 0});
                                     },150)
-
+                                    $("#stock_manage_pop_form").find("#USE_BARCODE").val("Y");
                                 }else {
                                     let parameters = {
                                         'url': '/json-list',
@@ -2571,8 +2576,6 @@
                                             'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcodeNew"}
                                         };
                                         fnPostAjax(function (data2, callFunctionParam) {
-                                            $("#stock_manage_pop_form").find("#USE_BARCODE").val("Y");
-
                                             let dataInfo2 = data2.info;
                                             if(dataInfo2 == null ) {
                                                 fnAlert(null, "도면번호가 존재하지 않습니다.");

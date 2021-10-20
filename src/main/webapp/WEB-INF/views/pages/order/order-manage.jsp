@@ -377,6 +377,21 @@
                 }
             },
             {
+                title: '품명', align: 'left', width: 150, dataIndx: 'ITEM_NM',
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.ORDER_STATUS != 'REG003';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
+                }
+            },
+            {
                 title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                 editable: function (ui) {
@@ -580,6 +595,15 @@
                 }
             },
             {
+                title: '소재<br>비고', width: 80, dataIndx: 'MATERIAL_NOTE',
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.ORDER_STATUS != 'REG003';
+                }
+            },
+            {
                 title: '특수처리', align: 'center', dataIndx: 'SPECIAL_TREATMENT',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 editable: function (ui) {
@@ -776,21 +800,6 @@
             },
             {
                 title: '비고(라벨)', align: 'left', width: 100, dataIndx: 'LABEL_NOTE', hidden: true,
-                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-
-                    return rowData.ORDER_STATUS != 'REG003';
-                },
-                render: function (ui) {
-                    let rowData = ui.rowData;
-                    let cls = null;
-
-                    return {cls: cls, text: controlManageFilterRender(ui)};
-                }
-            },
-            {
-                title: '품명', align: 'left', width: 150, dataIndx: 'ITEM_NM',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -1535,7 +1544,7 @@
                 'DESIGNER_NM', 'UNIT_SUM_AUTO_AMT', 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT',
                 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT', 'UNIT_PROCESS_AUTO_AMT', 'UNIT_ETC_AMT',
                 'UNIT_AMT_NOTE', 'INVOICE_NUM', 'OUT_QTY', 'OUT_FINISH_DT', 'RETURN_INSERT_DT',
-                'RETURN_FINISH_DT', 'ORDER_INSERT_DT', 'PDF_GFILE_SEQ', 'DXF_GFILE_SEQ', 'DRAWING_VER', 'DRAWING_UP_DT'
+                'RETURN_FINISH_DT', 'ORDER_INSERT_DT', 'PDF_GFILE_SEQ', 'DXF_GFILE_SEQ', 'DRAWING_VER', 'DRAWING_UP_DT', 'MATERIAL_NOTE'
             ];
             const includeList = orderList;
 

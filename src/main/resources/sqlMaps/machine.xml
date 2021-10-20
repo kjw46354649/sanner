@@ -1647,7 +1647,7 @@
                                                 AND EXISTS (SELECT * FROM TBL_CONTROL_PART_PROGRESS K WHERE K.CONTROL_SEQ = M.CONTROL_SEQ AND K.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ AND K.PART_STATUS = 'PRO002')
                                             GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
                                          )
-            AND B.OUTSIDE_YN = 'N'
+            AND IFNULL(B.OUTSIDE_YN,'N') = 'N'
             AND B.INNER_WORK_FINISH_DT IS NULL
             AND A.BARCODE_NUM = #{BARCODE_NUM}
     </select>

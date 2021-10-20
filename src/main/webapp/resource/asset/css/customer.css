@@ -1154,3 +1154,5 @@ div.custom-loading-mask > div {
 	margin-left:-10px;
 	border-color: transparent transparent #fff599 transparent;;
 }
+
+.stockPopupWrap .comboTreeInputBox:disabled {background-color: #dddddd !important;}

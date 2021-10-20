@@ -798,7 +798,7 @@
             }
         });
 
-        $('#CREATE_STOCK_CONTROL').on('click', function () {
+        $('#CREATE_STOCK_CONTROL').on('click', _.debounce(function () {
             prevErrorList = errorList;
             errorList = [];
 
@@ -833,7 +833,7 @@
                     fnAlert(null, controlNumStr + '<br>이미 등록된 주문입니다.');
                 }
             }, parameters, '');
-        });
+        },1000));
 
 
         $('#MAIN_COLUMN').on('change', function () {

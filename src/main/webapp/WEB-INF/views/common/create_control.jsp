@@ -84,10 +84,20 @@
             width: 16px;
         }
 
+        .div_bg {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.2;
+            display: none;
+        }
     </style>
 </head>
 <body>
 <div id="order_manage_div" class="page estimate">
+    <div class="div_bg"></div>
     <div style="height: 740px;padding: 10px;">
         <form class="form-inline" name="CREATE_CONTROL_SEARCH_FORM" id="CREATE_CONTROL_SEARCH_FORM" role="form" onsubmit="return false;">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectCreateControlList">
@@ -1923,9 +1933,17 @@
             }
         });
 
-        $('#CREATE_CONTROL').on('click', function () {
-            validationAndCreateControl('CREATE_CONTROL');
-        });
+        $('#CREATE_CONTROL').on('click', _.debounce(function () {
+            let data = $createControlGrid.pqGrid('option', 'dataModel.data');
+            if(data.length > 0) {
+                $(".pq-loading").show();
+                $(".div_bg").show();
+                validationAndCreateControl('CREATE_CONTROL');
+                setTimeout(function () {
+                    $(".div_bg").hide();
+                },500);
+            }
+        },1000));
 
         const validationAndCreateControl = function(type) {
             prevErrorList = errorList;
@@ -1967,7 +1985,6 @@
                     parameters = {'url': '/createNewControl', 'data': {data: JSON.stringify(changes2)}};
 
                     fnPostAjaxAsync(function (data) {
-                        console.log("완료",data)
                         if(!data.flag) {
                             fnAlert(null, '작업건이 생성되었습니다.');
                             $("#CREATE_CONTROL_REFRESH").trigger('click');

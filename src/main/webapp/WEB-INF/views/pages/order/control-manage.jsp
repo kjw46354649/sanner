@@ -772,6 +772,27 @@
                 }
             },
             {
+                title: '수행<br>공장', minWidth: 40, dataIndx: 'WORK_FACTORY',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
+                },
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1014')},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let index = -1;
+                    let options = fnGetCommCodeGridSelectBox('1014');
+
+                    index = options.findIndex(function (element) {
+                        return element.value === cellData;
+                    });
+                    if (index > -1) cellData = options[index].text;
+                    return {text: cellData};
+                }
+            },
+            {
                 title: '규격', width: 110, dataIndx: 'SIZE_TXT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: true

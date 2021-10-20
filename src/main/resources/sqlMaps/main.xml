@@ -45,6 +45,7 @@
             , X.SIZE_TXT
             , X.DRAWING_NUM
             , X.CONTROL_VER
+            , X.DRAWING_VER
             , SF_GET_CODE_NM('1027', X.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
             , SF_GET_CODE_NM('1035', X.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM
             , SF_GET_USER_NM(X.WORK_USER_ID) AS WORK_USER_NM
@@ -66,6 +67,7 @@
                     , C.MATERIAL_DETAIL
                     , C.DRAWING_NUM
                     , B.CONTROL_VER
+                    , C.DRAWING_VER
                     , A.WORK_USER_ID
                     , A.WORK_START_DT
                     , A.WORK_FINISH_DT
@@ -269,6 +271,7 @@
             , Z.REQUEST_QTY AS STOCK_REQUEST_QTY
             , Z.OUT_QTY AS STOCK_OUT_QTY
             , X.CONTROL_VER
+            , X.DRAWING_VER
             , X.DRAWING_NUM
             , SF_GET_CODE_NM('1027',X.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
             , (SELECT Y.REGIST_NUM FROM TBL_CONTROL_PART_ORDER_MAIN Y WHERE Y.CONTROL_SEQ = X.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ) AS REGIST_NUM
@@ -303,6 +306,7 @@
                 , A.CONTROL_VER
                 , B.DRAWING_NUM
                 , B.MATERIAL_DETAIL
+                , B.DRAWING_VER
             FROM TBL_CONTROL A, TBL_CONTROL_PART B
             WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                 AND A.CONTROL_STATUS IN ('ORD001','ORD003','ORD005')

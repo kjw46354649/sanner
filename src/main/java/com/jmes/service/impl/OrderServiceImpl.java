@@ -629,6 +629,9 @@ public class OrderServiceImpl implements OrderService {
                 while (iterator.hasNext()) {
                     String key = (String)iterator.next();
                     tempMap.put(key,hashMap.get(key));
+                    if(hashMap.get(key) == null) {
+                        tempMap.put(key,"");
+                    }
                 }
                 tempMap.put("CONTROL_SEQ",hashMap.get("CONTROL_SEQ"));
                 tempMap.put("CONTROL_DETAIL_SEQ",hashMap.get("CONTROL_DETAIL_SEQ"));

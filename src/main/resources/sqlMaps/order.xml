@@ -2933,6 +2933,7 @@
             H.INSPECT_GRADE, SF_GET_CODE_NM('1040', H.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM, <!-- 등급 -->
             G.USER_NM, F.STAFF_NM,
             A.CONTROL_VER,
+            B.DRAWING_VER,
             B.SIZE_TXT,
             SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM,
             SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM,
@@ -3299,8 +3300,8 @@
             <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (OUTSIDE_YN != null and OUTSIDE_YN != '')">
                 OUTSIDE_YN = #{OUTSIDE_YN},
             </if>
-            <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
-                WORK_FACTORY = CASE WHEN #{WORK_FACTORY} = 'null' THEN NULL ELSE #{WORK_FACTORY} END,
+            <if test="WORK_FACTORY != null">
+                WORK_FACTORY = CASE WHEN #{WORK_FACTORY} = '' THEN NULL ELSE #{WORK_FACTORY} END,
             </if>
             <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (MATERIAL_SUPPLY_YN != null and MATERIAL_SUPPLY_YN != '')">
                 MATERIAL_SUPPLY_YN = IFNULL(#{MATERIAL_SUPPLY_YN}, 'N'),
@@ -3516,6 +3517,7 @@
            , CASE WHEN X.RETURN_QTY IS NULL THEN '긴급' ELSE '반품' END AS TYPE_NM
            , X.CONTROL_PART_INFO AS CONTROL_NUM
            , X.CONTROL_VER
+           , X.DRAWING_VER
            , X.MATERIAL_DETAIL_NM
            , IFNULL(X.REGIST_NUM,SPACE(0)) AS REGIST_NUM
            , X.SIZE_TXT
@@ -3541,6 +3543,7 @@
                    , SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
                    , C.REGIST_NUM
                    , B.DRAWING_NUM
+                   , B.DRAWING_VER
                FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C
                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                     AND B.CONTROL_SEQ = C.CONTROL_SEQ
@@ -3578,6 +3581,7 @@
             , X.CHARGE_USER_NM
             , X.CONTROL_PART_INFO AS CONTROL_NUM
             , X.CONTROL_VER
+            , X.DRAWING_VER
             , X.MATERIAL_DETAIL_NM
             , IFNULL(X.REGIST_NUM,SPACE(0)) AS REGIST_NUM
             , X.SIZE_TXT
@@ -3593,6 +3597,7 @@
                 , SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
                 , (SELECT M.USER_NM FROM TBL_USER M, TBL_COMPANY N WHERE M.USER_ID = N.CHARGE_USER_ID AND N.COMP_CD = A.ORDER_COMP_CD) AS CHARGE_USER_NM
                 , A.CONTROL_VER
+                , B.DRAWING_VER
                 , B.SIZE_TXT
                 , SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
                 , C.REGIST_NUM
@@ -4321,11 +4326,11 @@
             A.UNIT_FINAL_EST_AMT,A.UNIT_FINAL_AMT,
             A.PREV_DRAWING_NUM,
             A.PROJECT_NM, A.MODULE_NM,
-            A.DELIVERY_COMP_NM, A.LABEL_NOTE,
+            A.DELIVERY_COMP_NM, A.LABEL_NOTE, A.MATERIAL_NOTE,
             A.ITEM_NM, A.ORDER_STAFF_SEQ,
             B.ORDER_SEQ, B.CONTROL_NUM,
             (SELECT Q.INVOICE_NUM FROM TBL_INVOICE_DETAIL Q WHERE Q.ORDER_SEQ = A.ORDER_SEQ) AS INVOICE_NUM,
-            B.DRAWING_VER, B.DRAWING_UP_DT, B.DRAWING_VER AS CONTROL_VER,
+            B.DRAWING_VER, B.DRAWING_UP_DT,
             B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
             B.PART_STATUS, A.UNIT_MATERIAL_AUTO_AMT,
             A.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, A.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT,
@@ -4746,6 +4751,9 @@
                     </otherwise>
                 </choose>
             </if>
+            <if test="MATERIAL_NOTE != null">
+                MATERIAL_NOTE = #{MATERIAL_NOTE},
+            </if>
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE ORDER_SEQ = #{ORDER_SEQ}
@@ -5043,7 +5051,8 @@
             VIEW_GFILE_SEQ,
             MATERIAL_FINISH_GRIND_YN,
             MATERIAL_FINISH_HEAT_YN,
-            ORDER_BARCODE_NUM
+            ORDER_BARCODE_NUM,
+            MATERIAL_NOTE
         )
         SELECT
             NEXTVAL(SEQ_DUMMY),
@@ -5090,7 +5099,8 @@
             A.VIEW_GFILE_SEQ,
             A.MATERIAL_FINISH_GRIND_YN,
             A.MATERIAL_FINISH_HEAT_YN,
-            A.ORDER_BARCODE_NUM
+            A.ORDER_BARCODE_NUM,
+            A.MATERIAL_NOTE
         FROM TBL_ORDER A
         WHERE A.ORDER_SEQ = #{ORDER_SEQ}
     </insert>

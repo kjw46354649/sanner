@@ -888,7 +888,7 @@
         if(typeof rowData != 'undefined' && typeof imageSeq != 'undefined') {
             $("#common_quick_drawing_form").find("#QUICK_DRAWING_REGIST_NUM").text(((typeof rowData.REGIST_NUM != 'undefined')?rowData.REGIST_NUM:''));
             $("#common_quick_drawing_form").find("#QUICK_DRAWING_NUM").text(((typeof rowData.DRAWING_NUM != 'undefined')?rowData.DRAWING_NUM:''));
-            $("#common_quick_drawing_form").find("#QUICK_DRAWING_REV").text(((typeof rowData.CONTROL_VER != 'undefined')?rowData.CONTROL_VER:''));
+            $("#common_quick_drawing_form").find("#QUICK_DRAWING_REV").text(((typeof rowData.DRAWING_VER != 'undefined')?rowData.DRAWING_VER:''));
             if(typeof rowData.CONTROL_PART_NUM != 'undefined') {
                 $("#common_quick_drawing_form").find("#QUICK_DRAWING_CONTROL_NUM").text(rowData.CONTROL_PART_NUM);
             }else {
@@ -919,7 +919,7 @@
             if(typeof rowData != 'undefined' && typeof imageSeq != 'undefined') {
                 $("#common_quick_drawing_form").find("#QUICK_DRAWING_REGIST_NUM").text(((typeof rowData.REGIST_NUM != 'undefined')?rowData.REGIST_NUM:''));
                 $("#common_quick_drawing_form").find("#QUICK_DRAWING_NUM").text(((typeof rowData.DRAWING_NUM != 'undefined')?rowData.DRAWING_NUM:''));
-                $("#common_quick_drawing_form").find("#QUICK_DRAWING_REV").text(((typeof rowData.CONTROL_VER != 'undefined')?rowData.CONTROL_VER:''));
+                $("#common_quick_drawing_form").find("#QUICK_DRAWING_REV").text(((typeof rowData.DRAWING_VER != 'undefined')?rowData.DRAWING_VER:''));
                 if(typeof rowData.CONTROL_PART_NUM != 'undefined') {
                     $("#common_quick_drawing_form").find("#QUICK_DRAWING_CONTROL_NUM").text(rowData.CONTROL_PART_NUM);
                 }else {

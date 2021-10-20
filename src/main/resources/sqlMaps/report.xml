@@ -516,6 +516,7 @@
             , Z.NOTE
             , Z.REGIST_NUM
             , Z.CONTROL_VER
+            , Z.DRAWING_VER
         FROM (  SELECT P.CONTROL_SEQ
                     , P.CONTROL_DETAIL_SEQ
                     , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
@@ -551,6 +552,7 @@
                        ) AS RETURN_QTY
                     , X.NOTE
                     , X.CONTROL_VER
+                    , Y.DRAWING_VER
                     , Y.DRAWING_NUM
                     , Y.PREV_DRAWING_NUM
                     , Y.IMG_GFILE_SEQ
@@ -653,6 +655,7 @@
             , jmes.SF_GET_CODE_NM('1025', C.ERROR_ACTION, #{LOGIN_LOCALE}) AS ERROR_ACTION_NM <!-- 조치 -->
             , jmes.SF_GET_DATE_F(C.INSERT_DT, '', 'M') AS INSERT_DT <!-- 작성일시 -->
             , A.CONTROL_VER
+            , B.DRAWING_VER
             , jmes.SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM   <!-- 언어조건 -->
             , B.SIZE_TXT
             , (SELECT D.REGIST_NUM FROM TBL_CONTROL_PART_ORDER_MAIN D WHERE D.CONTROL_SEQ= B.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS REGIST_NUM

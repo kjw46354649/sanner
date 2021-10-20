@@ -52,6 +52,7 @@
                 , X.WORK_FINISH_DT
                 , X.REGIST_NUM
                 , X.CONTROL_VER
+                , X.DRAWING_VER
             FROM (
                     SELECT
                           B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.ORDER_COMP_CD
@@ -69,6 +70,7 @@
                         , (SELECT COUNT(*) FROM TBL_INSPECT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.INSPECT_TYPE = '2' AND M.RETURN_SETTLEMENT_DT IS NULL) AS NOT_RETURN_SETTLEMENT_CNT
                         , C.REGIST_NUM
                         , A.CONTROL_VER
+                        , B.DRAWING_VER
                     FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER_MAIN C
                     WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                         AND A.CONTROL_SEQ = C.CONTROL_SEQ
@@ -460,7 +462,7 @@
     </select>
     <select id="selectOutgoingList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ, T.INSPECT_SEQ, T.CONTROL_VER
+            T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ, T.ORDER_SEQ, T.INSPECT_SEQ, T.DRAWING_VER
             , T.CONTROL_STATUS_NM
             , T.ORDER_COMP_NM
             , T.REGIST_NUM
@@ -506,7 +508,7 @@
             , T.SCRAP_YN
         FROM (
             SELECT
-                X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ, X.INSPECT_SEQ, X.CONTROL_VER
+                X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ, X.INSPECT_SEQ, X.DRAWING_VER
                 , SF_GET_CODE_NM('1038', X.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM
                 , SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
                 , X.REGIST_NUM
@@ -582,7 +584,7 @@
                     A.ORDER_SEQ,
                     B.CONTROL_SEQ,
                     B.CONTROL_DETAIL_SEQ,
-                    C.CONTROL_VER,
+                    D.DRAWING_VER,
                     C.CONTROL_STATUS ,
                     (
                         SELECT MAX(M.MCT_WORK_SEQ)
@@ -1952,6 +1954,7 @@
         <!-- 기능설계서에서 누적칼럼 없애고 반품조치일 추가 -->
         SELECT X.KEY_SEQ
             , X.CONTROL_VER
+            , X.DRAWING_VER
             , X.CONTROL_SEQ
             , X.CONTROL_DETAIL_SEQ
             , X.ORDER_SEQ
@@ -1994,6 +1997,7 @@
                     , NULL AS RETURN_QTY
                     , A.INSERT_DT
                     , '' AS RETURN_SETTLEMENT_DT
+                    , C.DRAWING_VER
                 FROM TBL_OUT A
                     , TBL_CONTROL B
                     , TBL_CONTROL_PART C
@@ -2040,6 +2044,7 @@
                     , A.ERROR_QTY AS RETURN_QTY
                     , A.INSERT_DT
                     , A.RETURN_SETTLEMENT_DT
+                    , C.DRAWING_VER
                 FROM TBL_INSPECT A
                     , TBL_CONTROL B
                     , TBL_CONTROL_PART C
@@ -2086,6 +2091,7 @@
                     , NULL AS RETURN_QTY
                     , C.OUT_FINISH_DT
                     , NULL AS RETURN_SETTLEMENT_DT
+                    , B.DRAWING_VER
 				FROM TBL_CONTROL A
 					, TBL_CONTROL_PART B
 					, TBL_CONTROL_PART_ORDER C
@@ -2145,6 +2151,7 @@
             , SF_GET_DATE_F(W.INSERT_DT,'YY','M') AS Q_DT
             , V.IMG_GFILE_SEQ
             , V.CONTROL_VER
+            , V.DRAWING_VER
             , (SELECT X.REGIST_NUM FROM TBL_CONTROL_PART_ORDER_MAIN X WHERE X.CONTROL_SEQ = V.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = V.CONTROL_DETAIL_SEQ) AS REGIST_NUM
         FROM (  SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
                     , CASE WHEN IFNULL(X.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN
@@ -2169,6 +2176,7 @@
                     , X.NOTE
                     , X.IMG_GFILE_SEQ
                     , X.CONTROL_VER
+                    , X.DRAWING_VER
                 FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
                             , A.ORDER_COMP_CD , A.EMERGENCY_YN , A.MAIN_INSPECTION
                             , B.WORK_FACTORY
@@ -2179,6 +2187,7 @@
                             , (SELECT MAX(M.POP_SEQ) FROM TBL_POP M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
                             , B.IMG_GFILE_SEQ
                             , A.CONTROL_VER
+                            , B.DRAWING_VER
                         FROM TBL_CONTROL A
                             , TBL_CONTROL_PART B
                         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
