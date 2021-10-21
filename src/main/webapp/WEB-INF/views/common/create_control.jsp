@@ -1986,8 +1986,14 @@
 
                     fnPostAjaxAsync(function (data) {
                         if(!data.flag) {
-                            fnAlert(null, '작업건이 생성되었습니다.');
-                            $("#CREATE_CONTROL_REFRESH").trigger('click');
+                            fnAlert(null, '작업지시가 생성되었습니다.');
+                            // $("#CREATE_CONTROL_REFRESH").trigger('click');
+                            setTimeout(function () {
+                                const parentWindow = window.opener;
+                                let parentGridSearchButton = $(parentWindow.document).find('#CONTROL_MANAGE_SEARCH');
+                                parentGridSearchButton.click();
+                                window.close();
+                            },500);
                         }else {
                             fnAlert(null, data.message);
                         }

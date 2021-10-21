@@ -359,8 +359,8 @@ button:disabled {
 .cam_work_manage_detail_pop .layerPopup .griddiv { height: 200px; }
 .cam_work_manage_detail_pop .layerPopup .listdiv { height: 140px; width: 100%; }
 .cam_work_manage_detail_pop .layerPopup .listdiv textarea { outline: none; padding: 0px 0px; border: none; font-size: 14px; }
-.cam_work_manage_detail_pop .layerPopup .listdiv .conWrapLeftPop50{ float: left; width: 48.0%; height: 45px; }
-.cam_work_manage_detail_pop .layerPopup .listdiv .conWrapRightPop50{ float: right; width: 48.0%; height: 45px; }
+.cam_work_manage_detail_pop .layerPopup .listdiv .conWrapLeftPop50{ /*float: left;*/ width: 48%; height: 45px; }
+.cam_work_manage_detail_pop .layerPopup .listdiv .conWrapRightPop50{ float: right; width: 48%; height: 45px;margin-left: 1.5%; }
 .cam_work_manage_detail_pop .layerPopup .listdiv .rightName{ float: right; margin-top: 14px;display: inline-block; }
 .cam_work_manage_detail_pop .layerPopup .right{ float: right; display: inline-block; }
 .cam_work_manage_detail_pop .layerPopup h4 {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; margin: 15px 0 5px; }

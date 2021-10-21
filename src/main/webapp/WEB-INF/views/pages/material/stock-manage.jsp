@@ -2330,13 +2330,13 @@
 
             let popType = $("#stock_manage_form").find("#popType").val();
             if(popType == "BARCODE" || popType == "GRID_IN") {//입고
-                if(CONTROL_SEQ != '' && parseInt(outQty) > ORG_ORDER_QTY) {
-                    fnAlert(null,"수량을 확인해 주세요.");
-                    $(this).val(ORG_ORDER_QTY);
-                    return;
-                }else {
-                    stockQty = Number(compareQty) + Number(outQty);
-                }
+                // if(CONTROL_SEQ != '' && parseInt(outQty) > ORG_ORDER_QTY) {
+                //     fnAlert(null,"수량을 확인해 주세요.");
+                //     $(this).val(ORG_ORDER_QTY);
+                //     return;
+                // }else {
+                    stockQty = Number(compareQty) + Number(outQty); // 21.10.21 입고시 수량제한 X
+                // }
             } else {
                 if(CONTROL_SEQ != '' && INSIDE_OUT_SEQ != '') {
                     fnAlert(null,"불출 요청건의 경우 수량을 변경할 수 없습니다.");
@@ -2381,13 +2381,13 @@
             let popType = $("#stock_manage_form").find("#popType").val();
             if(popType == "BARCODE" || popType == "GRID_IN"){//입고
                 if(type == "PLUS"){
-                    if(CONTROL_SEQ != '' && parseInt(POP_ORDER_QTY)+1 > ORG_ORDER_QTY) {
-                        fnAlert(null,"수량을 확인해 주세요.");
-                        return;
-                    }else {
+                    // if(CONTROL_SEQ != '' && parseInt(POP_ORDER_QTY)+1 > ORG_ORDER_QTY) {
+                    //     fnAlert(null,"수량을 확인해 주세요.");
+                    //     return;
+                    // }else {
                         POP_ORDER_QTY = parseInt(POP_ORDER_QTY)+1;
                         POP_STOCK_QTY_AFTER = parseInt(POP_STOCK_QTY) + POP_ORDER_QTY;
-                    }
+                    // }
                 }else if(type == "MINUS"){
                     // console.log("MINUS POP_ORDER_QTY",parseInt(POP_ORDER_QTY));
                     if(parseInt(POP_ORDER_QTY) > 0){
