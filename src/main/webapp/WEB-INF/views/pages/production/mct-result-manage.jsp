@@ -311,12 +311,12 @@
                         </li>
                     </ul>
                 </div>
-                <div class="listdiv" style="display: table; padding-top: 10px;">
+                <div class="listdiv" style="display: flex; padding-top: 10px;">
                     <div class="conWrapLeftPop50">
-                        <table class="rowStyle">
+                        <table class="rowStyle" style="table-layout: fixed;">
                             <colgroup><col width="100%"></colgroup>
                             <tr><th style="color:#162f2f; text-align: center;">경험 기록사항(Lessons Learned)</th></tr>
-                            <tr><td><textarea id="HISTORY_NOTE" name="HISTORY_NOTE" rows="3" cols="73" class="statusConfig" style="resize: none;"></textarea></td></tr>
+                            <tr><td><textarea id="HISTORY_NOTE" name="HISTORY_NOTE" rows="3" cols="73" class="statusConfig" style="resize: none;width:100%;"></textarea></td></tr>
                         </table>
                     </div>
                     <div class="conWrapRightPop50">
