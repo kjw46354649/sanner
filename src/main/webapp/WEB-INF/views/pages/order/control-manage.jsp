@@ -997,7 +997,7 @@
                 }
             },
             {
-                title: '발주<br>수량', dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_PART_QTY',
+                title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY_NEW',
                 editable: false,
                 render: function (ui) {
                     let cls = 'bg-lightgray';
@@ -1008,7 +1008,7 @@
             {
                 title: '대칭', align: 'center',
                 colModel: [
-                    {title: '원칭', dataType: 'integer', format: '#,###', dataIndx: 'DNJSCLD',
+                    {title: '원칭', dataType: 'integer', format: '#,###', dataIndx: 'ORIGINAL_SIDE_QTY_NEW',
                         editable: false,
                         render: function (ui) {
                             let cls = 'bg-lightgray';
@@ -1016,7 +1016,7 @@
                             return {cls: cls};
                         }
                     },
-                    {title: '대칭', dataType: 'integer', format: '#,###', dataIndx: 'EOCLD',
+                    {title: '대칭', dataType: 'integer', format: '#,###', dataIndx: 'OTHER_SIDE_QTY_NEW',
                         editable: false,
                         render: function (ui) {
                             let cls = 'bg-lightgray';
