@@ -285,7 +285,7 @@
             AND A.OUT_FINISH_DT IS NULL
             AND IFNULL(A.OUT_FINISH_STATUS,'RLS') != 'RLS010'
         </if>
-        ORDER BY A.CONTROL_NUM, B.PART_NUM, C.ORDER_SEQ
+        ORDER BY A.CONTROL_NUM, A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.PART_NUM, C.ORDER_SEQ
     </select>
 
     <select id="selectControlCloseVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -4648,7 +4648,7 @@
             <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
                 ORDER_COMP_CD = #{ORDER_COMP_CD},
             </if>
-            <if test="UNIT_FINAL_EST_AMT != null">
+            <if test="NOTE != null">
                 NOTE = #{NOTE},
             </if>
             <if test="(ORDER_STATUS == null or ORDER_STATUS == 'REG002') and (REGIST_NUM != null and REGIST_NUM != '')">
