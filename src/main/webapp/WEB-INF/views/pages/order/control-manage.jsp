@@ -505,7 +505,7 @@
                     if(ui.rowData.CONTROL_STATUS === undefined || ui.rowData.CONTROL_STATUS === 'ORD002') {
                         cls = '';
                     }
-                    if (ui.rowData.WORK_TYPE === 'WTP020' && ui.rowData.LAG_WORK_TYPE === undefined && ui.rowData.CONTROL_STATUS !== 'ORD001') {
+                    if (ui.rowData.WORK_TYPE === 'WTP020' && ui.rowData.CONTROL_STATUS !== 'ORD001') {
                         text = '<span class="ui-icon ui-icon-circle-plus" name="PART_NUM_PLUS_BUTTON" style="cursor: pointer"></span>';
                     }
                     if (ui.rowData.WORK_TYPE == 'WTP050') {
@@ -522,10 +522,13 @@
                         let data = $controlManagementGrid.pqGrid('option', 'dataModel.data');
                         let newPartNum = 1, lastRowIndex = 0, totalRecords = data.length, newRowData;
 
-                        for (let i = 0; i < totalRecords; i++) {
-                            if (data[i].CONTROL_SEQ === rowData.CONTROL_SEQ) {
+                        for (let i = rowData.pq_ri; i < totalRecords; i++) {
+                            if (data[i].CONTROL_SEQ === rowData.CONTROL_SEQ && data[i].WORK_TYPE == 'WTP050') {
                                 Number(data[i].PART_NUM) > 0 ? newPartNum++ : newPartNum;
                                 lastRowIndex = data[i].pq_ri;
+                            }
+                            if(typeof data[i].REGIST_NUM != 'undefined' && data[i].REGIST_NUM != rowData.REGIST_NUM) {
+                                i = totalRecords;
                             }
                         }
 
@@ -533,6 +536,7 @@
                         newRowData = fnCloneObj(newRowData);
                         newRowData.ROW_NUM = totalRecords + 1;
                         newRowData.PART_NUM = newPartNum;
+                        newRowData.TEMP_REGIST = rowData.REGIST_NUM;
                         newRowData.WORK_TYPE = 'WTP050';
                         newRowData.CONTROL_DETAIL_SEQ = null;
                         newRowData.ORDER_DRAWING_NUM = null;
@@ -540,6 +544,7 @@
                         newRowData.DRAWING_UP_DT = null;
                         newRowData.PREV_DRAWING_NUM = null;
                         newRowData.OUTSIDE_YN = null;
+                        newRowData.ORDER_QTY = null;
                         // newRowData.WORK_FACTORY = null;
                         // newRowData.MATERIAL_SUPPLY_YN = null;
                         // newRowData.INNER_DUE_DT = null;
@@ -598,6 +603,7 @@
                         newRowData.OTHER_SIDE_QTY = null;
                         newRowData.CONTROL_INSERT_DT = null;
                         newRowData.IS_NEW_ROW = true;
+                        newRowData.ORDER_CONNECT_CNT = null;
 
                         $controlManagementGrid.pqGrid('addRow', {
                             newRow: newRowData,
@@ -774,11 +780,7 @@
             {
                 title: '수행<br>공장', minWidth: 40, dataIndx: 'WORK_FACTORY',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-
-                    return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
-                },
+                editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1014')},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -2523,12 +2525,16 @@
          * @description 취소버튼 클릭
          */
         $('#CANCEL').on('click', function (event) {
+            if (selectedControlManagementRowIndex.length <= 0) {
+                fnAlert(null, '하나 이상의 작업을 선택해주세요');
+                return false;
+            }
             let selectedRowCount = selectedControlManagementRowIndex.length;
 
             //TODO: 외주가 ‘Y’ 인 상태에서는 외주관리화면에서 대상을 먼저 삭제해야만 확정취소가 가능
              for (let i = 0; i < selectedRowCount; i++) {
                  let rowData = $controlManagementGrid.pqGrid('getRowData', {rowIndx: selectedControlManagementRowIndex[i]});
-                console.log(rowData)
+
                  if ((rowData.OUT_QTY != '' && rowData.OUT_QTY > 0) || (typeof rowData.ORDER_OUT_FINISH_DT != 'undefined' && rowData.ORDER_OUT_FINISH_DT != null && rowData.ORDER_OUT_FINISH_DT != '')) {
                      fnAlert(null, '이미 출고처리가 된 작업건은 취소가 불가합니다.');
                      return false;

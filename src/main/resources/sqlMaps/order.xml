@@ -191,7 +191,7 @@
             IFNULL(D.INSIDE_STOCK_NUM,SPACE(0)) AS INSIDE_STOCK_NUM,
             IFNULL(D.REQUEST_QTY,SPACE(0)) AS STOCK_REQUEST_QTY,
             IFNULL(D.OUT_QTY,SPACE(0)) AS STOCK_OUT_QTY,
-            (SELECT COUNT(*) FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND B.WORK_TYPE != 'WTP040') AS ORDER_CONNECT_CNT,
+            (SELECT COUNT(*) FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND B.WORK_TYPE != 'WTP040') AS ORDER_CONNECT_CNT,
             CASE WHEN B.MATERIAL_FINISH_GRIND_YN = 'Y' THEN 'MATERIAL_FINISH_GRIND_YN'
                  WHEN B.MATERIAL_FINISH_HEAT_YN = 'Y' THEN 'MATERIAL_FINISH_HEAT_YN'
             END AS SPECIAL_TREATMENT
@@ -285,7 +285,8 @@
             AND A.OUT_FINISH_DT IS NULL
             AND IFNULL(A.OUT_FINISH_STATUS,'RLS') != 'RLS010'
         </if>
-        ORDER BY A.CONTROL_NUM, A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.PART_NUM, C.ORDER_SEQ
+        ORDER BY A.CONTROL_NUM, A.CONTROL_SEQ, B.TEMP_REGIST IS NULL ASC, B.TEMP_REGIST ASC, B.PART_NUM, C.ORDER_SEQ
+--         ORDER BY A.CONTROL_NUM, A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.PART_NUM, C.ORDER_SEQ
     </select>
 
     <select id="selectControlCloseVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -861,7 +862,8 @@
             OUTSIDE_IN_DT,
             OUTSIDE_STATUS,
             OUTSIDE_STATUS_DT,
-            INSERT_ID
+            INSERT_ID,
+            TEMP_REGIST
         )
         SELECT
             #{CONTROL_SEQ},
@@ -925,7 +927,8 @@
             #{OUTSIDE_IN_DT},
             #{OUTSIDE_STATUS},
             #{OUTSIDE_STATUS_DT},
-            #{LOGIN_USER_ID}
+            #{LOGIN_USER_ID},
+            #{TEMP_REGIST}
         FROM DUAL
         WHERE 1 = 1
             AND NOT EXISTS (SELECT *
@@ -935,7 +938,9 @@
                                 AND Z.WORK_TYPE = #{WORK_TYPE}
                                 <choose>
                                     <when test="PART_NUM != null and PART_NUM != ''">
-                                        AND Z.PART_NUM = #{PART_NUM})
+                                        AND Z.PART_NUM = #{PART_NUM}
+                                        AND Z.TEMP_REGIST = #{TEMP_REGIST}
+                                    )
                                     </when>
                                     <otherwise>
                                         AND Z.PART_NUM IS NULL)
@@ -2333,6 +2338,7 @@
                                                 <choose>
                                                     <when test="PART_NUM != null and PART_NUM != ''">
                                                         AND Q.PART_NUM = #{PART_NUM}
+                                                        AND Q.TEMP_REGIST = #{TEMP_REGIST}
                                                     </when>
                                                     <otherwise>
                                                         AND Q.PART_NUM IS NULL
@@ -2350,6 +2356,7 @@
                                                                     <choose>
                                                                         <when test="PART_NUM != null and PART_NUM != ''">
                                                                             AND Q.PART_NUM = #{PART_NUM}
+                                                                            AND Q.TEMP_REGIST = #{TEMP_REGIST}
                                                                         </when>
                                                                         <otherwise>
                                                                             AND Q.PART_NUM IS NULL
@@ -3381,7 +3388,8 @@
                     SELECT A.CONTROL_DETAIL_SEQ
                     FROM TBL_CONTROL_PART A
                     WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
-                    AND A.PART_NUM = #{PART_NUM}
+                        AND A.PART_NUM = #{PART_NUM}
+                        AND A.TEMP_REGIST = #{TEMP_REGIST}
                 )
             </otherwise>
         </choose>
@@ -3471,7 +3479,7 @@
             <if test="MAIN_INSPECTION != null and MAIN_INSPECTION != ''">
                 MAIN_INSPECTION = #{MAIN_INSPECTION},
             </if>
-            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (EMERGENCY_YN != null and EMERGENCY_YN != '')">
+            <if test="(EMERGENCY_YN != null and EMERGENCY_YN != '')">
                 EMERGENCY_YN = IFNULL(#{EMERGENCY_YN}, 'N'),
             </if>
             <if test="PRICE_CONFIRM != null and PRICE_CONFIRM != ''">

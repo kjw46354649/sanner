@@ -774,6 +774,7 @@
             , A.FINISH_QTY <!-- 완료 수량 -->
             , A.ERROR_QTY <!-- 불량 -->
             , A.ERROR_REASON <!-- 불량 원인 -->
+            , SF_GET_CODE_NM('1015', A.ERROR_REASON, #{LOGIN_LOCALE}) AS ERROR_REASON_NM <!-- 불량 원인 -->
             , CASE
                 WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM
                 ELSE CONCAT(B.CONTROL_NUM, ' #', C.PART_NUM)

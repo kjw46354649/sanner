@@ -1054,7 +1054,7 @@
                 }
             },
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 100, width: 100, editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed'}},
-            {title: '장비그룹', dataType: 'string',align: 'left', dataIndx: 'STOCK_EQUIP_NM', minWidth: 100, width: 100, editable: false},
+            {title: '장비그룹', dataType: 'string', align: 'left', dataIndx: 'STOCK_EQUIP_NM', minWidth: 100, width: 100, editable: false, styleHead: {'align':'center', 'text-align':'center'}},
             {title: '입고/불출', dataType: 'string', dataIndx: 'INSIDE_STOCK_QTY_IN_OUT', minWidth: 100, width: 100,
                 styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'black'}, editable: false,
                 render: function (ui) {

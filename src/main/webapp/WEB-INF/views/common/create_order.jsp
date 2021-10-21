@@ -192,6 +192,16 @@
                 }
             },
             {
+                title: '품명', align: 'left', width: 150, dataIndx: 'ITEM_NM',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                editor: {
+                    getData: function (ui) {
+                        let val = ui.$cell.find('.pq-cell-editor').val();
+                        return fnIsEmpty(val) ? undefined : val;
+                    }
+                }
+            },
+            {
                 title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM',
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
                 editor: {
@@ -548,16 +558,6 @@
             {
                 title: '비고(라벨)', align: 'left', width: 100, dataIndx: 'LABEL_NOTE',
                 styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'},
-                editor: {
-                    getData: function (ui) {
-                        let val = ui.$cell.find('.pq-cell-editor').val();
-                        return fnIsEmpty(val) ? undefined : val;
-                    }
-                }
-            },
-            {
-                title: '품명', align: 'left', width: 150, dataIndx: 'ITEM_NM',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editor: {
                     getData: function (ui) {
                         let val = ui.$cell.find('.pq-cell-editor').val();
