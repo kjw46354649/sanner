@@ -1049,7 +1049,7 @@ public class OrderServiceImpl implements OrderService {
                         for(int i=0;i<mergeList.size();i++) {
                             HashMap<String, Object> temp = mergeList.get(i);
                             if(temp.get("ROW_NUM") != hashMap.get("ROW_NUM") && !hashMap.get("VALIDATION_RESULT").equals("RS_EXISTS") && !hashMap.get("VALIDATION_RESULT").equals("RS_MERGE")) {
-                                String[] checkColumn = {"WORK_TYPE", "MATERIAL_SUPPLY_YN","MAIN_INSPECTION","SAME_SIDE_YN","SIZE_TXT","MATERIAL_DETAIL","MATERIAL_KIND","SURFACE_TREAT","SPECIAL_TREATMENT"};
+                                String[] checkColumn = {"WORK_TYPE", "MATERIAL_SUPPLY_YN","MAIN_INSPECTION","SAME_SIDE_YN","SIZE_TXT","MATERIAL_DETAIL","MATERIAL_KIND","SURFACE_TREAT","SPECIAL_TREATMENT","PART_NUM","INNER_DUE_DT"};
                                 Boolean mergeFlag = false;
 
                                 for(String column : checkColumn) {

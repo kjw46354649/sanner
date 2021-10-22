@@ -144,16 +144,6 @@
             <include refid="control"/>,
             <include refid="controlPart"/>,
             <include refid="controlPartOrder"/>,
-            CASE WHEN B.PART_NUM IS NULL THEN IFNULL(C.ORDER_QTY, SPACE(0)) ELSE ((SELECT M.ORDER_QTY FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.REGIST_NUM = B.TEMP_REGIST) * IFNULL(B.PART_UNIT_QTY,1))
-            END AS ORDER_QTY_NEW,
-            CASE WHEN B.PART_NUM IS NULL THEN IFNULL(C.ORIGINAL_SIDE_QTY, SPACE(0))
-                 WHEN C.ORIGINAL_SIDE_QTY IS NOT NULL THEN ((SELECT M.ORIGINAL_SIDE_QTY FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.REGIST_NUM = B.TEMP_REGIST) * IFNULL(B.PART_UNIT_QTY,1))
-                 ELSE SPACE(0)
-            END AS ORIGINAL_SIDE_QTY_NEW,
-            CASE WHEN B.PART_NUM IS NULL THEN IFNULL(C.OTHER_SIDE_QTY, SPACE(0))
-                 WHEN C.OTHER_SIDE_QTY IS NOT NULL THEN ((SELECT M.OTHER_SIDE_QTY FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.REGIST_NUM = B.TEMP_REGIST) * IFNULL(B.PART_UNIT_QTY,1))
-                 ELSE SPACE(0)
-            END AS OTHER_SIDE_QTY_NEW,
             CASE WHEN B.PART_NUM IS NULL THEN C.DRAWING_NUM ELSE B.DRAWING_NUM END AS ORDER_DRAWING_NUM,
             CASE WHEN B.PART_NUM IS NULL THEN C.IMG_GFILE_SEQ ELSE B.IMG_GFILE_SEQ END AS ORDER_IMG_GFILE_SEQ,
             CASE WHEN B.PART_NUM IS NULL THEN C.DXF_GFILE_SEQ ELSE B.DXF_GFILE_SEQ END AS ORDER_DXF_GFILE_SEQ,
@@ -258,7 +248,7 @@
                     </when>
                 </choose>
             </if>
-            LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN TBL_INSIDE_OUT D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
         WHERE A.DEL_YN = 'N'
             AND (A.CONTROL_STATUS IS NULL OR A.CONTROL_STATUS IN ('ORD001', 'ORD002', 'ORD005'))
@@ -1289,10 +1279,10 @@
             <if test="ITEM_NM != null">
                 ITEM_NM = #{ITEM_NM},
             </if>
-            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002')">
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (ORIGINAL_SIDE_QTY != null)">
                 ORIGINAL_SIDE_QTY = REPLACE(#{ORIGINAL_SIDE_QTY}, ',', SPACE(0)),
             </if>
-            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002')">
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (OTHER_SIDE_QTY != null)">
                 OTHER_SIDE_QTY = REPLACE(#{OTHER_SIDE_QTY}, ',', SPACE(0)),
             </if>
             <if test="UNIT_FINAL_EST_AMT != null">
@@ -1304,8 +1294,6 @@
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-          AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-          AND ORDER_SEQ = #{ORDER_SEQ}
     </update>
     <update id="updateControlPartOrderFromControlManage_old" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART_ORDER
@@ -3384,6 +3372,22 @@
             <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
                 ETC_GFILE_SEQ = #{ETC_GFILE_SEQ},
             </if>
+            <if test="SPECIAL_TREATMENT != null">
+                <choose>
+                    <when test="SPECIAL_TREATMENT == 'MATERIAL_FINISH_GRIND_YN'">
+                        MATERIAL_FINISH_GRIND_YN = 'Y',
+                        MATERIAL_FINISH_HEAT_YN = NULL,
+                    </when>
+                    <when test="SPECIAL_TREATMENT == 'MATERIAL_FINISH_HEAT_YN'">
+                        MATERIAL_FINISH_GRIND_YN = NULL,
+                        MATERIAL_FINISH_HEAT_YN = 'Y',
+                    </when>
+                    <otherwise>
+                        MATERIAL_FINISH_GRIND_YN = NULL,
+                        MATERIAL_FINISH_HEAT_YN = NULL,
+                    </otherwise>
+                </choose>
+            </if>
             OUTSIDE_HOPE_DUE_DT = CASE WHEN OUTSIDE_YN = 'Y' AND OUTSIDE_HOPE_DUE_DT IS NULL THEN DATE_FORMAT(DATE_SUB(INNER_DUE_DT, INTERVAL 1 DAY), '%Y%m%d') ELSE OUTSIDE_HOPE_DUE_DT END,
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
@@ -4561,7 +4565,8 @@
             ORDER_STAFF_SEQ,
             DESIGNER_NM,
             INSERT_ID,
-            ORDER_BARCODE_NUM
+            ORDER_BARCODE_NUM,
+            MATERIAL_NOTE
         ) VALUES
         (
             #{ORDER_SEQ},
@@ -4617,7 +4622,8 @@
             #{ORDER_STAFF_SEQ},
             #{DESIGNER_NM},
             #{LOGIN_USER_ID},
-            CONCAT('O',LPAD(NEXTVAL(SEQ_ORDER_BARCODE),9,'0'))
+            CONCAT('O',LPAD(NEXTVAL(SEQ_ORDER_BARCODE),9,'0')),
+            #{MATERIAL_NOTE}
         )
     </insert>
     <update id="updateOrderAutomaticQuote" parameterType="java.util.HashMap">

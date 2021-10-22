@@ -462,6 +462,10 @@
                 }
             },
             {
+                title: '소재<br>비고', width: 80, dataIndx: 'MATERIAL_NOTE',
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+            },
+            {
                 title: '특수처리', align: 'center', dataIndx: 'SPECIAL_TREATMENT',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 editor: {

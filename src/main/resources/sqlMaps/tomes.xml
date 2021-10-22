@@ -87,7 +87,7 @@
                     THEN (SELECT ETC5 FROM jmes.TBL_CODE K WHERE K.HIGH_CD = '1090' AND K.CODE_CD = A.OUT_FINISH_STATUS)
                 WHEN B.PART_STATUS IS NOT NULL
                     THEN (SELECT ETC5 FROM jmes.TBL_CODE K WHERE K.HIGH_CD = '1013' AND K.CODE_CD = B.PART_STATUS)
-                WHEN A.CONTROL_STATUS = 'ORD001' AND B.OUTSIDE_YN = 'N' THEN '발주확정'
+                WHEN A.CONTROL_STATUS = 'ORD001' AND IFNULL(B.OUTSIDE_YN,'N') = 'N' THEN '발주확정'
                 WHEN A.CONTROL_STATUS = 'ORD001' AND B.OUTSIDE_YN = 'Y' THEN '가공확정'
                 WHEN A.CONTROL_STATUS = 'ORD005' THEN '보류'
                 ELSE ''
