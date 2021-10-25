@@ -286,21 +286,19 @@
             C.UNIT_FINAL_EST_AMT, <!-- 최종 견적가 -->
             IFNULL( CASE
                         WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.UNIT_FINAL_AMT
-                                                                    FROM TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
-                                                                    WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                        AND N.CONTROL_STATUS = 'ORD003'
-                                                                        AND N.DEL_YN = 'N'
+                                                                    FROM TBL_ORDER M
+                                                                    WHERE M.ORDER_STATUS = 'REG003'
+                                                                        AND M.DEL_YN = 'N'
                                                                         AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
-                                                                    ORDER BY M.CONTROL_SEQ DESC
+                                                                    ORDER BY M.ORDER_SEQ DESC
                                                                     LIMIT 1)
                         ELSE (  SELECT M.UNIT_FINAL_AMT
-                                FROM TBL_CONTROL_PART_ORDER_MAIN M, TBL_CONTROL N
-                                WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                    AND N.CONTROL_STATUS = 'ORD003'
-                                    AND N.DEL_YN = 'N'
-                                    AND N.CONTROL_SEQ != B.CONTROL_SEQ
+                                FROM TBL_ORDER M
+                                WHERE M.ORDER_STATUS = 'REG003'
+                                    AND M.DEL_YN = 'N'
+                                    AND M.ORDER_SEQ != C.ORDER_SEQ
                                     AND M.DRAWING_NUM = B.DRAWING_NUM
-                                ORDER BY M.CONTROL_SEQ DESC
+                                ORDER BY M.ORDER_SEQ DESC
                                 LIMIT 1)
                     END, SPACE(0)) AS PREV_UNIT_FINAL_AMT,    <!-- 종전가 -->
         FROM TBL_CONTROL A
@@ -341,23 +339,21 @@
             IFNULL( CASE
                         WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (
                             SELECT M.UNIT_FINAL_AMT
-                            FROM TBL_CONTROL_PART_ORDER_MAIN M, TBL_CONTROL N
-                            WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                AND N.CONTROL_STATUS = 'ORD003'
-                                AND N.DEL_YN = 'N'
+                            FROM TBL_ORDER M
+                            WHERE M.ORDER_STATUS = 'REG003'
+                                AND M.DEL_YN = 'N'
                                 AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
-                            ORDER BY M.CONTROL_SEQ DESC
+                            ORDER BY M.ORDER_SEQ DESC
                             LIMIT 1
                         )
                         ELSE (
                             SELECT M.UNIT_FINAL_AMT
-                            FROM TBL_CONTROL_PART_ORDER_MAIN M, TBL_CONTROL N
-                            WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                AND N.CONTROL_STATUS = 'ORD003'
-                                AND N.DEL_YN = 'N'
-                                AND N.CONTROL_SEQ != B.CONTROL_SEQ
+                            FROM TBL_ORDER M
+                            WHERE M.ORDER_STATUS = 'REG003'
+                                AND M.DEL_YN = 'N'
+                                AND M.ORDER_SEQ != C.ORDER_SEQ
                                 AND M.DRAWING_NUM = B.DRAWING_NUM
-                            ORDER BY M.CONTROL_SEQ DESC
+                            ORDER BY M.ORDER_SEQ DESC
                             LIMIT 1
                         )
                     END, SPACE(0)
@@ -397,29 +393,25 @@
             IFNULL(
                 CASE WHEN A.PREV_DRAWING_NUM IS NOT NULL THEN (
                     SELECT M.UNIT_FINAL_AMT
-                    FROM TBL_CONTROL_PART_ORDER_MAIN M, TBL_CONTROL N, TBL_CONTROL_PART O
-                    WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                    AND O.CONTROL_SEQ = N.CONTROL_SEQ
-                    AND N.CONTROL_STATUS = 'ORD003'
-                    AND N.DEL_YN = 'N'
-                    AND M.DRAWING_NUM = A.PREV_DRAWING_NUM
-                    AND O.WORK_TYPE = A.WORK_TYPE
-                    AND N.ORDER_COMP_CD = A.ORDER_COMP_CD
-                    ORDER BY M.CONTROL_SEQ DESC
+                    FROM TBL_ORDER M
+                    WHERE M.ORDER_STATUS = 'REG003'
+                        AND M.DEL_YN = 'N'
+                        AND M.DRAWING_NUM = A.PREV_DRAWING_NUM
+                        AND M.WORK_TYPE = A.WORK_TYPE
+                        AND M.ORDER_COMP_CD = A.ORDER_COMP_CD
+                    ORDER BY M.ORDER_SEQ DESC
                     LIMIT 1
                 )
                 ELSE (
                     SELECT M.UNIT_FINAL_AMT
-                    FROM TBL_CONTROL_PART_ORDER_MAIN M, TBL_CONTROL N, TBL_CONTROL_PART O
-                    WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                    AND O.CONTROL_SEQ = N.CONTROL_SEQ
-                    AND N.CONTROL_STATUS = 'ORD003'
-                    AND N.DEL_YN = 'N'
-                    AND M.ORDER_SEQ != A.ORDER_SEQ
-                    AND M.DRAWING_NUM = A.DRAWING_NUM
-                    AND O.WORK_TYPE = A.WORK_TYPE
-                    AND N.ORDER_COMP_CD = A.ORDER_COMP_CD
-                    ORDER BY M.CONTROL_SEQ DESC
+                    FROM TBL_ORDER M
+                    WHERE M.ORDER_STATUS = 'REG003'
+                        AND M.DEL_YN = 'N'
+                        AND M.ORDER_SEQ != A.ORDER_SEQ
+                        AND M.DRAWING_NUM = A.DRAWING_NUM
+                        AND M.WORK_TYPE = A.WORK_TYPE
+                        AND M.ORDER_COMP_CD = A.ORDER_COMP_CD
+                    ORDER BY M.ORDER_SEQ DESC
                     LIMIT 1
                 )
                 END, SPACE(0)

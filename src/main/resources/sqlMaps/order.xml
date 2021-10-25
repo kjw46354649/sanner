@@ -160,27 +160,23 @@
             (SELECT SUM(OUT_QTY) FROM TBL_OUT WHERE CONTROL_SEQ = C.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY, <!-- 출고 -->
             IFNULL( CASE
                         WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.UNIT_FINAL_AMT
-                                                                    FROM TBL_CONTROL_PART_ORDER_MAIN M, TBL_CONTROL N, TBL_CONTROL_PART O
-                                                                    WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                        AND O.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                        AND N.CONTROL_STATUS = 'ORD003'
-                                                                        AND N.DEL_YN = 'N'
+                                                                    FROM TBL_ORDER M
+                                                                    WHERE M.ORDER_STATUS = 'REG003'
+                                                                        AND M.DEL_YN = 'N'
                                                                         AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
-                                                                        AND O.WORK_TYPE = B.WORK_TYPE
-                                                                        AND N.ORDER_COMP_CD = A.ORDER_COMP_CD
-                                                                    ORDER BY M.CONTROL_SEQ DESC
+                                                                        AND M.WORK_TYPE = B.WORK_TYPE
+                                                                        AND M.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                                                    ORDER BY M.ORDER_SEQ DESC
                                                                     LIMIT 1)
                         ELSE (  SELECT M.UNIT_FINAL_AMT
-                                FROM TBL_CONTROL_PART_ORDER_MAIN M, TBL_CONTROL N, TBL_CONTROL_PART O
-                                WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                    AND O.CONTROL_SEQ = N.CONTROL_SEQ
-                                    AND N.CONTROL_STATUS = 'ORD003'
-                                    AND N.DEL_YN = 'N'
-                                    AND N.CONTROL_SEQ != B.CONTROL_SEQ
+                                FROM TBL_ORDER M
+                                WHERE M.ORDER_STATUS = 'REG003'
+                                    AND M.DEL_YN = 'N'
+                                    AND M.ORDER_SEQ != C.ORDER_SEQ
                                     AND M.DRAWING_NUM = B.DRAWING_NUM
-                                    AND O.WORK_TYPE = B.WORK_TYPE
-                                    AND N.ORDER_COMP_CD = A.ORDER_COMP_CD
-                                ORDER BY M.CONTROL_SEQ DESC
+                                    AND M.WORK_TYPE = B.WORK_TYPE
+                                    AND M.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                ORDER BY M.ORDER_SEQ DESC
                                 LIMIT 1)
                     END, SPACE(0)) AS PREV_UNIT_FINAL_AMT,  <!-- 종전가 -->
             SF_GET_UNIT_SUM_AUTO_AMT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS UNIT_SUM_AUTO_AMT,
@@ -1752,27 +1748,23 @@
             C.UNIT_FINAL_AMT * C.ORDER_QTY AS FINAL_TOTAL_AMT, <!-- 합계 금액 -->
             IFNULL( CASE
                         WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.UNIT_FINAL_AMT
-                                                                    FROM TBL_CONTROL_PART_ORDER_MAIN M, TBL_CONTROL N, TBL_CONTROL_PART O
-                                                                    WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                        AND O.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                        AND N.CONTROL_STATUS = 'ORD003'
-                                                                        AND N.DEL_YN = 'N'
+                                                                    FROM TBL_ORDER M
+                                                                    WHERE M.ORDER_STATUS = 'REG003'
+                                                                        AND M.DEL_YN = 'N'
                                                                         AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
-                                                                        AND O.WORK_TYPE = B.WORK_TYPE
-                                                                        AND N.ORDER_COMP_CD = A.ORDER_COMP_CD
-                                                                    ORDER BY M.CONTROL_SEQ DESC
+                                                                        AND M.WORK_TYPE = B.WORK_TYPE
+                                                                        AND M.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                                                    ORDER BY M.ORDER_SEQ DESC
                                                                     LIMIT 1)
                         ELSE (  SELECT M.UNIT_FINAL_AMT
-                                FROM TBL_CONTROL_PART_ORDER_MAIN M, TBL_CONTROL N, TBL_CONTROL_PART O
-                                WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                    AND O.CONTROL_SEQ = N.CONTROL_SEQ
-                                    AND N.CONTROL_STATUS = 'ORD003'
-                                    AND N.DEL_YN = 'N'
-                                    AND N.CONTROL_SEQ != B.CONTROL_SEQ
+                                FROM TBL_ORDER M
+                                WHERE M.ORDER_STATUS = 'REG003'
+                                    AND M.DEL_YN = 'N'
+                                    AND M.ORDER_SEQ != C.ORDER_SEQ
                                     AND M.DRAWING_NUM = B.DRAWING_NUM
-                                    AND O.WORK_TYPE = B.WORK_TYPE
-                                    AND N.ORDER_COMP_CD = A.ORDER_COMP_CD
-                                ORDER BY M.CONTROL_SEQ DESC
+                                    AND M.WORK_TYPE = B.WORK_TYPE
+                                    AND M.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                ORDER BY M.ORDER_SEQ DESC
                                 LIMIT 1)
                     END, SPACE(0)) AS PREV_UNIT_FINAL_AMT, <!-- 종전가 -->
             B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS OUTSIDE_FINAL_AMT, <!-- 외주 합계 금액 -->
@@ -1878,27 +1870,23 @@
             C.UNIT_FINAL_AMT * C.ORDER_QTY AS FINAL_TOTAL_AMT, <!-- 합계 금액 -->
             IFNULL( CASE
                         WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.UNIT_FINAL_AMT
-                                                                    FROM TBL_CONTROL_PART_ORDER_MAIN M, TBL_CONTROL N, TBL_CONTROL_PART O
-                                                                    WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                        AND O.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                        AND N.CONTROL_STATUS = 'ORD003'
-                                                                        AND N.DEL_YN = 'N'
+                                                                    FROM TBL_ORDER M
+                                                                    WHERE M.ORDER_STATUS = 'REG003'
+                                                                        AND M.DEL_YN = 'N'
                                                                         AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
-                                                                        AND O.WORK_TYPE = B.WORK_TYPE
-                                                                        AND N.ORDER_COMP_CD = A.ORDER_COMP_CD
-                                                                    ORDER BY M.CONTROL_SEQ DESC
+                                                                        AND M.WORK_TYPE = B.WORK_TYPE
+                                                                        AND M.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                                                    ORDER BY M.ORDER_SEQ DESC
                                                                     LIMIT 1)
                         ELSE (  SELECT M.UNIT_FINAL_AMT
-                                FROM TBL_CONTROL_PART_ORDER_MAIN M, TBL_CONTROL N, TBL_CONTROL_PART O
-                                WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                    AND O.CONTROL_SEQ = N.CONTROL_SEQ
-                                    AND N.CONTROL_STATUS = 'ORD003'
-                                    AND N.DEL_YN = 'N'
-                                    AND N.CONTROL_SEQ != B.CONTROL_SEQ
+                                FROM TBL_ORDER M
+                                WHERE M.ORDER_STATUS = 'REG003'
+                                    AND M.DEL_YN = 'N'
+                                    AND N.ORDER_SEQ != C.ORDER_SEQ
                                     AND M.DRAWING_NUM = B.DRAWING_NUM
-                                    AND O.WORK_TYPE = B.WORK_TYPE
-                                    AND N.ORDER_COMP_CD = A.ORDER_COMP_CD
-                                ORDER BY M.CONTROL_SEQ DESC
+                                    AND M.WORK_TYPE = B.WORK_TYPE
+                                    AND M.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                ORDER BY M.ORDER_SEQ DESC
                                 LIMIT 1)
                     END, SPACE(0)) AS PREV_UNIT_FINAL_AMT, <!-- 종전가 -->
             B.OUTSIDE_UNIT_AMT * SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS OUTSIDE_FINAL_AMT, <!-- 외주 합계 금액 -->
@@ -4375,29 +4363,25 @@
             IFNULL(
                 CASE WHEN A.PREV_DRAWING_NUM IS NOT NULL THEN (
                     SELECT M.UNIT_FINAL_AMT
-                    FROM TBL_CONTROL_PART_ORDER_MAIN M, TBL_CONTROL N, TBL_CONTROL_PART O
-                    WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                        AND O.CONTROL_SEQ = N.CONTROL_SEQ
-                        AND N.CONTROL_STATUS = 'ORD003'
-                        AND N.DEL_YN = 'N'
+                    FROM TBL_ORDER M
+                    WHERE M.ORDER_STATUS = 'REG003'
+                        AND M.DEL_YN = 'N'
                         AND M.DRAWING_NUM = A.PREV_DRAWING_NUM
-                        AND O.WORK_TYPE = A.WORK_TYPE
-                        AND N.ORDER_COMP_CD = A.ORDER_COMP_CD
-                    ORDER BY M.CONTROL_SEQ DESC
+                        AND M.WORK_TYPE = A.WORK_TYPE
+                        AND M.ORDER_COMP_CD = A.ORDER_COMP_CD
+                    ORDER BY M.ORDER_SEQ DESC
                     LIMIT 1
                 )
                 ELSE (
                     SELECT M.UNIT_FINAL_AMT
-                    FROM TBL_CONTROL_PART_ORDER_MAIN M, TBL_CONTROL N, TBL_CONTROL_PART O
-                    WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                        AND O.CONTROL_SEQ = N.CONTROL_SEQ
-                        AND N.CONTROL_STATUS = 'ORD003'
-                        AND N.DEL_YN = 'N'
+                    FROM TBL_ORDER M
+                    WHERE M.ORDER_STATUS = 'REG003'
+                        AND M.DEL_YN = 'N'
                         AND M.ORDER_SEQ != A.ORDER_SEQ
                         AND M.DRAWING_NUM = A.DRAWING_NUM
-                        AND O.WORK_TYPE = A.WORK_TYPE
-                        AND N.ORDER_COMP_CD = A.ORDER_COMP_CD
-                    ORDER BY M.CONTROL_SEQ DESC
+                        AND M.WORK_TYPE = A.WORK_TYPE
+                        AND M.ORDER_COMP_CD = A.ORDER_COMP_CD
+                    ORDER BY M.ORDER_SEQ DESC
                     LIMIT 1
                 )
                 END, SPACE(0)

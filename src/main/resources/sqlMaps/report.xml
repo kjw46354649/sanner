@@ -123,6 +123,7 @@
         SELECT ROW_NUMBER() OVER(ORDER BY Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ ) AS ROW_NUM
             , Z.CONTROL_SEQ
             , Z.CONTROL_DETAIL_SEQ
+            , Z.ORDER_SEQ
             , Z.IMG_GFILE_SEQ
             , Z.ORDER_COMP_NM
             , Z.WORK_FACTORY_NM
@@ -141,27 +142,23 @@
             , (IFNULL(Z.UNIT_PROCESS_AUTO_AMT,0) + Z.TOTAL_AUTO_AMT + ROUND(Z.CP_VAL / (Z.PART_QTY + IFNULL(Z.ADDITIONAL_QTY,0)),1)) AS CP_TOTAL
             , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE FORMAT(Z.PART_QTY * Z.UNIT_FINAL_AMT / (Z.WORK_TIME / 60 / 60),0) END AS PRICE_PER_HOUR
             , CASE WHEN Z.PREV_DRAWING_NUM IS NOT NULL THEN (   SELECT M.UNIT_FINAL_AMT
-                                                                FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
-                                                                WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                    AND O.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                    AND N.CONTROL_STATUS = 'ORD003'
-                                                                    AND N.DEL_YN = 'N'
+                                                                FROM jmes.TBL_ORDER M
+                                                                WHERE M.ORDER_STATUS = 'REG003'
+                                                                    AND M.DEL_YN = 'N'
                                                                     AND M.DRAWING_NUM = Z.PREV_DRAWING_NUM
-                                                                    AND O.WORK_TYPE = Z.WORK_TYPE
-                                                                    AND N.ORDER_COMP_CD = Z.ORDER_COMP_CD
-                                                                ORDER BY M.CONTROL_SEQ DESC
+                                                                    AND M.WORK_TYPE = Z.WORK_TYPE
+                                                                    AND M.ORDER_COMP_CD = Z.ORDER_COMP_CD
+                                                                ORDER BY M.ORDER_SEQ DESC
                                                                 LIMIT 1)
                    ELSE (   SELECT M.UNIT_FINAL_AMT
-                            FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
-                            WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                AND O.CONTROL_SEQ = N.CONTROL_SEQ
-                                AND N.CONTROL_STATUS = 'ORD003'
-                                AND N.DEL_YN = 'N'
-                                AND N.CONTROL_SEQ != Z.CONTROL_SEQ
+                            FROM jmes.TBL_ORDER M
+                            WHERE M.ORDER_STATUS = 'REG003'
+                                AND M.DEL_YN = 'N'
+                                AND M.ORDER_SEQ != Z.ORDER_SEQ
                                 AND M.DRAWING_NUM = Z.DRAWING_NUM
-                                AND O.WORK_TYPE = Z.WORK_TYPE
-                                AND N.ORDER_COMP_CD = Z.ORDER_COMP_CD
-                            ORDER BY M.CONTROL_SEQ DESC
+                                AND M.WORK_TYPE = Z.WORK_TYPE
+                                AND M.ORDER_COMP_CD = Z.ORDER_COMP_CD
+                            ORDER BY M.ORDER_SEQ DESC
                             LIMIT 1)
               END AS PREV_UNIT_FINAL_AMT
             , Z.UNIT_FINAL_EST_AMT
@@ -183,6 +180,7 @@
             , jmes.SF_GET_CODE_NM('1027', Z.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
         FROM (  SELECT P.CONTROL_SEQ
                     , P.CONTROL_DETAIL_SEQ
+                    , M.ORDER_SEQ
                     , P.IMG_GFILE_SEQ
                     , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
                     , jmes.SF_GET_CODE_NM('1014',Y.WORK_FACTORY,#{LOGIN_LOCALE}) AS WORK_FACTORY_NM   <!-- 언어조건 -->
@@ -407,21 +405,19 @@
                                                                 , CASE WHEN B.OUT_FINISH_DT IS NULL THEN 'N' ELSE 'Y' END AS OUT_FINISH_YN
                                                                 , DATE_FORMAT(B.OUT_FINISH_DT,'%Y%m%d') AS OUT_FINISH_DT
                                                                 , IFNULL(E.UNIT_FINAL_AMT, IFNULL(E.UNIT_FINAL_EST_AMT, IFNULL(CASE WHEN C.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.UNIT_FINAL_AMT
-                                                                                                                                                                                FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
-                                                                                                                                                                                WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                                                                                                                                    AND N.CONTROL_STATUS = 'ORD003'
-                                                                                                                                                                                    AND N.DEL_YN = 'N'
+                                                                                                                                                                                FROM jmes.TBL_ORDER M
+                                                                                                                                                                                WHERE M.ORDER_STATUS = 'REG003'
+                                                                                                                                                                                    AND M.DEL_YN = 'N'
                                                                                                                                                                                     AND M.DRAWING_NUM = C.PREV_DRAWING_NUM
-                                                                                                                                                                                ORDER BY M.CONTROL_SEQ DESC
+                                                                                                                                                                                ORDER BY M.ORDER_SEQ DESC
                                                                                                                                                                                 LIMIT 1)
                                                                                                                                     ELSE ( SELECT M.UNIT_FINAL_AMT
-                                                                                                                                           FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
-                                                                                                                                           WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                                                                                               AND N.CONTROL_STATUS = 'ORD003'
-                                                                                                                                               AND N.DEL_YN = 'N'
-                                                                                                                                               AND N.CONTROL_SEQ != C.CONTROL_SEQ
+                                                                                                                                           FROM jmes.TBL_ORDER M
+                                                                                                                                           WHERE M.ORDER_STATUS = 'REG003'
+                                                                                                                                               AND M.DEL_YN = 'N'
+                                                                                                                                               AND M.ORDER_SEQ != E.ORDER_SEQ
                                                                                                                                                AND M.DRAWING_NUM = C.DRAWING_NUM
-                                                                                                                                           ORDER BY M.CONTROL_SEQ DESC
+                                                                                                                                           ORDER BY M.ORDER_SEQ DESC
                                                                                                                                            LIMIT 1)
                                                                                                                                END, C.FORECAST_UNIT_AMT))) AS FORECAST_UNIT_AMT
                                                                 , ROW_NUMBER() OVER (PARTITION BY C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ ORDER BY D.INSPECT_SEQ) AS INSPECT_RNUM
@@ -484,27 +480,23 @@
             , Z.PART_QTY * Z.FORECAST_UNIT_AMT AS TOTAL_AMT
             , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE FORMAT(Z.PART_QTY * Z.UNIT_FINAL_AMT / (Z.WORK_TIME / 60 / 60),0) END AS PRICE_PER_HOUR
             , CASE WHEN Z.PREV_DRAWING_NUM IS NOT NULL THEN (   SELECT M.UNIT_FINAL_AMT
-                                                                FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
-                                                                WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                    AND O.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                    AND N.CONTROL_STATUS = 'ORD003'
-                                                                    AND N.DEL_YN = 'N'
+                                                                FROM jmes.TBL_ORDER M
+                                                                WHERE M.ORDER_STATUS = 'REG003'
+                                                                    AND M.DEL_YN = 'N'
                                                                     AND M.DRAWING_NUM = Z.PREV_DRAWING_NUM
-                                                                    AND O.WORK_TYPE = Z.WORK_TYPE
-                                                                    AND N.ORDER_COMP_CD = Z.ORDER_COMP_CD
-                                                                ORDER BY M.CONTROL_SEQ DESC
+                                                                    AND M.WORK_TYPE = Z.WORK_TYPE
+                                                                    AND M.ORDER_COMP_CD = Z.ORDER_COMP_CD
+                                                                ORDER BY M.ORDER_SEQ DESC
                                                                 LIMIT 1)
                    ELSE (   SELECT M.UNIT_FINAL_AMT
-                            FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
-                            WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                AND O.CONTROL_SEQ = N.CONTROL_SEQ
-                                AND N.CONTROL_STATUS = 'ORD003'
-                                AND N.DEL_YN = 'N'
-                                AND N.CONTROL_SEQ != Z.CONTROL_SEQ
+                            FROM jmes.TBL_ORDER M
+                            WHERE M.ORDER_STATUS = 'REG003'
+                                AND M.DEL_YN = 'N'
+                                AND N.ORDER_SEQ != Z.ORDER_SEQ
                                 AND M.DRAWING_NUM = Z.DRAWING_NUM
-                                AND O.WORK_TYPE = Z.WORK_TYPE
-                                AND N.ORDER_COMP_CD = Z.ORDER_COMP_CD
-                            ORDER BY M.CONTROL_SEQ DESC
+                                AND M.WORK_TYPE = Z.WORK_TYPE
+                                AND M.ORDER_COMP_CD = Z.ORDER_COMP_CD
+                            ORDER BY M.ORDER_SEQ DESC
                             LIMIT 1)
               END AS PREV_UNIT_FINAL_AMT
             , Z.UNIT_FINAL_EST_AMT
@@ -519,6 +511,7 @@
             , Z.DRAWING_VER
         FROM (  SELECT P.CONTROL_SEQ
                     , P.CONTROL_DETAIL_SEQ
+                    , M.ORDER_SEQ
                     , jmes.SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
                     , X.CONTROL_NUM
                     , X.ORDER_COMP_CD

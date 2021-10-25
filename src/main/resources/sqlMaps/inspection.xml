@@ -673,18 +673,10 @@
                             )
                     ) AS CONTROL_CONFIRM_DT ,
                     (
-                        SELECT SF_GET_DATE_F(AA.STATUS_DT,'YYYY','')
-                        FROM TBL_CONTROL_PROGRESS AA
-                        WHERE 1 = 1
-                            AND B.CONTROL_SEQ = AA.CONTROL_SEQ
-                            AND AA.SEQ = (
-                                SELECT MAX(SEQ)
-                                FROM TBL_CONTROL_PROGRESS BB
-                                WHERE 1 = 1
-                                    AND AA.CONTROL_SEQ = BB.CONTROL_SEQ
-                                    AND BB.ORDER_STATUS = 'ORD003'
-                            )
-                    ) AS CONTROL_CLOSE_DT,
+                        CASE WHEN A.ORDER_STATUS = 'REG003' THEN SF_GET_DATE_F(A.ORDER_STATUS_DT,'YYYY','')
+                             ELSE SPACE(0)
+                        END
+                    ) AS CONTROL_CLOSE_DT, <!-- 21.10.25 주문 마감일자로 의미 변경 -->
                     B.SCRAP_YN
                 FROM TBL_ORDER A, TBL_CONTROL_PART_ORDER B, TBL_CONTROL C, TBL_CONTROL_PART D
                 WHERE A.ORDER_SEQ = B.ORDER_SEQ
