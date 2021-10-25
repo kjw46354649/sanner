@@ -14,4 +14,6 @@ public interface OutService {
     void removeOutsideClose(Map<String, Object> map)  throws Exception;
 
     void createOutGoing(Map<String, Object> map)  throws Exception;
+
+    void createOutGoingForGrid(Map<String, Object> map)  throws Exception;
 }

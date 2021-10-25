@@ -1330,7 +1330,14 @@
                     fnAlert(null, "해당 데이터가 존재하지 않습니다.");
                     $('#outgoing_manage_pop_type_1').modal('hide');
                 } else {
-                    fnJsonDataToForm("outgoing_manage_pop_type_1_form", dataInfo);
+                    // fnJsonDataToForm("outgoing_manage_pop_type_1_form", dataInfo);
+                    $("#outgoing_manage_pop_type_1_form").find("#REGIST_NUM").val(dataInfo.REGIST_NUM);
+                    $("#outgoing_manage_pop_type_1_form").find("#DRAWING_NUM").val(dataInfo.DRAWING_NUM);
+                    $("#outgoing_manage_pop_type_1_form").find("#ORDER_NUM").val(dataInfo.ORDER_NUM);
+                    $("#outgoing_manage_pop_type_1_form").find("#ORDER_SEQ").val(dataInfo.ORDER_SEQ);
+                    $("#outgoing_manage_pop_type_1_form").find("#ORDER_QTY").val(dataInfo.ORDER_QTY);
+                    $("#outgoing_manage_pop_type_1_form").find("#OUT_QTY").val(dataInfo.OUT_QTY);
+                    $("#outgoing_manage_pop_type_1_form").find("#NEW_OUT_QTY").val(dataInfo.NEW_OUT_QTY);
                     //ORDER_QTY 총수량, OUT_QTY 나간 수량, NEW_OUT_QTY 나갈 수량량
                     let view = dataInfo.NEW_OUT_QTY + "/" + dataInfo.ORDER_QTY;
                     $("#outgoing_manage_pop_type_1_form").find("#outgoing_manage_pop_type_1_form_view_1").html(view);
@@ -1542,15 +1549,13 @@
 
                 fnConfirm(null, "선택항목을 출고등록 하시겠습니까?", function () {
                     let changes = {
-                        'addList': groupList,
-                        'updateList': groupList
+                        'groupList': groupList
                     };
-                    changes.queryIdList = {
-                        'insertQueryId': ['inspection.insertOutgoingOutType2'],
-                        'updateQueryId': ['inspection.updateOutgoingOutSelectGridType1After1', 'inspection.updateOutgoingOutSelectGridType1After2', 'inspection.updateOutgoingOutSelectGridType1After3', 'inspection.updateOutFinishStatusUseOrderSeq', 'inspection.updateOrderOutFinishStatus', 'machine.deleteMctPlanAllUseOrderSeq']
-                    };
-                    let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
-
+                    // changes.queryIdList = {
+                    //     'insertQueryId': ['inspection.insertOutgoingOutType2'],
+                    //     'updateQueryId': ['inspection.updateOutgoingOutSelectGridType1After1', 'inspection.updateOutgoingOutSelectGridType1After2', 'inspection.updateOutgoingOutSelectGridType1After3', 'inspection.updateOutFinishStatusUseOrderSeq', 'inspection.updateOrderOutFinishStatus', 'machine.deleteMctPlanAllUseOrderSeq']
+                    // };
+                    let parameters = {'url': '/createOutGoingForGrid', 'data': {data: JSON.stringify(changes)}};
 
                     fnPostAjax(function () {
                         fnAlert(null, "등록이 완료되었습니다.");

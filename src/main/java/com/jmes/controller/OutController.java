@@ -73,4 +73,12 @@ public class OutController {
 
         return "jsonView";
     }
+    @RequestMapping(value = "/createOutGoingForGrid", method = RequestMethod.POST)
+    public String createOutGoingForGrid(HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.outService.createOutGoingForGrid(map);
+
+        return "jsonView";
+    }
 }
