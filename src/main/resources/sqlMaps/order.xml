@@ -2417,7 +2417,7 @@
                  B.CONTROL_DETAIL_SEQ,
                  A.ORDER_SEQ,
                  SF_GET_CODE_NM('1091', A.ORDER_STATUS , #{LOGIN_LOCALE}) AS ORDER_STATUS_NM, -- 주문관리상태 -->
-                 C.CONTROL_NUM,
+                 B.CONTROL_NUM,
                  A.REGIST_NUM,
                  A.ORDER_NUM,
                  A.DRAWING_NUM,
@@ -2431,8 +2431,11 @@
                  '' AS NOTE,
                  A.IMG_GFILE_SEQ
              FROM TBL_ORDER A
-                  LEFT OUTER JOIN TBL_CONTROL_PART_ORDER B ON A.ORDER_SEQ = B.ORDER_SEQ
-                  LEFT OUTER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND C.DEL_YN = 'N'
+                LEFT OUTER JOIN (
+                    SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, Y.CONTROL_NUM, X.ORDER_QTY, X.ORDER_SEQ
+                    FROM TBL_CONTROL_PART_ORDER X
+                        INNER JOIN TBL_CONTROL Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.DEL_YN = 'N'
+                ) B ON B.ORDER_SEQ = A.ORDER_SEQ
              WHERE A.DEL_YN = 'N'
                 AND IFNULL(A.WORK_TYPE,SPACE(0)) != 'WTP050'
                 AND A.ORDER_SEQ IN (${ORDER_SEQ_STR})
@@ -2443,7 +2446,7 @@
                  C.CONTROL_DETAIL_SEQ,
                  A.ORDER_SEQ,
                  SF_GET_CODE_NM('1091', A.ORDER_STATUS , #{LOGIN_LOCALE}) AS ORDER_STATUS_NM, -- 주문관리상태 -->
-                 D.CONTROL_NUM,
+                 C.CONTROL_NUM,
                  A.REGIST_NUM,
                  A.ORDER_NUM,
                  A.DRAWING_NUM,
@@ -2458,8 +2461,11 @@
                  A.IMG_GFILE_SEQ
              FROM TBL_ORDER A
                  INNER JOIN TBL_INVOICE_DETAIL B ON B.ORDER_SEQ = A.ORDER_SEQ AND B.INVOICE_NUM = #{INVOICE_NUM}
-                 LEFT OUTER JOIN TBL_CONTROL_PART_ORDER C ON B.ORDER_SEQ = C.ORDER_SEQ
-                 LEFT OUTER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND D.DEL_YN = 'N'
+                 LEFT OUTER JOIN (
+                     SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, Y.CONTROL_NUM, X.ORDER_QTY, X.ORDER_SEQ
+                     FROM TBL_CONTROL_PART_ORDER X
+                        INNER JOIN TBL_CONTROL Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.DEL_YN = 'N'
+                 ) C ON C.ORDER_SEQ = A.ORDER_SEQ
              WHERE A.DEL_YN = 'N'
                AND IFNULL(A.WORK_TYPE,SPACE(0)) != 'WTP050'
                AND A.ORDER_SEQ IN (${ORDER_SEQ_STR})

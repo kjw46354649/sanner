@@ -1782,7 +1782,7 @@
         FROM TBL_OUT_BARCODE
         WHERE DEL_YN = 'N'
             AND ORDER_SEQ = #{ORDER_SEQ}
-            AND CONTROL_SEQ IS NULL
+        LIMIT 1;
     </select>
     <select id="selectCommItemDetailGridCamPopBefore" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT B.CONTROL_SEQ

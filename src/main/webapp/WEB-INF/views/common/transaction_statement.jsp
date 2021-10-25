@@ -293,13 +293,19 @@
         // 라벨 출력
         $('#TRANSACTION_STATEMENT_LABEL_PRINT').on('click', function () {
             let barcodeList = [];
+            let orderSeqList = [];
             let data = $transactionStatementGrid.pqGrid('option', 'dataModel.data');
 
             for (let i = 0, DATA_LENGTH = data.length; i < DATA_LENGTH; i++) {
                 let rowData = data[i];
+                orderSeqList.push(rowData.ORDER_SEQ);
+            }
+            orderSeqList = [...new Set(orderSeqList)];
+
+            for (let i = 0; i < orderSeqList.length; i++) {
                 let postData = {
                     'queryId': 'inspection.selectOutgoingLabelType4',
-                    'ORDER_SEQ': rowData.ORDER_SEQ
+                    'ORDER_SEQ': orderSeqList[i]
                 };
                 let parameter = {'url': '/json-list', 'data': postData};
                 fnPostAjaxAsync(function (data) {
@@ -308,6 +314,7 @@
                     }
                 }, parameter, '');
             }
+
 
             let bCodePrintLen = barcodeList.length;
 
