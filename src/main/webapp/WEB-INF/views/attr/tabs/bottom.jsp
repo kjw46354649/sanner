@@ -275,7 +275,7 @@
                         <button id="ITEM_WORK_HISTORY_INFO" class="defaultBtn">가공상세수행 기록</button>
                     </div>
                 </div>
-                <div class="list1" style="border: 1px solid #AAA;background: white;overflow: hidden;height: 55%;">
+                <div class="list1" style="border: 1px solid #AAA;background: white;overflow: hidden;height: 53%;">
                     <img src="/qimage/734042" style="width: 100%;height: 100%;max-height: inherit;max-width: inherit;">
                 </div>
                 <div class="listdiv">

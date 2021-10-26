@@ -475,7 +475,7 @@
         WHERE A.DEL_YN = 'N'
             AND B.CONTROL_SEQ = #{CONTROL_SEQ}
             AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-        ORDER BY 1 DESC
+        ORDER BY A.ORDER_SEQ
     </select>
     <select id="selectCommItemDetailInspectionList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.*
