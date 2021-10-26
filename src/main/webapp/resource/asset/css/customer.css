@@ -359,8 +359,8 @@ button:disabled {
 .cam_work_manage_detail_pop .layerPopup .griddiv { height: 200px; }
 .cam_work_manage_detail_pop .layerPopup .listdiv { height: 140px; width: 100%; }
 .cam_work_manage_detail_pop .layerPopup .listdiv textarea { outline: none; padding: 0px 0px; border: none; font-size: 14px; }
-.cam_work_manage_detail_pop .layerPopup .listdiv .conWrapLeftPop50{ float: left; width: 48.0%; height: 45px; }
-.cam_work_manage_detail_pop .layerPopup .listdiv .conWrapRightPop50{ float: right; width: 48.0%; height: 45px; }
+.cam_work_manage_detail_pop .layerPopup .listdiv .conWrapLeftPop50{ /*float: left;*/ width: 48%; height: 45px; }
+.cam_work_manage_detail_pop .layerPopup .listdiv .conWrapRightPop50{ float: right; width: 48%; height: 45px;margin-left: 1.5%; }
 .cam_work_manage_detail_pop .layerPopup .listdiv .rightName{ float: right; margin-top: 14px;display: inline-block; }
 .cam_work_manage_detail_pop .layerPopup .right{ float: right; display: inline-block; }
 .cam_work_manage_detail_pop .layerPopup h4 {display: inline-block;font-size: 14px; font-family: 'NotoKrB'; color: #000; margin: 15px 0 5px; }
@@ -429,7 +429,7 @@ button:disabled {
 .popupTableDiv table.materialSupply .bg-title { border: 1px solid #CECECE; background-color: #F3FEFF; }
 .popupTableDiv table.materialSupply .bg-sum { border-width: 1px; border-style: solid none; border-color:#CECECE; background-color: #FFFBEF; }
 
-[name="CONTROL_MANAGE_VIEW"] { overflow: hidden; width: 80px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #FFE29B; color: black; font-family: 'NotoKrM'; font-size: 1.2rem; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
+[name="ORDER_MANAGE_VIEW"] { overflow: hidden; width: 80px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #FFE29B; color: black; font-family: 'NotoKrM'; font-size: 1.2rem; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 .virtual-disable { background: #dddddd; color: #212121; border: 1px solid #e5e5e5; }
 
 .underlinePoint{ color: blue; text-decoration-line: underline; cursor: pointer; }
@@ -486,8 +486,8 @@ button:disabled {
 
 ul, ol , dl { list-style: none;}
 .stockPopup, .stockPopup2, .stockPopup3, .stockSearchPopup {
-	width: 1980px;
-	height: 1080px;
+	width: 100%;
+	height: 100%;
 	background: rgba(0,0,0,0.5);
 	position: fixed;
 	z-index: 1050;
@@ -506,7 +506,7 @@ ul, ol , dl { list-style: none;}
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	transform: translate(-53%,-50%);
+	transform: translate(-50%,-50%);
 	padding: 20px 20px 10px 20px;
 }
 .stockPopupInfo .searchPopupWrap {
@@ -581,7 +581,7 @@ ul, ol , dl { list-style: none;}
 .stockPopupInfo .barCodeTxt {
 	display: inline-block;
 	height: 90%;
-	width: 48%;
+	width: 45%;
 	vertical-align: top;
 	margin-top: 3px;
 }
@@ -741,11 +741,11 @@ ul, ol , dl { list-style: none;}
 	position: absolute;
 	background: #f9fbfd;
 	width: 25%;
-	height: 23%;
+	height: 25%;
 	top: 45%;
 	left: 50%;
 	transform: translate(-50%,-50%);
-	padding: 30px 0 0;
+	padding: 20px 0 10px 0;
 	text-align: center;
 	line-height: 35px;
 	font-size: 1.4rem;
@@ -856,7 +856,7 @@ ul, ol , dl { list-style: none;}
 
 /*210608*/
 .searchPopup {
-	width: 77%;
+	width: 78%;
 	height: 67%;
 	position: absolute;
 	top: 50%;
@@ -888,7 +888,7 @@ ul, ol , dl { list-style: none;}
 	background: white;
 }
 .searchPopup .searchPopupRight {
-	width: 37%;
+	width: 38%;
 	height: 100%;
 	padding-left: 20px;
 }
@@ -1042,3 +1042,117 @@ div.custom-loading-mask > div {
 .quick_drawing_table tr {
 	height: 30px;
 }
+
+
+
+
+/*210608*/
+.revisionPopup {
+	width: 1250px;
+	height: 645px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform: none;
+	background: #ffffff;
+	padding: 20px 0px 10px 20px;
+}
+.revisionPopup h3 {
+	color: black;
+	font-size: 20px;
+}
+.revisionPopup h3 i {
+	color: black;
+}
+.revisionPopup .searchPopupWrap {
+	width: 100%;
+	height: 92%;
+	display: flex;
+}
+.revisionPopup .revisionMapLeft {
+	width: 67%;
+	height: 100%;
+	border: 1px solid #AAA;
+	overflow: hidden;
+	text-align: center;
+	margin-top: 1%;
+	background: white;
+}
+.revisionPopup .revisionPopupRight {
+	width: 30%;
+	height: 100%;
+	padding-left: 30px;
+}
+.revisionPopup .revisionPopupRight .searchPopupRightTop {
+	width: 100%;
+	height: 13%;
+	overflow: hidden;
+	margin: 10px 0;
+	padding: 5px 0;
+	font-size: 1.4rem;
+}
+.revisionPopup .revisionPopupRight .searchPopupRightTop h4 {
+	display: inline-block;
+	margin-right: 10px;
+	padding-top: 5px;
+	font-size: 15px;
+	font-weight: bold;
+	color: black;
+}
+.revisionPopup .revisionPopupRight .searchPopupRightTop .refreshBtn {
+	background: none;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	vertical-align: top;
+	padding-top: 5px;
+}
+
+.revisionPopup .revisionPopupRight table {
+	width: 99%;
+	height: 93%;
+	border: 1px solid black;
+}
+.revisionPopup .revisionPopupRight table th {
+	width: 40%;
+	border: 1px solid black;
+	text-align: center;
+	color: white;
+	background: #3b7ec5;
+}
+.revisionPopup .revisionPopupRight table td {
+	width: 60%;
+	border: 1px solid black;
+	text-align: center;
+	color: black;
+}
+.revisionPopup .stockPopupBtnWrap {
+	margin-top: 20px;
+}
+
+.matchToolTip {
+	display: none;
+	text-align: left;
+	font-size: 12px;
+	background-color: #fff599;
+	width: 650px;
+	height: 250px;
+	z-index: 9999999999;
+	top: 410px;
+	left: 1175px;
+	position: absolute;
+	border: 1px solid #efefef;
+}
+
+.matchToolTip::after {
+	content: " ";
+	top:-7.5%;
+	left:77.5%;
+	position: absolute;
+	border-style: solid;
+	border-width: 10px;
+	margin-left:-10px;
+	border-color: transparent transparent #fff599 transparent;;
+}
+
+.stockPopupWrap .comboTreeInputBox:disabled {background-color: #dddddd !important;}

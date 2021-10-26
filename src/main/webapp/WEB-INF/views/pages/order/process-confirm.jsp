@@ -34,11 +34,9 @@
 <%--                <option value="">All Fields</option>--%>
                 <option value="CONTROL_NUM">작업지시번호</option>
             </select>
-            <label for="processConfirmFilterCondition"></label>
-            <select id="processConfirmFilterCondition">
-                <c:forEach var="code" items="${HighCode.H_1083}">
-                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
-                </c:forEach>
+            <label for="processConfirmFilterCondition" style="display: none;"></label>
+            <select id="processConfirmFilterCondition" style="display: none;">
+                <option value="contain">Contains</option>
             </select>
             <button type="button" class="defaultBtn btn-100w orange" id="PROCESS_CONFIRM_FULLSCREEN">FULL SCREEN</button>
         </div>

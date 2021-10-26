@@ -115,6 +115,15 @@ public class FileUploadController {
         return "jsonView";
     }
 
+    @RequestMapping(value = "/controlCadPartPrev")
+    public String controlCadPartPrev(Model model, HttpServletRequest request) throws Exception {
+
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+        model.addAttribute("workKey", fileUploadService.controlCadPartPrev(map));
+
+        return "jsonView";
+    }
+
     /**
      * 주문 파일 업로드만 처리 하고 등록된 내용중에 리스트를 조회한다.
      * @param model

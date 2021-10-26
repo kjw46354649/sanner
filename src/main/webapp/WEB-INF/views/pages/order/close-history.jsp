@@ -170,7 +170,6 @@
                     <a href="#END_HISTORY" data-toggle="tab" aria-expanded="false">종료이력</a>
                 </li>
                 <div class="right_float">
-                    <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CONTROL_CLOSE_CANCEL_POPUP" style="font-weight:normal;">마감 취소</button>
                     <button type="button" class="defaultBtn btn-100w" id="CONTROL_FINISH_CANCEL" style="font-weight:normal;">종료 취소</button>
                     <button type="button" class="defaultBtn btn-100w" id="CLOSE_HISTORY_DRAWING_PRINT" style="font-weight:normal;">도면 출력</button>
                     <button type="button" class="defaultBtn btn-100w" id="CLOSE_HISTORY_BARCODE_DRAWING_PRINT" style="font-weight:normal;">바코드도면 출력</button>
@@ -195,35 +194,6 @@
     </div>
 </div>
 
-<%-- modal --%>
-<div class="popup_container" id="CONTROL_CLOSE_CANCEL_POPUP" style="display: none;">
-    <div class="controlCloseLayerPopup">
-        <h3>월 마감 취소 진행</h3>
-        <hr>
-        <button type="button" class="pop_close" name="CONTROL_CLOSE_CANCEL_NO">닫기</button>
-        <div class="d-inline-block">
-            <form class="form-inline" id="CONTROL_CLOSE_CANCEL_FORM" role="form">
-                <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectControlCloseCancelLeftList">
-                <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
-                <input type="hidden" name="ORDER_SEQ" id="ORDER_SEQ">
-                <div style="width: 450px; float:left;">
-                    <div id="CONTROL_CLOSE_CANCEL_LEFT_GRID"></div>
-                </div>
-                <div style="display: flex; float:left; align-items: center; justify-content: center; width: 70px; height: 250px;">
-                    <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표">
-                </div>
-                <div style="width: 450px; float:left;">
-                    <div id="CONTROL_CLOSE_CANCEL_RIGHT_GRID"></div>
-                </div>
-            </form>
-        </div>
-
-        <div class="text-center">
-            <button type="button" class="defaultBtn greenPopGra" id="CONTROL_CLOSE_CANCEL_YES">저장</button>
-            <button type="button" class="defaultBtn grayPopGra" name="CONTROL_CLOSE_CANCEL_NO">닫기</button>
-        </div>
-    </div>
-</div>
 
 <script>
     $(function () {
@@ -1697,87 +1667,7 @@
                 }
                 callQuickRowChangeDrawingImageViewer(nextImgUrl,nextRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             }
-        };
-
-        let $controlCloseCancelLeftGrid;
-        const controlCloseCancelLeftGridId = 'CONTROL_CLOSE_CANCEL_LEFT_GRID';
-        const controlCloseCancelLeftColModel = [
-            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', dataIndx: 'COMP_NM'},
-            {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
-            {title: '마감월', dataIndx: 'CLOSE_MONTH', hidden: true},
-            {title: '마감월', width: 70, dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataIndx: 'CLOSE_VER'},
-            {title: '품수', dataType: 'integer', format: '#,###', dataIndx: 'CNT'},
-            {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'},
-            {title: '공급가', width: 70, align: 'right', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 70, align: 'right', dataIndx: 'FINAL_NEGO_AMT'}
-        ];
-        const controlCloseCancelLeftObj = {
-            height: 300,
-            collapsible: false,
-            resizable: false,
-            showTitle: false,
-            // scrollModel: {autoFit: true},
-            rowHtHead: 15,
-            dragColumns: {enabled: false},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', editable: false},
-            colModel: controlCloseCancelLeftColModel,
-            strNoRows: g_noData,
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.emptyGrid'},
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            scroll: function (event, ui) {
-                let gridInstance = $controlCloseCancelRightGrid.pqGrid('getInstance').grid;
-                gridInstance.scrollXY(this.scrollX(), this.scrollY());
-            }
-        };
-        let $controlCloseCancelRightGrid;
-        const controlCloseCancelRightGridId = 'CONTROL_CLOSE_CANCEL_RIGHT_GRID';
-        const controlCloseCancelRightColModel = [
-            {title: '사업자', dataIndx: 'COMP_CD', hidden: true},
-            {title: '사업자', dataIndx: 'COMP_NM'},
-            {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주처', dataIndx: 'ORDER_COMP_NM'},
-            {title: '마감월', dataIndx: 'CLOSE_MONTH', hidden: true},
-            {title: '마감월', width: 70, dataIndx: 'CLOSE_MONTH_TRAN'},
-            {title: '차수', dataIndx: 'CLOSE_VER', hidden: true},
-            {title: '차수', dataIndx: 'CLOSE_VER_TRAN'},
-            {title: '품수', dataType: 'integer', format: '#,###', dataIndx: 'CNT'},
-            {title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY'},
-            {title: '공급가', width: 70, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'TOTAL_AMT'},
-            {title: '마감금액', width: 70, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'FINAL_NEGO_AMT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, editable: true}
-        ];
-        const controlCloseCancelRightObj = {
-            height: 300,
-            collapsible: false,
-            resizable: false,
-            showTitle: false,
-            // scrollModel: {autoFit: true},
-            rowHtHead: 15,
-            // dragColumns: {enabled: false},
-            editable: false,
-            trackModel: {on: true},
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
-            colModel: controlCloseCancelRightColModel,
-            strNoRows: g_noData,
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            scroll: function (event, ui) {
-                let gridInstance = $controlCloseCancelLeftGrid.pqGrid('getInstance').grid;
-                gridInstance.scrollXY(this.scrollX(), this.scrollY());
-            }
-        };
+        }
 
         /* variable */
 
@@ -1813,51 +1703,40 @@
             }
         };
 
-        const loadDataControlCloseCancel = function () {
-            let controlSeqList = new Set();
-            let orderSeqList = new Set ();
-            let controlSeqStr = '';
-            let orderSeqStr = '';
-
-            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                const rowData = $controlCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-
-                if (rowData.ORDER_SEQ) {
-                    orderSeqList.add(rowData.ORDER_SEQ);
-                }
-                if (rowData.ORDER_SEQ) {
-                    controlSeqList.add(rowData.CONTROL_SEQ);
-                }
-            }
-
-            for (let item of controlSeqList) {
-                controlSeqStr += item;
-                controlSeqStr += ',';
-            }
-            for (let item of orderSeqList) {
-                orderSeqStr += item;
-                orderSeqStr += ',';
-            }
-
-            controlSeqStr = controlSeqStr.substring(0, controlSeqStr.length - 1);
-            orderSeqStr = orderSeqStr.substring(0, orderSeqStr.length - 1);
-
-            $('#CONTROL_CLOSE_CANCEL_FORM > #CONTROL_SEQ').val(controlSeqStr);
-            $('#CONTROL_CLOSE_CANCEL_FORM > #ORDER_SEQ').val(orderSeqStr);
-
-            let postData = fnFormToJsonArrayData('#CONTROL_CLOSE_CANCEL_FORM');
-            postData.queryId = 'orderMapper.selectControlCloseCancelLeftList';
-            $controlCloseCancelLeftGrid.pqGrid('option', 'dataModel.postData', function () {
-                return postData;
-            });
-            $controlCloseCancelLeftGrid.pqGrid('refreshDataAndView');
-
-            postData.queryId = 'orderMapper.selectControlCloseCancelRightList';
-            $controlCloseCancelRightGrid.pqGrid('option', 'dataModel.postData', function () {
-                return postData;
-            });
-            $controlCloseCancelRightGrid.pqGrid('refreshDataAndView');
-        };
+        // const loadDataControlCloseCancel = function () {
+        //     let orderSeqList = new Set ();
+        //     let orderSeqStr = '';
+        //
+        //     for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+        //         const rowData = $controlCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+        //
+        //         if (rowData.ORDER_SEQ) {
+        //             orderSeqList.add(rowData.ORDER_SEQ);
+        //         }
+        //     }
+        //
+        //     for (let item of orderSeqList) {
+        //         orderSeqStr += item;
+        //         orderSeqStr += ',';
+        //     }
+        //
+        //     orderSeqStr = orderSeqStr.substring(0, orderSeqStr.length - 1);
+        //
+        //     $('#CONTROL_CLOSE_CANCEL_FORM > #ORDER_SEQ').val(orderSeqStr);
+        //
+        //     let postData = fnFormToJsonArrayData('#CONTROL_CLOSE_CANCEL_FORM');
+        //     postData.queryId = 'orderMapper.selectControlCloseCancelLeftList';
+        //     $controlCloseCancelLeftGrid.pqGrid('option', 'dataModel.postData', function () {
+        //         return postData;
+        //     });
+        //     $controlCloseCancelLeftGrid.pqGrid('refreshDataAndView');
+        //
+        //     postData.queryId = 'orderMapper.selectControlCloseCancelRightList';
+        //     $controlCloseCancelRightGrid.pqGrid('option', 'dataModel.postData', function () {
+        //         return postData;
+        //     });
+        //     $controlCloseCancelRightGrid.pqGrid('refreshDataAndView');
+        // };
 
         // status ORD003 마감, ORD004 종료
         let isDifferentStatus = function (status) {
@@ -1951,52 +1830,6 @@
             }
         });
 
-        $('#CONTROL_CLOSE_CANCEL_POPUP').on({
-            'show.bs.modal': function () {
-                if (noSelectedRowAlert()) {
-                    return false;
-                }
-
-                if (isDifferentStatus('ORD003')) {
-                    return false;
-                }
-
-                let compCdList = new Set();
-                let orderCompCdList = new Set();
-
-                for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                    const rowData = $controlCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-
-                    if (rowData.COMP_CD) {
-                        compCdList.add(rowData.COMP_CD);
-                    }
-
-                    if (rowData.ORDER_COMP_CD) {
-                        orderCompCdList.add(rowData.ORDER_COMP_CD);
-                    }
-                }
-
-                if (compCdList.size > 1) {
-                    fnAlert(null, '선택된 대상들의 발주사는 동일해야 합니다.');
-                    return false;
-                }
-
-                if (orderCompCdList.size > 1) {
-                    fnAlert(null, '선택된 대상들의 공급사는 동일해야 합니다.');
-                    return false;
-                }
-
-                $controlCloseCancelLeftGrid = $('#' + controlCloseCancelLeftGridId).pqGrid(controlCloseCancelLeftObj);
-                $controlCloseCancelRightGrid = $('#' + controlCloseCancelRightGridId).pqGrid(controlCloseCancelRightObj);
-
-                loadDataControlCloseCancel();
-            },
-            'hide.bs.modal': function () {
-                $controlCloseCancelLeftGrid.pqGrid('destroy');
-                $controlCloseCancelRightGrid.pqGrid('destroy');
-            }
-        });
-
         $('#CONTROL_CLOSE_HISTORY_SAVE').on('click', function () {
             const active = $('#CONTROL_CLOSE_HISTORY_TABS').tabs('option', 'active');
             let grid;
@@ -2015,33 +1848,6 @@
 
             fnModifyPQGrid(grid, [], updateQueryList);
         });
-
-        $('[name=CONTROL_CLOSE_CANCEL_NO]').on('click', function () {
-            $('#CONTROL_CLOSE_CANCEL_POPUP').modal('hide');
-        });
-
-        $('#CONTROL_CLOSE_CANCEL_YES').on('click', function () {
-            let list = [];
-
-            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
-                let rowData = $controlCloseHistoryGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
-
-                list.push(rowData);
-            }
-
-            let rightData = $controlCloseCancelRightGrid.pqGrid('option', 'dataModel.data');
-            let postData = {
-                'info-data': rightData,
-                'list-data': list
-            };
-
-            let parameters = {'url': '/removeMonthClose', 'data': {data: JSON.stringify(postData)}};
-            fnPostAjax(function (data, callFunctionParam) {
-                $('#CONTROL_CLOSE_CANCEL_POPUP').modal('hide');
-                $controlCloseHistoryGrid.pqGrid('refreshDataAndView');
-            }, parameters, '');
-        });
-
         $('#CONTROL_FINISH_CANCEL').on('click', function () {
             if (noSelectedRowAlert()) {
                 return false;

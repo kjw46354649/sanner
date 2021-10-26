@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.innodale.dao.InnodaleDao;
 import com.jmes.dao.OrderDao;
 import com.jmes.service.OutService;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -232,6 +234,178 @@ public class OutServiceImpl implements OutService {
         if (infoData != null && infoData.size() > 0) {
             for (HashMap<String, Object> hashMap : infoData) {
                 hashMap.put("queryId", "outMapper.updateOutsideCloseFinalNego");
+                this.innodaleDao.update(hashMap);
+            }
+        }
+    }
+    @Override
+    public void createOutGoing(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        String userId = (String) map.get("LOGIN_USER_ID");
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String type = String.valueOf(map.get("TYPE"));
+
+        if("disposal".equals(type.toLowerCase())) {
+            map.put("queryId", "inspection.deleteOutgoingDisposalOrderVer");
+            this.innodaleDao.remove(map);
+
+            map.put("queryId", "inspection.updateOutgoingDisposalOrderVer1");
+            this.innodaleDao.create(map);
+
+            map.put("queryId", "inspection.updateOutgoingOutType1After2");
+            this.innodaleDao.create(map);
+
+            map.put("queryId", "inspection.updateOutgoingDisposalOrderVer2");
+            this.innodaleDao.create(map);
+
+            map.put("queryId", "inspection.updateOutFinishStatusUseOrderSeq");
+            this.innodaleDao.create(map);
+
+            map.put("queryId", "inspection.updateOrderOutFinishStatus");
+            this.innodaleDao.create(map);
+
+            map.put("queryId", "machine.deleteMctPlanAllUseOrderSeq");
+            this.innodaleDao.remove(map);
+
+        }else {
+            Integer newOutQty = Integer.parseInt(map.get("NEW_OUT_QTY")+""); // 출고입력 수량
+            Integer orderQty = Integer.parseInt(map.get("ORDER_QTY")+""); // 발주수량
+            Integer outQty = Integer.parseInt(map.get("OUT_QTY")+"");  // 이미 출고나간 수량
+
+            if(newOutQty >= orderQty) { // 발주수량 모두 출고인 경우
+                map.put("queryId","inspection.selectControlCnt");
+                List<Map<String, Object>> controlList = this.innodaleDao.getList(map);
+
+                map.put("queryId", "inspection.insertOutgoingOutType1UseOrderSeq");
+                this.innodaleDao.create(map);
+
+                if(controlList.size() > 1) {
+                    map.put("queryId","inspection.updateOutgoingOutSelectGridType1After1");
+                    this.innodaleDao.update(map);
+
+                    map.put("queryId","inspection.updateOutFinishDtForGrid");
+                    this.innodaleDao.update(map);
+                }else {
+                    map.put("queryId", "inspection.updateOutgoingOutType1After1UseOrderSeq");
+                    this.innodaleDao.update(map);
+                }
+
+                map.put("queryId", "inspection.updateOutgoingOutType1After2");
+                this.innodaleDao.update(map);
+
+                map.put("queryId", "inspection.updateOutFinishDt");
+                this.innodaleDao.update(map);
+
+                map.put("queryId", "inspection.updateOutFinishStatusUseOrderSeq");
+                this.innodaleDao.update(map);
+
+                map.put("queryId", "inspection.updateOrderOutFinishStatus");
+                this.innodaleDao.update(map);
+
+                map.put("queryId", "machine.deleteMctPlanAllUseOrderSeq");
+                this.innodaleDao.update(map);
+
+            }else {
+                map.put("queryId", "outMapper.selectControlListUseOrderSeq");
+                List<Map<String, Object>> controlList = this.innodaleDao.getList(map);
+
+                boolean flag = false;
+                Integer newOutQtyCopy = new Integer(newOutQty);
+                for(Map<String, Object> tempMap : controlList) {
+                    if(newOutQtyCopy > 0) {
+                        Integer controlOrderQty = Integer.parseInt(tempMap.get("CONTROL_ORDER_QTY")+"");
+                        Integer controlOutQty = Integer.parseInt(tempMap.get("OUT_QTY")+"");
+
+                        if(newOutQtyCopy <= (controlOrderQty - controlOutQty)) {
+                            controlOrderQty = newOutQtyCopy;
+                            tempMap.put("NEW_OUT_QTY", newOutQtyCopy);
+                        }else {
+                            controlOrderQty = controlOrderQty - controlOutQty;
+                            tempMap.put("NEW_OUT_QTY", (controlOrderQty));
+                        }
+                        tempMap.put("queryId", "inspection.insertOutgoingOutType1");
+                        this.innodaleDao.create(tempMap);
+
+                        tempMap.put("queryId", "inspection.updateOutgoingOutType1After1");
+                        this.innodaleDao.update(tempMap);
+
+                        tempMap.put("queryId", "inspection.updateOutgoingOutType1After2");
+                        this.innodaleDao.update(tempMap);
+
+                        tempMap.put("queryId", "inspection.updateOutgoingOutType1After3");
+                        this.innodaleDao.update(tempMap);
+
+                        tempMap.put("queryId", "inspection.updateOutFinishStatus");
+                        this.innodaleDao.update(tempMap);
+
+                        tempMap.put("queryId", "inspection.updateOutFinishDt");
+                        this.innodaleDao.update(tempMap);
+
+                        tempMap.put("queryId", "inspection.updateOrderOutFinishStatus");
+                        this.innodaleDao.update(tempMap);
+
+                        tempMap.put("queryId", "machine.deleteMctPlanAll");
+                        this.innodaleDao.update(tempMap);
+
+                        newOutQtyCopy = newOutQtyCopy - controlOrderQty;
+
+                    }
+                }
+            }
+        }
+    }
+    @Override
+    public void createOutGoingForGrid(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        String userId = (String) map.get("LOGIN_USER_ID");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        ArrayList<HashMap<String, Object>> groupList = null;
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("groupList"))
+            groupList = (ArrayList<HashMap<String, Object>>) jsonMap.get("groupList");
+
+
+        if (groupList != null && groupList.size() > 0) {
+            for (HashMap<String, Object> hashMap : groupList) {
+                hashMap.put("LOGIN_USER_ID",userId);
+
+                hashMap.put("queryId","inspection.selectControlCnt");
+                List<Map<String, Object>> controlList = this.innodaleDao.getList(hashMap);
+
+                hashMap.put("queryId","inspection.insertOutgoingOutType2");
+                this.innodaleDao.create(hashMap);
+
+                hashMap.put("queryId","inspection.updateOutgoingOutSelectGridType1After1");
+                this.innodaleDao.update(hashMap);
+
+                hashMap.put("queryId","inspection.updateOutgoingOutSelectGridType1After2");
+                this.innodaleDao.update(hashMap);
+
+                hashMap.put("queryId","inspection.updateOutgoingOutSelectGridType1After3");
+                this.innodaleDao.update(hashMap);
+
+                hashMap.put("queryId","inspection.updateOutFinishStatusUseOrderSeq");
+                this.innodaleDao.update(hashMap);
+
+                if(controlList.size() > 1) {
+                    hashMap.put("queryId","inspection.updateOutFinishDtForGrid");
+                    this.innodaleDao.update(hashMap);
+                }else {
+                    hashMap.put("queryId","inspection.updateOutFinishDt");
+                    this.innodaleDao.update(hashMap);
+
+                }
+                hashMap.put("queryId","inspection.updateOrderOutFinishStatus");
+                this.innodaleDao.update(hashMap);
+
+                hashMap.put("queryId","machine.deleteMctPlanAllUseOrderSeq");
                 this.innodaleDao.update(hashMap);
             }
         }

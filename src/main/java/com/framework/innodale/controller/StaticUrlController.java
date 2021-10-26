@@ -188,7 +188,7 @@ public class StaticUrlController {
      */
     @RequestMapping(value = "/newOrderRegistration")
     public String newOrderRegistrationController(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
-        return "/common/register_control";
+        return "/common/create_order";
     }
 
     /**
@@ -304,6 +304,7 @@ public class StaticUrlController {
         mav.addObject("actionType", map.get("actionType"));
         mav.addObject("queryId", map.get("queryId"));
         mav.addObject("WORK_KEY", map.get("WORK_KEY"));
+        mav.addObject("INSIDE_STOCK_SEQ_STR", map.get("INSIDE_STOCK_SEQ_STR"));
 
         return mav;
     }
@@ -311,5 +312,38 @@ public class StaticUrlController {
     @RequestMapping(value = "/salesOrderStatus")
     public String salesOrderStatus(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         return "/common/sales_order_status";
+    }
+
+    @RequestMapping(value = "/drawingRevPop")
+    public ModelAndView drawingRevPop(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("/common/drawing_rev_history");
+        mav.addObject("ORDER_SEQ", map.get("ORDER_SEQ"));
+        mav.addObject("CONTROL_SEQ", map.get("CONTROL_SEQ"));
+        mav.addObject("CONTROL_DETAIL_SEQ", map.get("CONTROL_DETAIL_SEQ"));
+
+        return mav;
+    }
+    @RequestMapping(value = "/createControl")
+    public String createControl(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
+        return "/common/create_control";
+    }
+
+    @RequestMapping(value = "/createStockControl")
+    public ModelAndView createStockControl(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("/common/create_stock_control");
+        mav.addObject("INSIDE_STOCK_SEQ", map.get("INSIDE_STOCK_SEQ"));
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/stockEquip")
+    public String stockEquip(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
+        return "/common/stock_equip";
     }
 }

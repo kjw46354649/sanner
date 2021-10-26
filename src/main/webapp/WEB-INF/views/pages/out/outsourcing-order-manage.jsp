@@ -135,7 +135,8 @@
 <%--            <button type="button" class="defaultBtn btn-100w" id="BTN_REQUEST_OUTSIDE" data-toggle="modal" data-target="#REQUEST_OUTSIDE_POPUP">--%>
                 외주가공 요청
             </button>
-            <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CANCEL_REQUEST_OUTSIDE_POPUP">
+<%--            <button type="button" class="defaultBtn btn-100w" data-toggle="modal" data-target="#CANCEL_REQUEST_OUTSIDE_POPUP">--%>
+            <button type="button" class="defaultBtn btn-100w" id="BTN_CANCEL_REQUEST">
                 가공요청 취소
             </button>
             <button type="button" class="defaultBtn btn-100w" id="ORDER_EXTRACTION">발주서 추출</button>
@@ -1947,13 +1948,29 @@
         }
         $("#BTN_REQUEST_OUTSIDE").on('click',function (e) {
             checkOutsideOrderStatus(function (flag) {
-                    if(flag){
-                        $("#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #OUTSIDE_ORDER_SEARCH").trigger('click');
-                    }else {
-                        $('#REQUEST_OUTSIDE_POPUP').modal('show');
-                    }
+                if(flag){
+                    $("#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #OUTSIDE_ORDER_SEARCH").trigger('click');
+                }else {
+                    $('#REQUEST_OUTSIDE_POPUP').modal('show');
+                }
             },'request');
         })
+
+        $("#BTN_CANCEL_REQUEST").on('click',function (e) {
+            let flag = false;
+            for (let i = 0, selectedRowCount = selectedRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $outsideOrderManageGrid.pqGrid('getRowData', {rowIndx: selectedRowIndex[i]});
+                if(rowData.OUTSIDE_STATUS != 'OST001') {
+                    flag = true;
+                }
+            }
+            if(flag) {
+                fnAlert('',"가공 요청 취소는 가공요청 완료한 건에 대해서만 가능합니다.");
+                return false;
+            }
+
+            $('#CANCEL_REQUEST_OUTSIDE_POPUP').modal('show');
+        });
 
         $('#REQUEST_OUTSIDE_POPUP').on({
             'show.bs.modal': function (event) {

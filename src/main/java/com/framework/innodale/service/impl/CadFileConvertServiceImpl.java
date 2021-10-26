@@ -22,6 +22,7 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
     @Override
     public void createCadFileUpload(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
@@ -47,8 +48,10 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
             String currentControlNum = "";
 
             String queryCommonId = "";
+            boolean flag = false;
 
             for (HashMap<String, Object> hashMap : addList) {
+                hashMap.put("LOGIN_USER_ID",userId);
                 for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
 
                     queryCommonId = queryId.get(0);
@@ -66,31 +69,38 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
                             hashMap.put("queryId", queryCommonId);
                             this.innodaleDao.insertGrid(hashMap);
                         }
-                    } else if("drawingUploadMapper.manageControlCadRevFiles".equals(queryId.get(0))) {
-
-                        currentControlNum = (String) hashMap.get("CONTROL_NUM");
-
-                        // 발주 도면 리버전 처리
-                        if (null != hashMap.get("ORDER_SEQ") && !"".equals(hashMap.get("ORDER_SEQ"))) {
-
-                            hashMap.put("queryId", queryCommonId + "_order");
-                            this.innodaleDao.insertGrid(hashMap);
-
-                            if (!beforeControlNum.equals(currentControlNum)) {
-                                // 업로드 및 리비전 처리
-                                hashMap.put("queryId", queryCommonId);
-                                this.innodaleDao.insertGrid(hashMap);
-
-                                hashMap.put("queryId", queryCommonId + "_revDelete");     // 데이터 저장 파일 등록
-                                innodaleDao.create(hashMap);
-
-                                hashMap.put("queryId", queryCommonId + "_revInsert");     // 데이터 저장 파일 등록
-                                innodaleDao.create(hashMap);
-                            }
-                        }else{
-                            // Part 업로드
+                    }else if("drawingUploadMapper.manageOrderCadFiles".equals(queryId.get(0))) {
+                        if(null != hashMap.get("ORDER_SEQ") && !"".equals(hashMap.get("ORDER_SEQ"))) {
                             hashMap.put("queryId", queryCommonId);
                             this.innodaleDao.insertGrid(hashMap);
+                        }
+                    }else if("drawingUploadMapper.manageControlCadRevFiles".equals(queryId.get(0))) {
+
+                        currentControlNum = (String) hashMap.get("CONTROL_NUM");
+                        // 0. 이전 도면정보 히스토리 기록
+                        // 1. TBL_ORDER의 도면정보 변경
+                        // 2. TBL_CONTROL_PART_ORDER의 도면정보 변경
+                        // 3. TBL_CONTROL_PART의 도면정보 변경
+                        // 4. CONTROL_BARCODE 버전업
+                        if(!flag) {
+                            hashMap.put("queryId","drawingUploadMapper.insertDrawingHistory");
+                            this.innodaleDao.insertGrid(hashMap);
+                            flag = true;
+                        }
+
+                        String orderDrawingNum = (String)hashMap.get("ORDER_DRAWING_NUM");
+                        if(orderDrawingNum.equals(hashMap.get("DRAWING_NUM"))) {
+                            hashMap.put("queryId","drawingUploadMapper.manageOrderCadFiles");
+                            this.innodaleDao.update(hashMap);
+                        }
+
+                        hashMap.put("queryId", queryCommonId);
+                        this.innodaleDao.insertGrid(hashMap);
+
+                        hashMap.put("queryId", queryCommonId + "_order");
+                        this.innodaleDao.insertGrid(hashMap);
+
+                        if (!beforeControlNum.equals(currentControlNum)) {
 
                             hashMap.put("queryId", queryCommonId + "_revDelete");     // 데이터 저장 파일 등록
                             innodaleDao.create(hashMap);
@@ -98,6 +108,40 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
                             hashMap.put("queryId", queryCommonId + "_revInsert");     // 데이터 저장 파일 등록
                             innodaleDao.create(hashMap);
                         }
+
+
+
+                        // 발주 도면 리버전 처리
+//                        if (null != hashMap.get("ORDER_SEQ") && !"".equals(hashMap.get("ORDER_SEQ"))) {
+//
+//                            hashMap.put("queryId", queryCommonId);
+//                            this.innodaleDao.insertGrid(hashMap);
+//
+//                            hashMap.put("queryId", queryCommonId + "_order");
+//                            this.innodaleDao.insertGrid(hashMap);
+//
+//                            if (!beforeControlNum.equals(currentControlNum)) {
+//                                // 업로드 및 리비전 처리
+//                                hashMap.put("queryId", queryCommonId);
+//                                this.innodaleDao.insertGrid(hashMap);
+//
+//                                hashMap.put("queryId", queryCommonId + "_revDelete");     // 데이터 저장 파일 등록
+//                                innodaleDao.create(hashMap);
+//
+//                                hashMap.put("queryId", queryCommonId + "_revInsert");     // 데이터 저장 파일 등록
+//                                innodaleDao.create(hashMap);
+//                            }
+//                        }else{
+//                            // Part 업로드
+//                            hashMap.put("queryId", queryCommonId);
+//                            this.innodaleDao.insertGrid(hashMap);
+//
+//                            hashMap.put("queryId", queryCommonId + "_revDelete");     // 데이터 저장 파일 등록
+//                            innodaleDao.create(hashMap);
+//
+//                            hashMap.put("queryId", queryCommonId + "_revInsert");     // 데이터 저장 파일 등록
+//                            innodaleDao.create(hashMap);
+//                        }
 
                         beforeControlNum = currentControlNum;
                     }else{
@@ -109,5 +153,4 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
             }
         }
     }
-
 }

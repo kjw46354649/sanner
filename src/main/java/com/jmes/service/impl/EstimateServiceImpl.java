@@ -83,7 +83,8 @@ public class EstimateServiceImpl implements EstimateService {
             data = jsonMap.get(i);
             data.put("EST_SEQ", EST_SEQ);
             estimateDao.insertEstimateDetail(data);
-            data.put("queryId", "estimate.insertEstimateDetailProcessFromControl");
+//            data.put("queryId", "estimate.insertEstimateDetailProcessFromControl");
+            data.put("queryId", "estimate.insertEstimateDetailProcessFromOrder");
             this.innodaleDao.create(data);
             data.put("queryId", "estimate.updateEstimateAutomaticQuote");
         }

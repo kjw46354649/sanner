@@ -161,6 +161,7 @@ public class MaterialServiceImpl implements MaterialService {
         Boolean flag = false;
         String message = "";
         if("GRID_IN".equals(POP_TYPE)){
+            map.put("INFO_TYPE","STO007"); // 버튼으로 입고
 
             map.put("queryId", "material.updateInsideStockPop");
             this.innodaleDao.update(map);
@@ -169,6 +170,13 @@ public class MaterialServiceImpl implements MaterialService {
             this.innodaleDao.create(map);
 
         }else if("GRID_OUT".equals(POP_TYPE) || "BARCODE_OUT".equals(POP_TYPE)){
+            if("GRID_OUT".equals(POP_TYPE)) {
+                map.put("INFO_TYPE","STO008"); // 버튼으로 출고한 경우
+            }else {
+                // 바코드 도면으로 출고 (현재는 매칭되는 도면이 없으면 출고가 불가능하므로, 수동매칭 출고는 사실상 불가)
+                // 수동매칭 출고 : STO006 , 재고지정 출고 : STO004
+                map.put("INFO_TYPE","STO004");
+            }
 
             if(!"".equals(INSIDE_OUT_SEQ)) {
                 map.put("queryId", "material.updateInsideStockOut");
@@ -203,6 +211,7 @@ public class MaterialServiceImpl implements MaterialService {
                         String ABBR_NM = (String)selMap1.get("ABBR_NM");
 
                         String ORDER_COMP_CD = (String)map.get("ORDER_COMP_CD");
+                        String HIDDEN_POP_STOCK_EQUIP = (String)map.get("HIDDEN_POP_STOCK_EQUIP");
                         if(ORDER_COMP_CD == null || "".equals(ORDER_COMP_CD)){//그리드 값 체크
                             flag = true;
                             message = "발주처를 입력해주세요.";
@@ -216,6 +225,11 @@ public class MaterialServiceImpl implements MaterialService {
                             map.put("queryId", "material.insertInsideStock");
                             this.innodaleDao.create(map);
                             model.addAttribute("INSIDE_STOCK_NUM",		V_INSIDE_STOCK_NUM);
+
+                            if(HIDDEN_POP_STOCK_EQUIP != null && !"".equals(HIDDEN_POP_STOCK_EQUIP)) {
+                                map.put("queryId", "material.insertStockEquipMappingMultie");
+                                this.innodaleDao.create(map);
+                            }
                         }
                     }
                 }
@@ -228,8 +242,8 @@ public class MaterialServiceImpl implements MaterialService {
                 this.innodaleDao.create(map);
             }
 
-            if("Y".equals(USE_BARCODE)) { // 바코드로 재고입고시 출고프로세스 제거 (21/07/05)
-//                outGoingProcessForBarcodeIn(model,map);
+            if("Y".equals(USE_BARCODE)) { // 바코드로 재고입고시 출고프로세스
+                outGoingProcessForBarcodeIn(model,map);
             }
         }
 
@@ -237,7 +251,7 @@ public class MaterialServiceImpl implements MaterialService {
         model.addAttribute("message",message);
     }
 
-    @Override // 바코드로 재고입고시, 출고까지 진행 (단, 해당 작업지시건의 주문중 재고가 Y인것만 출고처리)
+    @Override // 바코드로 재고입고시, 출고까지 진행
     public void outGoingProcessForBarcodeIn(Model model, Map<String, Object> map) throws Exception {
         map.put("queryId", "material.insertOutgoingInStockManage1");
         this.innodaleDao.create(map);
@@ -252,6 +266,9 @@ public class MaterialServiceImpl implements MaterialService {
         this.innodaleDao.update(map);
 
         map.put("queryId", "inspection.updateOutFinishStatus");
+        this.innodaleDao.update(map);
+
+        map.put("queryId", "machine.deleteMctPlanAll");
         this.innodaleDao.update(map);
 
     }
@@ -384,13 +401,14 @@ public class MaterialServiceImpl implements MaterialService {
                 map.put("queryId", "material.deleteInsideStockIn");
                 this.innodaleDao.remove(map);
 
-                map.put("queryId", "material.selectInsideStockInOutList");
-                List<Map<String, Object>> inOutList = this.innodaleDao.getList(map);
-
-                if(inOutList.size() == 0) {
-                    map.put("queryId", "material.deleteInsideStock");
-                    this.innodaleDao.remove(map);
-                }
+                // 21.09.29 재고번호 삭제 로직 제거
+//                map.put("queryId", "material.selectInsideStockInOutList");
+//                List<Map<String, Object>> inOutList = this.innodaleDao.getList(map);
+//
+//                if(inOutList.size() == 0) {
+//                    map.put("queryId", "material.deleteInsideStock");
+//                    this.innodaleDao.remove(map);
+//                }
 
 //                if(!"".equals(CONTROL_SEQ)) { //바코드로 재고입고시 출고프로세스 제거로 해당 로직도 제거 (21/07/05)
 //                    map.put("queryId", "material.deleteInsideStockOutgoing");

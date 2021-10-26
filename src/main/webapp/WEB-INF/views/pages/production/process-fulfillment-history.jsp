@@ -257,7 +257,7 @@
                     },
                     {title: '완료수량', width: 60, dataIndx: 'FINISH_QTY'},
                     {title: '불량', width: 60, dataIndx: 'ERROR_QTY'},
-                    {title: '불량원인', width: 100, dataIndx: 'ERROR_REASON'},
+                    {title: '불량원인', width: 100, dataIndx: 'ERROR_REASON_NM'},
                 ]
             },
             {title: '작업지시번호', width: 180, align: 'left', dataIndx: 'CONTROL_NUM'},

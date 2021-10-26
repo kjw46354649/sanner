@@ -181,20 +181,16 @@
             B.BUSINESS_TYPE, <!-- 업태 -->
             B.BUSINESS_ITEM, <!-- 종목 -->
             CONCAT(B.BUSINESS_TYPE, ' / ', B.BUSINESS_ITEM) AS BUSINESS_TYPE_BUSINESS_ITEM,
-            (   SELECT SUM(C.UNIT_FINAL_AMT * C.ORDER_QTY)
-                FROM TBL_CONTROL A
-                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                                                       AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
-                                                   AND C.ORDER_SEQ = D.ORDER_SEQ
+            (   SELECT SUM(A.UNIT_FINAL_AMT * A.ORDER_QTY)
+                FROM TBL_ORDER A
+                    INNER JOIN TBL_INVOICE_DETAIL B ON A.ORDER_SEQ = B.ORDER_SEQ
                 WHERE 1 = 1
                     AND A.DEL_YN = 'N'
-                    AND IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050'
-                    AND A.CONTROL_SEQ IN (${CONTROL_SEQ_STR})
+                    AND IFNULL(A.WORK_TYPE, SPACE(0)) != 'WTP050'
+                    AND A.ORDER_SEQ IN (${ORDER_SEQ_STR})
                     AND A.COMP_CD = #{COMP_CD}
                     AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-                GROUP BY D.INVOICE_NUM) AS TOTAL_AMT, <!-- 금액 합계 -->
+                GROUP BY B.INVOICE_NUM) AS TOTAL_AMT, <!-- 금액 합계 -->
             A.INVOICE_NUM, <!-- INV No. -->
             A.INVOICE_TITLE,
             DATE_FORMAT(NOW(), '%Y-%m-%d') AS DATE
@@ -202,7 +198,7 @@
             INNER JOIN TBL_COMPANY B ON A.COMP_CD = B.COMP_CD
         WHERE INVOICE_NUM IN (SELECT INVOICE_NUM
                              FROM TBL_INVOICE_DETAIL
-                             WHERE CONTROL_SEQ IN (${CONTROL_SEQ_STR}))
+                             WHERE ORDER_SEQ IN (${ORDER_SEQ_STR}))
     </select>
 
     <select id="selectTransactionStatementListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -220,24 +216,27 @@
             MAX(NOTE) AS NOTE
         FROM (
             SELECT
-                ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_NUM) AS ROWNUM,
-                A.CONTROL_NUM,
-                C.ORDER_NUM,
-                C.DRAWING_NUM,
-                C.ITEM_NM,
-                CONCAT(C.DRAWING_NUM, '\n', C.ITEM_NM) AS DRAWING_NUM_ITEM_NM,
-                B.SIZE_TXT,
-                SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
-                C.UNIT_FINAL_AMT,
-                C.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT, <!-- 합계 금액 -->
-                D.NOTE
-            FROM TBL_CONTROL A
-                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND C.ORDER_SEQ = D.ORDER_SEQ
+                ROW_NUMBER () OVER (ORDER BY A.ORDER_SEQ, A.ORDER_NUM) AS ROWNUM,
+                (
+                    SELECT GROUP_CONCAT(Y.CONTROL_NUM)
+                    FROM TBL_CONTROL_PART_ORDER X
+                        INNER JOIN TBL_CONTROL Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.DEL_YN = 'N'
+                    WHERE X.ORDER_SEQ = A.ORDER_SEQ
+                ) AS CONTROL_NUM,
+                A.ORDER_NUM,
+                A.DRAWING_NUM,
+                A.ITEM_NM,
+                CONCAT(A.DRAWING_NUM, '\n',IFNULL(A.ITEM_NM,SPACE(0))) AS DRAWING_NUM_ITEM_NM,
+                A.SIZE_TXT,
+                A.ORDER_QTY AS CONTROL_ORDER_QTY,
+                A.UNIT_FINAL_AMT,
+                A.UNIT_FINAL_AMT * A.ORDER_QTY AS TOTAL_AMT, <!-- 합계 금액 -->
+                B.NOTE
+            FROM TBL_ORDER A
+                INNER JOIN TBL_INVOICE_DETAIL B ON A.ORDER_SEQ = B.ORDER_SEQ
             WHERE A.DEL_YN = 'N'
-                AND IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050'
-                AND D.INVOICE_NUM = #{INVOICE_NUM}
+                AND IFNULL(A.WORK_TYPE, SPACE(0)) != 'WTP050'
+                AND B.INVOICE_NUM = #{INVOICE_NUM}
             UNION ALL
             SELECT
                 A.SEQ AS ROWNUM,
@@ -287,21 +286,19 @@
             C.UNIT_FINAL_EST_AMT, <!-- 최종 견적가 -->
             IFNULL( CASE
                         WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.UNIT_FINAL_AMT
-                                                                    FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
-                                                                    WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                                                        AND N.CONTROL_STATUS = 'ORD003'
-                                                                        AND N.DEL_YN = 'N'
+                                                                    FROM TBL_ORDER M
+                                                                    WHERE M.ORDER_STATUS = 'REG003'
+                                                                        AND M.DEL_YN = 'N'
                                                                         AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
-                                                                    ORDER BY M.CONTROL_SEQ DESC
+                                                                    ORDER BY M.ORDER_SEQ DESC
                                                                     LIMIT 1)
                         ELSE (  SELECT M.UNIT_FINAL_AMT
-                                FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
-                                WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                    AND N.CONTROL_STATUS = 'ORD003'
-                                    AND N.DEL_YN = 'N'
-                                    AND N.CONTROL_SEQ != B.CONTROL_SEQ
+                                FROM TBL_ORDER M
+                                WHERE M.ORDER_STATUS = 'REG003'
+                                    AND M.DEL_YN = 'N'
+                                    AND M.ORDER_SEQ != C.ORDER_SEQ
                                     AND M.DRAWING_NUM = B.DRAWING_NUM
-                                ORDER BY M.CONTROL_SEQ DESC
+                                ORDER BY M.ORDER_SEQ DESC
                                 LIMIT 1)
                     END, SPACE(0)) AS PREV_UNIT_FINAL_AMT,    <!-- 종전가 -->
         FROM TBL_CONTROL A
@@ -342,23 +339,21 @@
             IFNULL( CASE
                         WHEN B.PREV_DRAWING_NUM IS NOT NULL THEN (
                             SELECT M.UNIT_FINAL_AMT
-                            FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
-                            WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                AND N.CONTROL_STATUS = 'ORD003'
-                                AND N.DEL_YN = 'N'
+                            FROM TBL_ORDER M
+                            WHERE M.ORDER_STATUS = 'REG003'
+                                AND M.DEL_YN = 'N'
                                 AND M.DRAWING_NUM = B.PREV_DRAWING_NUM
-                            ORDER BY M.CONTROL_SEQ DESC
+                            ORDER BY M.ORDER_SEQ DESC
                             LIMIT 1
                         )
                         ELSE (
                             SELECT M.UNIT_FINAL_AMT
-                            FROM jmes.TBL_CONTROL_PART_ORDER_MAIN M, jmes.TBL_CONTROL N
-                            WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
-                                AND N.CONTROL_STATUS = 'ORD003'
-                                AND N.DEL_YN = 'N'
-                                AND N.CONTROL_SEQ != B.CONTROL_SEQ
+                            FROM TBL_ORDER M
+                            WHERE M.ORDER_STATUS = 'REG003'
+                                AND M.DEL_YN = 'N'
+                                AND M.ORDER_SEQ != C.ORDER_SEQ
                                 AND M.DRAWING_NUM = B.DRAWING_NUM
-                            ORDER BY M.CONTROL_SEQ DESC
+                            ORDER BY M.ORDER_SEQ DESC
                             LIMIT 1
                         )
                     END, SPACE(0)
@@ -370,6 +365,61 @@
             AND A.DEL_YN = 'N'
             AND A.CONTROL_SEQ IN (${CONTROL_SEQ})
         ORDER BY A.CONTROL_NUM, B.PART_NUM
+    </select>
+    <select id="selectControlEstimateDetailListExcel_NEW" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER() OVER(ORDER BY A.REGIST_NUM, A.ORDER_NUM, A.ORDER_SEQ) AS ROW_NUM,
+            A.REGIST_NUM,
+            CONCAT('(', A.DRAWING_NUM, ')') AS DRAWING_NUM,
+            A.SIZE_TXT,
+            IFNULL(SF_GET_CODE_NM('1029', A.MATERIAL_KIND, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_KIND_NM,
+            '',
+            A.ORDER_QTY,
+            IFNULL(SF_GET_CODE_NM('1033', A.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM,
+            IFNULL(SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM,
+            '',
+            IFNULL(SF_GET_CODE_NM('1039', A.SURFACE_TREAT, #{LOGIN_LOCALE}), SPACE(0)) AS SURFACE_TREAT_NM,
+            '',
+            IFNULL(SF_GET_CODE_NM('1058', A.MATERIAL_FINISH_GRIND, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_FINISH_GRIND_NM,
+            '',
+            A.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, <!-- 열 처리 -->
+            A.UNIT_PROCESS_AUTO_AMT, <!-- 가공비 -->
+            A.UNIT_ETC_AMT, <!-- 기타 추가 -->
+            A.UNIT_AMT_NOTE, <!-- 항목별단가_견적비고 -->
+            CASE IFNULL(A.UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(A.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, 0) + IFNULL(A.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, 0) + IFNULL(A.UNIT_SURFACE_AUTO_AMT, 0) + IFNULL(A.UNIT_PROCESS_AUTO_AMT, 0) + IFNULL(A.UNIT_ETC_AMT, 0)
+                WHEN 0 THEN SPACE(0)
+            ELSE IFNULL(A.UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(A.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, 0) + IFNULL(A.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, 0) + IFNULL(A.UNIT_SURFACE_AUTO_AMT, 0) + IFNULL(A.UNIT_PROCESS_AUTO_AMT, 0) + IFNULL(A.UNIT_ETC_AMT, 0)
+            END AS CALC_EST_UNIT_COST, <!-- 계산 견적가 -->
+            A.UNIT_FINAL_EST_AMT, <!-- 최종 견적가 -->
+            IFNULL(
+                CASE WHEN A.PREV_DRAWING_NUM IS NOT NULL THEN (
+                    SELECT M.UNIT_FINAL_AMT
+                    FROM TBL_ORDER M
+                    WHERE M.ORDER_STATUS = 'REG003'
+                        AND M.DEL_YN = 'N'
+                        AND M.DRAWING_NUM = A.PREV_DRAWING_NUM
+                        AND M.WORK_TYPE = A.WORK_TYPE
+                        AND M.ORDER_COMP_CD = A.ORDER_COMP_CD
+                    ORDER BY M.ORDER_SEQ DESC
+                    LIMIT 1
+                )
+                ELSE (
+                    SELECT M.UNIT_FINAL_AMT
+                    FROM TBL_ORDER M
+                    WHERE M.ORDER_STATUS = 'REG003'
+                        AND M.DEL_YN = 'N'
+                        AND M.ORDER_SEQ != A.ORDER_SEQ
+                        AND M.DRAWING_NUM = A.DRAWING_NUM
+                        AND M.WORK_TYPE = A.WORK_TYPE
+                        AND M.ORDER_COMP_CD = A.ORDER_COMP_CD
+                    ORDER BY M.ORDER_SEQ DESC
+                    LIMIT 1
+                )
+                END, SPACE(0)
+            ) AS PREV_UNIT_FINAL_AMT <!-- 종전가 -->
+        FROM TBL_ORDER A
+        WHERE A.DEL_YN = 'N'
+            AND A.ORDER_SEQ IN (${ORDER_SEQ})
+        ORDER BY A.REGIST_NUM, A.ORDER_NUM, A.ORDER_SEQ
     </select>
 
     <select id="selectItemOrderRegisterOrderSheetListExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">

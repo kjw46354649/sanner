@@ -92,7 +92,7 @@
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="WORK_TYPE">작업형태</label>
-                            <select class="label_200" name="WORK_TYPE" id="WORK_TYPE" title="작업형태">
+                            <select class="wd_200" name="WORK_TYPE" id="WORK_TYPE" title="작업형태">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                                 <c:forEach var="code" items="${HighCode.H_1033}">
                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
@@ -150,9 +150,9 @@
                         <span class="gubun"></span>
                         <span>
                             <span class="ipu_wrap"><label class="label_100">Option</label></span>
-                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_WAIT_YN" value="NULL,MST001,MST003" checked><label for="ORDER_WAIT_YN"> 주문대기</label></span>
-                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="ORDER_YN" value="MST002" checked><label for="ORDER_YN"> 주문완료</label></span>
-                            <span class="chk_box"><input type="checkbox" name="ORDER_STATUS_CHECK_BOX" id="IN_YN" value="MST004"><label for="IN_YN"> 입고완료</label></span>
+                            <span class="chk_box"><input type="checkbox" name="MATERIAL_ORDER_STATUS_CHECK_BOX" id="ORDER_WAIT_YN" value="NULL,MST001,MST003" checked><label for="ORDER_WAIT_YN"> 주문대기</label></span>
+                            <span class="chk_box"><input type="checkbox" name="MATERIAL_ORDER_STATUS_CHECK_BOX" id="ORDER_YN" value="MST002" checked><label for="ORDER_YN"> 주문완료</label></span>
+                            <span class="chk_box"><input type="checkbox" name="MATERIAL_ORDER_STATUS_CHECK_BOX" id="IN_YN" value="MST004"><label for="IN_YN"> 입고완료</label></span>
                             <span class="chk_box"><input type="checkbox" name="SHIPMENT_YN" id="SHIPMENT_YN"><label for="SHIPMENT_YN"> 출하완료</label></span>
                             <span class="chk_box"><input type="checkbox" name="OUTSIDE_YN" id="ITEM_ORDER_REGISTER_OUTSIDE_YN"><label for="ITEM_ORDER_REGISTER_OUTSIDE_YN"> 외주가공</label></span>
                         </span>
@@ -163,7 +163,7 @@
                     </li>
                 </ul>
             </div>
-            <input type="hidden" name="ORDER_STATUS" id="ORDER_STATUS">
+            <input type="hidden" name="MATERIAL_ORDER_STATUS" id="MATERIAL_ORDER_STATUS">
             <input type="checkbox" name="IN_YN" id="HIDDEN_IN_YN" style="display: none">
         </form>
     </div>
@@ -278,7 +278,7 @@
         $itemOrderRegisterStartDate.datepicker('setDate', 'today');
         $itemOrderRegisterEndDate.datepicker('setDate', 'today');
 
-        $('#ORDER_STATUS').val("'NULL','MST001','MST003','MST002'");
+        $('#MATERIAL_ORDER_STATUS').val("'NULL','MST001','MST003','MST002'");
 
         /** 공통 코드 이외의 처리 부분 **/
         const $itemOrderRegisterSearchForm = $("#item_order_register_search_form");
@@ -1786,6 +1786,10 @@
                     controlSeqStr += ',';
                     controlDetailSeqStr += ',';
                 }
+                if(rowData.M_ORDER_QTY <= 0) {
+                    fnAlert(null, "주문수량이 0개인 작업이 존재합니다.");
+                    return false;
+                }
             }
 
             if(controlSeqStr == "" && controlDetailSeqStr == "") {
@@ -2418,10 +2422,10 @@
         $('#ITEM_ORDER_REGISTER_END_DATE').focus();
     });
 
-    $('[name=ORDER_STATUS_CHECK_BOX]').on('change', function () {
+    $('[name=MATERIAL_ORDER_STATUS_CHECK_BOX]').on('change', function () {
         let checkedValue = '';
 
-        $("input[name=ORDER_STATUS_CHECK_BOX]:checked").each(function (index) {
+        $("input[name=MATERIAL_ORDER_STATUS_CHECK_BOX]:checked").each(function (index) {
             if (index > 0) {
                 checkedValue += ', ';
             }
@@ -2430,7 +2434,7 @@
         });
 
         $('[name=IN_YN]').prop('checked', checkedValue.includes('MST004'));
-        $('#ORDER_STATUS').val(checkedValue);
+        $('#MATERIAL_ORDER_STATUS').val(checkedValue);
     });
 
     $('#ITEM_ORDER_REGISTER_EXCEL_EXPORT').on('click', function () {

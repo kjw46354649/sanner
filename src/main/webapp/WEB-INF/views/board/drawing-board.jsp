@@ -448,10 +448,10 @@
                                 <c:if test="${not empty workInfo}">${workInfo.STOP_SECOND}</c:if>&nbsp;<srping:message key='drawing.board.label.01'/>
                             </span>
                         </div>
-                        <div class="timeWrap <c:if test="${workInfo.DATA_TYPE eq 'CUR'}">yellowBackground</c:if>">
+                        <div class="timeWrap <c:if test="${workInfo.DATA_TYPE eq 'CUR'}">yellowBackground</c:if>" style="padding-right:20px;">
                             <span style="padding-top: 3px;" class="timeTit <c:if test="${workInfo.DATA_TYPE eq 'CUR'}">sandglass</c:if><c:if test="${workInfo.DATA_TYPE ne 'CUR'}">sandglass_stop</c:if>">
                                 <srping:message key='drawing.board.button.04'/></span>
-                            <span class="time" id="workTimeInfo">
+                            <span class="time" id="workTimeInfo" style="margin-left: 10px;">
                                 <c:if test="${not empty workInfo}">${workInfo.WORK_MINUTE}</c:if>&nbsp;<srping:message key='drawing.board.label.02'/>
                                 <c:if test="${not empty workInfo}">${workInfo.WORK_SECOND}</c:if>&nbsp;<srping:message key='drawing.board.label.01'/>
                             </span>
@@ -1367,8 +1367,8 @@
                                 seconds = 0;
                                 minutes++;
                             }
-                            let workTimeHtml = minutes + '&nbsp;<srping:message key='drawing.board.label.02'/>&nbsp;' + seconds + '&nbsp;<srping:message key='drawing.board.label.01'/>'
-                            $("#workTimeInfo").html(workTimeHtml);
+                            let workTimeHtml = minutes + ' <srping:message key='drawing.board.label.02'/> ' + seconds + ' <srping:message key='drawing.board.label.01'/>'
+                            $("#workTimeInfo").text(workTimeHtml);
                         }
                     }, 1000);
                     $("#bodyWrap").focus();

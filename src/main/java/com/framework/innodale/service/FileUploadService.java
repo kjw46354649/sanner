@@ -15,4 +15,6 @@ public interface FileUploadService {
 
     public String controlCadRevPrev(Map<String, Object> map) throws Exception;
 
+    public String controlCadPartPrev(Map<String, Object> map) throws Exception;
+
 }

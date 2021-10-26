@@ -58,7 +58,7 @@
     </update>
 
     <insert id="insertEstimateSubmitMail" parameterType="java.util.HashMap">
-        INSERT INTO jmes.TBL_MAIL_BOX
+        INSERT INTO TBL_MAIL_BOX
         (
             MAIL_BOX_SEQ, TITLE, CONTEXT,
             SEND_NAME, SEND_EMAIL, RECV_EMAIL,
@@ -72,14 +72,14 @@
             '' AS CC_EMAIL, '' AS HCC_EMAIL, A.ETC_GFILE_SEQ,
             'EMSTS001', 'N', 0,
             A.EST_SEQ, NOW(), #{USER_ID}
-        FROM jmes.TBL_ESTIMATE A
-            LEFT OUTER JOIN jmes.TBL_ESTIMATE_RECEIVER B ON A.EST_SEQ = B.EST_SEQ
+        FROM TBL_ESTIMATE A
+            LEFT OUTER JOIN TBL_ESTIMATE_RECEIVER B ON A.EST_SEQ = B.EST_SEQ
         WHERE A.EST_SEQ = #{EST_SEQ}
         GROUP BY A.EST_SEQ
     </insert>
 
     <insert id="insertItemOrderRegisterPopSubmitMail" parameterType="java.util.HashMap">
-        INSERT INTO jmes.TBL_MAIL_BOX
+        INSERT INTO TBL_MAIL_BOX
         (
             MAIL_BOX_SEQ, TITLE, CONTEXT,
             SEND_NAME, SEND_EMAIL, RECV_EMAIL,
@@ -115,7 +115,7 @@
     </insert>
 
     <insert id="insertOutsideRequestSubmitMail" parameterType="java.util.HashMap">
-        INSERT INTO jmes.TBL_MAIL_BOX
+        INSERT INTO TBL_MAIL_BOX
         (
             MAIL_BOX_SEQ, TITLE, CONTEXT,
             SEND_NAME, SEND_EMAIL, RECV_EMAIL,

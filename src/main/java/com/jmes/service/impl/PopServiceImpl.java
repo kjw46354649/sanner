@@ -125,6 +125,20 @@ public class PopServiceImpl implements PopService {
                 model.addAttribute("message", context02 + " " + context03 + " Already Existed."); // 현재와 같은 Location 스캔 처리
             }else {
 
+                hashMap.put("queryId", "popMapper.selectRequestStockInfo");
+                Map<String, Object> requestStockInfo = innodaleDao.getInfo(hashMap);
+                if(requestStockInfo != null) {
+                    requestStockInfo.put("LOGIN_USER_ID",hashMap.get("LOGIN_USER_ID"));
+
+                    requestStockInfo.put("INFO_TYPE","STO001");
+                    requestStockInfo.put("queryId","material.insertInsideStockIn");
+                    innodaleDao.create(requestStockInfo);
+
+                    requestStockInfo.put("INFO_TYPE","STO002");
+                    requestStockInfo.put("queryId","material.updateInsideStockOut");
+                    innodaleDao.update(requestStockInfo);
+                }
+
                 NotificationMessage notificationMessage = new NotificationMessage();
 
                 notificationMessage.setType(MessageType.POP);

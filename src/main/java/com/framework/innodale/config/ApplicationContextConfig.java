@@ -129,6 +129,7 @@ public class ApplicationContextConfig {
 
         txAttributes.setProperty("create*", writeTransactionAttributesDefinition);
         txAttributes.setProperty("update*", writeTransactionAttributesDefinition);
+        txAttributes.setProperty("save*", writeTransactionAttributesDefinition);
         txAttributes.setProperty("remove*", writeTransactionAttributesDefinition);
         txAttributes.setProperty("modify*", writeTransactionAttributesDefinition);
         txAttributes.setProperty("manager*", writeTransactionAttributesDefinition);

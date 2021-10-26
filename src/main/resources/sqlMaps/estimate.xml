@@ -782,6 +782,22 @@
         GROUP BY A.COMP_CD, A.ORDER_COMP_CD, C.ORDER_STAFF_SEQ
     </select>
 
+    <select id="selectEstimateInfoFromOrder" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            GROUP_CONCAT(A.ORDER_SEQ) AS CONCAT_ORDER_SEQ,
+            A.COMP_CD,
+            A.ORDER_STAFF_SEQ,
+            A.ORDER_COMP_CD,
+            DATE_FORMAT(A.ORDER_STATUS_DT , '%Y-%m-%d %T') INSERT_DT,
+            COUNT(A.ORDER_SEQ) AS DTL_CNT,
+            SUM(A.UNIT_FINAL_EST_AMT) AS DTL_AMOUNT, -- 견적금액 -->
+            (SELECT TEMPLATE_CONTENT FROM TBL_MAIL_TEMPLATE WHERE TEMPLATE_SEQ = 0) AS EMAIL_CONTENT
+        FROM TBL_ORDER A
+        WHERE A.DEL_YN = 'N'
+          AND A.ORDER_SEQ IN (${ORDER_SEQ})
+        GROUP BY A.COMP_CD, A.ORDER_COMP_CD, A.ORDER_STAFF_SEQ
+    </select>
+
     <select id="selectEstimateListFromControl" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER() OVER() AS ROWNUM,
@@ -833,6 +849,53 @@
         WHERE A.DEL_YN = 'N'
             AND A.CONTROL_SEQ IN (${CONTROL_SEQ})
     </select>
+    <select id="selectEstimateListFromOrder" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER() OVER() AS ROWNUM,
+            A.ORDER_SEQ,
+            A.PROJECT_NM,
+            A.MODULE_NM,
+            A.ITEM_NM,
+            A.DRAWING_NUM,
+            '' AS PART_NUM,
+            A.SIZE_TXT,
+            A.WORK_TYPE,
+            SF_GET_CODE_NM('1033', A.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM,
+            A.MATERIAL_TYPE,
+            SF_GET_CODE_NM('1035', A.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM,
+            A.MATERIAL_DETAIL,
+            SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM,
+            A.MATERIAL_KIND,
+            SF_GET_CODE_NM('1029', A.MATERIAL_KIND, #{LOGIN_LOCALE}) AS MATERIAL_KIND_NM,
+            A.SURFACE_TREAT,
+            SF_GET_CODE_NM('1039', A.SURFACE_TREAT, #{LOGIN_LOCALE}) AS SURFACE_TREAT_NM,
+            '' AS MATERIAL_NOTE,
+            '' AS MATERIAL_FINISH_GRIND,
+            '' AS MATERIAL_FINISH_HEAT,
+            CASE WHEN IFNULL(A.UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(A.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, 0) + IFNULL(A.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, 0) + IFNULL(A.UNIT_SURFACE_AUTO_AMT, 0) + IFNULL(A.UNIT_PROCESS_AUTO_AMT, 0) > 0
+                     THEN IFNULL(A.UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(A.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, 0) + IFNULL(A.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, 0) + IFNULL(A.UNIT_SURFACE_AUTO_AMT, 0) + IFNULL(A.UNIT_PROCESS_AUTO_AMT, 0)
+                END AS UNIT_SUM_AUTO_AMT,
+            A.UNIT_MATERIAL_AUTO_AMT,
+            A.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT,
+            A.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT,
+            A.UNIT_SURFACE_AUTO_AMT,
+            A.UNIT_PROCESS_AUTO_AMT,
+            A.UNIT_ETC_AMT,
+            A.UNIT_AMT_NOTE,
+            A.UNIT_FINAL_EST_AMT,
+            A.NOTE,
+            A.DWG_GFILE_SEQ,
+            A.DXF_GFILE_SEQ,
+            A.PDF_GFILE_SEQ,
+            A.IMG_GFILE_SEQ ,
+            CASE
+                WHEN A.UNIT_FINAL_EST_AMT IS NOT NULL THEN A.UNIT_FINAL_EST_AMT * A.ORDER_QTY
+                ELSE (IFNULL(A.UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(A.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, 0) + IFNULL(A.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, 0) + IFNULL(A.UNIT_SURFACE_AUTO_AMT, 0) + IFNULL(A.UNIT_PROCESS_AUTO_AMT, 0) + IFNULL(A.UNIT_ETC_AMT, 0)) * A.ORDER_QTY
+                END AS DTL_AMOUNT
+        FROM TBL_ORDER A
+        WHERE A.DEL_YN = 'N'
+          AND A.ORDER_SEQ IN (${ORDER_SEQ})
+    </select>
 
     <select id="selectEstimateReceiverListFromControl" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
@@ -842,6 +905,16 @@
             A.STAFF_TEL AS RECEIVER_TEL
         FROM TBL_COMPANY_STAFF A
         WHERE A.STAFF_SEQ IN (SELECT M.ORDER_STAFF_SEQ FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ IN (${CONTROL_SEQ}))
+    </select>
+
+    <select id="selectEstimateReceiverListFromOrder" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.STAFF_SEQ,
+            A.STAFF_NM AS RECEIVER_NM,
+            A.STAFF_EMAIL AS RECEIVER_EMAIL,
+            A.STAFF_TEL AS RECEIVER_TEL
+        FROM TBL_COMPANY_STAFF A
+        WHERE A.STAFF_SEQ IN (SELECT M.ORDER_STAFF_SEQ FROM TBL_ORDER M WHERE M.ORDER_SEQ IN (${ORDER_SEQ}))
     </select>
 
     <select id="selectSurfaceTreatmentCostList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -1341,6 +1414,30 @@
             AND A.CONTROL_SEQ = #{CONTROL_SEQ}
             AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
             AND NOT EXISTS ( SELECT * FROM TBL_ESTIMATE_DETAIL_PROCESS M WHERE M.FACTOR_CD = A.FACTOR_CD AND M.EST_SEQ = #{EST_SEQ} AND M.SEQ = #{SEQ} )
+    </insert>
+
+    <insert id="insertEstimateDetailProcessFromOrder" parameterType="java.util.HashMap">
+        INSERT INTO TBL_ESTIMATE_DETAIL_PROCESS (
+              EST_SEQ
+            , SEQ
+            , FACTOR_CD
+            , PROCESS_CNT
+            , INSERT_ID
+        )
+        SELECT #{EST_SEQ}
+             , #{SEQ}
+             , A.FACTOR_CD
+             , A.PROCESS_CNT
+             , #{LOGIN_USER_ID}
+        FROM TBL_CONTROL_PART_PROCESS A
+        WHERE CONCAT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) IN (
+            SELECT CONCAT(Y.CONTROL_SEQ, Y.CONTROL_DETAIL_SEQ)
+            FROM TBL_ORDER X
+                INNER JOIN TBL_CONTROL_PART_ORDER Y ON X.ORDER_SEQ = Y.ORDER_SEQ
+            WHERE X.DEL_YN = 'N'
+              AND X.ORDER_SEQ = #{ORDER_SEQ}
+        )
+        AND NOT EXISTS ( SELECT * FROM TBL_ESTIMATE_DETAIL_PROCESS M WHERE M.FACTOR_CD = A.FACTOR_CD AND M.EST_SEQ = #{EST_SEQ} AND M.SEQ = #{SEQ} )
     </insert>
 
 </mapper>

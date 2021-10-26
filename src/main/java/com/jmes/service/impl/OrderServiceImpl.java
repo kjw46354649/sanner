@@ -23,8 +23,56 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+
     @Override
     public void createNewOrder(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<Map<String, Object>> jsonMap = null;
+        ArrayList<Map<String, Object>> listMap = new ArrayList<>();
+        ArrayList<String> registList = new ArrayList<>();
+
+        Map<String, Object> hashMap = new HashMap<String, Object>();
+
+        if (jsonObject != null) {
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {});
+        }
+
+        for(int i=0; i<jsonMap.size();i++) {
+            Map<String,Object> tempMap = jsonMap.get(i);
+            if(tempMap.get("REGIST_NUM") != null && !"".equals(tempMap.get("REGIST_NUM"))) {
+                listMap.add(tempMap);
+                registList.add(String.valueOf(tempMap.get("REGIST_NUM")));
+            }
+        }
+
+        hashMap.put("list", listMap);
+        hashMap.put("registList", registList);
+
+        hashMap.put("queryId", "orderMapper.selectBeforeInsertDuplicationRegistList_NEW");
+        List<Map<String, Object>> duplicateRegistList = this.innodaleDao.getList(hashMap);
+        if(duplicateRegistList.size() > 0) {
+            model.addAttribute("registList", duplicateRegistList);
+        }else {
+            for(Map<String,Object> tempMap : listMap) {
+                tempMap.put("LOGIN_USER_ID",userId);
+
+                tempMap.put("queryId", "orderMapper.createOrder");
+                this.innodaleDao.create(tempMap);
+
+                // 21.09.16 단가계산은 작업연계 이후에 수행
+//                tempMap.put("queryId", "orderMapper.updateOrderAutomaticQuote");
+//                this.innodaleDao.update(tempMap);
+
+                tempMap.put("queryId", "orderMapper.insertOutBarcode");
+                this.innodaleDao.create(tempMap);
+            }
+        }
+    }
+
+    @Override
+    public void createNewStockControl(Model model, Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Map<String, Object>> jsonMap = null;
@@ -39,17 +87,13 @@ public class OrderServiceImpl implements OrderService {
         hashMap.put("list", jsonMap);
         hashMap.put("IN_UID", uuid);
 
-        hashMap.put("queryId", "orderMapper.createControlExcel");
+        hashMap.put("queryId", "orderMapper.createControlExcel_stock");
         this.innodaleDao.create(hashMap);
         hashMap.put("queryId", "orderMapper.selectBeforeInsertDuplicationControlList");
         duplicationList = this.innodaleDao.getList(hashMap);
 
-        hashMap.put("queryId", "orderMapper.selectBeforeInsertDuplicationRegistList");
-        List<Map<String, Object>> duplicateRegistList = this.innodaleDao.getList(hashMap);
         if (duplicationList.size() > 0) {
             model.addAttribute("list", duplicationList);
-        }else if(duplicateRegistList.size() > 0) {
-            model.addAttribute("registList", duplicateRegistList);
         }else {
             hashMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
             this.innodaleDao.create(hashMap);
@@ -126,16 +170,17 @@ public class OrderServiceImpl implements OrderService {
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
                 hashMap.put("LOGIN_USER_ID", userId);
-                hashMap.put("CONTROL_STATUS", "ORD003");
+                hashMap.put("ORDER_STATUS", "REG003");
                 hashMap.put("queryId", "orderMapper.createMonthClose");
                 this.innodaleDao.create(hashMap);
                 hashMap.put("queryId", "orderMapper.deleteMonthCloseOrder");
                 this.innodaleDao.remove(hashMap);
                 hashMap.put("queryId", "orderMapper.createMonthCloseOrder");
                 this.innodaleDao.create(hashMap);
-                hashMap.put("queryId", "orderMapper.updateControlStatusFromMonthClose");
+//                hashMap.put("queryId", "orderMapper.updateControlStatusFromMonthClose");
+                hashMap.put("queryId", "orderMapper.updateOrderStatusFromMonthClose");
                 this.innodaleDao.update(hashMap);
-                hashMap.put("queryId", "orderMapper.createControlProgressFromMonthClose");
+                hashMap.put("queryId", "orderMapper.createOrderProgressFromMonthClose");
                 this.innodaleDao.create(hashMap);
             }
         }
@@ -170,14 +215,16 @@ public class OrderServiceImpl implements OrderService {
         if (listData != null && listData.size() > 0) {
             for (HashMap<String, Object> hashMap : listData) {
                 hashMap.put("LOGIN_USER_ID",userId);
-                hashMap.put("CONTROL_STATUS", "ORD001");
+                hashMap.put("ORDER_STATUS", "REG001");
                 hashMap.put("queryId", "orderMapper.deleteMonthCloseOrder");
                 this.innodaleDao.remove(hashMap);
                 hashMap.put("queryId", "orderMapper.deleteMonthClose");
                 this.innodaleDao.remove(hashMap);
-                hashMap.put("queryId", "orderMapper.updateControlStatusFromMonthCloseCancel");
+//                hashMap.put("queryId", "orderMapper.updateControlStatusFromMonthCloseCancel");
+                hashMap.put("queryId", "orderMapper.updateOrderStatusFromMonthCloseCancel");
                 this.innodaleDao.update(hashMap);
-                hashMap.put("queryId", "orderMapper.createControlProgressFromMonthCloseCancel");
+//                hashMap.put("queryId", "orderMapper.createControlProgressFromMonthCloseCancel");
+                hashMap.put("queryId", "orderMapper.createOrderProgressFromMonthCloseCancel");
                 this.innodaleDao.create(hashMap);
             }
         }
@@ -234,6 +281,9 @@ public class OrderServiceImpl implements OrderService {
 
                 hashMap.put("queryId", "orderMapper.createInvoiceDetail");
                 this.innodaleDao.create(hashMap);
+
+                hashMap.put("queryId", "orderMapper.updatePackingCnt");
+                this.innodaleDao.update(hashMap);
             }
         }
 
@@ -500,14 +550,14 @@ public class OrderServiceImpl implements OrderService {
                         break;
                     }
                 }
-                if (oldList.get(i).containsKey("REGIST_NUM")) {
-                    hashMap.put("queryId", "orderMapper.selectCheckRegistNumDuplicate");
-                    if (this.orderDao.getFlag(hashMap)) {
-                        flag = true;
-                        message = "이미 등록된 접수번호 입니다.";
-                        break;
-                    }
-                }
+//                if (oldList.get(i).containsKey("REGIST_NUM")) {
+//                    hashMap.put("queryId", "orderMapper.selectCheckRegistNumDuplicate");
+//                    if (this.orderDao.getFlag(hashMap)) {
+//                        flag = true;
+//                        message = "이미 등록된 접수번호 입니다.";
+//                        break;
+//                    }
+//                }
 
             }
         }
@@ -579,6 +629,9 @@ public class OrderServiceImpl implements OrderService {
                 while (iterator.hasNext()) {
                     String key = (String)iterator.next();
                     tempMap.put(key,hashMap.get(key));
+                    if(hashMap.get(key) == null) {
+                        tempMap.put(key,"");
+                    }
                 }
                 tempMap.put("CONTROL_SEQ",hashMap.get("CONTROL_SEQ"));
                 tempMap.put("CONTROL_DETAIL_SEQ",hashMap.get("CONTROL_DETAIL_SEQ"));
@@ -752,4 +805,368 @@ public class OrderServiceImpl implements OrderService {
         model.addAttribute("flag", flag);
         model.addAttribute("message", message);
     }
+
+
+    @Override
+    public void validationCheckBeforeSaveFromOrder(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        ArrayList<HashMap<String, Object>> oldList = null;
+        ArrayList<HashMap<String, Object>> addList = null;
+        ArrayList<HashMap<String, Object>> updateList = null;
+
+        boolean flag = false;
+        String message = "";
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("oldList"))
+            oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
+
+        if (jsonMap.containsKey("addList"))
+            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
+
+        if (jsonMap.containsKey("updateList"))
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+        /*if (addList != null && addList.size() > 0) {
+            for (HashMap<String, Object> hashMap : addList) {
+
+            }
+        }*/
+
+        if (updateList != null && updateList.size() > 0 && !flag) {
+            for(int i = 0; i < updateList.size(); i++) {
+                HashMap<String, Object> hashMap = updateList.get(i);
+
+//                if (oldList.get(i).containsKey("CONTROL_NUM")) {
+//                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
+//                    if (this.orderDao.getFlag(hashMap)) {
+//                        flag = true;
+//                        message = "기존에 존재하는 작업지시번호입니다.";
+//                        break;
+//                    }
+//                }
+                if (oldList.get(i).containsKey("REGIST_NUM")) {
+                    hashMap.put("queryId", "orderMapper.selectCheckRegistNumDuplicateOrder");
+                    if (this.orderDao.getFlag(hashMap)) {
+                        flag = true;
+                        message = "이미 등록된 접수번호 입니다.";
+                        break;
+                    }
+                }
+
+            }
+        }
+
+        model.addAttribute("flag", flag);
+        model.addAttribute("message", message);
+    }
+
+    @Override
+    public void saveFromOrderManage(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        ArrayList<HashMap<String, Object>> updateList = null;
+        ArrayList<HashMap<String, Object>> oldList = null;
+
+        Boolean flag = false;
+        String message = "";
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("updateList"))
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+        if (jsonMap.containsKey("oldList"))
+            oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
+
+        if (updateList != null && updateList.size() > 0) {
+            for(int i = 0; i < updateList.size(); i++) {
+                HashMap<String, Object> hashMap = updateList.get(i);
+                HashMap<String, Object> oldMap = oldList.get(i);
+                HashMap<String, Object> tempMap = new HashMap<>();
+                tempMap.put("LOGIN_USER_ID",userId);
+
+                Set<String> keys = oldMap.keySet();
+                Iterator iterator = keys.iterator();
+                // 수정한 값만 업데이트 하도록 키값 추출
+                while (iterator.hasNext()) {
+                    String key = (String)iterator.next();
+                    tempMap.put(key,hashMap.get(key));
+                    if(hashMap.get(key) == null) {
+                        tempMap.put(key,"");
+                    }
+                }
+                tempMap.put("ORDER_SEQ",hashMap.get("ORDER_SEQ"));
+                tempMap.put("ORIGINAL_SIDE_QTY",hashMap.get("ORIGINAL_SIDE_QTY"));
+                tempMap.put("OTHER_SIDE_QTY",hashMap.get("OTHER_SIDE_QTY"));
+                if(hashMap.get("CONTROL_STATUS") != null) {
+                    tempMap.put("ORDER_STATUS",hashMap.get("ORDER_STATUS"));
+                }
+
+                try {
+                    tempMap.put("queryId", "orderMapper.updateOrderFromOrderManage");
+                    this.innodaleDao.updateGrid(tempMap);
+
+                    // 21.09.16 단가계산은 작업연계이후 수행
+//                    tempMap.put("queryId", "orderMapper.updateOrderAutomaticQuote");
+//                    this.innodaleDao.updateGrid(tempMap);
+
+                } catch (Exception e) {
+                    flag = true;
+                    message = "에러가 발생하였습니다";
+                }
+            }
+        }
+
+        model.addAttribute("flag", flag);
+        model.addAttribute("message", message);
+    }
+    @Override
+    public void removeOrder(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<HashMap<String, Object>> jsonArray = null;
+
+        if (jsonObject != null)
+            jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
+
+        boolean flag = false;
+        String message = "";
+        for (HashMap<String, Object> hashMap : jsonArray) {
+            hashMap.put("LOGIN_USER_ID",userId);
+            if(!flag) {
+                hashMap.put("queryId", "orderMapper.selectBeforeRemoveOrder1");
+                List<Map<String, Object>> orderStatusList = this.innodaleDao.getList(hashMap);
+                if(orderStatusList.size() > 0) {
+                    flag = true;
+                    message = "확정상태가 빈칸(임시저장)이나 확정취소인 경우에만 가능합니다";
+                }else {
+                    hashMap.put("queryId", "orderMapper.selectBeforeRemoveOrder2");
+                    List<Map<String, Object>> controlList = this.innodaleDao.getList(hashMap);
+
+                    if(controlList.size() > 0) {
+                        flag = true;
+                        message = "작업이 연계된 접수건은 삭제가 불가합니다.";
+                    }else {
+                        hashMap.put("queryId", "orderMapper.removeOrder");
+                        this.innodaleDao.remove(hashMap);
+                    }
+                }
+            }
+        }
+        model.addAttribute("flag",flag);
+        model.addAttribute("message",message);
+    }
+
+    @Override
+    public void managerOrderStatus(Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<HashMap<String, Object>> jsonArray = null;
+
+        if (jsonObject != null)
+            jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
+
+        for (HashMap<String, Object> hashMap : jsonArray) {
+            hashMap.put("LOGIN_USER_ID",userId);
+
+            hashMap.put("queryId", "orderMapper.updateOrderStatus");
+            this.innodaleDao.update(hashMap);
+
+//            hashMap.put("queryId", "orderMapper.updateControlBarcodeRevision");
+//            this.innodaleDao.update(hashMap);
+//            hashMap.put("queryId", "orderMapper.insertControlBarcodeRevision");
+//            this.innodaleDao.create(hashMap);
+
+            hashMap.put("queryId", "orderMapper.createOrderProgress");
+            this.innodaleDao.create(hashMap);
+
+//            hashMap.put("queryId", "orderMapper.updateOutsideConfirmDt");
+//            this.innodaleDao.update(hashMap);
+        }
+    }
+
+    @Override
+    public void validationCheckBeforeCreateControl(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        ArrayList<HashMap<String, Object>> oldList = null;
+        ArrayList<HashMap<String, Object>> addList = null;
+        ArrayList<HashMap<String, Object>> updateList = null;
+        ArrayList<HashMap<String, Object>> resultList = new ArrayList<>();
+        HashMap<String, Object> groupMap = new HashMap<>();
+
+        boolean flag = false;
+        String message = "";
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("updateList")) {
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+        }
+        for(int i=0;i<updateList.size();i++) {
+            HashMap<String, Object> tempMap = updateList.get(i);
+            String controlNum = (String) tempMap.get("CONTROL_NUM");
+            ArrayList<HashMap<String, Object>> groupList = new ArrayList<>();
+            if(groupMap.containsKey(controlNum)) {
+                groupList = (ArrayList<HashMap<String, Object>>) groupMap.get(controlNum);
+            }
+            groupList.add(tempMap);
+            groupMap.put(controlNum,groupList);
+        }
+
+        if (updateList != null && updateList.size() > 0) {
+            for(int j=0;j<updateList.size();j++) {
+                HashMap<String, Object> hashMap = updateList.get(j);
+                hashMap.put("LOGIN_USER_ID",userId);
+                hashMap.put("VALIDATION_RESULT", "SUCCESS");
+                String controlNum = (String) hashMap.get("CONTROL_NUM");
+
+                if (hashMap.containsKey("REGIST_NUM") && hashMap.containsKey("CONTROL_NUM")) {
+                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
+                    if(this.orderDao.getFlag(hashMap)) {
+                        flag = true;
+                        hashMap.put("VALIDATION_RESULT", "RS_EXISTS");
+                    }
+                    ArrayList<HashMap<String, Object>> mergeList = (ArrayList<HashMap<String, Object>>) groupMap.get(controlNum);
+                    if(mergeList.size() >= 2) {
+                        for(int i=0;i<mergeList.size();i++) {
+                            HashMap<String, Object> temp = mergeList.get(i);
+                            if(temp.get("ROW_NUM") != hashMap.get("ROW_NUM") && !hashMap.get("VALIDATION_RESULT").equals("RS_EXISTS") && !hashMap.get("VALIDATION_RESULT").equals("RS_MERGE")) {
+                                String[] checkColumn = {"WORK_TYPE", "MATERIAL_SUPPLY_YN","MAIN_INSPECTION","SAME_SIDE_YN","SIZE_TXT","MATERIAL_DETAIL","MATERIAL_KIND","SURFACE_TREAT","SPECIAL_TREATMENT","PART_NUM","INNER_DUE_DT"};
+                                Boolean mergeFlag = false;
+
+                                for(String column : checkColumn) {
+                                    if(temp.get(column) == null) {
+                                        temp.put(column,"");
+                                    }
+                                    if(hashMap.get(column) == null) {
+                                        hashMap.put(column,"");
+                                    }
+                                    if(!temp.get(column).equals(hashMap.get(column)) && !mergeFlag) {
+                                        mergeFlag = true;
+                                    }
+                                }
+
+                                if(mergeFlag) {
+                                    flag = true;
+                                    hashMap.put("VALIDATION_RESULT", "RS_EXISTS2");
+                                }else {
+                                    hashMap.put("VALIDATION_RESULT", "RS_MERGE");
+                                }
+                            }
+                        }
+                    }
+                }
+                resultList.add(hashMap);
+            }
+        }
+
+        if(resultList != null && resultList.size() > 0) {
+            model.addAttribute("resultList",resultList);
+        }
+
+        model.addAttribute("flag", flag);
+        model.addAttribute("message", message);
+    }
+
+    @Override
+    public void createNewControl(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        String userId = (String) map.get("LOGIN_USER_ID");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+        String uuid = UUID.randomUUID().toString();
+        Map<String, Object> tempMap = new HashMap<String, Object>();
+        tempMap.put("IN_UID", uuid);
+
+        ArrayList<HashMap<String, Object>> oldList = null;
+        ArrayList<HashMap<String, Object>> addList = null;
+        ArrayList<HashMap<String, Object>> updateList = null;
+
+        boolean flag = false;
+        String message = "";
+
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("oldList"))
+            oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
+
+        if (jsonMap.containsKey("addList"))
+            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
+
+        if (jsonMap.containsKey("updateList"))
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+
+//        if (addList != null && addList.size() > 0) {
+//            for (HashMap<String, Object> hashMap : addList) {
+//                hashMap.put("LOGIN_USER_ID", userId);
+//                hashMap.put("IN_UID",uuid);
+//
+//                if (hashMap.containsKey("REGIST_NUM") && hashMap.containsKey("CONTROL_NUM")) {
+////                    hashMap.put("queryId", "orderMapper.selectControlNumExists");
+//                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
+//                    if(this.orderDao.getFlag(hashMap)) {
+//                        flag = true;
+//                        message = "이미 존재하는 작업지시번호입니다.";
+//                    }
+//
+//                    hashMap.put("queryId", "orderMapper.createControlExcel");
+//                    this.innodaleDao.create(hashMap);
+//
+//                }
+//            }
+//        }
+
+        if (updateList != null && updateList.size() > 0 && !flag) {
+            for (HashMap<String, Object> hashMap : updateList) {
+                hashMap.put("LOGIN_USER_ID", userId);
+                hashMap.put("IN_UID",uuid);
+
+                if (hashMap.containsKey("REGIST_NUM") && hashMap.containsKey("CONTROL_NUM")) {
+//                    hashMap.put("queryId", "orderMapper.selectControlNumExists");
+                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
+                    if(this.orderDao.getFlag(hashMap)) {
+                        flag = true;
+                        message = "이미 존재하는 작업지시번호입니다.";
+                    }
+
+                    hashMap.put("queryId", "orderMapper.createControlExcel");
+                    this.innodaleDao.create(hashMap);
+
+                }
+            }
+        }
+
+        if(!flag) {
+            tempMap.put("queryId", "procedure.SP_CONTROL_EXCEL_BATCH");
+            this.innodaleDao.create(tempMap);
+        }
+
+        tempMap.put("queryId", "orderMapper.deleteControlExcel");
+        this.innodaleDao.remove(tempMap);
+
+        model.addAttribute("flag", flag);
+        model.addAttribute("message", message);
+    }
+
 }

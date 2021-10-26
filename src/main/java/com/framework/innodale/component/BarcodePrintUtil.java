@@ -37,11 +37,11 @@ public class BarcodePrintUtil {
             }else if("W".equals(barcodeType)) {//창고위치 라벨
                 getWOut(bufWriter,barcodeInfo);
             }
-//            System.out.println("barcodePrint bufWriter=" + bufWriter.toString());
+
             bufWriter.newLine();
             bufWriter.flush();
             socket.close();
-            bufWriter.close();
+            bufWriter.close(); // 서버로그로 라벨 찍어볼때는 해당 부분 주석처리
 
         }catch(Exception e){
             message = e.getMessage();
@@ -51,7 +51,7 @@ public class BarcodePrintUtil {
                 socket.close();
             }
             if(bufWriter != null){
-                bufWriter.close();
+                bufWriter.close(); // 서버로그로 라벨 찍어볼때는 해당 부분 주석처리
             }
 
         }
@@ -153,7 +153,27 @@ public class BarcodePrintUtil {
         bufWriter.write("^FO10,80^A1N^FD발주업체^FS");
         bufWriter.write("^FO90,70^FB300,2,1,L,0^A1N^FD" + doNull((String)barcodeInfo.get("ORDER_COMP_NM"))+ "^FS");
         bufWriter.write("^FO399,80^A1N^FD작업번호^FS");
-        bufWriter.write("^FO485,80^A1N^FD" + doNull((String)barcodeInfo.get("CONTROL_NUM"))+ "^FS");
+        // 작업번호 2줄인경우
+        String controlNum = doNull((String)barcodeInfo.get("CONTROL_NUM"));
+        if(controlNum.indexOf(",") >= 0) {
+            String[] controlArr = controlNum.split(",");
+
+            if(controlArr.length > 2) {
+                bufWriter.write("^CFJ,16");
+                bufWriter.write("^FO485,67^A1N^FD" + controlArr[0] + "^FS");
+                bufWriter.write("^FO485,83^A1N^FD" + controlArr[1]+ "^FS");
+                bufWriter.write("^FO485,100^A1N^FD" + controlArr[2]+ "^FS");
+
+            }else {
+                bufWriter.write("^CFJ,18");
+                bufWriter.write("^FO485,70^A1N^FD" + controlArr[0] + "^FS");
+                bufWriter.write("^FO485,93^A1N^FD" + controlArr[1]+ "^FS");
+            }
+            bufWriter.write("^CFJ,20");
+        }else {
+            bufWriter.write("^FO485,80^A1N^FD" + controlNum + "^FS");
+        }
+
         bufWriter.write("^FO10,130^A1N^FD도면번호^FS");
         bufWriter.write("^FO90,130^A1N^FD" + doNull((String)barcodeInfo.get("DRAWING_NUM"))+ "^FS");
         bufWriter.write("^FO399,130^A1N^FD품        명^FS");

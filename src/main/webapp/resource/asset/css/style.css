@@ -336,7 +336,7 @@
 .layerPopup .btnWrap { text-align: center; padding-top: 13px; }
 .layerPopup .btnWrap button { margin-right: 10px }
 
-.miniPopup{left: 50%;top:50%;width:394px; border:1px solid #ababab; box-sizing: border-box;transform: translate(-50%,-50%);background: #f1efef;position: absolute;border-top:0;padding-bottom: 15px;}
+.miniPopup{left: 50%;top:50%;width:407px; border:1px solid #ababab; box-sizing: border-box;transform: translate(-50%,-50%);background: #f1efef;position: absolute;border-top:0;padding-bottom: 15px;}
 .miniPopup .headWrap{height: 37px; background: url(../images/common/bg_minipophead.jpg) repeat-x 0 0;position: relative;}
 .miniPopup .headWrap:before{content: '';width: 33px; height: 25px; display: block; position: absolute; top:6px; left:7px; background:url(../images/common/ico_minipop.png)no-repeat 0 0;}
 .miniPopup .headWrap h4{padding-left: 55px; font-size: 18px; color:#fefefe; line-height: 37px}
@@ -921,10 +921,11 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
     height: 100%;
     border: 1px solid;
     border-collapse: collapse;
+    color: #605b5b;
 }
 
 #processingRequirementsModal table th, #processingRequirementsModal table td {
-    border: 1px solid black;
+    border: 1px solid #c6c6c6;
     text-align: center;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -946,12 +947,29 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
     font-weight: bold;
 }
 
-#processingRequirementsModal table.basic_information > tbody > tr > td:first-child {
+#processingRequirementsModal table.rightTopTable > thead > tr > td {
+    background-color: #5e3d11;
+    color:white;
+}
+
+#processingRequirementsModal table.basic_information > tbody > tr > td:nth-child(2n-1) {
     background-color: rgb(221, 235, 247);
     font-weight: bold;
 }
+#processingRequirementsModal table.rightTopTable > tbody > tr > td:nth-child(2n-1) {
+    background-color: rgb(255, 242, 204);
+}
+#processingRequirementsModal table.rightBotTable > tbody > tr > td:nth-child(2n-1){
+    background-color: rgb(255, 242, 204);
+}
+#processingRequirementsModal table.rightBotTable .titleTd{
+    background-color: #ffd966 !important;
+    color:black !important;
+    font-weight: bold;
+    text-align: left;
+}
 
-#processingRequirementsModal table.basic_information > tbody > tr > td:last-child {
+#processingRequirementsModal table.basic_information > tbody > tr > td:nth-child(2n) {
     background-color: rgb(219, 219, 219);
 }
 

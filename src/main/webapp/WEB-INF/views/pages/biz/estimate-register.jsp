@@ -1560,8 +1560,10 @@
         CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(context);
 
         $('#updateFromControl').on('click', function () {
-            let CONTROL_SEQ = $("#estimate_version_up_sequence_form #hidden_control_seq").val();
-            let postData = { 'queryId': 'estimate.selectEstimateInfoFromControl', 'CONTROL_SEQ': CONTROL_SEQ };
+            // let CONTROL_SEQ = $("#estimate_version_up_sequence_form #hidden_control_seq").val();
+            let ORDER_SEQ = $("#estimate_version_up_sequence_form #hidden_order_seq").val();
+            // let postData = { 'queryId': 'estimate.selectEstimateInfoFromControl', 'CONTROL_SEQ': CONTROL_SEQ };
+            let postData = { 'queryId': 'estimate.selectEstimateInfoFromOrder', 'ORDER_SEQ': ORDER_SEQ };
             let parameter = {'url': '/json-info', 'data': postData};
 
             fnPostAjax(function (data, callFunctionParam) {
@@ -1578,10 +1580,12 @@
                 btnDisabled();
             }, parameter, '');
 
-            postData = { 'queryId': 'estimate.selectEstimateListFromControl', 'CONTROL_SEQ': CONTROL_SEQ };
+            // postData = { 'queryId': 'estimate.selectEstimateListFromControl', 'CONTROL_SEQ': CONTROL_SEQ };
+            postData = { 'queryId': 'estimate.selectEstimateListFromOrder', 'ORDER_SEQ': ORDER_SEQ };
             fnRequestGridData(estimateRegisterTopGrid, postData);
 
-            postData = { 'queryId': 'estimate.selectEstimateReceiverListFromControl', 'CONTROL_SEQ': CONTROL_SEQ };
+            // postData = { 'queryId': 'estimate.selectEstimateReceiverListFromControl', 'CONTROL_SEQ': CONTROL_SEQ };
+            postData = { 'queryId': 'estimate.selectEstimateReceiverListFromOrder', 'ORDER_SEQ': ORDER_SEQ };
             fnRequestGridData(estimateRegisterBotGrid, postData);
 
             setTimeout(function () {
