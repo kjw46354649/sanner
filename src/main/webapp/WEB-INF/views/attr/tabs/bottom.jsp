@@ -97,139 +97,190 @@
 <!-- 주문상세정보 layer popup : S -->
 <div class="popup_container g_item_detail_pop" id="g_item_detail_pop" style="display: none;">
     <div class="layerPopup">
-        <h3>주문상세정보</h3>
-        <span class="right_float mr-30">
+        <h3>작업상세정보</h3>
+        <span class="right_float" style="margin-right: 100px;">
+            <span class="barCodeTxt" style="margin-right: 5px;">&nbsp;<input type="text" class="wd_270_barcode hg_30" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
             <span class="barCode" id="g_item_detail_pop_barcode_span"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
-            <span class="barCodeTxt">&nbsp;<input type="text" class="wd_270_barcode hg_30" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
         </span>
-        <button type="button" class="pop_close mt-10 mr-8" id="popClose2">닫기</button>
-        <div class="qualityWrap">
-            <div class="h_area"></div>
-            <form class="form-inline" id="g_item_detail_pop_form" name="g_item_detail_pop_form" role="form" onsubmit="return false;">
-                <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailInfo"/>
-                <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
-                <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
-                <input type="hidden" id="ASSEMBLY_CONTROL_DETAIL_SEQ" name="ASSEMBLY_CONTROL_DETAIL_SEQ"/>
-                <input type="hidden" id="FIRST_PART_CONTROL_DETAIL_SEQ" name="FIRST_PART_CONTROL_DETAIL_SEQ"/>
-                <input type="hidden" id="PREV_PART_CONTROL_DETAIL_SEQ" name="PREV_PART_CONTROL_DETAIL_SEQ" value=""/>
-                <input type="hidden" id="NEXT_PART_CONTROL_DETAIL_SEQ" name="NEXT_PART_CONTROL_DETAIL_SEQ" value=""/>
-                <div class="d-flex align-items-center">
-                    <h4>기본정보</h4>
-                    <div id="view_part_wrap" style="margin-left: 75px;">
-                        <button class="defaultBtn" name="view_assembly_or_part" id="WTP020" value="WTP020">조립</button>
-                        <button class="defaultBtn" name="view_assembly_or_part" id="WTP050" value="WTP050">파트</button>
-                        <span name="view_part" id="view_part_prev" style="cursor: pointer;">
+        <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close" style="float: right;right: 12px;position: absolute;">닫기</button>
+<%--        <button type="button" class="pop_close mt-10 mr-8" id="popClose2">닫기</button>--%>
+        <div class="h_area"></div>
+        <div class="qualityWrap" style="display: flex;">
+            <div style="width: 51%;">
+                <form class="form-inline" id="g_item_detail_pop_form" name="g_item_detail_pop_form" role="form" onsubmit="return false;">
+                    <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailInfo"/>
+                    <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
+                    <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
+                    <input type="hidden" id="ASSEMBLY_CONTROL_DETAIL_SEQ" name="ASSEMBLY_CONTROL_DETAIL_SEQ"/>
+                    <input type="hidden" id="FIRST_PART_CONTROL_DETAIL_SEQ" name="FIRST_PART_CONTROL_DETAIL_SEQ"/>
+                    <input type="hidden" id="PREV_PART_CONTROL_DETAIL_SEQ" name="PREV_PART_CONTROL_DETAIL_SEQ" value=""/>
+                    <input type="hidden" id="NEXT_PART_CONTROL_DETAIL_SEQ" name="NEXT_PART_CONTROL_DETAIL_SEQ" value=""/>
+                    <div class="d-flex align-items-center" style="height: 50px;">
+                        <h4>기본정보</h4>
+                        <div id="view_part_wrap" style="margin-left: 75px;">
+                            <button class="defaultBtn" name="view_assembly_or_part" id="WTP020" value="WTP020">조립</button>
+                            <button class="defaultBtn" name="view_assembly_or_part" id="WTP050" value="WTP050">파트</button>
+                            <span name="view_part" id="view_part_prev" style="cursor: pointer;">
                             <img src="/resource/asset/images/common/img_left_arrow.png" alt="왼쪽 화살표" style="width: 15px;">
                         </span>
-                        <span name="view_part" id="view_part_next" style="cursor: pointer;">
+                            <span name="view_part" id="view_part_next" style="cursor: pointer;">
                             <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표" style="width: 15px;">
                         </span>
+                        </div>
                     </div>
-                    <div class="btnWrap ml-auto mb-10">
-                        <button id="CAD_DOWNLOAD" class="d-none defaultBtn">캐드파일</button>
-                        <button id="DRAWING_VIEW" class="defaultBtn">도면보기</button>
-                        <button id="WORK_HISTORY_INFO" class="defaultBtn">유사주문 수행기록</button>
-                    </div>
-                </div>
-                <div class="list1">
-                    <table class="rowStyle" style="table-layout: fixed;">
-                        <colgroup>
-                            <col width="10%">
-                            <col width="20%">
-                            <col width="10%">
-                            <col width="15%">
-                            <col width="10%">
-                            <col width="15%">
-                        </colgroup>
-                        <tr>
-                            <th>
+                    <div class="list1">
+                        <table class="rowStyle" style="table-layout: fixed;">
+                            <colgroup>
+                                <col width="13%">
+                                <col width="20%">
+                                <col width="10%">
+                                <col width="20%">
+                            </colgroup>
+                            <tr>
+                                <th>
                                 <span name="control_num_arrow" id="left_arrow" data-value="-1" style="cursor: pointer;">
                                     <img src="/resource/asset/images/common/img_left_arrow.png" alt="왼쪽 화살표" style="width: 15px;">
                                 </span>
-                                <span>작업지시번호</span>
-                                <span name="control_num_arrow" id="right_arrow" data-value="1" style="cursor: pointer;">
+                                    <span>작업지시번호</span>
+                                    <span name="control_num_arrow" id="right_arrow" data-value="1" style="cursor: pointer;">
                                     <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표" style="width: 15px;">
                                 </span>
-                            </th>
-                            <td id="CONTROL_NUM" class="red"></td>
-                            <th>형태/수량(원,대)</th>
-                            <td id="WORK_TYPE_NM_ORDER_QTY_INFO"></td>
-                            <th>가공납기</th>
-                            <td id="INNER_DUE_DT"></td>
-                        </tr>
-                        <tr>
-                            <th>도면번호</th>
-                            <td id="DRAWING_NUM" class="red"></td>
-                            <th>재고번호</th>
-                            <td id="INSIDE_STOCK"></td>
-                            <th class="antiquewhite">진행상태</th>
-                            <td id="PART_STATUS_NM"></td>
-                        </tr>
-                        <tr>
-                            <th>품명</th>
-                            <td id="ITEM_NM"></td>
-                            <th>소재/규격</th>
-                            <td id="MATERIAL_DETAIL_NM"></td>
-                            <th class="antiquewhite">현재위치</th>
-                            <td id="POP_POSITION_NM"></td>
-                            <%--<th>소재Size</th>--%>
-                            <%--<td id="MATERIAL_SIZE_TXT" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;"></td>--%>
-                        </tr>
-                        <tr>
-                            <th>모듈</th>
-                            <td id="MODULE_NM" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;"></td>
-                            <th>표면처리</th>
-                            <td id="SURFACE_TREAT_NM"></td>
-                            <th class="antiquewhite">가공확정 일시</th>
-                            <td id="PROCESS_CONFIRM_DT"></td>
-                            <%--<th>소재주문상태</th>--%>
-                            <%--<td id="MATERIAL_ORDER_STATUS_NM"></td>--%>
-                        </tr>
-                        <tr>
-                            <th>프로젝트</th>
-                            <td id="PROJECT_NM"></td>
-                            <th>외주확정 일시</th>
-                            <td id="OUTSIDE_CONFIRM_DT"></td>
-                            <th class="antiquewhite">소재주문 일시</th>
-                            <td id="MATERIAL_ORDER_DT"></td>
-                            <%--<th>도면수정Rev.</th>--%>
-                            <%--<td id="DRAWING_VER"></td>--%>
-                            <%--<th>도면파일</th>--%>
-                            <%--<td id="DXF_GFILE_SEQ"></td>--%>
-                        </tr>
-                        <tr>
-                            <th class="palegoldenrod">발주처/설계자</th>
-                            <td id="ORDER_COMP_NM_DESIGNER_NM"></td>
-                            <th>외주업체명</th>
-                            <td id="OUTSIDE_COMP_NM"></td>
-                            <th class="antiquewhite">소재입고 일시</th>
-                            <td id="MATERIAL_IN_DT"></td>
-                        </tr>
-                        <tr>
-                            <th class="palegoldenrod">작업 확정</th>
-                            <td id="CONTROL_CONFIRM_DT"></td>
-                            <th>외주요청 일시</th>
-                            <td id="OUTSIDE_PROCESS_CONFIRM_DT"></td>
-                            <th class="antiquewhite blueviolet">가공완료 일시</th>
-                            <td id="PROCESS_FINISH_DT" class="blueviolet"></td>
-                            <%--<th>유사주문수행기록</th>--%>
-                            <%--<td id="WORK_HISTORY_INFO"></td>--%>
-                        </tr>
-                        <tr>
-                            <th class="palegoldenrod">주요 검사</th>
-                            <td id="MAIN_INSPECTION_NM"></td>
-                            <th>외주입고 일시</th>
-                            <td id="OUTSIDE_IN_DT"></td>
-                            <th class="antiquewhite blueviolet">출고완료 일시</th>
-                            <td id="OUT_FINISH_DT" class="blueviolet"></td>
-                        </tr>
+                                </th>
+                                <td id="CONTROL_NUM" class="red"></td>
+                                <th class="lightGreen">도면번호</th>
+                                <td id="DRAWING_NUM" class="red"></td>
+                            </tr>
+                            <tr>
+                                <th>가공납기</th>
+                                <td id="INNER_DUE_DT"></td>
+                                <th class="lightGreen">품명</th>
+                                <td id="ITEM_NM"></td>
+                            </tr>
+                            <tr>
+                                <th>작업형태</th>
+                                <td id="WORK_TYPE_NM"></td>
+                                <th class="lightGreen">모듈</th>
+                                <td id="MODULE_NM" style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap;"></td>
+                            </tr>
+                            <tr>
+                                <th>수량(원,대)</th>
+                                <td id="ORDER_QTY_INFO"></td>
+                                <th class="lightGreen">프로젝트</th>
+                                <td id="PROJECT_NM"></td>
+                                <%--<th>소재주문상태</th>--%>
+                                <%--<td id="MATERIAL_ORDER_STATUS_NM"></td>--%>
+                            </tr>
+                            <tr>
+                                <th>규격</th>
+                                <td id="SIZE_TXT"></td>
+                                <th class="lightGreen">발주처</th>
+                                <td id="ORDER_COMP_NM"></td>
+                                <%--<th>도면수정Rev.</th>--%>
+                                <%--<td id="DRAWING_VER"></td>--%>
+                                <%--<th>도면파일</th>--%>
+                                <%--<td id="DXF_GFILE_SEQ"></td>--%>
+                            </tr>
+                            <tr>
+                                <th>소재</th>
+                                <td id="MATERIAL_DETAIL_NM"></td>
+                                <th class="lightGreen">구매담당/설계자</th>
+                                <td id="ORDER_STAFF_NM_DESIGNER_NM"></td>
+                            </tr>
+                            <tr>
+                                <th>표면처리</th>
+                                <td id="SURFACE_TREAT_NM"></td>
+                                <th class="lightGreen">주요검사</th>
+                                <td id="MAIN_INSPECTION_NM"></td>
+                            </tr>
+                            <tr>
+                                <th>작업확정 일시</th>
+                                <td id="CONTROL_CONFIRM_DT"></td>
+                                <th class="palegoldenrod">외주확정 일시</th>
+                                <td id="OUTSIDE_CONFIRM_DT"></td>
+                                <%--<th>유사주문수행기록</th>--%>
+                                <%--<td id="WORK_HISTORY_INFO"></td>--%>
+                            </tr>
+                            <tr>
+                                <th class="redText">가공확정 일시</th>
+                                <td id="PROCESS_CONFIRM_DT"></td>
+                                <th class="palegoldenrod">외주업체명</th>
+                                <td id="OUTSIDE_COMP_NM"></td>
+                            </tr>
+                            <tr>
+                                <th>소재주문 일시</th>
+                                <td id="MATERIAL_ORDER_DT"></td>
+                                <th class="palegoldenrod">외주요청 일시</th>
+                                <td id="OUTSIDE_PROCESS_CONFIRM_DT"></td>
+                            </tr>
+                            <tr>
+                                <th>소재입고 일시</th>
+                                <td id="MATERIAL_IN_DT"></td>
+                                <th class="palegoldenrod">외주입고 일시</th>
+                                <td id="OUTSIDE_IN_DT"></td>
+                            </tr>
+                            <tr>
+                                <th class="blueviolet">가공완료 일시</th>
+                                <td id="PROCESS_FINISH_DT" class="blueviolet"></td>
+                                <th>재고번호</th>
+                                <td id="INSIDE_STOCK"></td>
+                            </tr>
+                            <tr>
+                                <th class="blueviolet">출고완료 일시</th>
+                                <td id="OUT_FINISH_DT"></td>
+                                <th>진행상태</th>
+                                <td id="PART_STATUS_NM"></td>
+                            </tr>
 
-                    </table>
+                        </table>
+                    </div>
+                    <div class="listdiv">
+                        <div class="tableWrap">
+                            <ul class="conWrapPopLeft">
+                                <h4>주문접수번호</h4>
+                                <div id="g_item_detail_pop_grid_06" class="jqx-refresh"></div>
+                            </ul>
+                            <ul class="conWrapPopRight">
+                                <h4>위치변동이력</h4>
+                                <div id="g_item_detail_pop_grid_02" class="jqx-refresh"></div>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="listdiv">
+                        <div class="tableWrap">
+                            <ul class="conWrapPopLeft">
+                                <h4>공유사항</h4>
+                                <div id="g_item_detail_pop_grid_03" class="jqx-refresh"></div>
+                            </ul>
+                            <ul class="conWrapPopRight">
+                                <h4>품질검사 이력</h4>
+                                <span class="slt_wrap namePlusSlt rightName">
+                                    <label id="search_inspection_detail" style="width: 50px;text-align: center;border-radius: 3px;background-color: #595757;color: white;">검색</label>
+                                </span>
+                                <div id="g_item_detail_pop_grid_05" class="jqx-refresh"></div>
+                            </ul>
+                        </div>
+                    </div>
+<%--                    <h4>품질사항</h4>--%>
+<%--                    <div class="list4">--%>
+<%--                        <div id="g_item_detail_pop_grid_05" class="jqx-refresh"></div>--%>
+<%--                    </div>--%>
+                </form>
+            </div>
+            <div style="width: 50%;margin-left: 2%;">
+                <div class="d-flex align-items-center">
+                    <h4></h4>
+                    <div class="btnWrap ml-auto mb-10">
+                        <button id="ITEM_CAD_DOWNLOAD" class="d-none defaultBtn">캐드파일</button>
+                        <button id="ITEM_DRAWING_VIEW" class="defaultBtn" style="background-color: #ecf6de;">도면상세보기</button>
+                        <button id="ITEM_WORK_HISTORY_INFO" class="defaultBtn">가공상세수행 기록</button>
+                    </div>
                 </div>
-
+                <div class="list1" style="border: 1px solid #AAA;background: white;overflow: hidden;height: 55%;">
+                    <img src="/qimage/734042" style="width: 100%;height: 100%;max-height: inherit;max-width: inherit;">
+                </div>
                 <div class="listdiv">
                     <div class="tableWrap">
-                        <ul class="conWrapPop60">
+                        <ul class="conWrapPop60" style="width: 100%;">
                             <h4>가공이력</h4>
                             <span class="slt_wrap namePlusSlt rightName">
                                 <label for="g_item_detail_pop_grid_01_info_1">총시간</label>
@@ -245,37 +296,25 @@
                             </span>
                             <div id="g_item_detail_pop_grid_01" class="jqx-refresh"></div>
                         </ul>
-                        <ul class="conWrapPop40">
-                            <h4>위치변동이력</h4>
-                            <div id="g_item_detail_pop_grid_02" class="jqx-refresh"></div>
-                        </ul>
                     </div>
                 </div>
                 <div class="listdiv">
                     <div class="tableWrap">
-                        <ul class="conWrapPop60">
+                        <ul class="conWrapPop60" style="width: 100%;">
                             <h4>CAM작업이력 <span style="color:#7d1919" id="g_item_detail_pop_grid_04_info1"></span></h4>
                             <span class="slt_wrap namePlusSlt rightName">
                                 <label id="g_item_detail_pop_grid_04_info2">Update </label>
                             </span>
                             <div id="g_item_detail_pop_grid_04" class="jqx-refresh"></div>
                         </ul>
-                        <ul class="conWrapPop40">
-                            <h4>공유사항</h4>
-                            <div id="g_item_detail_pop_grid_03" class="jqx-refresh"></div>
-                        </ul>
                     </div>
                 </div>
-                <h4>품질사항</h4>
-                <div class="list4">
-                    <div id="g_item_detail_pop_grid_05" class="jqx-refresh"></div>
-                </div>
-            </form>
+            </div>
         </div>
-        <div class="btnWrap">
-            <%--                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn" style="display: none;">CAM 작업시작</button>--%>
-            <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close">닫기</button>
-        </div>
+<%--        <div class="btnWrap">--%>
+<%--            &lt;%&ndash;                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn" style="display: none;">CAM 작업시작</button>&ndash;%&gt;--%>
+<%--            <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close">닫기</button>--%>
+<%--        </div>--%>
     </div>
 </div>
 <!-- 주문상세정보 layer popup : E -->
@@ -881,6 +920,24 @@
     </div>
 </div>
 
+<div class="popup_container" id="inspection_detail_popup" style="display: none;">
+    <div class="layerPopup" style="width: 800px;height: 400px;">
+        <h3>품질검사이력</h3>
+        <hr style="display: block; border: 1px solid #e0e2e6; margin: 7px;">
+        <div class="qualityWrap">
+            <form class="form-inline" id="inspection_detail_form" name="inspection_detail_form" role="form">
+                <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailInspectionList"/>
+                <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
+                <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
+            </form>
+            <div id="inspection_detail_grid"></div>
+        </div>
+        <div class="btnWrap">
+            <button type="button" class="defaultBtn grayPopGra close_inspection_detail">닫기</button>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
 
     let commonAlertPopup = $("#common_alert_popup");
@@ -1385,17 +1442,17 @@
     let g_ItemDetailPopGridId05 =  $("#g_item_detail_pop_grid_05");
     let g_ItemDetailPopColModel05 = [
         {title: 'Q_SEQ', dataType: 'string', dataIndx: 'Q_SEQ', hidden:true},
-        {title: '작성자', dataType: 'string', dataIndx: 'Q_INSPECT_USER_NM', width: 95},
-        {title: '측정방법', dataType: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', width: 95},
-        {title: '반품일', dataType: 'string', dataIndx: 'Q_RETURN_DT', minWidth: 90, width: 95},
+        // {title: '작성자', dataType: 'string', dataIndx: 'Q_INSPECT_USER_NM', width: 95},
+        // {title: '측정방법', dataType: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', width: 95},
+        // {title: '반품일', dataType: 'string', dataIndx: 'Q_RETURN_DT', minWidth: 90, width: 95},
         {title: '등급', dataType: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', width: 95},
-        {title: '부적합 수량', dataType: 'string', dataIndx: 'Q_ERROR_QTY', width: 95},
+        // {title: '부적합 수량', dataType: 'string', dataIndx: 'Q_ERROR_QTY', width: 95},
         {title: '불량코드', dataType: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', width: 95},
-        {title: '상세 및 비고', dataType: 'string', dataIndx: 'Q_INSPECT_DESC', width: 95},
-        {title: '원인', dataType: 'string', dataIndx: 'Q_ERROR_REASON_NM', width: 95},
-        {title: '조치', dataType: 'string', dataIndx: 'Q_ERROR_ACTION_NM', width: 95},
-        {title: '조치방안', dataType: 'string', dataIndx: 'Q_ERROR_NOTE', width: 95},
-        {title: '작성일자', dataType: 'string', dataIndx: 'Q_DT', minWidth: 90, width: 95}
+        // {title: '상세 및 비고', dataType: 'string', dataIndx: 'Q_INSPECT_DESC', width: 95},
+        // {title: '원인', dataType: 'string', dataIndx: 'Q_ERROR_REASON_NM', width: 95},
+        // {title: '조치', dataType: 'string', dataIndx: 'Q_ERROR_ACTION_NM', width: 95},
+        // {title: '조치방안', dataType: 'string', dataIndx: 'Q_ERROR_NOTE', width: 95},
+        {title: '작성일시', dataType: 'string', dataIndx: 'Q_DT', minWidth: 90, width: 95}
     ];
     let g_ItemDetailPopObj05 = {
         width: "100%", height: 120,
@@ -1419,6 +1476,37 @@
         resizable: false,
         trackModel: {on: true},
         colModel: g_ItemDetailPopColModel05
+    };
+
+    let g_ItemDetailPopGridId06 =  $("#g_item_detail_pop_grid_06");
+    let g_ItemDetailPopColModel06 = [
+        {title: 'ORDER_SEQ', dataType: 'string', dataIndx: 'ORDER_SEQ', hidden:true},
+        {title: '주문접수번호', dataType: 'string', dataIndx: 'REGIST_NUM', width: 180},
+        {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 65},
+        {title: '납기', dataType: 'string', dataIndx: 'ORDER_DUE_DT', width: 65}
+    ];
+    let g_ItemDetailPopObj06 = {
+        width: "100%", height: 120,
+        dataModel: {
+            location: "remote", dataType: "json", method: "POST", recIndx: 'Q_SEQ',
+            url: "/paramQueryGridSelect",
+            postData: fnFormToJsonArrayData('g_item_detail_pop_form'),
+            getData: function (dataJSON) {
+                return {data: dataJSON.data};
+            }
+        },
+        strNoRows: g_noData,
+        editable: false,
+        columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
+        scrollModel: {autoFit: true},
+        numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
+        selectionModel: { type: 'row', mode: 'single'} ,
+        swipeModel: {on: false},
+        showTitle: false,
+        collapsible: false,
+        resizable: false,
+        trackModel: {on: true},
+        colModel: g_ItemDetailPopColModel06
     };
 
     // let g_item_detail_cam_work_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
@@ -1467,10 +1555,10 @@
             let dxfFileDownloadYn = '${authUserInfo.DXF_FILE_DOWNLOAD_YN}';
             fnJsonDataToForm('g_item_detail_pop_form', dataInfo);
 
-            $itemDetailPopForm.find("#CAD_DOWNLOAD").addClass('d-none');
-            $itemDetailPopForm.find("#CAD_DOWNLOAD").removeAttr('onClick');
-            $itemDetailPopForm.find("#DRAWING_VIEW").removeAttr('onClick');
-            $itemDetailPopForm.find("#WORK_HISTORY_INFO").removeAttr('onClick');
+            $("#ITEM_CAD_DOWNLOAD").addClass('d-none');
+            $("#ITEM_CAD_DOWNLOAD").removeAttr('onClick');
+            $("#ITEM_DRAWING_VIEW").removeAttr('onClick');
+            $("#ITEM_WORK_HISTORY_INFO").removeAttr('onClick');
             $itemDetailPopForm.find(".list1").find(".rowStyle").find("td").html('');
             $itemDetailPopForm.find("[name=view_assembly_or_part]").siblings().removeClass('bg-moccasin');
 
@@ -1486,7 +1574,9 @@
                 const controlStatusHoldSpanElement = dataInfo.CONTROL_STATUS === 'ORD005' ? '<span class="mark" style="background-color: #ff0000; color: #ffffff">보류</span>' : '';
 
                 $itemDetailPopForm.find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
-                $itemDetailPopForm.find("#WORK_TYPE_NM_ORDER_QTY_INFO").html(dataInfo.WORK_TYPE_NM_ORDER_QTY_INFO);
+                $itemDetailPopForm.find("#ORDER_QTY_INFO").html(dataInfo.ORDER_QTY_INFO);
+                $itemDetailPopForm.find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
+                $itemDetailPopForm.find("#WORK_TYPE_NM").html(dataInfo.WORK_TYPE_NM);
                 $itemDetailPopForm.find("#INNER_DUE_DT").html(dataInfo.INNER_DUE_DT + emergencySpanElement);
 
                 $itemDetailPopForm.find("#DRAWING_NUM").attr('title', dataInfo.DRAWING_NUM);
@@ -1496,7 +1586,7 @@
 
                 $itemDetailPopForm.find("#ITEM_NM").attr('title', dataInfo.ITEM_NM);
                 $itemDetailPopForm.find("#ITEM_NM").html(dataInfo.ITEM_NM);
-                $itemDetailPopForm.find("#MATERIAL_DETAIL_NM").html((dataInfo.MATERIAL_DETAIL_NM || '' + materialFinishHeatSpanElement)  + ((dataInfo.MATERIAL_DETAIL_NM == null && materialFinishHeatSpanElement == '')? '':' / ') + dataInfo.SIZE_TXT);
+                $itemDetailPopForm.find("#MATERIAL_DETAIL_NM").html((dataInfo.MATERIAL_DETAIL_NM || '' + materialFinishHeatSpanElement)  + ((dataInfo.MATERIAL_DETAIL_NM == null && materialFinishHeatSpanElement == '')? '':''));
                 $itemDetailPopForm.find("#POP_POSITION_NM").html(dataInfo.POP_POSITION_NM);
 
                 $itemDetailPopForm.find("#MODULE_NM").attr('title', dataInfo.MODULE_NM);
@@ -1510,7 +1600,7 @@
                 $itemDetailPopForm.find("#OUTSIDE_CONFIRM_DT").html(dataInfo.OUTSIDE_CONFIRM_DT);
                 $itemDetailPopForm.find("#MATERIAL_ORDER_DT").html(dataInfo.MATERIAL_ORDER_DT);
 
-                $itemDetailPopForm.find("#ORDER_COMP_NM_DESIGNER_NM").html(dataInfo.ORDER_COMP_NM_DESIGNER_NM);
+                $itemDetailPopForm.find("#ORDER_STAFF_NM_DESIGNER_NM").html(dataInfo.ORDER_STAFF_NM_DESIGNER_NM);
                 $itemDetailPopForm.find("#OUTSIDE_COMP_NM").html(dataInfo.OUTSIDE_COMP_NM);
                 $itemDetailPopForm.find("#MATERIAL_IN_DT").html(dataInfo.MATERIAL_IN_DT);
 
@@ -1527,43 +1617,45 @@
 
                 if (dxfFileDownloadYn === 'Y') {
                     if (fnIsEmpty(dataInfo.DXF_GFILE_SEQ)) {
-                        $itemDetailPopForm.find("#CAD_DOWNLOAD").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
-                        $itemDetailPopForm.find("#CAD_DOWNLOAD").removeClass('d-none');
+                        $("#ITEM_CAD_DOWNLOAD").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
+                        $("#ITEM_CAD_DOWNLOAD").removeClass('d-none');
                     } else {
                         let str = dataInfo.DRAWING_NUM;
                         let arr = str.split(',');
 
                         if (arr.length === 1) {
-                            $itemDetailPopForm.find("#CAD_DOWNLOAD").attr('onClick', 'fnFileDownloadFormPageAction(' + dataInfo.DXF_GFILE_SEQ + ');');
+                            $("#ITEM_CAD_DOWNLOAD").attr('onClick', 'fnFileDownloadFormPageAction(' + dataInfo.DXF_GFILE_SEQ + ');');
                         } else if (arr.length > 1) {
                             $('#common_multi_download_pop_form').find('#MAIN_IMG_SEQ').val(dataInfo.IMG_GFILE_SEQ);
-                            $itemDetailPopForm.find("#CAD_DOWNLOAD").attr('onClick', 'commonMultiDownloadPop(' + dataInfo.CONTROL_SEQ + ',' + dataInfo.CONTROL_DETAIL_SEQ + ');');
+                            $("#ITEM_CAD_DOWNLOAD").attr('onClick', 'commonMultiDownloadPop(' + dataInfo.CONTROL_SEQ + ',' + dataInfo.CONTROL_DETAIL_SEQ + ');');
                         }
 
-                        $itemDetailPopForm.find("#CAD_DOWNLOAD").removeClass('d-none');
+                        $("#ITEM_CAD_DOWNLOAD").removeClass('d-none');
                     }
                 }
 
                 if (fnIsEmpty(dataInfo.IMG_GFILE_SEQ)) {
-                    $itemDetailPopForm.find("#DRAWING_VIEW").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
+                    $("#ITEM_DRAWING_VIEW").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
                 } else {
                     const str = dataInfo.DRAWING_NUM;
                     const arr = str.split(',');
                     if (arr.length === 1) {
-                        $itemDetailPopForm.find("#DRAWING_VIEW").attr('onClick', 'callWindowImageViewer(' + dataInfo.IMG_GFILE_SEQ + ');');
+                        $("#ITEM_DRAWING_VIEW").attr('onClick', 'callWindowImageViewer(' + dataInfo.IMG_GFILE_SEQ + ');');
                     } else if (arr.length > 1) {
                         $('#common_multi_download_pop_form').find('#MAIN_IMG_SEQ').val(dataInfo.IMG_GFILE_SEQ);
-                        $itemDetailPopForm.find("#DRAWING_VIEW").attr('onClick', 'commonMultiDownloadPop(' + dataInfo.CONTROL_SEQ + ',' + dataInfo.CONTROL_DETAIL_SEQ + ');');
+                        $("#ITEM_DRAWING_VIEW").attr('onClick', 'commonMultiDownloadPop(' + dataInfo.CONTROL_SEQ + ',' + dataInfo.CONTROL_DETAIL_SEQ + ');');
                     }
                 }
 
                 if (fnIsEmpty(dataInfo.WORK_HISTORY_INFO)) {
-                    $itemDetailPopForm.find("#WORK_HISTORY_INFO").attr('disabled', true);
-                    $itemDetailPopForm.find("#WORK_HISTORY_INFO").removeClass('bg-lightyellow');
+                    $("#ITEM_WORK_HISTORY_INFO").attr('disabled', true);
+                    $("#ITEM_WORK_HISTORY_INFO").removeClass('bg-lightyellow');
+                    $("#ITEM_WORK_HISTORY_INFO").text("가공상세수행 기록 (유사X)");
                 } else {
-                    $itemDetailPopForm.find("#WORK_HISTORY_INFO").attr('disabled', false);
-                    $itemDetailPopForm.find("#WORK_HISTORY_INFO").addClass('bg-lightyellow');
-                    $itemDetailPopForm.find("#WORK_HISTORY_INFO").attr('onClick', "g_item_detail_pop_cam_pop('" + dataInfo.CONTROL_SEQ + "','" + dataInfo.CONTROL_DETAIL_SEQ + "');");
+                    $("#ITEM_WORK_HISTORY_INFO").attr('disabled', false);
+                    $("#ITEM_WORK_HISTORY_INFO").addClass('bg-lightyellow');
+                    $("#ITEM_WORK_HISTORY_INFO").text("가공상세수행 기록 (유사O)");
+                    $("#ITEM_WORK_HISTORY_INFO").attr('onClick', "g_item_detail_pop_cam_pop('" + dataInfo.CONTROL_SEQ + "','" + dataInfo.CONTROL_DETAIL_SEQ + "');");
                 }
 
                 /** CAM 작업 여부에 따른 버튼 표시 **/
@@ -1661,6 +1753,18 @@
             g_ItemDetailPopObj05.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
             g_ItemDetailPopGridId05.pqGrid(g_ItemDetailPopObj05);
         }
+
+        if ($("#g_item_detail_pop_grid_06").hasClass('pq-grid')) {
+            $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid6');
+            g_ItemDetailPopGridId06.pqGrid('option', 'dataModel.postData', function (ui) {
+                return (fnFormToJsonArrayData('#g_item_detail_pop_form'));
+            });
+            g_ItemDetailPopGridId05.pqGrid('refreshDataAndView');
+        } else {
+            $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid6');
+            g_ItemDetailPopObj06.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
+            g_ItemDetailPopGridId06.pqGrid(g_ItemDetailPopObj06);
+        }
         $itemDetailPop.find("#g_item_detail_pop_barcode_num").focus();
     };
 
@@ -1672,6 +1776,7 @@
         if (g_ItemDetailPopGridId03.hasClass('pq-grid')) g_ItemDetailPopGridId03.pqGrid('destroy');
         if (g_ItemDetailPopGridId04.hasClass('pq-grid')) g_ItemDetailPopGridId04.pqGrid('destroy');
         if (g_ItemDetailPopGridId05.hasClass('pq-grid')) g_ItemDetailPopGridId05.pqGrid('destroy');
+        if (g_ItemDetailPopGridId06.hasClass('pq-grid')) g_ItemDetailPopGridId06.pqGrid('destroy');
     });
 
     $('#g_item_detail_pop_form').find('[name=control_num_arrow]').on('click', function () {
@@ -1715,6 +1820,11 @@
         }
 
         g_item_detail_pop_view(controlSeq, controlDetailSeq, orderDetailGrid, orderDetailRowIndx);
+    });
+    $("#search_inspection_detail").on('click',function() {
+        const controlSeq = $('#g_item_detail_pop_form > #CONTROL_SEQ').val();
+        let controlDetailSeq = $('#g_item_detail_pop_form > #CONTROL_DETAIL_SEQ').val();
+        g_item_detail_pop_inspection_pop(controlSeq, controlDetailSeq)
     });
 
 
@@ -1825,6 +1935,12 @@
         }, parameters, '');
     }
     /** cam popup */
+    const g_item_detail_pop_inspection_pop = function (CONTROL_SEQ, CONTROL_DETAIL_SEQ) {
+
+        $('#inspection_detail_form').find('#CONTROL_SEQ').val(CONTROL_SEQ);
+        $('#inspection_detail_form').find('#CONTROL_DETAIL_SEQ').val(CONTROL_DETAIL_SEQ);
+        $('#inspection_detail_popup').modal('show');
+    }
 
     /**  공통 제품상세 정보  끝 **/
 
@@ -3501,6 +3617,154 @@
         settingOngoingInfo();
         $mctPlanDetailPopGrid.pqGrid('refreshDataAndView');
     })
+
+    let inspectionDetailGrid =  $("#inspection_detail_grid");
+    let inspectionDetailColModel = [
+        {title: 'Q_SEQ', dataType: 'string', dataIndx: 'Q_SEQ', hidden:true},
+        {title: 'Seq.', datatype: 'string', dataIndx: 'Q_INSPECT_NUM', minWidth: 30, width: 30},
+        {title: '작성자', dataType: 'string', dataIndx: 'Q_INSPECT_USER_NM', width: 80},
+        {title: '측정방법', dataType: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', width: 85},
+        // {title: '반품일', dataType: 'string', dataIndx: 'Q_RETURN_DT', minWidth: 90, width: 95},
+        {title: '등급', dataType: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', width: 60},
+        {title: '수량', dataType: 'string', dataIndx: 'Q_ERROR_QTY', maxWidth: 40, width: 40},
+        {title: '검사코드', align: 'center', dataType: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', width: 95, colModel: [
+                {title: '', dataType: 'string', dataIndx: 'Q_INSPECT_DESC', minWidth: 95, styleHead: {'border-right-width': '0'}}
+            ]
+        },
+        {title: '원인', align: 'center', dataType: 'string', dataIndx: 'Q_ERROR_REASON_NM', width: 95, colModel: [
+                {title: '상세내용', dataType: 'string', dataIndx: 'Q_INSPECT_DESC1', minWidth: 95, styleHead: {'border-right-width': '0'}}
+            ]
+        },
+        {title: '발생공정', align: 'center', dataType: 'string', dataIndx: 'Q_ERROR_PROCESS_NM', width: 95, colModel: [
+                {title: '', dataType: 'string', dataIndx: 'Q_INSPECT_DESC2', minWidth: 95}
+            ]
+        },
+        {title: '조치', align: 'center', dataType: 'string', dataIndx: 'Q_ERROR_ACTION_NM', width: 95,  colModel: [
+                {title: '비고', dataType: 'string', dataIndx: 'Q_ERROR_NOTE', minWidth: 95}
+            ]
+        },
+        // {title: '조치방안', dataType: 'string', dataIndx: 'Q_ERROR_NOTE', width: 95},
+        {title: '작성일시', dataType: 'string', dataIndx: 'Q_DT', minWidth: 90, width: 95}
+    ];
+    let inspectionDetailObj = {
+        width: "100%", height: 280,
+        dataModel: {
+            location: "remote", dataType: "json", method: "POST", recIndx: 'Q_SEQ',
+            url: "/paramQueryGridSelect",
+            postData: fnFormToJsonArrayData('inspection_detail_form'),
+            getData: function (dataJSON) {
+                return {data: dataJSON.data};
+            }
+        },
+        strNoRows: g_noData,
+        editable: false,
+        columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
+        scrollModel: {autoFit: true},
+        numberCell: {width: 30, title: "No", show: false},
+        selectionModel: { type: 'row', mode: 'single'} ,
+        swipeModel: {on: false},
+        showTitle: false,
+        collapsible: false,
+        resizable: false,
+        trackModel: {on: true},
+        colModel: inspectionDetailColModel,
+        complete: function () {
+            inspectionAutoMerge(this, true);
+            const groupData = fnGroupBy(this.option('dataModel.data'),'Q_SEQ');
+            $.each(groupData, function(idx,Item) {
+                if (Item.length >= 2) {
+                    var cellId1 = '-' + Item[0].pq_ri + '-6-right'
+                    var cellId2 = '-' + Item[0].pq_ri + '-7-right'
+                    var cellId3 = '-' + Item[0].pq_ri + '-8-right'
+                    var cellId4 = '-' + Item[0].pq_ri + '-9-right'
+
+                    $("#"+cellId1 + " > div").text(Item[0].Q_INSPECT_RESULT_NM);
+                    $("#"+cellId2 + " > div").text(Item[0].Q_ERROR_REASON_NM);
+                    $("#"+cellId3 + " > div").text(Item[0].Q_ERROR_PROCESS_NM);
+                    $("#"+cellId4 + " > div").text(Item[0].Q_ERROR_ACTION_NM);
+                    $("#inspection_detail_popup").find("div[id^='pq-body-cell-'][id$='"+ cellId1 + "']").each(function() {
+                        $(this).find("div").text(Item[0].Q_INSPECT_RESULT_NM)
+                    });
+                    $("#inspection_detail_popup").find("div[id^='pq-body-cell-'][id$='"+ cellId2 + "']").each(function() {
+                        $(this).find("div").text(Item[0].Q_ERROR_REASON_NM)
+                    });
+                    $("#inspection_detail_popup").find("div[id^='pq-body-cell-'][id$='"+ cellId3 + "']").each(function() {
+                        $(this).find("div").text(Item[0].Q_ERROR_PROCESS_NM)
+                    });
+                    $("#inspection_detail_popup").find("div[id^='pq-body-cell-'][id$='"+ cellId4 + "']").each(function() {
+                        $(this).find("div").text(Item[0].Q_ERROR_ACTION_NM)
+                    });
+                }
+            })
+        }
+    };
+    const inspectionAutoMerge = function (grid, refresh) {
+        let mergeCellList = [],
+            colModelList = grid.getColModel(),
+            i = colModelList.length,
+            data = grid.option('dataModel.data');
+        const orderList = [
+            'Q_INSPECT_NUM', 'Q_INSPECT_USER_NM', 'Q_INSPECT_METHOD_NM', 'Q_INSPECT_GRADE', 'Q_INSPECT_GRADE_NOTE',
+            'Q_ERROR_QTY', 'Q_DT'
+        ];
+        const includeList = orderList;
+
+        while (i--) {
+            let dataIndx = colModelList[i].dataIndx,
+                rc = 1,
+                j = data.length;
+
+            if (includeList.includes(dataIndx)) {
+                while (j--) {
+                    let controlNum = data[j]['Q_SEQ'],
+                        controlNumPrev = data[j - 1] ? data[j - 1]['Q_SEQ'] : undefined,
+                        cellData = data[j][dataIndx] || '',
+                        cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] || '' : undefined;
+                    if (orderList.includes(dataIndx)) {
+                        if (controlNum === controlNumPrev) {
+                            // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
+                            if (cellDataPrev !== undefined && cellData == cellDataPrev) {
+                                rc++;
+                            }
+                        } else if (rc > 1) {
+                            /**
+                             * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
+                             * c1: colIndx of first column. 첫 번째 열의 colIndx.
+                             * rc: number of rows in the range. 범위 내 행 수.
+                             * cc: number of columns in the range. 범위 내 열 수.
+                             */
+                            mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
+                            rc = 1;
+                        }
+                    }
+                }
+            }
+        }
+        const groupData = fnGroupBy(data,'Q_SEQ');
+        $.each(groupData, function(idx,Item) {
+            if(Item.length >= 2) {
+                mergeCellList.push({r1: Item[1].pq_ri, c1: 6, rc: 1, cc: 3});
+            }
+        });
+
+        grid.option('mergeCells', mergeCellList);
+        if (refresh) {
+            grid.refreshView();
+        }
+    }
+    $("#inspection_detail_popup").on({
+        'show.bs.modal': function () {
+            inspectionDetailObj.dataModel.postData = fnFormToJsonArrayData('inspection_detail_form');
+            inspectionDetailGrid.pqGrid(inspectionDetailObj);
+        },'hide.bs.modal':function() {
+            if ($("#inspection_detail_grid").hasClass('pq-grid')) {
+                $("#inspection_detail_grid").pqGrid('destroy');
+            }
+        }
+    })
+    $(".close_inspection_detail").on("click", function() {
+        $("#inspection_detail_popup").modal("hide");
+    });
 
     $(document).ready(function(){
         $(document).on("blur","#ongoing_work_input",function(event){

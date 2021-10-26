@@ -230,25 +230,29 @@
             , C.PROJECT_NM  <!-- 프로젝트 -->
             , C.MODULE_NM
             , SF_GET_CODE_NM('1059', A.MAIN_INSPECTION, #{LOGIN_LOCALE}) AS MAIN_INSPECTION_NM <!-- 주요검사품 -->
+            , SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
             , CASE WHEN SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) > 0 AND IFNULL(B.ADDITIONAL_QTY,0) > 0 AND A.SAME_SIDE_YN = 'Y' THEN (
-                    CONCAT(SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), ' / ', IFNULL(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0),' (',IFNULL(SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1),0),',',IFNULL(SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1),0),') + ', B.ADDITIONAL_QTY)
+                    CONCAT(IFNULL(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ), 0),' (',IFNULL(SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1),0),',',IFNULL(SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(B.PART_UNIT_QTY, 1),0),') + ', B.ADDITIONAL_QTY)
                 )
                 WHEN SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) > 0 AND IFNULL(B.ADDITIONAL_QTY,0) > 0 THEN (
-                    CONCAT(SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), ' / ', SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ),' + ', B.ADDITIONAL_QTY)
+                    CONCAT(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ),' + ', B.ADDITIONAL_QTY)
                 )
-                WHEN SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) > 0 THEN CONCAT(SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), ' / ', SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ))
-                ELSE SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE})
-            END AS WORK_TYPE_NM_ORDER_QTY_INFO
+                WHEN SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) > 0 THEN CONCAT(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ))
+                ELSE SPACE(0)
+            END AS ORDER_QTY_INFO
             , B.SIZE_TXT
             , SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
             , SF_GET_CODE_NM('1039', B.SURFACE_TREAT, #{LOGIN_LOCALE}) AS SURFACE_TREAT_NM
             , SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
             , B.DXF_GFILE_SEQ
             , B.PDF_GFILE_SEQ
-             , B.IMG_GFILE_SEQ
-            , CASE WHEN C.DESIGNER_NM IS NULL THEN SF_GET_COMP_NM(A.ORDER_COMP_CD)
-                   ELSE CONCAT(SF_GET_COMP_NM(A.ORDER_COMP_CD), ' / ', C.DESIGNER_NM)
-            END AS ORDER_COMP_NM_DESIGNER_NM
+            , B.IMG_GFILE_SEQ
+            , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
+            , CASE WHEN C.DESIGNER_NM IS NOT NULL AND C.ORDER_STAFF_SEQ IS NOT NULL THEN CONCAT(C.DESIGNER_NM, ' / ', SF_GET_STAFF_NM(C.ORDER_STAFF_SEQ))
+                   WHEN C.DESIGNER_NM IS NOT NULL THEN C.DESIGNER_NM
+                   WHEN C.ORDER_STAFF_SEQ IS NOT NULL THEN SF_GET_STAFF_NM(C.ORDER_STAFF_SEQ)
+                   ELSE SPACE(0)
+             END AS ORDER_STAFF_NM_DESIGNER_NM
             , SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
             , CASE WHEN A.CONTROL_STATUS IN ('ORD001','ORD003','ORD004', 'ORD005') THEN (SELECT SF_GET_DATE_F(MAX(M.STATUS_DT),'YYYY','M') FROM TBL_CONTROL_PROGRESS M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.ORDER_STATUS = 'ORD001') END AS CONTROL_CONFIRM_DT
             , SF_GET_DATE_F(A.OUT_FINISH_DT,'','M') AS OUT_FINISH_DT
@@ -459,6 +463,90 @@
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
           AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
         ORDER BY 1 DESC
+    </select>
+    <select id="selectCommItemDetailInfoGrid6" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.REGIST_NUM,
+               A.ORDER_QTY,
+               SF_GET_DATE_F(A.ORDER_DUE_DT,'','') AS ORDER_DUE_DT,
+               A.ORDER_SEQ
+        FROM TBL_ORDER A
+            INNER JOIN TBL_CONTROL_PART_ORDER B ON A.ORDER_SEQ = B.ORDER_SEQ
+            INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.DEL_YN = 'N'
+        WHERE A.DEL_YN = 'N'
+            AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        ORDER BY 1 DESC
+    </select>
+    <select id="selectCommItemDetailInspectionList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.*
+        FROM (
+                 SELECT ROW_NUMBER() OVER(ORDER BY A.INSPECT_SEQ) AS Q_SEQ
+                , A.INSPECT_NUM AS Q_INSPECT_NUM
+                , 1 AS TYPE
+                , (SELECT M.USER_NM FROM TBL_USER M WHERE M.USER_ID = A.INSPECT_USER_ID) AS Q_INSPECT_USER_NM
+                      , SF_GET_CODE_NM('1060', A.INSPECT_METHOD, #{LOGIN_LOCALE}) AS Q_INSPECT_METHOD_NM
+                      , CASE WHEN A.INSPECT_TYPE = '2' THEN SF_GET_DATE_F(A.INSERT_DT,'YY','M') END AS Q_RETURN_DT
+                      , SF_GET_CODE_NM('1040', A.INSPECT_GRADE, #{LOGIN_LOCALE}) AS Q_INSPECT_GRADE
+                      , CASE
+                            WHEN A.INSPECT_GRADE IN ('GRD010', 'GRD020', 'GRD030') THEN '적합'
+                            WHEN A.INSPECT_GRADE = 'GRD040' THEN '부적합'
+                            WHEN A.INSPECT_GRADE IN ('GRD050', 'GRD060') THEN '반품'
+                     END AS Q_INSPECT_GRADE_NOTE
+                      , CASE WHEN A.INSPECT_TYPE = '1' THEN ( SELECT IFNULL(SUM(N.ORDER_QTY) * M.PART_UNIT_QTY,0)
+                                                              FROM TBL_CONTROL_PART M, TBL_CONTROL_PART_ORDER N
+                                                              WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                                                AND M.CONTROL_DETAIL_SEQ = N.CONTROL_DETAIL_SEQ
+                                                                AND M.CONTROL_SEQ = #{CONTROL_SEQ}
+                                                                AND M.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                                                            ) - IFNULL(A.ERROR_QTY,0)
+                     END AS Q_OK_QTY
+                      , CASE WHEN A.INSPECT_GRADE IN ('GRD040', 'GRD050', 'GRD060') THEN A.ERROR_QTY END AS Q_ERROR_QTY
+                      , CASE WHEN A.INSPECT_TYPE = '1' THEN CASE WHEN A.INSPECT_GRADE IN ('GRD030', 'GRD040') THEN SF_GET_CODE_NM('1019', A.INSPECT_RESULT, #{LOGIN_LOCALE}) END
+                             WHEN A.INSPECT_TYPE = '2' THEN SF_GET_CODE_NM('1021', A.INSPECT_RESULT, #{LOGIN_LOCALE})
+                     END AS Q_INSPECT_RESULT_NM
+                      , '' AS Q_INSPECT_DESC
+                      , SF_GET_CODE_NM('1010', A.ERROR_PROCESS, #{LOGIN_LOCALE}) AS Q_ERROR_PROCESS_NM
+                      , SF_GET_CODE_NM('1032', A.ERROR_REASON, #{LOGIN_LOCALE}) AS Q_ERROR_REASON_NM
+                      , SF_GET_CODE_NM('1025', A.ERROR_ACTION, #{LOGIN_LOCALE}) AS Q_ERROR_ACTION_NM
+                      , '' AS Q_ERROR_NOTE
+                      , SF_GET_DATE_F(A.INSERT_DT,'YY','M') AS Q_DT
+                 FROM TBL_INSPECT A
+                 WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+                   AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                 UNION ALL
+                 SELECT ROW_NUMBER() OVER(ORDER BY A.INSPECT_SEQ) AS Q_SEQ
+                    , A.INSPECT_NUM AS Q_INSPECT_NUM
+                    , 2 AS TYPE
+                    , (SELECT M.USER_NM FROM TBL_USER M WHERE M.USER_ID = A.INSPECT_USER_ID) AS Q_INSPECT_USER_NM
+                    , SF_GET_CODE_NM('1060', A.INSPECT_METHOD, #{LOGIN_LOCALE}) AS Q_INSPECT_METHOD_NM
+                    , CASE WHEN A.INSPECT_TYPE = '2' THEN SF_GET_DATE_F(A.INSERT_DT,'YY','M') END AS Q_RETURN_DT
+                    , SF_GET_CODE_NM('1040', A.INSPECT_GRADE, #{LOGIN_LOCALE}) AS Q_INSPECT_GRADE
+                    , CASE
+                            WHEN A.INSPECT_GRADE IN ('GRD010', 'GRD020', 'GRD030') THEN '적합'
+                            WHEN A.INSPECT_GRADE = 'GRD040' THEN '부적합'
+                            WHEN A.INSPECT_GRADE IN ('GRD050', 'GRD060') THEN '반품'
+                     END AS Q_INSPECT_GRADE_NOTE
+                    , CASE WHEN A.INSPECT_TYPE = '1' THEN ( SELECT IFNULL(SUM(N.ORDER_QTY) * M.PART_UNIT_QTY,0)
+                                                              FROM TBL_CONTROL_PART M, TBL_CONTROL_PART_ORDER N
+                                                              WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                                                                AND M.CONTROL_DETAIL_SEQ = N.CONTROL_DETAIL_SEQ
+                                                                AND M.CONTROL_SEQ = #{CONTROL_SEQ}
+                                                                AND M.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                                                            ) - IFNULL(A.ERROR_QTY,0)
+                     END AS Q_OK_QTY
+                    , CASE WHEN A.INSPECT_GRADE IN ('GRD040', 'GRD050', 'GRD060') THEN A.ERROR_QTY END AS Q_ERROR_QTY
+                    , '' AS Q_INSPECT_RESULT_NM
+                    , A.INSPECT_DESC AS Q_INSPECT_DESC
+                    , '' AS Q_ERROR_PROCESS_NM
+                    , '' AS Q_ERROR_REASON_NM
+                    , '' AS Q_ERROR_ACTION_NM
+                    , A.ERROR_NOTE AS Q_ERROR_NOTE
+                    , SF_GET_DATE_F(A.INSERT_DT,'YY','M') AS Q_DT
+                 FROM TBL_INSPECT A
+                 WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+                   AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+             ) X
+        ORDER BY X.Q_SEQ, X.Q_INSPECT_NUM, X.TYPE
     </select>
     <select id="selectControlCnt" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.CONTROL_SEQ

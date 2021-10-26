@@ -324,6 +324,7 @@
 .layerPopup .list1 .rowStyle tr th { border: 1px solid #acb9b9; background: #e8f0f0; color: #162f2f; text-align: center; padding: 5px; }
 .layerPopup .list1 .rowStyle tr th.palegoldenrod { background-color: palegoldenrod; }
 .layerPopup .list1 .rowStyle tr th.antiquewhite { background-color: antiquewhite; }
+.layerPopup .list1 .rowStyle tr th.lightGreen { background-color: #eff6e5; }
 .layerPopup .list1 .rowStyle tr th.blueviolet { color: blueviolet; }
 .layerPopup .list1 .rowStyle tr td {border: 1px solid #cecece; color: #444; padding: 5px; text-align: center; font-family: 'NotoKrR'; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 /*.layerPopup .list1 .rowStyle tr td { width: 100%; border: 1px solid #cecece; color: #444; padding: 5px; text-align: center; font-family: 'NotoKrR'; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }*/
