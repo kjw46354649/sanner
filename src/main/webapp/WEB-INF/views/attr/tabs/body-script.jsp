@@ -80,6 +80,8 @@
 <!-- monthpicker -->
 <script type="text/javascript" src="/resource/plugins/jquery.mtz.monthpicker/jquery.mtz.monthpicker.js"></script>
 
+<script type="text/javascript" src="/resource/plugins/spectrum/spectrum.js"></script>
+
 <script type='text/javascript'>
 
     var g_code;

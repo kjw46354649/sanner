@@ -20,6 +20,7 @@
 <link rel="stylesheet" type="text/css" href="/resource/plugins/paramquery/pqSelect/pqselect.min.css" />
 <!--add pqgrid.ui.css for jQueryUI theme support-->
 <link rel="stylesheet" type="text/css" href="/resource/plugins/paramquery/pqgrid.ui.min.css" />
+<link rel="stylesheet" type="text/css" href="/resource/plugins/spectrum/spectrum.css" />
 <!--Bootstrap dependencies-->
 <link rel="stylesheet" type="text/css" href="/resource/main/css/bootstrap.css" />
 <!--add pqgrid.bootstrap.css for bootstrap related classes-->

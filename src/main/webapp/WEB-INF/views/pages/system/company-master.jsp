@@ -112,7 +112,7 @@
                     </div>
 
                 </div>
-                <div class="resultWrap99 list99" style="height: 440px;">
+                <div class="resultWrap99 list99" style="height: 455px;">
                     <div class="leftWrap mt-15">
                         <input type="hidden" id="LOGO_GFILE_SEQ" name="LOGO_GFILE_SEQ" value="">
                         <img src="/image/999" id="LOGO_GFILE_SRC" width="388px" height="150px" alt="사진" style="border:1px solid #707070; width: 388px !important; height:150px !important;">
@@ -216,6 +216,15 @@
                                 <th scope="row">업체명(Full)</th>
                                 <td>
                                     <input type="text" id="COMP_NM2" name="COMP_NM2" value="" class="wd_150" data-notblank="true" class="form-control" placeholder="업체명(Full)">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">컬러</th>
+                                <td>
+                                    <input type="text" id="COLOR_CD" name="COLOR_CD" value="" class="wd_130" data-notblank="true" class="form-control">
+                                </td>
+                                <th scope="row"></th>
+                                <td>
                                 </td>
                             </tr>
                             <tr>
@@ -374,6 +383,13 @@
             {title: '주소', align: 'center', dataType: 'string', dataIndx: 'COMP_ADDRESS', width: 350},
             {title: '비고', align: 'center', dataType: 'string', dataIndx: 'NOTE', width: 200},
             {title: '대표이메일', align: 'center', dataType: 'string', dataIndx: 'COMP_EMAIL', width: 150},
+            {title: '색상', align: 'center', dataType: 'string', dataIndx: 'COLOR_CD', width: 80,
+                render: function (ui) {
+                    if(ui.cellData) {
+                        return {style: 'background-color:'+ ui.cellData};
+                    }
+                }
+            },
             {title: '로고', align: 'center', dataType: 'string', dataIndx: 'LOGO_GFILE_SEQ',
                 render: function (ui) {
                     var rowData = ui.rowData, dataIndx = ui.dataIndx;
@@ -470,6 +486,21 @@
                 let data = $systemCompanyMasterGrid.pqGrid('option', 'dataModel.data');
                 let totalRecords = data.length;
                 $('#system-company-master-grid-total-records').html(totalRecords);
+
+
+                // setTimeout(function() {
+                //     for(var i=0;i<data.length;i++) {
+                //         var id = "color-picker-" + i;
+                //         console.log($("#" + id));
+                //         $("#" + id).spectrum({
+                //             type: "component",
+                //             showInput: true,
+                //             showPalette: true,
+                //             showSelectionPalette: true,
+                //             palette: [ ]
+                //         });
+                //     }
+                // },500);
             },
         };
         $systemCompanyMasterGrid = $('#' + systemCompanyMasterGridId).pqGrid(systemCompanyMasterObj);
@@ -920,6 +951,13 @@
                         }
                     }
 
+                    $("#COLOR_CD").spectrum({
+                        type: "component",
+                        showInput: true,
+                        showPalette: true,
+                        showSelectionPalette: true,
+                        palette: [ ]
+                    });
 
                     $("#company_master_register_form").find("#queryId").val("systemMapper.getCompanyMasterStaffList");
                     $systemCompanyRegisterGrid = $('#' + systemCompanyRegisterGridId).pqGrid(systemCompanyRegisterObj);
