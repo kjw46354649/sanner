@@ -1576,7 +1576,7 @@
                 const materialFinishHeatSpanElement = dataInfo.MATERIAL_FINISH_HEAT === '열처리' ? '<span class="mark">열처리</span>' : '';
                 const controlStatusHoldSpanElement = dataInfo.CONTROL_STATUS === 'ORD005' ? '<span class="mark" style="background-color: #ff0000; color: #ffffff">보류</span>' : '';
 
-                $itemDetailPopForm.find("#item_detail_pop_img").attr("src", '/qimage/' + dataInfo.IMG_GFILE_SEQ);
+                $("#item_detail_pop_img").attr("src", '/qimage/' + dataInfo.IMG_GFILE_SEQ);
                 $itemDetailPopForm.find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
                 $itemDetailPopForm.find("#ORDER_QTY_INFO").html(dataInfo.ORDER_QTY_INFO);
                 $itemDetailPopForm.find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
