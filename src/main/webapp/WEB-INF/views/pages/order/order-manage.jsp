@@ -1609,6 +1609,7 @@
         const validationCheck = function (dataList) {
             // workTypeCheck(dataList);
             registNumCheck(dataList)
+            sameSideCheck(dataList)
             // controlNumCheck(dataList)
             // drawingNumCheck(dataList);
 
@@ -1629,6 +1630,17 @@
                     addErrorList(Item.pq_ri, 'CONTROL_NUM');
                 }
             })
+        }
+        const sameSideCheck = function (dataList) {
+            $.each(dataList, function (idx,Item) {
+                if(Item.SAME_SIDE_YN == 'Y' && (fnIsEmpty(Item.ORIGINAL_SIDE_QTY) || fnIsEmpty(Item.OTHER_SIDE_QTY))) {
+                    addErrorList(Item.pq_ri, 'ORIGINAL_SIDE_QTY');
+                    addErrorList(Item.pq_ri, 'OTHER_SIDE_QTY');
+                }else if(Item.SAME_SIDE_YN != 'Y' && (!fnIsEmpty(Item.ORIGINAL_SIDE_QTY) || !fnIsEmpty(Item.OTHER_SIDE_QTY))) {
+                    addErrorList(Item.pq_ri, 'ORIGINAL_SIDE_QTY');
+                    addErrorList(Item.pq_ri, 'OTHER_SIDE_QTY');
+                }
+            });
         }
         const registNumCheck = function (dataList) {
             // const groupedOrderSeq = fnGroupBy(dataList, 'ORDER_SEQ');
@@ -1912,8 +1924,7 @@
             // 작업지시번호 수정 여부 확인
             let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
-            console.log('changes',changes)
-            console.log('gridInstance',gridInstance)
+
             $.each(changes.oldList,function (idx,Item) {
                 $.each(Item,function (idx2,Item2) {
                     if(typeof Item2 == 'undefined') {

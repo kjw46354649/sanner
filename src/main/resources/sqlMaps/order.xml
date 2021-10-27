@@ -4695,7 +4695,7 @@
             <if test="MAIN_INSPECTION != null and MAIN_INSPECTION != ''">
                 MAIN_INSPECTION = #{MAIN_INSPECTION},
             </if>
-            <if test="(ORDER_STATUS == null or ORDER_STATUS == 'REG002') and (SAME_SIDE_YN != null and SAME_SIDE_YN != '')">
+            <if test="(ORDER_STATUS == null or ORDER_STATUS == 'REG002') and (SAME_SIDE_YN != null)">
                 SAME_SIDE_YN = #{SAME_SIDE_YN},
             </if>
             <if test="SIZE_TXT != null and SIZE_TXT != ''">

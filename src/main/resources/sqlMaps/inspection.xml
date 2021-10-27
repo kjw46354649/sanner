@@ -331,8 +331,15 @@
                     INNER JOIN TBL_INSIDE_OUT Y ON X.INSIDE_STOCK_SEQ = Y.INSIDE_STOCK_SEQ
             ) Z ON Z.CONTROL_SEQ = B.CONTROL_SEQ AND Z.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
         WHERE A.DEL_YN = 'N'
-            AND B.CONTROL_SEQ = #{CONTROL_SEQ}
-            AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        <choose>
+            <when test="CONTROL_NUM != null and CONTROL_NUM !=''">
+                AND A.CONTROL_NUM = #{CONTROL_NUM}
+            </when>
+            <otherwise>
+                AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+                AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            </otherwise>
+        </choose>
     </select>
     <select id="selectCommItemDetailInfo2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- MPR040(선반), MPR010(NC), MPR020(밀링), MPR030(연마)

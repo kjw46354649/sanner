@@ -1289,6 +1289,7 @@
             // workTypeCheck(dataList);
             controlNumCheck(dataList)
             orderQtyCheck(dataList);
+            dateCheck(dataList);
 
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 let rowData = dataList[i];
@@ -1327,6 +1328,16 @@
                         }
                         // }
                     })
+                }
+            })
+        }
+        const dateCheck = function (dataList) {
+            $.each(dataList, function (idx, Item) {
+                var dt = new Date(Item.INNER_DUE_DT);
+                var today = new Date();
+
+                if(dt < today) {
+                    addErrorList(Item.pq_ri, 'INNER_DUE_DT');
                 }
             })
         }

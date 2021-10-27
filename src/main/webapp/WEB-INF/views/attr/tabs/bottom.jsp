@@ -98,7 +98,7 @@
 <div class="popup_container g_item_detail_pop" id="g_item_detail_pop" style="display: none;">
     <div class="layerPopup">
         <h3>작업상세정보</h3>
-        <span class="right_float" style="margin-right: 100px;">
+        <span class="right_float" style="margin-right: 100px;display: none;">
             <span class="barCodeTxt" style="margin-right: 5px;">&nbsp;<input type="text" class="wd_270_barcode hg_30" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
             <span class="barCode" id="g_item_detail_pop_barcode_span"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
         </span>
@@ -107,7 +107,7 @@
         <div class="h_area"></div>
         <div class="qualityWrap" style="display: flex;">
             <div style="width: 51%;">
-                <form class="form-inline" id="g_item_detail_pop_form" name="g_item_detail_pop_form" role="form" onsubmit="return false;">
+                <form class="form-inline" id="g_item_detail_pop_form" name="g_item_detail_pop_form" role="form" onsubmit="return false;" onkeypress="return event.keyCode != 13;">
                     <input type="hidden" id="queryId" name="queryId" value="inspection.selectCommItemDetailInfo"/>
                     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value=""/>
                     <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value=""/>
@@ -117,15 +117,18 @@
                     <input type="hidden" id="NEXT_PART_CONTROL_DETAIL_SEQ" name="NEXT_PART_CONTROL_DETAIL_SEQ" value=""/>
                     <div class="d-flex align-items-center" style="height: 50px;">
                         <h4>기본정보</h4>
-                        <div id="view_part_wrap" style="margin-left: 75px;">
+                        <div id="view_part_wrap" style="margin-left: 95px;">
                             <button class="defaultBtn" name="view_assembly_or_part" id="WTP020" value="WTP020">조립</button>
                             <button class="defaultBtn" name="view_assembly_or_part" id="WTP050" value="WTP050">파트</button>
                             <span name="view_part" id="view_part_prev" style="cursor: pointer;">
-                            <img src="/resource/asset/images/common/img_left_arrow.png" alt="왼쪽 화살표" style="width: 15px;">
-                        </span>
+                                <img src="/resource/asset/images/common/img_left_arrow.png" alt="왼쪽 화살표" style="width: 15px;">
+                            </span>
                             <span name="view_part" id="view_part_next" style="cursor: pointer;">
-                            <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표" style="width: 15px;">
-                        </span>
+                                <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표" style="width: 15px;">
+                            </span>
+                        </div>
+                        <div style="margin-left: auto;">
+                            <input id="item_detail_pop_input" name="item_detail_pop_input" type="text" class="hg_30" placeholder="작업번호를 입력해주세요" value="">
                         </div>
                     </div>
                     <div class="list1">
@@ -276,7 +279,7 @@
                     </div>
                 </div>
                 <div class="list1" style="border: 1px solid #AAA;background: white;overflow: hidden;height: 53%;">
-                    <img src="/qimage/734042" style="width: 100%;height: 100%;max-height: inherit;max-width: inherit;">
+                    <img id="item_detail_pop_img" src="/resource/main/blank.jpg" style="width: 100%;height: 100%;max-height: inherit;max-width: inherit;">
                 </div>
                 <div class="listdiv">
                     <div class="tableWrap">
@@ -1573,6 +1576,7 @@
                 const materialFinishHeatSpanElement = dataInfo.MATERIAL_FINISH_HEAT === '열처리' ? '<span class="mark">열처리</span>' : '';
                 const controlStatusHoldSpanElement = dataInfo.CONTROL_STATUS === 'ORD005' ? '<span class="mark" style="background-color: #ff0000; color: #ffffff">보류</span>' : '';
 
+                $itemDetailPopForm.find("#item_detail_pop_img").attr("src", '/qimage/' + dataInfo.IMG_GFILE_SEQ);
                 $itemDetailPopForm.find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
                 $itemDetailPopForm.find("#ORDER_QTY_INFO").html(dataInfo.ORDER_QTY_INFO);
                 $itemDetailPopForm.find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
@@ -1845,6 +1849,33 @@
     <%--});--%>
     $("#g_item_detail_pop_barcode_span").on('click', function (e) {
         $("#g_item_detail_pop_barcode_num").focus();
+    });
+
+    $("#item_detail_pop_input").on({
+        keyup: function (e) {
+            if (e.keyCode == 13) {
+                let controlNum = this.value;
+                let data = {'queryId': "inspection.selectCommItemDetailInfo", 'CONTROL_NUM': controlNum};
+                let parameters = {'url': '/json-info', 'data': data};
+
+                fnPostAjax(function (data) {
+                    let dataInfo = data.info;
+                    if (dataInfo == null) {
+                        fnAlert(null, "작업번호 정보가 존재하지 않습니다.");
+                        return;
+                    } else {
+                        let CONTROL_SEQ = dataInfo.CONTROL_SEQ;
+                        let CONTROL_DETAIL_SEQ = dataInfo.CONTROL_DETAIL_SEQ;
+                        g_ItemDetailPopGridId01.pqGrid('destroy');
+                        g_ItemDetailPopGridId02.pqGrid('destroy');
+                        g_ItemDetailPopGridId03.pqGrid('destroy');
+                        g_ItemDetailPopGridId04.pqGrid('destroy');
+                        g_ItemDetailPopGridId05.pqGrid('destroy');
+                        g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
+                    }
+                }, parameters, '');
+            }
+        }
     });
 
     $("#g_item_detail_pop_barcode_num").on({

@@ -989,6 +989,8 @@
         const validationCheck = function (dataList) {
             // workTypeCheck(dataList);
             registNumCheck(dataList)
+            sameSideCheck(dataList);
+            dateCheck(dataList)
             // controlNumCheck(dataList)
 
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
@@ -1037,6 +1039,28 @@
                     })
                 }
             })
+        }
+        const dateCheck = function (dataList) {
+            $.each(dataList, function (idx, Item) {
+                var dt = new Date(Item.ORDER_DUE_DT);
+                var today = new Date();
+
+                if(dt < today) {
+                    addErrorList(Item.pq_ri, 'ORDER_DUE_DT');
+                }
+            })
+        }
+
+        const sameSideCheck = function (dataList) {
+            $.each(dataList, function (idx,Item) {
+                if(Item.SAME_SIDE_YN == 'Y' && (fnIsEmpty(Item.ORIGINAL_SIDE_QTY) || fnIsEmpty(Item.OTHER_SIDE_QTY))) {
+                    addErrorList(Item.pq_ri, 'ORIGINAL_SIDE_QTY');
+                    addErrorList(Item.pq_ri, 'OTHER_SIDE_QTY');
+                }else if(Item.SAME_SIDE_YN != 'Y' && (!fnIsEmpty(Item.ORIGINAL_SIDE_QTY) || !fnIsEmpty(Item.OTHER_SIDE_QTY))) {
+                    addErrorList(Item.pq_ri, 'ORIGINAL_SIDE_QTY');
+                    addErrorList(Item.pq_ri, 'OTHER_SIDE_QTY');
+                }
+            });
         }
 
         const workTypeCheck = function (dataList) {
