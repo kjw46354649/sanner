@@ -41,6 +41,9 @@
                     </select>
                 </span>
             </div>
+            <div style="opacity: 0;">
+                <input id="nfc_tag_input" type="text" style="height: 30px;margin-left: 50px;align-items: center;" autofocus >
+            </div>
 <%--            <div class="langBtn">--%>
 <%--                <button type="button" id="main" name="main" ><img src="/resource/asset/images/common/logo-01.png" style="width: 50px;height: 40px; margin-top: 0px;">Home</button>--%>
 <%--            </div>--%>
@@ -63,6 +66,22 @@
         </form>
         <form action="/drawing" id="home-form" name="home-form" method="POST"></form>
     </div>
+<div class="modal-scan" id="no_nfc_popup" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-stop-content">
+            <div class="modal-stop-body">
+                <div class="tableWrap">
+                    <div>
+                        <p class="stop-txt">등록되지 않은 기기입니다.</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <button type="button" class="gradeMidBtn red close_pop" style="width: auto; padding: 0 20px;">닫기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script type='text/javascript'>
 
     $(function () {
@@ -80,6 +99,45 @@
         $('#go_home').click(function(){
             document.getElementById('home-form').submit();
         });
+        $('.close_pop').click(function(){
+            $("#no_nfc_popup").css("display", "none");
+            $(".bodyWrap").removeClass("modal-open-body");
+        });
+        $("#nfc_tag_input").on({
+            keyup: function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                if (e.keyCode == 13) {
+                    console.log(this.value);
+                    $.ajax({
+                        type: 'POST', url: '/drawing-json-info', dataType: 'json', async: false,
+                        data: {"queryId":"drawingMapper.selectNfcData", "NFC_ID" : this.value},
+                        success: function (data, textStatus, jqXHR) {
+                            if (textStatus === 'success') {
+                                if(data.info == null) {
+                                    $("#no_nfc_popup").css("display", "block");
+                                    $(".bodyWrap").addClass("modal-open-body");
+                                }else {
+                                    $("#drawing_worker_form").find("#USER_ID").val(data.info.USER_ID);
+                                    $("#drawing_worker_form").find("#USER_NM").val(data.info.USER_NM);
+                                    $("#drawing_worker_form").find("#USER_GFILE_SEQ").val(data.info.PHOTO_GFILE_SEQ);
+                                    $("#drawing_worker_form").submit();
+                                }
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('err',textStatus);
+                        }
+                    });
+                    $("#nfc_tag_input").val("");
+                    $("#nfc_tag_input").focus();
+                }
+            },
+            focusout: function(e) {
+                $("#nfc_tag_input").focus();
+            }
+        })
 
         $("#DEPT").on('change', function(){
             let selDept = $(this).val();
@@ -108,6 +166,15 @@
             });
         });
         $("#DEPT").trigger("change");
+        // $("#nfc_tag_input").focus();
+
+    });
+    window.addEventListener('focus', function() {
+        $("#nfc_tag_input").focus();
+    }, false);
+
+    $(document).ready(function(){
+        $("#nfc_tag_input").focus();
     });
 
     $(document).on('click', '.userTag', function(event){
