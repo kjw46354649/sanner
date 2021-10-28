@@ -262,8 +262,9 @@
         const gridId = 'CREATE_CONTROL_GRID';
         const colModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+            {title: 'MERGE_CONTROL_SEQ', dataType: 'integer', dataIndx: 'MERGE_CONTROL_SEQ', hidden: true},
+            {title: 'MERGE_CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'MERGE_CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
-            {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {
@@ -1341,7 +1342,7 @@
                 var dt = new Date(Item.INNER_DUE_DT);
                 var today = new Date();
 
-                if(dt < today) {
+                if((fnIsEmpty(Item.CONTROL_SEQ)) && dt < today) {
                     addErrorList(Item.pq_ri, 'INNER_DUE_DT');
                 }
             })
@@ -1989,7 +1990,16 @@
                 $.each(data.resultList, function (idx,Item) {
                     $.each(gridData, function (idx2,Item2) {
                         if(Item.ROW_NUM == Item2.ROW_NUM) {
-                            $createControlGrid.pqGrid('updateRow', {rowIndx: Item2.pq_ri, row: {"VALIDATION": Item.VALIDATION_RESULT}, checkEditable: false});
+                            let updateRow = {
+                                "VALIDATION": Item.VALIDATION_RESULT
+                            };
+                            if(typeof Item.MERGE_CONTROL_SEQ != 'undefined' && Item.MERGE_CONTROL_SEQ != null && Item.MERGE_CONTROL_SEQ != '') {
+                                updateRow.MERGE_CONTROL_SEQ = Item.MERGE_CONTROL_SEQ
+                            }
+                            if(typeof Item.MERGE_CONTROL_DETAIL_SEQ != 'undefined' && Item.MERGE_CONTROL_DETAIL_SEQ != null && Item.MERGE_CONTROL_DETAIL_SEQ != '') {
+                                updateRow.MERGE_CONTROL_DETAIL_SEQ = Item.MERGE_CONTROL_DETAIL_SEQ
+                            }
+                            $createControlGrid.pqGrid('updateRow', {rowIndx: Item2.pq_ri, row: updateRow, checkEditable: false});
                         }
                     })
                 })

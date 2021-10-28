@@ -3709,6 +3709,67 @@
         WHERE X.GFILE_SEQ = Y.IMG_GFILE_SEQ
     </select>
 
+    <insert id="createPartOrderToMergeVer2" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_CONTROL_PART_ORDER (
+            CONTROL_SEQ
+            , CONTROL_DETAIL_SEQ
+            , ORDER_SEQ
+            , REGIST_NUM
+            , ORDER_NUM
+            , ORDER_QTY
+            , ORDER_DUE_DT
+            , DELIVERY_DT
+            , PROJECT_NM
+            , MODULE_NM
+            , DELIVERY_COMP_NM
+            , LABEL_NOTE
+            , ORDER_STAFF_SEQ
+            , DESIGNER_NM
+            , DRAWING_NUM
+            , DWG_GFILE_SEQ
+            , DXF_GFILE_SEQ
+            , PDF_GFILE_SEQ
+            , IMG_GFILE_SEQ
+            , VIEW_GFILE_SEQ
+            , ITEM_NM
+            , ORIGINAL_SIDE_QTY
+            , OTHER_SIDE_QTY
+            , UNIT_FINAL_EST_AMT
+            , UNIT_FINAL_AMT
+            , ORDER_BARCODE_NUM
+            , INSERT_ID
+        )
+        SELECT #{MERGE_CONTROL_SEQ}
+            , #{MERGE_CONTROL_DETAIL_SEQ}
+            , #{ORDER_SEQ}
+            , A.REGIST_NUM
+            , A.ORDER_NUM
+            , #{CONTROL_ORDER_QTY}
+            , A.ORDER_DUE_DT
+            , A.DELIVERY_DT
+            , A.PROJECT_NM
+            , A.MODULE_NM
+            , A.DELIVERY_COMP_NM
+            , A.LABEL_NOTE
+            , A.ORDER_STAFF_SEQ
+            , A.DESIGNER_NM
+            , A.DRAWING_NUM
+            , A.DWG_GFILE_SEQ
+            , A.DXF_GFILE_SEQ
+            , A.PDF_GFILE_SEQ
+            , A.IMG_GFILE_SEQ
+            , A.VIEW_GFILE_SEQ
+            , A.ITEM_NM
+            , #{CONTROL_ORIGINAL_SIDE_QTY}
+            , #{CONTROL_OTHER_SIDE_QTY}
+            , A.UNIT_FINAL_EST_AMT
+            , A.UNIT_FINAL_AMT
+            , A.ORDER_BARCODE_NUM
+            , #{LOGIN_USER_ID}
+        FROM TBL_ORDER A
+        WHERE A.DEL_YN = 'N'
+            AND A.ORDER_SEQ = #{ORDER_SEQ}
+    </insert>
     <insert id="createPartOrderToMerge" parameterType="java.util.HashMap" >
         <selectKey keyProperty="NEXT_ORDER_SEQ" resultType="int" order="BEFORE">
             SELECT NEXTVAL(SEQ_CONTROL_PART_ORDER) FROM DUAL
@@ -3796,6 +3857,25 @@
                         )
     </insert>
 
+    <insert id="createOutBarcodeToMergeVer2" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_OUT_BARCODE (
+              BARCODE_NUM
+            , CONTROL_SEQ
+            , CONTROL_DETAIL_SEQ
+            , ORDER_SEQ
+            , PACKING_NUM
+            , INSERT_ID
+        )
+        VALUES(
+            CONCAT('L', LPAD(NEXTVAL(SEQ_BARCODE), 9, '0'))
+            , #{MERGE_CONTROL_SEQ}
+            , #{MERGE_CONTROL_DETAIL_SEQ}
+            , #{ORDER_SEQ}
+            , 1
+            , #{LOGIN_USER_ID}
+        )
+    </insert>
+
     <insert id="createOutBarcodeToMerge" parameterType="java.util.HashMap" >
         INSERT INTO TBL_OUT_BARCODE (
             BARCODE_NUM
@@ -3825,6 +3905,31 @@
                         WHERE DEL_YN = 'N'
                             AND CONTROL_NUM = #{CONTROL_NUM}
                       )
+    </select>
+    <select id="selectCheckControlDuplicateVer3" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+        SELECT EXISTS (	SELECT *
+                           FROM TBL_CONTROL
+                           WHERE DEL_YN = 'N'
+                             AND CONTROL_NUM = #{CONTROL_NUM}
+                             AND CONTROL_STATUS IN ('ORD001','ORD005')
+                   )
+    </select>
+    <select id="selectCheckControlDuplicateVer2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.CONTROL_SEQ, IFNULL(A.CONTROL_STATUS,'TEMP') AS CONTROL_STATUS,
+               B.CONTROL_DETAIL_SEQ,
+               B.WORK_TYPE, B.MATERIAL_SUPPLY_YN, A.MAIN_INSPECTION, A.SAME_SIDE_YN, B.SIZE_TXT,
+               B.MATERIAL_DETAIL, B.MATERIAL_KIND, B.SURFACE_TREAT,
+               CASE WHEN B.MATERIAL_FINISH_GRIND_YN = 'Y' THEN 'MATERIAL_FINISH_GRIND_YN'
+                    WHEN B.MATERIAL_FINISH_HEAT_YN = 'Y' THEN 'MATERIAL_FINISH_HEAT_YN'
+                   END AS SPECIAL_TREATMENT,
+               CAST((SELECT COUNT(*) FROM TBL_CONTROL_PART X WHERE X.CONTROL_SEQ = A.CONTROL_SEQ AND X.WORK_TYPE = 'WTP050') AS CHAR) AS PART_NUM,
+               SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+        WHERE A.DEL_YN = 'N'
+            AND A.CONTROL_NUM = #{CONTROL_NUM}
+            AND B.WORK_TYPE != 'WTP050'
+        GROUP BY A.CONTROL_NUM
     </select>
     <select id="selectCheckRegistNumDuplicate" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
         SELECT EXISTS (	SELECT *
@@ -4948,6 +5053,7 @@
             B.PART_STATUS,
             SF_GET_DATE_F(A.INSERT_DT , '', 'M') AS ORDER_INSERT_DT,
             SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT,
+            SF_GET_DATE_F(B.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT_COPY,
             B.ORDER_QTY AS CONTROL_ORDER_QTY,
             B.OTHER_SIDE_QTY AS CONTROL_OTHER_SIDE_QTY,
             B.ORIGINAL_SIDE_QTY AS CONTROL_ORIGINAL_SIDE_QTY,

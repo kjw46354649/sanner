@@ -1039,39 +1039,82 @@ public class OrderServiceImpl implements OrderService {
                 String controlNum = (String) hashMap.get("CONTROL_NUM");
 
                 if (hashMap.containsKey("REGIST_NUM") && hashMap.containsKey("CONTROL_NUM")) {
-                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
-                    if(this.orderDao.getFlag(hashMap)) {
-                        flag = true;
-                        hashMap.put("VALIDATION_RESULT", "RS_EXISTS");
+//                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
+                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicateVer2");
+                    HashMap<String, Object> controlMap = (HashMap<String, Object>) this.innodaleDao.getInfo(hashMap);
+
+                    if(controlMap != null && controlMap.get("CONTROL_SEQ") != null && !controlMap.get("CONTROL_SEQ").equals("")) {
+                        String controlStatus = String.valueOf(controlMap.get("CONTROL_STATUS"));
+                        if(controlStatus.equals("ORD001") || controlStatus.equals("ORD005")) {
+                            flag = true;
+                            hashMap.put("VALIDATION_RESULT", "RS_EXISTS");
+                        }else {
+                            hashMap.put("MERGE_CONTROL_SEQ",controlMap.get("CONTROL_SEQ"));
+                            hashMap.put("MERGE_CONTROL_DETAIL_SEQ",controlMap.get("CONTROL_DETAIL_SEQ"));
+                            hashMap.put("MERGE_CONTROL_STATUS",controlMap.get("CONTROL_STATUS"));
+                        }
+
+                        String partNum = (String) controlMap.get("PART_NUM");
+                        if(partNum == null || partNum == "" || Integer.parseInt(partNum) <= 0) {
+                            controlMap.put("PART_NUM","");
+                        }
                     }
-                    ArrayList<HashMap<String, Object>> mergeList = (ArrayList<HashMap<String, Object>>) groupMap.get(controlNum);
-                    if(mergeList.size() >= 2) {
-                        for(int i=0;i<mergeList.size();i++) {
-                            HashMap<String, Object> temp = mergeList.get(i);
-                            if(temp.get("ROW_NUM") != hashMap.get("ROW_NUM") && hashMap.get("VALIDATION_RESULT").equals("SUCCESS")) {
-                                String[] checkColumn = {"WORK_TYPE", "MATERIAL_SUPPLY_YN","MAIN_INSPECTION","SAME_SIDE_YN","SIZE_TXT","MATERIAL_DETAIL","MATERIAL_KIND","SURFACE_TREAT","SPECIAL_TREATMENT","PART_NUM","INNER_DUE_DT"};
-                                Boolean mergeFlag = false;
 
-                                for(String column : checkColumn) {
-                                    if(temp.get(column) == null) {
-                                        temp.put(column,"");
-                                    }
-                                    if(hashMap.get(column) == null) {
-                                        hashMap.put(column,"");
-                                    }
-                                    if(!temp.get(column).equals(hashMap.get(column)) && !mergeFlag) {
-                                        mergeFlag = true;
-                                    }
+                    String[] checkColumn = {"WORK_TYPE", "MATERIAL_SUPPLY_YN","MAIN_INSPECTION","SAME_SIDE_YN","SIZE_TXT","MATERIAL_DETAIL","MATERIAL_KIND","SURFACE_TREAT","SPECIAL_TREATMENT","PART_NUM","INNER_DUE_DT"};
+                    if(hashMap.get("MERGE_CONTROL_SEQ") != null) {
+
+                        if(hashMap.get("VALIDATION_RESULT").equals("SUCCESS")) {
+                            Boolean mergeFlag = false;
+
+                            for(String column : checkColumn) {
+                                if(controlMap.get(column) == null) {
+                                    controlMap.put(column,"");
                                 }
+                                if(hashMap.get(column) == null) {
+                                    hashMap.put(column,"");
+                                }
+                                if(!controlMap.get(column).equals(hashMap.get(column)) && !mergeFlag) {
+                                    mergeFlag = true;
+                                }
+                            }
 
-                                if(mergeFlag) {
-                                    flag = true;
-                                    hashMap.put("VALIDATION_RESULT", "RS_EXISTS2");
-                                }else {
-                                    hashMap.put("VALIDATION_RESULT", "RS_MERGE");
+                            if(mergeFlag) {
+                                flag = true;
+                                hashMap.put("VALIDATION_RESULT", "RS_EXISTS2");
+                            }else {
+                                hashMap.put("VALIDATION_RESULT", "RS_MERGE");
+                            }
+                        }
+                    }else {
+                        ArrayList<HashMap<String, Object>> mergeList = (ArrayList<HashMap<String, Object>>) groupMap.get(controlNum);
+                        if(mergeList.size() >= 2) {
+                            for(int i=0;i<mergeList.size();i++) {
+                                HashMap<String, Object> temp = mergeList.get(i);
+                                if(temp.get("ROW_NUM") != hashMap.get("ROW_NUM") && hashMap.get("VALIDATION_RESULT").equals("SUCCESS")) {
+                                    Boolean mergeFlag = false;
+
+                                    for(String column : checkColumn) {
+                                        if(temp.get(column) == null) {
+                                            temp.put(column,"");
+                                        }
+                                        if(hashMap.get(column) == null) {
+                                            hashMap.put(column,"");
+                                        }
+                                        if(!temp.get(column).equals(hashMap.get(column)) && !mergeFlag) {
+                                            mergeFlag = true;
+                                        }
+                                    }
+
+                                    if(mergeFlag) {
+                                        flag = true;
+                                        hashMap.put("VALIDATION_RESULT", "RS_EXISTS2");
+                                    }else {
+                                        hashMap.put("VALIDATION_RESULT", "RS_MERGE");
+                                    }
                                 }
                             }
                         }
+
                     }
                 }
                 resultList.add(hashMap);
@@ -1143,15 +1186,23 @@ public class OrderServiceImpl implements OrderService {
                 hashMap.put("IN_UID",uuid);
 
                 if (hashMap.containsKey("REGIST_NUM") && hashMap.containsKey("CONTROL_NUM")) {
-//                    hashMap.put("queryId", "orderMapper.selectControlNumExists");
-                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
+//                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
+                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicateVer3");
                     if(this.orderDao.getFlag(hashMap)) {
                         flag = true;
                         message = "이미 존재하는 작업지시번호입니다.";
                     }
 
-                    hashMap.put("queryId", "orderMapper.createControlExcel");
-                    this.innodaleDao.create(hashMap);
+                    if(hashMap.get("MERGE_CONTROL_SEQ") != null && hashMap.get("MERGE_CONTROL_DETAIL_SEQ") != null) {
+
+                        hashMap.put("queryId", "orderMapper.createPartOrderToMergeVer2");
+                        this.innodaleDao.create(hashMap);
+                        hashMap.put("queryId", "orderMapper.createOutBarcodeToMergeVer2");
+                        this.innodaleDao.create(hashMap);
+                    }else {
+                        hashMap.put("queryId", "orderMapper.createControlExcel");
+                        this.innodaleDao.create(hashMap);
+                    }
 
                 }
             }
