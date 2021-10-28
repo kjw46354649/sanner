@@ -973,11 +973,16 @@
                     });
                 }
             },
+            {title: 'INNER_DUE_DT_COPY', dataType: 'String', dataIndx: 'INNER_DUE_DT_COPY', hidden: true},
             {
                 title: '가공<br>납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT', formatRaw: 'yy/mm/dd',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: true,
-                editor: {type: 'textbox', init: fnDateEditor}
+                editor: {type: 'textbox', init: fnDateEditor},
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    rowData.INNER_DUE_DT_COPY = ui.cellData;
+                }
             },
             {title: '수량<br>추가', dataType: 'integer', format: '#,###', dataIndx: 'ADDITIONAL_QTY',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
@@ -1541,6 +1546,16 @@
                             dt = column.dataType;
                         if (dt === 'integer' || dt === 'float') {
                             row[j] = row[j].replace(/[^(\d|.)]/g, '');
+                        }else if(dt === 'date') {
+                            let colName = column.dataIndx + "_COPY"
+                            let dateCopy = $controlManagementGrid.pqGrid("getRowData", {rowIndx: area.r1})[colName];
+
+                            if(typeof dateCopy != 'undefined' && dateCopy != null && dateCopy != '') {
+                                row[j] = dateCopy;
+                            }
+                            if(row[j].indexOf("-") >= 0 ) {
+                                row[j] = row[j].replace(/-/gi,"/");
+                            }
                         }
                     }
                 }
@@ -2011,6 +2026,7 @@
             workTypeCheck(dataList);
             // registNumCheck(dataList)
             controlNumCheck(dataList)
+            dateCheck(dataList);
             // drawingNumCheck(dataList);
 
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
@@ -2028,6 +2044,25 @@
                 var regexpSpec = /[^A-Za-z0-9\-]/gi;
                 if(regexpSpec.test(Item.CONTROL_NUM)) {
                     addErrorList(Item.pq_ri, 'CONTROL_NUM');
+                }
+            })
+        }
+        const dateCheck = function (dataList) {
+            let gridInstance = $controlManagementGrid.pqGrid('getInstance').grid;
+            let changes = gridInstance.getChanges({format: 'byVal'});
+            let arr = changes.addList.concat(changes.updateList);
+            let rowNumArr = [];
+            $.each(arr,function(idx,Item) {
+                rowNumArr.push(Item.ROW_NUM);
+            });
+            $.each(dataList, function (idx, Item) {
+                if(rowNumArr.indexOf(Item.ROW_NUM) >= 0) {
+                    var dt = new Date(Item.INNER_DUE_DT);
+                    var today = new Date();
+
+                    if(dt < today) {
+                        addErrorList(Item.pq_ri, 'INNER_DUE_DT');
+                    }
                 }
             })
         }
@@ -2339,7 +2374,7 @@
             // 작업지시번호 수정 여부 확인
             let gridInstance = $controlManagementGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
-            console.log('changes',changes)
+
             $.each(changes.oldList,function (idx,Item) {
                 $.each(Item,function (idx2,Item2) {
                     if(typeof Item2 == 'undefined') {

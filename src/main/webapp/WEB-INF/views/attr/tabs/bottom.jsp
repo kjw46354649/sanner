@@ -98,8 +98,8 @@
 <div class="popup_container g_item_detail_pop" id="g_item_detail_pop" style="display: none;">
     <div class="layerPopup">
         <h3>작업상세정보</h3>
-        <span class="right_float" style="margin-right: 100px;display: none;">
-            <span class="barCodeTxt" style="margin-right: 5px;">&nbsp;<input type="text" class="wd_270_barcode hg_30" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
+        <span class="right_float" style="margin-right: 100px;">
+            <span class="barCodeTxt" style="margin-right: 5px;opacity: 0;">&nbsp;<input type="text" class="wd_270_barcode hg_30" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
             <span class="barCode" id="g_item_detail_pop_barcode_span"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
         </span>
         <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close" style="float: right;right: 12px;position: absolute;">닫기</button>
@@ -1581,6 +1581,7 @@
                 $itemDetailPopForm.find("#ORDER_QTY_INFO").html(dataInfo.ORDER_QTY_INFO);
                 $itemDetailPopForm.find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
                 $itemDetailPopForm.find("#WORK_TYPE_NM").html(dataInfo.WORK_TYPE_NM);
+                $itemDetailPopForm.find("#ORDER_COMP_NM").html(dataInfo.ORDER_COMP_NM);
                 $itemDetailPopForm.find("#INNER_DUE_DT").html(dataInfo.INNER_DUE_DT + emergencySpanElement);
 
                 $itemDetailPopForm.find("#DRAWING_NUM").attr('title', dataInfo.DRAWING_NUM);
@@ -1681,18 +1682,18 @@
             let dataInfo = data.info;
 
             if (dataInfo == null) {
-                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_1").val('');
-                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_2").val('');
-                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_3").val('');
-                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_4").val('');
-                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_5").val('');
+                $("#g_item_detail_pop_grid_01_info_1").val('');
+                $("#g_item_detail_pop_grid_01_info_2").val('');
+                $("#g_item_detail_pop_grid_01_info_3").val('');
+                $("#g_item_detail_pop_grid_01_info_4").val('');
+                $("#g_item_detail_pop_grid_01_info_5").val('');
             } else {
                 //fnJsonDataToForm("stock_manage_pop_form", dataInfo);
-                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_1").val(dataInfo.WORK_TIME_TOTAL);
-                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_2").val(dataInfo.WORK_TIME_MPR040);
-                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_3").val(dataInfo.WORK_TIME_MPR010);
-                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_4").val(dataInfo.WORK_TIME_MPR020);
-                $itemDetailPopForm.find("#g_item_detail_pop_grid_01_info_5").val(dataInfo.WORK_TIME_MPR030);
+                $("#g_item_detail_pop_grid_01_info_1").val(dataInfo.WORK_TIME_TOTAL);
+                $("#g_item_detail_pop_grid_01_info_2").val(dataInfo.WORK_TIME_MPR040);
+                $("#g_item_detail_pop_grid_01_info_3").val(dataInfo.WORK_TIME_MPR010);
+                $("#g_item_detail_pop_grid_01_info_4").val(dataInfo.WORK_TIME_MPR020);
+                $("#g_item_detail_pop_grid_01_info_5").val(dataInfo.WORK_TIME_MPR030);
             }
         }, parameters2, '');
 

@@ -99,13 +99,11 @@
                     let grid = this,
                         $cell = grid.getCell(ui);
                     $cell.find('#downloadViewCad').bind('click', function () {
-                        console.log("!!!!!!!")
                         let rowData = ui.rowData;
                         fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
                     });
                     $cell.find('#downloadViewPdf').bind('click', function () {
                         let rowData = ui.rowData;
-                        console.log("??????")
                         fnFileDownloadFormPageAction(rowData.PDF_GFILE_SEQ);
                     });
                 }
@@ -152,6 +150,11 @@
                         }
                     }
                 })
+            },
+            complete: function (event, ui) {
+                setTimeout(function (){
+                    $('#' + popupGridId).pqGrid('setSelection', {rowIndx: 0});
+                },300);
             },
             cellKeyDown: function (event, ui) {
                 let rowIndx = ui.rowIndx;

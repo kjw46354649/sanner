@@ -446,6 +446,7 @@
                     }
                 ]
             },
+            {title: 'ORDER_DUE_DT_COPY', dataType: 'String', dataIndx: 'ORDER_DUE_DT_COPY', hidden: true},
             {
                 title: '발주납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
@@ -457,6 +458,7 @@
                 editor: {type: 'textbox', init: fnDateEditor},
                 render: function (ui) {
                     let rowData = ui.rowData;
+                    rowData.ORDER_DUE_DT_COPY = ui.cellData;
                     let cls = null;
 
                     return {cls: cls, text: controlManageFilterRender(ui)};
@@ -536,7 +538,7 @@
                         let rowData = ui.rowData;
 
                         if (rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002') {
-                            return fnGetCommCodeGridSelectBox('1027');
+                            return fnGetCommCodeGridSelectBox('1027');F
                         } else { // 확정
                             return fnGetCommCodeGridSelectBoxEtc('1027', rowData.MATERIAL_TYPE);
                         }
@@ -665,6 +667,7 @@
                     {title: '조치', dataType: 'date', dataIndx: 'RETURN_FINISH_DT'}
                 ]
             },
+            {title: 'DELIVERY_DT_COPY', dataType: 'String', dataIndx: 'DELIVERY_DT_COPY', hidden: true},
             {
                 title: '납품확인', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'DELIVERY_DT',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
@@ -677,6 +680,7 @@
                 render: function (ui) {
                     let rowData = ui.rowData;
                     let cls = null;
+                    rowData.DELIVERY_DT_COPY = ui.cellData;
 
                     return {cls: cls, text: controlManageFilterRender(ui)};
                 }
@@ -1259,6 +1263,15 @@
                             dt = column.dataType;
                         if (dt === 'integer' || dt === 'float') {
                             row[j] = row[j].replace(/[^(\d|.)]/g, '');
+                        }else if(dt === 'date') {
+                            let colName = column.dataIndx + "_COPY"
+                            let dateCopy = $orderManagementGrid.pqGrid("getRowData", {rowIndx: area.r1})[colName];
+                            if(typeof dateCopy != 'undefined' && dateCopy != null && dateCopy != '') {
+                                row[j] = dateCopy;
+                            }
+                            if(row[j].indexOf("-") >= 0 ) {
+                                row[j] = row[j].replace(/-/gi,"/");
+                            }
                         }
                     }
                 }
@@ -1610,6 +1623,7 @@
             // workTypeCheck(dataList);
             registNumCheck(dataList)
             sameSideCheck(dataList)
+            dateCheck(dataList);
             // controlNumCheck(dataList)
             // drawingNumCheck(dataList);
 
@@ -1628,6 +1642,25 @@
                 var regexpSpec = /[^A-Za-z0-9\-]/gi;
                 if(regexpSpec.test(Item.CONTROL_NUM)) {
                     addErrorList(Item.pq_ri, 'CONTROL_NUM');
+                }
+            })
+        }
+        const dateCheck = function (dataList) {
+            let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
+            let changes = gridInstance.getChanges({format: 'byVal'});
+            let arr = changes.addList.concat(changes.updateList);
+            let rowNumArr = [];
+            $.each(arr,function(idx,Item) {
+                rowNumArr.push(Item.ROW_NUM);
+            });
+            $.each(dataList, function (idx, Item) {
+                if(rowNumArr.indexOf(Item.ROW_NUM) >= 0) {
+                    var dt = new Date(Item.ORDER_DUE_DT);
+                    var today = new Date();
+
+                    if(dt < today) {
+                        addErrorList(Item.pq_ri, 'ORDER_DUE_DT');
+                    }
                 }
             })
         }
@@ -1908,7 +1941,7 @@
             } else {
                 topMenuOpen();
                 $(this).addClass('on');
-            }
+            }$("#ORDER_MANAGE_GRID").pqGrid("getInstance").grid.getChanges({format:'byVal'});
         });
 
         $('#ORDER_MANAGE_SAVE').on('click', function () {
@@ -2699,7 +2732,6 @@
                 'url': '/controlCadRevPrev',
                 'data': {"gridData": JSON.stringify(paramDatas)}
             };
-            console.log(parameters);
 
             fnPostAjax(function (data) {
                 console.log(data.workKey);

@@ -253,7 +253,7 @@
 .g_item_detail_pop .namePlusSlt label { padding: 0 5px; background: #f3f3f3; border: 1px solid #e6e6e6; border-right: 0; border-radius: 3px 0 0 3px; box-sizing: border-box; }
 .g_item_detail_pop span.mark { padding: 0 5px; margin-left: 5px; border: 1px solid black; border-radius: 3px; background-color: moccasin; font-size: 1.2rem; text-align: center; vertical-align: middle; }
 
-#g_item_detail_pop table.rowStyle th, table.rowStyle td {font-size: 14px;height: 25px;}
+#g_item_detail_pop table.rowStyle th, #g_item_detail_pop table.rowStyle td {font-size: 14px;height: 25px;}
 .g_item_detail_pop_cam_pop .layerPopup{height: 490px;}
 
 .wd_405_left_10 {   width: 405px !important; margin-left: 10px;}
