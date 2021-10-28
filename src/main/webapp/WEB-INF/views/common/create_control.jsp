@@ -700,7 +700,7 @@
             strNoRows: g_noData,
             rowHtHead: 15,
             copyModel: {render: true},
-            numberCell: {show:false},
+            numberCell: {width: 30, title: "No"},
             trackModel: {on: true},
             // scrollModel: {autoFit: true},
             editable: false,
@@ -995,7 +995,12 @@
                             row[j] = row[j].replace(/[^(\d|.)]/g, '');
                         }else if(dt === 'date') {
                             let dateCopy = $createControlGrid.pqGrid("getRowData", {rowIndx: area.r1}).INNER_DUE_DT_COPY;
-                            row[j] = dateCopy;
+                            if(typeof dateCopy != 'undefined' && dateCopy != null && dateCopy != '') {
+                                row[j] = dateCopy;
+                            }
+                            if(row[j].indexOf("-") >= 0 ) {
+                                row[j] = row[j].replace(/-/gi,"/");
+                            }
                         }
                     }
                 }
