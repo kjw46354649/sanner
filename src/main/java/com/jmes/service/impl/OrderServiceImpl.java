@@ -1006,8 +1006,8 @@ public class OrderServiceImpl implements OrderService {
         Map<String, Object> jsonMap = null;
 
         ArrayList<HashMap<String, Object>> oldList = null;
-        ArrayList<HashMap<String, Object>> addList = null;
         ArrayList<HashMap<String, Object>> updateList = null;
+        ArrayList<HashMap<String, Object>> controlNumArr = null;
         ArrayList<HashMap<String, Object>> resultList = new ArrayList<>();
         HashMap<String, Object> groupMap = new HashMap<>();
 
@@ -1019,7 +1019,9 @@ public class OrderServiceImpl implements OrderService {
 
         if (jsonMap.containsKey("updateList")) {
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+            controlNumArr = (ArrayList<HashMap<String, Object>>) jsonMap.get("controlNumArr");
         }
+
         for(int i=0;i<updateList.size();i++) {
             HashMap<String, Object> tempMap = updateList.get(i);
             String controlNum = (String) tempMap.get("CONTROL_NUM");
@@ -1030,8 +1032,12 @@ public class OrderServiceImpl implements OrderService {
             groupList.add(tempMap);
             groupMap.put(controlNum,groupList);
         }
-
         if (updateList != null && updateList.size() > 0) {
+            HashMap<String, Object> duplMap = new HashMap<>();
+            duplMap.put("queryId", "orderMapper.selectCheckControlDuplicateVer2");
+            duplMap.put("controlNumArr",controlNumArr);
+            List<Map<String, Object>> checkControlList = this.innodaleDao.getList(duplMap);
+
             for(int j=0;j<updateList.size();j++) {
                 HashMap<String, Object> hashMap = updateList.get(j);
                 hashMap.put("LOGIN_USER_ID",userId);
@@ -1039,9 +1045,12 @@ public class OrderServiceImpl implements OrderService {
                 String controlNum = (String) hashMap.get("CONTROL_NUM");
 
                 if (hashMap.containsKey("REGIST_NUM") && hashMap.containsKey("CONTROL_NUM")) {
-//                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
-                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicateVer2");
-                    HashMap<String, Object> controlMap = (HashMap<String, Object>) this.innodaleDao.getInfo(hashMap);
+                    HashMap<String, Object> controlMap = null;
+                    for(Map<String, Object> tempControl : checkControlList) {
+                        if(controlNum.equals(tempControl.get("CONTROL_NUM"+""))) {
+                            controlMap = (HashMap<String, Object>) tempControl;
+                        }
+                    }
 
                     if(controlMap != null && controlMap.get("CONTROL_SEQ") != null && !controlMap.get("CONTROL_SEQ").equals("")) {
                         String controlStatus = String.valueOf(controlMap.get("CONTROL_STATUS"));

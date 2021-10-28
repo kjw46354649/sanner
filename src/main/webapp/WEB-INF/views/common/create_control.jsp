@@ -1980,6 +1980,14 @@
             let changes = gridInstance.getChanges({format: 'byVal'});
             changes.updateList = changes.updateList.concat(changes.addList);
 
+            let controlNumArr = [];
+            for(var i=0;i<changes.updateList.length;i++) {
+                controlNumArr.push(changes.updateList[i].CONTROL_NUM);
+            }
+            controlNumArr = [...new Set(controlNumArr)];
+
+            changes.controlNumArr = controlNumArr;
+
             let parameters = {'url': '/validationCheckBeforeCreateControl', 'data': {data: JSON.stringify(changes)}};
             let flag = false;
 

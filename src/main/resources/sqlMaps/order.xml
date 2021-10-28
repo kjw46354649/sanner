@@ -3915,7 +3915,7 @@
                    )
     </select>
     <select id="selectCheckControlDuplicateVer2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT A.CONTROL_SEQ, IFNULL(A.CONTROL_STATUS,'TEMP') AS CONTROL_STATUS,
+        SELECT A.CONTROL_SEQ, IFNULL(A.CONTROL_STATUS,'TEMP') AS CONTROL_STATUS, A.CONTROL_NUM,
                B.CONTROL_DETAIL_SEQ,
                B.WORK_TYPE, B.MATERIAL_SUPPLY_YN, A.MAIN_INSPECTION, A.SAME_SIDE_YN, B.SIZE_TXT,
                B.MATERIAL_DETAIL, B.MATERIAL_KIND, B.SURFACE_TREAT,
@@ -3927,7 +3927,10 @@
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
         WHERE A.DEL_YN = 'N'
-            AND A.CONTROL_NUM = #{CONTROL_NUM}
+            AND A.CONTROL_NUM IN
+            <foreach collection="controlNumArr" item="bean" index="index"  open="(" close=")" separator=",">
+                #{bean}
+            </foreach>
             AND B.WORK_TYPE != 'WTP050'
         GROUP BY A.CONTROL_NUM
     </select>
