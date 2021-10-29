@@ -1635,7 +1635,7 @@
                     if (Object.keys(rowData).length > 2) {
                         requiredCheck(rowData);
                         badCodeCheck(rowData);
-                        dateCheck(rowData);
+                        // dateCheck(rowData);
                         sameSideCheck(rowData)
                         // inputErrorCheck(rowData);
                     }
