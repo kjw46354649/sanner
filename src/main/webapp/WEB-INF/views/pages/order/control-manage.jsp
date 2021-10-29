@@ -2023,19 +2023,28 @@
         };
 
         const validationCheck = function (dataList) {
+            let gridInstance = $controlManagementGrid.pqGrid('getInstance').grid;
+            let changes = gridInstance.getChanges({format: 'byVal'});
+            let arr = changes.addList.concat(changes.updateList);
+            let rowNumArr = [];
+            $.each(arr,function(idx,Item) {
+                rowNumArr.push(Item.ROW_NUM);
+            });
+
             workTypeCheck(dataList);
             // registNumCheck(dataList)
             controlNumCheck(dataList)
-            dateCheck(dataList);
             // drawingNumCheck(dataList);
 
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 let rowData = dataList[i];
-
-                if (Object.keys(rowData).length > 2) {
-                    requiredCheck(rowData);
-                    badCodeCheck(rowData);
-                    inputErrorCheck(rowData);
+                if(rowNumArr.indexOf(rowData.ROW_NUM) >= 0){
+                    if (Object.keys(rowData).length > 2) {
+                        requiredCheck(rowData);
+                        badCodeCheck(rowData);
+                        inputErrorCheck(rowData);
+                        dateCheck(rowData);
+                    }
                 }
             }
         };
@@ -2047,24 +2056,13 @@
                 }
             })
         }
-        const dateCheck = function (dataList) {
-            let gridInstance = $controlManagementGrid.pqGrid('getInstance').grid;
-            let changes = gridInstance.getChanges({format: 'byVal'});
-            let arr = changes.addList.concat(changes.updateList);
-            let rowNumArr = [];
-            $.each(arr,function(idx,Item) {
-                rowNumArr.push(Item.ROW_NUM);
-            });
-            $.each(dataList, function (idx, Item) {
-                if(rowNumArr.indexOf(Item.ROW_NUM) >= 0) {
-                    var dt = new Date(Item.INNER_DUE_DT);
-                    var today = new Date();
+        const dateCheck = function (rowData) {
+            var dt = new Date(rowData.INNER_DUE_DT);
+            var today = new Date();
 
-                    if(dt < today) {
-                        addErrorList(Item.pq_ri, 'INNER_DUE_DT');
-                    }
-                }
-            })
+            if(dt < today) {
+                addErrorList(rowData.pq_ri, 'INNER_DUE_DT');
+            }
         }
         const registNumCheck = function (dataList) {
             const groupedRegistNum = fnGroupBy(dataList, 'REGIST_NUM');

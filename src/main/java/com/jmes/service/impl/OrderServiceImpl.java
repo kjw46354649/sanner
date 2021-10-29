@@ -594,7 +594,7 @@ public class OrderServiceImpl implements OrderService {
         if (jsonMap.containsKey("oldList"))
             oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
 
-        if (addList != null && addList.size() > 0) {
+        if (addList != null && addList.size() > 0) { // 21.10.29 addList인 경우는 사실상 조립에 파트추가하는 경우만 존재.
             for (HashMap<String, Object> hashMap : addList) {
                 hashMap.put("LOGIN_USER_ID",userId);
                 try {

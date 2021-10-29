@@ -295,7 +295,7 @@
                 title: '주문상태', align: 'center', colModel: [
                     {title: '상태', dataIndx: 'ORDER_STATUS', hidden: true},
                     {title: '상태', minWidth: 30, dataIndx: 'ORDER_STATUS_NM'},
-                    {title: '일자', dataIndx: 'ORDER_STATUS_DT',
+                    {title: '일자', dataIndx: 'ORDER_STATUS_DT', format: 'mm/dd',
                         render: function (ui) {
                             let cellData = ui.cellData;
 
@@ -1391,8 +1391,6 @@
                 orderStatusList[i] = list[i].ORDER_STATUS || undefined;
                 list[i].ORDER_STATUS = orderStatus;
 
-                console.log(list[i]);
-
                 // if(list[i].OUTSIDE_YN == 'Y' && (list[i].OUTSIDE_STATUS == 'OST001' || list[i].OUTSIDE_STATUS == 'OST003')) {
                 //     outsideFlag = true;
                 // }
@@ -1620,32 +1618,6 @@
         };
 
         const validationCheck = function (dataList) {
-            // workTypeCheck(dataList);
-            registNumCheck(dataList)
-            sameSideCheck(dataList)
-            dateCheck(dataList);
-            // controlNumCheck(dataList)
-            // drawingNumCheck(dataList);
-
-            for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
-                let rowData = dataList[i];
-
-                if (Object.keys(rowData).length > 2) {
-                    requiredCheck(rowData);
-                    badCodeCheck(rowData);
-                    // inputErrorCheck(rowData);
-                }
-            }
-        };
-        const controlNumCheck = function (dataList) {
-            $.each(dataList, function (idx,Item) {
-                var regexpSpec = /[^A-Za-z0-9\-]/gi;
-                if(regexpSpec.test(Item.CONTROL_NUM)) {
-                    addErrorList(Item.pq_ri, 'CONTROL_NUM');
-                }
-            })
-        }
-        const dateCheck = function (dataList) {
             let gridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
             let arr = changes.addList.concat(changes.updateList);
@@ -1653,27 +1625,40 @@
             $.each(arr,function(idx,Item) {
                 rowNumArr.push(Item.ROW_NUM);
             });
-            $.each(dataList, function (idx, Item) {
-                if(rowNumArr.indexOf(Item.ROW_NUM) >= 0) {
-                    var dt = new Date(Item.ORDER_DUE_DT);
-                    var today = new Date();
+            // workTypeCheck(dataList);
+            registNumCheck(dataList)
+            // drawingNumCheck(dataList);
 
-                    if(dt < today) {
-                        addErrorList(Item.pq_ri, 'ORDER_DUE_DT');
+            for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
+                let rowData = dataList[i];
+                if(rowNumArr.indexOf(rowData.ROW_NUM) >= 0) {
+                    if (Object.keys(rowData).length > 2) {
+                        requiredCheck(rowData);
+                        badCodeCheck(rowData);
+                        dateCheck(rowData);
+                        sameSideCheck(rowData)
+                        // inputErrorCheck(rowData);
                     }
                 }
-            })
+            }
+        };
+
+        const dateCheck = function (rowData) {
+            var dt = new Date(rowData.ORDER_DUE_DT);
+            var today = new Date();
+
+            if(dt < today) {
+                addErrorList(rowData.pq_ri, 'ORDER_DUE_DT');
+            }
         }
-        const sameSideCheck = function (dataList) {
-            $.each(dataList, function (idx,Item) {
-                if(Item.SAME_SIDE_YN == 'Y' && (fnIsEmpty(Item.ORIGINAL_SIDE_QTY) || fnIsEmpty(Item.OTHER_SIDE_QTY))) {
-                    addErrorList(Item.pq_ri, 'ORIGINAL_SIDE_QTY');
-                    addErrorList(Item.pq_ri, 'OTHER_SIDE_QTY');
-                }else if(Item.SAME_SIDE_YN != 'Y' && (!fnIsEmpty(Item.ORIGINAL_SIDE_QTY) || !fnIsEmpty(Item.OTHER_SIDE_QTY))) {
-                    addErrorList(Item.pq_ri, 'ORIGINAL_SIDE_QTY');
-                    addErrorList(Item.pq_ri, 'OTHER_SIDE_QTY');
-                }
-            });
+        const sameSideCheck = function (rowData) {
+            if(rowData.SAME_SIDE_YN == 'Y' && (fnIsEmpty(rowData.ORIGINAL_SIDE_QTY) || fnIsEmpty(rowData.OTHER_SIDE_QTY))) {
+                addErrorList(rowData.pq_ri, 'ORIGINAL_SIDE_QTY');
+                addErrorList(rowData.pq_ri, 'OTHER_SIDE_QTY');
+            }else if(rowData.SAME_SIDE_YN != 'Y' && (!fnIsEmpty(rowData.ORIGINAL_SIDE_QTY) || !fnIsEmpty(rowData.OTHER_SIDE_QTY))) {
+                addErrorList(rowData.pq_ri, 'ORIGINAL_SIDE_QTY');
+                addErrorList(rowData.pq_ri, 'OTHER_SIDE_QTY');
+            }
         }
         const registNumCheck = function (dataList) {
             // const groupedOrderSeq = fnGroupBy(dataList, 'ORDER_SEQ');
@@ -2734,7 +2719,6 @@
             };
 
             fnPostAjax(function (data) {
-                console.log(data.workKey);
                 drawingUploadPopupWindow('controlRev', 'drawingUploadMapper.manageControlCadRevFiles', data.workKey);
             }, parameters, '');
         });
@@ -3159,7 +3143,6 @@
                 for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                     let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
                     tempArr.push(rowData);
-                    console.log(rowData)
                     // if (rowData.FINAL_TOTAL_AMT) {
                     //     totalAmount += parseFloat(rowData.FINAL_TOTAL_AMT);
                     // }

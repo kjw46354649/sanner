@@ -3305,7 +3305,7 @@
             <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (MATERIAL_SUPPLY_YN != null and MATERIAL_SUPPLY_YN != '')">
                 MATERIAL_SUPPLY_YN = IFNULL(#{MATERIAL_SUPPLY_YN}, 'N'),
             </if>
-            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (INNER_DUE_DT != null and INNER_DUE_DT != '')">
+            <if test="(INNER_DUE_DT != null and INNER_DUE_DT != '')">
                 INNER_DUE_DT = DATE_FORMAT(#{INNER_DUE_DT}, '%Y%m%d'),
             </if>
             <if test="SIZE_TXT != null and SIZE_TXT != ''">
@@ -3333,7 +3333,7 @@
             <if test="PART_UNIT_QTY != null and PART_UNIT_QTY != ''">
                 PART_UNIT_QTY = #{PART_UNIT_QTY},
             </if>
-            <if test="ADDITIONAL_QTY != null and ADDITIONAL_QTY != ''">
+            <if test="ADDITIONAL_QTY != null">
                 ADDITIONAL_QTY = #{ADDITIONAL_QTY},
             </if>
             <if test="MATERIAL_FINISH_GRIND != null and MATERIAL_FINISH_GRIND != ''">
@@ -4428,7 +4428,7 @@
             A.ORDER_SEQ,
             A.ORDER_STATUS AS ORDER_STATUS,
             IFNULL(SF_GET_CODE_NM('1091', A.ORDER_STATUS, #{LOGIN_LOCALE}), SPACE(0)) AS ORDER_STATUS_NM,
-            IFNULL(SF_GET_DATE_F(A.ORDER_STATUS_DT, '', ''),SPACE(0)) AS ORDER_STATUS_DT,
+            IFNULL(SF_GET_DATE_F(A.ORDER_STATUS_DT, 'YYYY', ''),SPACE(0)) AS ORDER_STATUS_DT,
             A.PRICE_CONFIRM, A.COMP_CD, A.DESIGNER_NM,
             A.ORDER_COMP_CD, A.NOTE,
             A.REGIST_NUM, A.DRAWING_NUM,
@@ -4436,14 +4436,14 @@
             A.ORDER_NUM, A.ORDER_QTY,
             IFNULL(A.ORIGINAL_SIDE_QTY,SPACE(0)) AS ORIGINAL_SIDE_QTY,
             IFNULL(A.OTHER_SIDE_QTY,SPACE(0)) AS OTHER_SIDE_QTY,
-            SF_GET_DATE_F(A.ORDER_DUE_DT,'','') AS ORDER_DUE_DT, A.WORK_TYPE,
+            SF_GET_DATE_F(A.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT, A.WORK_TYPE,
             A.MATERIAL_SUPPLY_YN, A.MAIN_INSPECTION,
             IFNULL(SF_GET_CODE_NM('1059', A.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION_NM,
             A.SAME_SIDE_YN, A.SIZE_TXT,
             SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM,
             A.MATERIAL_DETAIL, A.MATERIAL_KIND, A.MATERIAL_TYPE,
             A.SURFACE_TREAT, A.MATERIAL_FINISH_GRIND_YN,
-            A.MATERIAL_FINISH_HEAT_YN, SF_GET_DATE_F(A.DELIVERY_DT,'','') AS DELIVERY_DT,
+            A.MATERIAL_FINISH_HEAT_YN, SF_GET_DATE_F(A.DELIVERY_DT,'YYYY','') AS DELIVERY_DT,
             CASE WHEN A.MATERIAL_FINISH_GRIND_YN = 'Y' THEN 'MATERIAL_FINISH_GRIND_YN'
                  WHEN A.MATERIAL_FINISH_HEAT_YN = 'Y' THEN 'MATERIAL_FINISH_HEAT_YN'
             END AS SPECIAL_TREATMENT,

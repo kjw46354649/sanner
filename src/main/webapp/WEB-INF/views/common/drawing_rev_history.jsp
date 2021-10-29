@@ -152,8 +152,9 @@
                 })
             },
             complete: function (event, ui) {
+                const cnt = this.option('dataModel.data').length;
                 setTimeout(function (){
-                    $('#' + popupGridId).pqGrid('setSelection', {rowIndx: 0});
+                    $('#' + popupGridId).pqGrid('setSelection', {rowIndx: (cnt-1)});
                 },300);
             },
             cellKeyDown: function (event, ui) {
