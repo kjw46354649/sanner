@@ -1426,7 +1426,7 @@
         const processSpecialCostFactorColModel = [
             {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true, editable: false},
             {title: 'SEQ', dataIndx: 'CALC_SEQ', maxWidth: 55, hidden: false},
-            {title: 'Code', dataIndx: 'SP_FACTOR_CD'},
+            {title: 'Code', dataIndx: 'ETC_FACTOR_CD'},
             {title: 'Level1', dataIndx: 'LEVEL_1'},
             {title: 'Level2', dataIndx: 'LEVEL_2'},
             {title: '계산기준1(mm)', dataIndx: 'CALC_METHOD_1',

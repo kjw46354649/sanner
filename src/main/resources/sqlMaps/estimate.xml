@@ -1263,12 +1263,12 @@
     <select id="selectProcessSpecialCostFactorList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT ROW_NUMBER () OVER(ORDER BY A.CODE_CD) AS ROW_NUM,
             #{CALC_SEQ} AS CALC_SEQ,
-            A.CODE_CD AS SP_FACTOR_CD,
+            A.CODE_CD AS ETC_FACTOR_CD,
             SF_GET_CODE_NM('1057', A.REF_CD , #{LOGIN_LOCALE}) AS LEVEL_1,
             SF_GET_CODE_NM('1096', A.CODE_CD, #{LOGIN_LOCALE}) AS LEVEL_2,
             B.CALC_METHOD_1, B.CALC_METHOD_2 , B.CALC_UNIT, B.UNIT_AMT
         FROM TBL_CODE A
-             LEFT OUTER JOIN TBL_CALC_PROCESS_SP_FACTOR B ON A.CODE_CD = B.SP_FACTOR_CD
+             LEFT OUTER JOIN TBL_CALC_PROCESS_ETC_FACTOR B ON A.CODE_CD = B.ETC_FACTOR_CD
                 AND B.CALC_SEQ = #{CALC_SEQ}
         WHERE A.HIGH_CD = 1096
             AND A.DEL_YN = 'N'
@@ -1285,13 +1285,13 @@
             UNIT_AMT = #{UNIT_AMT}
     </insert>
     <insert id="insertProcessSpecialCostFactor" parameterType="java.util.HashMap">
-        INSERT INTO TBL_CALC_PROCESS_SP_FACTOR (
-            CALC_SEQ, SP_FACTOR_CD, CALC_METHOD_1, CALC_METHOD_2, CALC_UNIT, UNIT_AMT
+        INSERT INTO TBL_CALC_PROCESS_ETC_FACTOR (
+            CALC_SEQ, ETC_FACTOR_CD, CALC_METHOD_1, CALC_METHOD_2, CALC_UNIT, UNIT_AMT
         ) VALUES (
-             #{CALC_SEQ}, #{SP_FACTOR_CD}, #{CALC_METHOD_1}, #{CALC_METHOD_2}, #{CALC_UNIT}, #{UNIT_AMT}
+             #{CALC_SEQ}, #{ETC_FACTOR_CD}, #{CALC_METHOD_1}, #{CALC_METHOD_2}, #{CALC_UNIT}, #{UNIT_AMT}
         )
         ON DUPLICATE KEY UPDATE
-            SP_FACTOR_CD = #{SP_FACTOR_CD},
+            ETC_FACTOR_CD = #{ETC_FACTOR_CD},
             CALC_METHOD_1 = #{CALC_METHOD_1},
             CALC_METHOD_2 = #{CALC_METHOD_2},
             CALC_UNIT = #{CALC_UNIT},
