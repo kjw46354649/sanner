@@ -8,7 +8,7 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <div class="page onegrid">
     <div class="topWrap">
-        <form class="form-inline" id="common_group_code_search_form" name="common_group_code_search_form" role="form">
+        <form class="form-inline" id="common_group_code_search_form" name="common_group_code_search_form" role="form" onsubmit="return false;">
             <input type="hidden" name="queryId" id="queryId" value="systemMapper.selectCommonGroupCodeList">
             <div class="hWrap">
                 <span class="ipu_wrap">

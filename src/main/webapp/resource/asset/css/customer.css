@@ -239,7 +239,7 @@
 .inspectionBWrap .barCode { margin-left:20px;margin-right:10px }
 .estimate .inspectionBWrap .hWrap {font-size: 12px;}
 
-.g_item_detail_pop .layerPopup .listdiv { height: 160px; }
+.g_item_detail_pop .layerPopup .listdiv { height: 160px; width: 100%;}
 .g_item_detail_pop .layerPopup .listdiv .conWrapPop60{ float: left; width: 59.0%; padding-right: 1%; height: 100%; }
 .g_item_detail_pop .layerPopup .listdiv .conWrapPopLeft{ float: left; width: 52.5%; padding-right: 1%; height: 100%; }
 .g_item_detail_pop .layerPopup .listdiv .conWrapPopRight{ float: left; width: 46.5%; height: 100%; }

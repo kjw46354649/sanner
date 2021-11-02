@@ -321,20 +321,38 @@
                 <div class="conMainWrap">
                     <div id="process_cost_grid"></div>
                 </div>
-                <div class="hWrap">
-                    <div class="buttonWrap">
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <button class="defaultBtn btn-100w orange" data-toggle="modal" data-target="#outsourcingConversionModal">견적 가공 Factor 상세설정</button>
-                            </div>
-                            <div class="ml-auto">
-                                <button class="defaultBtn btn-100w green" id="process_cost_factor_save">Save</button>
+                <div style="display: flex;">
+                    <div style="width: 35%;float: left;">
+                        <div class="hWrap">
+                            <div class="buttonWrap">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <button class="defaultBtn btn-100w orange" data-toggle="modal" data-target="#outsourcingConversionModal">견적 가공 Factor 상세설정</button>
+                                    </div>
+                                    <div class="ml-auto">
+                                        <button class="defaultBtn btn-100w green" id="process_cost_factor_save">Save</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="conWrap">
+                            <div id="process_cost_factor_grid"></div>
+                        </div>
                     </div>
-                </div>
-                <div class="conWrap">
-                    <div id="process_cost_factor_grid"></div>
+                    <div style="width: 62%;margin-left: 3%;">
+                        <div class="hWrap">
+                            <div class="buttonWrap">
+                                <div class="d-flex align-items-center">
+                                    <div class="ml-auto">
+                                        <button class="defaultBtn btn-100w green" id="process_special_cost_factor_save">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="conWrap">
+                            <div id="process_special_cost_factor_grid"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -452,6 +470,7 @@
                     $('#escm4').show();
                     $processCostGrid.pqGrid('refreshDataAndView');
                     $processCostFactorGrid.pqGrid('refreshDataAndView');
+                    $processSpecialCostFactorGrid.pqGrid('refreshDataAndView');
                     break;
             }
         });
@@ -1300,6 +1319,13 @@
                     return processCostPostData;
                 });
                 $processCostFactorGrid.pqGrid('refreshDataAndView');
+
+
+                processCostPostData.queryId = 'estimate.selectProcessSpecialCostFactorList';
+                $processSpecialCostFactorGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                    return processCostPostData;
+                });
+                $processSpecialCostFactorGrid.pqGrid('refreshDataAndView');
             }
         };
         const $processCostGrid = $('#' + processCostGridId).pqGrid(processCostObj);
@@ -1382,6 +1408,99 @@
         };
         const $processCostFactorGrid = $('#' + processCostFactorGridId).pqGrid(processCostFactorObj);
         let processCostFactorSelectedRowIndex = [];
+
+        let HIGH_CODE_1097 = [];
+        let HIGH_CODE_1098 = [];
+        let HIGH_CODE_1099 = [];
+        <c:forEach var="vlocale" items="${HighCode.H_1097}">
+            HIGH_CODE_1097.push({text: '${vlocale.CODE_NM_KR}', value: '${vlocale.CODE_CD}'});
+        </c:forEach>
+        <c:forEach var="vlocale" items="${HighCode.H_1098}">
+            HIGH_CODE_1098.push({text: '${vlocale.CODE_NM_KR}', value: '${vlocale.CODE_CD}'});
+        </c:forEach>
+        <c:forEach var="vlocale" items="${HighCode.H_1099}">
+            HIGH_CODE_1099.push({text: '${vlocale.CODE_NM_KR}', value: '${vlocale.CODE_CD}'});
+        </c:forEach>
+
+        const processSpecialCostFactorGrid = 'process_special_cost_factor_grid';
+        const processSpecialCostFactorColModel = [
+            {title: 'ROW_NUM', dataIndx: 'ROW_NUM', hidden: true, editable: false},
+            {title: 'SEQ', dataIndx: 'CALC_SEQ', maxWidth: 55, hidden: false},
+            {title: 'Code', dataIndx: 'SP_FACTOR_CD'},
+            {title: 'Level1', dataIndx: 'LEVEL_1'},
+            {title: 'Level2', dataIndx: 'LEVEL_2'},
+            {title: '계산기준1(mm)', dataIndx: 'CALC_METHOD_1',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#000000'}, editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: HIGH_CODE_1097},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let index = -1;
+                    index = HIGH_CODE_1097.findIndex(function (element) {
+                        return element.value === cellData;
+                    });
+                    if (index > -1) cellData = HIGH_CODE_1097[index].text;
+
+                    return {text: cellData};
+                }
+            },
+            {title: '계산기준2', dataIndx: 'CALC_METHOD_2',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#000000'}, editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: HIGH_CODE_1098},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let index = -1;
+                    index = HIGH_CODE_1098.findIndex(function (element) {
+                        return element.value === cellData;
+                    });
+                    if (index > -1) cellData = HIGH_CODE_1098[index].text;
+
+                    return {text: cellData};
+                }
+            },
+            {title: '계산단위', dataIndx: 'CALC_UNIT',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#000000'}, editable: true,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: HIGH_CODE_1099},
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let index = -1;
+                    index = HIGH_CODE_1099.findIndex(function (element) {
+                        return element.value === cellData;
+                    });
+                    if (index > -1) cellData = HIGH_CODE_1099[index].text;
+
+                    return {text: cellData};
+                }
+            },
+            {
+                title: '단위당 단가(원)', /*align: 'right',*/ dataType: 'integer', format: '#,###', dataIndx: 'UNIT_AMT',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#000000'}, editable: true
+            }
+        ];
+        const processSpecialCostFactorObj = {
+            width:'100%',
+            height: 350,
+            collapsible: false,
+            resizable: false,
+            showTitle: false,
+            // rowHtHead: 15,
+            numberCell: {show: false},
+            scrollModel: {autoFit: true},
+            trackModel: {on: true},
+            selectionModel: {type: 'row', mode: 'single'},
+            editable: false,
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
+            colModel: processSpecialCostFactorColModel,
+            dataModel: {
+                location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
+                postData: {'queryId': 'estimate.selectProcessSpecialCostFactorList'},
+                recIndx: 'ROW_NUM',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            }
+        };
+        const $processSpecialCostFactorGrid = $('#' + processSpecialCostFactorGrid).pqGrid(processSpecialCostFactorObj);
+
         /* init */
 
         /* function */
@@ -1407,6 +1526,13 @@
             const updateQueryList = insertQueryList;
 
             fnModifyPQGrid($processCostFactorGrid, insertQueryList, updateQueryList);
+        })
+
+        $('#process_special_cost_factor_save').on('click', function () {
+            const insertQueryList = ['estimate.insertProcessSpecialCostFactor'];
+            const updateQueryList = insertQueryList;
+
+            fnModifyPQGrid($processSpecialCostFactorGrid, insertQueryList, updateQueryList);
         })
         /* event */
 
