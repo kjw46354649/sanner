@@ -538,7 +538,7 @@
                         let rowData = ui.rowData;
 
                         if (rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002') {
-                            return fnGetCommCodeGridSelectBox('1027');F
+                            return fnGetCommCodeGridSelectBox('1027');
                         } else { // 확정
                             return fnGetCommCodeGridSelectBoxEtc('1027', rowData.MATERIAL_TYPE);
                         }
