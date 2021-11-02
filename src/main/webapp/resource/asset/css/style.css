@@ -917,7 +917,7 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
     margin: -12px 0 0 0 !important;
 }
 
-#processingRequirementsModal table {
+#processingRequirementsModal table, #special_process_popup table {
     width: 100%;
     height: 100%;
     border: 1px solid;
@@ -925,7 +925,7 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
     color: #605b5b;
 }
 
-#processingRequirementsModal table th, #processingRequirementsModal table td {
+#processingRequirementsModal table th, #processingRequirementsModal table td, #special_process_popup table th, #special_process_popup table td {
     border: 1px solid #c6c6c6;
     text-align: center;
     text-overflow: ellipsis;
@@ -948,7 +948,7 @@ div.drawingTit,span.drawingTit{background-color: #e8f0f0; font-family: 'NotoKrB'
     font-weight: bold;
 }
 
-#processingRequirementsModal table.rightTopTable > thead > tr > td {
+#processingRequirementsModal table.rightTopTable > thead > tr > td, #special_process_popup table.rightTopTable > thead > tr > td {
     background-color: #5e3d11;
     color:white;
 }
