@@ -1053,7 +1053,7 @@
 
         const sameSideCheck = function (dataList) {
             $.each(dataList, function (idx,Item) {
-                if(Item.SAME_SIDE_YN == 'Y' && (fnIsEmpty(Item.ORIGINAL_SIDE_QTY) || fnIsEmpty(Item.OTHER_SIDE_QTY))) {
+                if(Item.SAME_SIDE_YN == 'Y' && (fnIsEmpty(Item.ORIGINAL_SIDE_QTY) && fnIsEmpty(Item.OTHER_SIDE_QTY))) {
                     addErrorList(Item.pq_ri, 'ORIGINAL_SIDE_QTY');
                     addErrorList(Item.pq_ri, 'OTHER_SIDE_QTY');
                 }else if(Item.SAME_SIDE_YN != 'Y' && (!fnIsEmpty(Item.ORIGINAL_SIDE_QTY) || !fnIsEmpty(Item.OTHER_SIDE_QTY))) {

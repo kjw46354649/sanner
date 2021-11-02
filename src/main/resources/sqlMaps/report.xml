@@ -492,7 +492,7 @@
                             FROM jmes.TBL_ORDER M
                             WHERE M.ORDER_STATUS = 'REG003'
                                 AND M.DEL_YN = 'N'
-                                AND N.ORDER_SEQ != Z.ORDER_SEQ
+                                AND M.ORDER_SEQ != Z.ORDER_SEQ
                                 AND M.DRAWING_NUM = Z.DRAWING_NUM
                                 AND M.WORK_TYPE = Z.WORK_TYPE
                                 AND M.ORDER_COMP_CD = Z.ORDER_COMP_CD
