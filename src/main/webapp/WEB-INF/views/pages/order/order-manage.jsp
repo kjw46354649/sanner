@@ -1652,12 +1652,22 @@
             }
         }
         const sameSideCheck = function (rowData) {
-            if(rowData.SAME_SIDE_YN == 'Y' && (fnIsEmpty(rowData.ORIGINAL_SIDE_QTY) && fnIsEmpty(rowData.OTHER_SIDE_QTY))) {
-                addErrorList(rowData.pq_ri, 'ORIGINAL_SIDE_QTY');
-                addErrorList(rowData.pq_ri, 'OTHER_SIDE_QTY');
-            }else if(rowData.SAME_SIDE_YN != 'Y' && (!fnIsEmpty(rowData.ORIGINAL_SIDE_QTY) || !fnIsEmpty(rowData.OTHER_SIDE_QTY))) {
-                addErrorList(rowData.pq_ri, 'ORIGINAL_SIDE_QTY');
-                addErrorList(rowData.pq_ri, 'OTHER_SIDE_QTY');
+            let tmpOther = (fnIsEmpty(rowData.OTHER_SIDE_QTY))?0:rowData.OTHER_SIDE_QTY;
+            let tmpOrg = (fnIsEmpty(rowData.ORIGINAL_SIDE_QTY))?0:rowData.ORIGINAL_SIDE_QTY;
+            let tmpOrd = (fnIsEmpty(rowData.ORDER_QTY))?0:rowData.ORDER_QTY;
+            if(rowData.SAME_SIDE_YN == 'Y') {
+                if(fnIsEmpty(rowData.ORIGINAL_SIDE_QTY) && fnIsEmpty(rowData.OTHER_SIDE_QTY)) {
+                    addErrorList(rowData.pq_ri, 'ORIGINAL_SIDE_QTY');
+                    addErrorList(rowData.pq_ri, 'OTHER_SIDE_QTY');
+                }else if(Number(tmpOrd) !== (Number(tmpOrg) + Number(tmpOther))) {
+                    addErrorList(rowData.pq_ri, 'ORIGINAL_SIDE_QTY');
+                    addErrorList(rowData.pq_ri, 'OTHER_SIDE_QTY');
+                }
+            }else {
+                if(!fnIsEmpty(rowData.ORIGINAL_SIDE_QTY) || !fnIsEmpty(rowData.OTHER_SIDE_QTY)) {
+                    addErrorList(rowData.pq_ri, 'ORIGINAL_SIDE_QTY');
+                    addErrorList(rowData.pq_ri, 'OTHER_SIDE_QTY');
+                }
             }
         }
         const registNumCheck = function (dataList) {

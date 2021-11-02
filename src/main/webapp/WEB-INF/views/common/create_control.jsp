@@ -1542,8 +1542,14 @@
             }
         };
         const sideQtyCheck = function(rowData) {
+            let tmpOther = (fnIsEmpty(rowData.CONTROL_OTHER_SIDE_QTY))?0:rowData.CONTROL_OTHER_SIDE_QTY;
+            let tmpOrg = (fnIsEmpty(rowData.CONTROL_ORIGINAL_SIDE_QTY))?0:rowData.CONTROL_ORIGINAL_SIDE_QTY;
+            let tmpOrd = (fnIsEmpty(rowData.CONTROL_ORDER_QTY))?0:rowData.CONTROL_ORDER_QTY;
             if(rowData.SAME_SIDE_YN == 'Y') {
                 if(fnIsEmpty(rowData.CONTROL_ORIGINAL_SIDE_QTY) && fnIsEmpty(rowData.CONTROL_OTHER_SIDE_QTY)) {
+                    addErrorList(rowData.pq_ri, 'CONTROL_ORIGINAL_SIDE_QTY');
+                    addErrorList(rowData.pq_ri, 'CONTROL_OTHER_SIDE_QTY');
+                }else if(Number(tmpOrd) !== (Number(tmpOrg) + Number(tmpOther))) {
                     addErrorList(rowData.pq_ri, 'CONTROL_ORIGINAL_SIDE_QTY');
                     addErrorList(rowData.pq_ri, 'CONTROL_OTHER_SIDE_QTY');
                 }

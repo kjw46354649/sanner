@@ -1053,12 +1053,22 @@
 
         const sameSideCheck = function (dataList) {
             $.each(dataList, function (idx,Item) {
-                if(Item.SAME_SIDE_YN == 'Y' && (fnIsEmpty(Item.ORIGINAL_SIDE_QTY) && fnIsEmpty(Item.OTHER_SIDE_QTY))) {
-                    addErrorList(Item.pq_ri, 'ORIGINAL_SIDE_QTY');
-                    addErrorList(Item.pq_ri, 'OTHER_SIDE_QTY');
-                }else if(Item.SAME_SIDE_YN != 'Y' && (!fnIsEmpty(Item.ORIGINAL_SIDE_QTY) || !fnIsEmpty(Item.OTHER_SIDE_QTY))) {
-                    addErrorList(Item.pq_ri, 'ORIGINAL_SIDE_QTY');
-                    addErrorList(Item.pq_ri, 'OTHER_SIDE_QTY');
+                if(Item.SAME_SIDE_YN == 'Y'){
+                    let tmpOther = (fnIsEmpty(Item.OTHER_SIDE_QTY))?0:Item.OTHER_SIDE_QTY;
+                    let tmpOrg = (fnIsEmpty(Item.ORIGINAL_SIDE_QTY))?0:Item.ORIGINAL_SIDE_QTY;
+                    let tmpOrd = (fnIsEmpty(Item.ORDER_QTY))?0:Item.ORDER_QTY;
+                    if(fnIsEmpty(Item.ORIGINAL_SIDE_QTY) && fnIsEmpty(Item.OTHER_SIDE_QTY)) {
+                        addErrorList(Item.pq_ri, 'ORIGINAL_SIDE_QTY');
+                        addErrorList(Item.pq_ri, 'OTHER_SIDE_QTY');
+                    }else if(Number(tmpOrd) !== (Number(tmpOrg) + Number(tmpOther))) {
+                        addErrorList(Item.pq_ri, 'ORIGINAL_SIDE_QTY');
+                        addErrorList(Item.pq_ri, 'OTHER_SIDE_QTY');
+                    }
+                }else {
+                    if(!fnIsEmpty(Item.ORIGINAL_SIDE_QTY) || !fnIsEmpty(Item.OTHER_SIDE_QTY)) {
+                        addErrorList(Item.pq_ri, 'ORIGINAL_SIDE_QTY');
+                        addErrorList(Item.pq_ri, 'OTHER_SIDE_QTY');
+                    }
                 }
             });
         }
