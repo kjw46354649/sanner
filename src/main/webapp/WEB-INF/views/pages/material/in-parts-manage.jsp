@@ -941,7 +941,7 @@
     });
 
     $("#PARTS_MANAGE_CURRENT_POPUP").on('hide.bs.modal', function(){
-        fnResetFrom("pop_form");
+        fnResetForm("pop_form");
         $("#machine_manage_pop_form").find("#queryId").val("material.selectConsumableList");
         $("#searchBtn").trigger("click");
     });

@@ -1046,7 +1046,7 @@
         }
 
         let camWorkHistoryPop = function (rowData) {
-            fnResetFrom('cam_work_history_pop_form');
+            fnResetForm('cam_work_history_pop_form');
             for (let i = 1; i <= 5; i++) {
                 $("#cam_work_history_detail_pop").find("#CAM_WORK_FILE_0" + i).html("");
             }

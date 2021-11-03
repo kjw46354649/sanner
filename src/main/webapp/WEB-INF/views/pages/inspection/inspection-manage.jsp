@@ -475,7 +475,7 @@
                 if (ui.rowData.CONTROL_SEQ != undefined && ui.rowData.CONTROL_SEQ >0) {
                     if (ui.dataIndx == 'CONTROL_SEQ_INSERT') {
 
-                        fnResetFrom("inspection_manage_pop_form");
+                        fnResetForm("inspection_manage_pop_form");
                         $("#inspection_manage_pop_form").find("#CONTROL_SEQ").val(ui.rowData.CONTROL_SEQ);
                         $("#inspection_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(ui.rowData.CONTROL_DETAIL_SEQ);
                         $('#inspection_manage_pop').modal('show');
@@ -575,7 +575,7 @@
 
 
         $("#inspection_manage_pop").on('hide.bs.modal', function () {
-            fnResetFrom("inspection_manage_pop_form");
+            fnResetForm("inspection_manage_pop_form");
             $("#inspection_manage_form").find("#queryId").val("inspection.selectInspectionList");
             $("#inspection_manage_search_btn").trigger("click");
             $("#INSPECTION_BARCODE_NUM").focus();
@@ -591,7 +591,7 @@
             //     //$("#stock_manage_pop_form").find("#DRAWING_NUM").attr("readonly", true);
             //$("#stock_manage_pop_form").find("#WAREHOUSE_CD").attr("disabled", true);
 
-            //fnResetFrom("inspection_manage_pop_form");
+            //fnResetForm("inspection_manage_pop_form");
 
             $("#inspection_manage_pop_form").find("#queryId").val("inspection.selectInspectionPopInfoBasic");
             let parameters = {
@@ -744,7 +744,7 @@
                 fnBarcodePrintCheck(function (confirm, callFunctionParam) {
                     let barcodeN = callFunctionParam;
                     if (confirm) {
-                        fnResetFrom("inspection_manage_pop_form");
+                        fnResetForm("inspection_manage_pop_form");
 
                         //0. 바코드 정보 가져오기
                         let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeN};

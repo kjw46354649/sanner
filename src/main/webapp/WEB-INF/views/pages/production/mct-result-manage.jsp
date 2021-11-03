@@ -921,7 +921,7 @@
 
         /** 제품 시작 상세 표시 **/
         let camWorkManagePop = function(rowData, popOpenFlag) {
-            fnResetFrom('cam_work_manage_pop_form');
+            fnResetForm('cam_work_manage_pop_form');
             for (let i = 1; i <= 5; i++) {
                 $("#cam_work_manage_pop_form").find("#CAM_WORK_FILE_0" + i).html("");
             }

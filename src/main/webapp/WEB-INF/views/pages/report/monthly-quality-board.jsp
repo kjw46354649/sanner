@@ -749,7 +749,7 @@
         };
 
         const updateBotPostData = function (rowData) {
-            // fnResetFrom('monthly_quality_board_bot_form');
+            // fnResetForm('monthly_quality_board_bot_form');
             let asdfasdfasdf = $('#asdfasdfasdf').val();
             switch (asdfasdfasdf) {
                 case 'ORDER':

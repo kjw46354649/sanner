@@ -458,7 +458,7 @@
             },
             rowDblClick: function( event, ui ) {
                 let rowData = ui.rowData;
-                fnResetFrom("company_master_register_form");
+                fnResetForm("company_master_register_form");
                 $("#company_master_register_form").find("#LOGO_GFILE_SRC").attr("src", "/image/999");
                 $("#company_master_register_form").find("#LOGO_GFILE_SRC").attr("src", "/image/999");
                 $("#company_master_register_form").find("#COMP_CD").val(rowData.COMP_CD);
@@ -924,7 +924,7 @@
                 if(false) {
                 }else{
                     if(dataInfo == null || "" == dataInfo.COMP_CD) {
-                        fnResetFrom("company_master_register_form");
+                        fnResetForm("company_master_register_form");
                     }else{
                         fnJsonDataToForm("company_master_register_form", dataInfo);
 
@@ -1074,7 +1074,7 @@
         });
         // 업체상세 모달 hide
         $("#system_company_popup").on('hide.bs.modal', function(){
-            fnResetFrom("company_master_register_form");
+            fnResetForm("company_master_register_form");
             $("#company_master_register_form").find("#queryId").val("systemMapper.getCompanyMasterInfo");
             $("#company_master_register_form").find("#LOGO_GFILE_SRC").attr("src", "/image/999");
             $("#company_master_register_form").find("#SIGN_GFILE_SRC").attr("src", "/image/999");

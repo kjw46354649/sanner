@@ -828,7 +828,7 @@
                                               alert(2);
                                             e.preventDefault();
                                               alert(3);
-                                              fnResetFrom("outgoing_manage_pop_type_1_form");
+                                              fnResetForm("outgoing_manage_pop_type_1_form");
                                              $("#outgoing_manage_pop_type_1_form").find("#CONTROL_SEQ").val(ui.rowData['CONTROL_SEQ']);
                                              $("#outgoing_manage_pop_type_1_form").find("#CONTROL_DETAIL_SEQ").val(ui.rowData['CONTROL_DETAIL_SEQ']);
                                              $("#outgoing_manage_pop_type_1_form").find("#ORDER_SEQ").val(ui.rowData['ORDER_SEQ']);
@@ -836,7 +836,7 @@
                                           });
                                           $cell.find('#returnBtn').bind('click', function(e) {
                                             e.preventDefault();
-                                              fnResetFrom("outgoing_manage_return_form");
+                                              fnResetForm("outgoing_manage_return_form");
                                               $("#outgoing_manage_return_form").find("#CONTROL_SEQ").val(ui.rowData['CONTROL_SEQ']);
                                               $("#outgoing_manage_return_form").find("#CONTROL_DETAIL_SEQ").val(ui.rowData['CONTROL_DETAIL_SEQ']);
                                               $("#outgoing_manage_return_form").find("#ORDER_SEQ").val(ui.rowData['ORDER_SEQ']);
@@ -848,7 +848,7 @@
                                               let formData = new Array();
                                               formData[0] = ui.rowData['BARCODE_NUM'];*!/
 
-                                              fnResetFrom("outgoing_manage_pop_label_type_1_form");
+                                              fnResetForm("outgoing_manage_pop_label_type_1_form");
                                               $("#outgoing_manage_pop_label_type_1_form").find("#CONTROL_SEQ").val(ui.rowData['CONTROL_SEQ']);
                                               $("#outgoing_manage_pop_label_type_1_form").find("#CONTROL_DETAIL_SEQ").val(ui.rowData['CONTROL_DETAIL_SEQ']);
                                               $("#outgoing_manage_pop_label_type_1_form").find("#ORDER_SEQ").val(ui.rowData['ORDER_SEQ']);
@@ -1303,7 +1303,7 @@
                 }, parameters, '');
 
             },'hide.bs.modal': function () {
-                fnResetFrom("outgoing_manage_return_form");
+                fnResetForm("outgoing_manage_return_form");
                 $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
                 $("#outgoing_manage_search_btn").trigger("click");
             }
@@ -1313,7 +1313,7 @@
             if ($("#DISPOSAL_YN").is(":checked")) {
                 $("#DISPOSAL_YN").trigger("click");
             }
-            fnResetFrom("outgoing_manage_pop_type_1_form");
+            fnResetForm("outgoing_manage_pop_type_1_form");
             $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
             $("#outgoing_manage_search_btn").trigger("click");
         });
@@ -1381,7 +1381,7 @@
                 }, parameters, '');
 
             },'hide.bs.modal': function () {
-                fnResetFrom("outgoing_manage_pop_label_type_1_form");
+                fnResetForm("outgoing_manage_pop_label_type_1_form");
             }
         });
 
@@ -1559,7 +1559,7 @@
 
                     fnPostAjax(function () {
                         fnAlert(null, "등록이 완료되었습니다.");
-                        fnResetFrom("outgoing_manage_pop_type_1_form");
+                        fnResetForm("outgoing_manage_pop_type_1_form");
                         $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
                         $("#outgoing_manage_search_btn").trigger("click");
                     }, parameters, '');
@@ -1698,7 +1698,7 @@
             let control_seq = event.target.dataset.control_seq;
             let control_detail_seq = event.target.dataset.control_detail_seq;
             let order_seq = event.target.dataset.order_seq;
-            fnResetFrom("outgoing_manage_pop_type_1_form");
+            fnResetForm("outgoing_manage_pop_type_1_form");
             $("#outgoing_manage_pop_type_1_form").find("#CONTROL_SEQ").val(control_seq);
             $("#outgoing_manage_pop_type_1_form").find("#CONTROL_DETAIL_SEQ").val(control_detail_seq);
             $("#outgoing_manage_pop_type_1_form").find("#ORDER_SEQ").val(order_seq);
@@ -1708,7 +1708,7 @@
             let control_seq = event.target.dataset.control_seq;
             let control_detail_seq = event.target.dataset.control_detail_seq;
             let order_seq = event.target.dataset.order_seq;
-            fnResetFrom("outgoing_manage_return_form");
+            fnResetForm("outgoing_manage_return_form");
             $("#outgoing_manage_return_form").find("#ORDER_SEQ").val(order_seq);
             $('#outgoing_manage_return_pop').modal('show');
         });
@@ -1720,7 +1720,7 @@
               let formData = new Array();
               formData[0] = ui.rowData['BARCODE_NUM'];*/
 
-            fnResetFrom("outgoing_manage_pop_label_type_1_form");
+            fnResetForm("outgoing_manage_pop_label_type_1_form");
             $("#outgoing_manage_pop_label_type_1_form").find("#CONTROL_SEQ").val(control_seq);
             $("#outgoing_manage_pop_label_type_1_form").find("#CONTROL_DETAIL_SEQ").val(control_detail_seq);
             $("#outgoing_manage_pop_label_type_1_form").find("#ORDER_SEQ").val(order_seq);

@@ -1078,7 +1078,7 @@
         });
 
         $("#user_info_pop").on('hide.bs.modal', function(){
-            fnResetFrom("user_info_pop_form");
+            fnResetForm("user_info_pop_form");
         });
 
         // 모달 open
@@ -1855,7 +1855,7 @@
     };
 
     $("#g_item_detail_pop").on('hide.bs.modal', function () {
-        fnResetFrom("g_item_detail_pop_form");
+        fnResetForm("g_item_detail_pop_form");
         $("#g_item_detail_pop_form").find("#queryId").val('inspection.selectCommItemDetailInfo');
         if (g_ItemDetailPopGridId01.hasClass('pq-grid')) g_ItemDetailPopGridId01.pqGrid('destroy');
         if (g_ItemDetailPopGridId02.hasClass('pq-grid')) g_ItemDetailPopGridId02.pqGrid('destroy');
@@ -2040,7 +2040,7 @@
         fnPostAjaxAsync(function (data) {
             let dataInfo = data.info;
             if (fnIsEmpty(dataInfo)) {
-                fnResetFrom('cam_work_detail_form');
+                fnResetForm('cam_work_detail_form');
             } else {
                 fnJsonDataToForm('cam_work_detail_form', dataInfo);
             }

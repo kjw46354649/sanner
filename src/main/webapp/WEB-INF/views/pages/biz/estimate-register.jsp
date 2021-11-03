@@ -1081,7 +1081,7 @@
                 let contextVal = context;
                 let GfileKey = "";
                 let status = "";
-                fnResetFrom('estimate_register_info_form');
+                fnResetForm('estimate_register_info_form');
                 $("#estimate_register_info_form #EST_TITLE").val('');
                 if(list){
                     contextVal = list.EMAIL_CONTENT;
@@ -1420,8 +1420,8 @@
         /** 버튼 처리 **/
         $("#btnEstimateRegisterNew").on('click', function(){
             $("#estimate_version_up_sequence_form #hidden_est_seq").val('');
-            fnResetFrom("estimate_register_info_form");
-            fnResetFrom("estimate_register_hidden_form");
+            fnResetForm("estimate_register_info_form");
+            fnResetForm("estimate_register_hidden_form");
             estimateRegisterReloadPageData();
         });
 

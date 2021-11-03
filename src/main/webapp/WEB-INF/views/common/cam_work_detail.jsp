@@ -364,7 +364,7 @@
             fnPostAjaxAsync(function (data) {
                 let dataInfo = data.info;
                 if (fnIsEmpty(dataInfo)) {
-                    fnResetFrom('cam_work_detail_form');
+                    fnResetForm('cam_work_detail_form');
                 } else {
                     fnJsonDataToForm('cam_work_detail_form', dataInfo);
                 }

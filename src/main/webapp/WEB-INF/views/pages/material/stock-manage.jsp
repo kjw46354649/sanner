@@ -1762,7 +1762,7 @@
                     $('#stock_process_grid').pqGrid('refreshDataAndView');
                 }
             },'hide.bs.modal': function () {
-                fnResetFrom("stock_process_form");
+                fnResetForm("stock_process_form");
             }
         });
         $(".stock_process_popup_close").on('click', function () {
@@ -1876,7 +1876,7 @@
                 $("#pop_note_input").val("");
                 $("#POP_DRAWING_IMG").attr("src", '/resource/main/blank.jpg');
 
-                fnResetFrom("stock_manage_pop_form");
+                fnResetForm("stock_manage_pop_form");
                 $("#stock_manage_form").find("#queryId").val("material.selectInsideStockList");
                 $("#stock_manage_search_btn").trigger("click");
             }
@@ -2519,7 +2519,7 @@
                                 'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoOutBarcode"}
                             };
                             fnPostAjax(function (data, callFunctionParam) {
-                                fnResetFrom("stock_manage_pop_form");
+                                fnResetForm("stock_manage_pop_form");
                                 tempDataList.push(data.info);
 
                                 if(typeof data.info.INSIDE_OUT_SEQ == 'undefined' || data.info.INSIDE_OUT_SEQ == '') {
@@ -2568,7 +2568,7 @@
                                     };
 
                                     fnPostAjax(function (data, callFunctionParam) {
-                                        fnResetFrom("stock_manage_pop_form");
+                                        fnResetForm("stock_manage_pop_form");
 
                                         let dataList = data.list;
                                         let parameters2 = {
@@ -2579,7 +2579,7 @@
                                             let dataInfo2 = data2.info;
                                             if(dataInfo2 == null ) {
                                                 fnAlert(null, "도면번호가 존재하지 않습니다.");
-                                                fnResetFrom("stock_manage_pop_form");
+                                                fnResetForm("stock_manage_pop_form");
                                                 $('#stock_manage_pop').modal('hide');
                                             }else{
                                                 if(typeof dataInfo2.ABBR_NM == 'undefined' || dataInfo2.ABBR_NM == '' || dataInfo2.ABBR_NM == null ) {
@@ -2603,7 +2603,7 @@
 
                         }
                     }else if(barcodeType == 'S') {
-                        fnResetFrom("stock_manage_pop_form");
+                        fnResetForm("stock_manage_pop_form");
 
                         let parameters = {
                             'url': '/json-list',

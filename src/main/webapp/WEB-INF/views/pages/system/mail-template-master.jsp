@@ -204,7 +204,7 @@
 
         /* 버튼 Action 처리 */
         $('#mail_template_record_popup').on('hide.bs.modal', function() {
-            fnResetFrom('mail_template_record_popup_form');
+            fnResetForm('mail_template_record_popup_form');
             CKEDITOR.instances.TEMPLATE_CONTENT_E.setData('');
             $("#mail_template_search_form #TEMPLATE_SEQ").val('');
         });

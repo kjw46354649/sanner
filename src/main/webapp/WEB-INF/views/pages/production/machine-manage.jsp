@@ -505,7 +505,7 @@
                 if (ui.dataIndx === 'PHOTO_GFILE_SEQ' || ui.dataIndx === 'EQUIP_NM'){
                     let target = ui.rowData.EQUIP_SEQ;
                     // console.log(ui.rowData.EQUIP_SEQ);
-                    fnResetFrom("machine_manage_pop_form");
+                    fnResetForm("machine_manage_pop_form");
                     $("#machine_manage_pop_form").find("#EQUIP_SEQ").val(target);
                     $('#CURRENT_POPUP').modal('show');
                 }
@@ -595,7 +595,7 @@
                 if (ui.dataIndx === 'PHOTO_GFILE_SEQ' || ui.dataIndx === 'EQUIP_NM'){
                     let target = ui.rowData.EQUIP_SEQ;
 
-                    fnResetFrom("machine_manage_pop_form");
+                    fnResetForm("machine_manage_pop_form");
                     $("#machine_manage_pop_form").find("#EQUIP_SEQ").val(target);
                     $('#CURRENT_POPUP').modal('show');
                 }
@@ -641,7 +641,7 @@
             rowClick: function( event, ui ) {
                 // console.log(ui) ;
                 // let rowData = ui.rowData;
-                // fnResetFrom("company_master_register_form");
+                // fnResetForm("company_master_register_form");
                 // $("#company_master_register_form").find("#COMP_CD").val(rowData.COMP_CD);
                 // $('#system_company_popup').modal('show');
             }
@@ -891,7 +891,7 @@
         });
 
         $newBtn.click(function(event){
-            fnResetFrom("machine_manage_pop_form");
+            fnResetForm("machine_manage_pop_form");
             $("#machine_manage_pop_form").find("#EQUIP_SEQ").val("");
             $('#CURRENT_POPUP').modal('show');
         });
@@ -1077,7 +1077,7 @@
     });
     $("#CURRENT_POPUP").on('hide.bs.modal', function(){
 
-        fnResetFrom("machine_manage_pop_form");
+        fnResetForm("machine_manage_pop_form");
         $("#machine_manage_pop_form").find("#queryId").val("machine.selectMachineInfo");
         $("#machine_manage_pop_form").find("#PHOTO_GFILE_SRC").attr("src", "/image/999");
 
@@ -1100,7 +1100,7 @@
             let dataInfo = data.info;
 
             if(dataInfo == null ) {
-                fnResetFrom("machine_manage_pop_form");
+                fnResetForm("machine_manage_pop_form");
                 //$("#machine_manage_pop_form").find("#EQUIP_ID_NM").html("");
                 $("#machine_manage_pop_form").find("#PHOTO_GFILE_SEQ").val("");
                 $("#machine_manage_pop_form").find("#PHOTO_GFILE_SRC").attr("src", "/image/999");

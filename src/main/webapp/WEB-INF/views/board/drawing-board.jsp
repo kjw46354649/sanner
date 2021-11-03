@@ -1321,9 +1321,9 @@
             };
             fnPostAjax(function (data, callFunctionParam) {
                 // fnDrawingAlertDialogAlert('startDivHtml', 3);
-                // fnResetFrom("drawing_action_form");
+                // fnResetForm("drawing_action_form");
                 // fnPopupClose("drawing_worker_scan_popup");
-                fnResetFrom("drawing_action_form");
+                fnResetForm("drawing_action_form");
                 fnDrawingAlertDialogAlert('startDivHtml', 3).then(result =>
                     fnPopupClose("drawing_worker_scan_popup")
                 );
@@ -1419,7 +1419,7 @@
         *	Form reset 처리
         *	formId : form Id
         **/
-       let fnResetFrom = function (formid){
+       let fnResetForm = function (formid){
            if(formid.indexOf("#") == -1) formid = $("#"+formid);
            formid.find('input:text, input:password, input:file, textarea').val('');
            formid.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');

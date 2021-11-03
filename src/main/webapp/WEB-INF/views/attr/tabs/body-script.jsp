@@ -324,7 +324,7 @@
 		/* data : json return data
 		*/
     let fnJsonDataToForm = function (formid, data) {
-        fnResetFrom(formid);
+        fnResetForm(formid);
         if(formid.indexOf("#") == -1) formid = "#"+formid;
         $.each(data, function(key, value) {
             let $ctrl = $(formid).find('[name='+key+']');
@@ -405,7 +405,7 @@
      *	Form reset 처리
      *	formId : form Id
      **/
-    let fnResetFrom = function (formid){
+    let fnResetForm = function (formid){
         if(formid.indexOf("#") == -1) formid = $("#"+formid);
         formid.find('input[type=text], input[type=number], input[type=password], input[type=file], textarea').val('');
         formid.find('input[type=radio], input[type=checkbox]').removeAttr('checked').removeAttr('selected');

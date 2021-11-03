@@ -58,7 +58,7 @@
         'use strict';
 
         $userMasterNewBtn .click(function(event){
-            fnResetFrom("user_info_pop_form");
+            fnResetForm("user_info_pop_form");
             fnCommCodeDatasourceSelectBoxCreate($('#user_info_pop_form').find('#ROLE_SEQ'), 'all', {
                 'url': '/json-list', 'data': {'queryId': 'dataSource.selectRoleCommonCode'}
             });
@@ -141,7 +141,7 @@
             },
             cellDblClick: function (event, ui) {
                 let rowData = ui.rowData;
-                fnResetFrom("user_info_pop_form");
+                fnResetForm("user_info_pop_form");
                 fnCommCodeDatasourceSelectBoxCreate($('#user_info_pop_form').find('#ROLE_SEQ'), 'all', {
                     'url': '/json-list', 'data': {'queryId': 'dataSource.selectRoleCommonCode'}
                 });
