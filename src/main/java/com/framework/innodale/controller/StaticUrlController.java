@@ -346,4 +346,14 @@ public class StaticUrlController {
     public String stockEquip(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
         return "/common/stock_equip";
     }
+
+    @RequestMapping(value = "/processDashBoard")
+    public String processDashBoard(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
+        return "/common/process_dashBoard";
+    }
+
+    @RequestMapping(value = "/testGrid")
+    public String testGrid(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
+        return "/common/test_grid";
+    }
 }

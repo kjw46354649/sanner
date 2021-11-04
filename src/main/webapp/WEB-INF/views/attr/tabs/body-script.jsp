@@ -1114,7 +1114,7 @@
         let postData = { 'queryId': queryId, 'BARCODE_NUM': barcodeNumber};
         $.ajax({
             type: 'POST',
-            url: '/json-info',
+            url: '/tv/json-info',
             dataType: 'json',
             data: postData,
             async: false,

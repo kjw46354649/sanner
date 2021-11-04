@@ -130,6 +130,8 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         /** pop path **/
         passList.add("/pop");
         passList.add("/scanningBarcodePop");
+        passList.add("/processDashBoard");
+        passList.add("/testGrid");
 
         /** websocket **/
         passList.add("/jmes-socket");
