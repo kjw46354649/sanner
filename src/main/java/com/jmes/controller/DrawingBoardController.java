@@ -480,7 +480,7 @@ public class DrawingBoardController {
         notificationMessage.setActionType(actionType);
         notificationMessage.setUserNm((String) alarmInfo.get("USER_NM"));
         notificationMessage.setUserId((String) alarmInfo.get("USER_ID"));
-        notificationMessage.setUserImageSeq((int) alarmInfo.get("PHOTO_GFILE_SEQ"));
+        notificationMessage.setUserImageSeq((alarmInfo.get("PHOTO_GFILE_SEQ") != null)?(int) alarmInfo.get("PHOTO_GFILE_SEQ"):0);
 
         getNotificationEquipMessage(notificationMessage, alarmInfo);
 
