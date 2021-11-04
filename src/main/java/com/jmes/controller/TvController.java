@@ -184,6 +184,12 @@ public class TvController {
         model.addAttribute("info", this.innodaleService.getInfo(hashMap));
         return "jsonView";
    }
+    @RequestMapping(value = "/tv/json-list",  method=RequestMethod.POST)
+    public String jsonList(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        model.addAttribute("list", this.innodaleService.getList(hashMap));
+        return "jsonView";
+    }
 
     @RequestMapping(value = "/tv/paramQueryGridSelect",  method=RequestMethod.POST)
     public String dHtmlGridList(Model model, HttpServletRequest request, HttpSession session) throws Exception {

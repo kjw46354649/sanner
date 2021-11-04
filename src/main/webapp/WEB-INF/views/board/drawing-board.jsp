@@ -578,6 +578,15 @@
         </div>
     </div>
 </div>
+
+<form id="drawing_worker_form" method="post" action="/drawing-board">
+    <input id="USER_ID" name="USER_ID" type="hidden" value="">
+    <input id="USER_NM" name="USER_NM" type="hidden" value="">
+    <input id="USER_GFILE_SEQ" name="USER_GFILE_SEQ" type="hidden" value="">
+    <section class="contents">
+        <ul class="userWrap" id="userWrapHtml"></ul>
+    </section>
+</form>
 <!-- reserve Modal End -->
 <script type='text/javascript'>
 
@@ -855,39 +864,57 @@
                                     신규 바코드 경우 현재 작업중인 내용 종료 처리 하고 자동으로 신규 작업 시작 처리 **/
         onScan.attachTo(document, {
             onScan: function(barcodeNum, iQty) {
-                let parameters = {
-                    'url': '/drawing/barcode',
-                    'data': { 'queryId': 'drawingMapper.selectDrawingBarcodeScanInfo', 'BARCODE_NUM': barcodeNum}
-                };
-                fnPostAjax(function (data, callFunctionParam) {
-
-                    let returnCode = data.returnCode;
-                    let curStatus = $("#curStatus").val();
-                    if (returnCode == "RET00") {
-                        if (curStatus == "stop") {
-                            if($("#drawing_worker_scan_popup").css('display') == 'none') {
-                                startWork(data.info);
+                let barcodeTemp = barcodeNum.toUpperCase();
+                if(barcodeTemp.indexOf("C") == 0 || barcodeTemp.indexOf("L") == 0 || barcodeTemp.indexOf("W") == 0) {
+                    let parameters = {
+                        'url': '/drawing/barcode',
+                        'data': { 'queryId': 'drawingMapper.selectDrawingBarcodeScanInfo', 'BARCODE_NUM': barcodeNum}
+                    };
+                    fnPostAjax(function (data, callFunctionParam) {
+                        let returnCode = data.returnCode;
+                        let curStatus = $("#curStatus").val();
+                        if (returnCode == "RET00") {
+                            if (curStatus == "stop") {
+                                if($("#drawing_worker_scan_popup").css('display') == 'none') {
+                                    startWork(data.info);
+                                }
+                            } else if (curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()) {
+                                $("#workCompletelBtn").trigger('click');
+                            } else {
+                                $("#singleComplete").hide();
+                                $("#continueComplete").show();
+                                $("#drawing_action_form").find("#RE_BARCODE_NUM").val(barcodeNum);
+                                $("#workCompletelBtn").trigger('click');
                             }
-                        } else if (curStatus == "work" && barcodeNum == $("#BARCODE_NUM").val()) {
-                            $("#workCompletelBtn").trigger('click');
+                        } else if (returnCode == "RET97") {
+                            fnDrawingDialogAlert('drawingVerErrorHtml', 3);
+                        } else if (returnCode == "RET96") {
+                            holdWork(data.info);
+                            // fnConfirm(null, data.message, function () {
+                            //     startWork(data.info);
+                            // });
                         } else {
-                            $("#singleComplete").hide();
-                            $("#continueComplete").show();
-                            $("#drawing_action_form").find("#RE_BARCODE_NUM").val(barcodeNum);
-                            $("#workCompletelBtn").trigger('click');
+                            showMessage(data.message);
+                            return false;
                         }
-                    } else if (returnCode == "RET97") {
-                        fnDrawingDialogAlert('drawingVerErrorHtml', 3);
-                    } else if (returnCode == "RET96") {
-                        holdWork(data.info);
-                        // fnConfirm(null, data.message, function () {
-                        //     startWork(data.info);
-                        // });
-                    } else {
-                        showMessage(data.message);
-                        return false;
-                    }
-                }, parameters, '');
+                    }, parameters, '');
+                }else {
+                    let parameters = {
+                        'url': '/drawing-json-info',
+                        'data': { 'queryId': 'drawingMapper.selectNfcData', 'NFC_ID': barcodeNum}
+                    };
+                    fnPostAjax(function (data, callFunctionParam) {
+                        if(data.info == null) {
+                            showMessage("등록되지 않은 기기입니다.");
+                        }else {
+                            $("#drawing_worker_form").find("#USER_ID").val(data.info.USER_ID)
+                            $("#drawing_worker_form").find("#USER_NM").val(data.info.USER_NM)
+                            $("#drawing_worker_form").find("#USER_GFILE_SEQ").val(data.info.PHOTO_GFILE_SEQ)
+                            $("#drawing_worker_form").submit();
+                        }
+                    }, parameters, '');
+
+                }
             }
         });
 

@@ -537,9 +537,9 @@
     <select id="selectNfcData" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.USER_ID, B.USER_NM, B.PHOTO_GFILE_SEQ
         FROM TBL_NFC_LOGIN A
-                 INNER JOIN TBL_USER B ON A.USER_ID = B.USER_ID AND B.DEL_YN = 'N'
+             INNER JOIN TBL_USER B ON A.USER_ID = B.USER_ID AND B.DEL_YN = 'N'
         WHERE A.DEL_YN = 'N'
-          AND A.NFC_ID = #{NFC_ID}
+          AND REPLACE(A.NFC_ID,'-',SPACE(0)) = #{NFC_ID}
     </select>
 
 </mapper>

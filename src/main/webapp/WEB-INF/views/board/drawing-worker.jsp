@@ -18,6 +18,7 @@
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
     <script type="text/javascript" src="/resource/asset/js/front.js"></script>
+    <script type="text/javascript" src="/resource/plugins/scanner/onscan.js" ></script>
     <style>
         select:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="tel"]:focus, input[type="number"]:focus, textarea:focus {
             border: none !important;
@@ -41,9 +42,9 @@
                     </select>
                 </span>
             </div>
-            <div style="opacity: 0;">
-                <input id="nfc_tag_input" type="text" style="height: 30px;margin-left: 50px;align-items: center;" autofocus >
-            </div>
+<%--            <div style="display: none;">--%>
+<%--                <input id="nfc_tag_input" type="text" style="height: 30px;margin-left: 50px;align-items: center;" autofocus >--%>
+<%--            </div>--%>
 <%--            <div class="langBtn">--%>
 <%--                <button type="button" id="main" name="main" ><img src="/resource/asset/images/common/logo-01.png" style="width: 50px;height: 40px; margin-top: 0px;">Home</button>--%>
 <%--            </div>--%>
@@ -135,7 +136,7 @@
                 }
             },
             focusout: function(e) {
-                $("#nfc_tag_input").focus();
+                // $("#nfc_tag_input").focus();
             }
         })
 
@@ -166,15 +167,36 @@
             });
         });
         $("#DEPT").trigger("change");
-        // $("#nfc_tag_input").focus();
 
-    });
-    window.addEventListener('focus', function() {
-        $("#nfc_tag_input").focus();
-    }, false);
+        onScan.attachTo(document, {
+            onScan: function(nfcId, iQty) {
+                let nfcTemp = nfcId.toUpperCase();
+                if(nfcTemp.indexOf("C") == 0 || nfcTemp.indexOf("L") == 0 || nfcTemp.indexOf("W") == 0) {
+                }else {
+                    $.ajax({
+                        type: 'POST', url: '/drawing-json-info', dataType: 'json', async: false,
+                        data: {"queryId":"drawingMapper.selectNfcData", "NFC_ID" : nfcId},
+                        success: function (data, textStatus, jqXHR) {
+                            if (textStatus === 'success') {
+                                if(data.info == null) {
+                                    $("#no_nfc_popup").css("display", "block");
+                                    $(".bodyWrap").addClass("modal-open-body");
+                                }else {
+                                    $("#drawing_worker_form").find("#USER_ID").val(data.info.USER_ID);
+                                    $("#drawing_worker_form").find("#USER_NM").val(data.info.USER_NM);
+                                    $("#drawing_worker_form").find("#USER_GFILE_SEQ").val(data.info.PHOTO_GFILE_SEQ);
+                                    $("#drawing_worker_form").submit();
+                                }
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('err',textStatus);
+                        }
+                    });
+                }
+            }
+        });
 
-    $(document).ready(function(){
-        $("#nfc_tag_input").focus();
     });
 
     $(document).on('click', '.userTag', function(event){
@@ -183,6 +205,7 @@
         $("#USER_GFILE_SEQ").val($(this).attr("attrSeq"));
         $("#drawing_worker_form").submit();
     });
+
 
 </script>
 </body>
