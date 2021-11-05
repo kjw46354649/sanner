@@ -489,7 +489,6 @@
             INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.DEL_YN = 'N'
         WHERE A.DEL_YN = 'N'
             AND B.CONTROL_SEQ = #{CONTROL_SEQ}
-            AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
         ORDER BY A.ORDER_SEQ
     </select>
     <select id="selectCommItemDetailInspectionList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
