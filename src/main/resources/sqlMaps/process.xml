@@ -4,9 +4,10 @@
 <mapper namespace="process">
     <select id="selectProcessMainGrid" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            Z.ORDER_COMP_CD,
-            SF_GET_COMP_NM(Z.ORDER_COMP_CD) AS ORDER_COMP_NM,
-            Z.TOTAL_CNT, Z.TOTAL_QTY,
+            IFNULL(Z.ORDER_COMP_CD,SPACE(0)) AS ORDER_COMP_CD,
+            IFNULL(SF_GET_COMP_NM(Z.ORDER_COMP_CD),SPACE(0)) AS ORDER_COMP_NM,
+            IFNULL(Z.TOTAL_CNT,0) AS TOTAL_CNT,
+            IFNULL(Z.TOTAL_QTY,0) AS TOTAL_QTY,
             IFNULL(Z.PRO002_CNT,0) AS PROCESS_CONFIRM_CNT,
             IFNULL(Z.PRO002_QTY,0) AS PROCESS_CONFIRM_QTY,
             IFNULL(Z.PRO004_CNT,0) AS WAIT_MATERIAL_CNT,
@@ -23,13 +24,185 @@
             (IFNULL(Z.PRO014_QTY,0) + IFNULL(Z.PRO015_QTY,0)) AS SURFACE_TREAT_QTY,
             (IFNULL(Z.PRO001_CNT,0) + IFNULL(Z.PRO019_CNT,0)) AS OUTSIDE_CNT,
             (IFNULL(Z.PRO001_QTY,0) + IFNULL(Z.PRO019_QTY,0)) AS OUTSIDE_QTY,
+            IFNULL(Z.APPROACH_DUE_DT,SPACE(0)) AS APPROACH_DUE_DT,
+            IFNULL(Z.DELAY_PROCESS_CNT,0) AS DELAY_PROCESS_CNT,
+            IFNULL(Z.DELAY_PROCESS_QTY,0) AS DELAY_PROCESS_QTY,
+            IFNULL(Z.DELAY_CNT,0) AS DELAY_CNT,
+            IFNULL(Z.DELAY_QTY,0) AS DELAY_QTY,
+            IFNULL(Z.MATCH_STOCK_CNT,0) AS MATCH_STOCK_CNT,
+            IFNULL(Z.MATCH_STOCK_QTY,0) AS MATCH_STOCK_QTY
+        FROM (
+                 SELECT
+                     X.ORDER_COMP_CD AS ORDER_COMP_CD,
+                     SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM,
+                     SUM(X.CNT) AS TOTAL_CNT,
+                     SUM(X.QTY) AS TOTAL_QTY,
+                     MAX(CASE WHEN X.PART_STATUS = 'PRO001' AND X.OUTSIDE_YN = 'Y' THEN X.CNT END) AS PRO001_CNT,
+                     MAX(CASE WHEN X.PART_STATUS = 'PRO002' AND X.OUTSIDE_YN != 'Y' THEN X.CNT END) AS PRO002_CNT,
+                     MAX(CASE WHEN X.PART_STATUS = 'PRO004' AND X.OUTSIDE_YN != 'Y' THEN X.CNT END) AS PRO004_CNT,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO005') AND X.OUTSIDE_YN != 'Y' THEN X.CNT END) AS PRO005_CNT,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO006') AND X.OUTSIDE_YN != 'Y' THEN X.CNT END) AS PRO006_CNT,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO007') AND X.OUTSIDE_YN != 'Y' THEN X.CNT END) AS PRO007_CNT,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO008') AND X.OUTSIDE_YN != 'Y' THEN X.CNT END) AS PRO008_CNT,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO009') AND X.OUTSIDE_YN != 'Y' THEN X.CNT END) AS PRO009_CNT,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO012') AND X.OUTSIDE_YN != 'Y' THEN X.CNT END) AS PRO012_CNT,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO013') AND X.OUTSIDE_YN != 'Y' THEN X.CNT END) AS PRO013_CNT,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO014') AND X.OUTSIDE_YN != 'Y' THEN X.CNT END) AS PRO014_CNT,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO015') AND X.OUTSIDE_YN != 'Y' THEN X.CNT END) AS PRO015_CNT,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO019') AND X.OUTSIDE_YN = 'Y' THEN X.CNT END) AS PRO019_CNT,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO021') AND X.OUTSIDE_YN != 'Y' THEN X.CNT END) AS PRO021_CNT,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO022') AND X.OUTSIDE_YN != 'Y' THEN X.CNT END) AS PRO022_CNT,
+                     MAX(CASE WHEN X.PART_STATUS = 'PRO001' AND X.OUTSIDE_YN = 'Y' THEN X.QTY END) AS PRO001_QTY,
+                     MAX(CASE WHEN X.PART_STATUS = 'PRO002' AND X.OUTSIDE_YN != 'Y' THEN X.QTY END) AS PRO002_QTY,
+                     MAX(CASE WHEN X.PART_STATUS = 'PRO004' AND X.OUTSIDE_YN != 'Y' THEN X.QTY END) AS PRO004_QTY,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO005') AND X.OUTSIDE_YN != 'Y' THEN X.QTY END) AS PRO005_QTY,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO006') AND X.OUTSIDE_YN != 'Y' THEN X.QTY END) AS PRO006_QTY,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO007') AND X.OUTSIDE_YN != 'Y' THEN X.CNT END) AS PRO007_QTY,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO008') AND X.OUTSIDE_YN != 'Y' THEN X.QTY END) AS PRO008_QTY,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO009') AND X.OUTSIDE_YN != 'Y' THEN X.QTY END) AS PRO009_QTY,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO012') AND X.OUTSIDE_YN != 'Y' THEN X.QTY END) AS PRO012_QTY,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO013') AND X.OUTSIDE_YN != 'Y' THEN X.QTY END) AS PRO013_QTY,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO014') AND X.OUTSIDE_YN != 'Y' THEN X.QTY END) AS PRO014_QTY,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO015') AND X.OUTSIDE_YN != 'Y' THEN X.QTY END) AS PRO015_QTY,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO019') AND X.OUTSIDE_YN = 'Y' THEN X.QTY END) AS PRO019_QTY,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO021') AND X.OUTSIDE_YN != 'Y' THEN X.QTY END) AS PRO021_QTY,
+                     MAX(CASE WHEN (X.PART_STATUS = 'PRO022') AND X.OUTSIDE_YN != 'Y' THEN X.QTY END) AS PRO022_QTY,
+                     SF_GET_DATE_F(X.APPROACH_DUE_DT,'YYYY','') AS APPROACH_DUE_DT,
+                     X.DELAY_PROCESS_CNT,
+                     X.DELAY_PROCESS_QTY,
+                     X.DELAY_CNT,
+                     X.DELAY_QTY,
+                     X.MATCH_STOCK_CNT,
+                     X.MATCH_STOCK_QTY,
+                     CAST(CONCAT(X.MATCH_STOCK_CNT, ' (',X.MATCH_STOCK_QTY,')') AS CHAR) AS MATCH_STOCK_TOT
+                 FROM (
+                          SELECT A.ORDER_COMP_CD, COUNT(*) AS CNT, B.PART_STATUS, IFNULL(B.OUTSIDE_YN,'N') AS OUTSIDE_YN,
+                                 SUM(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ)) AS QTY,
+                                 (SELECT COUNT(*)
+                                  FROM TBL_CONTROL X
+                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.INNER_WORK_FINISH_DT IS NULL
+                                           INNER JOIN TBL_INSIDE_OUT Z ON Y.CONTROL_SEQ = Z.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ AND Z.OUT_STATUS = 'OUT001'
+                                  WHERE X.DEL_YN = 'N'
+                                    AND X.CONTROL_STATUS IN ('ORD001','ORD003')
+                                    AND X.OUT_FINISH_DT IS NULL
+                                    AND Y.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016','PRO017', 'PRO018', 'PRO019', 'PRO020')
+                                    AND X.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                 ) AS MATCH_STOCK_CNT,
+                                 (SELECT SUM(SF_GET_CONTROL_PART_QTY(Y.CONTROL_SEQ,Y.CONTROL_DETAIL_SEQ))
+                                  FROM TBL_CONTROL X
+                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.INNER_WORK_FINISH_DT IS NULL
+                                           INNER JOIN TBL_INSIDE_OUT Z ON Y.CONTROL_SEQ = Z.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ AND Z.OUT_STATUS = 'OUT001'
+                                  WHERE X.DEL_YN = 'N'
+                                    AND X.CONTROL_STATUS IN ('ORD001','ORD003')
+                                    AND X.OUT_FINISH_DT IS NULL
+                                    AND Y.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016','PRO017', 'PRO018', 'PRO019', 'PRO020')
+                                    AND X.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                 ) AS MATCH_STOCK_QTY,
+                                 (SELECT MIN(Z.ORDER_DUE_DT)
+                                  FROM TBL_CONTROL X
+                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.PART_STATUS IS NOT NULL AND Y.INNER_WORK_FINISH_DT IS NULL
+                                           INNER JOIN TBL_CONTROL_PART_ORDER Z ON Y.CONTROL_SEQ = Z.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ AND Z.OUT_FINISH_DT IS NULL
+                                  WHERE X.DEL_YN = 'N'
+                                    AND X.CONTROL_STATUS IN ('ORD001','ORD003')
+                                    AND X.OUT_FINISH_DT IS NULL
+                                    AND Y.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016','PRO017', 'PRO018', 'PRO019', 'PRO020')
+                                    AND X.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                 ) AS APPROACH_DUE_DT,
+                                 (SELECT COUNT(*)
+                                  FROM TBL_CONTROL X
+                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.PART_STATUS IS NOT NULL AND Y.INNER_WORK_FINISH_DT IS NULL
+                                  WHERE X.DEL_YN = 'N'
+                                    AND X.CONTROL_STATUS IN ('ORD001','ORD003')
+                                    AND X.OUT_FINISH_DT IS NULL
+                                    AND STR_TO_DATE(Y.INNER_DUE_DT,'%Y%m%d') <![CDATA[ < ]]> NOW()
+                                    AND Y.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016','PRO017', 'PRO018', 'PRO019', 'PRO020')
+                                    AND X.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                 ) AS DELAY_PROCESS_CNT,
+                                 (SELECT SUM(SF_GET_CONTROL_PART_QTY(Y.CONTROL_SEQ,Y.CONTROL_DETAIL_SEQ))
+                                  FROM TBL_CONTROL X
+                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.PART_STATUS IS NOT NULL AND Y.INNER_WORK_FINISH_DT IS NULL
+                                  WHERE X.DEL_YN = 'N'
+                                    AND X.CONTROL_STATUS IN ('ORD001','ORD003')
+                                    AND X.OUT_FINISH_DT IS NULL
+                                    AND STR_TO_DATE(Y.INNER_DUE_DT,'%Y%m%d') <![CDATA[ < ]]> NOW()
+                                    AND Y.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016','PRO017', 'PRO018', 'PRO019', 'PRO020')
+                                    AND X.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                 ) AS DELAY_PROCESS_QTY,
+                                 (SELECT COUNT(*)
+                                  FROM TBL_CONTROL X
+                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.PART_STATUS IS NOT NULL AND Y.INNER_WORK_FINISH_DT IS NULL
+                                           INNER JOIN TBL_CONTROL_PART_ORDER Z ON Y.CONTROL_SEQ = Z.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ AND Z.OUT_FINISH_DT IS NULL
+                                  WHERE X.DEL_YN = 'N'
+                                    AND X.CONTROL_STATUS IN ('ORD001','ORD003')
+                                    AND X.OUT_FINISH_DT IS NULL
+                                    AND STR_TO_DATE(Z.ORDER_DUE_DT ,'%Y%m%d') <![CDATA[ < ]]> NOW()
+                                    AND Y.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016','PRO017', 'PRO018', 'PRO019', 'PRO020')
+                                    AND X.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                 ) AS DELAY_CNT,
+                                 (SELECT SUM(SF_GET_CONTROL_PART_QTY(Y.CONTROL_SEQ,Y.CONTROL_DETAIL_SEQ))
+                                  FROM TBL_CONTROL X
+                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.PART_STATUS IS NOT NULL AND Y.INNER_WORK_FINISH_DT IS NULL
+                                           INNER JOIN TBL_CONTROL_PART_ORDER Z ON Y.CONTROL_SEQ = Z.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ AND Z.OUT_FINISH_DT IS NULL
+                                  WHERE X.DEL_YN = 'N'
+                                    AND X.CONTROL_STATUS IN ('ORD001','ORD003')
+                                    AND X.OUT_FINISH_DT IS NULL
+                                    AND STR_TO_DATE(Z.ORDER_DUE_DT ,'%Y%m%d') <![CDATA[ < ]]> NOW()
+                                    AND Y.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016','PRO017', 'PRO018', 'PRO019', 'PRO020')
+                                    AND X.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                 ) AS DELAY_QTY
+                          FROM TBL_CONTROL A
+                                   INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL
+                              AND B.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016', 'PRO017', 'PRO018', 'PRO020')
+                          WHERE A.DEL_YN = 'N'
+                            AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+                            AND A.OUT_FINISH_DT IS NULL
+                          GROUP BY A.ORDER_COMP_CD, B.PART_STATUS
+                      ) X
+                 WHERE X.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016','PRO017', 'PRO018', 'PRO020')
+                 GROUP BY X.ORDER_COMP_CD
+             ) Z
+        ORDER BY Z.ORDER_COMP_CD
+    </select>
+    <select id="selectProcessMainGrid_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            Z.ORDER_COMP_CD,
+            SF_GET_COMP_NM(Z.ORDER_COMP_CD) AS ORDER_COMP_NM,
+            Z.TOTAL_CNT, Z.TOTAL_QTY,
+            CAST(CONCAT(IFNULL(Z.TOTAL_CNT,0), ' (', IFNULL(Z.TOTAL_QTY,0), ')') AS CHAR) AS TOTAL_TOT,
+            IFNULL(Z.PRO002_CNT,0) AS PROCESS_CONFIRM_CNT,
+            IFNULL(Z.PRO002_QTY,0) AS PROCESS_CONFIRM_QTY,
+            CAST(CONCAT(IFNULL(Z.PRO002_CNT,0), ' (', IFNULL(Z.PRO002_QTY,0), ')') AS CHAR)  AS PROCESS_CONFIRM_TOT,
+            IFNULL(Z.PRO004_CNT,0) AS WAIT_MATERIAL_CNT,
+            IFNULL(Z.PRO004_QTY,0) AS WAIT_MATERIAL_QTY,
+            CAST(CONCAT(IFNULL(Z.PRO004_CNT,0), ' (', IFNULL(Z.PRO004_QTY,0), ')') AS CHAR)  AS WAIT_MATERIAL_TOT,
+            (IFNULL(Z.PRO005_CNT,0) + IFNULL(Z.PRO021_CNT,0) + IFNULL(Z.PRO022_CNT,0)) AS IN_MATERIAL_CNT,
+            (IFNULL(Z.PRO005_QTY,0) + IFNULL(Z.PRO021_QTY,0) + IFNULL(Z.PRO022_QTY,0)) AS IN_MATERIAL_QTY,
+            CAST(CONCAT(IFNULL((IFNULL(Z.PRO005_CNT,0) + IFNULL(Z.PRO021_CNT,0) + IFNULL(Z.PRO022_CNT,0)),0), ' (', IFNULL((IFNULL(Z.PRO005_QTY,0) + IFNULL(Z.PRO021_QTY,0) + IFNULL(Z.PRO022_QTY,0)),0), ')') AS CHAR) AS IN_MATERIAL_TOT,
+            (IFNULL(Z.PRO006_CNT,0) + IFNULL(Z.PRO007_CNT,0) + IFNULL(Z.PRO008_CNT,0)) AS PROCESSING_CNT,
+            (IFNULL(Z.PRO006_QTY,0) + IFNULL(Z.PRO007_QTY,0) + IFNULL(Z.PRO008_QTY,0)) AS PROCESSING_QTY,
+            CAST(CONCAT(IFNULL((IFNULL(Z.PRO006_CNT,0) + IFNULL(Z.PRO007_CNT,0) + IFNULL(Z.PRO008_CNT,0)),0), ' (', IFNULL((IFNULL(Z.PRO006_QTY,0) + IFNULL(Z.PRO007_QTY,0) + IFNULL(Z.PRO008_QTY,0)),0), ')') AS CHAR) AS PROCESSING_TOT,
+            IFNULL(Z.PRO009_CNT,0) AS PROCESS_COMPLETE_CNT,
+            IFNULL(Z.PRO009_QTY,0) AS PROCESS_COMPLETE_QTY,
+            CAST(CONCAT(IFNULL(Z.PRO009_CNT,0), ' (', IFNULL(Z.PRO009_QTY,0), ')') AS CHAR) AS PROCESS_COMPLETE_TOT,
+            (IFNULL(Z.PRO012_CNT,0) + IFNULL(Z.PRO013_CNT,0)) AS AFTER_PROCESS_CNT,
+            (IFNULL(Z.PRO012_QTY,0) + IFNULL(Z.PRO013_QTY,0)) AS AFTER_PROCESS_QTY,
+            CAST(CONCAT(IFNULL((IFNULL(Z.PRO012_CNT,0) + IFNULL(Z.PRO013_CNT,0)),0), ' (', IFNULL((IFNULL(Z.PRO012_QTY,0) + IFNULL(Z.PRO013_QTY,0)),0), ')') AS CHAR) AS AFTER_PROCESS_TOT,
+            (IFNULL(Z.PRO014_CNT,0) + IFNULL(Z.PRO015_CNT,0)) AS SURFACE_TREAT_CNT,
+            (IFNULL(Z.PRO014_QTY,0) + IFNULL(Z.PRO015_QTY,0)) AS SURFACE_TREAT_QTY,
+            CAST(CONCAT(IFNULL((IFNULL(Z.PRO014_CNT,0) + IFNULL(Z.PRO015_CNT,0)),0), ' (', IFNULL((IFNULL(Z.PRO014_QTY,0) + IFNULL(Z.PRO015_QTY,0)),0), ')') AS CHAR) AS SURFACE_TREAT_TOT,
+            (IFNULL(Z.PRO001_CNT,0) + IFNULL(Z.PRO019_CNT,0)) AS OUTSIDE_CNT,
+            (IFNULL(Z.PRO001_QTY,0) + IFNULL(Z.PRO019_QTY,0)) AS OUTSIDE_QTY,
+            CAST(CONCAT(IFNULL((IFNULL(Z.PRO001_CNT,0) + IFNULL(Z.PRO019_CNT,0)),0), ' (', IFNULL((IFNULL(Z.PRO001_QTY,0) + IFNULL(Z.PRO019_QTY,0)),0), ')') AS CHAR) AS SURFACE_TREAT_TOT,
             Z.APPROACH_DUE_DT,
             Z.DELAY_PROCESS_CNT,
             Z.DELAY_PROCESS_QTY,
+            CAST(CONCAT(IFNULL(Z.DELAY_PROCESS_CNT,0), ' (', IFNULL(Z.DELAY_PROCESS_QTY,0), ')') AS CHAR) AS DELAY_PROCESS_TOT,
             Z.DELAY_CNT,
             Z.DELAY_QTY,
+            CAST(CONCAT(IFNULL(Z.DELAY_CNT,0), ' (', IFNULL(Z.DELAY_QTY,0), ')') AS CHAR) AS DELAY_TOT,
             IFNULL(Z.MATCH_STOCK_CNT,0) AS MATCH_STOCK_CNT,
-            IFNULL(Z.MATCH_STOCK_QTY,0) AS MATCH_STOCK_QTY
+            IFNULL(Z.MATCH_STOCK_QTY,0) AS MATCH_STOCK_QTY,
+            CAST(CONCAT(IFNULL(Z.MATCH_STOCK_CNT,0), ' (', IFNULL(Z.MATCH_STOCK_QTY,0), ')') AS CHAR) AS MATCH_STOCK_TOT
         FROM (
              SELECT
                  X.ORDER_COMP_CD AS ORDER_COMP_CD,
@@ -164,8 +337,7 @@
     </select>
     <select id="selectProcessCompleteList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            SF_GET_DATE_F(Z.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT,
-            CONCAT(SUM(Z.TOTAL), ' (',SUM(Z.TOTAL_QTY),') ') AS TOTAL_QTY, Z.GOAL_QTY, Z.GOAL_CNT,
+            SF_GET_DATE_F(Z.INNER_DUE_DT,'YYYY','') AS INNER_DUE_DT, Z.GOAL_QTY, Z.GOAL_CNT,
             (Z.VALUE9 + Z.VALUE10 + Z.VALUE11 + Z.VALUE12 + Z.VALUE13 + Z.VALUE14 +Z.VALUE15) AS COMPLETE_CNT,
             (Z.QTY9 + Z.QTY10 + Z.QTY11 + Z.QTY12 + Z.QTY13 + Z.QTY14 + Z.QTY15) AS COMPLETE_QTY,
             Z.VALUE1 AS OUTSIDE_CNT,

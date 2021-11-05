@@ -477,7 +477,7 @@
         var g_noData = '<div>Not Found Data.</div>';
         let setIntervalTimer;
         let timer = function(){
-            let selVal = 60;//1분
+            let selVal = 30;//1분
             let timesec = 1000;//1초
             setIntervalTimer = setInterval(function() {
                 getStockProcessList();
@@ -486,14 +486,51 @@
                 getProcessingMainInfo();
 
                 if ($("#process_dash_board_main_grid").hasClass('pq-grid')) {
-                    $("#process_dash_board_main_grid").pqGrid("refreshDataAndView");
+                    settingNewDataForGrid('process_dash_board_main_grid','PROCESS_DASH_MAIN_FORM','ORDER_COMP_CD')
+
                 }
                 if ($("#process_complete_grid").hasClass('pq-grid')) {
-                    $("#process_complete_grid").pqGrid("refreshDataAndView");
+                    settingNewDataForGrid('process_complete_grid','PROCESS_DASH_SUB_FORM','INNER_DUE_DT')
                 }
 
             }, timesec*selVal);
         };
+
+        let settingNewDataForGrid = function(gridId, formId, checkValue) {
+            let orgData = $("#" + gridId).pqGrid('option', 'dataModel.data');
+            let checkList = $("#" + gridId).pqGrid("getData",{dataIndx:[checkValue]});
+            let checkArr = [];
+            $.each(checkList, function(idx,Item) {
+                checkArr.push(Item[checkValue]);
+            })
+
+            const parameter = {'url': '/tv/paramQueryGridSelect', 'data': fnFormToJsonArrayData(formId)};
+            fnPostAjaxForDashBoard(function (data) {
+                let newData = data.data;
+
+                $.each(newData,function(idx,Item) {
+                    let chk = Item[checkValue];
+                    let rowIdx = checkArr.indexOf(chk);
+                    if(rowIdx >= 0) {
+                        $("#" + gridId).pqGrid('updateRow', {
+                            'rowIndx': rowIdx,
+                            'newRow': Item,
+                            checkEditable: false
+                        });
+                    }else {
+                        $("#" + gridId).pqGrid('addRow', {
+                            newRow: Item,
+                            rowIndx: orgData.length,
+                            checkEditable: false
+                        });
+                    }
+                })
+                if(gridId == 'process_dash_board_main_grid') {
+                    displayTotalHeader();
+                }
+            },parameter,'');
+
+        }
 
         let getStockProcessList = function (type) {
             const parameter = {'url': '/tv/json-list', 'data': {
@@ -658,14 +695,29 @@
                         totalQty += Number(Item2[Item + '_QTY'])
                     }
                 })
-
-                let html = '<br><span class="header_inside">' + totalCnt + " (" + totalQty + ")" + '</span>';
-                $("#pq-head-cell-u3-0-"+(idx+2) +"-right .pq-title-span").append(html)
+                if($("#pq-head-cell-u3-0-"+(idx+14) +"-right .pq-title-span .header_inside").length == 0) {
+                    let html = '<br><span class="header_inside">' + totalCnt + " (" + totalQty + ")" + '</span>';
+                    $("#pq-head-cell-u3-0-"+(idx+14) +"-right .pq-title-span").append(html)
+                }else {
+                    $("#pq-head-cell-u3-0-"+(idx+14) +"-right .pq-title-span .header_inside").text(totalCnt + " (" + totalQty + ")");
+                }
             });
         }
         const processDashBoardMainGrid = $("#process_dash_board_main_grid");
         const processDashBoardMainColModel = [
             {title: 'ORDER_COMP_CD', dataIndx: 'ORDER_COMP_CD', hidden: true},
+            {title: 'TOTAL_QTY', dataIndx: 'TOTAL_QTY', hidden: true},
+            {title: 'PROCESS_CONFIRM_QTY', dataIndx: 'PROCESS_CONFIRM_QTY', hidden: true},
+            {title: 'MATCH_STOCK_QTY', dataIndx: 'MATCH_STOCK_QTY', hidden: true},
+            {title: 'WAIT_MATERIAL_QTY', dataIndx: 'WAIT_MATERIAL_QTY', hidden: true},
+            {title: 'IN_MATERIAL_QTY', dataIndx: 'IN_MATERIAL_QTY', hidden: true},
+            {title: 'PROCESSING_QTY', dataIndx: 'PROCESSING_QTY', hidden: true},
+            {title: 'PROCESS_COMPLETE_QTY', dataIndx: 'PROCESS_COMPLETE_QTY', hidden: true},
+            {title: 'AFTER_PROCESS_QTY', dataIndx: 'AFTER_PROCESS_QTY', hidden: true},
+            {title: 'SURFACE_TREAT_QTY', dataIndx: 'SURFACE_TREAT_QTY', hidden: true},
+            {title: 'OUTSIDE_QTY', dataIndx: 'OUTSIDE_QTY', hidden: true},
+            {title: 'DELAY_PROCESS_QTY', dataIndx: 'DELAY_PROCESS_QTY', hidden: true},
+            {title: 'DELAY_QTY', dataIndx: 'DELAY_QTY', hidden: true},
             {title: '발주처', width: 135, dataIndx: 'ORDER_COMP_NM',editable: false,
                 styleHead: {'background-color':'#aedcff'},
                 render: function (ui) {
@@ -843,7 +895,7 @@
                 styleHead: {'background-color':'#006dc0','color':'white'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span class="column_hover">' + ui.cellData + '<span class="column_inside">(' + ui.rowData.OUTSIDE_QTY +')</span></span>';
+                        let html = '<span class="column_hover">' + ui.cellData + ' <span class="column_inside">(' + ui.rowData.OUTSIDE_QTY +')</span></span>';
                         return html;
                     }else {
                         return {text: ""};
@@ -906,7 +958,6 @@
             strNoRows: g_noData,
             numberCell: {show:false},
             trackModel: {on: true},
-            editable: false,
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             filterModel: {mode: 'OR'},
             colModel: processDashBoardMainColModel,
@@ -928,6 +979,11 @@
 
         const processCompleteGrid = $("#process_complete_grid");
         const processCompleteColModel = [
+            {title: 'TYPE', dataIndx: 'TYPE', hidden: true},
+            {title: 'GOAL_QTY', dataIndx: 'GOAL_QTY', hidden: true},
+            {title: 'COMPLETE_QTY', dataIndx: 'COMPLETE_QTY', hidden: true},
+            {title: 'OUTSIDE_QTY', dataIndx: 'OUTSIDE_QTY', hidden: true},
+            {title: 'NON_COMPLETE_QTY', dataIndx: 'NON_COMPLETE_QTY', hidden: true},
             {title: '가공납기', width: 75, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT',editable: false,
                 styleHead: {'background-color':'#b5ddfb'},
                 render: function (ui) {
@@ -1107,7 +1163,7 @@
             },
             complete: function () {
                 let html = '<br><span class="header_inside">'+ "(수량기준)" + '</span>';
-                $("#pq-head-cell-u5-0-5-right .pq-title-span").append(html)
+                $("#pq-head-cell-u5-0-10-right .pq-title-span").append(html)
             },
             sortModel: {on: false}
         }
