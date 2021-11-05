@@ -25,7 +25,6 @@
     <link rel="stylesheet" type="text/css" href="/resource/asset/css/customer.css" />
     <link rel="stylesheet" type="text/css" href="/resource/asset/css/common.css" />
 
-
     <style type="text/css">
         *{margin: 0; padding: 0; box-sizing: border-box;}
         a{text-decoration: none; color: black;}
@@ -61,6 +60,9 @@
         #process_complete_grid .pq-grid-row.pq-striped, #process_dash_board_main_grid .pq-grid-row.pq-striped {
             background: #eaf1fd;
         }
+        #process_dash_board_main_grid .pq-grid-cell {
+            height: 31px !important;
+        }
 
         .pq-grid {
             font-family: 'notoM'
@@ -76,7 +78,7 @@
         }
         .column_inside {
             font-size: 12px !important;
-            line-height: 23px !important;
+            line-height: 11px !important;
             font-weight: 500;
             color: #2d5785;
         }
@@ -86,6 +88,9 @@
         }
         #processPopup .pq-grid-header-table>.pq-grid-row>.pq-grid-number-cell {background: #aedcff;}
 
+        .dash_bg_yellow {
+            background-color: #faf7c0 !important;
+        }
     </style>
 </head>
 
@@ -145,7 +150,7 @@
                     <div class="display_f p-2 h80 grid_wrap2">
                         <div class="w33 h100 display_f">
                             <div class="w40 h100">
-                                <div class="h80 position_R">
+                                <div class="position_R" style="height: 45%;margin-top: 50%;">
                                     <img src="./resource/process/images/process_1.png" alt="주문가공" class="w100 process_img">
                                 </div>
                                 <div class="h20 pt-2">
@@ -153,10 +158,10 @@
                                 </div>
                             </div>
                             <div class="w60 h100">
-                                <div class="h80 position_R">
+                                <div class="position_R" style="height: 35%;margin-top: 45%;">
                                     <span class="text-primary process_percent" id="ORDER_PROCESSING_PERCENT"></span>
                                 </div>
-                                <div class="h20 pt-2">
+                                <div class="h20" style="text-align: center">
                                     <span class="font-weight-bold text-center" id="ORDER_PROCESSING_CNT"></span>
                                     <span class="text-light2" id="ORDER_PROCESSING_QTY">()</span>
                                 </div>
@@ -164,18 +169,18 @@
                         </div>
                         <div class="w33 h100 display_f">
                             <div class="w40 h100">
-                                <div class="h80 position_R">
-                                    <img src="./resource/process/images/process_2.png" alt="주문가공" class="w100 process_img">
+                                <div class="position_R" style="height: 45%;margin-top: 50%;">
+                                    <img src="./resource/process/images/process_2.png" alt="재고가공" class="w100 process_img">
                                 </div>
                                 <div class="h20 pt-2">
                                     <p class="font-weight-bold text-center font14">재고가공</p>
                                 </div>
                             </div>
                             <div class="w60 h100">
-                                <div class="h80 position_R">
+                                <div class="position_R" style="height: 35%;margin-top: 45%;">
                                     <span class="text-primary process_percent" id="STOCK_PROCESSING_PERCENT"></span>
                                 </div>
-                                <div class="h20 pt-2">
+                                <div class="h20" style="text-align: center">
                                     <span class="font-weight-bold text-center" id="STOCK_PROCESSING_CNT"></span>
                                     <span class="text-light2" id="STOCK_PROCESSING_QTY"></span>
                                 </div>
@@ -183,18 +188,18 @@
                         </div>
                         <div class="w33 h100 display_f">
                             <div class="w40 h100">
-                                <div class="h80 position_R">
-                                    <img src="./resource/process/images/process_3.png" alt="주문가공" class="w100 process_img">
+                                <div class="position_R" style="height: 45%;margin-top: 50%;">
+                                    <img src="./resource/process/images/process_3.png" alt="외주가공" class="w100 process_img">
                                 </div>
                                 <div class="h20 pt-2">
                                     <p class="font-weight-bold text-center font14">외주가공</p>
                                 </div>
                             </div>
                             <div class="w60 h100">
-                                <div class="h80 position_R">
+                                <div class="position_R" style="height: 35%;margin-top: 45%;">
                                     <span class="text-primary process_percent" id="OUTSIDE_PROCESSING_PERCENT"></span>
                                 </div>
-                                <div class="h20 pt-2">
+                                <div class="h20" style="text-align: center">
                                     <span class="font-weight-bold text-center" id="OUTSIDE_PROCESSING_CNT"></span>
                                     <span class="text-light2" id="OUTSIDE_PROCESSING_QTY"></span>
                                 </div>
@@ -225,7 +230,7 @@
                 <div class="border_color h80 m-2 box-scroll grid_wrap4 display_f">
                     <div class="w10 h100 border_color_R">
                         <div class="h100 border_color_B p-1">
-                            <div class="block_box block_box_small back_sky">
+                            <div class="block_box block_box_small back_purple">
                                 <p class="small">재질별</p>
                             </div>
                         </div>
@@ -278,7 +283,7 @@
                         <input type="hidden" name="MATERIAL_TYPE" id="MATERIAL_TYPE" value="">
                         <input type="hidden" name="PART_STATUS" id="PART_STATUS" value="">
                     </form>
-                    <div id="processPopOutsideDiv" class="h10 w100 box-scroll left_wrap1 from_outside" style="display: none;">
+                    <div id="processPopOutsideDiv" class="h10 w100 box-scroll left_wrap1 from_outside" style="display: none;height: 13.5%;">
                     </div>
                     <div id="processPopMaterialDiv" class="h10 w100 box-scroll left_wrap1 from_material" style="display: none;">
                     </div>
@@ -421,8 +426,8 @@
                 $("#processPopup").find(".from_material").show();
                 $("#processPopup").find(".from_outside").hide();
 
-                $(".from_material > .pop_material_div").removeClass("onClickStatus2");
-                $(".from_material").find("#POP_MATERIAL_"+rowData).addClass("onClickStatus2");
+                $(".from_material > .pop_material_div").removeClass("onClickStatus3");
+                $(".from_material").find("#POP_MATERIAL_"+rowData).addClass("onClickStatus3");
 
                 $("#PROCESS_POP_FORM").find("#MATERIAL_TYPE").val(rowData);
                 $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_material");
@@ -612,7 +617,7 @@
                 $.each(data.list, function (idx,Item) {
                     let materialId = "MATERIAL_" + Item.MATERIAL_TYPE;
                     if($("#"+materialId).length == 0) {
-                        let html = '<div id="'+materialId+'" class="block_box back_sky pt-3 wait_material_div" data-target="'+Item.MATERIAL_TYPE+'">';
+                        let html = '<div id="'+materialId+'" class="block_box back_purple pt-3 wait_material_div" data-target="'+Item.MATERIAL_TYPE+'">';
                         html += '<p>' + Item.MATERIAL_TYPE_NM + '</p>';
                         html += '<p class="small">' + Item.CNT + ' (' + Item.QTY + ')</p>';
                         html += '</div>';
@@ -620,7 +625,7 @@
                     }
                     let materialId2 = "POP_MATERIAL_"+ Item.MATERIAL_TYPE;
                     if($("#"+materialId2).length == 0) {
-                        let html = '<div id="'+materialId2+'" class="block_box block_box_middle back_sky pt-3 pop_material_div" data-target="'+Item.MATERIAL_TYPE+'">';
+                        let html = '<div id="'+materialId2+'" class="block_box block_box_middle back_purple pt-3 pop_material_div" data-target="'+Item.MATERIAL_TYPE+'">';
                         html += '<p>' + Item.MATERIAL_TYPE_NM + '</p>';
                         html += '<p class="small">' + Item.CNT + ' (' + Item.QTY + ')</p>';
                         html += '</div>';
@@ -661,7 +666,7 @@
         const processDashBoardMainGrid = $("#process_dash_board_main_grid");
         const processDashBoardMainColModel = [
             {title: 'ORDER_COMP_CD', dataIndx: 'ORDER_COMP_CD', hidden: true},
-            {title: '발주처', width: 140, dataIndx: 'ORDER_COMP_NM',editable: false,
+            {title: '발주처', width: 135, dataIndx: 'ORDER_COMP_NM',editable: false,
                 styleHead: {'background-color':'#aedcff'},
                 render: function (ui) {
                     return {style: 'font-style:italic;'};
@@ -670,7 +675,7 @@
             {title: '계', width: 90, dataIndx: 'TOTAL_CNT',editable: false,
                 styleHead: {'background-color':'#aedcff','color':'blue'},
                 render: function (ui) {
-                    let html = '<span class="column_hover" style="color: blue;">' + ui.cellData + '<br><span class="column_inside" style="color: #2190ff;">(' + ui.rowData.TOTAL_QTY +')</span></span>';
+                    let html = '<span class="column_hover" style="color: blue;">' + ui.cellData + ' <span class="column_inside" style="color: #2190ff;">(' + ui.rowData.TOTAL_QTY +')</span></span>';
                     return html;
                 },
                 postRender: function (ui) {
@@ -686,7 +691,7 @@
                 styleHead: {'background-color':'#9bd4ff'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span class="column_hover">' + ui.cellData + '<br><span class="column_inside">(' + ui.rowData.PROCESS_CONFIRM_QTY +')</span></span>';
+                        let html = '<span class="column_hover">' + ui.cellData + ' <span class="column_inside">(' + ui.rowData.PROCESS_CONFIRM_QTY +')</span></span>';
                         return html;
                     }else {
                         return {text: ""};
@@ -705,7 +710,7 @@
                 styleHead: {'background-color':'#7cc6ff'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span class="column_hover">' + ui.cellData + '<br><span class="column_inside">(' + ui.rowData.MATCH_STOCK_QTY +')</span></span>';
+                        let html = '<span class="column_hover">' + ui.cellData + ' <span class="column_inside">(' + ui.rowData.MATCH_STOCK_QTY +')</span></span>';
                         return html;
                     }else {
                         return {text: ""};
@@ -724,7 +729,7 @@
                 styleHead: {'background-color':'#69bdfd'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span class="column_hover">' + ui.cellData + '<br><span class="column_inside">(' + ui.rowData.WAIT_MATERIAL_QTY +')</span></span>';
+                        let html = '<span class="column_hover">' + ui.cellData + ' <span class="column_inside">(' + ui.rowData.WAIT_MATERIAL_QTY +')</span></span>';
                         return html;
                     }else {
                         return {text: ""};
@@ -743,7 +748,7 @@
                 styleHead: {'background-color':'#5fb4f5'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span class="column_hover">' + ui.cellData + '<br><span class="column_inside">(' + ui.rowData.IN_MATERIAL_QTY +')</span></span>';
+                        let html = '<span class="column_hover">' + ui.cellData + ' <span class="column_inside">(' + ui.rowData.IN_MATERIAL_QTY +')</span></span>';
                         return html;
                     }else {
                         return {text:""};
@@ -762,7 +767,7 @@
                 styleHead: {'background-color':'#4dadf7'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span class="column_hover">' + ui.cellData + '<br><span class="column_inside">(' + ui.rowData.PROCESSING_QTY +')</span></span>';
+                        let html = '<span class="column_hover">' + ui.cellData + ' <span class="column_inside">(' + ui.rowData.PROCESSING_QTY +')</span></span>';
                         return html;
                     }else {
                         return {text:""};
@@ -781,7 +786,7 @@
                 styleHead: {'background-color':'#39a4f7'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span class="column_hover">' + ui.cellData + '<br><span class="column_inside">(' + ui.rowData.PROCESS_COMPLETE_QTY +')</span></span>';
+                        let html = '<span class="column_hover">' + ui.cellData + ' <span class="column_inside">(' + ui.rowData.PROCESS_COMPLETE_QTY +')</span></span>';
                         return html;
                     }else {
                         return {text: ""};
@@ -800,7 +805,7 @@
                 styleHead: {'background-color':'#1893f1'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span class="column_hover">' + ui.cellData + '<br><span class="column_inside">(' + ui.rowData.AFTER_PROCESS_QTY +')</span></span>';
+                        let html = '<span class="column_hover">' + ui.cellData + ' <span class="column_inside">(' + ui.rowData.AFTER_PROCESS_QTY +')</span></span>';
                         return html;
                     }else {
                         return {text:""};
@@ -819,7 +824,7 @@
                 styleHead: {'background-color':'#0188ef'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span class="column_hover">' + ui.cellData + '<br><span class="column_inside">(' + ui.rowData.SURFACE_TREAT_QTY +')</span></span>';
+                        let html = '<span class="column_hover">' + ui.cellData + ' <span class="column_inside">(' + ui.rowData.SURFACE_TREAT_QTY +')</span></span>';
                         return html;
                     }else {
                         return {text:""};
@@ -838,7 +843,7 @@
                 styleHead: {'background-color':'#006dc0','color':'white'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span class="column_hover">' + ui.cellData + '<br><span class="column_inside">(' + ui.rowData.OUTSIDE_QTY +')</span></span>';
+                        let html = '<span class="column_hover">' + ui.cellData + '<span class="column_inside">(' + ui.rowData.OUTSIDE_QTY +')</span></span>';
                         return html;
                     }else {
                         return {text: ""};
@@ -853,7 +858,7 @@
                     });
                 }
             },
-            {title: '당면<br>납기', width: 60, dataType: 'date', format: 'mm/dd', dataIndx: 'APPROACH_DUE_DT', editable: false,
+            {title: '당면<br>납기', width: 85, dataType: 'date', format: 'mm/dd', dataIndx: 'APPROACH_DUE_DT', editable: false,
                 styleHead: {'background-color':'#0c4888', 'color':'white'},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -867,22 +872,22 @@
                     }
                 }
             },
-            {title: '가공<br>지연', width: 90, dataIndx: 'DELAY_PROCESS_CNT',editable: false,
+            {title: '가공<br>지연', width: 85, dataIndx: 'DELAY_PROCESS_CNT',editable: false,
                 styleHead: {'background-color':'#ffc372'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span>' + ui.cellData + '<br><span class="header_inside">(' + ui.rowData.DELAY_PROCESS_QTY +')</span></span>';
+                        let html = '<span>' + ui.cellData + ' <span class="header_inside">(' + ui.rowData.DELAY_PROCESS_QTY +')</span></span>';
                         return {style: 'background-color:#fdebd2;', text:html};
                     }else {
                         return {style: 'background-color:#fdebd2;', text:""};
                     }
                 }
             },
-            {title: '납기<br>지연', width: 90, dataIndx: 'DELAY_CNT',editable: false,
+            {title: '납기<br>지연', width: 85, dataIndx: 'DELAY_CNT',editable: false,
                 styleHead: {'background-color':'#fff54c', 'color':'red'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span>' + ui.cellData + '<br><span class="header_inside">(' + ui.rowData.DELAY_QTY +')</span></span>';
+                        let html = '<span>' + ui.cellData + ' <span class="header_inside">(' + ui.rowData.DELAY_QTY +')</span></span>';
                         return {style: 'color: red; background-color:#faf7c0;', text:html};
                     }else {
                         return {style: 'color: red; background-color:#faf7c0;', text:""};
@@ -896,6 +901,7 @@
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             showTitle: false,
+            resizable: false,
             rowHtHead: 35,
             strNoRows: g_noData,
             numberCell: {show:false},
@@ -934,6 +940,8 @@
                         return {cls: cls, text:cellData, style: 'font-weight:bold;'};
                     }else if(rowData.TYPE == 'AFEW') {
                         cls = 'bg-lightgray';
+                    }else if(rowData.TYPE == 'TODAY') {
+                        cls = 'dash_bg_yellow';
                     }
 
                     let date = new Date(cellData);
@@ -956,7 +964,10 @@
                         return {cls: cls, text:cellData};
                     }else if(rowData.TYPE == 'AFEW') {
                         cls = 'bg-lightgray';
+                    }else if(rowData.TYPE == 'TODAY') {
+                        cls = 'dash_bg_yellow';
                     }
+
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
                         let html = '<span>' + ui.cellData + ' <span class="header_inside">(' + ui.rowData.GOAL_QTY +')</span></span>';
                         return {cls: cls, text:html, style:'font-weight:bold;'};
@@ -979,7 +990,10 @@
                         return {cls: cls, text:cellData};
                     }else if(rowData.TYPE == 'AFEW') {
                         cls = 'bg-lightgray';
+                    }else if(rowData.TYPE == 'TODAY') {
+                        cls = 'dash_bg_yellow';
                     }
+
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
                         let html = '<span>' + ui.cellData + ' <span class="header_inside">(' + ui.rowData.COMPLETE_QTY +')</span></span>';
                         return {cls: cls, text: html, style: style};
@@ -1001,7 +1015,10 @@
                         return {cls: cls, text:cellData};
                     }else if(rowData.TYPE == 'AFEW') {
                         cls = 'bg-lightgray';
+                    }else if(rowData.TYPE == 'TODAY') {
+                        cls = 'dash_bg_yellow';
                     }
+
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
                         let html = '<span>' + ui.cellData + ' <span class="header_inside">(' + ui.rowData.OUTSIDE_QTY +')</span></span>';
                         return {cls: cls, text:html};
@@ -1024,7 +1041,10 @@
                     }else if(rowData.TYPE == 'AFEW') {
                         cls = 'bg-lightgray';
                         style = 'color:#f81414;';
+                    }else if(rowData.TYPE == 'TODAY') {
+                        cls = 'dash_bg_yellow';
                     }
+
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
                         let html = '<span>' + ui.cellData + ' <span class="header_inside">(' + ui.rowData.NON_COMPLETE_QTY +')</span></span>';
                         return {cls: cls, text:html, style:style};
@@ -1048,10 +1068,16 @@
                     }else if(rowData.TYPE == 'AFEW') {
                         cls = 'bg-lightgray';
                         style = 'color:#f81414;';
+                    }else if(rowData.TYPE == 'TODAY') {
+                        cls = 'dash_bg_yellow';
                     }else {
                         style = 'color:#367fae;'
                     }
-                    cellData += '%';
+                    if(fnIsEmpty(cellData)) {
+                        cellData = '';
+                    }else {
+                        cellData += '%';
+                    }
                     return {cls: cls, text:cellData, style:style};
                 }
             }
@@ -1060,6 +1086,7 @@
             height:295,
             width:'100%',
             collapsible: false,
+            resizable: false,
             postRenderInterval: -1, //call postRender synchronously.
             showTitle: false,
             rowHtHead: 25,
@@ -1149,6 +1176,7 @@
             height:'86.5%',
             width:'100%',
             collapsible: false,
+            resizable: false,
             postRenderInterval: -1, //call postRender synchronously.
             showTitle: false,
             rowHtHead: 25,
@@ -1243,8 +1271,8 @@
 
         });
         $(document).on("click",".pop_material_div",function(e){
-            $(".from_material > .pop_material_div").removeClass("onClickStatus2");
-            $(".from_material").find("#"+e.currentTarget.id).addClass("onClickStatus2");
+            $(".from_material > .pop_material_div").removeClass("onClickStatus3");
+            $(".from_material").find("#"+e.currentTarget.id).addClass("onClickStatus3");
 
             $("#PROCESS_POP_FORM").find("#MATERIAL_TYPE").val($(this).data('target'));
             $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_material");
