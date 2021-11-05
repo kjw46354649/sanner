@@ -60,10 +60,9 @@
         #process_complete_grid .pq-grid-row.pq-striped, #process_dash_board_main_grid .pq-grid-row.pq-striped {
             background: #eaf1fd;
         }
-        #process_dash_board_main_grid .pq-grid-cell {
-            height: 31px !important;
-        }
-
+        /*#process_dash_board_main_grid .pq-grid-cell {
+            height: 40px !important;
+        }*/
         .pq-grid {
             font-family: 'notoM'
         }
