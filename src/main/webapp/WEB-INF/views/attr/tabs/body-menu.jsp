@@ -12,7 +12,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
         <div class="sidebarWrap on">
-            <h1 class="logo"><a href="/main"><span class="invisible">진성정밀 MES 시스템</span></a></h1>
+            <h1 class="logo"><a href="/main"><span class="invisible">ToMES 시스템</span></a></h1>
             <div class="profileWrap">
                 <span class="imgWrap"><img src="/image/${authUserInfo.PHOTO_GFILE_SEQ}" alt=""></span>
                 <span class="textWrap" style="top:13px;">

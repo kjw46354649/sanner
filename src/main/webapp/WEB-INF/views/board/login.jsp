@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html lang="en" class="app">
 <head>
-    <title>J-MES POP</title>
+    <title>ToMES POP</title>
     <!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
    	<link rel="shortcut icon" href="/favicon.ico">
    	<!-- Chrome, Safari, IE -->

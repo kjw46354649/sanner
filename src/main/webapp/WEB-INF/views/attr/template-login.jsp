@@ -7,7 +7,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>진성정밀 MES 시스템</title>
+    <title>ToMES 시스템</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
     <!-- <link rel="shortcut icon" href="./asset/images/common/favicon-32.png"> -->
@@ -42,7 +42,7 @@
 </dl> -->
 <header>
     <div class="header login">
-        <h1 class="logo"><a href="/"><span class="invisible">진성정밀 MES 시스템</span></a></h1>
+        <h1 class="logo"><a href="/"><span class="invisible">ToMES 시스템</span></a></h1>
     </div>
 </header>
 <div class="bodyWrap login" id="bodyWrap">
