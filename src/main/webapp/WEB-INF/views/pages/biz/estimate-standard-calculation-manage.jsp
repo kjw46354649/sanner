@@ -21,8 +21,8 @@
                                 <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
                                 <select class="wd_200" name="estimate_standard" id="estimate_standard">
                                     <option value="0">소재비</option>
-                                    <option value="1">소재비추가로직</option>
-                                    <option value="2">후가공</option>
+<%--                                    <option value="1">소재비추가로직</option>--%>
+<%--                                    <option value="2">후가공</option>--%>
                                     <option value="3">표면처리비</option>
                                     <option value="4">가공비</option>
                                 </select>
@@ -98,8 +98,8 @@
                                 <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
                                 <select class="wd_200" name="estimate_standard" id="estimate_standard">
                                     <option value="0">소재비</option>
-                                    <option value="1">소재비추가로직</option>
-                                    <option value="2">후가공</option>
+<%--                                    <option value="1">소재비추가로직</option>--%>
+<%--                                    <option value="2">후가공</option>--%>
                                     <option value="3">표면처리비</option>
                                     <option value="4">가공비</option>
                                 </select>
@@ -146,8 +146,8 @@
                                 <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
                                 <select class="wd_200" name="estimate_standard" id="estimate_standard">
                                     <option value="0">소재비</option>
-                                    <option value="1">소재비추가로직</option>
-                                    <option value="2">후가공</option>
+<%--                                    <option value="1">소재비추가로직</option>--%>
+<%--                                    <option value="2">후가공</option>--%>
                                     <option value="3">표면처리비</option>
                                     <option value="4">가공비</option>
                                 </select>
@@ -203,8 +203,8 @@
                                 <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
                                 <select class="wd_200" name="estimate_standard" id="estimate_standard">
                                     <option value="0">소재비</option>
-                                    <option value="1">소재비추가로직</option>
-                                    <option value="2">후가공</option>
+<%--                                    <option value="1">소재비추가로직</option>--%>
+<%--                                    <option value="2">후가공</option>--%>
                                     <option value="3">표면처리비</option>
                                     <option value="4">가공비</option>
                                 </select>
@@ -270,8 +270,8 @@
                                 <label class="label_100" for="estimate_standard">견적 표준계산 관리</label>
                                 <select class="wd_200" name="estimate_standard" id="estimate_standard">
                                     <option value="0">소재비</option>
-                                    <option value="1">소재비추가로직</option>
-                                    <option value="2">후가공</option>
+<%--                                    <option value="1">소재비추가로직</option>--%>
+<%--                                    <option value="2">후가공</option>--%>
                                     <option value="3">표면처리비</option>
                                     <option value="4">가공비</option>
                                 </select>

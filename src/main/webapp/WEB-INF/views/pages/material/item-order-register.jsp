@@ -1869,7 +1869,7 @@
             });
         }, 1000));
 
-        $("#btnItemOrderRegisterPopSubmit").on('click', function(){
+        $("#btnItemOrderRegisterPopSubmit").on('click', _.debounce(function () {
             checkMaterialOrderStatus(function(flag) {
                 if(!flag) {
                     if (materialOrderEmptyRowCheck()) {
@@ -1879,7 +1879,7 @@
                     itemOrderRegisterPopMail();
                 }
             });
-        });
+        },1000));
 
         $("#btnItemOrderRegisterPopDelete").on('click', function() {
             let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num").val();

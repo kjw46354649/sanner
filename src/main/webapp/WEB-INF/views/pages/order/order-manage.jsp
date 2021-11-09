@@ -165,8 +165,7 @@
 <%--                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="TERMINATION" data-control_status="ORD004">종료</button>--%>
                 <div class="rightSpan">
 <%--                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>--%>
-                    <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_LIST_PRINT">견적 List</button>
-                    <button type="button" class="defaultBtn btn-100w" id="ORDER_ESTIMATE_DRAWING_PRINT">견적도면 출력</button>
+
                     <button type="button" class="defaultBtn btn-100w" id="ORDER_MANAGE_DRAWING_PRINT">도면 출력</button>
 <%--                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_BARCODE_PRINT">바코드 출력</button>--%>
                     <button type="button" class="defaultBtn btn-100w" id="ORDER_MANAGE_LABEL_PRINT">라벨 출력</button>
@@ -244,14 +243,6 @@
         </div>
     </div>
 </div>
-
-<form id="control_estimate_list_excel_download" method="POST">
-    <input type="hidden" id="sqlId" name="sqlId" value="excel.selectControlEstimateDetailListExcel_NEW"/>
-    <input type="hidden" id="mapInputId" name="mapInputId" value="data"/>
-    <input type="hidden" id="paramName" name="paramName" value="ORDER_SEQ"/>
-    <input type="hidden" id="paramData" name="paramData" value=""/>
-    <input type="hidden" id="template" name="template" value="control_estimate_list_template"/>
-</form>
 
 <input type="button" id="ATTACHMENT_BUTTON" style="display: none;">
 
@@ -2523,35 +2514,6 @@
             }
         });
 
-        // 견적List출력
-        $('#ESTIMATE_LIST_PRINT').on('click', function () {
-            let orderSeqList = [];
-            let orderSeqStr = '';
-
-            if (selectedOrderManagementRowIndex.length <= 0) {
-                fnAlert(null, '하나 이상의 작업을 선택해주세요');
-                return false;
-            }
-
-            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-
-                orderSeqList.push(rowData.ORDER_SEQ);
-            }
-            // 중복제거
-            orderSeqList = [...new Set(orderSeqList)];
-
-            for (let i = 0; i < orderSeqList.length; i++) {
-                orderSeqStr += orderSeqList[i];
-
-                if (i < orderSeqList.length - 1) {
-                    orderSeqStr += ',';
-                }
-            }
-            $('#control_estimate_list_excel_download #paramData').val(orderSeqStr);
-            fnReportFormToHiddenFormPageAction('control_estimate_list_excel_download', '/downloadExcel');
-        });
-
         if (!alertify.barcodeDrawingConfirm) {
             alertify.dialog('barcodeDrawingConfirm', function () {
                 return {
@@ -2586,37 +2548,6 @@
                 };
             }, false, 'confirm');
         }
-
-        // 견적도면 출력
-        $('#ORDER_ESTIMATE_DRAWING_PRINT').on('click', function () {
-            if (noSelectedRowAlert()) return false;
-            const gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
-            let selectOrderList = '';
-            let message = '';
-
-            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
-                const rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-
-                if (rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002') {
-                    fnAlert(null, '주문상태 확정 이후 출력 가능합니다');
-                    return false;
-                }
-                if (fnIsEmpty(rowData.IMG_GFILE_SEQ)) {
-                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
-                    return;
-                }
-                selectOrderList += String(rowData.ORDER_SEQ) + '|';
-            }
-
-            message =
-                '<h4>' +
-                '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-                '   <span>' + selectedOrderManagementRowIndex.length + ' 건의 견적도면이 출력 됩니다.</span> 진행하시겠습니까?' +
-                '</h4>';
-            fnConfirm(null, message, function () {
-                printJS({printable: '/makeEstimateDrawingPrint', properties: {selectOrderList:selectOrderList, flag:'N'}, type: 'pdf', showModal: true});
-            });
-        });
 
         // 바코드 출력
         $('#CONTROL_MANAGE_BARCODE_PRINT').on('click', function () {

@@ -162,7 +162,7 @@
                 <button type="button" class="defaultBtn btn-70w" id="MATCH_STOCK">재고매칭</button>
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_REGISTRATION">파트도면 등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_BARCODE_DRAWING_PRINT">작업지시서 출력</button>
-                <button type="button" class="defaultBtn btn-100w orange" id="CHANGE_OUTSIDE_YN">외주전환</button>
+                <button type="button" class="defaultBtn btn-80w orange" id="CHANGE_OUTSIDE_YN">외주전환</button>
                 <%--                <button type="button" class="defaultBtn btn-70w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>--%>
                 <%--                <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_LIST_PRINT">견적List출력</button>--%>
                 <%--                <button type="button" class="defaultBtn btn-70w" id="TRANSACTION_STATEMENT">거래명세표</button>--%>
@@ -174,6 +174,8 @@
 <%--                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_CLOSE_MODE">마감모드</button>--%>
 <%--                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_ALL_MODE">전체모드</button>--%>
                 <div class="rightSpan">
+                    <button type="button" class="defaultBtn btn-80w" id="ESTIMATE_LIST_PRINT">견적 List</button>
+                    <button type="button" class="defaultBtn btn-100w" id="ORDER_ESTIMATE_DRAWING_PRINT">견적도면 출력</button>
 <%--                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MERGE" style="background-color: #5b9bd5">Merge</button>--%>
                     <button type="button" class="defaultBtn btn-100w red" id="CONTROL_MANAGE_DELETE">삭제</button>
                     <button type="button" class="defaultBtn btn-100w green" id="CONTROL_MANAGE_SAVE">저장</button>
@@ -2912,6 +2914,61 @@
             });
 
             saveAs(blob, '주문관리.xlsx');
+        });
+        // 견적List출력
+        $('#ESTIMATE_LIST_PRINT').on('click', function () {
+            let orderSeqList = [];
+            let orderSeqStr = '';
+
+            if (selectedControlManagementRowIndex.length <= 0) {
+                fnAlert(null, '하나 이상의 작업을 선택해주세요');
+                return false;
+            }
+
+            for (let i = 0, selectedRowCount = selectedControlManagementRowIndex.length; i < selectedRowCount; i++) {
+                let rowData = $controlManagementGrid.pqGrid('getRowData', {rowIndx: selectedControlManagementRowIndex[i]});
+
+                orderSeqList.push(rowData.CONTROL_SEQ);
+            }
+            // 중복제거
+            orderSeqList = [...new Set(orderSeqList)];
+
+            for (let i = 0; i < orderSeqList.length; i++) {
+                orderSeqStr += orderSeqList[i];
+
+                if (i < orderSeqList.length - 1) {
+                    orderSeqStr += ',';
+                }
+            }
+            $('#control_estimate_list_excel_download #paramData').val(orderSeqStr);
+            fnReportFormToHiddenFormPageAction('control_estimate_list_excel_download', '/downloadExcel');
+        });
+
+        // 견적도면 출력
+        $('#ORDER_ESTIMATE_DRAWING_PRINT').on('click', function () {
+            if (noSelectedRowAlert()) return false;
+            const gridData = $controlManagementGrid.pqGrid('option', 'dataModel.data');
+            let selectOrderList = '';
+            let message = '';
+
+            for (let i = 0, selectedRowCount = selectedControlManagementRowIndex.length; i < selectedRowCount; i++) {
+                const rowData = $controlManagementGrid.pqGrid('getRowData', {rowIndx: selectedControlManagementRowIndex[i]});
+
+                if (fnIsEmpty(rowData.IMG_GFILE_SEQ)) {
+                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
+                    return;
+                }
+                selectOrderList += (String(rowData.CONTROL_SEQ) + '-' + String(rowData.CONTROL_DETAIL_SEQ)) + '|';
+            }
+
+            message =
+                '<h4>' +
+                '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                '   <span>' + selectedControlManagementRowIndex.length + ' 건의 견적도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                '</h4>';
+            fnConfirm(null, message, function () {
+                printJS({printable: '/makeEstimateDrawingPrint', properties: {selectOrderList:selectOrderList, flag:'N'}, type: 'pdf', showModal: true});
+            });
         });
         /* event */
 

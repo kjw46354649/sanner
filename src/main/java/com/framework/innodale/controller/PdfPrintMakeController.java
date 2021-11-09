@@ -780,9 +780,11 @@ public class PdfPrintMakeController {
 
         for(int i=0;i<selectOrderList.length;i++) {
             if (iCount > 0) document.newPage();
-
-            hashMap.put("ORDER_SEQ",selectOrderList[i]);
-            hashMap.put("queryId", "orderMapper.selectEstimateCadInfo");
+            String[] selectControlInfo = selectOrderList[i].split("-");
+            hashMap.put("CONTROL_SEQ",selectControlInfo[0]);
+            hashMap.put("CONTROL_DETAIL_SEQ",selectControlInfo[1]);
+            hashMap.put("queryId", "orderMapper.selectEstimateCadInfo_control");
+//            hashMap.put("queryId", "orderMapper.selectEstimateCadInfo");
             Map<String,Object> orderInfo = innodaleService.getInfo(hashMap);
 
             PdfPTable table = new PdfPTable(25);
@@ -792,7 +794,7 @@ public class PdfPrintMakeController {
 
             // 1st line
             table.addCell(createRotateCell("견적도면", 1, 3, largeBoldFont, 90));
-            table.addCell(createRotateCell("접번 " + (String)orderInfo.get("REGIST_NUM"), 1, 3, mediumNormalFont, 90));
+            table.addCell(createRotateCell("작업번호 " + (String)orderInfo.get("CONTROL_NUM"), 1, 3, mediumNormalFont, 90));
             String sizeTxt = orderInfo.get("SIZE_TXT") + "\n";
             if(orderInfo.get("MATERIAL_DETAIL_NM") != null) {
                 sizeTxt += orderInfo.get("MATERIAL_DETAIL_NM") + " / ";
@@ -819,12 +821,18 @@ public class PdfPrintMakeController {
                 table.addCell(createRotateCell(orderInfo.get(mapkey) != null ? ""+orderInfo.get(mapkey): "", 1, 1, mediumNormalFont2, 90, 15f));
             }
 
-            table.addCell(createRotateCell( orderInfo.get("PROCESS_TOTAL") != null ? "가공비 "+orderInfo.get("PROCESS_TOTAL"): "가공비", 1, 3, mediumNormalFont, 90));
+            table.addCell(createRotateCell( orderInfo.get("PROCESS_TOTAL_FORMAT") != null ? "가공비 "+orderInfo.get("PROCESS_TOTAL_FORMAT"): "가공비", 1, 3, mediumNormalFont, 90));
             table.addCell(createRotateColorCell("특수가공", 1, 3, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-            table.addCell(createRotateCell("", 1, 3, mediumNormalFont, 90));
-            table.addCell(createRotateCell("", 1, 3, mediumNormalFont, 90));
-            table.addCell(createRotateCell("가공합계", 1, 3, mediumBoldFont, 90));
-            table.addCell(createRotateCell("전체", 1, 3, mediumBoldFont, 90));
+            String etcText = orderInfo.get("ETC_TEXT") != null ? ""+orderInfo.get("ETC_TEXT"): "";
+            if(etcText.indexOf("<br>") >= 0) {
+                etcText = etcText.replaceAll("<br>","\n");
+            }
+            PdfPCell tempCell2 = createRotateCell(etcText, 2, 6, mediumNormalFont, 90);
+            tempCell2.setVerticalAlignment(Element.ALIGN_TOP);
+            tempCell2.setPaddingLeft(5);
+            table.addCell(tempCell2);
+            table.addCell(createRotateCell(orderInfo.get("TOTAL_ETC") != null ? "가공합계 "+orderInfo.get("TOTAL_ETC"): "가공합계", 1, 3, mediumBoldFont, 90));
+            table.addCell(createRotateCell(orderInfo.get("TOTAL_AMT") != null ? "전체 "+orderInfo.get("TOTAL_AMT"): "전체", 1, 3, mediumBoldFont, 90));
 
             String[] columnList = {"밀링", "TAP", "일반", "정밀", "15T 이하", "15T 초과", "15T 이하", "15T 초과", "15T 이하", "15T 초과", "일반 Hole", "TAP", "공차 Hole", "특수 Hole", "C/B" };
             for(int j=0;j<columnList.length;j++) {

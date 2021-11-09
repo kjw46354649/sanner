@@ -1159,3 +1159,7 @@ div.custom-loading-mask > div {
 }
 
 .stockPopupWrap .comboTreeInputBox:disabled {background-color: #dddddd !important;}
+
+#processing_requirements_special_sub_grid .pq-header-outer {
+	display: none !important;
+}

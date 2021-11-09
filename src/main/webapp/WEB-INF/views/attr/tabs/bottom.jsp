@@ -633,9 +633,14 @@
                     </div>
                     <div style="width: 45%; margin-left: 5%;">
                         <div class="d-flex">
+                            <form id="processing_requirements_special_form" role="form" onsubmit="return false;">
+                                <input type="hidden" name="ETC_FACTOR_CD" id="ETC_FACTOR_CD">
+                                <input type="hidden" name="SEQ1" id="SEQ1">
+                                <input type="hidden" name="SEQ2" id="SEQ2">
+                            </form>
                             <span style="font-size: 1.5rem;font-family: 'NotoKrB';color: #535759;">특수가공 요건</span>
                             <div class="ml-auto">
-                                <button class="defaultBtn radius btn-60w blue" id="input_special_process_btn" style="padding: 0;margin: 0;">입력</button>
+                                <button class="defaultBtn radius btn-60w blue" id="save_special_process" style="padding: 0;margin: 0;">Apply</button>
                             </div>
                         </div>
                         <div style="height: 26%;">
@@ -655,22 +660,14 @@
                                         <td >연마</td>
                                         <td>
                                             <div style="display: flex;flex-wrap: wrap;">
-                                                <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
-                                                    <input name="FNL020" id="FNL020" type="checkbox">
-                                                    <label for="FNL020"> 평면</label>
-                                                </span>
-                                                <span class="chk_box"  style="margin-left: 8px; margin-right: 0px;">
-                                                    <input name="FNL_TEMP" id="FNL_TEMP" type="checkbox">
-                                                    <label for="FNL_TEMP"> 양면</label>
-                                                </span>
-                                                <span class="chk_box"  style="margin-left: 8px; margin-right: 0px;">
-                                                    <input name="FNL021" id="FNL021" type="checkbox">
-                                                    <label for="FNL021"> 평탄도</label>
-                                                </span>
-                                                <span class="chk_box"  style="margin-left: 8px; margin-right: 0px;">
-                                                    <input name="FNL022" id="FNL022" type="checkbox" >
-                                                    <label for="FNL022"> 원통</label>
-                                                </span>
+                                                <c:forEach var="code" items="${HighCode.H_1096}">
+                                                    <c:if test="${code.REF_CD eq 'MFN020'}">
+                                                        <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
+                                                            <input name="GRIND_CHECK" id="${code.CODE_CD}" type="checkbox" value="${code.CODE_CD}">
+                                                            <label for="${code.CODE_CD}"> ${code.CODE_NM_KR}</label>
+                                                        </span>
+                                                    </c:if>
+                                                </c:forEach>
                                             </div>
                                         </td>
                                     </tr>
@@ -678,94 +675,37 @@
                                         <td>열처리</td>
                                         <td>
                                             <div style="display: flex;flex-wrap: wrap;">
-                                                <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
-                                                    <input name="FNL030" id="FNL030" type="checkbox" >
-                                                    <label for="FNL030"> 열처리</label>
-                                                </span>
+                                                <c:forEach var="code" items="${HighCode.H_1096}">
+                                                    <c:if test="${code.REF_CD eq 'MFN030'}">
+                                                        <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
+                                                            <input name="HEAT_CHECK" id="${code.CODE_CD}" type="checkbox" value="${code.CODE_CD}">
+                                                            <label for="${code.CODE_CD}"> ${code.CODE_NM_KR}</label>
+                                                        </span>
+                                                    </c:if>
+                                                </c:forEach>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>각가공</td>
+                                        <td>각비</td>
                                         <td>
                                             <div style="display: flex;flex-wrap: wrap;">
-                                                <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
-                                                    <input name="FNL010" id="FNL010" type="checkbox" >
-                                                    <label for="FNL010"> T맞춤</label>
-                                                </span>
-                                                <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
-                                                    <input name="FNL0101" id="FNL0101" type="checkbox" >
-                                                    <label for="FNL0101"> 각가공</label>
-                                                </span>
+                                                <c:forEach var="code" items="${HighCode.H_1096}">
+                                                    <c:if test="${code.REF_CD eq 'MFN010'}">
+                                                        <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
+                                                            <input name="ANGLE_CHECK" id="${code.CODE_CD}" type="checkbox" value="${code.CODE_CD}">
+                                                            <label for="${code.CODE_CD}"> ${code.CODE_NM_KR}</label>
+                                                        </span>
+                                                    </c:if>
+                                                </c:forEach>
                                             </div>
-
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                         <div style="height: 67%; margin-top: 4.5%;">
-                            <table class="rightBotTable" style="display: none;">
-                                <colgroup>
-                                    <col width="15">
-                                    <col width="85">
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <td class="titleTd" colspan="2">
-<%--                                            <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">--%>
-<%--                                                <input name="CHECK_GRIND_PROCESS" id="CHECK_GRIND_PROCESS" type="checkbox">--%>
-<%--                                                <label for="CHECK_GRIND_PROCESS"></label>--%>
-<%--                                            </span>--%>
-                                        </td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>단가</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>계산값</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="titleTd" colspan="2">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td>/td>
-                                    </tr>
-                                    <tr>
-                                        <td>단가</td>
-                                        <td>100</td>
-                                    </tr>
-                                    <tr>
-                                        <td>계산값</td>
-                                        <td>10,000</td>
-                                    </tr>
-                                    <tr style="height: 35px;">
-                                        <td style="background-color: white;" colspan="2"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="darkBrown">Sub Total</td>
-                                        <td>10,000</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div id="processing_requirements_special_sub_grid"></div>
                         </div>
                     </div>
                 </div>
@@ -776,86 +716,6 @@
         </div>
     </div>
 </div>
-
-<div class="popup_container" id="special_process_popup" style="display: none;">
-    <div class="controlCloseLayerPopup" style="width: 370px; height: 280px;">
-        <h3>특수가공 요건</h3>
-        <hr>
-        <form class="form-inline" id="special_process_form" role="form">
-            <input type="hidden" name="queryId" id="queryId" value="material.insertStockEquipMapping">
-            <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ" value="">
-            <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
-            <div class="d-inline-block align-items-center ml-10 mt-10" style="margin-bottom: 7px;">
-                <div>
-                    <table class="rightTopTable">
-                        <colgroup>
-                            <col width="30%">
-                            <col width="30%">
-                            <col width="30%">
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <td>연마</td>
-                                <td>열처리</td>
-                                <td>각비</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div style="display: flex;flex-wrap: wrap;">
-                                        <span class="chk_box" style="margin-left: 8px; margin-right: 10px;">
-                                            <input name="FNL020" id="FNL020" type="checkbox">
-                                            <label for="FNL020"> 평면</label>
-                                        </span>
-                                        <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
-                                            <input name="FNL_TEMP" id="FNL_TEMP" type="checkbox">
-                                            <label for="FNL_TEMP"> 양면</label>
-                                        </span>
-                                        <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
-                                            <input name="FNL021" id="FNL021" type="checkbox">
-                                            <label for="FNL021"> 평탄도</label>
-                                        </span>
-                                        <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
-                                            <input name="FNL022" id="FNL022" type="checkbox">
-                                            <label for="FNL022"> 원통</label>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="display: flex;flex-wrap: wrap;">
-                                        <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
-                                            <input name="FNL030" id="FNL030" type="checkbox">
-                                            <label for="FNL030"> 열처리</label>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="display: flex;flex-wrap: wrap;">
-                                        <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
-                                            <input name="FNL010" id="FNL010" type="checkbox">
-                                            <label for="FNL010"> T맞춤</label>
-                                        </span>
-                                        <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
-                                            <input name="FNL0101" id="FNL0101" type="checkbox">
-                                            <label for="FNL0101"> 각가공</label>
-                                        </span>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </form>
-        <hr>
-        <div class="text-center" style="margin-top: 11px;">
-            <button class="defaultBtn btn-80w radius grayPopGra special_process_popup_close">닫기</button>
-            <button id="save_special_process" class="defaultBtn btn-80w radius green">저장</button>
-        </div>
-    </div>
-</div>
-
 
 
 <div id="drawingPrintDiv" style="display: none">
@@ -1033,6 +893,7 @@
     let g_ItemDetailPopGrid04;
 
     let $processingRequirementsGrid;
+    let $processingRequirementsEtcGrid;
     let processingRequirementsTargetGrid;
     let processingRequirementsTargetRowIndex = [];
 
@@ -1625,9 +1486,18 @@
         $itemDetailPopForm.find("#CONTROL_SEQ").val(CONTROL_SEQ);
         $itemDetailPopForm.find("#CONTROL_DETAIL_SEQ").val(CONTROL_DETAIL_SEQ);
 
+        let workZindex = ($("#cam_work_detail_popup").css('display') !== 'none')?Number($("#cam_work_detail_popup").css('z-index')):0;
+
+        if($("#cam_work_detail_popup").css('display') !== 'none') {
+            $('#cam_work_detail_popup').css('z-index','1050');
+            $('#g_item_detail_pop').css('z-index','1055');
+        }else {
+            $('#g_item_detail_pop').css('z-index','1050');
+        }
         if ($itemDetailPop.css('display') === 'none') {
             $itemDetailPop.modal('show');
         }
+
         //기본정보
         $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfo');
         let parameters = {
@@ -1750,6 +1620,12 @@
                 // }else{
                 //     $('.work_info_area').hide();
                 // }
+            }else {
+                $("#item_detail_pop_img").attr("src", "/resource/main/blank.jpg");
+                $("#ITEM_WORK_HISTORY_INFO").attr('disabled', true);
+                $("#ITEM_WORK_HISTORY_INFO").removeClass('bg-lightyellow');
+                $("#ITEM_WORK_HISTORY_INFO").text("가공상세수행 기록 (유사X)");
+                $("#ITEM_DRAWING_VIEW").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
             }
         }, parameters, '');
 
@@ -1845,7 +1721,7 @@
             g_ItemDetailPopGridId06.pqGrid('option', 'dataModel.postData', function (ui) {
                 return (fnFormToJsonArrayData('#g_item_detail_pop_form'));
             });
-            g_ItemDetailPopGridId05.pqGrid('refreshDataAndView');
+            g_ItemDetailPopGridId06.pqGrid('refreshDataAndView');
         } else {
             $itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid6');
             g_ItemDetailPopObj06.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
@@ -2044,7 +1920,16 @@
             } else {
                 fnJsonDataToForm('cam_work_detail_form', dataInfo);
             }
-            $('#cam_work_detail_popup').modal('show');
+
+            if($("#g_item_detail_pop").css('display') !== 'none') {
+                $('#g_item_detail_pop').css('z-index','1050');
+                $('#cam_work_detail_popup').css('z-index','1055');
+            }else {
+                $('#cam_work_detail_popup').css('z-index','1050');
+            }
+            if($("#cam_work_detail_popup").css('display') === 'none') {
+                $("#cam_work_detail_popup").modal('show');
+            }
         }, parameters, '');
     }
     /** cam popup */
@@ -2399,48 +2284,67 @@
                 processingRequirementsTargetRowIndex = Number(selectedControlManagementRowIndex[0]);
             }
 
-            const processingRequirementsSpecialGrid = 'processing_requirements_special_grid';
-            const processingRequirementsSpecialColModel = [
-                {title: 'Level1', dataIndx: 'LEVEL_1', style: {'background': '#fff2cc', 'font-weight': 'bold'}},
-                {title: 'Level2', dataIndx: 'LEVEL_2', align: 'left', style: {'background': '#fff2cc', 'font-weight': 'bold'}}
-            ];
-            const processingRequirementsSpecialObj = {
-                height: 'auto',
-                collapsible: false,
-                showTitle: false,
-                strNoRows: g_noData,
-                // rowHtHead: 15,
-                sortModel: {on: false},
-                copyModel: {render: true},
-                numberCell: {show: false},
-                trackModel: {on: true},
-                editable: false,
-                columnTemplate: {
-                    align: 'center', halign: 'center', hvalign: 'center', valign: 'center',
-                    styleHead: {'background':'#ffd966'}
-                },
-                editModel: {clicksToEdit: 1},
-                colModel: processingRequirementsSpecialColModel,
-                scrollModel: {autoFit: true},
-                dataModel: {
-                    location: 'remote', dataType: 'json', method: 'POST', url: '/paramQueryGridSelect',
-                    postData: {'queryId': 'dataSource.emptyGrid'}, recIndx: 'ROW_NUM',
-                    getData: function (dataJSON) {
-                        return {data: dataJSON.data};
-                    }
-                },
-            }
             const processingRequirementsSpecialSubGrid = 'processing_requirements_special_sub_grid';
             const processingRequirementsSpecialSubColModel = [
-                {title: '연마 - 평면연마', dataIndx: 'LEVEL_1', style: {'background': '#fff2cc', 'font-weight': 'bold'}},
-                {title: '각가공 - T맞춤', dataIndx: 'LEVEL_1', style: {'background': '#fff2cc', 'font-weight': 'bold'}}
+                {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+                {title: 'ETC_FACTOR_CD', dataIndx: 'ETC_FACTOR_CD', hidden: true},
+                {title: 'COLUMN_TYPE', dataIndx: 'COLUMN_TYPE', hidden: true},
+                {title: 'EDIT_YN', dataIndx: 'EDIT_YN', hidden: true},
+                {title: 'T', dataIndx: 'T', hidden: true},
+                {title: 'CALC_METHOD_1_EDIT_YN', dataIndx: 'CALC_METHOD_1_EDIT_YN', hidden: true},
+                {title: 'CALC_METHOD_2_EDIT_YN', dataIndx: 'CALC_METHOD_2_EDIT_YN', hidden: true},
+                {title: 'CALC_UNIT_AMT_EDIT_YN', dataIndx: 'CALC_UNIT_AMT_EDIT_YN', hidden: true},
+                {title: 'CALC_UNIT_AMT_EDIT_YN', dataIndx: 'CALC_UNIT_AMT_EDIT_YN', hidden: true},
+                {title: 'CALC_AMT_EDIT_YN', dataIndx: 'CALC_AMT_EDIT_YN', hidden: true},
+                {title: 'NAME', dataIndx: 'NAME',
+                    render: function (ui) {
+                        if(ui.cellData == 'Sub Total') {
+                            return {cls : 'darkBrown', style: 'font-weight:bold;'};
+                        }
+                        if(ui.rowData.T == 1) {
+                            return {style: 'background-color:#ffd966;font-weight:bold;font-size:12px;'};
+                        }else if(ui.rowData.T == 2) {
+                            return {cls : 'bg-lightgray', style: 'font-weight:bold;'};
+                        }else {
+                            return {style : 'background:#fff2cc;font-weight:bold;'};
+                        }
+                    }
+                },
+                {title: 'VALUE', dataIndx: 'VALUE', editable: function (ui) {
+                        let rowData = ui.rowData;
+                        if(rowData.T == 2) {
+                            return false;
+                        }else {
+                            return true;
+                        }
+                    },
+                    render: function (ui) {
+                        let rowData = ui.rowData;
+                        let cls = "";
+                        let style = "";
+                        if(rowData.T == 2) {
+                            cls = 'bg-lightgray';
+                        }
+                        if(rowData.EDIT_YN == 'Y') {
+                            style = "color:blue;";
+                        }
+                        if(rowData.T == 3) {
+                            let text = ui.cellData + " " + rowData.CALC_UNIT_NM;
+                            return {cls :cls, style:style, text: text};
+                        }else if(rowData.T == 5 || rowData.NAME == 'Sub Total') {
+                            let text = numberWithCommas(ui.cellData);
+                            return {cls :cls, style:style, text: text};
+                        }
+                        return {cls :cls, style:style};
+                    }
+                }
             ]
             const processingRequirementsSpecialSubObj = {
-                height: 'auto',
+                height: 345,
                 collapsible: false,
                 showTitle: false,
                 strNoRows: g_noData,
-                // rowHtHead: 15,
+                rowHtHead: 0,
                 sortModel: {on: false},
                 copyModel: {render: true},
                 numberCell: {show: false},
@@ -2460,7 +2364,60 @@
                         return {data: dataJSON.data};
                     }
                 },
+                load: function () {
+                    const data = this.option('dataModel.data');
+                    const summary = function (data) {
+                        const lastRow = data[data.length - 1];
+                        const costTotal = lastRow ? lastRow.VALUE : '';
+                        const array = [
+                            {NAME: 'Sub Total', VALUE: costTotal}
+                        ];
 
+                        return array;
+                    };
+                    const merge = function (grid, refresh, data) {
+                        let mc = [],
+                            rc = 1,
+                            j = data.length;
+
+                        while (j--) {
+                            let cd = data[j]['T']
+                            if(cd == 1) {
+                                mc.push({r1: j, c1: 10, rc: 1, cc: 2});
+                            }
+                        }
+                        grid.option('mergeCells', mc);
+                        if (refresh) {
+                            grid.refreshView();
+                        }
+                    };
+
+                    this.option('summaryData', summary(data));
+                    data.pop(); // 총계(마지막 행) 제외
+                    merge(this, true, data);
+                },
+                complete : function () {
+                    let headerT = $("#processing_requirements_special_sub_grid .pq-header-outer").height();
+                    let bodyT = $("#processing_requirements_special_sub_grid .pq-body-outer").height();
+                    let afterT = bodyT + headerT;
+                    $("#processing_requirements_special_sub_grid .pq-body-outer").height( afterT + "px");
+                },
+                editorKeyDown: function (evt, ui) {
+                    if (evt.keyCode === 9 || evt.keyCode === 13) {
+                        evt.originalEvent.keyCode = 40; //disguise down key.
+                    }
+                },
+                cellSave: function () {
+                    processingRequirementsEtcSave();
+                },
+                editorBegin: function (evt, ui) {
+                    if($("#processing_requirements_special_sub_grid .pq-header-outer").css('display') !== 'none') {
+                        let headerT = $("#processing_requirements_special_sub_grid .pq-header-outer").height();
+                        let bodyT = $("#processing_requirements_special_sub_grid .pq-body-outer").height();
+                        let afterT = bodyT + headerT;
+                        $("#processing_requirements_special_sub_grid .pq-body-outer").height( afterT + "px");
+                    }
+                }
             }
 
 
@@ -2584,24 +2541,112 @@
             };
 
             $processingRequirementsGrid = $('#' + processingRequirementsGridId).pqGrid(processingRequirementsObj);
+            $processingRequirementsEtcGrid = $('#' + processingRequirementsSpecialSubGrid).pqGrid(processingRequirementsSpecialSubObj);
             changeData();
         },
         'hide.bs.modal': function () {
             $processingRequirementsGrid.pqGrid('destroy');
+            $processingRequirementsEtcGrid.pqGrid('destroy');
+            $("input[name=GRIND_CHECK]").prop("checked",false);
+            $("input[name=HEAT_CHECK]").prop("checked",false);
+            $("input[name=ANGLE_CHECK]").prop("checked",false);
         }
     });
-    $("#input_special_process_btn").on("click", function () {
-        const rowData = processingRequirementsTargetGrid.pqGrid('getRowData', {rowIndx: processingRequirementsTargetRowIndex});
-        $("#special_process_form").find("#CONTROL_SEQ").val(rowData.CONTROL_SEQ)
-        $("#special_process_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ)
-        $("#special_process_popup").modal("show");
-    });
-    $(".special_process_popup_close").on("click", function () {
-        $("#special_process_popup").modal("hide");
-    });
+
     $("#save_special_process").on("click", function () {
+        const rowData = processingRequirementsTargetGrid.pqGrid('getRowData', {rowIndx: processingRequirementsTargetRowIndex});
+        let factorCdStr = "";
+        let factorCdArr = [];
+        $("input[name=GRIND_CHECK]:checked").each(function() {
+            var val = $(this).val();
+            factorCdStr += "'" + val + "',";
+            factorCdArr.push(val);
+        });
+        $("input[name=HEAT_CHECK]:checked").each(function() {
+            var val = $(this).val();
+            factorCdStr += "'" + val + "',";
+            factorCdArr.push(val);
+        });
+        $("input[name=ANGLE_CHECK]:checked").each(function() {
+            var val = $(this).val();
+            factorCdStr += "'" + val + "',";
+            factorCdArr.push(val);
+        });
+        factorCdArr = [...new Set(factorCdArr)];
+
+        if(factorCdStr != "") {
+            factorCdStr = factorCdStr.substring(0,factorCdStr.length - 1);
+        }
+
+        let parameter1 = {'url': '/json-list', 'data': {
+                'queryId': 'orderMapper.selectControlPartEtcProcess_chkBox',
+                'SEQ1': rowData.CONTROL_SEQ,
+                'SEQ2': rowData.CONTROL_DETAIL_SEQ
+            }
+        };
+        fnPostAjax(function (data) {
+            let parameter2 = {
+                'queryId': '',
+                'ETC_FACTOR_CD': "",
+                'SEQ1':rowData.CONTROL_SEQ,
+                'SEQ2':rowData.CONTROL_DETAIL_SEQ
+            };
+            let delFactorStr = "";
+            let insertFactorStr = "";
+            if(data.list.length > 0) {
+                $.each(data.list, function(idx,Item) {
+                    if(factorCdArr.indexOf(Item.ETC_FACTOR_CD) < 0) {
+                        delFactorStr += "'" + Item.ETC_FACTOR_CD + "',";
+                    }else {
+                        factorCdArr.splice(factorCdArr.indexOf(Item.ETC_FACTOR_CD),1);
+                    }
+                })
+            }
+            if(factorCdArr.length > 0) {
+                parameter2.queryId = 'orderMapper.insertControlPartEtcProcess,orderMapper.updateControlPartEtcAutomaticQuote';
+                $.each(factorCdArr,function (idx,Item) {
+                    insertFactorStr += "'" + Item + "',";
+                })
+                insertFactorStr = insertFactorStr.substring(0,insertFactorStr.length - 1);
+                parameter2.ETC_FACTOR_CD = insertFactorStr;
+            }
+            if(delFactorStr != "") {
+                delFactorStr = delFactorStr.substring(0,delFactorStr.length - 1);
+                parameter2.queryId = 'orderMapper.deleteControlPartEtcProcess,' + parameter2.queryId;
+                parameter2.DEL_ETC_FACTOR_CD = delFactorStr;
+            }
+            let parameters = {'url': '/json-manager', 'data': parameter2};
+            fnPostAjax(function (data) {
+                changeData();
+            }, parameters, '');
+        }, parameter1, '');
+
     });
 
+    const settingProcessingEtcDiv = function (rowData) {
+        let $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
+        let queryId = '';
+
+        if ($processingRequirementsType === 'ESTIMATE') {
+            queryId = 'estimate.selectProcessingRequirementsBasicInfo';
+        } else if ($processingRequirementsType === 'CONTROL') {
+            queryId = 'orderMapper.selectControlPartEtcProcess_chkBox';
+        }
+        let parameter = {'url': '/json-list', 'data': {
+                'queryId': queryId,
+                'SEQ1': rowData.CONTROL_SEQ,
+                'SEQ2': rowData.CONTROL_DETAIL_SEQ
+            }
+        };
+
+        fnPostAjax(function (data) {
+            $.each(data.list, function (idx,Item) {
+                $("#"+Item.ETC_FACTOR_CD).prop('checked', true);
+            });
+        }, parameter, '');
+
+
+    }
     /* function */
     const changeProcessingRequirementsBasicInformation = function (rowData) {
         let $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
@@ -2644,6 +2689,26 @@
         });
         $processingRequirementsGrid.pqGrid('refreshDataAndView');
     };
+
+    const changeProcessingRequirementsEtcInformation = function (rowData) {
+        const $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
+        let queryId = '';
+
+        if ($processingRequirementsType === 'ESTIMATE') {
+            queryId = 'estimate.selectProcessingRequirementsInfo';
+        } else if ($processingRequirementsType === 'CONTROL') {
+            queryId = 'orderMapper.selectControlPartEtcProcess';
+        }
+        const postData = $.extend({queryId: queryId}, rowData);
+        postData.TYPE = $processingRequirementsType;
+        postData.SEQ1 = rowData.CONTROL_SEQ;
+        postData.SEQ2 = rowData.CONTROL_DETAIL_SEQ;
+
+        $processingRequirementsEtcGrid.pqGrid('option', 'dataModel.postData', function () {
+            return postData;
+        });
+        $processingRequirementsEtcGrid.pqGrid('refreshDataAndView');
+    }
 
     const createTopTable = function (data) {
         let seq1 = '';
@@ -2748,12 +2813,24 @@
 
     //TODO: 함수명 변경
     const changeData = function () {
+        $("input[name=GRIND_CHECK]").prop("checked",false);
+        $("input[name=HEAT_CHECK]").prop("checked",false);
+        $("input[name=ANGLE_CHECK]").prop("checked",false);
+
         const rowData = processingRequirementsTargetGrid.pqGrid('getRowData', {rowIndx: processingRequirementsTargetRowIndex});
         $('#processing_requirements_form').find('#WORK_TYPE').val(rowData.WORK_TYPE);
+
+        if(rowData.WORK_TYPE == 'WTP020') {
+            $("#save_special_process").prop('disabled',true);
+        }else {
+            $("#save_special_process").prop('disabled',false);
+        }
 
         visibilityButton();
         changeProcessingRequirementsBasicInformation(rowData);
         changeProcessingRequirementsInformation(rowData);
+        changeProcessingRequirementsEtcInformation(rowData);
+        settingProcessingEtcDiv(rowData);
         changeImageView(rowData);
     };
     /* function */
@@ -2795,6 +2872,39 @@
         changeData();
     });
 
+    const processingRequirementsEtcSave = function () {
+        const rowData = processingRequirementsTargetGrid.pqGrid('getRowData', {rowIndx: processingRequirementsTargetRowIndex});
+        const gridInstance = $processingRequirementsEtcGrid.pqGrid('getInstance').grid;
+        if (gridInstance.isDirty()) {
+            let $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
+            let gridInstance = $processingRequirementsEtcGrid.pqGrid('getInstance').grid;
+            let changes = gridInstance.getChanges({format: 'byVal'});
+            changes.TYPE = $processingRequirementsType;
+            changes.SEQ1 = rowData.CONTROL_SEQ;
+            changes.SEQ2 = rowData.CONTROL_DETAIL_SEQ;
+            let url = '';
+
+            if ($processingRequirementsType === 'ESTIMATE') {
+                url = 'processingRequirementsEstimateSave';
+            } else if ($processingRequirementsType === 'CONTROL') {
+                url = 'processingRequirementsEtcControlSave';
+            }
+            let parameter = {'url': '/' + url, 'data': {data: JSON.stringify(changes)}};
+
+            fnPostAjax(function (data) {
+                const flag = data.flag;
+
+                if (flag) {
+                    fnAlert(null, '<srping:message code="error.common"/>');
+                    return;
+                }
+
+                changeData();
+            }, parameter, '');
+
+        }
+
+    }
     const processingRequirementsSave = function () {
         const gridInstance = $processingRequirementsGrid.pqGrid('getInstance').grid;
 
