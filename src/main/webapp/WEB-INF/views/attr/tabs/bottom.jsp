@@ -1593,13 +1593,11 @@
                 if (fnIsEmpty(dataInfo.IMG_GFILE_SEQ)) {
                     $("#ITEM_DRAWING_VIEW").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
                 } else {
-                    const str = dataInfo.DRAWING_NUM;
-                    const arr = str.split(',');
-                    if (arr.length === 1) {
-                        $("#ITEM_DRAWING_VIEW").attr('onClick', 'callWindowImageViewer(' + dataInfo.IMG_GFILE_SEQ + ');');
-                    } else if (arr.length > 1) {
+                    if(dataInfo.REGIST_CNT >= 2) {
                         $('#common_multi_download_pop_form').find('#MAIN_IMG_SEQ').val(dataInfo.IMG_GFILE_SEQ);
                         $("#ITEM_DRAWING_VIEW").attr('onClick', 'commonMultiDownloadPop(' + dataInfo.CONTROL_SEQ + ',' + dataInfo.CONTROL_DETAIL_SEQ + ');');
+                    }else {
+                        $("#ITEM_DRAWING_VIEW").attr('onClick', 'callWindowImageViewer(' + dataInfo.IMG_GFILE_SEQ + ');');
                     }
                 }
 
