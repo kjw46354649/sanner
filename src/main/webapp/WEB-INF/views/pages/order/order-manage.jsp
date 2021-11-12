@@ -74,9 +74,10 @@
                             <c:forEach var="code" items="${HighCode.H_1092}">
                                 <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                             </c:forEach>
+                                <option value="ROM005">마감차수</option>
                             </select>
                         </span>
-                        <div class="d-inline-block" style="width:260px">
+                        <div id="order_default_date_div" class="disp-inline" style="width:260px">
                             <span class="calendar_span">
                                 <input type="text" title="달력정보" style="width: 120px;" name="ORDER_MANAGE_START_DATE" id="ORDER_MANAGE_START_DATE" readonly><button type="button" id="ORDER_MANAGE_START_DATE_BUTTON">달력선택</button>
                             </span>
@@ -85,7 +86,15 @@
                                 <input type="text" title="달력정보" style="width: 120px;" name="ORDER_MANAGE_END_DATE" id="ORDER_MANAGE_END_DATE" readonly><button type="button" id="ORDER_MANAGE_END_DATE_BUTTON">달력선택</button>
                             </span>
                         </div>
-                        <span class="gubun"></span>
+                        <div id="close_order_date_div" class="disp-inline" style="width:260px;display: none;">
+                            <span class="slt_wrap">
+                                <select class="wd_70 mr-5" name="MONTH_CLOSER_YEAR_SEL" id="MONTH_CLOSER_YEAR_SEL"></select>
+                                <select class="wd_60 mr-5" name="MONTH_CLOSER_MONTH_SEL" id="MONTH_CLOSER_MONTH_SEL"></select>
+                                <select class="wd_60" name="MONTH_CLOSER_VER_SEL" id="MONTH_CLOSER_VER_SEL">
+                                    <option value="">차수</option>
+                                </select>
+                            </span>
+                        </div>
                         <span class="slt_wrap">
                             <span id="order_manage_amount_summary_area" style="padding-left: 10px;">
                                 <span class="chk_box">
@@ -217,6 +226,12 @@
 
 <%-- modal --%>
 <div class="popup_container" id="CONTROL_CLOSE_CANCEL_POPUP" style="display: none;">
+    <div id="cancel_loading_bar" class="pq-loading" style="display: none;">
+        <div class="pq-loading-bg" style="opacity: 0.2;"></div>
+        <div class="pq-loading-mask ui-state-highlight">
+            <div>Loading...</div>
+        </div>
+    </div>
     <div class="controlCloseLayerPopup">
         <h3>월 마감 취소 진행</h3>
         <hr>
@@ -260,6 +275,15 @@
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getOrderCompanyList'}
         });
+
+        fnAppendSelectboxYear('MONTH_CLOSER_YEAR_SEL', 10);
+        fnAppendSelectboxMonth('MONTH_CLOSER_MONTH_SEL');
+        for(var i=1;i<=10;i++) {
+            $('#MONTH_CLOSER_VER_SEL').append(new Option(i + '차',i));
+        }
+        var today = new Date();
+        $('#MONTH_CLOSER_MONTH_SEL').val(today.getMonth()).prop("selected",true);
+
         const COMPANY_STAFF = (function () {
             let list = [];
             let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getCompanyStaffList'}};
@@ -286,13 +310,7 @@
                 title: '주문상태', align: 'center', colModel: [
                     {title: '상태', dataIndx: 'ORDER_STATUS', hidden: true},
                     {title: '상태', minWidth: 30, dataIndx: 'ORDER_STATUS_NM'},
-                    {title: '일자', dataIndx: 'ORDER_STATUS_DT', format: 'mm/dd',
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-
-                            return cellData.substring(0, 5);
-                        }
-                    }
+                    {title: '일자', minWidth: 70 , dataIndx: 'ORDER_STATUS_DT'}
                 ]
             },
             {
@@ -932,6 +950,7 @@
                     }
                 ]
             },
+            {title: '마감차수', width: 90, dataIndx: 'CLOSE_VER'},
             {title: '재질', dataIndx: 'MATERIAL_TYPE', hidden: true},
             {title: '생성일시', width: 90, dataIndx: 'ORDER_INSERT_DT'},
             {title: 'CONTROL_BARCODE_NUM', dataIndx: 'CONTROL_BARCODE_NUM', hidden: true}
@@ -2298,6 +2317,7 @@
         });
         $('#CONTROL_CLOSE_CANCEL_YES').on('click', function () {
             let list = [];
+            $("#cancel_loading_bar").show();
 
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
@@ -2313,6 +2333,7 @@
 
             let parameters = {'url': '/removeMonthClose', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data, callFunctionParam) {
+                $("#cancel_loading_bar").hide();
                 $('#CONTROL_CLOSE_CANCEL_POPUP').modal('hide');
                 $orderManagementGrid.pqGrid('refreshDataAndView');
             }, parameters, '');
@@ -2914,6 +2935,13 @@
 
         $('#ORDER_SEARCH_CONDITION').on('change', function () {
             const $orderManageDates = $('[id^=ORDER_MANAGE][id$=DATE]');
+            if($(this).val() == 'ROM005') {
+                $("#close_order_date_div").show();
+                $("#order_default_date_div").hide();
+            }else {
+                $("#order_default_date_div").show();
+                $("#close_order_date_div").hide();
+            }
 
             $(this).val() === '' ? $orderManageDates.prop('disabled', true) : $orderManageDates.prop('disabled', false);
         });

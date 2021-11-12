@@ -4589,7 +4589,7 @@
             A.ORDER_SEQ,
             A.ORDER_STATUS AS ORDER_STATUS,
             IFNULL(SF_GET_CODE_NM('1091', A.ORDER_STATUS, #{LOGIN_LOCALE}), SPACE(0)) AS ORDER_STATUS_NM,
-            IFNULL(SF_GET_DATE_F(A.ORDER_STATUS_DT, 'YYYY', ''),SPACE(0)) AS ORDER_STATUS_DT,
+            IFNULL(SF_GET_DATE_F(A.ORDER_STATUS_DT, 'YY', ''),SPACE(0)) AS ORDER_STATUS_DT,
             A.PRICE_CONFIRM, A.COMP_CD, A.DESIGNER_NM,
             A.ORDER_COMP_CD, A.NOTE,
             A.REGIST_NUM, A.DRAWING_NUM,
@@ -4626,7 +4626,7 @@
              GROUP BY M.ORDER_SEQ
             ) AS OUT_QTY,
             IFNULL(SF_GET_DATE_F(A.OUT_FINISH_DT, '', 'M'),SPACE(0)) AS OUT_FINISH_DT,
-            (A.UNIT_FINAL_AMT * A.ORDER_QTY) AS FINAL_TOTAL_AMT,
+            CONCAT(DATE_FORMAT(STR_TO_DATE(C.CLOSE_MONTH, '%Y%m'), '%Y.%m'),SPACE(1),C.CLOSE_VER,'차') AS CLOSE_VER,
             SF_GET_DATE_F(A.INSERT_DT , '', 'M') AS ORDER_INSERT_DT,
             (IFNULL(A.UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(A.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT,0) + IFNULL(A.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT,0) + IFNULL(A.UNIT_SURFACE_AUTO_AMT ,0) + IFNULL(A.UNIT_PROCESS_AUTO_AMT ,0) + IFNULL(A.UNIT_ETC_AMT, 0)) AS UNIT_SUM_AUTO_AMT,
             IFNULL(
@@ -4691,6 +4691,12 @@
                     </otherwise>
                 </choose>
             ) B ON A.ORDER_SEQ = B.ORDER_SEQ
+            LEFT OUTER JOIN (
+                SELECT X.CLOSE_MONTH, X.CLOSE_VER, Y.ORDER_SEQ
+                FROM TBL_MONTH_CLOSE X
+                    INNER JOIN TBL_MONTH_CLOSE_ORDER Y ON X.CLOSE_MONTH = Y.CLOSE_MONTH AND X.CLOSE_VER = Y.CLOSE_VER
+                          AND X.COMP_CD = Y.COMP_CD AND X.ORDER_COMP_CD = Y.ORDER_COMP_CD
+            ) C ON A.ORDER_SEQ = C.ORDER_SEQ
         WHERE A.DEL_YN = 'N'
             <if test="HIDDEN_WORK_TYPE != null and HIDDEN_WORK_TYPE != ''">
                 AND A.WORK_TYPE IN (${HIDDEN_WORK_TYPE})
@@ -4751,6 +4757,12 @@
                 <!-- 가공 납기 -->
                 <when test="ORDER_SEARCH_CONDITION == 'ROM004'">
                     AND DATE_FORMAT(B.INNER_DUE_DT, '%Y/%m/%d') BETWEEN #{ORDER_MANAGE_START_DATE} AND #{ORDER_MANAGE_END_DATE}
+                </when>
+                <when test="ORDER_SEARCH_CONDITION == 'ROM005'">
+                    AND C.CLOSE_MONTH = CONCAT(#{MONTH_CLOSER_YEAR_SEL},#{MONTH_CLOSER_MONTH_SEL})
+                    <if test="MONTH_CLOSER_VER_SEL != null and MONTH_CLOSER_VER_SEL !=''">
+                        AND C.CLOSE_VER = #{MONTH_CLOSER_VER_SEL}
+                    </if>
                 </when>
             </choose>
             <if test="CONTROL_NUM != null and CONTROL_NUM != ''">

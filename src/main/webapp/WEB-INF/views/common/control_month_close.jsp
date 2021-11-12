@@ -19,6 +19,12 @@
     <title>월 마감 진행</title>
 </head>
 <body>
+<div id="close_loading_bar" class="pq-loading" style="display: none;">
+    <div class="pq-loading-bg" style="opacity: 0.2;"></div>
+    <div class="pq-loading-mask ui-state-highlight">
+        <div>Loading...</div>
+    </div>
+</div>
 <div style="padding: 10px;">
     <h3 style="font-size: 20px; font-family: 'NotoKrB'; color: #000; display: inline-block;">월 마감 진행</h3>
     <hr style="display: block; border: 1px solid #e0e2e6; margin: 7px;">
@@ -245,6 +251,7 @@
         });
 
         $('#CONTROL_MONTH_CLOSE_YES').on('click', function () {
+            $("#close_loading_bar").show();
             let list = [];
             let CLOSE_VER = $('#CLOSE_VER').val();
             let CLOSE_MONTH = $('#CONTROL_MONTH_CLOSE_YEAR').val() + $('#CONTROL_MONTH_CLOSE_MONTH').val();
@@ -280,6 +287,7 @@
             // rightGrid
             let parameters = {'url': '/createMonthClose', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data, callFunctionParam) {
+                $("#close_loading_bar").hide();
                 fnAlert(null, '<spring:message code="com.alert.default.save.success"/>', function () {
                     opener.$orderManagementGrid.pqGrid('refreshDataAndView');
                     window.close();

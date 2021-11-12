@@ -1163,3 +1163,6 @@ div.custom-loading-mask > div {
 #processing_requirements_special_sub_grid .pq-header-outer {
 	display: none !important;
 }
+.disp-inline {
+	display: inline-block;
+}
