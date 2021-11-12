@@ -203,7 +203,10 @@
                     , (SELECT ROUND(SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)),0) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = P.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ) AS WORK_TIME
                     , Y.FORECAST_UNIT_AMT
                     , M.UNIT_FINAL_EST_AMT
-                    , M.UNIT_FINAL_AMT
+--                     , M.UNIT_FINAL_AMT
+                    , CASE WHEN Y.WORK_TYPE != 'WTP040' THEN (SELECT T.UNIT_FINAL_AMT FROM TBL_ORDER T WHERE T.ORDER_SEQ = M.ORDER_SEQ)
+                           ELSE M.UNIT_FINAL_AMT
+                      END AS UNIT_FINAL_AMT <!-- 공급단가 - 주문정보에서 가져옴. 재고는 주문이 없으므로 제외 -->
                     , jmes.SF_GET_CODE_NM('1040',P.INSPECT_GRADE,#{LOGIN_LOCALE}) AS INSPECT_GRADE_NM   <!-- 언어조건 -->
                     , jmes.SF_GET_CODE_NM('1020',P.INSPECT_RESULT,#{LOGIN_LOCALE}) AS INSPECT_RESULT_NM   <!-- 언어조건 -->
                     , P.ERROR_QTY
