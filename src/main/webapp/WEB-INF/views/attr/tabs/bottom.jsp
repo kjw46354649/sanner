@@ -553,9 +553,9 @@
 <!-- 도면파일 multi 다운로드 공통 팝업 : E -->
 
 <div class="modal" id="processingRequirementsModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div role="document">
 <%--        <div class="modal-content" style="width: 450px">--%>
-        <div class="modal-content" style="width: 650px">
+        <div id="processingPopBody" class="modal-content" style="width: 650px;left: 35%;margin-top: 7%;">
             <div class="modal-header">
                 <h5 class="modal-title" style="font-size: large; font-weight: bold">가공요건 입력 / 가공비 계산</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -21.5px">
@@ -563,154 +563,162 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <button class="defaultBtn" id="prev">이전</button>
-                        <button class="defaultBtn" id="next">다음</button>
-                    </div>
-                    <div class="ml-auto"></div>
-                </div>
-                <hr style="display: block; border: 1px solid #e2e2e2; margin: 7px;">
-                <div>
-                    <table class="basic_information">
-                        <colgroup>
-                            <col width="10">
-                            <col width="40">
-                            <col width="10">
-                            <col width="40">
-                        </colgroup>
-                        <tbody>
-                            <tr style="display: none;">
-                                <td id="seq1"></td>
-                                <td id="seq2"></td>
-                                <td id="seq3"></td>
-                                <td id="seq4"></td>
-                            </tr>
-                            <tr>
-                                <td scope="row">작업번호</td>
-                                <td></td>
-                                <td scope="row">도면번호</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td scope="row">접수번호</td>
-                                <td></td>
-                                <td scope="row">소재/작업형태</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td scope="row">규격</td>
-                                <td></td>
-                                <td scope="row">표면처리</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td scope="row">규격 Level</td>
-                                <td></td>
-                                <td scope="row">기본가공비</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td scope="row" colspan="2" class="darkBrown">가공비 Total</td>
-                                <td colspan="2"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <br>
                 <div class="d-flex">
-                    <div style="width: 50%;">
-                        <div>
-                            <span style="font-size: 1.5rem;font-family: 'NotoKrB';color: #535759;">일반가공 요건</span>
-                        </div>
-                        <form id="processing_requirements_form" role="form" onsubmit="return false;">
-                            <input type="hidden" name="TYPE" id="TYPE">
-                            <input type="hidden" name="WORK_TYPE" id="WORK_TYPE">
-                            <input type="hidden" name="SEQ1" id="SEQ1">
-                            <input type="hidden" name="SEQ2" id="SEQ2">
-                            <div id="processing_requirements_grid"></div>
-                        </form>
+                    <div id="processingRequireImgDiv" style="display:none;width: 63%;margin-right: 1%;">
+                        <img id="processing_pop_img" src="/resource/main/blank.jpg" style="width: 100%;height: 100%;max-height: inherit;max-width: inherit;">
                     </div>
-                    <div style="width: 45%; margin-left: 5%;">
-                        <div class="d-flex">
-                            <form id="processing_requirements_special_form" role="form" onsubmit="return false;">
-                                <input type="hidden" name="ETC_FACTOR_CD" id="ETC_FACTOR_CD">
-                                <input type="hidden" name="SEQ1" id="SEQ1">
-                                <input type="hidden" name="SEQ2" id="SEQ2">
-                            </form>
-                            <span style="font-size: 1.5rem;font-family: 'NotoKrB';color: #535759;">특수가공 요건</span>
-                            <div class="ml-auto">
-                                <button class="defaultBtn radius btn-60w blue" id="save_special_process" style="padding: 0;margin: 0;">Apply</button>
+                    <div id="processingRequireInfoDiv" style="width: 100%;">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <button class="defaultBtn" id="prev">이전</button>
+                                <button class="defaultBtn" id="next">다음</button>
                             </div>
+                            <div class="ml-auto"></div>
                         </div>
-                        <div style="height: 26%;">
-                            <table class="rightTopTable">
+                        <hr style="display: block; border: 1px solid #e2e2e2; margin: 7px;">
+                        <div>
+                            <table class="basic_information">
                                 <colgroup>
-                                    <col width="15">
-                                    <col width="85">
+                                    <col width="10">
+                                    <col width="40">
+                                    <col width="10">
+                                    <col width="40">
                                 </colgroup>
-                                <thead>
-                                    <tr>
-                                        <td>Level1</td>
-                                        <td>Level2</td>
-                                    </tr>
-                                </thead>
                                 <tbody>
-                                    <tr>
-                                        <td >연마</td>
-                                        <td>
-                                            <div style="display: flex;flex-wrap: wrap;">
-                                                <c:forEach var="code" items="${HighCode.H_1096}">
-                                                    <c:if test="${code.REF_CD eq 'MFN020'}">
+                                <tr style="display: none;">
+                                    <td id="seq1"></td>
+                                    <td id="seq2"></td>
+                                    <td id="seq3"></td>
+                                    <td id="seq4"></td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">작업번호</td>
+                                    <td></td>
+                                    <td scope="row">도면번호</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">접수번호</td>
+                                    <td></td>
+                                    <td scope="row">소재/작업형태</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">규격</td>
+                                    <td></td>
+                                    <td scope="row">표면처리</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">규격 Level</td>
+                                    <td></td>
+                                    <td scope="row">기본가공비</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td scope="row" colspan="2" class="darkBrown">가공비 Total</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br>
+                        <div class="d-flex">
+                            <div style="width: 50%;">
+                                <div>
+                                    <span style="font-size: 1.5rem;font-family: 'NotoKrB';color: #535759;">일반가공 요건</span>
+                                </div>
+                                <form id="processing_requirements_form" role="form" onsubmit="return false;">
+                                    <input type="hidden" name="TYPE" id="TYPE">
+                                    <input type="hidden" name="WORK_TYPE" id="WORK_TYPE">
+                                    <input type="hidden" name="SEQ1" id="SEQ1">
+                                    <input type="hidden" name="SEQ2" id="SEQ2">
+                                    <div id="processing_requirements_grid"></div>
+                                </form>
+                            </div>
+                            <div style="width: 45%; margin-left: 5%;">
+                                <div class="d-flex">
+                                    <form id="processing_requirements_special_form" role="form" onsubmit="return false;">
+                                        <input type="hidden" name="ETC_FACTOR_CD" id="ETC_FACTOR_CD">
+                                        <input type="hidden" name="SEQ1" id="SEQ1">
+                                        <input type="hidden" name="SEQ2" id="SEQ2">
+                                    </form>
+                                    <span style="font-size: 1.5rem;font-family: 'NotoKrB';color: #535759;">특수가공 요건</span>
+                                    <div class="ml-auto">
+                                        <button class="defaultBtn radius btn-60w blue" id="save_special_process" style="padding: 0;margin: 0;">Apply</button>
+                                    </div>
+                                </div>
+                                <div style="height: 26%;">
+                                    <table class="rightTopTable">
+                                        <colgroup>
+                                            <col width="15">
+                                            <col width="85">
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <td>Level1</td>
+                                            <td>Level2</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td >연마</td>
+                                            <td>
+                                                <div style="display: flex;flex-wrap: wrap;">
+                                                    <c:forEach var="code" items="${HighCode.H_1096}">
+                                                        <c:if test="${code.REF_CD eq 'MFN020'}">
                                                         <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
                                                             <input name="GRIND_CHECK" id="${code.CODE_CD}" type="checkbox" value="${code.CODE_CD}">
                                                             <label for="${code.CODE_CD}"> ${code.CODE_NM_KR}</label>
                                                         </span>
-                                                    </c:if>
-                                                </c:forEach>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>열처리</td>
-                                        <td>
-                                            <div style="display: flex;flex-wrap: wrap;">
-                                                <c:forEach var="code" items="${HighCode.H_1096}">
-                                                    <c:if test="${code.REF_CD eq 'MFN030'}">
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>열처리</td>
+                                            <td>
+                                                <div style="display: flex;flex-wrap: wrap;">
+                                                    <c:forEach var="code" items="${HighCode.H_1096}">
+                                                        <c:if test="${code.REF_CD eq 'MFN030'}">
                                                         <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
                                                             <input name="HEAT_CHECK" id="${code.CODE_CD}" type="checkbox" value="${code.CODE_CD}">
                                                             <label for="${code.CODE_CD}"> ${code.CODE_NM_KR}</label>
                                                         </span>
-                                                    </c:if>
-                                                </c:forEach>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>각비</td>
-                                        <td>
-                                            <div style="display: flex;flex-wrap: wrap;">
-                                                <c:forEach var="code" items="${HighCode.H_1096}">
-                                                    <c:if test="${code.REF_CD eq 'MFN010'}">
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>각비</td>
+                                            <td>
+                                                <div style="display: flex;flex-wrap: wrap;">
+                                                    <c:forEach var="code" items="${HighCode.H_1096}">
+                                                        <c:if test="${code.REF_CD eq 'MFN010'}">
                                                         <span class="chk_box" style="margin-left: 8px; margin-right: 0px;">
                                                             <input name="ANGLE_CHECK" id="${code.CODE_CD}" type="checkbox" value="${code.CODE_CD}">
                                                             <label for="${code.CODE_CD}"> ${code.CODE_NM_KR}</label>
                                                         </span>
-                                                    </c:if>
-                                                </c:forEach>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div style="height: 67%; margin-top: 4.5%;">
-                            <div id="processing_requirements_special_sub_grid"></div>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div style="height: 67%; margin-top: 4.5%;">
+                                    <div id="processing_requirements_special_sub_grid"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer" style="text-align: center !important">
+                <button type="button" class="defaultBtn greenPopGra wd_130 mr-10" id="processing_drawing_detail">도면상세보기</button>
                 <button type="button" class="defaultBtn grayPopGra" data-dismiss="modal">닫기</button>
             </div>
         </div>
@@ -2739,6 +2747,9 @@
             totalProcessingCost = info.TOTAL_PROCESSING_COST || '';
             surface = info.SURFACE_TREAT_NM || '';
             img = info.IMG_GFILE_SEQ ? '<span class="fileSearchIcon" id="imageView" data-value="' + info.IMG_GFILE_SEQ + '" style="margin-left: 10px; vertical-align: middle; cursor: pointer"></span>' : '';
+            if(!fnIsEmpty(info.IMG_GFILE_SEQ)) {
+                $("#processing_pop_img").attr("src", '/qimage/' + info.IMG_GFILE_SEQ);
+            }
         }
 
         htmlString += '<tr style="display: none;">';
@@ -2814,6 +2825,7 @@
         $("input[name=GRIND_CHECK]").prop("checked",false);
         $("input[name=HEAT_CHECK]").prop("checked",false);
         $("input[name=ANGLE_CHECK]").prop("checked",false);
+        $("#processing_pop_img").attr("src", '/resource/main/blank.jpg');
 
         const rowData = processingRequirementsTargetGrid.pqGrid('getRowData', {rowIndx: processingRequirementsTargetRowIndex});
         $('#processing_requirements_form').find('#WORK_TYPE').val(rowData.WORK_TYPE);
@@ -2851,7 +2863,37 @@
 
         changeData();
     });
+    $("#processing_drawing_detail").on('click', function() {
+        if($("#processingRequireImgDiv").css('display') === 'none') {
+            $("#processingPopBody").css(
+                {
+                    'width':'1480px',
+                    'left':'10%'
+                }
+            );
+            $("#processingRequireInfoDiv").css('width','36%')
+            $("#processingRequireImgDiv").show();
+        }else {
+            $("#processingPopBody").css(
+                {
+                    'width':'650px',
+                    'left':'35%'
+                }
+            );
+            $("#processingRequireImgDiv").hide();
+            $("#processingRequireInfoDiv").css('width','100%')
 
+        }
+        $("#processing_requirements_grid").pqGrid('refreshView');
+        $("#processing_requirements_special_sub_grid").pqGrid('refreshView');
+
+        if($("#processing_requirements_special_sub_grid .pq-header-outer").css('display') !== 'none') {
+            let headerT = $("#processing_requirements_special_sub_grid .pq-header-outer").height();
+            let bodyT = $("#processing_requirements_special_sub_grid .pq-body-outer").height();
+            let afterT = bodyT + headerT;
+            $("#processing_requirements_special_sub_grid .pq-body-outer").height( afterT + "px");
+        }
+    })
     $('#processingRequirementsModal #next').on('click', function () {
         if ($('#processing_requirements_form').find('#TYPE').val() === 'CONTROL') {
             const rowData = processingRequirementsTargetGrid.pqGrid('getRowData', {rowIndx: processingRequirementsTargetRowIndex});

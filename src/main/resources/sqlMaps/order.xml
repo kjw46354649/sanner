@@ -4608,6 +4608,7 @@
             CASE WHEN A.MATERIAL_FINISH_GRIND_YN = 'Y' THEN 'MATERIAL_FINISH_GRIND_YN'
                  WHEN A.MATERIAL_FINISH_HEAT_YN = 'Y' THEN 'MATERIAL_FINISH_HEAT_YN'
             END AS SPECIAL_TREATMENT,
+            IFNULL(A.UNIT_FINAL_AMT * A.ORDER_QTY, SPACE(0)) AS FINAL_TOTAL_AMT,  -- 합계 금액 -->
             A.UNIT_FINAL_EST_AMT,A.UNIT_FINAL_AMT,
             A.PREV_DRAWING_NUM,
             A.PROJECT_NM, A.MODULE_NM,
@@ -4617,10 +4618,10 @@
             (SELECT Q.INVOICE_NUM FROM TBL_INVOICE_DETAIL Q WHERE Q.ORDER_SEQ = A.ORDER_SEQ) AS INVOICE_NUM,
             B.DRAWING_VER, B.DRAWING_UP_DT,
             B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
-            B.PART_STATUS, A.UNIT_MATERIAL_AUTO_AMT,
-            A.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, A.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT,
-            A.UNIT_SURFACE_AUTO_AMT, A.UNIT_PROCESS_AUTO_AMT,
-            A.UNIT_ETC_AMT, A.UNIT_AMT_NOTE,
+            B.PART_STATUS, B.UNIT_MATERIAL_AUTO_AMT, B.UNIT_FINAL_EST_AMT AS CONTROL_EST_AMT,
+            B.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, B.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT,
+            B.UNIT_SURFACE_AUTO_AMT, B.UNIT_PROCESS_AUTO_AMT,
+            B.UNIT_ETC_AMT, B.UNIT_AMT_NOTE,
             (SELECT SUM(M.OUT_QTY) FROM TBL_OUT M
              WHERE M.ORDER_SEQ = A.ORDER_SEQ
              GROUP BY M.ORDER_SEQ
@@ -4628,7 +4629,7 @@
             IFNULL(SF_GET_DATE_F(A.OUT_FINISH_DT, '', 'M'),SPACE(0)) AS OUT_FINISH_DT,
             CONCAT(DATE_FORMAT(STR_TO_DATE(C.CLOSE_MONTH, '%Y%m'), '%Y.%m'),SPACE(1),C.CLOSE_VER,'차') AS CLOSE_VER,
             SF_GET_DATE_F(A.INSERT_DT , '', 'M') AS ORDER_INSERT_DT,
-            (IFNULL(A.UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(A.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT,0) + IFNULL(A.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT,0) + IFNULL(A.UNIT_SURFACE_AUTO_AMT ,0) + IFNULL(A.UNIT_PROCESS_AUTO_AMT ,0) + IFNULL(A.UNIT_ETC_AMT, 0)) AS UNIT_SUM_AUTO_AMT,
+            (IFNULL(B.UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT,0) + IFNULL(B.UNIT_SURFACE_AUTO_AMT ,0) + IFNULL(B.UNIT_PROCESS_AUTO_AMT ,0) + IFNULL(B.UNIT_ETC_AMT, 0)) AS UNIT_SUM_AUTO_AMT,
             IFNULL(
                 CASE WHEN A.PREV_DRAWING_NUM IS NOT NULL THEN (
                     SELECT M.UNIT_FINAL_AMT
@@ -4669,6 +4670,14 @@
                             '' AS PART_STATUS,
                             '' AS DRAWING_VER,
                             '' AS INNER_DUE_DT,
+                            '' AS UNIT_FINAL_EST_AMT,
+                            '' AS UNIT_MATERIAL_AUTO_AMT,
+                            '' AS UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT,
+                            '' AS UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT,
+                            '' AS UNIT_SURFACE_AUTO_AMT,
+                            '' AS UNIT_PROCESS_AUTO_AMT,
+                            '' AS UNIT_ETC_AMT,
+                            '' AS UNIT_AMT_NOTE,
                             '' AS DRAWING_UP_DT
                         FROM DUAL
                     </when>
@@ -4682,6 +4691,14 @@
                             END AS PART_STATUS,
                             Z.DRAWING_VER,
                             Z.INNER_DUE_DT,
+                            X.UNIT_FINAL_EST_AMT,
+                            Z.UNIT_MATERIAL_AUTO_AMT,
+                            Z.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT,
+                            Z.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT,
+                            Z.UNIT_SURFACE_AUTO_AMT,
+                            Z.UNIT_PROCESS_AUTO_AMT,
+                            Z.UNIT_ETC_AMT,
+                            Z.UNIT_AMT_NOTE,
                             CASE WHEN Z.DRAWING_VER IS NOT NULL THEN IFNULL(SF_GET_DATE_F(Z.DRAWING_UP_DT, '', 'M'), SPACE(0))
                                  ELSE SPACE(0)
                             END AS DRAWING_UP_DT <!-- 도면업로드시간 -->

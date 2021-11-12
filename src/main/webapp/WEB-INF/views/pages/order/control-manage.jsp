@@ -945,36 +945,6 @@
                     return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
-            {
-                title: '가공요건', width: 85, dataIndx: 'DETAIL_MACHINE_REQUIREMENT',
-                // hidden: true, // 20210331 임시 hidden 처리
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
-                },
-                render: function (ui) {
-                    let rowData = ui.rowData;
-                    let cls = null;
-                    let text = '';
-                    let isDisabled = rowData.WORK_TYPE === 'WTP020' ? 'disabled' : '';
-
-                    // if (rowData.WORK_TYPE === 'WTP020') {
-                    //     cls = 'bg-lightgray';
-                    // }
-
-                    text = '<button class="miniBtn" name="processing_requirements"' + isDisabled + ' style="background-color: #ffffd1">가공요건</button>';
-
-                    return {cls: cls, text: text};
-                },
-                postRender(ui) {
-                    const grid = this,
-                        $cell = grid.getCell(ui);
-
-                    $cell.find("[name=processing_requirements]").bind("click", function () {
-                        processingRequirementsPop('CONTROL');
-                    });
-                }
-            },
             {title: 'INNER_DUE_DT_COPY', dataType: 'String', dataIndx: 'INNER_DUE_DT_COPY', hidden: true},
             {
                 title: '가공<br>납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT', formatRaw: 'yy/mm/dd',
@@ -1065,6 +1035,107 @@
                     //     }
                     // }
                 ]
+            },
+            {
+                title: '견적단가', align: 'right', width: 80, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT',
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.ORDER_STATUS != 'REG003';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
+                }
+            },
+            {
+                title: '계산<br>견적가', width: 80, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SUM_AUTO_AMT',
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = 'bg-lightgray';;
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
+                }
+            },
+            {
+                title: '상세 견적가', align: 'center',
+                colModel: [
+                    // {title: '합계', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_SUM_AUTO_AMT'},
+                    {title: '소재비', minWidth:65, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_AUTO_AMT',
+                        render: function (ui) {
+                            let cls = 'bg-lightgray';
+
+                            return {cls: cls};
+                        }
+                    },
+                    {title: '표면처리비', minWidth:65, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_SURFACE_AUTO_AMT',
+                        render: function (ui) {
+                            let cls = 'bg-lightgray';
+
+                            return {cls: cls};
+                        }
+                    },
+                    {title: '가공비', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_PROCESS_AUTO_AMT',
+                        render: function (ui) {
+                            let cls = 'bg-lightgray';
+
+                            return {cls: cls};
+                        }
+                    },
+                    // {title: '연마비', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT'},
+                    // {title: '열처리', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT'},
+                    {
+                        title: '기타추가', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_ETC_AMT', editable:true,
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    },
+                    {
+                        title: '견적비고', align: 'left', dataIndx: 'UNIT_AMT_NOTE', editable:true,
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let cls = null;
+
+                            return {cls: cls, text: controlManageFilterRender(ui)};
+                        }
+                    }
+                ]
+            },
+            {
+                title: '가공요건', width: 85, dataIndx: 'DETAIL_MACHINE_REQUIREMENT',
+                // hidden: true, // 20210331 임시 hidden 처리
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+                    return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+                    let text = '';
+                    let isDisabled = rowData.WORK_TYPE === 'WTP020' ? 'disabled' : '';
+
+                    // if (rowData.WORK_TYPE === 'WTP020') {
+                    //     cls = 'bg-lightgray';
+                    // }
+
+                    text = '<button class="miniBtn" name="processing_requirements"' + isDisabled + ' style="background-color: #ffffd1">가공요건</button>';
+
+                    return {cls: cls, text: text};
+                },
+                postRender(ui) {
+                    const grid = this,
+                        $cell = grid.getCell(ui);
+
+                    $cell.find("[name=processing_requirements]").bind("click", function () {
+                        processingRequirementsPop('CONTROL');
+                    });
+                }
             },
             {
                 title: '진행상태', dataType: 'String', dataIndx: 'PART_STATUS_NM',

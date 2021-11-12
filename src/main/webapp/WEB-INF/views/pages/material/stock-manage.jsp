@@ -1488,7 +1488,7 @@
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'INSIDE_STOCK_SEQ',
                 url: "/paramQueryGridSelect",
-                postData: fnFormToJsonArrayData('stock_manage_pop_form'),
+                postData: {'queryId': 'dataSource.emptyGrid'},
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
                 }
@@ -1802,7 +1802,7 @@
                 if(popType == "BARCODE"){
                     $("#stockPopup_title").html("재고생성 / 입고");
                     $("#pop_qty_txt").html("입고수량");
-                    stockManageGridId03.pqGrid('option' , 'dataModel.data',[]);
+                    stockManageGridId03.pqGrid('option' , 'dataModel.postData',[]);
                     stockManageGridId03.pqGrid('refreshDataAndView');
                 }else if(popType == "GRID_IN"){
                     equipParamData2 = {
@@ -1810,7 +1810,7 @@
                         'data': {'queryId': 'material.selectStockMappingEquip', 'INSIDE_STOCK_SEQ':$("#stock_manage_pop_form").find("#INSIDE_STOCK_SEQ").val()}
                     }
                     fnPostAjaxAsync(function (data, callFunctionParam) {
-                        console.log('GRID_IN',data.list)
+                        // console.log('GRID_IN',data.list)
                         for(var i=0;i<data.list.length;i++) {
                             $('span[data-id="'+data.list[i].CODE_CD+'"]').trigger('click')
                         }
@@ -1825,7 +1825,7 @@
 
                     setTimeout(function () {
                         stockManageGridId03.pqGrid('setSelection', {rowIndx: 0});
-                    },150)
+                    },250)
                 }else if(popType == "GRID_OUT"){
                     equipParamData2 = {
                         'url': '/json-list',
