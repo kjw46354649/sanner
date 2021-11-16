@@ -8,9 +8,8 @@
             ROW_NUMBER () OVER () AS ROW_NUM,
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
-            (SELECT N.UNIT_FINAL_EST_AMT
+            (SELECT M.UNIT_FINAL_EST_AMT
              FROM TBL_CONTROL_PART_ORDER_MAIN M
-                INNER JOIN TBL_ORDER N ON M.ORDER_SEQ = N.ORDER_SEQ
              WHERE M.CONTROL_SEQ = A.CONTROL_SEQ
              LIMIT 1
             ) AS UNIT_FINAL_EST_AMT,
@@ -18,6 +17,7 @@
              FROM TBL_CONTROL_PART_ORDER_MAIN M
                 INNER JOIN TBL_ORDER N ON M.ORDER_SEQ = N.ORDER_SEQ
              WHERE M.CONTROL_SEQ = A.CONTROL_SEQ
+             ORDER BY N.ORDER_SEQ
              LIMIT 1
              ) AS UNIT_FINAL_AMT,
             SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', 'M') AS OUTSIDE_IN_DT2,
@@ -444,7 +444,13 @@
             ROW_NUMBER () OVER () AS ROW_NUM,
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
-            (SELECT M.UNIT_FINAL_AMT FROM TBL_CONTROL_PART_ORDER_MAIN M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ) AS UNIT_FINAL_AMT,
+            (SELECT N.UNIT_FINAL_AMT
+             FROM TBL_CONTROL_PART_ORDER_MAIN M
+                INNER JOIN TBL_ORDER N ON M.ORDER_SEQ = N.ORDER_SEQ
+             WHERE M.CONTROL_SEQ = A.CONTROL_SEQ
+             ORDER BY N.ORDER_SEQ
+             LIMIT 1
+            ) AS UNIT_FINAL_AMT,
             SF_GET_DATE_F(B.OUTSIDE_IN_DT, '', 'M') AS OUTSIDE_IN_DT2,
             DATE_FORMAT(STR_TO_DATE(C.CLOSE_MONTH, '%Y%m'), '%Y.%m') AS OUTSIDE_CLOSE_MONTH,
             C.CLOSE_VER AS OUTSIDE_CLOSE_VER,
@@ -608,7 +614,13 @@
                     , D.CLOSE_VER
                     , B.OUTSIDE_COMP_CD
                     , (SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0)) AS CONTROL_PART_QTY
-                    , (SELECT M.UNIT_FINAL_AMT FROM TBL_CONTROL_PART_ORDER_MAIN M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ) AS ORIGINAL_ORDER_AMT <!-- 원 발주 금액 -->
+                    , ( SELECT N.UNIT_FINAL_AMT
+                        FROM TBL_CONTROL_PART_ORDER_MAIN M
+                            INNER JOIN TBL_ORDER N ON M.ORDER_SEQ = N.ORDER_SEQ
+                        WHERE M.CONTROL_SEQ = A.CONTROL_SEQ
+                        ORDER BY N.ORDER_SEQ
+                        LIMIT 1
+                    ) AS ORIGINAL_ORDER_AMT <!-- 원 발주 금액 -->
                     , B.OUTSIDE_UNIT_AMT * (SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0)) AS OUTSIDE_ORDER_AMT <!-- 외주 발주 금액 -->
                     , E.FINAL_NEGO_AMT <!-- 외주 마감 금액 -->
                     , E.FINAL_NEGO_AMT * 0.1 AS VAT_AMOUNT <!-- 부가세 -->
@@ -1215,7 +1227,13 @@
         SELECT
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
-            (SELECT M.UNIT_FINAL_AMT FROM TBL_CONTROL_PART_ORDER_MAIN M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ) AS UNIT_FINAL_AMT,
+            (SELECT M.UNIT_FINAL_AMT
+             FROM TBL_CONTROL_PART_ORDER_MAIN M
+                INNER JOIN TBL_ORDER N ON M.ORDER_SEQ = N.ORDER_SEQ
+             WHERE M.CONTROL_SEQ = A.CONTROL_SEQ
+             ORDER BY N.ORDER_SEQ
+             LIMIT 1
+            ) AS UNIT_FINAL_AMT,
             DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y.%m') AS OUTSIDE_CLOSE_MONTH, <!-- 마감 월 -->
             D.CLOSE_VER AS OUTSIDE_CLOSE_VER,
             SF_GET_COMP_NM(E.COMP_CD) AS OUTSIDE_CLOSE_COMP_NM, <!-- 매입 사업자 -->

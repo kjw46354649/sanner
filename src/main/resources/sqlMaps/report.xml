@@ -534,7 +534,10 @@
                     , jmes.SF_GET_DATE_F(P.OUT_FINISH_DT,'','M') AS OUT_FINISH_DT
                     , Y.FORECAST_UNIT_AMT
                     , M.UNIT_FINAL_EST_AMT
-                    , M.UNIT_FINAL_AMT
+--                     , M.UNIT_FINAL_AMT
+                    , CASE WHEN Y.WORK_TYPE != 'WTP040' THEN (SELECT T.UNIT_FINAL_AMT FROM TBL_ORDER T WHERE T.ORDER_SEQ = M.ORDER_SEQ)
+                           ELSE M.UNIT_FINAL_AMT
+                      END AS UNIT_FINAL_AMT
                     , M.REGIST_NUM
                     , jmes.SF_GET_CODE_NM('1040',P.INSPECT_GRADE,#{LOGIN_LOCALE}) AS INSPECT_GRADE_NM   <!-- 언어조건 -->
                     , jmes.SF_GET_CODE_NM('1020',P.INSPECT_RESULT,#{LOGIN_LOCALE}) AS INSPECT_RESULT_NM   <!-- 언어조건 -->
