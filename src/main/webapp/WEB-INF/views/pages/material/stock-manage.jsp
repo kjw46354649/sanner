@@ -1802,7 +1802,7 @@
                 if(popType == "BARCODE"){
                     $("#stockPopup_title").html("재고생성 / 입고");
                     $("#pop_qty_txt").html("입고수량");
-                    stockManageGridId03.pqGrid('option' , 'dataModel.postData',[]);
+                    stockManageGridId03.pqGrid('option' , 'dataModel.data',[]);
                     stockManageGridId03.pqGrid('refreshDataAndView');
                 }else if(popType == "GRID_IN"){
                     equipParamData2 = {
