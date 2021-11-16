@@ -841,7 +841,7 @@
 
 <div class="popup_container" id="cam_work_detail_popup" style="display: none;">
     <div class="layerPopup" style="width: 1150px;height: 700px;">
-        <h3>CAM 작업 관리</h3>
+        <h3>유사형태 수행기록</h3>
         <div class="right_float" style="margin-right:50px;">
             <span class="chk_box">
                 <input type="checkbox" name="ORDER_COMP_CHECK" id="ORDER_COMP_CHECK" checked>

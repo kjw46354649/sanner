@@ -3230,6 +3230,9 @@
             <include refid="control"/>,
             <include refid="controlPart"/>,
             <include refid="controlPartOrder"/>,
+            CASE WHEN B.WORK_TYPE != 'WTP040' THEN (SELECT T.UNIT_FINAL_AMT FROM TBL_ORDER T WHERE T.ORDER_SEQ = C.ORDER_SEQ)
+                 ELSE IFNULL(C.UNIT_FINAL_AMT, SPACE(0))
+            END AS UNIT_FINAL_AMT_ORDER,
             C.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, C.ORDER_SEQ) AS FINAL_AMT <!-- 합계 금액 -->
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ

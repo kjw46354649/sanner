@@ -106,7 +106,7 @@
                 ]
             },
             {title: '견적단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT'},
-            {title: '공급단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
+            {title: '공급단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT_ORDER'},
             {title: '합계금액', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'}
         ];
         const detailListViewObj = {
