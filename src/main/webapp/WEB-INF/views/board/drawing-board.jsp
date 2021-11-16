@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html lang="en" class="app">
 <head>
-    <title>ToMES POP 1</title>
+    <title>J-MES POP 1</title>
     <!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
    	<link rel="shortcut icon" href="/favicon.ico">
    	<!-- Chrome, Safari, IE -->
