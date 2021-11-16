@@ -596,7 +596,7 @@ public class PdfPrintMakeController {
             if (controlInfo.get("WORK_TYPE_NM") != null && !controlInfo.get("WORK_TYPE_NM").equals("")) {
                 String content = controlInfo.get("WORK_TYPE_NM").equals("조립") ? "SET" : "EA";
 
-                if (controlInfo.get("SAME_SIDE_YN").equals("Y")) {
+                if (controlInfo.get("SAME_SIDE_YN") != null && controlInfo.get("SAME_SIDE_YN").equals("Y")) {
                     table.addCell(createQtyCell1((String) controlInfo.get("ORDER_QTY"), 1, 1, mediumNormalFont));
                     table.addCell(createEACell1(content, 1, 1, mediumNormalFont));
                 } else {
@@ -611,7 +611,7 @@ public class PdfPrintMakeController {
             table.addCell(createCell((String) controlInfo.get("DRAWING_NUM"), 1, 1, mediumNormalFont));
             table.addCell(createCell("규격", 1, 1, smallBoldFont));
             table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, mediumNormalFont));
-            if (controlInfo.get("SAME_SIDE_YN").equals("Y")) {
+            if (controlInfo.get("SAME_SIDE_YN") != null && controlInfo.get("SAME_SIDE_YN").equals("Y")) {
                 table.addCell(createCellPartUnit((String) controlInfo.get("SIDE_QTY"), 2, 1, mediumNormalFont));
             }
             table.addCell(createCell(controlInfo.get("REGIST_NUM") != null ? (String) controlInfo.get("REGIST_NUM") : "", 2, 1, mediumNormalFont));
