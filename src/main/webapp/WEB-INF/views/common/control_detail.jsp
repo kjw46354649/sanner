@@ -54,7 +54,7 @@
             {title: '사업자<br>구분', width: 70, dataIndx: 'COMP_NM'},
             {title: '발주업체', width: 70, dataIndx: 'ORDER_COMP_NM'},
             {title: '비고', dataIndx: 'NOTE'},
-            {title: 'INV No.<br>(거래명세No.)', width: 100, dataIndx: 'CHARGE_USER_ID'},
+            {title: 'INV No.<br>(거래명세No.)', width: 100, dataIndx: 'INV_NO'},
             {title: '모듈명', dataIndx: 'MODULE_NM'},
             {title: '', align: 'center', minWidth: 25, 
                 render: function (ui) {
@@ -73,7 +73,7 @@
                 }
             },
             {title: '작업지시번호', width: 180, dataIndx: 'CONTROL_NUM'},
-            {title: '파<br>트', minWidth: 25, dataType: 'integer', dataIndx: 'PART_NUM'},
+            // {title: '파<br>트', minWidth: 25, dataType: 'integer', dataIndx: 'PART_NUM'},
             {title: '', minWidth: 25, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
                     if (ui.rowData.IMG_GFILE_SEQ) return '<span class="fileSearchIcon" id="imageView" style="cursor: pointer"></span>'
@@ -91,11 +91,11 @@
             {title: '품명', width: 110, dataIndx: 'ITEM_NM'},
             {title: '작업<br>형태', minWidth: 40, dataIndx: 'WORK_TYPE_NM'},
             {title: '외주', dataIndx: 'OUTSIDE_YN'},
-            {title: '자재<br>사급', dataIndx: 'OUTSIDE_YN'},
+            {title: '자재<br>사급', dataIndx: 'MATERIAL_SUPPLY_YN'},
             {title: '규격', width: 110, dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면<br>처리', width: 80, dataIndx: 'SURFACE_TREAT_NM'},
-            {title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY'},
+            // {title: 'Part<br>Unit', dataType: 'integer', format: '#,###', dataIndx: 'PART_UNIT_QTY'},
             {title: '접수번호', align: 'left', width: 140, dataIndx: 'REGIST_NUM'},
             {title: '발주번호', align: 'left', width: 100, dataIndx: 'ORDER_NUM'},
             {title: '수량', dataIndx: 'ORDER_QTY'},
@@ -106,7 +106,7 @@
                 ]
             },
             {title: '견적단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT'},
-            {title: '공급단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT_ORDER'},
+            {title: '공급단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT'},
             {title: '합계금액', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'FINAL_AMT'}
         ];
         const detailListViewObj = {
@@ -134,6 +134,7 @@
             load: function () {
                 let data = $detailListViewGrid.pqGrid('option', 'dataModel.data');
                 $('#DETAIL_LIST_VIEW_RECORDS').html(data.length);
+                autoMerge(this, true);
             },
             rowSelect: function (evt, ui) {
                 $.each(ui.addList, function (idx,Item) {
@@ -159,6 +160,52 @@
                 const selRowData = this.getRowData({rowIndx: rowIndx});
                 callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
+        };
+        const autoMerge = function (grid, refresh) {
+            let mergeCellList = [],
+                colModelList = grid.getColModel(),
+                i = colModelList.length,
+                data = grid.option('dataModel.data');
+            const orderList = ['REGIST_NUM', 'FINAL_AMT', 'ORDER_NUM', 'ORDER_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'UNIT_FINAL_AMT'];
+            const includeList = orderList;
+
+            while (i--) {
+                let dataIndx = colModelList[i].dataIndx,
+                    rc = 1,
+                    j = data.length;
+
+                if (includeList.includes(dataIndx)) {
+                    while (j--) {
+                        let controlNum = data[j]['REGIST_NUM'],
+                            controlNumPrev = data[j - 1] ? data[j - 1]['REGIST_NUM'] : undefined,
+                            cellData = data[j][dataIndx] || '',
+                            cellDataPrev = data[j - 1] ? data[j - 1][dataIndx] || '' : undefined;
+
+                        if (orderList.includes(dataIndx)) {
+                            if (controlNum === controlNumPrev) {
+                                // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
+                                if (cellDataPrev !== undefined && cellData == cellDataPrev) {
+                                    rc++;
+                                }
+                            } else if (rc > 1) {
+                                /**
+                                 * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
+                                 * c1: colIndx of first column. 첫 번째 열의 colIndx.
+                                 * rc: number of rows in the range. 범위 내 행 수.
+                                 * cc: number of columns in the range. 범위 내 열 수.
+                                 */
+                                mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
+                                rc = 1;
+                            }
+                        }
+                    }
+                }
+            }
+
+            grid.option('mergeCells', mergeCellList);
+            if (refresh) {
+                grid.refreshView();
+            }
         };
        const $detailListViewGrid = $('#' + detailListViewGridId).pqGrid(detailListViewObj);
         /* function */

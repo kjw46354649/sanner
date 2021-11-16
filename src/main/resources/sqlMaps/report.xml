@@ -407,22 +407,46 @@
                                                                 , CASE WHEN C.INNER_WORK_FINISH_DT IS NULL THEN 'N' ELSE 'Y' END AS INNER_WORK_FINISH_YN
                                                                 , CASE WHEN B.OUT_FINISH_DT IS NULL THEN 'N' ELSE 'Y' END AS OUT_FINISH_YN
                                                                 , DATE_FORMAT(B.OUT_FINISH_DT,'%Y%m%d') AS OUT_FINISH_DT
-                                                                , IFNULL(E.UNIT_FINAL_AMT, IFNULL(E.UNIT_FINAL_EST_AMT, IFNULL(CASE WHEN C.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.UNIT_FINAL_AMT
-                                                                                                                                                                                FROM jmes.TBL_ORDER M
-                                                                                                                                                                                WHERE M.ORDER_STATUS = 'REG003'
-                                                                                                                                                                                    AND M.DEL_YN = 'N'
-                                                                                                                                                                                    AND M.DRAWING_NUM = C.PREV_DRAWING_NUM
-                                                                                                                                                                                ORDER BY M.ORDER_SEQ DESC
-                                                                                                                                                                                LIMIT 1)
-                                                                                                                                    ELSE ( SELECT M.UNIT_FINAL_AMT
-                                                                                                                                           FROM jmes.TBL_ORDER M
-                                                                                                                                           WHERE M.ORDER_STATUS = 'REG003'
-                                                                                                                                               AND M.DEL_YN = 'N'
-                                                                                                                                               AND M.ORDER_SEQ != E.ORDER_SEQ
-                                                                                                                                               AND M.DRAWING_NUM = C.DRAWING_NUM
-                                                                                                                                           ORDER BY M.ORDER_SEQ DESC
-                                                                                                                                           LIMIT 1)
-                                                                                                                               END, C.FORECAST_UNIT_AMT))) AS FORECAST_UNIT_AMT
+                                                                , CASE WHEN (SELECT Q.UNIT_FINAL_AMT FROM TBL_ORDER Q WHERE Q.ORDER_SEQ = E.ORDER_SEQ) >= 0 THEN (SELECT Q.UNIT_FINAL_AMT FROM TBL_ORDER Q WHERE Q.ORDER_SEQ = E.ORDER_SEQ)
+                                                                       WHEN E.UNIT_FINAL_AMT IS NOT NULL THEN E.UNIT_FINAL_AMT
+                                                                       WHEN UNIT_FINAL_EST_AMT IS NOT NULL THEN E.UNIT_FINAL_EST_AMT
+                                                                       WHEN C.PREV_DRAWING_NUM IS NOT NULL THEN (
+                                                                            SELECT M.UNIT_FINAL_AMT
+                                                                            FROM jmes.TBL_ORDER M
+                                                                            WHERE M.ORDER_STATUS = 'REG003'
+                                                                                AND M.DEL_YN = 'N'
+                                                                                AND M.DRAWING_NUM = C.PREV_DRAWING_NUM
+                                                                            ORDER BY M.ORDER_SEQ DESC
+                                                                            LIMIT 1
+                                                                       )
+                                                                       WHEN C.PREV_DRAWING_NUM IS NULL THEN (
+                                                                            SELECT M.UNIT_FINAL_AMT
+                                                                            FROM jmes.TBL_ORDER M
+                                                                            WHERE M.ORDER_STATUS = 'REG003'
+                                                                                AND M.DEL_YN = 'N' AND M.ORDER_SEQ != E.ORDER_SEQ
+                                                                                AND M.DRAWING_NUM = C.DRAWING_NUM
+                                                                            ORDER BY M.ORDER_SEQ DESC
+                                                                            LIMIT 1
+                                                                       )
+                                                                       ELSE C.FORECAST_UNIT_AMT
+                                                                 END AS FORECAST_UNIT_AMT
+--                                                                 , IFNULL(E.UNIT_FINAL_AMT, IFNULL(E.UNIT_FINAL_EST_AMT, IFNULL(CASE WHEN C.PREV_DRAWING_NUM IS NOT NULL THEN (  SELECT M.UNIT_FINAL_AMT
+--                                                                                                                                                                                 FROM jmes.TBL_ORDER M
+--                                                                                                                                                                                 WHERE M.ORDER_STATUS = 'REG003'
+--                                                                                                                                                                                     AND M.DEL_YN = 'N'
+--                                                                                                                                                                                     AND M.DRAWING_NUM = C.PREV_DRAWING_NUM
+--                                                                                                                                                                                 ORDER BY M.ORDER_SEQ DESC
+--                                                                                                                                                                                 LIMIT 1)
+--                                                                                                                                     ELSE ( SELECT M.UNIT_FINAL_AMT
+--                                                                                                                                            FROM jmes.TBL_ORDER M
+--                                                                                                                                            WHERE M.ORDER_STATUS = 'REG003'
+--                                                                                                                                                AND M.DEL_YN = 'N'
+--                                                                                                                                                AND M.ORDER_SEQ != E.ORDER_SEQ
+--                                                                                                                                                AND M.DRAWING_NUM = C.DRAWING_NUM
+--                                                                                                                                            ORDER BY M.ORDER_SEQ DESC
+--                                                                                                                                            LIMIT 1)
+--                                                                                                                                END, C.FORECAST_UNIT_AMT))
+--                                                                  ) AS FORECAST_UNIT_AMT
                                                                 , ROW_NUMBER() OVER (PARTITION BY C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ ORDER BY D.INSPECT_SEQ) AS INSPECT_RNUM
                                                                 , CASE WHEN D.INSPECT_GRADE = 'GRD040' THEN 1 ELSE 0 END AS ERROR_CNT
                                                                 , CASE WHEN D.INSPECT_GRADE = 'GRD040' THEN D.ERROR_QTY ELSE 0 END AS ERROR_QTY
@@ -1257,7 +1281,10 @@
                                                                 AND M.CONTROL_SEQ = B.CONTROL_SEQ
                                                                 AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ        
                                                           ) AS UNIT_EC_AMT
-                                                        , (IFNULL(D.UNIT_FINAL_AMT,0) - (IFNULL(B.UNIT_MATERIAL_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT,0) + IFNULL(B.UNIT_SURFACE_AMT,0) + IFNULL(B.UNIT_PROCESS_AMT,0) + IFNULL(B.UNIT_ETC_AMT,0))) AS UNIT_AP_AMT
+                                                        , CASE WHEN B.WORK_TYPE != 'WTP040' THEN IFNULL((SELECT T.UNIT_FINAL_AMT FROM TBL_ORDER T WHERE T.ORDER_SEQ = D.ORDER_SEQ),0) - (IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0))
+                                                               ELSE (IFNULL(D.UNIT_FINAL_AMT, 0) - (IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)))
+                                                          END AS UNIT_AP_AMT
+--                                                         , (IFNULL(D.UNIT_FINAL_AMT,0) - (IFNULL(B.UNIT_MATERIAL_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT,0) + IFNULL(B.UNIT_SURFACE_AMT,0) + IFNULL(B.UNIT_PROCESS_AMT,0) + IFNULL(B.UNIT_ETC_AMT,0))) AS UNIT_AP_AMT
                                                         , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
                                                         , C.INSPECT_GRADE
                                                     FROM jmes.TBL_CONTROL A
@@ -1351,7 +1378,10 @@
                             AND M.CONTROL_SEQ = B.CONTROL_SEQ
                             AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ        
                       ) AS UNIT_EC_AMT
-                    , (IFNULL(D.UNIT_FINAL_AMT,0) - (IFNULL(B.UNIT_MATERIAL_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT,0) + IFNULL(B.UNIT_SURFACE_AMT,0) + IFNULL(B.UNIT_PROCESS_AMT,0) + IFNULL(B.UNIT_ETC_AMT,0))) AS UNIT_AP_AMT
+                    , CASE WHEN B.WORK_TYPE != 'WTP040' THEN IFNULL((SELECT T.UNIT_FINAL_AMT FROM TBL_ORDER T WHERE T.ORDER_SEQ = D.ORDER_SEQ),0) - (IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0))
+                           ELSE (IFNULL(D.UNIT_FINAL_AMT, 0) - (IFNULL(B.UNIT_MATERIAL_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT, 0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT, 0) + IFNULL(B.UNIT_SURFACE_AMT, 0) + IFNULL(B.UNIT_PROCESS_AMT, 0) + IFNULL(B.UNIT_ETC_AMT, 0)))
+                      END AS UNIT_AP_AMT
+--                     , (IFNULL(D.UNIT_FINAL_AMT,0) - (IFNULL(B.UNIT_MATERIAL_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_GRIND_AMT,0) + IFNULL(B.UNIT_MATERIAL_FINISH_HEAT_AMT,0) + IFNULL(B.UNIT_SURFACE_AMT,0) + IFNULL(B.UNIT_PROCESS_AMT,0) + IFNULL(B.UNIT_ETC_AMT,0))) AS UNIT_AP_AMT
                     , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
                     , C.INSPECT_GRADE
                     , C.INSPECT_RESULT
