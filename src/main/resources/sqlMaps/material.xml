@@ -2236,6 +2236,13 @@
             INFO_TYPE = #{INFO_TYPE}
         WHERE INSIDE_OUT_SEQ = #{INSIDE_OUT_SEQ}
     </update>
+    <select id="selectWorkType" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.WORK_TYPE
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </select>
     <select id="selectInsideStockPopInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             A.DRAWING_NUM

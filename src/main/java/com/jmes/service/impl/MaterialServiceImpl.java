@@ -242,8 +242,12 @@ public class MaterialServiceImpl implements MaterialService {
                 this.innodaleDao.create(map);
             }
 
-            if("Y".equals(USE_BARCODE)) { // 바코드로 재고입고시 출고프로세스
-                outGoingProcessForBarcodeIn(model,map);
+            if("Y".equals(USE_BARCODE)) { // 바코드로 재고입고시 출고프로세스 (21.11.17 단, 작업형태 재고인것만 출고처리함)
+                map.put("queryId", "material.selectWorkType");
+                Map<String, Object> workMap = this.innodaleDao.getInfo(map);
+                if(workMap != null && workMap.get("WORK_TYPE") != null && workMap.get("WORK_TYPE").equals("WTP040")) {
+                    outGoingProcessForBarcodeIn(model,map);
+                }
             }
         }
 
@@ -267,6 +271,12 @@ public class MaterialServiceImpl implements MaterialService {
 
         map.put("queryId", "inspection.updateOutFinishStatus");
         this.innodaleDao.update(map);
+
+//        map.put("queryId", "inspection.updateOutFinishDtForBarcode");  // 작업형태 재고인것만 출고하기 때문에, ORDER쪽 출고처리는 필요없음
+//        this.innodaleDao.update(map);
+//
+//        map.put("queryId", "inspection.updateOrderOutFinishStatusForBarcode");
+//        this.innodaleDao.update(map);
 
         map.put("queryId", "machine.deleteMctPlanAll");
         this.innodaleDao.update(map);
