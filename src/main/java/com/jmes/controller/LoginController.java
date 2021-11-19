@@ -1,13 +1,16 @@
 package com.jmes.controller;
 
 import com.framework.innodale.component.CommonUtility;
+import com.framework.innodale.component.HttpUtil;
 import com.framework.innodale.service.InnodaleService;
+import com.google.gson.JsonObject;
 import com.jmes.service.LoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.LocaleEditor;
 import org.springframework.context.MessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,11 +23,9 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.net.InetAddress;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class LoginController {
@@ -42,6 +43,9 @@ public class LoginController {
 
     @Autowired
     private LocaleResolver localeResolver;
+
+    @Autowired
+    private Environment environment;
 
     @RequestMapping(value="/")
     public String index(Model model, HttpServletRequest request,  Locale locale) throws Exception {
@@ -74,6 +78,27 @@ public class LoginController {
             session.setAttribute("authUserInfo", hashMap.get("userInfo"));
             session.setAttribute("authUserMenu", hashMap.get("userMenu"));
 
+            String ipAddress=request.getRemoteAddr();
+            if(ipAddress.equalsIgnoreCase("0:0:0:0:0:0:0:1")){
+                InetAddress inetAddress = InetAddress.getLocalHost();
+                ipAddress = inetAddress.getHostAddress();
+            }
+            session.setAttribute("ipAddress", ipAddress);
+            model.addAttribute("ipAddress", ipAddress);
+
+//            System.out.println("클라이언트IP 주소: "+ipAddress);
+//            System.out.println("tempMap : "+tempMap);
+//
+//            JsonObject json = new JsonObject();
+//            json.addProperty("crtfcKey",environment.getProperty("semes.log.key"));
+//            json.addProperty("logDt",sdf.format(new Date()));
+//            json.addProperty("useSe","접속");
+//            json.addProperty("sysUser",(String) tempMap.get("USER_ID"));
+//            json.addProperty("conectIp",ipAddress);
+//            json.addProperty("dataUsgqty",tempMap.toString().getBytes().length);
+//
+//            HttpUtil.callApi("https://log.smart-factory.kr/apisvc/sendLogData.json",json,"POST");
+
             session.setMaxInactiveInterval(-1);
         }else{
             String autoReturnCode = String.valueOf(hashMap.get("autoReturnCode"));
@@ -90,8 +115,8 @@ public class LoginController {
         return "jsonView";
     }
 
-    @RequestMapping(value="/userLotout", method = RequestMethod.GET)
-    public String userLotout(Model model, HttpSession session, HttpServletRequest request) throws Exception {
+    @RequestMapping(value="/userLogout", method = RequestMethod.GET)
+    public String userLogout(Model model, HttpSession session, HttpServletRequest request) throws Exception {
         String result = "redirect:/";
 
         /** Session clear **/
