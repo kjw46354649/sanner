@@ -44,6 +44,39 @@
     $(document).ready(function(){
         $("#login-form").validationEngine();
 
+        function getByteLength(s) {
+
+            if (s == null || s.length == 0) {
+                return 0;
+            }
+            var size = 0;
+
+            for ( var i = 0; i < s.length; i++) {
+                size += charByteSize(s.charAt(i));
+            }
+
+            return size;
+        };
+
+        function charByteSize(ch) {
+
+            if (ch == null || ch.length == 0) {
+                return 0;
+            }
+
+            var charCode = ch.charCodeAt(0);
+
+            if (charCode <= 0x00007F) {
+                return 1;
+            } else if (charCode <= 0x0007FF) {
+                return 2;
+            } else if (charCode <= 0x00FFFF) {
+                return 3;
+            } else {
+                return 4;
+            }
+        }
+
         $loginChekcBtn.click(function(e){
             e.preventDefault();
             if($("#login-form").validationEngine('validate') == false){
@@ -60,6 +93,27 @@
                             $('#userPassword').val("");
                             return false;
                         }else{
+                            let date = new Date();
+                            var dateStr = date.getFullYear() + '-' + ('00'+(date.getMonth()+1)).substr(-2) + '-' + ('00'+date.getDate()).substr(-2) + ' ' + ('00'+date.getHours()).substr(-2) + ':' + ('00'+date.getMinutes()).substr(-2)  + ':' +('00'+date.getSeconds()).substr(-2) + '.' + date.getMilliseconds();
+                            let logParam = {
+                                'crtfcKey':'$5$API$X1KoDEUj3kPHqU9JwaEEFE0u.GjI/1uSvIR2A304FbC',
+                                'logDt':dateStr,
+                                'useSe':'접속',
+                                'sysUser':$("#userId").val(),
+                                'conectIp':data.ipAddress,
+                                'dataUsgqty':getByteLength($('#login-form').serialize())
+                            }
+                            console.log(logParam)
+                            $.ajax({
+                                type: "POST", dataType: "json", url: "https://log.smart-factory.kr/apisvc/sendLogData.json", data: logParam,
+                                success: function(data){
+                                    console.log(data);
+                                },
+                                error: function(xhr, status, error){
+                                    alert(error);
+                                    return false;
+                                }
+                            });
                             document.getElementById('login-form').submit();
                         }
                     }catch(exception){

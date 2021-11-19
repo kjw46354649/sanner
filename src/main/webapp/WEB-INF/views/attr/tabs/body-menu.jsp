@@ -19,7 +19,7 @@
                     <span style="font-size: 12px;">${authUserInfo.LOGIN_TIME}</span><br>
                     <b>${authUserInfo.USER_NM}</b>님 안녕하세요.
                 </span>
-                <a href="/userLotout"><span class="btnWrap"><button type="button" class="btn"></button></span></a>
+                <a href="/userLogout" id="logoutBtn"><span class="btnWrap"><button type="button" class="btn"></button></span></a>
             </div>
             <div class="gnbWrap" id="gnbWrap">
                 <ul>
@@ -59,3 +59,33 @@
                 <a href="#a;" class="btn_allMenu"><span>메뉴열기</span></a>
             </div>
         </div>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $("#logoutBtn").on("click", function() {
+            let ip = "${ipAddress}";
+            let userId = '${authUserInfo.USER_ID}';
+
+            let date = new Date();
+            var dateStr = date.getFullYear() + '-' + ('00'+(date.getMonth()+1)).substr(-2) + '-' + ('00'+date.getDate()).substr(-2) + ' ' + ('00'+date.getHours()).substr(-2) + ':' + ('00'+date.getMinutes()).substr(-2)  + ':' +('00'+date.getSeconds()).substr(-2) + '.' + date.getMilliseconds();
+            let logParam = {
+                'crtfcKey':'$5$API$X1KoDEUj3kPHqU9JwaEEFE0u.GjI/1uSvIR2A304FbC',
+                'logDt':dateStr,
+                'useSe':'접속',
+                'sysUser':userId,
+                'conectIp':ip,
+                'dataUsgqty':0
+            }
+            $.ajax({
+                type: "POST", dataType: "json", url: "https://log.smart-factory.kr/apisvc/sendLogData.json", data: logParam,
+                success: function(data){
+                    console.log(data);
+                },
+                error: function(xhr, status, error){
+                    alert(error);
+                    return false;
+                }
+            });
+        })
+    });
+</script>
