@@ -96,7 +96,8 @@
                             let date = new Date();
                             var dateStr = date.getFullYear() + '-' + ('00'+(date.getMonth()+1)).substr(-2) + '-' + ('00'+date.getDate()).substr(-2) + ' ' + ('00'+date.getHours()).substr(-2) + ':' + ('00'+date.getMinutes()).substr(-2)  + ':' +('00'+date.getSeconds()).substr(-2) + '.' + date.getMilliseconds();
                             let logParam = {
-                                'crtfcKey':'$5$API$X1KoDEUj3kPHqU9JwaEEFE0u.GjI/1uSvIR2A304FbC',
+                                // 'crtfcKey':'$5$API$X1KoDEUj3kPHqU9JwaEEFE0u.GjI/1uSvIR2A304FbC', //이노데일 버전 인증키
+                                'crtfcKey':'$5$API$fWGgUcRM2Dm85Pdh/QFfrNnYjXPg1autH5a1tLE14RA', //진성정밀 버전 인증키
                                 'logDt':dateStr,
                                 'useSe':'접속',
                                 'sysUser':$("#userId").val(),
