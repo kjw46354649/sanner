@@ -8,7 +8,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>J-MES POP(Point Of Production)</title>
+	<title>ToMES POP(Point Of Production)</title>
 	<!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
 	<link rel="shortcut icon" href="/favicon.ico">
 	<!-- Chrome, Safari, IE -->
