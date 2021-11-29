@@ -701,6 +701,7 @@
           <choose>
             <when test="INNER_DUE_DT == 'BEFORE'">
                 AND B.INNER_DUE_DT <![CDATA[ < ]]> DATE_SUB(NOW(), INTERVAL 3 DAY)
+                AND B.INNER_WORK_FINISH_DT IS NULL
             </when>
             <otherwise>
                 AND B.INNER_DUE_DT = #{INNER_DUE_DT}
