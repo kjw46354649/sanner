@@ -176,7 +176,6 @@
 <%--                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>--%>
 
                     <button type="button" class="defaultBtn btn-100w" id="ORDER_MANAGE_DRAWING_PRINT">도면 출력</button>
-<%--                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_BARCODE_PRINT">바코드 출력</button>--%>
                     <button type="button" class="defaultBtn btn-100w" id="ORDER_MANAGE_LABEL_PRINT">라벨 출력</button>
                 </div>
             </div>
@@ -1308,7 +1307,7 @@
             let Cols = $orderManagementGridInstance.Columns();
             let commArray = [
                 'ORDER_STATUS_NM', 'ORDER_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'NOTE', 'REGIST_NUM', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON',
-                'MAIN_INSPECTION', 'DRAWING_NUM_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
+                'MAIN_INSPECTION', 'DRAWING_NUM_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'CONTROL_STATUS', 'DRAWING_NUM',
                 'DELIVERY_DT', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'MATERIAL_SUPPLY_YN',
                 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_FINISH_HEAT', 'CONTROL_EST_AMT', 'UNIT_FINAL_AMT', 'PREV_DRAWING_NUM'
             ];
@@ -1321,16 +1320,16 @@
                 'INVOICE_NUM', 'OUT_QTY', 'OUT_FINISH_DT', 'CLOSE_DT', 'DETAIL_MACHINE_REQUIREMENT', 'UNIT_SUM_AUTO_AMT', 'MATERIAL_FINISH_GRIND',
                 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIA_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT', 'UNIT_PROCESS_AUTO_AMT',
                 'UNIT_SURFACE_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PROJECT_NM', 'ORDER_STAFF_NM', 'ORDER_IMG_GFILE_SEQ',
-                'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE'
+                'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'CLOSE_VER'
             ];
             const allModeArray1 = [
                 'INVOICE_NUM', 'PROJECT_NM', 'MODULE_NM', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'SAME_SIDE_YN',
                 'OUT_QTY', 'OUT_FINISH_DT', 'CLOSE_DT', 'MATERIAL_FINISH_GRIND', 'DETAIL_MACHINE_REQUIREMENT', 'UNIT_SUM_AUTO_AMT',
                 'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIA_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT',
                 'UNIT_SURFACE_AUTO_AMT', 'UNIT_PROCESS_AUTO_AMT', 'UNIT_SURFACE_AMT', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'DXF_GFILE_SEQ', 'ORDER_IMG_GFILE_SEQ',
-                'PDF_GFILE_SEQ', 'DRAWING_VER', 'DRAWING_UP_DT', 'ETC_GFILE_SEQ',
+                'PDF_GFILE_SEQ', 'DRAWING_VER', 'DRAWING_UP_DT', 'ETC_GFILE_SEQ', 'RETURN_INSERT_DT', 'RETURN_FINISH_DT',
                 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT',
-                'UNIT_SURFACE_AUTO_AMT', 'CONTROL_PART_INSERT_UPDATE_DT'
+                'UNIT_SURFACE_AUTO_AMT', 'CONTROL_PART_INSERT_UPDATE_DT', 'CLOSE_VER', 'ORDER_INSERT_DT', 'MATERIAL_NOTE'
             ];
 
             switch (elementId) {
@@ -2570,42 +2569,6 @@
             }, false, 'confirm');
         }
 
-        // 바코드 출력
-        $('#CONTROL_MANAGE_BARCODE_PRINT').on('click', function () {
-            if (noSelectedRowAlert()) return false;
-            let selectedRowCount = selectedOrderManagementRowIndex.length;
-            let selectControlPartCount = 0;
-            let selectControlPartInfo = '';
-            let formData = [];
-            for (let i = 0; i < selectedRowCount; i++) {
-                let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                let curControlPartInfo = rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ;
-                if (!(rowData.CONTROL_STATUS === 'ORD001')) {
-                    fnAlert(null, '주문상태 확정 이후 출력 가능합니다');
-                    return false;
-                }
-                if (!rowData.ORDER_IMG_GFILE_SEQ) {
-                    fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
-                    return;
-                // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
-                } else if(selectControlPartInfo != curControlPartInfo){
-                    selectControlPartCount++;
-                    selectControlPartInfo = curControlPartInfo;
-                    formData.push(rowData.CONTROL_BARCODE_NUM);
-                }
-            }
-            let message =
-                '<h4>\n' +
-                '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                '    <span>선택하신 ' + selectControlPartCount + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
-                '</h4>';
-
-            fnConfirm(null, message, function () {
-                fnBarcodePrint(function(data){
-                    fnAlert(null, data.message);
-                }, formData, '');
-            });
-        });
         // 라벨 출력
         $('#ORDER_MANAGE_LABEL_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;
