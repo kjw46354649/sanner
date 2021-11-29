@@ -90,6 +90,10 @@
         .dash_bg_yellow {
             background-color: #faf7c0 !important;
         }
+
+        .pq-grid-header-table .pq-title-span {
+            text-decoration : none !important;
+        }
     </style>
 </head>
 
@@ -272,6 +276,7 @@
                     <div class="left_top_wrap">
                         <span class="from_main_grid">주문가공 진행현황</span>
                         <span class="from_outside">외주가공 진행현황</span>
+                        <span class="from_non_complete">미완료 현황</span>
                         <span class="from_material" style="display: none;">가공대기현황 (<span class="text-primary">재질별</span>)</span>
                         <span class="text-primary from_main_grid" id="processPop_comp_nm"></span>
                     </div>
@@ -281,12 +286,15 @@
                         <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD" value="">
                         <input type="hidden" name="MATERIAL_TYPE" id="MATERIAL_TYPE" value="">
                         <input type="hidden" name="PART_STATUS" id="PART_STATUS" value="">
+                        <input type="hidden" name="INNER_DUE_DT" id="INNER_DUE_DT" value="">
                     </form>
-                    <div id="processPopOutsideDiv" class="h10 w100 box-scroll left_wrap1 from_outside" style="display: none;height: 13.5%;">
+                    <div id="processPopOutsideDiv" class="h10 w100 box-scroll-x left_wrap1 from_outside" style="display: none;height: 13.5%;">
                     </div>
-                    <div id="processPopMaterialDiv" class="h10 w100 box-scroll left_wrap1 from_material" style="display: none;">
+                    <div id="processPopMaterialDiv" class="h10 w100 box-scroll-x left_wrap1 from_material" style="display: none;">
                     </div>
-                    <div class="h10 w100 box-scroll left_wrap1 display_f text-center p-1 from_main_grid" style="display: none;">
+                    <div id="processPopNonCompleteDiv" class="h10 w100 box-scroll-x left_wrap1 from_non_complete" style="display: none;">
+                    </div>
+                    <div id="processPopMainGridDiv" class="h10 w100 box-scroll-x left_wrap1 display_f text-center p-1 from_main_grid" style="display: none;">
                         <div id="DIV_TOTAL" class="w10 h100 status1 pt-3">
                             <p>계</p>
                             <p id="TOTAL_CNT"></p>
@@ -336,6 +344,11 @@
                             <p>외주가공</p>
                             <p id="OUTSIDE_CNT"></p>
                             <span class="lineH15">(<span id="OUTSIDE_QTY"></span>)</span>
+                        </div>
+                        <div id="DIV_ASSEMBLE" class="w10 h100 status11 pt-3">
+                            <p>조립</p>
+                            <p id="ASSEMBLE_CNT"></p>
+                            <span class="lineH15">(<span id="ASSEMBLE_QTY"></span>)</span>
                         </div>
                     </div>
                     <div id="processPop_grid" class="h90 w100 border_color left_wrap2">
@@ -413,6 +426,7 @@
             if(type == 'OUTSIDE_PROCESS_DIV') {
                 $("#processPopup").find(".from_main_grid").hide();
                 $("#processPopup").find(".from_material").hide();
+                $("#processPopup").find(".from_non_complete").hide();
                 $("#processPopup").find(".from_outside").show();
 
                 $(".from_outside > .pop_outside_div").removeClass("onClickStatus2");
@@ -424,16 +438,29 @@
                 $("#processPopup").find(".from_main_grid").hide();
                 $("#processPopup").find(".from_material").show();
                 $("#processPopup").find(".from_outside").hide();
+                $("#processPopup").find(".from_non_complete").hide();
 
                 $(".from_material > .pop_material_div").removeClass("onClickStatus3");
                 $(".from_material").find("#POP_MATERIAL_"+rowData).addClass("onClickStatus3");
 
                 $("#PROCESS_POP_FORM").find("#MATERIAL_TYPE").val(rowData);
                 $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_material");
+            }else if(type == 'NON_COMPLETE') {
+                $("#processPopup").find(".from_main_grid").hide();
+                $("#processPopup").find(".from_material").hide();
+                $("#processPopup").find(".from_outside").hide();
+                $("#processPopup").find(".from_non_complete").show();
+
+                $(".from_non_complete > .non_complete_div").removeClass("onClickStatus4");
+                $(".from_non_complete").find("#NON_COMPLETE_"+rowData).addClass("onClickStatus4");
+
+                $("#PROCESS_POP_FORM").find("#INNER_DUE_DT").val(rowData);
+                $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_nonComplete");
 
             }else {
                 $("#processPopup").find(".from_outside").hide();
                 $("#processPopup").find(".from_material").hide();
+                $("#processPopup").find(".from_non_complete").hide();
                 $("#processPopup").find(".from_main_grid").show();
 
                 $("#processPopup").find("#processPop_comp_nm").text("(" + rowData.ORDER_COMP_NM + ")");
@@ -459,15 +486,16 @@
     let getPartStatus = function(type) {
         let processListJson = {
             'TOTAL':'',
-            'PROCESS_CONFIRM':'"PRO002"',
+            'PROCESS_CONFIRM':'PRO002',
             'MATCH_STOCK':'MATCH_STOCK',
-            'WAIT_MATERIAL':'"PRO004"',
+            'WAIT_MATERIAL':'PRO004',
             'IN_MATERIAL':'"PRO005","PRO021","PRO022"',
             'PROCESSING':'"PRO006","PRO007","PRO008"',
-            'PROCESS_COMPLETE':'"PRO009"',
+            'PROCESS_COMPLETE':'PROCESS_COMPLETE',
             'AFTER_PROCESS':'"PRO012","PRO013"',
             'SURFACE_TREAT':'"PRO014","PRO015"',
-            'OUTSIDE':'OUTSIDE'
+            'OUTSIDE':'OUTSIDE',
+            'ASSEMBLE':'ASSEMBLE'
         }
         return processListJson[type];
     }
@@ -498,18 +526,28 @@
         let settingNewDataForGrid = function(gridId, formId, checkValue) {
             let orgData = $("#" + gridId).pqGrid('option', 'dataModel.data');
             let checkList = $("#" + gridId).pqGrid("getData",{dataIndx:[checkValue]});
+            let popCompCd = $("#PROCESS_POP_FORM").find("#ORDER_COMP_CD").val();
+            let popRowData = null;
             let checkArr = [];
+            let checkArrCopy = [];
             $.each(checkList, function(idx,Item) {
                 checkArr.push(Item[checkValue]);
+                checkArrCopy.push(Item[checkValue]);
             })
 
             const parameter = {'url': '/tv/paramQueryGridSelect', 'data': fnFormToJsonArrayData(formId)};
             fnPostAjaxForDashBoard(function (data) {
                 let newData = data.data;
-
+                if(gridId == 'process_complete_grid') {
+                    settingNonCompletePop(newData);
+                }
                 $.each(newData,function(idx,Item) {
                     let chk = Item[checkValue];
                     let rowIdx = checkArr.indexOf(chk);
+                    if(checkArrCopy.indexOf(chk) >= 0){
+                        let copyIdx = checkArrCopy.indexOf(chk);
+                        checkArrCopy.splice(copyIdx,1);
+                    }
                     if(rowIdx >= 0) {
                         $("#" + gridId).pqGrid('updateRow', {
                             'rowIndx': rowIdx,
@@ -519,18 +557,64 @@
                     }else {
                         $("#" + gridId).pqGrid('addRow', {
                             newRow: Item,
-                            rowIndx: orgData.length,
+                            rowIndx: idx,
                             checkEditable: false
                         });
+                        checkArr.splice(idx,0,chk);
+                    }
+                    if(gridId == 'process_dash_board_main_grid') {
+                        if(chk == popCompCd) {
+                            popRowData = Item;
+                        }
                     }
                 })
+
+                try {
+                    if(checkArrCopy.length > 0) {
+                        for(var i=0;i<checkArrCopy.length;i++) {
+                            $.each(orgData, function (idx,Item) {
+                                let compCd = Item.ORDER_COMP_CD;
+                                if(compCd == checkArrCopy[i]) {
+                                    $("#" + gridId).pqGrid('deleteRow', {'rowIndx': Item.pq_ri});//rowIndx
+                                }
+                            });
+                        }
+                    }
+                }catch (e) {
+                }
+
+                $("#" + gridId).pqGrid('option', 'dataModel.postData', function (ui) {
+                    return fnFormToJsonArrayData(formId);
+                });
+
                 if(gridId == 'process_dash_board_main_grid') {
                     displayTotalHeader();
+
+                    if($("#processPopup").find("#processPopMainGridDiv").css('display') != 'none') {
+                        if(popRowData != null) {
+                            settingDataUseId('processPopup',popRowData);
+                        }else {
+                            resetPopCnt();
+                        }
+                        $("#processPop_grid").pqGrid("option", "dataModel.postData", function(ui){
+                            return fnFormToJsonArrayData('PROCESS_POP_FORM');
+                        } );
+                        $("#processPop_grid").pqGrid("refreshDataAndView");
+                    }
                 }
             },parameter,'');
 
         }
-
+        let resetPopCnt = function () {
+            let arr = ['TOTAL_CNT','TOTAL_QTY','PROCESS_CONFIRM_CNT','PROCESS_CONFIRM_QTY','MATCH_STOCK_CNT','MATCH_STOCK_QTY',
+                'WAIT_MATERIAL_CNT', 'WAIT_MATERIAL_QTY', 'IN_MATERIAL_CNT', 'IN_MATERIAL_QTY', 'PROCESSING_CNT', 'PROCESSING_QTY',
+                'PROCESS_COMPLETE_CNT', 'PROCESS_COMPLETE_QTY', 'AFTER_PROCESS_CNT', 'AFTER_PROCESS_QTY', 'SURFACE_TREAT_CNT',
+                'SURFACE_TREAT_QTY', 'OUTSIDE_CNT', 'OUTSIDE_QTY'
+            ]
+            for(var i=0;i<arr.length;i++) {
+                $("#"+arr[i]).text("0");
+            }
+        }
         let getStockProcessList = function (type) {
             const parameter = {'url': '/tv/json-list', 'data': {
                     'queryId':'process.selectStockProcessList'
@@ -614,33 +698,37 @@
                 });
             },parameter,'');
         }
+        function calculatePercent(l, target) {
+            var off = target - _.reduce(l, function(acc, x) { return acc + Math.round(x) }, 0);
+            return _.chain(l).
+            sortBy(function(x) { return Math.round(x) - x }).
+            map(function(x, i) { return Math.round(x) + (off > i) - (i >= (l.length + off)) }).
+            value();
+        }
 
         let getProcessingMainInfo = function () {
-            const parameter1 = {'url': '/tv/json-info', 'data': {
-                    'queryId':'process.selectProcessingInfo_total'
-                }
-            };
             const parameter2 = {'url': '/tv/json-list', 'data': {
                     'queryId':'process.selectProcessingInfo_main'
                 }
             };
 
-            fnPostAjaxForDashBoard(function (data1) {
-                if(data1.info != null) {
-                    let totalQty = data1.info.QTY;
-                    let totalCnt = data1.info.CNT;
-                    fnPostAjaxForDashBoard(function (data2) {
-                        $.each(data2.list, function (idx,Item) {
-                            let percent = 0;
-                            percent = Math.floor((Item.CNT / totalCnt) * 100);
+            let totalCnt = 0;
+            fnPostAjaxForDashBoard(function (data2) {
+                let arr = [];
+                $.each(data2.list, function (idx,Item) {
+                    totalCnt += Number(Item.CNT);
 
-                            $("#"+Item.TYPE + "_CNT").text(Item.CNT)
-                            $("#"+Item.TYPE + "_QTY").text("("+Item.QTY+")");
-                            $("#"+Item.TYPE + "_PERCENT").text(percent + "%");
-                        });
-                    },parameter2,'');
-                }
-            },parameter1,'');
+                    $("#"+Item.TYPE + "_CNT").text(Item.CNT)
+                    $("#"+Item.TYPE + "_QTY").text("("+Item.QTY+")");
+                });
+                $.each(data2.list, function (idx,Item) {
+                    arr.push((Item.CNT / totalCnt) * 100);
+                });
+                let result = calculatePercent(arr,100);
+                $.each(data2.list, function (idx,Item) {
+                    $("#"+Item.TYPE + "_PERCENT").text(result[idx] +'%');
+                });
+            },parameter2,'');
         }
         let getProcessWaitingList = function (type) {
             const parameter = {'url': '/tv/json-list', 'data': {
@@ -675,25 +763,21 @@
         let displayTotalHeader = function () {
             let dataIndxList = [
                 'TOTAL', 'PROCESS_CONFIRM', 'MATCH_STOCK', 'WAIT_MATERIAL', 'IN_MATERIAL', 'PROCESSING',
-                'PROCESS_COMPLETE', 'AFTER_PROCESS', 'SURFACE_TREAT', 'OUTSIDE'
+                'PROCESS_COMPLETE', 'AFTER_PROCESS', 'SURFACE_TREAT', 'OUTSIDE', 'ASSEMBLE'
             ]
+            let gridData = $("#process_dash_board_main_grid").pqGrid('option', 'dataModel.data');
             $.each(dataIndxList, function (idx, Item) {
-                let cntList = processDashBoardMainGrid.pqGrid("getData",{dataIndx:[Item + '_CNT']})
-                let qtyList = processDashBoardMainGrid.pqGrid("getData",{dataIndx:[Item + '_QTY']})
                 let totalCnt = 0;
                 let totalQty = 0;
-
-                $.each(cntList, function (idx2,Item2) {
-                    if(!fnIsEmpty(Item2[Item + '_CNT'])) {
-                        totalCnt += Number(Item2[Item + '_CNT'])
+                $.each(gridData, function (idx2, rowData) {
+                    if(!fnIsEmpty(rowData[Item + '_CNT'])) {
+                        totalCnt += Number(rowData[Item + '_CNT'])
                     }
-                })
-
-                $.each(qtyList, function (idx2,Item2) {
-                    if(!fnIsEmpty(Item2[Item + '_QTY'])) {
-                        totalQty += Number(Item2[Item + '_QTY'])
+                    if(!fnIsEmpty(rowData[Item + '_QTY'])) {
+                        totalQty += Number(rowData[Item + '_QTY'])
                     }
-                })
+                });
+
                 if($("#pq-head-cell-u3-0-"+(idx+14) +"-right .pq-title-span .header_inside").length == 0) {
                     let html = '<br><span class="header_inside">' + totalCnt + " (" + totalQty + ")" + '</span>';
                     $("#pq-head-cell-u3-0-"+(idx+14) +"-right .pq-title-span").append(html)
@@ -717,13 +801,13 @@
             {title: 'OUTSIDE_QTY', dataIndx: 'OUTSIDE_QTY', hidden: true},
             {title: 'DELAY_PROCESS_QTY', dataIndx: 'DELAY_PROCESS_QTY', hidden: true},
             {title: 'DELAY_QTY', dataIndx: 'DELAY_QTY', hidden: true},
-            {title: '발주처', width: 135, dataIndx: 'ORDER_COMP_NM',editable: false,
+            {title: '발주처', width: 125, dataIndx: 'ORDER_COMP_NM', editable: false, sortable:false,
                 styleHead: {'background-color':'#aedcff'},
                 render: function (ui) {
                     return {style: 'font-style:italic;'};
                 }
             },
-            {title: '계', width: 90, dataIndx: 'TOTAL_CNT',editable: false,
+            {title: '계', width: 85, dataIndx: 'TOTAL_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#aedcff','color':'blue'},
                 render: function (ui) {
                     let html = '<span class="column_hover" style="color: blue;">' + ui.cellData + ' <span class="column_inside" style="color: #2190ff;">(' + ui.rowData.TOTAL_QTY +')</span></span>';
@@ -734,11 +818,11 @@
                         $cell = grid.getCell(ui);
                     $cell.find('.column_hover').bind('click', function () {
                         let rowData = ui.rowData;
-                        openProcessPopup('TOTAL');
+                        openProcessPopup('TOTAL',rowData);
                     });
                 }
             },
-            {title: '가공확정', width: 90, dataIndx: 'PROCESS_CONFIRM_CNT',editable: false,
+            {title: '가공확정', width: 85, dataIndx: 'PROCESS_CONFIRM_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#9bd4ff'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
@@ -757,7 +841,7 @@
                     });
                 }
             },
-            {title: '재고충당대기', width: 95, dataIndx: 'MATCH_STOCK_CNT',editable: false,
+            {title: '재고충당대기', width: 90, dataIndx: 'MATCH_STOCK_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#7cc6ff'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
@@ -776,7 +860,7 @@
                     });
                 }
             },
-            {title: '소재입고대기', width: 95, dataIndx: 'WAIT_MATERIAL_CNT',editable: false,
+            {title: '소재입고대기', width: 93, dataIndx: 'WAIT_MATERIAL_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#69bdfd'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
@@ -795,7 +879,7 @@
                     });
                 }
             },
-            {title: '소재입고', width: 90, dataIndx: 'IN_MATERIAL_CNT',editable: false,
+            {title: '소재입고', width: 88, dataIndx: 'IN_MATERIAL_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#5fb4f5'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
@@ -814,7 +898,7 @@
                     });
                 }
             },
-            {title: '가공중', width: 90, dataIndx: 'PROCESSING_CNT',editable: false,
+            {title: '가공중', width: 88, dataIndx: 'PROCESSING_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#4dadf7'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
@@ -833,7 +917,7 @@
                     });
                 }
             },
-            {title: '가공완료', width: 90, dataIndx: 'PROCESS_COMPLETE_CNT',editable: false,
+            {title: '가공완료', width: 88, dataIndx: 'PROCESS_COMPLETE_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#39a4f7'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
@@ -852,7 +936,7 @@
                     });
                 }
             },
-            {title: '후가공', width: 90, dataIndx: 'AFTER_PROCESS_CNT',editable: false,
+            {title: '후가공', width: 80, dataIndx: 'AFTER_PROCESS_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#1893f1'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
@@ -871,7 +955,7 @@
                     });
                 }
             },
-            {title: '표면처리', width: 90, dataIndx: 'SURFACE_TREAT_CNT',editable: false,
+            {title: '표면처리', width: 85, dataIndx: 'SURFACE_TREAT_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#0188ef'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
@@ -890,7 +974,7 @@
                     });
                 }
             },
-            {title: '외주가공', width: 90, dataIndx: 'OUTSIDE_CNT',editable: false,
+            {title: '외주가공', width: 80, dataIndx: 'OUTSIDE_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#006dc0','color':'white'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
@@ -909,7 +993,26 @@
                     });
                 }
             },
-            {title: '당면<br>납기', width: 85, dataType: 'date', format: 'mm/dd', dataIndx: 'APPROACH_DUE_DT', editable: false,
+            {title: '조립', width: 80, dataIndx: 'ASSEMBLE_CNT', editable: false, sortable:false,
+                styleHead: {'background-color':'#1156a0','color':'white'},
+                render: function (ui) {
+                    if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
+                        let html = '<span class="column_hover">' + ui.cellData + ' <span class="column_inside">(' + ui.rowData.ASSEMBLE_QTY +')</span></span>';
+                        return html;
+                    }else {
+                        return {text: ""};
+                    }
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('.column_hover').bind('click', function () {
+                        let rowData = ui.rowData;
+                        openProcessPopup('ASSEMBLE',rowData);
+                    });
+                }
+            },
+            {title: '당면<br>납기', width: 82, dataType: 'date', format: 'mm/dd', dataIndx: 'APPROACH_DUE_DT', editable: false, sortable:false,
                 styleHead: {'background-color':'#0c4888', 'color':'white'},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -923,7 +1026,7 @@
                     }
                 }
             },
-            {title: '가공<br>지연', width: 85, dataIndx: 'DELAY_PROCESS_CNT',editable: false,
+            {title: '가공<br>지연', width: 82, dataIndx: 'DELAY_PROCESS_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#ffc372'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
@@ -934,7 +1037,7 @@
                     }
                 }
             },
-            {title: '납기<br>지연', width: 85, dataIndx: 'DELAY_CNT',editable: false,
+            {title: '납기<br>지연', width: 82, dataIndx: 'DELAY_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#fff54c', 'color':'red'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
@@ -956,7 +1059,7 @@
             rowHtHead: 35,
             strNoRows: g_noData,
             numberCell: {show:false},
-            trackModel: {on: true},
+            // trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             filterModel: {mode: 'OR'},
             colModel: processDashBoardMainColModel,
@@ -1101,12 +1204,26 @@
                     }
 
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span>' + ui.cellData + ' <span class="header_inside">(' + ui.rowData.NON_COMPLETE_QTY +')</span></span>';
+                        let html = '<span class="column_hover">' + ui.cellData + ' <span class="header_inside">(' + ui.rowData.NON_COMPLETE_QTY +')</span></span>';
                         return {cls: cls, text:html, style:style};
                     }else {
                         cellData = "-";
                     }
                     return {cls: cls, text:cellData};
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('.column_hover').bind('click', function () {
+                        let rowData = ui.rowData;
+                        let dt = "";
+                        if(rowData.TYPE == 'BEFORE') {
+                            dt = "BEFORE";
+                        }else {
+                            dt = rowData.INNER_DUE_DT.replaceAll("/","");
+                        }
+                        openProcessPopup('NON_COMPLETE',dt);
+                    });
                 }
             },
             {title: '완료율', width: 65, dataIndx: 'PERCENT',editable: false,
@@ -1162,7 +1279,11 @@
             },
             complete: function () {
                 let html = '<br><span class="header_inside">'+ "(수량기준)" + '</span>';
-                $("#pq-head-cell-u5-0-10-right .pq-title-span").append(html)
+                $("#pq-head-cell-u5-0-10-right .pq-title-span").append(html);
+
+                const data = this.option('dataModel.data');
+                settingNonCompletePop(data);
+
             },
             sortModel: {on: false}
         }
@@ -1173,15 +1294,38 @@
         getProcessingMainInfo();
         timer();
 
-
-
+        let settingNonCompletePop = function (data) {
+            $("#processPopNonCompleteDiv").empty();
+            $.each(data, function (idx,Item) {
+                if(Item.NON_COMPLETE_CNT > 0) {
+                    let innerDueDt = Item.INNER_DUE_DT.replaceAll("/","");
+                    let target = Item.INNER_DUE_DT.replaceAll("/","");
+                    let id = "NON_COMPLETE_"
+                    let title = Item.INNER_DUE_DT.substring(5,Item.INNER_DUE_DT.length);
+                    if(Item.TYPE == 'BEFORE') {
+                        title = "이전";
+                        target = "BEFORE";
+                        id += target;
+                    }else {
+                        id += innerDueDt;
+                    }
+                    let html = '<div id="'+id+'" class="block_box block_box_middle back_sky2 pt-3 non_complete_div" data-target="'+target+'">';
+                    html += '<p>' + title + '</p>';
+                    html += '<p class="small">' + Item.NON_COMPLETE_CNT + ' (' + Item.NON_COMPLETE_QTY + ')</p>';
+                    html += '</div>';
+                    $("#processPopNonCompleteDiv").append(html);
+                }
+            })
+        }
 
         const processPopGrid = $("#processPop_grid");
         const processPopColModel = [
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: '가공납기', width: 60, dataIndx: 'INNER_DUE_DT',editable: false,
                 styleHead: {'background-color':'#aedcff'}
             },
-            {title: '진행상태', width: 100, dataIndx: 'PART_STATUS_NM',editable: false,
+            {title: '진행상태', width: 90, dataIndx: 'PART_STATUS_NM',editable: false,
                 styleHead: {'background-color':'#aedcff'}
             },
             {title: '작업번호<br>/ 규격', width: 140, dataIndx: 'CONTROL_SIZE',editable: false,
@@ -1193,7 +1337,7 @@
                     }
                 }
             },
-            {title: '작업형태<br>/ 소재', width: 100, dataIndx: 'WORK_TYPE_MATERIAL',editable: false,
+            {title: '작업형태<br>/ 소재', width: 80, dataIndx: 'WORK_TYPE_MATERIAL',editable: false,
                 styleHead: {'background-color':'#aedcff'},
                 render: function (ui) {
                     const cellData = ui.cellData;
@@ -1205,7 +1349,21 @@
             {title: '수량', width: 50, dataIndx: 'QTY',editable: false,
                 styleHead: {'background-color':'#aedcff'}
             },
-            {title: '현재위치', width: 100, dataIndx: 'POP_POSITION',editable: false,
+            {title: '', align: 'center', dataType: 'string', dataIndx: 'DETAIL_INFO', width: 30, minWidth: 30, editable: false,
+                styleHead: {'background-color':'#aedcff'},
+                render: function (ui) {
+                    if (ui.rowData.CONTROL_SEQ > 0) return '<span id="detailView" class="shareIcon"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(ui.rowData.CONTROL_SEQ, ui.rowData.CONTROL_DETAIL_SEQ);
+                    });
+                }
+            },
+            {title: '현재위치', width: 90, dataIndx: 'POP_POSITION',editable: false,
                 styleHead: {'background-color':'#aedcff'}
             },
             {title: '가공진행 현황', align: 'center',
@@ -1310,6 +1468,9 @@
         });
         $(document).on("click",".wait_material_div",function(e){
             openProcessPopup('WAIT_MATERIAL_DIV',$(this).data('target'))
+        });
+        $(document).on("click",".non_complete_div",function(e){
+            openProcessPopup('NON_COMPLETE',$(this).data('target'))
         });
 
         $(document).on("click",".pop_outside_div",function(e){

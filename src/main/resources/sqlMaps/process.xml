@@ -8,43 +8,47 @@
             IFNULL(SF_GET_COMP_NM(Z.ORDER_COMP_CD),SPACE(0)) AS ORDER_COMP_NM,
             IFNULL(Z.TOTAL_CNT,0) AS TOTAL_CNT,
             IFNULL(Z.TOTAL_QTY,0) AS TOTAL_QTY,
-            IFNULL(Z.PRO002_CNT,0) AS PROCESS_CONFIRM_CNT,
-            IFNULL(Z.PRO002_QTY,0) AS PROCESS_CONFIRM_QTY,
+            (IFNULL(Z.PRO002_CNT,0) - IFNULL(Z.ASSEMBLE_CNT,0)) AS PROCESS_CONFIRM_CNT,
+            (IFNULL(Z.PRO002_QTY,0) - IFNULL(Z.ASSEMBLE_QTY,0)) AS PROCESS_CONFIRM_QTY,
             IFNULL(Z.PRO004_CNT,0) AS WAIT_MATERIAL_CNT,
             IFNULL(Z.PRO004_QTY,0) AS WAIT_MATERIAL_QTY,
             (IFNULL(Z.PRO005_CNT,0) + IFNULL(Z.PRO021_CNT,0) + IFNULL(Z.PRO022_CNT,0)) AS IN_MATERIAL_CNT,
             (IFNULL(Z.PRO005_QTY,0) + IFNULL(Z.PRO021_QTY,0) + IFNULL(Z.PRO022_QTY,0)) AS IN_MATERIAL_QTY,
             (IFNULL(Z.PRO006_CNT,0) + IFNULL(Z.PRO007_CNT,0) + IFNULL(Z.PRO008_CNT,0)) AS PROCESSING_CNT,
             (IFNULL(Z.PRO006_QTY,0) + IFNULL(Z.PRO007_QTY,0) + IFNULL(Z.PRO008_QTY,0)) AS PROCESSING_QTY,
-            IFNULL(Z.PRO009_CNT,0) AS PROCESS_COMPLETE_CNT,
-            IFNULL(Z.PRO009_QTY,0) AS PROCESS_COMPLETE_QTY,
+            (IFNULL(Z.PRO009_CNT,0) + IFNULL(Z.PRO019_CNT,0)) AS PROCESS_COMPLETE_CNT,
+            (IFNULL(Z.PRO009_QTY,0) + IFNULL(Z.PRO019_QTY,0)) AS PROCESS_COMPLETE_QTY,
             (IFNULL(Z.PRO012_CNT,0) + IFNULL(Z.PRO013_CNT,0)) AS AFTER_PROCESS_CNT,
             (IFNULL(Z.PRO012_QTY,0) + IFNULL(Z.PRO013_QTY,0)) AS AFTER_PROCESS_QTY,
             (IFNULL(Z.PRO014_CNT,0) + IFNULL(Z.PRO015_CNT,0)) AS SURFACE_TREAT_CNT,
             (IFNULL(Z.PRO014_QTY,0) + IFNULL(Z.PRO015_QTY,0)) AS SURFACE_TREAT_QTY,
-            (IFNULL(Z.PRO001_CNT,0) + IFNULL(Z.PRO019_CNT,0)) AS OUTSIDE_CNT,
-            (IFNULL(Z.PRO001_QTY,0) + IFNULL(Z.PRO019_QTY,0)) AS OUTSIDE_QTY,
+            IFNULL(Z.PRO001_CNT,0) AS OUTSIDE_CNT,
+            IFNULL(Z.PRO001_QTY,0) AS OUTSIDE_QTY,
             IFNULL(Z.APPROACH_DUE_DT,SPACE(0)) AS APPROACH_DUE_DT,
             IFNULL(Z.DELAY_PROCESS_CNT,0) AS DELAY_PROCESS_CNT,
             IFNULL(Z.DELAY_PROCESS_QTY,0) AS DELAY_PROCESS_QTY,
             IFNULL(Z.DELAY_CNT,0) AS DELAY_CNT,
             IFNULL(Z.DELAY_QTY,0) AS DELAY_QTY,
             IFNULL(Z.MATCH_STOCK_CNT,0) AS MATCH_STOCK_CNT,
-            IFNULL(Z.MATCH_STOCK_QTY,0) AS MATCH_STOCK_QTY
+            IFNULL(Z.MATCH_STOCK_QTY,0) AS MATCH_STOCK_QTY,
+            IFNULL(Z.ASSEMBLE_CNT,0) AS ASSEMBLE_CNT,
+            IFNULL(Z.ASSEMBLE_QTY,0) AS ASSEMBLE_QTY
         FROM (
                  SELECT
                      X.ORDER_COMP_CD AS ORDER_COMP_CD,
                      SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM,
                      SUM(X.CNT) AS TOTAL_CNT,
                      SUM(X.QTY) AS TOTAL_QTY,
+                     MAX(CASE WHEN X.INSIDE_STOCK_SEQ IS NOT NULL THEN X.CNT END) AS MATCH_STOCK_CNT,
+                     MAX(CASE WHEN X.INSIDE_STOCK_SEQ IS NOT NULL THEN X.QTY END) AS MATCH_STOCK_QTY,
                      MAX(CASE WHEN X.PART_STATUS = 'PRO001' AND IFNULL(X.OUTSIDE_YN,'N') = 'Y' THEN X.CNT END) AS PRO001_CNT,
-                     MAX(CASE WHEN X.PART_STATUS = 'PRO002' AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.CNT END) AS PRO002_CNT,
-                     MAX(CASE WHEN X.PART_STATUS = 'PRO004' AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.CNT END) AS PRO004_CNT,
+                     MAX(CASE WHEN X.PART_STATUS = 'PRO002' AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' AND X.INSIDE_STOCK_SEQ IS NULL THEN X.CNT END) AS PRO002_CNT,
+                     MAX(CASE WHEN X.PART_STATUS = 'PRO004' AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' AND X.INSIDE_STOCK_SEQ IS NULL THEN X.CNT END) AS PRO004_CNT,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO005') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.CNT END) AS PRO005_CNT,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO006') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.CNT END) AS PRO006_CNT,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO007') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.CNT END) AS PRO007_CNT,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO008') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.CNT END) AS PRO008_CNT,
-                     MAX(CASE WHEN (X.PART_STATUS = 'PRO009') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.CNT END) AS PRO009_CNT,
+                     MAX(CASE WHEN X.PART_STATUS = 'PRO009' THEN X.CNT END) AS PRO009_CNT,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO012') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.CNT END) AS PRO012_CNT,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO013') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.CNT END) AS PRO013_CNT,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO014') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.CNT END) AS PRO014_CNT,
@@ -53,13 +57,13 @@
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO021') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.CNT END) AS PRO021_CNT,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO022') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.CNT END) AS PRO022_CNT,
                      MAX(CASE WHEN X.PART_STATUS = 'PRO001' AND IFNULL(X.OUTSIDE_YN,'N') = 'Y' THEN X.QTY END) AS PRO001_QTY,
-                     MAX(CASE WHEN X.PART_STATUS = 'PRO002' AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.QTY END) AS PRO002_QTY,
-                     MAX(CASE WHEN X.PART_STATUS = 'PRO004' AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.QTY END) AS PRO004_QTY,
+                     MAX(CASE WHEN X.PART_STATUS = 'PRO002' AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' AND X.INSIDE_STOCK_SEQ IS NULL THEN X.QTY END) AS PRO002_QTY,
+                     MAX(CASE WHEN X.PART_STATUS = 'PRO004' AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' AND X.INSIDE_STOCK_SEQ IS NULL THEN X.QTY END) AS PRO004_QTY,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO005') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.QTY END) AS PRO005_QTY,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO006') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.QTY END) AS PRO006_QTY,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO007') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.CNT END) AS PRO007_QTY,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO008') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.QTY END) AS PRO008_QTY,
-                     MAX(CASE WHEN (X.PART_STATUS = 'PRO009') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.QTY END) AS PRO009_QTY,
+                     MAX(CASE WHEN X.PART_STATUS = 'PRO009' THEN X.QTY END) AS PRO009_QTY,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO012') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.QTY END) AS PRO012_QTY,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO013') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.QTY END) AS PRO013_QTY,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO014') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.QTY END) AS PRO014_QTY,
@@ -67,18 +71,38 @@
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO019') AND IFNULL(X.OUTSIDE_YN,'N') = 'Y' THEN X.QTY END) AS PRO019_QTY,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO021') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.QTY END) AS PRO021_QTY,
                      MAX(CASE WHEN (X.PART_STATUS = 'PRO022') AND IFNULL(X.OUTSIDE_YN,'N') != 'Y' THEN X.QTY END) AS PRO022_QTY,
+                     X.ASSEMBLE_CNT,
+                     X.ASSEMBLE_QTY,
                      SF_GET_DATE_F(X.APPROACH_DUE_DT,'YYYY','') AS APPROACH_DUE_DT,
                      X.DELAY_PROCESS_CNT,
                      X.DELAY_PROCESS_QTY,
                      X.DELAY_CNT,
-                     X.DELAY_QTY,
-                     X.MATCH_STOCK_CNT,
-                     X.MATCH_STOCK_QTY,
-                     CAST(CONCAT(X.MATCH_STOCK_CNT, ' (',X.MATCH_STOCK_QTY,')') AS CHAR) AS MATCH_STOCK_TOT
+                     X.DELAY_QTY
                  FROM (
                           SELECT A.ORDER_COMP_CD, COUNT(*) AS CNT, B.PART_STATUS, IFNULL(B.OUTSIDE_YN,'N') AS OUTSIDE_YN,
-                                 SUM(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ)) AS QTY,
+                                 SUM(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ)) AS QTY, B.WORK_TYPE,
+                                 C.INSIDE_STOCK_SEQ,
                                  (SELECT COUNT(*)
+                                  FROM TBL_CONTROL X
+                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.PART_STATUS IS NOT NULL AND Y.INNER_WORK_FINISH_DT IS NULL
+                                  WHERE X.DEL_YN = 'N'
+                                    AND X.CONTROL_STATUS IN ('ORD001','ORD003')
+                                    AND X.OUT_FINISH_DT IS NULL
+                                    AND Y.WORK_TYPE = 'WTP020'
+                                    AND Y.PART_STATUS = 'PRO002'
+                                    AND X.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                 ) AS ASSEMBLE_CNT,
+                                 (SELECT SUM(SF_GET_CONTROL_PART_QTY(Y.CONTROL_SEQ,Y.CONTROL_DETAIL_SEQ))
+                                  FROM TBL_CONTROL X
+                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.PART_STATUS IS NOT NULL AND Y.INNER_WORK_FINISH_DT IS NULL
+                                  WHERE X.DEL_YN = 'N'
+                                    AND X.CONTROL_STATUS IN ('ORD001','ORD003')
+                                    AND X.OUT_FINISH_DT IS NULL
+                                    AND Y.WORK_TYPE = 'WTP020'
+                                    AND Y.PART_STATUS = 'PRO002'
+                                    AND X.ORDER_COMP_CD = A.ORDER_COMP_CD
+                                 ) AS ASSEMBLE_QTY,
+                                 /*(SELECT COUNT(*)
                                   FROM TBL_CONTROL X
                                            INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.INNER_WORK_FINISH_DT IS NULL
                                            INNER JOIN TBL_INSIDE_OUT Z ON Y.CONTROL_SEQ = Z.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ AND Z.OUT_STATUS = 'OUT001'
@@ -97,7 +121,7 @@
                                     AND X.OUT_FINISH_DT IS NULL
                                     AND Y.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016','PRO017', 'PRO018', 'PRO019', 'PRO020')
                                     AND X.ORDER_COMP_CD = A.ORDER_COMP_CD
-                                 ) AS MATCH_STOCK_QTY,
+                                 ) AS MATCH_STOCK_QTY,*/
                                  (SELECT MIN(Z.ORDER_DUE_DT)
                                   FROM TBL_CONTROL X
                                            INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.PART_STATUS IS NOT NULL AND Y.INNER_WORK_FINISH_DT IS NULL
@@ -151,8 +175,10 @@
                                     AND X.ORDER_COMP_CD = A.ORDER_COMP_CD
                                  ) AS DELAY_QTY
                           FROM TBL_CONTROL A
-                            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL
+                            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND B.INNER_WORK_FINISH_DT IS NULL
                                 AND B.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016', 'PRO017', 'PRO018', 'PRO020')
+                                AND B.WORK_TYPE != 'WTP040'
+                            LEFT OUTER JOIN TBL_INSIDE_OUT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND C.OUT_STATUS = 'OUT001'
                           WHERE A.DEL_YN = 'N'
                             AND A.CONTROL_STATUS IN ('ORD001','ORD003')
                             AND A.OUT_FINISH_DT IS NULL
@@ -161,7 +187,7 @@
                                   FROM TBL_OUTSIDE_CLOSE
                                   WHERE CONTROL_SEQ = B.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
                             )
-                          GROUP BY A.ORDER_COMP_CD, B.PART_STATUS, B.OUTSIDE_YN
+                          GROUP BY A.ORDER_COMP_CD, B.PART_STATUS, C.INSIDE_STOCK_SEQ
                       ) X
                  WHERE X.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016','PRO017', 'PRO018', 'PRO020')
                  GROUP BY X.ORDER_COMP_CD
@@ -398,6 +424,7 @@
                         AND A.OUT_FINISH_DT IS NULL
                         AND B.INNER_DUE_DT <![CDATA[ < ]]> DATE_SUB(NOW(), INTERVAL 3 DAY)
                 ) X
+                GROUP BY X.PART_STATUS
             ) Y
             UNION ALL
             SELECT DATE_FORMAT(Q.INNER_DUE_DT,'%Y%m%d') AS INNER_DUE_DT, COUNT(*) AS TOTAL,SUM(Y.QTY) AS TOTAL_QTY, Y.GOAL_QTY, Y.GOAL_CNT,
@@ -455,7 +482,7 @@
                             AND Y.INNER_DUE_DT = B.INNER_DUE_DT
                         ) AS GOAL_CNT
                     FROM TBL_CONTROL A
-                        INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL
+                        INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND B.INNER_WORK_FINISH_DT IS NULL
                     WHERE A.DEL_YN = 'N'
                         AND A.CONTROL_STATUS IN ('ORD001','ORD003')
                         AND A.OUT_FINISH_DT IS NULL
@@ -468,7 +495,7 @@
         WHERE Z.INNER_DUE_DT <![CDATA[ <= ]]> (
             SELECT MAX(B.INNER_DUE_DT)
             FROM TBL_CONTROL A
-                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL
+                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND B.INNER_WORK_FINISH_DT IS NULL
             WHERE A.DEL_YN = 'N'
                 AND A.CONTROL_STATUS IN ('ORD001','ORD003')
                 AND A.OUT_FINISH_DT IS NULL
@@ -613,7 +640,7 @@
 		             ELSE 'text-dark'
                 END AS STATUS
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE = 'WTP040'
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE = 'WTP040' AND B.INNER_WORK_FINISH_DT IS NULL
                 AND B.INSIDE_STOCK_SEQ IS NOT NULL AND B.PART_STATUS IS NOT NULL
                 AND B.PART_STATUS IN (  'PRO002','PRO004','PRO005','PRO021','PRO022'             <!-- 가공전 -->
                     , 'PRO006','PRO007','PRO008'                                <!-- 가공중 -->
@@ -635,10 +662,11 @@
             SUM(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ)) AS QTY,
             SF_GET_DATE_F(MIN(B.INNER_DUE_DT),'','') AS INNER_DUE_DT
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND IFNULL(B.OUTSIDE_YN,'N') = 'Y'
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND IFNULL(B.OUTSIDE_YN,'N') = 'Y' AND B.INNER_WORK_FINISH_DT IS NULL
         WHERE A.DEL_YN = 'N'
           AND A.OUT_FINISH_DT IS NULL
           AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+          AND B.PART_STATUS = 'PRO001'
           AND NOT EXISTS (
                 SELECT 1
                 FROM TBL_OUTSIDE_CLOSE
@@ -653,7 +681,7 @@
                COUNT(*) AS CNT,
                SUM(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ)) AS QTY
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND B.MATERIAL_TYPE IS NOT NULL
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND B.MATERIAL_TYPE IS NOT NULL AND B.INNER_WORK_FINISH_DT IS NULL
                 AND B.PART_STATUS IN ('PRO002','PRO004','PRO005','PRO021','PRO022','PRO017')
                 AND IFNULL(B.OUTSIDE_YN,'N') = 'N'
         WHERE A.DEL_YN = 'N'
@@ -666,7 +694,7 @@
                COUNT(*) AS CNT,
                SUM(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ)) AS QTY
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND AND B.INNER_WORK_FINISH_DT IS NULL
         WHERE A.DEL_YN = 'N'
           AND A.CONTROL_STATUS IN ('ORD001','ORD003')
           AND A.OUT_FINISH_DT IS NULL
@@ -676,19 +704,12 @@
         SELECT *
         FROM (
              SELECT 'ORDER_PROCESSING' AS TYPE,
-                    COUNT(*) AS CNT,
-                    SUM(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ)) AS QTY
+                COUNT(*) AS CNT,
+                SUM(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ)) AS QTY
              FROM TBL_CONTROL A
-                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL
-                    AND B.WORK_TYPE != 'WTP040' AND IFNULL(B.OUTSIDE_YN,'N') = 'N'
+                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND B.INNER_WORK_FINISH_DT IS NULL
+                 AND B.WORK_TYPE != 'WTP040'
              WHERE A.DEL_YN = 'N'
-                AND EXISTS (
-                    SELECT 1
-                    FROM TBL_CONTROL_PART_ORDER X
-                        INNER JOIN TBL_ORDER Y ON X.ORDER_SEQ = Y.ORDER_SEQ
-                    WHERE X.CONTROL_SEQ = A.CONTROL_SEQ
-                        AND X.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                )
                 AND A.CONTROL_STATUS IN ('ORD001','ORD003')
                 AND A.OUT_FINISH_DT IS NULL
                 AND B.PART_STATUS IN ('PRO006','PRO007','PRO008')
@@ -697,8 +718,8 @@
                  COUNT(*) AS CNT,
                  SUM(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ)) AS QTY
              FROM TBL_CONTROL A
-                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL
-                    AND B.WORK_TYPE = 'WTP040' AND IFNULL(B.OUTSIDE_YN,'N') = 'N'
+                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND B.INNER_WORK_FINISH_DT IS NULL
+                    AND B.WORK_TYPE = 'WTP040'
                     AND B.INSIDE_STOCK_SEQ IS NOT NULL
                     AND EXISTS (
                         SELECT 1
@@ -714,7 +735,9 @@
                  COUNT(*) AS CNT,
                  SUM(SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ)) AS QTY
              FROM TBL_CONTROL A
-                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND IFNULL(B.OUTSIDE_YN,'N') = 'Y'
+                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND B.INNER_WORK_FINISH_DT IS NULL
+                    AND IFNULL(B.OUTSIDE_YN,'N') = 'Y'
+                    AND B.WORK_TYPE != 'WTP040'
              WHERE A.DEL_YN = 'N'
                 AND A.CONTROL_STATUS IN ('ORD001','ORD003')
                 AND NOT EXISTS (
@@ -723,26 +746,30 @@
                     WHERE CONTROL_SEQ = B.CONTROL_SEQ
                         AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
                 )
+                AND B.PART_STATUS IN ('PRO001')
                 AND A.OUT_FINISH_DT IS NULL
         ) X
+        ORDER BY CNT DESC
     </select>
 
     <select id="selectProcessPop_company" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT SF_GET_DATE_F(B.INNER_DUE_DT, '','') AS INNER_DUE_DT,
             SF_GET_CODE_NM('1013',B.PART_STATUS ,#{LOGIN_LOCALE}) AS PART_STATUS_NM,
             CONCAT(A.CONTROL_NUM, <![CDATA[ '<br>' ]]> ,B.SIZE_TXT) AS CONTROL_SIZE,
-            CONCAT(SF_GET_CODE_NM('1033',B.WORK_TYPE,#{LOGIN_LOCALE}), <![CDATA[ '<br>' ]]> ,SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE})) AS WORK_TYPE_MATERIAL,
+            CONCAT(SF_GET_CODE_NM('1033',B.WORK_TYPE,#{LOGIN_LOCALE}), <![CDATA[ '<br>' ]]> ,IFNULL(SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}),SPACE(0))) AS WORK_TYPE_MATERIAL,
             SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ) AS QTY,
             A.SAME_SIDE_YN,
             SF_GET_USER_NM(D.WORK_USER_ID) AS WORK_USER_NM,
---             SF_GET_RECENT_MCT_WORK('WORKER', B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS LAST_MCT_WORK_USER,
             SF_GET_CODE_NM('1009', C.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION,
             D.EQUIP_NM,
             B.IMG_GFILE_SEQ,
+            B.CONTROL_SEQ,
+            B.CONTROL_DETAIL_SEQ,
             SF_GET_CODE_NM('1010', D.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM,
             CONCAT(TRUNCATE(D.WORKING_TIME / 3600, 0), 'h ', TRUNCATE((D.WORKING_TIME % 3600) / 60, 0), 'm')  AS WORKING_TIME
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND B.INNER_WORK_FINISH_DT IS NULL
+                AND B.WORK_TYPE != 'WTP040'
                 AND B.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016', 'PRO017', 'PRO018', 'PRO020')
             LEFT OUTER JOIN TBL_POP C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                 AND C.POP_SEQ = (
@@ -771,8 +798,32 @@
             AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
             <if test="PART_STATUS != null and PART_STATUS !=''">
                 <choose>
+                    <when test="PART_STATUS == 'ASSEMBLE'">
+                        AND B.PART_STATUS IN ('PRO002')
+                        AND B.WORK_TYPE = 'WTP020'
+                    </when>
                     <when test="PART_STATUS == 'MATCH_STOCK'">
                         AND EXISTS (
+                        SELECT 1
+                        FROM TBL_INSIDE_OUT X
+                        WHERE X.CONTROL_SEQ = B.CONTROL_SEQ
+                            AND X.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                            AND X.OUT_STATUS = 'OUT001'
+                        )
+                    </when>
+                    <when test="PART_STATUS == 'OUTSIDE'">
+                        AND IFNULL(B.OUTSIDE_YN,'N') = 'Y'
+                        AND B.PART_STATUS IN ('PRO001')
+                        AND NOT EXISTS (
+                            SELECT 1
+                            FROM TBL_OUTSIDE_CLOSE
+                            WHERE CONTROL_SEQ = B.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                        )
+                    </when>
+                    <when test="PART_STATUS == 'PRO002'">
+                        AND B.WORK_TYPE != 'WTP020'
+                        AND B.PART_STATUS IN (#{PART_STATUS})
+                        AND NOT EXISTS (
                             SELECT 1
                             FROM TBL_INSIDE_OUT X
                             WHERE X.CONTROL_SEQ = B.CONTROL_SEQ
@@ -780,9 +831,18 @@
                                 AND X.OUT_STATUS = 'OUT001'
                         )
                     </when>
-                    <when test="PART_STATUS == 'OUTSIDE'">
-                        AND IFNULL(B.OUTSIDE_YN,'N') = 'Y'
-                        AND B.PART_STATUS IN ('PRO001','PRO019')
+                    <when test="PART_STATUS == 'PRO004'">
+                        AND B.PART_STATUS IN (#{PART_STATUS})
+                        AND NOT EXISTS (
+                            SELECT 1
+                            FROM TBL_INSIDE_OUT X
+                            WHERE X.CONTROL_SEQ = B.CONTROL_SEQ
+                                AND X.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                AND X.OUT_STATUS = 'OUT001'
+                        )
+                    </when>
+                    <when test="PART_STATUS == 'PROCESS_COMPLETE'">
+                        AND B.PART_STATUS IN ('PRO009','PRO019')
                         AND NOT EXISTS (
                             SELECT 1
                             FROM TBL_OUTSIDE_CLOSE
@@ -790,7 +850,6 @@
                         )
                     </when>
                     <otherwise>
-                        AND IFNULL(B.OUTSIDE_YN,'N') = 'N'
                         AND B.PART_STATUS IN (${PART_STATUS})
                     </otherwise>
                 </choose>
@@ -800,19 +859,20 @@
         SELECT SF_GET_DATE_F(B.INNER_DUE_DT, '','') AS INNER_DUE_DT,
                SF_GET_CODE_NM('1013',B.PART_STATUS ,#{LOGIN_LOCALE}) AS PART_STATUS_NM,
                CONCAT(A.CONTROL_NUM, <![CDATA[ '<br>' ]]> ,B.SIZE_TXT) AS CONTROL_SIZE,
-               CONCAT(SF_GET_CODE_NM('1033',B.WORK_TYPE,#{LOGIN_LOCALE}), <![CDATA[ '<br>' ]]> ,SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE})) AS WORK_TYPE_MATERIAL,
+               CONCAT(SF_GET_CODE_NM('1033',B.WORK_TYPE,#{LOGIN_LOCALE}), <![CDATA[ '<br>' ]]> ,IFNULL(SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}),SPACE(0))) AS WORK_TYPE_MATERIAL,
                SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ) AS QTY,
                A.SAME_SIDE_YN,
                SF_GET_USER_NM(D.WORK_USER_ID) AS WORK_USER_NM,
---             SF_GET_RECENT_MCT_WORK('WORKER', B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS LAST_MCT_WORK_USER,
                SF_GET_CODE_NM('1009', C.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION,
                D.EQUIP_NM,
+               B.CONTROL_SEQ,
+               B.CONTROL_DETAIL_SEQ,
                B.IMG_GFILE_SEQ,
                SF_GET_CODE_NM('1010', D.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM,
                CONCAT(TRUNCATE(D.WORKING_TIME / 3600, 0), 'h ', TRUNCATE((D.WORKING_TIME % 3600) / 60, 0), 'm')  AS WORKING_TIME
         FROM TBL_CONTROL A
-                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL
-                 LEFT OUTER JOIN TBL_POP C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND B.INNER_WORK_FINISH_DT IS NULL
+            LEFT OUTER JOIN TBL_POP C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                     AND C.POP_SEQ = (
                         SELECT MAX(K.POP_SEQ)
                         FROM TBL_POP K
@@ -820,72 +880,128 @@
                           AND K.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
                         GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ
                     )
-                 LEFT OUTER JOIN (
-                    SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.MCT_WORK_SEQ,
-                           X.WORK_USER_ID, Y.EQUIP_NM, Y.PROCESS_TYPE, SF_GET_DRAWING_WORK_TIME('WORK', X.MCT_WORK_SEQ) AS WORKING_TIME
-                    FROM TBL_MCT_WORK X
-                             INNER JOIN TBL_EQUIP Y ON X.EQUIP_SEQ = Y.EQUIP_SEQ
-                    WHERE X.DEL_YN = 'N'
-                      AND X.MCT_WORK_SEQ = (
-                          SELECT MAX(M.MCT_WORK_SEQ) FROM TBL_MCT_WORK M
-                          WHERE M.DEL_YN = 'N'
+            LEFT OUTER JOIN (
+                SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.MCT_WORK_SEQ,
+                    X.WORK_USER_ID, Y.EQUIP_NM, Y.PROCESS_TYPE, SF_GET_DRAWING_WORK_TIME('WORK', X.MCT_WORK_SEQ) AS WORKING_TIME
+                FROM TBL_MCT_WORK X
+                    INNER JOIN TBL_EQUIP Y ON X.EQUIP_SEQ = Y.EQUIP_SEQ
+                WHERE X.DEL_YN = 'N'
+                    AND X.MCT_WORK_SEQ = (
+                        SELECT MAX(M.MCT_WORK_SEQ) FROM TBL_MCT_WORK M
+                        WHERE M.DEL_YN = 'N'
                             AND M.CONTROL_SEQ = X.CONTROL_SEQ
                             AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
-                          GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
-                    )
-                ) D ON D.CONTROL_SEQ = B.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                      GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
+                )
+            ) D ON D.CONTROL_SEQ = B.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
         WHERE A.DEL_YN = 'N'
-          AND A.CONTROL_STATUS IN ('ORD001','ORD003')
-          AND A.OUT_FINISH_DT IS NULL
-          AND IFNULL(B.OUTSIDE_YN,'N') = 'Y'
-          AND NOT EXISTS (SELECT *
+            AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+            AND A.OUT_FINISH_DT IS NULL
+            AND IFNULL(B.OUTSIDE_YN,'N') = 'Y'
+            AND NOT EXISTS (SELECT *
                           FROM TBL_OUTSIDE_CLOSE
                           WHERE CONTROL_SEQ = B.CONTROL_SEQ AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ)
-          AND B.OUTSIDE_COMP_CD = #{ORDER_COMP_CD}
+            AND B.OUTSIDE_COMP_CD = #{ORDER_COMP_CD}
+            AND B.PART_STATUS = 'PRO001'
     </select>
     <select id="selectProcessPop_material" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT SF_GET_DATE_F(B.INNER_DUE_DT, '','') AS INNER_DUE_DT,
                SF_GET_CODE_NM('1013',B.PART_STATUS ,#{LOGIN_LOCALE}) AS PART_STATUS_NM,
                CONCAT(A.CONTROL_NUM, <![CDATA[ '<br>' ]]> ,B.SIZE_TXT) AS CONTROL_SIZE,
-               CONCAT(SF_GET_CODE_NM('1033',B.WORK_TYPE,#{LOGIN_LOCALE}), <![CDATA[ '<br>' ]]> ,SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE})) AS WORK_TYPE_MATERIAL,
+               CONCAT(SF_GET_CODE_NM('1033',B.WORK_TYPE,#{LOGIN_LOCALE}), <![CDATA[ '<br>' ]]> ,IFNULL(SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}),SPACE(0))) AS WORK_TYPE_MATERIAL,
                SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ) AS QTY,
                A.SAME_SIDE_YN,
                SF_GET_USER_NM(D.WORK_USER_ID) AS WORK_USER_NM,
                SF_GET_CODE_NM('1009', C.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION,
                D.EQUIP_NM,
                B.IMG_GFILE_SEQ,
+               B.CONTROL_SEQ,
+               B.CONTROL_DETAIL_SEQ,
                SF_GET_CODE_NM('1010', D.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM,
                CONCAT(TRUNCATE(D.WORKING_TIME / 3600, 0), 'h ', TRUNCATE((D.WORKING_TIME % 3600) / 60, 0), 'm')  AS WORKING_TIME
         FROM TBL_CONTROL A
-                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL
-            AND B.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016', 'PRO017', 'PRO018', 'PRO019', 'PRO020')
-                 LEFT OUTER JOIN TBL_POP C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            AND C.POP_SEQ = (
-                SELECT MAX(K.POP_SEQ)
-                FROM TBL_POP K
-                WHERE K.CONTROL_SEQ = B.CONTROL_SEQ
-                  AND K.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ
-            )
-                 LEFT OUTER JOIN (
-            SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.MCT_WORK_SEQ,
-                   X.WORK_USER_ID, Y.EQUIP_NM, Y.PROCESS_TYPE, SF_GET_DRAWING_WORK_TIME('WORK', X.MCT_WORK_SEQ) AS WORKING_TIME
-            FROM TBL_MCT_WORK X
-                     INNER JOIN TBL_EQUIP Y ON X.EQUIP_SEQ = Y.EQUIP_SEQ
-            WHERE X.DEL_YN = 'N'
-              AND X.MCT_WORK_SEQ = (
-                SELECT MAX(M.MCT_WORK_SEQ) FROM TBL_MCT_WORK M
-                WHERE M.DEL_YN = 'N'
-                  AND M.CONTROL_SEQ = X.CONTROL_SEQ
-                  AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
-                GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
-            )
-        ) D ON D.CONTROL_SEQ = B.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND B.INNER_WORK_FINISH_DT IS NULL
+                AND B.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016', 'PRO017', 'PRO018', 'PRO019', 'PRO020')
+            LEFT OUTER JOIN TBL_POP C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                AND C.POP_SEQ = (
+                    SELECT MAX(K.POP_SEQ)
+                    FROM TBL_POP K
+                    WHERE K.CONTROL_SEQ = B.CONTROL_SEQ
+                      AND K.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                    GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ
+                )
+            LEFT OUTER JOIN (
+                SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.MCT_WORK_SEQ,
+                       X.WORK_USER_ID, Y.EQUIP_NM, Y.PROCESS_TYPE, SF_GET_DRAWING_WORK_TIME('WORK', X.MCT_WORK_SEQ) AS WORKING_TIME
+                FROM TBL_MCT_WORK X
+                         INNER JOIN TBL_EQUIP Y ON X.EQUIP_SEQ = Y.EQUIP_SEQ
+                WHERE X.DEL_YN = 'N'
+                    AND X.MCT_WORK_SEQ = (
+                        SELECT MAX(M.MCT_WORK_SEQ) FROM TBL_MCT_WORK M
+                        WHERE M.DEL_YN = 'N'
+                            AND M.CONTROL_SEQ = X.CONTROL_SEQ
+                            AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+                        GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
+                    )
+            ) D ON D.CONTROL_SEQ = B.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
         WHERE A.DEL_YN = 'N'
           AND A.CONTROL_STATUS IN ('ORD001','ORD003')
           AND B.PART_STATUS IN ('PRO002','PRO004','PRO005','PRO021','PRO022','PRO017')
           AND IFNULL(B.OUTSIDE_YN,'N') = 'N'
           AND A.OUT_FINISH_DT IS NULL
           AND B.MATERIAL_TYPE = #{MATERIAL_TYPE}
+    </select>
+    <select id="selectProcessPop_nonComplete" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            SF_GET_DATE_F(B.INNER_DUE_DT, '','') AS INNER_DUE_DT,
+            SF_GET_CODE_NM('1013',B.PART_STATUS ,#{LOGIN_LOCALE}) AS PART_STATUS_NM,
+            CONCAT(A.CONTROL_NUM, <![CDATA[ '<br>' ]]> ,B.SIZE_TXT) AS CONTROL_SIZE,
+            CONCAT(SF_GET_CODE_NM('1033',B.WORK_TYPE,#{LOGIN_LOCALE}), <![CDATA[ '<br>' ]]> ,IFNULL(SF_GET_CODE_NM('1027',B.MATERIAL_DETAIL,#{LOGIN_LOCALE}),SPACE(0))) AS WORK_TYPE_MATERIAL,
+            SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ) AS QTY,
+            A.SAME_SIDE_YN,
+            SF_GET_USER_NM(D.WORK_USER_ID) AS WORK_USER_NM,
+            SF_GET_CODE_NM('1009', C.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION,
+            D.EQUIP_NM,
+            B.IMG_GFILE_SEQ,
+            B.CONTROL_SEQ,
+            B.CONTROL_DETAIL_SEQ,
+            SF_GET_CODE_NM('1010', D.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM,
+            CONCAT(TRUNCATE(D.WORKING_TIME / 3600, 0), 'h ', TRUNCATE((D.WORKING_TIME % 3600) / 60, 0), 'm')  AS WORKING_TIME
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND B.INNER_WORK_FINISH_DT IS NULL
+            LEFT OUTER JOIN TBL_POP C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                AND C.POP_SEQ = (
+                    SELECT MAX(K.POP_SEQ)
+                    FROM TBL_POP K
+                    WHERE K.CONTROL_SEQ = B.CONTROL_SEQ
+                        AND K.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                    GROUP BY K.CONTROL_SEQ, K.CONTROL_DETAIL_SEQ
+                )
+            LEFT OUTER JOIN (
+                SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.MCT_WORK_SEQ,
+                    X.WORK_USER_ID, Y.EQUIP_NM, Y.PROCESS_TYPE, SF_GET_DRAWING_WORK_TIME('WORK', X.MCT_WORK_SEQ) AS WORKING_TIME
+                FROM TBL_MCT_WORK X
+                    INNER JOIN TBL_EQUIP Y ON X.EQUIP_SEQ = Y.EQUIP_SEQ
+                WHERE X.DEL_YN = 'N'
+                    AND X.MCT_WORK_SEQ = (
+                        SELECT MAX(M.MCT_WORK_SEQ) FROM TBL_MCT_WORK M
+                        WHERE M.DEL_YN = 'N'
+                            AND M.CONTROL_SEQ = X.CONTROL_SEQ
+                            AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+                        GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
+                    )
+            ) D ON D.CONTROL_SEQ = B.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+        WHERE A.DEL_YN = 'N'
+            AND A.CONTROL_STATUS IN ('ORD001','ORD003')
+            AND A.OUT_FINISH_DT IS NULL
+            AND B.PART_STATUS IN ('PRO002', 'PRO003', 'PRO004', 'PRO005','PRO006','PRO007','PRO008')
+          <choose>
+            <when test="INNER_DUE_DT == 'BEFORE'">
+                AND B.INNER_DUE_DT <![CDATA[ < ]]> DATE_SUB(NOW(), INTERVAL 3 DAY)
+            </when>
+            <otherwise>
+                AND B.INNER_DUE_DT = #{INNER_DUE_DT}
+            </otherwise>
+          </choose>
     </select>
 </mapper>
