@@ -7,7 +7,7 @@
 <html lang="ko">
 <head>
     <meta charset="utf-8">
-    <title>ToMES 시스템</title>
+    <title>진성정밀 MES 시스템</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <tiles:insertAttribute name="header"/>
     <tiles:insertAttribute name="body-default-script"/>
