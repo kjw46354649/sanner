@@ -1309,7 +1309,7 @@
                     }else {
                         id += innerDueDt;
                     }
-                    let html = '<div id="'+id+'" class="block_box block_box_middle back_sky2 pt-3 non_complete_div" data-target="'+target+'">';
+                    let html = '<div id="'+id+'" class="block_box block_box_middle back_sky2 pt-3 non_complete_div" style="height: 70px;" data-target="'+target+'">';
                     html += '<p>' + title + '</p>';
                     html += '<p class="small">' + Item.NON_COMPLETE_CNT + ' (' + Item.NON_COMPLETE_QTY + ')</p>';
                     html += '</div>';
