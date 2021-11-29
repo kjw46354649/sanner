@@ -724,7 +724,6 @@
                     arr.push((Item.CNT / totalCnt) * 100);
                 });
                 let result = calculatePercent(arr,100);
-                console.log(result);
                 $.each(data2.list, function (idx,Item) {
                     $("#"+Item.TYPE + "_PERCENT").text(result[idx] +'%');
                 });
@@ -802,7 +801,7 @@
             {title: 'ASSEMBLE_QTY', dataIndx: 'ASSEMBLE_QTY', hidden: true},
             {title: 'DELAY_PROCESS_QTY', dataIndx: 'DELAY_PROCESS_QTY', hidden: true},
             {title: 'DELAY_QTY', dataIndx: 'DELAY_QTY', hidden: true},
-            {title: '발주처', width: 125, dataIndx: 'ORDER_COMP_NM', editable: false, sortable:false,
+            {title: '발주처', width: 120, dataIndx: 'ORDER_COMP_NM', editable: false, sortable:false,
                 styleHead: {'background-color':'#aedcff'},
                 render: function (ui) {
                     return {style: 'font-style:italic;'};
@@ -1013,7 +1012,7 @@
                     });
                 }
             },
-            {title: '당면<br>납기', width: 82, dataType: 'date', format: 'mm/dd', dataIndx: 'APPROACH_DUE_DT', editable: false, sortable:false,
+            {title: '당면<br>납기', width: 80, dataType: 'date', format: 'mm/dd', dataIndx: 'APPROACH_DUE_DT', editable: false, sortable:false,
                 styleHead: {'background-color':'#0c4888', 'color':'white'},
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -1027,7 +1026,7 @@
                     }
                 }
             },
-            {title: '가공<br>지연', width: 82, dataIndx: 'DELAY_PROCESS_CNT', editable: false, sortable:false,
+            {title: '가공<br>지연', width: 80, dataIndx: 'DELAY_PROCESS_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#ffc372'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
@@ -1038,7 +1037,7 @@
                     }
                 }
             },
-            {title: '납기<br>지연', width: 82, dataIndx: 'DELAY_CNT', editable: false, sortable:false,
+            {title: '납기<br>지연', width: 80, dataIndx: 'DELAY_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#fff54c', 'color':'red'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
