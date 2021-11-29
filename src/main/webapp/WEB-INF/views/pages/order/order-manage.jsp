@@ -20,7 +20,7 @@
                 <ul>
                     <li>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="REGIST_NUM">접수번호</label>
+                            <label class="label_100" for="REGIST_NUM">접수/작업번호</label>
                             <input type="search" class="wd_200" name="REGIST_NUM" id="REGIST_NUM" title="작업지시번호">
                         </span>
                         <span class="gubun"></span>
@@ -35,8 +35,8 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="CONTROL_NUM">작업지시번호</label>
-                            <input type="search" class="wd_200" name="CONTROL_NUM" id="CONTROL_NUM" title="작업지시번호">
+                            <label class="label_100" for="ITEM_NM">품명</label>
+                            <input type="search" class="wd_200" name="ITEM_NM" id="ITEM_NM" title="품명">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap right_float">
@@ -46,8 +46,8 @@
                     </li>
                     <li>
                         <span class="ipu_wrap">
-                            <label class="label_100" for="ITEM_NM">품명</label>
-                            <input type="search" class="wd_200" name="ITEM_NM" id="ITEM_NM" title="품명">
+                            <label class="label_100" for="MODULE_PROJECT">모듈/프로젝트</label>
+                            <input type="search" class="wd_200" name="MODULE_PROJECT" id="MODULE_PROJECT" title="모듈/프로젝트">
                         </span>
                         <span class="gubun"></span>
                         <span class="ipu_wrap">
@@ -363,6 +363,38 @@
                 }
             },
             {
+                title: '작업<br>형태', dataIndx: 'WORK_TYPE',
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
+                },
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')}
+            },
+            {
+                title: '작업지시번호', align: 'left', width: 140, dataIndx: 'CONTROL_NUM',
+                editable: false
+            },
+            {
+                title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
+                render: function (ui) {
+                    if (ui.rowData.CONTROL_NUM)
+                        return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
+                    $cell.find('[name=detailView]').bind('click', function () {
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
+                    });
+                }
+            },
+            {title: '작업<br>확정', minWidth: 50, dataIndx: 'CONTROL_STATUS'},
+            {
                 title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
@@ -472,16 +504,6 @@
 
                     return {cls: cls, text: controlManageFilterRender(ui)};
                 }
-            },
-            {
-                title: '작업<br>형태', dataIndx: 'WORK_TYPE',
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': 'black'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-
-                    return rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
-                },
-                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')}
             },
             {
                 title: '소재<br>사급', dataIndx: 'MATERIAL_SUPPLY_YN',
@@ -632,28 +654,6 @@
                     ]
                 },
             },
-            {
-                title: '작업지시번호', align: 'left', width: 140, dataIndx: 'CONTROL_NUM',
-                editable: false
-            },
-            {
-                title: '', minWidth: 30, width: 30, dataIndx: 'CONTROL_NUM_BUTTON',
-                render: function (ui) {
-                    if (ui.rowData.CONTROL_NUM)
-                        return '<span  class="shareIcon" name="detailView" style="cursor: pointer"></span>';
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui),
-                        rowIndx = ui.rowIndx,
-                        rowData = ui.rowData;
-
-                    $cell.find('[name=detailView]').bind('click', function () {
-                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
-                    });
-                }
-            },
-            {title: '가공확정', minWidth: 60, dataIndx: 'PART_STATUS'},
             {title: 'INV No.', width: 100, dataIndx: 'INVOICE_NUM',
                 render: function (ui) {
                     let rowData = ui.rowData;
@@ -1307,8 +1307,8 @@
             let $orderManagementGridInstance = $orderManagementGrid.pqGrid('getInstance').grid;
             let Cols = $orderManagementGridInstance.Columns();
             let commArray = [
-                'ORDER_STATUS_NM', 'ORDER_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'NOTE', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON',
-                'MAIN_INSPECTION', 'DRAWING_NUM_BUTTON', 'REGIST_NUM', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
+                'ORDER_STATUS_NM', 'ORDER_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'NOTE', 'REGIST_NUM', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON',
+                'MAIN_INSPECTION', 'DRAWING_NUM_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
                 'DELIVERY_DT', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'MATERIAL_SUPPLY_YN',
                 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_FINISH_HEAT', 'CONTROL_EST_AMT', 'UNIT_FINAL_AMT', 'PREV_DRAWING_NUM'
             ];
@@ -1317,11 +1317,6 @@
                 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'MATERIAL_FINISH_GRIND', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'EST_TOTAL_AMT', 'PROJECT_NM', 'MODULE_NM',
                 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'SAME_SIDE_YN'
             ]
-            const normalModeArray1 = [
-                'OUT_QTY', 'OUT_FINISH_DT', 'INVOICE_NUM', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'DETAIL_MACHINE_REQUIREMENT',
-                'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER', 'DRAWING_UP_DT',
-                'CONTROL_PART_INSERT_UPDATE_DT', 'ORDER_IMG_GFILE_SEQ', 'SAME_SIDE_YN'
-            ];
             const closeModeArray1 = [
                 'INVOICE_NUM', 'OUT_QTY', 'OUT_FINISH_DT', 'CLOSE_DT', 'DETAIL_MACHINE_REQUIREMENT', 'UNIT_SUM_AUTO_AMT', 'MATERIAL_FINISH_GRIND',
                 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIA_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT', 'UNIT_PROCESS_AUTO_AMT',
@@ -1341,9 +1336,6 @@
             switch (elementId) {
                 case 'CONTROL_MANAGE_INPUT_MODE':
                     array = commArray.concat(inputModeArray1);
-                    break;
-                case 'CONTROL_MANAGE_NORMAL_MODE':
-                    array = commArray.concat(normalModeArray1);
                     break;
                 case 'CONTROL_MANAGE_CLOSE_MODE':
                     array = commArray.concat(closeModeArray1);
@@ -2463,6 +2455,7 @@
             $orderManagementGrid.pqGrid('refreshView');
         });
         // 거래명세표
+
         $('#TRANSACTION_STATEMENT').on('click', function () {
             if (noSelectedRowAlert()) {
                 return false;
@@ -2844,6 +2837,7 @@
         })();
         $('#ORDER_SEARCH_CONDITION').val('ROM001').prop("selected",true);
         $orderManagementGrid = $('#' + gridId).pqGrid(obj);
+        changeViewColumn('CONTROL_MANAGE_ALL_MODE');
 
 
         $('#ESTIMATE_REGISTER_FROM_CONTROL').on('click', function (event) {

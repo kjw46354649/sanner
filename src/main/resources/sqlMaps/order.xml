@@ -5013,7 +5013,7 @@
             (SELECT Q.INVOICE_NUM FROM TBL_INVOICE_DETAIL Q WHERE Q.ORDER_SEQ = A.ORDER_SEQ) AS INVOICE_NUM,
             B.DRAWING_VER, B.DRAWING_UP_DT,
             B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
-            B.PART_STATUS, B.UNIT_MATERIAL_AUTO_AMT, B.UNIT_FINAL_EST_AMT AS CONTROL_EST_AMT,
+            B.CONTROL_STATUS, B.UNIT_MATERIAL_AUTO_AMT, B.UNIT_FINAL_EST_AMT AS CONTROL_EST_AMT,
             B.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, B.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT,
             B.UNIT_SURFACE_AUTO_AMT, B.UNIT_PROCESS_AUTO_AMT,
             B.UNIT_ETC_AMT, B.UNIT_AMT_NOTE,
@@ -5062,7 +5062,7 @@
                             '' AS INVOICE_NUM,
                             '' AS CONTROL_SEQ,
                             '' AS CONTROL_DETAIL_SEQ,
-                            '' AS PART_STATUS,
+                            '' AS CONTROL_STATUS,
                             '' AS DRAWING_VER,
                             '' AS INNER_DUE_DT,
                             '' AS UNIT_FINAL_EST_AMT,
@@ -5080,10 +5080,9 @@
                         SELECT
                             X.ORDER_SEQ,
                             Y.CONTROL_NUM, Y.OUT_FINISH_DT, X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ,
-                            CASE WHEN (Z.PART_STATUS = 'PRO003') THEN SPACE(0)
-                                 WHEN Z.PART_STATUS IS NULL THEN SPACE(0)
-                                 ELSE '확정'
-                            END AS PART_STATUS,
+                            CASE WHEN (Y.CONTROL_STATUS = 'ORD001') THEN '확정'
+                                 ELSE SPACE(0)
+                            END AS CONTROL_STATUS,
                             Z.DRAWING_VER,
                             Z.INNER_DUE_DT,
                             X.UNIT_FINAL_EST_AMT,
@@ -5177,11 +5176,8 @@
                     </if>
                 </when>
             </choose>
-            <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
-                AND B.CONTROL_NUM LIKE CONCAT('%', #{CONTROL_NUM}, '%')
-            </if>
             <if test="REGIST_NUM != null and REGIST_NUM != ''">
-                AND A.REGIST_NUM LIKE CONCAT('%', #{REGIST_NUM}, '%')
+                AND (UPPER(A.REGIST_NUM) LIKE CONCAT('%', UPPER(#{REGIST_NUM}), '%') OR UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{REGIST_NUM}), '%'))
             </if>
             <if test="HIDDEN_ORDER_COMP_CD != null and HIDDEN_ORDER_COMP_CD != ''">
                 AND A.ORDER_COMP_CD IN (${HIDDEN_ORDER_COMP_CD})
@@ -5197,6 +5193,9 @@
             </if>
             <if test="ITEM_NM != null and ITEM_NM != ''">
                 AND UPPER(A.ITEM_NM) LIKE CONCAT('%', UPPER(#{ITEM_NM}), '%')
+            </if>
+            <if test="MODULE_PROJECT != null and MODULE_PROJECT != ''">
+                AND (UPPER(A.MODULE_NM) LIKE CONCAT('%', UPPER(#{MODULE_PROJECT}), '%') OR UPPER(A.PROJECT_NM) LIKE CONCAT('%', UPPER(#{MODULE_PROJECT}), '%'))
             </if>
         ORDER BY A.REGIST_NUM, A.ORDER_NUM, A.ORDER_SEQ
     </select>
