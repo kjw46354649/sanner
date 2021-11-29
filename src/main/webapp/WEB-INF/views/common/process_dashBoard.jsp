@@ -701,7 +701,6 @@
         function calculatePercent(l, target) {
             var off = target - _.reduce(l, function(acc, x) { return acc + Math.round(x) }, 0);
             return _.chain(l).
-            sortBy(function(x) { return Math.round(x) - x }).
             map(function(x, i) { return Math.round(x) + (off > i) - (i >= (l.length + off)) }).
             value();
         }
@@ -725,6 +724,7 @@
                     arr.push((Item.CNT / totalCnt) * 100);
                 });
                 let result = calculatePercent(arr,100);
+                console.log(result);
                 $.each(data2.list, function (idx,Item) {
                     $("#"+Item.TYPE + "_PERCENT").text(result[idx] +'%');
                 });
@@ -799,6 +799,7 @@
             {title: 'AFTER_PROCESS_QTY', dataIndx: 'AFTER_PROCESS_QTY', hidden: true},
             {title: 'SURFACE_TREAT_QTY', dataIndx: 'SURFACE_TREAT_QTY', hidden: true},
             {title: 'OUTSIDE_QTY', dataIndx: 'OUTSIDE_QTY', hidden: true},
+            {title: 'ASSEMBLE_QTY', dataIndx: 'ASSEMBLE_QTY', hidden: true},
             {title: 'DELAY_PROCESS_QTY', dataIndx: 'DELAY_PROCESS_QTY', hidden: true},
             {title: 'DELAY_QTY', dataIndx: 'DELAY_QTY', hidden: true},
             {title: '발주처', width: 125, dataIndx: 'ORDER_COMP_NM', editable: false, sortable:false,
@@ -1064,7 +1065,7 @@
             filterModel: {mode: 'OR'},
             colModel: processDashBoardMainColModel,
             dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', recIndx: 'RNUM',
+                location: 'remote', dataType: 'json', method: 'POST',
                 url: '/tv/paramQueryGridSelect',
                 postData: fnFormToJsonArrayData('PROCESS_DASH_MAIN_FORM'),
                 getData: function (dataJSON) {
@@ -1264,13 +1265,12 @@
             rowHtHead: 25,
             strNoRows: g_noData,
             numberCell: {show:false},
-            trackModel: {on: true},
             editable: false,
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
             filterModel: {mode: 'OR'},
             colModel: processCompleteColModel,
             dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', recIndx: 'RNUM',
+                location: 'remote', dataType: 'json', method: 'POST',
                 url: '/tv/paramQueryGridSelect',
                 postData: fnFormToJsonArrayData('PROCESS_DASH_SUB_FORM'),
                 getData: function (dataJSON) {
