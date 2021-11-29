@@ -990,7 +990,7 @@
             // workTypeCheck(dataList);
             registNumCheck(dataList)
             sameSideCheck(dataList);
-            dateCheck(dataList)
+            // dateCheck(dataList)
             // controlNumCheck(dataList)
 
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
