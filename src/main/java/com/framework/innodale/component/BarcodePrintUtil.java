@@ -70,8 +70,8 @@ public class BarcodePrintUtil {
             bufWriter.write("^FO630,4^GB85,108,1^FS");
             bufWriter.write("^FO4,60^GB709,1,1^FS");
             bufWriter.write("^FO110,20^FD" + doNull((String)barcodeInfo.get("CONTROL_NUM_INFO"))+ "^FS");//타이틀
-            bufWriter.write("^FO660,20^FD" + barcodeInfo.get("CONTROL_VER")+ "^FS");
-            bufWriter.write("^FO660,75^FD" + barcodeInfo.get("DRAWING_VER")+ "^FS");
+//            bufWriter.write("^FO660,20^FD" + barcodeInfo.get("CONTROL_VER")+ "^FS"); // controlVer삭제에 따른 주석. but 어디서 출력되는지 확인불가
+            bufWriter.write("^FO660,55^FD" + barcodeInfo.get("DRAWING_VER")+ "^FS");
             bufWriter.write("^CFJ,20");
             bufWriter.write("^FO10,78^A1N^FD도면 번호^FS");
             bufWriter.write("^CFJ,25");

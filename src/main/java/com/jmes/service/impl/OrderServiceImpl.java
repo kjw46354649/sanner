@@ -133,12 +133,12 @@ public class OrderServiceImpl implements OrderService {
         for (HashMap<String, Object> hashMap : jsonArray) {
             hashMap.put("LOGIN_USER_ID",userId);
 
-            hashMap.put("queryId", "orderMapper.updateControlRevision");
-            this.innodaleDao.update(hashMap);
-            hashMap.put("queryId", "orderMapper.updateControlBarcodeRevision");
-            this.innodaleDao.update(hashMap);
-            hashMap.put("queryId", "orderMapper.insertControlBarcodeRevision");
-            this.innodaleDao.create(hashMap);
+//            hashMap.put("queryId", "orderMapper.updateControlRevision");
+//            this.innodaleDao.update(hashMap);
+//            hashMap.put("queryId", "orderMapper.updateControlBarcodeRevision");
+//            this.innodaleDao.update(hashMap);
+//            hashMap.put("queryId", "orderMapper.insertControlBarcodeRevision");
+//            this.innodaleDao.create(hashMap);
             hashMap.put("queryId", "orderMapper.updateControlStatus");
             this.innodaleDao.update(hashMap);
             hashMap.put("queryId", "orderMapper.createControlProgress");

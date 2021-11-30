@@ -344,17 +344,17 @@
                             return renderData;
                         }
                     },
-                    {title: '', minWidth: 20, dataType: 'integer', dataIndx: 'CONTROL_VER',
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-                            let cls = 'bg-lightgray';
-                            if(ui.rowData.CONTROL_STATUS === undefined || ui.rowData.CONTROL_STATUS === 'ORD002') {
-                                cls = '';
-                            }
-
-                            return {cls: cls, text: cellData};
-                        }
-                    },
+                    // {title: '', minWidth: 20, dataType: 'integer', dataIndx: 'CONTROL_VER',
+                    //     render: function (ui) {
+                    //         let cellData = ui.cellData;
+                    //         let cls = 'bg-lightgray';
+                    //         if(ui.rowData.CONTROL_STATUS === undefined || ui.rowData.CONTROL_STATUS === 'ORD002') {
+                    //             cls = '';
+                    //         }
+                    //
+                    //         return {cls: cls, text: cellData};
+                    //     }
+                    // },
                     {title: '일자', dataIndx: 'CONTROL_STATUS_DT',
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -1645,7 +1645,7 @@
             let $controlManagementGridInstance = $controlManagementGrid.pqGrid('getInstance').grid;
             let Cols = $controlManagementGridInstance.Columns();
             let commArray = [
-                'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON',
+                'CONTROL_STATUS_NM'/*, 'CONTROL_VER'*/, 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON',
                 'PART_NUM','EMERGENCY_YN', 'MAIN_INSPECTION', 'DRAWING_NUM_BUTTON', 'ORDER_DRAWING_NUM', 'ORDER_NUM_PLUS_BUTTON', 'REGIST_NUM', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
                 'DELIVERY_DT', 'PART_UNIT_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN', 'MATERIAL_SUPPLY_YN',
                 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'MATERIAL_FINISH_HEAT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'PREV_DRAWING_NUM',
@@ -1656,68 +1656,17 @@
                 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'WORK_FACTORY', 'MATERIAL_FINISH_GRIND', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'EST_TOTAL_AMT', 'PROJECT_NM', 'MODULE_NM',
                 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'SAME_SIDE_YN'
             ]
-            // const inputModeArray = [
-            //     'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD',
-            //     'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM',
-            //     'DRAWING_NUM_BUTTON', 'ORDER_DRAWING_NUM',
-            //     'ORDER_NUM_PLUS_BUTTON', 'REGIST_NUM', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'PART_UNIT_QTY',
-            //     'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'SIZE_TXT', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN',
-            //     'WORK_FACTORY', 'MATERIAL_SUPPLY_YN', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE',
-            //     'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
-            //     'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
-            //     'UNIT_FINAL_EST_AMT', 'EST_TOTAL_AMT', 'UNIT_FINAL_AMT', 'PROJECT_NM', 'MODULE_NM', 'DELIVERY_COMP_NM',
-            //     'LABEL_NOTE', 'PREV_DRAWING_NUM', 'SAME_SIDE_YN',
-            //     'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','ADDITIONAL_QTY'
-            //     // , 'DETAIL_MACHINE_REQUIREMENT', 'TOTAL_SHEET'
-            // ];
             const normalModeArray1 = [
                 'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'INVOICE_NUM', 'CONTROL_PART_QTY', 'WORK_FACTORY', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'DETAIL_MACHINE_REQUIREMENT',
                 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER', 'DRAWING_UP_DT', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT_F',
                 'CONTROL_PART_INSERT_UPDATE_DT', 'ORDER_IMG_GFILE_SEQ', 'EOCLD', 'DNJSCLD', 'SAME_SIDE_YN'
             ];
-            // const normalModeArray = [
-            //     'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD',
-            //     'CONTROL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM',
-            //     'DRAWING_NUM_BUTTON', 'ORDER_DRAWING_NUM', 'ORDER_NUM_PLUS_BUTTON', 'REGIST_NUM', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
-            //     'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'INVOICE_NUM', 'PART_UNIT_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
-            //     'CONTROL_PART_QTY', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN', 'WORK_FACTORY', 'MATERIAL_SUPPLY_YN',
-            //     'SIZE_TXT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT',
-            //     'PREV_UNIT_FINAL_AMT', 'ITEM_NM',
-            //     'DETAIL_MACHINE_REQUIREMENT', // 20210331 임시 hidden 처리
-            //     'PREV_DRAWING_NUM', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT',
-            //     'MATERIAL_FINISH_HEAT', 'MATERIAL_NOTE', 'DXF_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER',
-            //     'DRAWING_UP_DT', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN',
-            //     'OUTSIDE_UNIT_AMT', 'OUTSIDE_IN_DT_F', 'DELIVERY_DT', 'CONTROL_PART_INSERT_UPDATE_DT', 'ORDER_IMG_GFILE_SEQ',
-            //     'EOCLD', 'DNJSCLD', 'SAME_SIDE_YN',
-            //     'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','ADDITIONAL_QTY'
-            //     // , 'TOTAL_SHEET'
-            // ];
             const closeModeArray1 = [
                 'INVOICE_NUM', 'CONTROL_PART_QTY', 'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'CLOSE_DT', 'DETAIL_MACHINE_REQUIREMENT', 'UNIT_SUM_AUTO_AMT', 'MATERIAL_FINISH_GRIND',
                 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIA_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT', 'UNIT_PROCESS_AUTO_AMT',
                 'UNIT_SURFACE_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PROJECT_NM', 'ORDER_STAFF_NM', 'ORDER_IMG_GFILE_SEQ',
                 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT', 'OUTSIDE_FINAL_AMT', 'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE'
             ];
-            // const closeModeArray = [
-            //     'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD',
-            //     'CONTROL_NOTE', 'INVOICE_NUM', 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_NUM_BUTTON',
-            //     'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'ORDER_DRAWING_NUM', 'ITEM_NM', 'SIZE_TXT',
-            //     'WORK_TYPE', 'OUTSIDE_YN', 'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL', 'MATERIAL_KIND',
-            //     'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY',
-            //     'OTHER_SIDE_QTY', 'ORDER_NUM_PLUS_BUTTON', 'REGIST_NUM', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY',
-            //     'ORDER_OUT_FINISH_DT', 'CLOSE_DT', 'DELIVERY_DT',
-            //     'DETAIL_MACHINE_REQUIREMENT', 'UNIT_SUM_AUTO_AMT', // 20210331 임시 hidden 처리
-            //     'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT', 'UNIT_MATERIAL_AUTO_AMT',
-            //     'UNIT_MATERIA_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT',
-            //     'UNIT_PROCESS_AUTO_AMT', 'UNIT_SURFACE_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE',
-            //     'MODULE_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT',
-            //     'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PROJECT_NM', 'ITEM_NM', 'ORDER_STAFF_NM', 'PREV_DRAWING_NUM',
-            //     'ORDER_IMG_GFILE_SEQ', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT',
-            //     'OUTSIDE_FINAL_AMT',
-            //     'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','ADDITIONAL_QTY'
-            //     //, 'TOTAL_SHEET'
-            // ];
-
             const allModeArray1 = [
                 'INVOICE_NUM', 'PROJECT_NM', 'MODULE_NM', 'ORDER_STAFF_SEQ', 'DESIGNER_NM', 'DELIVERY_COMP_NM', 'LABEL_NOTE', 'EOCLD', 'DNJSCLD', 'SAME_SIDE_YN',
                 'WORK_FACTORY', 'CONTROL_PART_QTY', 'OUT_QTY', 'ORDER_OUT_FINISH_DT', 'CLOSE_DT', 'MATERIAL_FINISH_GRIND', 'DETAIL_MACHINE_REQUIREMENT', 'UNIT_SUM_AUTO_AMT',
@@ -1727,29 +1676,6 @@
                 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT_F', 'OUTSIDE_NOTE', 'UNIT_MATERIAL_AUTO_AMT', 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT',
                 'UNIT_SURFACE_AUTO_AMT', 'CONTROL_PART_INSERT_UPDATE_DT'
             ];
-            // const allModeArray = [
-            //     'CONTROL_STATUS_NM', 'CONTROL_VER', 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD',
-            //     'CONTROL_NOTE', 'INVOICE_NUM', 'PROJECT_NM', 'MODULE_NM','ORDER_STAFF_SEQ', 'DESIGNER_NM',
-            //     'DELIVERY_COMP_NM', 'LABEL_NOTE', 'MAIN_INSPECTION', 'EMERGENCY_YN',
-            //     'CONTROL_NUM_BUTTON', 'CONTROL_NUM', 'PART_NUM', 'DRAWING_NUM_BUTTON', 'ORDER_DRAWING_NUM', 'ITEM_NM',
-            //     'SIZE_TXT', 'WORK_TYPE', 'EOCLD', 'DNJSCLD', 'SAME_SIDE_YN', 'OUTSIDE_YN', 'WORK_FACTORY',
-            //     'MATERIAL_SUPPLY_YN', 'INNER_DUE_DT', 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT',
-            //     'MATERIAL_NOTE', 'PART_UNIT_QTY', 'CONTROL_PART_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY',
-            //     'ORDER_NUM_PLUS_BUTTON', 'REGIST_NUM', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'OUT_QTY', 'ORDER_OUT_FINISH_DT',
-            //     'CLOSE_DT', 'DELIVERY_DT', 'MATERIAL_FINISH_GRIND', 'MATERIAL_FINISH_HEAT',
-            //     'DETAIL_MACHINE_REQUIREMENT', 'UNIT_SUM_AUTO_AMT', // 20210331 임시 hidden 처리
-            //     'UNIT_PROCESS_AMT', 'UNIT_ETC_AMT', 'UNIT_AMT_NOTE', 'UNIT_FINAL_EST_AMT', 'UNIT_MATERIAL_AUTO_AMT',
-            //     'UNIT_MATERIA_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT',
-            //     'UNIT_PROCESS_AUTO_AMT', 'UNIT_SURFACE_AMT',
-            //     'UNIT_FINAL_AMT', 'FINAL_TOTAL_AMT', 'PREV_UNIT_FINAL_AMT', 'PREV_DRAWING_NUM',
-            //     'DXF_GFILE_SEQ', 'ORDER_IMG_GFILE_SEQ', 'PDF_GFILE_SEQ', 'DRAWING_VER', 'DRAWING_UP_DT',
-            //     'ETC_GFILE_SEQ', 'OUTSIDE_COMP_NM', 'OUTSIDE_MATERIAL_SUPPLY_YN', 'OUTSIDE_UNIT_AMT',
-            //     'OUTSIDE_FINAL_AMT', 'OUTSIDE_HOPE_DUE_DT', 'OUTSIDE_IN_DT_F', 'OUTSIDE_NOTE', 'UNIT_MATERIAL_AUTO_AMT',
-            //     'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', 'UNIT_SURFACE_AUTO_AMT',
-            //     'CONTROL_PART_INSERT_UPDATE_DT',
-            //     'INSIDE_STOCK_NUM','STOCK_REQUEST_QTY','STOCK_OUT_QTY','ADDITIONAL_QTY'
-            //     //, 'TOTAL_SHEET'
-            // ];
 
             switch (elementId) {
                 case 'CONTROL_MANAGE_INPUT_MODE':
@@ -2011,7 +1937,7 @@
                 data = grid.option('dataModel.data');
 
             const controlList = [
-                'CONTROL_NUM', 'CONTROL_NUM_BUTTON', 'CONTROL_VER', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE',
+                'CONTROL_NUM', 'CONTROL_NUM_BUTTON'/*, 'CONTROL_VER'*/, 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE',
                 'MAIN_INSPECTION', 'EMERGENCY_YN', 'CONTROL_STATUS_NM', 'CONTROL_STATUS_DT',
                 'PRICE_CONFIRM', 'SAME_SIDE_YN', 'CONTROL_MERGE_CHECKBOX', 'ORDER_CONNECT_CNT'
                 // , 'TOTAL_SHEET'

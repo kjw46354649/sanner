@@ -181,7 +181,8 @@ public class PdfPrintMakeController {
             baos.close();
             Image barcodeImage = Image.getInstance(imageInByte);
 
-            String verText = controlInfo.get("CONTROL_VER") + "\n" + controlInfo.get("DRAWING_VER");
+//            String verText = controlInfo.get("CONTROL_VER") + "\n" + controlInfo.get("DRAWING_VER");
+            String verText = (String) controlInfo.get("DRAWING_VER");
             table.addCell(createCell(verText, 1, 1, smallNormalFont));
 
             PdfPCell imgCell = createImageCell(barcodeImage,1,1,20f,smallNormalFont);
