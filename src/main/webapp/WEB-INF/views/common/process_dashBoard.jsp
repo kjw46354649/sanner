@@ -777,11 +777,11 @@
                     }
                 });
 
-                if($("#pq-head-cell-u3-0-"+(idx+14) +"-right .pq-title-span .header_inside").length == 0) {
+                if($("#pq-head-cell-u3-0-"+(idx+15) +"-right .pq-title-span .header_inside").length == 0) {
                     let html = '<br><span class="header_inside">' + totalCnt + " (" + totalQty + ")" + '</span>';
-                    $("#pq-head-cell-u3-0-"+(idx+14) +"-right .pq-title-span").append(html)
+                    $("#pq-head-cell-u3-0-"+(idx+15) +"-right .pq-title-span").append(html)
                 }else {
-                    $("#pq-head-cell-u3-0-"+(idx+14) +"-right .pq-title-span .header_inside").text(totalCnt + " (" + totalQty + ")");
+                    $("#pq-head-cell-u3-0-"+(idx+15) +"-right .pq-title-span .header_inside").text(totalCnt + " (" + totalQty + ")");
                 }
             });
         }
