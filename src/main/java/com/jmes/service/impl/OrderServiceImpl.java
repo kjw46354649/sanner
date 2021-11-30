@@ -942,11 +942,13 @@ public class OrderServiceImpl implements OrderService {
             for (HashMap<String, Object> hashMap : addList) {
                 hashMap.put("LOGIN_USER_ID",userId);
 
-                hashMap.put("queryId", "orderMapper.createOrder");
-                this.innodaleDao.create(hashMap);
+                if(hashMap.containsKey("REGIST_NUM") && !hashMap.get("REGIST_NUM").equals("")) {
+                    hashMap.put("queryId", "orderMapper.createOrder");
+                    this.innodaleDao.create(hashMap);
 
-                hashMap.put("queryId", "orderMapper.insertOutBarcode");
-                this.innodaleDao.create(hashMap);
+                    hashMap.put("queryId", "orderMapper.insertOutBarcode");
+                    this.innodaleDao.create(hashMap);
+                }
 
             }
         }
