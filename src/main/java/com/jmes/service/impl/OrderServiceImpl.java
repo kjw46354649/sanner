@@ -1063,6 +1063,61 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public void orderConfirmFromDrawing(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        ArrayList<HashMap<String, Object>> addList = null;
+        ArrayList<HashMap<String, Object>> oldList = null;
+        ArrayList<HashMap<String, Object>> updateList = null;
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("addList")) {
+            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
+        }
+
+        boolean flag = false;
+        String message = "";
+
+        if(addList != null && addList.size() > 0) {
+            for (HashMap<String, Object> hashMap : addList) {
+                hashMap.put("LOGIN_USER_ID",userId);
+
+                hashMap.put("queryId", "orderMapper.selectOrderInfo");
+                HashMap<String,Object> tempMap = (HashMap<String, Object>) this.innodaleDao.getInfo(hashMap);
+
+                if(tempMap != null) {
+                    message = "주문 확정이 불가능한 대상이 있습니다.";
+                    if(!tempMap.containsKey("PDF_GFILE_SEQ") || !tempMap.containsKey("DRAWING_NUM") || !tempMap.containsKey("ORDER_QTY")) {
+                        flag = true;
+                    }else if(tempMap.get("ORDER_STATUS") != null && tempMap.get("ORDER_STATUS").equals("REG003")) {
+                        flag = true;
+                    }else {
+                        message = "";
+                        tempMap.put("ORDER_STATUS", "REG001");
+
+                        tempMap.put("queryId", "orderMapper.updateOrderStatus");
+                        this.innodaleDao.update(tempMap);
+
+                        tempMap.put("queryId", "orderMapper.createOrderProgress");
+                        this.innodaleDao.create(tempMap);
+                    }
+                }else {
+                    flag = true;
+                    message = "주문 정보를 확인해주세요.";
+                }
+
+            }
+        }
+        model.addAttribute("flag",flag);
+        model.addAttribute("message",message);
+    }
+
+    @Override
     public void validationCheckBeforeCreateControl(Model model, Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         String userId = (String)map.get("LOGIN_USER_ID");

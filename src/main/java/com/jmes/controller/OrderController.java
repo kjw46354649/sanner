@@ -234,6 +234,14 @@ public class OrderController {
 
         return "jsonView";
     }
+    @RequestMapping(value = "/orderConfirmFromDrawing", method = RequestMethod.POST)
+    public String orderConfirmFromDrawing(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.orderConfirmFromDrawing(model, map);
+
+        return "jsonView";
+    }
 
     @RequestMapping(value = "/validationCheckBeforeCreateControl", method = RequestMethod.POST)
     public String validationCheckBeforeCreateControl(Model model, HttpServletRequest request) throws Exception {

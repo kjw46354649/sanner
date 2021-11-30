@@ -5920,4 +5920,19 @@
         FROM TBL_ORDER A
         WHERE A.ORDER_SEQ = #{ORDER_SEQ}
     </insert>
+    <select id="selectOrderInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.REGIST_NUM,
+            IFNULL(A.ORDER_STATUS, 'TEMP') AS ORDER_STATUS,
+            A.PDF_GFILE_SEQ,
+            A.DRAWING_NUM,
+            A.ORDER_SEQ,
+            A.ORDER_QTY,
+            A.SAME_SIDE_YN,
+            A.ORIGINAL_SIDE_QTY,
+            A.OTHER_SIDE_QTY
+        FROM TBL_ORDER A
+        WHERE A.DEL_YN = 'N'
+            AND A.ORDER_SEQ = #{ORDER_SEQ}
+    </select>
 </mapper>

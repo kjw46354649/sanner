@@ -44,6 +44,8 @@ public interface OrderService {
 
     void managerOrderStatus(Map<String, Object> map) throws Exception;
 
+    void orderConfirmFromDrawing(Model model, Map<String, Object> map) throws Exception;
+
     void validationCheckBeforeCreateControl(Model model, Map<String, Object> map) throws Exception;
 
     void createNewControl(Model model, Map<String, Object> map) throws Exception;

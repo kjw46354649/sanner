@@ -723,12 +723,33 @@
                 };
                 $("#common_cad_file_attach_form").find("#fileGrid").val(JSON.stringify(changes));
                 let parameters = {'url': '/cadFileConvert', 'data': {data: JSON.stringify(changes)}};
+                // return;
                 fnPostAjax(function (data, callFunctionParam) {
-                    fnAlert(null,"<h1>저장되었습니다.</h1>", function () {
-                        $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
-                        $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
-                        $('#drawing_upload_close').trigger("click");
-                    });
+                    fnConfirm(null, '<span style="text-align: center;">저장 완료되었습니다.<br>저장이 완료된 대상에 대해서 <span style="color: blue;">주문확정</span>을 진행 하시겠습니까?</span>',
+                        function () { // onOk
+                            let parameterConfirm = {'url':'/orderConfirmFromDrawing', 'data':{data: JSON.stringify(changes)}};
+                            fnPostAjax(function (data, callFunctionParam) {
+                                if(data.flag) {
+                                    fnAlert(null,data.message);
+                                }else {
+                                    fnAlert(null, "확정처리 되었습니다.", function () {
+                                        $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
+                                        $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
+                                        $('#drawing_upload_close').trigger("click");
+                                    });
+                                }
+                            }, parameterConfirm, '');
+                        }, function () { // onCancel
+                            $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
+                            $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
+                            $('#drawing_upload_close').trigger("click");
+                        }
+                    )
+                    // fnAlert(null,"<h1>저장되었습니다.</h1>", function () {
+                    //     $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
+                    //     $commonCadUploadFileGrid.pqGrid('refreshDataAndView');
+                    //     $('#drawing_upload_close').trigger("click");
+                    // });
                 }, parameters, '');
             }
         }
