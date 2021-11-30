@@ -50,7 +50,6 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
             session.setAttribute("LocalInfo", localeResolver.resolveLocale(request));
 
         }
-
         if(!isPassUrlList(requestUrl) && userInfo == null){
             if(!isAJAXRequest(request)){
                 if(isAJAXRequestForMobile(request)){ //request from mobile
@@ -131,7 +130,7 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         passList.add("/pop");
         passList.add("/scanningBarcodePop");
         passList.add("/processDashBoard");
-        passList.add("/testGrid");
+        passList.add("/inspectionResult");
 
         /** websocket **/
         passList.add("/jmes-socket");
