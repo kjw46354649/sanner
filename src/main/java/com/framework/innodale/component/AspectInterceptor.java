@@ -50,6 +50,9 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
             session.setAttribute("LocalInfo", localeResolver.resolveLocale(request));
 
         }
+        if(requestUrl != null) {
+            System.out.println("requestUrl >>>>>>>>>>>>>>>>>>>>>>>>" + requestUrl);
+        }
         if(!isPassUrlList(requestUrl) && userInfo == null){
             if(!isAJAXRequest(request)){
                 if(isAJAXRequestForMobile(request)){ //request from mobile
