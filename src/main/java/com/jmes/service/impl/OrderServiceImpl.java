@@ -878,30 +878,28 @@ public class OrderServiceImpl implements OrderService {
         if (jsonMap.containsKey("updateList"))
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
 
-        /*if (addList != null && addList.size() > 0) {
+        if (addList != null && addList.size() > 0) {
             for (HashMap<String, Object> hashMap : addList) {
+                if(hashMap.containsKey("REGIST_NUM") && !flag) {
+                    hashMap.put("queryId", "orderMapper.selectCheckRegistNumDuplicateOrder");
 
+                    if (this.orderDao.getFlag(hashMap)) {
+                        flag = true;
+                        message = "이미 등록된 접수번호 입니다.";
+                    }
+                }
             }
-        }*/
+        }
 
         if (updateList != null && updateList.size() > 0 && !flag) {
             for(int i = 0; i < updateList.size(); i++) {
                 HashMap<String, Object> hashMap = updateList.get(i);
 
-//                if (oldList.get(i).containsKey("CONTROL_NUM")) {
-//                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
-//                    if (this.orderDao.getFlag(hashMap)) {
-//                        flag = true;
-//                        message = "기존에 존재하는 작업지시번호입니다.";
-//                        break;
-//                    }
-//                }
-                if (oldList.get(i).containsKey("REGIST_NUM")) {
+                if (oldList.get(i).containsKey("REGIST_NUM") && !flag) {
                     hashMap.put("queryId", "orderMapper.selectCheckRegistNumDuplicateOrder");
                     if (this.orderDao.getFlag(hashMap)) {
                         flag = true;
                         message = "이미 등록된 접수번호 입니다.";
-                        break;
                     }
                 }
 
@@ -920,6 +918,7 @@ public class OrderServiceImpl implements OrderService {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
 
+        ArrayList<HashMap<String, Object>> addList = null;
         ArrayList<HashMap<String, Object>> updateList = null;
         ArrayList<HashMap<String, Object>> oldList = null;
 
@@ -929,11 +928,28 @@ public class OrderServiceImpl implements OrderService {
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
+        if (jsonMap.containsKey("addList"))
+            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
+
         if (jsonMap.containsKey("updateList"))
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
 
         if (jsonMap.containsKey("oldList"))
             oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
+
+
+        if (addList != null && addList.size() > 0) {
+            for (HashMap<String, Object> hashMap : addList) {
+                hashMap.put("LOGIN_USER_ID",userId);
+
+                hashMap.put("queryId", "orderMapper.createOrder");
+                this.innodaleDao.create(hashMap);
+
+                hashMap.put("queryId", "orderMapper.insertOutBarcode");
+                this.innodaleDao.create(hashMap);
+
+            }
+        }
 
         if (updateList != null && updateList.size() > 0) {
             for(int i = 0; i < updateList.size(); i++) {

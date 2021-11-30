@@ -207,6 +207,7 @@
                         </select>
                     </span>
 <%--                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MERGE" style="background-color: #5b9bd5">Merge</button>--%>
+                    <button type="button" class="defaultBtn btn-100w lightGray" id="ORDER_MANAGE_COPY">복제</button>
                     <button type="button" class="defaultBtn btn-100w red" id="ORDER_MANAGE_DELETE">삭제</button>
                     <button type="button" class="defaultBtn btn-100w green" id="ORDER_MANAGE_SAVE">저장</button>
                 </div>
@@ -300,11 +301,10 @@
         const gridId = 'ORDER_MANAGE_GRID';
         const colModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
+            {title: 'IS_NEW_ROW', dataType: 'integer', dataIndx: 'IS_NEW_ROW', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
-            {title: 'CONTROL_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'CONTROL_PROGRESS_SEQ', hidden: true},
             {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: 'PART_PROGRESS_SEQ', dataType: 'integer', dataIndx: 'PART_PROGRESS_SEQ', hidden: true},
             {
                 title: '주문상태', align: 'center', colModel: [
                     {title: '상태', dataIndx: 'ORDER_STATUS', hidden: true},
@@ -358,7 +358,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
+                    return rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS == null || rowData.ORDER_STATUS === 'REG002' ;
                 }
             },
             {
@@ -1008,11 +1008,11 @@
                     let firstRow = ui.selection._areas[i].r1;
                     let lastRow = ui.selection._areas[i].r2;
 
-                    for (let i = firstRow; i <= lastRow; i++) selectedOrderManagementRowIndex.push(i);
                     if (firstRow === lastRow) {
                         let selRowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: firstRow});
                         callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData); // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
                         // callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);
+                        selectedOrderManagementRowIndex.push(firstRow);
                     }else {
                         let selFirstRowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: firstRow});
                         let selLastRowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: lastRow});
@@ -1020,6 +1020,7 @@
                         if(selFirstRowData.REGIST_NUM == selLastRowData.REGIST_NUM) {
                             callQuickRowChangeDrawingImageViewer(selFirstRowData.IMG_GFILE_SEQ,selFirstRowData);
                         }
+                        selectedOrderManagementRowIndex.push(lastRow);
                     }
                 }
                 amountSummaryHtml();
@@ -1979,19 +1980,58 @@
                     fnAlert(null, data.message);
                     return false;
                 }
+                // console.log('changes',changes)
+                // return ;
+                if (!flag) {
+                    parameters = {'url': '/saveFromOrderManage', 'data': {data: JSON.stringify(changes)}};
+
+                    fnPostAjaxAsync(function (data) {
+                        if (data.flag) {
+                            fnAlert(null, data.message);
+                            return false;
+                        }
+
+                        fnAlert(null, '<spring:message code="com.alert.default.save.success"/>');
+                        $orderManagementGrid.pqGrid('refreshDataAndView');
+                    }, parameters, '');
+                }
             }, parameters, '');
-            if (!flag) {
-                parameters = {'url': '/saveFromOrderManage', 'data': {data: JSON.stringify(changes)}};
+        });
 
-                fnPostAjaxAsync(function (data) {
-                    if (data.flag) {
-                        fnAlert(null, data.message);
-                        return false;
-                    }
-
-                    fnAlert(null, '<spring:message code="com.alert.default.save.success"/>');
-                    $orderManagementGrid.pqGrid('refreshDataAndView');
-                }, parameters, '');
+        $('#ORDER_MANAGE_COPY').on('click', function () {
+            let cnt = 0;
+            let indexList = [];
+            for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
+                let totalData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+                let thisRowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                let newRowData = fnCloneObj(thisRowData);
+                newRowData.REGIST_NUM = null;
+                newRowData.ORDER_SEQ = null;
+                newRowData.CONTROL_SEQ = null;
+                newRowData.CONTROL_DETAIL_SEQ = null;
+                newRowData.CONTROL_NUM = null;
+                newRowData.CONTROL_STATUS = null;
+                newRowData.INVOICE_NUM = null;
+                newRowData.OUT_QTY = null;
+                newRowData.OUT_FINISH_DT = null;
+                newRowData.RETURN_INSERT_DT = null;
+                newRowData.RETURN_FINISH_DT = null;
+                newRowData.DRAWING_VER = null;
+                newRowData.DRAWING_UP_DT = null;
+                newRowData.CLOSE_VER = null;
+                newRowData.ORDER_INSERT_DT = null;
+                newRowData.ORDER_STATUS_NM = null;
+                newRowData.ORDER_STATUS_DT = null;
+                newRowData.ORDER_STATUS = null;
+                newRowData.IS_NEW_ROW = true;
+                newRowData.ROW_NUM = totalData.length + 1;
+                // console.log(thisRowData);
+                $orderManagementGrid.pqGrid('addRow', {
+                    newRow: newRowData,
+                    rowIndx: (thisRowData.pq_ri + 1),
+                    checkEditable: false
+                });
+                cnt++;
             }
         });
 

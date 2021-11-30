@@ -5248,6 +5248,15 @@
             DESIGNER_NM,
             INSERT_ID,
             ORDER_BARCODE_NUM,
+            <if test="PDF_GFILE_SEQ != null and PDF_GFILE_SEQ != ''">
+                PDF_GFILE_SEQ,
+            </if>
+            <if test="IMG_GFILE_SEQ != null and IMG_GFILE_SEQ != ''">
+                IMG_GFILE_SEQ,
+            </if>
+            <if test="DXF_GFILE_SEQ != null and DXF_GFILE_SEQ != ''">
+                DXF_GFILE_SEQ,
+            </if>
             MATERIAL_NOTE
         ) VALUES
         (
@@ -5305,6 +5314,15 @@
             #{DESIGNER_NM},
             #{LOGIN_USER_ID},
             CONCAT('O',LPAD(NEXTVAL(SEQ_ORDER_BARCODE),9,'0')),
+            <if test="PDF_GFILE_SEQ != null and PDF_GFILE_SEQ != ''">
+                #{PDF_GFILE_SEQ},
+            </if>
+            <if test="IMG_GFILE_SEQ != null and IMG_GFILE_SEQ != ''">
+                #{IMG_GFILE_SEQ},
+            </if>
+            <if test="DXF_GFILE_SEQ != null and DXF_GFILE_SEQ != ''">
+                #{DXF_GFILE_SEQ},
+            </if>
             #{MATERIAL_NOTE}
         )
     </insert>
