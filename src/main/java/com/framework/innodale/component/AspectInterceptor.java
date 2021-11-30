@@ -50,9 +50,6 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
             session.setAttribute("LocalInfo", localeResolver.resolveLocale(request));
 
         }
-        if(requestUrl != null) {
-            System.out.println("requestUrl >>>>>>>>>>>>>>>>>>>>>>>>" + requestUrl);
-        }
         if(!isPassUrlList(requestUrl) && userInfo == null){
             if(!isAJAXRequest(request)){
                 if(isAJAXRequestForMobile(request)){ //request from mobile
@@ -63,6 +60,11 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
                     return false;
                 }
             }else{
+                String queryId = request.getParameter("queryId");
+                if(requestUrl != null && queryId != null) {
+                    System.out.println("requestUrl >>>>>>>>>>>>>>>>>>>>>>>>" + requestUrl);
+                    System.out.println("queryId >>>>>>>>>>>>>>>>>>>>>>>>" + queryId);
+                }
                 throw new AuthenticationFailException();
 //                request.setAttribute("throwException", "authenticationFailException");
 //                request.getRequestDispatcher("/exception").forward(request, response);

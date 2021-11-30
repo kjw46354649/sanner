@@ -173,6 +173,8 @@
     </div>
     <!-- 외주 전환 -->
 </div>
+<form id="hidden_action_frm_process" name="hidden_action_frm_process" action="/userLogout" target="_self" method="get">
+</form>
 <script>
     $(function () {
         'use strict';
@@ -292,6 +294,17 @@
                 postData: topLeftPostData,
                 getData: function (dataJSON) {
                     return {data: dataJSON.data};
+                },
+                error:function( jqXHR, textStatus, errorThrown ){
+                    console.log('error')
+                    console.log('textStatus',textStatus);
+                    console.log('errorThrown',errorThrown);
+                    if(textStatus == 'error') {
+                        fnAlert(null, '사용자 정보가 없습니다. 재로그인 해 주십시오.', function (){
+                            $("#hidden_action_frm_process").submit();
+                        });
+                    }
+                    // 배포로 인한 세션정보 삭제시 따로 처리 필요.
                 }
             },
             dataReady: function () {
