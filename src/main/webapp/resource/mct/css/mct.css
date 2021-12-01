@@ -201,6 +201,7 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 	padding-left: 15%;
 	border: 1px solid #888;
 	margin-right: 16.5%;
+	vertical-align: inherit;
 }
 .rightContainer .rightBtnWrap select:focus {
 	outline: none;
@@ -282,10 +283,85 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 	width: 100%;
 	height: 75.5%;
 }
+.detailPopImgDiv {
+	height: 987px;
+	border: 1px solid #AAA;
+	background: white;
+	overflow: hidden;
+}
+
+#g_item_detail_pop table.rowStyle th, #g_item_detail_pop table.rowStyle td {
+	height: 73px !important;
+	font-size: 1.75rem !important;
+	font-family: 'NotoKrR';
+}
+#g_item_detail_pop table.rowStyle th {
+	font-weight: bold;
+	font-family: 'NotoKrM' !important;
+}
+
+.g_item_detail_pop .layerPopup h4 {
+	font-size: 1.8rem !important;
+	font-weight: bold;
+}
+
+.g_item_detail_pop .layerPopup .listdiv {
+	height: 310px !important;
+}
+.g_item_detail_pop .layerPopup .listdiv .conWrapPopRight {
+	width: 47.5% !important;
+}
+.layerPopup h3 {
+	font-family: 'NotoKrB';
+	font-weight: bold;
+	font-size: 2.5rem !important;
+}
+.layerPopup {
+	padding: 1% !important;
+}
+.defaultBtn {
+	height: 35px !important;
+	font-size: 1.2rem !important;
+}
+.slt_wrap label {
+	font-size: 1.5rem !important;
+	line-height: 35px !important;
+	height: 35px !important;
+}
+.detailPop_info_input {
+	width: 100px !important;
+	height: 35px !important;
+	font-size: 1.5rem !important;
+}
+.g_item_detail_pop .inspectBtn {
+	width: 65px;
+	height: 40px !important;
+	text-align: center;
+	border-radius: 3px !important;
+	background-color: #595757 !important;
+	color: white !important;
+}
+
+#view_part_prev img, #view_part_next img, #left_arrow img, #right_arrow img {
+	width: 30px;
+}
+#item_detail_pop_input {
+	height: 35px !important;
+	line-height: 35px !important;
+	font-size: 1.2rem !important;
+	width: 220px !important;
+}
+#inspection_detail_popup .qualityWrap {
+	height: 650px;
+}
+
+#cam_work_detail_popup .qualityWrap {
+	height: 1150px;
+}
 
 @media(max-width:1920px){
 	html {
-		font-family: 'notoM';
+		font-family: 'notoM' !important;
 		overflow: hidden;
 	}
 	body {
@@ -409,6 +485,7 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 		height: 50%;
 		padding-left: 5%;
 		margin-right: 5.5%;
+		margin-top:10%;
 	}
 	.changeBtn {
 		font-size: 1rem;
@@ -503,5 +580,67 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 		height: 30px;
 		width: 150px;
 	}
-	div.pq-grid * {font-size: 0.8rem !important;}
+	div.pq-grid * {font-size: 0.78rem !important;}
+
+	.detailPopImgDiv {
+		height: 469px;
+	}
+	#g_item_detail_pop table.rowStyle th, #g_item_detail_pop table.rowStyle td {
+		height: 36px !important;
+		font-size: 0.81rem !important;
+	}
+
+	.g_item_detail_pop .layerPopup h4 {
+		font-size: 0.92rem !important;
+	}
+	.g_item_detail_pop .layerPopup .listdiv {
+		height: 150px !important;
+	}
+	.layerPopup h3 {
+		font-size: 20px !important;
+	}
+	.layerPopup {
+		padding: 20px !important;
+	}
+	.defaultBtn {
+		height: 27px !important;
+		font-size: 12px !important;
+	}
+	.g_item_detail_pop span.mark {
+		font-size: 14px !important;
+	}
+	.slt_wrap label {
+		font-size: 12px !important;
+		line-height: 23px !important;
+		height: 25px !important;
+	}
+	.detailPop_info_input {
+		width: 60px !important;
+		height: 25px !important;
+		font-size: 12px !important;
+	}
+
+	.g_item_detail_pop .inspectBtn {
+		width: 50px;
+		height: 25px !important;
+	}
+
+	#view_part_prev img, #view_part_next img, #left_arrow img, #right_arrow img {
+		width: 15px;
+	}
+
+	#item_detail_pop_input {
+		height: 30px !important;
+		line-height: 28px !important;
+		width: 187px !important;
+		font-size: 14px !important;
+	}
+
+	#inspection_detail_popup .qualityWrap {
+		height: 320px;
+	}
+
+	#cam_work_detail_popup .qualityWrap {
+		height: 550px;
+	}
 }

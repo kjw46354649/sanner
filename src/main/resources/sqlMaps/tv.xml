@@ -454,14 +454,18 @@
                           , A.WORK_TEMP_STOP_DT
                      FROM jmes.TBL_MCT_WORK A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
                      WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                       AND A.CONTROL_SEQ = C.CONTROL_SEQ
-                       AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                       AND A.WORK_STATUS IN ('DBS010', 'DBS020')
-                       AND A.DEL_YN = 'N'
-                       AND B.DEL_YN = 'N'
-                       AND EXISTS (SELECT 1 FROM jmes.TBL_EQUIP D WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
-                                                                    AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
-                         )
+                        AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                        AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                        AND A.WORK_STATUS IN ('DBS010', 'DBS020')
+                        AND A.WORK_FINISH_DT IS NULL
+                        AND A.DEL_YN = 'N'
+                        AND B.DEL_YN = 'N'
+                        AND EXISTS (
+                            SELECT 1
+                            FROM jmes.TBL_EQUIP D
+                            WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
+                                AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                        )
                      UNION ALL
                      -- PLAN
                      SELECT '2' AS WORK_PLAN_TYPE
@@ -485,13 +489,17 @@
                           , '' AS WORK_TEMP_STOP_DT
                      FROM jmes.TBL_MCT_PLAN A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
                      WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                       AND A.CONTROL_SEQ = C.CONTROL_SEQ
-                       AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                       AND A.DEL_YN = 'N'
-                       AND B.DEL_YN = 'N'
-                       AND EXISTS (SELECT 1 FROM jmes.TBL_EQUIP D WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
-                                                                    AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
-                         )
+                        AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                        AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                        AND A.DEL_YN = 'N'
+                        AND B.DEL_YN = 'N'
+                        AND EXISTS (
+                            SELECT 1
+                            FROM jmes.TBL_EQUIP D
+                            WHERE A.EQUIP_SEQ = D.EQUIP_SEQ
+                                AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
+                                AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                        )
                      GROUP BY A.EQUIP_SEQ
                  ) T
                  GROUP BY T.EQUIP_SEQ
@@ -669,14 +677,17 @@
                 , B.PART_STATUS
                 , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
                 , B.IMG_GFILE_SEQ
-            FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
-            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                AND A.DEL_YN = 'N'
-                AND B.WORK_TYPE NOT IN ('WTP020','WTP040')
+                , SF_GET_CODE_NM('1009', C.POP_POSITION, #{LOGIN_LOCALE}) AS CURR_POS
+            FROM jmes.TBL_CONTROL A
+                INNER JOIN jmes.TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE NOT IN ('WTP020','WTP040') AND B.INNER_WORK_FINISH_DT IS NULL
+                    AND B.PART_STATUS IS NOT NULL AND B.PART_STATUS NOT IN ('PRO009') AND IFNULL(B.OUTSIDE_YN,'N') = 'N'
+                    AND B.INNER_DUE_DT <![CDATA[ <= ]]> DATE_FORMAT(NOW(),'%Y%m%d')
+                LEFT OUTER JOIN TBL_POP C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND C.POP_SEQ = (SELECT MAX(X.POP_SEQ) FROM TBL_POP X WHERE X.CONTROL_SEQ = C.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ)
+            WHERE A.DEL_YN = 'N'
                 AND A.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
                 AND A.OUT_FINISH_DT IS NULL
-                AND B.INNER_WORK_FINISH_DT IS NULL
-                AND B.INNER_DUE_DT <![CDATA[ <= ]]> DATE_FORMAT(NOW(),'%Y%m%d')
+                AND IFNULL(A.OUT_FINISH_STATUS,SPACE(0)) != 'RLS020'
             UNION ALL
             SELECT
                 3 AS RANK, '긴급' AS TITLE, COUNT(*) OVER (PARTITION BY 1) AS TOTAL_COUNT
@@ -688,15 +699,17 @@
                 , B.PART_STATUS
                 , jmes.SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
                 , B.IMG_GFILE_SEQ
-            FROM jmes.TBL_CONTROL A, jmes.TBL_CONTROL_PART B
-            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                AND A.DEL_YN = 'N'
-                AND B.WORK_TYPE NOT IN ('WTP020','WTP040')
+                , SF_GET_CODE_NM('1009', C.POP_POSITION, #{LOGIN_LOCALE}) AS CURR_POS
+            FROM jmes.TBL_CONTROL A
+                INNER JOIN jmes.TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE NOT IN ('WTP020','WTP040') AND B.INNER_WORK_FINISH_DT IS NULL
+                    AND B.PART_STATUS IS NOT NULL AND B.PART_STATUS NOT IN ('PRO009') AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
+                LEFT OUTER JOIN TBL_POP C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND C.POP_SEQ = (SELECT MAX(X.POP_SEQ) FROM TBL_POP X WHERE X.CONTROL_SEQ = C.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ)
+            WHERE A.DEL_YN = 'N'
                 AND A.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
                 AND A.EMERGENCY_YN = 'Y'
                 AND A.OUT_FINISH_DT IS NULL
-                AND IFNULL(B.OUTSIDE_YN, 'N') = 'N'
-                AND B.INNER_WORK_FINISH_DT IS NULL
+                AND IFNULL(A.OUT_FINISH_STATUS,SPACE(0)) != 'RLS020'
             UNION ALL
             SELECT
                 1 AS RANK, '불량' AS TITLE, COUNT(*) OVER (PARTITION BY 1) AS TOTAL_COUNT
@@ -708,11 +721,13 @@
                 , C.PART_STATUS
                 , jmes.SF_GET_PART_STATUS_NM(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
                 , C.IMG_GFILE_SEQ
+                , SF_GET_CODE_NM('1009', E.POP_POSITION, #{LOGIN_LOCALE}) AS CURR_POS
             FROM jmes.TBL_INSPECT A
-                INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N' AND B.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
-                INNER JOIN jmes.TBL_CONTROL_PART C ON B.CONTROL_SEQ= C.CONTROL_SEQ AND C.WORK_TYPE NOT IN ('WTP020','WTP040')
-                INNER JOIN jmes.TBL_CONTROL_PART_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-                    AND A.ORDER_SEQ = D.ORDER_SEQ AND D.OUT_FINISH_DT IS NULL
+                INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N' AND B.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005') AND IFNULL(B.OUT_FINISH_STATUS,SPACE(0)) != 'RLS020'
+                INNER JOIN jmes.TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                INNER JOIN jmes.TBL_CONTROL_PART_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND A.ORDER_SEQ = D.ORDER_SEQ
+                LEFT OUTER JOIN TBL_POP E ON A.CONTROL_SEQ = E.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+                    AND E.POP_SEQ = (SELECT MAX(X.POP_SEQ) FROM TBL_POP X WHERE X.CONTROL_SEQ = E.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ)
             WHERE A.INSPECT_TYPE = '1' AND A.INSPECT_GRADE = 'GRD040'
                 AND A.INSPECT_SEQ = (
                     SELECT MAX(B.INSPECT_SEQ)
@@ -732,11 +747,13 @@
                 , C.PART_STATUS
                 , jmes.SF_GET_PART_STATUS_NM(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
                 , C.IMG_GFILE_SEQ
+                , SF_GET_CODE_NM('1009', E.POP_POSITION, #{LOGIN_LOCALE}) AS CURR_POS
             FROM jmes.TBL_INSPECT A
-                INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N' AND B.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005')
+                INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N' AND B.CONTROL_STATUS NOT IN  ('ORD002', 'ORD004', 'ORD005') AND IFNULL(B.OUT_FINISH_STATUS,SPACE(0)) != 'RLS020'
                 INNER JOIN jmes.TBL_CONTROL_PART C ON B.CONTROL_SEQ= C.CONTROL_SEQ AND C.WORK_TYPE NOT IN ('WTP020','WTP040')
-                INNER JOIN jmes.TBL_CONTROL_PART_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-                    AND A.ORDER_SEQ = D.ORDER_SEQ
+                INNER JOIN jmes.TBL_CONTROL_PART_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND A.ORDER_SEQ = D.ORDER_SEQ
+                LEFT OUTER JOIN TBL_POP E ON A.CONTROL_SEQ = E.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
+                    AND E.POP_SEQ = (SELECT MAX(X.POP_SEQ) FROM TBL_POP X WHERE X.CONTROL_SEQ = E.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ)
             WHERE A.INSPECT_TYPE = '2' AND A.RETURN_SETTLEMENT_DT IS NULL
         ) Z
         ORDER BY RANK, CASE WHEN Z.PART_STATUS = 'PRO002' THEN 1
@@ -856,32 +873,70 @@
         FROM (
             SELECT 'NOW_RATE' AS TITLE, CONCAT(ROUND(IFNULL(((SUM(CASE WHEN B.MCT_WORK_SEQ IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*)) * 100), 0), 0), '%') AS CNT
             FROM jmes.TBL_EQUIP A
-                LEFT OUTER JOIN jmes.TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.DEL_YN = 'N'
-                    AND B.WORK_STATUS IN ('DBS010', 'DBS020')
+                LEFT OUTER JOIN (
+                    SELECT B.MCT_WORK_SEQ, B.EQUIP_SEQ
+                    FROM jmes.TBL_MCT_WORK B
+                             INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ  AND C.DEL_YN = 'N'
+                    WHERE B.DEL_YN = 'N'
+                      AND  B.WORK_FINISH_DT IS NULL
+                      AND B.WORK_STATUS IN ('DBS010', 'DBS020')
+                ) B  ON A.EQUIP_SEQ = B.EQUIP_SEQ
             WHERE 1 = 1
                 AND A.EQUIP_KIND = '1' AND A.DEL_YN = 'N'
                 AND LAYOUT_ROW IS NOT NULL
                 AND LAYOUT_COL IS NOT NULL
                 AND A.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                <if test="FACTORY_TYPE != null and FACTORY_TYPE != ''">
+                    <choose>
+                        <when test="FACTORY_TYPE == 'DMT'">
+                            AND SF_GET_ETC_CD('1005', A.FACTORY_AREA) = 'FCT030'
+                        </when>
+                        <otherwise>
+                            AND SF_GET_ETC_CD('1005', A.FACTORY_AREA) != 'FCT030'
+                        </otherwise>
+                    </choose>
+                </if>
             UNION
             SELECT 'RUN' AS TITLE, COUNT(*) OVER () AS CNT
             FROM TBL_EQUIP A
-                INNER JOIN TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.WORK_STATUS = 'DBS020' AND B.DEL_YN = 'N'
+                INNER JOIN TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.WORK_STATUS = 'DBS020' AND B.DEL_YN = 'N' AND B.WORK_FINISH_DT IS NULL
+                INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ  AND C.DEL_YN = 'N'
             WHERE A.EQUIP_KIND = '1'
                 AND A.DEL_YN = 'N'
                 AND A.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
                 AND LAYOUT_ROW IS NOT NULL
                 AND LAYOUT_COL IS NOT NULL
+                <if test="FACTORY_TYPE != null and FACTORY_TYPE != ''">
+                    <choose>
+                        <when test="FACTORY_TYPE == 'DMT'">
+                            AND SF_GET_ETC_CD('1005', A.FACTORY_AREA) = 'FCT030'
+                        </when>
+                        <otherwise>
+                            AND SF_GET_ETC_CD('1005', A.FACTORY_AREA) != 'FCT030'
+                        </otherwise>
+                    </choose>
+                </if>
             GROUP BY A.EQUIP_SEQ
             UNION
             SELECT 'STOP' AS TITLE, COUNT(*) OVER () AS CNT
             FROM TBL_EQUIP A
-                INNER JOIN TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.WORK_STATUS = 'DBS010'
+                INNER JOIN TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.WORK_STATUS = 'DBS010' AND B.DEL_YN = 'N' AND B.WORK_FINISH_DT IS NULL
+                INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ  AND C.DEL_YN = 'N'
             WHERE A.EQUIP_KIND = '1'
                 AND A.DEL_YN = 'N'
                 AND A.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
                 AND LAYOUT_ROW IS NOT NULL
                 AND LAYOUT_COL IS NOT NULL
+                <if test="FACTORY_TYPE != null and FACTORY_TYPE != ''">
+                    <choose>
+                        <when test="FACTORY_TYPE == 'DMT'">
+                            AND SF_GET_ETC_CD('1005', A.FACTORY_AREA) = 'FCT030'
+                        </when>
+                        <otherwise>
+                            AND SF_GET_ETC_CD('1005', A.FACTORY_AREA) != 'FCT030'
+                        </otherwise>
+                    </choose>
+                </if>
             GROUP BY A.EQUIP_SEQ
             UNION
             SELECT 'NOT_RUN' AS TITLE, COUNT(*) OVER () AS CNT
@@ -894,9 +949,21 @@
                 AND NOT EXISTS (
                     SELECT 1
                     FROM TBL_MCT_WORK B
+                        INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ  AND C.DEL_YN = 'N'
                     WHERE B.EQUIP_SEQ = A.EQUIP_SEQ
+                        AND B.DEL_YN = 'N' AND B.WORK_FINISH_DT IS NULL
                         AND B.WORK_STATUS IN ('DBS010','DBS020')
                 )
+                <if test="FACTORY_TYPE != null and FACTORY_TYPE != ''">
+                    <choose>
+                        <when test="FACTORY_TYPE == 'DMT'">
+                            AND SF_GET_ETC_CD('1005', A.FACTORY_AREA) = 'FCT030'
+                        </when>
+                        <otherwise>
+                            AND SF_GET_ETC_CD('1005', A.FACTORY_AREA) != 'FCT030'
+                        </otherwise>
+                    </choose>
+                </if>
             GROUP BY A.EQUIP_SEQ
         ) Z
     </select>

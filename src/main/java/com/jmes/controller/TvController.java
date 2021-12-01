@@ -1,5 +1,7 @@
 package com.jmes.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.service.InnodaleService;
 import com.jmes.service.PopService;
@@ -14,10 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class TvController {
@@ -123,6 +122,15 @@ public class TvController {
 //       List<Map<String, Object>> grid_list3 = this.innodaleService.getList(hashMap);
 //       model.addAttribute("grid_list3", grid_list3);
 
+
+       String jsonObject = (String) hashMap.get("data");
+       ObjectMapper objectMapper = new ObjectMapper();
+       Map<String, Object> jsonMap = null;
+
+       if (jsonObject != null) {
+           jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+       }
+       hashMap.put("FACTORY_TYPE", jsonMap.get("FACTORY_TYPE"));
        hashMap.put("queryId","tvMapper.selectMctInfo");//mct가동률 및 기타.
        Map<String, Object> mct_info = this.innodaleService.getInfo(hashMap);
        model.addAttribute("mct_rate", mct_info);
@@ -161,6 +169,16 @@ public class TvController {
 //       List<Map<String, Object>> grid_list3 = this.innodaleService.getList(hashMap);
 //       model.addAttribute("grid_list3", grid_list3);
 
+
+       String jsonObject = (String) hashMap.get("data");
+       ObjectMapper objectMapper = new ObjectMapper();
+       Map<String, Object> jsonMap = null;
+
+       if (jsonObject != null) {
+           jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+       }
+
+       hashMap.put("FACTORY_TYPE", jsonMap.get("FACTORY_TYPE"));
        hashMap.put("queryId","tvMapper.selectMctInfo");//mct가동률 및 기타.
        Map<String, Object> mct_info = this.innodaleService.getInfo(hashMap);
        model.addAttribute("mct_rate", mct_info);
