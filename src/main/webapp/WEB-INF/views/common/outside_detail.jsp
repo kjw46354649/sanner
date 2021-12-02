@@ -72,7 +72,7 @@
                         rowData = ui.rowData;
 
                     $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
+                        window.opener.callItemDetailPop(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
                     });
                 }
             },

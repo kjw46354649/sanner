@@ -1325,6 +1325,10 @@
         $('form[name="hidden_action_frm"]').submit();
     };
 
+    function callItemDetailPop(controlSeq, controlDetailSeq, grid, idx) {
+        g_item_detail_pop_view(controlSeq,controlDetailSeq, grid, idx)
+    }
+
     $(document).on('click', '#DETAIL_VIEW', function () {
         g_item_detail_pop_view();
     });
