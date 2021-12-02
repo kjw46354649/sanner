@@ -113,22 +113,6 @@
 
 		<!--두번째 줄 시작-->
 		<div id="contents02" class="contents02">
-			<!--선반/연마 -->
-			<div id="grind contentsWrap" class="grind contentsWrap">
-				<!--네임 태그-->
-				<div id="titleTag" class="titleTag">선반/연마</div>
-				<!--진행,대기 상황-->
-				<div class="progressTag">
-					<span id="ARE04_WORK" class="progress"><span>진행</span></span>
-					<span id="ARE04_WAIT" class="standby"><span>대기</span></span>
-				</div>
-
-				<!--선반/연마 내용 시작-->
-				<div id="ARE04" class="infoWrap">
-				</div>
-				<!--선반/연마 내용 끝-->
-			</div>
-			<!--선반/연마 끝-->
 
 			<!--밀링 -->
 			<div id="milling contentsWrap" class="milling contentsWrap">
@@ -146,6 +130,22 @@
 				<!--밀링 내용 끝-->
 			</div>
 			<!--밀링 끝-->
+			<!--선반/연마 -->
+			<div id="grind contentsWrap" class="grind contentsWrap">
+				<!--네임 태그-->
+				<div id="titleTag" class="titleTag">선반/연마</div>
+				<!--진행,대기 상황-->
+				<div class="progressTag">
+					<span id="ARE04_WORK" class="progress"><span>진행</span></span>
+					<span id="ARE04_WAIT" class="standby"><span>대기</span></span>
+				</div>
+
+				<!--선반/연마 내용 시작-->
+				<div id="ARE04" class="infoWrap">
+				</div>
+				<!--선반/연마 내용 끝-->
+			</div>
+			<!--선반/연마 끝-->
 
 		</div>
 		<!--두번째 줄 끝-->
