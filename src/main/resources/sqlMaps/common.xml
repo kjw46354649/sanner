@@ -137,6 +137,15 @@
                  INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
         WHERE A.GFILE_SEQ  = #{GFILE_SEQ}
     </select>
+    <select id="selectFileListForDrawingCheck" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT B.GFILE_SEQ, B.FILE_NM, B.FILE_PATH, B.TIME_PATH, B.ORGINAL_FILE_NM, B.FILE_TYPE, B.FILE_EXT
+        FROM TBL_FILE_GROUP A
+             INNER JOIN TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
+        WHERE B.FILE_EXT = 'png'
+          AND B.FILE_PATH IS NOT NULL
+          AND B.TIME_PATH IS NOT NULL
+          AND B.ORGINAL_FILE_NM IS NOT NULL;
+    </select>
 
     <select id="selectControlBarcodeInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT

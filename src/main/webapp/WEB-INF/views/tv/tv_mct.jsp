@@ -2614,7 +2614,7 @@
 		let setGridSchedulerIntervalTimer;
 		let gridSchedulerTimer = function(){
 			// let selVal = 60;//1분
-			let selVal = 5;// 분
+			let selVal = 1;// 분
 			let timesec = 60000;//60초
 			setGridSchedulerIntervalTimer = setInterval(function() {
 				getReLoadTableData();

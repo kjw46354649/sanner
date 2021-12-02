@@ -83,6 +83,9 @@
                 </ul>
             </section>
         </div>
+        <c:if test="${authUserInfo.USER_ID eq 'manager1'}">
+            <button type="button" class="defaultBtn btn-100w" id="DRAWING_FILE_MAKE" style="background-color: #5b9bd5">누락도면생성</button>
+        </c:if>
     </div>
 </div>
 <!-- 생산 목표금액 설정 -->
@@ -359,6 +362,16 @@
         'hide.bs.modal': function () {
             $productionTargetAmountRegisterGrid.pqGrid('destroy');
         }
+    });
+
+    $('#DRAWING_FILE_MAKE').on('click', function () {
+        var parameters = {
+            'url': '/checkDrawing',
+            'data': {}
+        };
+        fnPostAjax(function (data) {
+            console.log(data);
+        }, parameters, '');
     });
 
     $('[name=production_target_amount_register_close]').on('click', function () {

@@ -2,6 +2,10 @@ package com.framework.innodale.controller;
 
 import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.service.InnodaleService;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.tools.imageio.ImageIOUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,8 +15,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -132,6 +140,51 @@ public class StaticUrlController {
         modelAndView.addObject("blank_image", rootPath + File.separator + "resource" + File.separator + "main" + File.separator + "blank.jpg");
 
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/checkDrawing")
+    public String checkDrawing(Model model, HttpServletRequest req, HttpServletResponse res) throws Exception {
+
+        HashMap<String, Object> fileInfo = new HashMap<String, Object>();
+        fileInfo.put("queryId", "common.selectFileListForDrawingCheck");
+
+        ArrayList<Map<String, Object>> resultList = new ArrayList<>();
+        List<Map<String,Object>> fileList = (List<Map<String, Object>>) innodaleService.getList(fileInfo);
+        for(Map<String,Object> temp : fileList) {
+            String filePath = (String) temp.get("FILE_PATH");
+            String fileName = (String) temp.get("FILE_NM");
+
+            if(filePath != null && fileName != null) {
+                File orgFile = new File(filePath);
+                if(!orgFile.exists()) {
+                    File thumbNailFile = new File(filePath + ".thumbnail.png");
+                    if(!thumbNailFile.exists()) {
+                        File printFile = new File(filePath + ".print.png");
+                        if(printFile.exists()) {
+                            Files.copy(orgFile.toPath(),printFile.toPath());
+                            resultList.add(temp);
+                        }else {
+                            String pdfName = filePath.replace(".png",".pdf");
+                            File pdfFile = new File(pdfName);
+                            if(pdfFile.exists()) {
+                                PDDocument document = PDDocument.load(pdfFile);
+                                PDFRenderer pdfRenderer = new PDFRenderer(document);
+
+                                BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 300, ImageType.RGB);
+                                ImageIOUtil.writeImage(bim, filePath, 300);
+                                resultList.add(temp);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if(resultList.size() > 0) {
+            model.addAttribute("resultList", resultList);
+        }
+
+        return "jsonView";
     }
 
     /**
@@ -352,8 +405,15 @@ public class StaticUrlController {
         return "/common/process_dashBoard";
     }
 
-    @RequestMapping(value = "/testGrid")
-    public String testGrid(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
-        return "/common/test_grid";
+    @RequestMapping(value = "/inspectionResult")
+    public ModelAndView inspectionResult(Model model, HttpServletRequest request, HttpServletResponse response)  throws Exception{
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("/common/inspection_result_pop");
+        mav.addObject("CONTROL_SEQ", map.get("CONTROL_SEQ"));
+        mav.addObject("CONTROL_DETAIL_SEQ", map.get("CONTROL_DETAIL_SEQ"));
+
+        return mav;
     }
 }
