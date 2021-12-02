@@ -145,6 +145,7 @@
           AND B.FILE_PATH IS NOT NULL
           AND B.TIME_PATH IS NOT NULL
           AND B.ORGINAL_FILE_NM IS NOT NULL;
+--           AND B.INSERT_DT <![CDATA[ < ]]> '20210501';
     </select>
 
     <select id="selectControlBarcodeInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">

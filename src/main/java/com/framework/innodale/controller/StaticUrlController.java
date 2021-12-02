@@ -158,7 +158,7 @@ public class StaticUrlController {
                 File orgFile = new File(filePath);
                 if(!orgFile.exists()) {
                     File thumbNailFile = new File(filePath + ".thumbnail.png");
-                    if(!thumbNailFile.exists()) {
+                    if(thumbNailFile.exists()) {
                         File printFile = new File(filePath + ".print.png");
                         if(printFile.exists()) {
                             Files.copy(orgFile.toPath(),printFile.toPath());
