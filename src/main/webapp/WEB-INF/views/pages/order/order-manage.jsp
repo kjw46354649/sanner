@@ -1019,8 +1019,20 @@
 
                         if(selFirstRowData.REGIST_NUM == selLastRowData.REGIST_NUM) {
                             callQuickRowChangeDrawingImageViewer(selFirstRowData.IMG_GFILE_SEQ,selFirstRowData);
+                            selectedOrderManagementRowIndex.push(lastRow);
+                        }else {
+                            for (let i = firstRow; i <= lastRow; i++) {
+                                let currData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: i});
+                                let nextIdx = ((i+1)>lastRow) ? lastRow : i+1;
+                                let nextData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: nextIdx});
+                                if(currData.REGIST_NUM == nextData.REGIST_NUM) {
+                                    selectedOrderManagementRowIndex.push(nextIdx)
+                                    i = i+1;
+                                }else {
+                                    selectedOrderManagementRowIndex.push(i)
+                                }
+                            }
                         }
-                        selectedOrderManagementRowIndex.push(lastRow);
                     }
                 }
                 amountSummaryHtml();
