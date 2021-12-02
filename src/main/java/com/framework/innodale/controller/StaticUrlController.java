@@ -161,7 +161,7 @@ public class StaticUrlController {
                     if(thumbNailFile.exists()) {
                         File printFile = new File(filePath + ".print.png");
                         if(printFile.exists()) {
-                            Files.copy(orgFile.toPath(),printFile.toPath());
+                            Files.copy(printFile.toPath(),orgFile.toPath());
                             resultList.add(temp);
                         }else {
                             String pdfName = filePath.replace(".png",".pdf");
