@@ -3370,6 +3370,14 @@
         };
         matchStockGrid.pqGrid(matchStockObj);
 
+        $(".searchPopup").on('click', function (e) {
+            if(e.target.id != 'processStockMatch') {
+                if($("#matchToolTipDiv").css("display") != 'none') {
+                        $('#matchToolTipDiv').hide();
+                }
+            }
+        })
+
         $('#matchStockDetailBtn').on('click', function (e) {
             let gFileSeq = $("#stock_match_pop_form").find("#GFILE_SEQ").val();
             if(gFileSeq != '') {
