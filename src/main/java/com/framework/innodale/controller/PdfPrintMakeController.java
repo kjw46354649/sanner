@@ -263,7 +263,8 @@ public class PdfPrintMakeController {
             table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("WORK_TYPE_NM"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("MATERIAL_NM"), 1, 1, mediumNormalFont));
-            table.addCell(createCell((String) controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, mediumNormalFont));
+//            table.addCell(createCell((String) controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, mediumNormalFont));
+            table.addCell(createCell((String) controlInfo.get("SPECIAL_TREATMENT"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("INNER_DUE_DT"), 2, 1, mediumBoldFont));
             PdfPCell cell1 = new PdfPCell();
             cell1.addElement(table);
