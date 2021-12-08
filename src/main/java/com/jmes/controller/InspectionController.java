@@ -1,10 +1,11 @@
 package com.jmes.controller;
 
 import com.framework.innodale.component.CommonUtility;
-import com.framework.innodale.entity.ActionType;
 import com.framework.innodale.entity.MessageType;
 import com.framework.innodale.entity.NotificationMessage;
 import com.framework.innodale.service.InnodaleService;
+import com.jmes.service.InspectionService;
+import com.jmes.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,9 @@ public class InspectionController {
 
     @Autowired
     public InnodaleService innodaleService;
+
+    @Autowired
+    public InspectionService inspectionService;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -51,4 +55,21 @@ public class InspectionController {
         return "jsonView";
     }
 
+    @RequestMapping(value = "/saveLayer",  method= RequestMethod.POST)
+    public String saveLayer(Model model, HttpServletRequest request, HttpSession session) throws Exception{
+
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        inspectionService.saveLayer(hashMap,model);
+
+        return "jsonView";
+    }
+
+    @RequestMapping(value = "/modifyInspectResult",  method= RequestMethod.POST)
+    public String modifyInspectResult(Model model, HttpServletRequest request, HttpSession session) throws Exception{
+
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        inspectionService.modifyInspectResult(hashMap,model);
+
+        return "jsonView";
+    }
 }

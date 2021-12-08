@@ -8,15 +8,17 @@
         FROM (
             SELECT
                   X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_COMP_CD, SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
-                , CASE WHEN IFNULL(X.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN_NM
-                , CASE Z.INSPECT_GRADE WHEN 'GRD040' THEN '불' WHEN 'GRD050' THEN '반' WHEN 'GRD060' THEN '반' ELSE SPACE(0) END AS INSPECT_GRADE_SHORT_NM
+                , CASE WHEN IFNULL(X.EMERGENCY_YN, 'N') = 'Y' THEN 'Y' ELSE SPACE(0) END AS EMERGENCY_YN_NM
+                , CASE Z.INSPECT_GRADE WHEN 'GRD040' THEN '불량' WHEN 'GRD050' THEN '반품' WHEN 'GRD060' THEN '반품' ELSE SPACE(0) END AS INSPECT_GRADE_SHORT_NM
                 , X.EMERGENCY_YN, X.MAIN_INSPECTION, SF_GET_CODE_NM('1059', X.MAIN_INSPECTION, #{LOGIN_LOCALE}) AS MAIN_INSPECTION_NM
                 , X.MCT_WORK_SEQ, X.INSPECT_SEQ, Z.INSPECT_TYPE, Z.INSPECT_GRADE
-                , SF_GET_DATE_F(X.INNER_DUE_DT,'YY','') AS INNER_DUE_DT
+                , SF_GET_DATE_F(X.INNER_DUE_DT,'','') AS INNER_DUE_DT
                 , P.POP_POSITION
-                , SF_GET_CODE_NM('1009', P.POP_POSITION, #{LOGIN_LOCALE}) AS POP_NM <!-- 현재 등록된 위치 -->
+                , SF_GET_CODE_NM('1009', P.POP_POSITION, #{LOGIN_LOCALE}) AS POP_NM -- 현재 등록된 위치 -->
                 , (SELECT M.COMP_NM FROM TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
+                , SF_GET_DATE_F(X.OUTSIDE_IN_DT,'','M') AS OUTSIDE_IN_DT
                 , SF_GET_PART_STATUS_NM(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+                , SF_GET_CONTROL_PART_INFO(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
                 , X.CONTROL_NUM
                 , X.PART_NUM
                 , X.DRAWING_NUM
@@ -27,11 +29,11 @@
                 , SF_GET_CONTROL_PART_QTY(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ) AS ORDER_QTY
                 , X.SAME_SIDE_YN
                 , X.SIZE_TXT
-                , SF_GET_DATE_F(Y.WORK_START_DT,'YY','M') AS MCT_WORK_DT        <!-- 변경 확인필요 -->
+                , SF_GET_DATE_F(Y.WORK_START_DT,'YY','M') AS MCT_WORK_DT        -- 변경 확인필요 -->
                 , (SELECT M.USER_NM FROM TBL_USER M WHERE M.USER_ID = Y.WORK_USER_ID) AS WORK_USER_NM
                 , (SELECT M.EQUIP_NM FROM TBL_EQUIP M WHERE M.EQUIP_SEQ = Y.EQUIP_SEQ) AS EQUIP_NM
                 , (SELECT NOTE FROM TBL_CAM M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ) AS CAM_NOTE
-                , X.NOTE
+                , X.NOTE, X.MATERIAL_NOTE
                 , (SELECT COUNT(*) FROM TBL_INSPECT M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ) AS Q_SEQ
                 , (SELECT M.USER_NM FROM TBL_USER M WHERE M.USER_ID = Z.INSPECT_USER_ID) AS Q_INSPECT_USER_NM
                 , SF_GET_CODE_NM('1060', Z.INSPECT_METHOD, #{LOGIN_LOCALE}) AS Q_INSPECT_METHOD_NM
@@ -47,12 +49,19 @@
                 , SF_GET_CODE_NM('1025', Z.ERROR_ACTION, #{LOGIN_LOCALE}) AS Q_ERROR_ACTION_NM
                 , Z.ERROR_NOTE AS Q_ERROR_NOTE
                 , SF_GET_DATE_F(Z.INSERT_DT, '', 'M') AS Q_DT
-                , X.OUT_FINISH_DT
+                , SF_GET_DATE_F(X.OUT_FINISH_DT, '', '') AS OUT_FINISH_DT
                 , X.NOT_RETURN_SETTLEMENT_CNT
                 , X.WORK_FINISH_DT
                 , X.REGIST_NUM
                 , X.CONTROL_VER
                 , X.DRAWING_VER
+                , (SELECT COUNT(DISTINCT Q.PRODUCT_NUM) FROM TBL_INSPECT_RESULT Q WHERE Q.CONTROL_SEQ = X.CONTROL_SEQ AND Q.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ) AS INSPECT_RESULT_QTY
+                , ( SELECT
+                        CASE WHEN MAX(Q.UPDATE_DT) IS NOT NULL THEN SF_GET_DATE_F(MAX(Q.UPDATE_DT), '', 'M')
+                             ELSE SF_GET_DATE_F(MAX(Q.INSERT_DT), '', 'M')
+                        END
+                    FROM TBL_INSPECT_RESULT Q WHERE Q.CONTROL_SEQ = X.CONTROL_SEQ AND Q.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+                 ) AS INSPECT_RESULT_LATEST_DT
             FROM (
                     SELECT
                           B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.ORDER_COMP_CD
@@ -62,8 +71,8 @@
                         , B.MATERIAL_DETAIL, B.WORK_TYPE, B.MATERIAL_TYPE
                         , A.SAME_SIDE_YN
                         , B.PART_UNIT_QTY, B.SIZE_TXT, A.NOTE
-                        , B.IMG_GFILE_SEQ
-                        , SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', '') AS WORK_FINISH_DT
+                        , B.IMG_GFILE_SEQ, B.MATERIAL_NOTE
+                        , SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', 'M') AS WORK_FINISH_DT
                         , (SELECT MAX(M.MCT_WORK_SEQ) FROM TBL_MCT_WORK M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N') AS MCT_WORK_SEQ
                         , (SELECT MAX(M.INSPECT_SEQ) FROM TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS INSPECT_SEQ
                         , A.OUT_FINISH_DT
@@ -71,17 +80,19 @@
                         , C.REGIST_NUM
                         , A.CONTROL_VER
                         , B.DRAWING_VER
+                        , B.OUTSIDE_IN_DT
                     FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER_MAIN C
                     WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
                         AND A.CONTROL_SEQ = C.CONTROL_SEQ
                         AND A.DEL_YN = 'N'
                         AND A.CONTROL_STATUS IN ('ORD001', 'ORD003')
-                        AND (EXISTS (SELECT *
-                                    FROM TBL_CONTROL_PART_PROGRESS
-                                    WHERE 1 = 1
-                                        AND CONTROL_SEQ = B.CONTROL_SEQ
-                                        AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                        AND PART_STATUS = 'PRO002') OR B.OUTSIDE_CONFIRM_DT IS NOT NULL)
+                        AND B.PART_STATUS NOT IN ('PRO001','PRO002','PRO003','PRO004','PRO005','PRO006','PRO007','PRO008','PRO021','PRO022')
+--                         AND (EXISTS (SELECT *
+--                                     FROM TBL_CONTROL_PART_PROGRESS
+--                                     WHERE 1 = 1
+--                                         AND CONTROL_SEQ = B.CONTROL_SEQ
+--                                         AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+--                                         AND PART_STATUS = 'PRO002') OR B.OUTSIDE_CONFIRM_DT IS NOT NULL)
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
@@ -95,32 +106,38 @@
                         AND B.OUTSIDE_COMP_CD = #{SEL_OUTSIDE_COMP_CD}
                     </if>
                     <if test="SEL_OUTSIDE_YN or SEL_OUTSIDE_YN == true">
-                        AND IFNULL(B.OUTSIDE_YN,0) = 'N'  <!-- 외주대상 제외 체크하면 -->
+                        AND IFNULL(B.OUTSIDE_YN,0) = 'N'  -- 외주대상 제외 체크하면 -->
                     </if>
                     <if test="SEL_INNER_WORK_FINISH_YN == 'true'">
                         AND B.INNER_WORK_FINISH_DT IS NOT NULL
                     </if>
-                    ) X LEFT OUTER JOIN TBL_MCT_WORK Y ON Y.MCT_WORK_SEQ = X.MCT_WORK_SEQ
-                        LEFT OUTER JOIN TBL_INSPECT Z ON Z.INSPECT_SEQ = X.INSPECT_SEQ
-                        LEFT OUTER JOIN TBL_POP P ON X.CONTROL_SEQ = P.CONTROL_SEQ
-                                                                AND X.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ
-                                                                AND P.POP_SEQ = (SELECT MAX(POP_SEQ)
-                                                                                FROM TBL_POP G
-                                                                                WHERE 1 = 1
-                                                                                    AND P.CONTROL_SEQ = G.CONTROL_SEQ
-                                                                                    AND P.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ)
-                                                            <!-- <if test="SEL_POP_POSITION !='' and SEL_POP_POSITION != null"> -->
-<!--                                                                AND P.POP_POSITION = #{SEL_POP_POSITION}-->
-                                                            <!-- </if> -->
-                    WHERE (X.OUT_FINISH_DT IS NULL OR X.NOT_RETURN_SETTLEMENT_CNT > 0)
-            ) T
-            WHERE 1=1
-            <if test="SEL_INSPECT_GRADE or SEL_INSPECT_GRADE == true">
-                AND (T.INSPECT_GRADE IS NULL OR T.INSPECT_GRADE NOT IN ('GRD010','GRD020','GRD030'))  <!-- 검사완료품 제외를 체크하면 -->
-            </if>
-            <if test="SEL_POP_POSITION !='' and SEL_POP_POSITION != null">
-                AND T.POP_POSITION = #{SEL_POP_POSITION}
-            </if>
+                    <if test="SEL_MATERIAL_DETAIL !='' and SEL_MATERIAL_DETAIL != null">
+                        AND B.MATERIAL_DETAIL = #{SEL_MATERIAL_DETAIL}
+                    </if>
+                    <if test="SEL_WORK_TYPE !='' and SEL_WORK_TYPE != null">
+                        AND B.WORK_TYPE = #{SEL_WORK_TYPE}
+                    </if>
+            ) X LEFT OUTER JOIN TBL_MCT_WORK Y ON Y.MCT_WORK_SEQ = X.MCT_WORK_SEQ
+                LEFT OUTER JOIN TBL_INSPECT Z ON Z.INSPECT_SEQ = X.INSPECT_SEQ
+                LEFT OUTER JOIN TBL_POP P ON X.CONTROL_SEQ = P.CONTROL_SEQ
+                                                        AND X.CONTROL_DETAIL_SEQ = P.CONTROL_DETAIL_SEQ
+                                                        AND P.POP_SEQ = (SELECT MAX(POP_SEQ)
+                                                                        FROM TBL_POP G
+                                                                        WHERE 1 = 1
+                                                                            AND P.CONTROL_SEQ = G.CONTROL_SEQ
+                                                                            AND P.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ)
+            WHERE (X.OUT_FINISH_DT IS NULL OR X.NOT_RETURN_SETTLEMENT_CNT > 0)
+        ) T
+        WHERE 1=1
+        <if test="SEL_INSPECT_PASS or SEL_INSPECT_PASS == true">
+            AND IFNULL(T.INSPECT_GRADE, SPACE(0)) NOT IN ('GRD010','GRD020','GRD030')
+        </if>
+<!--        <if test="SEL_INSPECT_GRADE or SEL_INSPECT_GRADE == true">-->
+<!--            AND (T.INSPECT_GRADE IS NULL OR T.INSPECT_GRADE NOT IN ('GRD010','GRD020','GRD030'))  &lt;!&ndash; 검사완료품 제외를 체크하면 &ndash;&gt;-->
+<!--        </if>-->
+<!--        <if test="SEL_POP_POSITION !='' and SEL_POP_POSITION != null">-->
+<!--            AND T.POP_POSITION = #{SEL_POP_POSITION}-->
+<!--        </if>-->
         ORDER BY T.INNER_DUE_DT, T.CONTROL_SEQ, T.CONTROL_DETAIL_SEQ
     </select>
 
@@ -2241,7 +2258,7 @@
         <!-- 항목은 검사리스트와 동일하게 하고 MCT 실적은 제거 -->
         <!-- 검색조건 확인필요 (불량코드콤보는 note값으로 처리, Show All seq 삭제) -->
 
-        SELECT V.CONTROL_SEQ, V.CONTROL_DETAIL_SEQ
+        SELECT V.CONTROL_SEQ, V.CONTROL_DETAIL_SEQ, SF_GET_CONTROL_PART_INFO(V.CONTROL_SEQ, V.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
             , V.WORK_FINISH_DT, V.ORDER_COMP_NM, V.INNER_DUE_DT, V.EMERGENCY_YN, V.MAIN_INSPECTION_NM
             , V.CONTROL_NUM, V.PART_NUM, V.DRAWING_NUM, V.WORK_TYPE_NM, V.WORK_FACTORY_NM, V.OUTSIDE_COMP_NM
             , V.MATERIAL_DETAIL_NM, V.ORDER_QTY, V.SIZE_TXT, V.NOTE, V.POP_NM, V.PART_STATUS_NM
@@ -2262,7 +2279,7 @@
             , SF_GET_CODE_NM('1032', W.ERROR_REASON, #{LOGIN_LOCALE}) AS Q_ERROR_REASON_NM
             , SF_GET_CODE_NM('1025', W.ERROR_ACTION, #{LOGIN_LOCALE}) AS Q_ERROR_ACTION_NM
             , W.ERROR_NOTE AS Q_ERROR_NOTE
-            , SF_GET_DATE_F(W.INSERT_DT,'YY','M') AS Q_DT
+            , SF_GET_DATE_F(W.INSERT_DT,'','M') AS INSEPCT_INSERT_DT
             , V.IMG_GFILE_SEQ
             , V.CONTROL_VER
             , V.DRAWING_VER
@@ -2482,4 +2499,223 @@
         WHERE A.ORDER_SEQ = #{ORDER_SEQ}
           AND EXISTS ( SELECT 1 FROM TBL_CONTROL_PART_ORDER M WHERE M.ORDER_SEQ = A.ORDER_SEQ)
     </update>
+    <select id="selectLayerInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT LAYER_AREA_NAME,
+               AREA_TYPE,
+               AREA_NAME,
+               AREA_COORDINATE,
+               MARK_TYPE,
+               SF_GET_CODE_NM('1101',MARK_TYPE,#{LOGIN_LOCALE}) AS MARK_TYPE_NM
+        FROM TBL_LAYER_AREA
+        WHERE LAYER_AREA_NAME = #{LAYER_AREA_NAME}
+        ORDER BY AREA_TYPE, AREA_NAME
+    </select>
+    <insert id="insertLayerInfo" parameterType="java.util.HashMap">
+        INSERT INTO TBL_LAYER_AREA (
+            LAYER_AREA_NAME,
+            AREA_TYPE,
+            MARK_TYPE,
+            AREA_NAME,
+            AREA_COORDINATE,
+            INSERT_ID
+        )
+        VALUES (
+            #{LAYER_AREA_NAME},
+            #{AREA_TYPE},
+            #{MARK_TYPE},
+            #{AREA_NAME},
+            #{AREA_COORDINATE},
+            #{LOGIN_USER_ID}
+        )
+        ON DUPLICATE KEY UPDATE
+            AREA_COORDINATE = #{AREA_COORDINATE},
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+    </insert>
+
+    <delete id="deleteLayerInfo" parameterType="java.util.HashMap">
+        DELETE FROM TBL_LAYER_AREA
+        WHERE LAYER_AREA_NAME = #{LAYER_AREA_NAME}
+            AND AREA_TYPE = #{AREA_TYPE}
+            AND MARK_TYPE = #{MARK_TYPE}
+            AND AREA_NAME = #{AREA_NAME}
+    </delete>
+    <select id="selectInspectionResult" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.INSPECT_RESULT_SEQ,
+               A.CONTROL_SEQ,
+               A.CONTROL_DETAIL_SEQ,
+               A.RESULT_NUM,
+               '1' AS EYE_VIEW,
+               A.RESULT_POSITION,
+               A.RESULT_VALUE,
+               A.COORDINATE_X,
+               A.COORDINATE_Y,
+               '1' AS DELETE_BTN,
+               A.LAYER_AREA_NAME
+        FROM TBL_INSPECT_RESULT A
+        WHERE 1=1
+            <if test="CONTROL_SEQ !='' and CONTROL_SEQ != null">
+                AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+            </if>
+            <if test="CONTROL_DETAIL_SEQ !='' and CONTROL_DETAIL_SEQ != null">
+                AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            </if>
+            <if test="PRODUCT_NUM !='' and PRODUCT_NUM != null">
+                AND A.PRODUCT_NUM = #{PRODUCT_NUM}
+            </if>
+    </select>
+
+    <select id="selectInspectionResultControlInfoBarcode" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.BARCODE_NUM
+            , A.CONTROL_SEQ
+            , A.CONTROL_DETAIL_SEQ
+            , C.IMG_GFILE_SEQ
+            , CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, ' # ', IFNULL(C.PART_NUM, SPACE(0))) END AS CONTROL_NUM
+            , SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS QTY
+            , SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+            , D.PRODUCT_NUM
+            , D.LAYER_AREA_NAME
+        FROM jmes.TBL_CONTROL_BARCODE A
+            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N'
+            INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_INSPECT_RESULT D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+        WHERE A.DEL_YN = 'N'
+          AND A.BARCODE_NUM = #{BARCODE_NUM}
+        ORDER BY D.PRODUCT_NUM
+        LIMIT 1
+    </select>
+    <select id="selectInspectionResultControlInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.CONTROL_SEQ,
+            B.CONTROL_DETAIL_SEQ,
+            CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' # ', IFNULL(B.PART_NUM, SPACE(0))) END AS CONTROL_NUM,
+            SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS QTY,
+            SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM,
+            CASE WHEN C.PRODUCT_NUM IS NOT NULL THEN C.PRODUCT_NUM
+                 WHEN #{PRODUCT_NUM} IS NOT NULL THEN #{PRODUCT_NUM}
+                 ELSE SPACE(0)
+            END AS PRODUCT_NUM,
+            B.IMG_GFILE_SEQ,
+            C.LAYER_AREA_NAME
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
+            LEFT OUTER JOIN TBL_INSPECT_RESULT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+            <if test="PRODUCT_NUM !='' and PRODUCT_NUM != null">
+                AND C.PRODUCT_NUM = #{PRODUCT_NUM}
+            </if>
+        WHERE A.DEL_YN = 'N'
+            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        ORDER BY C.PRODUCT_NUM DESC
+        LIMIT 1
+    </select>
+    <insert id="insertInspectionResult" parameterType="java.util.HashMap">
+        INSERT INTO TBL_INSPECT_RESULT (
+            INSPECT_RESULT_SEQ,
+            CONTROL_SEQ,
+            CONTROL_DETAIL_SEQ,
+            PRODUCT_NUM,
+            RESULT_NUM,
+            RESULT_POSITION,
+            RESULT_VALUE,
+            COORDINATE_X,
+            COORDINATE_Y,
+            LAYER_AREA_NAME,
+            INSERT_ID
+         )
+        VALUES (
+            NEXTVAL(SEQ_INSPECT_RESULT),
+            #{CONTROL_SEQ},
+            #{CONTROL_DETAIL_SEQ},
+            #{PRODUCT_NUM},
+            #{RESULT_NUM},
+            #{RESULT_POSITION},
+            #{RESULT_VALUE},
+            #{COORDINATE_X},
+            #{COORDINATE_Y},
+            #{LAYER_AREA_NAME},
+            #{LOGIN_USER_ID}
+        )
+    </insert>
+    <update id="updateInspectionResult" parameterType="java.util.HashMap">
+        UPDATE TBL_INSPECT_RESULT
+        SET
+            UPDATE_DT = NOW(),
+            <if test="RESULT_NUM != null and RESULT_NUM !=''">
+                RESULT_NUM = #{RESULT_NUM},
+            </if>
+            <if test="RESULT_VALUE != null and RESULT_VALUE !=''">
+                RESULT_VALUE = #{RESULT_VALUE},
+            </if>
+            <if test="LAYER_AREA_NAME != null and LAYER_AREA_NAME !=''">
+                LAYER_AREA_NAME = #{LAYER_AREA_NAME},
+            </if>
+            <if test="RESULT_POSITION != null and RESULT_POSITION !=''">
+                RESULT_POSITION = #{RESULT_POSITION},
+            </if>
+            <if test="COORDINATE_X != null and COORDINATE_X !=''">
+                COORDINATE_X = #{COORDINATE_X},
+            </if>
+            <if test="COORDINATE_Y != null and COORDINATE_Y !=''">
+                COORDINATE_Y = #{COORDINATE_Y},
+            </if>
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE INSPECT_RESULT_SEQ = #{INSPECT_RESULT_SEQ}
+    </update>
+    <delete id="deleteInspectionResultProdNum" parameterType="java.util.HashMap">
+        DELETE FROM TBL_INSPECT_RESULT
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND PRODUCT_NUM = #{PRODUCT_NUM}
+    </delete>
+    <delete id="deleteInspectionResult" parameterType="java.util.HashMap">
+        DELETE FROM TBL_INSPECT_RESULT
+        WHERE INSPECT_RESULT_SEQ = #{INSPECT_RESULT_SEQ}
+    </delete>
+
+    <select id="selectInspectPointList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, ' # ', IFNULL(C.PART_NUM, SPACE(0))) END AS CONTROL_NUM,
+            C.SIZE_TXT,
+            C.MATERIAL_TYPE,
+            C.CONTROL_SEQ,
+            C.CONTROL_DETAIL_SEQ,
+            C.IMG_GFILE_SEQ,
+            SF_GET_CODE_NM('1035', C.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM,
+--             COUNT(*) AS POINT_CNT,
+            (SELECT COUNT(*) FROM TBL_INSPECT_RESULT X WHERE X.CONTROL_SEQ = A.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND X.PRODUCT_NUM = A.PRODUCT_NUM) AS POINT_CNT,
+            SF_GET_DATE_F(MAX(A.INSERT_DT), '', 'M') AS LATEST_UPDATE_DT,
+            COUNT(DISTINCT A.PRODUCT_NUM) AS INSPECT_RESULT_CNT,
+            MAX(A.PRODUCT_NUM) AS LATEST_PRODUCT_NUM,
+            MAX(A.LAYER_AREA_NAME) AS LAYER_AREA_NAME
+        FROM TBL_INSPECT_RESULT A
+            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N'
+            INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+        WHERE C.SIZE_TXT LIKE CONCAT('%',#{SIZE_TXT},'%')
+            <if test="MATERIAL_TYPE != null and MATERIAL_TYPE != ''">
+                AND MATERIAL_TYPE = #{MATERIAL_TYPE}
+            </if>
+        GROUP BY C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ
+        ORDER BY B.CONTROL_NUM, A.INSERT_DT
+    </select>
+    <select id="selectInspectPointDetail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.INSPECT_RESULT_SEQ,
+            A.CONTROL_SEQ,
+            A.CONTROL_DETAIL_SEQ,
+            A.RESULT_NUM,
+            '1' AS EYE_VIEW,
+            A.RESULT_POSITION,
+            A.RESULT_VALUE,
+            A.COORDINATE_X,
+            A.COORDINATE_Y,
+            '1' AS DELETE_BTN,
+            A.LAYER_AREA_NAME
+        FROM TBL_INSPECT_RESULT A
+        WHERE 1=1
+            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        <if test="PRODUCT_NUM !='' and PRODUCT_NUM != null">
+            AND A.PRODUCT_NUM = #{PRODUCT_NUM}
+        </if>
+    </select>
 </mapper>
