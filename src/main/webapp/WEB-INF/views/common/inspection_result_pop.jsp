@@ -312,6 +312,7 @@
                 <button type="button" id="startInspectBtn" class="defaultBtn btn-120w radius fluore_blue" style="font-size: 16px;height: 30px;">시 작</button>
                 <button type="button" id="saveInspectBtn" class="defaultBtn btn-120w radius green" style="font-size: 16px;height: 30px;display: none;">저 장</button>
                 <button type="button" id="gradeInspectBtn" class="defaultBtn btn-120w radius purple" style="font-size: 16px;height: 30px;">등급 입력</button>
+<%--                <button type="button" id="saveHtmlImgBtn" class="defaultBtn btn-120w radius" style="font-size: 16px;height: 30px;">이미지 저장</button>--%>
                 <button type="button" id="deleteInspectBtn" class="defaultBtn btn-120w radius red mt-05" style="font-size: 16px;height: 30px;">삭 제</button>
                 <button type="button" id="closeInspectBtn" class="defaultBtn btn-120w radius black mt-05" style="font-size: 16px;height: 30px;">닫 기</button>
 <%--                <button type="button" class="defaultBtn radius black mt-05" style="font-size: 16px;height: 30px;" id="startRecordBtn">동영상 녹화 시작</button>--%>
@@ -568,6 +569,7 @@
 <form class="form-inline" id="layer_setting_form" name="layer_setting_form" role="form" onsubmit="return false;">
 </form>
     <script type="text/javascript" src='/resource/plugins/vanilla-js-wheel-zoom-master/dist/wheel-zoom.js'></script>
+    <script type="text/javascript" src='/resource/plugins/html2canvas-1.3.3/html2canvas.js'></script>
     <script type='text/javascript'>
         const startBtn = document.getElementById('startRecordBtn');
         const stopBtn = document.getElementById('stopRecordBtn');
@@ -1191,6 +1193,32 @@
                     }
                 }
             });
+
+            $("#saveHtmlImgBtn").on("click",function () {
+                html2canvas(document.querySelector("#myWindow")).then(
+                    function(canvas) {
+                        // return Canvas2Image.saveAsPNG(canvas);
+                        saveAs(canvas.toDataURL(),  'myWindow_Media.jpg');
+                });
+            });
+            function saveAs(uri, filename) {
+                var link = document.createElement('a');
+                if (typeof link.download === 'string') {
+                    link.href = uri;
+                    link.download = filename;
+
+                    //Firefox requires the link to be in the body
+                    document.body.appendChild(link);
+
+                    //simulate click
+                    link.click();
+
+                    //remove the link when done
+                    document.body.removeChild(link);
+                } else {
+                    window.open(uri);
+                }
+            }
 
             $("#gradeInspectBtn").on("click",function () {
                 let controlSeq = $("#inspection_result_pop_form").find("#CONTROL_SEQ").val();
