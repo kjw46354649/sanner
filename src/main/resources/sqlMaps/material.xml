@@ -2602,6 +2602,7 @@
     <select id="selectOrderStatusBeforeMaterialOrder" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT IFNULL(A.CONTROL_STATUS,SPACE(0)) AS CONTROL_STATUS
                , B.OUTSIDE_YN
+               , IFNULL(B.OUTSIDE_MATERIAL_SUPPLY_YN,'N') AS OUTSIDE_MATERIAL_SUPPLY_YN
                , IFNULL(B.PART_STATUS,SPACE(0)) AS PART_STATUS
         FROM TBL_CONTROL A, TBL_CONTROL_PART B
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ

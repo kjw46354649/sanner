@@ -1800,12 +1800,15 @@
                     'data': {"CONTROL_SEQ":controlSeqStr,"CONTROL_DETAIL_SEQ":controlDetailSeqStr,"queryId":"material.selectOrderStatusBeforeMaterialOrder"}
                 };
                 fnPostAjaxAsync(function (data, callFunctionParam) {
+                    console.log(data.list);
                     if(data.list.length > 0) {
                         var flag = false;
                         $.each(data.list, function(idx,Item) {
                             if(Item.OUTSIDE_YN == 'Y') { // 외주가공건인 경우.
-                                flag = true;
-                                return;
+                                if(Item.OUTSIDE_MATERIAL_SUPPLY_YN == 'N') {
+                                    flag = true;
+                                    return;
+                                }
                             }else if(Item.CONTROL_STATUS != 'ORD001' ) { // 주문상태가 확정이 아닌경우
                                 flag = true;
                                 return;
