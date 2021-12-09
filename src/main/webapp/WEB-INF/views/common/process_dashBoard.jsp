@@ -274,11 +274,13 @@
             <div class="display_f h90 my-2" style="height: 95%;">
                 <div class="left_wrap h100 w50 mx-1 position_R" style="width: 46%;">
                     <div class="left_top_wrap">
-                        <span class="from_main_grid">주문가공 진행현황</span>
-                        <span class="from_outside">외주가공 진행현황</span>
-                        <span class="from_non_complete">미완료 현황</span>
-                        <span class="from_material" style="display: none;">가공대기현황 (<span class="text-primary">재질별</span>)</span>
-                        <span class="text-primary from_main_grid" id="processPop_comp_nm"></span>
+                        <span class="popHeader from_main_grid">주문가공 진행현황</span>
+                        <span class="popHeader from_outside">외주가공 진행현황</span>
+                        <span class="popHeader from_non_complete">미완료 현황</span>
+                        <span class="popHeader from_delay">납기지연 현황</span>
+                        <span class="popHeader from_delay_process">가공지연 현황</span>
+                        <span class="popHeader from_material" style="display: none;">가공대기현황 (<span class="text-primary">재질별</span>)</span>
+                        <span class="popHeader text-primary from_main_grid" id="processPop_comp_nm"></span>
                     </div>
                     <form class="form-inline" name="PROCESS_POP_FORM" id="PROCESS_POP_FORM" role="form">
                         <input type="hidden" name="queryId" id="queryId" value="process.selectProcessPop_company">
@@ -288,13 +290,17 @@
                         <input type="hidden" name="PART_STATUS" id="PART_STATUS" value="">
                         <input type="hidden" name="INNER_DUE_DT" id="INNER_DUE_DT" value="">
                     </form>
-                    <div id="processPopOutsideDiv" class="h10 w100 box-scroll-x left_wrap1 from_outside" style="display: none;height: 13.5%;">
+                    <div id="processPopOutsideDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_outside" style="display: none;height: 13.5%;">
                     </div>
-                    <div id="processPopMaterialDiv" class="h10 w100 box-scroll-x left_wrap1 from_material" style="display: none;">
+                    <div id="processPopMaterialDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_material" style="display: none;">
                     </div>
-                    <div id="processPopNonCompleteDiv" class="h10 w100 box-scroll-x left_wrap1 from_non_complete" style="display: none;">
+                    <div id="processPopDelayDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_delay" style="display: none;">
                     </div>
-                    <div id="processPopMainGridDiv" class="h10 w100 box-scroll-x left_wrap1 display_f text-center p-1 from_main_grid" style="display: none;">
+                    <div id="processPopDelayProcessDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_delay_process" style="display: none;">
+                    </div>
+                    <div id="processPopNonCompleteDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_non_complete" style="display: none;">
+                    </div>
+                    <div id="processPopMainGridDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 display_f text-center p-1 from_main_grid" style="display: none;">
                         <div id="DIV_TOTAL" class="w10 h100 status1 pt-3">
                             <p>계</p>
                             <p id="TOTAL_CNT"></p>
@@ -423,10 +429,9 @@
     let openProcessPopup = function(type,rowData) {
         if(!fnIsEmpty(rowData)) {
             fnResetForm("PROCESS_POP_FORM");
+            $("#processPopup").find(".popHeader").hide();
+
             if(type == 'OUTSIDE_PROCESS_DIV') {
-                $("#processPopup").find(".from_main_grid").hide();
-                $("#processPopup").find(".from_material").hide();
-                $("#processPopup").find(".from_non_complete").hide();
                 $("#processPopup").find(".from_outside").show();
 
                 $(".from_outside > .pop_outside_div").removeClass("onClickStatus2");
@@ -435,10 +440,7 @@
                 $("#PROCESS_POP_FORM").find("#ORDER_COMP_CD").val(rowData);
                 $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_outside");
             }else if(type == 'WAIT_MATERIAL_DIV') {
-                $("#processPopup").find(".from_main_grid").hide();
                 $("#processPopup").find(".from_material").show();
-                $("#processPopup").find(".from_outside").hide();
-                $("#processPopup").find(".from_non_complete").hide();
 
                 $(".from_material > .pop_material_div").removeClass("onClickStatus3");
                 $(".from_material").find("#POP_MATERIAL_"+rowData).addClass("onClickStatus3");
@@ -446,9 +448,6 @@
                 $("#PROCESS_POP_FORM").find("#MATERIAL_TYPE").val(rowData);
                 $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_material");
             }else if(type == 'NON_COMPLETE') {
-                $("#processPopup").find(".from_main_grid").hide();
-                $("#processPopup").find(".from_material").hide();
-                $("#processPopup").find(".from_outside").hide();
                 $("#processPopup").find(".from_non_complete").show();
 
                 $(".from_non_complete > .non_complete_div").removeClass("onClickStatus4");
@@ -457,10 +456,26 @@
                 $("#PROCESS_POP_FORM").find("#INNER_DUE_DT").val(rowData);
                 $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_nonComplete");
 
+            }else if(type == 'DELAY') {
+                $("#processPopup").find(".from_delay").show();
+
+                $(".from_delay > .delay_div").removeClass("onClickStatus2");
+                $(".from_delay").find("#DELAY_"+rowData).addClass("onClickStatus2");
+
+                $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_delay");
+
+                $("#PROCESS_POP_FORM").find("#ORDER_COMP_CD").val(rowData);
+
+            }else if(type == 'DELAY_PROCESS') {
+                $("#processPopup").find(".from_delay_process").show();
+
+                $(".from_delay_process > .delay_process_div").removeClass("onClickStatus2");
+                $(".from_delay_process").find("#DELAY_PROCESS_"+rowData).addClass("onClickStatus2");
+
+                $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_delayProcess");
+
+                $("#PROCESS_POP_FORM").find("#ORDER_COMP_CD").val(rowData);
             }else {
-                $("#processPopup").find(".from_outside").hide();
-                $("#processPopup").find(".from_material").hide();
-                $("#processPopup").find(".from_non_complete").hide();
                 $("#processPopup").find(".from_main_grid").show();
 
                 $("#processPopup").find("#processPop_comp_nm").text("(" + rowData.ORDER_COMP_NM + ")");
@@ -473,6 +488,28 @@
 
                 settingDataUseId('processPopup',rowData);
             }
+
+            let $processPopGridInstance = $("#processPop_grid").pqGrid('getInstance').grid;
+            let Cols = $processPopGridInstance.Columns();
+
+            Cols.alter(function () {
+                Cols.each(function (col) {
+                    if(col.dataIndx == 'ORDER_DUE_DT') {
+                        if(type == 'DELAY') {
+                            col.hidden = false;
+                        }else {
+                            col.hidden = true;
+                        }
+                    }
+                    if(col.dataIndx == 'INNER_DUE_DT') {
+                        if(type == 'DELAY') {
+                            col.hidden = true;
+                        }else {
+                            col.hidden = false;
+                        }
+                    }
+                });
+            });
 
             $("#processPop_grid").pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('PROCESS_POP_FORM');
@@ -596,15 +633,38 @@
                         }else {
                             resetPopCnt();
                         }
-                        $("#processPop_grid").pqGrid("option", "dataModel.postData", function(ui){
-                            return fnFormToJsonArrayData('PROCESS_POP_FORM');
-                        } );
-                        $("#processPop_grid").pqGrid("refreshDataAndView");
+                        // $("#processPop_grid").pqGrid("option", "dataModel.postData", function(ui){
+                        //     return fnFormToJsonArrayData('PROCESS_POP_FORM');
+                        // } );
+                        // $("#processPop_grid").pqGrid("refreshDataAndView");
                     }
                 }
             },parameter,'');
-
         }
+
+        let delayPopHeader = function () {
+            let gridData = $("#process_dash_board_main_grid").pqGrid('option', 'dataModel.data');
+            $("#processPopDelayDiv").empty();
+            $("#processPopDelayProcessDiv").empty();
+            $.each(gridData, function (idx,Item) {
+                if(Item.DELAY_CNT > 0) {
+                    let html = '<div id="DELAY_'+Item.ORDER_COMP_CD+'" class="block_box block_box_middle pt-3 back_sky delay_div" data-target="'+Item.ORDER_COMP_CD +'">';
+                    html += '<p>' + Item.ORDER_COMP_NM + '</p>';
+                    html += '<p class="small">' + Item.DELAY_CNT + ' (' + Item.DELAY_QTY + ')</p>';
+                    html += '</div>';
+                    $("#processPopDelayDiv").append(html);
+                }
+                if(Item.DELAY_PROCESS_CNT > 0) {
+                    let html = '<div id="DELAY_PROCESS_'+Item.ORDER_COMP_CD+'" class="block_box block_box_middle pt-3 back_sky delay_process_div" data-target="'+Item.ORDER_COMP_CD +'">';
+                    html += '<p>' + Item.ORDER_COMP_NM + '</p>';
+                    html += '<p class="small">' + Item.DELAY_PROCESS_CNT + ' (' + Item.DELAY_PROCESS_QTY + ')</p>';
+                    html += '</div>';
+                    $("#processPopDelayProcessDiv").append(html);
+
+                }
+            })
+        }
+
         let resetPopCnt = function () {
             let arr = ['TOTAL_CNT','TOTAL_QTY','PROCESS_CONFIRM_CNT','PROCESS_CONFIRM_QTY','MATCH_STOCK_CNT','MATCH_STOCK_QTY',
                 'WAIT_MATERIAL_CNT', 'WAIT_MATERIAL_QTY', 'IN_MATERIAL_CNT', 'IN_MATERIAL_QTY', 'PROCESSING_CNT', 'PROCESSING_QTY',
@@ -615,6 +675,7 @@
                 $("#"+arr[i]).text("0");
             }
         }
+
         let getStockProcessList = function (type) {
             const parameter = {'url': '/tv/json-list', 'data': {
                     'queryId':'process.selectStockProcessList'
@@ -666,6 +727,7 @@
                 });
             },parameter,'');
         }
+
         let getOutsideProcessData = function () {
             const parameter = {'url': '/tv/json-list', 'data': {
                     'queryId':'process.selectOutsideProcessList'
@@ -698,6 +760,7 @@
                 });
             },parameter,'');
         }
+
         function calculatePercent(l, target) {
             var off = target - _.reduce(l, function(acc, x) { return acc + Math.round(x) }, 0);
             return _.chain(l).
@@ -1030,22 +1093,40 @@
                 styleHead: {'background-color':'#ffc372'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span>' + ui.cellData + ' <span class="header_inside">(' + ui.rowData.DELAY_PROCESS_QTY +')</span></span>';
+                        let html = '<span class="column_hover">' + ui.cellData + ' <span class="header_inside">(' + ui.rowData.DELAY_PROCESS_QTY +')</span></span>';
                         return {style: 'background-color:#fdebd2;', text:html};
                     }else {
                         return {style: 'background-color:#fdebd2;', text:""};
                     }
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('.column_hover').bind('click', function () {
+                        let rowData = ui.rowData;
+                        delayPopHeader();
+                        openProcessPopup('DELAY_PROCESS',rowData.ORDER_COMP_CD);
+                    });
                 }
             },
             {title: '납기<br>지연', width: 80, dataIndx: 'DELAY_CNT', editable: false, sortable:false,
                 styleHead: {'background-color':'#fff54c', 'color':'red'},
                 render: function (ui) {
                     if(!fnIsEmpty(ui.cellData) && ui.cellData > 0) {
-                        let html = '<span>' + ui.cellData + ' <span class="header_inside">(' + ui.rowData.DELAY_QTY +')</span></span>';
+                        let html = '<span class="column_hover">' + ui.cellData + ' <span class="header_inside">(' + ui.rowData.DELAY_QTY +')</span></span>';
                         return {style: 'color: red; background-color:#faf7c0;', text:html};
                     }else {
                         return {style: 'color: red; background-color:#faf7c0;', text:""};
                     }
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find('.column_hover').bind('click', function () {
+                        let rowData = ui.rowData;
+                        delayPopHeader();
+                        openProcessPopup('DELAY',rowData.ORDER_COMP_CD);
+                    });
                 }
             }
         ]
@@ -1073,6 +1154,7 @@
             },
             complete: function () {
                 displayTotalHeader();
+                delayPopHeader();
             },
             sortModel: {on: false}
         }
@@ -1321,8 +1403,11 @@
         const processPopColModel = [
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: '발주납기', width: 60, dataIndx: 'ORDER_DUE_DT',editable: false,
+                styleHead: {'background-color':'#aedcff'}, hidden: true
+            },
             {title: '가공납기', width: 60, dataIndx: 'INNER_DUE_DT',editable: false,
-                styleHead: {'background-color':'#aedcff'}
+                styleHead: {'background-color':'#aedcff'}, hidden: false
             },
             {title: '진행상태', width: 90, dataIndx: 'PART_STATUS_NM',editable: false,
                 styleHead: {'background-color':'#aedcff'}
@@ -1468,8 +1553,17 @@
         $(document).on("click",".wait_material_div",function(e){
             openProcessPopup('WAIT_MATERIAL_DIV',$(this).data('target'))
         });
+
         $(document).on("click",".non_complete_div",function(e){
             openProcessPopup('NON_COMPLETE',$(this).data('target'))
+        });
+
+        $(document).on("click",".delay_div",function(e){
+            openProcessPopup('DELAY',$(this).data('target'))
+        });
+
+        $(document).on("click",".delay_process_div",function(e){
+            openProcessPopup('DELAY_PROCESS',$(this).data('target'))
         });
 
         $(document).on("click",".pop_outside_div",function(e){
