@@ -2412,6 +2412,7 @@
             let tempList = [];
             // let controlNumList = [];
             let message;
+            let controlStr = "";
 
             for (let i = 0, selectedRowCount = selectedControlManagementRowIndex.length; i < selectedRowCount; i++) {
                 let thisRowData = $controlManagementGrid.pqGrid('getRowData', {rowIndx: selectedControlManagementRowIndex[i]});
@@ -2420,6 +2421,7 @@
                     tempList.push({rowIndx : thisRowData.pq_ri})
                 }else {
                     list.push(thisRowData);
+                    controlStr += "'" + thisRowData.CONTROL_SEQ + "" + thisRowData.CONTROL_DETAIL_SEQ + "',";
                 }
 
                 if (!(thisRowData.CONTROL_STATUS === undefined || thisRowData.CONTROL_STATUS === null || thisRowData.CONTROL_STATUS === 'ORD002')) {
@@ -2436,21 +2438,53 @@
                 //     return false;
                 // }
             }
+
+            if(controlStr.length > 0) {
+                controlStr = controlStr.substring(0, controlStr.length-1);
+            }
+
             if(list.length > 0) {
-                //TODO: list.lenth 건수
                 message =
                     '<h4>\n' +
                     '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                     '    <span>' + (list.length + tempList.length) + ' 건이 삭제됩니다. 진행하시겠습니까?</span>\n' +
                     '</h4>';
-                fnConfirm(null, message, function () {
-                    $controlManagementGrid.pqGrid("deleteRow", {rowList: tempList});
-                    let parameters = {'url': '/removeControl', 'data': {data: JSON.stringify(list)}};
-                    fnPostAjax(function () {
-                        fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
-                        $controlManagementGrid.pqGrid('refreshDataAndView');
-                    }, parameters, '');
-                });
+
+                let param1 = {
+                    'url': '/json-list',
+                    'data': {"CONTROL_STR":controlStr,"queryId":"orderMapper.selectControlBeforeDelete"}
+                };
+                fnPostAjax(function (data, callFunctionParam) {
+                    if(data.list.length > 0) {
+                        $.each(data.list, function (idx,Item) {
+                            if(Item.STOCK_REQUEST_STATUS == 'OUT002') {
+                                message =
+                                    '<h4>\n' +
+                                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                                    '    <span>' + ' 재고충당이 완료된 작업건이 존재합니다. 삭제하시겠습니까?</span>\n' +
+                                    '</h4>';
+                            }else if(Item.STOCK_REQUEST_STATUS == 'OUT001') {
+                                message =
+                                    '<h4>\n' +
+                                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                                    '    <span>' + ' 재고충당 요청중인 작업건이 존재합니다. 삭제하시겠습니까?</span>\n' +
+                                    '</h4>';
+                            }
+                        });
+
+
+                        //TODO: list.lenth 건수
+                        fnConfirm(null, message, function () {
+                            $controlManagementGrid.pqGrid("deleteRow", {rowList: tempList});
+
+                            let parameters = {'url': '/removeControl', 'data': {data: JSON.stringify(list)}};
+                            fnPostAjax(function () {
+                                fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
+                                $controlManagementGrid.pqGrid('refreshDataAndView');
+                            }, parameters, '');
+                        });
+                    }
+                },param1,'');
             }else if(tempList.length > 0) {
                 $controlManagementGrid.pqGrid("deleteRow", {rowList: tempList});
             }

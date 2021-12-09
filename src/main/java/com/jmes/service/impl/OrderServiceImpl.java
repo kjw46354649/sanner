@@ -115,7 +115,11 @@ public class OrderServiceImpl implements OrderService {
 
         for (HashMap<String, Object> hashMap : jsonArray) {
             hashMap.put("LOGIN_USER_ID",userId);
+
             hashMap.put("queryId", "orderMapper.removeControl");
+            this.innodaleDao.remove(hashMap);
+
+            hashMap.put("queryId", "orderMapper.deleteControlRequestStock");
             this.innodaleDao.remove(hashMap);
         }
     }

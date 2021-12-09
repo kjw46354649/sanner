@@ -4978,7 +4978,7 @@
         FROM TBL_INSIDE_OUT A
         WHERE A.INSIDE_OUT_SEQ = #{INSIDE_OUT_SEQ}
     </select>
-        <delete id="deleteRequestStock" parameterType="java.util.HashMap">
+    <delete id="deleteRequestStock" parameterType="java.util.HashMap">
         DELETE FROM TBL_INSIDE_OUT
         WHERE INSIDE_OUT_SEQ = #{INSIDE_OUT_SEQ}
     </delete>
@@ -5939,4 +5939,18 @@
         WHERE A.DEL_YN = 'N'
             AND A.ORDER_SEQ = #{ORDER_SEQ}
     </select>
+    <select id="selectControlBeforeDelete" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.CONTROL_NUM, IFNULL(A.CONTROL_STATUS,'TEMP') AS CONTROL_STATUS,
+               IFNULL((SELECT X.OUT_STATUS FROM TBL_INSIDE_OUT X WHERE X.CONTROL_SEQ = A.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ),'N') AS STOCK_REQUEST_STATUS
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+        WHERE A.DEL_YN = 'N'
+            AND CONCAT(A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN (${CONTROL_STR})
+    </select>
+
+    <delete id="deleteControlRequestStock" parameterType="java.util.HashMap">
+        DELETE FROM TBL_INSIDE_OUT
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </delete>
 </mapper>

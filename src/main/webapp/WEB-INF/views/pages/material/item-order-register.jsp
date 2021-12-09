@@ -633,7 +633,6 @@
             {
                 title: '주문대상 관리정보', align: 'center', colModel: [
                     {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 110, editable: false},
-                    {title: '추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', minWidth: 40, width: 40, editable: false},
                     {title: '발주', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
                     {title: '충당요청', dataType: 'string', dataIndx: 'STOCK_REQUEST_QTY', minWidth: 40, width: 40, editable: false}
                 ]
@@ -690,7 +689,8 @@
                 }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
             },
             {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 110, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', minWidth: 35, width: 35, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', minWidth: 35, width: 35, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, validations: [{ type: 'minLen', value: 1, msg: "Required"}]},
+            {title: '수량<br>추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', minWidth: 35, width: 35, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 95, validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: { type: 'select', valueIndx: "value", labelIndx: "text", options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}}), },
                 render: function (ui) {
@@ -821,12 +821,13 @@
                 }
             },
             {title: '입고일시', dataIndx: 'IN_DT', width: 100, editable: false},
-            {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
-            {title: '', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true},
-            {title: '', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
-            {title: '', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true},
-            {title: '', dataType: 'string', dataIndx: 'ORDER_USER_ID', hidden: true}
+            {title: 'ORG_M_ORDER_QTY', dataType: 'string', dataIndx: 'ORG_M_ORDER_QTY', hidden: true},
+            {title: 'ROWNUM', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
+            {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: 'MATERIAL_ORDER_SEQ', dataType: 'string', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
+            {title: 'MATERIAL_ORDER_NUM', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', hidden: true},
+            {title: 'ORDER_USER_ID', dataType: 'string', dataIndx: 'ORDER_USER_ID', hidden: true}
         ];
 
         const itemOrderRegisterPopTopColModel_temp = [
@@ -875,7 +876,6 @@
             {
                 title: '주문대상 관리정보', align: 'center', colModel: [
                     {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 110, editable: false},
-                    {title: '추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', minWidth: 40, width: 40, editable: false},
                     {title: '발주', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
                     {title: '충당요청', dataType: 'string', dataIndx: 'STOCK_REQUEST_QTY', minWidth: 40, width: 40, editable: false}
                 ]
@@ -927,6 +927,7 @@
             },
             {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 110, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', minWidth: 35, width: 35, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
+            {title: '수량<br>추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', minWidth: 35, width: 35, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 95, validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: { type: 'select', valueIndx: "value", labelIndx: "text", options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}}), },
                 render: function (ui) {
@@ -1033,6 +1034,7 @@
                 }
             },
             {title: '입고일시', dataIndx: 'IN_DT', width: 100, editable: false},
+            {title: 'ORG_M_ORDER_QTY', dataType: 'string', dataIndx: 'ORG_M_ORDER_QTY', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
@@ -1136,6 +1138,7 @@
             },
             {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', editable: false, width: 110},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', minWidth: 35, width: 35, editable: false },
+            {title: '수량<br>추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', minWidth: 35, width: 35, editable: false },
             {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 95, editable: false,
                 editor: {
                     type: 'select',
@@ -1217,6 +1220,7 @@
                 render: function () {return '';}
             },
             {title: '입고일시', dataIndx: 'IN_DT', width: 100, editable: false},
+            {title: 'ORG_M_ORDER_QTY', dataType: 'string', dataIndx: 'ORG_M_ORDER_QTY', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'ROWNUM', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: '', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
@@ -1547,8 +1551,25 @@
                             });
                         }
                     },
-                    change: function () {
+                    change: function (evt, ui) {
                         $('#btnItemOrderRegisterPopSubmit').attr('disabled', true);
+                        if (ui.source === 'edit' || ui.source === 'clear') {
+                            let rowIndx = ui.updateList[0].rowIndx;
+                            let data = ui.updateList[0].rowData;
+                            let newRow = ui.updateList[0].newRow;
+
+                            if(newRow.hasOwnProperty("ADDITIONAL_QTY")) {
+                                let totalQty = Number(data.ORG_M_ORDER_QTY) + Number(fnIsEmpty(newRow.ADDITIONAL_QTY)?0:newRow.ADDITIONAL_QTY)
+                                this.updateRow({
+                                    rowIndx: rowIndx,
+                                    row: {
+                                        'M_ORDER_QTY': totalQty
+                                    },
+                                    checkEditable: false
+                                });
+                            }
+                            this.refreshView();
+                        }
                     },
                 });
 
@@ -1800,7 +1821,6 @@
                     'data': {"CONTROL_SEQ":controlSeqStr,"CONTROL_DETAIL_SEQ":controlDetailSeqStr,"queryId":"material.selectOrderStatusBeforeMaterialOrder"}
                 };
                 fnPostAjaxAsync(function (data, callFunctionParam) {
-                    console.log(data.list);
                     if(data.list.length > 0) {
                         var flag = false;
                         $.each(data.list, function(idx,Item) {
