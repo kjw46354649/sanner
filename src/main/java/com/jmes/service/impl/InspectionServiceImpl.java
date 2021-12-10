@@ -97,6 +97,9 @@ public class InspectionServiceImpl implements InspectionService {
 
                 hashMap.put("queryId","inspection.insertInspectionResult");
                 innodaleDao.create(hashMap);
+
+                hashMap.put("queryId","inspection.insertInspectionResultDetail");
+                innodaleDao.create(hashMap);
             }
         }
 
@@ -112,6 +115,11 @@ public class InspectionServiceImpl implements InspectionService {
                 if(tempMap.containsKey("INSPECT_RESULT_SEQ")) {
                     tempMap.put("queryId","inspection.updateInspectionResult");
                     innodaleDao.update(tempMap);
+
+                    if(tempMap.containsKey("INSPECT_RESULT_DETAIL_SEQ")) {
+                        tempMap.put("queryId","inspection.updateInspectionResultDetail");
+                        innodaleDao.update(tempMap);
+                    }
                 }
             }
         }
@@ -120,8 +128,8 @@ public class InspectionServiceImpl implements InspectionService {
             for(HashMap<String,Object> hashMap : deleteList) {
                 hashMap.put("LOGIN_USER_ID", userId);
 
-                if(hashMap.containsKey("INSPECT_RESULT_SEQ")){
-                    hashMap.put("queryId","inspection.deleteInspectionResult");
+                if(hashMap.containsKey("INSPECT_RESULT_SEQ") && hashMap.containsKey("INSPECT_RESULT_DETAIL_SEQ")){
+                    hashMap.put("queryId","inspection.deleteInspectionResultDetail");
                     innodaleDao.remove(hashMap);
                 }
             }

@@ -305,6 +305,7 @@
                     <input type="hidden" id="QTY" name="QTY"/>
                     <input type="hidden" id="PRODUCT_NUM" name="PRODUCT_NUM"/>
                     <input type="hidden" id="LAYER_AREA_NAME" name="LAYER_AREA_NAME"/>
+                    <input type="hidden" id="INSPECT_RESULT_SEQ" name="INSPECT_RESULT_SEQ"/>
                 </form>
                 <div id="inspection_result_pop_grid"></div>
             </div>
@@ -1234,12 +1235,14 @@
             $("#deleteInspectBtn").on("click",function () {
                 let controlSeq = $("#inspection_result_pop_form").find("#CONTROL_SEQ").val();
                 let controlDetailSeq = $("#inspection_result_pop_form").find("#CONTROL_DETAIL_SEQ").val();
-                let data = {'queryId': "inspection.deleteInspectionResultProdNum",
+                let data = {
+                    'queryId': "inspection.deleteInspectionResultProdNum,inspection.deleteInspectionResultDetailProdNum",
                     'CONTROL_SEQ': controlSeq,
                     'CONTROL_DETAIL_SEQ':controlDetailSeq,
+                    'INSPECT_RESULT_SEQ':$("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val(),
                     'PRODUCT_NUM':$("#inspection_result_pop_form").find("#PRODUCT_NUM").val()
                 };
-                let parameters = {'url': '/json-remove', 'data': data};
+                let parameters = {'url': '/json-manager', 'data': data};
                 fnPostAjax(function (data) {
                     fnAlert(null, "삭제되었습니다.");
                     // $("#inspection_result_pop_form").find("#PRODUCT_NUM").val('');
@@ -1624,20 +1627,8 @@
                         if(!fnIsEmpty(data.info.PRODUCT_NUM)) {
                             $("#INSPECT_RESULT_NO").val(data.info.PRODUCT_NUM)
                             $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(data.info.PRODUCT_NUM);
+                            $("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val(data.info.INSPECT_RESULT_SEQ);
                             $("#INSPECT_RESULT_NO").parents('td').addClass('table-bg-gray');
-
-                            // if(data.info.QTY > 1) {
-                            //     if(data.info.QTY == data.info.PRODUCT_NUM) {
-                            //         $("#nextProdNum").attr('disabled',true);
-                            //         $("#prevProdNum").attr('disabled',false);
-                            //     }else if(data.info.PRODUCT_NUM == 1) {
-                            //         $("#prevProdNum").attr('disabled',true);
-                            //         $("#nextProdNum").attr('disabled',false);
-                            //     }
-                            // }else {
-                            //     $("#nextProdNum").attr('disabled',true);
-                            //     $("#prevProdNum").attr('disabled',true);
-                            // }
                         }else {
                             $("#INSPECT_RESULT_NO").val('')
                             $("#inspection_result_pop_form").find("#PRODUCT_NUM").val('');

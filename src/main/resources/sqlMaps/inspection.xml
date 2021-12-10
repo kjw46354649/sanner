@@ -86,13 +86,13 @@
                         AND A.CONTROL_SEQ = C.CONTROL_SEQ
                         AND A.DEL_YN = 'N'
                         AND A.CONTROL_STATUS IN ('ORD001', 'ORD003')
-                        AND B.PART_STATUS NOT IN ('PRO001','PRO002','PRO003','PRO004','PRO005','PRO006','PRO007','PRO008','PRO021','PRO022')
---                         AND (EXISTS (SELECT *
---                                     FROM TBL_CONTROL_PART_PROGRESS
---                                     WHERE 1 = 1
---                                         AND CONTROL_SEQ = B.CONTROL_SEQ
---                                         AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
---                                         AND PART_STATUS = 'PRO002') OR B.OUTSIDE_CONFIRM_DT IS NOT NULL)
+--                         AND B.PART_STATUS NOT IN ('PRO001','PRO002','PRO003','PRO004','PRO005','PRO006','PRO007','PRO008','PRO021','PRO022')
+                        AND (EXISTS (SELECT *
+                                    FROM TBL_CONTROL_PART_PROGRESS
+                                    WHERE 1 = 1
+                                        AND CONTROL_SEQ = B.CONTROL_SEQ
+                                        AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                        AND PART_STATUS = 'PRO002') OR B.OUTSIDE_CONFIRM_DT IS NOT NULL)
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
@@ -2544,15 +2544,16 @@
         SELECT A.INSPECT_RESULT_SEQ,
                A.CONTROL_SEQ,
                A.CONTROL_DETAIL_SEQ,
-               A.RESULT_NUM,
+               B.RESULT_NUM,
                '1' AS EYE_VIEW,
-               A.RESULT_POSITION,
-               A.RESULT_VALUE,
-               A.COORDINATE_X,
-               A.COORDINATE_Y,
+               B.RESULT_POSITION,
+               B.RESULT_VALUE,
+               B.COORDINATE_X,
+               B.COORDINATE_Y,
                '1' AS DELETE_BTN,
                A.LAYER_AREA_NAME
         FROM TBL_INSPECT_RESULT A
+            INNER JOIN TBL_INSPECT_RESULT_DETAIL B ON A.INSPECT_RESULT_SEQ = B.INSPECT_RESULT_SEQ
         WHERE 1=1
             <if test="CONTROL_SEQ !='' and CONTROL_SEQ != null">
                 AND A.CONTROL_SEQ = #{CONTROL_SEQ}
@@ -2576,6 +2577,7 @@
             , SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
             , D.PRODUCT_NUM
             , D.LAYER_AREA_NAME
+            , D.INSPECT_RESULT_SEQ
         FROM jmes.TBL_CONTROL_BARCODE A
             INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N'
             INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
@@ -2596,7 +2598,8 @@
                  ELSE SPACE(0)
             END AS PRODUCT_NUM,
             B.IMG_GFILE_SEQ,
-            C.LAYER_AREA_NAME
+            C.LAYER_AREA_NAME,
+            C.INSPECT_RESULT_SEQ
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
             LEFT OUTER JOIN TBL_INSPECT_RESULT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
@@ -2610,48 +2613,73 @@
         LIMIT 1
     </select>
     <insert id="insertInspectionResult" parameterType="java.util.HashMap">
+        <selectKey keyProperty="INSPECT_RESULT_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_INSPECT_RESULT) FROM DUAL
+        </selectKey>
         INSERT INTO TBL_INSPECT_RESULT (
             INSPECT_RESULT_SEQ,
             CONTROL_SEQ,
             CONTROL_DETAIL_SEQ,
             PRODUCT_NUM,
+            LAYER_AREA_NAME,
+            INSERT_ID
+         )
+        VALUES (
+            #{INSPECT_RESULT_SEQ},
+            #{CONTROL_SEQ},
+            #{CONTROL_DETAIL_SEQ},
+            #{PRODUCT_NUM},
+            #{LAYER_AREA_NAME},
+            #{LOGIN_USER_ID}
+        )
+    </insert>
+    <insert id="insertInspectionResultDetail" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_INSPECT_RESULT_DETAIL (
+            INSPECT_RESULT_SEQ,
+            INSPECT_RESULT_DETAIL_SEQ,
             RESULT_NUM,
             RESULT_POSITION,
             RESULT_VALUE,
             COORDINATE_X,
             COORDINATE_Y,
-            LAYER_AREA_NAME,
             INSERT_ID
-         )
+        )
         VALUES (
-            NEXTVAL(SEQ_INSPECT_RESULT),
-            #{CONTROL_SEQ},
-            #{CONTROL_DETAIL_SEQ},
-            #{PRODUCT_NUM},
+            #{INSPECT_RESULT_SEQ},
+            NEXTVAL(SEQ_INSPECT_RESULT_DETAIL),
             #{RESULT_NUM},
             #{RESULT_POSITION},
             #{RESULT_VALUE},
             #{COORDINATE_X},
             #{COORDINATE_Y},
-            #{LAYER_AREA_NAME},
             #{LOGIN_USER_ID}
-        )
+        );
     </insert>
+
     <update id="updateInspectionResult" parameterType="java.util.HashMap">
         UPDATE TBL_INSPECT_RESULT
+        SET
+            UPDATE_DT = NOW(),
+            <if test="LAYER_AREA_NAME != null and LAYER_AREA_NAME !=''">
+                LAYER_AREA_NAME = #{LAYER_AREA_NAME},
+            </if>
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE INSPECT_RESULT_SEQ = #{INSPECT_RESULT_SEQ}
+            AND PRODUCT_NUM = #{PRODUCT_NUM}
+    </update>
+
+    <update id="updateInspectionResultDetail" parameterType="java.util.HashMap">
+        UPDATE TBL_INSPECT_RESULT_DETAIL
         SET
             UPDATE_DT = NOW(),
             <if test="RESULT_NUM != null and RESULT_NUM !=''">
                 RESULT_NUM = #{RESULT_NUM},
             </if>
-            <if test="RESULT_VALUE != null and RESULT_VALUE !=''">
-                RESULT_VALUE = #{RESULT_VALUE},
-            </if>
-            <if test="LAYER_AREA_NAME != null and LAYER_AREA_NAME !=''">
-                LAYER_AREA_NAME = #{LAYER_AREA_NAME},
-            </if>
             <if test="RESULT_POSITION != null and RESULT_POSITION !=''">
                 RESULT_POSITION = #{RESULT_POSITION},
+            </if>
+            <if test="RESULT_VALUE != null and RESULT_VALUE !=''">
+                RESULT_VALUE = #{RESULT_VALUE},
             </if>
             <if test="COORDINATE_X != null and COORDINATE_X !=''">
                 COORDINATE_X = #{COORDINATE_X},
@@ -2661,61 +2689,48 @@
             </if>
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE INSPECT_RESULT_SEQ = #{INSPECT_RESULT_SEQ}
+            AND INSPECT_RESULT_DETAIL_SEQ = #{INSPECT_RESULT_DETAIL_SEQ}
     </update>
+
     <delete id="deleteInspectionResultProdNum" parameterType="java.util.HashMap">
         DELETE FROM TBL_INSPECT_RESULT
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
             AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
             AND PRODUCT_NUM = #{PRODUCT_NUM}
     </delete>
-    <delete id="deleteInspectionResult" parameterType="java.util.HashMap">
-        DELETE FROM TBL_INSPECT_RESULT
+    <delete id="deleteInspectionResultDetailProdNum" parameterType="java.util.HashMap">
+        DELETE FROM TBL_INSPECT_RESULT_DETAIL
         WHERE INSPECT_RESULT_SEQ = #{INSPECT_RESULT_SEQ}
+    </delete>
+    <delete id="deleteInspectionResultDetail" parameterType="java.util.HashMap">
+        DELETE FROM TBL_INSPECT_RESULT_DETAIL
+        WHERE INSPECT_RESULT_SEQ = #{INSPECT_RESULT_SEQ}
+            AND INSPECT_RESULT_DETAIL_SEQ = #{INSPECT_RESULT_DETAIL_SEQ}
     </delete>
 
     <select id="selectInspectPointList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, ' # ', IFNULL(C.PART_NUM, SPACE(0))) END AS CONTROL_NUM,
-            C.SIZE_TXT,
-            C.MATERIAL_TYPE,
-            C.CONTROL_SEQ,
-            C.CONTROL_DETAIL_SEQ,
-            C.IMG_GFILE_SEQ,
-            SF_GET_CODE_NM('1035', C.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM,
---             COUNT(*) AS POINT_CNT,
-            (SELECT COUNT(*) FROM TBL_INSPECT_RESULT X WHERE X.CONTROL_SEQ = A.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND X.PRODUCT_NUM = A.PRODUCT_NUM) AS POINT_CNT,
+            CASE WHEN D.PART_NUM IS NULL THEN C.CONTROL_NUM ELSE CONCAT(C.CONTROL_NUM, ' # ', IFNULL(D.PART_NUM, SPACE(0))) END AS CONTROL_NUM,
+            D.SIZE_TXT,
+            D.MATERIAL_TYPE,
+            D.CONTROL_SEQ,
+            D.CONTROL_DETAIL_SEQ,
+            D.IMG_GFILE_SEQ,
+            SF_GET_CODE_NM('1035', D.MATERIAL_TYPE, 'KO') AS MATERIAL_TYPE_NM,
+            (SELECT COUNT(*) FROM TBL_INSPECT_RESULT_DETAIL X WHERE X.INSPECT_RESULT_SEQ = A.INSPECT_RESULT_SEQ) AS POINT_CNT,
             SF_GET_DATE_F(MAX(A.INSERT_DT), '', 'M') AS LATEST_UPDATE_DT,
             COUNT(DISTINCT A.PRODUCT_NUM) AS INSPECT_RESULT_CNT,
             MAX(A.PRODUCT_NUM) AS LATEST_PRODUCT_NUM,
             MAX(A.LAYER_AREA_NAME) AS LAYER_AREA_NAME
         FROM TBL_INSPECT_RESULT A
-            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N'
-            INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-        WHERE C.SIZE_TXT LIKE CONCAT('%',#{SIZE_TXT},'%')
+            INNER JOIN TBL_INSPECT_RESULT_DETAIL B ON A.INSPECT_RESULT_SEQ = B.INSPECT_RESULT_SEQ
+            INNER JOIN TBL_CONTROL C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND C.DEL_YN = 'N'
+            INNER JOIN TBL_CONTROL_PART D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+        WHERE D.SIZE_TXT LIKE CONCAT('%',#{SIZE_TXT},'%')
             <if test="MATERIAL_TYPE != null and MATERIAL_TYPE != ''">
-                AND MATERIAL_TYPE = #{MATERIAL_TYPE}
+                AND D.MATERIAL_TYPE = #{MATERIAL_TYPE}
             </if>
-        GROUP BY C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ
-        ORDER BY B.CONTROL_NUM, A.INSERT_DT
-    </select>
-    <select id="selectInspectPointDetail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT A.INSPECT_RESULT_SEQ,
-            A.CONTROL_SEQ,
-            A.CONTROL_DETAIL_SEQ,
-            A.RESULT_NUM,
-            '1' AS EYE_VIEW,
-            A.RESULT_POSITION,
-            A.RESULT_VALUE,
-            A.COORDINATE_X,
-            A.COORDINATE_Y,
-            '1' AS DELETE_BTN,
-            A.LAYER_AREA_NAME
-        FROM TBL_INSPECT_RESULT A
-        WHERE 1=1
-            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
-            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-        <if test="PRODUCT_NUM !='' and PRODUCT_NUM != null">
-            AND A.PRODUCT_NUM = #{PRODUCT_NUM}
-        </if>
+        GROUP BY D.CONTROL_SEQ, D.CONTROL_DETAIL_SEQ
+        ORDER BY C.CONTROL_NUM, A.INSERT_DT
     </select>
 </mapper>

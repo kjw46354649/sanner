@@ -151,14 +151,14 @@
             },
             {title: '가공완료<br>일시', dataType: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 80, width: 80, editable: false},
             {title: '외주가공 현황', datatype: 'string', align: 'center', colModel: [
-                    {title: '업체명', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 80, width: 80, editable: false},
+                    {title: '업체명', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 85, width: 85, editable: false},
                     {title: '입고일시', dataType: 'string', dataIndx: 'OUTSIDE_IN_DT', minWidth: 80, width: 80, editable: false},
                 ]
             },
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 90, width: 90, editable: false},
             {title: '긴<br>급', minWidth: 25, width: 25, dataType: 'string', dataIndx: 'EMERGENCY_YN_NM', editable: false},
             {title: '불량<br>반품', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'INSPECT_GRADE_SHORT_NM', editable: false},
-            {title: '주요<br>검사', width: 70, dataType: 'string', dataIndx: 'MAIN_INSPECTION_NM', editable: false},
+            {title: '주요<br>검사', width: 65, dataType: 'string', dataIndx: 'MAIN_INSPECTION_NM', editable: false},
             // {title: '카ㄴㅇㄹ드', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
             //     render: function (ui) {
             //         let rowIndx = ui.rowIndx, grid = this;
@@ -179,7 +179,7 @@
                     });
                 }
             },
-            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', minWidth: 140, width: 140, editable: false},
+            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', minWidth: 135, width: 135, editable: false},
             // {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40, editable: false},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
@@ -194,10 +194,10 @@
                     });
                 }
             },
-            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 60, width: 60, editable: false},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 50, width: 50, editable: false},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 110, width: 110, editable: false},
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 80, width: 80, editable: false},
-            {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 50, editable: false,
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 75, width: 75, editable: false},
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 40, editable: false,
                 render: function (ui) {
                     let cellData = ui.cellData;
 
@@ -209,22 +209,22 @@
                 }
             },
             {title: '가공<br>납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 60, width: 60, editable: false},
-            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 90, width: 90, editable: false},
-            {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 80, width: 80, editable: false},
-            {title: '출하<br>일자', dataType: 'string', dataIndx: 'OUT_FINISH_DT', minWidth: 60, width: 60, editable: false},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 75, width: 75, editable: false},
+            {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 75, width: 75, editable: false},
+            {title: '출하<br>일자', dataType: 'string', dataIndx: 'OUT_FINISH_DT', minWidth: 50, width: 50, editable: false},
             {title: '주문사항 비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 100, width: 100, editable: false},
             {title: '기타 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', minWidth: 100, width: 100, editable: false},
             // {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 210, width: 210, editable: false},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', minWidth: 80, width: 80, editable: false},
             {title: '검사 성적서', datatype: 'string', align: 'center', colModel: [
-                    {title: 'Qty.', datatype: 'string', dataIndx: 'INSPECT_RESULT_QTY', minWidth: 50, width: 50, editable: false,
+                    {title: 'Qty.', datatype: 'string', dataIndx: 'INSPECT_RESULT_QTY', minWidth: 40, width: 40, editable: false,
                         render: function (ui) {
                             if (ui.rowData.INSPECT_RESULT_QTY <= 0) return '';
                         }
                     },
                     {title: '업데이트 일시', datatype: 'string', dataIndx: 'INSPECT_RESULT_LATEST_DT', minWidth: 100, width: 100, editable: false},
                     // {title: '영상', datatype: 'string', dataIndx: 'MCT_WORK_DT', minWidth: 100, width: 100, editable: false},
-                    {title: '', datatype: 'string', dataIndx: 'INSPECT_RESULT_BTN', minWidth: 70, width: 70, editable: false,
+                    {title: '', datatype: 'string', dataIndx: 'INSPECT_RESULT_BTN', minWidth: 60, width: 60, editable: false,
                         render: function (ui) {
                             if (ui.rowData.CONTROL_SEQ > 0) return '<button type="button" class="miniBtn black inspectR">입력</button>';
                             return '';
@@ -239,56 +239,56 @@
                         }
                     },
                 ]
-            },
-            {
-                title: '최근 MCT 실적', datatype: 'string', align: 'center', colModel: [
-                    {title: '날짜', datatype: 'string', dataIndx: 'MCT_WORK_DT', minWidth: 100, width: 100, editable: false},
-                    {title: '작업자', datatype: 'string', dataIndx: 'WORK_USER_NM', minWidth: 100, width: 100, editable: false},
-                    {title: 'NC No.', datatype: 'string', dataIndx: 'EQUIP_NM', minWidth: 70, width: 70, editable: false},
-                    {title: '비고', datatype: 'string', dataIndx: 'CAM_NOTE', minWidth: 300, width: 300, editable: false}
-                ]
-            },
-            {
-                title: '최근 품질 실적', datatype: 'string', align: 'center', colModel: [
-                    {title: 'seq', datatype: 'string', dataIndx: 'Q_SEQ', minWidth: 40, width: 40, editable: false},
-                    {title: '담당관', datatype: 'string', dataIndx: 'Q_INSPECT_USER_NM', minWidth: 80, width: 80, editable: false},
-                    {title: '측정방법', datatype: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', minWidth: 100, width: 100, editable: false},
-                    {title: '등급', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NM', minWidth: 60, width: 60, editable: false,
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-
-                            if (cellData === '' || cellData === undefined) {
-                                return '';
-                            } else {
-                                let text = cellData, style = '';
-                                let rowData = ui.rowData;
-
-                                if (rowData.INSPECT_GRADE === 'GRD040' || rowData.INSPECT_GRADE === 'GRD050') {
-                                    style = 'color: #FF0000;font-weight: bold;';
-                                }
-
-                                return {text: text, style: style};
-                            }
-                        }
-                    },
-                    {title: '합/불', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', minWidth: 70, width: 70, editable: false},
-                    {title: '불량수량', datatype: 'string', dataIndx: 'Q_ERROR_QTY', minWidth: 50, width: 50, editable: false},
-                    {title: '반품일시', datatype: 'string', dataIndx: 'Q_RETURN_DT', minWidth: 80, width: 80, editable: false},
-                    {title: '검사코드', datatype: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', minWidth: 100, width: 100, editable: false},
-                    {title: '상세 내용', datatype: 'string', dataIndx: 'Q_INSPECT_DESC', minWidth: 200, width: 200, editable: false},
-                    {title: '발생공정', datatype: 'string', dataIndx: 'Q_ERROR_PROCESS_NM', minWidth: 120, width: 120, editable: false},
-                    {title: '원인', datatype: 'string', dataIndx: 'Q_ERROR_REASON_NM', minWidth: 100, width: 100, editable: false},
-                    {title: '조치', datatype: 'string', dataIndx: 'Q_ERROR_ACTION_NM', minWidth: 80, width: 80, editable: false},
-                    {title: '조치방안 및 비고', datatype: 'string', dataIndx: 'Q_ERROR_NOTE', minWidth: 120, width: 120, editable: false},
-                    {title: '작성일시', datatype: 'string', dataIndx: 'Q_DT', minWidth: 80, width: 80, editable: false},
-                    {title: '최근 실적<br>삭제', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_DELETE', width: 80, minWidth: 80, editable: false,
-                        render: function (ui) {
-                            if (ui.rowData.INSPECT_SEQ > 0) return "<button type=\"button\" class=\"miniBtn black\">삭제</button>";
-                            return '';
-                        }
-                    }
-                ]
             }
+            // {
+            //     title: '최근 MCT 실적', datatype: 'string', align: 'center', colModel: [
+            //         {title: '날짜', datatype: 'string', dataIndx: 'MCT_WORK_DT', minWidth: 100, width: 100, editable: false},
+            //         {title: '작업자', datatype: 'string', dataIndx: 'WORK_USER_NM', minWidth: 100, width: 100, editable: false},
+            //         {title: 'NC No.', datatype: 'string', dataIndx: 'EQUIP_NM', minWidth: 70, width: 70, editable: false},
+            //         {title: '비고', datatype: 'string', dataIndx: 'CAM_NOTE', minWidth: 300, width: 300, editable: false}
+            //     ]
+            // },
+            // {
+            //     title: '최근 품질 실적', datatype: 'string', align: 'center', colModel: [
+            //         {title: 'seq', datatype: 'string', dataIndx: 'Q_SEQ', minWidth: 40, width: 40, editable: false},
+            //         {title: '담당관', datatype: 'string', dataIndx: 'Q_INSPECT_USER_NM', minWidth: 80, width: 80, editable: false},
+            //         {title: '측정방법', datatype: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', minWidth: 100, width: 100, editable: false},
+            //         {title: '등급', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NM', minWidth: 60, width: 60, editable: false,
+            //             render: function (ui) {
+            //                 let cellData = ui.cellData;
+            //
+            //                 if (cellData === '' || cellData === undefined) {
+            //                     return '';
+            //                 } else {
+            //                     let text = cellData, style = '';
+            //                     let rowData = ui.rowData;
+            //
+            //                     if (rowData.INSPECT_GRADE === 'GRD040' || rowData.INSPECT_GRADE === 'GRD050') {
+            //                         style = 'color: #FF0000;font-weight: bold;';
+            //                     }
+            //
+            //                     return {text: text, style: style};
+            //                 }
+            //             }
+            //         },
+            //         {title: '합/불', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', minWidth: 70, width: 70, editable: false},
+            //         {title: '불량수량', datatype: 'string', dataIndx: 'Q_ERROR_QTY', minWidth: 50, width: 50, editable: false},
+            //         {title: '반품일시', datatype: 'string', dataIndx: 'Q_RETURN_DT', minWidth: 80, width: 80, editable: false},
+            //         {title: '검사코드', datatype: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', minWidth: 100, width: 100, editable: false},
+            //         {title: '상세 내용', datatype: 'string', dataIndx: 'Q_INSPECT_DESC', minWidth: 200, width: 200, editable: false},
+            //         {title: '발생공정', datatype: 'string', dataIndx: 'Q_ERROR_PROCESS_NM', minWidth: 120, width: 120, editable: false},
+            //         {title: '원인', datatype: 'string', dataIndx: 'Q_ERROR_REASON_NM', minWidth: 100, width: 100, editable: false},
+            //         {title: '조치', datatype: 'string', dataIndx: 'Q_ERROR_ACTION_NM', minWidth: 80, width: 80, editable: false},
+            //         {title: '조치방안 및 비고', datatype: 'string', dataIndx: 'Q_ERROR_NOTE', minWidth: 120, width: 120, editable: false},
+            //         {title: '작성일시', datatype: 'string', dataIndx: 'Q_DT', minWidth: 80, width: 80, editable: false},
+            //         {title: '최근 실적<br>삭제', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_DELETE', width: 80, minWidth: 80, editable: false,
+            //             render: function (ui) {
+            //                 if (ui.rowData.INSPECT_SEQ > 0) return "<button type=\"button\" class=\"miniBtn black\">삭제</button>";
+            //                 return '';
+            //             }
+            //         }
+            //     ]
+            // }
         ];
 
         inspectionManageGridId01.pqGrid({
