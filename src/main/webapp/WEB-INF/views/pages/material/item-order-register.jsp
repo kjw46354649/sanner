@@ -633,6 +633,7 @@
             {
                 title: '주문대상 관리정보', align: 'center', colModel: [
                     {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 110, editable: false},
+                    {title: '추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', minWidth: 40, width: 40, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
                     {title: '발주', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
                     {title: '충당요청', dataType: 'string', dataIndx: 'STOCK_REQUEST_QTY', minWidth: 40, width: 40, editable: false}
                 ]
@@ -690,7 +691,6 @@
             },
             {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 110, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', minWidth: 35, width: 35, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, validations: [{ type: 'minLen', value: 1, msg: "Required"}]},
-            {title: '수량<br>추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', minWidth: 35, width: 35, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 95, validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: { type: 'select', valueIndx: "value", labelIndx: "text", options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}}), },
                 render: function (ui) {
@@ -876,6 +876,7 @@
             {
                 title: '주문대상 관리정보', align: 'center', colModel: [
                     {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 110, editable: false},
+                    {title: '추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', minWidth: 40, width: 40, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
                     {title: '발주', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
                     {title: '충당요청', dataType: 'string', dataIndx: 'STOCK_REQUEST_QTY', minWidth: 40, width: 40, editable: false}
                 ]
@@ -927,7 +928,6 @@
             },
             {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, width: 110, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', minWidth: 35, width: 35, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, validations: [{ type: 'minLen', value: 1, msg: "Required"}] },
-            {title: '수량<br>추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', minWidth: 35, width: 35, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}},
             {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 95, validations: [{ type: 'minLen', value: 1, msg: "Required"}],
                 editor: { type: 'select', valueIndx: "value", labelIndx: "text", options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}}), },
                 render: function (ui) {
@@ -1087,6 +1087,7 @@
             {
                 title: '주문대상 관리정보', align: 'center', colModel: [
                     {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 110, editable: false},
+                    {title: '추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', minWidth: 40, width: 40, editable: false},
                     {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 40, width: 40, editable: false},
                     {title: '충당요청', dataType: 'string', dataIndx: 'STOCK_REQUEST_QTY', minWidth: 40, width: 40, editable: false}
                 ]
@@ -1138,7 +1139,6 @@
             },
             {title: '요청소재<br>Size(mm)', dataType: 'string', dataIndx: 'M_SIZE_TXT', editable: false, width: 110},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'M_ORDER_QTY', minWidth: 35, width: 35, editable: false },
-            {title: '수량<br>추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', minWidth: 35, width: 35, editable: false },
             {title: '주문업체', dataType: 'string', dataIndx: 'M_COMP_CD', width: 95, editable: false,
                 editor: {
                     type: 'select',
@@ -1915,7 +1915,7 @@
                     'queryId': 'material.deleteMaterialOrderToNumber',
                     'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
                 };
-                let parameters = {'url': '/json-remove', 'data': parameter};
+                let parameters = {'url': '/json-manager', 'data': parameter};
                 fnPostAjax(function () {
                     fnAlert(null, '취소 완료되었습니다.');
                     if ($('#item_order_register_popup').hasClass('in')) {
