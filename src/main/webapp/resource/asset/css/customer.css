@@ -1289,3 +1289,36 @@ div.custom-loading-mask > div {
 	content:''
 }
 
+
+
+#inspection_result_value_popup .layerPopup .h_area .buttonWrap {
+	font-size: 0;
+	display: inline-block;
+	width: 40%;
+}
+#inspection_result_value_popup .barcodeDiv
+{
+	float: right;
+	border: 1px solid black;
+	width: 12%;
+	padding: 2px 0 2px 0;
+}
+
+#inspection_result_value_popup table.rowStyle th {
+	padding: 0;
+	text-align: center;
+	background: #abc3e9;
+	color: black;
+	border: 1px solid #92979a;
+	height: 30px;
+}
+#inspection_result_value_popup table.rowStyle td {
+	background: #e4e4e4;
+	height: 50px;
+}
+
+#inspection_result_value_popup .layerPopup .h_area {
+	border-bottom: none;
+	padding: 10px 0 7px;
+	margin-bottom: 20px;
+}

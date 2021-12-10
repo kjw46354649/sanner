@@ -97,6 +97,9 @@
                 <span class="barCode" id="inspectionResultBarcodeSpan" style="margin-left: 10px;"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="inspectionResultBarcodeImg"></span>
                 <span class="barCodeTxt" style="opacity: 0;">&nbsp;<input type="text" style="width: 0px;cursor: default;" name="INSPECTION_RESULT_BARCODE_NUM" id="INSPECTION_RESULT_BARCODE_NUM"></span>
             </div>
+<%--            <div style="float: right">--%>
+<%--                <button type="button" id="exportInspectResultBtn" class="defaultBtn btn-100w">검사 성적서 EXPORT</button>--%>
+<%--            </div>--%>
         </div>
         <div class="tableWrap" style="padding: 10px 0;">
             <div class="conWrap">
@@ -110,9 +113,83 @@
 </div>
 
 
+<!-- 품질실적 layer popup : S -->
+<div class="popup_container inspection" id="inspection_result_value_popup" style="display: none;">
+    <form class="form-inline" id="inspection_result_value_form" name="inspection_result_value_form" role="form">
+        <input type="hidden" name="queryId" id="queryId" value="inspection.selectInspectionPopInfoBasic">
+        <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ" value="">
+        <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
+
+        <div class="layerPopup" style="width: 1150px;">
+            <h3>검사 성적서 Value 관리</h3>
+            <div class="barcodeDiv">
+                  <span class="barCode ml-5" id="inspectionResultValueSpan">
+                  <img src="/resource/asset/images/common/Code128code.png" alt="바코드" id="inspectionResultValueBarcodeImg" style="width: 92%;height: 30px;">
+                  </span>
+                <input type="text" id="input_main_layer_barcode" style="width: 0;opacity: 0;height: 0;padding: 0;">
+            </div>
+            <div class="qualityWrap">
+                <div class="h_area">
+                    <div class="buttonWrap">
+                        <table class="rowStyle">
+                            <colgroup>
+                                <col style="width: 52%">
+                                <col style="width: 8%">
+                                <col style="width: 20%">
+                                <col style="width: 20%">
+                            </colgroup>
+                            <tr>
+                                <th scope="col">작업번호</th>
+                                <th scope="col"></th>
+                                <th scope="col">작업형태</th>
+                                <th scope="col">수량</th>
+                            </tr>
+                            <tbody>
+                                <tr>
+                                    <td id="CONTROL_NUM_DIV" class="table-bg-gray"></td>
+                                    <td id="IMG_GFILE" class="table-bg-gray"></td>
+                                    <td id="WORK_TYPE_DIV" class="table-bg-gray"></td>
+                                    <td id="QTY_DIV" class="table-bg-gray"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="m_area">
+                    <div class="listWrap">
+                        <button type="button" class="defaultBtn btn-100w radius">SELECT ALL</button>
+                        <button type="button" class="defaultBtn btn-100w radius">Auto Copy</button>
+                        <select class="wd_60 mr-5 ml-10" name="SEL_REF_COLUMN" id="SEL_REF_COLUMN">
+                            <option value="">Ref.</option>
+                        </select>
+                        <input class="wd_50" type="number" name="COLUMN_FROM" id="COLUMN_FROM" placeholder="From" disabled>
+                        <span class="nbsp">~</span>
+                        <input class="wd_50 mr-5" type="number" name="COLUMN_TO" id="COLUMN_TO" placeholder="To" disabled>
+                        <input name="CHECK_COPY" id="CHECK_COPY" type="checkbox" style="width: 18px;height: 18px;margin: 0;">
+
+                        <div style="float: right;">
+                            <button type="button" class="defaultBtn btn-100w radius">도면성적서 열기</button>
+                            <button type="button" class="defaultBtn btn-70w red radius">열삭제</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="list3">
+                    <div id="inspection_result_value_grid"></div>
+                </div>
+            </div>
+
+            <div class="btnWrap">
+                <button type="button" class="defaultBtn greenPopGra" id="inspection_manage_pop_save">저장</button>
+                <button type="button" class="defaultBtn grayPopGra" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- 품질실적 layer popup : E -->
+
 <form id="inspection_result_data_form" name="inspection_result_data_form" method="post">
     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ">
-    <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ">\
+    <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ">
 </form>
 
 
@@ -371,6 +448,28 @@
                 return fnFormToJsonArrayData('#inspection_manage_form');
             } );
             inspectionManageGridId01.pqGrid("refreshDataAndView");
+        });
+
+        let $inspectionResultValueGrid  = $("#inspection_result_value_grid");
+        let inspectionResultValueColModel = [
+
+        ]
+        let inspectionResultValueObj = {
+
+        }
+
+        $("#inspection_result_value_popup").on({
+            'show.bs.modal': function () {
+
+            }, 'hide.bs.modal': function () {
+
+            }
+        })
+
+
+
+        $('#exportInspectResultBtn').on('click', function () {
+            $("#inspection_result_value_popup").modal('show');
         });
 
         $('#INSPECTION_MANAGE_EXCEL_EXPORT').on('click', function () {

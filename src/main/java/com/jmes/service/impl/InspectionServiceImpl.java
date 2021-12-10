@@ -88,15 +88,30 @@ public class InspectionServiceImpl implements InspectionService {
         }
 
         if(addList != null && addList.size() > 0) {
+            jsonMap.put("LOGIN_USER_ID",userId);
+            jsonMap.put("queryId","inspection.selectInspectionResultExistCheck");
+            HashMap<String,Object> inspectInfo = (HashMap<String, Object>) this.innodaleDao.getInfo(jsonMap);
+            String inspectResultSeq = null;
+            if(inspectInfo != null && inspectInfo.get("INSPECT_RESULT_SEQ") != null && !inspectInfo.get("INSPECT_RESULT_SEQ").equals("")) {
+                inspectResultSeq = (String) inspectInfo.get("INSPECT_RESULT_SEQ");
+            }else {
+                jsonMap.put("queryId","inspection.selectInspectionResultSeq");
+                HashMap<String,Object> seqData = (HashMap<String, Object>) this.innodaleDao.getInfo(jsonMap);
+                inspectResultSeq = (String) seqData.get("INSPECT_RESULT_SEQ");
+
+                jsonMap.put("INSPECT_RESULT_SEQ",inspectResultSeq);
+                jsonMap.put("queryId","inspection.insertInspectionResult");
+                innodaleDao.create(jsonMap);
+            }
+
+
             for(HashMap<String,Object> hashMap : addList) {
                 hashMap.put("LOGIN_USER_ID", userId);
                 hashMap.put("PRODUCT_NUM",jsonMap.get("PRODUCT_NUM"));
                 hashMap.put("CONTROL_SEQ",jsonMap.get("CONTROL_SEQ"));
                 hashMap.put("CONTROL_DETAIL_SEQ",jsonMap.get("CONTROL_DETAIL_SEQ"));
                 hashMap.put("LAYER_AREA_NAME",jsonMap.get("LAYER_AREA_NAME"));
-
-                hashMap.put("queryId","inspection.insertInspectionResult");
-                innodaleDao.create(hashMap);
+                hashMap.put("INSPECT_RESULT_SEQ",inspectResultSeq);
 
                 hashMap.put("queryId","inspection.insertInspectionResultDetail");
                 innodaleDao.create(hashMap);

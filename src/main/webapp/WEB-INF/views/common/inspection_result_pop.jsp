@@ -186,12 +186,13 @@
             font-size: 15px;
         }
         .blueWhiteBtn {
+            float: right;
             background-color: #336fca;
             color: white;
             border-color: #1a5a91;
             width: 60px;
             font-size: 16px;
-            height: 30px;
+            height: 33px;
         }
         .table-bg-gray input {
             background-color: #e4e4e4;
@@ -207,6 +208,11 @@
              text-decoration: none !important;
              cursor: default !important;
          }
+        #veritcal_change_btn {
+            width: 25% !important;
+            height: 9% !important;
+            margin-top: 2%;
+        }
     </style>
 </head>
 <body style="overflow: hidden;padding: 1%;">
@@ -230,7 +236,7 @@
 <%--                    <span id="horizon_type_text">ABC</span>--%>
                 </button>
                 <p>Vertical</p>
-                <button id="veritcal_change_btn" type="button" class="naBtn btn-concrete">123
+                <button id="veritcal_change_btn" type="button" class="naBtn btn-concrete">1<br>2<br>3
 <%--                    <span id="vertical_type_text">123</span>--%>
                 </button>
             </div>
@@ -247,11 +253,10 @@
             </div>
         </div>
         <div style="width: 20%;margin-left: 1%;margin-top: 2.5%;">
-            <div class="rightTopDiv">
-                <button type="button" class="radius blueWhiteBtn">성적서</button>
-                <button type="button" class="radius ml-5 blueWhiteBtn wd_70" id="layerSettingBtn">구역설정</button>
+            <button type="button" class="radius ml-5 blueWhiteBtn wd_70" id="layerSettingBtn">구역설정</button>
+            <div class="rightTopDiv" style="width: 31%;float: right;margin-bottom: 3%;">
                 <span class="barCode ml-5" id="inspectionResultSpan">
-                    <img src="/resource/asset/images/common/Code128code.png" alt="바코드" id="inspectionResultPopBarcodeImg" style="width: 58%;height: 30px;">
+                    <img src="/resource/asset/images/common/Code128code.png" alt="바코드" id="inspectionResultPopBarcodeImg" style="width: 95%;height: 28px;">
                 </span>
                 <input type="text" id="input_main_layer_barcode" style="width: 0;opacity: 0;height: 0;padding: 0;">
             </div>
@@ -297,7 +302,7 @@
                     </div>
                 </div>
             </div>
-            <div style="height: 60%;margin-top: 3%;">
+            <div style="height: 77%;margin-top: 3%;">
                 <form id="inspection_result_pop_form">
                     <input type="hidden" id="queryId" name="queryId" value="inspection.selectInspectionResult"/>
                     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value="${CONTROL_SEQ}"/>
@@ -316,7 +321,7 @@
 <%--                <button type="button" id="saveHtmlImgBtn" class="defaultBtn btn-120w radius" style="font-size: 16px;height: 30px;">이미지 저장</button>--%>
                 <button type="button" id="deleteInspectBtn" class="defaultBtn btn-120w radius red mt-05" style="font-size: 16px;height: 30px;">삭 제</button>
                 <button type="button" id="closeInspectBtn" class="defaultBtn btn-120w radius black mt-05" style="font-size: 16px;height: 30px;">닫 기</button>
-<%--                <button type="button" class="defaultBtn radius black mt-05" style="font-size: 16px;height: 30px;" id="startRecordBtn">동영상 녹화 시작</button>--%>
+                <button type="button" class="defaultBtn radius black mt-05" style="font-size: 16px;height: 30px;" id="startRecordBtn">동영상 녹화 시작</button>
 <%--                <button type="button" class="defaultBtn radius black mt-05" style="font-size: 16px;height: 30px;" id="stopRecordBtn">정지</button>--%>
 <%--                <button type="button" class="defaultBtn radius black mt-05" style="font-size: 16px;height: 30px;" id="playRecordBtn">미리보기</button>--%>
 <%--                <a class="defaultBtn radius black mt-05"  style="font-size: 16px;height: 30px;" id="downloadRecordBtn">다운로드</a>--%>
@@ -656,15 +661,16 @@
             let inspectionResultPopGrid = $("#inspection_result_pop_grid");
             let inspectionResultPopColModel = [
                 {title: 'INSPECT_RESULT_SEQ', dataType: 'integer', dataIndx: 'INSPECT_RESULT_SEQ', hidden: true},
+                {title: 'INSPECT_RESULT_DETAIL_SEQ', dataType: 'integer', dataIndx: 'INSPECT_RESULT_DETAIL_SEQ', hidden: true},
                 {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
                 {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
                 {title: 'COORDINATE_X', dataIndx: 'COORDINATE_X', hidden: true},
                 {title: 'COORDINATE_Y', dataIndx: 'COORDINATE_Y', hidden: true},
-                {title: 'No.', minWidth: 60, dataIndx: 'RESULT_NUM', sortable:false,
+                {title: 'No.', minWidth: 60, dataIndx: 'RESULT_NUM', sortable:false, editable:false,
                     styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
                 },
                 {title: '<i class="xi-eye-o" style="cursor: pointer;"></i>', minWidth: 60, dataIndx: 'EYE_VIEW', sortable:false,
-                    styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'25px'},
+                    styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'25px'}, editable:false,
                     render: function (ui) {
                         const cellData = ui.cellData;
                         if(cellData){
@@ -690,7 +696,7 @@
                         });
                     }
                 },
-                {title: 'POS', minWidth: 60, dataIndx: 'RESULT_POSITION', sortable:false,
+                {title: 'POS', minWidth: 60, dataIndx: 'RESULT_POSITION', sortable:false, editable:false,
                     styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
                 },
                 {title: '<i id="header_reset" class="xi-undo" style="font-size: 16px;float: left;cursor: pointer;"></i> Value', minWidth: 100, dataIndx: 'RESULT_VALUE', sortable:false,
@@ -712,7 +718,7 @@
 
                 },
                 {title: '<span id="header_delete" style="cursor: pointer;"><i class="xi-trash"></i></span>', minWidth: 60, dataIndx: 'DELETE_BTN', sortable:false,
-                    styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'20px'},
+                    styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'20px'}, editable:false,
                     render: function (ui) {
                         const cellData = ui.cellData;
                         if(cellData){
@@ -781,19 +787,23 @@
             }
             function reCalculateNum(deleteNum) {
                 let data = inspectionResultPopGrid.pqGrid('option', 'dataModel.data');
+
                 for(let i=0;i<data.length;i++) {
                     let rowData = inspectionResultPopGrid.pqGrid('getRowData', {rowIndx: i});
-                    if(rowData.RESULT_NUM > deleteNum) {
+                    if(Number(rowData.RESULT_NUM) >= Number(deleteNum)) {
                         let newNum = rowData.RESULT_NUM
                         if(i>0 && data.length > 1) {
                             let beforeData = inspectionResultPopGrid.pqGrid('getRowData', {rowIndx: i-1});
-                            newNum = beforeData.RESULT_NUM +1;
+                            newNum = Number(beforeData.RESULT_NUM) +1;
+                        }else if(i == 0) {
+                            newNum = 1;
                         }
 
                         $("#code_" + rowData.RESULT_NUM).remove();
                         inspectionResultPopGrid.pqGrid('updateRow', {
                             rowIndx: i,
-                            row: {'RESULT_NUM': newNum}
+                            row: {'RESULT_NUM': newNum},
+                            checkEditable: false
                         });
 
                         let html = '<span id="code_'+newNum+ '" class="spanPosition" style="top:'+rowData.COORDINATE_Y+'px;left: '+rowData.COORDINATE_X+'px;">'+ newNum +'</span>';
@@ -854,7 +864,8 @@
                     })
                     inspectionResultPopGrid.pqGrid("updateRow", {
                         'rowIndx': rowData.pq_ri ,
-                        row: { 'RESULT_POSITION': pos1+""+pos2 }
+                        row: { 'RESULT_POSITION': pos1+""+pos2 },
+                        checkEditable: false
                     });
                 })
             }
@@ -905,7 +916,8 @@
                             "COORDINATE_X":endX,
                             "COORDINATE_Y":endY,
                             "RESULT_POSITION":calculateCoordPoint(endX,endY)
-                        }
+                        },
+                        checkEditable: false
                     });
                 }
 
@@ -1132,13 +1144,9 @@
 
                     let result = inspectionResultPopGrid.pqGrid('option', 'dataModel.data');
 
-                    if(result.length > 0) {
+                    if(!fnIsEmpty(prodNo)) {
                         $("#INSPECT_RESULT_NO").parents('td').addClass('table-bg-gray');
                         $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(prodNo);
-                    }else {
-                        $("#INSPECT_RESULT_NO").val('')
-                        $("#inspection_result_pop_form").find("#PRODUCT_NUM").val('');
-                        $("#INSPECT_RESULT_NO").parents('td').removeClass('table-bg-gray');
                     }
 
                 }, parameters, '');
@@ -1640,9 +1648,7 @@
                             $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val(data.info.LAYER_AREA_NAME);
                             $("button[data-target='"+data.info.LAYER_AREA_NAME +"']").trigger('click');
                         }else {
-                            $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val('');
-                            $(".layerBtn").removeClass('on');
-                            $("#drawing_touch_div").empty();
+                            resetLayer();
                         }
 
 
@@ -1841,6 +1847,8 @@
                         deleteList.push({rowIndx:rowData.pq_ri});
                     }
                     inspectionResultPopGrid.pqGrid('deleteRow', {rowList: deleteList});
+
+                    $(".spanPosition").remove();
                 }
             });
             $(document).on("click","#header_reset",function(e){

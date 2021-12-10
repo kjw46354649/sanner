@@ -86,13 +86,13 @@
                         AND A.CONTROL_SEQ = C.CONTROL_SEQ
                         AND A.DEL_YN = 'N'
                         AND A.CONTROL_STATUS IN ('ORD001', 'ORD003')
---                         AND B.PART_STATUS NOT IN ('PRO001','PRO002','PRO003','PRO004','PRO005','PRO006','PRO007','PRO008','PRO021','PRO022')
-                        AND (EXISTS (SELECT *
-                                    FROM TBL_CONTROL_PART_PROGRESS
-                                    WHERE 1 = 1
-                                        AND CONTROL_SEQ = B.CONTROL_SEQ
-                                        AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                        AND PART_STATUS = 'PRO002') OR B.OUTSIDE_CONFIRM_DT IS NOT NULL)
+                        AND B.PART_STATUS NOT IN ('PRO001','PRO002','PRO003','PRO004','PRO005','PRO006','PRO007','PRO008','PRO021','PRO022')
+--                         AND (EXISTS (SELECT *
+--                                     FROM TBL_CONTROL_PART_PROGRESS
+--                                     WHERE 1 = 1
+--                                         AND CONTROL_SEQ = B.CONTROL_SEQ
+--                                         AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+--                                         AND PART_STATUS = 'PRO002') OR B.OUTSIDE_CONFIRM_DT IS NOT NULL)
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
@@ -2544,6 +2544,7 @@
         SELECT A.INSPECT_RESULT_SEQ,
                A.CONTROL_SEQ,
                A.CONTROL_DETAIL_SEQ,
+               B.INSPECT_RESULT_DETAIL_SEQ,
                B.RESULT_NUM,
                '1' AS EYE_VIEW,
                B.RESULT_POSITION,
@@ -2612,10 +2613,19 @@
         ORDER BY C.PRODUCT_NUM DESC
         LIMIT 1
     </select>
+
+    <select id="selectInspectionResultExistCheck" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT CAST(INSPECT_RESULT_SEQ AS CHAR) AS INSPECT_RESULT_SEQ
+        FROM TBL_INSPECT_RESULT
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            AND PRODUCT_NUM = #{PRODUCT_NUM}
+    </select>
+    <select id="selectInspectionResultSeq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT CAST(NEXTVAL(SEQ_INSPECT_RESULT) AS CHAR) AS INSPECT_RESULT_SEQ FROM DUAL
+    </select>
+
     <insert id="insertInspectionResult" parameterType="java.util.HashMap">
-        <selectKey keyProperty="INSPECT_RESULT_SEQ" resultType="int" order="BEFORE">
-            SELECT NEXTVAL(SEQ_INSPECT_RESULT) FROM DUAL
-        </selectKey>
         INSERT INTO TBL_INSPECT_RESULT (
             INSPECT_RESULT_SEQ,
             CONTROL_SEQ,
@@ -2623,16 +2633,17 @@
             PRODUCT_NUM,
             LAYER_AREA_NAME,
             INSERT_ID
-         )
+        )
         VALUES (
-            #{INSPECT_RESULT_SEQ},
-            #{CONTROL_SEQ},
-            #{CONTROL_DETAIL_SEQ},
-            #{PRODUCT_NUM},
-            #{LAYER_AREA_NAME},
-            #{LOGIN_USER_ID}
+           #{INSPECT_RESULT_SEQ},
+           #{CONTROL_SEQ},
+           #{CONTROL_DETAIL_SEQ},
+           #{PRODUCT_NUM},
+           #{LAYER_AREA_NAME},
+           #{LOGIN_USER_ID}
         )
     </insert>
+
     <insert id="insertInspectionResultDetail" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_INSPECT_RESULT_DETAIL (
             INSPECT_RESULT_SEQ,
@@ -2665,6 +2676,8 @@
             </if>
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE INSPECT_RESULT_SEQ = #{INSPECT_RESULT_SEQ}
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
             AND PRODUCT_NUM = #{PRODUCT_NUM}
     </update>
 
