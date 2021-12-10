@@ -252,9 +252,9 @@
                 </div>
             </div>
         </div>
-        <div style="width: 20%;margin-left: 1%;margin-top: 2.5%;">
+        <div style="width: 20%;margin-left: 1%;">
             <button type="button" class="radius ml-5 blueWhiteBtn wd_70" id="layerSettingBtn">구역설정</button>
-            <div class="rightTopDiv" style="width: 31%;float: right;margin-bottom: 3%;">
+            <div class="rightTopDiv" style="width: 31%;float: right;margin-bottom: 3%;padding: 1px 0 1px 0;">
                 <span class="barCode ml-5" id="inspectionResultSpan">
                     <img src="/resource/asset/images/common/Code128code.png" alt="바코드" id="inspectionResultPopBarcodeImg" style="width: 95%;height: 28px;">
                 </span>
@@ -321,7 +321,7 @@
 <%--                <button type="button" id="saveHtmlImgBtn" class="defaultBtn btn-120w radius" style="font-size: 16px;height: 30px;">이미지 저장</button>--%>
                 <button type="button" id="deleteInspectBtn" class="defaultBtn btn-120w radius red mt-05" style="font-size: 16px;height: 30px;">삭 제</button>
                 <button type="button" id="closeInspectBtn" class="defaultBtn btn-120w radius black mt-05" style="font-size: 16px;height: 30px;">닫 기</button>
-                <button type="button" class="defaultBtn radius black mt-05" style="font-size: 16px;height: 30px;" id="startRecordBtn">동영상 녹화 시작</button>
+<%--                <button type="button" class="defaultBtn radius black mt-05" style="font-size: 16px;height: 30px;" id="startRecordBtn">동영상 녹화 시작</button>--%>
 <%--                <button type="button" class="defaultBtn radius black mt-05" style="font-size: 16px;height: 30px;" id="stopRecordBtn">정지</button>--%>
 <%--                <button type="button" class="defaultBtn radius black mt-05" style="font-size: 16px;height: 30px;" id="playRecordBtn">미리보기</button>--%>
 <%--                <a class="defaultBtn radius black mt-05"  style="font-size: 16px;height: 30px;" id="downloadRecordBtn">다운로드</a>--%>
