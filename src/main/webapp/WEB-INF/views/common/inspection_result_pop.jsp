@@ -785,7 +785,7 @@
                         },150);
 
                     }
-                }
+                },
                 toolbar: false,
             };
             inspectionResultPopGrid.pqGrid(inspectionResultPopObj);
