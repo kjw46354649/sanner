@@ -32,13 +32,13 @@
         }
         .item2 {
             display: flex;
-            border-bottom: 5px solid #ffc63a;
-            border-right: 5px solid #ffc63a;
+            border-bottom: 3px solid rgb(255 198 58 / 60%);
+            border-right: 3px solid rgb(255 198 58 / 60%);
         }
         .item {
             display: flex;
-            border-bottom: 3px solid #ffc63a;
-            border-right: 3px solid #ffc63a;
+            border-bottom: 2px solid rgb(255 198 58 / 50%);
+            border-right: 2px solid rgb(255 198 58 / 50%);
         }
         /*.item:nth-child(8n){*/
         /*    border-right: none;*/
@@ -186,7 +186,6 @@
             font-size: 15px;
         }
         .blueWhiteBtn {
-            float: right;
             background-color: #336fca;
             color: white;
             border-color: #1a5a91;
@@ -253,10 +252,10 @@
             </div>
         </div>
         <div style="width: 20%;margin-left: 1%;">
-            <button type="button" class="radius ml-5 blueWhiteBtn wd_70" id="layerSettingBtn">구역설정</button>
-            <div class="rightTopDiv" style="width: 31%;float: right;margin-bottom: 3%;padding: 1px 0 1px 0;">
-                <span class="barCode ml-5" id="inspectionResultSpan">
-                    <img src="/resource/asset/images/common/Code128code.png" alt="바코드" id="inspectionResultPopBarcodeImg" style="width: 95%;height: 28px;">
+            <button type="button" class="radius ml-5 blueWhiteBtn wd_70" id="layerSettingBtn" style="float: right;margin-top: -6%;">구역설정</button>
+            <div class="rightTopDiv" style="width: 35%;float: right;margin-bottom: 2%;padding: 1px 0 1px 0;margin-top: -6%;">
+                <span class="barCode" id="inspectionResultSpan">
+                    <img src="/resource/asset/images/common/Code128code.png" alt="바코드" id="inspectionResultPopBarcodeImg" style="width: 100%;height: 27px;">
                 </span>
                 <input type="text" id="input_main_layer_barcode" style="width: 0;opacity: 0;height: 0;padding: 0;">
             </div>
@@ -280,8 +279,8 @@
                                 <td id="CONTROL_NUM_DIV" class="table-bg-gray" style="text-decoration: underline;cursor: pointer;"></td>
                                 <td id="QTY_DIV" class="table-bg-gray"></td>
                                 <td id="WORK_TYPE_DIV" class="table-bg-gray"></td>
-                                <td>
-                                    <input id="INSPECT_RESULT_NO" type="text" style="border: none;width: 30px;">
+                                <td class="table-bg-gray">
+                                    <input id="INSPECT_RESULT_NO" type="text" style="border: none;width: 50px;text-align: center;" disabled>
                                 </td>
                             </tr>
                         </tbody>
@@ -302,7 +301,7 @@
                     </div>
                 </div>
             </div>
-            <div style="height: 77%;margin-top: 3%;">
+            <div style="height: 84%;margin-top: 3%;">
                 <form id="inspection_result_pop_form">
                     <input type="hidden" id="queryId" name="queryId" value="inspection.selectInspectionResult"/>
                     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value="${CONTROL_SEQ}"/>
@@ -311,16 +310,21 @@
                     <input type="hidden" id="PRODUCT_NUM" name="PRODUCT_NUM"/>
                     <input type="hidden" id="LAYER_AREA_NAME" name="LAYER_AREA_NAME"/>
                     <input type="hidden" id="INSPECT_RESULT_SEQ" name="INSPECT_RESULT_SEQ"/>
+                    <input type="hidden" id="SIZE_TXT" name="SIZE_TXT"/>
+                    <input type="hidden" id="LAST_PRODUCT_NUM" name="LAST_PRODUCT_NUM"/>
+                    <input type="hidden" id="INSPECT_RESULT_CNT" name="INSPECT_RESULT_CNT"/>
                 </form>
                 <div id="inspection_result_pop_grid"></div>
             </div>
             <div style="margin-top: 3%;text-align: center">
-                <button type="button" id="startInspectBtn" class="defaultBtn btn-120w radius fluore_blue" style="font-size: 16px;height: 30px;">시 작</button>
-                <button type="button" id="saveInspectBtn" class="defaultBtn btn-120w radius green" style="font-size: 16px;height: 30px;display: none;">저 장</button>
-                <button type="button" id="gradeInspectBtn" class="defaultBtn btn-120w radius purple" style="font-size: 16px;height: 30px;">등급 입력</button>
+                <button type="button" id="newInspectBtn" class="defaultBtn btn-110w radius green left_float" style="font-size: 16px;height: 65px;">신규 작성</button>
+                <button type="button" id="startInspectBtn" class="defaultBtn btn-110w radius orange left_float" style="font-size: 16px;height: 30px;">수 정</button>
+                <button type="button" id="saveInspectBtn" class="defaultBtn btn-110w radius green" style="font-size: 16px;height: 30px;display: none;">저 장</button>
+                <button type="button" id="gradeInspectBtn" class="defaultBtn btn-110w radius purple" style="font-size: 16px;height: 30px;">등급 입력</button>
 <%--                <button type="button" id="saveHtmlImgBtn" class="defaultBtn btn-120w radius" style="font-size: 16px;height: 30px;">이미지 저장</button>--%>
-                <button type="button" id="deleteInspectBtn" class="defaultBtn btn-120w radius red mt-05" style="font-size: 16px;height: 30px;">삭 제</button>
-                <button type="button" id="closeInspectBtn" class="defaultBtn btn-120w radius black mt-05" style="font-size: 16px;height: 30px;">닫 기</button>
+                <button type="button" id="deleteInspectBtn" class="defaultBtn btn-110w radius red mt-05 left_float" style="font-size: 16px;height: 30px;">삭 제</button>
+                <button type="button" id="cancelInsepctBtn" class="defaultBtn btn-110w radius darkBlue mt-05 left_float" style="font-size: 16px;height: 30px;display: none;">취 소</button>
+                <button type="button" id="closeInspectBtn" class="defaultBtn btn-110w radius black mt-05" style="font-size: 16px;height: 30px;">닫 기</button>
 <%--                <button type="button" class="defaultBtn radius black mt-05" style="font-size: 16px;height: 30px;" id="startRecordBtn">동영상 녹화 시작</button>--%>
 <%--                <button type="button" class="defaultBtn radius black mt-05" style="font-size: 16px;height: 30px;" id="stopRecordBtn">정지</button>--%>
 <%--                <button type="button" class="defaultBtn radius black mt-05" style="font-size: 16px;height: 30px;" id="playRecordBtn">미리보기</button>--%>
@@ -331,7 +335,7 @@
     <div class="popup_container" id="layer_setting_popup" style="display: none;">
         <div class="layerPopup" style="width: 95%; height: 98%;">
             <h3><i class="xi-drag-vertical"></i>Layer 구역 설정</h3>
-            <div style="height: 5%;margin-bottom: 1%;margin-top: -1%;">
+            <div style="height: 5%;margin-bottom: 1%;margin-top: -1%;margin-left: -0.1;">
                 <div class="step-state step1">
                     <ul>
                         <li><p>0</p></li>
@@ -352,7 +356,7 @@
                 </div>
             </div>
             <div class="d-flex" style="height: 85%;">
-                <div style="width: 5.5%;margin-top: -3%;">
+                <div style="width: 5.5%;margin-top: -3.23%;">
                     <div class="step-state-vertical step1">
                         <ul>
                             <li><p>0</p></li>
@@ -660,8 +664,8 @@
         $(function () {
             let inspectionResultPopGrid = $("#inspection_result_pop_grid");
             let inspectionResultPopColModel = [
-                {title: 'INSPECT_RESULT_SEQ', dataType: 'integer', dataIndx: 'INSPECT_RESULT_SEQ', hidden: true},
-                {title: 'INSPECT_RESULT_DETAIL_SEQ', dataType: 'integer', dataIndx: 'INSPECT_RESULT_DETAIL_SEQ', hidden: true},
+                {title: 'INSPECT_RESULT_SEQ', dataIndx: 'INSPECT_RESULT_SEQ', hidden: true},
+                {title: 'INSPECT_RESULT_DETAIL_SEQ', dataIndx: 'INSPECT_RESULT_DETAIL_SEQ', hidden: true},
                 {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
                 {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
                 {title: 'COORDINATE_X', dataIndx: 'COORDINATE_X', hidden: true},
@@ -715,7 +719,6 @@
                             ui.rowData.RESULT_VALUE = "";
                         });
                     }
-
                 },
                 {title: '<span id="header_delete" style="cursor: pointer;"><i class="xi-trash"></i></span>', minWidth: 60, dataIndx: 'DELETE_BTN', sortable:false,
                     styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'20px'}, editable:false,
@@ -768,6 +771,23 @@
                     let totalRecords = data.length;
                     // console.log('complete',data);
                     loadCoordinate(data);
+                },
+                editorKeyDown: function(evt, ui){
+                    console.log('editorKeyDown')
+                    if(evt.keyCode == 13) {
+                        $("#inspection_result_pop_grid").pqGrid('setSelection', null);
+                        setTimeout(function () {
+                            let instance = inspectionResultPopGrid.pqGrid('getInstance').grid.colIndxs;
+
+                            inspectionResultPopGrid.pqGrid('setSelection', {rowIndx: (ui.rowData.pq_ri +1)});
+                            // inspectionResultPopGrid.pqGrid('focus',{rowIndxPage:(ui.rowData.pq_ri +1), colIndx:instance['RESULT_VALUE']});
+                            inspectionResultPopGrid.pqGrid('editCell',{rowIndx:(ui.rowData.pq_ri +1), dataIndx:'RESULT_VALUE'});
+                        },150);
+
+                    }
+                },
+                refresh: function (evt, ui) {
+                  console.log('refresh')
                 },
                 toolbar: false,
             };
@@ -833,6 +853,7 @@
                         pos2 = Item.AREA_NAME;
                     }
                 })
+                let newIdx = $("#inspection_result_pop_grid").pqGrid('option', 'dataModel.data').length
                 inspectionResultPopGrid.pqGrid('addRow', {
                     newRow: {
                         'CONTROL_SEQ':$("#inspection_result_pop_form").find("#CONTROL_SEQ").val(),
@@ -840,13 +861,20 @@
                         'RESULT_NUM':$(".spanPosition").length,
                         'EYE_VIEW':1,
                         'RESULT_POSITION':pos1 + pos2,
+                        'RESULT_VALUE':'',
                         'DELETE_BTN':1,
                         'COORDINATE_X':x,
                         'COORDINATE_Y':y
                     },
-                    rowIndx: $("#inspection_result_pop_grid").pqGrid('option', 'dataModel.data').length,
+                    rowIndx: newIdx,
                     checkEditable: false
                 });
+
+                setTimeout(function () {
+                    let instance = inspectionResultPopGrid.pqGrid('getInstance').grid.colIndxs;
+                    inspectionResultPopGrid.pqGrid('focus',{rowIndxPage:newIdx, colIndx:instance['RESULT_VALUE']});
+                    inspectionResultPopGrid.pqGrid('editCell',{rowIndx:newIdx, dataIndx:'RESULT_VALUE'});
+                },100)
             }
             function calculateCoord(data) {
                 $.each(data, function (idx,rowData) {
@@ -968,23 +996,27 @@
                         document.getElementById(id).addEventListener('touchstart',touchStartPoint);
                         document.getElementById(id).addEventListener('touchmove',dragPoint);
                         addNewCoordinate(targetX,targetY);
+
                     }
                 }
             }
 
             $("#drawing_touch_div").on("touchstart", function (e) {
                 e.preventDefault();
+                console.log("touchstart")
 
                 startTime = new Date().getTime();
             });
 
             $("#drawing_touch_div").on("touchmove", function (e) {
                 e.preventDefault();
+                console.log("touchmove")
 
                 moveTime = new Date().getTime()
             })
             $("#drawing_touch_div").on("touchend", function (e) {
                 e.preventDefault();
+                console.log("touchend")
 
                 endTime = new Date().getTime();
 
@@ -1088,12 +1120,105 @@
                     inspectionResultPopGrid.pqGrid('option' , 'dataModel.data',[]);
                     inspectionResultPopGrid.pqGrid('refreshDataAndView');
                 }
+                settingBtn('start');
+                settingProdNumDiv('edit')
+            });
 
-                $("#startInspectBtn").hide();
-                $("#saveInspectBtn").show();
-                $("#deleteInspectBtn").attr('disabled',true);
-                $("#prevProdNum").attr('disabled',true);
-                $("#nextProdNum").attr('disabled',true);
+            function settingBtn(type) {
+                if(type == 'cancel' || type == 'save' || type == 'delete') {
+                    $("#deleteInspectBtn").attr('disabled',false);
+                    $("#gradeInspectBtn").attr('disabled',false);
+                    $("#newInspectBtn").attr('disabled',false);
+                    $("#prevProdNum").attr('disabled',false);
+                    $("#nextProdNum").attr('disabled',false);
+                    $("#startInspectBtn").show();
+                    $("#deleteInspectBtn").show();
+                    $("#cancelInsepctBtn").hide();
+                    $("#saveInspectBtn").hide();
+
+                    let inspectResultSeq = $("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val();
+                    if(fnIsEmpty(inspectResultSeq)) {
+                        $("#deleteInspectBtn").attr('disabled',true);
+                        $("#startInspectBtn").attr('disabled',true);
+                    }else {
+                        $("#startInspectBtn").attr('disabled',false);
+                    }
+
+                    let prodNum = $("#inspection_result_pop_form").find("#PRODUCT_NUM").val();
+                    let lastProdNum = $("#inspection_result_pop_form").find("#LAST_PRODUCT_NUM").val();
+                    if(Number(lastProdNum) <= Number(prodNum)) {
+                        $("#nextProdNum").attr('disabled',true);
+                    }
+                    if(fnIsEmpty(prodNum) || Number(prodNum) == 1) {
+                        $("#prevProdNum").attr('disabled',true);
+                    }
+                }else if(type == 'start' || type == 'new') {
+                    $("#deleteInspectBtn").hide();
+                    $("#startInspectBtn").hide();
+                    $("#saveInspectBtn").show();
+                    $("#cancelInsepctBtn").show();
+                    $("#gradeInspectBtn").attr('disabled',true);
+                    $("#deleteInspectBtn").attr('disabled',true);
+                    $("#newInspectBtn").attr('disabled',true);
+                    $("#prevProdNum").attr('disabled',true);
+                    $("#nextProdNum").attr('disabled',true);
+                }
+            }
+            function settingProdNumDiv(type) {
+                let resultCnt = $("#inspection_result_pop_form").find("#INSPECT_RESULT_CNT").val();
+                let currProdNum = $("#inspection_result_pop_form").find("#PRODUCT_NUM").val();
+                if(fnIsEmpty(currProdNum)) {
+                    currProdNum = "";
+                }
+                if(fnIsEmpty(resultCnt)) {
+                    resultCnt = 0;
+                }
+
+                if(type == 'edit' || Number(resultCnt) <= 0 || fnIsEmpty(currProdNum)) {
+                    $("#INSPECT_RESULT_NO").val(currProdNum);
+                }else {
+                    $("#INSPECT_RESULT_NO").val(currProdNum + " / " + resultCnt)
+                }
+            }
+
+            $("#cancelInsepctBtn").on("click", function () {
+                fnConfirm(null, "취소 하시겠습니까?", function () {
+                    settingBtn('cancel');
+                    settingProdNumDiv('cancel');
+
+                    inspectionResultPopGrid.pqGrid("option", "dataModel.postData", function(ui){
+                        return fnFormToJsonArrayData('inspection_result_pop_form');
+                    } );
+                    inspectionResultPopGrid.pqGrid("refreshDataAndView");
+                });
+            });
+
+            $("#newInspectBtn").on("click", function () {
+                let layer = $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val();
+                // console.log(layer);
+                if(fnIsEmpty(layer)) {
+                    fnAlert(null,"레이어를 선택해주세요.");
+                    return false;
+                }
+                let qty = $("#inspection_result_pop_form").find("#QTY").val();
+                let latestProdNum = $("#inspection_result_pop_form").find("#LAST_PRODUCT_NUM").val();
+
+                if(!fnIsEmpty(latestProdNum)) {
+                    let nextNum = Number(latestProdNum) +1;
+                    if(nextNum > qty) {
+                        fnAlert(null,"검사 성적서는 수량 갯수만큼만 작성 가능합니다.");
+                        return;
+                    }else {
+                        latestProdNum = nextNum;
+                    }
+                }else {
+                    latestProdNum = 1;
+                }
+
+                $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(latestProdNum);
+                settingPopData('newInspect');
+                settingBtn('new');
+                settingProdNumDiv('edit')
             });
 
             // 저장
@@ -1107,35 +1232,21 @@
                 let gridInstance = inspectionResultPopGrid.pqGrid('getInstance').grid;
                 let changes = gridInstance.getChanges({format: 'byVal'});
 
-                // var flag = false;
-                // if(changes.updateList.length >= 0) {
-                //     $.each(changes.updateList,function (idx,Item) {
-                //         if(fnIsEmpty(Item.RESULT_VALUE)) {
-                //             flag = true;
-                //         }
-                //     });
-                // }
-                // if(flag) {
-                //     fnAlert(null,"Value 값을 입력해주세요.");
-                //     return;
-                // }
                 changes.PRODUCT_NUM = prodNo;
                 changes.CONTROL_SEQ = $("#inspection_result_pop_form").find("#CONTROL_SEQ").val();
                 changes.CONTROL_DETAIL_SEQ = $("#inspection_result_pop_form").find("#CONTROL_DETAIL_SEQ").val();
                 changes.LAYER_AREA_NAME = $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val();
 
-                // console.log('changes',changes);
-
                 let parameters = {'url': '/modifyInspectResult', 'data': {data: JSON.stringify(changes)}};
 
                 fnPostAjax(function (data) {
+                    // console.log('data',data);
                     fnAlert(null,"저장되었습니다.");
+                    setTimeout(function () {
+                        alertify.alert().close();
+                    },1000);
+
                     inspectionResultPopGrid.pqGrid('option', 'editable', false);
-                    $("#deleteInspectBtn").attr('disabled',false);
-                    $("#prevProdNum").attr('disabled',false);
-                    $("#nextProdNum").attr('disabled',false);
-                    $("#startInspectBtn").show();
-                    $("#saveInspectBtn").hide();
 
                     inspectionResultPopGrid.pqGrid("option", "dataModel.postData", function(ui){
                         return fnFormToJsonArrayData('inspection_result_pop_form');
@@ -1145,10 +1256,20 @@
                     let result = inspectionResultPopGrid.pqGrid('option', 'dataModel.data');
 
                     if(!fnIsEmpty(prodNo)) {
-                        $("#INSPECT_RESULT_NO").parents('td').addClass('table-bg-gray');
                         $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(prodNo);
                     }
+                    if(!fnIsEmpty(data.result.INSPECT_RESULT_SEQ)) {
+                        $("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val(data.result.INSPECT_RESULT_SEQ);
+                    }
+                    if(!fnIsEmpty(data.result.LAST_PRODUCT_NUM)) {
+                        $("#inspection_result_pop_form").find("#LAST_PRODUCT_NUM").val(data.result.LAST_PRODUCT_NUM);
+                    }
+                    if(!fnIsEmpty(data.result.INSPECT_RESULT_CNT)) {
+                        $("#inspection_result_pop_form").find("#INSPECT_RESULT_CNT").val(data.result.INSPECT_RESULT_CNT);
+                    }
 
+                    settingProdNumDiv('new')
+                    settingBtn('save');
                 }, parameters, '');
             });
 
@@ -1159,20 +1280,21 @@
             });
 
             $("#focusGridBtn").on("click", function () {
-                $("#inspection_result_pop_grid").pqGrid('setSelection', null);
-                let data = inspectionResultPopGrid.pqGrid('option', 'dataModel.data');
-                let instance = inspectionResultPopGrid.pqGrid('getInstance').grid.colIndxs;
+                if($("#startInspectBtn").css( "display" ) == "none") {
+                    $("#inspection_result_pop_grid").pqGrid('setSelection', null);
+                    let data = inspectionResultPopGrid.pqGrid('option', 'dataModel.data');
 
-                $.each(data,function (idx,Item) {
-                    if(fnIsEmpty(Item.RESULT_VALUE)) {
-                        inspectionResultPopGrid.pqGrid('focus',{rowIndxPage:Item.pq_ri, colIndx:instance['RESULT_VALUE']});
-                        return;
-                    }
-                })
+                    $.each(data,function (idx,Item) {
+                        if(fnIsEmpty(Item.RESULT_VALUE)) {
+                            inspectionResultPopGrid.pqGrid('editCell',{rowIndx:Item.pq_ri, dataIndx:'RESULT_VALUE'});
+                            return false;
+                        }
+                    })
+                }
             });
 
             $("#openInspectBtn").on("click", function () {
-                $("#inspectResult_list_popup").modal('show');
+                $("#inspectResult_list_popup").modal('show')
             });
 
             $("#prevProdNum").on("click", function () {
@@ -1241,28 +1363,39 @@
             });
 
             $("#deleteInspectBtn").on("click",function () {
-                let controlSeq = $("#inspection_result_pop_form").find("#CONTROL_SEQ").val();
-                let controlDetailSeq = $("#inspection_result_pop_form").find("#CONTROL_DETAIL_SEQ").val();
-                let data = {
-                    'queryId': "inspection.deleteInspectionResultProdNum,inspection.deleteInspectionResultDetailProdNum",
-                    'CONTROL_SEQ': controlSeq,
-                    'CONTROL_DETAIL_SEQ':controlDetailSeq,
-                    'INSPECT_RESULT_SEQ':$("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val(),
-                    'PRODUCT_NUM':$("#inspection_result_pop_form").find("#PRODUCT_NUM").val()
-                };
-                let parameters = {'url': '/json-manager', 'data': data};
-                fnPostAjax(function (data) {
-                    fnAlert(null, "삭제되었습니다.");
-                    // $("#inspection_result_pop_form").find("#PRODUCT_NUM").val('');
-                    // $("#INSPECT_RESULT_NO").val('')
+                fnConfirm(null, "삭제하시겠습니까?", function () {
+                    let controlSeq = $("#inspection_result_pop_form").find("#CONTROL_SEQ").val();
+                    let controlDetailSeq = $("#inspection_result_pop_form").find("#CONTROL_DETAIL_SEQ").val();
+                    let data = {
+                        'queryId': "inspection.deleteInspectionResultProdNum,inspection.deleteInspectionResultDetailProdNum",
+                        'CONTROL_SEQ': controlSeq,
+                        'CONTROL_DETAIL_SEQ':controlDetailSeq,
+                        'INSPECT_RESULT_SEQ':$("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val(),
+                        'PRODUCT_NUM':$("#inspection_result_pop_form").find("#PRODUCT_NUM").val()
+                    };
+                    let parameters = {'url': '/json-manager', 'data': data};
+                    fnPostAjax(function (data) {
+                        fnAlert(null, "삭제되었습니다.");
+                        $("#inspection_result_pop_form").find("#PRODUCT_NUM").val('');
+                        $("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val('');
+                        $("#inspection_result_pop_form").find("#INSPECT_RESULT_CNT").val(0);
+                        $("#inspection_result_pop_form").find("#LAST_PRODUCT_NUM").val('');
+                        $("#INSPECT_RESULT_NO").val('')
 
-                    settingPopData();
-
-                }, parameters, '');
+                        settingPopData();
+                        settingBtn('delete');
+                    }, parameters, '');
+                })
             });
 
             $("#closeInspectBtn").on("click",function () {
-                window.close();
+                if($("#startInspectBtn").css( "display" ) == "none") {
+                    fnConfirm(null, "저장하지 않고 종료 하시겠습니까?<br>(저장하지 않은 데이터는 삭제됩니다.)", function () {
+                        window.close();
+                    });
+                }else {
+                    window.close();
+                }
             });
 
             $("#layerSettingBtn").on("click",function () {
@@ -1600,7 +1733,7 @@
                     'CONTROL_SEQ' : controlSeq,
                     'CONTROL_DETAIL_SEQ':controlDetailSeq
                 };
-                if(!fnIsEmpty(barcodeNum)) {
+                if(!fnIsEmpty(barcodeNum) && barcodeNum != 'newInspect') {
                     parameter = {
                         'queryId': 'inspection.selectInspectionResultControlInfoBarcode',
                         'BARCODE_NUM':barcodeNum
@@ -1615,13 +1748,17 @@
                 }
 
                 fnPostAjaxAsync(function(data, callFunctionParam){
-                    // console.log(data);
+                    console.log('settingPopData', data);
                     if(data.info != null) {
+                        let prodNum = (fnIsEmpty(data.info.PRODUCT_NUM)?"":Number(data.info.PRODUCT_NUM));
                         $("#CONTROL_NUM_DIV").text(data.info.CONTROL_NUM)
                         $("#QTY_DIV").text(data.info.QTY)
                         $("#WORK_TYPE_DIV").text(data.info.WORK_TYPE_NM)
 
                         $("#inspection_result_pop_form").find("#QTY").val(data.info.QTY);
+                        $("#inspection_result_pop_form").find("#SIZE_TXT").val(data.info.SIZE_TXT);
+                        $("#inspection_result_pop_form").find("#LAST_PRODUCT_NUM").val(data.info.LAST_PRODUCT_NUM);
+                        $("#inspection_result_pop_form").find("#INSPECT_RESULT_CNT").val(data.info.INSPECT_RESULT_CNT);
 
                         if(!fnIsEmpty(data.info.IMG_GFILE_SEQ)) {
                             let orgImg = $("#img_div").attr("src");
@@ -1633,19 +1770,35 @@
                         }
 
                         if(!fnIsEmpty(data.info.PRODUCT_NUM)) {
-                            $("#INSPECT_RESULT_NO").val(data.info.PRODUCT_NUM)
-                            $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(data.info.PRODUCT_NUM);
+                            $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(prodNum);
                             $("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val(data.info.INSPECT_RESULT_SEQ);
-                            $("#INSPECT_RESULT_NO").parents('td').addClass('table-bg-gray');
+
+                            if(barcodeNum != 'newInspect') {
+                                $("#startInspectBtn").attr('disabled',false);
+                                $("#deleteInspectBtn").attr('disabled',false);
+                                $("#nextProdNum").attr('disabled',false);
+                                $("#prevProdNum").attr('disabled',false);
+                                if(Number(data.info.LAST_PRODUCT_NUM) <= prodNum) {
+                                    $("#nextProdNum").attr('disabled',true);
+                                }
+                                if(prodNum == 1) {
+                                    $("#prevProdNum").attr('disabled',true);
+                                }
+                            }
+                            settingProdNumDiv('new');
+
                         }else {
-                            $("#INSPECT_RESULT_NO").val('')
-                            $("#inspection_result_pop_form").find("#PRODUCT_NUM").val('');
-                            $("#INSPECT_RESULT_NO").parents('td').removeClass('table-bg-gray');
+                            settingProdNumDiv('edit');
+                            $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(prodNum);
+                            $("#startInspectBtn").attr('disabled',true);
+                            $("#deleteInspectBtn").attr('disabled',true);
+                            $("#nextProdNum").attr('disabled',true);
+                            $("#prevProdNum").attr('disabled',true);
                         }
 
 
                         if(!fnIsEmpty(data.info.LAYER_AREA_NAME)) {
-                            $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val(data.info.LAYER_AREA_NAME);
+                            $("#inspection_result_pop_form").find("#LAYER_AREA_NAM1E").val(data.info.LAYER_AREA_NAME);
                             $("button[data-target='"+data.info.LAYER_AREA_NAME +"']").trigger('click');
                         }else {
                             resetLayer();
@@ -1758,6 +1911,8 @@
 
             $("#inspectResult_list_popup").on({
                 'show.bs.modal' :  function() {
+                    $("#inspect_point_pop_form").find("#SIZE_TXT").val($("#inspection_result_pop_form").find("#SIZE_TXT").val());
+
                     inspectPointGrid.pqGrid("option", "dataModel.postData", function(ui){
                         return fnFormToJsonArrayData('inspect_point_pop_form');
                     } );

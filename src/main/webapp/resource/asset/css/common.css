@@ -136,6 +136,7 @@ option { font-size: 12px; }
 .defaultBtn.btn-70w { display: inline-block; overflow: hidden; width: 70px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 .defaultBtn.btn-80w { display: inline-block; overflow: hidden; width: 80px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 .defaultBtn.btn-100w { display: inline-block; overflow: hidden; width: 100px; height: 25px; margin: 0 5px; padding: 0 4px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
+.defaultBtn.btn-110w { display: inline-block; overflow: hidden; width: 110px; height: 27px; margin: 0 3px; padding: 0 10px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 .defaultBtn.btn-120w { display: inline-block; overflow: hidden; width: 120px; height: 27px; margin: 0 5px; padding: 0 10px; line-height: 25px; background-color: #fff; color: #212121; font-size: 12px; font-family: 'NotoKrM'; text-align: center; border: 1px solid #e5e5e5; box-sizing: border-box; }
 
 
@@ -163,10 +164,11 @@ option { font-size: 12px; }
 .smallBtn { height: 24px; padding: 0 20px; font-size: 12px; color: #000; background: #fcfcfc; line-height: 22px; font-family: 'NotoKrM'; display: inline-block; text-align: center; border: 1px solid #afafaf; border-radius: 2px; box-sizing: border-box; }
 
 .blue { color: #fff !important; background: #59a8e4 !important; border: 1px solid #599bce !important; }
+.darkBlue {color: #fff !important;background: #274393 !important;border: 1px solid #0f276c !important;}
 .black { color: #fff !important; background: #454545 !important; border: 1px solid #454545 !important; }
 .sky { color: #0a2032 !important; background: #add6f6 !important; border: 1px solid #85b3d8 !important; }
 .red{background: #9b1313 !important; color: #fff !important; border: 1px solid #9b1313 !important;}
-.orange{background: #e57304 !important; border: 1px solid #e57304 !important; color:#fff !important;}
+.orange{background: #ea9039 !important; border: 1px solid #e57304 !important; color:#fff !important;}
 .green{background: #4d8d1a !important; border:1px solid #4d8d1a !important; color:#fff !important;}
 .yellow{background: #ffc63a !important; border: 1px solid #ffc63a !important; color: #fff !important;}
 .purple{background: #73139b !important; border:1px solid #73139b !important; color:#fff !important;}

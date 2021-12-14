@@ -149,5 +149,9 @@ public class InspectionServiceImpl implements InspectionService {
                 }
             }
         }
+
+        jsonMap.put("queryId","inspection.selectInspectionResultControlInfo");
+        HashMap<String,Object> result = (HashMap<String, Object>) innodaleDao.getInfo(jsonMap);
+        model.addAttribute("result",result);
     }
 }
