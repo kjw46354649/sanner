@@ -211,6 +211,10 @@
             width: 25% !important;
             height: 9% !important;
             margin-top: 2%;
+            letter-spacing: 10px;
+            padding-left: 6px;
+            word-break: break-all;
+            white-space: break-spaces;
         }
     </style>
 </head>
@@ -231,13 +235,9 @@
             </div>
             <div class="bottomDiv">
                 <p>Horizontal</p>
-                <button id="horizon_change_btn" type="button" class="naBtn btn-concrete">ABC
-<%--                    <span id="horizon_type_text">ABC</span>--%>
-                </button>
+                <button id="horizon_change_btn" type="button" class="naBtn btn-concrete">ABC</button>
                 <p>Vertical</p>
-                <button id="veritcal_change_btn" type="button" class="naBtn btn-concrete">1<br>2<br>3
-<%--                    <span id="vertical_type_text">123</span>--%>
-                </button>
+                <button id="veritcal_change_btn" type="button" class="naBtn btn-concrete">123</button>
             </div>
         </div>
         <div id="main_img_div" style="width: 1300px;height: 920px;margin-top: 1%;">
@@ -1108,12 +1108,11 @@
                             });
                         }
                     }
-                    inspectionResultPopGrid.pqGrid('option', 'editable', true);
                 }else {
-                    inspectionResultPopGrid.pqGrid('option', 'editable', true);
                     inspectionResultPopGrid.pqGrid('option' , 'dataModel.data',[]);
                     inspectionResultPopGrid.pqGrid('refreshDataAndView');
                 }
+                inspectionResultPopGrid.pqGrid('option', 'editable', true);
                 settingBtn('start');
                 settingProdNumDiv('edit')
             });
@@ -1201,7 +1200,7 @@
                     let nextNum = Number(latestProdNum) +1;
                     if(nextNum > qty) {
                         fnAlert(null,"검사 성적서는 수량 갯수만큼만 작성 가능합니다.");
-                        return;ㅊ
+                        return;
                     }else {
                         latestProdNum = nextNum;
                     }
@@ -1213,6 +1212,7 @@
                 settingPopData('newInspect');
                 settingBtn('new');
                 settingProdNumDiv('edit')
+                inspectionResultPopGrid.pqGrid('option', 'editable', true);
             });
 
             // 저장
@@ -1791,11 +1791,13 @@
                         }
 
 
-                        if(!fnIsEmpty(data.info.LAYER_AREA_NAME)) {
-                            $("#inspection_result_pop_form").find("#LAYER_AREA_NAM1E").val(data.info.LAYER_AREA_NAME);
-                            $("button[data-target='"+data.info.LAYER_AREA_NAME +"']").trigger('click');
-                        }else {
-                            resetLayer();
+                        if(barcodeNum != 'newInspect') {
+                            if(!fnIsEmpty(data.info.LAYER_AREA_NAME)) {
+                                $("#inspection_result_pop_form").find("#LAYER_AREA_NAM1E").val(data.info.LAYER_AREA_NAME);
+                                $("button[data-target='"+data.info.LAYER_AREA_NAME +"']").trigger('click');
+                            }else {
+                                resetLayer();
+                            }
                         }
 
 
