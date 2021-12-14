@@ -86,13 +86,13 @@
                         AND A.CONTROL_SEQ = C.CONTROL_SEQ
                         AND A.DEL_YN = 'N'
                         AND A.CONTROL_STATUS IN ('ORD001', 'ORD003')
---                         AND B.PART_STATUS NOT IN ('PRO001','PRO002','PRO003','PRO004','PRO005','PRO006','PRO007','PRO008','PRO021','PRO022')
-                        AND (EXISTS (SELECT *
-                                    FROM TBL_CONTROL_PART_PROGRESS
-                                    WHERE 1 = 1
-                                        AND CONTROL_SEQ = B.CONTROL_SEQ
-                                        AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                        AND PART_STATUS = 'PRO002') OR B.OUTSIDE_CONFIRM_DT IS NOT NULL)
+                        AND B.PART_STATUS NOT IN ('PRO001','PRO002','PRO003','PRO004','PRO005','PRO006','PRO007','PRO008','PRO021','PRO022')
+--                         AND (EXISTS (SELECT *
+--                                     FROM TBL_CONTROL_PART_PROGRESS
+--                                     WHERE 1 = 1
+--                                         AND CONTROL_SEQ = B.CONTROL_SEQ
+--                                         AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+--                                         AND PART_STATUS = 'PRO002') OR B.OUTSIDE_CONFIRM_DT IS NOT NULL)
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
