@@ -252,8 +252,8 @@
             </div>
         </div>
         <div style="width: 20%;margin-left: 1%;">
-            <button type="button" class="radius ml-5 blueWhiteBtn wd_70" id="layerSettingBtn" style="float: right;margin-top: -6%;">구역설정</button>
-            <div class="rightTopDiv" style="width: 35%;float: right;margin-bottom: 2%;padding: 1px 0 1px 0;margin-top: -6%;">
+            <button type="button" class="radius ml-5 blueWhiteBtn wd_70" id="layerSettingBtn" style="float: right;">구역설정</button>
+            <div class="rightTopDiv" style="width: 35%;float: right;margin-bottom: 3%;padding: 1px 0 1px 0;">
                 <span class="barCode" id="inspectionResultSpan">
                     <img src="/resource/asset/images/common/Code128code.png" alt="바코드" id="inspectionResultPopBarcodeImg" style="width: 100%;height: 27px;">
                 </span>
@@ -301,7 +301,7 @@
                     </div>
                 </div>
             </div>
-            <div style="height: 84%;margin-top: 3%;">
+            <div style="height: 80%;margin-top: 3%;">
                 <form id="inspection_result_pop_form">
                     <input type="hidden" id="queryId" name="queryId" value="inspection.selectInspectionResult"/>
                     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value="${CONTROL_SEQ}"/>
