@@ -773,7 +773,7 @@
                     loadCoordinate(data);
                 },
                 editorKeyDown: function(evt, ui){
-                    console.log('editorKeyDown')
+                    // console.log('editorKeyDown')
                     if(evt.keyCode == 13) {
                         $("#inspection_result_pop_grid").pqGrid('setSelection', null);
                         setTimeout(function () {
@@ -785,10 +785,7 @@
                         },150);
 
                     }
-                },
-                refresh: function (evt, ui) {
-                  console.log('refresh')
-                },
+                }
                 toolbar: false,
             };
             inspectionResultPopGrid.pqGrid(inspectionResultPopObj);
@@ -1003,20 +1000,17 @@
 
             $("#drawing_touch_div").on("touchstart", function (e) {
                 e.preventDefault();
-                console.log("touchstart")
 
                 startTime = new Date().getTime();
             });
 
             $("#drawing_touch_div").on("touchmove", function (e) {
                 e.preventDefault();
-                console.log("touchmove")
 
                 moveTime = new Date().getTime()
             })
             $("#drawing_touch_div").on("touchend", function (e) {
                 e.preventDefault();
-                console.log("touchend")
 
                 endTime = new Date().getTime();
 
@@ -1207,7 +1201,7 @@
                     let nextNum = Number(latestProdNum) +1;
                     if(nextNum > qty) {
                         fnAlert(null,"검사 성적서는 수량 갯수만큼만 작성 가능합니다.");
-                        return;
+                        return;ㅊ
                     }else {
                         latestProdNum = nextNum;
                     }
@@ -1748,7 +1742,7 @@
                 }
 
                 fnPostAjaxAsync(function(data, callFunctionParam){
-                    console.log('settingPopData', data);
+                    // console.log('settingPopData', data);
                     if(data.info != null) {
                         let prodNum = (fnIsEmpty(data.info.PRODUCT_NUM)?"":Number(data.info.PRODUCT_NUM));
                         $("#CONTROL_NUM_DIV").text(data.info.CONTROL_NUM)
