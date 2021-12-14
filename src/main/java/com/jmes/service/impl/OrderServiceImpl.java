@@ -153,6 +153,8 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+
+    // 21.12.14 속도이슈로 처리 방식 변경 고려
     @Override
     public void createMonthClose(Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
