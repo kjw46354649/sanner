@@ -665,12 +665,13 @@
             let inspectionResultPopGrid = $("#inspection_result_pop_grid");
             let inspectionResultPopColModel = [
                 {title: 'INSPECT_RESULT_SEQ', dataIndx: 'INSPECT_RESULT_SEQ', hidden: true},
-                {title: 'INSPECT_RESULT_DETAIL_SEQ', dataIndx: 'INSPECT_RESULT_DETAIL_SEQ', hidden: true},
+                {title: 'POINT_SEQ', dataIndx: 'POINT_SEQ', hidden: true},
+                {title: 'INSPECT_RESULT_VALUE_SEQ', dataIndx: 'INSPECT_RESULT_VALUE_SEQ', hidden: true},
                 {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
                 {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
                 {title: 'COORDINATE_X', dataIndx: 'COORDINATE_X', hidden: true},
                 {title: 'COORDINATE_Y', dataIndx: 'COORDINATE_Y', hidden: true},
-                {title: 'No.', minWidth: 60, dataIndx: 'RESULT_NUM', sortable:false, editable:false,
+                {title: 'No.', minWidth: 60, dataIndx: 'POSITION_NUM', sortable:false, editable:false,
                     styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
                 },
                 {title: '<i class="xi-eye-o" style="cursor: pointer;"></i>', minWidth: 60, dataIndx: 'EYE_VIEW', sortable:false,
@@ -690,17 +691,17 @@
                                 ui.rowData.EYE_VIEW = 2;
                                 $cell.find(".clickEye").removeClass('xi-eye-o');
                                 $cell.find(".clickEye").addClass('xi-eye-off-o');
-                                $("#code_" + rowData.RESULT_NUM).hide();
+                                $("#code_" + rowData.POSITION_NUM).hide();
                             }else {
                                 ui.rowData.EYE_VIEW = 1;
-                                $("#code_" + rowData.RESULT_NUM).show();
+                                $("#code_" + rowData.POSITION_NUM).show();
                                 $cell.find(".clickEye").removeClass('xi-eye-off-o');
                                 $cell.find(".clickEye").addClass('xi-eye-o');
                             }
                         });
                     }
                 },
-                {title: 'POS', minWidth: 60, dataIndx: 'RESULT_POSITION', sortable:false, editable:false,
+                {title: 'POS', minWidth: 60, dataIndx: 'POINT_POSITION', sortable:false, editable:false,
                     styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
                 },
                 {title: '<i id="header_reset" class="xi-undo" style="font-size: 16px;float: left;cursor: pointer;"></i> Value', minWidth: 100, dataIndx: 'RESULT_VALUE', sortable:false,
@@ -734,10 +735,10 @@
                         $cell.find(".removeRow").bind("click", function () {
                             if(inspectionResultPopGrid.pqGrid('option', 'editable')) {
                                 let rowData = ui.rowData;
-                                $("#code_" + rowData.RESULT_NUM).remove()
+                                $("#code_" + rowData.POSITION_NUM).remove()
                                 inspectionResultPopGrid.pqGrid('deleteRow', {rowIndx: rowData.pq_ri});
 
-                                reCalculateNum(rowData.RESULT_NUM);
+                                reCalculateNum(rowData.POSITION_NUM);
                             }
                         });
                     }
@@ -758,7 +759,7 @@
                 columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
                 colModel: inspectionResultPopColModel,
                 dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'RESULT_NUM',
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'POSITION_NUM',
                     url: "/paramQueryGridSelect",
                     postData: fnFormToJsonArrayData('inspection_result_pop_form'),
                     // postData: {queryId: 'dataSource.getRownumEmptyData', 'COUNT': 20}, recIndx: 'ROWNUM',
@@ -794,8 +795,8 @@
             function loadCoordinate(data) {
                 $(".spanPosition").remove();
                 $.each(data,function (idx,Item) {
-                    let id = "code_" + Item.RESULT_NUM;
-                    let html = '<span id="'+id+ '" class="spanPosition" style="top:'+Item.COORDINATE_Y+'px;left: '+Item.COORDINATE_X+'px;" data-target="'+Item.RESULT_NUM+'">'+ Item.RESULT_NUM +'</span>';
+                    let id = "code_" + Item.POSITION_NUM;
+                    let html = '<span id="'+id+ '" class="spanPosition" style="top:'+Item.COORDINATE_Y+'px;left: '+Item.COORDINATE_X+'px;" data-target="'+Item.POSITION_NUM+'">'+ Item.POSITION_NUM +'</span>';
                     $("#img_div").after(html);
                     document.getElementById(id).addEventListener('touchend',clickNumber);
                     document.getElementById(id).addEventListener('touchstart',touchStartPoint);
@@ -807,19 +808,19 @@
 
                 for(let i=0;i<data.length;i++) {
                     let rowData = inspectionResultPopGrid.pqGrid('getRowData', {rowIndx: i});
-                    if(Number(rowData.RESULT_NUM) >= Number(deleteNum)) {
-                        let newNum = rowData.RESULT_NUM
+                    if(Number(rowData.POSITION_NUM) >= Number(deleteNum)) {
+                        let newNum = rowData.POSITION_NUM
                         if(i>0 && data.length > 1) {
                             let beforeData = inspectionResultPopGrid.pqGrid('getRowData', {rowIndx: i-1});
-                            newNum = Number(beforeData.RESULT_NUM) +1;
+                            newNum = Number(beforeData.POSITION_NUM) +1;
                         }else if(i == 0) {
                             newNum = 1;
                         }
 
-                        $("#code_" + rowData.RESULT_NUM).remove();
+                        $("#code_" + rowData.POSITION_NUM).remove();
                         inspectionResultPopGrid.pqGrid('updateRow', {
                             rowIndx: i,
-                            row: {'RESULT_NUM': newNum},
+                            row: {'POSITION_NUM': newNum},
                             checkEditable: false
                         });
 
@@ -855,9 +856,9 @@
                     newRow: {
                         'CONTROL_SEQ':$("#inspection_result_pop_form").find("#CONTROL_SEQ").val(),
                         'CONTROL_DETAIL_SEQ':$("#inspection_result_pop_form").find("#CONTROL_DETAIL_SEQ").val(),
-                        'RESULT_NUM':$(".spanPosition").length,
+                        'POSITION_NUM':$(".spanPosition").length,
                         'EYE_VIEW':1,
-                        'RESULT_POSITION':pos1 + pos2,
+                        'POINT_POSITION':pos1 + pos2,
                         'RESULT_VALUE':'',
                         'DELETE_BTN':1,
                         'COORDINATE_X':x,
@@ -889,7 +890,7 @@
                     })
                     inspectionResultPopGrid.pqGrid("updateRow", {
                         'rowIndx': rowData.pq_ri ,
-                        row: { 'RESULT_POSITION': pos1+""+pos2 },
+                        row: { 'POINT_POSITION': pos1+""+pos2 },
                         checkEditable: false
                     });
                 })
@@ -910,16 +911,33 @@
                 return pos1+""+pos2;
             }
 
+            document.getElementById('drawing_touch_div').addEventListener('click', function(e) {
+                if($("#startInspectBtn").css( "display" ) == "none") {
+                    var rect = document.getElementById('drawing_touch_div').getBoundingClientRect();
+                    var x = e.clientX - rect.left;
+                    var y = e.clientY - rect.top;
+
+                    targetX = Math.floor(($("#drawing_touch_div").width()/Math.floor(rect.width)) * x);
+                    targetY = Math.floor(($("#drawing_touch_div").height()/Math.floor(rect.height)) * y);
+
+                    let id = "code_" + ($(".spanPosition").length+1)
+                    let html = '<span id="'+id+ '" class="spanPosition" style="top:'+targetY+'px;left: '+targetX+'px;" data-target="'+($(".spanPosition").length+1)+'">'+($(".spanPosition").length+1) +'</span>';
+                    $("#img_div").after(html);
+                    document.getElementById(id).addEventListener('click',clickNumber);
+                    addNewCoordinate(targetX,targetY);
+                }
+            })
+
 
             function clickNumber(e) {
                 $("#inspection_result_pop_grid").pqGrid('setSelection', null);
 
                 // console.log($(this).data('target'));
                 let num = $(this).data('target');
-                let data = $("#inspection_result_pop_grid").pqGrid("getData",{dataIndx:['RESULT_NUM']});
+                let data = $("#inspection_result_pop_grid").pqGrid("getData",{dataIndx:['POSITION_NUM']});
                 let targetIdx = -1;
                 $.each(data,function (idx,Item) {
-                    if(Item.RESULT_NUM == num) {
+                    if(Item.POSITION_NUM == num) {
                         targetIdx = idx;
                     }
                 });
@@ -940,7 +958,7 @@
                         row: {
                             "COORDINATE_X":endX,
                             "COORDINATE_Y":endY,
-                            "RESULT_POSITION":calculateCoordPoint(endX,endY)
+                            "POINT_POSITION":calculateCoordPoint(endX,endY)
                         },
                         checkEditable: false
                     });
@@ -1298,6 +1316,7 @@
                     let prevNum = Number(currProdNum) -1;
                     if(prevNum > 0) {
                         $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(prevNum);
+                        $(".layerBtn").removeClass("on");
                         settingPopData();
                     }
                 }
@@ -1314,6 +1333,7 @@
                         return;
                     }else {
                         $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(nextNum);
+                        $(".layerBtn").removeClass("on");
                         settingPopData();
                     }
                 }
@@ -1361,7 +1381,7 @@
                     let controlSeq = $("#inspection_result_pop_form").find("#CONTROL_SEQ").val();
                     let controlDetailSeq = $("#inspection_result_pop_form").find("#CONTROL_DETAIL_SEQ").val();
                     let data = {
-                        'queryId': "inspection.deleteInspectionResultProdNum,inspection.deleteInspectionResultDetailProdNum",
+                        'queryId': "inspection.deleteInspectionResultProdNum,inspection.deleteInspectionResultPointProdNum",
                         'CONTROL_SEQ': controlSeq,
                         'CONTROL_DETAIL_SEQ':controlDetailSeq,
                         'INSPECT_RESULT_SEQ':$("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val(),
@@ -1889,7 +1909,7 @@
                     inspectPointData = data.list;
                     $(".spanPositionPop").remove();
                     $.each(data.list, function (idx,Item) {
-                        let id = "code_" + Item.RESULT_NUM;
+                        let id = "code_" + Item.POSITION_NUM;
                         let widthRatio =  $("#inspect_point_img").width() / $("#img_div").width();
                         let heightRatio = $("#inspect_point_img").height() / $("#img_div").height();
 
@@ -1899,7 +1919,7 @@
                         let x = Math.floor(Item.COORDINATE_X * widthRatio) + document.getElementById('div_point_pop').offsetLeft;
                         let y = Math.floor(Item.COORDINATE_Y * heightRatio) + document.getElementById('div_point_pop').offsetTop;
 
-                        let html = '<span id="'+id+ '" class="spanPositionPop" style="top:'+y+'px;left: '+x+'px;" data-target="'+Item.RESULT_NUM+'">'+ Item.RESULT_NUM +'</span>';
+                        let html = '<span id="'+id+ '" class="spanPositionPop" style="top:'+y+'px;left: '+x+'px;" data-target="'+Item.POSITION_NUM+'">'+ Item.POSITION_NUM +'</span>';
                         $("#inspect_point_img").after(html);
                     })
                 }, parameters, '');
@@ -1943,9 +1963,9 @@
                         newRow: {
                             'CONTROL_SEQ':$("#inspection_result_pop_form").find("#CONTROL_SEQ").val(),
                             'CONTROL_DETAIL_SEQ':$("#inspection_result_pop_form").find("#CONTROL_DETAIL_SEQ").val(),
-                            'RESULT_NUM':Item.RESULT_NUM,
+                            'POSITION_NUM':Item.POSITION_NUM,
                             'EYE_VIEW':1,
-                            'RESULT_POSITION':'',
+                            'POINT_POSITION':'',
                             'DELETE_BTN':1,
                             'COORDINATE_X':Item.COORDINATE_X,
                             'COORDINATE_Y':Item.COORDINATE_Y,

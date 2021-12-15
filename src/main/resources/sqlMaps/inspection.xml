@@ -57,7 +57,7 @@
                 , X.DRAWING_VER
                 , (SELECT COUNT(DISTINCT Q.PRODUCT_NUM) FROM TBL_INSPECT_RESULT Q WHERE Q.CONTROL_SEQ = X.CONTROL_SEQ AND Q.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ) AS INSPECT_RESULT_QTY
                 , ( SELECT
-                        CASE WHEN MAX(Q.UPDATE_DT) IS NOT NULL THEN SF_GET_DATE_F(MAX(Q.UPDATE_DT), '', 'M')
+                        CASE WHEN MAX(Q.UPDATE_DT) > MAX(Q.INSERT_DT) THEN SF_GET_DATE_F(MAX(Q.UPDATE_DT), '', 'M')
                              ELSE SF_GET_DATE_F(MAX(Q.INSERT_DT), '', 'M')
                         END
                     FROM TBL_INSPECT_RESULT Q WHERE Q.CONTROL_SEQ = X.CONTROL_SEQ AND Q.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
@@ -2650,25 +2650,40 @@
         )
     </insert>
 
-    <insert id="insertInspectionResultDetail" parameterType="java.util.HashMap">
-        INSERT INTO jmes.TBL_INSPECT_RESULT_DETAIL (
+    <insert id="insertInspectionResultPoint" parameterType="java.util.HashMap">
+        <selectKey keyProperty="POINT_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_INSPECT_RESULT_POINT) FROM DUAL
+        </selectKey>
+        INSERT INTO jmes.TBL_INSPECT_RESULT_POINT (
             INSPECT_RESULT_SEQ,
-            INSPECT_RESULT_DETAIL_SEQ,
-            RESULT_NUM,
-            RESULT_POSITION,
-            RESULT_VALUE,
+            POINT_SEQ,
+            POSITION_NUM,
+            POINT_POSITION,
             COORDINATE_X,
             COORDINATE_Y,
             INSERT_ID
         )
         VALUES (
             #{INSPECT_RESULT_SEQ},
-            NEXTVAL(SEQ_INSPECT_RESULT_DETAIL),
-            #{RESULT_NUM},
-            #{RESULT_POSITION},
-            #{RESULT_VALUE},
+            #{POINT_SEQ},
+            #{POSITION_NUM},
+            #{POINT_POSITION},
             #{COORDINATE_X},
             #{COORDINATE_Y},
+            #{LOGIN_USER_ID}
+        );
+    </insert>
+    <insert id="insertInspectionResultValue" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_INSPECT_RESULT_VALUE (
+            INSPECT_RESULT_VALUE_SEQ,
+            POINT_SEQ,
+            RESULT_VALUE,
+            INSERT_ID
+        )
+        VALUES (
+            NEXTVAL(SEQ_INSPECT_RESULT_VALUE),
+            #{POINT_SEQ},
+            #{RESULT_VALUE},
             #{LOGIN_USER_ID}
         );
     </insert>

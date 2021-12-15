@@ -49,8 +49,6 @@ public class InspectionServiceImpl implements InspectionService {
             }
         }
 
-
-
         for (Map<String, Object> hashMap : jsonMap) {
             hashMap.put("queryId","inspection.insertLayerInfo");
             innodaleDao.create(hashMap);
@@ -113,7 +111,10 @@ public class InspectionServiceImpl implements InspectionService {
                 hashMap.put("LAYER_AREA_NAME",jsonMap.get("LAYER_AREA_NAME"));
                 hashMap.put("INSPECT_RESULT_SEQ",inspectResultSeq);
 
-                hashMap.put("queryId","inspection.insertInspectionResultDetail");
+                hashMap.put("queryId","inspection.insertInspectionResultPoint");
+                innodaleDao.create(hashMap);
+
+                hashMap.put("queryId","inspection.insertInspectionResultValue");
                 innodaleDao.create(hashMap);
             }
         }
@@ -131,8 +132,12 @@ public class InspectionServiceImpl implements InspectionService {
                     tempMap.put("queryId","inspection.updateInspectionResult");
                     innodaleDao.update(tempMap);
 
-                    if(tempMap.containsKey("INSPECT_RESULT_DETAIL_SEQ")) {
-                        tempMap.put("queryId","inspection.updateInspectionResultDetail");
+                    if(tempMap.containsKey("POINT_SEQ")) {
+
+                        tempMap.put("queryId","inspection.updateInspectionResultPoint");
+                        innodaleDao.update(tempMap);
+
+                        tempMap.put("queryId","inspection.updateInspectionResultValue");
                         innodaleDao.update(tempMap);
                     }
                 }
@@ -143,7 +148,7 @@ public class InspectionServiceImpl implements InspectionService {
             for(HashMap<String,Object> hashMap : deleteList) {
                 hashMap.put("LOGIN_USER_ID", userId);
 
-                if(hashMap.containsKey("INSPECT_RESULT_SEQ") && hashMap.containsKey("INSPECT_RESULT_DETAIL_SEQ")){
+                if(hashMap.containsKey("INSPECT_RESULT_VALUE_SEQ")){
                     hashMap.put("queryId","inspection.deleteInspectionResultDetail");
                     innodaleDao.remove(hashMap);
                 }
