@@ -3222,6 +3222,10 @@
         }
     }
 
+    function callInspectionManageSearch(){
+        $("#inspection_manage_search_btn").trigger("click");
+    }
+
     let drawingRevPopup;
     const drawingRevPopupWindow = function (orderSeq, controlSeq, controlDetailSeq) {
         let drawingForm = document.drawing_revision_pop_form;

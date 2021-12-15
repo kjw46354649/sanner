@@ -216,6 +216,11 @@
             word-break: break-all;
             white-space: break-spaces;
         }
+        .mainBtn .defaultBtn {
+            width: 30%;
+            margin: 0 1.5%;
+            padding:0 1%;
+        }
     </style>
 </head>
 <body style="overflow: hidden;padding: 1%;">
@@ -316,7 +321,7 @@
                 </form>
                 <div id="inspection_result_pop_grid"></div>
             </div>
-            <div style="margin-top: 3%;text-align: center">
+            <div style="margin-top: 3%;text-align: center" class="mainBtn">
                 <button type="button" id="newInspectBtn" class="defaultBtn btn-110w radius green left_float" style="font-size: 16px;height: 65px;">신규 작성</button>
                 <button type="button" id="startInspectBtn" class="defaultBtn btn-110w radius orange left_float" style="font-size: 16px;height: 30px;">수 정</button>
                 <button type="button" id="saveInspectBtn" class="defaultBtn btn-110w radius green" style="font-size: 16px;height: 30px;display: none;">저 장</button>
@@ -669,9 +674,10 @@
                 {title: 'INSPECT_RESULT_VALUE_SEQ', dataIndx: 'INSPECT_RESULT_VALUE_SEQ', hidden: true},
                 {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
                 {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+                {title: 'PRODUCT_NUM', dataIndx: 'PRODUCT_NUM', hidden: true},
                 {title: 'COORDINATE_X', dataIndx: 'COORDINATE_X', hidden: true},
                 {title: 'COORDINATE_Y', dataIndx: 'COORDINATE_Y', hidden: true},
-                {title: 'No.', minWidth: 60, dataIndx: 'POSITION_NUM', sortable:false, editable:false,
+                {title: 'No.', minWidth: 60, dataIndx: 'POINT_NUM', sortable:false, editable:false,
                     styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
                 },
                 {title: '<i class="xi-eye-o" style="cursor: pointer;"></i>', minWidth: 60, dataIndx: 'EYE_VIEW', sortable:false,
@@ -691,10 +697,10 @@
                                 ui.rowData.EYE_VIEW = 2;
                                 $cell.find(".clickEye").removeClass('xi-eye-o');
                                 $cell.find(".clickEye").addClass('xi-eye-off-o');
-                                $("#code_" + rowData.POSITION_NUM).hide();
+                                $("#code_" + rowData.POINT_NUM).hide();
                             }else {
                                 ui.rowData.EYE_VIEW = 1;
-                                $("#code_" + rowData.POSITION_NUM).show();
+                                $("#code_" + rowData.POINT_NUM).show();
                                 $cell.find(".clickEye").removeClass('xi-eye-off-o');
                                 $cell.find(".clickEye").addClass('xi-eye-o');
                             }
@@ -735,10 +741,10 @@
                         $cell.find(".removeRow").bind("click", function () {
                             if(inspectionResultPopGrid.pqGrid('option', 'editable')) {
                                 let rowData = ui.rowData;
-                                $("#code_" + rowData.POSITION_NUM).remove()
+                                $("#code_" + rowData.POINT_NUM).remove()
                                 inspectionResultPopGrid.pqGrid('deleteRow', {rowIndx: rowData.pq_ri});
 
-                                reCalculateNum(rowData.POSITION_NUM);
+                                reCalculateNum(rowData.POINT_NUM);
                             }
                         });
                     }
@@ -759,7 +765,7 @@
                 columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
                 colModel: inspectionResultPopColModel,
                 dataModel: {
-                    location: "remote", dataType: "json", method: "POST", recIndx: 'POSITION_NUM',
+                    location: "remote", dataType: "json", method: "POST", recIndx: 'POINT_NUM',
                     url: "/paramQueryGridSelect",
                     postData: fnFormToJsonArrayData('inspection_result_pop_form'),
                     // postData: {queryId: 'dataSource.getRownumEmptyData', 'COUNT': 20}, recIndx: 'ROWNUM',
@@ -795,8 +801,8 @@
             function loadCoordinate(data) {
                 $(".spanPosition").remove();
                 $.each(data,function (idx,Item) {
-                    let id = "code_" + Item.POSITION_NUM;
-                    let html = '<span id="'+id+ '" class="spanPosition" style="top:'+Item.COORDINATE_Y+'px;left: '+Item.COORDINATE_X+'px;" data-target="'+Item.POSITION_NUM+'">'+ Item.POSITION_NUM +'</span>';
+                    let id = "code_" + Item.POINT_NUM;
+                    let html = '<span id="'+id+ '" class="spanPosition" style="top:'+Item.COORDINATE_Y+'px;left: '+Item.COORDINATE_X+'px;" data-target="'+Item.POINT_NUM+'">'+ Item.POINT_NUM +'</span>';
                     $("#img_div").after(html);
                     document.getElementById(id).addEventListener('touchend',clickNumber);
                     document.getElementById(id).addEventListener('touchstart',touchStartPoint);
@@ -808,19 +814,19 @@
 
                 for(let i=0;i<data.length;i++) {
                     let rowData = inspectionResultPopGrid.pqGrid('getRowData', {rowIndx: i});
-                    if(Number(rowData.POSITION_NUM) >= Number(deleteNum)) {
-                        let newNum = rowData.POSITION_NUM
+                    if(Number(rowData.POINT_NUM) >= Number(deleteNum)) {
+                        let newNum = rowData.POINT_NUM
                         if(i>0 && data.length > 1) {
                             let beforeData = inspectionResultPopGrid.pqGrid('getRowData', {rowIndx: i-1});
-                            newNum = Number(beforeData.POSITION_NUM) +1;
+                            newNum = Number(beforeData.POINT_NUM) +1;
                         }else if(i == 0) {
                             newNum = 1;
                         }
 
-                        $("#code_" + rowData.POSITION_NUM).remove();
+                        $("#code_" + rowData.POINT_NUM).remove();
                         inspectionResultPopGrid.pqGrid('updateRow', {
                             rowIndx: i,
-                            row: {'POSITION_NUM': newNum},
+                            row: {'POINT_NUM': newNum},
                             checkEditable: false
                         });
 
@@ -856,7 +862,7 @@
                     newRow: {
                         'CONTROL_SEQ':$("#inspection_result_pop_form").find("#CONTROL_SEQ").val(),
                         'CONTROL_DETAIL_SEQ':$("#inspection_result_pop_form").find("#CONTROL_DETAIL_SEQ").val(),
-                        'POSITION_NUM':$(".spanPosition").length,
+                        'POINT_NUM':$(".spanPosition").length,
                         'EYE_VIEW':1,
                         'POINT_POSITION':pos1 + pos2,
                         'RESULT_VALUE':'',
@@ -923,7 +929,7 @@
                     let id = "code_" + ($(".spanPosition").length+1)
                     let html = '<span id="'+id+ '" class="spanPosition" style="top:'+targetY+'px;left: '+targetX+'px;" data-target="'+($(".spanPosition").length+1)+'">'+($(".spanPosition").length+1) +'</span>';
                     $("#img_div").after(html);
-                    document.getElementById(id).addEventListener('click',clickNumber);
+                    // document.getElementById(id).addEventListener('click',clickNumber);
                     addNewCoordinate(targetX,targetY);
                 }
             })
@@ -934,10 +940,10 @@
 
                 // console.log($(this).data('target'));
                 let num = $(this).data('target');
-                let data = $("#inspection_result_pop_grid").pqGrid("getData",{dataIndx:['POSITION_NUM']});
+                let data = $("#inspection_result_pop_grid").pqGrid("getData",{dataIndx:['POINT_NUM']});
                 let targetIdx = -1;
                 $.each(data,function (idx,Item) {
-                    if(Item.POSITION_NUM == num) {
+                    if(Item.POINT_NUM == num) {
                         targetIdx = idx;
                     }
                 });
@@ -1059,7 +1065,7 @@
                     fnPostAjaxAsync(function(data, callFunctionParam){
                         setTimeout(function () {
                             settingLayerGrid(data,'main');
-                        },400);
+                        },500);
                     }, parameters, '');
                 }else {
                 // 성적서 입력중에는 레이어 선택불가~
@@ -1251,6 +1257,8 @@
 
                 let parameters = {'url': '/modifyInspectResult', 'data': {data: JSON.stringify(changes)}};
 
+                // console.log('changes',changes)
+
                 fnPostAjax(function (data) {
                     // console.log('data',data);
                     fnAlert(null,"저장되었습니다.");
@@ -1316,7 +1324,6 @@
                     let prevNum = Number(currProdNum) -1;
                     if(prevNum > 0) {
                         $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(prevNum);
-                        $(".layerBtn").removeClass("on");
                         settingPopData();
                     }
                 }
@@ -1333,7 +1340,6 @@
                         return;
                     }else {
                         $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(nextNum);
-                        $(".layerBtn").removeClass("on");
                         settingPopData();
                     }
                 }
@@ -1381,7 +1387,7 @@
                     let controlSeq = $("#inspection_result_pop_form").find("#CONTROL_SEQ").val();
                     let controlDetailSeq = $("#inspection_result_pop_form").find("#CONTROL_DETAIL_SEQ").val();
                     let data = {
-                        'queryId': "inspection.deleteInspectionResultProdNum,inspection.deleteInspectionResultPointProdNum",
+                        'queryId': "inspection.deleteInspectionResultProdNum,inspection.deleteInspectionResultPointData,inspection.deleteInspectionResultData",
                         'CONTROL_SEQ': controlSeq,
                         'CONTROL_DETAIL_SEQ':controlDetailSeq,
                         'INSPECT_RESULT_SEQ':$("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val(),
@@ -1405,9 +1411,11 @@
             $("#closeInspectBtn").on("click",function () {
                 if($("#startInspectBtn").css( "display" ) == "none") {
                     fnConfirm(null, "저장하지 않고 종료 하시겠습니까?<br>(저장하지 않은 데이터는 삭제됩니다.)", function () {
+                        window.opener.callInspectionManageSearch();
                         window.close();
                     });
                 }else {
+                    window.opener.callInspectionManageSearch();
                     window.close();
                 }
             });
@@ -1813,7 +1821,8 @@
 
                         if(barcodeNum != 'newInspect') {
                             if(!fnIsEmpty(data.info.LAYER_AREA_NAME)) {
-                                $("#inspection_result_pop_form").find("#LAYER_AREA_NAM1E").val(data.info.LAYER_AREA_NAME);
+                                $(".layerBtn").removeClass("on");
+                                $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val(data.info.LAYER_AREA_NAME);
                                 $("button[data-target='"+data.info.LAYER_AREA_NAME +"']").trigger('click');
                             }else {
                                 resetLayer();
@@ -1909,7 +1918,7 @@
                     inspectPointData = data.list;
                     $(".spanPositionPop").remove();
                     $.each(data.list, function (idx,Item) {
-                        let id = "code_" + Item.POSITION_NUM;
+                        let id = "code_" + Item.POINT_NUM;
                         let widthRatio =  $("#inspect_point_img").width() / $("#img_div").width();
                         let heightRatio = $("#inspect_point_img").height() / $("#img_div").height();
 
@@ -1919,7 +1928,7 @@
                         let x = Math.floor(Item.COORDINATE_X * widthRatio) + document.getElementById('div_point_pop').offsetLeft;
                         let y = Math.floor(Item.COORDINATE_Y * heightRatio) + document.getElementById('div_point_pop').offsetTop;
 
-                        let html = '<span id="'+id+ '" class="spanPositionPop" style="top:'+y+'px;left: '+x+'px;" data-target="'+Item.POSITION_NUM+'">'+ Item.POSITION_NUM +'</span>';
+                        let html = '<span id="'+id+ '" class="spanPositionPop" style="top:'+y+'px;left: '+x+'px;" data-target="'+Item.POINT_NUM+'">'+ Item.POINT_NUM +'</span>';
                         $("#inspect_point_img").after(html);
                     })
                 }, parameters, '');
@@ -1946,37 +1955,38 @@
             })
 
             function settingNewPointData() {
+                // console.log('inspectPointData',inspectPointData)
+                if(inspectPointData != null && inspectPointData.length > 0) {
+                    loadCoordinate(inspectPointData);
 
-                loadCoordinate(inspectPointData);
+                    let deleteIdx = [];
+                    let totalLength = inspectionResultPopGrid.pqGrid('option', 'dataModel.data').length;
+                    for(let i=0;i<totalLength;i++) {
+                        let rowData = inspectionResultPopGrid.pqGrid('getRowData', {rowIndx: i});
+                        deleteIdx.push({rowIndx:rowData.pq_ri});
+                    }
+                    inspectionResultPopGrid.pqGrid('deleteRow', {rowList: deleteIdx});
 
-                let deleteIdx = [];
-                let totalLength = inspectionResultPopGrid.pqGrid('option', 'dataModel.data').length;
-                for(let i=0;i<totalLength;i++) {
-                    let rowData = inspectionResultPopGrid.pqGrid('getRowData', {rowIndx: i});
-                    deleteIdx.push({rowIndx:rowData.pq_ri});
-                }
-                inspectionResultPopGrid.pqGrid('deleteRow', {rowList: deleteIdx});
-
-                let newDataList = [];
-                $.each(inspectPointData, function (idx,Item) {
-                    newDataList.push({
-                        newRow: {
-                            'CONTROL_SEQ':$("#inspection_result_pop_form").find("#CONTROL_SEQ").val(),
-                            'CONTROL_DETAIL_SEQ':$("#inspection_result_pop_form").find("#CONTROL_DETAIL_SEQ").val(),
-                            'POSITION_NUM':Item.POSITION_NUM,
-                            'EYE_VIEW':1,
-                            'POINT_POSITION':'',
-                            'DELETE_BTN':1,
-                            'COORDINATE_X':Item.COORDINATE_X,
-                            'COORDINATE_Y':Item.COORDINATE_Y,
-                            'RESULT_VALUE':Item.RESULT_VALUE
-                        },
-                        rowIndx :idx,
-                        checkEditable: false
+                    let newDataList = [];
+                    $.each(inspectPointData, function (idx,Item) {
+                        newDataList.push({
+                            newRow: {
+                                'CONTROL_SEQ':$("#inspection_result_pop_form").find("#CONTROL_SEQ").val(),
+                                'CONTROL_DETAIL_SEQ':$("#inspection_result_pop_form").find("#CONTROL_DETAIL_SEQ").val(),
+                                'POINT_NUM':Item.POINT_NUM,
+                                'EYE_VIEW':1,
+                                'POINT_POSITION':calculateCoordPoint(Item.COORDINATE_X,Item.COORDINATE_Y),
+                                'DELETE_BTN':1,
+                                'COORDINATE_X':Item.COORDINATE_X,
+                                'COORDINATE_Y':Item.COORDINATE_Y,
+                                'RESULT_VALUE':Item.RESULT_VALUE
+                            },
+                            rowIndx :idx,
+                            checkEditable: false
+                        })
                     })
-                })
-                inspectionResultPopGrid.pqGrid('addRow', {rowList: newDataList});
-
+                    inspectionResultPopGrid.pqGrid('addRow', {rowList: newDataList});
+                }
             }
 
             $("#applyPointBtn").on("click", function () {
@@ -1990,9 +2000,6 @@
                     return;
                 }
             })
-
-
-
 
 
 

@@ -123,7 +123,7 @@ public class InspectionServiceImpl implements InspectionService {
             for(int i = 0; i < updateList.size(); i++) {
                 HashMap<String,Object> tempMap = updateList.get(i);
                 tempMap.put("LOGIN_USER_ID",userId);
-                tempMap.put("PRODUCT_NUM",jsonMap.get("PRODUCT_NUM"));
+//                tempMap.put("PRODUCT_NUM",jsonMap.get("PRODUCT_NUM"));
                 tempMap.put("CONTROL_SEQ",jsonMap.get("CONTROL_SEQ"));
                 tempMap.put("CONTROL_DETAIL_SEQ",jsonMap.get("CONTROL_DETAIL_SEQ"));
                 tempMap.put("LAYER_AREA_NAME",jsonMap.get("LAYER_AREA_NAME"));
@@ -133,12 +133,18 @@ public class InspectionServiceImpl implements InspectionService {
                     innodaleDao.update(tempMap);
 
                     if(tempMap.containsKey("POINT_SEQ")) {
-
                         tempMap.put("queryId","inspection.updateInspectionResultPoint");
                         innodaleDao.update(tempMap);
 
-                        tempMap.put("queryId","inspection.updateInspectionResultValue");
-                        innodaleDao.update(tempMap);
+                        if(tempMap.containsKey("INSPECT_RESULT_VALUE_SEQ")) {
+                            tempMap.put("queryId","inspection.updateInspectionResultValue");
+                            innodaleDao.update(tempMap);
+                        }else {
+                            tempMap.put("PRODUCT_NUM",jsonMap.get("PRODUCT_NUM"));
+
+                            tempMap.put("queryId","inspection.insertInspectionResultValue");
+                            innodaleDao.create(tempMap);
+                        }
                     }
                 }
             }
@@ -148,8 +154,12 @@ public class InspectionServiceImpl implements InspectionService {
             for(HashMap<String,Object> hashMap : deleteList) {
                 hashMap.put("LOGIN_USER_ID", userId);
 
-                if(hashMap.containsKey("INSPECT_RESULT_VALUE_SEQ")){
-                    hashMap.put("queryId","inspection.deleteInspectionResultDetail");
+                if(hashMap.containsKey("INSPECT_RESULT_SEQ") && hashMap.containsKey("POINT_SEQ")){
+
+                    hashMap.put("queryId","inspection.deleteInspectionResultValue");
+                    innodaleDao.remove(hashMap);
+
+                    hashMap.put("queryId","inspection.deleteInspectionResultPoint");
                     innodaleDao.remove(hashMap);
                 }
             }
