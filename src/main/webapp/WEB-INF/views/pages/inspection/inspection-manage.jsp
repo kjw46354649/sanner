@@ -97,9 +97,9 @@
                 <span class="barCode" id="inspectionResultBarcodeSpan" style="margin-left: 10px;"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="inspectionResultBarcodeImg"></span>
                 <span class="barCodeTxt" style="opacity: 0;">&nbsp;<input type="text" style="width: 0px;cursor: default;" name="INSPECTION_RESULT_BARCODE_NUM" id="INSPECTION_RESULT_BARCODE_NUM"></span>
             </div>
-<%--            <div style="float: right">--%>
-<%--                <button type="button" id="exportInspectResultBtn" class="defaultBtn btn-100w">검사 성적서 EXPORT</button>--%>
-<%--            </div>--%>
+            <div style="float: right">
+                <button type="button" id="exportInspectResultBtn" class="defaultBtn btn-100w">검사 성적서 EXPORT</button>
+            </div>
         </div>
         <div class="tableWrap" style="padding: 10px 0;">
             <div class="conWrap">
@@ -112,13 +112,14 @@
     </div>
 </div>
 
-
 <!-- 품질실적 layer popup : S -->
 <div class="popup_container inspection" id="inspection_result_value_popup" style="display: none;">
     <form class="form-inline" id="inspection_result_value_form" name="inspection_result_value_form" role="form">
-        <input type="hidden" name="queryId" id="queryId" value="inspection.selectInspectionPopInfoBasic">
+        <input type="hidden" name="queryId" id="queryId" value="inspection.selectInspectionResultValueList">
         <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ" value="">
+        <input type="hidden" name="ORDER_QTY" id="ORDER_QTY" value="">
         <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
+        <input type="hidden" name="IMG_GFILE_SEQ" id="IMG_GFILE_SEQ" value="">
 
         <div class="layerPopup" style="width: 1150px;">
             <h3>검사 성적서 Value 관리</h3>
@@ -146,10 +147,12 @@
                             </tr>
                             <tbody>
                                 <tr>
-                                    <td id="CONTROL_NUM_DIV" class="table-bg-gray"></td>
-                                    <td id="IMG_GFILE" class="table-bg-gray"></td>
-                                    <td id="WORK_TYPE_DIV" class="table-bg-gray"></td>
-                                    <td id="QTY_DIV" class="table-bg-gray"></td>
+                                    <td id="CONTROL_PART_INFO" class="table-bg-gray"></td>
+                                    <td id="IMG_GFILE" class="table-bg-gray">
+                                        <span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>
+                                    </td>
+                                    <td id="WORK_TYPE_NM" class="table-bg-gray"></td>
+                                    <td id="ORDER_QTY_DIV" class="table-bg-gray"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -296,7 +299,20 @@
             {title: '검사 성적서', datatype: 'string', align: 'center', colModel: [
                     {title: 'Qty.', datatype: 'string', dataIndx: 'INSPECT_RESULT_QTY', minWidth: 40, width: 40, editable: false,
                         render: function (ui) {
-                            if (ui.rowData.INSPECT_RESULT_QTY <= 0) return '';
+                            if (ui.cellData > 0)  {
+                                return '<span class="inspectValue" style="cursor: pointer;text-decoration: underline;">'+ui.cellData + '</span>'
+                            }else {
+                                return ''
+                            }
+                        },
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            $cell.find(".inspectValue").bind("click", function () {
+                                let rowData = ui.rowData;
+
+                                openResultValuePop(rowData);
+                            });
                         }
                     },
                     {title: '업데이트 일시', datatype: 'string', dataIndx: 'INSPECT_RESULT_LATEST_DT', minWidth: 100, width: 100, editable: false},
@@ -452,19 +468,94 @@
 
         let $inspectionResultValueGrid  = $("#inspection_result_value_grid");
         let inspectionResultValueColModel = [
-
+            {title: 'INSPECT_RESULT_SEQ', dataIndx: 'INSPECT_RESULT_SEQ', hidden: true},
+            {title: 'POINT_SEQ', dataIndx: 'POINT_SEQ', hidden: true},
+            {title: 'INSPECT_RESULT_VALUE_SEQ', dataIndx: 'INSPECT_RESULT_VALUE_SEQ', hidden: true},
+            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
+            {title: 'PRODUCT_NUM', dataIndx: 'PRODUCT_NUM', hidden: true},
+            {title: 'No.', minWidth: 60, dataIndx: 'POINT_NUM', sortable:false, editable:false,
+                styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
+            },
+            {title: 'POS', minWidth: 60, dataIndx: 'POINT_POSITION', sortable:false, editable:false,
+                styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
+            },
+            {title: '', minWidth: 60, dataIndx: 'RESULT_VALUE', sortable:false, editable:false,
+                styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
+            }
         ]
         let inspectionResultValueObj = {
-
+            height: 500,
+            width: "auto",
+            // selectionModel: { type: 'row', mode: 'single'},
+            rowHtHead: 30,
+            numberCell: {title: 'No.',show:false},
+            sortModel: {on: false},
+            swipeModel: {on: false}, trackModel: {on: true},
+            strNoRows: '',
+            editable: false,
+            collapsible: false, resizable: false, flexWidth: false, showTitle: false,
+            postRenderInterval: -1, //call postRender synchronously.
+            columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
+            colModel: inspectionResultValueColModel,
+            dataModel: {
+                location: "remote", dataType: "json", method: "POST", recIndx: 'POINT_NUM',
+                url: "/paramQueryGridSelect",
+                postData: fnFormToJsonArrayData('inspection_result_value_form'),
+                // postData: {queryId: 'dataSource.getRownumEmptyData', 'COUNT': 20}, recIndx: 'ROWNUM',
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            complete: function () {
+                let data = this.option('dataModel.data');
+                console.log('complete',data);
+            }
         }
+        $inspectionResultValueGrid.pqGrid(inspectionResultValueObj);
 
         $("#inspection_result_value_popup").on({
             'show.bs.modal': function () {
+                $inspectionResultValueGrid.pqGrid("option", "dataModel.postData", function(ui){
+                    return fnFormToJsonArrayData('inspection_result_value_form');
+                } );
+                $inspectionResultValueGrid.pqGrid("refreshDataAndView");
+                let qty = $("#inspection_result_value_form").find("#ORDER_QTY").val();
+                let arr = [];
+                if(!fnIsEmpty(qty)) {
+                    for(var i=1;i<=qty;i++) {
+                        arr.push(i);
+                    }
+                }
+                let changes = {
+                    'TEST_DATA':arr,
+                    'CONTROL_SEQ':$("#inspection_result_value_form").find("#CONTROL_SEQ").val(),
+                    'CONTROL_DETAIL_SEQ':$("#inspection_result_value_form").find("#CONTROL_DETAIL_SEQ").val()
+                };
+                let parameters = {'url': '/selectInspectResult', 'data': {data: JSON.stringify(changes)}};
+                fnPostAjaxAsync(function(data, callFunctionParam){
+                    console.log(data)
+                }, parameters, '');
 
             }, 'hide.bs.modal': function () {
 
             }
         })
+
+        function openResultValuePop(data) {
+
+            $("#inspection_result_value_form").find("#CONTROL_SEQ").val(data.CONTROL_SEQ);
+            $("#inspection_result_value_form").find("#CONTROL_DETAIL_SEQ").val(data.CONTROL_DETAIL_SEQ);
+            $("#inspection_result_value_form").find("#IMG_GFILE_SEQ").val(data.IMG_GFILE_SEQ);
+            $("#inspection_result_value_form").find("#ORDER_QTY").val(data.ORDER_QTY);
+
+            $("#inspection_result_value_popup").find("#CONTROL_PART_INFO").text(data.CONTROL_PART_INFO);
+            $("#inspection_result_value_popup").find("#WORK_TYPE_NM").text(data.WORK_TYPE_NM);
+            $("#inspection_result_value_popup").find("#ORDER_QTY_DIV").text(data.ORDER_QTY);
+
+
+            $('#inspection_result_value_popup').modal('show');
+        }
 
 
 

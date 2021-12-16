@@ -169,4 +169,20 @@ public class InspectionServiceImpl implements InspectionService {
         HashMap<String,Object> result = (HashMap<String, Object>) innodaleDao.getInfo(jsonMap);
         model.addAttribute("result",result);
     }
+
+    @Override
+    public void selectInspectResult(Map<String, Object> hashMap, Model model) throws Exception {
+        String jsonObject = (String) hashMap.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+
+        if (jsonObject != null) {
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+        }
+        jsonMap.put("queryId","inspection.selectTestData");
+        System.out.println(jsonMap.toString());
+        ArrayList<Map<String,Object>> list = (ArrayList<Map<String, Object>>) innodaleDao.getList(jsonMap);
+        model.addAttribute("data",list);
+
+    }
 }

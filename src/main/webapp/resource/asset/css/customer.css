@@ -1294,7 +1294,7 @@ div.custom-loading-mask > div {
 #inspection_result_value_popup .layerPopup .h_area .buttonWrap {
 	font-size: 0;
 	display: inline-block;
-	width: 40%;
+	width: 35%;
 }
 #inspection_result_value_popup .barcodeDiv
 {
@@ -1314,11 +1314,14 @@ div.custom-loading-mask > div {
 }
 #inspection_result_value_popup table.rowStyle td {
 	background: #e4e4e4;
-	height: 50px;
+	text-align: center;
 }
 
 #inspection_result_value_popup .layerPopup .h_area {
 	border-bottom: none;
 	padding: 10px 0 7px;
 	margin-bottom: 20px;
+}
+#inspection_result_value_popup .layerPopup .list3 {
+	height: 500px;
 }
