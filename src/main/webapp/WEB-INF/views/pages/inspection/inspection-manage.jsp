@@ -311,7 +311,7 @@
                             $cell.find(".inspectValue").bind("click", function () {
                                 let rowData = ui.rowData;
 
-                                openResultValuePop(rowData);
+                                // openResultValuePop(rowData);
                             });
                         }
                     },
