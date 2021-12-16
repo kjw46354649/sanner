@@ -874,11 +874,12 @@
                     checkEditable: false
                 });
 
+                $("#inspection_result_pop_grid").pqGrid('setSelection', null);
                 setTimeout(function () {
-                    let instance = inspectionResultPopGrid.pqGrid('getInstance').grid.colIndxs;
-                    inspectionResultPopGrid.pqGrid('focus',{rowIndxPage:newIdx, colIndx:instance['RESULT_VALUE']});
+                    // let instance = inspectionResultPopGrid.pqGrid('getInstance').grid.colIndxs;
+                    // inspectionResultPopGrid.pqGrid('focus',{rowIndxPage:newIdx, colIndx:instance['RESULT_VALUE']});
                     inspectionResultPopGrid.pqGrid('editCell',{rowIndx:newIdx, dataIndx:'RESULT_VALUE'});
-                },100)
+                },300)
             }
             function calculateCoord(data) {
                 $.each(data, function (idx,rowData) {
