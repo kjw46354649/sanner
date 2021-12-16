@@ -179,9 +179,10 @@ public class InspectionServiceImpl implements InspectionService {
         if (jsonObject != null) {
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
         }
-        jsonMap.put("queryId","inspection.selectTestData");
+        jsonMap.put("queryId","inspection.selectInspectionResultValueList");
         System.out.println(jsonMap.toString());
         ArrayList<Map<String,Object>> list = (ArrayList<Map<String, Object>>) innodaleDao.getList(jsonMap);
+        System.out.println("list >>>>>>>>>>>>>>>>>>>>>>>>>> " +list.toString());
         model.addAttribute("data",list);
 
     }
