@@ -11,5 +11,5 @@ public interface InspectionService {
 
     void modifyInspectResult(Map<String, Object> map, Model model) throws Exception;
 
-    void selectInspectResult(Map<String, Object> hashMap, Model model) throws Exception;
+    void saveInspectResult(Map<String, Object> hashMap, Model model) throws Exception;
 }

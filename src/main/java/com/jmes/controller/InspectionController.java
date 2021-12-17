@@ -73,11 +73,11 @@ public class InspectionController {
         return "jsonView";
     }
 
-    @RequestMapping(value = "/selectInspectResult",  method= RequestMethod.POST)
-    public String selectInspectResult(Model model, HttpServletRequest request, HttpSession session) throws Exception{
+    @RequestMapping(value = "/saveInspectResult",  method= RequestMethod.POST)
+    public String saveInspectResult(Model model, HttpServletRequest request, HttpSession session) throws Exception{
 
         Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
-        inspectionService.selectInspectResult(hashMap,model);
+        inspectionService.saveInspectResult(hashMap,model);
 
         return "jsonView";
     }

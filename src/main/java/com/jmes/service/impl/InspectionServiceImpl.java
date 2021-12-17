@@ -171,19 +171,30 @@ public class InspectionServiceImpl implements InspectionService {
     }
 
     @Override
-    public void selectInspectResult(Map<String, Object> hashMap, Model model) throws Exception {
-        String jsonObject = (String) hashMap.get("data");
+    public void saveInspectResult(Map<String, Object> map, Model model) throws Exception {
+
+        String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
+
+//        ArrayList<HashMap<String, Object>> oldList = null;
+//        ArrayList<HashMap<String, Object>> addList = null;
+        ArrayList<HashMap<String, Object>> updateList = null;
+//        ArrayList<HashMap<String, Object>> deleteList = null;
 
         if (jsonObject != null) {
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
         }
-        jsonMap.put("queryId","inspection.selectInspectionResultValueList");
-        System.out.println(jsonMap.toString());
-        ArrayList<Map<String,Object>> list = (ArrayList<Map<String, Object>>) innodaleDao.getList(jsonMap);
-        System.out.println("list >>>>>>>>>>>>>>>>>>>>>>>>>> " +list.toString());
-        model.addAttribute("data",list);
 
+        if(jsonMap.containsKey("updateList")) {
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+        }
+
+        if(updateList != null && updateList.size() > 0) {
+            for(int i=0;i<updateList.size();i++) {
+
+            }
+        }
     }
 }

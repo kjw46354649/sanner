@@ -93,13 +93,13 @@
                         AND A.CONTROL_SEQ = C.CONTROL_SEQ
                         AND A.DEL_YN = 'N'
                         AND A.CONTROL_STATUS IN ('ORD001', 'ORD003')
-                        AND B.PART_STATUS NOT IN ('PRO001','PRO002','PRO003','PRO004','PRO005','PRO006','PRO007','PRO008','PRO021','PRO022')
---                         AND (EXISTS (SELECT *
---                                     FROM TBL_CONTROL_PART_PROGRESS
---                                     WHERE 1 = 1
---                                         AND CONTROL_SEQ = B.CONTROL_SEQ
---                                         AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
---                                         AND PART_STATUS = 'PRO002') OR B.OUTSIDE_CONFIRM_DT IS NOT NULL)
+--                         AND B.PART_STATUS NOT IN ('PRO001','PRO002','PRO003','PRO004','PRO005','PRO006','PRO007','PRO008','PRO021','PRO022')
+                        AND (EXISTS (SELECT *
+                                    FROM TBL_CONTROL_PART_PROGRESS
+                                    WHERE 1 = 1
+                                        AND CONTROL_SEQ = B.CONTROL_SEQ
+                                        AND CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                        AND PART_STATUS = 'PRO002') OR B.OUTSIDE_CONFIRM_DT IS NOT NULL)
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
@@ -2575,6 +2575,7 @@
             <if test="CONTROL_DETAIL_SEQ !='' and CONTROL_DETAIL_SEQ != null">
                 AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
             </if>
+        ORDER BY B.POINT_NUM
     </select>
 
     <select id="selectInspectionResultControlInfoBarcode" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -2588,24 +2589,24 @@
             , SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS QTY
             , SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
             , MAX(D.PRODUCT_NUM) AS PRODUCT_NUM
-            (
+            ,(
              SELECT COUNT(DISTINCT Y.PRODUCT_NUM)
              FROM TBL_INSPECT_RESULT X
                 INNER JOIN TBL_INSPECT_RESULT_VALUE Y ON X.INSPECT_RESULT_SEQ = Y.INSPECT_RESULT_SEQ
              WHERE X.CONTROL_SEQ = A.CONTROL_SEQ
                 AND X.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            ) AS INSPECT_RESULT_CNT,
-            (
+            ) AS INSPECT_RESULT_CNT
+            ,(
              SELECT MAX(Y.PRODUCT_NUM)
              FROM TBL_INSPECT_RESULT X
                 INNER JOIN TBL_INSPECT_RESULT_VALUE Y ON X.INSPECT_RESULT_SEQ = Y.INSPECT_RESULT_SEQ
              WHERE X.CONTROL_SEQ = A.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            ) AS LAST_PRODUCT_NUM,
+            ) AS LAST_PRODUCT_NUM
             , D.LAYER_AREA_NAME
             , D.INSPECT_RESULT_SEQ
         FROM jmes.TBL_CONTROL_BARCODE A
             INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N'
-            INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SE
+            INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN (
                 SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.INSPECT_RESULT_SEQ, Y.PRODUCT_NUM, X.LAYER_AREA_NAME
                 FROM TBL_INSPECT_RESULT X
@@ -2831,33 +2832,25 @@
         GROUP BY D.CONTROL_SEQ, D.CONTROL_DETAIL_SEQ
         ORDER BY C.CONTROL_NUM, A.INSERT_DT
     </select>
-    <select id="selectTestData" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            X.INSPECT_RESULT_SEQ,
-            X.POINT_SEQ,
-            X.POINT_NUM,
-            X.POINT_POSITION,
-            <foreach item="item" index="index" collection="TEST_DATA">
-                MAX(CASE WHEN X.PRODUCT_NUM = ${item} THEN X.PRODUCT_NUM END) AS NUM_${item},
-                MAX(CASE WHEN X.PRODUCT_NUM = ${item} THEN X.RESULT_VALUE END) AS VALUE_${item},
-            </foreach>
-            X.PRODUCT_NUM
-       FROM (
-            SELECT A.INSPECT_RESULT_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, B.POINT_NUM, B.POINT_SEQ, B.POINT_POSITION, C.RESULT_VALUE, C.PRODUCT_NUM, C.INSPECT_RESULT_VALUE_SEQ
-            FROM TBL_INSPECT_RESULT A
-                INNER JOIN TBL_INSPECT_RESULT_POINT B ON A.INSPECT_RESULT_SEQ = B.INSPECT_RESULT_SEQ
-                INNER JOIN TBL_INSPECT_RESULT_VALUE C ON B.POINT_SEQ = C.POINT_SEQ AND B.INSPECT_RESULT_SEQ = C.INSPECT_RESULT_SEQ
-            WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
-                AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-        ) X
-        GROUP BY X.POINT_NUM
+    <select id="selectInspectionResultPrdNumList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT DISTINCT C.PRODUCT_NUM
+        FROM TBL_INSPECT_RESULT A
+             INNER JOIN TBL_INSPECT_RESULT_POINT B ON A.INSPECT_RESULT_SEQ = B.INSPECT_RESULT_SEQ
+             INNER JOIN TBL_INSPECT_RESULT_VALUE C ON B.POINT_SEQ = C.POINT_SEQ AND B.INSPECT_RESULT_SEQ = C.INSPECT_RESULT_SEQ
+        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+          AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        ORDER BY C.PRODUCT_NUM
     </select>
+
     <select id="selectInspectionResultValueList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT A.INSPECT_RESULT_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, B.POINT_NUM, B.POINT_SEQ, B.POINT_POSITION, C.RESULT_VALUE, C.PRODUCT_NUM, C.INSPECT_RESULT_VALUE_SEQ
+        SELECT A.INSPECT_RESULT_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 'N' AS CHECK_YN,
+            B.POINT_NUM, B.POINT_SEQ, B.POINT_POSITION, C.RESULT_VALUE, C.PRODUCT_NUM, C.INSPECT_RESULT_VALUE_SEQ,
+            (SELECT COUNT(*) FROM TBL_INSPECT_RESULT_POINT X WHERE X.INSPECT_RESULT_SEQ = A.INSPECT_RESULT_SEQ) AS POINT_CNT
         FROM TBL_INSPECT_RESULT A
             INNER JOIN TBL_INSPECT_RESULT_POINT B ON A.INSPECT_RESULT_SEQ = B.INSPECT_RESULT_SEQ
             INNER JOIN TBL_INSPECT_RESULT_VALUE C ON B.POINT_SEQ = C.POINT_SEQ AND B.INSPECT_RESULT_SEQ = C.INSPECT_RESULT_SEQ
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
           AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        ORDER BY C.PRODUCT_NUM, B.POINT_NUM
     </select>
 </mapper>

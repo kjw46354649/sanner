@@ -112,7 +112,7 @@
     </div>
 </div>
 
-<!-- 품질실적 layer popup : S -->
+<!-- 검사 성적서  layer popup : S -->
 <div class="popup_container inspection" id="inspection_result_value_popup" style="display: none;">
     <form class="form-inline" id="inspection_result_value_form" name="inspection_result_value_form" role="form">
         <input type="hidden" name="queryId" id="queryId" value="inspection.selectInspectionResultValueList">
@@ -120,6 +120,7 @@
         <input type="hidden" name="ORDER_QTY" id="ORDER_QTY" value="">
         <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
         <input type="hidden" name="IMG_GFILE_SEQ" id="IMG_GFILE_SEQ" value="">
+        <input type="hidden" name="CHECK_FLAG" id="CHECK_FLAG" value="">
 
         <div class="layerPopup" style="width: 1150px;">
             <h3>검사 성적서 Value 관리</h3>
@@ -127,7 +128,7 @@
                   <span class="barCode ml-5" id="inspectionResultValueSpan">
                   <img src="/resource/asset/images/common/Code128code.png" alt="바코드" id="inspectionResultValueBarcodeImg" style="width: 92%;height: 30px;">
                   </span>
-                <input type="text" id="input_main_layer_barcode" style="width: 0;opacity: 0;height: 0;padding: 0;">
+                <input type="text" id="input_inspection_result_value" style="width: 0;opacity: 0;height: 0;padding: 0;">
             </div>
             <div class="qualityWrap">
                 <div class="h_area">
@@ -160,8 +161,8 @@
                 </div>
                 <div class="m_area">
                     <div class="listWrap">
-                        <button type="button" class="defaultBtn btn-100w radius">SELECT ALL</button>
-                        <button type="button" class="defaultBtn btn-100w radius">Auto Copy</button>
+                        <button type="button" id="selectAllBtn" class="defaultBtn btn-100w radius">SELECT ALL</button>
+                        <button type="button" id="autoCopyBtn" class="defaultBtn btn-100w radius">Auto Copy</button>
                         <select class="wd_60 mr-5 ml-10" name="SEL_REF_COLUMN" id="SEL_REF_COLUMN">
                             <option value="">Ref.</option>
                         </select>
@@ -169,9 +170,8 @@
                         <span class="nbsp">~</span>
                         <input class="wd_50 mr-5" type="number" name="COLUMN_TO" id="COLUMN_TO" placeholder="To" disabled>
                         <input name="CHECK_COPY" id="CHECK_COPY" type="checkbox" style="width: 18px;height: 18px;margin: 0;">
-
                         <div style="float: right;">
-                            <button type="button" class="defaultBtn btn-100w radius">도면성적서 열기</button>
+                            <button type="button" id="openResultPopBtn" class="defaultBtn btn-100w radius">도면성적서 열기</button>
                             <button type="button" class="defaultBtn btn-70w red radius">열삭제</button>
                         </div>
                     </div>
@@ -182,13 +182,13 @@
             </div>
 
             <div class="btnWrap">
-                <button type="button" class="defaultBtn greenPopGra" id="inspection_manage_pop_save">저장</button>
-                <button type="button" class="defaultBtn grayPopGra" data-dismiss="modal">닫기</button>
+                <button type="button" class="defaultBtn greenPopGra" id="inspection_result_value_save">저장</button>
+                <button type="button" class="defaultBtn grayPopGra black" data-dismiss="modal">닫기</button>
             </div>
         </div>
     </form>
 </div>
-<!-- 품질실적 layer popup : E -->
+<!-- 검사 성적서  layer popup : E -->
 
 <form id="inspection_result_data_form" name="inspection_result_data_form" method="post">
     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ">
@@ -467,23 +467,35 @@
         });
 
         let $inspectionResultValueGrid  = $("#inspection_result_value_grid");
-        let inspectionResultValueColModel = [
+        let inspectionResultValueColCommModel = [
             {title: 'INSPECT_RESULT_SEQ', dataIndx: 'INSPECT_RESULT_SEQ', hidden: true},
             {title: 'POINT_SEQ', dataIndx: 'POINT_SEQ', hidden: true},
+            {title: 'EDIT_YN', dataIndx: 'EDIT_YN', hidden: true},
             {title: 'INSPECT_RESULT_VALUE_SEQ', dataIndx: 'INSPECT_RESULT_VALUE_SEQ', hidden: true},
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'PRODUCT_NUM', dataIndx: 'PRODUCT_NUM', hidden: true},
-            {title: 'No.', minWidth: 60, dataIndx: 'POINT_NUM', sortable:false, editable:false,
-                styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
+            {
+                dataIndx: 'CHECK_YN',
+                dataType: 'bool',
+                hidden: true,
+                editable: true
+            },
+            {title: 'No.', minWidth: 60, type: "checkbox", dataIndx: 'POINT_NUM', cbId: 'CHECK_YN', sortable:false,
+                useLabel: true,
+                styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'},
+                // render: function (ui) {
+                //     const cellData = ui.cellData;
+                //     if(cellData){
+                //         return '<input id="POINT_CHECK_'+cellData + '" name="POINT_CHECK" class="point_check" data-target="'+cellData+'" style="margin-right: 10px;" type="checkbox"/>' + cellData;
+                //     }
+                // },
             },
             {title: 'POS', minWidth: 60, dataIndx: 'POINT_POSITION', sortable:false, editable:false,
                 styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
-            },
-            {title: '', minWidth: 60, dataIndx: 'RESULT_VALUE', sortable:false, editable:false,
-                styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
             }
-        ]
+        ];
+
         let inspectionResultValueObj = {
             height: 500,
             width: "auto",
@@ -497,53 +509,133 @@
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
             postRenderInterval: -1, //call postRender synchronously.
             columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
-            colModel: inspectionResultValueColModel,
+            colModel: inspectionResultValueColCommModel,
             dataModel: {
                 location: "remote", dataType: "json", method: "POST", recIndx: 'POINT_NUM',
                 url: "/paramQueryGridSelect",
                 postData: fnFormToJsonArrayData('inspection_result_value_form'),
                 // postData: {queryId: 'dataSource.getRownumEmptyData', 'COUNT': 20}, recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
+                    dataJSON.data = formattingData(dataJSON.data);
+                    // console.log('dataJSON',dataJSON.data);
                     return {data: dataJSON.data};
                 }
             },
-            complete: function () {
-                let data = this.option('dataModel.data');
-                console.log('complete',data);
+            editorEnd: function( event, ui ) {
+                // console.log('editorEnd',ui)
+                let cell = this.getCell({ rowIndx: ui.rowIndx, dataIndx: ui.dataIndx })
+                // console.log(this.isDirty({rowIndx:ui.rowIndx}))
+                if(this.isDirty({rowIndx:ui.rowIndx})) {
+                    // cell.addClass("bg-real-yellow");
+                    // console.log(cell)
+                    // console.log($(cell).css('background-color','yellow'))
+                    // console.log($(cell).hasClass("bg-real-yellow"))
+                }else {
+                    // cell.removeClass("bg-real-yellow");
+                }
+
+            },
+            scroll: function( event, ui ) {
+                let flag = $("#inspection_result_value_form").find("#CHECK_FLAG").val();
+                if(flag == 'true') {
+                    $(".point_check").prop('checked',true);
+                    $(".prdNum_check").prop('checked',true);
+                }else if(flag == 'false') {
+                    $(".prdNum_check").prop('checked',false);
+                    $(".point_check").prop('checked',false);
+                }
             }
         }
-        $inspectionResultValueGrid.pqGrid(inspectionResultValueObj);
 
         $("#inspection_result_value_popup").on({
             'show.bs.modal': function () {
-                $inspectionResultValueGrid.pqGrid("option", "dataModel.postData", function(ui){
-                    return fnFormToJsonArrayData('inspection_result_value_form');
-                } );
-                $inspectionResultValueGrid.pqGrid("refreshDataAndView");
-                let qty = $("#inspection_result_value_form").find("#ORDER_QTY").val();
-                let arr = [];
-                if(!fnIsEmpty(qty)) {
-                    for(var i=1;i<=qty;i++) {
-                        arr.push(i);
-                    }
-                }
-                let changes = {
-                    'TEST_DATA':arr,
-                    'CONTROL_SEQ':$("#inspection_result_value_form").find("#CONTROL_SEQ").val(),
-                    'CONTROL_DETAIL_SEQ':$("#inspection_result_value_form").find("#CONTROL_DETAIL_SEQ").val()
-                };
-                let parameters = {'url': '/selectInspectResult', 'data': {data: JSON.stringify(changes)}};
-                fnPostAjaxAsync(function(data, callFunctionParam){
-                    console.log(data)
-                }, parameters, '');
-
+                resultValuePopGridSetting();
             }, 'hide.bs.modal': function () {
-
+                if ($('#inspection_result_value_grid').pqGrid('instance')) {
+                    $inspectionResultValueGrid.pqGrid('destroy');
+                }
             }
         })
 
-        function openResultValuePop(data) {
+        function formattingData(data) {
+            let flagPrdNum = "";
+            let formattingArr = [];
+            let pointNumList = [];
+            let pointCnt = 0;
+            let qty = $("#inspection_result_value_form").find("#ORDER_QTY").val();
 
+            if(!fnIsEmpty(qty)) {
+                $.each(data,function (idx,Item) {
+                    for (var i = 1; i <= qty; i++) {
+                        Item['RESULT_VALUE_'+ i] = '';
+                    }
+                    Item['RESULT_VALUE_'+ Item.PRODUCT_NUM] = Item.RESULT_VALUE;
+                    pointCnt = Item.POINT_CNT;
+
+                    let pIdx = pointNumList.indexOf(Item.POINT_NUM);
+                    if(pIdx < 0) {
+                        formattingArr.push(Item);
+                        pointNumList.push(Item.POINT_NUM);
+                    }else {
+                        formattingArr[pIdx]['RESULT_VALUE_'+ Item.PRODUCT_NUM] = (fnIsEmpty(Item.RESULT_VALUE)?'':Item.RESULT_VALUE);
+                    }
+                })
+            }
+
+            return formattingArr;
+        }
+        let realPrdNumArr = []
+        function resultValuePopGridSetting() {
+            let parameter = {
+                'queryId': 'inspection.selectInspectionResultPrdNumList',
+                'CONTROL_SEQ': $("#inspection_result_value_form").find("#CONTROL_SEQ").val(),
+                'CONTROL_DETAIL_SEQ': $("#inspection_result_value_form").find("#CONTROL_DETAIL_SEQ").val()
+            };
+            let parameters = {'url': '/json-list', 'data': parameter};
+            fnPostAjaxAsync(function(data, callFunctionParam){
+                // console.log(data);
+                realPrdNumArr = [];
+                $.each(data.list,function (idx,Item) {
+                    realPrdNumArr.push(Item.PRODUCT_NUM);
+                });
+                $("#SEL_REF_COLUMN").empty();
+                $("#SEL_REF_COLUMN")[0].add(new Option('Ref.',''));
+
+                let qty = $("#inspection_result_value_form").find("#ORDER_QTY").val();
+                let colModel = fnCloneObj(inspectionResultValueColCommModel);
+                if(!fnIsEmpty(qty)) {
+                    for(var i=1;i<=qty;i++) {
+                        let headerColor = '#abc3e9';
+                        let fontColor = 'black';
+                        if(realPrdNumArr.indexOf(i) < 0) {
+                            headerColor = '#d9d9d9';
+                            fontColor = '#6e6c6c';
+                        }
+                        colModel.push(
+                            {title: '<input id="PRODUCT_NUM_CHECK_'+ i +'" name="PRODUCT_NUM_CHECK" class="prdNum_check" data-target="'+ i +'" type="checkbox"/>', datatype: 'string', align: 'center', colModel: [
+                                    {
+                                        title: '#' + i,
+                                        minWidth: 60,
+                                        dataIndx: 'RESULT_VALUE_' + i,
+                                        sortable: false,
+                                        editable: true,
+                                        styleHead: {'font-weight': 'bold', 'background': headerColor, 'font-size': '12px', 'color':fontColor}
+                                    }
+                                ],
+                                styleHead: {'font-weight': 'bold', 'background': '#abc3e9', 'font-size': '12px'}
+                            }
+                        );
+                        $("#SEL_REF_COLUMN")[0].add(new Option('#'+i,i));
+                    }
+                }
+
+                inspectionResultValueObj.colModel = colModel;
+                inspectionResultValueObj.dataModel.postData = fnFormToJsonArrayData('inspection_result_value_form');
+                $inspectionResultValueGrid.pqGrid(inspectionResultValueObj);
+            }, parameters, '');
+        }
+
+        function openResultValuePop(data) {
             $("#inspection_result_value_form").find("#CONTROL_SEQ").val(data.CONTROL_SEQ);
             $("#inspection_result_value_form").find("#CONTROL_DETAIL_SEQ").val(data.CONTROL_DETAIL_SEQ);
             $("#inspection_result_value_form").find("#IMG_GFILE_SEQ").val(data.IMG_GFILE_SEQ);
@@ -557,7 +649,139 @@
             $('#inspection_result_value_popup').modal('show');
         }
 
+        $('#inspection_result_value_save').on('click', function () {
 
+            let data = $inspectionResultValueGrid.pqGrid('option', 'dataModel.data');
+            let gridInstance = $inspectionResultValueGrid.pqGrid('getInstance').grid;
+            let changes = gridInstance.getChanges({format: 'byVal'});
+
+            console.log('changes',changes)
+            let parameters = {'url': '/saveInspectResult', 'data': {data: JSON.stringify(changes)}};
+            fnPostAjaxAsync(function (data) {
+                console.log('data',data);
+            },parameters,'');
+        });
+
+        $('#CHECK_COPY').on('click', function () {
+            let checked = this.checked;
+            if(checked) {
+                $("#COLUMN_FROM").prop('disabled',false);
+                $("#COLUMN_TO").prop('disabled',false);
+            }else {
+                $("#COLUMN_FROM").prop('disabled',true);
+                $("#COLUMN_TO").prop('disabled',true);
+            }
+        });
+
+        $('#selectAllBtn').on('click', function () {
+            let flag = $("#inspection_result_value_form").find("#CHECK_FLAG").val();
+            if(flag == 'true') {
+                $(".prdNum_check").prop('checked',false);
+                $(".point_check").prop('checked',false);
+                $("#inspection_result_value_form").find("#CHECK_FLAG").val(false);
+            }else {
+                $(".point_check").prop('checked',true);
+                $(".prdNum_check").prop('checked',true);
+                $("#inspection_result_value_form").find("#CHECK_FLAG").val(true);
+            }
+        })
+
+        $('#openResultPopBtn').on('click', function () {
+            let controlSeq = $("#inspection_result_value_form").find("#CONTROL_SEQ").val();
+            let controlDetailSeq = $("#inspection_result_value_form").find("#CONTROL_DETAIL_SEQ").val();
+            inspectionResultPopupWindow(controlSeq,controlDetailSeq);
+        });
+
+        $("#inspectionResultValueBarcodeImg").on('click', function (){
+            $("#input_inspection_result_value").focus();
+        })
+
+        $('#inspectionResultValueSpan').on('click', function () {
+            $("#inspectionResultValueBarcodeImg").attr("src", "/resource/asset/images/common/Code128code_on.png");
+            $("#input_inspection_result_value").focus();
+
+        });
+
+        $("#input_inspection_result_value").on({
+            'focus': function () {
+                $("#inspectionResultValueBarcodeImg").attr("src","/resource/asset/images/common/Code128code_on.png");
+            },
+            'blur': function () {
+                $('#inspectionResultValueBarcodeImg').prop('src','/resource/asset/images/common/Code128code.png');
+            },
+            'keyup': function (e) {
+                if(e.keyCode == 13) {
+                    let barcodeNum = fnBarcodeKo2En($(this).val());
+
+                    let data = {'queryId': "inspection.selectInspectionResultControlInfoBarcode", 'BARCODE_NUM': barcodeNum};
+                    let parameters = {'url': '/json-info', 'data': data};
+                    fnPostAjaxAsync(function(data, callFunctionParam){
+                        // console.log(data);
+                        if(data.info != null) {
+                            $inspectionResultValueGrid.pqGrid('destroy');
+
+                            $("#inspection_result_value_form").find("#CONTROL_SEQ").val(data.info.CONTROL_SEQ);
+                            $("#inspection_result_value_form").find("#CONTROL_DETAIL_SEQ").val(data.info.CONTROL_DETAIL_SEQ);
+                            $("#inspection_result_value_form").find("#IMG_GFILE_SEQ").val(data.info.IMG_GFILE_SEQ);
+                            $("#inspection_result_value_form").find("#ORDER_QTY").val(data.info.QTY);
+
+                            $("#inspection_result_value_popup").find("#CONTROL_PART_INFO").text(data.info.CONTROL_NUM);
+                            $("#inspection_result_value_popup").find("#WORK_TYPE_NM").text(data.info.WORK_TYPE_NM);
+                            $("#inspection_result_value_popup").find("#ORDER_QTY_DIV").text(data.info.QTY);
+
+                            resultValuePopGridSetting();
+                        }
+                    },parameters,'');
+
+                    $(this).val('');
+                }
+            }
+        })
+        $("#inspection_result_value_popup #imageView").on('click', function (){
+            let imgSeq = $("#inspection_result_value_form").find("#IMG_GFILE_SEQ").val();
+            callWindowImageViewer(imgSeq);
+        });
+
+        $('#autoCopyBtn').on('click', function () {
+            let standardCol = $("#SEL_REF_COLUMN").val();
+            console.log(standardCol)
+            if(fnIsEmpty(standardCol)) {
+                fnAlert(null,"기준 컬럼을 선택해 주세요.");
+                return;
+            }
+
+            if($("input[name=POINT_CHECK]:checked").length == 0) {
+                fnAlert(null,"copy할 row를 선택해 주세요.");
+                return;
+            }
+
+            if($("input[name=PRODUCT_NUM_CHECK]:checked").length == 0) {
+                fnAlert(null,"copy될 컬럼을 선택해 주세요.");
+                return;
+            }
+
+            let updateList = [];
+            $("input[name=POINT_CHECK]:checked").each(function (index) {
+                let pointNum = $(this).data('target');
+                let rowData = $inspectionResultValueGrid.pqGrid("getRowData", {rowIndx: pointNum -1});
+                $("input[name=PRODUCT_NUM_CHECK]:checked").each(function (index) {
+                    let prdNum = $(this).data('target');
+                    if(!fnIsEmpty(rowData['RESULT_VALUE_'+standardCol])) {
+                        let newJson = {}
+                        newJson['RESULT_VALUE_'+prdNum] = rowData['RESULT_VALUE_'+standardCol]
+                        updateList.push({
+                            rowIndx:rowData.pq_ri,
+                            newRow:newJson,
+                            checkEditable: false}
+                        );
+                    }
+                });
+            });
+
+            if(updateList.length > 0) {
+                $inspectionResultValueGrid.pqGrid('updateRow', {rowList: updateList});
+            }
+        });
 
         $('#exportInspectResultBtn').on('click', function () {
             $("#inspection_result_value_popup").modal('show');
