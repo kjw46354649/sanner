@@ -1260,7 +1260,7 @@
 
                 // console.log('changes',changes)
 
-                fnPostAjax(function (data) {
+                fnPostAjaxAsync(function (data) {
                     // console.log('data',data);
                     fnAlert(null,"저장되었습니다.");
                     setTimeout(function () {
@@ -1395,7 +1395,7 @@
                         'PRODUCT_NUM':$("#inspection_result_pop_form").find("#PRODUCT_NUM").val()
                     };
                     let parameters = {'url': '/json-manager', 'data': data};
-                    fnPostAjax(function (data) {
+                    fnPostAjaxAsync(function (data) {
                         fnAlert(null, "삭제되었습니다.");
                         $("#inspection_result_pop_form").find("#PRODUCT_NUM").val('');
                         $("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val('');
@@ -1435,7 +1435,7 @@
 
                         let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeNum};
                         let parameters = {'url': '/json-info', 'data': data};
-                        fnPostAjax(function (data) {
+                        fnPostAjaxAsync(function (data) {
                             let dataInfo = data.info;
                             if(dataInfo != null && !fnIsEmpty(dataInfo.IMG_GFILE_SEQ)) {
                                 $("#layer_setting_img").attr("src", "/image/"+dataInfo.IMG_GFILE_SEQ);
