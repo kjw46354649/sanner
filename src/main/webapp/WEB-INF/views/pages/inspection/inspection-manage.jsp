@@ -98,7 +98,7 @@
                 <span class="barCodeTxt" style="opacity: 0;">&nbsp;<input type="text" style="width: 0px;cursor: default;" name="INSPECTION_RESULT_BARCODE_NUM" id="INSPECTION_RESULT_BARCODE_NUM"></span>
             </div>
             <div style="float: right">
-                <button type="button" id="exportInspectResultBtn" class="defaultBtn btn-100w">검사 성적서 EXPORT</button>
+                <button type="button" id="exportInspectResultBtn" class="defaultBtn mr-15">검사 성적서 EXPORT</button>
             </div>
         </div>
         <div class="tableWrap" style="padding: 10px 0;">
@@ -400,7 +400,6 @@
             columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: inspectionManageFilterRender}, filterModel: { mode: 'OR' },
             //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
-            selectionModel: { type: 'row', mode: 'single'} ,
             swipeModel: {on: false},
             showTitle: false,
             collapsible: false,
@@ -881,7 +880,8 @@
         });
 
         $('#exportInspectResultBtn').on('click', function () {
-            $("#inspection_result_value_popup").modal('show');
+            let arr = inspectionManageGridId01.pqGrid('getInstance').grid.Selection().getSelection();
+            console.log(arr);
         });
 
         $('#INSPECTION_MANAGE_EXCEL_EXPORT').on('click', function () {
