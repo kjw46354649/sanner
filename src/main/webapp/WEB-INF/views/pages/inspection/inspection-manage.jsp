@@ -120,7 +120,6 @@
         <input type="hidden" name="ORDER_QTY" id="ORDER_QTY" value="">
         <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
         <input type="hidden" name="IMG_GFILE_SEQ" id="IMG_GFILE_SEQ" value="">
-        <input type="hidden" name="CHECK_FLAG" id="CHECK_FLAG" value="">
 
         <div class="layerPopup" style="width: 1150px;">
             <h3>검사 성적서 Value 관리</h3>
@@ -201,6 +200,9 @@
 
 <script>
 
+
+    let pointCheckArr = [];
+    let prdNumCheckArr = [];
 
 
     $(function () {
@@ -311,7 +313,7 @@
                             $cell.find(".inspectValue").bind("click", function () {
                                 let rowData = ui.rowData;
 
-                                // openResultValuePop(rowData);
+                                openResultValuePop(rowData);
                             });
                         }
                     },
@@ -465,7 +467,6 @@
             } );
             inspectionManageGridId01.pqGrid("refreshDataAndView");
         });
-
         let $inspectionResultValueGrid  = $("#inspection_result_value_grid");
         let inspectionResultValueColCommModel = [
             {title: 'INSPECT_RESULT_SEQ', dataIndx: 'INSPECT_RESULT_SEQ', hidden: true},
@@ -475,21 +476,21 @@
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'PRODUCT_NUM', dataIndx: 'PRODUCT_NUM', hidden: true},
-            {
-                dataIndx: 'CHECK_YN',
-                dataType: 'bool',
-                hidden: true,
-                editable: true
-            },
-            {title: 'No.', minWidth: 60, type: "checkbox", dataIndx: 'POINT_NUM', cbId: 'CHECK_YN', sortable:false,
-                useLabel: true,
+            {title: 'No.', minWidth: 60, dataIndx: 'POINT_NUM', sortable:false, editable:false,
                 styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'},
-                // render: function (ui) {
-                //     const cellData = ui.cellData;
-                //     if(cellData){
-                //         return '<input id="POINT_CHECK_'+cellData + '" name="POINT_CHECK" class="point_check" data-target="'+cellData+'" style="margin-right: 10px;" type="checkbox"/>' + cellData;
-                //     }
-                // },
+                render: function (ui) {
+                    const cellData = ui.cellData;
+                    if(cellData){
+                        return '<input id="POINT_CHECK_'+cellData + '" name="POINT_CHECK" class="point_check" data-target="'+cellData+'" style="margin-right: 10px;" type="checkbox"/>' + cellData;
+                    }
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find(".point_check").bind("click", function () {
+                        let rowData = ui.rowData;
+                    });
+                }
             },
             {title: 'POS', minWidth: 60, dataIndx: 'POINT_POSITION', sortable:false, editable:false,
                 styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
@@ -535,15 +536,20 @@
                 }
 
             },
-            scroll: function( event, ui ) {
-                let flag = $("#inspection_result_value_form").find("#CHECK_FLAG").val();
-                if(flag == 'true') {
-                    $(".point_check").prop('checked',true);
-                    $(".prdNum_check").prop('checked',true);
-                }else if(flag == 'false') {
-                    $(".prdNum_check").prop('checked',false);
-                    $(".point_check").prop('checked',false);
-                }
+            refresh: function( event, ui ) {
+                setTimeout(function () {
+                    if(prdNumCheckArr.length > 0) {
+                        for(var i=0;i<prdNumCheckArr.length;i++) {
+                            $("#"+prdNumCheckArr[i]).prop('checked',true);
+                        }
+                    }
+                    if(pointCheckArr.length > 0) {
+                        for(var i=0;i<pointCheckArr.length;i++) {
+                            $("#"+pointCheckArr[i]).prop('checked',true);
+                        }
+                    }
+                },200);
+
             }
         }
 
@@ -554,6 +560,7 @@
                 if ($('#inspection_result_value_grid').pqGrid('instance')) {
                     $inspectionResultValueGrid.pqGrid('destroy');
                 }
+                $("#inspection_manage_search_btn").trigger('click');
             }
         })
 
@@ -655,10 +662,17 @@
             let gridInstance = $inspectionResultValueGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
 
-            console.log('changes',changes)
+            changes.ORDER_QTY = $("#inspection_result_value_form").find("#ORDER_QTY").val();
             let parameters = {'url': '/saveInspectResult', 'data': {data: JSON.stringify(changes)}};
             fnPostAjaxAsync(function (data) {
-                console.log('data',data);
+                fnAlert(null,"저장되었습니다.");
+
+                prdNumCheckArr = [];
+                pointCheckArr = [];
+
+                $inspectionResultValueGrid.pqGrid('destroy');
+                resultValuePopGridSetting();
+
             },parameters,'');
         });
 
@@ -674,16 +688,18 @@
         });
 
         $('#selectAllBtn').on('click', function () {
-            let flag = $("#inspection_result_value_form").find("#CHECK_FLAG").val();
-            if(flag == 'true') {
-                $(".prdNum_check").prop('checked',false);
-                $(".point_check").prop('checked',false);
-                $("#inspection_result_value_form").find("#CHECK_FLAG").val(false);
-            }else {
-                $(".point_check").prop('checked',true);
-                $(".prdNum_check").prop('checked',true);
-                $("#inspection_result_value_form").find("#CHECK_FLAG").val(true);
+            let data = $inspectionResultValueGrid.pqGrid('option', 'dataModel.data');
+            let qty = $("#inspection_result_value_form").find("#ORDER_QTY").val();
+
+            for(var i=1;i<=qty;i++) {
+                prdNumCheckArr.push("PRODUCT_NUM_CHECK_"+i);
+                $("#PRODUCT_NUM_CHECK_"+i).prop('checked',true);
             }
+
+            $.each(data,function (idx,Item) {
+                pointCheckArr.push("POINT_CHECK_"+Item.POINT_NUM);
+                $("#POINT_CHECK_"+Item.POINT_NUM).prop('checked',true);
+            })
         })
 
         $('#openResultPopBtn').on('click', function () {
@@ -742,9 +758,28 @@
             callWindowImageViewer(imgSeq);
         });
 
+        function getRandomArbitrary(min, max) {
+            if((min % 1 == 0) && (max % 1 == 0) ) {
+                // 둘의 자릿수가 맞아야함
+                min = Math.ceil(min);
+                max = Math.floor(max);
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }else {
+                let decimalIdx = min.indexOf(".");
+                let decimalLength = min.substring(decimalIdx + 1,min.length).length;
+                let randomNum = Math.random() * (max - min) + min;
+
+                console.log('decimalLength',decimalLength)
+                console.log('random',randomNum)
+                console.log('random', Math.random().toFixed(decimalLength) * (max - min) + min)
+
+                return randomNum;
+            }
+        }
+
         $('#autoCopyBtn').on('click', function () {
             let standardCol = $("#SEL_REF_COLUMN").val();
-            console.log(standardCol)
+
             if(fnIsEmpty(standardCol)) {
                 fnAlert(null,"기준 컬럼을 선택해 주세요.");
                 return;
@@ -759,6 +794,18 @@
                 fnAlert(null,"copy될 컬럼을 선택해 주세요.");
                 return;
             }
+            let fromVal = $("#COLUMN_FROM").val();
+            let toVal = $("#COLUMN_TO").val();
+            if(fromVal > toVal) {
+                fnAlert(null,"숫자 범위를 확인해주세요.");
+                return;
+            }
+            let idxF = fromVal.indexOf(".");
+            let idxT = toVal.indexOf(".");
+            if((idxF >= 0  && idxT < 0) || (idxF < 0 && idxT >= 0)) {
+                fnAlert(null,"소수점 자릿수를 확인해주세요.");
+                return;
+            }
 
             let updateList = [];
             $("input[name=POINT_CHECK]:checked").each(function (index) {
@@ -768,7 +815,7 @@
                     let prdNum = $(this).data('target');
                     if(!fnIsEmpty(rowData['RESULT_VALUE_'+standardCol])) {
                         let newJson = {}
-                        newJson['RESULT_VALUE_'+prdNum] = rowData['RESULT_VALUE_'+standardCol]
+                        newJson['RESULT_VALUE_'+prdNum] = Number(rowData['RESULT_VALUE_'+standardCol]) + Number(getRandomArbitrary(fromVal,toVal))
                         updateList.push({
                             rowIndx:rowData.pq_ri,
                             newRow:newJson,
@@ -1009,4 +1056,31 @@
             },50)
         }
     }, false);
+
+    $(document).ready(function(){
+        $(document).on("click",".prdNum_check",function(e){
+            let idx = prdNumCheckArr.indexOf(e.target.id);
+            if(!$(this).prop('checked')) {
+                if(idx >= 0) {
+                    prdNumCheckArr.splice(idx,1);
+                }
+            }else {
+                if(idx < 0) {
+                    prdNumCheckArr.push(e.target.id)
+                }
+            }
+        });
+        $(document).on("click",".point_check",function(e){
+            let idx = pointCheckArr.indexOf(e.target.id);
+            if(!$(this).prop('checked')) {
+                if(idx >= 0) {
+                    pointCheckArr.splice(idx,1);
+                }
+            }else {
+                if(idx < 0) {
+                    pointCheckArr.push(e.target.id)
+                }
+            }
+        });
+    });
 </script>

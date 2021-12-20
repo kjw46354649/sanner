@@ -2843,7 +2843,7 @@
     </select>
 
     <select id="selectInspectionResultValueList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT A.INSPECT_RESULT_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, 'N' AS CHECK_YN,
+        SELECT A.INSPECT_RESULT_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
             B.POINT_NUM, B.POINT_SEQ, B.POINT_POSITION, C.RESULT_VALUE, C.PRODUCT_NUM, C.INSPECT_RESULT_VALUE_SEQ,
             (SELECT COUNT(*) FROM TBL_INSPECT_RESULT_POINT X WHERE X.INSPECT_RESULT_SEQ = A.INSPECT_RESULT_SEQ) AS POINT_CNT
         FROM TBL_INSPECT_RESULT A
@@ -2853,4 +2853,13 @@
           AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
         ORDER BY C.PRODUCT_NUM, B.POINT_NUM
     </select>
+
+    <select id="selectExistsValue" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT INSPECT_RESULT_VALUE_SEQ, POINT_SEQ, INSPECT_RESULT_SEQ, PRODUCT_NUM
+        FROM TBL_INSPECT_RESULT_VALUE
+        WHERE POINT_SEQ = #{POINT_SEQ}
+            AND PRODUCT_NUM = #{PRODUCT_NUM}
+            AND INSPECT_RESULT_SEQ = #{INSPECT_RESULT_SEQ}
+    </select>
+
 </mapper>

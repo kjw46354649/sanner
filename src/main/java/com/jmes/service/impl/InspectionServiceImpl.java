@@ -3,6 +3,7 @@ package com.jmes.service.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.innodale.dao.InnodaleDao;
+import com.jmes.dao.OrderDao;
 import com.jmes.service.InspectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -191,9 +192,45 @@ public class InspectionServiceImpl implements InspectionService {
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
         }
 
+        Integer orderQty = Integer.parseInt(jsonMap.get("ORDER_QTY")+"");
+
         if(updateList != null && updateList.size() > 0) {
             for(int i=0;i<updateList.size();i++) {
+                HashMap<String,Object> hashMap = updateList.get(i);
 
+                for(int j=1;j<=orderQty;j++) {
+                    String prodNum = String.valueOf(j);
+
+                    hashMap.put("queryId", "inspection.selectExistsValue");
+                    hashMap.put("PRODUCT_NUM",prodNum);
+
+                    HashMap<String,Object> temp = (HashMap<String, Object>) innodaleDao.getInfo(hashMap);
+                    if (temp != null && temp.containsKey("INSPECT_RESULT_VALUE_SEQ")) {
+                        // updateInspectionResultValue
+                        if(hashMap.containsKey("RESULT_VALUE_"+prodNum)) {
+                            temp.put("LOGIN_USER_ID",userId);
+                            temp.put("RESULT_VALUE",hashMap.get("RESULT_VALUE_"+prodNum));
+
+                            temp.put("queryId", "inspection.updateInspectionResultValue");
+                            innodaleDao.update(temp);
+                        }
+
+                    }else {
+                        if(hashMap.containsKey("RESULT_VALUE_"+prodNum)) {
+                            temp = new HashMap<>();
+
+                            temp.put("PRODUCT_NUM",prodNum);
+                            temp.put("POINT_SEQ",hashMap.get("POINT_SEQ"));
+                            temp.put("INSPECT_RESULT_SEQ",hashMap.get("INSPECT_RESULT_SEQ"));
+                            temp.put("RESULT_VALUE",hashMap.get("RESULT_VALUE_"+prodNum));
+                            temp.put("LOGIN_USER_ID",userId);
+
+                            temp.put("queryId", "inspection.insertInspectionResultValue");
+                            innodaleDao.create(temp);
+                        }
+                    }
+
+                }
             }
         }
     }
