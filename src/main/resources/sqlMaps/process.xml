@@ -134,7 +134,7 @@
                                  ) AS APPROACH_DUE_DT,
                                  (SELECT COUNT(*)
                                   FROM TBL_CONTROL X
-                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.PART_STATUS IS NOT NULL
+                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.PART_STATUS IS NOT NULL AND Y.INNER_WORK_FINISH_DT IS NULL
                                   WHERE X.DEL_YN = 'N'
                                     AND X.CONTROL_STATUS IN ('ORD001','ORD003')
                                     AND X.OUT_FINISH_DT IS NULL
@@ -144,7 +144,7 @@
                                  ) AS DELAY_PROCESS_CNT,
                                  (SELECT SUM(SF_GET_CONTROL_PART_QTY(Y.CONTROL_SEQ,Y.CONTROL_DETAIL_SEQ))
                                   FROM TBL_CONTROL X
-                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.PART_STATUS IS NOT NULL
+                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.PART_STATUS IS NOT NULL AND Y.INNER_WORK_FINISH_DT IS NULL
                                   WHERE X.DEL_YN = 'N'
                                     AND X.CONTROL_STATUS IN ('ORD001','ORD003')
                                     AND X.OUT_FINISH_DT IS NULL
@@ -775,7 +775,7 @@
             SF_GET_CODE_NM('1010', D.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM,
             CONCAT(TRUNCATE(D.WORKING_TIME / 3600, 0), 'h ', TRUNCATE((D.WORKING_TIME % 3600) / 60, 0), 'm')  AS WORKING_TIME
         FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL AND B.INNER_WORK_FINISH_DT IS NULL
             LEFT OUTER JOIN TBL_POP C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                 AND C.POP_SEQ = (
                     SELECT MAX(K.POP_SEQ)
