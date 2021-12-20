@@ -2862,4 +2862,10 @@
             AND INSPECT_RESULT_SEQ = #{INSPECT_RESULT_SEQ}
     </select>
 
+    <delete id="deleteInspectionResultProdNumList" parameterType="java.util.HashMap">
+        DELETE FROM TBL_INSPECT_RESULT_VALUE
+        WHERE INSPECT_RESULT_SEQ = #{INSPECT_RESULT_SEQ}
+          AND PRODUCT_NUM IN (${PRODUCT_NUM_LIST})
+    </delete>
+
 </mapper>

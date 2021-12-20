@@ -171,7 +171,7 @@
                         <input name="CHECK_COPY" id="CHECK_COPY" type="checkbox" style="width: 18px;height: 18px;margin: 0;">
                         <div style="float: right;">
                             <button type="button" id="openResultPopBtn" class="defaultBtn btn-100w radius">도면성적서 열기</button>
-                            <button type="button" class="defaultBtn btn-70w red radius">열삭제</button>
+                            <button type="button" id="deleteColPopBtn" class="defaultBtn btn-70w red radius">열삭제</button>
                         </div>
                     </div>
                 </div>
@@ -181,7 +181,7 @@
             </div>
 
             <div class="btnWrap">
-                <button type="button" class="defaultBtn greenPopGra" id="inspection_result_value_save">저장</button>
+                <button type="button" class="defaultBtn greenPopGra" id="inspection_result_value_save" disabled>저장</button>
                 <button type="button" class="defaultBtn grayPopGra black" data-dismiss="modal">닫기</button>
             </div>
         </div>
@@ -483,16 +483,9 @@
                     if(cellData){
                         return '<input id="POINT_CHECK_'+cellData + '" name="POINT_CHECK" class="point_check" data-target="'+cellData+'" style="margin-right: 10px;" type="checkbox"/>' + cellData;
                     }
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find(".point_check").bind("click", function () {
-                        let rowData = ui.rowData;
-                    });
                 }
             },
-            {title: 'POS', minWidth: 60, dataIndx: 'POINT_POSITION', sortable:false, editable:false,
+            {title: 'POS', minWidth: 60, dataIndx: 'POINT_POSITION', sortable:false, editable:true,
                 styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
             }
         ];
@@ -515,26 +508,33 @@
                 location: "remote", dataType: "json", method: "POST", recIndx: 'POINT_NUM',
                 url: "/paramQueryGridSelect",
                 postData: fnFormToJsonArrayData('inspection_result_value_form'),
-                // postData: {queryId: 'dataSource.getRownumEmptyData', 'COUNT': 20}, recIndx: 'ROWNUM',
                 getData: function (dataJSON) {
                     dataJSON.data = formattingData(dataJSON.data);
-                    // console.log('dataJSON',dataJSON.data);
                     return {data: dataJSON.data};
                 }
             },
             editorEnd: function( event, ui ) {
-                // console.log('editorEnd',ui)
-                let cell = this.getCell({ rowIndx: ui.rowIndx, dataIndx: ui.dataIndx })
-                // console.log(this.isDirty({rowIndx:ui.rowIndx}))
-                if(this.isDirty({rowIndx:ui.rowIndx})) {
-                    // cell.addClass("bg-real-yellow");
-                    // console.log(cell)
-                    // console.log($(cell).css('background-color','yellow'))
-                    // console.log($(cell).hasClass("bg-real-yellow"))
-                }else {
-                    // cell.removeClass("bg-real-yellow");
-                }
+                let idx = ui.rowIndx;
+                let dataIdx = ui.dataIndx;
 
+                setTimeout(function () {
+                    let cell = $inspectionResultValueGrid.pqGrid('getCell', { rowIndx: idx, dataIndx: dataIdx});
+                    if( $inspectionResultValueGrid.pqGrid('isDirty',{rowIndx: idx})) {
+                        cell.addClass("bg-real-yellow");
+                    }else {
+                        cell.removeClass("bg-real-yellow");
+                    }
+                },200);
+
+            },
+            change:function( event, ui ) {
+                let gridInstance = $inspectionResultValueGrid.pqGrid('getInstance').grid;
+                let changes = gridInstance.getChanges({format: 'byVal'});
+                if(changes.updateList.length > 0) {
+                    $("#inspection_result_value_save").prop("disabled",false);
+                }else {
+                    $("#inspection_result_value_save").prop("disabled",true);
+                }
             },
             refresh: function( event, ui ) {
                 setTimeout(function () {
@@ -560,6 +560,9 @@
                 if ($('#inspection_result_value_grid').pqGrid('instance')) {
                     $inspectionResultValueGrid.pqGrid('destroy');
                 }
+                fnResetForm("inspection_result_value_form");
+                prdNumCheckArr = [];
+                pointCheckArr = [];
                 $("#inspection_manage_search_btn").trigger('click');
             }
         })
@@ -602,11 +605,12 @@
             fnPostAjaxAsync(function(data, callFunctionParam){
                 // console.log(data);
                 realPrdNumArr = [];
-                $.each(data.list,function (idx,Item) {
-                    realPrdNumArr.push(Item.PRODUCT_NUM);
-                });
                 $("#SEL_REF_COLUMN").empty();
                 $("#SEL_REF_COLUMN")[0].add(new Option('Ref.',''));
+                $.each(data.list,function (idx,Item) {
+                    realPrdNumArr.push(Item.PRODUCT_NUM);
+                    $("#SEL_REF_COLUMN")[0].add(new Option('#'+Item.PRODUCT_NUM,Item.PRODUCT_NUM));
+                });
 
                 let qty = $("#inspection_result_value_form").find("#ORDER_QTY").val();
                 let colModel = fnCloneObj(inspectionResultValueColCommModel);
@@ -632,7 +636,6 @@
                                 styleHead: {'font-weight': 'bold', 'background': '#abc3e9', 'font-size': '12px'}
                             }
                         );
-                        $("#SEL_REF_COLUMN")[0].add(new Option('#'+i,i));
                     }
                 }
 
@@ -657,12 +660,33 @@
         }
 
         $('#inspection_result_value_save').on('click', function () {
-
             let data = $inspectionResultValueGrid.pqGrid('option', 'dataModel.data');
             let gridInstance = $inspectionResultValueGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
+            let orderQty = $("#inspection_result_value_form").find("#ORDER_QTY").val();
 
-            changes.ORDER_QTY = $("#inspection_result_value_form").find("#ORDER_QTY").val();
+            changes.ORDER_QTY = orderQty;
+
+            let flag = false;
+            $.each(data, function (idx,Item) {
+                for(var i=1;i<=orderQty;i++) {
+                    if(fnIsEmpty(Item["RESULT_VALUE_"+i])) {
+                        let nextVal = Item["RESULT_VALUE_"+(i)];
+                        if(i+1 <= orderQty){
+                            nextVal = Item["RESULT_VALUE_"+(i+1)];
+                        }
+                        if(!fnIsEmpty(nextVal)) {
+                            flag = true;
+                            return;
+                        }
+                    }
+                }
+            })
+            if(flag) {
+                fnAlert(null,"입력 정보를 확인해주세요.");
+                return false;
+            }
+
             let parameters = {'url': '/saveInspectResult', 'data': {data: JSON.stringify(changes)}};
             fnPostAjaxAsync(function (data) {
                 fnAlert(null,"저장되었습니다.");
@@ -706,6 +730,35 @@
             let controlSeq = $("#inspection_result_value_form").find("#CONTROL_SEQ").val();
             let controlDetailSeq = $("#inspection_result_value_form").find("#CONTROL_DETAIL_SEQ").val();
             inspectionResultPopupWindow(controlSeq,controlDetailSeq);
+        });
+
+        $('#deleteColPopBtn').on('click', function () {
+            let data = $inspectionResultValueGrid.pqGrid('option', 'dataModel.data');
+            if($("input[name=PRODUCT_NUM_CHECK]:checked").length == 0) {
+                fnAlert(null,"삭제할 대상을 선택해 주세요.");
+                return;
+            }
+            let prdNumStr = "";
+            $("input[name=PRODUCT_NUM_CHECK]:checked").each(function (index) {
+                let prdNum = $(this).data('target');
+                prdNumStr += "'" + prdNum + "',";
+            });
+            prdNumStr = prdNumStr.substring(0,prdNumStr.length-1);
+
+            let parameter = {
+                'queryId': 'inspection.deleteInspectionResultProdNumList',
+                'INSPECT_RESULT_SEQ': data[0].INSPECT_RESULT_SEQ,
+                'PRODUCT_NUM_LIST': prdNumStr
+            };
+            let parameters = {'url': '/json-remove', 'data': parameter};
+            fnPostAjaxAsync(function(data, callFunctionParam){
+                prdNumCheckArr = [];
+                fnAlert(null,"삭제되었습니다.");
+
+                $inspectionResultValueGrid.pqGrid('destroy');
+                resultValuePopGridSetting();
+
+            }, parameters, '');
         });
 
         $("#inspectionResultValueBarcodeImg").on('click', function (){
@@ -767,13 +820,12 @@
             }else {
                 let decimalIdx = min.indexOf(".");
                 let decimalLength = min.substring(decimalIdx + 1,min.length).length;
-                let randomNum = Math.random() * (max - min) + min;
+                let randomNum = Math.random() * Number(max - min) + Number(min);
 
                 console.log('decimalLength',decimalLength)
-                console.log('random',randomNum)
-                console.log('random', Math.random().toFixed(decimalLength) * (max - min) + min)
+                console.log('random',randomNum.toFixed(decimalLength))
 
-                return randomNum;
+                return randomNum.toFixed(decimalLength);
             }
         }
 
@@ -794,16 +846,11 @@
                 fnAlert(null,"copy될 컬럼을 선택해 주세요.");
                 return;
             }
+
             let fromVal = $("#COLUMN_FROM").val();
             let toVal = $("#COLUMN_TO").val();
             if(fromVal > toVal) {
                 fnAlert(null,"숫자 범위를 확인해주세요.");
-                return;
-            }
-            let idxF = fromVal.indexOf(".");
-            let idxT = toVal.indexOf(".");
-            if((idxF >= 0  && idxT < 0) || (idxF < 0 && idxT >= 0)) {
-                fnAlert(null,"소수점 자릿수를 확인해주세요.");
                 return;
             }
 
@@ -815,7 +862,10 @@
                     let prdNum = $(this).data('target');
                     if(!fnIsEmpty(rowData['RESULT_VALUE_'+standardCol])) {
                         let newJson = {}
-                        newJson['RESULT_VALUE_'+prdNum] = Number(rowData['RESULT_VALUE_'+standardCol]) + Number(getRandomArbitrary(fromVal,toVal))
+                        newJson['RESULT_VALUE_'+prdNum] = Number(rowData['RESULT_VALUE_'+standardCol]);
+                        if($("#CHECK_COPY").prop('checked')) {
+                            newJson['RESULT_VALUE_'+prdNum] += Number(getRandomArbitrary(fromVal,toVal));
+                        }
                         updateList.push({
                             rowIndx:rowData.pq_ri,
                             newRow:newJson,

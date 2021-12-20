@@ -179,7 +179,7 @@ public class InspectionServiceImpl implements InspectionService {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
 
-//        ArrayList<HashMap<String, Object>> oldList = null;
+        ArrayList<HashMap<String, Object>> oldList = null;
 //        ArrayList<HashMap<String, Object>> addList = null;
         ArrayList<HashMap<String, Object>> updateList = null;
 //        ArrayList<HashMap<String, Object>> deleteList = null;
@@ -188,6 +188,9 @@ public class InspectionServiceImpl implements InspectionService {
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
         }
 
+        if(jsonMap.containsKey("oldList")) {
+            oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
+        }
         if(jsonMap.containsKey("updateList")) {
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
         }
@@ -197,39 +200,47 @@ public class InspectionServiceImpl implements InspectionService {
         if(updateList != null && updateList.size() > 0) {
             for(int i=0;i<updateList.size();i++) {
                 HashMap<String,Object> hashMap = updateList.get(i);
+                HashMap<String,Object> oldMap = oldList.get(i);
+                if(oldMap.containsKey("POINT_POSITION")) { //updateInspectionResultPoint
+                    oldMap.put("POINT_SEQ",hashMap.get("POINT_SEQ"));
+                    oldMap.put("INSPECT_RESULT_SEQ",hashMap.get("INSPECT_RESULT_SEQ"));
+                    oldMap.put("POINT_POSITION",hashMap.get("POINT_POSITION"));
+                    oldMap.put("queryId", "inspection.updateInspectionResultPoint");
+                    innodaleDao.update(oldMap);
+                }
 
                 for(int j=1;j<=orderQty;j++) {
                     String prodNum = String.valueOf(j);
 
-                    hashMap.put("queryId", "inspection.selectExistsValue");
-                    hashMap.put("PRODUCT_NUM",prodNum);
+                    if(oldMap.containsKey("RESULT_VALUE_"+prodNum)) {
+                        hashMap.put("queryId", "inspection.selectExistsValue");
+                        hashMap.put("PRODUCT_NUM",prodNum);
 
-                    HashMap<String,Object> temp = (HashMap<String, Object>) innodaleDao.getInfo(hashMap);
-                    if (temp != null && temp.containsKey("INSPECT_RESULT_VALUE_SEQ")) {
-                        // updateInspectionResultValue
-                        if(hashMap.containsKey("RESULT_VALUE_"+prodNum)) {
-                            temp.put("LOGIN_USER_ID",userId);
-                            temp.put("RESULT_VALUE",hashMap.get("RESULT_VALUE_"+prodNum));
+                        HashMap<String,Object> temp = (HashMap<String, Object>) innodaleDao.getInfo(hashMap);
+                        if (temp != null && temp.containsKey("INSPECT_RESULT_VALUE_SEQ")) {
+                            // updateInspectionResultValue
+                            if(hashMap.containsKey("RESULT_VALUE_"+prodNum)) {
+                                temp.put("LOGIN_USER_ID",userId);
+                                temp.put("RESULT_VALUE",hashMap.get("RESULT_VALUE_"+prodNum));
 
-                            temp.put("queryId", "inspection.updateInspectionResultValue");
-                            innodaleDao.update(temp);
-                        }
+                                temp.put("queryId", "inspection.updateInspectionResultValue");
+                                innodaleDao.update(temp);
+                            }
+                        }else {
+                            if(hashMap.containsKey("RESULT_VALUE_"+prodNum)) {
+                                temp = new HashMap<>();
 
-                    }else {
-                        if(hashMap.containsKey("RESULT_VALUE_"+prodNum)) {
-                            temp = new HashMap<>();
+                                temp.put("PRODUCT_NUM",prodNum);
+                                temp.put("POINT_SEQ",hashMap.get("POINT_SEQ"));
+                                temp.put("INSPECT_RESULT_SEQ",hashMap.get("INSPECT_RESULT_SEQ"));
+                                temp.put("RESULT_VALUE",hashMap.get("RESULT_VALUE_"+prodNum));
+                                temp.put("LOGIN_USER_ID",userId);
 
-                            temp.put("PRODUCT_NUM",prodNum);
-                            temp.put("POINT_SEQ",hashMap.get("POINT_SEQ"));
-                            temp.put("INSPECT_RESULT_SEQ",hashMap.get("INSPECT_RESULT_SEQ"));
-                            temp.put("RESULT_VALUE",hashMap.get("RESULT_VALUE_"+prodNum));
-                            temp.put("LOGIN_USER_ID",userId);
-
-                            temp.put("queryId", "inspection.insertInspectionResultValue");
-                            innodaleDao.create(temp);
+                                temp.put("queryId", "inspection.insertInspectionResultValue");
+                                innodaleDao.create(temp);
+                            }
                         }
                     }
-
                 }
             }
         }
