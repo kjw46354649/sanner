@@ -201,7 +201,7 @@
                         <h3 style="margin-bottom: 5%;">템플릿 종류</h3>
                         <select class="wd_200 mr-20" name="SEL_TEMPLATE" id="SEL_TEMPLATE" style="font-size: 14px;">
                             <c:forEach var="vlocale" items="${HighCode.H_1102}">
-                                <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                                <option value="${vlocale.ETC1}">${vlocale.CODE_NM_KR}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -932,7 +932,7 @@
                 $("#common_excel_form #mapInputId").val('info:data:data2:data3');
                 $("#common_excel_form #paramName").val('CONTROL_SEQ_STR');
                 $("#common_excel_form #paramData").val(selRowData.CONTROL_SEQ +"" +selRowData.CONTROL_DETAIL_SEQ);
-                $("#common_excel_form #template").val('inspection_result_template_01');
+                $("#common_excel_form #template").val($("#SEL_TEMPLATE").val());
 
                 fnReportFormToHiddenFormPageAction("common_excel_form", "/downloadExcel");
             }
