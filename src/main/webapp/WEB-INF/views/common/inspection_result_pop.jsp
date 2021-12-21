@@ -318,6 +318,7 @@
                     <input type="hidden" id="SIZE_TXT" name="SIZE_TXT"/>
                     <input type="hidden" id="LAST_PRODUCT_NUM" name="LAST_PRODUCT_NUM"/>
                     <input type="hidden" id="INSPECT_RESULT_CNT" name="INSPECT_RESULT_CNT"/>
+                    <input type="hidden" id="POINT_IMG_GFILE_SEQ" name="POINT_IMG_GFILE_SEQ"/>
                 </form>
                 <div id="inspection_result_pop_grid"></div>
             </div>
@@ -1255,8 +1256,9 @@
                 changes.CONTROL_SEQ = $("#inspection_result_pop_form").find("#CONTROL_SEQ").val();
                 changes.CONTROL_DETAIL_SEQ = $("#inspection_result_pop_form").find("#CONTROL_DETAIL_SEQ").val();
                 changes.LAYER_AREA_NAME = $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val();
+                changes.POINT_IMG_GFILE_SEQ = $("#inspection_result_pop_form").find("#POINT_IMG_GFILE_SEQ").val();
 
-                html2canvas(document.querySelector("#myWindow")).then(
+                html2canvas(document.querySelector("#myContent")).then(
                 function(canvas) {
                     // return Canvas2Image.saveAsPNG(canvas);
                     let myImg = canvas.toDataURL("image/png");
@@ -1790,6 +1792,7 @@
                         $("#WORK_TYPE_DIV").text(data.info.WORK_TYPE_NM)
 
                         $("#inspection_result_pop_form").find("#QTY").val(data.info.QTY);
+                        $("#inspection_result_pop_form").find("#POINT_IMG_GFILE_SEQ").val(data.info.POINT_IMG_GFILE_SEQ);
                         $("#inspection_result_pop_form").find("#SIZE_TXT").val(data.info.SIZE_TXT);
                         $("#inspection_result_pop_form").find("#LAST_PRODUCT_NUM").val(data.info.LAST_PRODUCT_NUM);
                         $("#inspection_result_pop_form").find("#INSPECT_RESULT_CNT").val(data.info.INSPECT_RESULT_CNT);

@@ -13,8 +13,8 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.util.IOUtils;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
@@ -84,6 +84,7 @@ public class ExcelController {
             }
 
             // 검사 성적서 관련 추가 코드
+            Map<String,Object> tempMap = new HashMap<>();
             if(templateFileName.indexOf("inspection_result_template") >= 0) {
                 List<Map<String,Object>> pointList = (List<Map<String, Object>>) map.get("data2");
                 List<Map<String,Object>> valueList = (List<Map<String, Object>>) map.get("data");
@@ -108,11 +109,37 @@ public class ExcelController {
                     pointList.set(j,temp);
                 }
                 map.put("data2",pointList);
+                tempMap = (Map<String, Object>) valueList.get(0);
             }
 
             is = new BufferedInputStream(new FileInputStream(excelDir + File.separator + templateFileName + ".xlsx"));
             XLSTransformer xls = new XLSTransformer();
             workbook = xls.transformXLS(is, map);
+
+            if(templateFileName.indexOf("inspection_result_template") >= 0) {
+                tempMap.put("queryId","common.selectGfileFileListInfo");
+                HashMap<String,Object> imgInfo = (HashMap<String, Object>) innodaleService.getInfo(tempMap);
+
+                XSSFSheet sheet = (XSSFSheet) workbook.getSheetAt(0);
+
+                InputStream ips = new FileInputStream(imgInfo.get("FILE_PATH")+"");
+                byte[] bytes = IOUtils.toByteArray(ips);
+                int pictureIdx = workbook.addPicture(bytes, XSSFWorkbook.PICTURE_TYPE_JPEG);
+                ips.close();
+
+                XSSFCreationHelper helper = (XSSFCreationHelper) workbook.getCreationHelper();
+                XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
+                XSSFClientAnchor anchor = (XSSFClientAnchor) helper.createClientAnchor();
+
+                anchor.setCol1(1);
+                anchor.setCol2(12);
+                anchor.setRow1(11);
+                anchor.setRow2(41);
+
+                XSSFPicture picture = (XSSFPicture) drawing.createPicture(anchor,pictureIdx);
+
+                picture.resize(1.075,1.032);
+            }
 
             res.setHeader("Content-Disposition", CommonUtility.getDisposition(templateFileName + date + ".xlsx", CommonUtility.getBrowser(req)));
             res.setHeader("Content-Transfer-Encoding", "binary");

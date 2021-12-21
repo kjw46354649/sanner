@@ -227,10 +227,6 @@
     <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ">
 </form>
 
-
-
-
-
 <script>
 
 
@@ -432,6 +428,7 @@
             strNoRows: g_noData,
             columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: inspectionManageFilterRender}, filterModel: { mode: 'OR' },
             //scrollModel: {autoFit: true},
+            selectionModel: {type: 'row', mode: 'single'},
             numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
             swipeModel: {on: false},
             showTitle: false,
@@ -913,11 +910,15 @@
         });
 
         $('#exportInspectResultBtn').on('click', function () {
-            let arr = inspectionManageGridId01.pqGrid('getInstance').grid.Selection().getSelection();
-            console.log(arr);
-            if(arr.length > 0) {
-                $("#exportCount").text(arr.length);
-                $("#inspection_result_export_popup").modal('show');
+            if(SelectedRowIndex.length > 0) {
+                let selRowData = inspectionManageGridId01.pqGrid('getRowData', {rowIndx: SelectedRowIndex[0]})
+                if(selRowData.INSPECT_RESULT_QTY > 0) {
+                    $("#exportCount").text(selRowData.INSPECT_RESULT_QTY);
+                    $("#inspection_result_export_popup").modal('show');
+                }else {
+                    fnAlert(null, "검사 성적서 출력은 성적서 입력 이후 가능합니다.");
+                    return;
+                }
             }else {
                 fnAlert(null, "출력 대상을 선택하세요.");
                 return;
@@ -925,18 +926,16 @@
         });
 
         $('#exportExcelBtn').on('click', function () {
-            let arr = inspectionManageGridId01.pqGrid('getInstance').grid.Selection().getSelection();
-
-            if(arr.length > 0) {
+            if(SelectedRowIndex.length > 0) {
+                let selRowData = inspectionManageGridId01.pqGrid('getRowData', {rowIndx: SelectedRowIndex[0]})
                 $("#common_excel_form #sqlId").val('selectInspectResultControlInfoExcel:selectInspectResultValueListExcel:selectInspectResultPointListExcel:selectInspectionResultPrdNumListExcel');
                 $("#common_excel_form #mapInputId").val('info:data:data2:data3');
                 $("#common_excel_form #paramName").val('CONTROL_SEQ_STR');
-                $("#common_excel_form #paramData").val(arr[0].rowData.CONTROL_SEQ +"" +arr[0].rowData.CONTROL_DETAIL_SEQ);
+                $("#common_excel_form #paramData").val(selRowData.CONTROL_SEQ +"" +selRowData.CONTROL_DETAIL_SEQ);
                 $("#common_excel_form #template").val('inspection_result_template_01');
 
                 fnReportFormToHiddenFormPageAction("common_excel_form", "/downloadExcel");
             }
-
         });
 
 

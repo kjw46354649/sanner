@@ -106,7 +106,6 @@ public class InspectionServiceImpl implements InspectionService {
         binaryData = binaryData.replaceAll("data:image/png;base64,", "");
 
         byte[] file = Base64.decodeBase64(binaryData);
-        System.out.println("binary file   "  + binaryData);
 
         FileOutputStream stream = null;
         File newFile = new File(uploadFilePath + File.separator + serverFullFileName + ".png");
@@ -114,19 +113,20 @@ public class InspectionServiceImpl implements InspectionService {
         stream.write(file);
         stream.close();
 
-//        HashMap<String, Object> fileMap = new HashMap<String, Object>();
-//        fileMap.put("FILE_NM", serverFileName);
-//        fileMap.put("FILE_PATH", uploadFilePath + File.separator + serverFileName);
-//        fileMap.put("ORGINAL_FILE_NM", serverFileName);
-//        fileMap.put("FILE_TYPE", "image");
-//        fileMap.put("FILE_EXT", "png");
-//        fileMap.put("FILE_SIZE", newFile.length());
-//
-//        fileMap.put("queryId","common.insertFileGroup");
-//        innodaleDao.create(fileMap);
-//
-//        fileMap.put("queryId","common.insertFile");
-//        innodaleDao.create(fileMap);
+        HashMap<String, Object> fileMap = new HashMap<String, Object>();
+        fileMap.put("FILE_NM", serverFullFileName + ".png");
+        fileMap.put("FILE_PATH", uploadFilePath + File.separator + serverFullFileName + ".png");
+        fileMap.put("TIME_PATH", uploadTimePath);
+        fileMap.put("ORGINAL_FILE_NM", serverFullFileName + ".png");
+        fileMap.put("FILE_TYPE", "image");
+        fileMap.put("FILE_EXT", "png");
+        fileMap.put("FILE_SIZE", newFile.length());
+
+        fileMap.put("queryId","common.insertFileGroup");
+        innodaleDao.create(fileMap);
+
+        fileMap.put("queryId","common.insertFile");
+        innodaleDao.create(fileMap);
 
         if(addList != null && addList.size() > 0) {
             jsonMap.put("LOGIN_USER_ID",userId);
@@ -140,6 +140,9 @@ public class InspectionServiceImpl implements InspectionService {
                 HashMap<String,Object> seqData = (HashMap<String, Object>) this.innodaleDao.getInfo(jsonMap);
                 inspectResultSeq = (String) seqData.get("INSPECT_RESULT_SEQ");
 
+                jsonMap.put("INSPECT_RESULT_SEQ",inspectResultSeq);
+                jsonMap.put("queryId","inspection.insertInspectionResult");
+                innodaleDao.create(jsonMap);
             }
 
 
@@ -150,7 +153,7 @@ public class InspectionServiceImpl implements InspectionService {
                 hashMap.put("CONTROL_DETAIL_SEQ",jsonMap.get("CONTROL_DETAIL_SEQ"));
                 hashMap.put("LAYER_AREA_NAME",jsonMap.get("LAYER_AREA_NAME"));
                 hashMap.put("INSPECT_RESULT_SEQ",inspectResultSeq);
-//                hashMap.put("IMG_GFILE_SEQ",fileMap.get("GFILE_SEQ"));
+                hashMap.put("IMG_GFILE_SEQ",fileMap.get("GFILE_SEQ"));
 
                 hashMap.put("queryId","inspection.insertInspectionResultPoint");
                 innodaleDao.create(hashMap);
@@ -158,8 +161,9 @@ public class InspectionServiceImpl implements InspectionService {
                 hashMap.put("queryId","inspection.insertInspectionResultValue");
                 innodaleDao.create(hashMap);
 
-//                hashMap.put("queryId","inspection.updateInspectionResult");
-//                innodaleDao.update(hashMap);
+                hashMap.put("queryId","inspection.updateInspectionResult");
+                innodaleDao.update(hashMap);
+
             }
         }
 
@@ -190,6 +194,10 @@ public class InspectionServiceImpl implements InspectionService {
                             innodaleDao.create(tempMap);
                         }
                     }
+
+                    tempMap.put("IMG_GFILE_SEQ",fileMap.get("GFILE_SEQ"));
+                    tempMap.put("queryId","inspection.updateInspectionResult");
+                    innodaleDao.update(tempMap);
                 }
             }
         }
@@ -205,7 +213,26 @@ public class InspectionServiceImpl implements InspectionService {
 
                     hashMap.put("queryId","inspection.deleteInspectionResultPoint");
                     innodaleDao.remove(hashMap);
+
+                    hashMap.put("IMG_GFILE_SEQ",fileMap.get("GFILE_SEQ"));
+                    hashMap.put("queryId","inspection.updateInspectionResult");
+                    innodaleDao.update(hashMap);
                 }
+            }
+        }
+
+        if(jsonMap.get("POINT_IMG_GFILE_SEQ") != null && !jsonMap.get("POINT_IMG_GFILE_SEQ").equals("")) {
+            jsonMap.put("queryId","common.selectGfileFileListInfo");
+            jsonMap.put("GFILE_SEQ",jsonMap.get("POINT_IMG_GFILE_SEQ"));
+            HashMap<String,Object> temp = (HashMap<String, Object>) innodaleDao.getInfo(jsonMap);
+            String filePath = (String) temp.get("FILE_PATH");
+            File orgFile = new File(filePath);
+
+            if(orgFile.exists()) {
+                orgFile.delete();
+
+                temp.put("queryId","common.deleteFileKey");
+                innodaleDao.remove(temp);
             }
         }
 
