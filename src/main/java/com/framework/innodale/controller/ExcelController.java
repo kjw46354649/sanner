@@ -83,6 +83,33 @@ public class ExcelController {
                 map.put(arrayMapInputIds[j], dataList);
             }
 
+            // 검사 성적서 관련 추가 코드
+            if(templateFileName.indexOf("inspection_result_template") >= 0) {
+                List<Map<String,Object>> pointList = (List<Map<String, Object>>) map.get("data2");
+                List<Map<String,Object>> valueList = (List<Map<String, Object>>) map.get("data");
+
+                for(int j=0;j<pointList.size();j++) {
+                    Map<String,Object> temp = pointList.get(j);
+                    String pointSeq = String.valueOf(temp.get("POINT_SEQ"));
+                    List<String> list = new ArrayList<>();
+
+                    for(int i=0;i<valueList.size();i++) {
+                        Map<String,Object> valueMap = valueList.get(i);
+                        String targetPoint = String.valueOf(valueMap.get("POINT_SEQ")+"");
+                        String resultValue = String.valueOf(valueMap.get("RESULT_VALUE")+"");
+
+                        if(targetPoint.equals(pointSeq)) {
+                            list.add(resultValue);
+                        }
+                    }
+                    if(list.size() > 0) {
+                        temp.put("list",list);
+                    }
+                    pointList.set(j,temp);
+                }
+                map.put("data2",pointList);
+            }
+
             is = new BufferedInputStream(new FileInputStream(excelDir + File.separator + templateFileName + ".xlsx"));
             XLSTransformer xls = new XLSTransformer();
             workbook = xls.transformXLS(is, map);

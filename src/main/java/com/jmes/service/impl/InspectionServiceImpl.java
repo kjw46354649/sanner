@@ -2,22 +2,28 @@ package com.jmes.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.dao.InnodaleDao;
 import com.jmes.dao.OrderDao;
 import com.jmes.service.InspectionService;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class InspectionServiceImpl implements InspectionService {
     @Autowired
     public InnodaleDao innodaleDao;
+    @Autowired
+    public Environment environment;
 
     @Override
     public void saveLayer(Map<String, Object> map, Model model) throws Exception {
@@ -86,6 +92,42 @@ public class InspectionServiceImpl implements InspectionService {
             deleteList = (ArrayList<HashMap<String, Object>>) jsonMap.get("deleteList");
         }
 
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", new Locale("ko", "KR"));
+        String uploadDatePath = formatter.format(new Date()).substring(0, 8) + File.separator + formatter.format(new Date());
+        String uploadTimePath = File.separator + formatter.format(new Date());
+        String uploadFilePath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.upload.inspect.path") + File.separator + uploadDatePath;
+//
+        CommonUtility.createFileDirectory(new File(uploadFilePath));
+//
+        String serverFileName = CommonUtility.getUUIDString();
+        String serverFullFileName = "file-" + serverFileName;
+
+        String binaryData = (String) jsonMap.get("imgSrc");
+        binaryData = binaryData.replaceAll("data:image/png;base64,", "");
+
+        byte[] file = Base64.decodeBase64(binaryData);
+        System.out.println("binary file   "  + binaryData);
+
+        FileOutputStream stream = null;
+        File newFile = new File(uploadFilePath + File.separator + serverFullFileName + ".png");
+        stream = new FileOutputStream(newFile);
+        stream.write(file);
+        stream.close();
+
+//        HashMap<String, Object> fileMap = new HashMap<String, Object>();
+//        fileMap.put("FILE_NM", serverFileName);
+//        fileMap.put("FILE_PATH", uploadFilePath + File.separator + serverFileName);
+//        fileMap.put("ORGINAL_FILE_NM", serverFileName);
+//        fileMap.put("FILE_TYPE", "image");
+//        fileMap.put("FILE_EXT", "png");
+//        fileMap.put("FILE_SIZE", newFile.length());
+//
+//        fileMap.put("queryId","common.insertFileGroup");
+//        innodaleDao.create(fileMap);
+//
+//        fileMap.put("queryId","common.insertFile");
+//        innodaleDao.create(fileMap);
+
         if(addList != null && addList.size() > 0) {
             jsonMap.put("LOGIN_USER_ID",userId);
             jsonMap.put("queryId","inspection.selectInspectionResultExistCheck");
@@ -98,9 +140,6 @@ public class InspectionServiceImpl implements InspectionService {
                 HashMap<String,Object> seqData = (HashMap<String, Object>) this.innodaleDao.getInfo(jsonMap);
                 inspectResultSeq = (String) seqData.get("INSPECT_RESULT_SEQ");
 
-                jsonMap.put("INSPECT_RESULT_SEQ",inspectResultSeq);
-                jsonMap.put("queryId","inspection.insertInspectionResult");
-                innodaleDao.create(jsonMap);
             }
 
 
@@ -111,12 +150,16 @@ public class InspectionServiceImpl implements InspectionService {
                 hashMap.put("CONTROL_DETAIL_SEQ",jsonMap.get("CONTROL_DETAIL_SEQ"));
                 hashMap.put("LAYER_AREA_NAME",jsonMap.get("LAYER_AREA_NAME"));
                 hashMap.put("INSPECT_RESULT_SEQ",inspectResultSeq);
+//                hashMap.put("IMG_GFILE_SEQ",fileMap.get("GFILE_SEQ"));
 
                 hashMap.put("queryId","inspection.insertInspectionResultPoint");
                 innodaleDao.create(hashMap);
 
                 hashMap.put("queryId","inspection.insertInspectionResultValue");
                 innodaleDao.create(hashMap);
+
+//                hashMap.put("queryId","inspection.updateInspectionResult");
+//                innodaleDao.update(hashMap);
             }
         }
 

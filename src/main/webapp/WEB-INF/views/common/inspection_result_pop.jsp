@@ -1256,42 +1256,50 @@
                 changes.CONTROL_DETAIL_SEQ = $("#inspection_result_pop_form").find("#CONTROL_DETAIL_SEQ").val();
                 changes.LAYER_AREA_NAME = $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val();
 
-                let parameters = {'url': '/modifyInspectResult', 'data': {data: JSON.stringify(changes)}};
+                html2canvas(document.querySelector("#myWindow")).then(
+                function(canvas) {
+                    // return Canvas2Image.saveAsPNG(canvas);
+                    let myImg = canvas.toDataURL("image/png");
+                    myImg = myImg.replace("data:image/png;base64,", "");
 
+                    changes.imgSrc = myImg;
+
+                    let parameters = {'url': '/modifyInspectResult', 'data': {data: JSON.stringify(changes)}};
+
+                    fnPostAjaxAsync(function (data) {
+                        // console.log('data',data);
+                        fnAlert(null,"저장되었습니다.");
+                        setTimeout(function () {
+                            alertify.alert().close();
+                        },1000);
+
+                        inspectionResultPopGrid.pqGrid('option', 'editable', false);
+
+                        inspectionResultPopGrid.pqGrid("option", "dataModel.postData", function(ui){
+                            return fnFormToJsonArrayData('inspection_result_pop_form');
+                        } );
+                        inspectionResultPopGrid.pqGrid("refreshDataAndView");
+
+                        let result = inspectionResultPopGrid.pqGrid('option', 'dataModel.data');
+
+                        if(!fnIsEmpty(prodNo)) {
+                            $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(prodNo);
+                        }
+                        if(!fnIsEmpty(data.result.INSPECT_RESULT_SEQ)) {
+                            $("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val(data.result.INSPECT_RESULT_SEQ);
+                        }
+                        if(!fnIsEmpty(data.result.LAST_PRODUCT_NUM)) {
+                            $("#inspection_result_pop_form").find("#LAST_PRODUCT_NUM").val(data.result.LAST_PRODUCT_NUM);
+                        }
+                        if(!fnIsEmpty(data.result.INSPECT_RESULT_CNT)) {
+                            $("#inspection_result_pop_form").find("#INSPECT_RESULT_CNT").val(data.result.INSPECT_RESULT_CNT);
+                        }
+
+                        settingProdNumDiv('new')
+                        settingBtn('save');
+                    }, parameters, '');
+                });
                 // console.log('changes',changes)
-
-                fnPostAjaxAsync(function (data) {
-                    // console.log('data',data);
-                    fnAlert(null,"저장되었습니다.");
-                    setTimeout(function () {
-                        alertify.alert().close();
-                    },1000);
-
-                    inspectionResultPopGrid.pqGrid('option', 'editable', false);
-
-                    inspectionResultPopGrid.pqGrid("option", "dataModel.postData", function(ui){
-                        return fnFormToJsonArrayData('inspection_result_pop_form');
-                    } );
-                    inspectionResultPopGrid.pqGrid("refreshDataAndView");
-
-                    let result = inspectionResultPopGrid.pqGrid('option', 'dataModel.data');
-
-                    if(!fnIsEmpty(prodNo)) {
-                        $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(prodNo);
-                    }
-                    if(!fnIsEmpty(data.result.INSPECT_RESULT_SEQ)) {
-                        $("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val(data.result.INSPECT_RESULT_SEQ);
-                    }
-                    if(!fnIsEmpty(data.result.LAST_PRODUCT_NUM)) {
-                        $("#inspection_result_pop_form").find("#LAST_PRODUCT_NUM").val(data.result.LAST_PRODUCT_NUM);
-                    }
-                    if(!fnIsEmpty(data.result.INSPECT_RESULT_CNT)) {
-                        $("#inspection_result_pop_form").find("#INSPECT_RESULT_CNT").val(data.result.INSPECT_RESULT_CNT);
-                    }
-
-                    settingProdNumDiv('new')
-                    settingBtn('save');
-                }, parameters, '');
             });
 
             $("#CONTROL_NUM_DIV").on("click", function () {
@@ -1350,6 +1358,9 @@
                 html2canvas(document.querySelector("#myWindow")).then(
                     function(canvas) {
                         // return Canvas2Image.saveAsPNG(canvas);
+                        var myImg = canvas.toDataURL("image/png");
+                        myImg = myImg.replace("data:image/png;base64,", "");
+
                         saveAs(canvas.toDataURL(),  'myWindow_Media.jpg');
                 });
             });

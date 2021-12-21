@@ -2672,14 +2672,16 @@
             CONTROL_SEQ,
             CONTROL_DETAIL_SEQ,
             LAYER_AREA_NAME,
+            IMG_GFILE_SEQ,
             INSERT_ID
         )
         VALUES (
-           #{INSPECT_RESULT_SEQ},
-           #{CONTROL_SEQ},
-           #{CONTROL_DETAIL_SEQ},
-           #{LAYER_AREA_NAME},
-           #{LOGIN_USER_ID}
+            #{INSPECT_RESULT_SEQ},
+            #{CONTROL_SEQ},
+            #{CONTROL_DETAIL_SEQ},
+            #{LAYER_AREA_NAME},
+            #{IMG_GFILE_SEQ},
+            #{LOGIN_USER_ID}
         )
     </insert>
 
@@ -2731,6 +2733,9 @@
             UPDATE_DT = NOW(),
             <if test="LAYER_AREA_NAME != null and LAYER_AREA_NAME !=''">
                 LAYER_AREA_NAME = #{LAYER_AREA_NAME},
+            </if>
+            <if test="IMG_GFILE_SEQ != null and IMG_GFILE_SEQ !=''">
+                IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
             </if>
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE INSPECT_RESULT_SEQ = #{INSPECT_RESULT_SEQ}
