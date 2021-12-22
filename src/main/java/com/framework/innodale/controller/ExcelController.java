@@ -85,7 +85,7 @@ public class ExcelController {
 
             // 검사 성적서 관련 추가 코드
             Map<String,Object> tempMap = new HashMap<>();
-            if(templateFileName.indexOf("inspection_result_template") >= 0) {
+            if(templateFileName.indexOf("inspection_result_template_01") >= 0) {
                 List<Map<String,Object>> pointList = (List<Map<String, Object>>) map.get("data2");
                 List<Map<String,Object>> valueList = (List<Map<String, Object>>) map.get("data");
 
