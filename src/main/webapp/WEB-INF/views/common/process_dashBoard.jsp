@@ -840,12 +840,17 @@
                     }
                 });
 
-                if($("#pq-head-cell-u3-0-"+(idx+15) +"-right .pq-title-span .header_inside").length == 0) {
-                    let html = '<br><span class="header_inside">' + totalCnt + " (" + totalQty + ")" + '</span>';
-                    $("#pq-head-cell-u3-0-"+(idx+15) +"-right .pq-title-span").append(html)
-                }else {
-                    $("#pq-head-cell-u3-0-"+(idx+15) +"-right .pq-title-span .header_inside").text(totalCnt + " (" + totalQty + ")");
-                }
+                $("#process_dash_board_main_grid").find("[id^='pq-head-cell']").each(function (index) {
+                    let colIdx = $(this).attr('pq-col-indx');
+                    if(colIdx == (idx+15)) {
+                        if($(this).find(".pq-title-span .header_inside").length == 0) {
+                            let html = '<br><span class="header_inside">' + totalCnt + " (" + totalQty + ")" + '</span>';
+                            $(this).find(".pq-title-span").append(html);
+                        }else {
+                            $(this).find(".pq-title-span .header_inside").text(totalCnt + " (" + totalQty + ")");
+                        }
+                    }
+                })
             });
         }
         const processDashBoardMainGrid = $("#process_dash_board_main_grid");
