@@ -8,11 +8,13 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import net.sf.jxls.transformer.XLSTransformer;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
+import java.awt.Color;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -86,6 +89,7 @@ public class ExcelController {
             // 검사 성적서 관련 추가 코드
             Map<String,Object> tempMap = new HashMap<>();
             if(templateFileName.indexOf("inspection_result_template") >= 0) {
+                List<Map<String,Object>> prodList = (List<Map<String, Object>>) map.get("data3");
                 List<Map<String,Object>> pointList = (List<Map<String, Object>>) map.get("data2");
                 List<Map<String,Object>> valueList = (List<Map<String, Object>>) map.get("data");
 
@@ -93,6 +97,7 @@ public class ExcelController {
                     Map<String,Object> temp = pointList.get(j);
                     String pointSeq = String.valueOf(temp.get("POINT_SEQ"));
                     List<String> list = new ArrayList<>();
+
 
                     for(int i=0;i<valueList.size();i++) {
                         Map<String,Object> valueMap = valueList.get(i);
@@ -103,9 +108,12 @@ public class ExcelController {
                             list.add(resultValue);
                         }
                     }
-                    if(list.size() > 0) {
-                        temp.put("list",list);
+                    if(list.size() < prodList.size()) {
+                        while (list.size() < prodList.size()) {
+                            list.add("");
+                        }
                     }
+                    temp.put("list",list);
                     pointList.set(j,temp);
                 }
                 map.put("data2",pointList);
@@ -139,6 +147,46 @@ public class ExcelController {
                 XSSFPicture picture = (XSSFPicture) drawing.createPicture(anchor,pictureIdx);
 
                 picture.resize(1.075,1.032);
+            }else if(templateFileName.indexOf("inspection_result_template_02") >= 0) {
+                List<Map<String,Object>> pointList = (List<Map<String, Object>>) map.get("data2");
+                List<Map<String,Object>> prodList = (List<Map<String, Object>>) map.get("data3");
+                XSSFSheet sheet = (XSSFSheet) workbook.getSheetAt(0);
+                int cellMax = 19 + pointList.size();
+                int last = 5 + prodList.size();
+
+
+                for(int i=19;i<=cellMax;i++) {
+                    XSSFCellStyle xssfCellStyle = createHeaderCellStyle(workbook);
+                    xssfCellStyle.setBorderLeft(BorderStyle.MEDIUM);
+                    xssfCellStyle.setBorderBottom(BorderStyle.MEDIUM);
+                    sheet.getRow(i).getCell(1).setCellStyle(xssfCellStyle);
+
+                    for(int j=2;j<=last;j++) {
+                        xssfCellStyle = createDefaultCellStyle(workbook);
+                        if(i==19) {
+                            xssfCellStyle = createHeaderCellStyle(workbook);
+                            if(j > 5) {
+                                xssfCellStyle.setFillPattern(FillPatternType.NO_FILL);
+                                if(j == last) {
+                                    xssfCellStyle.setBorderRight(BorderStyle.MEDIUM);
+                                }
+                            }
+                        }else {
+                            if(j > 5) {
+                                xssfCellStyle.setAlignment(HorizontalAlignment.RIGHT);
+                                if(j == last) {
+                                    xssfCellStyle.setBorderRight(BorderStyle.MEDIUM);
+                                }
+                            }
+                            if(i==cellMax) {
+                                xssfCellStyle.setBorderBottom(BorderStyle.MEDIUM);
+                            }
+                        }
+                        sheet.getRow(i).getCell(j).setCellStyle(xssfCellStyle);
+                    }
+                }
+                sheet.addMergedRegion(new CellRangeAddress(19,(19 + pointList.size()),1,1));
+
             }
 
             res.setHeader("Content-Disposition", CommonUtility.getDisposition(templateFileName + date + ".xlsx", CommonUtility.getBrowser(req)));
@@ -157,6 +205,39 @@ public class ExcelController {
         }
     }
 
+    public XSSFCellStyle createHeaderCellStyle(Workbook workbook) {
+        XSSFCellStyle xssfCellStyle = (XSSFCellStyle) workbook.createCellStyle();
+        XSSFColor xssfColor = new XSSFColor(new Color(217,217,217));
+        Font font = workbook.createFont();
+        font.setBold(true);
+
+        xssfCellStyle.setBorderTop(BorderStyle.MEDIUM);
+        xssfCellStyle.setBorderBottom(BorderStyle.THIN);
+        xssfCellStyle.setBorderLeft(BorderStyle.THIN);
+        xssfCellStyle.setBorderRight(BorderStyle.THIN);
+
+        xssfCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        xssfCellStyle.setAlignment(HorizontalAlignment.CENTER);
+        xssfCellStyle.setFillForegroundColor(xssfColor);
+        xssfCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        xssfCellStyle.setFont(font);
+
+        return xssfCellStyle;
+    }
+
+    public XSSFCellStyle createDefaultCellStyle(Workbook workbook) {
+        XSSFCellStyle xssfCellStyle = (XSSFCellStyle) workbook.createCellStyle();
+
+        xssfCellStyle.setBorderTop(BorderStyle.THIN);
+        xssfCellStyle.setBorderBottom(BorderStyle.THIN);
+        xssfCellStyle.setBorderLeft(BorderStyle.THIN);
+        xssfCellStyle.setBorderRight(BorderStyle.THIN);
+
+        xssfCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        xssfCellStyle.setAlignment(HorizontalAlignment.CENTER);
+
+        return xssfCellStyle;
+    }
 
 
     @RequestMapping("/itemOrderRegisterOrderSheetPrint")

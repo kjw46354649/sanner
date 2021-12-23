@@ -188,28 +188,25 @@
 </div>
 <!-- 검사 성적서  layer popup : E -->
 <div class="popup_container in" id="inspection_result_export_popup" style="display: none;">
-    <div class="controlCloseLayerPopup" style="width: 570px; height: 300px;">
+    <div class="controlCloseLayerPopup" style="width: 490px; height: 280px;">
         <h3>검사성적서 출력</h3>
         <hr>
         <form class="form-inline" id="inspection_result_export_form" role="form">
             <input type="hidden" name="queryId" id="queryId" value="material.insertStockEquipMapping">
             <input type="hidden" name="INSIDE_STOCK_SEQ" id="INSIDE_STOCK_SEQ" value="">
             <input type="hidden" name="STOCK_EQUIP_SEQ" id="STOCK_EQUIP_SEQ" value="500000">
-            <div class="d-inline-block align-items-center ml-10 mt-10" style="margin-bottom: 7px;height: 60%;">
-                <div class="d-flex" style="width: 500px;">
-                    <div style="width: 50%;margin-left: 8%;">
-                        <h3 style="margin-bottom: 5%;">템플릿 종류</h3>
+            <div class="d-inline-block align-items-center ml-10 mt-10" style="margin-bottom: 7px;height: 60%;width: 100%;">
+                <div class="d-inline-block" style="margin-left: 12%;margin-top: 4%;">
+                    <span class="slt_wrap">
+                        <span class="mr-15" style="margin-bottom: 5%;font-size: 20px;color: black;vertical-align: middle;">템플릿 종류</span>
                         <select class="wd_200 mr-20" name="SEL_TEMPLATE" id="SEL_TEMPLATE" style="font-size: 14px;">
                             <c:forEach var="vlocale" items="${HighCode.H_1102}">
                                 <option value="${vlocale.ETC1}">${vlocale.CODE_NM_KR}</option>
                             </c:forEach>
                         </select>
-                    </div>
-                    <div style="width: 50%;font-size: 28px;margin-top: 6%;color: black;margin-left: 5%;">
-                        <span>선택 대상  :  <span id="exportCount">32</span></span>
-                    </div>
+                    </span>
                 </div>
-                <div class="text-center" style="margin-top: 5%;font-size: 25px;color: black;font-weight: bold;">
+                <div class="text-center" style="margin-top: 7%;font-size: 25px;color: black;font-weight: bold;">
                     <span>검사 성적서 추출을 진행하시겠습니까?</span>
                 </div>
             </div>
