@@ -394,7 +394,8 @@
             ERROR_QTY = #{ERROR_QTY},
             ERROR_REASON = #{ERROR_REASON},
             UPDATE_DT = NOW(),
-            UPDATE_ID = #{userInfo.USER_ID}
+            UPDATE_ID = #{userInfo.USER_ID},
+            WORK_USER_ID = #{userInfo.USER_ID}
         WHERE 1 = 1
             AND DEL_YN = 'N'
             AND MCT_WORK_SEQ = #{MCT_WORK_SEQ}
