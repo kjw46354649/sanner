@@ -251,7 +251,7 @@
             {title: 'MCT_WORK_SEQ', dataType: 'string', dataIndx: 'MCT_WORK_SEQ', hidden:true},
             {title: 'INSPECT_TYPE', dataType: 'string', dataIndx: 'INSPECT_TYPE', hidden:true},
             {title: 'INSPECT_GRADE', dataType: 'string', dataIndx: 'INSPECT_GRADE', hidden:true},
-            {title: '결과<br>등록', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_INSERT', width: 60, minWidth: 60, editable: false,
+            {title: '결과<br>등록', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_INSERT', width: 70, minWidth: 70, editable: false,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_SEQ > 0) return "<button type=\"button\" class=\"miniBtn black\">등록</button>";
                     return '';
@@ -263,7 +263,7 @@
                     {title: '입고일시', dataType: 'string', dataIndx: 'OUTSIDE_IN_DT', minWidth: 80, width: 80, editable: false},
                 ]
             },
-            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 90, width: 90, editable: false},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 90, width: 100, editable: false},
             {title: '긴<br>급', minWidth: 25, width: 25, dataType: 'string', dataIndx: 'EMERGENCY_YN_NM', editable: false},
             {title: '불량<br>반품', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'INSPECT_GRADE_SHORT_NM', editable: false},
             {title: '주요<br>검사', width: 65, dataType: 'string', dataIndx: 'MAIN_INSPECTION_NM', editable: false},
@@ -287,7 +287,7 @@
                     });
                 }
             },
-            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', minWidth: 135, width: 135, editable: false},
+            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', minWidth: 135, width: 140, editable: false},
             // {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40, editable: false},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
@@ -304,7 +304,7 @@
             },
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 50, width: 50, editable: false},
             {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 110, width: 110, editable: false},
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 75, width: 75, editable: false},
+            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 85, width: 85, editable: false},
             {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 40, editable: false,
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -320,10 +320,10 @@
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 75, width: 75, editable: false},
             {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 75, width: 75, editable: false},
             {title: '출하<br>일자', dataType: 'string', dataIndx: 'OUT_FINISH_DT', minWidth: 50, width: 50, editable: false},
-            {title: '주문사항 비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 100, width: 100, editable: false},
+            {title: '주문사항 비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 110, width: 150, editable: false},
             {title: '기타 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', minWidth: 100, width: 100, editable: false},
             // {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 210, width: 210, editable: false},
-            {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', minWidth: 80, width: 80, editable: false},
+            // {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', minWidth: 80, width: 80, editable: false},
             {title: '검사 성적서', datatype: 'string', align: 'center', colModel: [
                     {title: 'Qty.', datatype: 'string', dataIndx: 'INSPECT_RESULT_QTY', minWidth: 40, width: 40, editable: false,
                         render: function (ui) {
