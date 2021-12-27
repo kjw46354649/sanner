@@ -1087,8 +1087,15 @@
                 },
                 'keyup': function (e) {
                     if(e.keyCode == 13) {
+
                         let barcodeNum = fnBarcodeKo2En($(this).val());
-                        settingPopData(barcodeNum);
+                        if($("#startInspectBtn").css( "display" ) == "none") {
+                            fnConfirm(null, "현재&nbsp;&nbsp;데이터&nbsp;&nbsp;입력 모드입니다.<br>저장되지&nbsp;&nbsp;않은&nbsp;&nbsp;데이터는&nbsp;&nbsp;삭제됩니다.<br><br> 계속 진행하시겠습니까?", function () {
+                                settingPopData(barcodeNum);
+                            })
+                        }else {
+                            settingPopData(barcodeNum);
+                        }
 
                         $(this).val('');
                     }
