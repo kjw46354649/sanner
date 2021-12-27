@@ -1306,6 +1306,9 @@
                         if(!fnIsEmpty(data.result.INSPECT_RESULT_CNT)) {
                             $("#inspection_result_pop_form").find("#INSPECT_RESULT_CNT").val(data.result.INSPECT_RESULT_CNT);
                         }
+                        if(!fnIsEmpty(data.result.POINT_IMG_GFILE_SEQ)) {
+                            $("#inspection_result_pop_form").find("#POINT_IMG_GFILE_SEQ").val(data.result.POINT_IMG_GFILE_SEQ);
+                        }
 
                         settingProdNumDiv('new')
                         settingBtn('save');
