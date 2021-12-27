@@ -2659,7 +2659,6 @@
     <select id="selectInspectionResultExistCheck" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT CAST(A.INSPECT_RESULT_SEQ AS CHAR) AS INSPECT_RESULT_SEQ
         FROM TBL_INSPECT_RESULT A
-            INNER JOIN TBL_INSPECT_RESULT_VALUE B ON A.INSPECT_RESULT_SEQ = B.INSPECT_RESULT_SEQ
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
             AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
         LIMIT 1
