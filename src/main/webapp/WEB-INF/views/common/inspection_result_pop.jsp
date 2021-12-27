@@ -1196,6 +1196,9 @@
                 if(type == 'edit' || Number(resultCnt) <= 0 || fnIsEmpty(currProdNum)) {
                     $("#INSPECT_RESULT_NO").val(currProdNum);
                 }else {
+                    if(type == 'cancel') {
+                        currProdNum = $("#inspection_result_pop_form").find("#LAST_PRODUCT_NUM").val();
+                    }
                     $("#INSPECT_RESULT_NO").val(currProdNum + " / " + resultCnt)
                 }
             }
@@ -1784,7 +1787,6 @@
                 }
 
                 fnPostAjaxAsync(function(data, callFunctionParam){
-                    // console.log('settingPopData', data);
                     if(data.info != null) {
                         let prodNum = (fnIsEmpty(data.info.PRODUCT_NUM)?"":Number(data.info.PRODUCT_NUM));
                         $("#CONTROL_NUM_DIV").text(data.info.CONTROL_NUM)

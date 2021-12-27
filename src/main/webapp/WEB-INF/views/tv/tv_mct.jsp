@@ -172,8 +172,8 @@
 		<div id="rightContainer" class="rightContainer">
 			<div class="rightBtnWrap">
 				<select id="changeScreen">
-					<option value="JINSUNG">진성정밀</option>
-					<option value="DMT">DMT</option>
+					<option value="FCT010">진성정밀</option>
+					<option value="FCT030">DMT</option>
 				</select>
 				<div id="changeBtn" class="changeBtn">
 					<a href="/tv/pop">화면전환</a>
@@ -618,6 +618,7 @@
 	<form class="form-inline" id="mct_main_form" name="mct_main_form" role="form" onsubmit="return false;">
 		<input type="hidden" id="queryId" name="queryId" value="tvMapper.selectMctGridList">
 		<input type="hidden" id="EQUIP_SEQ" name="EQUIP_SEQ" value="">
+		<input type="hidden" id="FACTORY_AREA" name="FACTORY_AREA" value="">
 		<input type="hidden" id="MCT_WORK_SEQ" name="MCT_WORK_SEQ" value="">
 		<input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
 	</form>
@@ -975,7 +976,6 @@
             }, 500);
         }
     }
-
 
 	/** 공통 제품상세 정보 */
 
@@ -2113,14 +2113,15 @@
 	$(function () {
 
 		$("#changeScreen").change(function(){
-			if($("#changeScreen").val().toUpperCase() == "DMT"){
+			if($("#changeScreen").val().toUpperCase() == "FCT030"){
 				$("#contents01, #contents02").hide();
 				$("#contents03").show();
 			}else{
 				$("#contents01, #contents02").show();
 				$("#contents03").hide();
 			}
-			getReLoadTableData(true);
+			$("#mct_main_form").find("#FACTORY_AREA").val($("#changeScreen").val().toUpperCase());
+			getReLoadTableData();
 		});
 
 		let getInitData = function () {
@@ -2347,7 +2348,7 @@
 			}
 		};
 
-		let getReLoadTableData = function (selectChange) {
+		let getReLoadTableData = function () {
 			'use strict';
 			let type = {
 				'FACTORY_TYPE': $("#changeScreen").val()
@@ -2359,9 +2360,7 @@
 						fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
-					if(!selectChange) {
-						createGrid1();	// 불량/반품
-					}
+					createGrid1();	// 불량/반품
 
 					var rateInfo = data.mct_rate;
 					$('#NOW_RATE').html(rateInfo.NOW_RATE);
@@ -2468,15 +2467,16 @@
 			});
 		};
 
+		$("#mct_main_form").find("#FACTORY_AREA").val($("#changeScreen").val().toUpperCase());
+
 		let mctMainGrid = $("#mct_main_grid");
 		let $mctMainGrid;
 		let mctMainColModel = [
 			{title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
 			{title: 'CONTROL_DETAIL_SEQ', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-			{title: 'CURR_POS', dataIndx: 'CURR_POS', hidden: true},
 			{title: 'IMG_GFILE_SEQ', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
 			{title: 'RANK', dataIndx: 'RANK', hidden: true},
-			{title: '구분', minWidth: 35, maxWidth: 80, width: 35, dataIndx: 'TITLE', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'},
+			{title: '구분', minWidth: 30, maxWidth: 80, width: 30, dataIndx: 'TITLE', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'},
 				render: function (ui) {
 					const rowData = ui.rowData
 					if (rowData.RANK == 1 || rowData.RANK == 2) {
@@ -2488,8 +2488,8 @@
 					}
 				}
 			},
-			{title: '납기', minWidth: 45, maxWidth: 115, width: 45, dataIndx: 'INNER_DUE_DT', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'}},
-			{title: '작업번호', align: 'center', minWidth: 140, maxWidth: 330, width: 140, dataIndx: 'CONTROL_TEXT', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'},
+			{title: '납기', minWidth: 40, maxWidth: 115, width: 40, dataIndx: 'INNER_DUE_DT', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'}},
+			{title: '작업번호', align: 'center', minWidth: 135, maxWidth: 330, width: 135, dataIndx: 'CONTROL_PART_INFO', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'},
 				render: function (ui) {
 					const cellData = ui.cellData;
 					if (cellData) {
@@ -2501,27 +2501,13 @@
 							$cell = grid.getCell(ui);
 					$cell.bind('click', function () {
 						let rowData = ui.rowData;
-						console.log(rowData);
 						g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ);
 						// callWindowImageViewer(rowData.IMG_GFILE_SEQ);
 					});
 				}
 			},
-			{title: '진행상태',minWidth: 85, maxWidth: 190, width: 85, dataIndx: 'PART_STATUS_NM', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'},
-				render:function (ui) {
-					const cellData = ui.cellData;
-					let partStatus = ui.rowData.PART_STATUS;
-					var text = "";
-					var style = "";
-					if(typeof partStatus != 'undefined' && partStatus != null && (partStatus == 'PRO002' || partStatus == 'PRO005')) {
-						style = "color:red; font-weight:bold;";
-					}
-					if(typeof cellData != 'undefined' && typeof ui.rowData.CURR_POS != 'undefined' && ui.rowData.CURR_POS != null && ui.rowData.CURR_POS != '') {
-						text = cellData + '<br>(' + ui.rowData.CURR_POS +')';
-					}
-					return {text:((text != "")?text:cellData),style: style};
-				}
-			}
+			{title: '수량', minWidth: 35, maxWidth: 80, width: 35, dataIndx: 'CONTROL_PART_QTY', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'}},
+			{title: '위치',minWidth: 70, maxWidth: 190, width: 70, dataIndx: 'CURR_POS', editable: false, styleHead: {'font-weight': 'bold','background':'#214062', 'color': 'white'}}
 		];
 		let mctMainObj= {
 			width: '100%', height: 'auto',
@@ -2568,6 +2554,9 @@
 		$mctMainGrid = mctMainGrid.pqGrid(mctMainObj);
 
 		let createGrid1 = function(){
+			$mctMainGrid.pqGrid("option", "dataModel.postData", function(ui){
+				return fnFormToJsonArrayData('mct_main_form');
+			} );
 			$mctMainGrid.pqGrid('refreshDataAndView');
 		};
 
