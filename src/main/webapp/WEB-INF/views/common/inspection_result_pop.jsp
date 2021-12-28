@@ -1203,15 +1203,15 @@
                 if(type == 'edit' || Number(resultCnt) <= 0 || fnIsEmpty(currProdNum)) {
                     $("#INSPECT_RESULT_NO").val(currProdNum);
                 }else {
-                    if(type == 'cancel') {
-                        currProdNum = $("#inspection_result_pop_form").find("#LAST_PRODUCT_NUM").val();
-                    }
                     $("#INSPECT_RESULT_NO").val(currProdNum + " / " + resultCnt)
                 }
             }
 
             $("#cancelInsepctBtn").on("click", function () {
                 fnConfirm(null, "취소 하시겠습니까?", function () {
+                    let lastPrdNum = $("#inspection_result_pop_form").find("#LAST_PRODUCT_NUM").val();
+                    $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(lastPrdNum);
+
                     settingBtn('cancel');
                     settingProdNumDiv('cancel');
 
@@ -1294,8 +1294,10 @@
 
                         let result = inspectionResultPopGrid.pqGrid('option', 'dataModel.data');
 
-                        if(!fnIsEmpty(prodNo)) {
-                            $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(prodNo);
+                        if(!fnIsEmpty(data.result.PRODUCT_NUM)) {
+                            $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(data.result.PRODUCT_NUM);
+                        }else {
+                            $("#inspection_result_pop_form").find("#PRODUCT_NUM").val('');
                         }
                         if(!fnIsEmpty(data.result.INSPECT_RESULT_SEQ)) {
                             $("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val(data.result.INSPECT_RESULT_SEQ);
