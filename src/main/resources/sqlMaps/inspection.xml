@@ -2517,6 +2517,16 @@
         WHERE LAYER_AREA_NAME = #{LAYER_AREA_NAME}
         ORDER BY AREA_TYPE, AREA_NAME
     </select>
+    <select id="selectLayerInfoForBtn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.LAYER_AREA_NAME, GROUP_CONCAT(X.DIV_CNT ORDER BY AREA_TYPE SEPARATOR ', ') AS DIV_TXT
+        FROM (
+                 SELECT A.LAYER_AREA_NAME, A.AREA_TYPE, COUNT(*) AS DIV_CNT
+                 FROM TBL_LAYER_AREA A
+                 GROUP BY A.LAYER_AREA_NAME, A.AREA_TYPE
+                 ORDER BY A.LAYER_AREA_NAME, A.AREA_TYPE
+             ) X
+        GROUP BY X.LAYER_AREA_NAME
+    </select>
     <insert id="insertLayerInfo" parameterType="java.util.HashMap">
         INSERT INTO TBL_LAYER_AREA (
             LAYER_AREA_NAME,

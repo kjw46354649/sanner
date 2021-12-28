@@ -103,7 +103,7 @@
             margin-bottom: 13%;
             color: #0d0d0d;
             text-align: center;
-            line-height: 52px;
+            /*line-height: 52px;*/
             font-size: 28px;
             background: #abc3e9;
             border-radius: 4px;
@@ -223,14 +223,16 @@
         }
     </style>
 </head>
-<body style="overflow: hidden;padding: 1%;">
+<body id="inspection_result_pop_body" style="overflow: hidden;padding: 1%;">
     <div>
         <h3><i class="xi-library-bookmark"></i>검사 성적서 입력</h3>
     </div>
     <div class="d-flex" style="padding:0% 1% 0% 1%;height: 85%;">
         <div class="buttonDiv">
             <div class="topDiv" style="height: 80%;">
-                <button class="layerBtn" data-target="A" type="button"><span>A</span></button>
+                <button class="layerBtn" data-target="A" type="button">
+                    <span>A</span>
+                </button>
                 <button class="layerBtn" data-target="B" type="button"><span>B</span></button>
                 <button class="layerBtn" data-target="C" type="button"><span>C</span></button>
                 <button class="layerBtn" data-target="D" type="button"><span>D</span></button>
@@ -257,10 +259,10 @@
             </div>
         </div>
         <div style="width: 20%;margin-left: 1%;">
-            <button type="button" class="radius ml-5 blueWhiteBtn wd_70" id="layerSettingBtn" style="float: right;">구역설정</button>
-            <div class="rightTopDiv" style="width: 35%;float: right;margin-bottom: 3%;padding: 1px 0 1px 0;">
+            <button type="button" class="radius ml-5 blueWhiteBtn wd_70" id="layerSettingBtn" style="float: right;height: 38px;">구역설정</button>
+            <div class="rightTopDiv" style="width: 45%;float: right;margin-bottom: 2%;padding: 1px 0 1px 0;">
                 <span class="barCode" id="inspectionResultSpan">
-                    <img src="/resource/asset/images/common/Code128code.png" alt="바코드" id="inspectionResultPopBarcodeImg" style="width: 100%;height: 27px;">
+                    <img src="/resource/asset/images/common/Code128code.png" alt="바코드" id="inspectionResultPopBarcodeImg" style="width: 100%;height: 32px;">
                 </span>
                 <input type="text" id="input_main_layer_barcode" style="width: 0;opacity: 0;height: 0;padding: 0;">
             </div>
@@ -296,6 +298,7 @@
                     <button type="button" id="openInspectBtn" class="defaultBtn radius" style="background: #ffc63a;border: 1px solid #ffc63a;font-size: 20px;height: 30px;margin-right: 7px;">
                         <i class="xi-folder-open"></i>
                     </button>
+                    <button id="fullScreenMode"></button>
                     <div style="float: right;">
                         <button type="button" id="prevProdNum" class="defaultBtn radius" style="font-size: 20px;height: 30px;">
                             <i class="xi-angle-left"></i>
@@ -591,6 +594,7 @@
         const stopBtn = document.getElementById('stopRecordBtn');
         const playBtn = document.getElementById('playRecordBtn');
         const download = document.getElementById('downloadRecordBtn');
+        const fullScreenMode = document.getElementById('fullScreenMode');
 
         let wzoom = null;
 
@@ -641,10 +645,36 @@
         // startBtn.addEventListener("click",videoStart);
         // stopBtn.addEventListener("click",stopRecording);
         // playBtn.addEventListener("click",playRecording);
+        window.addEventListener("load", startup, false);
+
+        function startup() {
+            // Get the reference to video
+            console.log("load");
+            const elm = document.getElementById("inspection_result_pop_body");
+
+            // On pressing ENTER call toggleFullScreen method
+            fullScreenMode.addEventListener("click", function(e) {
+                toggleFullScreen(elm);
+            }, false);
+        }
+
+        function toggleFullScreen(elm) {
+            if (!document.fullscreenElement) {
+                // If the document is not in full screen mode
+                // make the video full screen
+                elm.requestFullscreen();
+            } else {
+                // Otherwise exit the full screen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
 
 
         document.addEventListener('DOMContentLoaded', function () {
             var imageElement = document.getElementById('myContent').querySelector('img');
+            console.log("DOMContentLoaded");
 
             if (imageElement.complete) {
                 init();
@@ -668,6 +698,8 @@
         });
 
         $(function () {
+            console.log("???????????")
+
             let inspectionResultPopGrid = $("#inspection_result_pop_grid");
             let inspectionResultPopColModel = [
                 {title: 'INSPECT_RESULT_SEQ', dataIndx: 'INSPECT_RESULT_SEQ', hidden: true},
@@ -1766,11 +1798,10 @@
                     };
                     let parameters = {'url': '/json-list', 'data': parameter};
                     fnPostAjaxAsync(function(data, callFunctionParam){
-
                         settingLayerGrid(data);
                     }, parameters, '');
                 }, 'hide.bs.modal' : function () {
-
+                    settingLayerBtn();
                 }
             });
 
@@ -1805,6 +1836,10 @@
                         $("#QTY_DIV").text(data.info.QTY)
                         $("#WORK_TYPE_DIV").text(data.info.WORK_TYPE_NM)
 
+                        if(!fnIsEmpty(barcodeNum) && barcodeNum != 'newInspect') {
+                            $("#inspection_result_pop_form").find("#CONTROL_SEQ").val(data.info.CONTROL_SEQ);
+                            $("#inspection_result_pop_form").find("#CONTROL_DETAIL_SEQ").val(data.info.CONTROL_DETAIL_SEQ);
+                        }
                         $("#inspection_result_pop_form").find("#QTY").val(data.info.QTY);
                         $("#inspection_result_pop_form").find("#POINT_IMG_GFILE_SEQ").val(data.info.POINT_IMG_GFILE_SEQ);
                         $("#inspection_result_pop_form").find("#SIZE_TXT").val(data.info.SIZE_TXT);
@@ -1841,6 +1876,7 @@
                         }else {
                             settingProdNumDiv('edit');
                             $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(prodNum);
+                            $("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val('');
                             $("#startInspectBtn").attr('disabled',true);
                             $("#deleteInspectBtn").attr('disabled',true);
                             $("#nextProdNum").attr('disabled',true);
@@ -1857,7 +1893,6 @@
                                 resetLayer();
                             }
                         }
-
 
                         inspectionResultPopGrid.pqGrid("option", "dataModel.postData", function(ui){
                             return fnFormToJsonArrayData('inspection_result_pop_form');
@@ -2018,6 +2053,26 @@
                 }
             }
 
+            function settingLayerBtn() {
+                // selectLayerInfoForBtn
+
+                let params = {
+                    'url': '/json-list',
+                    'data': {
+                        'queryId': 'inspection.selectLayerInfoForBtn'
+                    }
+                }
+                fnPostAjaxAsync(function(data, callFunctionParam){
+                    if(data.list.length > 0) {
+                        $.each(data.list, function (idx,Item) {
+                            let html = '<span>' + Item.LAYER_AREA_NAME + '<br>';
+                            html += '<span style="font-size: 18px;">(' + Item.DIV_TXT + ')</span></span>';
+                            $("button[data-target='"+Item.LAYER_AREA_NAME +"']").html(html);
+                        })
+                    }
+                },params,'');
+            }
+
             $("#applyPointBtn").on("click", function () {
                 // console.log(inspectPointData);
 
@@ -2035,6 +2090,7 @@
             let contorlSeq = $("#inspection_result_pop_form").find("#CONTROL_SEQ").val();
             if(!fnIsEmpty(contorlSeq)) {
                 settingPopData()
+                settingLayerBtn();
             }
 
             $(window).on('resize', _.debounce(function() {

@@ -1106,23 +1106,11 @@
         let inspectionResultPopup;
         const inspectionResultPopupWindow = function (controlSeq, controlDetailSeq) {
             let inspectFrom = document.inspection_result_data_form;
-            // const url = '/drawingUploadPopup?actionType=' + actionType + '&queryId=' + queryId;
-            // 팝업 사이즈
-            const nWidth = 1550;
-            const nHeight = 950;
-            const winWidth = document.body.clientWidth;
-            const winHeight = document.body.clientHeight;
-            const winX = window.screenX || window.screenLeft || 0;
-            const winY = window.screenY || window.screenTop || 0;
-            const nLeft = winX + (winWidth - nWidth) / 2;
-            const nTop = winY + (winHeight - nHeight) / 2;
 
             let strOption = '';
-            strOption += 'left=' + nLeft + 'px,';
-            strOption += 'top=' + nTop + 'px,';
-            strOption += 'width=' + nWidth + 'px,';
-            strOption += 'height=' + nHeight + 'px,';
-            strOption += 'toolbar=no,menubar=no,location=no,resizable=no,status=yes';
+            strOption += 'width=' + screen.width + ',';
+            strOption += 'height=' + screen.height + ',';
+            strOption += 'fullscreen=yes';
 
             // 최초 클릭이면 팝업을 띄운다.
             if (inspectionResultPopup === undefined || inspectionResultPopup.closed) {
