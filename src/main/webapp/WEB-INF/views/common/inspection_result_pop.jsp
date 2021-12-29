@@ -58,6 +58,10 @@
             /*border: 1px solid #545050;*/
             z-index: 15;
         }
+        .spanPosition.focus {
+            background-color: rgb(255 193 115 / 85%);
+            border: 1px solid #666;
+        }
         .spanPositionPop {
             position: absolute;
             background-color: rgb(195 241 255 / 85%);
@@ -755,8 +759,12 @@
                         let grid = this,
                             $cell = grid.getCell(ui);
                         $cell.find(".resetValue").bind("click", function () {
-                            let rowData = ui.rowData;
-                            ui.rowData.RESULT_VALUE = "";
+                            if(inspectionResultPopGrid.pqGrid('option', 'editable')) {
+                                let rowData = ui.rowData;
+                                ui.rowData.RESULT_VALUE = "";
+
+                                inspectionResultPopGrid.pqGrid('refreshView');
+                            }
                         });
                     }
                 },
@@ -813,7 +821,6 @@
                     loadCoordinate(data);
                 },
                 editorKeyDown: function(evt, ui){
-                    // console.log('editorKeyDown')
                     if(evt.keyCode == 13) {
                         $("#inspection_result_pop_grid").pqGrid('setSelection', null);
                         setTimeout(function () {
@@ -825,6 +832,14 @@
                         },150);
 
                     }
+                },
+                rowSelect: function (evt, ui) {
+                    $.each(ui.addList, function (idx,Item) {
+                        if(idx === 0) {
+                            $(".spanPosition").removeClass("focus");
+                            $("#code_"+Item.rowData.POINT_NUM).addClass("focus");
+                        }
+                    })
                 },
                 toolbar: false,
             };
@@ -1107,26 +1122,37 @@
             })
 
             $("#inspectionResultSpan").on("click", function () {
-                $("#inspectionResultPopBarcodeImg").attr("src", "/resource/asset/images/common/Code128code_on.png");
-                $("#input_main_layer_barcode").focus();
+                if($("#startInspectBtn").css( "display" ) == "none") {
+                    fnAlert(null,"수정 진행중에는 다른 작업 선택이 불가합니다.");
+                    return false;
+                }else {
+                    $("#inspectionResultPopBarcodeImg").attr("src", "/resource/asset/images/common/Code128code_on.png");
+                    $("#input_main_layer_barcode").focus();
+                }
             });
             $("#input_main_layer_barcode").on({
                 'focus': function () {
-                    $("#inspectionResultPopBarcodeImg").attr("src","/resource/asset/images/common/Code128code_on.png");
+                    if($("#startInspectBtn").css( "display" ) != "none") {
+                        $("#inspectionResultPopBarcodeImg").attr("src","/resource/asset/images/common/Code128code_on.png");
+                    }
                 },
                 'blur': function () {
                     $('#inspectionResultPopBarcodeImg').prop('src','/resource/asset/images/common/Code128code.png');
                 },
                 'keyup': function (e) {
                     if(e.keyCode == 13) {
-
                         let barcodeNum = fnBarcodeKo2En($(this).val());
-                        if($("#startInspectBtn").css( "display" ) == "none") {
-                            fnConfirm(null, "현재&nbsp;&nbsp;데이터&nbsp;&nbsp;입력 모드입니다.<br>저장되지&nbsp;&nbsp;않은&nbsp;&nbsp;데이터는&nbsp;&nbsp;삭제됩니다.<br><br> 계속 진행하시겠습니까?", function () {
+                        const barcodeType = barcodeNum.charAt(0).toUpperCase();
+                        if(barcodeType === 'C') {
+                            // if($("#startInspectBtn").css( "display" ) == "none") {
+                            //     fnConfirm(null, "현재&nbsp;&nbsp;데이터&nbsp;&nbsp;입력 모드입니다.<br>저장되지&nbsp;&nbsp;않은&nbsp;&nbsp;데이터는&nbsp;&nbsp;삭제됩니다.<br><br> 계속 진행하시겠습니까?", function () {
+                            //         settingPopData(barcodeNum);
+                            //     })
+                            // }else {
                                 settingPopData(barcodeNum);
-                            })
+                            // }
                         }else {
-                            settingPopData(barcodeNum);
+                            fnAlert("바코드 정보를 확인해주세요.");
                         }
 
                         $(this).val('');
@@ -1134,7 +1160,9 @@
                 }
             })
             $("#inspectionResultPopBarcodeImg").on('click', function (){
-                $("#input_main_layer_barcode").focus();
+                if($("#startInspectBtn").css( "display" ) != "none") {
+                    $("#input_main_layer_barcode").focus();
+                }
             })
 
             // 시작
@@ -1232,7 +1260,7 @@
                     resultCnt = 0;
                 }
 
-                if(type == 'edit' || Number(resultCnt) <= 0 || fnIsEmpty(currProdNum)) {
+                if($("#startInspectBtn").css( "display" ) == "none" || Number(resultCnt) <= 0 || fnIsEmpty(currProdNum)) {
                     $("#INSPECT_RESULT_NO").val(currProdNum);
                 }else {
                     $("#INSPECT_RESULT_NO").val(currProdNum + " / " + resultCnt)
@@ -1246,6 +1274,8 @@
 
                     settingBtn('cancel');
                     settingProdNumDiv('cancel');
+
+                    inspectionResultPopGrid.pqGrid('option', 'editable', false);
 
                     inspectionResultPopGrid.pqGrid("option", "dataModel.postData", function(ui){
                         return fnFormToJsonArrayData('inspection_result_pop_form');
@@ -1300,6 +1330,8 @@
                 changes.LAYER_AREA_NAME = $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val();
                 changes.POINT_IMG_GFILE_SEQ = $("#inspection_result_pop_form").find("#POINT_IMG_GFILE_SEQ").val();
 
+                inspectionResultPopGrid.pqGrid('showLoading');
+                $("#drawing_touch_div").hide();
                 html2canvas(document.querySelector("#myContent")).then(
                 function(canvas) {
                     // return Canvas2Image.saveAsPNG(canvas);
@@ -1313,6 +1345,7 @@
                     fnPostAjaxAsync(function (data) {
                         // console.log('data',data);
                         fnAlert(null,"저장되었습니다.");
+                        $("#drawing_touch_div").show();
                         setTimeout(function () {
                             alertify.alert().close();
                         },1000);
@@ -1346,6 +1379,8 @@
 
                         settingProdNumDiv('new')
                         settingBtn('save');
+
+                        inspectionResultPopGrid.pqGrid('hideLoading');
                     }, parameters, '');
                 });
                 // console.log('changes',changes)
@@ -1829,9 +1864,16 @@
                     'data':parameter
                 }
 
+                console.log('params',params);
                 fnPostAjaxAsync(function(data, callFunctionParam){
                     if(data.info != null) {
                         let prodNum = (fnIsEmpty(data.info.PRODUCT_NUM)?"":Number(data.info.PRODUCT_NUM));
+                        if(!fnIsEmpty(barcodeNum) && barcodeNum != 'newInspect') {
+                            if($("#startInspectBtn").css( "display" ) == "none") {
+                                prodNum = data.info.NEXT_PRODUCT_NUM;
+                            }
+                        }
+
                         $("#CONTROL_NUM_DIV").text(data.info.CONTROL_NUM)
                         $("#QTY_DIV").text(data.info.QTY)
                         $("#WORK_TYPE_DIV").text(data.info.WORK_TYPE_NM)
@@ -1845,6 +1887,7 @@
                         $("#inspection_result_pop_form").find("#SIZE_TXT").val(data.info.SIZE_TXT);
                         $("#inspection_result_pop_form").find("#LAST_PRODUCT_NUM").val(data.info.LAST_PRODUCT_NUM);
                         $("#inspection_result_pop_form").find("#INSPECT_RESULT_CNT").val(data.info.INSPECT_RESULT_CNT);
+                        $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(prodNum);
 
                         if(!fnIsEmpty(data.info.IMG_GFILE_SEQ)) {
                             let orgImg = $("#img_div").attr("src");
@@ -1856,7 +1899,6 @@
                         }
 
                         if(!fnIsEmpty(data.info.PRODUCT_NUM)) {
-                            $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(prodNum);
                             $("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val(data.info.INSPECT_RESULT_SEQ);
 
                             if(barcodeNum != 'newInspect') {
@@ -1874,9 +1916,8 @@
                             settingProdNumDiv('new');
 
                         }else {
-                            settingProdNumDiv('edit');
-                            $("#inspection_result_pop_form").find("#PRODUCT_NUM").val(prodNum);
                             $("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val('');
+                            settingProdNumDiv('edit');
                             $("#startInspectBtn").attr('disabled',true);
                             $("#deleteInspectBtn").attr('disabled',true);
                             $("#nextProdNum").attr('disabled',true);
@@ -1906,6 +1947,7 @@
             }
 
             let inspectPointData = null;
+            let inspectPointSelectedIdx = [];
             let inspectPointGrid = $("#inspect_point_grid");
             let inspectPointColModel = [
                 {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
@@ -1955,14 +1997,20 @@
                     }
                 },
                 rowSelect: function (evt, ui) {
-                    const rowData = ui.addList[0].rowData;
-                    if(!fnIsEmpty(rowData.IMG_GFILE_SEQ)) {
-                        $("#inspect_point_img").attr('src', '/image/' + rowData.IMG_GFILE_SEQ);
-                    }
-                    if(rowData.POINT_CNT > 0) {
-                        settingCoordPop(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, rowData.LATEST_PRODUCT_NUM)
-                    }else {
-                        inspectPointData = null;
+                    inspectPointSelectedIdx = [];
+                    if(ui.addList.length > 0) {
+                        const rowData = ui.addList[0].rowData;
+
+                        inspectPointSelectedIdx.push(ui.addList[0].rowIndx);
+
+                        if(!fnIsEmpty(rowData.IMG_GFILE_SEQ)) {
+                            $("#inspect_point_img").attr('src', '/image/' + rowData.IMG_GFILE_SEQ);
+                        }
+                        if(rowData.POINT_CNT > 0) {
+                            settingCoordPop(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, rowData.LATEST_PRODUCT_NUM)
+                        }else {
+                            inspectPointData = null;
+                        }
                     }
                 },
                 toolbar: false
@@ -2077,8 +2125,14 @@
                 // console.log(inspectPointData);
 
                 if(inspectionResultPopGrid.pqGrid('option', 'editable')) {
-                    settingNewPointData();
-                    $("#inspectResult_list_popup").modal("hide");
+                    let totalLength = inspectionResultPopGrid.pqGrid('option', 'dataModel.data').length;
+                    if(totalLength > 0) {
+                        fnAlert(null,"입력된 데이터가 있어 적용이 불가합니다.");
+                        return;
+                    }else {
+                        settingNewPointData();
+                        $("#inspectResult_list_popup").modal("hide");
+                    }
                 }else {
                     fnAlert(null,"point 불러오기는 성적서 입력중에만 가능합니다.");
                     return;
@@ -2125,6 +2179,7 @@
                     inspectionResultPopGrid.pqGrid('updateRow', {rowList: updateList});
                 }
             });
+
         });
     </script>
 </body>
