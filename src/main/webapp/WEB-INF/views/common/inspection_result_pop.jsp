@@ -118,6 +118,12 @@
             background: #336fca;
             border: 2px inset #cdd0d2;
         }
+
+        .buttonDiv .org {
+            background: #ffe590;
+            border: 2px outset #cbbb87;
+            box-shadow:1px 2px 0 #86784a;
+        }
         
         .naBtn {
             white-space:nowrap;
@@ -321,6 +327,7 @@
                     <input type="hidden" id="QTY" name="QTY"/>
                     <input type="hidden" id="PRODUCT_NUM" name="PRODUCT_NUM"/>
                     <input type="hidden" id="LAYER_AREA_NAME" name="LAYER_AREA_NAME"/>
+                    <input type="hidden" id="ORG_LAYER_AREA_NAME" name="ORG_LAYER_AREA_NAME"/>
                     <input type="hidden" id="INSPECT_RESULT_SEQ" name="INSPECT_RESULT_SEQ"/>
                     <input type="hidden" id="SIZE_TXT" name="SIZE_TXT"/>
                     <input type="hidden" id="LAST_PRODUCT_NUM" name="LAST_PRODUCT_NUM"/>
@@ -934,12 +941,12 @@
                     let pos1 = "";
                     let pos2 = "";
                     $.each(gridDivData.gridDivX,function (idx2,Item) {
-                        if(rowData.COORDINATE_X < Item.AREA_COORDINATE && pos1 == "") {
+                        if((Number(rowData.COORDINATE_X) < Number(Item.AREA_COORDINATE)) && pos1 == "") {
                             pos1 = Item.AREA_NAME;
                         }
                     })
                     $.each(gridDivData.gridDivY,function (idx2,Item) {
-                        if(rowData.COORDINATE_Y < Item.AREA_COORDINATE && pos2 == "") {
+                        if((Number(rowData.COORDINATE_Y) < Number(Item.AREA_COORDINATE)) && pos2 == "") {
                             pos2 = Item.AREA_NAME;
                         }
                     })
@@ -1095,15 +1102,22 @@
             $(".layerBtn").on("click", function (e) {
                 if($("#startInspectBtn").css( "display") != "none") {
                     let layer = $(this).data('target');
+                    let onYn = $(this).hasClass("on");
                     $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val(layer);
 
-                    if($(this).hasClass("on")) {
-                        $(".layerBtn").removeClass("on");
+                    $(".layerBtn").removeClass("on");
+                    if(onYn) {
                         $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val("");
                         layer = "";
                     }else {
-                        $(".layerBtn").removeClass("on");
                         $(this).addClass("on");
+                    }
+
+                    let orgLayer = $("#inspection_result_pop_form").find("#ORG_LAYER_AREA_NAME").val();
+
+                    $(".layerBtn").removeClass("org");
+                    if(orgLayer != layer) {
+                        $("button[data-target='"+orgLayer +"']").addClass("org");
                     }
 
                     let parameter = {
@@ -1144,13 +1158,7 @@
                         let barcodeNum = fnBarcodeKo2En($(this).val());
                         const barcodeType = barcodeNum.charAt(0).toUpperCase();
                         if(barcodeType === 'C') {
-                            // if($("#startInspectBtn").css( "display" ) == "none") {
-                            //     fnConfirm(null, "현재&nbsp;&nbsp;데이터&nbsp;&nbsp;입력 모드입니다.<br>저장되지&nbsp;&nbsp;않은&nbsp;&nbsp;데이터는&nbsp;&nbsp;삭제됩니다.<br><br> 계속 진행하시겠습니까?", function () {
-                            //         settingPopData(barcodeNum);
-                            //     })
-                            // }else {
-                                settingPopData(barcodeNum);
-                            // }
+                            settingPopData(barcodeNum);
                         }else {
                             fnAlert("바코드 정보를 확인해주세요.");
                         }
@@ -1184,6 +1192,7 @@
                                 }else {
                                     $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val(orgLayer);
 
+                                    $(".layerBtn").removeClass("org");
                                     $(".layerBtn").removeClass("on");
                                     $("button[data-target='"+orgLayer +"']").addClass("on");
 
@@ -1330,6 +1339,11 @@
                 changes.LAYER_AREA_NAME = $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val();
                 changes.POINT_IMG_GFILE_SEQ = $("#inspection_result_pop_form").find("#POINT_IMG_GFILE_SEQ").val();
 
+                if($("#inspection_result_pop_form").find("#ORG_LAYER_AREA_NAME").val() != $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val()) {
+                    changes.CHANGE_LAYER = "Y";
+                    changes.INSPECT_RESULT_SEQ = $("#inspection_result_pop_form").find("#INSPECT_RESULT_SEQ").val();
+                }
+
                 inspectionResultPopGrid.pqGrid('showLoading');
                 $("#drawing_touch_div").hide();
                 html2canvas(document.querySelector("#myContent")).then(
@@ -1349,6 +1363,8 @@
                         setTimeout(function () {
                             alertify.alert().close();
                         },1000);
+
+                        inspectionResultPopGrid.pqGrid('hideLoading');
 
                         inspectionResultPopGrid.pqGrid('option', 'editable', false);
 
@@ -1376,11 +1392,17 @@
                         if(!fnIsEmpty(data.result.POINT_IMG_GFILE_SEQ)) {
                             $("#inspection_result_pop_form").find("#POINT_IMG_GFILE_SEQ").val(data.result.POINT_IMG_GFILE_SEQ);
                         }
+                        if(!fnIsEmpty(data.result.LAYER_AREA_NAME)) {
+                            $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val(data.result.LAYER_AREA_NAME);
+                            $("#inspection_result_pop_form").find("#ORG_LAYER_AREA_NAME").val(data.result.LAYER_AREA_NAME);
+                            $(".layerBtn").removeClass("org");
+                            $(".layerBtn").removeClass("on");
+                            $("button[data-target='"+data.result.LAYER_AREA_NAME +"']").addClass("on");
+                        }
 
                         settingProdNumDiv('new')
                         settingBtn('save');
 
-                        inspectionResultPopGrid.pqGrid('hideLoading');
                     }, parameters, '');
                 });
                 // console.log('changes',changes)
@@ -1929,6 +1951,7 @@
                             if(!fnIsEmpty(data.info.LAYER_AREA_NAME)) {
                                 $(".layerBtn").removeClass("on");
                                 $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val(data.info.LAYER_AREA_NAME);
+                                $("#inspection_result_pop_form").find("#ORG_LAYER_AREA_NAME").val(data.info.LAYER_AREA_NAME);
                                 $("button[data-target='"+data.info.LAYER_AREA_NAME +"']").trigger('click');
                             }else {
                                 resetLayer();

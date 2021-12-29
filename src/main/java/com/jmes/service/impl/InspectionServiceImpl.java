@@ -128,6 +128,8 @@ public class InspectionServiceImpl implements InspectionService {
         fileMap.put("queryId","common.insertFile");
         innodaleDao.create(fileMap);
 
+
+
         if(addList != null && addList.size() > 0) {
             jsonMap.put("LOGIN_USER_ID",userId);
             jsonMap.put("queryId","inspection.selectInspectionResultExistCheck");
@@ -221,20 +223,31 @@ public class InspectionServiceImpl implements InspectionService {
             }
         }
 
-        if(jsonMap.get("POINT_IMG_GFILE_SEQ") != null && !jsonMap.get("POINT_IMG_GFILE_SEQ").equals("")) {
-            jsonMap.put("queryId","common.selectGfileFileListInfo");
-            jsonMap.put("GFILE_SEQ",jsonMap.get("POINT_IMG_GFILE_SEQ"));
-            HashMap<String,Object> temp = (HashMap<String, Object>) innodaleDao.getInfo(jsonMap);
-            String filePath = (String) temp.get("FILE_PATH");
-            File orgFile = new File(filePath);
+        if(addList.size() == 0 && updateList.size() == 0 && deleteList.size() == 0) {
+            if(jsonMap.get("CHANGE_LAYER") != null && jsonMap.get("CHANGE_LAYER").equals("Y")) {
+                jsonMap.put("LOGIN_USER_ID",userId);
+                jsonMap.put("IMG_GFILE_SEQ",fileMap.get("GFILE_SEQ"));
+                jsonMap.put("queryId","inspection.updateInspectionResult");
+                innodaleDao.update(jsonMap);
 
-            if(orgFile.exists()) {
-                orgFile.delete();
-
-                temp.put("queryId","common.deleteFileKey");
-                innodaleDao.remove(temp);
             }
         }
+
+//        if(jsonMap.get("POINT_IMG_GFILE_SEQ") != null && !jsonMap.get("POINT_IMG_GFILE_SEQ").equals("")) {
+//            HashMap<String,Object> delMap = new HashMap<>();
+//            delMap.put("queryId","common.selectGfileFileListInfo");
+//            delMap.put("GFILE_SEQ",jsonMap.get("POINT_IMG_GFILE_SEQ"));
+//            HashMap<String,Object> temp = (HashMap<String, Object>) innodaleDao.getInfo(delMap);
+//            String filePath = (String) temp.get("FILE_PATH");
+//            File orgFile = new File(filePath);
+//
+//            if(orgFile.exists()) {
+//                orgFile.delete();
+//
+//                temp.put("queryId","common.deleteFileKey");
+//                innodaleDao.remove(temp);
+//            }
+//        }
 
         jsonMap.put("queryId","inspection.selectInspectionResultControlInfo");
         HashMap<String,Object> result = (HashMap<String, Object>) innodaleDao.getInfo(jsonMap);
