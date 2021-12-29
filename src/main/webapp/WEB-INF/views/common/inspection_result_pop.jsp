@@ -1352,7 +1352,9 @@
                     let myImg = canvas.toDataURL("image/png");
                     myImg = myImg.replace("data:image/png;base64,", "");
 
-                    changes.imgSrc = myImg;
+                    if(changes.addList.length > 0 || changes.deleteList.length > 0 || changes.updateList.length > 0) {
+                        changes.imgSrc = myImg;
+                    }
 
                     let parameters = {'url': '/modifyInspectResult', 'data': {data: JSON.stringify(changes)}};
 

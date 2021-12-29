@@ -92,41 +92,44 @@ public class InspectionServiceImpl implements InspectionService {
             deleteList = (ArrayList<HashMap<String, Object>>) jsonMap.get("deleteList");
         }
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", new Locale("ko", "KR"));
-        String uploadDatePath = formatter.format(new Date()).substring(0, 8) + File.separator + formatter.format(new Date());
-        String uploadTimePath = File.separator + formatter.format(new Date());
-        String uploadFilePath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.upload.inspect.path") + File.separator + uploadDatePath;
-//
-        CommonUtility.createFileDirectory(new File(uploadFilePath));
-//
-        String serverFileName = CommonUtility.getUUIDString();
-        String serverFullFileName = "file-" + serverFileName;
-
-        String binaryData = (String) jsonMap.get("imgSrc");
-        binaryData = binaryData.replaceAll("data:image/png;base64,", "");
-
-        byte[] file = Base64.decodeBase64(binaryData);
-
-        FileOutputStream stream = null;
-        File newFile = new File(uploadFilePath + File.separator + serverFullFileName + ".png");
-        stream = new FileOutputStream(newFile);
-        stream.write(file);
-        stream.close();
 
         HashMap<String, Object> fileMap = new HashMap<String, Object>();
-        fileMap.put("FILE_NM", serverFullFileName + ".png");
-        fileMap.put("FILE_PATH", uploadFilePath + File.separator + serverFullFileName + ".png");
-        fileMap.put("TIME_PATH", uploadTimePath);
-        fileMap.put("ORGINAL_FILE_NM", serverFullFileName + ".png");
-        fileMap.put("FILE_TYPE", "image");
-        fileMap.put("FILE_EXT", "png");
-        fileMap.put("FILE_SIZE", newFile.length());
+        if(jsonMap.containsKey("imgSrc")) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", new Locale("ko", "KR"));
+            String uploadDatePath = formatter.format(new Date()).substring(0, 8) + File.separator + formatter.format(new Date());
+            String uploadTimePath = File.separator + formatter.format(new Date());
+            String uploadFilePath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.upload.inspect.path") + File.separator + uploadDatePath;
+//
+            CommonUtility.createFileDirectory(new File(uploadFilePath));
+//
+            String serverFileName = CommonUtility.getUUIDString();
+            String serverFullFileName = "file-" + serverFileName;
 
-        fileMap.put("queryId","common.insertFileGroup");
-        innodaleDao.create(fileMap);
+            String binaryData = (String) jsonMap.get("imgSrc");
+            binaryData = binaryData.replaceAll("data:image/png;base64,", "");
 
-        fileMap.put("queryId","common.insertFile");
-        innodaleDao.create(fileMap);
+            byte[] file = Base64.decodeBase64(binaryData);
+
+            FileOutputStream stream = null;
+            File newFile = new File(uploadFilePath + File.separator + serverFullFileName + ".png");
+            stream = new FileOutputStream(newFile);
+            stream.write(file);
+            stream.close();
+
+            fileMap.put("FILE_NM", serverFullFileName + ".png");
+            fileMap.put("FILE_PATH", uploadFilePath + File.separator + serverFullFileName + ".png");
+            fileMap.put("TIME_PATH", uploadTimePath);
+            fileMap.put("ORGINAL_FILE_NM", serverFullFileName + ".png");
+            fileMap.put("FILE_TYPE", "image");
+            fileMap.put("FILE_EXT", "png");
+            fileMap.put("FILE_SIZE", newFile.length());
+
+            fileMap.put("queryId","common.insertFileGroup");
+            innodaleDao.create(fileMap);
+
+            fileMap.put("queryId","common.insertFile");
+            innodaleDao.create(fileMap);
+        }
 
 
 
@@ -197,9 +200,11 @@ public class InspectionServiceImpl implements InspectionService {
                         }
                     }
 
-                    tempMap.put("IMG_GFILE_SEQ",fileMap.get("GFILE_SEQ"));
-                    tempMap.put("queryId","inspection.updateInspectionResult");
-                    innodaleDao.update(tempMap);
+                    if(fileMap.get("GFILE_SEQ") != null) {
+                        tempMap.put("IMG_GFILE_SEQ",fileMap.get("GFILE_SEQ"));
+                        tempMap.put("queryId","inspection.updateInspectionResult");
+                        innodaleDao.update(tempMap);
+                    }
                 }
             }
         }
@@ -216,15 +221,17 @@ public class InspectionServiceImpl implements InspectionService {
                     hashMap.put("queryId","inspection.deleteInspectionResultPoint");
                     innodaleDao.remove(hashMap);
 
-                    hashMap.put("IMG_GFILE_SEQ",fileMap.get("GFILE_SEQ"));
-                    hashMap.put("queryId","inspection.updateInspectionResult");
-                    innodaleDao.update(hashMap);
+                    if(fileMap.get("GFILE_SEQ") != null) {
+                        hashMap.put("IMG_GFILE_SEQ",fileMap.get("GFILE_SEQ"));
+                        hashMap.put("queryId","inspection.updateInspectionResult");
+                        innodaleDao.update(hashMap);
+                    }
                 }
             }
         }
 
         if(addList.size() == 0 && updateList.size() == 0 && deleteList.size() == 0) {
-            if(jsonMap.get("CHANGE_LAYER") != null && jsonMap.get("CHANGE_LAYER").equals("Y")) {
+            if(jsonMap.get("CHANGE_LAYER") != null && jsonMap.get("CHANGE_LAYER").equals("Y") && fileMap.get("GFILE_SEQ") != null) {
                 jsonMap.put("LOGIN_USER_ID",userId);
                 jsonMap.put("IMG_GFILE_SEQ",fileMap.get("GFILE_SEQ"));
                 jsonMap.put("queryId","inspection.updateInspectionResult");
