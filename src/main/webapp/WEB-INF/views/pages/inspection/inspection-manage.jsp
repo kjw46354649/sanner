@@ -742,8 +742,10 @@
             let qty = $("#inspection_result_value_form").find("#ORDER_QTY").val();
 
             for(var i=1;i<=qty;i++) {
-                prdNumCheckArr.push("PRODUCT_NUM_CHECK_"+i);
-                $("#PRODUCT_NUM_CHECK_"+i).prop('checked',true);
+                if(!$("#PRODUCT_NUM_CHECK_"+i).prop('disabled')) {
+                    prdNumCheckArr.push("PRODUCT_NUM_CHECK_"+i);
+                    $("#PRODUCT_NUM_CHECK_"+i).prop('checked',true);
+                }
             }
 
             $.each(data,function (idx,Item) {
@@ -848,12 +850,23 @@
                 let decimalLength = min.substring(decimalIdx + 1,min.length).length;
                 let randomNum = Math.random() * Number(max - min) + Number(min);
 
-                console.log('decimalLength',decimalLength)
-                console.log('random',randomNum.toFixed(decimalLength))
-
                 return randomNum.toFixed(decimalLength);
             }
         }
+
+        $("#SEL_REF_COLUMN").on('change', function(e){
+            $(".prdNum_check").prop("disabled",false);
+
+            let standardCol = $(this).val();
+
+            $("#PRODUCT_NUM_CHECK_"+standardCol).prop("disabled",true);
+            $("#PRODUCT_NUM_CHECK_"+standardCol).prop("checked",false);
+
+            let idx = prdNumCheckArr.indexOf("PRODUCT_NUM_CHECK_"+standardCol);
+            if(idx >= 0) {
+                prdNumCheckArr.splice(idx,1);
+            }
+        });
 
         $('#autoCopyBtn').on('click', function () {
             let standardCol = $("#SEL_REF_COLUMN").val();
