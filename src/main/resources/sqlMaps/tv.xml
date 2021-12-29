@@ -511,7 +511,7 @@
             AND X.EQUIP_SEQ = #{EQUIP_SEQ}
           </if>
           AND LAYOUT_SORT IS NOT NULL
-        ORDER BY FACTORY_AREA, LAYOUT_SORT
+        ORDER BY FACTORY_AREA, LAYOUT_SORT_MCT
     </select>
     <select id="selectMctAreInfoList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
