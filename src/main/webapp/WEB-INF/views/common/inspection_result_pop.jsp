@@ -1164,7 +1164,7 @@
                         if(barcodeType === 'C') {
                             settingPopData(barcodeNum);
                         }else {
-                            fnAlert("바코드 정보를 확인해주세요.");
+                            fnAlert(null,"바코드 정보를 확인해주세요.");
                         }
 
                         $(this).val('');
