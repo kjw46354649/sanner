@@ -269,8 +269,8 @@
             </div>
         </div>
         <div style="width: 20%;margin-left: 1%;">
-            <button type="button" class="radius ml-5 blueWhiteBtn wd_70" id="layerSettingBtn" style="float: right;height: 38px;">구역설정</button>
-            <div class="rightTopDiv" style="width: 45%;float: right;margin-bottom: 2%;padding: 1px 0 1px 0;">
+            <button type="button" class="radius ml-5 blueWhiteBtn wd_70" id="layerSettingBtn" style="float: right;height: 40px;">구역설정</button>
+            <div class="rightTopDiv" id="inspectionResultDiv" style="width: 45%;float: right;margin-bottom: 1%;padding: 1px 0 1px 0;border: 2px solid black;">
                 <span class="barCode" id="inspectionResultSpan">
                     <img src="/resource/asset/images/common/Code128code.png" alt="바코드" id="inspectionResultPopBarcodeImg" style="width: 100%;height: 32px;">
                 </span>
@@ -1138,20 +1138,24 @@
             $("#inspectionResultSpan").on("click", function () {
                 if($("#startInspectBtn").css( "display" ) == "none") {
                     fnAlert(null,"수정 진행중에는 다른 작업 선택이 불가합니다.");
+                    $("#inspectionResultDiv").css({'border-color':'black'});
                     return false;
                 }else {
                     $("#inspectionResultPopBarcodeImg").attr("src", "/resource/asset/images/common/Code128code_on.png");
                     $("#input_main_layer_barcode").focus();
+                    $("#inspectionResultDiv").css({'border-color':'blue'});
                 }
             });
             $("#input_main_layer_barcode").on({
                 'focus': function () {
                     if($("#startInspectBtn").css( "display" ) != "none") {
                         $("#inspectionResultPopBarcodeImg").attr("src","/resource/asset/images/common/Code128code_on.png");
+                        $("#inspectionResultDiv").css({'border-color':'blue'});
                     }
                 },
                 'blur': function () {
                     $('#inspectionResultPopBarcodeImg').prop('src','/resource/asset/images/common/Code128code.png');
+                    $("#inspectionResultDiv").css({'border-color':'black'});
                 },
                 'keyup': function (e) {
                     if(e.keyCode == 13) {
@@ -1346,6 +1350,7 @@
 
                 inspectionResultPopGrid.pqGrid('showLoading');
                 $("#drawing_touch_div").hide();
+                $(".spanPosition").removeClass("focus");
                 html2canvas(document.querySelector("#myContent")).then(
                 function(canvas) {
                     // return Canvas2Image.saveAsPNG(canvas);

@@ -2870,6 +2870,9 @@
             INNER JOIN TBL_INSPECT_RESULT_VALUE C ON B.POINT_SEQ = C.POINT_SEQ AND B.INSPECT_RESULT_SEQ = C.INSPECT_RESULT_SEQ
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
           AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            <if test="LIMIT_PRODUCT_NUM != null and LIMIT_PRODUCT_NUM !=''">
+                AND C.PRODUCT_NUM  <![CDATA[<=]]> #{LIMIT_PRODUCT_NUM}
+            </if>
         ORDER BY C.PRODUCT_NUM, B.POINT_NUM
     </select>
 
@@ -2887,4 +2890,39 @@
           AND PRODUCT_NUM IN (${PRODUCT_NUM_LIST})
     </delete>
 
+    <select id="selectRandRange" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT RAND_NUM, RAND_TITLE, RAND_FROM, RAND_TO
+        FROM TBL_RAND_RANGE
+    </select>
+    <insert id="insertRandRange" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_RAND_RANGE (
+            RAND_NUM,
+            RAND_TITLE,
+            RAND_FROM,
+            RAND_TO,
+            INSERT_ID
+        )
+        VALUES (
+            #{RAND_NUM},
+            #{RAND_TITLE},
+            #{RAND_FROM},
+            #{RAND_TO},
+            #{LOGIN_USER_ID}
+        );
+    </insert>
+
+    <update id="updateRandRange" parameterType="java.util.HashMap">
+        UPDATE TBL_RAND_RANGE
+        SET UPDATE_ID = #{LOGIN_USER_ID},
+            RAND_TITLE = #{RAND_TITLE},
+            RAND_FROM = #{RAND_FROM},
+            RAND_TO = #{RAND_TO},
+            UPDATE_DT = NOW()
+        WHERE RAND_NUM = #{RAND_NUM}
+    </update>
+
+    <delete id="deleteRandRange" parameterType="java.util.HashMap">
+        DELETE FROM TBL_RAND_RANGE
+        WHERE RAND_NUM = #{RAND_NUM}
+    </delete>
 </mapper>

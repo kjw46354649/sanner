@@ -120,6 +120,7 @@
         <input type="hidden" name="ORDER_QTY" id="ORDER_QTY" value="">
         <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
         <input type="hidden" name="IMG_GFILE_SEQ" id="IMG_GFILE_SEQ" value="">
+        <input type="hidden" name="LIMIT_PRODUCT_NUM" id="LIMIT_PRODUCT_NUM" value="">
 
         <div class="layerPopup" style="width: 1150px;">
             <h3>검사 성적서 Value 관리</h3>
@@ -162,14 +163,26 @@
                     <div class="listWrap">
                         <button type="button" id="selectAllBtn" class="defaultBtn btn-100w radius">SELECT ALL</button>
                         <button type="button" id="autoCopyBtn" class="defaultBtn btn-100w radius">Auto Copy</button>
-                        <select class="wd_60 mr-5 ml-10" name="SEL_REF_COLUMN" id="SEL_REF_COLUMN">
+                        <select class="wd_60 mr-10 ml-5" name="SEL_REF_COLUMN" id="SEL_REF_COLUMN">
                             <option value="">Ref.</option>
+                        </select>
+                        <select class="wd_85 mr-5 ml-5" name="SEL_RAND_RANGE" id="SEL_RAND_RANGE">
+                            <option value="">Rand 범위</option>
                         </select>
                         <input class="wd_50" type="number" name="COLUMN_FROM" id="COLUMN_FROM" placeholder="From" disabled>
                         <span class="nbsp">~</span>
                         <input class="wd_50 mr-5" type="number" name="COLUMN_TO" id="COLUMN_TO" placeholder="To" disabled>
                         <input name="CHECK_COPY" id="CHECK_COPY" type="checkbox" style="width: 18px;height: 18px;margin: 0;">
+                        <button type="button" id="rendSettingBtn" class="defaultBtn btn-80w radius ml-15 darkBlue">Rand 설정</button>
                         <div style="float: right;">
+                            <label class="label_100" for="SEL_PRODUCT_NUM" style="font-size: 12px;">제품 No. 표시</label>
+                            <select id="SEL_PRODUCT_NUM" name="SEL_PRODUCT_NUM" class="wd_60 mr-8">
+                                  <option value="10" selected>10</option>
+                                  <option value="20">20</option>
+                                  <option value="50">50</option>
+                                  <option value="100">100</option>
+                                <option value=""><spring:message code="com.form.top.all.option" /></option>
+                            </select>
                             <button type="button" id="openResultPopBtn" class="defaultBtn btn-100w radius">도면성적서 열기</button>
                             <button type="button" id="deleteColPopBtn" class="defaultBtn btn-70w red radius">열삭제</button>
                         </div>
@@ -187,6 +200,27 @@
     </form>
 </div>
 <!-- 검사 성적서  layer popup : E -->
+<div class="popup_container in" id="rand_range_popup" style="display: none;">
+    <div class="layerPopup" style="width: 420px; height: 380px;">
+        <form class="form-inline" id="rand_range_form" role="form">
+            <input type="hidden" name="queryId" id="queryId" value="inspection.selectRandRange">
+            <div class="d-inline-block ml-10 mt-10" style="margin-bottom: 7px;width:100%;">
+                <div style="float: right;">
+                    <button type="button" class="defaultBtn btn-60w grayPopGra radius" id="addRandBtn">추가</button>
+                    <button type="button" class="defaultBtn btn-60w red radius" id="deleteRandBtn">삭제</button>
+                </div>
+            </div>
+            <div style="margin-top: 1%;" id="rand_range_grid">
+
+            </div>
+            <div class="btnWrap">
+                <button type="button" class="defaultBtn btn-60w green radius" id="saveRandBtn">저장</button>
+                <button type="button" class="defaultBtn btn-60w grayPopGra black radius" data-dismiss="modal">닫기</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="popup_container in" id="inspection_result_export_popup" style="display: none;">
     <div class="controlCloseLayerPopup" style="width: 490px; height: 280px;">
         <h3>검사성적서 출력</h3>
@@ -239,7 +273,25 @@
         let inspectionManageGridId01 = $("#inspection_manage_grid");
         let inspectionManageColModel01;
         let inspectionManagePostData01;
+        let RAND_RANGE;
 
+        function randRangeSelBox () {
+            let parameters = {'url': '/json-list', 'data': {'queryId': 'inspection.selectRandRange'}};
+            fnPostAjax(function (data) {
+                $("#SEL_RAND_RANGE").empty();
+                $("#SEL_RAND_RANGE")[0].add(new Option('Rand 범위',''));
+
+                if(data.list.length > 0) {
+                    RAND_RANGE = fnGroupBy(data.list,"RAND_NUM");
+                    $.each(data.list, function (idx,Item) {
+                        $("#SEL_RAND_RANGE")[0].add(new Option(Item.RAND_TITLE,Item.RAND_NUM));
+                    });
+                }
+                console.log('RAND_RANGE',RAND_RANGE);
+
+            },parameters,'');
+        }
+        randRangeSelBox();
 
         /**  리스트 그리드 선언 시작 **/
         $("#inspection_manage_form").find("#queryId").val("inspection.selectInspectionList");
@@ -502,16 +554,46 @@
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'PRODUCT_NUM', dataIndx: 'PRODUCT_NUM', hidden: true},
-            {title: 'No.', minWidth: 60, dataIndx: 'POINT_NUM', sortable:false, editable:false,
-                styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'},
-                render: function (ui) {
-                    const cellData = ui.cellData;
-                    if(cellData){
-                        return '<input id="POINT_CHECK_'+cellData + '" name="POINT_CHECK" class="point_check" data-target="'+cellData+'" style="margin-right: 10px;" type="checkbox"/>' + cellData;
+            // {title: 'No.', minWidth: 60, dataIndx: 'POINT_NUM', sortable:false, editable:false,
+            //     styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'},
+            //     render: function (ui) {
+            //         const cellData = ui.cellData;
+            //         if(cellData){
+            //             return '<input id="POINT_CHECK_'+cellData + '" name="POINT_CHECK" class="point_check" data-target="'+cellData+'" style="margin-right: 10px;" type="checkbox"/>' + cellData;
+            //         }
+            //     }
+            // },
+            {title: 'No.', datatype: 'string', align: 'center', sortable:false, editable:false, colModel: [
+                    {
+                        title: '<input id="vertical_check" type="checkbox"/>',
+                        minWidth: 60,
+                        dataIndx: 'POINT_NUM',
+                        sortable: false,
+                        editable: false,
+                        styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'},
+                        render: function (ui) {
+                            const cellData = ui.cellData;
+                            if(cellData){
+                                return '<input id="POINT_CHECK_'+cellData + '" name="POINT_CHECK" class="point_check" data-target="'+cellData+'" style="margin-right: 10px;" type="checkbox"/>' + cellData;
+                            }
+                        }
                     }
-                }
+                ],
+                styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
             },
-            {title: 'POS', minWidth: 60, dataIndx: 'POINT_POSITION', sortable:false, editable:true,
+            // {title: 'POS', minWidth: 60, dataIndx: 'POINT_POSITION', sortable:false, editable:true,
+            //     styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
+            // }
+            {title: '<input id="horizon_check"  type="checkbox"/>', datatype: 'string', align: 'center', sortable:false, editable:true, colModel: [
+                    {
+                        title: 'POS',
+                        minWidth: 60,
+                        dataIndx: 'POINT_POSITION',
+                        sortable: false,
+                        editable: true,
+                        styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
+                    }
+                ],
                 styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
             }
         ];
@@ -520,7 +602,7 @@
             height: 500,
             width: "auto",
             // selectionModel: { type: 'row', mode: 'single'},
-            rowHtHead: 30,
+            // rowHtHead: 30,
             numberCell: {title: 'No.',show:false},
             sortModel: {on: false},
             swipeModel: {on: false}, trackModel: {on: true},
@@ -599,6 +681,11 @@
             let pointNumList = [];
             let pointCnt = 0;
             let qty = $("#inspection_result_value_form").find("#ORDER_QTY").val();
+            let limit = $("#inspection_result_value_form").find("#LIMIT_PRODUCT_NUM").val();
+
+            if(!fnIsEmpty(limit) && (Number(qty) > Number(limit))) {
+                qty = limit;
+            }
 
             if(!fnIsEmpty(qty)) {
                 $.each(data,function (idx,Item) {
@@ -622,6 +709,8 @@
         }
         let realPrdNumArr = []
         function resultValuePopGridSetting() {
+            $("#inspection_result_value_form").find("#LIMIT_PRODUCT_NUM").val($("#SEL_PRODUCT_NUM").val());
+
             let parameter = {
                 'queryId': 'inspection.selectInspectionResultPrdNumList',
                 'CONTROL_SEQ': $("#inspection_result_value_form").find("#CONTROL_SEQ").val(),
@@ -639,6 +728,10 @@
                 });
 
                 let qty = $("#inspection_result_value_form").find("#ORDER_QTY").val();
+                let limit = $("#inspection_result_value_form").find("#LIMIT_PRODUCT_NUM").val()
+                if(!fnIsEmpty(limit) && (Number(qty) > Number(limit))) {
+                    qty = limit;
+                }
                 let colModel = fnCloneObj(inspectionResultValueColCommModel);
                 if(!fnIsEmpty(qty)) {
                     for(var i=1;i<=qty;i++) {
@@ -685,11 +778,22 @@
             $('#inspection_result_value_popup').modal('show');
         }
 
+        $("#SEL_PRODUCT_NUM").on('change',function () {
+            console.log($(this).val());
+            // $("#inspection_result_value_form").find("#LIMIT_PRODUCT_NUM").val($(this).val());
+            $inspectionResultValueGrid.pqGrid('destroy');
+            resultValuePopGridSetting();
+        })
+
         $('#inspection_result_value_save').on('click', function () {
             let data = $inspectionResultValueGrid.pqGrid('option', 'dataModel.data');
             let gridInstance = $inspectionResultValueGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
             let orderQty = $("#inspection_result_value_form").find("#ORDER_QTY").val();
+            let limit = $("#inspection_result_value_form").find("#LIMIT_PRODUCT_NUM").val();
+            if(!fnIsEmpty(limit) && (Number(orderQty) > Number(limit))) {
+                orderQty = limit;
+            }
 
             changes.ORDER_QTY = orderQty;
 
@@ -740,6 +844,11 @@
         $('#selectAllBtn').on('click', function () {
             let data = $inspectionResultValueGrid.pqGrid('option', 'dataModel.data');
             let qty = $("#inspection_result_value_form").find("#ORDER_QTY").val();
+            let limit = $("#inspection_result_value_form").find("#LIMIT_PRODUCT_NUM").val();
+
+            if(!fnIsEmpty(limit) && (Number(qty) > Number(limit))) {
+                qty = limit;
+            }
 
             for(var i=1;i<=qty;i++) {
                 if(!$("#PRODUCT_NUM_CHECK_"+i).prop('disabled')) {
@@ -752,7 +861,11 @@
                 pointCheckArr.push("POINT_CHECK_"+Item.POINT_NUM);
                 $("#POINT_CHECK_"+Item.POINT_NUM).prop('checked',true);
             })
-        })
+        });
+
+        $("#rendSettingBtn").on('click', function () {
+            $("#rand_range_popup").modal("show");
+        });
 
         $('#openResultPopBtn').on('click', function () {
             let controlSeq = $("#inspection_result_value_form").find("#CONTROL_SEQ").val();
@@ -853,6 +966,21 @@
                 return randomNum.toFixed(decimalLength);
             }
         }
+
+        $("#SEL_RAND_RANGE").on('change', function(e){
+            let randNum = $(this).val();
+
+            if(randNum == "") {
+                $("#COLUMN_FROM").val("");
+                $("#COLUMN_TO").val("");
+            }else {
+                let randData = RAND_RANGE[randNum];
+                if(typeof randData != 'undefined' && randData.length > 0) {
+                    $("#COLUMN_FROM").val(randData[0].RAND_FROM);
+                    $("#COLUMN_TO").val(randData[0].RAND_TO);
+                }
+            }
+        });
 
         $("#SEL_REF_COLUMN").on('change', function(e){
             $(".prdNum_check").prop("disabled",false);
@@ -1148,6 +1276,117 @@
                 }, 500);
             }
         }
+
+
+
+
+        let randSelectIndex = [];
+        let $randRangeGrid  = $("#rand_range_grid");
+        let randRangeColCommModel = [
+            {title: 'No.', width: 40 , dataIndx: 'RAND_NUM', editable: false,
+                styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
+            },
+            {title: 'Title', width: 50, dataIndx: 'RAND_TITLE',
+                styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
+            },
+            {title: 'From', width: 70, dataIndx: 'RAND_FROM', dataType:'float',
+                styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
+            },
+            {title: 'To', width: 70, dataIndx: 'RAND_TO', dataType:'float',
+                styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'}
+            }
+        ];
+        let randRangeObj = {
+            height: 260,
+            width: "auto",
+            selectionModel: { type: 'row', mode: 'single'},
+            rowHtHead: 30,
+            numberCell: {title: 'No.',show:false},
+            sortModel: {on: false},
+            scrollModel: {autoFit: true},
+            swipeModel: {on: false}, trackModel: {on: true},
+            strNoRows: '',
+            collapsible: false, resizable: false, flexWidth: false, showTitle: false,
+            postRenderInterval: -1, //call postRender synchronously.
+            columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
+            colModel: randRangeColCommModel,
+            dataModel: {
+                location: "remote", dataType: "json", method: "POST", recIndx: 'RAND_NUM',
+                url: "/paramQueryGridSelect",
+                postData: fnFormToJsonArrayData('rand_range_form'),
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            rowSelect: function (event, ui) {
+                randSelectIndex = [];
+                let selectList = ui.addList;
+                for (let i = 0; i < selectList.length; i++) {
+                    // console.log(selectList[i].rowIndx);
+                    randSelectIndex.push(selectList[i].rowIndx);
+                }
+            },
+            toolbar: false
+        };
+
+        $("#rand_range_popup").on({
+            'show.bs.modal': function () {
+                $randRangeGrid.pqGrid(randRangeObj);
+            }, 'hide.bs.modal': function () {
+                if ($('#rand_range_grid').pqGrid('instance')) {
+                    $randRangeGrid.pqGrid('destroy');
+                }
+                fnResetForm("rand_range_form");
+                randRangeSelBox();
+            }
+        })
+
+        $("#addRandBtn").on('click', function () {
+            let data = $randRangeGrid.pqGrid('option', 'dataModel.data');
+            let randNum = 1;
+            if(data.length > 0) {
+                randNum = Number(data[data.length-1].RAND_NUM) + 1;
+            }
+
+            $randRangeGrid.pqGrid('addRow', {
+                newRow: {
+                    'RAND_NUM':randNum,
+                    'RAND_TITLE':'',
+                    'RAND_FROM':'',
+                    'RAND_TO':''
+                },
+                rowIndx: data.length,
+                checkEditable: false
+            });
+        });
+
+        $("#deleteRandBtn").on('click', function () {
+            if(randSelectIndex.length > 0) {
+                let rowData = $randRangeGrid.pqGrid("getRowData", {rowIndx: randSelectIndex[0]});
+
+                let parameter = {
+                    'queryId': 'inspection.deleteRandRange',
+                    'RAND_NUM': rowData.RAND_NUM,
+                };
+                let parameters = {'url': '/json-remove', 'data': parameter};
+                fnPostAjaxAsync(function(data, callFunctionParam){
+                    fnAlert(null,"삭제되었습니다.");
+
+                    $randRangeGrid.pqGrid('refreshDataAndView');
+                }, parameters, '');
+            }
+        });
+
+        $("#saveRandBtn").on('click', function () {
+
+            let gridInstance = $randRangeGrid.pqGrid('getInstance').grid;
+            let changes = gridInstance.getChanges({format: 'byVal'});
+
+            const insertQueryList = ['inspection.insertRandRange'];
+            const updateQueryList = ['inspection.updateRandRange'];
+
+            fnModifyPQGrid($randRangeGrid, insertQueryList, updateQueryList);
+        });
     });
 
     $("#INSPECTION_BARCODE_NUM").focus();
@@ -1161,6 +1400,41 @@
     }, false);
 
     $(document).ready(function(){
+
+        $(document).on("click","#horizon_check",function(e){
+            let qty = $("#inspection_result_value_form").find("#ORDER_QTY").val();
+            let limit = $("#inspection_result_value_form").find("#LIMIT_PRODUCT_NUM").val();
+
+            if(!fnIsEmpty(limit) && (Number(qty) > Number(limit))) {
+                qty = limit;
+            }
+
+            prdNumCheckArr = [];
+            if($(this).prop('checked')) {
+                for(var i=1;i<=qty;i++) {
+                    if(!$("#PRODUCT_NUM_CHECK_"+i).prop('disabled')) {
+                        prdNumCheckArr.push("PRODUCT_NUM_CHECK_"+i);
+                        $("#PRODUCT_NUM_CHECK_"+i).prop('checked',true);
+                    }
+                }
+            }else {
+                $(".prdNum_check").prop('checked',false);
+            }
+        });
+
+        $(document).on("click","#vertical_check",function(e){
+            let data = $("#inspection_result_value_grid").pqGrid('option', 'dataModel.data');
+            pointCheckArr = [];
+            if($(this).prop('checked')) {
+                $.each(data,function (idx,Item) {
+                    pointCheckArr.push("POINT_CHECK_"+Item.POINT_NUM);
+                });
+                $(".point_check").prop('checked',true);
+            }else {
+                $(".point_check").prop('checked',false);
+            }
+        });
+
         $(document).on("click",".prdNum_check",function(e){
             let idx = prdNumCheckArr.indexOf(e.target.id);
             if(!$(this).prop('checked')) {
