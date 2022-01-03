@@ -1162,7 +1162,9 @@
                         let barcodeNum = fnBarcodeKo2En($(this).val());
                         const barcodeType = barcodeNum.charAt(0).toUpperCase();
                         if(barcodeType === 'C') {
-                            settingPopData(barcodeNum);
+                            fnBarcodePrintCheck(function (confirm, callFunctionParam) {
+                                settingPopData(barcodeNum);
+                            }, barcodeNum, barcodeNum);
                         }else {
                             fnAlert(null,"바코드 정보를 확인해주세요.");
                         }

@@ -1144,15 +1144,19 @@
             keyup: function (e) {
                 if (e.keyCode == 13) {
                     let barcodeNum = fnBarcodeKo2En(this.value);
-
-                    let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeNum};
-                    let parameters = {'url': '/json-info', 'data': data};
-                    fnPostAjax(function (data) {
-                        let dataInfo = data.info;
-                        if(dataInfo != null) {
-                            inspectionResultPopupWindow(dataInfo.CONTROL_SEQ,dataInfo.CONTROL_DETAIL_SEQ);
-                        }
-                    }, parameters, '');
+                    fnBarcodePrintCheck(function (confirm, callFunctionParam) {
+                        let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeNum};
+                        let parameters = {'url': '/json-info', 'data': data};
+                        fnPostAjax(function (data) {
+                            let dataInfo = data.info;
+                            if(dataInfo != null) {
+                                inspectionResultPopupWindow(dataInfo.CONTROL_SEQ,dataInfo.CONTROL_DETAIL_SEQ);
+                            }else {
+                                fnAlert(null, "해당 바코드가 존재하지 않습니다.");
+                                return;
+                            }
+                        }, parameters, '');
+                    }, barcodeNum, barcodeNum);
                     this.value = '';
                 }
             }
