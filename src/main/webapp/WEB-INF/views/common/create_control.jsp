@@ -520,7 +520,6 @@
                 title: '발주<br>납기', width: 50, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT',
                 styleHead: {'font-weight': 'bold', 'background': '#fff2a0'},
                 editable: false,
-                editor: {type: 'textbox', init: fnDateEditor},
                 render: function (ui) {
                     let rowData = ui.rowData;
                     let cls = 'bg-lightgray';
@@ -1841,8 +1840,8 @@
                 for(let i=0; i<data.length; i++){
                     let rowData = $createControlGrid.pqGrid('getRowData', {rowIndx: i});
                     let date = new Date(rowData.ORDER_DUE_DT);
-                    let today = new Date();
-                    date.setFullYear(today.getFullYear())
+                    // let today = new Date();
+                    // date.setFullYear(today.getFullYear())
                     date.setDate(date.getDate() - dateCnt);
                     let newData = {'INNER_DUE_DT':date.getFullYear()+"/"+(date.getMonth()+1)+"/"+("0"+date.getDate()).substr(-2)};
                     $createControlGrid.pqGrid("updateRow", { 'rowIndx': i , row: newData });

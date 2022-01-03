@@ -2794,10 +2794,12 @@
                 parameter2.queryId = 'orderMapper.deleteControlPartEtcProcess,' + parameter2.queryId;
                 parameter2.DEL_ETC_FACTOR_CD = delFactorStr;
             }
-            let parameters = {'url': '/json-manager', 'data': parameter2};
-            fnPostAjax(function (data) {
-                changeData();
-            }, parameters, '');
+            if(parameter2.queryId != "") {
+                let parameters = {'url': '/json-manager', 'data': parameter2};
+                fnPostAjax(function (data) {
+                    changeData();
+                }, parameters, '');
+            }
         }, parameter1, '');
 
     });
