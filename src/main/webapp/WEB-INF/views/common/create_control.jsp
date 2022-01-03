@@ -1843,7 +1843,7 @@
                     // let today = new Date();
                     // date.setFullYear(today.getFullYear())
                     date.setDate(date.getDate() - dateCnt);
-                    let newData = {'INNER_DUE_DT':date.getFullYear()+"/"+(date.getMonth()+1)+"/"+("0"+date.getDate()).substr(-2)};
+                    let newData = {'INNER_DUE_DT':date.getFullYear()+"/"+("0" + (date.getMonth()+1)).substr(-2)+"/"+("0"+date.getDate()).substr(-2)};
                     $createControlGrid.pqGrid("updateRow", { 'rowIndx': i , row: newData });
                 }
             }
