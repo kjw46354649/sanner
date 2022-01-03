@@ -79,13 +79,30 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 1px solid black;
+            height: 920px;
+            margin-top: 2%;
+            overflow: hidden;
         }
-
+        #zoomBtn {
+            position: absolute;
+            z-index: 999;
+            float: right;
+            right: 1%;
+            top: 1%;
+            border: 2px solid gray;
+            border-radius: 15px;
+            font-size: 60px;
+            background: #eaffd0e6;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            display: none;
+        }
         #myContent {
             position: relative;
             display: flex;
             align-items: center;
-            border: 1px solid black;
         }
 
         #myContent img {
@@ -258,8 +275,11 @@
             </div>
         </div>
         <div id="main_img_div" style="width: 1300px;height: 920px;margin-top: 1%;">
-            <div class="embed-responsive embed-responsive-4by3">
+            <div class="embed-responsive embed-responsive-4by3" style="overflow: visible;">
                 <div id="myWindow" class="embed-responsive-item">
+                    <div id="zoomBtn">
+                        <i class="xi-compress-square"></i>
+                    </div>
                     <div id="myContent">
                         <img id="img_div" src="/resource/main/blank.jpg" alt="image"/>
                         <div id="drawing_touch_div">
@@ -319,7 +339,7 @@
                     </div>
                 </div>
             </div>
-            <div style="height: 80%;margin-top: 3%;">
+            <div style="height: 81%;margin-top: 3%;">
                 <form id="inspection_result_pop_form">
                     <input type="hidden" id="queryId" name="queryId" value="inspection.selectInspectionResult"/>
                     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value="${CONTROL_SEQ}"/>
@@ -336,7 +356,7 @@
                 </form>
                 <div id="inspection_result_pop_grid"></div>
             </div>
-            <div style="margin-top: 3%;text-align: center" class="mainBtn">
+            <div style="margin-top: 4%;text-align: center" class="mainBtn">
                 <button type="button" id="newInspectBtn" class="defaultBtn btn-110w radius green left_float" style="font-size: 16px;height: 65px;">신규 작성</button>
                 <button type="button" id="startInspectBtn" class="defaultBtn btn-110w radius orange left_float" style="font-size: 16px;height: 30px;">수 정</button>
                 <button type="button" id="saveInspectBtn" class="defaultBtn btn-110w radius green" style="font-size: 16px;height: 30px;display: none;">저 장</button>
@@ -660,7 +680,6 @@
 
         function startup() {
             // Get the reference to video
-            console.log("load");
             const elm = document.getElementById("inspection_result_pop_body");
 
             // On pressing ENTER call toggleFullScreen method
@@ -705,11 +724,24 @@
                 window.addEventListener('resize', function () {
                     wzoom.prepare();
                 });
+
+                window.addEventListener('wheel', zoomSetting, false);
+                window.addEventListener('touchmove', zoomSetting, false);
+            }
+
+            function zoomSetting() {
+                let transForm = $("#myContent").css('transform');
+                let lastNum = Number(transForm.substring(transForm.lastIndexOf(",") + 2,transForm.lastIndexOf(")")));
+
+                if(lastNum == 0) {
+                    $("#zoomBtn").hide();
+                }else {
+                    $("#zoomBtn").show();
+                }
             }
         });
 
         $(function () {
-            console.log("???????????")
 
             let inspectionResultPopGrid = $("#inspection_result_pop_grid");
             let inspectionResultPopColModel = [
@@ -1097,6 +1129,9 @@
                 checkTouchTime(e);
             })
 
+            $("#zoomBtn").on("click", function (e) {
+                wzoom.maxZoomDown();
+            });
 
 
             $(".layerBtn").on("click", function (e) {
