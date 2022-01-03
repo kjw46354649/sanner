@@ -1131,6 +1131,7 @@
 
             $("#zoomBtn").on("click", function (e) {
                 wzoom.maxZoomDown();
+                $("#zoomBtn").hide();
             });
 
 
