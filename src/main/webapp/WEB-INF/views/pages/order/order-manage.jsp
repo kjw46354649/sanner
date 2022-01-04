@@ -987,7 +987,7 @@
                     return {data: dataJSON.data};
                 }
             },
-            sortModel: {on: false},
+            // sortModel: {on: false},
             load: function () {
                 if($('#orderManageFilterKeyword').val() !== '')
                     fnFilterHandler($orderManagementGrid, 'orderManageFilterKeyword', 'orderManageFilterCondition', 'orderManageFilterColumn');
