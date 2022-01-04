@@ -264,6 +264,7 @@
 <script>
     var $orderManagementGrid;
     var selectedOrderManagementRowIndex = [];
+    let orderStatus_comboTree;
     $(function () {
         'use strict';
         /* variable */
@@ -282,7 +283,7 @@
             $('#MONTH_CLOSER_VER_SEL').append(new Option(i + '차',i));
         }
         var today = new Date();
-        $('#MONTH_CLOSER_MONTH_SEL').val(today.getMonth()).prop("selected",true);
+        $('#MONTH_CLOSER_MONTH_SEL').val(("0"+(today.getMonth()+1)).substr(-2)).prop("selected",true);
 
         const COMPANY_STAFF = (function () {
             let list = [];
@@ -2829,7 +2830,7 @@
                 </c:if>
             </c:forEach>
 
-            $('#ORDER_MANAGE_SEARCH_FORM #ORDER_STATUS').comboTree({
+            orderStatus_comboTree = $('#ORDER_MANAGE_SEARCH_FORM #ORDER_STATUS').comboTree({
                 source: comboData,
                 isMultiple: true,
                 cascadeSelect: false,
@@ -2954,9 +2955,13 @@
             if($(this).val() == 'ROM005') {
                 $("#close_order_date_div").show();
                 $("#order_default_date_div").hide();
+                orderStatus_comboTree.clearSelection();
+                orderStatus_comboTree.options.selected = ['REG003'];
+                orderStatus_comboTree.processSelected();
             }else {
                 $("#order_default_date_div").show();
                 $("#close_order_date_div").hide();
+                orderStatus_comboTree.options.selected = ['REGTEMP','REG001'];
             }
 
             $(this).val() === '' ? $orderManageDates.prop('disabled', true) : $orderManageDates.prop('disabled', false);
