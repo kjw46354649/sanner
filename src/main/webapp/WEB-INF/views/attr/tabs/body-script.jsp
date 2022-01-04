@@ -906,6 +906,13 @@
             $("#common_quick_drawing_form").find("#QUICK_DRAWING_SIZE_TXT").text("");
             $("#common_quick_drawing_form").find("#QUICK_DRAWING_MATERIAL_DETAIL").text("");
         }
+
+        // 유사수행기록에서 뜬 팝업인 경우 z-index 조정
+        if($("#cam_work_detail_popup").css('display') == 'block') {
+            let zIdx = Number($("#cam_work_detail_popup").css('z-index'));
+            $("#common_quick_drawing_popup").parents(".ui-dialog").css('z-index',zIdx+1);
+        }
+
         if(!isOpen) {
             $("#common_quick_drawing_popup").dialog("open");
         }
@@ -916,6 +923,13 @@
         // 팝업창이 열려 있는 경우만 처리
         let isOpen = $("#common_quick_drawing_popup").dialog("isOpen");
         if(isOpen) {
+
+            // 유사수행기록에서 뜬 팝업인 경우 z-index 조정
+            if($("#cam_work_detail_popup").css('display') == 'block') {
+                let zIdx = Number($("#cam_work_detail_popup").css('z-index'));
+                $("#common_quick_drawing_popup").parents(".ui-dialog").css('z-index',zIdx+1);
+            }
+
             $("#common_quick_drawing_form").find("#gFileSeq").val(imageSeq);
             $("#common_quick_drawing_form").find("#drawingImage").attr("src", '/qimage/' + imageSeq);
             if(typeof rowData != 'undefined' && typeof imageSeq != 'undefined') {

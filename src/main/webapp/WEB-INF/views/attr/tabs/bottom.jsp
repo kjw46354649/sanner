@@ -1109,6 +1109,7 @@
                 $("#common_quick_drawing_popup").show();
             },
             close: function( event, ui ) {
+                $("#common_quick_drawing_popup").parents(".ui-dialog").css('z-index','');
                 $("#common_quick_drawing_popup").hide();
             }
         });
@@ -3576,7 +3577,7 @@
                     $cell = grid.getCell(ui);
                 $cell.find('[name=imageView]').bind('click', function () {
                     let rowData = ui.rowData;
-                    callWindowImageViewer(rowData.IMG_GFILE_SEQ);
+                    callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
                 });
             }
         },
@@ -3795,6 +3796,40 @@
                     if (ui.rowIndx === 0) {
                         return {style: {'background': '#FFFF00'}};
                     }
+                },
+                rowSelect: function (event, ui) {
+                    if(ui.addList.length > 0) {
+                        const rowData = ui.addList[0].rowData;
+                        callQuickRowChangeDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
+                    }
+                },
+                cellKeyDown: function (event, ui) {
+                    const rowIndx = ui.rowIndx;
+                    let nextIdx = ui.rowIndx;
+                    const sr = this.SelectRow();
+                    const selRowData = this.getRowData({rowIndx: rowIndx});
+                    const data = this.option('dataModel.data');
+                    let groupNo = fnGroupBy(data,'CONTROL_NUM');
+                    if (event.keyCode == $.ui.keyCode.DOWN  && rowIndx < (data.length - 1)) {
+                        nextIdx++;
+                    } else if (event.keyCode == $.ui.keyCode.UP && rowIndx > 0) {
+                        nextIdx--;
+                    }
+
+                    const nextData = this.getRowData({rowIndx: nextIdx});
+                    if(typeof groupNo[nextData.CONTROL_NUM] != 'undefined' && groupNo[nextData.CONTROL_NUM].length > 1) {
+                        let nextRow = groupNo[nextData.CONTROL_NUM][0];
+                        nextIdx = nextRow.pq_ri;
+                        if(nextIdx == rowIndx) {
+                            nextIdx = nextIdx + groupNo[nextData.CONTROL_NUM].length;
+                            if(event.keyCode == $.ui.keyCode.UP) {
+                                nextIdx = nextIdx - groupNo[nextData.CONTROL_NUM].length;
+                            }
+                        }
+                    }
+
+                    sr.removeAll();
+                    sr.add({rowIndx: nextIdx});
                 },
                 complete: function () {
                     this.flex();
