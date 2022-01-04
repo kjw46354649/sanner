@@ -289,6 +289,7 @@
             </div>
         </div>
         <div style="width: 20%;margin-left: 1%;">
+            <button type="button" class="radius ml-5 blueWhiteBtn wd_90" id="fullScreenMode" style="float: right;height: 40px;background-color: black;">전체화면</button>
             <button type="button" class="radius ml-5 blueWhiteBtn wd_70" id="layerSettingBtn" style="float: right;height: 40px;">구역설정</button>
             <div class="rightTopDiv" id="inspectionResultDiv" style="width: 45%;float: right;margin-bottom: 1%;padding: 1px 0 1px 0;border: 2px solid black;">
                 <span class="barCode" id="inspectionResultSpan">
@@ -328,7 +329,6 @@
                     <button type="button" id="openInspectBtn" class="defaultBtn radius" style="background: #ffc63a;border: 1px solid #ffc63a;font-size: 20px;height: 30px;margin-right: 7px;">
                         <i class="xi-folder-open"></i>
                     </button>
-                    <button id="fullScreenMode"></button>
                     <div style="float: right;">
                         <button type="button" id="prevProdNum" class="defaultBtn radius" style="font-size: 20px;height: 30px;">
                             <i class="xi-angle-left"></i>
@@ -680,19 +680,18 @@
 
         function startup() {
             // Get the reference to video
-            const elm = document.getElementById("inspection_result_pop_body");
 
             // On pressing ENTER call toggleFullScreen method
             fullScreenMode.addEventListener("click", function(e) {
-                toggleFullScreen(elm);
+                toggleFullScreen();
             }, false);
         }
 
-        function toggleFullScreen(elm) {
+        function toggleFullScreen() {
             if (!document.fullscreenElement) {
                 // If the document is not in full screen mode
                 // make the video full screen
-                elm.requestFullscreen();
+                document.documentElement.requestFullscreen();
             } else {
                 // Otherwise exit the full screen
                 if (document.exitFullscreen) {
