@@ -398,6 +398,7 @@
             {title: '입금액', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, dataIndx: 'DEPOSIT_AMT',
                 halign: 'center', align: 'right', dataType: 'integer', format: '#,###'},
             {title: '종류', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}, dataIndx: 'DEPOSIT_TYPE', editable: true,
+                validations: [{ type: 'nonEmpty', msg: "Required"}],
                 editor: {
                     type: 'select',
                     valueIndx: 'value',
@@ -569,9 +570,26 @@
         });
 
         $moneyReceiveSaveBtn.click(function(){
-            let moneyReceiveStatusInsertQueryList = ['insertMoneyManageReceive'];
-            let moneyReceiveStatusUpdateQueryList = ['updateMoneyManageReceive'];
-            fnModifyPQGrid($moneyReceiveStatusGrid, moneyReceiveStatusInsertQueryList, moneyReceiveStatusUpdateQueryList);
+            let data = $moneyReceiveStatusGrid.pqGrid('option', 'dataModel.data');
+            let gridInstance = $moneyReceiveStatusGrid.pqGrid('getInstance').grid;
+            let changes = gridInstance.getChanges({format: 'byVal'});
+
+            if(gridInstance.isDirty()) {
+                let emptyFlag = false;
+                $.each(changes.updateList, function (idx,Item) {
+                    if(fnIsEmpty(Item.DEPOSIT_TYPE)) {
+                        emptyFlag = true;
+                    }
+                })
+                if(emptyFlag) {
+                    fnAlert(null, "종류를 입력해주세요.");
+                    return false;
+                }else {
+                    let moneyReceiveStatusInsertQueryList = ['insertMoneyManageReceive'];
+                    let moneyReceiveStatusUpdateQueryList = ['updateMoneyManageReceive'];
+                    fnModifyPQGrid($moneyReceiveStatusGrid, moneyReceiveStatusInsertQueryList, moneyReceiveStatusUpdateQueryList);
+                }
+            }
         });
 
         $('#money_receive_manage_search_form').on('change', function () {
