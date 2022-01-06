@@ -1114,11 +1114,9 @@
                     fnRequestGridData(estimateRegisterBotGrid, postData);
                 }
 
-                if(typeof GfileKey != 'undefined' && GfileKey != '') {
-                    if($('#estimate_register_file_grid').hasClass('pq-grid')) {
-                        postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
-                        fnRequestGridData(estimateRegisterFileGrid, postData);
-                    }
+                if($('#estimate_register_file_grid').hasClass('pq-grid')) {
+                    postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
+                    fnRequestGridData(estimateRegisterFileGrid, postData);
                 }
 
                 CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(contextVal);
@@ -1133,11 +1131,13 @@
             }, parameter, '');
         }
 
-        $(document).on('click', '#estimateRegisterReloadBtn', function(){
+        $(document).on('click', '#estimateRegisterReloadBtn', _.debounce(function(e){
+            e.preventDefault();
+
             $("#estimate_register_top_grid").find(".pq-grid-norows").html("");
             $("#custom_loading").show();
             estimateRegisterReloadPageData();
-        });
+        },500));
 
         let errorList = [];
         let prevErrorList = [];

@@ -754,16 +754,24 @@
             fnReportFormToHiddenFormPageAction("common_excel_form", "/downloadExcel");
         });
 
-        $("#btnEstimateListNewEstimate").on('click', function(){
+        $("#btnEstimateListNewEstimate").on('click', function(e){
+            e.preventDefault();
+
             $("#estimate_version_up_sequence_form #hidden_est_seq").val('');
 
-            $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
+            if($("#tab_"+$("#estimateNo").val()).length == 0) {
+                $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
+            }else {
+                $("#tab_"+$("#estimateNo").val()).trigger("click");
+            }
             setTimeout(function(){
                 $("#estimateRegisterReloadBtn").trigger('click');
-            }, 800)
+            }, 500)
         });
 
-        $("#btnEstimateListNewVersion").on('click', function(){
+        $("#btnEstimateListNewVersion").on('click', function(e){
+            e.preventDefault();
+
             let parameters = {'url': '/json-list', 'data': {'queryId':'selectEstimateNextSequence'}};
             let EST_SEQ = "";
             let VERSION_UP_YN = $("#estimate_master_hidden_form #VERSION_UP_YN").val();
@@ -799,7 +807,12 @@
                         };
                         parameters = {'url': '/json-create', 'data': parameter};
                         fnPostAjaxAsync('',parameters, '');
-                        $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
+
+                        if($("#tab_"+$("#estimateNo").val()).length == 0) {
+                            $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
+                        }else {
+                            $("#tab_"+$("#estimateNo").val()).trigger("click");
+                        }
                         setTimeout(function(){
                             $("#btnEstimateListSearch").trigger('click');
                             $("#estimateRegisterReloadBtn").trigger('click');
@@ -910,9 +923,15 @@
 
     /** 화면 이동 처리 **/
     $(document).on('click', '#estimateRegisterPage', function (event) {
+        event.preventDefault();
+
         let seq = event.target.dataset.seq;
         // let status = event.target.dataset.status;
-        $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
+        if($("#tab_"+$("#estimateNo").val()).length == 0) {
+            $("a[pid='" + $("#estimateNo").val() + "']").trigger("click");
+        }else {
+            $("#tab_"+$("#estimateNo").val()).trigger("click");
+        }
         clickEstimateRegisterReloadBtn(seq);
     });
 
