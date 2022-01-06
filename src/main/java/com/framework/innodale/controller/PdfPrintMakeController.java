@@ -329,7 +329,9 @@ public class PdfPrintMakeController {
                             PdfPCell inCell = createOrderHighCell(new Phrase(text, mediumTempBoldFont),1,1);
                             tempTable.addCell(inCell);
 
-                            text = "수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
+                            String orderDueDt = String.valueOf(controlOrderInfo.get("ORDER_DUE_DT"));
+
+                            text = orderDueDt + "  수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
                             if(sameSideYn.equals("Y")) {
                                 text += " (" + controlOrderInfo.get("ORIGINAL_SIDE_QTY") + "," + controlOrderInfo.get("OTHER_SIDE_QTY") + ")";
                             }
@@ -350,7 +352,9 @@ public class PdfPrintMakeController {
                             PdfPCell inCell = createOrderHighCell(new Phrase(text, mediumTempBoldFont),1,1);
                             tempTable.addCell(inCell);
 
-                            text = "수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
+                            String orderDueDt = String.valueOf(controlOrderInfo.get("ORDER_DUE_DT"));
+
+                            text = orderDueDt + "  수량 " + String.valueOf(controlOrderInfo.get("ORDER_QTY"));
                             if(sameSideYn.equals("Y")) {
                                 text += " (" + controlOrderInfo.get("ORIGINAL_SIDE_QTY") + "," + controlOrderInfo.get("OTHER_SIDE_QTY") + ")";
                             }
