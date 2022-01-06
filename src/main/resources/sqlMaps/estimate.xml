@@ -50,7 +50,7 @@
                     ELSE (IFNULL(UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, 0) + IFNULL(UNIT_SURFACE_AUTO_AMT, 0) + IFNULL(UNIT_PROCESS_AUTO_AMT, 0) + IFNULL(UNIT_ETC_AMT, 0)) * ITEM_QTY
             END) AS DTL_AMOUNT,
             SF_GET_DATE_F(A.INSERT_DT,'YY','') AS INSERT_DT,
-            CASE WHEN (SELECT COUNT(*) FROM TBL_CONTROL WHERE EST_SEQ = A.EST_SEQ AND DEL_YN ='N') > 0 THEN 'Y' ELSE 'N' END CONTROL_YN,
+            CASE WHEN (SELECT COUNT(*) FROM TBL_ORDER WHERE EST_SEQ = A.EST_SEQ AND DEL_YN ='N') > 0 THEN 'Y' ELSE 'N' END ORDER_YN,
             A.EMAIL_TITLE,
             CASE WHEN A.EMAIL_CONTENT IS NOT NULL THEN A.EMAIL_CONTENT
                 ELSE (SELECT TEMPLATE_CONTENT FROM TBL_MAIL_TEMPLATE WHERE TEMPLATE_SEQ = 0)
@@ -599,6 +599,87 @@
                 AND CASE WHEN B.PARENT_SEQ IS NULL THEN B.SEQ ELSE B.PARENT_SEQ END = #{SEQ}
         WHERE A.EST_SEQ = #{EST_SEQ}
         GROUP BY CASE WHEN B.PARENT_SEQ IS NULL THEN B.SEQ ELSE B.PARENT_SEQ END
+    </insert>
+    <insert id="insertEstimateOrderMaster" parameterType="java.util.HashMap">
+        <selectKey keyProperty="ORDER_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_CONTROL_PART_ORDER) FROM DUAL
+        </selectKey>
+        INSERT INTO TBL_ORDER (
+            ORDER_SEQ,
+            REGIST_NUM,
+            COMP_CD,
+            ORDER_COMP_CD,
+            NOTE,
+            DRAWING_NUM,
+            ORDER_QTY,
+            WORK_TYPE,
+            MATERIAL_SUPPLY_YN,
+            SIZE_TYPE,
+            SIZE_TXT,
+            MATERIAL_DETAIL,
+            MATERIAL_KIND,
+            MATERIAL_TYPE,
+            SIZE_W,
+            SIZE_H,
+            SIZE_T,
+            SIZE_D,
+            SIZE_L,
+            SURFACE_TREAT,
+            UNIT_FINAL_EST_AMT,
+            UNIT_ETC_AMT,
+            UNIT_AMT_NOTE,
+            PROJECT_NM,
+            MODULE_NM,
+            ITEM_NM,
+            ORDER_STAFF_SEQ,
+            INSERT_ID,
+            ORDER_BARCODE_NUM,
+            PDF_GFILE_SEQ,
+            IMG_GFILE_SEQ,
+            DXF_GFILE_SEQ,
+            EST_SEQ,
+            MATERIAL_NOTE
+        )
+        SELECT #{ORDER_SEQ},
+            UPPER(CONCAT('TEMP_REGIST_',#{ORDER_SEQ})),
+            A.COMP_CD,
+            A.ORDER_COMP_CD,
+            B.NOTE,
+            B.DRAWING_NUM,
+            B.ITEM_QTY,
+            B.WORK_TYPE,
+            B.MATERIAL_SUPPLY_YN,
+            B.SIZE_TYPE,
+            B.SIZE_TXT,
+            B.MATERIAL_DETAIL,
+            B.MATERIAL_KIND,
+            B.MATERIAL_TYPE,
+            B.SIZE_W,
+            B.SIZE_H,
+            B.SIZE_T,
+            B.SIZE_D,
+            B.SIZE_L,
+            B.SURFACE_TREAT,
+            B.UNIT_FINAL_EST_AMT,
+            B.UNIT_ETC_AMT,
+            B.UNIT_AMT_NOTE,
+            B.PROJECT_NM,
+            B.MODULE_NM,
+            B.ITEM_NM,
+            A.ORDER_STAFF_SEQ,
+            #{LOGIN_USER_ID},
+            CONCAT('O',LPAD(NEXTVAL(SEQ_ORDER_BARCODE),9,'0')),
+            B.PDF_GFILE_SEQ,
+            B.IMG_GFILE_SEQ,
+            B.DXF_GFILE_SEQ,
+            #{EST_SEQ},
+            B.MATERIAL_NOTE
+        FROM TBL_ESTIMATE A
+            INNER JOIN TBL_ESTIMATE_DETAIL B ON A.EST_SEQ = B.EST_SEQ
+        WHERE A.DEL_YN = 'N'
+            AND A.EST_STATUS = 'EST010'
+            AND A.EST_SEQ = #{EST_SEQ}
+            AND CASE WHEN B.PARENT_SEQ IS NULL THEN B.SEQ ELSE B.PARENT_SEQ END = #{SEQ}
     </insert>
 
     <insert id="insertEstimateOrderControlDetail"  parameterType="java.util.HashMap">

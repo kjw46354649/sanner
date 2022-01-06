@@ -112,8 +112,7 @@ public class EstimateServiceImpl implements EstimateService {
         data.put("LOGIN_USER_ID", userId);
 
         if (jsonObject != null) {
-            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {
-            });
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {});
         }
 
         for (int i = 0; i < jsonMap.size(); i++) {
@@ -132,30 +131,36 @@ public class EstimateServiceImpl implements EstimateService {
             data.put("LOGIN_USER_ID", userId);
             String workType = (String) data.get("WORK_TYPE");
             if(!workType.equals("WTP050")) {
-                estimateDao.insertEstimateOrderControlMaster(data);
-                estimateDao.insertEstimateOrderControlDetail(data);
-                estimateDao.insertEstimateOrderControlOrder(data);
-                estimateDao.insertEstimateOrderControlBarcode(data);
-                estimateDao.insertEstimateOrderOutBarcode(data);
-                data.put("queryId", "estimate.insertEstimateOrderPartProcess");
+//                estimateDao.insertEstimateOrderControlMaster(data);
+//                estimateDao.insertEstimateOrderControlDetail(data);
+//                estimateDao.insertEstimateOrderControlOrder(data);
+//                estimateDao.insertEstimateOrderControlBarcode(data);
+//                estimateDao.insertEstimateOrderOutBarcode(data);
+                data.put("queryId","estimate.insertEstimateOrderMaster");
                 this.innodaleDao.create(data);
 
-                if(workType.equals("WTP020") && map.get((String) data.get("DRAWING_NUM")) != null) {
-                    ArrayList<Map<String, Object>> tempArr = map.get((String) data.get("DRAWING_NUM"));
-                    int count = 1;
-                    for(Map<String, Object> temp : tempArr) {
-                        if(temp.get("WORK_TYPE").equals("WTP050")) {
-                            temp.put("CONTROL_SEQ",data.get("CONTROL_SEQ"));
-                            temp.put("PART_NUM",count);
-                            temp.put("LOGIN_USER_ID", userId);
-                            estimateDao.insertEstimateOrderControlDetail(temp);
-                            estimateDao.insertEstimateOrderControlBarcode(data);
-                            data.put("queryId", "estimate.insertEstimateOrderPartProcess");
-                            this.innodaleDao.create(data);
-                            count++;
-                        }
-                    }
-                }
+                data.put("queryId", "orderMapper.insertOutBarcode");
+                this.innodaleDao.create(data);
+
+//                data.put("queryId", "estimate.insertEstimateOrderPartProcess");
+//                this.innodaleDao.create(data);
+
+//                if(workType.equals("WTP020") && map.get((String) data.get("DRAWING_NUM")) != null) {
+//                    ArrayList<Map<String, Object>> tempArr = map.get((String) data.get("DRAWING_NUM"));
+//                    int count = 1;
+//                    for(Map<String, Object> temp : tempArr) {
+//                        if(temp.get("WORK_TYPE").equals("WTP050")) {
+//                            temp.put("CONTROL_SEQ",data.get("CONTROL_SEQ"));
+//                            temp.put("PART_NUM",count);
+//                            temp.put("LOGIN_USER_ID", userId);
+//                            estimateDao.insertEstimateOrderControlDetail(temp);
+//                            estimateDao.insertEstimateOrderControlBarcode(data);
+//                            data.put("queryId", "estimate.insertEstimateOrderPartProcess");
+//                            this.innodaleDao.create(data);
+//                            count++;
+//                        }
+//                    }
+//                }
             }
         }
         estimateDao.updateEstimateMasterFinish(data);

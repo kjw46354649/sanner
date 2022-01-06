@@ -150,12 +150,12 @@
             {title: '상태', dataType: 'string', dataIndx: 'EST_STATUS_NM', width: 60 },
             {title: '주문접수', dataType: 'date', dataIndx: '', width: 80 ,
                 render: function(ui){
-                    let CONTROL_YN = ui.rowData.CONTROL_YN;
+                    let ORDER_YN = ui.rowData.ORDER_YN;
                     let EST_SEQ = ui.rowData.EST_SEQ;
                     let EST_VER = ui.rowData.EST_VER;
                     let FINAL_VER = ui.rowData.FINAL_VER;
 
-                    if(CONTROL_YN == 'N') {
+                    if(ORDER_YN == 'N') {
                         if(FINAL_VER == 'Y'){
                             return '<button type="button" id="estimateOrder" data-seq="'+EST_SEQ+'" data-ver="'+EST_VER+'" class="miniBtn blue">주문등록</button>'
                         }
@@ -497,7 +497,7 @@
                     // {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AMT', format: '#,###'},
                     {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###', sortable: false},
                     {title: '견적비고', dataType: 'integer', dataIndx: 'UNIT_AMT_NOTE', sortable: false}
-                ]},
+            ]},
             {title: '최종견적단가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80, sortable: false},
             {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80, sortable: false},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', sortable: false},
@@ -889,6 +889,7 @@
     $(document).on('click', '#estimateOrder', function(event){
         let seq = event.target.dataset.seq;
         let parameters = {'url': '/json-list', 'data': { 'queryId': 'selectEstimateOrderControlData', 'EST_SEQ': seq}};
+        $("#estimate_master_top_grid").pqGrid('showLoading');
         fnPostAjax(function (data, callFunctionParam) {
 
             let parameters = {
@@ -899,6 +900,7 @@
             fnPostAjax(function () {
                 fnAlert(null,"<spring:message code='com.alert.default.save.success'/>");
                 $("#btnEstimateListSearch").trigger('click');
+                $("#estimate_master_top_grid").pqGrid('hideLoading');
             }, parameters, '');
 
         }, parameters, '');

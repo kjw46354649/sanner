@@ -574,7 +574,6 @@
                         // newRowData.UNIT_PROCESS_AMT = null;
                         // newRowData.UNIT_ETC_AMT = null;
                         // newRowData.UNIT_AMT_NOTE = null;
-                        // newRowData.UNIT_FINAL_EST_AMT = null;
                         // newRowData.UNIT_FINAL_AMT = null;
                         // newRowData.DWG_GFILE_SEQ = null;
                         // newRowData.ORDER_DXF_GFILE_SEQ = null;
@@ -1035,21 +1034,6 @@
                     //     }
                     // }
                 ]
-            },
-            {
-                title: '견적단가', align: 'right', width: 80, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT',
-                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-
-                    return rowData.ORDER_STATUS != 'REG003';
-                },
-                render: function (ui) {
-                    let rowData = ui.rowData;
-                    let cls = null;
-
-                    return {cls: cls, text: controlManageFilterRender(ui)};
-                }
             },
             {
                 title: '계산<br>견적가', width: 80, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SUM_AUTO_AMT',
@@ -1648,7 +1632,7 @@
                 'CONTROL_STATUS_NM'/*, 'CONTROL_VER'*/, 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON',
                 'PART_NUM','EMERGENCY_YN', 'MAIN_INSPECTION', 'DRAWING_NUM_BUTTON', 'ORDER_DRAWING_NUM', 'ORDER_NUM_PLUS_BUTTON', 'REGIST_NUM', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
                 'DELIVERY_DT', 'PART_UNIT_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN', 'MATERIAL_SUPPLY_YN',
-                'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'MATERIAL_FINISH_HEAT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'PREV_DRAWING_NUM',
+                'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'MATERIAL_FINISH_HEAT', 'UNIT_FINAL_AMT', 'PREV_DRAWING_NUM',
                 'INSIDE_STOCK_NUM', 'STOCK_REQUEST_QTY', 'STOCK_OUT_QTY', 'ADDITIONAL_QTY'
             ];
             let array = [];
@@ -2272,8 +2256,8 @@
             const singleList = ['PART_UNIT_QTY']; // 단품
             const assemblyList = [/*'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', */'PART_UNIT_QTY']; // 조립
             const modifiedList = ['PART_UNIT_QTY']; // 수정
-            const stockList = ['PART_UNIT_QTY', 'ORDER_NUM', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT']; // 재고
-            const partList = ['ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT']; // 파트
+            const stockList = ['PART_UNIT_QTY', 'ORDER_NUM', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_AMT']; // 재고
+            const partList = ['ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'UNIT_FINAL_AMT']; // 파트
 
             switch (rowData.WORK_TYPE) {
                 case 'WTP010':

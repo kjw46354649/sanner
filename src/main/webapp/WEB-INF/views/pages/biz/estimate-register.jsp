@@ -1145,6 +1145,7 @@
         function fnEstimateRegisterSave(alertYn) {
             prevErrorList = errorList;
             errorList = [];
+            checkWorkType = [];
             let data = estimateRegisterTopGrid.pqGrid('option', 'dataModel.data');
 
             validationCheck(data);

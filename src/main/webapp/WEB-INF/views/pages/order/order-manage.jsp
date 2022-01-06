@@ -694,21 +694,21 @@
                     return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
-            // {
-            //     title: '견적단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT',
-            //     styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
-            //     editable: function (ui) {
-            //         let rowData = ui.rowData;
-            //
-            //         return rowData.ORDER_STATUS != 'REG003';
-            //     },
-            //     render: function (ui) {
-            //         let rowData = ui.rowData;
-            //         let cls = null;
-            //
-            //         return {cls: cls, text: controlManageFilterRender(ui)};
-            //     }
-            // },
+            {
+                title: '견적단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_EST_AMT',
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.ORDER_STATUS != 'REG003';
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
+                }
+            },
             {
                 title: '공급단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
@@ -733,15 +733,15 @@
                     return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
-            {
-                title: '입력<br>견적단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_EST_AMT',
-                render: function (ui) {
-                    let rowData = ui.rowData;
-                    let cls = null;
-
-                    return {cls: cls, text: controlManageFilterRender(ui)};
-                }
-            },
+            // {
+            //     title: '입력<br>견적단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_EST_AMT',
+            //     render: function (ui) {
+            //         let rowData = ui.rowData;
+            //         let cls = null;
+            //
+            //         return {cls: cls, text: controlManageFilterRender(ui)};
+            //     }
+            // },
             {
                 title: '계산<br>견적단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SUM_AUTO_AMT',
                 render: function (ui) {
@@ -1323,7 +1323,7 @@
                 'ORDER_STATUS_NM', 'ORDER_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'NOTE', 'REGIST_NUM', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON',
                 'MAIN_INSPECTION', 'DRAWING_NUM_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'CONTROL_STATUS', 'DRAWING_NUM',
                 'DELIVERY_DT', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'MATERIAL_SUPPLY_YN',
-                'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_FINISH_HEAT', 'CONTROL_EST_AMT', 'UNIT_FINAL_AMT', 'PREV_DRAWING_NUM'
+                'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_FINISH_HEAT', 'CONTROL_EST_AMT', 'UNIT_FINAL_AMT', 'PREV_DRAWING_NUM', 'UNIT_FINAL_EST_AMT'
             ];
             let array = [];
             const inputModeArray1 = [
