@@ -233,7 +233,12 @@
         </div>
     </div>
     <div class="controlCloseLayerPopup">
-        <h3>월 마감 취소 진행</h3>
+        <h3>월 마감 취소 진행
+<%--            <span class="chk_box mr-30" style="float: right;">--%>
+<%--                <input name="CHECK_TIME_CANCEL" id="CHECK_TIME_CANCEL" type="checkbox">--%>
+<%--                <label for="CHECK_TIME_CANCEL">test</label>--%>
+<%--            </span>--%>
+        </h3>
         <hr>
         <button type="button" class="pop_close" name="CONTROL_CLOSE_CANCEL_NO">닫기</button>
         <div class="d-inline-block">
@@ -959,7 +964,8 @@
                     }
                 ]
             },
-            {title: '마감차수', width: 90, dataIndx: 'CLOSE_VER'},
+            {title: '마감차수', width: 90, dataIndx: 'CLOSE_VER_FORMAT'},
+            {title: '마감차수', dataIndx: 'CLOSE_VER', hidden: true},
             {title: '재질', dataIndx: 'MATERIAL_TYPE', hidden: true},
             {title: '생성일시', width: 90, dataIndx: 'ORDER_INSERT_DT'},
             {title: 'CONTROL_BARCODE_NUM', dataIndx: 'CONTROL_BARCODE_NUM', hidden: true}
@@ -2379,11 +2385,15 @@
             let rightData = $controlCloseCancelRightGrid.pqGrid('option', 'dataModel.data');
             let postData = {
                 'info-data': rightData,
-                'list-data': list
+                'list-data': list,
+                'TYPE': 'Y'
             };
 
+            let now = new Date();
             let parameters = {'url': '/removeMonthClose', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data, callFunctionParam) {
+                let after = new Date();
+                console.log('time', after.getTime() - now.getTime());
                 $("#cancel_loading_bar").hide();
                 $('#CONTROL_CLOSE_CANCEL_POPUP').modal('hide');
                 $orderManagementGrid.pqGrid('refreshDataAndView');
@@ -2395,6 +2405,8 @@
 
         $('#ORDER_MANAGE_SEARCH').on('click', function () {
             selectedOrderManagementRowIndex = [];
+            $orderManagementGrid.pqGrid('setSelection', null);
+
             let orderSts = $("#ORDER_MANAGE_SEARCH_FORM").find("#HIDDEN_ORDER_STATUS").val();
             if(orderSts.indexOf("REGTEMP") >= 0) {
                 let tempOrderSts = orderSts + ", 'REG002'";

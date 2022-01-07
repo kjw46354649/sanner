@@ -2503,6 +2503,8 @@
 
         $('#CONTROL_MANAGE_SEARCH').on('click', function () {
             selectedControlManagementRowIndex = [];
+            $controlManagementGrid.pqGrid('setSelection', null);
+
             $controlManagementGrid.pqGrid('option', 'dataModel.postData', function () {
                 return (fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM'));
             });

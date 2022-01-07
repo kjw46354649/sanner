@@ -57,6 +57,12 @@
                         <option value="5">5차</option>
                     </select>
                 </div>
+<%--                <div class="d-inline-block ml-10" style="display: none;">--%>
+<%--                    <span class="chk_box">--%>
+<%--                        <input name="CHECK_TIME" id="CHECK_TIME" type="checkbox">--%>
+<%--                        <label for="CHECK_TIME">test</label>--%>
+<%--                    </span>--%>
+<%--                </div>--%>
             </div>
         </form>
     </div>
@@ -281,13 +287,18 @@
             let rightData = $controlMonthCloseRightGrid.pqGrid('option', 'dataModel.data');
             let postData = {
                 'info-data': rightData,
-                'list-data': list
+                'list-data': list,
+                'TYPE': 'Y'
             };
-
+            console.log(postData)
             // rightGrid
+            let now = new Date();
+
             let parameters = {'url': '/createMonthClose', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data, callFunctionParam) {
                 $("#close_loading_bar").hide();
+                let after = new Date();
+                console.log('time', after.getTime() - now.getTime());
                 fnAlert(null, '<spring:message code="com.alert.default.save.success"/>', function () {
                     opener.$orderManagementGrid.pqGrid('refreshDataAndView');
                     window.close();

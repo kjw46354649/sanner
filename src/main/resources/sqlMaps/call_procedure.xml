@@ -31,4 +31,12 @@
         { call jmes.SP_CONTROL_DRAWING_UPLOAD_STOCK(#{WORK_KEY}) }
     </update>
 
+    <update id="SP_MONTH_CLOSE" statementType="CALLABLE" >
+        { call jmes.SP_MONTH_CLOSE(#{GROUP_KEY}) }
+    </update>
+
+    <update id="SP_REMOVE_MONTH_CLOSE" statementType="CALLABLE" >
+        { call jmes.SP_REMOVE_MONTH_CLOSE(#{GROUP_KEY}) }
+    </update>
+
 </mapper>

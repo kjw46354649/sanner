@@ -161,6 +161,7 @@ public class OrderServiceImpl implements OrderService {
         String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
+        String uuid = UUID.randomUUID().toString();
         ArrayList<HashMap<String, Object>> listData = null;
         ArrayList<HashMap<String, Object>> infoData = null;
 
@@ -177,17 +178,25 @@ public class OrderServiceImpl implements OrderService {
             for (HashMap<String, Object> hashMap : listData) {
                 hashMap.put("LOGIN_USER_ID", userId);
                 hashMap.put("ORDER_STATUS", "REG003");
-                hashMap.put("queryId", "orderMapper.createMonthClose");
-                this.innodaleDao.create(hashMap);
-                hashMap.put("queryId", "orderMapper.deleteMonthCloseOrder");
-                this.innodaleDao.remove(hashMap);
-                hashMap.put("queryId", "orderMapper.createMonthCloseOrder");
-                this.innodaleDao.create(hashMap);
-//                hashMap.put("queryId", "orderMapper.updateControlStatusFromMonthClose");
-                hashMap.put("queryId", "orderMapper.updateOrderStatusFromMonthClose");
-                this.innodaleDao.update(hashMap);
-                hashMap.put("queryId", "orderMapper.createOrderProgressFromMonthClose");
-                this.innodaleDao.create(hashMap);
+                hashMap.put("GROUP_KEY", uuid);
+                hashMap.put("PROCESS_TYPE", "C");
+
+                if(jsonMap.get("TYPE") != null && String.valueOf(jsonMap.get("TYPE")).equals("Y")) {
+                    hashMap.put("queryId", "orderMapper.createBeforeMonthClose");
+                    this.innodaleDao.create(hashMap);
+                }else {
+                    hashMap.put("queryId", "orderMapper.createMonthClose");
+                    this.innodaleDao.create(hashMap);
+                    hashMap.put("queryId", "orderMapper.deleteMonthCloseOrder");
+                    this.innodaleDao.remove(hashMap);
+                    hashMap.put("queryId", "orderMapper.createMonthCloseOrder");
+                    this.innodaleDao.create(hashMap);
+
+                    hashMap.put("queryId", "orderMapper.updateOrderStatusFromMonthClose");
+                    this.innodaleDao.update(hashMap);
+                    hashMap.put("queryId", "orderMapper.createOrderProgressFromMonthClose");
+                    this.innodaleDao.create(hashMap);
+                }
             }
         }
 
@@ -198,6 +207,11 @@ public class OrderServiceImpl implements OrderService {
                 this.innodaleDao.update(hashMap);
             }
         }
+        if(jsonMap.get("TYPE") != null && String.valueOf(jsonMap.get("TYPE")).equals("Y")) {
+            jsonMap.put("GROUP_KEY", uuid);
+            jsonMap.put("queryId", "procedure.SP_MONTH_CLOSE");
+            this.innodaleDao.callProcedureMethod(jsonMap);
+        }
     }
 
     @Override
@@ -206,6 +220,7 @@ public class OrderServiceImpl implements OrderService {
         String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
+        String uuid = UUID.randomUUID().toString();
         ArrayList<HashMap<String, Object>> listData = null;
         ArrayList<HashMap<String, Object>> infoData = null;
 
@@ -222,16 +237,22 @@ public class OrderServiceImpl implements OrderService {
             for (HashMap<String, Object> hashMap : listData) {
                 hashMap.put("LOGIN_USER_ID",userId);
                 hashMap.put("ORDER_STATUS", "REG001");
-                hashMap.put("queryId", "orderMapper.deleteMonthCloseOrder");
-                this.innodaleDao.remove(hashMap);
-                hashMap.put("queryId", "orderMapper.deleteMonthClose");
-                this.innodaleDao.remove(hashMap);
-//                hashMap.put("queryId", "orderMapper.updateControlStatusFromMonthCloseCancel");
-                hashMap.put("queryId", "orderMapper.updateOrderStatusFromMonthCloseCancel");
-                this.innodaleDao.update(hashMap);
-//                hashMap.put("queryId", "orderMapper.createControlProgressFromMonthCloseCancel");
-                hashMap.put("queryId", "orderMapper.createOrderProgressFromMonthCloseCancel");
-                this.innodaleDao.create(hashMap);
+                hashMap.put("GROUP_KEY", uuid);
+                hashMap.put("PROCESS_TYPE", "D");
+
+                if(jsonMap.get("TYPE") != null && String.valueOf(jsonMap.get("TYPE")).equals("Y")) {
+                    hashMap.put("queryId", "orderMapper.createBeforeMonthClose");
+                    this.innodaleDao.create(hashMap);
+                }else {
+                    hashMap.put("queryId", "orderMapper.deleteMonthCloseOrder");
+                    this.innodaleDao.remove(hashMap);
+                    hashMap.put("queryId", "orderMapper.deleteMonthClose");
+                    this.innodaleDao.remove(hashMap);
+                    hashMap.put("queryId", "orderMapper.updateOrderStatusFromMonthCloseCancel");
+                    this.innodaleDao.update(hashMap);
+                    hashMap.put("queryId", "orderMapper.createOrderProgressFromMonthCloseCancel");
+                    this.innodaleDao.create(hashMap);
+                }
             }
         }
 
@@ -240,6 +261,12 @@ public class OrderServiceImpl implements OrderService {
                 hashMap.put("queryId", "orderMapper.updateMonthCloseFinalNego");
                 this.innodaleDao.update(hashMap);
             }
+        }
+
+        if(jsonMap.get("TYPE") != null && String.valueOf(jsonMap.get("TYPE")).equals("Y")) {
+            jsonMap.put("GROUP_KEY", uuid);
+            jsonMap.put("queryId", "procedure.SP_REMOVE_MONTH_CLOSE");
+            this.innodaleDao.callProcedureMethod(jsonMap);
         }
     }
 
