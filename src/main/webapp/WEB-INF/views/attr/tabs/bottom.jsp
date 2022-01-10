@@ -2891,7 +2891,6 @@
     };
 
     const changeProcessingRequirementsEtcInformation = function (rowData) {
-        console.log(rowData);
         const $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
         let queryId = '';
 
