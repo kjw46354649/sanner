@@ -2807,7 +2807,7 @@
             if(delFactorStr != "") {
                 delFactorStr = delFactorStr.substring(0,delFactorStr.length - 1);
                 if ($processingRequirementsType === 'ESTIMATE') {
-                    parameter2.queryId = 'orderMapper.deleteEstimateEtcProcess,' + parameter2.queryId;
+                    parameter2.queryId = 'estimate.deleteEstimateEtcProcess,' + parameter2.queryId;
                 }else if ($processingRequirementsType === 'CONTROL') {
                     parameter2.queryId = 'orderMapper.deleteControlPartEtcProcess,' + parameter2.queryId;
                 }
