@@ -25,7 +25,8 @@
         IFNULL(SF_GET_CODE_NM('1017', PRICE_CONFIRM, #{LOGIN_LOCALE}), SPACE(0)) AS PRICE_CONFIRM_NM, <!-- 단가확인 -->
         IFNULL(A.OUT_FINISH_DT, SPACE(0)) AS CONTROL_OUT_FINISH_DT, <!-- 주문관리 출고완료일 -->
         IFNULL(A.SAME_SIDE_YN, SPACE(0)) AS SAME_SIDE_YN, <!-- 대칭여부 -->
-        SF_GET_DATE_F(A.INSERT_DT, '', 'M') AS CONTROL_INSERT_DT
+        SF_GET_DATE_F(A.INSERT_DT, '', 'M') AS CONTROL_INSERT_DT,
+        SF_GET_DATE_F(B.DRAWING_PRINT_DT, '', 'M') AS DRAWING_PRINT_DT
     </sql>
 
     <sql id="controlPart">
@@ -3639,6 +3640,15 @@
             AND A.DEL_YN = 'N'
         ORDER BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
     </select>
+
+    <update id="updateControlPartDrawingPrintDt" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET DRAWING_PRINT_DT = CASE WHEN DRAWING_PRINT_DT IS NULL THEN NOW() ELSE DRAWING_PRINT_DT END
+        WHERE CONCAT(CONTROL_SEQ, CONTROL_DETAIL_SEQ) IN
+        <foreach collection="selectControlLists" item="bean" index="index"  open="(" close=")" separator=",">
+            #{bean}
+        </foreach>
+    </update>
 
     <select id="selectControlCadOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT C.ORDER_SEQ

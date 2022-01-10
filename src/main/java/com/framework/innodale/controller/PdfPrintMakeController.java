@@ -140,6 +140,10 @@ public class PdfPrintMakeController {
         hashMap.put("selectControlLists", selectControlLists);
         hashMap.put("queryId", "orderMapper.selectControlCadBarcodeList");
         List<Map<String, Object>> controlImageList = innodaleService.getList(hashMap);
+
+        hashMap.put("queryId", "orderMapper.updateControlPartDrawingPrintDt");
+        innodaleService.update(hashMap);
+
         int iCount = 0;
 
         document.open();
