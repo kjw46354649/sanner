@@ -641,6 +641,7 @@
                     }
                 }
             },
+            {title: '수행<br>공장', dataIndx: 'WORK_FACTORY_NM', minWidth: 20, width: 60},
             {title: '가공완료일시', dataIndx: 'INNER_WORK_FINISH_DT', hidden: true},
             {title: '현재위치', dataIndx: 'POP_POSITION', minWidth: 20, width: 80},
             {title: '작업지시번호', align: 'left', dataIndx: 'CONTROL_PART_NUM', width: 180},

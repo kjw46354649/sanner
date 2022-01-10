@@ -2542,6 +2542,10 @@
                     fnAlert(null, 'PDF확장자 파일 도면을 등록 후 다시 시도해주세요');
                     return false;
                 }
+                if (rowData.OUTSIDE_YN != 'Y' && fnIsEmpty(rowData.WORK_FACTORY)) {
+                    fnAlert(null, '수행 공장을 선택해주세요.');
+                    return false;
+                }
 
                 if (rowData.SAME_SIDE_YN === 'Y' || !fnIsEmpty(rowData.DNJSCLD) || !fnIsEmpty(rowData.EOCLD)) {
                     if(Number(rowData.CONTROL_PART_QTY) !== (Number(rowData.DNJSCLD) + Number(rowData.EOCLD))) {

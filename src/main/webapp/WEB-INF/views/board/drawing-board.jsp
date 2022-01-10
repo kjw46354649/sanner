@@ -369,7 +369,7 @@
                 <input id="PART_NUM" name="PART_NUM" type="hidden" value="${workInfo.PART_NUM}">
                 <input id="ORDER_QTY" name="ORDER_QTY" type="hidden" value="${workInfo.ORDER_QTY}">
                 <input id="INNER_DUE_DT" name="INNER_DUE_DT" type="hidden" value="${workInfo.INNER_DUE_DT}">
-                <input id="FINISH_QTY" name="FINISH_QTY" type="hidden" value="${workInfo.ORDER_QTY}">
+                <input id="FINISH_QTY" name="FINISH_QTY" type="hidden" value="${workInfo.FINISH_QTY}">
                 <input id="ERROR_QTY" name="ERROR_QTY" type="hidden" value="">
                 <input id="ERROR_REASON" name="ERROR_REASON" type="hidden" value="">
                 <input id="RE_BARCODE_NUM" name="RE_BARCODE_NUM" type="hidden" value="">
