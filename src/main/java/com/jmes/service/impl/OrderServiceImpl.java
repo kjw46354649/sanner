@@ -199,6 +199,13 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
         }
+//
+
+        if(jsonMap.get("TYPE") != null && String.valueOf(jsonMap.get("TYPE")).equals("Y")) {
+            jsonMap.put("GROUP_KEY", uuid);
+            jsonMap.put("queryId", "procedure.SP_MONTH_CLOSE");
+            this.innodaleDao.callProcedureMethod(jsonMap);
+        }
 
         if (infoData != null && infoData.size() > 0) {
             for (HashMap<String, Object> hashMap : infoData) {
@@ -206,11 +213,6 @@ public class OrderServiceImpl implements OrderService {
                 hashMap.put("queryId", "orderMapper.updateMonthCloseFinalNego");
                 this.innodaleDao.update(hashMap);
             }
-        }
-        if(jsonMap.get("TYPE") != null && String.valueOf(jsonMap.get("TYPE")).equals("Y")) {
-            jsonMap.put("GROUP_KEY", uuid);
-            jsonMap.put("queryId", "procedure.SP_MONTH_CLOSE");
-            this.innodaleDao.callProcedureMethod(jsonMap);
         }
     }
 
@@ -256,17 +258,17 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
+        if(jsonMap.get("TYPE") != null && String.valueOf(jsonMap.get("TYPE")).equals("Y")) {
+            jsonMap.put("GROUP_KEY", uuid);
+            jsonMap.put("queryId", "procedure.SP_REMOVE_MONTH_CLOSE");
+            this.innodaleDao.callProcedureMethod(jsonMap);
+        }
+
         if (infoData != null && infoData.size() > 0) {
             for (HashMap<String, Object> hashMap : infoData) {
                 hashMap.put("queryId", "orderMapper.updateMonthCloseFinalNego");
                 this.innodaleDao.update(hashMap);
             }
-        }
-
-        if(jsonMap.get("TYPE") != null && String.valueOf(jsonMap.get("TYPE")).equals("Y")) {
-            jsonMap.put("GROUP_KEY", uuid);
-            jsonMap.put("queryId", "procedure.SP_REMOVE_MONTH_CLOSE");
-            this.innodaleDao.callProcedureMethod(jsonMap);
         }
     }
 

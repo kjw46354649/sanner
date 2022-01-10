@@ -141,7 +141,7 @@
                                             <td style="width:18%; background-color: #bfbfbf; text-align: center; font-weight: bold;">입금액(현금+어음)</td>
                                             <td style="width:17%; background-color: #bfbfbf; text-align: center; font-weight: bold;">발행어음</td>
                                             <td style="width:18%; background-color: #bfbfbf; text-align: center; font-weight: bold;">지급완료 어음</td>
-                                            <td style="width:18%; background-color: #bfbfbf; text-align: center; font-weight: bold;">실지급액(할인률%)</td>
+                                            <td style="width:18%; background-color: #bfbfbf; text-align: center; font-weight: bold;">실지급액(%)</td>
                                             <td style="width:17%; background-color: #bfbfbf; text-align: center; font-weight: bold;">미지급 어음</td>
                                         </tr>
                                         <tr>
@@ -235,41 +235,31 @@
             {title: 'No.', minWidth: 30, width: 30, align: 'right', dataType: 'integer', dataIndx: 'ROW_NUM'},
             {title: '사업자', minWidth: 30, width: 120, dataIndx: 'COMP_CD_NM'},
             {title: '발주처', minWidth: 30, width: 200, dataIndx: 'ORDER_COMP_NM'},
-            {title: '2020년<br>매출현황(VAT 포함)', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'SALE_AMT',
+            {title: '매출현황(VAT 포함)', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'SALE_AMT',
                 summary: {
                     type: "sum",
                     edit: true
                 },
             },
-            {
-                title: '2020년 수금현황', clsHead: 'cantChange', align: 'center', colModel: [
-                    {title: '현금', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CASH_AMT',
-                        summary: {
-                            type: "sum",
-                            edit: true
-                        },
-                    },
-                    {title: '어음', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PAPER_AMT',
-                        summary: {
-                            type: "sum",
-                            edit: true
-                        },
-                    },
-                    {title: '합계', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DEPOSIT_TOTAL_AMT',
-                        summary: {
-                            type: "sum",
-                            edit: true
-                        },
-                    },
-                ]
-            },
-            {title: '전년도 총<br>미수금액', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_AMT',
+            {title: '수금현황', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CASH_AMT',
                 summary: {
                     type: "sum",
                     edit: true
                 },
             },
-            {title: '총미수금 현황<br>2020년', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_TOTAL_AMT',
+            {title: '발행어음', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PAPER_AMT',
+                summary: {
+                    type: "sum",
+                    edit: true
+                },
+            },
+            {title: '전년도<br>이월 미수금액', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_AMT',
+                summary: {
+                    type: "sum",
+                    edit: true
+                },
+            },
+            {title: '총 미수금 현황', minWidth: 30, width: 150, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'NOT_DEPOSIT_TOTAL_AMT',
                 summary: {
                     type: "sum",
                     edit: true
@@ -296,7 +286,7 @@
 
         let moneyManageStatusObj = {
             height: 770, collapsible: false, resizable: false, selectionModel: { type: 'row', mode: 'single'} ,
-            showTitle: false, rowHtHead: 15, strNoRows: g_noData, numberCell: {show: false}, scrollModel: {autoFit: false}, trackModel: {on: true},
+            showTitle: false, rowHtHead: 15, strNoRows: g_noData, numberCell: {show: false}, scrollModel: {autoFit: true}, trackModel: {on: true},
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center',  editable: false},
             colModel: moneyManageStatusModel, toolbar: false,
             groupModel: moneyManageStatusGroupModel,
@@ -316,10 +306,10 @@
                 $moneyManageStatusGrid.pqGrid({
                     refresh: function( event, ui ) {
                         let searchYear = $("#money_manage_status_search_form").find("#MONEY_MANAGE_STATUS_YEAR").val();
-                        $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=7] span.pq-title-span").html(searchYear + "년<br>매출현황(VAT 포함)");
-                        $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-row-indx=0][pq-col-indx=8] span.pq-title-span").html(searchYear + "년 수금현황");
-                        $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=11] span.pq-title-span").html("전년도(" + (searchYear - 1) + "년)<br>" + "이월 미수금액");
-                        $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=12] span.pq-title-span").html("총 미수금 현황<br>" + searchYear + "년");
+                        // $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=7] span.pq-title-span").html(searchYear + "년<br>매출현황(VAT 포함)");
+                        // $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-row-indx=0][pq-col-indx=8] span.pq-title-span").html(searchYear + "년 수금현황");
+                        $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=10] span.pq-title-span").html("전년도(" + (searchYear - 1) + "년)<br>" + "이월 미수금액");
+                        // $("#moneyManageStatusGrid .pq-grid-header-table .pq-grid-row").find("div[pq-col-indx=12] span.pq-title-span").html("총 미수금 현황<br>" + searchYear + "년");
                         $("span.pq-group-icon").hide();
                         $("span.pq-group-toggle").hide();
                     }
@@ -527,7 +517,7 @@
                         moneySales05 += parseInt(rowData.DEPOSIT_AMT?rowData.DEPOSIT_AMT:0);
                     }
                 }
-                if(moneySales04 > 0) duePayPer = (((moneySales03 - moneySales04) / moneySales03) * 100).toFixed(1);
+                if(moneySales04 > 0) duePayPer = ((moneySales04 / moneySales03) * 100).toFixed(1);
                 $('#moneySales01').html(numberWithCommas(moneySales01));
                 $('#moneySales02').html(numberWithCommas(moneySales02));
                 $('#moneySales03').html(numberWithCommas(moneySales03));
