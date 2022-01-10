@@ -571,6 +571,11 @@
                         emptyFlag = true;
                     }
                 })
+                $.each(changes.addList, function (idx,Item) {
+                    if(fnIsEmpty(Item.DEPOSIT_TYPE)) {
+                        emptyFlag = true;
+                    }
+                })
                 if(emptyFlag) {
                     fnAlert(null, "종류를 입력해주세요.");
                     return false;
