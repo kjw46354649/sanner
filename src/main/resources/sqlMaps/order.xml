@@ -3020,6 +3020,12 @@
                 SUM(A.DEPOSIT_AMT) AS DEPOSIT_TOTAL_AMT, 0 AS NOT_DEPOSIT_AMT
             FROM TBL_MONEY_DEPOSIT A
             WHERE DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y') = #{MONEY_MANAGE_STATUS_YEAR}
+                <if test="COMP_CD != null and COMP_CD != ''">
+                    AND A.COMP_CD = #{COMP_CD}
+                </if>
+                <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                    AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                </if>
             GROUP BY A.COMP_CD, A.ORDER_COMP_CD, DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y')
         ) Z
         LEFT OUTER JOIN TBL_MONEY_YEAR_NOTE Y ON Z.COMP_CD = Y.COMP_CD AND Z.ORDER_COMP_CD = Y.ORDER_COMP_CD AND Z.CLOSE_YEAR = Y.YYYY
