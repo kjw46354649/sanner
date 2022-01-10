@@ -3009,7 +3009,7 @@
                 </if>
                 GROUP BY A.COMP_CD, A.ORDER_COMP_CD, A.CLOSE_MONTH, A.CLOSE_VER
             ) Q
-            GROUP BY Q.COMP_CD, Q.ORDER_COMP_CD, Q.CLOSE_YEAR
+            GROUP BY Q.COMP_CD, Q.ORDER_COMP_CD
             HAVING SUM(Q.SALE_AMT) - Q.DEPOSIT_AMT > 0
             UNION ALL
                 SELECT A.COMP_CD, A.ORDER_COMP_CD, DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y') AS CLOSE_YEAR, 0 AS SALE_AMT,
