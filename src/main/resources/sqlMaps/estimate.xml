@@ -1504,6 +1504,165 @@
         WHERE EST_SEQ = #{EST_SEQ} AND SEQ = #{SEQ}
     </delete>
 
+    <select id="selectEstimateEtcProcess_chkBox" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ETC_FACTOR_CD
+        FROM TBL_ESTIMATE_DETAIL_ETC_PROCESS
+        WHERE EST_SEQ = #{SEQ1}
+          AND SEQ = #{SEQ2}
+    </select>
+
+    <insert id="insertEstiateEtcProcess" parameterType="java.util.HashMap">
+        INSERT INTO TBL_ESTIMATE_DETAIL_ETC_PROCESS (
+            EST_SEQ
+            , SEQ
+            , ETC_FACTOR_CD
+            , CALC_METHOD_1
+            , CALC_METHOD_2
+            , CALC_UNIT
+            , CALC_UNIT_AMT
+            , INSERT_ID
+        )
+        SELECT #{SEQ1}
+             , #{SEQ2}
+             , A.ETC_FACTOR_CD
+             , A.CALC_METHOD_1
+             , A.CALC_METHOD_2
+             , A.CALC_UNIT
+             , A.UNIT_AMT
+             , #{LOGIN_USER_ID}
+        FROM TBL_CALC_PROCESS_ETC_FACTOR A
+        WHERE A.ETC_FACTOR_CD IN (${ETC_FACTOR_CD})
+          AND A.CALC_SEQ = SF_GET_CALC_PROCESS_SEQ('ESTIMATE', #{SEQ1}, #{SEQ2})
+    </insert>
+    <update id="updateEstimateEtcProcess" parameterType="java.util.HashMap">
+        UPDATE TBL_ESTIMATE_DETAIL_ETC_PROCESS
+        SET
+            <if test="COLUMN_TYPE != null and COLUMN_TYPE != ''">
+                <if test="COLUMN_TYPE == 'CALC_SIZE'">
+                    CALC_SIZE = #{VALUE},
+                    CALC_SIZE_EDIT_YN = 'Y',
+                    CALC_AMT = CALC_UNIT_AMT * #{VALUE},
+                </if>
+                <if test="COLUMN_TYPE == 'CALC_UNIT_AMT'">
+                    CALC_UNIT_AMT = #{VALUE},
+                    CALC_UNIT_AMT_EDIT_YN = 'Y',
+                    CALC_AMT = CALC_SIZE * #{VALUE},
+                </if>
+                <if test="COLUMN_TYPE == 'CALC_AMT'">
+                    CALC_AMT = #{VALUE},
+                    CALC_AMT_EDIT_YN = 'Y',
+                </if>
+            </if>
+            UPDATE_ID = #{LOGIN_USER_ID},
+            UPDATE_DT = NOW()
+        WHERE EST_SEQ = #{SEQ1}
+            AND SEQ = #{SEQ2}
+            AND ETC_FACTOR_CD = #{ETC_FACTOR_CD}
+    </update>
+    <update id="updateEstimateEtcAutomaticQuote" parameterType="java.util.HashMap">
+        UPDATE TBL_ESTIMATE_DETAIL_ETC_PROCESS
+        SET
+            CALC_SIZE_TXT = SF_GET_CALC_PROCESS_ETC_SIZE_TXT('ESTIMATE', #{SEQ1}, #{SEQ2}, ETC_FACTOR_CD),
+            CALC_SIZE = SF_GET_CALC_PROCESS_ETC_SIZE('ESTIMATE', #{SEQ1}, #{SEQ2}, ETC_FACTOR_CD),
+            CALC_AMT = SF_GET_CALC_PROCESS_ETC_AMT('ESTIMATE', #{SEQ1}, #{SEQ2}, ETC_FACTOR_CD)
+        WHERE EST_SEQ = #{SEQ1}
+          AND SEQ = #{SEQ2}
+    </update>
+    <delete id="deleteEstimateEtcProcess" parameterType="java.util.HashMap">
+        DELETE FROM TBL_ESTIMATE_DETAIL_ETC_PROCESS
+        WHERE EST_SEQ = #{SEQ1}
+          AND SEQ = #{SEQ2}
+          AND ETC_FACTOR_CD IN (${DEL_ETC_FACTOR_CD})
+    </delete>
+    <select id="selectEstimateEtcProcess" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT *, ROW_NUMBER () OVER(ORDER BY ETC_FACTOR_CD IS NULL ASC, ETC_FACTOR_CD ASC, T) AS ROW_NUM
+        FROM (
+                 SELECT ETC_FACTOR_CD,
+                    CASE
+                        WHEN T = 1 THEN CONCAT(TYPE, ' - ', ETC_FACTOR_NM)
+                        WHEN T = 2 THEN CALC_METHOD_1_NM
+                        WHEN T = 3 THEN CALC_METHOD_2_NM
+                        WHEN T = 4 THEN '단가'
+                        WHEN T = 5 THEN '계산값'
+                    END NAME,
+                    CASE
+                        WHEN T = 1 THEN SPACE(0)
+                        WHEN T = 2 THEN CALC_SIZE_TXT
+                        WHEN T = 3 THEN CALC_SIZE
+                        WHEN T = 4 THEN CALC_UNIT_AMT
+                        WHEN T = 5 THEN CALC_AMT
+                    END VALUE,
+                    CASE WHEN T=1 THEN 'TITLE'
+                         WHEN T=2 THEN 'SIZE_TXT'
+                         WHEN T=3 THEN 'CALC_SIZE'
+                         WHEN T=4 THEN 'CALC_UNIT_AMT'
+                         WHEN T=5 THEN 'CALC_AMT'
+                    END COLUMN_TYPE,
+                    CASE WHEN T=1 THEN 'N'
+                         WHEN T=2 THEN 'N'
+                         WHEN T=3 THEN CALC_SIZE_EDIT_YN
+                         WHEN T=4 THEN CALC_UNIT_AMT_EDIT_YN
+                         WHEN T=5 THEN CALC_AMT_EDIT_YN
+                    END EDIT_YN,
+                    CALC_UNIT_NM,
+                    T,
+                    CALC_METHOD_1_EDIT_YN,
+                    CALC_METHOD_2_EDIT_YN,
+                    CALC_UNIT_AMT_EDIT_YN,
+                    CALC_AMT_EDIT_YN
+                 FROM (
+                     SELECT *
+                     FROM (
+                         SELECT
+                             A.CALC_SEQ,
+                             SF_GET_ETC_NM('1096', A.ETC_FACTOR_CD) AS TYPE,
+                             A.ETC_FACTOR_CD,
+                             SF_GET_CODE_NM('1096', A.ETC_FACTOR_CD, #{LOGIN_LOCALE}) AS ETC_FACTOR_NM,
+                             A.CALC_METHOD_1,
+                             SF_GET_CODE_NM('1097', A.CALC_METHOD_1, #{LOGIN_LOCALE}) AS CALC_METHOD_1_NM,
+                             B.CALC_SIZE_TXT,
+                             A.CALC_METHOD_2,
+                             SF_GET_CODE_NM('1098', A.CALC_METHOD_2, #{LOGIN_LOCALE}) AS CALC_METHOD_2_NM,
+                             B.CALC_SIZE,
+                             B.CALC_UNIT,
+                             SF_GET_CODE_NM('1099', A.CALC_UNIT, #{LOGIN_LOCALE}) AS CALC_UNIT_NM,
+                             B.CALC_AMT,
+                             B.CALC_UNIT_AMT,
+                             B.CALC_SIZE_EDIT_YN,
+                             B.CALC_AMT_EDIT_YN,
+                             B.CALC_UNIT_AMT_EDIT_YN,
+                             B.CALC_METHOD_1_EDIT_YN,
+                             B.CALC_METHOD_2_EDIT_YN
+                         FROM TBL_CALC_PROCESS_ETC_FACTOR A
+                             INNER JOIN TBL_ESTIMATE_DETAIL_ETC_PROCESS B ON A.ETC_FACTOR_CD = B.ETC_FACTOR_CD AND B.EST_SEQ = #{SEQ1} AND B.SEQ = #{SEQ2}
+                             INNER JOIN TBL_CALC_PROCESS C ON A.CALC_SEQ = C.CALC_SEQ AND C.CALC_SEQ = SF_GET_CALC_PROCESS_SEQ('ESTIMATE', #{SEQ1}, #{SEQ2})
+                     ) X, (
+                         SELECT 1 AS T
+                         UNION ALL SELECT 2 AS T
+                         UNION ALL SELECT 3 AS T
+                         UNION ALL SELECT 4 AS T
+                         UNION ALL SELECT 5 AS T
+                     ) Y
+                 ) Z
+                 UNION ALL
+                 SELECT '' AS ETC_FACTOR_CD,
+                     '' AS NAME,
+                     SUM(B.CALC_AMT) AS VALUE,
+                     '' AS COLUMN_TYPE,
+                     '' AS EDIT_YN,
+                     '' AS CALC_UNIT_NM,
+                     '' AS T,
+                     '' AS CALC_METHOD_1_EDIT_YN,
+                     '' AS CALC_METHOD_2_EDIT_YN,
+                     '' AS CALC_UNIT_AMT_EDIT_YN,
+                     '' AS CALC_AMT_EDIT_YN
+                 FROM TBL_CALC_PROCESS_ETC_FACTOR A
+                     INNER JOIN TBL_ESTIMATE_DETAIL_ETC_PROCESS B ON A.ETC_FACTOR_CD = B.ETC_FACTOR_CD AND B.EST_SEQ = #{SEQ1} AND B.SEQ = #{SEQ2}
+                     INNER JOIN TBL_CALC_PROCESS C ON A.CALC_SEQ = C.CALC_SEQ AND C.CALC_SEQ = SF_GET_CALC_PROCESS_SEQ('ESTIMATE', #{SEQ1}, #{SEQ2})
+             ) Q
+        ORDER BY ETC_FACTOR_CD IS NULL ASC, ETC_FACTOR_CD ASC, T
+    </select>
+
     <insert id="insertEstimateDetailProcessFromControl" parameterType="java.util.HashMap">
         INSERT INTO TBL_ESTIMATE_DETAIL_PROCESS (
             EST_SEQ

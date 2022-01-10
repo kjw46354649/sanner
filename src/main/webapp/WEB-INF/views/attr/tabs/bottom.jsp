@@ -2758,18 +2758,28 @@
             factorCdStr = factorCdStr.substring(0,factorCdStr.length - 1);
         }
 
-        let parameter1 = {'url': '/json-list', 'data': {
-                'queryId': 'orderMapper.selectControlPartEtcProcess_chkBox',
-                'SEQ1': rowData.CONTROL_SEQ,
-                'SEQ2': rowData.CONTROL_DETAIL_SEQ
+        let $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
+        let $basicInformation = $('.basic_information');
+        let parameter1 = {'url': '/json-list',
+            'data': {
+                'queryId': '',
+                'SEQ1': $basicInformation.find('#seq1').html(),
+                'SEQ2': $basicInformation.find('#seq2').html()
             }
         };
+
+        if ($processingRequirementsType === 'ESTIMATE') {
+            parameter1.data.queryId = 'estimate.selectEstimateEtcProcess_chkBox';
+        }else if ($processingRequirementsType === 'CONTROL') {
+            parameter1.data.queryId = 'orderMapper.selectControlPartEtcProcess_chkBox';
+        }
+
         fnPostAjax(function (data) {
             let parameter2 = {
                 'queryId': '',
                 'ETC_FACTOR_CD': "",
-                'SEQ1':rowData.CONTROL_SEQ,
-                'SEQ2':rowData.CONTROL_DETAIL_SEQ
+                'SEQ1': $basicInformation.find('#seq1').html(),
+                'SEQ2': $basicInformation.find('#seq2').html()
             };
             let delFactorStr = "";
             let insertFactorStr = "";
@@ -2783,7 +2793,11 @@
                 })
             }
             if(factorCdArr.length > 0) {
-                parameter2.queryId = 'orderMapper.insertControlPartEtcProcess,orderMapper.updateControlPartEtcAutomaticQuote';
+                if ($processingRequirementsType === 'ESTIMATE') {
+                    parameter2.queryId = 'estimate.insertEstiateEtcProcess,estimate.updateEstimateEtcAutomaticQuote';
+                }else if ($processingRequirementsType === 'CONTROL') {
+                    parameter2.queryId = 'orderMapper.insertControlPartEtcProcess,orderMapper.updateControlPartEtcAutomaticQuote';
+                }
                 $.each(factorCdArr,function (idx,Item) {
                     insertFactorStr += "'" + Item + "',";
                 })
@@ -2792,7 +2806,11 @@
             }
             if(delFactorStr != "") {
                 delFactorStr = delFactorStr.substring(0,delFactorStr.length - 1);
-                parameter2.queryId = 'orderMapper.deleteControlPartEtcProcess,' + parameter2.queryId;
+                if ($processingRequirementsType === 'ESTIMATE') {
+                    parameter2.queryId = 'orderMapper.deleteEstimateEtcProcess,' + parameter2.queryId;
+                }else if ($processingRequirementsType === 'CONTROL') {
+                    parameter2.queryId = 'orderMapper.deleteControlPartEtcProcess,' + parameter2.queryId;
+                }
                 parameter2.DEL_ETC_FACTOR_CD = delFactorStr;
             }
             if(parameter2.queryId != "") {
@@ -2810,14 +2828,14 @@
         let queryId = '';
 
         if ($processingRequirementsType === 'ESTIMATE') {
-            queryId = 'estimate.selectProcessingRequirementsBasicInfo';
+            queryId = 'estimate.selectEstimateEtcProcess_chkBox';
         } else if ($processingRequirementsType === 'CONTROL') {
             queryId = 'orderMapper.selectControlPartEtcProcess_chkBox';
         }
         let parameter = {'url': '/json-list', 'data': {
                 'queryId': queryId,
-                'SEQ1': rowData.CONTROL_SEQ,
-                'SEQ2': rowData.CONTROL_DETAIL_SEQ
+                'SEQ1': rowData.SEQ1,
+                'SEQ2': rowData.SEQ2
             }
         };
 
@@ -2842,8 +2860,8 @@
 
         let postData = $.extend({queryId: queryId}, rowData);
         postData.TYPE = $processingRequirementsType;
-        postData.SEQ1 = $('.basic_information').find('#seq1').html();
-        postData.SEQ2 = $('.basic_information').find('#seq2').html();
+        postData.SEQ1 = rowData.SEQ1;
+        postData.SEQ2 = rowData.SEQ2;
         let parameter = {'url': '/json-info', 'data': postData};
 
         fnPostAjax(function (data) {
@@ -2863,8 +2881,8 @@
 
         const postData = $.extend({queryId: queryId}, rowData);
         postData.TYPE = $processingRequirementsType;
-        postData.SEQ1 = $('.basic_information').find('#seq1').html();
-        postData.SEQ2 = $('.basic_information').find('#seq2').html();
+        postData.SEQ1 = rowData.SEQ1;
+        postData.SEQ2 = rowData.SEQ2;
 
         $processingRequirementsGrid.pqGrid('option', 'dataModel.postData', function () {
             return postData;
@@ -2873,18 +2891,19 @@
     };
 
     const changeProcessingRequirementsEtcInformation = function (rowData) {
+        console.log(rowData);
         const $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
         let queryId = '';
 
         if ($processingRequirementsType === 'ESTIMATE') {
-            queryId = 'estimate.selectProcessingRequirementsInfo';
+            queryId = 'estimate.selectEstimateEtcProcess';
         } else if ($processingRequirementsType === 'CONTROL') {
             queryId = 'orderMapper.selectControlPartEtcProcess';
         }
         const postData = $.extend({queryId: queryId}, rowData);
         postData.TYPE = $processingRequirementsType;
-        postData.SEQ1 = rowData.CONTROL_SEQ;
-        postData.SEQ2 = rowData.CONTROL_DETAIL_SEQ;
+        postData.SEQ1 = rowData.SEQ1;
+        postData.SEQ2 = rowData.SEQ2;
 
         $processingRequirementsEtcGrid.pqGrid('option', 'dataModel.postData', function () {
             return postData;
@@ -3010,6 +3029,16 @@
             $("#save_special_process").prop('disabled',true);
         }else {
             $("#save_special_process").prop('disabled',false);
+        }
+
+        const $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
+
+        if ($processingRequirementsType === 'ESTIMATE') {
+            rowData.SEQ1 = rowData.EST_SEQ;
+            rowData.SEQ2 = rowData.SEQ;
+        } else if ($processingRequirementsType === 'CONTROL') {
+            rowData.SEQ1 = rowData.CONTROL_SEQ;
+            rowData.SEQ2 = rowData.CONTROL_DETAIL_SEQ;
         }
 
         visibilityButton();

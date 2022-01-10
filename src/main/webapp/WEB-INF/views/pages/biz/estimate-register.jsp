@@ -490,91 +490,116 @@
                     }
                 }
             },
-            {
-                title: '후가공', align: 'center',
-                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                colModel: [
-                    {
-                        title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND', sortable: false,
-                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
-                        editable: function (ui) {
-                            let rowData = ui.rowData;
-                            return (typeof rowData != 'undefined' && typeof rowData.WORK_TYPE != 'undefined' && rowData.WORK_TYPE != 'WTP020');
-                        },
-                        render: function (ui) {
-                            let cellData = ui.cellData;
+            // {
+            //     title: '후가공', align: 'center',
+            //     styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+            //     colModel: [
+            //         {
+            //             title: '연마', width: 70, dataIndx: 'MATERIAL_FINISH_GRIND', sortable: false,
+            //             styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+            //             editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020')},
+            //             editable: function (ui) {
+            //                 let rowData = ui.rowData;
+            //                 return (typeof rowData != 'undefined' && typeof rowData.WORK_TYPE != 'undefined' && rowData.WORK_TYPE != 'WTP020');
+            //             },
+            //             render: function (ui) {
+            //                 let cellData = ui.cellData;
+            //
+            //                 let rowData = ui.rowData;
+            //                 // if (typeof rowData != 'undefined' && typeof rowData.WORK_TYPE != 'undefined' && rowData.WORK_TYPE != 'WTP050') {
+            //                 if (typeof rowData != 'undefined' && typeof rowData.WORK_TYPE != 'undefined' && rowData.WORK_TYPE == 'WTP020') {
+            //                     ui.rowData.MATERIAL_FINISH_GRIND = "";
+            //                     ui.cellData = ""
+            //                     $("#estimate_register_top_grid").pqGrid('addClass', {rowIndx: ui.rowData.pq_ri, dataIndx: 'MATERIAL_FINISH_GRIND', cls: 'bg-lightgray'} );
+            //                 }else {
+            //                     $("#estimate_register_top_grid").pqGrid('removeClass', {rowIndx: ui.rowData.pq_ri, dataIndx: 'MATERIAL_FINISH_GRIND', cls: 'bg-lightgray'} );
+            //                 }
+            //                 if (cellData === '' || cellData === undefined) {
+            //                     return '';
+            //                 } else {
+            //                     let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
+            //                     let index = workFactory.findIndex(function (element) {
+            //                         return element.text === cellData;
+            //                     });
+            //
+            //                     if (index < 0) {
+            //                         index = workFactory.findIndex(function (element) {
+            //                             return element.value === cellData;
+            //                         });
+            //                     }
+            //
+            //                     return (index < 0) ? cellData : workFactory[index].text;
+            //                 }
+            //             }
+            //         },
+            //         {
+            //             title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT', sortable: false,
+            //             styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+            //             editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
+            //             editable: function (ui) {
+            //                 let rowData = ui.rowData;
+            //                 return (typeof rowData != 'undefined' && typeof rowData.WORK_TYPE != 'undefined' && rowData.WORK_TYPE != 'WTP020');
+            //             },
+            //             render: function (ui) {
+            //                 let cellData = ui.cellData;
+            //
+            //                 let rowData = ui.rowData;
+            //                 // if (typeof rowData != 'undefined' && typeof rowData.WORK_TYPE != 'undefined' && rowData.WORK_TYPE != 'WTP050') {
+            //                 if (typeof rowData != 'undefined' && typeof rowData.WORK_TYPE != 'undefined' && rowData.WORK_TYPE == 'WTP020') {
+            //                     ui.rowData.MATERIAL_FINISH_HEAT = "";
+            //                     ui.cellData = ""
+            //                     $("#estimate_register_top_grid").pqGrid('addClass', {rowIndx: ui.rowData.pq_ri, dataIndx: 'MATERIAL_FINISH_HEAT', cls: 'bg-lightgray'} );
+            //                 }else {
+            //                     $("#estimate_register_top_grid").pqGrid('removeClass', {rowIndx: ui.rowData.pq_ri, dataIndx: 'MATERIAL_FINISH_HEAT', cls: 'bg-lightgray'} );
+            //                 }
+            //
+            //                 if (cellData === '' || cellData === undefined) {
+            //                     return '';
+            //                 } else {
+            //                     let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
+            //                     let index = workFactory.findIndex(function (element) {
+            //                         return element.text === cellData;
+            //                     });
+            //
+            //                     if (index < 0) {
+            //                         index = workFactory.findIndex(function (element) {
+            //                             return element.value === cellData;
+            //                         });
+            //                     }
+            //
+            //                     return (index < 0) ? cellData : workFactory[index].text;
+            //                 }
+            //             }
+            //         }
+            //     ]
+            // },
+            {title: '소재사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', sortable: false,
+                editor: {
+                    type: 'select',
+                    mapIndices: { name: "MATERIAL_SUPPLY_YN", id: "MATERIAL_SUPPLY_YN" },
+                    valueIndx: "value",
+                    labelIndx: "text",
+                    options: fnGetCommCodeGridSelectBox('1042'),
+                },
+                render: function (ui) {
+                    let cellData = ui.cellData;
 
-                            let rowData = ui.rowData;
-                            // if (typeof rowData != 'undefined' && typeof rowData.WORK_TYPE != 'undefined' && rowData.WORK_TYPE != 'WTP050') {
-                            if (typeof rowData != 'undefined' && typeof rowData.WORK_TYPE != 'undefined' && rowData.WORK_TYPE == 'WTP020') {
-                                ui.rowData.MATERIAL_FINISH_GRIND = "";
-                                ui.cellData = ""
-                                $("#estimate_register_top_grid").pqGrid('addClass', {rowIndx: ui.rowData.pq_ri, dataIndx: 'MATERIAL_FINISH_GRIND', cls: 'bg-lightgray'} );
-                            }else {
-                                $("#estimate_register_top_grid").pqGrid('removeClass', {rowIndx: ui.rowData.pq_ri, dataIndx: 'MATERIAL_FINISH_GRIND', cls: 'bg-lightgray'} );
-                            }
-                            if (cellData === '' || cellData === undefined) {
-                                return '';
-                            } else {
-                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
-                                let index = workFactory.findIndex(function (element) {
-                                    return element.text === cellData;
-                                });
-
-                                if (index < 0) {
-                                    index = workFactory.findIndex(function (element) {
-                                        return element.value === cellData;
-                                    });
-                                }
-
-                                return (index < 0) ? cellData : workFactory[index].text;
-                            }
-                        }
-                    },
-                    {
-                        title: '열처리', width: 70, dataIndx: 'MATERIAL_FINISH_HEAT', sortable: false,
-                        styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                        editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030')},
-                        editable: function (ui) {
-                            let rowData = ui.rowData;
-                            return (typeof rowData != 'undefined' && typeof rowData.WORK_TYPE != 'undefined' && rowData.WORK_TYPE != 'WTP020');
-                        },
-                        render: function (ui) {
-                            let cellData = ui.cellData;
-
-                            let rowData = ui.rowData;
-                            // if (typeof rowData != 'undefined' && typeof rowData.WORK_TYPE != 'undefined' && rowData.WORK_TYPE != 'WTP050') {
-                            if (typeof rowData != 'undefined' && typeof rowData.WORK_TYPE != 'undefined' && rowData.WORK_TYPE == 'WTP020') {
-                                ui.rowData.MATERIAL_FINISH_HEAT = "";
-                                ui.cellData = ""
-                                $("#estimate_register_top_grid").pqGrid('addClass', {rowIndx: ui.rowData.pq_ri, dataIndx: 'MATERIAL_FINISH_HEAT', cls: 'bg-lightgray'} );
-                            }else {
-                                $("#estimate_register_top_grid").pqGrid('removeClass', {rowIndx: ui.rowData.pq_ri, dataIndx: 'MATERIAL_FINISH_HEAT', cls: 'bg-lightgray'} );
-                            }
-
-                            if (cellData === '' || cellData === undefined) {
-                                return '';
-                            } else {
-                                let workFactory = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
-                                let index = workFactory.findIndex(function (element) {
-                                    return element.text === cellData;
-                                });
-
-                                if (index < 0) {
-                                    index = workFactory.findIndex(function (element) {
-                                        return element.value === cellData;
-                                    });
-                                }
-
-                                return (index < 0) ? cellData : workFactory[index].text;
-                            }
-                        }
-                    }
+                    return cellData === 'Y' ? cellData : '';
+                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
+            },
+            {title: '계산견적가', width: 85, dataType: 'integer', dataIndx: 'UNIT_SUM_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
+            {title: '자동 계산 단가', align: "center", colModel: [
+                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
+                    // {title: '연마비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
+                    // {title: '열처리', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
+                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
+                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
+                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right', sortable: false},
+                    {title: '견적비고', dataType: 'string', dataIndx: 'UNIT_AMT_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'left', sortable: false}
                 ]
             },
             {
-                title: '상세 가공요건', width: 85, sortable: false,
+                title: '가공요건', width: 85, sortable: false,
                 // hidden: true, // 20210331 임시 hidden 처리
                 render: function (ui) {
                     const rowData = ui.rowData;
@@ -593,39 +618,7 @@
                     });
                 }
             },
-            {title: '소재사급', dataType: 'string', dataIndx: 'MATERIAL_SUPPLY_YN', sortable: false,
-                editor: {
-                    type: 'select',
-                    mapIndices: { name: "MATERIAL_SUPPLY_YN", id: "MATERIAL_SUPPLY_YN" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1042'),
-                },
-                render: function (ui) {
-                    let cellData = ui.cellData;
-
-                    return cellData === 'Y' ? cellData : '';
-                }, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': 'black'}
-            },
-            {title: '예상소재 Size', align: "center", colModel:[
-                    {title:'가로', dataType: 'float', dataIndx: 'SIZE_W_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title:'세로', dataType: 'float', dataIndx: 'SIZE_H_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title:'두께', dataType: 'float', dataIndx: 'SIZE_T_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title:'지름', dataType: 'float', dataIndx: 'SIZE_D_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} },
-                    {title:'길이', dataType: 'float', dataIndx: 'SIZE_L_M', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'} }
-                ], hidden: true},
-            {title: '자동 계산견적 단가', align: "center", colModel: [
-                    {title: '합계', dataType: 'integer', dataIndx: 'UNIT_SUM_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
-                    {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
-                    {title: '연마비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
-                    {title: '열처리', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
-                    {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
-                    {title: '가공비', dataType: 'integer', dataIndx: 'UNIT_PROCESS_AUTO_AMT', format: '#,###', align: 'right', editable: false, sortable: false},
-                    {title: '기타추가', dataType: 'integer', dataIndx: 'UNIT_ETC_AMT', format: '#,###', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'right', sortable: false},
-                    {title: '견적비고', dataType: 'string', dataIndx: 'UNIT_AMT_NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, align: 'left', sortable: false}
-                ]
-            },
-            {title: '최종견적단가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, sortable: false },
+            {title: '확정<br>견적단가', dataType: 'float', dataIndx: 'UNIT_FINAL_EST_AMT', format: '#,###', width: 80, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, sortable: false },
             {title: '금액 계', dataType: 'float', dataIndx: 'DTL_AMOUNT', format: '#,###', width: 80, editable: false, sortable: false},
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}, sortable: false },
             {title: 'DXF', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false, sortable: false,
