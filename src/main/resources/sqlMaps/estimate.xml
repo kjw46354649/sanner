@@ -322,27 +322,29 @@
 <!--    </update>-->
 
     <insert id="insertEstimateMaster" parameterType="java.util.HashMap">
-        <selectKey keyProperty="EST_NUM" resultType="string" order="BEFORE">
-            SELECT CONCAT('EST-', DATE_FORMAT(NOW(), '%Y%m%d'), LPAD(NEXTVAL(SEQ_EST_NUM), 3, '0')) FROM DUAL
-        </selectKey>
         INSERT INTO TBL_ESTIMATE
-            (EST_SEQ, EST_VER, EST_NUM, ORDER_COMP_CD, ORDER_STAFF_SEQ, COMP_CD, EST_USER_ID,
-            EST_TITLE, EST_STATUS, EMAIL_TITLE, EMAIL_CONTENT, ETC_GFILE_SEQ, DEL_YN, INSERT_DT, INSERT_ID)
-        VALUES
-        (
-            #{EST_SEQ}, 0, #{EST_NUM},
-            #{ORDER_COMP_CD}, #{ORDER_STAFF_SEQ}, #{COMP_CD}, #{EST_USER_ID},
-            #{EST_TITLE}, 'EST010',
-            CONCAT('[견적서송부 ', IFNULL(#{EST_NUM}, SPACE(0)), SPACE(1), IFNULL(#{EST_TITLE}, SPACE(0))),
-            #{EMAIL_CONTENT}, #{GFILE_SEQ}, 'N', NOW(), #{LOGIN_USER_ID}
-        )
+        (EST_SEQ, EST_VER, EST_NUM, ORDER_COMP_CD, ORDER_STAFF_SEQ, COMP_CD, EST_USER_ID,
+         EST_TITLE, EST_STATUS, EMAIL_TITLE, EMAIL_CONTENT, ETC_GFILE_SEQ, DEL_YN, INSERT_DT, INSERT_ID)
+        SELECT
+            #{EST_SEQ} AS EST_SEQ, EST_VER, EST_NUM,
+            #{ORDER_COMP_CD} AS ORDER_COMP_CD, #{ORDER_STAFF_SEQ} AS ORDER_STAFF_SEQ, #{COMP_CD} AS COMP_CD, #{EST_USER_ID} AS EST_USER_ID,
+            #{EST_TITLE} AS EST_TITLE, 'EST010' AS EST_STATUS,
+            CONCAT('[견적서송부 ', IFNULL(EST_NUM, SPACE(0)), SPACE(1), IFNULL(EST_TITLE, SPACE(0))) AS EMAIL_TITLE,
+            #{EMAIL_CONTENT} AS EMAIL_CONTENT, #{GFILE_SEQ}, 'N' AS DEL_YN, NOW() AS INSERT_DT, #{LOGIN_USER_ID} AS INSERT_ID
+        FROM (
+             SELECT
+                 0 AS EST_VER, EST_TITLE,
+                 CONCAT('EST-', DATE_FORMAT(NOW(), '%Y%m%d'), LPAD(CAST(COUNT(*)+1 AS CHAR), 3, '0')) EST_NUM
+             FROM TBL_ESTIMATE
+             WHERE DATE_FORMAT(INSERT_DT, '%Y%m%d') = DATE_FORMAT(NOW(), '%Y%m%d')
+        ) Z
         ON DUPLICATE KEY UPDATE
             ORDER_COMP_CD = #{ORDER_COMP_CD},
             ORDER_STAFF_SEQ = #{ORDER_STAFF_SEQ},
             COMP_CD = #{COMP_CD},
             EST_USER_ID = #{EST_USER_ID},
             EST_TITLE = #{EST_TITLE},
-            EMAIL_TITLE = (CONCAT('[견적서송부 ', IFNULL(#{EST_NUM}, SPACE(0)), SPACE(1), IFNULL(#{EST_TITLE}, SPACE(0)))),
+            EMAIL_TITLE = (SELECT CONCAT('[견적서송부 ', IFNULL(EST_NUM, SPACE(0)), SPACE(1), IFNULL(EST_TITLE, SPACE(0))) FROM TBL_ESTIMATE WHERE EST_SEQ = #{EST_SEQ}),
             EMAIL_CONTENT = #{EMAIL_CONTENT},
             ETC_GFILE_SEQ = #{GFILE_SEQ},
             UPDATE_DT = NOW(),
