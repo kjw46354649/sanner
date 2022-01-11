@@ -682,6 +682,10 @@
                             text = '번호존재. Merge 가능';
                             cls = 'bg-light-yellow2';
                             break;
+                        case 'FAIL':
+                            text = '생성불가';
+                            cls = 'bg-light-red';
+                            break;
                     }
                     $createControlGrid.pqGrid('removeClass', {rowIndx: ui.rowData.pq_ri, dataIndx: 'VALIDATION', cls: 'pq-cell-dirty'} );
 
@@ -1586,6 +1590,7 @@
             tempObject.rowIndx = rowIndex;
             tempObject.dataIndx = dataIndex;
             errorList.push(tempObject);
+            $createControlGrid.pqGrid('updateRow', {rowIndx: rowIndex, row: {'VALIDATION':'FAIL'}, checkEditable: false});
         };
 
         // cell 색 변경

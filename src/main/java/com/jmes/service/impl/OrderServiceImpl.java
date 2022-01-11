@@ -1013,12 +1013,18 @@ public class OrderServiceImpl implements OrderService {
                 }
 
                 try {
+
                     tempMap.put("queryId", "orderMapper.updateOrderFromOrderManage");
-                    this.innodaleDao.updateGrid(tempMap);
+                    this.innodaleDao.update(tempMap);
+
+                    if(oldMap.containsKey("ORDER_DUE_DT")) {
+                        tempMap.put("queryId", "orderMapper.updateControlPartOrderFromOrderManage");
+                        this.innodaleDao.update(tempMap);
+                    }
 
                     // 21.09.16 단가계산은 작업연계이후 수행
 //                    tempMap.put("queryId", "orderMapper.updateOrderAutomaticQuote");
-//                    this.innodaleDao.updateGrid(tempMap);
+//                    this.innodaleDao.update(tempMap);
 
                 } catch (Exception e) {
                     flag = true;

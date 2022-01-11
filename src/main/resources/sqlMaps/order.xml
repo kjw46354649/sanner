@@ -1244,6 +1244,16 @@
             </otherwise>
         </choose>
     </update>
+    <update id="updateControlPartOrderFromOrderManage" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART_ORDER
+        SET
+            UPDATE_DT = CASE WHEN UPDATE_DT IS NOT NULL THEN UPDATE_DT ELSE NULL END,
+            <if test="ORDER_DUE_DT != null and ORDER_DUE_DT != ''">
+                ORDER_DUE_DT = DATE_FORMAT(#{ORDER_DUE_DT}, '%Y%m%d'),
+            </if>
+            UPDATE_ID = CASE WHEN UPDATE_ID IS NOT NULL THEN UPDATE_ID ELSE NULL END
+        WHERE ORDER_SEQ = #{ORDER_SEQ}
+    </update>
 
     <update id="updateControlPartOrderFromControlManage" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART_ORDER
