@@ -277,7 +277,7 @@
                                 </tr>
                                 <tr><th>작성자</th>
                                     <td colspan="2">
-                                        <select name="CAM_WORK_USER_ID_01" id="CAM_WORK_USER_ID_01" class="wd_150 statusConfig" ></select>
+                                        <select name="CAM_WORK_USER_ID_01" id="CAM_WORK_USER_ID_01" class="wd_150 statusConfig camWorkUser" ></select>
                                     </td>
                                 </tr>
                                 <tr><th colspan="3">CAM/NC 파일</th></tr>
@@ -319,7 +319,7 @@
                                 </tr>
                                 <tr><th>작성자</th>
                                     <td colspan="2">
-                                        <select name="CAM_WORK_USER_ID_02" id="CAM_WORK_USER_ID_02" class="wd_150 statusConfig" ></select>
+                                        <select name="CAM_WORK_USER_ID_02" id="CAM_WORK_USER_ID_02" class="wd_150 statusConfig camWorkUser" ></select>
                                     </td>
                                 </tr>
                                 <tr><th colspan="3">CAM/NC 파일</th></tr>
@@ -361,7 +361,7 @@
                                 </tr>
                                 <tr><th>작성자</th>
                                     <td colspan="2">
-                                        <select name="CAM_WORK_USER_ID_03" id="CAM_WORK_USER_ID_03" class="wd_150 statusConfig" ></select>
+                                        <select name="CAM_WORK_USER_ID_03" id="CAM_WORK_USER_ID_03" class="wd_150 statusConfig camWorkUser" ></select>
                                     </td>
                                 </tr>
                                 <tr><th colspan="3">CAM/NC 파일</th></tr>
@@ -403,7 +403,7 @@
                                 </tr>
                                 <tr><th>작성자</th>
                                     <td colspan="2">
-                                        <select name="CAM_WORK_USER_ID_04" id="CAM_WORK_USER_ID_04" class="wd_150 statusConfig workUser" ></select>
+                                        <select name="CAM_WORK_USER_ID_04" id="CAM_WORK_USER_ID_04" class="wd_150 statusConfig workUser camWorkUser" ></select>
                                     </td>
                                 </tr>
                                 <tr><th colspan="3">CAM/NC 파일</th></tr>
@@ -473,6 +473,8 @@
                     </div>
                 </div>
                 <div class="btnWrap" style="float: none; padding-bottom: 20px;">
+                    <button type="button" id="saveCamHistroyBtn" class="defaultBtn grayPopGra blue" style="display: none;">저장</button>
+                    <button type="button" id="editCamHistroyBtn" class="defaultBtn grayPopGra darkBlue">수정</button>
                     <button type="button" class="defaultBtn grayPopGra cam_work_history_detail_pop_close">닫기</button>
                 </div>
             </div>
@@ -1045,6 +1047,39 @@
             }, infoParameters, '');
         }
 
+        $("#cam_work_history_detail_pop").on({
+            'show.bs.modal' :  function() {
+                $("#saveCamHistroyBtn").hide();
+                $("#editCamHistroyBtn").show();
+            }, 'hide.bs.modal' : function () {
+            }
+        });
+
+        $("#editCamHistroyBtn").on('click', function (e) {
+            $("#saveCamHistroyBtn").show();
+            $("#editCamHistroyBtn").hide();
+            camWorkHistoryStatusConfig(false);
+
+        })
+        $("#saveCamHistroyBtn").on('click', function (e) {
+            let failMessage = camWorkStepSaveValidation();
+            if(failMessage){
+                fnAlert(null, failMessage);
+                return false;
+            }
+            $("#cam_work_history_pop_form").find("#actionType").val("temp");
+            let parameters = {
+                'url': '/managerCamWork',
+                'data': $('#cam_work_history_pop_form').serialize()
+            };
+            fnPostAjax(function (data, callFunctionParam) {
+                fnAlert(null, "저장을 완료 하였습니다.");
+                $("#saveCamHistroyBtn").hide();
+                $("#editCamHistroyBtn").show();
+                camWorkHistoryStatusConfig(true);
+            }, parameters, '');
+        })
+
         let camWorkHistoryPop = function (rowData) {
             fnResetForm('cam_work_history_pop_form');
             for (let i = 1; i <= 5; i++) {
@@ -1054,6 +1089,7 @@
             $("#cam_work_history_pop_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ);
             $("#cam_work_history_pop_form").find("#DXF_GFILE_SEQ").val(rowData.DXF_GFILE_SEQ);
             $("#cam_work_history_pop_form").find("#CAM_SEQ").val(rowData.CAM_SEQ);
+
             let controlNum = rowData.CONTROL_NUM;
             if (rowData.PART_NUM) controlNum += " # " + rowData.PART_NUM;
             $("#cam_work_history_pop_form").find("#CONTROL_NUM").html("<p style='color:blue;'>" + controlNum + "<p/>");
@@ -1106,7 +1142,7 @@
             $("#cam_work_history_pop_form").find("#WORK_HISTORY_INFO").html(camPopHtml || '');
             $("#cam_work_history_pop_form").find("#HISTORY_NOTE").val(rowData.HISTORY_NOTE);
             $("#cam_work_history_pop_form").find("#NOTE").val(rowData.NOTE);
-            camWorkHistoryStatusConfig(rowData);
+            camWorkHistoryStatusConfig(true);
             let parameters = {
                 'url': '/json-list',
                 'data': $('#cam_work_history_pop_form').serialize()
@@ -1129,17 +1165,125 @@
             }, parameters, '');
         };
 
+        /** 파일 업로드 스크립트 **/
+        $(".mctWorkStyle").on("dragenter", function (e) {  //드래그 요소가 들어왔을떄
+            $(this).addClass('drag-over');
+        }).on("dragleave", function (e) {  //드래그 요소가 나갔을때
+            $(this).removeClass('drag-over');
+        }).on("dragover", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }).on('drop', function (e) {  //드래그한 항목을 떨어뜨렸을때
+            e.preventDefault();
+
+            if ($("#saveCamHistroyBtn").css('display') != 'none') {
+                $(this).removeClass('drag-over');
+                let idxNum = $(this).attr("idx");
+                let isCheckYn = $("#cam_work_history_pop_form").find("#CAM_WORK_CHK_" + idxNum).prop('checked');
+                if (!isCheckYn) {
+                    $('#cam_work_history_pop_form').find("input:checkbox[id='CAM_WORK_CHK_" + idxNum + "']").trigger("click");
+                }
+                let mctCamWorkUploadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
+                if (mctCamWorkUploadFiles.length > 0) { // file upload
+                    let formData = new FormData();
+                    for (let i = 0; i < mctCamWorkUploadFiles.length; i++) {
+                        let file = mctCamWorkUploadFiles[i];
+                        formData.append('file', file, file.name);
+                    }
+                    fnFormDataFileUploadAjax(function (data) {
+                        let fileUploadList = data.fileUploadList;
+                        let GFILE_SEQ = fileUploadList[0].GFILE_SEQ;
+                        let fileHtml = "";
+                        for (let j = 0; j < fileUploadList.length; j++) {
+                            if (j > 0) fileHtml += "<br>";
+                            fileHtml += '<a href="/downloadfile/' + fileUploadList[j].FILE_SEQ + '" download style="overflow: hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block;max-width:100%;vertical-align:top;">' + fileUploadList[j].ORGINAL_FILE_NM + '</a>';
+                        }
+                        if (fileUploadList.length === 1) fileHtml += "<br>";
+                        $("#cam_work_history_pop_form").find("#CAM_WORK_FILE_" + idxNum).html(fileHtml);
+                        $("#cam_work_history_pop_form").find("#CAM_WORK_GFILE_SEQ_" + idxNum).val(GFILE_SEQ);
+                    }, formData, '');
+                }
+            }else {
+                fnAlert(null, '파일 업로드는 수정중에만 가능합니다.');
+            }
+        });
+        /** 파일 업로드 스크립트 종료 **/
+
         /** 시작 전 Disable 처리 **/
-        let camWorkHistoryStatusConfig = function(rowData){
-            let disableFlag = true;
+        let camWorkHistoryStatusConfig = function(disableFlag){
+
+            $("#cam_work_history_pop_form").find(".camworkChekbox").attr('disabled', disableFlag);
             $("#cam_work_history_pop_form").find(".statusConfig").attr('readonly', disableFlag);
             $("#cam_work_history_pop_form").find(".statusConfig").attr('disabled', disableFlag);
-            $("#cam_work_history_pop_form").find(".camworkChekbox").attr('disabled', disableFlag);
+            if(!disableFlag) {
+                $('#cam_work_history_pop_form').find("input:checkbox[class*='camworkChekbox']").each(function() {
+                    if(!$(this).prop('checked')) {
+                        $(this).parents('tbody').find('tr').find('.statusConfig').attr('readonly', true);
+                        $(this).parents('tbody').find('tr').find('.statusConfig').attr('disabled', true);
+
+                        $(this).attr('readonly', false);
+                        $(this).attr('disabled', false);
+                    }
+                })
+            }
             $("#cam_work_history_pop_form").find("#HISTORY_NOTE").attr('readonly', disableFlag);
             $("#cam_work_history_pop_form").find("#HISTORY_NOTE").attr('disabled', disableFlag);
             $("#cam_work_history_pop_form").find("#NOTE").attr('readonly', disableFlag);
             $("#cam_work_history_pop_form").find("#NOTE").attr('disabled', disableFlag);
         };
+
+        let camWorkStepSaveValidation = function(){
+            let beforeCheckOrder = true;
+            let returnMessage = "";
+            let checkCount = 0;
+            $("#cam_work_history_pop_form").find("input:checkbox[id^='CAM_WORK_CHK_']").each(function() {
+                if($(this).prop('checked')) {
+                    let indexNum = $(this).attr('name').split('_').reverse()[0];
+                    if (!beforeCheckOrder) {
+                        returnMessage = "순차적으로 CAM 작업 등록을 하여야 합니다. 확인 후 진행해 주십시오.";
+                        return;
+                    }
+                    if ($("#cam_work_history_pop_form").find("#CAM_WORK_DIRECTION_" + indexNum).val() == "") {
+                        returnMessage = "Step " + parseInt(indexNum) + " 항목의 위치를 확인 해 주십시오.";
+                        return;
+                    }
+                    if ($("#cam_work_history_pop_form").find("#CAM_WORK_DESIGN_QTY_" + indexNum).val() == "") {
+                        returnMessage = "Step " + parseInt(indexNum) + " 항목의 작업 수량을 확인 해 주십시오.";
+                        return;
+                    }
+                    if ($("#cam_work_history_pop_form").find("#CAM_WORK_USER_ID_" + indexNum).val() == "") {
+                        returnMessage = "Step " + parseInt(indexNum) + " 항목의 작업자를 확인 해 주십시오.";
+                        return;
+                    }
+                    if ($("#cam_work_history_pop_form").find("#CAM_WORK_GFILE_SEQ_" + indexNum).val() == "") {
+                        returnMessage = "Step " + parseInt(indexNum) + " 항목의 설계파일을 확인 해 주십시오.";
+                        return;
+                    }
+                    beforeCheckOrder = true;
+                    checkCount++;
+                }else{
+                    beforeCheckOrder = false;
+                }
+            });
+            if(checkCount == 0){
+                returnMessage = "하나 이상의 Step 정보를 등록하여야 합니다.";
+            }
+            return returnMessage;
+        }
+
+        $("#cam_work_history_pop_form").find(".camworkChekbox").click(function(){
+            $(this).parents('tbody').find('tr').find('.statusConfig').attr('readonly', !$(this).prop('checked'));
+            $(this).parents('tbody').find('tr').find('.statusConfig').attr('disabled', !$(this).prop('checked'));
+
+            $(this).attr('readonly', false);
+            $(this).attr('disabled', false);
+
+            if($(this).prop('checked')) {
+                $(this).parents('tbody').find('tr').find('.camWorkUser').each(function() {
+                    $(this).val('${authUserInfo.USER_ID}');
+                });
+            }
+        });
 
         $(".datepicker-input").each(function () {
             $(this).datepicker({
