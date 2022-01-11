@@ -722,15 +722,15 @@
             }, parameters, '');
         });
 
-        $("#btnEstimateListSave").on('click', function(){
-            let estimateDetailInsertQueryList = ['insertEstimateDetail'];
-            let estimateDetailUpdateQueryList = ['updateEstimateDetail'];
-            fnModifyPQGrid(estimateMasterBotGrid, estimateDetailInsertQueryList, estimateDetailUpdateQueryList);
-
-            let estimateMasterInsertQueryList = ['insertEstimateMaster'];
-            let estimateMasterUpdateQueryList = ['updateEstimateMaster'];
-            fnModifyPQGrid(estimateMasterTopGrid, estimateMasterInsertQueryList, estimateMasterUpdateQueryList);
-        });
+        // $("#btnEstimateListSave").on('click', function(){
+        //     let estimateDetailInsertQueryList = ['insertEstimateDetail'];
+        //     let estimateDetailUpdateQueryList = ['updateEstimateDetail'];
+        //     fnModifyPQGrid(estimateMasterBotGrid, estimateDetailInsertQueryList, estimateDetailUpdateQueryList);
+        //
+        //     let estimateMasterInsertQueryList = ['insertEstimateMaster'];
+        //     let estimateMasterUpdateQueryList = ['updateEstimateMaster'];
+        //     fnModifyPQGrid(estimateMasterTopGrid, estimateMasterInsertQueryList, estimateMasterUpdateQueryList);
+        // });
 
         $("#btnEstimateExcel").on('click', function(){
             $("#common_excel_form #sqlId").val('selectEstimateDetailListExcel:selectEstimateMasterInfoExcel');
@@ -968,11 +968,11 @@
     function btnDisabled(status) {
         if(status == 'EST020'){
             $("#btnEstimateListDelete").attr('disabled', true);
-            $("#btnEstimateListSave").attr('disabled', true);
+            // $("#btnEstimateListSave").attr('disabled', true);
 
         }else {
             $("#btnEstimateListDelete").attr('disabled', false);
-            $("#btnEstimateListSave").attr('disabled', false);
+            // $("#btnEstimateListSave").attr('disabled', false);
         }
     }
 
