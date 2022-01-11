@@ -662,12 +662,27 @@
         // 주문 도면 차수 변경
         if (actionType === 'controlRev') {
             let gridData = $commonCadFileAttachGrid.pqGrid('option', 'dataModel.data')
+            let gridData2 = $commonCadUploadFileGrid.pqGrid('option', 'dataModel.data')
+            let groupByFileAttach = fnGroupBy(gridData, 'DRAWING_NUM');
+            let groupByUploadFile = fnGroupBy(gridData2, 'MAPPING_STR');
+            let drawingFlag = false;
+            $.each(groupByFileAttach, function (idx,Item) {
+                if(typeof groupByUploadFile[idx] == 'undefined') {
+                    drawingFlag = true;
+                }
+            })
+            if(drawingFlag) {
+                fnAlert(null, "선택한 대상의 도면을 모두 업로드 하셔야합니다.");
+                return false;
+            }
+
             var message = '도면 변경시 바코드가 변경되며,<br>이미 배포된 바코드 출력도면은 교체해야 합니다.<br><br>진행하시겠습니까?';
             $.each(gridData, function (idx,Item) {
                if(typeof Item.OUT_FINISH_STATUS != 'undefined' && Item.OUT_FINISH_STATUS == 'RLS010') {
                     message = '출고 완료 대상이 존재합니다. 도면변경을 진행하시겠습니까?<br><br>※ 도면 변경시 바코드가 변경되며, 이미 배포된 바코드 출력도면은 교체해야합니다.';
                }
             });
+            // return;
             fnConfirm(null, message, function () {
                 let gridInstance = $commonCadFileAttachGrid.pqGrid('getInstance').grid;
                 let changes = gridInstance.getChanges({format: 'byVal'});

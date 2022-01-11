@@ -84,7 +84,7 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
                         // 4. CONTROL_BARCODE 버전업
                         if(!flag) {
                             hashMap.put("queryId","drawingUploadMapper.insertDrawingHistory");
-                            this.innodaleDao.insertGrid(hashMap);
+                            this.innodaleDao.create(hashMap);
                             flag = true;
                         }
 
@@ -95,10 +95,10 @@ public class CadFileConvertServiceImpl implements CadFileConvertService {
                         }
 
                         hashMap.put("queryId", queryCommonId);
-                        this.innodaleDao.insertGrid(hashMap);
+                        this.innodaleDao.update(hashMap);
 
                         hashMap.put("queryId", queryCommonId + "_order");
-                        this.innodaleDao.insertGrid(hashMap);
+                        this.innodaleDao.update(hashMap);
 
                         if (!beforeControlNum.equals(currentControlNum)) {
 
