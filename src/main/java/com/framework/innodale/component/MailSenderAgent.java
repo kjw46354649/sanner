@@ -35,6 +35,7 @@ public class MailSenderAgent {
     /**
      * 메일 전송 부분
      */
+    // 22.01.12 개발서버가 운영에 붙게되었을경우, 메일이 발송되지 않도록 추가 처리 필요함
     public void sendEmail(final Map<String, Object> mailInfo) throws AddressException, AuthenticationFailedException, MessagingException, UnsupportedEncodingException {
 
         MimeMessagePreparator preparator = new MimeMessagePreparator() {

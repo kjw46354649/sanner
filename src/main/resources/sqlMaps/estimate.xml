@@ -323,10 +323,10 @@
 
     <insert id="insertEstimateMaster" parameterType="java.util.HashMap">
         <selectKey keyProperty="EST_NUM" resultType="string" order="BEFORE">
-            SELECT CASE WHEN EST_NUM IS NOT NULL THEN EST_NUM
+            SELECT CASE WHEN (SELECT EST_NUM FROM TBL_ESTIMATE WHERE EST_SEQ = #{EST_SEQ}) IS NOT NULL THEN (SELECT EST_NUM FROM TBL_ESTIMATE WHERE EST_SEQ = #{EST_SEQ})
                         ELSE CONCAT('EST-', DATE_FORMAT(NOW(), '%Y%m%d'), LPAD(NEXTVAL(SEQ_EST_NUM), 3, '0'))
-                END AS EST_NUM
-            FROM TBL_ESTIMATE WHERE EST_SEQ = #{EST_SEQ}
+            END AS EST_NUM
+            FROM DUAL
         </selectKey>
         INSERT INTO TBL_ESTIMATE
         (EST_SEQ, EST_VER, EST_NUM, ORDER_COMP_CD, ORDER_STAFF_SEQ, COMP_CD, EST_USER_ID,
@@ -708,7 +708,6 @@
         FROM TBL_ESTIMATE A
             INNER JOIN TBL_ESTIMATE_DETAIL B ON A.EST_SEQ = B.EST_SEQ
         WHERE A.DEL_YN = 'N'
-            AND A.EST_STATUS = 'EST010'
             AND A.EST_SEQ = #{EST_SEQ}
             AND CASE WHEN B.PARENT_SEQ IS NULL THEN B.SEQ ELSE B.PARENT_SEQ END = #{SEQ}
     </insert>
