@@ -164,18 +164,21 @@
                     </div>
                 </div>
                 <div class="mt-10">
-                    <div class="d-inline" style="margin-left: 20px;">
-                        <label for="controlManageFilterKeyword"></label><input type="search" id="controlManageFilterKeyword" placeholder="Enter your keyword">
-                        <label for="controlManageFrozen" class="label_30" style="font-size: 15px;">Fix</label>
-                        <select id="controlManageFrozen" name="controlManageFrozen">
+                    <div class="d-inline">
+                        <button type="button" class="defaultBtn btn-80w blue" id="SELECT_ALL">일괄선택</button>
+                        <button type="button" class="defaultBtn btn-80w" id="CLEAR_SELECT" style="margin: 0;">선택해제</button>
+                        <label for="createControlFilterKeyword"></label>
+                        <input type="search" id="createControlFilterKeyword" class="wd_150 ml-75" placeholder="Enter your keyword">
+                        <label for="createControlFrozen" class="label_30" style="font-size: 15px;">Fix</label>
+                        <select id="createControlFrozen" name="createControlFrozen">
                         </select>
-                        <label for="controlManageFilterColumn" style="display: none;"></label>
-                        <select id="controlManageFilterColumn" style="display: none;"></select>
-                        <label for="controlManageFilterCondition" style="display: none;"></label>
-                        <select id="controlManageFilterCondition" style="display: none;">
+                        <label for="createControlFilterColumn" style="display: none;"></label>
+                        <select id="createControlFilterColumn" style="display: none;"></select>
+                        <label for="createControlFilterCondition" style="display: none;"></label>
+                        <select id="createControlFilterCondition" style="display: none;">
                             <option value="contain">Contains</option>
                         </select>
-                        <input type="text" class="wd_130" name="BATCH_CONTROL_NUM" id="BATCH_CONTROL_NUM" title="일괄입력" style="margin-left: 50px;">
+                        <input type="text" class="wd_130 ml-75" name="BATCH_CONTROL_NUM" id="BATCH_CONTROL_NUM" title="일괄입력">
                         <select id="CONTROL_NUM_NUMBER" class="wd_70">
                             <option value="" selected>자리수</option>
                             <c:forEach var="i" begin="1" end="5">
@@ -191,16 +194,16 @@
                         <button type="button" class="defaultBtn btn-80w" id="INPUT_BATCH">일괄입력</button>
                     </div>
                     <div style="float: right;display: inline-block;">
-                        <span style="margin-right: 100px;">
+                        <span style="margin-right: 50px;">
                             <span class="chk_box"><input name="HIDE_CONTROL_NUM" id="HIDE_CONTROL_NUM" type="checkbox" checked><label for="HIDE_CONTROL_NUM"> 생성완료 제외</label></span>
 <%--                            <span class="chk_box"><input name="MAIN_COLUMN" id="MAIN_COLUMN" type="checkbox"><label for="MAIN_COLUMN"> 주요컬럼</label></span>--%>
                         </span>
-                        <button type="button" class="defaultBtn btn-100w" id="RESET_GRID">
+                        <button type="button" class="defaultBtn btn-80w" id="RESET_GRID">
                             <i class="xi-refresh" style="margin-right: 4px;"></i>
                             Reset
                         </button>
-                        <button type="button" class="defaultBtn btn-100w" id="ADD_ROW">Row 삽입</button>
-                        <button type="button" class="defaultBtn btn-100w red" id="DELETE_ROW">제거</button>
+                        <button type="button" class="defaultBtn btn-80w" id="ADD_ROW">Row 삽입</button>
+                        <button type="button" class="defaultBtn btn-80w red" id="DELETE_ROW">제거</button>
                         <button type="button" class="defaultBtn btn-100w" style="background-color: #ffd966;" id="VALIDATION_GRID">Validation</button>
                         <button type="button" class="defaultBtn btn-100w green" id="CREATE_CONTROL">작업생성</button>
                     </div>
@@ -219,18 +222,16 @@
     </div>
 </div>
 
-<input type="button" id="ATTACHMENT_BUTTON" style="display: none;">
-
 <script>
     /* init */
     var $createControlGrid;
     var selectedCreateControlRowIndex = [];
-    const $orderManageStartDate = $('#CREATE_CONTROL_START_DATE');
-    const $orderManageEndDate = $('#CREATE_CONTROL_END_DATE');
-    $orderManageStartDate.datepicker({dateFormat: 'yy/mm/dd'});
-    $orderManageEndDate.datepicker({dateFormat: 'yy/mm/dd'});
-    $orderManageStartDate.datepicker('setDate', 'today');
-    $orderManageEndDate.datepicker('setDate', 'today');
+    const $createControlStartDate = $('#CREATE_CONTROL_START_DATE');
+    const $createControlEndDate = $('#CREATE_CONTROL_END_DATE');
+    $createControlStartDate.datepicker({dateFormat: 'yy/mm/dd'});
+    $createControlEndDate.datepicker({dateFormat: 'yy/mm/dd'});
+    $createControlStartDate.datepicker('setDate', 'today');
+    $createControlEndDate.datepicker('setDate', 'today');
     let isActiveDrawingView = false;
     $('#CREATE_CONTROL_SEARCH_CONDITION').val('ROM002').prop("selected",true);
 
@@ -350,7 +351,7 @@
                     let rowData = ui.rowData;
                     let cls = 'bg-lightgray';
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: createControlFilterRender(ui)};
                 }
             },
             {
@@ -367,7 +368,7 @@
                     let rowData = ui.rowData;
                     let cls = 'bg-lightgray';
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: createControlFilterRender(ui)};
                 }
             },
             {
@@ -427,7 +428,7 @@
                     let rowData = ui.rowData;
                     let cls = 'bg-lightgray';
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: createControlFilterRender(ui)};
                 }
             },
             {
@@ -485,7 +486,7 @@
                     let rowData = ui.rowData;
                     let cls = 'bg-lightgray';
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: createControlFilterRender(ui)};
                 }
             },
             {
@@ -524,7 +525,7 @@
                     let rowData = ui.rowData;
                     let cls = 'bg-lightgray';
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: createControlFilterRender(ui)};
                 }
             },
             {
@@ -572,7 +573,7 @@
                     if(typeof rowData.CONTROL_SEQ != 'undefined' && rowData.CONTROL_SEQ != null ) {
                         cls = 'bg-lightgray';
                     }
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: createControlFilterRender(ui)};
                 }
             },
             {title: 'INNER_DUE_DT_COPY', dataType: 'String', dataIndx: 'INNER_DUE_DT_COPY', hidden: true},
@@ -708,7 +709,7 @@
             trackModel: {on: true},
             // scrollModel: {autoFit: true},
             editable: false,
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: controlManageFilterRender},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: createControlFilterRender},
             filterModel: {mode: 'OR'},
             colModel: colModel,
             dataModel: {
@@ -721,8 +722,8 @@
             },
             sortModel: {on: true},
             load: function () {
-                if($('#controlManageFilterKeyword').val() !== '')
-                    fnFilterHandler($createControlGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
+                if($('#createControlFilterKeyword').val() !== '')
+                    fnFilterHandler($createControlGrid, 'createControlFilterKeyword', 'createControlFilterCondition', 'createControlFilterColumn');
                 autoMerge(this, true);
             },
             selectChange: function (event, ui) {
@@ -730,7 +731,12 @@
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
                     let firstRow = ui.selection._areas[i].r1;
                     let lastRow = ui.selection._areas[i].r2;
-                    for (let i = firstRow; i <= lastRow; i++) selectedCreateControlRowIndex.push(i);
+                    for (let i = firstRow; i <= lastRow; i++)  {
+                        let rowData = $createControlGrid.pqGrid("getRowData", {rowIndx: i});
+                        if(fnIsEmpty(rowData.CONTROL_SEQ)) {
+                            selectedCreateControlRowIndex.push(i);
+                        }
+                    }
                     if (firstRow === lastRow) {
                         let selRowData = $createControlGrid.pqGrid("getRowData", {rowIndx: firstRow});
                         $("#CREATE_CONTROL_SEARCH_FORM").find("#GFILE_SEQ").val(selRowData.IMG_GFILE_SEQ);
@@ -753,8 +759,8 @@
                         frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
                     }
                 });
-                $('#controlManageFilterColumn').html(filterOpts);
-                $('#controlManageFrozen').html(frozenOts);
+                $('#createControlFilterColumn').html(filterOpts);
+                $('#createControlFrozen').html(frozenOts);
             },
             change: function (evt, ui) {
                 if (ui.source === 'paste') {
@@ -764,23 +770,6 @@
                         let newRowData = ui.updateList[i].newRow;
                         let rowIndx = ui.updateList[i].rowIndx;
 
-                        // 단가확인
-                        if (newRowData.hasOwnProperty('PRICE_CONFIRM')) {
-                            let priceConfirmList = fnGetCommCodeGridSelectBox('1017');
-                            let index = priceConfirmList.findIndex(function (element) {
-                                return element.text === newRowData.PRICE_CONFIRM;
-                            });
-
-                            if (index < 0) {
-                                index = priceConfirmList.findIndex(function (element) {
-                                    return element.value === newRowData.PRICE_CONFIRM;
-                                });
-                            }
-                            $createControlGrid.pqGrid('updateRow', {
-                                rowIndx: rowIndx,
-                                row: {'PRICE_CONFIRM': priceConfirmList[index].value}
-                            });
-                        }
                         // 사업자 구분
                         if (newRowData.hasOwnProperty('COMP_CD')) {
                             let index = FAMILY_COMPANY.findIndex(function (element) {
@@ -898,40 +887,6 @@
                                 row: {'SURFACE_TREAT': surfaceTreatList[index].value}
                             });
                         }
-                        // 연마
-                        if (newRowData.hasOwnProperty('MATERIAL_FINISH_GRIND')) {
-                            let materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
-                            let index = materialFinishGrindList.findIndex(function (element) {
-                                return element.text === newRowData.MATERIAL_FINISH_GRIND;
-                            });
-
-                            if (index < 0) {
-                                index = materialFinishGrindList.findIndex(function (element) {
-                                    return element.value === newRowData.MATERIAL_FINISH_GRIND;
-                                });
-                            }
-                            $createControlGrid.pqGrid('updateRow', {
-                                rowIndx: rowIndx,
-                                row: {'MATERIAL_FINISH_GRIND': materialFinishGrindList[index].value}
-                            });
-                        }
-                        // 열처리
-                        if (newRowData.hasOwnProperty('MATERIAL_FINISH_HEAT')) {
-                            let materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
-                            let index = materialFinishHeatList.findIndex(function (element) {
-                                return element.text === newRowData.MATERIAL_FINISH_HEAT;
-                            });
-
-                            if (index < 0) {
-                                index = materialFinishHeatList.findIndex(function (element) {
-                                    return element.value === newRowData.MATERIAL_FINISH_HEAT;
-                                });
-                            }
-                            $createControlGrid.pqGrid('updateRow', {
-                                rowIndx: rowIndx,
-                                row: {'MATERIAL_FINISH_HEAT': materialFinishHeatList[index].value}
-                            });
-                        }
                     }
                 }
 
@@ -1010,10 +965,6 @@
                 }
             }
         };
-        let newOrderRegistrationPopup;
-        let controlMonthClosePopup;
-        let transactionStatementPopup;
-        let $controlMergeGrid;
         /* variable */
 
         /* function */
@@ -1055,111 +1006,6 @@
             });
         };
 
-        const getOrderStatusButton = function (event) {
-            let orderStatus = event.target.dataset.control_status;
-            confirmOrderStatus(orderStatus);
-        };
-
-        const confirmOrderStatus = function (orderStatus) {
-            let orderStatusNm = '';
-            let orderSeqList = [];
-
-            switch (orderStatus) {
-                case 'REG001':
-                    orderStatusNm = '확정';
-                    break;
-                case 'REG002':
-                    orderStatusNm = '확정취소';
-                    break;
-            }
-
-            for (let i = 0, selectedRowCount = selectedCreateControlRowIndex.length; i < selectedRowCount; i++) {
-                let rowData  = $createControlGrid.pqGrid('getRowData', {rowIndx: selectedCreateControlRowIndex[i]});
-                orderSeqList[i] = rowData.ORDER_SEQ;
-            }
-
-            // 중복제거
-            orderSeqList = [...new Set(orderSeqList)];
-            let message =
-                '<h4>\n' +
-                '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                '    <span>선택하신 ' + orderSeqList.length + ' 건을 ' + orderStatusNm + '처리합니다. \n진행하시겠습니까?</span>\n' +
-                '</h4>';
-            fnConfirm(null, message, function () {updateOrderStatus(orderStatus)});
-        };
-
-        const updateOrderStatus = function (orderStatus) {
-            let list = [];
-            let orderStatusList = [];
-            let message;
-            let outsideFlag = false;
-            let controlFlag = false;
-            for (let i = 0, selectedRowCount = selectedCreateControlRowIndex.length; i < selectedRowCount; i++) {
-                list[i] = $createControlGrid.pqGrid('getRowData', {rowIndx: selectedCreateControlRowIndex[i]});
-                // 값 변경 전 이상 case 확인하기 위해 배열에 담는다.
-                orderStatusList[i] = list[i].ORDER_STATUS || undefined;
-                list[i].ORDER_STATUS = orderStatus;
-
-                console.log(list[i]);
-
-                // if(list[i].OUTSIDE_YN == 'Y' && (list[i].OUTSIDE_STATUS == 'OST001' || list[i].OUTSIDE_STATUS == 'OST003')) {
-                //     outsideFlag = true;
-                // }
-                if(typeof list[i].CONTROL_NUM != 'undefined' && list[i].CONTROL_NUM != null && list[i].CONTROL_NUM != '') {
-                    controlFlag = true;
-                }
-            }
-
-
-            // 중복제거
-            orderStatusList = [...new Set(orderStatusList)];
-
-            /**
-             * 상태값이 다를 때
-             * 이미 처리된 대상에 대해서 동일한 상태처리를 진행할 경우
-             * 빈칸인 상태에서 취소를 진행하는 경우
-             */
-            if ((orderStatusList.length > 1 && !(orderStatusList.includes('REG002') && orderStatusList.includes(undefined))) || orderStatusList[0] === orderStatus) {
-                message =
-                    '<h4>\n' +
-                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                    '    <span>상태변경이 불가한 대상이 있습니다.\n선택목록을 확인해주세요</span>\n' +
-                    '</h4>';
-                fnAlert(null, message);
-                return false;
-            }
-            if(outsideFlag) {
-                message =
-                    '<h4>\n' +
-                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                    '    <span>외주가공 중에는 취소가 불가능합니다.\n외주가공 취소 후 진행해주세요.</span>\n' +
-                    '</h4>';
-                fnAlert(null, message);
-                return false;
-            }
-            if(controlFlag) {
-                message =
-                    '<h4>\n' +
-                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                    '    <span>작업번호가 연계된 접수건은 상태 변경이 불가합니다.</span>\n' +
-                    '</h4>';
-                fnAlert(null, message);
-                return false;
-            }
-
-            let parameters = {'url': '/managerOrderStatus', 'data': {data: JSON.stringify(list)}};
-
-            fnPostAjax(function () {
-                message =
-                    '<h4>\n' +
-                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                    '    <span>' + "<spring:message code='com.alert.default.save.success' />" + '</span>\n' +
-                    '</h4>';
-                fnAlert(null, message);
-                $createControlGrid.pqGrid('refreshDataAndView');
-            }, parameters, '');
-        };
-
 
         const noSelectedRowAlert = function () {
             if (selectedCreateControlRowIndex.length > 0) {
@@ -1170,7 +1016,7 @@
             }
         };
 
-        function controlManageFilterRender(ui) {
+        function createControlFilterRender(ui) {
             let val = ui.cellData === undefined ? '' : ui.cellData,
                 options = ui.column.editor === undefined ? '' : ui.column.editor.options;
             let index = -1;
@@ -1188,9 +1034,9 @@
                     val = o && !isNaN(o.getTime()) && $.datepicker.formatDate(ui.column.format, o);
                 }
 
-                let condition = $('#controlManageFilterCondition :selected').val(),
+                let condition = $('#createControlFilterCondition :selected').val(),
                     valUpper = val.toString().toUpperCase(),
-                    txt = $('#controlManageFilterKeyword').val(),
+                    txt = $('#createControlFilterKeyword').val(),
                     txtUpper = (txt == null) ? '' : txt.toString().toUpperCase(),
                     indx = -1;
 
@@ -1305,7 +1151,6 @@
                 if(typeof rowData.CONTROL_SEQ == 'undefined' || rowData.CONTROL_SEQ == null || rowData.CONTROL_SEQ == '') {
                     if (Object.keys(rowData).length > 2) {
                         requiredCheck(rowData);
-                        // badCodeCheck(rowData);
                         inputErrorCheck(rowData);
                         sideQtyCheck(rowData);
                     }
@@ -1408,107 +1253,7 @@
                 }
             }
         };
-        // 잘못된 데이터(코드) 체크
-        const badCodeCheck = function (rowData) {
-            const rowIndex = rowData.pq_ri;
-            const priceConfirmList = fnGetCommCodeGridSelectBox('1017');
-            const mainInspectionList = fnGetCommCodeGridSelectBox('1059');
-            const workTypeList = fnGetCommCodeGridSelectBox('1033');
-            const workFactoryList = fnGetCommCodeGridSelectBox('1014');
-            const materialDetailList = fnGetCommCodeGridSelectBox('1027');
-            const materialKindList = fnGetCommCodeGridSelectBox('1029');
-            const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
-            const materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
-            const materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
 
-            // 단가확인
-            if (rowData.PRICE_CONFIRM !== undefined && rowData.PRICE_CONFIRM !== null && rowData.PRICE_CONFIRM !== '') {
-                let index = priceConfirmList.findIndex(function (element) {
-                    return element.value === rowData.PRICE_CONFIRM;
-                });
-                if (index < 0) addErrorList(rowIndex, 'PRICE_CONFIRM');
-            }
-            // 사업자
-            if (rowData.COMP_CD !== undefined && rowData.COMP_CD !== null && rowData.COMP_CD !== '') {
-                let index = FAMILY_COMPANY.findIndex(function (element) {
-                    return element.value === rowData.COMP_CD;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'COMP_CD');
-            }
-            // 발주업체
-            if (rowData.ORDER_COMP_CD !== undefined && rowData.ORDER_COMP_CD !== null && rowData.ORDER_COMP_CD !== '') {
-                let index = ORDER_COMPANY.findIndex(function (element) {
-                    return element.value === rowData.ORDER_COMP_CD;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'ORDER_COMP_CD');
-            }
-            // 구매 담당자
-            if (rowData.ORDER_STAFF_SEQ !== undefined && rowData.ORDER_STAFF_SEQ !== null && rowData.ORDER_STAFF_SEQ !== '') {
-                let index = COMPANY_STAFF.findIndex(function (element) {
-                    return element.value === Number(rowData.ORDER_STAFF_SEQ);
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'ORDER_STAFF_SEQ');
-            }
-            // 주요검사품
-            if (rowData.MAIN_INSPECTION !== undefined && rowData.MAIN_INSPECTION !== null && rowData.MAIN_INSPECTION !== '') {
-                let index = mainInspectionList.findIndex(function (element) {
-                    return element.value === rowData.MAIN_INSPECTION;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'MAIN_INSPECTION');
-            }
-            // 작업형태
-            if (rowData.WORK_TYPE !== undefined && rowData.WORK_TYPE !== null && rowData.WORK_TYPE !== '') {
-                let index = workTypeList.findIndex(function (element) {
-                    return element.value === rowData.WORK_TYPE;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'WORK_TYPE');
-            }
-            //소재 상세
-            if (rowData.MATERIAL_DETAIL !== undefined && rowData.MATERIAL_DETAIL !== null && rowData.MATERIAL_DETAIL !== '') {
-                let index = materialDetailList.findIndex(function (element) {
-                    return element.value === rowData.MATERIAL_DETAIL;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'MATERIAL_DETAIL');
-            }
-            // 소재형태
-            if (rowData.MATERIAL_KIND !== undefined && rowData.MATERIAL_KIND !== null && rowData.MATERIAL_KIND !== '') {
-                let index = materialKindList.findIndex(function (element) {
-                    return element.value === rowData.MATERIAL_KIND;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'MATERIAL_KIND');
-            }
-            // 표면처리
-            if (rowData.SURFACE_TREAT !== undefined && rowData.SURFACE_TREAT !== null && rowData.SURFACE_TREAT !== '') {
-                let index = surfaceTreatList.findIndex(function (element) {
-                    return element.value === rowData.SURFACE_TREAT;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'SURFACE_TREAT');
-            }
-            // 열처리
-            if (rowData.MATERIAL_FINISH_HEAT !== undefined && rowData.MATERIAL_FINISH_HEAT !== null && rowData.MATERIAL_FINISH_HEAT !== '') {
-                let index = materialFinishHeatList.findIndex(function (element) {
-                    return element.value === rowData.MATERIAL_FINISH_HEAT;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_HEAT');
-            }
-            // 연마
-            if (rowData.MATERIAL_FINISH_GRIND !== undefined && rowData.MATERIAL_FINISH_GRIND !== null && rowData.MATERIAL_FINISH_GRIND !== '') {
-                let index = materialFinishGrindList.findIndex(function (element) {
-                    return element.value === rowData.MATERIAL_FINISH_GRIND;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_GRIND');
-            }
-        };
         // 잘못 입력된 데이터 체크
         const inputErrorCheck = function (rowData) {
             let list = [];
@@ -1609,84 +1354,7 @@
                 }
             }
         };
-
-        const changeColumnFilter = function () {
-            // 필터 옵션 변경
-            let filterOpts = '<option value=\"\">All Fields</option>';
-            let frozenOts = '<option value="0">Selected</option>';
-
-            $createControlGrid.pqGrid('getInstance').grid.getColModel().forEach(function (column) {
-                let hiddenYn = column.hidden === false || column.hidden === undefined;
-                if (hiddenYn && column.title) {
-                    filterOpts += '<option value="' + column.dataIndx + '">' + column.title + '</option>';
-                    frozenOts += '<option value="' + (column.leftPos + 1) + '">' + column.title + '</option>';
-                }
-            });
-
-            $('#controlManageFilterColumn').html(filterOpts);
-            $('#controlManageFrozen').html(frozenOts);
-        };
         /* function */
-
-
-        $('#ORDER_MANAGE_SEARCH').on('click', function () {
-            selectedCreateControlRowIndex = [];
-            $createControlGrid.pqGrid('option', 'dataModel.postData', function () {
-                return (fnFormToJsonArrayData('#CREATE_CONTROL_SEARCH_FORM'));
-            });
-            $createControlGrid.pqGrid('refreshDataAndView');
-        });
-
-
-        $('#CONTROL_CLOSE_YEAR').on('change', function () {
-            fnAppendSelectboxMonth('CONTROL_CLOSE_MONTH', this.value);
-        });
-
-        $('[name=ORDER_MANAGE_VIEW]').on('click', function (event) {
-            // column
-            changeViewColumn(event.target.id);
-            // 필터 컬럼 변경
-            changeColumnFilter();
-            // css 변경
-            $(this).removeClass('virtual-disable').siblings('[name=ORDER_MANAGE_VIEW]').addClass('virtual-disable');
-            $createControlGrid.pqGrid('refreshView');
-        });
-
-
-        if (!alertify.barcodeDrawingConfirm) {
-            alertify.dialog('barcodeDrawingConfirm', function () {
-                return {
-                    setup: function () {
-                        let settings = alertify.confirm().settings;
-                        for (let prop in settings)
-                            this.settings[prop] = settings[prop];
-                        let setup = alertify.confirm().setup();
-                        setup.buttons[1].invokeOnClose = false; // indicate if closing the dialog should trigger this button action
-                        setup.buttons.push({
-                            text: '취소',
-                            scope: 'primary'
-                        });
-                        return setup;
-                    },
-                    settings: {
-                        oncontinue: null
-                    },
-                    callback: function (closeEvent) {
-                        if (closeEvent.index == 2) {
-                            if (typeof this.get('oncontinue') === 'function') {
-                                let returnValue;
-                                returnValue = this.get('oncontinue').call(this, closeEvent);
-                                if (typeof returnValue !== 'undefined') {
-                                    closeEvent.cancel = !returnValue;
-                                }
-                            }
-                        } else {
-                            alertify.confirm().callback.call(this, closeEvent);
-                        }
-                    }
-                };
-            }, false, 'confirm');
-        }
 
         /** 도면 보기 팝업 호출 */
         $('#create_control_draw_detail').on('click', function () {
@@ -1694,6 +1362,24 @@
             if(!noSelectedRowAlert()) {
                 callWindowImageViewer($("#CREATE_CONTROL_SEARCH_FORM").find("#GFILE_SEQ").val());
             }
+        });
+
+        $("#SELECT_ALL").on('click',function () {
+            let data = $createControlGrid.pqGrid('option', 'dataModel.data');
+            const sr = $createControlGrid.pqGrid('SelectRow');
+            let rowList = [];
+            $.each(data, function (idx,Item) {
+                if(fnIsEmpty(Item.CONTROL_SEQ)) {
+                    rowList.push({rowIndx: Item.pq_ri});
+                }
+            })
+            sr.removeAll();
+            sr.add({rows:rowList});
+        });
+
+        $("#CLEAR_SELECT").on('click',function () {
+            selectedCreateControlRowIndex = [];
+            $createControlGrid.pqGrid('setSelection', null);
         });
 
 
@@ -1760,16 +1446,16 @@
             cascadeSelect: false
         });
 
-        $('#controlManageFilterKeyword').on({
+        $('#createControlFilterKeyword').on({
             'keyup': function () {
-                fnFilterHandler($createControlGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
+                fnFilterHandler($createControlGrid, 'createControlFilterKeyword', 'createControlFilterCondition', 'createControlFilterColumn');
                 autoMerge($createControlGrid.pqGrid('getInstance').grid, true);
 
                 let data = $createControlGrid.pqGrid('option', 'dataModel.data');
                 $('#ORDER_MANAGE_RECORDS').html(data.length);
             },
             'search': function () {
-                fnFilterHandler($createControlGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
+                fnFilterHandler($createControlGrid, 'createControlFilterKeyword', 'createControlFilterCondition', 'createControlFilterColumn');
                 autoMerge($createControlGrid.pqGrid('getInstance').grid, true);
 
                 let data = $createControlGrid.pqGrid('option', 'dataModel.data');
@@ -1777,7 +1463,7 @@
             }
         });
 
-        $('#controlManageFrozen').on('change', function(){
+        $('#createControlFrozen').on('change', function(){
             fnFrozenHandler($createControlGrid, $(this).val());
         });
 
@@ -1789,20 +1475,8 @@
         });
 
         $('#CREATE_CONTROL_SEARCH_CONDITION').on('change', function () {
-            const $orderManageDates = $('[id^=CREATE_CONTROL][id$=DATE]');
-            console.log('change')
-            $(this).val() === '' ? $orderManageDates.prop('disabled', true) : $orderManageDates.prop('disabled', false);
-        });
-
-        $('#ATTACHMENT_BUTTON').on('click', function () {
-            let $attachmentButton = $('#ATTACHMENT_BUTTON');
-            let GfileKey = $('#common_file_download_form').find('#GFILE_SEQ').val();
-            let rowIndx = $attachmentButton.data('rowIndx');
-
-            if (GfileKey !== '' && GfileKey !== $attachmentButton.data('GfileKey')) {
-                $createControlGrid.pqGrid('updateRow', {rowIndx: rowIndx, row: {'ETC_GFILE_SEQ': GfileKey}, checkEditable: false});
-                $('#ORDER_MANAGE_SAVE').click();
-            }
+            const $createControlDates = $('[id^=CREATE_CONTROL][id$=DATE]');
+            $(this).val() === '' ? $createControlDates.prop('disabled', true) : $createControlDates.prop('disabled', false);
         });
 
         $('#toggleImageView').on('click', function () {
@@ -1812,7 +1486,7 @@
                 //     $('#MAIN_COLUMN').trigger('click');
                 // }
                 var width = document.getElementsByClassName("pq-cont-right")[1].scrollWidth
-                console.log(width);
+
                 $("#main_column_draw_div").show();
                 $createControlGrid.pqGrid('option', 'width', 'auto').pqGrid('refresh');
                 setTimeout(function () {
@@ -1917,8 +1591,10 @@
         });
 
         $('#VALIDATION_GRID').on('click', function () {
-            $(".pq-loading").show();
-            validationAndCreateControl('VALIDATION_GRID');
+            if(!noSelectedRowAlert()) {
+                $(".pq-loading").show();
+                validationAndCreateControl('VALIDATION_GRID');
+            }
         });
 
         $('#DELETE_ROW').on('click', function () {
@@ -1962,13 +1638,18 @@
 
         $('#CREATE_CONTROL').on('click', _.debounce(function () {
             let data = $createControlGrid.pqGrid('option', 'dataModel.data');
-            if(data.length > 0) {
-                $(".pq-loading").show();
-                $(".div_bg").show();
-                validationAndCreateControl('CREATE_CONTROL');
-                setTimeout(function () {
-                    $(".div_bg").hide();
-                },500);
+            if(!noSelectedRowAlert()) {
+                let msg = '선택주문건수 : ' + selectedCreateControlRowIndex.length + ' 건<br>';
+                msg += '작업지시 생성을 진행하시겠습니까?';
+
+                fnConfirm(null, msg, function () {
+                    $(".pq-loading").show();
+                    $(".div_bg").show();
+                    validationAndCreateControl('CREATE_CONTROL');
+                    setTimeout(function () {
+                        $(".div_bg").hide();
+                    },500);
+                })
             }
         },1000));
 
@@ -1976,8 +1657,14 @@
             prevErrorList = errorList;
             errorList = [];
             let data = $createControlGrid.pqGrid('option', 'dataModel.data');
+            let dataList = [];
+            $.each(data, function (idx,Item) {
+               if(selectedCreateControlRowIndex.indexOf(Item.pq_ri) >= 0) {
+                   dataList.push(Item);
+               }
+            });
 
-            validationCheck(data);
+            validationCheck(dataList);
             changeCellColor(errorList, prevErrorList);
 
             if (errorList.length) {
@@ -1985,10 +1672,23 @@
                 $(".pq-loading").hide();
                 return false;
             }
+            let rowNumList = [];
+            for(let i=0;i<selectedCreateControlRowIndex.length;i++) {
+                let rowData = $createControlGrid.pqGrid('getRowData', {rowIndx: selectedCreateControlRowIndex[i]})
+                rowNumList.push(rowData.ROW_NUM);
+            }
 
             let gridInstance = $createControlGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
-            changes.updateList = changes.updateList.concat(changes.addList);
+            // changes.updateList = changes.updateList.concat(changes.addList);
+
+            let select = [];
+            $.each(changes.updateList, function (idx,Item) {
+                if(rowNumList.indexOf(Item.ROW_NUM) >= 0) {
+                    select.push(Item);
+                }
+            })
+            changes.updateList = select;
 
             let controlNumArr = [];
             for(var i=0;i<changes.updateList.length;i++) {
@@ -2022,9 +1722,16 @@
                     })
                 })
                 if(type == 'CREATE_CONTROL' && !flag) {
-
                     let gridInstance2 = $createControlGrid.pqGrid('getInstance').grid;
                     let changes2 = gridInstance.getChanges({format: 'byVal'});
+
+                    let select2 = [];
+                    $.each(changes2.updateList, function (idx,Item) {
+                        if(rowNumList.indexOf(Item.ROW_NUM) >= 0) {
+                            select2.push(Item);
+                        }
+                    })
+                    changes2.updateList = select2;
 
                     parameters = {'url': '/createNewControl', 'data': {data: JSON.stringify(changes2)}};
 
@@ -2063,25 +1770,6 @@
             parentGridSearchButton.click();
             window.close();
         });
-
-        // $(document).on({
-        //     mouseenter: function () {
-        //         if (isActiveDrawingView) {
-        //             const id = $(this).attr('id');
-        //             const splits = id.split('-');
-        //             const rowIndx = splits[4];
-        //             const rowData = $(this).closest('.pq-grid').pqGrid('getRowData', {rowIndx: rowIndx});
-        //
-        //             if (rowData.IMG_GFILE_SEQ) {
-        //                 $("#create_control_img").attr("src", '/qimage/' + rowData.IMG_GFILE_SEQ);
-        //                 $("#CREATE_CONTROL_SEARCH_FORM").find("#GFILE_SEQ").val(rowData.IMG_GFILE_SEQ);
-        //             }else {
-        //                 $("#create_control_img").attr("src", '/resource/main/blank.jpg');
-        //                 $("#CREATE_CONTROL_SEARCH_FORM").find("#GFILE_SEQ").val("");
-        //             }
-        //         }
-        //     }
-        // }, '#CREATE_CONTROL_GRID .pq-grid-row');
     });
 </script>
 </body>
