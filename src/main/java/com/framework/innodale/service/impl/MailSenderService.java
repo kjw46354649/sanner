@@ -41,15 +41,6 @@ public class MailSenderService {
 
         try{
             String dbUrl = environment.getRequiredProperty("base.jdbc.url");
-            InetAddress local = InetAddress.getLocalHost();
-            String ip = local.getHostAddress();
-            if(CommonUtility.isTest() && dbUrl.indexOf("1.220.196.5") >= 0) {
-                System.out.println(">>>>>>>>>>>>>>>>>>> dbUrl 1 = " + dbUrl);
-                System.out.println("local.getHostAddress=[" + ip + "]");
-            }else {
-                System.out.println(">>>>>>>>>>>>>>>>>>> dbUrl 2 = " + dbUrl);
-                System.out.println("local.getHostAddress=[" + ip + "]");
-            }
             // 운영 서버인 경우만 메일 발송 처리 된다.
              if(CommonUtility.isScheduleRunning() && dbUrl.indexOf("106.240.243.250") >= 0){
 
