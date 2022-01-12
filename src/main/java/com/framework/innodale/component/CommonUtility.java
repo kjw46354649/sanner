@@ -411,6 +411,20 @@ public class CommonUtility {
         return isRunning;
     }
 
+    public static boolean isTest() {
+        boolean isTest = false;
+        try{
+            InetAddress local = InetAddress.getLocalHost();
+            String ip = local.getHostAddress();
+            // System.out.println("local.getHostAddress=[" + ip + "]");
+//            if("106.240.243.250".equals(ip) || "172.16.0.83".equals(ip) || "192.168.122.1".equals(ip)){
+            if("192.168.0.210".equals(ip)){
+                isTest = true;
+            }
+        }catch(Exception exception){ }
+        return isTest;
+    }
+
     /**
      * 브라우저 종류
      * @param request

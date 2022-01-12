@@ -6,10 +6,12 @@ import com.framework.innodale.dao.InnodaleDao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,9 @@ public class MailSenderService {
     @Autowired
     MailSenderAgent mailSenderAgent;
 
+    @Autowired
+    private Environment environment;
+
     /** 비동기 방식으로 20초 간격을 두고서 실행 처리 **/
    	// @Async
 	@Scheduled(fixedRate=20000)  // 30 secound,	1000 = 1sec
@@ -35,9 +40,18 @@ public class MailSenderService {
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
 
         try{
+            String dbUrl = environment.getRequiredProperty("base.jdbc.url");
+            InetAddress local = InetAddress.getLocalHost();
+            String ip = local.getHostAddress();
+            if(CommonUtility.isTest() && dbUrl.indexOf("1.220.196.5") >= 0) {
+                System.out.println(">>>>>>>>>>>>>>>>>>> dbUrl 1 = " + dbUrl);
+                System.out.println("local.getHostAddress=[" + ip + "]");
+            }else {
+                System.out.println(">>>>>>>>>>>>>>>>>>> dbUrl 2 = " + dbUrl);
+                System.out.println("local.getHostAddress=[" + ip + "]");
+            }
             // 운영 서버인 경우만 메일 발송 처리 된다.
-             if(CommonUtility.isScheduleRunning()){
-//            if(true){
+             if(CommonUtility.isScheduleRunning() && dbUrl.indexOf("106.240.243.250") >= 0){
 
                 // Demon Key 생성, 자동화 발신 이메일 정보만 UPDATE 한다.
                 hashMap.put("SKEY", CommonUtility.getUUIDString("mail"));

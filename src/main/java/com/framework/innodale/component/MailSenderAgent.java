@@ -62,7 +62,7 @@ public class MailSenderAgent {
                     message.setCc(cc);
                 }
 
-                message.setBcc(new InternetAddress("jins-jmes@naver.com"));
+                message.setBcc(new InternetAddress(environment.getRequiredProperty("smtp_cc_mail")));
 
                 message.setSubject((String)mailInfo.get("TITLE"));
                 message.setText((String)mailInfo.get("CONTEXT"), true);
