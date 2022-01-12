@@ -574,20 +574,20 @@
                 <span class="barCode">
                     <img src="resource/asset/images/common/img_barcode_long.png" id="stock_pop_location_barcode_img" alt="바코드">
                 </span>
-                <span class="barCodeTxt">
-                    <input type="text" class="wd_200 hg_35" name="POP_LOC_BARCODE_NUM" id="POP_LOC_BARCODE_NUM" placeholder=""/>
-                </span>
+                <input type="text" style="width: 0;height: 0;opacity: 0;padding: 0;" name="POP_LOC_BARCODE_NUM" id="POP_LOC_BARCODE_NUM" placeholder=""/>
             </div>
             <div class="inputWrap" style="height: 11%;">
-                <label for="POP_WAREHOUSE">창고</label>
+                <label for="POP_WAREHOUSE">수동지정</label>
                 <select id="POP_WAREHOUSE" class="warehouse">
+                    <option value="">창고</option>
                     <c:forEach var="vlocale" items="${HighCode.H_1049}">
                         <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
                     </c:forEach>
                 </select>
-                <label for="POP_LOC_SEQ">위치</label>
-                <select id="POP_LOC_SEQ" class="where">
+                <select id="POP_LOC_SEQ" class="where ml-10">
                 </select>
+                <input name="LOC_NON_CHECK" id="LOC_NON_CHECK" type="checkbox" style="margin: 0 5px 0 15px;">
+                <label for="LOC_NON_CHECK" style="width: 10%;">미지정</label>
             </div>
             <div class="stockPopupBtnWrap">
                 <button id="stockPopBtnCancel2" class="stockBtnCancel">취소</button>
@@ -1663,7 +1663,11 @@
                 $("#POP_IN_MATERIAL_DETAIL").html($("#POP_MATERIAL_DETAIL option:selected").text())
                 $("#POP_IN_SIZE_TXT").html($("#POP_SIZE_TXT").text())
                 $("#POP_IN_GUBUN").html($("#POP_GUBUN").text())
-                $("#POP_IN_LOC").html($("#POP_WAREHOUSE option:selected").text() +"&emsp;" + $("#POP_LOC_SEQ option:selected").text());
+                let loc_text = $("#POP_WAREHOUSE option:selected").text() +"&emsp;" + $("#POP_LOC_SEQ option:selected").text();
+                if($("#LOC_NON_CHECK").prop('checked')) {
+                    loc_text = "미지정";
+                }
+                $("#POP_IN_LOC").html(loc_text);
                 $("#POP_IN_ORDER_QTY").html($("#stock_manage_pop_form").find("#ORDER_QTY").val());
                 $("#POP_IN_REMAIN_QTY").html($("#stock_manage_pop_form").find("#POP_STOCK_QTY_AFTER").val());
 
@@ -2248,7 +2252,7 @@
         let parameters = {'url': '/json-list', 'data': {'queryId': 'dataSource.getLocationListWithWarehouse'}};
         fnPostAjaxAsync(function(data){
             let optText1 = "<option value=''><spring:message code='com.form.top.all.option'/></option>";
-            let optText2 = "<option value=''><spring:message code='com.form.top.sel.option'/></option>";
+            let optText2 = "<option value=''>위치</option>";
 
             $.each(data.list,function (idx,Item) {
                 optText1 += "<option class='dep2 "+Item.WAREHOUSE_CD +"' value='" + Item.value + "' >" + Item.CODE_NM +"</option>"
@@ -2417,6 +2421,9 @@
             $('#stock_manage_pop_form').find('#ORDER_QTY').val(POP_ORDER_QTY);
             $('#stock_manage_pop_form').find('#POP_STOCK_QTY_AFTER').val(POP_STOCK_QTY_AFTER);
         }
+        $("#stock_pop_location_barcode_img").on("click",function () {
+            $("#POP_LOC_BARCODE_NUM").focus();
+        })
         $("#POP_LOC_BARCODE_NUM").on({
             focus: function () {
                 $("#stock_pop_location_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long_on.png");
@@ -2433,16 +2440,21 @@
                         'data': {"LOC_BARCODE":BARCODE_NUM,"queryId":"material.selectWarehouseInfoByLocBarcode"}
                     };
                     fnPostAjax(function (data, callFunctionParam) {
-                        $('#POP_WAREHOUSE option[value='+data.info.WAREHOUSE_CD +']').prop('selected',true);
-                        $('#POP_LOC_SEQ option[value='+data.info.LOC_SEQ +']').prop('selected',true);
-                        $("#stock_manage_pop_form").find("#WAREHOUSE_CD").val(data.info.WAREHOUSE_CD);
-                        $("#stock_manage_pop_form").find("#LOC_SEQ").val(data.info.LOC_SEQ);
+                        console.log(data.info)
+                        if(data.info != null) {
+                            $('#POP_WAREHOUSE option[value='+data.info.WAREHOUSE_CD +']').prop('selected',true);
+                            $('#POP_LOC_SEQ option[value='+data.info.LOC_SEQ +']').prop('selected',true);
+                            $("#stock_manage_pop_form").find("#WAREHOUSE_CD").val(data.info.WAREHOUSE_CD);
+                            $("#stock_manage_pop_form").find("#LOC_SEQ").val(data.info.LOC_SEQ);
 
-                        $("#stock_pop_location").find('.dep2').hide();
-                        $('#POP_LOC_SEQ').attr('disabled',false);
-                        $('#POP_LOC_SEQ > .' + data.info.WAREHOUSE_CD).show();
+                            $("#stock_pop_location").find('.dep2').hide();
+                            $('#POP_LOC_SEQ').attr('disabled',false);
+                            $('#POP_LOC_SEQ > .' + data.info.WAREHOUSE_CD).show();
 
-                        $("#stock_pop_in").modal('show');
+                            $("#stock_pop_in").modal('show');
+                        }else {
+                            fnAlert(null,"바코드 정보를 확인해주세요.");
+                        }
 
                         $("#POP_LOC_BARCODE_NUM").val('');
                     }, parameters, '');
@@ -2464,6 +2476,18 @@
 
         $("#POP_LOC_SEQ").on('change',function () {
             $("#stock_manage_pop_form").find("#LOC_SEQ").val($(this).val());
+        })
+
+        $("#LOC_NON_CHECK").on('click', function () {
+            if($(this).prop('checked')) {
+                $('#POP_WAREHOUSE').val('').prop('selected', true);
+                $('#POP_LOC_SEQ').val('').prop('selected', true);
+                $("#stock_manage_pop_form").find("#LOC_SEQ").val('');
+                $("#stock_manage_pop_form").find("#WAREHOUSE_CD").val('');
+            }
+
+            $("#POP_WAREHOUSE").prop("disabled", $(this).prop('checked'));
+            $("#POP_LOC_SEQ").prop("disabled", $(this).prop('checked'));
         })
 
         $("#LOCATION_BARCODE_NUM").on({
@@ -2670,7 +2694,7 @@
         })
 
         $("#stockPopBtnSave2").on('click',function () {
-            if($("#POP_LOC_SEQ").val() == '') {
+            if(!$("#LOC_NON_CHECK").prop('checked') && $("#POP_LOC_SEQ").val() == '') {
                 fnAlert('',"창고 위치를 선택해주세요");
             }else {
                 $("#stock_pop_in").modal('show');
