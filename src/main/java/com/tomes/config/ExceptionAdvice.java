@@ -1,5 +1,6 @@
 package com.tomes.config;
 
+import com.framework.innodale.component.CommonUtility;
 import com.tomes.domain.CommonResult;
 import com.tomes.exception.AuthenticationFailException;
 import com.tomes.exception.CompanyDisabledException;
@@ -7,6 +8,7 @@ import com.tomes.exception.CompanyNotFoundException;
 import com.tomes.exception.TokenException;
 import com.tomes.service.ResponseService;
 import lombok.RequiredArgsConstructor;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -15,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestControllerAdvice
@@ -27,9 +28,15 @@ public class ExceptionAdvice {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    SqlSessionTemplate sqlSessionTemplate;
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult exception(HttpServletRequest request, Exception e) {
+
+        insertErrorLog(request,e);
+
         e.printStackTrace();
         return responseService.getFailResult(Integer.parseInt(getMessage("unKnown.code")), getMessage("unKnown.msg"));
     }
@@ -68,6 +75,25 @@ public class ExceptionAdvice {
     // code정보, 추가 argument로 현재 locale에 맞는 메시지를 조회합니다.
     private String getMessage(String code, Object[] args) {
         return messageSource.getMessage(code, args, LocaleContextHolder.getLocale());
+    }
+    private void insertErrorLog(HttpServletRequest request, Exception e) {
+
+        try {
+            HashMap<String,Object> requestMap = CommonUtility.getParameterMap(request);
+
+            HashMap<String,Object> hashMap = new HashMap<>();
+            hashMap.put("queryId","common.insertErrorLog");
+            hashMap.put("REQUEST_URL",request.getRequestURI());
+            hashMap.put("ERROR_NAME",e.getClass().getName());
+            hashMap.put("ERROR_MSG",e.getMessage());
+            hashMap.put("REQUEST_PARAM",requestMap.get("data").toString());
+            hashMap.put("LOGIN_USER_ID",requestMap.get("LOGIN_USER_ID"));
+
+            sqlSessionTemplate.insert((String)hashMap.get("queryId"), hashMap);
+
+        }catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
 }
