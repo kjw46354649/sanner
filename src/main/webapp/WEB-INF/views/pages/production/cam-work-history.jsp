@@ -1166,7 +1166,7 @@
         };
 
         /** 파일 업로드 스크립트 **/
-        $(".mctWorkStyle").on("dragenter", function (e) {  //드래그 요소가 들어왔을떄
+        $("#cam_work_history_detail_pop").find(".mctWorkStyle").on("dragenter", function (e) {  //드래그 요소가 들어왔을떄
             $(this).addClass('drag-over');
         }).on("dragleave", function (e) {  //드래그 요소가 나갔을때
             $(this).removeClass('drag-over');
