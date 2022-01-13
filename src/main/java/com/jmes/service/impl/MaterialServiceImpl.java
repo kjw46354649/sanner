@@ -292,6 +292,7 @@ public class MaterialServiceImpl implements MaterialService {
     @Override
     public void inWarehouseManageSave(Model model, HashMap<String, Object> hashMap) throws Exception {
         String jsonObject = (String) hashMap.get("data");
+        String userId = (String)hashMap.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
 
@@ -342,6 +343,7 @@ public class MaterialServiceImpl implements MaterialService {
                 ArrayList<String> queryId = (ArrayList<String>) queryIdList.get("insertQueryId");
                 for (HashMap<String, Object> dataList : addList) {
                     for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
+                        dataList.put("LOGIN_USER_ID",userId);
                         dataList.put("queryId", queryId.get(i));
                         this.innodaleDao.insertGrid(dataList);
                     }
@@ -351,6 +353,7 @@ public class MaterialServiceImpl implements MaterialService {
                 ArrayList<String> queryId = (ArrayList<String>) queryIdList.get("updateQueryId");
                 for (HashMap<String, Object> dataList : updateList) {
                     for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
+                        dataList.put("LOGIN_USER_ID",userId);
                         dataList.put("queryId", queryId.get(i));
                         this.innodaleDao.updateGrid(dataList);
                     }

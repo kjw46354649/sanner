@@ -89,6 +89,7 @@ public class PopServiceImpl implements PopService {
             model.addAttribute("returnCode", "RET98");
             model.addAttribute("message", "도면에 문제가 있습니다. 도면 확인 바랍니다."); // 정보가 없는 경우
         }else{
+            controlPartInfo.put("LOGIN_USER_ID",hashMap.get("LOGIN_USER_ID"));
 
             /** 추가 되어야 할 데이터 **/
             String prevPopLocation = (String) controlPartInfo.get("POP_PREV_POSITION"); // 이전 pop 위치 이름

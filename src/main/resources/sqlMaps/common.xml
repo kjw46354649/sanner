@@ -16,7 +16,7 @@
             <if test="GFILE_TYPE != null and GFILE_TYPE != ''">
                 #{GFILE_TYPE},
             </if>
-            'admin')
+            #{LOGIN_USER_ID})
     </insert>
 
     <delete id="deleteFileGroup" parameterType="java.util.HashMap">
@@ -46,7 +46,7 @@
         (#{FILE_SEQ}, #{FILE_NM}, #{FILE_PATH}, #{TIME_PATH}, #{ORGINAL_FILE_NM}, #{FILE_TYPE}, #{FILE_EXT}, #{FILE_SIZE},
             CASE WHEN UPPER(#{FILE_EXT}) IN ('MC7', 'MC9', 'MCAM') THEN 'EXC'
                  WHEN UPPER(#{FILE_EXT}) = 'NC' THEN 'EXN' ELSE SPACE(0) END,
-            #{GFILE_SEQ}, 'admin')
+            #{GFILE_SEQ}, #{LOGIN_USER_ID})
     </insert>
 
     <update id="updateFile" parameterType="java.util.HashMap">

@@ -266,6 +266,7 @@ public class OrderServiceImpl implements OrderService {
 
         if (infoData != null && infoData.size() > 0) {
             for (HashMap<String, Object> hashMap : infoData) {
+                hashMap.put("LOGIN_USER_ID",userId);
                 hashMap.put("queryId", "orderMapper.updateMonthCloseFinalNego");
                 this.innodaleDao.update(hashMap);
             }
@@ -397,6 +398,7 @@ public class OrderServiceImpl implements OrderService {
     public void updateControlConfirmProcess(Map<String, Object> map) throws Exception {
 
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
         HashMap<String, Object> queryIdList = null;
@@ -417,6 +419,7 @@ public class OrderServiceImpl implements OrderService {
 
             for (HashMap<String, Object> hashMap : updateList) {
                 for (int i = 0, queryCount = queryId.size(); i < queryCount; i++) {
+                    hashMap.put("LOGIN_USER_ID",userId);
                     hashMap.put("queryId", queryId.get(i));
                     this.innodaleDao.updateGrid(hashMap);
                 }

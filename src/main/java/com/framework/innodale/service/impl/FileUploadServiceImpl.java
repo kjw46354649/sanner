@@ -45,6 +45,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     @Override
     public void createFileUpload(MultipartHttpServletRequest request, Model model) throws Exception {
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        String userId = (String)hashMap.get("LOGIN_USER_ID");
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS", new Locale("ko", "KR"));
         String uploadFilePath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.upload.main.path") + File.separator + formatter.format(new Date()).substring(0, 8);
@@ -67,6 +68,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 
                 HashMap<String, Object> fileMap = new HashMap<String, Object>();
                 CommonUtility.createFileDirectory(new File(uploadFilePath));
+                fileMap.put("LOGIN_USER_ID",userId);
 
                 multipartFile.transferTo(new File(uploadFilePath + File.separator + serverFileName));
 
@@ -172,6 +174,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     public void uploadDxfAndPdfCadFilesControlOrder(MultipartHttpServletRequest request, Model model) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        String userId = (String)hashMap.get("LOGIN_USER_ID");
 
         // Demon Key 생성
         if(StringUtils.isEmpty(hashMap.get("WORK_KEY"))){
@@ -202,6 +205,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                 String serverFullFileName = "file-" + serverFileName;
 
                 HashMap<String, Object> fileInfo = new HashMap<String, Object>();
+                fileInfo.put("LOGIN_USER_ID",userId);
 
                 // String originalFullName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"), "utf-8");
                 String originalFullName = multipartFile.getOriginalFilename();
@@ -250,6 +254,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 
                             File ImageFile = new File(targetImageFullpath);
                             HashMap<String, Object> imageFileInfo = new HashMap<String, Object>();
+                            imageFileInfo.put("LOGIN_USER_ID",userId);
                             imageFileInfo.put("FILE_NM", serverFullFileName + ".png");
                             imageFileInfo.put("MAPPING_STR", mappingDrawingNum);
                             imageFileInfo.put("FILE_PATH", targetImageFullpath);
@@ -361,6 +366,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     public void uploadDxfAndPdfCadFiles(MultipartHttpServletRequest request, Model model) throws Exception {
 
         HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        String userId = (String)hashMap.get("LOGIN_USER_ID");
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", new Locale("ko", "KR"));
         String uploadDatePath = formatter.format(new Date()).substring(0, 8) + File.separator + formatter.format(new Date());
@@ -390,6 +396,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                 String serverFullFileName = "file-" + serverFileName;
 
                 HashMap<String, Object> fileInfo = new HashMap<String, Object>();
+                fileInfo.put("LOGIN_USER_ID",userId);
 
                 // String originalFullName = new String(multipartFile.getOriginalFilename().getBytes("8859_1"), "utf-8");
                 String originalFullName = multipartFile.getOriginalFilename();
@@ -433,6 +440,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 
                             File ImageFile = new File(targetImageFullpath);
                             HashMap<String, Object> imageFileInfo = new HashMap<String, Object>();
+                            imageFileInfo.put("LOGIN_USER_ID",userId);
                             imageFileInfo.put("FILE_NM", serverFullFileName + ".png");
                             imageFileInfo.put("MAPPING_STR", mappingDrawingNum);
                             imageFileInfo.put("FILE_PATH", targetImageFullpath);

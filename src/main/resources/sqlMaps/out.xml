@@ -374,13 +374,15 @@
             CLOSE_VER,
             CONTROL_SEQ,
             CONTROL_DETAIL_SEQ,
-            CLOSE_DT
+            CLOSE_DT,
+            INSERT_ID
         ) VALUES (
             #{CLOSE_MONTH},
             #{CLOSE_VER},
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ},
-            NOW()
+            NOW(),
+            #{LOGIN_USER_ID}
         ) ON DUPLICATE KEY
 	        UPDATE
 		        CLOSE_DT = NOW()
@@ -393,14 +395,16 @@
             CLOSE_MONTH,
             CLOSE_VER,
             CONTROL_SEQ,
-            CONTROL_DETAIL_SEQ
+            CONTROL_DETAIL_SEQ,
+            INSERT_ID
         ) VALUES (
             NEXTVAL(SEQ_OUTSIDE_CLOSE_HISTORY),
             NOW(),
             #{CLOSE_MONTH},
             CAST(#{CLOSE_VER} AS INTEGER),
             #{CONTROL_SEQ},
-            #{CONTROL_DETAIL_SEQ}
+            #{CONTROL_DETAIL_SEQ},
+            #{LOGIN_USER_ID}
         )
     </insert>
 
@@ -1112,7 +1116,7 @@
             NEXTVAL(SEQ_DUMMY),
             #{STAFF_NM},
             #{STAFF_EMAIL},
-            NOW()
+            #{LOGIN_USER_ID}
         )
     </insert>
 

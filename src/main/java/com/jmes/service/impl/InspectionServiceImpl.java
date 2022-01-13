@@ -28,6 +28,7 @@ public class InspectionServiceImpl implements InspectionService {
     @Override
     public void saveLayer(Map<String, Object> map, Model model) throws Exception {
         String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Map<String, Object>> jsonMap = null;
         if (jsonObject != null) {
@@ -57,6 +58,7 @@ public class InspectionServiceImpl implements InspectionService {
         }
 
         for (Map<String, Object> hashMap : jsonMap) {
+            hashMap.put("LOGIN_USER_ID",userId);
             hashMap.put("queryId","inspection.insertLayerInfo");
             innodaleDao.create(hashMap);
         }
@@ -94,6 +96,8 @@ public class InspectionServiceImpl implements InspectionService {
 
 
         HashMap<String, Object> fileMap = new HashMap<String, Object>();
+        fileMap.put("LOGIN_USER_ID",userId);
+
         if(jsonMap.containsKey("imgSrc")) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", new Locale("ko", "KR"));
             String uploadDatePath = formatter.format(new Date()).substring(0, 8) + File.separator + formatter.format(new Date());

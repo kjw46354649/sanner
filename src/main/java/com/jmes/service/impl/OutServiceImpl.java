@@ -79,6 +79,7 @@ public class OutServiceImpl implements OutService {
 
         if (infoData != null && infoData.size() > 0) {
             for (HashMap<String, Object> hashMap : infoData) {
+                hashMap.put("LOGIN_USER_ID",userId);
                 hashMap.put("queryId", "outMapper.createOutsideCloseNote");
                 this.innodaleDao.create(hashMap);
             }
@@ -115,6 +116,7 @@ public class OutServiceImpl implements OutService {
             mailReceiverList = (ArrayList<HashMap<String, Object>>) jsonMap.get("mailReceiverList");
 
         String mailAttachGfileSeq = "";
+        requestMailForm.put("LOGIN_USER_ID", userId);
         if (requestMailForm.get("GFILE_SEQ") != null && !"".equals(requestMailForm.get("GFILE_SEQ"))) {
             mailAttachGfileSeq = (String) requestMailForm.get("GFILE_SEQ");
         } else {
@@ -182,6 +184,7 @@ public class OutServiceImpl implements OutService {
 
                         if(!"".equals(reception)) { //메일 수신처 정보가 없는 경우, 메일발송X
                             for (HashMap<String, Object> hashMap : mailReceiverList) {
+                                hashMap.put("LOGIN_USER_ID", userId);
                                 hashMap.put("OUTSIDE_REQUEST_SEQ", outsideRequestSeq);
                                 hashMap.put("queryId", "outMapper.createOutsideRequestReceiver");
                                 this.innodaleDao.create(hashMap);
@@ -313,6 +316,7 @@ public class OutServiceImpl implements OutService {
                 boolean flag = false;
                 Integer newOutQtyCopy = new Integer(newOutQty);
                 for(Map<String, Object> tempMap : controlList) {
+                    tempMap.put("LOGIN_USER_ID",userId);
                     if(newOutQtyCopy > 0) {
                         Integer controlOrderQty = Integer.parseInt(tempMap.get("CONTROL_ORDER_QTY")+"");
                         Integer controlOutQty = Integer.parseInt(tempMap.get("OUT_QTY")+"");
