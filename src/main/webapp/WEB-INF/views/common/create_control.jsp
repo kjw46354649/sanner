@@ -720,6 +720,13 @@
                     return {data: dataJSON.data};
                 }
             },
+            dragModel: {
+                on: true,
+                diHelper: ['ROW_NUM'],
+            },
+            dropModel: {
+                on: true,
+            },
             sortModel: {on: true},
             load: function () {
                 if($('#createControlFilterKeyword').val() !== '')
