@@ -86,7 +86,7 @@ public class ExceptionAdvice {
             hashMap.put("REQUEST_URL",request.getRequestURI());
             hashMap.put("ERROR_NAME",e.getClass().getName());
             hashMap.put("ERROR_MSG",e.getMessage());
-            hashMap.put("REQUEST_PARAM",requestMap.get("data").toString());
+            hashMap.put("REQUEST_PARAM",requestMap.toString());
             hashMap.put("LOGIN_USER_ID",requestMap.get("LOGIN_USER_ID"));
 
             sqlSessionTemplate.insert((String)hashMap.get("queryId"), hashMap);
