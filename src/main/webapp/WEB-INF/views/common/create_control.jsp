@@ -735,6 +735,8 @@
             },
             selectChange: function (event, ui) {
                 selectedCreateControlRowIndex = [];
+                let rowList = [];
+                const sr = $createControlGrid.pqGrid('SelectRow');
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
                     let firstRow = ui.selection._areas[i].r1;
                     let lastRow = ui.selection._areas[i].r2;
@@ -742,8 +744,12 @@
                         let rowData = $createControlGrid.pqGrid("getRowData", {rowIndx: i});
                         if(fnIsEmpty(rowData.CONTROL_SEQ)) {
                             selectedCreateControlRowIndex.push(i);
+                            rowList.push({rowIndx: i});
                         }
                     }
+                    sr.removeAll();
+                    sr.add({rows:rowList});
+
                     if (firstRow === lastRow) {
                         let selRowData = $createControlGrid.pqGrid("getRowData", {rowIndx: firstRow});
                         $("#CREATE_CONTROL_SEARCH_FORM").find("#GFILE_SEQ").val(selRowData.IMG_GFILE_SEQ);
@@ -1372,12 +1378,14 @@
         });
 
         $("#SELECT_ALL").on('click',function () {
+            selectedCreateControlRowIndex = [];
             let data = $createControlGrid.pqGrid('option', 'dataModel.data');
             const sr = $createControlGrid.pqGrid('SelectRow');
             let rowList = [];
             $.each(data, function (idx,Item) {
                 if(fnIsEmpty(Item.CONTROL_SEQ)) {
                     rowList.push({rowIndx: Item.pq_ri});
+                    selectedCreateControlRowIndex.push(Item.pq_ri);
                 }
             })
             sr.removeAll();
@@ -1728,34 +1736,38 @@
                         }
                     })
                 })
-                if(type == 'CREATE_CONTROL' && !flag) {
-                    let gridInstance2 = $createControlGrid.pqGrid('getInstance').grid;
-                    let changes2 = gridInstance.getChanges({format: 'byVal'});
+                if(type == 'CREATE_CONTROL') {
+                    if(flag) {
+                        fnAlert(null, "생성 불가한 작업지시건이 있습니다.");
+                    }else {
+                        let gridInstance2 = $createControlGrid.pqGrid('getInstance').grid;
+                        let changes2 = gridInstance.getChanges({format: 'byVal'});
 
-                    let select2 = [];
-                    $.each(changes2.updateList, function (idx,Item) {
-                        if(rowNumList.indexOf(Item.ROW_NUM) >= 0) {
-                            select2.push(Item);
-                        }
-                    })
-                    changes2.updateList = select2;
+                        let select2 = [];
+                        $.each(changes2.updateList, function (idx,Item) {
+                            if(rowNumList.indexOf(Item.ROW_NUM) >= 0) {
+                                select2.push(Item);
+                            }
+                        })
+                        changes2.updateList = select2;
 
-                    parameters = {'url': '/createNewControl', 'data': {data: JSON.stringify(changes2)}};
+                        parameters = {'url': '/createNewControl', 'data': {data: JSON.stringify(changes2)}};
 
-                    fnPostAjaxAsync(function (data) {
-                        if(!data.flag) {
-                            fnAlert(null, '작업지시가 생성되었습니다.');
-                            // $("#CREATE_CONTROL_REFRESH").trigger('click');
-                            setTimeout(function () {
-                                const parentWindow = window.opener;
-                                let parentGridSearchButton = $(parentWindow.document).find('#CONTROL_MANAGE_SEARCH');
-                                parentGridSearchButton.click();
-                                window.close();
-                            },500);
-                        }else {
-                            fnAlert(null, data.message);
-                        }
-                    }, parameters, '');
+                        fnPostAjaxAsync(function (data) {
+                            if(!data.flag) {
+                                fnAlert(null, '작업지시가 생성되었습니다.');
+                                // $("#CREATE_CONTROL_REFRESH").trigger('click');
+                                setTimeout(function () {
+                                    const parentWindow = window.opener;
+                                    let parentGridSearchButton = $(parentWindow.document).find('#CONTROL_MANAGE_SEARCH');
+                                    parentGridSearchButton.click();
+                                    window.close();
+                                },500);
+                            }else {
+                                fnAlert(null, data.message);
+                            }
+                        }, parameters, '');
+                    }
                 }
                 $(".pq-loading").hide();
             }, parameters, '');
