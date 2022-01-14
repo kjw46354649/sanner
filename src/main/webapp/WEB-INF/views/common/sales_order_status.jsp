@@ -166,6 +166,17 @@
                 $businessOutgoingListGrid.pqGrid('refreshDataAndView');
                 // info.dayEl.style.backgroundColor = 'red';
             }
+            , eventClick : function(info) {
+                if(!fnIsEmpty(info.event.start)) {
+                    let clickDate = new Date(info.event.start);
+
+                    $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker('setDate', clickDate);
+                    $businessOutgoingListGrid.pqGrid('option', 'dataModel.postData', function () {
+                        return (fnFormToJsonArrayData('#business_status_search_form'));
+                    });
+                    $businessOutgoingListGrid.pqGrid('refreshDataAndView');
+                }
+            }
             , selectable: true
             , defaultDate : TODAY // 기준일자
             , editable : false
@@ -564,12 +575,7 @@
         });
 
         $('#business_status_refresh').on('click', function () {
-            $businessOutgoingListGrid.pqGrid('refreshDataAndView');
-            $businessEmergencyListGrid.pqGrid('refreshDataAndView');
-            $businessOverOrderListGrid.pqGrid('refreshDataAndView');
-            businessCalendar.refetchEvents();
-            var today = new Date();
-            businessCalendar.gotoDate(today);
+            refreshAllData();
         });
         $('#business_refresh_timer').on('click', function () {
             $("#timer_pop").show();
@@ -577,6 +583,15 @@
         $('#close_timerPop').on('click', function () {
             $("#timer_pop").hide();
         });
+
+        function refreshAllData() {
+            $businessOutgoingListGrid.pqGrid('refreshDataAndView');
+            $businessEmergencyListGrid.pqGrid('refreshDataAndView');
+            $businessOverOrderListGrid.pqGrid('refreshDataAndView');
+            businessCalendar.refetchEvents();
+            var today = new Date();
+            businessCalendar.gotoDate(today);
+        }
 
         let timerId = 0;
         $('input[name="timer_setting"]').change(function() {
@@ -598,15 +613,23 @@
             clearInterval(timerId);
             if(selectVal !== "0") {
                 timerId = setInterval(function () {
-                    $businessOutgoingListGrid.pqGrid('refreshDataAndView');
-                    $businessEmergencyListGrid.pqGrid('refreshDataAndView');
-                    $businessOverOrderListGrid.pqGrid('refreshDataAndView');
-                    businessCalendar.refetchEvents();
-                    var today = new Date();
-                    businessCalendar.gotoDate(today);
+                    refreshAllData();
                 },timer)
             }
         });
+
+        let setIntervalTimer;
+        let refreshTimer = function () {
+            let selVal = 30;
+            let timesec = 1000;//1초
+            setIntervalTimer = setInterval(function() {
+                let curTime = new Date();
+                if(curTime.getHours() == 0 && curTime.getMinutes() == 0) {
+                    refreshAllData();
+                }
+            }, timesec*selVal);
+        };
+        refreshTimer();
     });
 </script>
 </body>
