@@ -218,7 +218,6 @@
                     <form class="form-inline" name="PROCESS_DASH_SUB_FORM" id="PROCESS_DASH_SUB_FORM" role="form">
                         <input type="hidden" name="queryId" id="queryId" value="process.selectProcessCompleteList">
                         <div id="process_complete_grid" class="border_color h80 m-2 box-scroll grid_wrap3">
-
                         </div>
                     </form>
                 </div>
@@ -609,8 +608,8 @@
                     if(checkArrCopy.length > 0) {
                         for(var i=0;i<checkArrCopy.length;i++) {
                             $.each(orgData, function (idx,Item) {
-                                let compCd = Item.ORDER_COMP_CD;
-                                if(compCd == checkArrCopy[i]) {
+                                let val = Item[checkValue];
+                                if(val == checkArrCopy[i]) {
                                     $("#" + gridId).pqGrid('deleteRow', {'rowIndx': Item.pq_ri});//rowIndx
                                 }
                             });
