@@ -430,64 +430,65 @@
         if(!fnIsEmpty(rowData)) {
             fnResetForm("PROCESS_POP_FORM");
             $("#processPopup").find(".popHeader").hide();
-
+            let divName = "";
             if(type == 'OUTSIDE_PROCESS_DIV') {
-                $("#processPopup").find(".from_outside").show();
+                divName = ".from_outside";
 
                 $(".from_outside > .pop_outside_div").removeClass("onClickStatus2");
-                $(".from_outside").find("#POP_OUTSIDE_"+rowData).addClass("onClickStatus2");
+                $(divName).find("#POP_OUTSIDE_"+rowData).addClass("onClickStatus2");
 
                 $("#PROCESS_POP_FORM").find("#ORDER_COMP_CD").val(rowData);
                 $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_outside");
             }else if(type == 'WAIT_MATERIAL_DIV') {
-                $("#processPopup").find(".from_material").show();
+                divName = ".from_material";
 
                 $(".from_material > .pop_material_div").removeClass("onClickStatus3");
-                $(".from_material").find("#POP_MATERIAL_"+rowData).addClass("onClickStatus3");
+                $(divName).find("#POP_MATERIAL_"+rowData).addClass("onClickStatus3");
 
                 $("#PROCESS_POP_FORM").find("#MATERIAL_TYPE").val(rowData);
                 $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_material");
             }else if(type == 'NON_COMPLETE') {
-                $("#processPopup").find(".from_non_complete").show();
+                divName = ".from_non_complete";
 
                 $(".from_non_complete > .non_complete_div").removeClass("onClickStatus4");
-                $(".from_non_complete").find("#NON_COMPLETE_"+rowData).addClass("onClickStatus4");
+                $(divName).find("#NON_COMPLETE_"+rowData).addClass("onClickStatus4");
 
                 $("#PROCESS_POP_FORM").find("#INNER_DUE_DT").val(rowData);
                 $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_nonComplete");
 
             }else if(type == 'DELAY') {
-                $("#processPopup").find(".from_delay").show();
+                divName = ".from_delay";
 
                 $(".from_delay > .delay_div").removeClass("onClickStatus2");
-                $(".from_delay").find("#DELAY_"+rowData).addClass("onClickStatus2");
+                $(divName).find("#DELAY_"+rowData).addClass("onClickStatus2");
 
                 $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_delay");
 
                 $("#PROCESS_POP_FORM").find("#ORDER_COMP_CD").val(rowData);
 
             }else if(type == 'DELAY_PROCESS') {
-                $("#processPopup").find(".from_delay_process").show();
+                divName = ".from_delay_process";
 
                 $(".from_delay_process > .delay_process_div").removeClass("onClickStatus2");
-                $(".from_delay_process").find("#DELAY_PROCESS_"+rowData).addClass("onClickStatus2");
+                $(divName).find("#DELAY_PROCESS_"+rowData).addClass("onClickStatus2");
 
                 $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_delayProcess");
 
                 $("#PROCESS_POP_FORM").find("#ORDER_COMP_CD").val(rowData);
             }else {
-                $("#processPopup").find(".from_main_grid").show();
+                divName = ".from_main_grid";
 
                 $("#processPopup").find("#processPop_comp_nm").text("(" + rowData.ORDER_COMP_NM + ")");
                 $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_company");
                 $(".from_main_grid > .pt-3").removeClass("onClickStatus");
-                $(".from_main_grid").find("#DIV_"+type).addClass("onClickStatus");
+                $(divName).find("#DIV_"+type).addClass("onClickStatus");
 
                 $("#PROCESS_POP_FORM").find("#ORDER_COMP_CD").val(rowData.ORDER_COMP_CD);
                 $("#PROCESS_POP_FORM").find("#PART_STATUS").val(getPartStatus(type));
 
                 settingDataUseId('processPopup',rowData);
             }
+            $("#processPopup").find(divName).show();
 
             let $processPopGridInstance = $("#processPop_grid").pqGrid('getInstance').grid;
             let Cols = $processPopGridInstance.Columns();
@@ -495,17 +496,15 @@
             Cols.alter(function () {
                 Cols.each(function (col) {
                     if(col.dataIndx == 'ORDER_DUE_DT') {
+                        col.hidden = true;
                         if(type == 'DELAY') {
                             col.hidden = false;
-                        }else {
-                            col.hidden = true;
                         }
                     }
                     if(col.dataIndx == 'INNER_DUE_DT') {
+                        col.hidden = false;
                         if(type == 'DELAY') {
                             col.hidden = true;
-                        }else {
-                            col.hidden = false;
                         }
                     }
                 });
@@ -633,10 +632,6 @@
                         }else {
                             resetPopCnt();
                         }
-                        // $("#processPop_grid").pqGrid("option", "dataModel.postData", function(ui){
-                        //     return fnFormToJsonArrayData('PROCESS_POP_FORM');
-                        // } );
-                        // $("#processPop_grid").pqGrid("refreshDataAndView");
                     }
                 }
             },parameter,'');
@@ -761,7 +756,7 @@
             },parameter,'');
         }
 
-        function calculatePercent(l, target) {
+        function calculatePercent(l, target) { // 퍼센트 비율계산
             var off = target - _.reduce(l, function(acc, x) { return acc + Math.round(x) }, 0);
             return _.chain(l).
             map(function(x, i) { return Math.round(x) + (off > i) - (i >= (l.length + off)) }).
@@ -1527,7 +1522,6 @@
         $("#detailCloseBtn").on("click",function(){
             $(".popupBackground").hide();
             if (processPopGrid.hasClass('pq-grid')) {
-                // processPopGrid.pqGrid('destroy');
                 fnResetForm("PROCESS_POP_FORM");
             }
         });

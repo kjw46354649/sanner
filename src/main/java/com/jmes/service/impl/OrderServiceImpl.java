@@ -2,6 +2,7 @@ package com.jmes.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.framework.innodale.component.CommonUtility;
 import com.framework.innodale.dao.InnodaleDao;
 import com.framework.innodale.entity.MessageType;
 import com.framework.innodale.entity.NotificationMessage;
@@ -666,10 +667,7 @@ public class OrderServiceImpl implements OrderService {
                 // 수정한 값만 업데이트 하도록 키값 추출
                 while (iterator.hasNext()) {
                     String key = (String)iterator.next();
-                    tempMap.put(key,hashMap.get(key));
-                    if(hashMap.get(key) == null) {
-                        tempMap.put(key,"");
-                    }
+                    tempMap.put(key, CommonUtility.nullToBlank((String) hashMap.get(key)));
                 }
                 tempMap.put("CONTROL_SEQ",hashMap.get("CONTROL_SEQ"));
                 tempMap.put("CONTROL_DETAIL_SEQ",hashMap.get("CONTROL_DETAIL_SEQ"));
@@ -1003,10 +1001,7 @@ public class OrderServiceImpl implements OrderService {
                 // 수정한 값만 업데이트 하도록 키값 추출
                 while (iterator.hasNext()) {
                     String key = (String)iterator.next();
-                    tempMap.put(key,hashMap.get(key));
-                    if(hashMap.get(key) == null) {
-                        tempMap.put(key,"");
-                    }
+                    tempMap.put(key, CommonUtility.nullToBlank((String) hashMap.get(key)));
                 }
                 tempMap.put("ORDER_SEQ",hashMap.get("ORDER_SEQ"));
                 tempMap.put("ORIGINAL_SIDE_QTY",hashMap.get("ORIGINAL_SIDE_QTY"));
@@ -1161,21 +1156,25 @@ public class OrderServiceImpl implements OrderService {
         model.addAttribute("message",message);
     }
 
+    // 작업건 생성시 케이스
+    // 1. 신규 생성
+    // 2. 기존 작업번호에 merge (단, 기존 작업의 상태가 확정,보류가 아니어야함)
+    // * 접수와 작업건은 N:M의 관계 가능. 접수1개에 작업N / 접수N: 작업1 등등
+    // 하나의 작업번호로 묶이기 위해서는 하기 항목 모두 동일해야함
+    // 작업형태, 소재사급여부, 주요검사, 대칭여부, 규격, 소재형태, 소재종류, 표면처리, 특수처리, 가공납기, 파트개수
+
     @Override
     public void validationCheckBeforeCreateControl(Model model, Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
-        String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
 
-        ArrayList<HashMap<String, Object>> oldList = null;
         ArrayList<HashMap<String, Object>> updateList = null;
         ArrayList<HashMap<String, Object>> controlNumArr = null;
         ArrayList<HashMap<String, Object>> resultList = new ArrayList<>();
         HashMap<String, Object> groupMap = new HashMap<>();
 
         boolean flag = false;
-        String message = "";
 
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
@@ -1186,15 +1185,15 @@ public class OrderServiceImpl implements OrderService {
         }
 
         for(int i=0;i<updateList.size();i++) {
-            HashMap<String, Object> tempMap = updateList.get(i);
-            String controlNum = (String) tempMap.get("CONTROL_NUM");
+            String controlNum = (String) updateList.get(i).get("CONTROL_NUM");
             ArrayList<HashMap<String, Object>> groupList = new ArrayList<>();
             if(groupMap.containsKey(controlNum)) {
                 groupList = (ArrayList<HashMap<String, Object>>) groupMap.get(controlNum);
             }
-            groupList.add(tempMap);
+            groupList.add(updateList.get(i));
             groupMap.put(controlNum,groupList);
         }
+
         if (updateList != null && updateList.size() > 0) {
             HashMap<String, Object> duplMap = new HashMap<>();
             duplMap.put("queryId", "orderMapper.selectCheckControlDuplicateVer2");
@@ -1203,8 +1202,7 @@ public class OrderServiceImpl implements OrderService {
 
             for(int j=0;j<updateList.size();j++) {
                 HashMap<String, Object> hashMap = updateList.get(j);
-                hashMap.put("LOGIN_USER_ID",userId);
-                hashMap.put("VALIDATION_RESULT", "SUCCESS");
+                String validationResult = "SUCCESS";
                 String controlNum = (String) hashMap.get("CONTROL_NUM");
 
                 if (hashMap.containsKey("REGIST_NUM") && hashMap.containsKey("CONTROL_NUM")) {
@@ -1219,7 +1217,7 @@ public class OrderServiceImpl implements OrderService {
                         String controlStatus = String.valueOf(controlMap.get("CONTROL_STATUS"));
                         if(controlStatus.equals("ORD001") || controlStatus.equals("ORD005")) {
                             flag = true;
-                            hashMap.put("VALIDATION_RESULT", "RS_EXISTS");
+                            validationResult = "RS_EXISTS";
                         }else {
                             hashMap.put("MERGE_CONTROL_SEQ",controlMap.get("CONTROL_SEQ"));
                             hashMap.put("MERGE_CONTROL_DETAIL_SEQ",controlMap.get("CONTROL_DETAIL_SEQ"));
@@ -1234,17 +1232,13 @@ public class OrderServiceImpl implements OrderService {
 
                     String[] checkColumn = {"WORK_TYPE", "MATERIAL_SUPPLY_YN","MAIN_INSPECTION","SAME_SIDE_YN","SIZE_TXT","MATERIAL_DETAIL","MATERIAL_KIND","SURFACE_TREAT","SPECIAL_TREATMENT","PART_NUM","INNER_DUE_DT"};
                     if(hashMap.get("MERGE_CONTROL_SEQ") != null) {
-
-                        if(hashMap.get("VALIDATION_RESULT").equals("SUCCESS")) {
+                        if(validationResult.equals("SUCCESS")) {
                             Boolean mergeFlag = false;
 
                             for(String column : checkColumn) {
-                                if(controlMap.get(column) == null) {
-                                    controlMap.put(column,"");
-                                }
-                                if(hashMap.get(column) == null) {
-                                    hashMap.put(column,"");
-                                }
+                                controlMap.put(column, CommonUtility.nullToBlank((String) controlMap.get(column)));
+                                hashMap.put(column, CommonUtility.nullToBlank((String) hashMap.get(column)));
+
                                 if(!controlMap.get(column).equals(hashMap.get(column)) && !mergeFlag) {
                                     mergeFlag = true;
                                 }
@@ -1252,9 +1246,9 @@ public class OrderServiceImpl implements OrderService {
 
                             if(mergeFlag) {
                                 flag = true;
-                                hashMap.put("VALIDATION_RESULT", "RS_EXISTS2");
+                                validationResult = "RS_EXISTS2";
                             }else {
-                                hashMap.put("VALIDATION_RESULT", "RS_MERGE");
+                                validationResult = "RS_MERGE";
                             }
                         }
                     }else {
@@ -1262,16 +1256,13 @@ public class OrderServiceImpl implements OrderService {
                         if(mergeList.size() >= 2) {
                             for(int i=0;i<mergeList.size();i++) {
                                 HashMap<String, Object> temp = mergeList.get(i);
-                                if(temp.get("ROW_NUM") != hashMap.get("ROW_NUM") && hashMap.get("VALIDATION_RESULT").equals("SUCCESS")) {
+                                if(temp.get("ROW_NUM") != hashMap.get("ROW_NUM") && validationResult.equals("SUCCESS")) {
                                     Boolean mergeFlag = false;
 
                                     for(String column : checkColumn) {
-                                        if(temp.get(column) == null) {
-                                            temp.put(column,"");
-                                        }
-                                        if(hashMap.get(column) == null) {
-                                            hashMap.put(column,"");
-                                        }
+                                        temp.put(column, CommonUtility.nullToBlank((String) temp.get(column)));
+                                        hashMap.put(column, CommonUtility.nullToBlank((String) hashMap.get(column)));
+
                                         if(!temp.get(column).equals(hashMap.get(column)) && !mergeFlag) {
                                             mergeFlag = true;
                                         }
@@ -1279,16 +1270,16 @@ public class OrderServiceImpl implements OrderService {
 
                                     if(mergeFlag) {
                                         flag = true;
-                                        hashMap.put("VALIDATION_RESULT", "RS_EXISTS2");
+                                        validationResult = "RS_EXISTS2";
                                     }else {
-                                        hashMap.put("VALIDATION_RESULT", "RS_MERGE");
+                                        validationResult = "RS_MERGE";
                                     }
                                 }
                             }
                         }
-
                     }
                 }
+                hashMap.put("VALIDATION_RESULT", validationResult);
                 resultList.add(hashMap);
             }
         }
@@ -1298,7 +1289,6 @@ public class OrderServiceImpl implements OrderService {
         }
 
         model.addAttribute("flag", flag);
-        model.addAttribute("message", message);
     }
 
     @Override
@@ -1311,8 +1301,6 @@ public class OrderServiceImpl implements OrderService {
         Map<String, Object> tempMap = new HashMap<String, Object>();
         tempMap.put("IN_UID", uuid);
 
-        ArrayList<HashMap<String, Object>> oldList = null;
-        ArrayList<HashMap<String, Object>> addList = null;
         ArrayList<HashMap<String, Object>> updateList = null;
 
         boolean flag = false;
@@ -1322,35 +1310,9 @@ public class OrderServiceImpl implements OrderService {
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-        if (jsonMap.containsKey("oldList"))
-            oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
-
-        if (jsonMap.containsKey("addList"))
-            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
-
         if (jsonMap.containsKey("updateList"))
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
 
-
-//        if (addList != null && addList.size() > 0) {
-//            for (HashMap<String, Object> hashMap : addList) {
-//                hashMap.put("LOGIN_USER_ID", userId);
-//                hashMap.put("IN_UID",uuid);
-//
-//                if (hashMap.containsKey("REGIST_NUM") && hashMap.containsKey("CONTROL_NUM")) {
-////                    hashMap.put("queryId", "orderMapper.selectControlNumExists");
-//                    hashMap.put("queryId", "orderMapper.selectCheckControlDuplicate");
-//                    if(this.orderDao.getFlag(hashMap)) {
-//                        flag = true;
-//                        message = "이미 존재하는 작업지시번호입니다.";
-//                    }
-//
-//                    hashMap.put("queryId", "orderMapper.createControlExcel");
-//                    this.innodaleDao.create(hashMap);
-//
-//                }
-//            }
-//        }
 
         if (updateList != null && updateList.size() > 0 && !flag) {
             for (HashMap<String, Object> hashMap : updateList) {
