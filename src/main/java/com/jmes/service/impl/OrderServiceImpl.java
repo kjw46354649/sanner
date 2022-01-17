@@ -667,7 +667,10 @@ public class OrderServiceImpl implements OrderService {
                 // 수정한 값만 업데이트 하도록 키값 추출
                 while (iterator.hasNext()) {
                     String key = (String)iterator.next();
-                    tempMap.put(key, CommonUtility.nullToBlank((String) hashMap.get(key)));
+                    tempMap.put(key,hashMap.get(key));
+                    if(hashMap.get(key) == null) {
+                        tempMap.put(key,"");
+                    }
                 }
                 tempMap.put("CONTROL_SEQ",hashMap.get("CONTROL_SEQ"));
                 tempMap.put("CONTROL_DETAIL_SEQ",hashMap.get("CONTROL_DETAIL_SEQ"));
@@ -1236,8 +1239,12 @@ public class OrderServiceImpl implements OrderService {
                             Boolean mergeFlag = false;
 
                             for(String column : checkColumn) {
-                                controlMap.put(column, CommonUtility.nullToBlank((String) controlMap.get(column)));
-                                hashMap.put(column, CommonUtility.nullToBlank((String) hashMap.get(column)));
+                                if(controlMap.get(column) == null) {
+                                    controlMap.put(column,"");
+                                }
+                                if(hashMap.get(column) == null) {
+                                    hashMap.put(column,"");
+                                }
 
                                 if(!controlMap.get(column).equals(hashMap.get(column)) && !mergeFlag) {
                                     mergeFlag = true;
@@ -1260,9 +1267,12 @@ public class OrderServiceImpl implements OrderService {
                                     Boolean mergeFlag = false;
 
                                     for(String column : checkColumn) {
-                                        temp.put(column, CommonUtility.nullToBlank((String) temp.get(column)));
-                                        hashMap.put(column, CommonUtility.nullToBlank((String) hashMap.get(column)));
-
+                                        if(temp.get(column) == null) {
+                                            temp.put(column,"");
+                                        }
+                                        if(hashMap.get(column) == null) {
+                                            hashMap.put(column,"");
+                                        }
                                         if(!temp.get(column).equals(hashMap.get(column)) && !mergeFlag) {
                                             mergeFlag = true;
                                         }

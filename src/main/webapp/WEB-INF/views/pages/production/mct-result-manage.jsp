@@ -1322,8 +1322,6 @@
                 // });
                 // $("#cam_work_manage_pop_form").find("input[name*='" + index + "']").val("");
             }
-            // console.log(index);
-            // console.log(disableFlag);
             $("#cam_work_manage_pop_form").find("input[name*='" + index + "']").attr('readonly', disableFlag);
             $("#cam_work_manage_pop_form").find("input[name*='" + index + "']").attr('disabled', disableFlag);
             $("#cam_work_manage_pop_form").find("select[name*='" + index + "']").attr('readonly', disableFlag);
