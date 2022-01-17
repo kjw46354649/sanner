@@ -760,6 +760,11 @@
                     }
                 }
             },
+            complete: function () {
+                // let data = $createControlGrid.pqGrid('option', 'dataModel.data');
+                // let totalRecords = data.length;
+                // $('#CREATE_CONTROL_GRID_RECORDS').html(totalRecords);
+            },
             render: function () {
                 this.option('freezeCols', 8);
                 // 필터 옵션 생성

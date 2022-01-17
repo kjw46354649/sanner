@@ -1004,7 +1004,10 @@ public class OrderServiceImpl implements OrderService {
                 // 수정한 값만 업데이트 하도록 키값 추출
                 while (iterator.hasNext()) {
                     String key = (String)iterator.next();
-                    tempMap.put(key, CommonUtility.nullToBlank((String) hashMap.get(key)));
+                    tempMap.put(key,hashMap.get(key));
+                    if(hashMap.get(key) == null) {
+                        tempMap.put(key,"");
+                    }
                 }
                 tempMap.put("ORDER_SEQ",hashMap.get("ORDER_SEQ"));
                 tempMap.put("ORIGINAL_SIDE_QTY",hashMap.get("ORIGINAL_SIDE_QTY"));
