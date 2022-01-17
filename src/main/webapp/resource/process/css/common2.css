@@ -124,6 +124,20 @@ div.rounded {background: #fff;}
 	background-image: linear-gradient(160deg, #b9eaff 0%, #f3fbff 100%) !important;
 	color: black !important;
 }
-.onClickStatus2 { background-image: linear-gradient(160deg, #209cff 0%, #68e0cf 100%) !important;}
-.onClickStatus3 { background-image: linear-gradient(160deg, #9e6afb 0%, #dabdf3 100%) !important;}
-.onClickStatus4 { background: #72c2ff !important;}
+.pop_outside_div.onClickStatus, .delay_process_div.onClickStatus, .delay_div.onClickStatus {
+	border:none !important;
+	background-image: linear-gradient(160deg, #209cff 0%, #68e0cf 100%) !important;
+}
+.pop_material_div.onClickStatus {
+	border:none !important;
+	background-image: linear-gradient(160deg, #9e6afb 0%, #dabdf3 100%) !important;
+}
+.non_complete_div.onClickStatus {
+	background: #72c2ff !important;
+}
+
+
+
+/*.onClickStatus2 { background-image: linear-gradient(160deg, #209cff 0%, #68e0cf 100%) !important;}*/
+/*.onClickStatus3 { background-image: linear-gradient(160deg, #9e6afb 0%, #dabdf3 100%) !important;}*/
+/*.onClickStatus4 { background: #72c2ff !important;}*/

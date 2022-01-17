@@ -104,26 +104,6 @@
                                     AND Y.PART_STATUS = 'PRO002'
                                     AND X.ORDER_COMP_CD = A.ORDER_COMP_CD
                                  ) AS ASSEMBLE_QTY,
-                                 /*(SELECT COUNT(*)
-                                  FROM TBL_CONTROL X
-                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.INNER_WORK_FINISH_DT IS NULL
-                                           INNER JOIN TBL_INSIDE_OUT Z ON Y.CONTROL_SEQ = Z.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ AND Z.OUT_STATUS = 'OUT001'
-                                  WHERE X.DEL_YN = 'N'
-                                    AND X.CONTROL_STATUS IN ('ORD001','ORD003')
-                                    AND X.OUT_FINISH_DT IS NULL
-                                    AND Y.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016','PRO017', 'PRO018', 'PRO019', 'PRO020')
-                                    AND X.ORDER_COMP_CD = A.ORDER_COMP_CD
-                                 ) AS MATCH_STOCK_CNT,
-                                 (SELECT SUM(SF_GET_CONTROL_PART_QTY(Y.CONTROL_SEQ,Y.CONTROL_DETAIL_SEQ))
-                                  FROM TBL_CONTROL X
-                                           INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.INNER_WORK_FINISH_DT IS NULL
-                                           INNER JOIN TBL_INSIDE_OUT Z ON Y.CONTROL_SEQ = Z.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ AND Z.OUT_STATUS = 'OUT001'
-                                  WHERE X.DEL_YN = 'N'
-                                    AND X.CONTROL_STATUS IN ('ORD001','ORD003')
-                                    AND X.OUT_FINISH_DT IS NULL
-                                    AND Y.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016','PRO017', 'PRO018', 'PRO019', 'PRO020')
-                                    AND X.ORDER_COMP_CD = A.ORDER_COMP_CD
-                                 ) AS MATCH_STOCK_QTY,*/
                                  (SELECT MIN(Z.ORDER_DUE_DT)
                                   FROM TBL_CONTROL X
                                            INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.PART_STATUS IS NOT NULL

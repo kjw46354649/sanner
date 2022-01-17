@@ -289,17 +289,17 @@
                         <input type="hidden" name="PART_STATUS" id="PART_STATUS" value="">
                         <input type="hidden" name="INNER_DUE_DT" id="INNER_DUE_DT" value="">
                     </form>
-                    <div id="processPopOutsideDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_outside" style="display: none;height: 13.5%;">
+                    <div id="processPopOutsideDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_outside popTopDiv" style="display: none;height: 13.5%;">
                     </div>
-                    <div id="processPopMaterialDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_material" style="display: none;">
+                    <div id="processPopMaterialDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_material popTopDiv" style="display: none;">
                     </div>
-                    <div id="processPopDelayDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_delay" style="display: none;">
+                    <div id="processPopDelayDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_delay popTopDiv" style="display: none;">
                     </div>
-                    <div id="processPopDelayProcessDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_delay_process" style="display: none;">
+                    <div id="processPopDelayProcessDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_delay_process popTopDiv" style="display: none;">
                     </div>
-                    <div id="processPopNonCompleteDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_non_complete" style="display: none;">
+                    <div id="processPopNonCompleteDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 from_non_complete popTopDiv" style="display: none;">
                     </div>
-                    <div id="processPopMainGridDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 display_f text-center p-1 from_main_grid" style="display: none;">
+                    <div id="processPopMainGridDiv" class="popHeader h10 w100 box-scroll-x left_wrap1 display_f text-center p-1 from_main_grid popTopDiv" style="display: none;">
                         <div id="DIV_TOTAL" class="w10 h100 status1 pt-3">
                             <p>계</p>
                             <p id="TOTAL_CNT"></p>
@@ -424,62 +424,62 @@
             $(target).find("#"+key).text(value);
         });
     }
-
+    let refreshPopGrid = function () {
+        $("#processPop_grid").pqGrid("option", "dataModel.postData", function(ui){
+            return fnFormToJsonArrayData('PROCESS_POP_FORM');
+        } );
+        $("#processPop_grid").pqGrid("refreshDataAndView");
+    }
     let openProcessPopup = function(type,rowData) {
         if(!fnIsEmpty(rowData)) {
             fnResetForm("PROCESS_POP_FORM");
             $("#processPopup").find(".popHeader").hide();
             let divName = "";
+            let queryId = "";
+
+            $(".popTopDiv").find("div").removeClass("onClickStatus");
             if(type == 'OUTSIDE_PROCESS_DIV') {
                 divName = ".from_outside";
+                queryId = "process.selectProcessPop_outside";
 
-                $(".from_outside > .pop_outside_div").removeClass("onClickStatus2");
-                $(divName).find("#POP_OUTSIDE_"+rowData).addClass("onClickStatus2");
+                $(divName).find("#POP_OUTSIDE_"+rowData).addClass("onClickStatus");
 
                 $("#PROCESS_POP_FORM").find("#ORDER_COMP_CD").val(rowData);
-                $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_outside");
             }else if(type == 'WAIT_MATERIAL_DIV') {
                 divName = ".from_material";
+                queryId = "process.selectProcessPop_material";
 
-                $(".from_material > .pop_material_div").removeClass("onClickStatus3");
-                $(divName).find("#POP_MATERIAL_"+rowData).addClass("onClickStatus3");
+                $(divName).find("#POP_MATERIAL_"+rowData).addClass("onClickStatus");
 
                 $("#PROCESS_POP_FORM").find("#MATERIAL_TYPE").val(rowData);
-                $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_material");
             }else if(type == 'NON_COMPLETE') {
                 divName = ".from_non_complete";
+                queryId = "process.selectProcessPop_nonComplete";
 
-                $(".from_non_complete > .non_complete_div").removeClass("onClickStatus4");
-                $(divName).find("#NON_COMPLETE_"+rowData).addClass("onClickStatus4");
+                $(divName).find("#NON_COMPLETE_"+rowData).addClass("onClickStatus");
 
                 $("#PROCESS_POP_FORM").find("#INNER_DUE_DT").val(rowData);
-                $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_nonComplete");
 
             }else if(type == 'DELAY') {
                 divName = ".from_delay";
+                queryId = "process.selectProcessPop_delay";
 
-                $(".from_delay > .delay_div").removeClass("onClickStatus2");
-                $(divName).find("#DELAY_"+rowData).addClass("onClickStatus2");
-
-                $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_delay");
+                $(divName).find("#DELAY_"+rowData).addClass("onClickStatus");
 
                 $("#PROCESS_POP_FORM").find("#ORDER_COMP_CD").val(rowData);
 
             }else if(type == 'DELAY_PROCESS') {
                 divName = ".from_delay_process";
+                queryId = "process.selectProcessPop_delayProcess";
 
-                $(".from_delay_process > .delay_process_div").removeClass("onClickStatus2");
-                $(divName).find("#DELAY_PROCESS_"+rowData).addClass("onClickStatus2");
-
-                $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_delayProcess");
+                $(divName).find("#DELAY_PROCESS_"+rowData).addClass("onClickStatus");
 
                 $("#PROCESS_POP_FORM").find("#ORDER_COMP_CD").val(rowData);
             }else {
                 divName = ".from_main_grid";
+                queryId = "process.selectProcessPop_company";
 
                 $("#processPopup").find("#processPop_comp_nm").text("(" + rowData.ORDER_COMP_NM + ")");
-                $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_company");
-                $(".from_main_grid > .pt-3").removeClass("onClickStatus");
                 $(divName).find("#DIV_"+type).addClass("onClickStatus");
 
                 $("#PROCESS_POP_FORM").find("#ORDER_COMP_CD").val(rowData.ORDER_COMP_CD);
@@ -487,6 +487,7 @@
 
                 settingDataUseId('processPopup',rowData);
             }
+            $("#PROCESS_POP_FORM").find("#queryId").val(queryId);
             $("#processPopup").find(divName).show();
 
             let $processPopGridInstance = $("#processPop_grid").pqGrid('getInstance').grid;
@@ -509,10 +510,7 @@
                 });
             });
 
-            $("#processPop_grid").pqGrid("option", "dataModel.postData", function(ui){
-                return fnFormToJsonArrayData('PROCESS_POP_FORM');
-            } );
-            $("#processPop_grid").pqGrid("refreshDataAndView");
+            refreshPopGrid();
 
             $("#processPopup").show();
         }
@@ -1274,10 +1272,7 @@
                     let cellData = ui.cellData;
                     let cls = '';
                     let style = '';
-                    if(rowData.TYPE == 'BEFORE') {
-                        cls = 'bg-lightgray';
-                        style = 'color:#f81414;';
-                    }else if(rowData.TYPE == 'AFEW') {
+                    if(rowData.TYPE == 'BEFORE' || rowData.TYPE == 'AFEW') {
                         cls = 'bg-lightgray';
                         style = 'color:#f81414;';
                     }else if(rowData.TYPE == 'TODAY') {
@@ -1531,10 +1526,8 @@
 
             $("#PROCESS_POP_FORM").find("#PART_STATUS").val(getPartStatus(type));
             $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_company");
-            processPopGrid.pqGrid("option", "dataModel.postData", function(ui){
-                return fnFormToJsonArrayData('PROCESS_POP_FORM');
-            } );
-            processPopGrid.pqGrid("refreshDataAndView");
+
+            refreshPopGrid();
         })
         $("#processPopMapBtn").on("click",function(){
             let gFileSeq = $("#PROCESS_POP_FORM").find("#IMG_GFILE_SEQ").val();
@@ -1565,30 +1558,23 @@
         });
 
         $(document).on("click",".pop_outside_div",function(e){
-            $(".from_outside > .pop_outside_div").removeClass("onClickStatus2");
-            $(".from_outside").find("#"+e.currentTarget.id).addClass("onClickStatus2");
+            $(".from_outside > .pop_outside_div").removeClass("onClickStatus");
+            $(".from_outside").find("#"+e.currentTarget.id).addClass("onClickStatus");
 
             $("#PROCESS_POP_FORM").find("#ORDER_COMP_CD").val($(this).data('target'));
             $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_outside");
 
-            $("#processPop_grid").pqGrid("option", "dataModel.postData", function(ui){
-                return fnFormToJsonArrayData('PROCESS_POP_FORM');
-            } );
-            $("#processPop_grid").pqGrid("refreshDataAndView");
-
+            refreshPopGrid();
         });
+
         $(document).on("click",".pop_material_div",function(e){
-            $(".from_material > .pop_material_div").removeClass("onClickStatus3");
-            $(".from_material").find("#"+e.currentTarget.id).addClass("onClickStatus3");
+            $(".from_material > .pop_material_div").removeClass("onClickStatus");
+            $(".from_material").find("#"+e.currentTarget.id).addClass("onClickStatus");
 
             $("#PROCESS_POP_FORM").find("#MATERIAL_TYPE").val($(this).data('target'));
             $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_material");
 
-
-            $("#processPop_grid").pqGrid("option", "dataModel.postData", function(ui){
-                return fnFormToJsonArrayData('PROCESS_POP_FORM');
-            } );
-            $("#processPop_grid").pqGrid("refreshDataAndView");
+            refreshPopGrid();
         });
     });
 </script>
