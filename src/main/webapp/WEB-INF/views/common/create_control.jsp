@@ -216,7 +216,12 @@
                     <!--도면삽입-->
                     <img id="create_control_img" src="/resource/main/blank.jpg" style="width: 100%;height: 100%;max-height: inherit;max-width: inherit;">
                 </div>
-                <div id="CREATE_CONTROL_GRID"></div>
+                <div id="grid_top_div" style="width: 100%;">
+                    <div id="CREATE_CONTROL_GRID"></div>
+                    <div class="right_sort">
+                        전체 조회 건수 (Total : <span id="CREATE_CONTROL_GRID_RECORDS" style="color: #00b3ee">0</span>)
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -761,9 +766,9 @@
                 }
             },
             complete: function () {
-                // let data = $createControlGrid.pqGrid('option', 'dataModel.data');
-                // let totalRecords = data.length;
-                // $('#CREATE_CONTROL_GRID_RECORDS').html(totalRecords);
+                let data = $createControlGrid.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#CREATE_CONTROL_GRID_RECORDS').html(totalRecords);
             },
             render: function () {
                 this.option('freezeCols', 8);
@@ -1505,6 +1510,7 @@
                 // if(!$('#MAIN_COLUMN').prop('checked')) {
                 //     $('#MAIN_COLUMN').trigger('click');
                 // }
+                $("#grid_top_div").css({width:'46%'});
                 var width = document.getElementsByClassName("pq-cont-right")[1].scrollWidth
 
                 $("#main_column_draw_div").show();
@@ -1516,6 +1522,7 @@
                 // if($('#MAIN_COLUMN').prop('checked')) {
                 //     $('#MAIN_COLUMN').trigger('click');
                 // }
+                $("#grid_top_div").css({width:'100%'});
                 $("#main_column_draw_div").hide();
                 $createControlGrid.pqGrid('option', 'width', '100%').pqGrid('refresh');
             }
