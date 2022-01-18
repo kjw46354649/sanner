@@ -367,6 +367,7 @@
         <choose>
             <when test="CONTROL_NUM != null and CONTROL_NUM !=''">
                 AND A.CONTROL_NUM = #{CONTROL_NUM}
+                AND B.WORK_TYPE != 'WTP050'
             </when>
             <otherwise>
                 AND B.CONTROL_SEQ = #{CONTROL_SEQ}
