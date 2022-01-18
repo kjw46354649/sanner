@@ -36,11 +36,21 @@
                                     </span>
                                 </div>
                                 <div class="ml-auto">
-                                    <span class="timer">
-                                        <button type="button" id="business_refresh_timer"><img src="/resource/asset/images/common/btn_stopwatch.png" alt="타이머"></button>
+                                    <span class="timer mr-10">
+                                        <button class="mr-5" type="button" id="business_refresh_timer" style="cursor:default;">
+                                            <img src="/resource/asset/images/common/btn_stopwatch.png" alt="타이머">
+                                        </button>
+                                        <select class="wd_70" name="timer_setting" id="timer_setting">
+                                            <option value="0">미설정</option>
+                                            <option value="1">1분</option>
+                                            <option value="5">5분</option>
+                                            <option value="10">10분</option>
+                                        </select>
                                     </span>
                                     <span class="refresh">
-                                        <button type="button" id="business_status_refresh"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button>
+                                        <button type="button" id="business_status_refresh">
+                                            <img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침">
+                                        </button>
                                     </span>
                                     <span class="slt_wrap ml-10">
                                         <label for="ORDER_COMP_CD">발주처</label>
@@ -91,28 +101,6 @@
     </div>
 </div>
 
-<div id="timer_pop" style="display: none;" >
-    <div class="layerPopup" style="width: 200px;height: 150px;z-index:9999;margin: inherit;top: 40px;left: 26%;font-size: 14px;">
-        <div class="mb05">
-            <input type="radio" id="none_set" name="timer_setting" value="0"
-                   checked>
-            <label for="none_set">미설정</label>
-        </div>
-        <div class="mb05">
-            <input type="radio" id="min_1" name="timer_setting" value="1">
-            <label for="min_1">1분</label>
-        </div>
-        <div class="mb05">
-            <input type="radio" id="min_5" name="timer_setting" value="5">
-            <label for="min_5">5분</label>
-        </div>
-        <div class="mb05">
-            <input type="radio" id="min_10" name="timer_setting" value="10">
-            <label for="min_10">10분</label>
-        </div>
-        <button type="button" class="pop_close mt-10 mr-8" id="close_timerPop">닫기</button>
-    </div>
-</div>
 <script type="text/javascript">
 
     let $businessOutgoingListGrid;
@@ -284,7 +272,7 @@
                     });
                 }
             },
-            {title: '작업지시번호', align: 'left', minWidth: 150, dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', align: 'center', minWidth: 130, dataIndx: 'CONTROL_NUM'},
             {
                 title: '', minWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
@@ -301,7 +289,7 @@
             },
             {title: '형태', dataIndx: 'WORK_TYPE_NM', minWidth: 45},
             {title: '수량', dataIndx: 'ORDER_QTY', minWidth: 30},
-            {title: '접수번호', dataIndx: 'REGIST_NUM', minWidth: 130},
+            {title: '접수번호', dataIndx: 'REGIST_NUM', minWidth: 150},
             // {title: '발주번호', dataIndx: 'ORDER_NUM', minWidth: 90},
             // {title: '도면번호', align: 'left', width: 128, dataIndx: 'DRAWING_NUM'},
             {title: '진행상태', dataIndx: 'PART_STATUS', width: 72},
@@ -577,25 +565,23 @@
         $('#business_status_refresh').on('click', function () {
             refreshAllData();
         });
-        $('#business_refresh_timer').on('click', function () {
-            $("#timer_pop").show();
-        });
-        $('#close_timerPop').on('click', function () {
-            $("#timer_pop").hide();
-        });
 
         function refreshAllData() {
-            $businessOutgoingListGrid.pqGrid('refreshDataAndView');
-            $businessEmergencyListGrid.pqGrid('refreshDataAndView');
-            $businessOverOrderListGrid.pqGrid('refreshDataAndView');
             businessCalendar.refetchEvents();
             var today = new Date();
             businessCalendar.gotoDate(today);
+
+            $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker('setDate', today);
+            $businessOutgoingListGrid.pqGrid('option', 'dataModel.postData', function () {
+                return (fnFormToJsonArrayData('#business_status_search_form'));
+            });
+            $businessOutgoingListGrid.pqGrid('refreshDataAndView');
+            $businessEmergencyListGrid.pqGrid('refreshDataAndView');
+            $businessOverOrderListGrid.pqGrid('refreshDataAndView');
         }
 
         let timerId = 0;
-        $('input[name="timer_setting"]').change(function() {
-            // 모든 radio를 순회한다.
+        $('#timer_setting').on('change', function () {
             let selectVal = $(this).val();
             let timer = 0;
             switch (selectVal) {

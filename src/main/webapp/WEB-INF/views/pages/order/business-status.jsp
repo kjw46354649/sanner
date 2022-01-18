@@ -23,11 +23,21 @@
                                     </span>
                                 </div>
                                 <div class="ml-auto">
-                                    <span class="timer">
-                                        <button type="button" id="business_refresh_timer"><img src="/resource/asset/images/common/btn_stopwatch.png" alt="타이머"></button>
+                                    <span class="timer mr-10">
+                                        <button class="mr-5" type="button" id="business_refresh_timer" style="cursor:default;">
+                                            <img src="/resource/asset/images/common/btn_stopwatch.png" alt="타이머">
+                                        </button>
+                                        <select class="wd_70" name="timer_setting" id="timer_setting">
+                                            <option value="0">미설정</option>
+                                            <option value="1">1분</option>
+                                            <option value="5">5분</option>
+                                            <option value="10">10분</option>
+                                        </select>
                                     </span>
                                     <span class="refresh">
-                                        <button type="button" id="business_status_refresh"><img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침"></button>
+                                        <button type="button" id="business_status_refresh">
+                                            <img src="/resource/asset/images/common/btn_refresh.png" alt="새로고침">
+                                        </button>
                                     </span>
                                     <span class="slt_wrap ml-10">
                                         <label for="ORDER_COMP_CD">발주처</label>
@@ -78,28 +88,6 @@
     </div>
 </div>
 
-<div id="timer_pop" style="display: none;" >
-    <div class="layerPopup" style="width: 200px;height: 150px;z-index:9999;margin: inherit;top: 40px;left: 26%;font-size: 14px;">
-        <div class="mb05">
-            <input type="radio" id="none_set" name="timer_setting" value="0"
-                   checked>
-            <label for="none_set">미설정</label>
-        </div>
-        <div class="mb05">
-            <input type="radio" id="min_1" name="timer_setting" value="1">
-            <label for="min_1">1분</label>
-        </div>
-        <div class="mb05">
-            <input type="radio" id="min_5" name="timer_setting" value="5">
-            <label for="min_5">5분</label>
-        </div>
-        <div class="mb05">
-            <input type="radio" id="min_10" name="timer_setting" value="10">
-            <label for="min_10">10분</label>
-        </div>
-        <button type="button" class="pop_close mt-10 mr-8" id="close_timerPop">닫기</button>
-    </div>
-</div>
 <script type="text/javascript">
 
     let $businessOutgoingListGrid;
@@ -142,6 +130,17 @@
                 });
                 $businessOutgoingListGrid.pqGrid('refreshDataAndView');
                 // info.dayEl.style.backgroundColor = 'red';
+            }
+            , eventClick : function(info) {
+                if(!fnIsEmpty(info.event.start)) {
+                    let clickDate = new Date(info.event.start);
+
+                    $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker('setDate', clickDate);
+                    $businessOutgoingListGrid.pqGrid('option', 'dataModel.postData', function () {
+                        return (fnFormToJsonArrayData('#business_status_search_form'));
+                    });
+                    $businessOutgoingListGrid.pqGrid('refreshDataAndView');
+                }
             }
             , selectable: true
             , defaultDate : TODAY // 기준일자
@@ -219,7 +218,7 @@
                     });
                 }
             },
-            {title: '작업지시번호', width: 135, dataIndx: 'CONTROL_NUM'},
+            {title: '작업지시번호', width: 120, dataIndx: 'CONTROL_NUM', align: 'center'},
             {
                 title: '', minWidth: 30, dataIndx: 'DRAWING_NUM_BUTTON',
                 render: function (ui) {
@@ -509,25 +508,27 @@
             businessCalendar.refetchEvents();
         });
 
-        $('#business_status_refresh').on('click', function () {
-            $businessOutgoingListGrid.pqGrid('refreshDataAndView');
-            $businessEmergencyListGrid.pqGrid('refreshDataAndView');
-            $businessOverOrderListGrid.pqGrid('refreshDataAndView');
+        function refreshAllData() {
             businessCalendar.refetchEvents();
             var today = new Date();
             businessCalendar.gotoDate(today);
-        });
 
-        $('#business_refresh_timer').on('click', function () {
-            $("#timer_pop").show();
-        });
-        $('#close_timerPop').on('click', function () {
-            $("#timer_pop").hide();
+            $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker('setDate', today);
+            $businessOutgoingListGrid.pqGrid('option', 'dataModel.postData', function () {
+                return (fnFormToJsonArrayData('#business_status_search_form'));
+            });
+
+            $businessOutgoingListGrid.pqGrid('refreshDataAndView');
+            $businessEmergencyListGrid.pqGrid('refreshDataAndView');
+            $businessOverOrderListGrid.pqGrid('refreshDataAndView');
+        }
+
+        $('#business_status_refresh').on('click', function () {
+            refreshAllData();
         });
 
         let timerId = 0;
-        $('input[name="timer_setting"]').change(function() {
-            // 모든 radio를 순회한다.
+        $('#timer_setting').on('change', function () {
             let selectVal = $(this).val();
             let timer = 0;
             switch (selectVal) {
@@ -545,15 +546,23 @@
             clearInterval(timerId);
             if(selectVal !== "0") {
                 timerId = setInterval(function () {
-                    $businessOutgoingListGrid.pqGrid('refreshDataAndView');
-                    $businessEmergencyListGrid.pqGrid('refreshDataAndView');
-                    $businessOverOrderListGrid.pqGrid('refreshDataAndView');
-                    businessCalendar.refetchEvents();
-                    var today = new Date();
-                    businessCalendar.gotoDate(today);
+                    refreshAllData();
                 },timer)
             }
         });
+
+        let setIntervalTimer;
+        let refreshTimer = function () {
+            let selVal = 30;
+            let timesec = 1000;//1초
+            setIntervalTimer = setInterval(function() {
+                let curTime = new Date();
+                if(curTime.getHours() == 0 && curTime.getMinutes() == 0) {
+                    refreshAllData();
+                }
+            }, timesec*selVal);
+        };
+        refreshTimer();
     });
 
 </script>
