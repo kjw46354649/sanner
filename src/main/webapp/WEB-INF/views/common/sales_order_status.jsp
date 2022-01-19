@@ -569,6 +569,7 @@
         function refreshAllData() {
             businessCalendar.refetchEvents();
             var today = new Date();
+            businessCalendar.setOption('now', today.valueOf());
             businessCalendar.gotoDate(today);
 
             $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker('setDate', today);
@@ -603,6 +604,7 @@
                 },timer)
             }
         });
+        $('#timer_setting').val('5').trigger('change');
 
         let setIntervalTimer;
         let refreshTimer = function () {

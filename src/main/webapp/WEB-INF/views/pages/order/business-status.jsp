@@ -143,6 +143,7 @@
                 }
             }
             , selectable: true
+            // , now : TODAY
             , defaultDate : TODAY // 기준일자
             , editable : false
             , eventLimit : true // allow "more" link when too many events
@@ -187,6 +188,7 @@
         };
         businessCalendar = new FullCalendar.Calendar(businessCalendarEl, businessCalendarProps);
         businessCalendar.render();
+        console.log(businessCalendar);
 
         $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker({dateFormat: 'yy/mm/dd'});
         $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker('setDate', 'today');
@@ -511,6 +513,7 @@
         function refreshAllData() {
             businessCalendar.refetchEvents();
             var today = new Date();
+            businessCalendar.setOption('now', today.valueOf());
             businessCalendar.gotoDate(today);
 
             $('#business_status_search_form').find('#BUSINESS_STATUS_INNER_DUE_DT').datepicker('setDate', today);
@@ -550,6 +553,8 @@
                 },timer)
             }
         });
+
+        $('#timer_setting').val('5').trigger('change');
 
         let setIntervalTimer;
         let refreshTimer = function () {
