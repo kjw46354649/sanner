@@ -2022,9 +2022,15 @@
                 loadOutsideProcessData('REQUEST_OUTSIDE_PROCESS_FORM');
             },
             'hide.bs.modal': function () {
-                $mailRecipientGrid.pqGrid('destroy');
-                $outsideProcessRequestGrid.pqGrid('destroy');
-                $requestOutsideFileGrid.pqGrid('destroy');
+                if($mailRecipientGrid.hasClass('pq-grid')){
+                    $mailRecipientGrid.pqGrid('destroy');
+                }
+                if($outsideProcessRequestGrid.hasClass('pq-grid')){
+                    $outsideProcessRequestGrid.pqGrid('destroy');
+                }
+                if($requestOutsideFileGrid.hasClass('pq-grid')){
+                    $requestOutsideFileGrid.pqGrid('destroy');
+                }
             }
         });
 
@@ -2060,9 +2066,15 @@
                 loadOutsideProcessData('CANCEL_REQUEST_OUTSIDE_PROCESS_FORM');
             },
             'hide.bs.modal': function () {
-                $cancelMailRecipientGrid.pqGrid('destroy');
-                $cancelRequestOutsideGrid.pqGrid('destroy');
-                $cancelRequestOutsideFileGrid.pqGrid('destroy');
+                if($cancelMailRecipientGrid.hasClass('pq-grid')){
+                    $cancelMailRecipientGrid.pqGrid('destroy');
+                }
+                if($cancelRequestOutsideGrid.hasClass('pq-grid')){
+                    $cancelRequestOutsideGrid.pqGrid('destroy');
+                }
+                if($cancelRequestOutsideFileGrid.hasClass('pq-grid')){
+                    $cancelRequestOutsideFileGrid.pqGrid('destroy');
+                }
             }
         });
 

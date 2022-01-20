@@ -7,6 +7,7 @@ import com.jmes.dao.OrderDao;
 import com.jmes.service.OutService;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -166,10 +167,10 @@ public class OutServiceImpl implements OutService {
                             this.innodaleDao.create(hashMap);
                         }
 
-                        hashMap.put("queryId", "orderMapper.updateControlPart");
+                        hashMap.put("queryId", "outMapper.updateControlPart_outSide");
                         this.innodaleDao.update(hashMap);
 
-                        hashMap.put("queryId", "orderMapper.createControlPartProgress");
+                        hashMap.put("queryId", "outMapper.createControlPartProgress_outSide");
                         this.innodaleDao.create(hashMap);
                     } else {
                         model.addAttribute("result", "error");
