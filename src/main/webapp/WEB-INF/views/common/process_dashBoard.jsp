@@ -537,7 +537,7 @@
         var g_noData = '<div>Not Found Data.</div>';
         let setIntervalTimer;
         let timer = function(){
-            let selVal = 90;//1분
+            let selVal = 300;//1분
             let timesec = 1000;//1초
             setIntervalTimer = setInterval(function() {
                 getStockProcessList();
