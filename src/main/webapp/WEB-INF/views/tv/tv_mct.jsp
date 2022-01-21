@@ -2332,19 +2332,19 @@
 
 				}
 
-				for (let i = 0; i < machineListData.length; i++) {
+				// for (let i = 0; i < machineListData.length; i++) {
 
-					let equip_seq = machineListData[i].EQUIP_SEQ;
-					let equip_nm = machineListData[i].EQUIP_NM;
-					let factory_area = machineListData[i].FACTORY_AREA;
-					let layout_row = machineListData[i].LAYOUT_ROW;
-					let layout_col = machineListData[i].LAYOUT_COL;
-					let user_nm = machineListData[i].USER_NM;
+					// let equip_seq = machineListData[i].EQUIP_SEQ;
+					// let equip_nm = machineListData[i].EQUIP_NM;
+					// let factory_area = machineListData[i].FACTORY_AREA;
+					// let layout_row = machineListData[i].LAYOUT_ROW;
+					// let layout_col = machineListData[i].LAYOUT_COL;
+					// let user_nm = machineListData[i].USER_NM;
 
 					// 장비의 작업 정보 조회
 					// getReLoadDrawingData(equip_seq, factory_area, layout_row, layout_col);
 
-				}
+				// }
 			}
 		};
 
