@@ -1545,7 +1545,9 @@
 				$popMachineGrid = popMachineGrid.pqGrid(popMachineObj);
 			},
 			'hide.bs.modal': function () {
-				$popMachineGrid.pqGrid('destroy');
+				if($popMachineGrid.hasClass('pq-grid')){
+					$popMachineGrid.pqGrid('destroy');
+				}
 			}
 		});
 	});

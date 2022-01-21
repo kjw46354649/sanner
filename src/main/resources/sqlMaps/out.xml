@@ -1150,6 +1150,15 @@
                                 AND CONTROL_SEQ  = #{CONTROL_SEQ}
                                 AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ} ) AS FLAG
     </select>
+    <select id="selectOutsideStatusCheck2" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+        SELECT (#{OUTSIDE_REQUEST_SEQ} = (
+                SELECT MAX(OUTSIDE_REQUEST_SEQ)
+                FROM TBL_OUTSIDE_REQUEST_DETAIL
+                WHERE DEL_YN = 'N'
+                  AND CONTROL_SEQ = #{CONTROL_SEQ}
+                  AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
+            )) AS FLAG
+    </select>
 
     <update id="updateOutsideRequestDetailDelete" parameterType="java.util.HashMap">
         UPDATE TBL_OUTSIDE_REQUEST_DETAIL
@@ -1160,6 +1169,97 @@
         WHERE 1 = 1
             AND OUTSIDE_REQUEST_SEQ = #{OUTSIDE_REQUEST_SEQ}
             AND CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
+
+    <update id="updateOutsideRequestDetailDelete2" parameterType="java.util.HashMap">
+        UPDATE TBL_OUTSIDE_REQUEST_DETAIL
+        SET DEL_YN = 'Y',
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE DEL_YN != 'Y'
+            AND CONTROL_SEQ = #{CONTROL_SEQ}
+	        AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+	        AND OUTSIDE_REQUEST_SEQ != (
+	            SELECT MAX(OUTSIDE_REQUEST_SEQ)
+	            FROM TBL_OUTSIDE_REQUEST_DETAIL
+	            WHERE DEL_YN = 'N'
+                    AND CONTROL_SEQ = #{CONTROL_SEQ}
+                    AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            )
+    </update>
+
+    <insert id="createControlPartProgress_outSide" parameterType="java.util.HashMap" >
+        INSERT INTO TBL_CONTROL_PART_PROGRESS (
+            CONTROL_SEQ,
+            CONTROL_DETAIL_SEQ,
+            SEQ,
+            PART_STATUS,
+            STATUS_DT,
+            INSERT_ID
+        )
+        SELECT
+            #{CONTROL_SEQ},
+            #{CONTROL_DETAIL_SEQ},
+            NEXTVAL(SEQ_CONTROL_PART_PROGRESS),
+            #{PART_STATUS},
+            NOW(),
+            #{LOGIN_USER_ID}
+        FROM DUAL
+    </insert>
+    <update id="updateControlPart_outSide" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            <if test="PART_STATUS != null and PART_STATUS != ''">
+                PART_STATUS = CASE WHEN #{PART_STATUS} = 'null' THEN NULL ELSE #{PART_STATUS} END,
+                STATUS_DT = NOW(),
+            </if>
+            <if test="OUTSIDE_COMP_CD != null and OUTSIDE_COMP_CD != ''">
+                OUTSIDE_COMP_CD = #{OUTSIDE_COMP_CD},
+            </if>
+            <if test="OUTSIDE_ORDER_NUM != null and OUTSIDE_ORDER_NUM != ''">
+                OUTSIDE_ORDER_NUM = #{OUTSIDE_ORDER_NUM},
+            </if>
+            <if test="OUTSIDE_NOTE != null and OUTSIDE_NOTE != ''">
+                OUTSIDE_NOTE = #{OUTSIDE_NOTE},
+            </if>
+            <if test="OUTSIDE_MATERIAL_SUPPLY_YN != null and OUTSIDE_MATERIAL_SUPPLY_YN != ''">
+                OUTSIDE_MATERIAL_SUPPLY_YN = #{OUTSIDE_MATERIAL_SUPPLY_YN},
+            </if>
+            <if test="OUTSIDE_REQUEST_FINISH_YN != null and OUTSIDE_REQUEST_FINISH_YN != ''">
+                OUTSIDE_REQUEST_FINISH_YN = #{OUTSIDE_REQUEST_FINISH_YN},
+            </if>
+            <if test="OUTSIDE_REQUEST_PROCESS_YN != null and OUTSIDE_REQUEST_PROCESS_YN != ''">
+                OUTSIDE_REQUEST_PROCESS_YN = #{OUTSIDE_REQUEST_PROCESS_YN},
+            </if>
+            <if test="OUTSIDE_REQUEST_GRIND_YN != null and OUTSIDE_REQUEST_GRIND_YN != ''">
+                OUTSIDE_REQUEST_GRIND_YN = #{OUTSIDE_REQUEST_GRIND_YN},
+            </if>
+            <if test="OUTSIDE_REQUEST_SURFACE_YN != null and OUTSIDE_REQUEST_SURFACE_YN != ''">
+                OUTSIDE_REQUEST_SURFACE_YN = #{OUTSIDE_REQUEST_SURFACE_YN},
+            </if>
+            <if test="OUTSIDE_REQUEST_ETC != null and OUTSIDE_REQUEST_ETC != ''">
+                OUTSIDE_REQUEST_ETC = #{OUTSIDE_REQUEST_ETC},
+            </if>
+            <if test="OUTSIDE_HOPE_DUE_DT != null and OUTSIDE_HOPE_DUE_DT != ''">
+                OUTSIDE_HOPE_DUE_DT = DATE_FORMAT(REPLACE(#{OUTSIDE_HOPE_DUE_DT}, '/', SPACE(0)), '%Y%m%d'),
+            </if>
+            <if test="OUTSIDE_UNIT_AMT != null and OUTSIDE_UNIT_AMT != ''">
+                OUTSIDE_UNIT_AMT = #{OUTSIDE_UNIT_AMT},
+            </if>
+            <choose>
+                <when test="OUTSIDE_STATUS != null and OUTSIDE_STATUS != ''">
+                    OUTSIDE_STATUS = #{OUTSIDE_STATUS},
+                    OUTSIDE_STATUS_DT = NOW(),
+                </when>
+                <when test="OUTSIDE_STATUS == null">
+                    OUTSIDE_STATUS = #{OUTSIDE_STATUS},
+                    OUTSIDE_STATUS_DT = NULL,
+                </when>
+            </choose>
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
             AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
 

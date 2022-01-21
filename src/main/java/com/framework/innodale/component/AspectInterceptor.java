@@ -60,11 +60,11 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
                     return false;
                 }
             }else{
-                String queryId = request.getParameter("queryId");
-                if(requestUrl != null && queryId != null) {
-                    System.out.println("requestUrl >>>>>>>>>>>>>>>>>>>>>>>>" + requestUrl);
-                    System.out.println("queryId >>>>>>>>>>>>>>>>>>>>>>>>" + queryId);
-                }
+//                String queryId = request.getParameter("queryId");
+//                if(requestUrl != null && queryId != null) {
+//                    System.out.println("requestUrl >>>>>>>>>>>>>>>>>>>>>>>>" + requestUrl);
+//                    System.out.println("queryId >>>>>>>>>>>>>>>>>>>>>>>>" + queryId);
+//                }
                 throw new AuthenticationFailException();
 //                request.setAttribute("throwException", "authenticationFailException");
 //                request.getRequestDispatcher("/exception").forward(request, response);

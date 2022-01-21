@@ -115,26 +115,32 @@ public class InspectionServiceImpl implements InspectionService {
             byte[] file = Base64.decodeBase64(binaryData);
 
             FileOutputStream stream = null;
-            File newFile = new File(uploadFilePath + File.separator + serverFullFileName + ".png");
-            stream = new FileOutputStream(newFile);
-            stream.write(file);
-            stream.close();
+            try {
+                File newFile = new File(uploadFilePath + File.separator + serverFullFileName + ".png");
+                stream = new FileOutputStream(newFile);
+                stream.write(file);
+                stream.close();
 
-            fileMap.put("FILE_NM", serverFullFileName + ".png");
-            fileMap.put("FILE_PATH", uploadFilePath + File.separator + serverFullFileName + ".png");
-            fileMap.put("TIME_PATH", uploadTimePath);
-            fileMap.put("ORGINAL_FILE_NM", serverFullFileName + ".png");
-            fileMap.put("FILE_TYPE", "image");
-            fileMap.put("FILE_EXT", "png");
-            fileMap.put("FILE_SIZE", newFile.length());
+                fileMap.put("FILE_NM", serverFullFileName + ".png");
+                fileMap.put("FILE_PATH", uploadFilePath + File.separator + serverFullFileName + ".png");
+                fileMap.put("TIME_PATH", uploadTimePath);
+                fileMap.put("ORGINAL_FILE_NM", serverFullFileName + ".png");
+                fileMap.put("FILE_TYPE", "image");
+                fileMap.put("FILE_EXT", "png");
+                fileMap.put("FILE_SIZE", newFile.length());
 
-            fileMap.put("queryId","common.insertFileGroup");
-            innodaleDao.create(fileMap);
+                fileMap.put("queryId","common.insertFileGroup");
+                innodaleDao.create(fileMap);
 
-            fileMap.put("queryId","common.insertFile");
-            innodaleDao.create(fileMap);
+                fileMap.put("queryId","common.insertFile");
+                innodaleDao.create(fileMap);
+
+            }catch (Exception e) {
+                e.printStackTrace();
+            }finally {
+                if (stream != null) stream.close();
+            }
         }
-
 
 
         if(addList != null && addList.size() > 0) {
@@ -274,9 +280,7 @@ public class InspectionServiceImpl implements InspectionService {
         Map<String, Object> jsonMap = null;
 
         ArrayList<HashMap<String, Object>> oldList = null;
-//        ArrayList<HashMap<String, Object>> addList = null;
         ArrayList<HashMap<String, Object>> updateList = null;
-//        ArrayList<HashMap<String, Object>> deleteList = null;
 
         if (jsonObject != null) {
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});

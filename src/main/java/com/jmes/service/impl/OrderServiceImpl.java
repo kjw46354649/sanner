@@ -609,7 +609,6 @@ public class OrderServiceImpl implements OrderService {
     public void saveFromControlManage(Model model, Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         String userId = (String)map.get("LOGIN_USER_ID");
-        System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< LOGIN : " + userId);
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
@@ -667,9 +666,10 @@ public class OrderServiceImpl implements OrderService {
                 // 수정한 값만 업데이트 하도록 키값 추출
                 while (iterator.hasNext()) {
                     String key = (String)iterator.next();
-                    tempMap.put(key,hashMap.get(key));
                     if(hashMap.get(key) == null) {
                         tempMap.put(key,"");
+                    }else {
+                        tempMap.put(key,hashMap.get(key));
                     }
                 }
                 tempMap.put("CONTROL_SEQ",hashMap.get("CONTROL_SEQ"));
