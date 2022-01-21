@@ -71,7 +71,6 @@ public class InspectionServiceImpl implements InspectionService {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
 
-        ArrayList<HashMap<String, Object>> oldList = null;
         ArrayList<HashMap<String, Object>> addList = null;
         ArrayList<HashMap<String, Object>> updateList = null;
         ArrayList<HashMap<String, Object>> deleteList = null;
@@ -80,25 +79,16 @@ public class InspectionServiceImpl implements InspectionService {
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
         }
 
-
-        if(jsonMap.containsKey("oldList")) {
-            oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
-        }
-        if(jsonMap.containsKey("addList")) {
+        if(jsonMap != null) {
             addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
-        }
-        if(jsonMap.containsKey("updateList")) {
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
-        }
-        if(jsonMap.containsKey("deleteList")) {
             deleteList = (ArrayList<HashMap<String, Object>>) jsonMap.get("deleteList");
         }
-
 
         HashMap<String, Object> fileMap = new HashMap<String, Object>();
         fileMap.put("LOGIN_USER_ID",userId);
 
-        if(jsonMap.containsKey("imgSrc")) {
+        if(jsonMap.get("imgSrc") != null) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", new Locale("ko", "KR"));
             String uploadDatePath = formatter.format(new Date()).substring(0, 8) + File.separator + formatter.format(new Date());
             String uploadTimePath = File.separator + formatter.format(new Date());
@@ -147,7 +137,7 @@ public class InspectionServiceImpl implements InspectionService {
             jsonMap.put("LOGIN_USER_ID",userId);
             jsonMap.put("queryId","inspection.selectInspectionResultExistCheck");
             HashMap<String,Object> inspectInfo = (HashMap<String, Object>) this.innodaleDao.getInfo(jsonMap);
-            String inspectResultSeq = null;
+            String inspectResultSeq = "";
             if(inspectInfo != null && inspectInfo.get("INSPECT_RESULT_SEQ") != null && !inspectInfo.get("INSPECT_RESULT_SEQ").equals("")) {
                 inspectResultSeq = (String) inspectInfo.get("INSPECT_RESULT_SEQ");
             }else {
@@ -159,7 +149,6 @@ public class InspectionServiceImpl implements InspectionService {
                 jsonMap.put("queryId","inspection.insertInspectionResult");
                 innodaleDao.create(jsonMap);
             }
-
 
             for(HashMap<String,Object> hashMap : addList) {
                 hashMap.put("LOGIN_USER_ID", userId);
@@ -191,15 +180,15 @@ public class InspectionServiceImpl implements InspectionService {
                 tempMap.put("CONTROL_DETAIL_SEQ",jsonMap.get("CONTROL_DETAIL_SEQ"));
                 tempMap.put("LAYER_AREA_NAME",jsonMap.get("LAYER_AREA_NAME"));
 
-                if(tempMap.containsKey("INSPECT_RESULT_SEQ")) {
+                if(tempMap.get("INSPECT_RESULT_SEQ") != null) {
                     tempMap.put("queryId","inspection.updateInspectionResult");
                     innodaleDao.update(tempMap);
 
-                    if(tempMap.containsKey("POINT_SEQ")) {
+                    if(tempMap.get("POINT_SEQ") != null) {
                         tempMap.put("queryId","inspection.updateInspectionResultPoint");
                         innodaleDao.update(tempMap);
 
-                        if(tempMap.containsKey("INSPECT_RESULT_VALUE_SEQ")) {
+                        if(tempMap.get("INSPECT_RESULT_VALUE_SEQ") != null) {
                             tempMap.put("queryId","inspection.updateInspectionResultValue");
                             innodaleDao.update(tempMap);
                         }else {
@@ -286,20 +275,18 @@ public class InspectionServiceImpl implements InspectionService {
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
         }
 
-        if(jsonMap.containsKey("oldList")) {
+        if(jsonMap != null) {
             oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
-        }
-        if(jsonMap.containsKey("updateList")) {
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
         }
 
-        Integer orderQty = Integer.parseInt(jsonMap.get("ORDER_QTY")+"");
+        Integer orderQty = Integer.parseInt((String) jsonMap.get("ORDER_QTY"));
 
         if(updateList != null && updateList.size() > 0) {
             for(int i=0;i<updateList.size();i++) {
                 HashMap<String,Object> hashMap = updateList.get(i);
                 HashMap<String,Object> oldMap = oldList.get(i);
-                if(oldMap.containsKey("POINT_POSITION")) { //updateInspectionResultPoint
+                if(oldMap.get("POINT_POSITION") != null) { //updateInspectionResultPoint
                     oldMap.put("POINT_SEQ",hashMap.get("POINT_SEQ"));
                     oldMap.put("INSPECT_RESULT_SEQ",hashMap.get("INSPECT_RESULT_SEQ"));
                     oldMap.put("POINT_POSITION",hashMap.get("POINT_POSITION"));
@@ -310,32 +297,30 @@ public class InspectionServiceImpl implements InspectionService {
                 for(int j=1;j<=orderQty;j++) {
                     String prodNum = String.valueOf(j);
 
-                    if(oldMap.containsKey("RESULT_VALUE_"+prodNum)) {
+                    if(oldMap.get("RESULT_VALUE_"+prodNum) != null) {
                         hashMap.put("queryId", "inspection.selectExistsValue");
                         hashMap.put("PRODUCT_NUM",prodNum);
 
                         HashMap<String,Object> temp = (HashMap<String, Object>) innodaleDao.getInfo(hashMap);
-                        if (temp != null && temp.containsKey("INSPECT_RESULT_VALUE_SEQ")) {
-                            // updateInspectionResultValue
-                            if(hashMap.containsKey("RESULT_VALUE_"+prodNum)) {
-                                temp.put("LOGIN_USER_ID",userId);
-                                temp.put("RESULT_VALUE",hashMap.get("RESULT_VALUE_"+prodNum));
+                        if(temp == null) {
+                            temp = new HashMap<>();
+                        }
 
+                        if(hashMap.get("RESULT_VALUE_"+prodNum) != null) {
+                            temp.put("RESULT_VALUE",hashMap.get("RESULT_VALUE_"+prodNum));
+                            temp.put("LOGIN_USER_ID",userId);
+
+                            if(temp.get("INSPECT_RESULT_VALUE_SEQ") != null) {
                                 temp.put("queryId", "inspection.updateInspectionResultValue");
                                 innodaleDao.update(temp);
-                            }
-                        }else {
-                            if(hashMap.containsKey("RESULT_VALUE_"+prodNum)) {
-                                temp = new HashMap<>();
-
+                            }else {
                                 temp.put("PRODUCT_NUM",prodNum);
                                 temp.put("POINT_SEQ",hashMap.get("POINT_SEQ"));
                                 temp.put("INSPECT_RESULT_SEQ",hashMap.get("INSPECT_RESULT_SEQ"));
-                                temp.put("RESULT_VALUE",hashMap.get("RESULT_VALUE_"+prodNum));
-                                temp.put("LOGIN_USER_ID",userId);
 
                                 temp.put("queryId", "inspection.insertInspectionResultValue");
                                 innodaleDao.create(temp);
+
                             }
                         }
                     }

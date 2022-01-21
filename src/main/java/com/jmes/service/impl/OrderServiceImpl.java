@@ -549,33 +549,18 @@ public class OrderServiceImpl implements OrderService {
         Map<String, Object> jsonMap = null;
 
         ArrayList<HashMap<String, Object>> oldList = null;
-        ArrayList<HashMap<String, Object>> addList = null;
         ArrayList<HashMap<String, Object>> updateList = null;
 
         boolean flag = false;
         String message = "";
-        String action = "";
 
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-        if (jsonMap.containsKey("ACTION"))
-            action = (String) jsonMap.get("ACTION");
-
-        if (jsonMap.containsKey("oldList"))
+        if(jsonMap != null) {
             oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
-
-        if (jsonMap.containsKey("addList"))
-            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
-
-        if (jsonMap.containsKey("updateList"))
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
-
-        /*if (addList != null && addList.size() > 0) {
-            for (HashMap<String, Object> hashMap : addList) {
-
-            }
-        }*/
+        }
 
         if (updateList != null && updateList.size() > 0 && !flag) {
             for(int i = 0; i < updateList.size(); i++) {
@@ -623,14 +608,11 @@ public class OrderServiceImpl implements OrderService {
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-        if (jsonMap.containsKey("addList"))
+        if(jsonMap != null) {
             addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
-
-        if (jsonMap.containsKey("updateList"))
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
-
-        if (jsonMap.containsKey("oldList"))
             oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
+        }
 
         if (addList != null && addList.size() > 0) { // 21.10.29 addList인 경우는 사실상 조립에 파트추가하는 경우만 존재.
             for (HashMap<String, Object> hashMap : addList) {
@@ -721,17 +703,13 @@ public class OrderServiceImpl implements OrderService {
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-        if (jsonMap.containsKey("addList"))
+        if(jsonMap != null) {
             addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
-
-        if (jsonMap.containsKey("updateList"))
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
 
-        if (jsonMap.containsKey("SEQ1"))
             seq1 = Integer.parseInt(String.valueOf(jsonMap.get("SEQ1")));
-
-        if (jsonMap.containsKey("SEQ2"))
             seq2 = Integer.parseInt(String.valueOf(jsonMap.get("SEQ2")));
+        }
 
         try {
             if (addList != null && addList.size() > 0) {
@@ -769,7 +747,6 @@ public class OrderServiceImpl implements OrderService {
         String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> jsonMap = null;
-        ArrayList<HashMap<String, Object>> addList = null;
         ArrayList<HashMap<String, Object>> updateList = null;
         boolean flag = false;
         Integer seq1 = null;
@@ -778,17 +755,12 @@ public class OrderServiceImpl implements OrderService {
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-        if (jsonMap.containsKey("addList"))
-            addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
-
-        if (jsonMap.containsKey("updateList"))
+        if(jsonMap != null) {
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
 
-        if (jsonMap.containsKey("SEQ1"))
             seq1 = Integer.parseInt(String.valueOf(jsonMap.get("SEQ1")));
-
-        if (jsonMap.containsKey("SEQ2"))
             seq2 = Integer.parseInt(String.valueOf(jsonMap.get("SEQ2")));
+        }
 
         try {
             if (updateList != null && updateList.size() > 0) {
@@ -825,11 +797,11 @@ public class OrderServiceImpl implements OrderService {
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-        if (jsonMap.containsKey("addList"))
+        if(jsonMap != null) {
             addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
-
-        if (jsonMap.containsKey("updateList"))
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+        }
+
 
         if (addList != null && addList.size() > 0) {
             for (HashMap<String, Object> hashMap : addList) {
@@ -908,14 +880,12 @@ public class OrderServiceImpl implements OrderService {
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-        if (jsonMap.containsKey("oldList"))
+        if(jsonMap != null) {
             oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
-
-        if (jsonMap.containsKey("addList"))
             addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
-
-        if (jsonMap.containsKey("updateList"))
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+        }
 
         if (addList != null && addList.size() > 0) {
             for (HashMap<String, Object> hashMap : addList) {
@@ -967,21 +937,17 @@ public class OrderServiceImpl implements OrderService {
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-        if (jsonMap.containsKey("addList"))
+        if(jsonMap != null) {
             addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
-
-        if (jsonMap.containsKey("updateList"))
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
-
-        if (jsonMap.containsKey("oldList"))
             oldList = (ArrayList<HashMap<String, Object>>) jsonMap.get("oldList");
-
+        }
 
         if (addList != null && addList.size() > 0) {
             for (HashMap<String, Object> hashMap : addList) {
                 hashMap.put("LOGIN_USER_ID",userId);
 
-                if(hashMap.containsKey("REGIST_NUM") && !hashMap.get("REGIST_NUM").equals("")) {
+                if(hashMap.get("REGIST_NUM") != null && !hashMap.get("REGIST_NUM").equals("")) {
                     hashMap.put("queryId", "orderMapper.createOrder");
                     this.innodaleDao.create(hashMap);
 
@@ -1115,13 +1081,11 @@ public class OrderServiceImpl implements OrderService {
         Map<String, Object> jsonMap = null;
 
         ArrayList<HashMap<String, Object>> addList = null;
-        ArrayList<HashMap<String, Object>> oldList = null;
-        ArrayList<HashMap<String, Object>> updateList = null;
 
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-        if (jsonMap.containsKey("addList")) {
+        if(jsonMap != null) {
             addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
         }
 
@@ -1185,22 +1149,22 @@ public class OrderServiceImpl implements OrderService {
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-        if (jsonMap.containsKey("updateList")) {
+        if(jsonMap != null) {
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
             controlNumArr = (ArrayList<HashMap<String, Object>>) jsonMap.get("controlNumArr");
         }
 
-        for(int i=0;i<updateList.size();i++) {
-            String controlNum = (String) updateList.get(i).get("CONTROL_NUM");
-            ArrayList<HashMap<String, Object>> groupList = new ArrayList<>();
-            if(groupMap.containsKey(controlNum)) {
-                groupList = (ArrayList<HashMap<String, Object>>) groupMap.get(controlNum);
-            }
-            groupList.add(updateList.get(i));
-            groupMap.put(controlNum,groupList);
-        }
-
         if (updateList != null && updateList.size() > 0) {
+            for(int i=0;i<updateList.size();i++) {
+                String controlNum = (String) updateList.get(i).get("CONTROL_NUM");
+                ArrayList<HashMap<String, Object>> groupList = new ArrayList<>();
+                if(groupMap.get(controlNum) != null) {
+                    groupList = (ArrayList<HashMap<String, Object>>) groupMap.get(controlNum);
+                }
+                groupList.add(updateList.get(i));
+                groupMap.put(controlNum,groupList);
+            }
+
             HashMap<String, Object> duplMap = new HashMap<>();
             duplMap.put("queryId", "orderMapper.selectCheckControlDuplicateVer2");
             duplMap.put("controlNumArr",controlNumArr);
@@ -1211,7 +1175,7 @@ public class OrderServiceImpl implements OrderService {
                 String validationResult = "SUCCESS";
                 String controlNum = (String) hashMap.get("CONTROL_NUM");
 
-                if (hashMap.containsKey("REGIST_NUM") && hashMap.containsKey("CONTROL_NUM")) {
+                if (hashMap.containsKey("REGIST_NUM") && controlNum != null) {
                     HashMap<String, Object> controlMap = null;
                     for(Map<String, Object> tempControl : checkControlList) {
                         if(controlNum.equals(tempControl.get("CONTROL_NUM"+""))) {
@@ -1227,7 +1191,7 @@ public class OrderServiceImpl implements OrderService {
                         }else {
                             hashMap.put("MERGE_CONTROL_SEQ",controlMap.get("CONTROL_SEQ"));
                             hashMap.put("MERGE_CONTROL_DETAIL_SEQ",controlMap.get("CONTROL_DETAIL_SEQ"));
-                            hashMap.put("MERGE_CONTROL_STATUS",controlMap.get("CONTROL_STATUS"));
+                            hashMap.put("MERGE_CONTROL_STATUS",controlStatus);
                         }
 
                         String partNum = (String) controlMap.get("PART_NUM");
@@ -1237,18 +1201,21 @@ public class OrderServiceImpl implements OrderService {
                     }
 
                     String[] checkColumn = {"WORK_TYPE", "MATERIAL_SUPPLY_YN","MAIN_INSPECTION","SAME_SIDE_YN","SIZE_TXT","MATERIAL_DETAIL","MATERIAL_KIND","SURFACE_TREAT","SPECIAL_TREATMENT","PART_NUM","INNER_DUE_DT"};
+
+                    for(String column : checkColumn) {
+                        if(controlMap.get(column) == null) {
+                            controlMap.put(column,"");
+                        }
+                        if(hashMap.get(column) == null) {
+                            hashMap.put(column,"");
+                        }
+                    }
+
                     if(hashMap.get("MERGE_CONTROL_SEQ") != null) {
                         if(validationResult.equals("SUCCESS")) {
                             Boolean mergeFlag = false;
 
                             for(String column : checkColumn) {
-                                if(controlMap.get(column) == null) {
-                                    controlMap.put(column,"");
-                                }
-                                if(hashMap.get(column) == null) {
-                                    hashMap.put(column,"");
-                                }
-
                                 if(!controlMap.get(column).equals(hashMap.get(column)) && !mergeFlag) {
                                     mergeFlag = true;
                                 }
@@ -1270,12 +1237,6 @@ public class OrderServiceImpl implements OrderService {
                                     Boolean mergeFlag = false;
 
                                     for(String column : checkColumn) {
-                                        if(temp.get(column) == null) {
-                                            temp.put(column,"");
-                                        }
-                                        if(hashMap.get(column) == null) {
-                                            hashMap.put(column,"");
-                                        }
                                         if(!temp.get(column).equals(hashMap.get(column)) && !mergeFlag) {
                                             mergeFlag = true;
                                         }
@@ -1323,9 +1284,9 @@ public class OrderServiceImpl implements OrderService {
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
 
-        if (jsonMap.containsKey("updateList"))
+        if(jsonMap != null) {
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
-
+        }
 
         if (updateList != null && updateList.size() > 0 && !flag) {
             for (HashMap<String, Object> hashMap : updateList) {
