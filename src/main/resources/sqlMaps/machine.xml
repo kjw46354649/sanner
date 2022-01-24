@@ -872,6 +872,207 @@
             , A.CONTROL_SEQ
             , A.CONTROL_DETAIL_SEQ
             , A.DXF_GFILE_SEQ
+            , A.IMG_GFILE_SEQ
+            , SF_GET_DATE_F(A.INNER_DUE_DT, 'YYYY', '') AS INNER_DUE_DT <!-- 내부가공납기 -->
+            , SF_GET_DATE_F(A.INNER_WORK_FINISH_DT, 'YYYY', '') AS INNER_WORK_FINISH_DT <!-- 내부 가공완료일시 -->
+            , CASE
+                WHEN B.CONTROL_STATUS = 'ORD005' THEN '보류'
+                WHEN B.EMERGENCY_YN = 'Y' THEN '긴급'
+              END AS EMERGENCY_HOLD <!-- 긴급 보류 -->
+            , SF_GET_CODE_NM('1059', B.MAIN_INSPECTION, #{LOGIN_LOCALE}) AS MAIN_INSPECTION_NM <!-- 주요 검사품 -->
+            , CASE
+                WHEN B.OUT_FINISH_STATUS = 'RLS030' THEN '반품'
+                WHEN E.INSPECT_GRADE = 'GRD040' AND C.OUT_FINISH_DT IS NULL THEN '불량'
+              END AS FAIL_STATUS
+            , SF_GET_CODE_NM('1033', A.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM <!-- 형태 -->
+            , SF_GET_CODE_NM('1009', H.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION <!-- 현재위치 -->
+            , SF_GET_PART_STATUS_NM(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS <!-- 진행상태 -->
+            , B.CONTROL_NUM <!-- 작업지시번호 -->
+            , CONCAT(B.CONTROL_NUM, CASE WHEN A.PART_NUM IS NOT NULL THEN CONCAT(' #', A.PART_NUM) ELSE SPACE(0) END) AS CONTROL_PART_NUM
+            , IFNULL(SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM <!-- 소재 종류 -->
+            , IFNULL(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ), 0) AS ORDER_QTY <!-- 수량 -->
+            , IFNULL(A.ADDITIONAL_QTY,SPACE(0)) AS ADDITIONAL_QTY
+            , IFNULL(A.DRAWING_NUM, SPACE(0)) AS DRAWING_NUM <!-- 도면번호 -->
+            , A.ETC_GFILE_SEQ
+            , A.SIZE_TXT AS STANDARD_SIZE <!-- 규격 -->
+            , SF_GET_MATERIAL_SIZE_TXT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERAIL_ORDER_SIZE <!-- 소재 주문 규격 -->
+            , B.NOTE AS CONTROL_NOTE <!-- 주문 확정 비고 -->
+            , IFNULL(SF_GET_CODE_NM('1011', A.MCT_WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS MCT_WORK_TYPE_NM <!-- MCT 작업 구분 이름 -->
+            , CASE WHEN CASE
+                            WHEN B.OUT_FINISH_STATUS = 'RLS030' THEN '반품'
+                            WHEN E.INSPECT_GRADE = 'GRD040' AND C.OUT_FINISH_DT IS NULL THEN '불량'
+                        END IS NULL THEN CASE
+                                           WHEN D.START_DT IS NOT NULL AND D.FINISH_DT IS NOT NULL THEN 'CWS030'
+                                           WHEN D.START_DT IS NOT NULL AND D.FINISH_DT IS NULL THEN 'CWS020'
+                                           ELSE 'CWS010'
+                                         END
+                        ELSE CASE
+                                WHEN (B.OUT_FINISH_STATUS = 'RLS030' AND IFNULL(D.UPDATE_DT, D.INSERT_DT) <![CDATA[ < ]]> B.OUT_FINISH_STATUS_DT) OR (E.INSPECT_GRADE = 'GRD040' AND (IFNULL(D.UPDATE_DT, D.INSERT_DT) <![CDATA[ < ]]> E.INSERT_DT)) THEN 'CWS010'
+                                WHEN D.START_DT IS NOT NULL AND D.FINISH_DT IS NOT NULL THEN 'CWS030'
+                                WHEN D.START_DT IS NOT NULL AND D.FINISH_DT IS NULL THEN 'CWS020'
+                                ELSE 'CWS010'
+                             END
+              END CAM_STATUS <!-- CAM 상태 -->
+            , D.CAM_STEP <!-- CAM 스탭 -->
+            , SF_GET_CODE_NM('1080', D.WORK_DIRECTION, #{LOGIN_LOCALE}) AS WORK_DIRECTION <!-- CAM 가공위치 -->
+            , SF_GET_USER_NM(D.WORK_USER_ID) AS WORK_USER_NM <!-- CAM 작업자 -->
+            , SF_GET_DATE_F(D.FINISH_DT, '', 'M') AS CAM_FINISH_DT <!-- CAM 종료 일시, -->
+            , SF_GET_DATE_F(A.STATUS_DT, '', 'M') AS STATUS_DT <!-- 확정 일시 -->
+            , (SELECT SF_GET_DATE_F(MAX(M.STATUS_DT), '', 'M') FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ  AND M.PART_STATUS = 'PRO002') AS PROCESS_CONFIRM_DT
+            , SF_GET_MATERIAL_RECEIPT_DT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT <!-- 소재 입고 일시 -->
+            , E.INSPECT_NUM AS INSPECT_STEP <!-- 품질 스탭 -->
+            , SF_GET_CODE_NM('1040', E.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE
+            , CASE
+                WHEN E.INSPECT_RESULT LIKE 'QCC%' THEN SF_GET_CODE_NM('1019', E.INSPECT_RESULT, #{LOGIN_LOCALE})
+                WHEN E.INSPECT_RESULT LIKE 'QCD%' THEN SF_GET_CODE_NM('1020', E.INSPECT_RESULT, #{LOGIN_LOCALE})
+                ELSE SPACE(0)
+              END AS INSPECT_RESULT <!-- 불량 코드 -->
+            , E.ERROR_QTY <!-- 불량 수량 -->
+            , SF_GET_CODE_NM('1032', E.ERROR_REASON, #{LOGIN_LOCALE}) AS ERROR_REASON <!-- 불량 원인 -->
+            , E.ERROR_NOTE <!-- 불량 조치방안 -->
+            , SF_GET_DATE_F(E.INSERT_DT, '', '') AS INSPECT_DT <!-- 품질현황 -->
+            , G.MCT_PLAN_SEQ
+            , G.EQUIP_SEQ <!-- 계획 장비 번호 -->
+            , G.WORKING_TIME <!-- MCT 계획 시간 -->
+            , B.SAME_SIDE_YN <!-- 대칭 -->
+            , F.EQUIP_NM
+            , CASE
+                WHEN A.PART_STATUS != 'PRO007' AND F.WORKING_TIME IS NOT NULL THEN
+                    CASE
+                        WHEN F.WORKING_TIME > 3600 THEN CONCAT(TRUNCATE(IFNULL(F.WORKING_TIME, 0)/ 3600, 0), 'h ', TRUNCATE((IFNULL(F.WORKING_TIME, 0)%3600)/ 60, 0), 'm')
+                        ELSE CONCAT(TRUNCATE((IFNULL(F.WORKING_TIME, 0)%3600)/ 60, 0), 'm')
+                    END
+              END AS RECENT_WORKING_TIME
+            , F.NC_WORK_TYPE
+            , SF_GET_USER_NM(F.WORK_USER_ID) AS NC_WORK_USER_NM <!-- CAM 작업자 -->
+            , A.SIZE_TXT
+            , jmes.SF_GET_CODE_NM('1014', A.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
+        FROM TBL_CONTROL_PART A
+            INNER JOIN TBL_CONTROL B ON B.CONTROL_SEQ = A.CONTROL_SEQ AND B.DEL_YN = 'N' AND B.CONTROL_STATUS IN ('ORD001', 'ORD003', 'ORD005')
+            <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
+                AND UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
+            </if>
+            INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = B.CONTROL_SEQ
+            LEFT OUTER JOIN (
+                SELECT A.CAM_SEQ
+                , A.CONTROL_SEQ
+                , A.CONTROL_DETAIL_SEQ
+                , A.START_DT
+                , A.HISTORY_NOTE
+                , A.NOTE
+                , A.INSERT_DT
+                , A.UPDATE_DT
+                , A.FINISH_DT
+                , B.SEQ  AS CAM_STEP
+                , B.WORK_DIRECTION
+                , B.WORK_USER_ID
+                , B.CAM_GFILE_SEQ
+                FROM TBL_CAM A
+                    LEFT OUTER JOIN TBL_CAM_DETAIL B ON B.CAM_SEQ = A.CAM_SEQ AND B.SEQ = (SELECT MAX(M.SEQ) FROM TBL_CAM_DETAIL M WHERE M.CAM_SEQ = B.CAM_SEQ GROUP BY M.CAM_SEQ)
+            ) D ON D.CONTROL_SEQ = A.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_INSPECT E ON E.CONTROL_SEQ = A.CONTROL_SEQ AND E.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND E.INSPECT_TYPE = '1'
+                AND E.INSPECT_SEQ = (SELECT MAX(M.INSPECT_SEQ) FROM TBL_INSPECT M WHERE M.CONTROL_SEQ = E.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '1')
+            LEFT OUTER JOIN (
+                SELECT A.CONTROL_SEQ
+                , A.CONTROL_DETAIL_SEQ
+                , A.WORK_USER_ID
+                , A.WORK_STATUS
+                , SF_GET_CODE_NM('1079', A.WORK_STATUS, #{LOGIN_LOCALE}) AS WORK_STATUS_NM
+                , SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) AS WORKING_TIME
+                , B.EQUIP_NM
+                , IFNULL(SF_GET_CODE_NM('1010', B.PROCESS_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS NC_WORK_TYPE
+                FROM TBL_MCT_WORK A, TBL_EQUIP B
+                WHERE B.EQUIP_SEQ = A.EQUIP_SEQ
+                    AND A.DEL_YN = 'N'
+                    AND A.MCT_WORK_SEQ = (SELECT MAX(M.MCT_WORK_SEQ) FROM TBL_MCT_WORK M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N')
+            ) F ON F.CONTROL_SEQ = A.CONTROL_SEQ AND F.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN (
+                SELECT
+                A.MCT_PLAN_SEQ
+                , A.CONTROL_SEQ
+                , A.CONTROL_DETAIL_SEQ
+                , A.WORKING_TIME
+                , B.EQUIP_SEQ
+                , B.EQUIP_ID
+                , B.EQUIP_NM
+                FROM TBL_MCT_PLAN A
+                , TBL_EQUIP B
+                WHERE B.EQUIP_SEQ = A.EQUIP_SEQ
+                AND A.DEL_YN = 'N'
+                AND B.DEL_YN = 'N'
+                AND A.MCT_PLAN_SEQ = (SELECT MAX(M.MCT_PLAN_SEQ) FROM TBL_MCT_PLAN M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N')
+            ) G ON G.CONTROL_SEQ = A.CONTROL_SEQ AND G.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+            LEFT OUTER JOIN TBL_POP H ON H.CONTROL_SEQ = A.CONTROL_SEQ AND H.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                AND H.POP_SEQ = (SELECT MAX(M.POP_SEQ) FROM TBL_POP M WHERE M.CONTROL_SEQ = H.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ)
+        WHERE 1=1
+            AND (
+            (IFNULL(B.OUT_FINISH_STATUS, SPACE(0)) NOT IN ('RLS010'))
+                OR
+                (EXISTS (SELECT 1 FROM TBL_CAM CM WHERE A.CONTROL_SEQ = CM.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = CM.CONTROL_DETAIL_SEQ AND CM.START_DT IS NOT NULL
+                    AND CM.FINISH_DT IS NULL)
+                )
+            )
+            <if test='SEL_ASSEMBLY == null'>
+                AND A.WORK_TYPE != 'WTP020'
+            </if>
+            <choose>
+                <when test='SEL_OUTSIDE_YN != null'>
+                    AND A.PART_STATUS IN ('PRO001', 'PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018', 'PRO019', 'PRO021', 'PRO022')
+                </when>
+                <otherwise>
+                    AND IFNULL(A.OUTSIDE_YN, 'N') = 'N'
+                    AND A.PART_STATUS IN ('PRO002', 'PRO004', 'PRO005', 'PRO006', 'PRO007', 'PRO008', 'PRO009', 'PRO012', 'PRO013', 'PRO014', 'PRO015', 'PRO018', 'PRO021', 'PRO022')
+                </otherwise>
+            </choose>
+            <if test="HIDDEN_EQUIP_SEQ != null and HIDDEN_EQUIP_SEQ != ''">
+                AND (
+                    EXISTS (SELECT 1 FROM TBL_MCT_WORK M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.DEL_YN = 'N' AND M.EQUIP_SEQ IN (${HIDDEN_EQUIP_SEQ}))
+                    OR G.EQUIP_SEQ IN (${HIDDEN_EQUIP_SEQ})
+                    <if test="INCLUDE_UNALLOCATED_WAIT != null">
+                        OR G.EQUIP_SEQ IS NULL
+                    </if>
+                )
+            </if>
+            <if test="CONTROL_DETAIL_SEQ != null and CONTROL_DETAIL_SEQ != ''">
+                AND A.CONTROL_DETAIL_SEQ LIKE CONCAT('%', #{CONTROL_DETAIL_SEQ}, '%')
+            </if>
+            <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
+                AND UPPER(A.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{DRAWING_NUM}), '%')
+            </if>
+            <if test="MATERIAL_TYPE != null and MATERIAL_TYPE != ''">
+                AND A.MATERIAL_TYPE = #{MATERIAL_TYPE}
+            </if>
+            <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
+                AND A.WORK_FACTORY = #{WORK_FACTORY}
+            </if>
+            <if test="BARCODE_NUM != null and BARCODE_NUM != ''">
+                AND EXISTS (SELECT 1 FROM TBL_CONTROL_BARCODE M
+                    WHERE A.CONTROL_SEQ = M.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
+                    AND M.DEL_YN = 'N' AND M.BARCODE_NUM = #{BARCODE_NUM}
+                )
+            </if>
+            <if test='SEL_COMPLETED_YN != null'>
+                AND (A.INNER_WORK_FINISH_DT IS NULL OR (E.INSPECT_GRADE = 'GRD040' AND C.OUT_FINISH_DT IS NULL) OR B.OUT_FINISH_STATUS = 'RLS030'
+                    OR (EXISTS (SELECT 1 FROM TBL_CAM CM WHERE A.CONTROL_SEQ = CM.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = CM.CONTROL_DETAIL_SEQ AND CM.START_DT IS NOT NULL
+                        AND CM.FINISH_DT IS NULL)
+                    )
+                )
+            </if>
+        ORDER BY
+            <if test="INCLUDE_UNALLOCATED_WAIT != null and INCLUDE_UNALLOCATED_WAIT != ''">
+                G.EQUIP_SEQ IS NULL,
+            </if>
+            CASE CAM_STATUS WHEN 'CWS020' THEN 0 WHEN 'CWS010' THEN 1 WHEN 'CWS030' THEN 2 END,
+            CASE FAIL_STATUS WHEN '반품' THEN 0 WHEN '불량' THEN 1 ELSE 2 END,
+            CASE EMERGENCY_HOLD WHEN '긴급' THEN 0 WHEN '보류' THEN 1 ELSE 2 END,
+            A.INNER_DUE_DT, STATUS_DT DESC, B.CONTROL_NUM, IFNULL(A.PART_NUM, 0)
+    </select>
+
+    <select id="selectResultManageList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER () OVER () AS ROWNUM
+            , A.CONTROL_SEQ
+            , A.CONTROL_DETAIL_SEQ
+            , A.DXF_GFILE_SEQ
             , A.PDF_GFILE_SEQ
             , A.IMG_GFILE_SEQ
             , SF_GET_DATE_F(A.INNER_DUE_DT, 'YYYY', '') AS INNER_DUE_DT <!-- 내부가공납기 -->
@@ -930,7 +1131,6 @@
             , D.CAM_SEQ <!-- CAM 마스터 번호 -->
             , D.CAM_STEP <!-- CAM 스탭 -->
             , SF_GET_CODE_NM('1080', D.WORK_DIRECTION, #{LOGIN_LOCALE}) AS WORK_DIRECTION <!-- CAM 가공위치 -->
-            , D.WORK_DESC <!-- CAM 작업 내용 -->
             , SF_GET_USER_NM(D.WORK_USER_ID) AS WORK_USER_NM <!-- CAM 작업자 -->
             , CASE
                 WHEN D.CAM_GFILE_SEQ IS NOT NULL THEN ( SELECT M.FILE_SEQ
@@ -991,8 +1191,8 @@
                                                             ELSE CONCAT(TRUNCATE((IFNULL(F.WORKING_TIME, 0)%3600)/ 60, 0), 'm')
                                                         END
              END AS RECENT_WORKING_TIME
-            , F.WORK_STATUS
-            , F.WORK_STATUS_NM
+--             , F.WORK_STATUS
+--             , F.WORK_STATUS_NM
             , F.NC_WORK_TYPE
             , SF_GET_USER_NM(F.WORK_USER_ID) AS NC_WORK_USER_NM <!-- CAM 작업자 -->
             , B.CONTROL_VER
@@ -1000,7 +1200,10 @@
             , A.SIZE_TXT
             , jmes.SF_GET_CODE_NM('1014', A.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
         FROM TBL_CONTROL_PART A
-            INNER JOIN TBL_CONTROL B ON B.CONTROL_SEQ = A.CONTROL_SEQ
+            INNER JOIN TBL_CONTROL B ON B.CONTROL_SEQ = A.CONTROL_SEQ AND B.DEL_YN = 'N' AND B.CONTROL_STATUS IN ('ORD001', 'ORD003', 'ORD005')
+            <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
+                AND UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
+            </if>
             INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON C.CONTROL_SEQ = B.CONTROL_SEQ
             LEFT OUTER JOIN (
                 SELECT A.CAM_SEQ
@@ -1014,7 +1217,6 @@
                     , A.FINISH_DT
                     , B.SEQ  AS CAM_STEP
                     , B.WORK_DIRECTION
-                    , B.WORK_DESC
                     , B.WORK_USER_ID
                     , B.CAM_GFILE_SEQ
                 FROM TBL_CAM A
@@ -1055,8 +1257,7 @@
             ) G ON G.CONTROL_SEQ = A.CONTROL_SEQ AND G.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
             LEFT OUTER JOIN TBL_POP H ON H.CONTROL_SEQ = A.CONTROL_SEQ AND H.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
                 AND H.POP_SEQ = (SELECT MAX(M.POP_SEQ) FROM TBL_POP M WHERE M.CONTROL_SEQ = H.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = H.CONTROL_DETAIL_SEQ GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ)
-        WHERE B.DEL_YN = 'N'
-            AND B.CONTROL_STATUS IN ('ORD001', 'ORD003', 'ORD005')
+        WHERE 1=1
             AND (
                 (IFNULL(B.OUT_FINISH_STATUS, SPACE(0)) NOT IN ('RLS010'))
                   OR
@@ -1066,7 +1267,7 @@
                 )
             )
             <if test='SEL_ASSEMBLY == null'>
-                AND A.WORK_TYPE NOT IN ('WTP020')
+                AND A.WORK_TYPE != 'WTP020'
             </if>
             <choose>
                 <when test='SEL_OUTSIDE_YN != null'>
@@ -1085,9 +1286,6 @@
                         OR G.EQUIP_SEQ IS NULL
                     </if>
                     )
-            </if>
-            <if test="CONTROL_NUM != null and CONTROL_NUM != ''">
-                AND UPPER(B.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{CONTROL_NUM}), '%')
             </if>
             <if test="CONTROL_DETAIL_SEQ != null and CONTROL_DETAIL_SEQ != ''">
                 AND A.CONTROL_DETAIL_SEQ LIKE CONCAT('%', #{CONTROL_DETAIL_SEQ}, '%')

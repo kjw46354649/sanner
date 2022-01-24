@@ -646,7 +646,7 @@
             {title: '현재위치', dataIndx: 'POP_POSITION', minWidth: 20, width: 80},
             {title: '작업지시번호', align: 'left', dataIndx: 'CONTROL_PART_NUM', width: 180},
             {title: '작업지시번호', align: 'left', dataIndx: 'CONTROL_NUM', hidden: true},
-            {title: '파<br>트', dataIndx: 'PART_NUM', hidden: true},
+            // {title: '파<br>트', dataIndx: 'PART_NUM', hidden: true},
             {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM', width: 50},
             {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 40, width: 80},
             {title: '', minWidth: 25, width: 25, dataIndx: 'DRAWING_NUM_BUTTON',
@@ -663,7 +663,7 @@
                 }
             },
             {title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM'},
-            {title: '도면번호', align: 'left', width: 150, dataIndx: 'CONCAT_DRAWING_NUM', hidden: true},
+            // {title: '도면번호', align: 'left', width: 150, dataIndx: 'CONCAT_DRAWING_NUM', hidden: true},
             {title: '규격', dataIndx: 'STANDARD_SIZE', minWidth: 40, width: 80},
             {title: '소재 Size', dataIndx: 'MATERAIL_ORDER_SIZE', minWidth: 40, width: 80},
             {title: '수량<br>추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', width: 50, editable: false},
@@ -716,8 +716,8 @@
                      {title: '기기명', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_NM'},
                      {title: '작업자', minWidth: 40, width: 80, dataType: 'string', dataIndx: 'NC_WORK_USER_NM'},
                      {title: 'R/T', minWidth: 50, width: 55, dataType: 'string', align: 'right', dataIndx: 'RECENT_WORKING_TIME'},
-                     {title: 'WORK_STATUS', dataIndx: 'WORK_STATUS', hidden: true},
-                     {title: 'WORK_STATUS_NM', dataIndx: 'WORK_STATUS_NM', hidden: true}
+                     // {title: 'WORK_STATUS', dataIndx: 'WORK_STATUS', hidden: true},
+                     // {title: 'WORK_STATUS_NM', dataIndx: 'WORK_STATUS_NM', hidden: true}
                 ]
             },
             {
@@ -844,7 +844,7 @@
                     },
                     {title: '불량원인', dataIndx: 'ERROR_REASON', minWidth: 30, width: 70},
                     {title: '조치방안', dataIndx: 'ERROR_NOTE', minWidth: 30, width: 70},
-                    {title: '작성일자', dataIndx: 'INSPECT_DT', minWidth: 75, width: 75}
+                    {title: '작성일자', dataType: 'date', format: 'mm/dd', dataIndx: 'INSPECT_DT', minWidth: 75, width: 75}
                 ]
             },
             {title: 'IMG_GFILE_SEQ', dataType: 'integer', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
