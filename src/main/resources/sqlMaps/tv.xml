@@ -3,100 +3,60 @@
 
 <mapper namespace="tvMapper">
 
-
     <select id="selectTvPopList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT Z.POP_SEQ
-            , Z.POP_POSITION
-            , Z.POP_NM
-            , Z.CONTROL_SEQ
-            , Z.CONTROL_DETAIL_SEQ
-            , Z.CONTROL_PART_INFO
-            , Z.TOTAL_CNT
-            , Z.TOTAL_QTY
-            , Z.IMG_GFILE_SEQ
-            , Z.CONTROL_PART_QTY
-            , Z.PART_STATUS_NM
-            , Z.PART_STATUS
-            , Z.INNER_DUE_DT
-            , Z.CONTROL_NUM_PART_NUM
-            , Z.WORK_TYPE_MATERIAL
-            , Z.OUTSIDE_COMP_NM
-            , Z.ORDER_QTY_INFO
-            , Y.RECENTLY_WORK_TYPE AS RECENTLY_PROCESS_TYPE_NM
-            , Y.WORK_USER_NM AS RECENTLY_WORK_USER_NM
+        SELECT A.POP_SEQ
+            , A.POP_POSITION
+            , SF_GET_CODE_NM(1009,A.POP_POSITION,#{LOGIN_LOCALE}) AS POP_NM
+            , A.CONTROL_SEQ
+            , A.CONTROL_DETAIL_SEQ
+            , COUNT(*) OVER (PARTITION BY A.POP_POSITION) AS TOTAL_CNT
+            , SUM(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ)) OVER (PARTITION BY A.POP_POSITION) AS TOTAL_QTY
+            , C.IMG_GFILE_SEQ
+            , SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
+            , SF_GET_PART_STATUS_NM(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+            , C.PART_STATUS
+            , SF_GET_DATE_F(C.INNER_DUE_DT,'','') AS INNER_DUE_DT
+            , CASE WHEN C.PART_NUM IS NULL THEN CONCAT(B.CONTROL_NUM, <![CDATA[ '<br>' ]]> , C.SIZE_TXT) ELSE CONCAT(B.CONTROL_NUM, ' #', C.PART_NUM, <![CDATA[ '<br>' ]]> ,C.SIZE_TXT) END AS CONTROL_NUM_PART_NUM
+            , CONCAT(jmes.SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}), <![CDATA[ '<br>' ]]> ,SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, #{LOGIN_LOCALE})) AS WORK_TYPE_MATERIAL
+            , IFNULL(SF_GET_COMP_NM(C.OUTSIDE_COMP_CD), SPACE(0)) AS OUTSIDE_COMP_NM
+            , CASE WHEN IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0) = 0 AND IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0) > 0 THEN '대'
+            ELSE 'N'
+            END AS ORDER_QTY_INFO
+            , D.RECENTLY_WORK_TYPE AS RECENTLY_PROCESS_TYPE_NM
+            , D.WORK_USER_NM AS RECENTLY_WORK_USER_NM
             , CASE
-                WHEN Z.PART_STATUS != 'PRO007' AND Y.WORK_TIME IS NOT NULL THEN
-                CONCAT(TRUNCATE(IFNULL(Y.WORK_TIME,0)/3600,0),'h ',TRUNCATE((IFNULL(Y.WORK_TIME,0)%3600)/60,0),'m')
-                ELSE SPACE(0)
+            WHEN C.PART_STATUS != 'PRO007' AND D.WORK_TIME IS NOT NULL THEN
+            CONCAT(TRUNCATE(IFNULL(D.WORK_TIME,0)/3600,0),'h ',TRUNCATE((IFNULL(D.WORK_TIME,0)%3600)/60,0),'m')
+            ELSE SPACE(0)
             END RECENTLY_WORKING_TIME
-        FROM (
-            SELECT B.POP_SEQ
-                , B.POP_POSITION
-                , B.POP_DT
-                , SF_GET_CODE_NM(1009,B.POP_POSITION,#{LOGIN_LOCALE}) AS POP_NM
-                , B.CONTROL_SEQ
-                , B.CONTROL_DETAIL_SEQ
-                , CASE WHEN D.PART_NUM IS NULL THEN C.CONTROL_NUM ELSE CONCAT(C.CONTROL_NUM,'#',D.PART_NUM) END AS CONTROL_PART_INFO
-                , COUNT(*) OVER (PARTITION BY B.POP_POSITION) AS TOTAL_CNT
-                , SUM(SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ)) OVER (PARTITION BY B.POP_POSITION) AS TOTAL_QTY
-                , D.IMG_GFILE_SEQ
-                , SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY
-                , SF_GET_PART_STATUS_NM(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
-                , D.PART_STATUS
-                , SF_GET_DATE_F(D.INNER_DUE_DT,'','') AS INNER_DUE_DT
-                , CASE WHEN D.PART_NUM IS NULL THEN CONCAT(C.CONTROL_NUM, <![CDATA[ '<br>' ]]>, D.SIZE_TXT) ELSE CONCAT(C.CONTROL_NUM, ' #', D.PART_NUM, <![CDATA[ '<br>' ]]>,D.SIZE_TXT) END AS CONTROL_NUM_PART_NUM
-                , CONCAT(jmes.SF_GET_CODE_NM('1033', D.WORK_TYPE, #{LOGIN_LOCALE}), <![CDATA[ '<br>' ]]>,SF_GET_CODE_NM('1027', D.MATERIAL_DETAIL, #{LOGIN_LOCALE})) AS WORK_TYPE_MATERIAL
-                , IFNULL(SF_GET_COMP_NM(D.OUTSIDE_COMP_CD), SPACE(0)) AS OUTSIDE_COMP_NM
-                , CASE WHEN IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(D.PART_UNIT_QTY, 1), 0) = 0 AND IFNULL(jmes.SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(D.PART_UNIT_QTY, 1), 0) > 0 THEN '대'
-                       ELSE 'N'
-                END AS ORDER_QTY_INFO
-            FROM (
-                SELECT M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ, MAX(M.POP_SEQ) AS POP_SEQ
-                FROM jmes.TBL_POP M
-                WHERE NOT EXISTS (
-                    SELECT 1
-                    FROM jmes.TBL_CONTROL N, jmes.TBL_CONTROL_PART O
-                    WHERE O.CONTROL_SEQ = M.CONTROL_SEQ AND O.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
-                        AND N.CONTROL_SEQ = O.CONTROL_SEQ
-                        AND N.DEL_YN = 'N'
-                        AND N.OUT_FINISH_DT IS NOT NULL
-                )
-                GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
-            ) A, jmes.TBL_POP B, jmes.TBL_CONTROL C, jmes.TBL_CONTROL_PART D
-            WHERE A.POP_SEQ = B.POP_SEQ
-                AND B.CONTROL_SEQ = C.CONTROL_SEQ
-                AND B.CONTROL_SEQ = D.CONTROL_SEQ
-                AND C.CONTROL_STATUS NOT IN ('ORD004')
-                <if test="POP_POSITION != null and POP_POSITION != ''">
-                    AND B.POP_POSITION = #{POP_POSITION}
-                </if>
-                AND B.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-                AND C.DEL_YN = 'N'
-                AND NOT EXISTS (
-                    SELECT 1
-                    FROM jmes.TBL_CONTROL_PART E
-                    WHERE D.CONTROL_SEQ = E.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
-                        AND E.PART_STATUS = 'PRO018' AND E.WORK_TYPE = 'WTP050'
-                )
-        ) Z
-        LEFT OUTER JOIN (
-            SELECT
-                IFNULL(SF_GET_CODE_NM('1010', G.PROCESS_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS RECENTLY_WORK_TYPE, F.WORK_USER_ID,jmes.SF_GET_DRAWING_WORK_TIME('WORK',F.MCT_WORK_SEQ) AS WORK_TIME,
-                F.CONTROL_SEQ, F.CONTROL_DETAIL_SEQ, H.USER_NM AS WORK_USER_NM
-            FROM TBL_MCT_WORK F
-                INNER JOIN jmes.TBL_EQUIP G ON F.EQUIP_SEQ = G.EQUIP_SEQ
-                INNER JOIN jmes.TBL_USER H ON F.WORK_USER_ID = H.USER_ID
-            WHERE F.DEL_YN = 'N'
-                AND F.MCT_WORK_SEQ = (
-                    SELECT MAX(X.MCT_WORK_SEQ) FROM TBL_MCT_WORK X
-                    WHERE  X.DEL_YN = 'N'
-                        AND X.CONTROL_SEQ = F.CONTROL_SEQ
-                        AND X.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
-                    GROUP BY X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
-                )
-        ) Y ON Y.CONTROL_SEQ = Z.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ
-        ORDER BY Z.POP_DT DESC
+        FROM TBL_POP A
+            INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N' AND B.CONTROL_STATUS != 'ORD004' AND B.OUT_FINISH_DT IS NULL
+            INNER JOIN TBL_CONTROL_PART C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                AND (C.PART_STATUS != 'PRO018' OR C.WORK_TYPE != 'WTP050')
+            LEFT OUTER JOIN (
+                SELECT
+                    IFNULL(SF_GET_CODE_NM('1010', G.PROCESS_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS RECENTLY_WORK_TYPE, F.WORK_USER_ID,jmes.SF_GET_DRAWING_WORK_TIME('WORK',F.MCT_WORK_SEQ) AS WORK_TIME,
+                    F.CONTROL_SEQ, F.CONTROL_DETAIL_SEQ, H.USER_NM AS WORK_USER_NM
+                FROM TBL_MCT_WORK F
+                    INNER JOIN jmes.TBL_EQUIP G ON F.EQUIP_SEQ = G.EQUIP_SEQ
+                    INNER JOIN jmes.TBL_USER H ON F.WORK_USER_ID = H.USER_ID
+                WHERE F.DEL_YN = 'N'
+                    AND F.MCT_WORK_SEQ = (
+                        SELECT MAX(X.MCT_WORK_SEQ)
+                        FROM TBL_MCT_WORK X
+                        WHERE  X.DEL_YN = 'N'
+                            AND X.CONTROL_SEQ = F.CONTROL_SEQ
+                            AND X.CONTROL_DETAIL_SEQ = F.CONTROL_DETAIL_SEQ
+                        GROUP BY X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
+                    )
+            ) D ON D.CONTROL_SEQ = A.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+        WHERE A.POP_SEQ = (SELECT MAX(X.POP_SEQ) FROM TBL_POP X WHERE X.CONTROL_SEQ = A.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ GROUP BY X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ)
+            <if test="POP_POSITION != null and POP_POSITION != ''">
+                AND A.POP_POSITION = #{POP_POSITION}
+            </if>
+        ORDER BY A.POP_DT DESC
     </select>
+
     <select id="selectTvPopList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- POP Info
         SELECT B.POP_SEQ
