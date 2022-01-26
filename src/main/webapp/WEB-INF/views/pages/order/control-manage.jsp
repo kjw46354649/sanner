@@ -1811,14 +1811,18 @@
             fnConfirm(null, message2, function () {
                 let parameters = {'url': '/managerControlStatus', 'data': {data: JSON.stringify(list)}};
 
-                fnPostAjax(function () {
-                    let message3 =
-                        '<h4>\n' +
-                        '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                        '    <span>' + "<spring:message code='com.alert.default.save.success' />" + '</span>\n' +
-                        '</h4>';
-                    fnAlert(null, message3);
-                    $controlManagementGrid.pqGrid('refreshDataAndView');
+                fnPostAjax(function (data) {
+                    if(!data.flag) {
+                        let message3 =
+                            '<h4>\n' +
+                            '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                            '    <span>' + "<spring:message code='com.alert.default.save.success' />" + '</span>\n' +
+                            '</h4>';
+                        fnAlert(null, message3);
+                        $controlManagementGrid.pqGrid('refreshDataAndView');
+                    }else {
+                        fnAlert(null,data.message);
+                    }
                 }, parameters, '');
             });
         };

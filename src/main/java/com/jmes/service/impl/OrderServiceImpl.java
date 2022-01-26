@@ -126,32 +126,49 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void managerControlStatus(Map<String, Object> map) throws Exception {
+    public void managerControlStatus(Model model, Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<HashMap<String, Object>> jsonArray = null;
+        Boolean flag = false;
+        String msg = "";
 
         if (jsonObject != null)
             jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
 
         for (HashMap<String, Object> hashMap : jsonArray) {
-            hashMap.put("LOGIN_USER_ID",userId);
+            String controlStatus = (String) hashMap.get("CONTROL_STATUS");
+            if(controlStatus != null && "ORD002".equals(controlStatus)) {
+                hashMap.put("queryId", "orderMapper.selectCheckControlStatus");
+                HashMap<String,Object> temp = (HashMap<String, Object>) this.innodaleDao.getInfo(hashMap);
+                if(temp != null) {
+                    flag = true;
+                    if(temp.get("MCT_WORK_SEQ") != null) {
+                        msg = "가공 진행중인 작업건은 확정취소가 불가합니다.";
+                    }else if(temp.get("MATERIAL_ORDER_NUM") != null) {
+                        msg = "소재 주문중인 작업건은 확정취소가 불가합니다.";
+                    }else if(temp.get("OUTSIDE_STATUS") != null && "OST001".equals((String) temp.get("OUTSIDE_STATUS"))) {
+                        msg = "외주 가공중인 작업은 확정취소가 불가합니다.";
+                    }
+                }
+            }
 
-//            hashMap.put("queryId", "orderMapper.updateControlRevision");
-//            this.innodaleDao.update(hashMap);
-//            hashMap.put("queryId", "orderMapper.updateControlBarcodeRevision");
-//            this.innodaleDao.update(hashMap);
-//            hashMap.put("queryId", "orderMapper.insertControlBarcodeRevision");
-//            this.innodaleDao.create(hashMap);
-            hashMap.put("queryId", "orderMapper.updateControlStatus");
-            this.innodaleDao.update(hashMap);
-            hashMap.put("queryId", "orderMapper.createControlProgress");
-            this.innodaleDao.create(hashMap);
-            hashMap.put("queryId", "orderMapper.updateOutsideConfirmDt");
-            this.innodaleDao.update(hashMap);
+            if(!flag) {
+                hashMap.put("LOGIN_USER_ID",userId);
 
+                hashMap.put("queryId", "orderMapper.updateControlStatus");
+                this.innodaleDao.update(hashMap);
+                hashMap.put("queryId", "orderMapper.createControlProgress");
+                this.innodaleDao.create(hashMap);
+                hashMap.put("queryId", "orderMapper.updateOutsideConfirmDt");
+                this.innodaleDao.update(hashMap);
+            }
         }
+        if(flag) {
+            model.addAttribute("message",msg);
+        }
+        model.addAttribute("flag",flag);
     }
 
 

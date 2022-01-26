@@ -10,7 +10,7 @@ public interface OrderService {
 
     void removeControl(Map<String, Object> map) throws Exception;
 
-    void managerControlStatus(Map<String, Object> map) throws Exception;
+    void managerControlStatus(Model model, Map<String, Object> map) throws Exception;
 
     void createMonthClose(Map<String, Object> map) throws Exception;
 

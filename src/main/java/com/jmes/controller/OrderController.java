@@ -45,10 +45,10 @@ public class OrderController {
      * @description 주문 상태 변경
      */
     @RequestMapping(value = "/managerControlStatus", method = RequestMethod.POST)
-    public String managerControlStatus(HttpServletRequest request) throws Exception {
+    public String managerControlStatus(Model model, HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
 
-        this.orderService.managerControlStatus(map);
+        this.orderService.managerControlStatus(model,map);
 
         return "jsonView";
     }
