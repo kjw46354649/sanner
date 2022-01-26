@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
             Map<String,Object> tempMap = jsonMap.get(i);
             if(tempMap.get("REGIST_NUM") != null && !"".equals(tempMap.get("REGIST_NUM"))) {
                 listMap.add(tempMap);
-                registList.add(String.valueOf(tempMap.get("REGIST_NUM")));
+                registList.add((String) tempMap.get("REGIST_NUM"));
             }
         }
 
@@ -182,7 +182,7 @@ public class OrderServiceImpl implements OrderService {
                 hashMap.put("GROUP_KEY", uuid);
                 hashMap.put("PROCESS_TYPE", "C");
 
-                if(jsonMap.get("TYPE") != null && String.valueOf(jsonMap.get("TYPE")).equals("Y")) {
+                if(jsonMap.get("TYPE") != null && "Y".equals((String) jsonMap.get("TYPE"))) {
                     hashMap.put("queryId", "orderMapper.createBeforeMonthClose");
                     this.innodaleDao.create(hashMap);
                 }else {
@@ -202,7 +202,7 @@ public class OrderServiceImpl implements OrderService {
         }
 //
 
-        if(jsonMap.get("TYPE") != null && String.valueOf(jsonMap.get("TYPE")).equals("Y")) {
+        if(jsonMap.get("TYPE") != null && "Y".equals((String) jsonMap.get("TYPE"))) {
             jsonMap.put("GROUP_KEY", uuid);
             jsonMap.put("queryId", "procedure.SP_MONTH_CLOSE");
             this.innodaleDao.callProcedureMethod(jsonMap);
@@ -243,7 +243,7 @@ public class OrderServiceImpl implements OrderService {
                 hashMap.put("GROUP_KEY", uuid);
                 hashMap.put("PROCESS_TYPE", "D");
 
-                if(jsonMap.get("TYPE") != null && String.valueOf(jsonMap.get("TYPE")).equals("Y")) {
+                if(jsonMap.get("TYPE") != null && "Y".equals((String) jsonMap.get("TYPE"))) {
                     hashMap.put("queryId", "orderMapper.createBeforeMonthClose");
                     this.innodaleDao.create(hashMap);
                 }else {
@@ -259,7 +259,7 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-        if(jsonMap.get("TYPE") != null && String.valueOf(jsonMap.get("TYPE")).equals("Y")) {
+        if(jsonMap.get("TYPE") != null && "Y".equals((String) jsonMap.get("TYPE"))) {
             jsonMap.put("GROUP_KEY", uuid);
             jsonMap.put("queryId", "procedure.SP_REMOVE_MONTH_CLOSE");
             this.innodaleDao.callProcedureMethod(jsonMap);
@@ -297,7 +297,7 @@ public class OrderServiceImpl implements OrderService {
             for (HashMap<String, Object> hashMap : infoData) {
                 invoiceNum = (String) hashMap.get("INVOICE_NUM");
 
-                if (invoiceNum.equals("")) {
+                if ("".equals(invoiceNum)) {
                     invoiceNum = this.orderDao.createInvoiceNum(hashMap);
                     hashMap.put("INVOICE_NUM", invoiceNum);
                 }
@@ -356,7 +356,7 @@ public class OrderServiceImpl implements OrderService {
                 message = "먼저 주문확정을 해주세요.";
             }
 
-            if (type.equals("confirm")) {
+            if ("confirm".equals(type)) {
                 // 이미 가공확정 됐는지 확인
                 map.put("queryId", "orderMapper.selectHasPartStatusConfirm");
                 if (this.orderDao.getFlag(map) && !flag) {
@@ -369,7 +369,7 @@ public class OrderServiceImpl implements OrderService {
                     flag = true;
                     message = "외주 작업지시번호는 가공확정을 할수 없습니다.";
                 }
-            } else if (type.equals("conversion")) {
+            } else if ("conversion".equals(type)) {
                 // 이미 가공확정 됐는지 확인
                 map.put("queryId", "orderMapper.selectHasPartStatusConfirm");
                 if (this.orderDao.getFlag(map) && !flag) {
@@ -477,7 +477,7 @@ public class OrderServiceImpl implements OrderService {
         if (controlPartList != null && controlPartList.size() > 0) {
             for (HashMap<String, Object> hashMap : controlPartList) {
                 hashMap.put("LOGIN_USER_ID",userId);
-                if (action.equals("CHECK")) {
+                if ("CHECK".equals(action)) {
                     // 주문상태가 대기 또는 취소가 아닌지 확인
                     hashMap.put("queryId", "orderMapper.selectHasControlStatusConfirm");
                     if (this.orderDao.getFlag(hashMap)) {
@@ -697,8 +697,8 @@ public class OrderServiceImpl implements OrderService {
         ArrayList<HashMap<String, Object>> addList = null;
         ArrayList<HashMap<String, Object>> updateList = null;
         boolean flag = false;
-        Integer seq1 = null;
-        Integer seq2 = null;
+        String seq1 = null;
+        String seq2 = null;
 
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
@@ -707,8 +707,8 @@ public class OrderServiceImpl implements OrderService {
             addList = (ArrayList<HashMap<String, Object>>) jsonMap.get("addList");
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
 
-            seq1 = Integer.parseInt(String.valueOf(jsonMap.get("SEQ1")));
-            seq2 = Integer.parseInt(String.valueOf(jsonMap.get("SEQ2")));
+            seq1 = (String) jsonMap.get("SEQ1");
+            seq2 = (String) jsonMap.get("SEQ2");
         }
 
         try {
@@ -749,8 +749,8 @@ public class OrderServiceImpl implements OrderService {
         Map<String, Object> jsonMap = null;
         ArrayList<HashMap<String, Object>> updateList = null;
         boolean flag = false;
-        Integer seq1 = null;
-        Integer seq2 = null;
+        String seq1 = null;
+        String seq2 = null;
 
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
@@ -758,8 +758,8 @@ public class OrderServiceImpl implements OrderService {
         if(jsonMap != null) {
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
 
-            seq1 = Integer.parseInt(String.valueOf(jsonMap.get("SEQ1")));
-            seq2 = Integer.parseInt(String.valueOf(jsonMap.get("SEQ2")));
+            seq1 = (String) jsonMap.get("SEQ1");
+            seq2 = (String) jsonMap.get("SEQ2");
         }
 
         try {
@@ -802,16 +802,14 @@ public class OrderServiceImpl implements OrderService {
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
         }
 
-
         if (addList != null && addList.size() > 0) {
             for (HashMap<String, Object> hashMap : addList) {
                 try {
-                    String insideOutSeq = String.valueOf(hashMap.get("INSIDE_OUT_SEQ"));
                     Boolean checkBox = (Boolean)hashMap.get("CHECK_BOX");
                     String rnum = (String)hashMap.get("RNUM");
                     hashMap.put("LOGIN_USER_ID",userId);
                     if("".equals(rnum) && checkBox) {
-                        if("".equals(insideOutSeq) || insideOutSeq == null){
+                        if(hashMap.get("INSIDE_OUT_SEQ") == null || "".equals(hashMap.get("INSIDE_OUT_SEQ"))) {
                             hashMap.put("queryId", "orderMapper.insertRequestStock");
                             this.innodaleDao.insertGrid(hashMap);
                         }else {
@@ -843,7 +841,7 @@ public class OrderServiceImpl implements OrderService {
                         if(!"".equals(insideOutSeq)) {
                             hashMap.put("queryId", "orderMapper.selectRequestStockStatus");
                             Map<String,Object> tempData = this.innodaleDao.getInfo(hashMap);
-                            if(tempData.get("OUT_STATUS").equals("OUT002")) {
+                            if("OUT002".equals(tempData.get("OUT_STATUS"))) {
                                 flag = true;
                                 message = "불출 완료된 건은 취소 불가합니다.";
                             }else {
@@ -947,7 +945,7 @@ public class OrderServiceImpl implements OrderService {
             for (HashMap<String, Object> hashMap : addList) {
                 hashMap.put("LOGIN_USER_ID",userId);
 
-                if(hashMap.get("REGIST_NUM") != null && !hashMap.get("REGIST_NUM").equals("")) {
+                if(hashMap.get("REGIST_NUM") != null && !"".equals(hashMap.get("REGIST_NUM"))) {
                     hashMap.put("queryId", "orderMapper.createOrder");
                     this.innodaleDao.create(hashMap);
 
@@ -1103,7 +1101,7 @@ public class OrderServiceImpl implements OrderService {
                     message = "주문 확정이 불가능한 대상이 있습니다.";
                     if(!tempMap.containsKey("PDF_GFILE_SEQ") || !tempMap.containsKey("DRAWING_NUM") || !tempMap.containsKey("ORDER_QTY")) {
                         flag = true;
-                    }else if(tempMap.get("ORDER_STATUS") != null && tempMap.get("ORDER_STATUS").equals("REG003")) {
+                    }else if(tempMap.get("ORDER_STATUS") != null && "REG003".equals(tempMap.get("ORDER_STATUS"))) {
                         flag = true;
                     }else {
                         message = "";
@@ -1183,15 +1181,15 @@ public class OrderServiceImpl implements OrderService {
                         }
                     }
 
-                    if(controlMap != null && controlMap.get("CONTROL_SEQ") != null && !controlMap.get("CONTROL_SEQ").equals("")) {
+                    if(controlMap != null && controlMap.get("CONTROL_SEQ") != null && !"".equals(controlMap.get("CONTROL_SEQ"))) {
                         String controlStatus = String.valueOf(controlMap.get("CONTROL_STATUS"));
-                        if(controlStatus.equals("ORD001") || controlStatus.equals("ORD005")) {
+                        if("ORD001".equals(controlStatus) || "ORD005".equals(controlStatus)) {
                             flag = true;
                             validationResult = "RS_EXISTS";
                         }else {
                             hashMap.put("MERGE_CONTROL_SEQ",controlMap.get("CONTROL_SEQ"));
                             hashMap.put("MERGE_CONTROL_DETAIL_SEQ",controlMap.get("CONTROL_DETAIL_SEQ"));
-                            hashMap.put("MERGE_CONTROL_STATUS",controlMap.get("CONTROL_STATUS"));
+                            hashMap.put("MERGE_CONTROL_STATUS",controlStatus);
                         }
 
                         String partNum = (String) controlMap.get("PART_NUM");
@@ -1202,7 +1200,7 @@ public class OrderServiceImpl implements OrderService {
 
                     String[] checkColumn = {"WORK_TYPE", "MATERIAL_SUPPLY_YN","MAIN_INSPECTION","SAME_SIDE_YN","SIZE_TXT","MATERIAL_DETAIL","MATERIAL_KIND","SURFACE_TREAT","SPECIAL_TREATMENT","PART_NUM","INNER_DUE_DT"};
                     if(hashMap.get("MERGE_CONTROL_SEQ") != null) {
-                        if(validationResult.equals("SUCCESS")) {
+                        if("SUCCESS".equals(validationResult)) {
                             Boolean mergeFlag = false;
 
                             for(String column : checkColumn) {
@@ -1230,7 +1228,7 @@ public class OrderServiceImpl implements OrderService {
                         if(mergeList.size() >= 2) {
                             for(int i=0;i<mergeList.size();i++) {
                                 HashMap<String, Object> temp = mergeList.get(i);
-                                if(temp.get("ROW_NUM") != hashMap.get("ROW_NUM") && validationResult.equals("SUCCESS")) {
+                                if(temp.get("ROW_NUM") != hashMap.get("ROW_NUM") && "SUCCESS".equals(validationResult)) {
                                     Boolean mergeFlag = false;
 
                                     for(String column : checkColumn) {
