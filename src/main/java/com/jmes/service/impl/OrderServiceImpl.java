@@ -143,12 +143,14 @@ public class OrderServiceImpl implements OrderService {
                 hashMap.put("queryId", "orderMapper.selectCheckControlStatus");
                 HashMap<String,Object> temp = (HashMap<String, Object>) this.innodaleDao.getInfo(hashMap);
                 if(temp != null) {
-                    flag = true;
                     if(temp.get("MCT_WORK_SEQ") != null) {
+                        flag = true;
                         msg = "가공 진행중인 작업건은 확정취소가 불가합니다.";
                     }else if(temp.get("MATERIAL_ORDER_NUM") != null) {
+                        flag = true;
                         msg = "소재 주문중인 작업건은 확정취소가 불가합니다.";
                     }else if(temp.get("OUTSIDE_STATUS") != null && "OST001".equals((String) temp.get("OUTSIDE_STATUS"))) {
+                        flag = true;
                         msg = "외주 가공중인 작업은 확정취소가 불가합니다.";
                     }
                 }

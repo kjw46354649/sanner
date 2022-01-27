@@ -1749,6 +1749,8 @@
                 }
             }
 
+            console.log('controlStatusList',controlStatusList)
+            console.log('controlStatus',controlStatus)
             // 중복제거
             controlStatusList = [...new Set(controlStatusList)];
             controlSeqList = [...new Set(controlSeqList)];
@@ -1765,6 +1767,7 @@
                     '    <span>상태변경이 불가한 대상이 있습니다.\n선택목록을 확인해주세요</span>\n' +
                     '</h4>';
                 fnAlert(null, message);
+                $controlManagementGrid.pqGrid('refreshDataAndView');
                 return false;
             }
             if(outsideFlag) {
@@ -1774,6 +1777,7 @@
                     '    <span>외주가공 중에는 취소가 불가능합니다.\n외주가공 취소 후 진행해주세요.</span>\n' +
                     '</h4>';
                 fnAlert(null, message);
+                $controlManagementGrid.pqGrid('refreshDataAndView');
                 return false;
             }
             if(closeFlag) {
@@ -1783,6 +1787,7 @@
                     '    <span>마감된 대상이 존재하여 종료가 불가합니다.</span>\n' +
                     '</h4>';
                 fnAlert(null, message);
+                $controlManagementGrid.pqGrid('refreshDataAndView');
                 return false;
             }
 
@@ -1819,10 +1824,10 @@
                             '    <span>' + "<spring:message code='com.alert.default.save.success' />" + '</span>\n' +
                             '</h4>';
                         fnAlert(null, message3);
-                        $controlManagementGrid.pqGrid('refreshDataAndView');
                     }else {
                         fnAlert(null,data.message);
                     }
+                    $controlManagementGrid.pqGrid('refreshDataAndView');
                 }, parameters, '');
             });
         };

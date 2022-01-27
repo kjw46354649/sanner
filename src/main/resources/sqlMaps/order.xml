@@ -252,7 +252,8 @@
         <choose>
             <!-- 작업생성일시 -->
             <when test="CONTROL_SEARCH_CONDITION == 'OCM00'">
-                AND DATE_FORMAT(A.INSERT_DT, '%Y/%m/%d') BETWEEN #{CONTROL_MANAGE_START_DATE} AND #{CONTROL_MANAGE_END_DATE}
+                AND A.INSERT_DT >= #{CONTROL_MANAGE_START_DATE}
+                AND A.INSERT_DT <![CDATA[ <= ]]> DATE_ADD(#{CONTROL_MANAGE_END_DATE}, INTERVAL 1 DAY)
             </when>
             <!-- 가공확정일시 -->
             <when test="CONTROL_SEARCH_CONDITION == 'OCM01'">
@@ -260,7 +261,8 @@
             </when>
             <!-- 가공 납기 -->
             <when test="CONTROL_SEARCH_CONDITION == 'OCM02'">
-                AND DATE_FORMAT(B.INNER_DUE_DT, '%Y/%m/%d') BETWEEN #{CONTROL_MANAGE_START_DATE} AND #{CONTROL_MANAGE_END_DATE}
+                AND B.INNER_DUE_DT >= REPLACE(#{CONTROL_MANAGE_START_DATE},'/',SPACE(0))
+                AND B.INNER_DUE_DT <![CDATA[ <= ]]> REPLACE(#{CONTROL_MANAGE_END_DATE},'/', SPACE(0))
             </when>
         </choose>
         <if test="UNIT_PRICE_CONFIRM != null and UNIT_PRICE_CONFIRM != ''">
@@ -283,7 +285,6 @@
             AND IFNULL(A.OUT_FINISH_STATUS,'RLS') != 'RLS010'
         </if>
         ORDER BY A.CONTROL_NUM, A.CONTROL_SEQ, B.TEMP_REGIST IS NULL ASC, B.TEMP_REGIST ASC, B.PART_NUM, C.ORDER_SEQ
---         ORDER BY A.CONTROL_NUM, A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.PART_NUM, C.ORDER_SEQ
     </select>
 
     <select id="selectControlCloseVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
