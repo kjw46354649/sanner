@@ -847,11 +847,11 @@
                     </if>
                     <if test='SEL_OUTGOING_DATE_TYPE == "3"'>
                         AND X.OUT_FINISH_DT >= #{SEL_ST_DT}
-                        AND X.OUT_FINISH_DT <![CDATA[ <= ]]> #{SEL_END_DT}  <!-- 출고일시 -->
+                        AND X.OUT_FINISH_DT <![CDATA[ <= ]]> DATE_ADD(#{SEL_END_DT}, INTERVAL 1 DAY)  <!-- 출고일시 -->
                     </if>
                     <if test='SEL_OUTGOING_DATE_TYPE == "4"'>
                         AND X.CONTROL_CONFIRM_DT >= #{SEL_ST_DT}
-                        AND X.CONTROL_CONFIRM_DT <![CDATA[ <= ]]> #{SEL_END_DT}  <!-- 확정일시 -->
+                        AND X.CONTROL_CONFIRM_DT <![CDATA[ <= ]]> DATE_ADD(#{SEL_END_DT}, INTERVAL 1 DAY) <!-- 확정일시 -->
                     </if>
                 </if>
             </if>
