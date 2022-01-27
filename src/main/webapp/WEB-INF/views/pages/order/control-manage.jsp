@@ -1749,8 +1749,6 @@
                 }
             }
 
-            console.log('controlStatusList',controlStatusList)
-            console.log('controlStatus',controlStatus)
             // 중복제거
             controlStatusList = [...new Set(controlStatusList)];
             controlSeqList = [...new Set(controlSeqList)];
@@ -3665,7 +3663,7 @@
             let GfileKey = $('#common_file_download_form').find('#GFILE_SEQ').val();
             let rowIndx = $attachmentButton.data('rowIndx');
 
-            if (GfileKey !== '' && GfileKey !== $attachmentButton.data('GfileKey')) {
+            if (GfileKey !== $attachmentButton.data('GfileKey')) {
                 $controlManagementGrid.pqGrid('updateRow', {rowIndx: rowIndx, row: {'ETC_GFILE_SEQ': GfileKey}, checkEditable: false});
                 $('#CONTROL_MANAGE_SAVE').click();
             }

@@ -810,9 +810,9 @@
                         }
                         let GfileKey = ui.rowData.ETC_GFILE_SEQ;
                         $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
-                        $('#ATTACHMENT_BUTTON').data('rowIndx', ui.rowIndx);
-                        $('#ATTACHMENT_BUTTON').data('GfileKey', GfileKey);
-                        commonFileDownUploadPopupCall(GfileKey, 'ATTACHMENT_BUTTON');
+                        // $('#ATTACHMENT_BUTTON').data('rowIndx', ui.rowIndx);
+                        // $('#ATTACHMENT_BUTTON').data('GfileKey', GfileKey);
+                        commonFileDownUploadPopupCall(GfileKey, 'MCT_RESULT_MANAGE');
                     });
                 }
             },

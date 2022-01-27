@@ -71,6 +71,7 @@
             <input type="hidden" id="queryId" name="queryId" value="">
             <input type="hidden" id="EST_SEQ" name="EST_SEQ" value="">
             <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
+            <input type="hidden" id="IMG_GFILE_SEQ" name="IMG_GFILE_SEQ" value="">
             <input type="hidden" id="MAIL_BOX_SEQ" name="MAIL_BOX_SEQ" value="">
             <input type="hidden" id="EST_STATUS" name="EST_STATUS" value="">
             <div class="basicWrap">
@@ -821,7 +822,7 @@
                     for (let i = firstRow; i <= lastRow; i++) estimateRegisterSelectedRowIndex.push(i);
                     if(firstRow === lastRow){
                         let selRowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: firstRow});
-                        $("#estimate_register_info_form").find("#GFILE_SEQ").val(selRowData.IMG_GFILE_SEQ);
+                        $("#estimate_register_info_form").find("#IMG_GFILE_SEQ").val(selRowData.IMG_GFILE_SEQ);
                         callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
                     }
                 }
@@ -1171,6 +1172,11 @@
                 $("#estimate_register_info_form #ESTIMATE_DETAIL_DATA").val(JSON.stringify(detail_data));
                 $("#estimate_register_info_form #ESTIMATE_RECEIVER_DATA").val(JSON.stringify(receiver_data));
                 $("#estimate_register_info_form #EMAIL_CONTENT").val(mail_data);
+
+                let file_data = estimateRegisterFileGrid.pqGrid('option', 'dataModel.data');
+                if(file_data.length == 0) {
+                    $("#estimate_register_info_form #GFILE_SEQ").val('');
+                }
 
                 $("#estimate_version_up_sequence_form #hidden_est_seq").val(EST_SEQ);
                 $("#common_excel_form #paramData").val(EST_SEQ);

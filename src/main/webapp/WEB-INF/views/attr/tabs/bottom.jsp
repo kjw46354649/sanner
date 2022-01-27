@@ -1279,10 +1279,16 @@
     });
 
     commonFileDownUploadPopup.on('hide.bs.modal', function (e) {
-        commonFileDownUploadGrid.pqGrid('destroy');
         let callElement = $("#common_file_download_form").find("#callElement").val();
+        let data = commonFileDownUploadGrid.pqGrid('option', 'dataModel.data');
+        if((callElement == 'ATTACHMENT_BUTTON' || callElement == 'estimateListFileUpload') && data.length == 0) {
+            $('#common_file_download_form').find('#GFILE_SEQ').val('');
+        }
+
         $("#common_file_download_form #deleteYn").val(false);
         $("#" + callElement ).trigger('click');
+
+        commonFileDownUploadGrid.pqGrid('destroy');
     });
 
     /** 파일 업로드 다운로드 Call 함수
@@ -1313,11 +1319,18 @@
         e.preventDefault();
         $(this).removeClass('drag-over');
         let cadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
+        console.log(cadFiles);
+
         let GfileSeq = $("#common_file_download_form").find("#GFILE_SEQ").val();
         let uploadFileSize = 0;
         for(let i = 0; i < cadFiles.length; i++) {
             let file = cadFiles[i];
             uploadControlFiles.push(file); //업로드 목록에 추가
+            if(file.type == "" && file.size == 0) {
+                fnAlert(null,"파일 형식을 확인해주세요.");
+                uploadControlFiles = [];
+                return false;
+            }
         }
         if (uploadControlFiles.length > 0) { // file upload
             let formData = new FormData();
@@ -1333,6 +1346,9 @@
                     fnAlert(null, "파일 첨부는 최대 22MB까지 가능합니다.");
                     processFlag = false;
                 }
+            }
+            if($("#common_file_download_form").find("#callElement").val() == 'MCT_RESULT_MANAGE') {
+                processFlag = false;
             }
             // console.log($('#common_cad_file_attach_form').find("#queryId").val())
             formData.append('GFILE_SEQ', GfileSeq);

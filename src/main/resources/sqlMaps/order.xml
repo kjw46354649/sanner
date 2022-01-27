@@ -3870,8 +3870,8 @@
             <if test="UNIT_AMT_NOTE != null">
                 UNIT_AMT_NOTE = #{UNIT_AMT_NOTE},
             </if>
-            <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
-                ETC_GFILE_SEQ = #{ETC_GFILE_SEQ},
+            <if test="ETC_GFILE_SEQ != null">
+                ETC_GFILE_SEQ = CASE WHEN #{ETC_GFILE_SEQ} = '' THEN NULL ELSE #{ETC_GFILE_SEQ} END,
             </if>
             <if test="SPECIAL_TREATMENT != null">
                 <choose>
