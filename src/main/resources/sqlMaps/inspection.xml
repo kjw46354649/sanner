@@ -637,7 +637,7 @@
             , T.OUTSIDE_IN_DT
             , T.Q_INSPECT_GRADE_NM
             , T.Q_DT
-            , T.CONTROL_CONFIRM_DT
+            , SF_GET_DATE_F(T.CONTROL_CONFIRM_DT,'YYYY','') AS CONTROL_CONFIRM_DT
             , T.CONTROL_CLOSE_DT
             , T.SCRAP_YN
         FROM (
@@ -788,7 +788,7 @@
                     SF_GET_MATERIAL_RECEIPT_DT(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ) AS MATERIAL_RECEIPT_DT ,
                     SF_GET_DATE_F(D.OUTSIDE_IN_DT,'','M') AS OUTSIDE_IN_DT ,
                     (
-                        SELECT SF_GET_DATE_F(AA.STATUS_DT,'YYYY','')
+                        SELECT AA.STATUS_DT
                         FROM TBL_CONTROL_PROGRESS AA
                         WHERE 1 = 1
                             AND B.CONTROL_SEQ = AA.CONTROL_SEQ
@@ -805,15 +805,16 @@
                              ELSE SPACE(0)
                         END
                     ) AS CONTROL_CLOSE_DT, <!-- 21.10.25 주문 마감일자로 의미 변경 -->
-                    B.SCRAP_YN
-                FROM TBL_ORDER A, TBL_CONTROL_PART_ORDER B, TBL_CONTROL C, TBL_CONTROL_PART D
-                WHERE A.ORDER_SEQ = B.ORDER_SEQ
-                    AND A.DEL_YN = 'N'
-                    AND B.CONTROL_SEQ = C.CONTROL_SEQ
-                    AND C.CONTROL_SEQ = D.CONTROL_SEQ
-                    AND C.DEL_YN = 'N'
+                    A.SCRAP_YN
+                FROM TBL_ORDER A
+                    INNER JOIN TBL_CONTROL_PART_ORDER B ON A.ORDER_SEQ = B.ORDER_SEQ
+                    INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.DEL_YN = 'N' AND C.CONTROL_STATUS IN ('ORD001', 'ORD003', 'ORD005')
+                    INNER JOIN TBL_CONTROL_PART D ON D.CONTROL_SEQ = C.CONTROL_SEQ
+                        <if test="SEL_OUTSIDE_COMP_CD !='' and SEL_OUTSIDE_COMP_CD != null">
+                            AND D.OUTSIDE_COMP_CD = #{SEL_OUTSIDE_COMP_CD}
+                        </if>
+                WHERE A.DEL_YN = 'N'
                     AND IFNULL(A.SCRAP_YN, 'N') = 'N'
-                    AND C.CONTROL_STATUS IN ('ORD001', 'ORD003', 'ORD005')
                     <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
                         AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
                     </if>
@@ -823,9 +824,6 @@
                     <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
                         AND UPPER(A.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
                     </if>
-                    <if test="SEL_OUTSIDE_COMP_CD !='' and SEL_OUTSIDE_COMP_CD != null">
-                        AND D.OUTSIDE_COMP_CD = #{SEL_OUTSIDE_COMP_CD}
-                    </if>
                     <if test="SEL_ORDER_NUM !='' and SEL_ORDER_NUM != null">
                         AND UPPER(A.ORDER_NUM) LIKE CONCAT('%', UPPER(#{SEL_ORDER_NUM}), '%')
                     </if>
@@ -833,27 +831,31 @@
                         AND A.OUT_FINISH_DT IS NULL
                     </if>
             ) X LEFT OUTER JOIN TBL_INSPECT Z ON ( Z.INSPECT_SEQ = X.INSPECT_SEQ AND Z.INSPECT_TYPE = '1' OR Z.INSPECT_SEQ = X.INSPECT_SEQ AND Z.INSPECT_TYPE = '2' AND Z.ORDER_SEQ = X.ORDER_SEQ)
-        ) T
-        WHERE 1=1
-        <if test="SEL_ST_DT !='' and SEL_ST_DT != null">
-            <if test="SEL_END_DT !='' and SEL_END_DT != null">
-                <if test='SEL_OUTGOING_DATE_TYPE == "1"'>
-                    AND DATE_FORMAT(T.ORDER_DUE_DT, '%Y%m%d') BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))    <!-- 요망납기 -->
-                </if>
-                <if test='SEL_OUTGOING_DATE_TYPE == "2"'>
-                    AND DATE_FORMAT(T.INNER_DUE_DT, '%Y%m%d') BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))    <!-- 가공납기 -->
-                </if>
-                <if test='SEL_OUTGOING_DATE_TYPE == "3"'>
-                    AND DATE_FORMAT(T.OUT_FINISH_DT, '%Y%m%d') BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))          <!-- 출고일시 -->
-                </if>
-                <if test='SEL_OUTGOING_DATE_TYPE == "4"'>
-                    AND DATE_FORMAT(T.CONTROL_CONFIRM_DT, '%Y%m%d') BETWEEN REPLACE(#{SEL_ST_DT}, '/', SPACE(0)) AND REPLACE(#{SEL_END_DT}, '/', SPACE(0))          <!-- 확정일시 -->
+            WHERE 1=1
+            <if test="SEL_PART_NUM_VIEW_YN == null">
+                AND X.PART_NUM IS NULL    <!-- Part 단위표시가 체크가 안되어 있는 경우 -->
+            </if>
+            <if test="SEL_ST_DT !='' and SEL_ST_DT != null">
+                <if test="SEL_END_DT !='' and SEL_END_DT != null">
+                    <if test='SEL_OUTGOING_DATE_TYPE == "1"'>
+                        AND STR_TO_DATE(X.ORDER_DUE_DT, '%Y%m%d') >= #{SEL_ST_DT}
+                        AND STR_TO_DATE(X.ORDER_DUE_DT, '%Y%m%d') <![CDATA[ <= ]]> #{SEL_END_DT}   <!-- 요망납기 -->
+                    </if>
+                    <if test='SEL_OUTGOING_DATE_TYPE == "2"'>
+                        AND STR_TO_DATE(X.INNER_DUE_DT, '%Y%m%d') >= #{SEL_ST_DT}
+                        AND STR_TO_DATE(X.INNER_DUE_DT, '%Y%m%d') <![CDATA[ <= ]]> #{SEL_END_DT}   <!-- 가공납기 -->
+                    </if>
+                    <if test='SEL_OUTGOING_DATE_TYPE == "3"'>
+                        AND X.OUT_FINISH_DT >= #{SEL_ST_DT}
+                        AND X.OUT_FINISH_DT <![CDATA[ <= ]]> #{SEL_END_DT}  <!-- 출고일시 -->
+                    </if>
+                    <if test='SEL_OUTGOING_DATE_TYPE == "4"'>
+                        AND X.CONTROL_CONFIRM_DT >= #{SEL_ST_DT}
+                        AND X.CONTROL_CONFIRM_DT <![CDATA[ <= ]]> #{SEL_END_DT}  <!-- 확정일시 -->
+                    </if>
                 </if>
             </if>
-        </if>
-        <if test="SEL_PART_NUM_VIEW_YN == null">
-            AND T.PART_NUM IS NULL    <!-- Part 단위표시가 체크가 안되어 있는 경우 -->
-        </if>
+        ) T
         GROUP BY T.REGIST_NUM, T.CONTROL_NUM
         ORDER BY T.CONTROL_NUM, T.ORDER_NUM, T.DRAWING_NUM
     </select>
