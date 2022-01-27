@@ -838,12 +838,12 @@
             <if test="SEL_ST_DT !='' and SEL_ST_DT != null">
                 <if test="SEL_END_DT !='' and SEL_END_DT != null">
                     <if test='SEL_OUTGOING_DATE_TYPE == "1"'>
-                        AND STR_TO_DATE(X.ORDER_DUE_DT, '%Y%m%d') >= #{SEL_ST_DT}
-                        AND STR_TO_DATE(X.ORDER_DUE_DT, '%Y%m%d') <![CDATA[ <= ]]> #{SEL_END_DT}   <!-- 요망납기 -->
+                        AND X.ORDER_DUE_DT >= REPLACE(#{SEL_ST_DT},'/',SPACE(0))
+                        AND X.ORDER_DUE_DT <![CDATA[ <= ]]> REPLACE(#{SEL_END_DT},'/',SPACE(0))  <!-- 요망납기 -->
                     </if>
                     <if test='SEL_OUTGOING_DATE_TYPE == "2"'>
-                        AND STR_TO_DATE(X.INNER_DUE_DT, '%Y%m%d') >= #{SEL_ST_DT}
-                        AND STR_TO_DATE(X.INNER_DUE_DT, '%Y%m%d') <![CDATA[ <= ]]> #{SEL_END_DT}   <!-- 가공납기 -->
+                        AND X.INNER_DUE_DT >= REPLACE(#{SEL_ST_DT},'/',SPACE(0))
+                        AND X.INNER_DUE_DT <![CDATA[ <= ]]> REPLACE(#{SEL_END_DT},'/',SPACE(0))   <!-- 가공납기 -->
                     </if>
                     <if test='SEL_OUTGOING_DATE_TYPE == "3"'>
                         AND X.OUT_FINISH_DT >= #{SEL_ST_DT}
