@@ -1319,7 +1319,6 @@
         e.preventDefault();
         $(this).removeClass('drag-over');
         let cadFiles = e.originalEvent.dataTransfer.files; //드래그&드랍 항목
-        console.log(cadFiles);
 
         let GfileSeq = $("#common_file_download_form").find("#GFILE_SEQ").val();
         let uploadFileSize = 0;
