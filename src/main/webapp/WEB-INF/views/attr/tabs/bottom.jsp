@@ -1322,11 +1322,23 @@
 
         let GfileSeq = $("#common_file_download_form").find("#GFILE_SEQ").val();
         let uploadFileSize = 0;
+
+        for (const item of e.originalEvent.dataTransfer.items) {
+            // kind will be 'file' for file/directory entries.
+            if (item.kind === 'file') {
+                const entry = item.webkitGetAsEntry();
+                if(entry.isDirectory) {   // file인지 dir인지 구분
+                    fnAlert(null,"파일 형식을 확인해주세요.");
+                    uploadControlFiles = [];
+                    return false;
+                }
+            }
+        }
         for(let i = 0; i < cadFiles.length; i++) {
             let file = cadFiles[i];
             uploadControlFiles.push(file); //업로드 목록에 추가
-            if(file.type == "" && file.size == 0) {
-                fnAlert(null,"파일 형식을 확인해주세요.");
+            if(file.size > (50 * 1024 * 1024)) { // 파일당 50mb 사이즈 제한
+                fnAlert(null, "파일 첨부는 1개당 최대 50MB까지 가능합니다.");
                 uploadControlFiles = [];
                 return false;
             }
