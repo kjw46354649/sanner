@@ -2985,10 +2985,11 @@
                 0 AS CASH_AMT, 0 AS PAPER_AMT, 0 AS DUE_PAY_AMT, 0 AS DEPOSIT_TOTAL_AMT, 0 AS NOT_DEPOSIT_AMT
             FROM (
                 SELECT
-                    A.COMP_CD, A.ORDER_COMP_CD, DATE_FORMAT(STR_TO_DATE(E.CLOSE_MONTH, '%Y%m'), '%Y') as CLOSE_YEAR, E.FINAL_NEGO_AMT + E.FINAL_NEGO_AMT * 0.1 AS SALE_AMT
+                    A.COMP_CD, A.ORDER_COMP_CD, DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y') as CLOSE_YEAR, E.FINAL_NEGO_AMT + E.FINAL_NEGO_AMT * 0.1 AS SALE_AMT
                 FROM TBL_ORDER A
-                    INNER JOIN TBL_MONTH_CLOSE E ON A.COMP_CD = E.COMP_CD AND A.ORDER_COMP_CD = E.ORDER_COMP_CD
-                        AND DATE_FORMAT(STR_TO_DATE(E.CLOSE_MONTH, '%Y%m'), '%Y') = #{MONEY_MANAGE_STATUS_YEAR}
+                    INNER JOIN TBL_MONTH_CLOSE_ORDER D ON A.ORDER_SEQ = D.ORDER_SEQ AND A.COMP_CD = D.COMP_CD AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
+                    INNER JOIN TBL_MONTH_CLOSE E ON D.COMP_CD = E.COMP_CD AND D.CLOSE_MONTH = E.CLOSE_MONTH AND D.ORDER_COMP_CD = E.ORDER_COMP_CD AND D.CLOSE_VER = E.CLOSE_VER
+                        AND DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y') = #{MONEY_MANAGE_STATUS_YEAR}
                 WHERE A.DEL_YN = 'N'
                     <if test="COMP_CD != null and COMP_CD != ''">
                         AND A.COMP_CD = #{COMP_CD}
@@ -2996,7 +2997,7 @@
                     <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
                         AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
                     </if>
-                GROUP BY A.COMP_CD, A.ORDER_COMP_CD, E.CLOSE_MONTH, E.CLOSE_VER
+                GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH, D.CLOSE_VER
             ) Z
             GROUP BY Z.COMP_CD, Z.ORDER_COMP_CD, Z.CLOSE_YEAR
             UNION ALL
