@@ -5215,12 +5215,7 @@
                     </otherwise>
                 </choose>
             ) B ON A.ORDER_SEQ = B.ORDER_SEQ
-            LEFT OUTER JOIN (
-                SELECT X.CLOSE_MONTH, X.CLOSE_VER, Y.ORDER_SEQ
-                FROM TBL_MONTH_CLOSE X
-                    INNER JOIN TBL_MONTH_CLOSE_ORDER Y ON X.CLOSE_MONTH = Y.CLOSE_MONTH AND X.CLOSE_VER = Y.CLOSE_VER
-                          AND X.COMP_CD = Y.COMP_CD AND X.ORDER_COMP_CD = Y.ORDER_COMP_CD
-            ) C ON A.ORDER_SEQ = C.ORDER_SEQ
+            LEFT OUTER JOIN TBL_MONTH_CLOSE_ORDER C ON C.ORDER_SEQ = A.ORDER_SEQ AND C.COMP_CD = A.COMP_CD AND C.ORDER_COMP_CD = A.ORDER_COMP_CD
         WHERE A.DEL_YN = 'N'
             <if test="HIDDEN_WORK_TYPE != null and HIDDEN_WORK_TYPE != ''">
                 AND A.WORK_TYPE IN (${HIDDEN_WORK_TYPE})
@@ -5267,12 +5262,14 @@
             <choose>
                 <!-- 생성 일시 -->
                 <when test="ORDER_SEARCH_CONDITION == 'ROM001'">
-                    AND DATE_FORMAT(A.INSERT_DT, '%Y/%m/%d') BETWEEN #{ORDER_MANAGE_START_DATE} AND #{ORDER_MANAGE_END_DATE}
+                    AND A.INSERT_DT >= #{ORDER_MANAGE_START_DATE}
+                    AND A.INSERT_DT <![CDATA[ <= ]]> DATE_ADD(#{ORDER_MANAGE_END_DATE}, INTERVAL 1 DAY)
                 </when>
                 <!-- 주문확정 일자 -->
                 <when test="ORDER_SEARCH_CONDITION == 'ROM002'">
                     AND A.ORDER_STATUS = 'REG001'
-                    AND DATE_FORMAT(A.ORDER_STATUS_DT, '%Y/%m/%d') BETWEEN #{ORDER_MANAGE_START_DATE} AND #{ORDER_MANAGE_END_DATE}
+                    AND A.ORDER_STATUS_DT >= #{ORDER_MANAGE_START_DATE}
+                    AND A.ORDER_STATUS_DT <![CDATA[ <= ]]> DATE_ADD(#{ORDER_MANAGE_END_DATE}, INTERVAL 1 DAY)
                 </when>
                 <!-- 발주 납기 -->
                 <when test="ORDER_SEARCH_CONDITION == 'ROM003'">

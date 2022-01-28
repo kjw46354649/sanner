@@ -2408,7 +2408,7 @@
             $orderManagementGrid.pqGrid('setSelection', null);
 
             let orderSts = $("#ORDER_MANAGE_SEARCH_FORM").find("#HIDDEN_ORDER_STATUS").val();
-            if(orderSts.indexOf("REGTEMP") >= 0) {
+            if(orderSts.indexOf("REGTEMP") >= 0 && orderSts.indexOf("REG002") < 0) {
                 let tempOrderSts = orderSts + ", 'REG002'";
                 $("#ORDER_MANAGE_SEARCH_FORM").find("#HIDDEN_ORDER_STATUS").val(tempOrderSts);
             }
