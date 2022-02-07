@@ -8,9 +8,11 @@
             ROW_NUMBER () OVER () AS ROW_NUM,
             <include refid="orderMapper.control"/>,
             <include refid="orderMapper.controlPart"/>,
-            (SELECT M.UNIT_FINAL_EST_AMT
+            (SELECT N.UNIT_FINAL_EST_AMT
              FROM TBL_CONTROL_PART_ORDER_MAIN M
+                INNER JOIN TBL_ORDER N ON M.ORDER_SEQ = N.ORDER_SEQ
              WHERE M.CONTROL_SEQ = A.CONTROL_SEQ
+             ORDER BY N.ORDER_SEQ
              LIMIT 1
             ) AS UNIT_FINAL_EST_AMT,
             (SELECT N.UNIT_FINAL_AMT
