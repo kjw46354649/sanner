@@ -54,6 +54,7 @@
         <form class="form-inline" id="DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM" role="form" onsubmit="return false;" style="height: inherit;">
             <input type="hidden" name="queryId" id="queryId" value="reportMapper.selectDailyProcessStatusRightList">
             <input type="hidden" name="DT" id="DT">
+            <input type="hidden" name="COUNTING_TIME" id="COUNTING_TIME">
             <input type="hidden" name="WORK_FACTORY" id="WORK_FACTORY">
             <div style="height: inherit;">
                 <div class="d-flex align-items-center">
@@ -148,11 +149,13 @@
             rowSelect: function (event, ui) {
                 if (!(ui.addList[0].rowData.CAL_DT_NM === '합계' || ui.addList[0].rowData.CAL_DT_NM === '총계')) {
                     const rowData = ui.addList[0].rowData;
-                    const dt = rowData.DT || null;
+                    const dt = rowData.DT_FORMAT || null;
+                    let countingTime = rowData.COUNTING_TIME || '';
                     const workFactory = rowData.WORK_FACTORY || null;
                     selectedRowIndex[0] = rowData.pq_ri;
 
                     $("#DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM").find("#DT").val(dt);
+                    $("#DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM").find("#COUNTING_TIME").val(countingTime);
                     $("#DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM").find("#WORK_FACTORY").val(workFactory);
                     $dailyProcessStatusRightGrid.pqGrid("option", "dataModel.postData", function (ui) {
                         return fnFormToJsonArrayData('DAILY_PROCESS_STATUS_RIGHT_SEARCH_FORM');

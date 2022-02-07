@@ -6,7 +6,9 @@
         SELECT ROW_NUMBER () OVER(ORDER BY Z.WEEK_SEQ IS NULL ASC, Z.WEEK_SEQ, Z.DT IS NULL ASC, Z.DT) AS ROW_NUM
             , #{WORK_FACTORY} AS WORK_FACTORY     <!-- 고정조건 -->
             , Z.WEEK_SEQ
+            , CONCAT(SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),1,2),':',SUBSTRING(SF_GET_CODE_NM('1086','1',#{LOGIN_LOCALE}),3,2)) AS COUNTING_TIME
             , Z.DT
+            , DATE_FORMAT(Z.DT, '%Y/%m/%d') AS DT_FORMAT
             , CASE WHEN Z.WEEK_SEQ IS NULL THEN '총계'
                    WHEN Z.DT IS NULL THEN '합계'
                    ELSE CONCAT(DATE_FORMAT(STR_TO_DATE(Z.DT,'%Y%m%d'),'%e'),'일')
@@ -118,8 +120,122 @@
             ) Z
         ORDER BY Z.WEEK_SEQ IS NULL ASC, Z.WEEK_SEQ, Z.DT IS NULL ASC, Z.DT
     </select>
-
     <select id="selectDailyProcessStatusRightList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER() OVER(ORDER BY Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ ) AS ROW_NUM
+            , Z.CONTROL_SEQ
+            , Z.CONTROL_DETAIL_SEQ
+            , Z.ORDER_SEQ
+            , Z.IMG_GFILE_SEQ
+            , Z.ORDER_COMP_NM
+            , Z.WORK_FACTORY_NM
+            , CASE WHEN Z.PART_NUM IS NULL THEN Z.CONTROL_NUM ELSE CONCAT(Z.CONTROL_NUM, ' #', Z.PART_NUM) END AS CONTROL_NUM
+            , Z.INNER_DUE_DT
+            , Z.PART_QTY
+            , IFNULL(Z.ADDITIONAL_QTY, SPACE(0)) AS ADDITIONAL_QTY
+            , Z.INNER_WORK_FINISH_DT
+            , FORMAT(Z.WORK_TIME / 60,1) AS WORK_TIME
+            , Z.FORECAST_UNIT_AMT
+            , CASE WHEN Z.UNIT_FINAL_AMT IS NOT NULL THEN (Z.PART_QTY * Z.UNIT_FINAL_AMT)
+                   WHEN Z.FORECAST_UNIT_AMT IS NOT NULL THEN (Z.PART_QTY * Z.FORECAST_UNIT_AMT)
+                   ELSE SPACE(0)
+              END AS TOTAL_AMT
+            , (IFNULL(Z.UNIT_PROCESS_AUTO_AMT,0) + Z.TOTAL_AUTO_AMT + ROUND(Z.CP_VAL / (Z.PART_QTY + IFNULL(Z.ADDITIONAL_QTY,0)),1)) AS CP_TOTAL
+            , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE FORMAT(Z.PART_QTY * Z.UNIT_FINAL_AMT / (Z.WORK_TIME / 60 / 60),0) END AS PRICE_PER_HOUR
+            , CASE WHEN Z.PREV_DRAWING_NUM IS NOT NULL THEN (
+                SELECT M.UNIT_FINAL_AMT
+                FROM jmes.TBL_ORDER M
+                WHERE M.ORDER_STATUS = 'REG003'
+                    AND M.DEL_YN = 'N'
+                    AND M.DRAWING_NUM = Z.PREV_DRAWING_NUM
+                    AND M.WORK_TYPE = Z.WORK_TYPE
+                    AND M.ORDER_COMP_CD = Z.ORDER_COMP_CD
+                ORDER BY M.ORDER_SEQ DESC
+                LIMIT 1
+            ) ELSE (
+                SELECT M.UNIT_FINAL_AMT
+                FROM jmes.TBL_ORDER M
+                WHERE M.ORDER_STATUS = 'REG003'
+                    AND M.DEL_YN = 'N'
+                    AND M.ORDER_SEQ != Z.ORDER_SEQ
+                    AND M.DRAWING_NUM = Z.DRAWING_NUM
+                    AND M.WORK_TYPE = Z.WORK_TYPE
+                    AND M.ORDER_COMP_CD = Z.ORDER_COMP_CD
+                ORDER BY M.ORDER_SEQ DESC
+                LIMIT 1
+            ) END AS PREV_UNIT_FINAL_AMT
+            , Z.UNIT_FINAL_EST_AMT
+            , Z.UNIT_FINAL_AMT
+            , Z.INSPECT_GRADE_NM
+            , Z.INSPECT_RESULT_NM
+            , Z.ERROR_QTY
+            , Z.NOTE
+            , Z.UNIT_MATERIAL_AUTO_AMT
+            , Z.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT
+            , Z.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT
+            , Z.UNIT_SURFACE_AUTO_AMT
+            , Z.UNIT_PROCESS_AUTO_AMT
+            , Z.WORK_TYPE
+            , Z.CONTROL_VER
+            , Z.DRAWING_NUM
+            , Z.REGIST_NUM
+            , Z.SIZE_TXT
+            , jmes.SF_GET_CODE_NM('1027', Z.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+        FROM (
+            SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
+                , B.IMG_GFILE_SEQ
+                , jmes.SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
+                , jmes.SF_GET_CODE_NM('1014',B.WORK_FACTORY,#{LOGIN_LOCALE}) AS WORK_FACTORY_NM   -- 언어조건 -->
+                , A.CONTROL_NUM
+                , A.CONTROL_VER
+                , A.ORDER_COMP_CD
+                , B.PART_NUM
+                , B.WORK_TYPE
+                , jmes.SF_GET_DATE_F(B.INNER_DUE_DT,'','') AS INNER_DUE_DT
+                , jmes.SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY
+                , B.ADDITIONAL_QTY
+                , jmes.SF_GET_DATE_F(B.INNER_WORK_FINISH_DT,'','M') AS INNER_WORK_FINISH_DT
+                ,(SELECT SUM(jmes.SF_GET_UNIT_SUM_AUTO_AMT(B.CONTROL_SEQ,B.CONTROL_DETAIL_SEQ)) FROM TBL_CONTROL_PART T WHERE T.CONTROL_SEQ = B.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS TOTAL_AUTO_AMT
+                ,(SELECT SUM(te.COST_PER_HOUR * ROUND(jmes.SF_GET_DRAWING_WORK_TIME('W_MINUTE', tmw.MCT_WORK_SEQ) / 60,2))
+                  FROM TBL_MCT_WORK tmw, TBL_EQUIP te
+                  WHERE tmw.DEL_YN = 'N' AND te.DEL_YN = 'N'
+                    AND tmw.EQUIP_SEQ = te.EQUIP_SEQ
+                    AND tmw.CONTROL_SEQ = B.CONTROL_SEQ
+                    AND tmw.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                )AS CP_VAL
+                , (SELECT ROUND(SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)),0) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS WORK_TIME
+                , B.FORECAST_UNIT_AMT
+                , D.UNIT_FINAL_EST_AMT
+                , CASE WHEN B.WORK_TYPE != 'WTP040' THEN D.UNIT_FINAL_AMT
+                       ELSE C.UNIT_FINAL_AMT
+                  END AS UNIT_FINAL_AMT -- 공급단가 - 주문정보에서 가져옴. 재고는 주문이 없으므로 제외 -->
+                , jmes.SF_GET_CODE_NM('1040',E.INSPECT_GRADE,#{LOGIN_LOCALE}) AS INSPECT_GRADE_NM   -- 언어조건 -->
+                , jmes.SF_GET_CODE_NM('1020',E.INSPECT_RESULT,#{LOGIN_LOCALE}) AS INSPECT_RESULT_NM   -- 언어조건 -->
+                , E.ERROR_QTY
+                , A.NOTE
+                , B.DRAWING_NUM
+                , B.PREV_DRAWING_NUM
+                , B.UNIT_MATERIAL_AUTO_AMT
+                , B.UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT
+                , B.UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT
+                , B.UNIT_SURFACE_AUTO_AMT
+                , B.UNIT_PROCESS_AUTO_AMT
+                , C.REGIST_NUM
+                , B.SIZE_TXT
+                , B.MATERIAL_DETAIL
+            FROM TBL_CONTROL A
+                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.WORK_TYPE != 'WTP020' AND B.INNER_WORK_FINISH_DT IS NOT NULL
+                    AND B.INNER_WORK_FINISH_DT >= CONCAT(#{DT},SPACE(1), #{COUNTING_TIME})
+                    AND B.INNER_WORK_FINISH_DT <![CDATA[ < ]]> DATE_ADD(CONCAT(#{DT},SPACE(1), #{COUNTING_TIME}), INTERVAL 1 DAY)
+                INNER JOIN TBL_CONTROL_PART_ORDER_MAIN C ON B.CONTROL_SEQ = C.CONTROL_SEQ
+                INNER JOIN TBL_ORDER D ON C.ORDER_SEQ = D.ORDER_SEQ AND D.DEL_YN = 'N'
+                LEFT OUTER JOIN TBL_INSPECT E ON E.CONTROL_SEQ = B.CONTROL_SEQ AND E.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND E.INSPECT_TYPE = '1'
+                    AND E.INSPECT_SEQ = (SELECT MIN(X.INSPECT_SEQ) FROM TBL_INSPECT X WHERE X.CONTROL_SEQ = B.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND X.INSPECT_TYPE = '1')
+            WHERE A.DEL_YN = 'N'
+            GROUP BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+        ) Z
+    </select>
+
+    <select id="selectDailyProcessStatusRightList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT ROW_NUMBER() OVER(ORDER BY Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ ) AS ROW_NUM
             , Z.CONTROL_SEQ
             , Z.CONTROL_DETAIL_SEQ
