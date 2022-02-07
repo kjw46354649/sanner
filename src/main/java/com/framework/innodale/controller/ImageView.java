@@ -63,6 +63,8 @@ public class ImageView extends AbstractView {
 
         img.flush();
 
+        out.close();
+
         if(rotateImg != null) {
             rotateImg.flush();
         }
