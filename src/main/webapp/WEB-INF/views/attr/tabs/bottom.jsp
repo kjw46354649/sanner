@@ -1345,13 +1345,20 @@
         }
         if (uploadControlFiles.length > 0) { // file upload
             let formData = new FormData();
+            let gridData = commonFileDownUploadGrid.pqGrid('option', 'dataModel.data');
+            var processFlag = true;
             $.each(uploadControlFiles, function(i, file) {
                 if(file.upload != 'disable') {//삭제하지 않은 이미지만 업로드 항목으로 추가
                     formData.append('file', file, file.name);
                     uploadFileSize += file.size;
                 }
+                $.each(gridData, function (idx,Item) {
+                    if(Item.ORGINAL_FILE_NM == file.name) {
+                        fnAlert(null, "이미 등록된 파일입니다.");
+                        processFlag = false;
+                    }
+                })
             });
-            var processFlag = true;
             if($("#common_file_download_form").find("#callElement").val() == 'REQUEST_OUTSIDE_FILE_UPLOAD' || $("#common_file_download_form").find("#callElement").val() == 'CANCEL_REQUEST_OUTSIDE_FILE_UPLOAD') {
                 if(orgFileSize + uploadFileSize > (22 * 1024 * 1024)) { // 파일사이즈가 22mb를 넘을경우
                     fnAlert(null, "파일 첨부는 최대 22MB까지 가능합니다.");
@@ -1361,7 +1368,6 @@
             if($("#common_file_download_form").find("#callElement").val() == 'MCT_RESULT_MANAGE') {
                 processFlag = false;
             }
-            // console.log($('#common_cad_file_attach_form').find("#queryId").val())
             formData.append('GFILE_SEQ', GfileSeq);
             var actionUrl = '';
             var queryId = $('#common_cad_file_attach_form').find("#queryId").val() + "_select";
