@@ -6068,6 +6068,14 @@
             LEFT OUTER JOIN TBL_MCT_WORK B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND B.WORK_START_DT IS NOT NULL AND B.WORK_FINISH_DT IS NULL
             LEFT OUTER JOIN TBL_MATERIAL_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND IFNULL(C.ORDER_STATUS,'TEMP') IN ('TEMP', 'MST001', 'MST002')
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
-            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+          <choose>
+              <when test="WORK_TYPE != null and WORK_TYPE == 'WTP020'">
+                  AND A.WORK_TYPE != 'WTP020'
+                  GROUP BY A.CONTROL_SEQ
+              </when>
+              <otherwise>
+                  AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+              </otherwise>
+          </choose>
     </select>
 </mapper>
