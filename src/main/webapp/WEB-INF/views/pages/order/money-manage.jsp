@@ -60,7 +60,7 @@
                         </span>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
-                            <label class="label_100" for="ORDER_COMP_CD">발주사</label>
+                            <label class="label_100" for="ORDER_COMP_CD">발주처</label>
                             <select class="wd_150" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
                                 <option value=""><spring:message code="com.form.top.all.option"/></option>
                             </select>
@@ -600,12 +600,25 @@
 
         });
 
+        function settingForm(formId, targetFormId) {
+            let arr = ['ORDER_COMP_CD', 'COMP_CD'];
+
+            for(var i=0;i<arr.length;i++) {
+                $("#"+targetFormId).find("#"+arr[i]).val($("#"+formId).find("#"+arr[i]).val());
+            }
+        }
+
         $('#moneyManageTabs').tabs({
             activate: function (event, ui) {
                 ui.newPanel.find('.pq-grid').pqGrid('refresh');
                 $('.topWrap').toggle();
                 $('.money_receive_save_id').toggle();
                 $('.money_year_note_save_id').toggle();
+                if(ui.newPanel.selector == "#money_manage_status_tab") {
+                    settingForm('money_receive_manage_search_form','money_manage_status_search_form');
+                }else {
+                    settingForm('money_manage_status_search_form','money_receive_manage_search_form');
+                }
             }
         });
 
