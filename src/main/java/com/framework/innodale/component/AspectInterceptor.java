@@ -1,6 +1,7 @@
 package com.framework.innodale.component;
 
 import com.framework.innodale.service.InnodaleService;
+import com.sun.management.OperatingSystemMXBean;
 import com.tomes.exception.AuthenticationFailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.LocaleEditor;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.lang.management.ManagementFactory;
 import java.util.*;
 
 public class AspectInterceptor extends HandlerInterceptorAdapter {
@@ -81,6 +83,14 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         if(session.getAttribute("HighCode") == null){
             hashMap.put("queryId", "systemMapper.selectSessionCodeList");
             session.setAttribute("HighCode", CommonUtility.getCode(innodaleService.getList(hashMap)));
+        }
+
+        OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+        if(osBean.getSystemCpuLoad() >= 10) {
+            System.out.println("=======================================");
+            System.out.println("request Url : " + request.getRequestURI());
+            System.out.println("CPU Usage : " + String.format("%.2f", osBean.getSystemCpuLoad() * 100 ));
+            System.out.println("LoadAverage : " + osBean.getSystemLoadAverage());
         }
     }
 
