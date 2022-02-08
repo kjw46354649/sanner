@@ -443,19 +443,39 @@
             }
         });
 
+        $('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchClosingHistory();
+            }
+        });
+
         $('#CONTROL_SALES_CLOSING_HISTORY_SEARCH').on('click', function () {
-            $closingHistoryGrid.pqGrid('option', 'dataModel.postData', function (ui) {
-                return fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM');
-            });
-            $closingHistoryGrid.pqGrid('refreshDataAndView');
+            searchClosingHistory();
+        });
+
+        $('#MONTH_SALE_STATUS_SEARCH_FORM input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchMonthSale();
+            }
         });
 
         $('#CONTROL_MONTH_SALE_STATUS_SEARCH').on('click', function () {
+            searchMonthSale();
+        });
+
+        function searchMonthSale () {
             $monthlySalesStatusGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return fnFormToJsonArrayData('#MONTH_SALE_STATUS_SEARCH_FORM');
             });
             $monthlySalesStatusGrid.pqGrid('refreshDataAndView');
-        });
+        }
+
+        function searchClosingHistory () {
+            $closingHistoryGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return fnFormToJsonArrayData('#SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM');
+            });
+            $closingHistoryGrid.pqGrid('refreshDataAndView');
+        }
 
         $('#CONTROL_SALES_CLOSING_HISTORY_EXCEL_EXPORT').on('click', function () {
             const blob = $closingHistoryGrid.pqGrid('getInstance').grid.exportData({

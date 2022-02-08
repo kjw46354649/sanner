@@ -681,14 +681,23 @@
             estimateMasterBotGrid.pqGrid("refreshDataAndView");
         };
 
+        $('#estimate_master_search_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchEstimate();
+            }
+        });
 
         /** 버튼 처리 **/
         $("#btnEstimateListSearch").on('click', function(){
+            searchEstimate();
+        });
+
+        function searchEstimate() {
             estimateMasterTopGrid.pqGrid('option', "dataModel.postData", function (ui) {
                 return (fnFormToJsonArrayData('#estimate_master_search_form'));
             });
             estimateMasterTopGrid.pqGrid('refreshDataAndView');
-        });
+        }
 
         $("#btnEstimateListDelete").on('click', function(){
             /*let ESTIMATE_MASTER_QUERY_ID = ['deleteEstimateMaster', 'deleteEstimateDetail'];

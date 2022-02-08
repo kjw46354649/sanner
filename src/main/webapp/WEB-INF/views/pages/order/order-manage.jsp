@@ -2403,7 +2403,17 @@
             $('#CONTROL_CLOSE_CANCEL_POPUP').modal('hide');
         });
 
+        $('#ORDER_MANAGE_SEARCH_FORM input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchOrderManage();
+            }
+        });
+
         $('#ORDER_MANAGE_SEARCH').on('click', function () {
+            searchOrderManage();
+        });
+
+        function searchOrderManage() {
             selectedOrderManagementRowIndex = [];
             $orderManagementGrid.pqGrid('setSelection', null);
 
@@ -2416,7 +2426,7 @@
                 return (fnFormToJsonArrayData('#ORDER_MANAGE_SEARCH_FORM'));
             });
             $orderManagementGrid.pqGrid('refreshDataAndView');
-        });
+        }
 
         /**
          * @description 확정버튼 클릭

@@ -2508,7 +2508,17 @@
             }
         });
 
+        $('#CONTROL_MANAGE_SEARCH_FORM input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchControlManage();
+            }
+        });
+
         $('#CONTROL_MANAGE_SEARCH').on('click', function () {
+            searchControlManage();
+        });
+
+        function searchControlManage() {
             selectedControlManagementRowIndex = [];
             $controlManagementGrid.pqGrid('setSelection', null);
 
@@ -2516,8 +2526,7 @@
                 return (fnFormToJsonArrayData('#CONTROL_MANAGE_SEARCH_FORM'));
             });
             $controlManagementGrid.pqGrid('refreshDataAndView');
-        });
-
+        }
         /**
          * @description 확정버튼 클릭
          */

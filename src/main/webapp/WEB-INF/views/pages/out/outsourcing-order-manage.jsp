@@ -2236,12 +2236,22 @@
             $('#OUTSIDE_CLOSE_POPUP').modal('hide');
         });
 
+        $('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchOutsideOrder();
+            }
+        });
+
         $('#OUTSIDE_ORDER_SEARCH').on('click', function () {
+            searchOutsideOrder();
+        });
+
+        function searchOutsideOrder() {
             $outsideOrderManageGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return (fnFormToJsonArrayData('#OUTSIDE_ORDER_MANAGE_SEARCH_FORM'));
             });
             $outsideOrderManageGrid.pqGrid('refreshDataAndView');
-        });
+        }
 
         $('#OUTSIDE_ORDER_MANAGE_SAVE').on('click', function () {
             const updateQueryList = ['outMapper.updateControlPartOutsourcingOrderManage'];

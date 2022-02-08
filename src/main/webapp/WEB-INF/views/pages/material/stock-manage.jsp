@@ -1886,7 +1886,17 @@
             }
         })
 
+        $('#stock_manage_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchStockManage();
+            }
+        });
+
         $("#stock_manage_search_btn").on('click', function () {
+            searchStockManage();
+        });
+
+        function searchStockManage() {
             stockManageGridId01.pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('#stock_manage_form');
             } );
@@ -1902,8 +1912,7 @@
             if($('#stock_manage_grid02').hasClass('pq-grid')) {
                 $("#stock_manage_grid02").pqGrid("refreshDataAndView");
             }
-
-        });
+        }
 
         $('#stock_manage_add_btn').on('click', function () {
 
@@ -3221,13 +3230,22 @@
         });
         /**  현황관리(GRID01) 그리드 선언 끝 **/
 
+        $('#stock_in_out_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchInoutStock();
+            }
+        });
+
         $("#stock_in_out_search_btn").on('click', function () {
+            searchInoutStock();
+        });
+
+        function searchInoutStock() {
             stockInoutGridId01.pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('#stock_in_out_form');
             } );
             stockInoutGridId01.pqGrid("refreshDataAndView");
-
-        });
+        }
 
         fnCommCodeDatasourceSelectBoxCreate($('#stock_in_out_form').find('#SEL_COMP_CD'), 'all', {
             'url': '/json-list',

@@ -667,14 +667,23 @@
         }
         /* function */
 
+        $('#OUTSIDE_CLOSE_HISTORY_SEARCH_FORM input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchOutsideClose();
+            }
+        });
         /* event */
         $('#OUTSIDE_CLOSE_HISTORY_SEARCH').on('click', function () {
+            searchOutsideClose();
+        });
+
+        function searchOutsideClose() {
             postData = fnFormToJsonArrayData('#OUTSIDE_CLOSE_HISTORY_SEARCH_FORM')
             $outsideCloseHistoryGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return postData;
             });
             $outsideCloseHistoryGrid.pqGrid('refreshDataAndView');
-        });
+        }
 
         $('#OUTSIDE_CLOSE_CANCEL').on('click', function () {
             updateControlPartStatus();
