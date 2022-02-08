@@ -1233,6 +1233,8 @@
                             return postData;
                         });
                         commonFileDownUploadGrid.pqGrid('refreshDataAndView');
+
+                        fnAlert(null, "삭제되었습니다.");
                         //fnRequestGridData(commonFileDownUploadGrid, postData);
                     }, parameters, '');
                 });
