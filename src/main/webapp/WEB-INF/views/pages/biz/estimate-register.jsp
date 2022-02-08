@@ -1091,7 +1091,11 @@
                     $("#estimate_register_info_form #EST_NUM").val(list.EST_NUM + ' (' + list.EST_VER + ')');
                     $("#estimate_register_info_form #DTL_CNT").val(list.DTL_CNT);
                     $("#estimate_register_info_form #DTL_AMOUNT").val(numberWithCommas(list.DTL_AMOUNT));
-                    $("#estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
+                    if(!fnIsEmpty(list.UPDATE_DT)) {
+                        $("#estimate_register_info_form #INSERT_DT").val(list.UPDATE_DT);
+                    }else {
+                        $("#estimate_register_info_form #INSERT_DT").val(list.INSERT_DT);
+                    }
                     $("#estimate_register_info_form #SEND_DT").val(list.SEND_DT);
                     $("#estimate_register_info_form #GFILE_SEQ").val(GfileKey);
                 }
