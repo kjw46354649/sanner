@@ -14,7 +14,7 @@
 
 <div class="page estimate">
     <div class="topWrap out_close_tab">
-        <form class="form-inline" id="OUTSIDE_CLOSE_STATUS_SEARCH_FORM" role="form">
+        <form class="form-inline" id="OUTSIDE_CLOSE_STATUS_SEARCH_FORM" role="form" onsubmit="return false;">
             <input type="hidden" name="queryId" id="queryId" value="outMapper.selectOutsideCloseStatusList">
             <div class="none_gubunWrap row2_topWrap">
                 <ul>

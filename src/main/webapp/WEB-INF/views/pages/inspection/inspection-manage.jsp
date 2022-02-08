@@ -6,7 +6,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="page estimate">
     <div class="topWrap">
-        <form class="form-inline" id="inspection_manage_form" name="inspection_manage_form" role="form">
+        <form class="form-inline" id="inspection_manage_form" name="inspection_manage_form" role="form" onsubmit="return false;">
             <input type="hidden" name="queryId" id="queryId" value="inspection.selectInspectionList">
             <div class="none_gubunWrap row2_topWrap" >
                 <ul>

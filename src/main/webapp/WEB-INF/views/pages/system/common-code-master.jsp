@@ -12,7 +12,7 @@
             <input type="hidden" name="queryId" id="queryId" value="systemMapper.selectCommonGroupCodeList">
             <div class="hWrap">
                 <span class="ipu_wrap">
-                    <label for="sel_group_code_nm">그룹 코드 이름</label>
+                    <label for="sel_group_code_nm">그룹명 이름</label>
                     <input type="text" name="sel_group_code_nm" id="sel_group_code_nm" placeholder="그룹 코드 이름" value="" class="pd-left5 wd_200">
                 </span>
                 <div class="rightSpan">

@@ -131,7 +131,7 @@
     </div>
     <div class="bottomWrap">
         <div class="hWrap" style="padding: 0;">
-            <form id="MCT_PROCESS_TARGET_FORM" role="form">
+            <form id="MCT_PROCESS_TARGET_FORM" role="form" onsubmit="return false;">
                 <input type="hidden" name="queryId" id="queryId" value="machine.selectWorkPlanGridList">
                 <div class="d-flex align-items-center" style="padding: 0 20px;">
                     <div>

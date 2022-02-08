@@ -14,7 +14,7 @@
 
 <div class="page estimate">
     <div class="topWrap sales_closing_history_tab">
-        <form class="form-inline" id="SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM" role="form">
+        <form class="form-inline" id="SALES_CLOSING_HISTORY_MANAGE_SEARCH_FORM" role="form" onsubmit="return false;">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectSalesClosingHistoryList">
             <div class="none_gubunWrap row2_topWrap">
                 <ul>
@@ -70,7 +70,7 @@
         </form>
     </div>
     <div class="topWrap month_sale_status_tab" style="display: none">
-        <form class="form-inline" id="MONTH_SALE_STATUS_SEARCH_FORM" role="form">
+        <form class="form-inline" id="MONTH_SALE_STATUS_SEARCH_FORM" role="form" onsubmit="return false;">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectMonthSaleStatusList">
             <div class="none_gubunWrap row2_topWrap">
                 <ul>
