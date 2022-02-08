@@ -69,6 +69,8 @@ public class ExcelController {
             Date today = new Date();
             String date = time.format(today);
 
+            String excelFileName = req.getParameter("template") + date + ".xlsx";
+
             String[] arrayQueryId = sqlIds.split(":");
             String[] arrayParamName = paramName.split(":");
             String[] arrayParams = paramData.split(":");
@@ -89,6 +91,10 @@ public class ExcelController {
             // 검사 성적서 관련 추가 코드
             Map<String,Object> tempMap = new HashMap<>();
             if(templateFileName.indexOf("inspection_result_template") >= 0) {
+                List<Map<String,Object>> infoList = (List<Map<String, Object>>) map.get("info");
+                if(infoList.size() > 0) {
+                    excelFileName = templateFileName.replace("_result_template_0","") + "_" + infoList.get(0).get("CONTROL") + ".xlsx";
+                }
                 List<Map<String,Object>> prodList = (List<Map<String, Object>>) map.get("data3");
                 List<Map<String,Object>> pointList = (List<Map<String, Object>>) map.get("data2");
                 List<Map<String,Object>> valueList = (List<Map<String, Object>>) map.get("data");
@@ -97,7 +103,6 @@ public class ExcelController {
                     Map<String,Object> temp = pointList.get(j);
                     String pointSeq = String.valueOf(temp.get("POINT_SEQ"));
                     List<String> list = new ArrayList<>();
-
 
                     for(int i=0;i<valueList.size();i++) {
                         Map<String,Object> valueMap = valueList.get(i);
@@ -186,10 +191,9 @@ public class ExcelController {
                     }
                 }
                 sheet.addMergedRegion(new CellRangeAddress(19,(19 + pointList.size()),1,1));
-
             }
 
-            res.setHeader("Content-Disposition", CommonUtility.getDisposition(templateFileName + date + ".xlsx", CommonUtility.getBrowser(req)));
+            res.setHeader("Content-Disposition", CommonUtility.getDisposition(excelFileName, CommonUtility.getBrowser(req)));
             res.setHeader("Content-Transfer-Encoding", "binary");
             res.setContentType("application/x-msexcel");
             res.setContentType("application/octet-stream; charset=utf-8");

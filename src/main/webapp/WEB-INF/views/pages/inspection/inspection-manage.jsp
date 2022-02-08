@@ -1073,6 +1073,8 @@
                 $("#common_excel_form #template").val($("#SEL_TEMPLATE").val());
 
                 fnReportFormToHiddenFormPageAction("common_excel_form", "/downloadExcel");
+
+                $("#inspection_result_export_popup").modal('hide');
             }
         });
 

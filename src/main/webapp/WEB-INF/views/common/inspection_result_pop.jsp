@@ -1930,7 +1930,6 @@
                     'data':parameter
                 }
 
-                console.log('params',params);
                 fnPostAjaxAsync(function(data, callFunctionParam){
                     if(data.info != null) {
                         let prodNum = (fnIsEmpty(data.info.PRODUCT_NUM)?"":Number(data.info.PRODUCT_NUM));
@@ -1996,7 +1995,11 @@
                                 $(".layerBtn").removeClass("on");
                                 $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val(data.info.LAYER_AREA_NAME);
                                 $("#inspection_result_pop_form").find("#ORG_LAYER_AREA_NAME").val(data.info.LAYER_AREA_NAME);
-                                $("button[data-target='"+data.info.LAYER_AREA_NAME +"']").trigger('click');
+
+                                // let imgEl = document.getElementById('img_div');
+                                // if(imgEl.complete) {
+                                //     $("button[data-target='"+data.info.LAYER_AREA_NAME +"']").trigger('click');
+                                // }
                             }else {
                                 resetLayer();
                             }
@@ -2206,6 +2209,11 @@
                 }
             })
 
+            // 이미지가 load 될때 발생 (변경 포함), 레이어 영역 이슈로 해당 이벤트로 trigger 하는것으로 변경
+            document.getElementById('img_div').addEventListener('load',function () {
+               let layerName = $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val();
+                $("button[data-target='"+layerName +"']").trigger('click');
+            });
 
 
             let contorlSeq = $("#inspection_result_pop_form").find("#CONTROL_SEQ").val();
