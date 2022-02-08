@@ -1168,12 +1168,22 @@
             }, infoParameters, '');
         };
 
+        $('#mct_result_manage_search_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchMctResultManage();
+            }
+        });
+
         $mctCamManageSearchBtn.click(function(event) {
+            searchMctResultManage()
+        });
+
+        function searchMctResultManage() {
             $mctResultManageGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return (fnFormToJsonArrayData('#mct_result_manage_search_form'));
             });
             $mctResultManageGrid.pqGrid('refreshDataAndView');
-        });
+        }
 
         /** 파일 업로드 스크립트 **/
         $("#cam_work_manage_detail_pop").find(".mctWorkStyle").on("dragenter", function (e) {  //드래그 요소가 들어왔을떄

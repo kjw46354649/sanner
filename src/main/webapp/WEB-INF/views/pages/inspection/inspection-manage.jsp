@@ -539,12 +539,23 @@
         });
         /**  리스트 그리드 선언 끝 **/
 
+        $('#inspection_manage_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchInspectionManage();
+            }
+        });
+
         $("#inspection_manage_search_btn").on('click', function () {
+            searchInspectionManage();
+        });
+
+        function searchInspectionManage() {
             inspectionManageGridId01.pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('#inspection_manage_form');
             } );
             inspectionManageGridId01.pqGrid("refreshDataAndView");
-        });
+        }
+
         let $inspectionResultValueGrid  = $("#inspection_result_value_grid");
         let inspectionResultValueColCommModel = [
             {title: 'INSPECT_RESULT_SEQ', dataIndx: 'INSPECT_RESULT_SEQ', hidden: true},

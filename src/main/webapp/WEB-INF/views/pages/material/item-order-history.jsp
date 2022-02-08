@@ -423,12 +423,22 @@
             itemOrderHistoryRightGrid.pqGrid("refreshDataAndView");
         }
 
+        $('#item_order_history_search_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchItemOrderHistory();
+            }
+        });
+
         $("#btnItemOrderHistorySearch").on('click', function(){
+            searchItemOrderHistory();
+        });
+
+        function searchItemOrderHistory() {
             itemOrderHistoryLeftGrid.pqGrid('option', "dataModel.postData", function (ui) {
                 return (fnFormToJsonArrayData('#item_order_history_search_form'));
             });
             itemOrderHistoryLeftGrid.pqGrid('refreshDataAndView');
-        });
+        }
 
         $("#btnItemOrderHistorySave").on('click', function(){
             itemOrderHistoryInspectionIn();

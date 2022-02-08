@@ -821,7 +821,17 @@
             });
         }
 
+        $('#in_warehouse_manage_search_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchInWarehouseManage();
+            }
+        });
+
         $("#btnInWarehouseManageManageSearch").on('click', function(){
+            searchInWarehouseManage();
+        });
+
+        function searchInWarehouseManage() {
             inWarehouseManageManageGrid01.pqGrid('option', "dataModel.postData", function (ui) {
                 return (fnFormToJsonArrayData('#in_warehouse_manage_search_form'));
             });
@@ -831,14 +841,24 @@
                 return (fnFormToJsonArrayData('#in_warehouse_manage_hidden_form'));
             });
             inWarehouseManageManageGrid02.pqGrid('refreshDataAndView');
+        }
+
+        $('#in_warehouse_manage_out_search_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchInWarehouseOutManage();
+            }
         });
 
         $("#btnInWarehouseManageOutSearch").on('click', function(){
+            searchInWarehouseOutManage();
+        });
+
+        function searchInWarehouseOutManage() {
             inWarehouseManageOutGrid.pqGrid('option', "dataModel.postData", function (ui) {
                 return (fnFormToJsonArrayData('#in_warehouse_manage_out_search_form'));
             });
             inWarehouseManageOutGrid.pqGrid('refreshDataAndView');
-        });
+        }
 
         $("#in_warehouse_manage_tabs").tabs({
             activate: function(event, ui) {
@@ -849,23 +869,22 @@
                 $("#IN_WAREHOUSE_MANAGE_OUT_BUTTON").toggle();
             }
         });
+        $("#in_warehouse_manage_scan_barcode_popup").on({
+            'show.bs.modal': function () {
+                fnSearchScanTableOnData();
+            },'hide.bs.modal': function () {
+                $("#in_warehouse_manage_scan_barcode_popup_form #TYPE").val('');
+                $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val('');
+                $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val('');
+                $("#in_warehouse_manage_scan_barcode_popup_form #CONTROL_NUM").val('');
+                $("#in_warehouse_manage_scan_barcode_popup_form #inWarehouseManageBarcode").val('');
+
+                $("#in_warehouse_manage_scan_barcode_popup_form").find('#dynamicTableTr').remove();
+            }
+        });
 
         $('#in_warehouse_manage_scan_barcode_popup').on('shown.bs.modal', function() {
             $("#in_warehouse_manage_scan_barcode_popup_form").find("#inWarehouseManageBarcode").focus();
-        });
-
-        $('#in_warehouse_manage_scan_barcode_popup').on('show.bs.modal',function() {
-            fnSearchScanTableOnData();
-        });
-
-        $('#in_warehouse_manage_scan_barcode_popup').on('hide.bs.modal',function() {
-            $("#in_warehouse_manage_scan_barcode_popup_form #TYPE").val('');
-            $("#in_warehouse_manage_scan_barcode_popup_form #MY_MAT_OUT_SEQ").val('');
-            $("#in_warehouse_manage_scan_barcode_popup_form #BARCODE_NUM").val('');
-            $("#in_warehouse_manage_scan_barcode_popup_form #CONTROL_NUM").val('');
-            $("#in_warehouse_manage_scan_barcode_popup_form #inWarehouseManageBarcode").val('');
-
-            $("#in_warehouse_manage_scan_barcode_popup_form").find('#dynamicTableTr').remove();
         });
 
         function fnSearchScanTableOnData() {
@@ -1115,9 +1134,6 @@
                 let data = inWarehouseManageManageGrid01.pqGrid('option', 'dataModel.data');
                 $('#in_warehouse_manage_manage_grid01_records').html(data.length);
             }
-        });
-
-        $("#inWarehouseManageFilterKeyword").on("keyup", function(e){
         });
 
         $("#inWarehouseManageFrozen").on('change', function(e){

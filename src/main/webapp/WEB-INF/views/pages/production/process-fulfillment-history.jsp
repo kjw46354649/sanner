@@ -410,12 +410,22 @@
         /* function */
 
         /* event */
+        $('#PROCESS_FULFILLMENT_HISTORY_SEARCH_FORM input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchProcessFulFillment();
+            }
+        });
+
         $('#PROCESS_FULFILLMENT_HISTORY_SEARCH').on('click', function () {
+            searchProcessFulFillment();
+        });
+
+        function searchProcessFulFillment() {
             $processFulfillmentHistoryGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return fnFormToJsonArrayData('#PROCESS_FULFILLMENT_HISTORY_SEARCH_FORM');
             });
             $processFulfillmentHistoryGrid.pqGrid('refreshDataAndView');
-        });
+        }
 
         $('#NC_PERFORMANCE_HISTORY_EXCEL_EXPORT').on('click', function () {
             const blob = $processFulfillmentHistoryGrid.pqGrid('getInstance').grid.exportData({

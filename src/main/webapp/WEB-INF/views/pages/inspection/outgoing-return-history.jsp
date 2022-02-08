@@ -286,12 +286,22 @@
         });
         /**  리스트 그리드 선언 끝 **/
 
-         $("#outgoing_history_search_btn").on('click', function () {
+        $('#outgoing_history_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchOutgoingHistory();
+            }
+        });
+
+        $("#outgoing_history_search_btn").on('click', function () {
+            searchOutgoingHistory();
+        });
+
+        function searchOutgoingHistory() {
             outgoingHistoryGridId01.pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('#outgoing_history_form');
             } );
             outgoingHistoryGridId01.pqGrid("refreshDataAndView");
-        });
+        }
 
         $("#outgoing_history_form").find('[name=SEL_OUTGOING_RETURN_TERM]').change(function () {
             let value = $(this).val(), today = new Date(), newDate = new Date();

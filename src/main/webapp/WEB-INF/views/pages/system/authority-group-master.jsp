@@ -142,12 +142,22 @@
         $authorityGroupGrid = $('#' + authorityGroupGridId).pqGrid(authorityGroupObj);
 
         /* 버튼 Action 처리 */
+        $('#authority_group_search_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchAuthorityGroup();
+            }
+        });
+
         $authorityGroupSearchBtn.click(function(event){
+            searchAuthorityGroup();
+        });
+
+        function searchAuthorityGroup() {
             $authorityGroupGrid.pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('authority_group_search_form');
             } );
             $authorityGroupGrid.pqGrid("refreshDataAndView");
-        });
+        }
 
         $authorityGroupAddBtn.click(function(event){
             $authorityGroupGrid.pqGrid('addNodes', [{}], 0);

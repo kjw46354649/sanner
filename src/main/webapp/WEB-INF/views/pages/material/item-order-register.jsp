@@ -1593,13 +1593,22 @@
             }
         });
 
+        $('#item_order_register_search_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchItemOrderRegister();
+            }
+        });
         /** 버튼 처리 **/
         $('#btnItemOrderRegisterSearch').on('click', function(){
+            searchItemOrderRegister();
+        });
+
+        function searchItemOrderRegister() {
             itemOrderRegisterLeftGrid.pqGrid('option', 'dataModel.postData', function () {
                 return (fnFormToJsonArrayData('#item_order_register_search_form'));
             });
             itemOrderRegisterLeftGrid.pqGrid('refreshDataAndView');
-        });
+        }
 
         $("#btnItemOrderRegisterOrder").on('click', function(){
             itemOrder('button');

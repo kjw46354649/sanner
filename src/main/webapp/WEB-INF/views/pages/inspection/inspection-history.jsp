@@ -352,7 +352,17 @@
             }
         });
         /**  리스트 그리드 선언 끝 **/
+
+        $('#inspection_history_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchInspectionHistory();
+            }
+        });
         $("#inspection_history_search_btn").on('click', function(){
+            searchInspectionHistory()
+        });
+
+        function searchInspectionHistory() {
             // let SEL_INSPECT_GRADE_SELECT = $("#inspection_history_form").find("#SEL_INSPECT_GRADE_SELECT").val();
             // let arr = SEL_INSPECT_GRADE_SELECT.trim().split(",");
             // let rtn = "";
@@ -369,8 +379,7 @@
                 return fnFormToJsonArrayData('#inspection_history_form');
             } );
             inspectionHistoryGridId01.pqGrid("refreshDataAndView");
-
-        });
+        }
 
         $('#inspectionHistoryFilterKeyword').on({
             'keyup': function () {

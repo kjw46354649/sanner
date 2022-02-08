@@ -1403,12 +1403,22 @@
             }, formData, '');
         });
 
+        $('#outgoing_manage_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchOutgoingManage();
+            }
+        });
+
         $("#outgoing_manage_search_btn").on('click', function () {
+            searchOutgoingManage();
+        });
+
+        function searchOutgoingManage() {
             outgoingManageGridId01.pqGrid("option", "dataModel.postData", function () {
                 return fnFormToJsonArrayData('#outgoing_manage_form');
             });
             outgoingManageGridId01.pqGrid("refreshDataAndView");
-        });
+        }
 
         $(".datepicker-input").each(function () {
             $(this).datepicker({dateFormat: 'yy/mm/dd'});

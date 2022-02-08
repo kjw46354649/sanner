@@ -711,6 +711,13 @@
                 }
             }
         };
+
+        $('#search_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                $("#searchBtn").trigger('click');
+            }
+        });
+
         $("#searchBtn").on('click', function(e) {
             let targetTab = $("#search_form").find("#SEL_TAB_TYPE").val();
             let SEL_TERM_DT_USE = $("#search_form").find("#SEL_TERM_DT_USE").val();

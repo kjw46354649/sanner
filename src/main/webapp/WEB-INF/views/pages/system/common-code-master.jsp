@@ -13,7 +13,7 @@
             <div class="hWrap">
                 <span class="ipu_wrap">
                     <label for="sel_group_code_nm">그룹명 이름</label>
-                    <input type="text" name="sel_group_code_nm" id="sel_group_code_nm" placeholder="그룹 코드 이름" value="" class="pd-left5 wd_200">
+                    <input type="text" name="sel_group_code_nm" id="sel_group_code_nm" placeholder="그룹명 이름" value="" class="pd-left5 wd_200">
                 </span>
                 <div class="rightSpan">
                     <span class="buttonWrap">
@@ -124,12 +124,22 @@
         };
         $commonCodeTopGrid = $('#' + commonCodeTopGridId).pqGrid(commonCodeTopObj);
 
+        $('#common_group_code_search_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchCommonCode();
+            }
+        });
+
         $commonGroupCodeSearchBtn.on('click', function () {
+            searchCommonCode();
+        });
+
+        function searchCommonCode() {
             $commonCodeTopGrid.pqGrid('option', 'dataModel.postData', function () {
                 return fnFormToJsonArrayData('common_group_code_search_form');
             });
             $commonCodeTopGrid.pqGrid('refreshDataAndView');
-        });
+        }
 
         $commonGroupCodeAddBtn.on('click', function () {
             const totalRecords = $commonCodeTopGrid.pqGrid('option', 'dataModel.data').length;

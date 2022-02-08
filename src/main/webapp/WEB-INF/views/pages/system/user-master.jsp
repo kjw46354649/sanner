@@ -166,12 +166,22 @@
         $userMasterGrid = $('#' + userMasterGridId).pqGrid(userMasterObj);
 
         /* 버튼 Action 처리 */
+        $('#user_master_search_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchUserMaster();
+            }
+        });
+
         $userMasterSearchBtn.click(function(event){
+            searchUserMaster();
+        });
+
+        function searchUserMaster() {
             $userMasterGrid.pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('user_master_search_form');
             } );
             $userMasterGrid.pqGrid("refreshDataAndView");
-        });
+        }
 
         $userMasterAddBtn.click(function(event){
             $userMasterGrid.pqGrid('addNodes', [{}], 0);

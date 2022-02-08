@@ -84,7 +84,7 @@
                             </span>
                         </div>
 <%--                        <span class="chk_box ml-20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>--%>
-                        <button type="button" class="right_float defaultBtn radius blue" id="searchBtn">검색</button>
+                        <button type="button" class="right_float defaultBtn radius blue" id="machine_searchBtn">검색</button>
                     </li>
                 </ul>
 
@@ -383,7 +383,7 @@
 
 <script type="text/javascript">
     /**  선언 **/
-    let $searchBtn = $("#searchBtn");
+    let $machineSearchBtn = $("#machine_searchBtn");
     let $saveBtn = $("#saveBtn");
     let $deleteBtn = $("#deleteBtn");
     let $newBtn = $("#newBtn");
@@ -923,7 +923,7 @@
                 fnPostAjax(function (data, callFunctionParam) {
                     fnAlert(null, '장비상세 정보가 저장되었습니다.');
                     $('#CURRENT_POPUP').modal('hide');
-                    $searchBtn.trigger("click");
+                    $machineSearchBtn.trigger("click");
                 }, parameters, '');
             });
         });
@@ -944,7 +944,13 @@
             $('#CURRENT_POPUP').modal('hide');
         });
 
-        $searchBtn.on('click', function(e) {
+        $('#machine_manage_search_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                $machineSearchBtn.trigger('click');
+            }
+        });
+
+        $machineSearchBtn.on('click', function(e) {
             let targetTab = $("#machine_manage_search_form").find("#SEL_EQUIP_KIND").val();
             // let SEL_TERM_DT_USE = $("#machine_manage_search_form").find("#SEL_TERM_DT_USE").val();
             // let SEL_MACHINE_MANAGE_ST_DT = $("#machine_manage_search_form").find("#SEL_MACHINE_MANAGE_ST_DT").val();
@@ -1033,7 +1039,7 @@
             $("#machine_manage_pop_form").find("#addHistoryBtn").show();
             $("#machine_manage_pop_form").find("#deleteHistoryBtn").show();
 
-            $searchBtn.trigger('click');
+            $machineSearchBtn.trigger('click');
 
         }
     });
@@ -1086,7 +1092,7 @@
         //$historyGrid.pqGrid('destroy');
         //$('#' + logGridId).pqGrid('destroy');
         //$('#' + historyGridId).pqGrid('destroy');
-        $searchBtn.trigger("click");
+        $machineSearchBtn.trigger("click");
     });
     // 모달 open
     $("#CURRENT_POPUP").on('show.bs.modal', function(){

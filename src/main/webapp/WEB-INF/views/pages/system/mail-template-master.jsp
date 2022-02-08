@@ -15,7 +15,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">X</span><span class="sr-only">Close</span></button>
             </div>
             <div class="modal-body">
-                <form class="form-inline" role="form" id="mail_template_record_popup_form" name="mail_template_record_popup_form">
+                <form class="form-inline" role="form" id="mail_template_record_popup_form" name="mail_template_record_popup_form" onsubmit="return false;">
                     <input type="hidden" id="queryId" name="queryId" value="systemMapper.insertUpdateMailTemplate">
                     <input type="hidden" id="TEMPLATE_SEQ" name="TEMPLATE_SEQ" value="">
                     <input type="hidden" id="TEMPLATE_CONTENT" name="TEMPLATE_CONTENT" value="">
@@ -65,7 +65,7 @@
 
 <div class="page onegrid">
     <div class="topWrap">
-        <form class="form-inline" id="mail_template_search_form" name="mail_template_search_form" role="form">
+        <form class="form-inline" id="mail_template_search_form" name="mail_template_search_form" role="form" onsubmit="return false;">
             <input type="hidden" name="queryId" id="queryId" value="systemMapper.selectMailTemplateList">
             <input type="hidden" name="TEMPLATE_SEQ" id="TEMPLATE_SEQ" value="">
             <div class="hWrap">
@@ -170,12 +170,22 @@
         }
 
         /* 버튼 Action 처리 */
+        $('#mail_template_search_form input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchMailTemplate();
+            }
+        });
+
         $mailTemplateSearchBtn.click(function(event){
+            searchMailTemplate();
+        });
+
+        function searchMailTemplate() {
             mailTemplateMasterGrid.pqGrid("option", "dataModel.postData", function(ui){
                 return fnFormToJsonArrayData('mail_template_search_form');
             } );
             mailTemplateMasterGrid.pqGrid("refreshDataAndView");
-        });
+        }
 
         $mailTemplateMasterAddBtn.click(function(event){
             $("#mail_template_record_popup_form #queryId").val('systemMapper.insertUpdateMailTemplate');

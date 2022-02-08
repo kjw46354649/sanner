@@ -878,12 +878,23 @@
         /* function */
 
         /* event */
+
+        $('#CAM_WORK_HISTORY_GRID_SEARCH_FORM input').on('keyup', function (e) {
+            if(e.keyCode == 13) {
+                searchCamWorkHistory();
+            }
+        });
+
         $('#CAM_WORK_HISTORY_SEARCH').on('click', function () {
+            searchCamWorkHistory();
+        });
+
+        function searchCamWorkHistory() {
             $camWorkHistoryGrid.pqGrid('option', 'dataModel.postData', function (ui) {
                 return fnFormToJsonArrayData('#CAM_WORK_HISTORY_GRID_SEARCH_FORM');
             });
             $camWorkHistoryGrid.pqGrid('refreshDataAndView');
-        });
+        }
 
         $('#CAM_WORK_HISTORY_EXCEL_EXPORT').on('click', function () {
             const blob = $camWorkHistoryGrid.pqGrid('getInstance').grid.exportData({
