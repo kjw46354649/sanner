@@ -264,7 +264,7 @@
     </div>
 </div>
 
-<input type="button" id="ATTACHMENT_BUTTON" style="display: none;">
+<input type="button" id="ORDER_ATTACHMENT_BUTTON" style="display: none;">
 
 <script>
     var $orderManagementGrid;
@@ -2979,8 +2979,8 @@
             $(this).val() === '' ? $orderManageDates.prop('disabled', true) : $orderManageDates.prop('disabled', false);
         });
 
-        $('#ATTACHMENT_BUTTON').on('click', function () {
-            let $attachmentButton = $('#ATTACHMENT_BUTTON');
+        $('#ORDER_ATTACHMENT_BUTTON').on('click', function () {
+            let $attachmentButton = $('#ORDER_ATTACHMENT_BUTTON');
             let GfileKey = $('#common_file_download_form').find('#GFILE_SEQ').val();
             let rowIndx = $attachmentButton.data('rowIndx');
 

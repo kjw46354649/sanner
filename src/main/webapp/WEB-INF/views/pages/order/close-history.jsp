@@ -1060,6 +1060,7 @@
                             $("#common_file_download_form #deleteYn").val(false);
                         }
                         commonFileDownUploadPopupCall(GfileKey, 'ATTACHMENT_BUTTON');
+                        // 22.02.08 ATTACHMENT_BUTTON -> id 겹침 유의. 해당 화면은 현재 미사용 & 참조파일 미사용으로 보여서 처리안함
                     });
                 }
             },
