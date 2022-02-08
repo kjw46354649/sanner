@@ -597,8 +597,159 @@
             ) Z
         ORDER BY Z.WEEK_SEQ IS NULL ASC, Z.WEEK_SEQ, Z.DT IS NULL ASC, Z.DT
     </select>
-
     <select id="selectMonthlyReportDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER() OVER(ORDER BY Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ ) AS ROW_NUM
+            , Z.CONTROL_SEQ
+            , Z.CONTROL_DETAIL_SEQ
+            , Z.ORDER_COMP_NM
+            , CASE WHEN Z.PART_NUM IS NULL THEN Z.CONTROL_NUM ELSE CONCAT(Z.CONTROL_NUM, ' #', Z.PART_NUM) END AS CONTROL_NUM
+            , Z.DRAWING_NUM
+            , Z.IMG_GFILE_SEQ
+            , Z.PART_NUM
+            , Z.SIZE_TXT
+            , Z.MATERIAL_DETAIL_NM
+            , Z.WORK_TYPE_NM
+            , Z.ORDER_DUE_DT
+            , Z.PART_QTY
+            , Z.PART_STATUS_NM
+            , Z.WORK_FACTORY_NM
+            , Z.INNER_WORK_FINISH_DT
+            , FORMAT(Z.WORK_TIME / 60,1) AS WORK_TIME
+            , Z.OUTSIDE_COMP_NM
+            , Z.OUTSIDE_IN_DT
+            , Z.OUT_FINISH_DT
+            , Z.FORECAST_UNIT_AMT
+            , Z.PART_QTY * Z.FORECAST_UNIT_AMT AS TOTAL_AMT
+            , CASE WHEN IFNULL(Z.WORK_TIME,0) = 0 THEN NULL ELSE FORMAT(Z.PART_QTY * Z.UNIT_FINAL_AMT / (Z.WORK_TIME / 60 / 60),0) END AS PRICE_PER_HOUR
+            , CASE WHEN Z.PREV_DRAWING_NUM IS NOT NULL THEN (
+                SELECT M.UNIT_FINAL_AMT
+                FROM jmes.TBL_ORDER M
+                WHERE M.ORDER_STATUS = 'REG003'
+                    AND M.DEL_YN = 'N'
+                    AND M.DRAWING_NUM = Z.PREV_DRAWING_NUM
+                    AND M.WORK_TYPE = Z.WORK_TYPE
+                    AND M.ORDER_COMP_CD = Z.ORDER_COMP_CD
+                ORDER BY M.ORDER_SEQ DESC
+                LIMIT 1
+            ) ELSE (
+                SELECT M.UNIT_FINAL_AMT
+                FROM jmes.TBL_ORDER M
+                WHERE M.ORDER_STATUS = 'REG003'
+                    AND M.DEL_YN = 'N'
+                    AND M.ORDER_SEQ != Z.ORDER_SEQ
+                    AND M.DRAWING_NUM = Z.DRAWING_NUM
+                    AND M.WORK_TYPE = Z.WORK_TYPE
+                    AND M.ORDER_COMP_CD = Z.ORDER_COMP_CD
+                ORDER BY M.ORDER_SEQ DESC
+                LIMIT 1
+            ) END AS PREV_UNIT_FINAL_AMT
+            , Z.UNIT_FINAL_EST_AMT
+            , Z.UNIT_FINAL_AMT
+            , Z.INSPECT_GRADE_NM
+            , Z.INSPECT_RESULT_NM
+            , Z.ERROR_QTY
+            , Z.RETURN_QTY
+            , Z.NOTE
+            , Z.REGIST_NUM
+            , Z.CONTROL_VER
+            , Z.DRAWING_VER
+        FROM (
+            SELECT C.CONTROL_SEQ
+                , C.CONTROL_DETAIL_SEQ
+                , E.ORDER_SEQ
+                , jmes.SF_GET_COMP_NM(B.ORDER_COMP_CD) AS ORDER_COMP_NM
+                , B.CONTROL_NUM
+                , B.ORDER_COMP_CD
+                , C.WORK_TYPE
+                , C.PART_NUM
+                , C.SIZE_TXT
+                , jmes.SF_GET_CODE_NM('1027',C.MATERIAL_DETAIL,#{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+                , jmes.SF_GET_CODE_NM('1033',C.WORK_TYPE,#{LOGIN_LOCALE}) AS WORK_TYPE_NM
+                , jmes.SF_GET_DATE_F(A.ORDER_DUE_DT,'','') AS ORDER_DUE_DT
+                , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
+                , jmes.SF_GET_PART_STATUS_NM(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+                , jmes.SF_GET_CODE_NM('1014',C.WORK_FACTORY,#{LOGIN_LOCALE}) AS WORK_FACTORY_NM
+                , jmes.SF_GET_DATE_F(C.INNER_WORK_FINISH_DT,'','M') AS INNER_WORK_FINISH_DT
+                , (SELECT ROUND(SUM(jmes.SF_GET_DRAWING_WORK_TIME('WORK',M.MCT_WORK_SEQ)),0) FROM jmes.TBL_MCT_WORK M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ) AS WORK_TIME
+                , CASE WHEN C.OUTSIDE_YN = 'Y' THEN jmes.SF_GET_COMP_NM(C.OUTSIDE_COMP_CD) END AS OUTSIDE_COMP_NM
+                , CASE WHEN C.OUTSIDE_YN = 'Y' THEN jmes.SF_GET_DATE_F(C.OUTSIDE_IN_DT,'','M') END AS OUTSIDE_IN_DT
+                , jmes.SF_GET_DATE_F(B.OUT_FINISH_DT,'','M') AS OUT_FINISH_DT
+                , C.FORECAST_UNIT_AMT
+                , F.UNIT_FINAL_EST_AMT
+                , CASE WHEN C.WORK_TYPE != 'WTP040' THEN F.UNIT_FINAL_AMT
+                       ELSE E.UNIT_FINAL_AMT
+                  END AS UNIT_FINAL_AMT
+                , F.REGIST_NUM
+                , jmes.SF_GET_CODE_NM('1040',D.INSPECT_GRADE,#{LOGIN_LOCALE}) AS INSPECT_GRADE_NM   -- 언어조건 -->
+                , jmes.SF_GET_CODE_NM('1020',D.INSPECT_RESULT,#{LOGIN_LOCALE}) AS INSPECT_RESULT_NM   -- 언어조건 -->
+                , CASE WHEN D.INSPECT_GRADE = 'GRD040' THEN D.ERROR_QTY ELSE 0 END AS ERROR_QTY
+                , (SELECT SUM(M.ERROR_QTY)
+                   FROM jmes.TBL_INSPECT M
+                   WHERE M.CONTROL_SEQ = C.CONTROL_SEQ
+                    AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                    AND M.INSPECT_TYPE = '2'
+                    AND M.INSPECT_GRADE IN ('GRD050', 'GRD060')
+                ) AS RETURN_QTY
+                , B.NOTE
+                , B.CONTROL_VER
+                , C.DRAWING_VER
+                , C.DRAWING_NUM
+                , C.PREV_DRAWING_NUM
+                , C.IMG_GFILE_SEQ
+            FROM (
+                SELECT M.CONTROL_SEQ, MAX(M.ORDER_DUE_DT) AS ORDER_DUE_DT
+                FROM jmes.TBL_CONTROL_PART_ORDER M
+                GROUP BY M.CONTROL_SEQ
+                HAVING MAX(M.ORDER_DUE_DT) BETWEEN REPLACE(#{MONTH_REPORT_DETAIL_START_DATE}, '/', SPACE(0)) AND REPLACE(#{MONTH_REPORT_DETAIL_END_DATE}, '/', SPACE(0))
+            ) A
+            INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N' AND B.CONTROL_STATUS IN ('ORD001', 'ORD003')
+                <if test="COMP_CD != null and COMP_CD != ''">
+                    AND B.COMP_CD = #{COMP_CD}          <!-- 가변조건 -->
+                </if>
+                <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
+                    AND B.ORDER_COMP_CD = #{ORDER_COMP_CD}          <!-- 가변조건 -->
+                </if>
+                <choose>
+                    <when test='OUT_FINISH_YN == "Y"'>
+                        AND B.OUT_FINISH_DT IS NOT NULL             <!-- 가변조건(출고완료) -->
+                    </when>
+                    <when test='OUT_FINISH_YN == "N"'>
+                        AND B.OUT_FINISH_DT IS  NULL
+                    </when>
+                </choose>
+                <choose>
+                    <when test='DELAY_YN == "Y"'>
+                        AND DATE_FORMAT(B.OUT_FINISH_DT,'%Y%m%d') > A.ORDER_DUE_DT        <!-- 가변조건(지연여부) -->
+                    </when>
+                    <when test='DELAY_YN == "N"'>
+                        AND B.OUT_FINISH_DT <![CDATA[ < ]]> A.ORDER_DUE_DT
+                    </when>
+                </choose>
+            INNER JOIN jmes.TBL_CONTROL_PART C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND C.WORK_TYPE != 'WTP020' AND C.INNER_WORK_FINISH_DT IS NOT NULL
+                <choose>
+                    <when test='FACTORY_CLASSIFY_YN == "Y"'>
+                        AND C.INNER_WORK_FINISH_DT IS NOT NULL      <!-- 가변조건(가공완료) -->
+                    </when>
+                    <when test='FACTORY_CLASSIFY_YN == "N"'>
+                        AND C.INNER_WORK_FINISH_DT IS NULL
+                    </when>
+                </choose>
+                <choose>
+                    <when test='OUTSIDE_YN == "Y"'>
+                        AND IFNULL(C.OUTSIDE_YN,'N') = 'Y'          <!-- 가변조건(외주대상) -->
+                    </when>
+                    <when test='OUTSIDE_YN == "N"'>
+                        AND IFNULL(C.OUTSIDE_YN,'N') = 'N'
+                    </when>
+                </choose>
+            INNER JOIN TBL_CONTROL_PART_ORDER_MAIN E ON E.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_ORDER F ON F.ORDER_SEQ = E.ORDER_SEQ AND F.DEL_YN = 'N'
+            LEFT OUTER JOIN jmes.TBL_INSPECT D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND D.INSPECT_TYPE = '1'
+                AND D.INSPECT_SEQ = (SELECT MIN(X.INSPECT_SEQ) FROM TBL_INSPECT X WHERE X.CONTROL_SEQ = C.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND X.INSPECT_TYPE = '1')
+        ) Z
+    </select>
+
+    <select id="selectMonthlyReportDetailList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT ROW_NUMBER() OVER(ORDER BY Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ ) AS ROW_NUM
             , Z.CONTROL_SEQ
             , Z.CONTROL_DETAIL_SEQ
