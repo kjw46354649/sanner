@@ -1056,8 +1056,8 @@
                         let selRowData = outgoingManageGridId01.pqGrid("getRowData", {rowIndx: firstRow});
                         callQuickRowChangeDrawingImageViewer(selRowData.IMG_GFILE_SEQ,selRowData);
                     }else {
-                        let selFirstRowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: firstRow});
-                        let selLastRowData = $orderManagementGrid.pqGrid("getRowData", {rowIndx: lastRow});
+                        let selFirstRowData = outgoingManageGridId01.pqGrid("getRowData", {rowIndx: firstRow});
+                        let selLastRowData = outgoingManageGridId01.pqGrid("getRowData", {rowIndx: lastRow});
 
                         if(selFirstRowData.REGIST_NUM == selLastRowData.REGIST_NUM) {
                             callQuickRowChangeDrawingImageViewer(selFirstRowData.IMG_GFILE_SEQ,selFirstRowData);
