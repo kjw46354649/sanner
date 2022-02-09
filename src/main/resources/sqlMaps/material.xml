@@ -2804,6 +2804,7 @@
         FROM TBL_CONTROL_PART_ORDER A
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
           AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+          AND EXISTS(SELECT X.CONTROL_SEQ FROM TBL_CONTROL X WHERE X.CONTROL_SEQ = A.CONTROL_SEQ AND X.DEL_YN = 'N')
     </insert>
 
     <update id="updateOutgoingOutInStockManage1" parameterType="java.util.HashMap">

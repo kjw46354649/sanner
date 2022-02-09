@@ -1536,6 +1536,7 @@
                 let list = [];
                 let groupList = [];
                 let controlStatusNmObj = new Set();
+                let qty = 0;
 
                 for (let i = 0; i < outgoingManageSelectedRowIndex.length; i++) {
                     let rowData = outgoingManageGridId01.pqGrid('getRowData', {rowIndx: outgoingManageSelectedRowIndex[i]});
@@ -1546,6 +1547,7 @@
 
                     controlStatusNmObj.add(rowData.CONTROL_STATUS_NM);
                     list.push(rowData);
+                    qty += Number(rowData.ORDER_QTY);
                 }
                 let grouped = fnGroupBy(list,'REGIST_NUM');
                 $.each(grouped, function (idx,Item) {
@@ -1557,7 +1559,8 @@
                     return false;
                 }
 
-                fnConfirm(null, "선택항목을 출고등록 하시겠습니까?", function () {
+                let confirmMsg = '선택항목을 출고등록 하시겠습니까?<br><br>선택주문수&ensp;:&ensp;' + outgoingManageSelectedRowIndex.length + ' 건&emsp;수량&ensp;:&ensp;'+ qty + ' EA';
+                fnConfirm(null, confirmMsg, function () {
                     let changes = {
                         'groupList': groupList
                     };
