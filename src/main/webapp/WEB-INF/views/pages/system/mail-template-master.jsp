@@ -88,7 +88,7 @@
                 <button type="button" id="mailTemplateMasterDelBtn" class="defaultBtn radius red">삭제</button>
             </div>
             <div class="conWrap">
-                <div id="user_manager_grid" style="margin:auto; height: auto; width: auto;" ></div>
+                <div id="mail_template_grid" style="margin:auto; height: auto; width: auto;" ></div>
                 <div class="right_sort">
                     전체 조회 건수 (Total : <span id="user_master_total_records" style="color: #00b3ee">0</span>)
                 </div>
@@ -99,9 +99,9 @@
 
 <script>
 
-    let userMasterSelectedRowIndex = [];
+    let mailTemplateSelectedRowIndex = [];
     let mailTemplateMasterGrid;
-    let userMasterGridId = 'user_manager_grid';
+    let mailTemplateGridId = 'mail_template_grid';
     let mailTemplateMasterPostData = fnFormToJsonArrayData('mail_template_search_form');
     let $mailTemplateSearchBtn = $("#mailTemplateSearchBtn");
     let $mailTemplateMasterAddBtn = $("#mailTemplateMasterAddBtn");
@@ -153,16 +153,16 @@
             },
             toolbar: false,
             rowSelect: function (event, ui) {
-                userMasterSelectedRowIndex[0] = ui.addList[0].rowIndx;
+                mailTemplateSelectedRowIndex[0] = ui.addList[0].rowIndx;
             },
             cellDblClick: function (event, ui) {
                 let TEMPLATE_SEQ = ui.rowData.TEMPLATE_SEQ;
                 $("#mail_template_search_form #TEMPLATE_SEQ").val(TEMPLATE_SEQ);
-                $("#mail_template_record_popup").modal('show');;
+                $("#mail_template_record_popup").modal('show');
             }
         };
 
-        mailTemplateMasterGrid = $('#' + userMasterGridId).pqGrid(mailTempalteMasterObj);
+        mailTemplateMasterGrid = $('#' + mailTemplateGridId).pqGrid(mailTempalteMasterObj);
 
         function mailTemplateMasterSaveCallBack(){
             $("#mail_template_record_popup").modal('hide');
@@ -196,7 +196,7 @@
 
         $mailTemplateMasterDelBtn.click(function(event){
             let USER_MASTER_QUERY_ID = 'deleteUser';
-            fnDeletePQGrid(mailTemplateMasterGrid, userMasterSelectedRowIndex, USER_MASTER_QUERY_ID);
+            fnDeletePQGrid(mailTemplateMasterGrid, mailTemplateSelectedRowIndex, USER_MASTER_QUERY_ID);
         });
 
         $mailTemplatePopSaveBtn.click(function(event){
