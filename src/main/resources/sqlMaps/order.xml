@@ -5867,6 +5867,16 @@
             AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </delete>
 
+    <select id="selectCheckOrderStatus" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.ORDER_STATUS, C.CONTROL_NUM, C.CONTROL_STATUS
+        FROM TBL_ORDER A
+            INNER JOIN TBL_CONTROL_PART_ORDER B ON A.ORDER_SEQ = B.ORDER_SEQ
+            INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND C.DEL_YN = 'N'
+        WHERE A.DEL_YN = 'N'
+          AND A.ORDER_SEQ = #{ORDER_SEQ}
+        GROUP BY A.ORDER_SEQ
+    </select>
+
     <select id="selectCheckControlStatus" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.OUTSIDE_STATUS, B.MCT_WORK_SEQ, C.MATERIAL_ORDER_NUM
         FROM TBL_CONTROL_PART A

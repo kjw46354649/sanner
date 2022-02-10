@@ -42,7 +42,7 @@ public interface OrderService {
 
     void removeOrder(Model model, Map<String, Object> map) throws Exception;
 
-    void managerOrderStatus(Map<String, Object> map) throws Exception;
+    void managerOrderStatus(Model model, Map<String, Object> map) throws Exception;
 
     void orderConfirmFromDrawing(Model model, Map<String, Object> map) throws Exception;
 

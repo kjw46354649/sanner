@@ -1424,7 +1424,6 @@
             let list = [];
             let orderStatusList = [];
             let message;
-            let outsideFlag = false;
             let controlFlag = false;
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 list[i] = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
@@ -1432,9 +1431,6 @@
                 orderStatusList[i] = list[i].ORDER_STATUS || undefined;
                 list[i].ORDER_STATUS = orderStatus;
 
-                // if(list[i].OUTSIDE_YN == 'Y' && (list[i].OUTSIDE_STATUS == 'OST001' || list[i].OUTSIDE_STATUS == 'OST003')) {
-                //     outsideFlag = true;
-                // }
                 if(typeof list[i].CONTROL_NUM != 'undefined' && list[i].CONTROL_NUM != null && list[i].CONTROL_NUM != '') {
                     controlFlag = true;
                 }
@@ -1458,15 +1454,7 @@
                 fnAlert(null, message);
                 return false;
             }
-            if(outsideFlag) {
-                message =
-                    '<h4>\n' +
-                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                    '    <span>외주가공 중에는 취소가 불가능합니다.\n외주가공 취소 후 진행해주세요.</span>\n' +
-                    '</h4>';
-                fnAlert(null, message);
-                return false;
-            }
+
             if(controlFlag) {
                 message =
                     '<h4>\n' +
@@ -1479,12 +1467,20 @@
 
             let parameters = {'url': '/managerOrderStatus', 'data': {data: JSON.stringify(list)}};
 
-            fnPostAjax(function () {
-                message =
-                    '<h4>\n' +
-                    '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                    '    <span>' + "<spring:message code='com.alert.default.save.success' />" + '</span>\n' +
-                    '</h4>';
+            fnPostAjax(function (data) {
+                if(data.resCode == 'CONTROL_EXISTS') {
+                    message =
+                        '<h4>\n' +
+                        '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                        '    <span>작업번호가 연계된 접수건은 상태 변경이 불가합니다.</span>\n' +
+                        '</h4>';
+                }else {
+                    message =
+                        '<h4>\n' +
+                        '    <img style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                        '    <span>' + "<spring:message code='com.alert.default.save.success' />" + '</span>\n' +
+                        '</h4>';
+                }
                 fnAlert(null, message);
                 $orderManagementGrid.pqGrid('refreshDataAndView');
             }, parameters, '');

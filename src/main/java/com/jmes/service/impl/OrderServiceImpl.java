@@ -1062,7 +1062,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void managerOrderStatus(Map<String, Object> map) throws Exception {
+    public void managerOrderStatus(Model model, Map<String, Object> map) throws Exception {
         String jsonObject = (String) map.get("data");
         String userId = (String)map.get("LOGIN_USER_ID");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -1072,21 +1072,29 @@ public class OrderServiceImpl implements OrderService {
             jsonArray = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<HashMap<String, Object>>>() {});
 
         for (HashMap<String, Object> hashMap : jsonArray) {
-            hashMap.put("LOGIN_USER_ID",userId);
+            hashMap.put("queryId", "orderMapper.selectCheckOrderStatus");
+            Map<String,Object> checkMap = innodaleDao.getInfo(hashMap);
 
-            hashMap.put("queryId", "orderMapper.updateOrderStatus");
-            this.innodaleDao.update(hashMap);
+            if(checkMap != null) {
+                model.addAttribute("resCode", "CONTROL_EXISTS");
+            }else {
+                hashMap.put("LOGIN_USER_ID",userId);
+
+                hashMap.put("queryId", "orderMapper.updateOrderStatus");
+                this.innodaleDao.update(hashMap);
 
 //            hashMap.put("queryId", "orderMapper.updateControlBarcodeRevision");
 //            this.innodaleDao.update(hashMap);
 //            hashMap.put("queryId", "orderMapper.insertControlBarcodeRevision");
 //            this.innodaleDao.create(hashMap);
 
-            hashMap.put("queryId", "orderMapper.createOrderProgress");
-            this.innodaleDao.create(hashMap);
+                hashMap.put("queryId", "orderMapper.createOrderProgress");
+                this.innodaleDao.create(hashMap);
 
 //            hashMap.put("queryId", "orderMapper.updateOutsideConfirmDt");
 //            this.innodaleDao.update(hashMap);
+                model.addAttribute("resCode", "SUCCESS");
+            }
         }
     }
 
@@ -1194,9 +1202,11 @@ public class OrderServiceImpl implements OrderService {
 
                 if (hashMap.containsKey("REGIST_NUM") && hashMap.containsKey("CONTROL_NUM")) {
                     HashMap<String, Object> controlMap = null;
-                    for(Map<String, Object> tempControl : checkControlList) {
-                        if(controlNum.equals(tempControl.get("CONTROL_NUM"+""))) {
-                            controlMap = (HashMap<String, Object>) tempControl;
+                    if(checkControlList.size() > 0) {
+                        for(Map<String, Object> tempControl : checkControlList) {
+                            if(controlNum.equals(tempControl.get("CONTROL_NUM"+""))) {
+                                controlMap = (HashMap<String, Object>) tempControl;
+                            }
                         }
                     }
 
@@ -1238,6 +1248,9 @@ public class OrderServiceImpl implements OrderService {
                             if(mergeFlag) {
                                 flag = true;
                                 validationResult = "RS_EXISTS2";
+                                hashMap.remove("MERGE_CONTROL_SEQ");
+                                hashMap.remove("MERGE_CONTROL_DETAIL_SEQ");
+                                hashMap.remove("MERGE_CONTROL_STATUS");
                             }else {
                                 validationResult = "RS_MERGE";
                             }
