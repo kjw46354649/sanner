@@ -545,7 +545,7 @@
                         newRowData.DRAWING_VER = null;
                         newRowData.DRAWING_UP_DT = null;
                         newRowData.PREV_DRAWING_NUM = null;
-                        newRowData.OUTSIDE_YN = null;
+                        newRowData.OUTSIDE_YN = 'N';
                         newRowData.ORDER_QTY = null;
                         // newRowData.WORK_FACTORY = null;
                         // newRowData.MATERIAL_SUPPLY_YN = null;
@@ -1401,6 +1401,13 @@
                             $controlManagementGrid.pqGrid('updateRow', {
                                 rowIndx: rowIndx,
                                 row: {'ORDER_COMP_CD': ORDER_COMPANY[index].value}
+                            });
+                        }
+
+                        if (newRowData.hasOwnProperty('OUTSIDE_YN')) {
+                            $controlManagementGrid.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'OUTSIDE_YN': ((newRowData.OUTSIDE_YN == 'Y')?'Y':'N') }
                             });
                         }
                         // 주요검사
