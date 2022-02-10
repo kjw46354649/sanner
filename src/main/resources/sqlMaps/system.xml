@@ -857,6 +857,11 @@
             UPDATE_ID = #{UPDATE_ID}
     </insert>
 
+    <delete id="deleteMailTemplate" parameterType="java.util.HashMap">
+        DELETE FROM jmes.TBL_MAIL_TEMPLATE
+        WHERE TEMPLATE_SEQ = #{TEMPLATE_SEQ}
+    </delete>
+
     <insert id="insertSchedulerNote" parameterType="java.util.HashMap" >
         INSERT INTO jmes.TBL_CALENDAR
             (CAL_SEQ, CAL_DT, CAL_TYPE, NOTE, INSERT_ID)

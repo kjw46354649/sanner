@@ -191,12 +191,14 @@
             $("#mail_template_record_popup_form #queryId").val('systemMapper.insertUpdateMailTemplate');
             $("#mail_template_record_popup_form #TEMPLATE_SEQ").val('');
             $("#mail_template_search_form #TEMPLATE_SEQ").val('');
-            $("#mail_template_record_popup").modal('show');;
+            $("#mail_template_record_popup").modal('show');
         });
 
         $mailTemplateMasterDelBtn.click(function(event){
-            let USER_MASTER_QUERY_ID = 'deleteUser';
-            fnDeletePQGrid(mailTemplateMasterGrid, mailTemplateSelectedRowIndex, USER_MASTER_QUERY_ID);
+            let USER_MASTER_QUERY_ID = 'deleteMailTemplate';
+            fnDeletePQGrid(mailTemplateMasterGrid, mailTemplateSelectedRowIndex, USER_MASTER_QUERY_ID, function () {
+                mailTemplateMasterGrid.pqGrid("refreshDataAndView");
+            });
         });
 
         $mailTemplatePopSaveBtn.click(function(event){
