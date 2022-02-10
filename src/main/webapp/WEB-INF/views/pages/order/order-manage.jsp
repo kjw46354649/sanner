@@ -175,6 +175,7 @@
                 <div class="rightSpan">
 <%--                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>--%>
 
+                    <button type="button" class="defaultBtn btn-100w" id="ORDER_MANAGE_CODE_EXPORT">코드 추출</button>
                     <button type="button" class="defaultBtn btn-100w" id="ORDER_MANAGE_DRAWING_PRINT">도면 출력</button>
                     <button type="button" class="defaultBtn btn-100w" id="ORDER_MANAGE_LABEL_PRINT">라벨 출력</button>
                 </div>
@@ -265,6 +266,15 @@
 </div>
 
 <input type="button" id="ORDER_ATTACHMENT_BUTTON" style="display: none;">
+
+<%-- 엑셀 다운로드 폼 --%>
+<form id="order_manage_excel_download" method="POST">
+    <input type="hidden" id="sqlId" name="sqlId" value="selectOrderManageCodeInfoExcel"/>
+    <input type="hidden" id="mapInputId" name="mapInputId" value="info"/>
+    <input type="hidden" id="paramName" name="paramName" value="ORDER_SEQ_STR"/>
+    <input type="hidden" id="paramData" name="paramData" value=""/>
+    <input type="hidden" id="template" name="template" value="order_manage_code_template"/>
+</form>
 
 <script>
     var $orderManagementGrid;
@@ -2727,6 +2737,29 @@
             let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[0]});
             callWindowImageViewer(rowData.IMG_GFILE_SEQ);
         });
+
+        // 코드 추출
+        $('#ORDER_MANAGE_CODE_EXPORT').on('click', function () {
+            if (noSelectedRowAlert()) return false;
+            let orderSeqList = new Set();
+            let orderSeqStr = '';
+            const gridData = $orderManagementGrid.pqGrid('option', 'dataModel.data');
+
+            for(let i=0;i<selectedOrderManagementRowIndex.length;i++) {
+                const rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
+                orderSeqList.add(rowData.ORDER_SEQ);
+            }
+
+            for(let orderSeq of orderSeqList) {
+                orderSeqStr += orderSeq + ',';
+            }
+            orderSeqStr = orderSeqStr.substring(0, orderSeqStr.length - 1)
+
+            $('#order_manage_excel_download #paramData').val(orderSeqStr);
+            // console.log($('#order_manage_excel_download').serialize())
+            fnReportFormToHiddenFormPageAction('order_manage_excel_download', '/downloadExcel');
+        });
+
         // 도면 출력
         $('#ORDER_MANAGE_DRAWING_PRINT').on('click', function () {
             if (noSelectedRowAlert()) return false;

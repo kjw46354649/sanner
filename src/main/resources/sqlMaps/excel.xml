@@ -503,4 +503,25 @@
         WHERE CONCAT(A.CONTROL_SEQ,A.CONTROL_DETAIL_SEQ) = ${CONTROL_SEQ_STR}
         ORDER BY B.PRODUCT_NUM, B.POINT_SEQ
     </select>
+    <select id="selectOrderManageCodeInfoExcel" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.ORDER_COMP_CD,
+            SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM,
+            A.REGIST_NUM,
+            A.ORDER_BARCODE_NUM,
+            GROUP_CONCAT(DISTINCT D.CONTROL_NUM SEPARATOR ', ') AS CONTROL_NUM,
+            A.DRAWING_NUM,
+            A.ITEM_NM,
+            A.ORDER_NUM,
+            DATE_FORMAT(A.ORDER_DUE_DT, '%Y/%m/%d') AS ORDER_DUE_DT,
+            CONCAT(DATE_FORMAT(A.ORDER_DUE_DT, '%m'),'월 ',DATE_FORMAT(A.ORDER_DUE_DT, '%d'),'일' ) AS ORDER_DUE_DT_FORMAT,
+            SF_GET_CODE_NM('1033', A.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE,
+            A.ORDER_QTY
+        FROM TBL_ORDER A
+             INNER JOIN TBL_CONTROL_PART_ORDER B ON A.ORDER_SEQ = B.ORDER_SEQ
+             INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+             INNER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND D.DEL_YN = 'N'
+        WHERE A.DEL_YN = 'N'
+          AND A.ORDER_SEQ IN (${ORDER_SEQ_STR})
+        GROUP BY A.ORDER_SEQ
+    </select>
 </mapper>
