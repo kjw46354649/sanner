@@ -383,7 +383,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
+                    return rowData.ORDER_STATUS == null || rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1033')}
             },
@@ -415,7 +415,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
+                    return rowData.ORDER_STATUS == null || rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
                 }
             },
             {title: '', minWidth: 25, dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
@@ -469,7 +469,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
+                    return rowData.ORDER_STATUS == null || rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
                 },
                 render: function (ui) {
                     let rowData = ui.rowData;
@@ -488,7 +488,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
+                            return rowData.ORDER_STATUS == null || rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
                         }
                     },
                     {
@@ -497,7 +497,7 @@
                         editable: function (ui) {
                             let rowData = ui.rowData;
 
-                            return rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
+                            return rowData.ORDER_STATUS == null || rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
                         }
                     }
                 ]
@@ -526,7 +526,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
+                    return rowData.ORDER_STATUS == null || rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
@@ -552,7 +552,7 @@
                 editable: function (ui) {
                     let rowData = ui.rowData;
 
-                    return rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
+                    return rowData.ORDER_STATUS == null || rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002' ;
                 },
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1042')},
                 render: function (ui) {
@@ -583,7 +583,7 @@
                     options: function (ui) {
                         let rowData = ui.rowData;
 
-                        if (rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002') {
+                        if (rowData.ORDER_STATUS == null || rowData.ORDER_STATUS === undefined || rowData.ORDER_STATUS === 'REG002') {
                             return fnGetCommCodeGridSelectBox('1027');
                         } else { // 확정
                             return fnGetCommCodeGridSelectBoxEtc('1027', rowData.MATERIAL_TYPE);
@@ -724,6 +724,7 @@
                     return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
+            {title: 'UNIT_FINAL_AMT_COPY', dataType: 'String', dataIndx: 'UNIT_FINAL_AMT_COPY', hidden: true},
             {
                 title: '공급단가', align: 'right', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
@@ -2805,7 +2806,7 @@
 
             for (let i = 0, selectedRowCount = selectedOrderManagementRowIndex.length; i < selectedRowCount; i++) {
                 let rowData = $orderManagementGrid.pqGrid('getRowData', {rowIndx: selectedOrderManagementRowIndex[i]});
-                let supplyUnitPrice = (Math.ceil(rowData.UNIT_FINAL_AMT * (number / 100) / 100) * 100).toFixed(0) || null;
+                let supplyUnitPrice = (Math.ceil(rowData.UNIT_FINAL_AMT_COPY * (number / 100) / 100) * 100).toFixed(0) || null;
                 let finalAmount = (supplyUnitPrice * rowData.ORDER_QTY) || null; // 10의 자리 올림
 
                 $orderManagementGrid.pqGrid('updateRow', {'rowIndx': selectedOrderManagementRowIndex[i], row: {'UNIT_FINAL_AMT': supplyUnitPrice, 'FINAL_TOTAL_AMT': finalAmount}, checkEditable: false});
