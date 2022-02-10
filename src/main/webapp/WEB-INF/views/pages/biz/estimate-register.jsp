@@ -1108,13 +1108,17 @@
                 }
 
                 if($('#estimate_register_bot_grid').hasClass('pq-grid')) {
-                    postData = { 'queryId': 'estimate.selectEstimateReceiverList', 'EST_SEQ': EST_SEQ };
-                    fnRequestGridData(estimateRegisterBotGrid, postData);
+                    $("#estimate_register_bot_grid").pqGrid('option', 'dataModel.postData', function () {
+                        return { 'queryId': 'estimate.selectEstimateReceiverList', 'EST_SEQ': EST_SEQ };
+                    });
+                    $("#estimate_register_bot_grid").pqGrid('refreshDataAndView');
                 }
 
                 if($('#estimate_register_file_grid').hasClass('pq-grid')) {
-                    postData = { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
-                    fnRequestGridData(estimateRegisterFileGrid, postData);
+                    $("#estimate_register_file_grid").pqGrid('option', 'dataModel.postData', function () {
+                        return { 'queryId': 'common.selectGfileFileListInfo', 'GFILE_SEQ': GfileKey };
+                    });
+                    $("#estimate_register_file_grid").pqGrid('refreshDataAndView');
                 }
 
                 CKEDITOR.instances.EMAIL_CONTENT_TXT.setData(contextVal);
@@ -1177,8 +1181,8 @@
                 $("#estimate_register_info_form #ESTIMATE_RECEIVER_DATA").val(JSON.stringify(receiver_data));
                 $("#estimate_register_info_form #EMAIL_CONTENT").val(mail_data);
 
-                let file_data = estimateRegisterFileGrid.pqGrid('option', 'dataModel.data');
-                if(file_data.length == 0) {
+                let file_data = $("#estimate_register_file_grid").pqGrid('option', 'dataModel.data');
+                if(file_data == null || file_data.length == 0) {
                     $("#estimate_register_info_form #GFILE_SEQ").val('');
                 }
 
