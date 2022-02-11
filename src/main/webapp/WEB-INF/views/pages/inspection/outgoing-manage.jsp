@@ -2024,6 +2024,11 @@
                                     fnMakeScanTableTdOnDataFail('이미 출하처리 되었습니다',dataInfo);
                                     return false;
                                 }
+                                if (dataInfo.ORDER_STATUS != 'REG001') {
+                                    setDiv('fail_div','success_div','접수번호 상태를 확인해주세요',dataInfo.REGIST_NUM,"")
+                                    fnMakeScanTableTdOnDataFail('접수번호 상태를 확인해주세요',dataInfo);
+                                    return false;
+                                }
                                 if (dataInfo.CONTROL_STATUS != 'ORD001' && dataInfo.CONTROL_STATUS != 'ORD003') {
                                     setDiv('fail_div','success_div','작업지시 상태를 확인해주세요',dataInfo.CONTROL_NUM,"")
                                     fnMakeScanTableTdOnDataFail('작업지시 상태를 확인해주세요',dataInfo);
@@ -2055,6 +2060,12 @@
                                     fnMakeScanTableTdOnDataSuccess(dataInfo);
                                 }, parameters, '');
                             } else if (barcodeType === "C" || barcodeType === "O") {
+
+                                if (barcodeType === "O" && dataInfo.ORDER_STATUS != 'REG001') {
+                                    setDiv('fail_div','success_div','접수번호 상태를 확인해주세요',dataInfo.REGIST_NUM,"")
+                                    fnMakeScanTableTdOnDataFail('접수번호 상태를 확인해주세요',dataInfo);
+                                    return false;
+                                }
 
                                 if (dataInfo.CONTROL_STATUS != 'ORD001' && dataInfo.CONTROL_STATUS != 'ORD003') {
                                     setDiv('fail_div','success_div','작업지시 상태를 확인해주세요',dataInfo.CONTROL_NUM,"")
