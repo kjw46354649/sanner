@@ -643,7 +643,7 @@
             </div>
             <h2>&nbsp;</h2>
             <div class="table-box-wrap">
-                <div class="table-box" id="outgoing_table_div">
+                <div class="table-box" id="outgoing_table_div" style="overflow-x: hidden;">
                     <table class="outgoingTable" id="outgoingScanPopDynamicTable">
                         <colgroup>
                             <col width="6%">
@@ -1916,8 +1916,7 @@
             html += '</tr>';
 
             $("#outgoingScanPopDynamicTable tbody").append(html);
-            let height = $("#outgoing_table_div").height();
-            $("#outgoing_table_div").scrollTop(height);
+            document.getElementById('outgoing_table_div').scrollTop = document.getElementById('outgoing_table_div').scrollHeight;
         }
 
         function fnMakeScanTableTdOnDataSuccess(data) {
@@ -1938,8 +1937,7 @@
             html += '</tr>';
 
             $("#outgoingScanPopDynamicTable tbody").append(html);
-            let height = $("#outgoing_table_div").height();
-            $("#outgoing_table_div").scrollTop(height);
+            document.getElementById('outgoing_table_div').scrollTop = document.getElementById('outgoing_table_div').scrollHeight;
         }
 
         function resetScanPop() {

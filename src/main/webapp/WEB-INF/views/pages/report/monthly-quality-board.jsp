@@ -110,7 +110,9 @@
         var data1 = new Object() ;
         data1.id = '${vlocale.CODE_CD}' ;
         data1.title = '${vlocale.CODE_NM_KR}' ;
-        comboData.push(data1) ;
+        if(data1.id != 'GRD010' && data1.id != 'GRD020') {
+            comboData.push(data1) ;
+        }
         </c:forEach>
         let bottom_combotree = $("#BOTTOM_INSPECT_GRADE").comboTree({
             source : comboData,
