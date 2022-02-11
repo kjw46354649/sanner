@@ -1166,6 +1166,7 @@
     </update>
     <select id="selectOutgoingOutType4OrderVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.ORDER_SEQ,
+               IFNULL(B.ORDER_STATUS, 'TEMP') AS ORDER_STATUS,
                B.DRAWING_NUM,
                B.IMG_GFILE_SEQ,
                B.ORDER_NUM,
@@ -1296,6 +1297,7 @@
         SELECT D.CONTROL_NUM
             , D.CONTROL_STATUS
             , D.DRAWING_NUM
+            , D.ORDER_STATUS
             , D.ORDER_NUM
             , D.REGIST_NUM
             , D.CONTROL_SEQ
@@ -1313,6 +1315,7 @@
                 C.CONTROL_NUM
                 , C.CONTROL_STATUS
                 , B.DRAWING_NUM
+                , IFNULL(B.ORDER_STATUS, 'TEMP') AS ORDER_STATUS
                 , B.ORDER_NUM
                 , B.REGIST_NUM
                 , '' AS CONTROL_SEQ
