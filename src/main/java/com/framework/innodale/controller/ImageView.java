@@ -31,6 +31,7 @@ public class ImageView extends AbstractView {
         res.setHeader("Content-Transfer-Encoding", "binary");
 
         OutputStream out = res.getOutputStream();
+        BufferedOutputStream bos = new BufferedOutputStream(out);
 
         String fileName = (String)model.get("blank_image");
         String photoType = "";
@@ -53,17 +54,17 @@ public class ImageView extends AbstractView {
             g2d.rotate(Math.toRadians(270));
             g2d.drawImage(img,0,0,null);
 
-            ImageIO.write(rotateImg,"png",out);
+            ImageIO.write(rotateImg,"png",bos);
         }else {
             byte[] buf = Files.readAllBytes(Paths.get(fileName));
-            out.write(buf);
+            bos.write(buf);
         }
 
-        out.flush();
+        bos.flush();
 
         img.flush();
 
-        out.close();
+        bos.close();
 
         if(rotateImg != null) {
             rotateImg.flush();
