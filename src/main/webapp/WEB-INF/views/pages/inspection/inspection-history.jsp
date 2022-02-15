@@ -4,6 +4,12 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<style>
+    .d-inline.inspection_history_div, .inspection_result_history_div {
+        font-weight: 400;
+        font-family: 'NotoKrM', Arial,sans-serif;
+    }
+</style>
 
 <div class="page estimate">
     <div class="topWrap">
@@ -40,7 +46,7 @@
                         </span>
                         <span class="gubun"></span>
                     </li>
-                    <li>
+                    <li class="inspection_history_div">
                         <span class="slt_wrap">
                            <label class="label_100" for="SEL_INSPECT_METHOD">측정방식</label>
                            <select id="SEL_INSPECT_METHOD" name="SEL_INSPECT_METHOD" title="측정방식" class="wd_200">
@@ -78,6 +84,13 @@
                        </span>
                         <span class="gubun"></span>
                     </li>
+                    <li class="inspection_result_history_div" style="display: none;">
+                        <span class="ipu_wrap">
+                           <label class="label_100" for="SEL_NOTE">비고</label>
+                           <input type="search" class="wd_200" name="SEL_NOTE" id="SEL_NOTE" title="비고">
+                        </span>
+                        <span class="gubun"></span>
+                    </li>
                     <li>
                         <span class="slt_wrap">
                            <label class="label_100" for="SEL_INSPECT_USER_ID">검사자</label>
@@ -107,33 +120,6 @@
                                 <input reqcd="R" type="radio" name="SEL_INSPECTION_RETURN_TERM" id="SEL_INSPECTION_RETURN_TERM_3" value="month"><label for="SEL_INSPECTION_RETURN_TERM_3">-1개월</label>
                             </span>
                         </div>
-                       <%-- <span class="slt_wrap mr-10">
-                                                    <label class="label_100" for="SEL_OUTGOING_DATE_TYPE">구분</label>
-                                                    <select class="wd_200" name="SEL_OUTGOING_DATE_TYPE" id="SEL_OUTGOING_DATE_TYPE">
-                                                       <option value=""><spring:message code="com.form.top.all.option" /></option>
-                                                       <option value="1">출고일</option>
-                                                    </select>
-                                                </span>--%>
-                        <%--<span class="radio_box">
-                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_1" value="0" ><label for="SEL_OUTGOING_TERM_1">오늘</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_2" value="3"><label for="SEL_OUTGOING_TERM_2">3일전</label>
-                        </span>
-                        <span class="radio_box">
-                            <input reqcd="R" type="radio" name="SEL_OUTGOING_TERM" id="SEL_OUTGOING_TERM_3" value="31"><label for="SEL_OUTGOING_TERM_3">이번달</label>
-                        </span>
-                        <div class="calendar_wrap">
-                            <span class="calendar_span">
-                                <input class="datepicker-input" type="text" name="SEL_ST_DT" id="SEL_ST_DT" placeholder="" value="" title="시작날짜" readonly>
-&lt;%&ndash;                                <button type="button">달력선택</button>&ndash;%&gt;
-                            </span>
-                            <span class="nbsp">~</span>
-                            <span class="calendar_span">
-                                <input class="datepicker-input" type="text" name="SEL_END_DT" id="SEL_END_DT" placeholder="" value="" title="종료날짜" readonly>
-&lt;%&ndash;                                <button type="button">달력선택</button>&ndash;%&gt;
-                            </span>
-                        </div>--%>
                          <span class="ipu_wrap right_float">
                             <button type="button" id="inspection_history_export_btn"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue ml-10" id="inspection_history_search_btn">검색</button>
@@ -144,33 +130,59 @@
         </form>
     </div>
     <div class="bottomWrap row3_bottomWrap">
-        <div class="hWrap">
-            <div class="d-inline">
-                <input type="search" id="inspectionHistoryFilterKeyword" placeholder="Enter your keyword">
-                <label for="inspectionHistoryFrozen" class="label_50" style="font-size: 15px;">Fix</label>
-                <select id="inspectionHistoryFrozen" name="inspectionHistoryFrozen">
-                </select>
-                <select id="inspectionHistoryFilterColumn" style="display: none;"></select>
-                <select id="inspectionHistoryFilterCondition" style="display: none;">
-                    <option value="contain">Contains</option>
-                </select>
-                <div class="rightSpan">
-                    <button type="button" class="defaultBtn btn-100w" id="inspection_history_barcode_drawing_print">바코드도면 출력</button>
+        <div class="tableWrap jmestabs" id="inspection_history_tabs">
+            <ul class="smallTabMenuTabs">
+                <li class="active"><a href="#INSPECTION_HISTORY_TAB" data-toggle="tab" aria-expanded="true">검사결과이력</a></li>
+                <li><a href="#INSPECTION_RESULT_TAB" data-toggle="tab" aria-expanded="false">성적서이력</a></li>
+                <div class="d-inline right_float inspection_history_div" style="margin-top: 2px;">
+                    <input type="search" id="inspectionHistoryFilterKeyword" placeholder="Enter your keyword">
+                    <label for="inspectionHistoryFrozen" class="label_30" style="font-size: 15px;">Fix</label>
+                    <select id="inspectionHistoryFrozen" name="inspectionHistoryFrozen">
+                    </select>
+                    <select id="inspectionHistoryFilterColumn" style="display: none;"></select>
+                    <select id="inspectionHistoryFilterCondition" style="display: none;">
+                        <option value="contain">Contains</option>
+                    </select>
+                    <button type="button" class="defaultBtn btn-100w ml-25" id="inspection_history_barcode_drawing_print">바코드도면 출력</button>
                 </div>
-            </div>
-        </div>
-        <div class="tableWrap" style="padding: 10px 0;">
-            <div class="conWrap">
-                <div id="inspection_history_grid"></div>
-                <div class="right_sort">
-                    전체 조회 건수 (Total : <span id="inspection_history_grid_records" style="color: #00b3ee">0</span>)
+                <div class="d-inline right_float inspection_result_history_div" style="margin-top: 2px;display: none;">
+                    <input type="search" id="inspectionResultHistoryFilterKeyword" placeholder="Enter your keyword">
+                    <label for="inspectionResultHistoryFrozen" class="label_30" style="font-size: 15px;">Fix</label>
+                    <select id="inspectionResultHistoryFrozen" name="inspectionResultHistoryFrozen">
+                    </select>
+                    <select id="inspectionResultHistoryFilterColumn" style="display: none;"></select>
+                    <select id="inspectionResultHistoryFilterCondition" style="display: none;">
+                        <option value="contain">Contains</option>
+                    </select>
                 </div>
+            </ul>
+            <div class="tab-content" style="margin-top: 4px;">
+                <ul class="active" id="INSPECTION_HISTORY_TAB">
+                    <div class="conMainWrap">
+                        <div id="inspection_history_grid"></div>
+                        <div class="right_sort">
+                            전체 조회 건수 (Total : <span id="inspection_history_grid_records" style="color: #00b3ee">0</span>)
+                        </div>
+                    </div>
+                </ul>
+                <ul class="" id="INSPECTION_RESULT_TAB">
+                    <div class="conWrap">
+                        <div id="inspection_result_history_grid"></div>
+                        <div class="right_sort">
+                            전체 조회 건수 (Total : <span id="inspection_result_history_grid_records" style="color: #00b3ee">0</span>)
+                        </div>
+                    </div>
+                </ul>
             </div>
         </div>
     </div>
 </div>
 
 
+<form id="inspection_history_result_data_form" name="inspection_history_result_data_form" method="post">
+    <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ">
+    <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ">
+</form>
 
 
 
@@ -181,7 +193,9 @@
         let SelectedRowIndex = [];
 
         let inspectionHistoryGridId01 = $("#inspection_history_grid");
+        let inspectionResultHistoryGrid = $("#inspection_result_history_grid");
         let inspectionHistoryColModel01;
+        let inspectionResultHistoryColModel01;
         let inspectionHistoryPostData01;
 
         let today = new Date();
@@ -351,6 +365,119 @@
                 }
             }
         });
+
+
+        inspectionResultHistoryColModel01 = [
+            {title: 'INSPECT_RESULT_SEQ', dataType: 'string', dataIndx: 'INSPECT_RESULT_SEQ', hidden:true},
+            {title: 'CONTROL_SEQ', dataType: 'string', dataIndx: 'CONTROL_SEQ', hidden:true},
+            {title: 'CONTROL_DETAIL_SEQ', dataType: 'string', dataIndx: 'CONTROL_DETAIL_SEQ', hidden:true},
+            // {title: '가공완료<br>일시', dataType: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 80, width: 80},
+            {title: '등록일시', dataType: 'string', dataIndx: 'INSEPCT_RESULT_INSERT_DT', minWidth: 80, width: 80},
+            {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 90, width: 90},
+            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', minWidth: 140, width: 140},
+            {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25,
+                render: function (ui) {
+                    if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
+                    return '';
+                },
+                postRender: function(ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui),
+                        rowIndx = ui.rowIndx,
+                        rowData = ui.rowData;
+
+                    $cell.find("#detailView").bind("click", function () {
+                        g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
+                    });
+                }
+            },
+            {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 150, width: 150},
+            {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 30, width: 30,
+                render: function (ui) {
+                    if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find("#imageView").bind("click", function () {
+                        let rowData = ui.rowData;
+                        callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
+                    });
+                }
+            },
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 120, width: 120},
+            {title: '주문<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 50, width: 50},
+            {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 60, width: 60},
+            {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY_NM', minWidth: 70, width: 70},
+            {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 80, width: 80},
+            {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 90, width: 90},
+            {title: '기타 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', minWidth: 120, width: 120},
+            {
+                title: '성적서', datatype: 'string', align: 'center', colModel: [
+                    {title: '제품No', datatype: 'string', dataIndx: 'PRODUCT_NUM', minWidth: 60, width: 60},
+                    {title: '작성자', datatype: 'string', dataIndx: 'INSPECT_RESULT_USER_NM', minWidth: 90, width: 90},
+                    {title: 'Area', datatype: 'string', dataIndx: 'LAYER_AREA_NAME', minWidth: 60, width: 60},
+                    {title: 'Value', datatype: 'string', dataIndx: 'VALUE_CNT', minWidth: 50, width: 50}
+                ]
+            },
+            {title: '상세보기', align: 'center', dataType: 'string', dataIndx: '', minWidth: 100, width: 100,
+                render: function (ui) {
+                    if (ui.rowData['INSPECT_RESULT_SEQ'] > 0) return '<button type="button" class="miniBtn black inspectR">검사 성적서</button>';
+                    return '';
+                },
+                postRender: function (ui) {
+                    let grid = this,
+                        $cell = grid.getCell(ui);
+                    $cell.find(".inspectR").bind("click", function () {
+                        let rowData = ui.rowData;
+                        inspectionResultPopupWindow(rowData.CONTROL_SEQ,rowData.CONTROL_DETAIL_SEQ);
+                    });
+                }
+            }
+        ];
+
+        inspectionResultHistoryGrid.pqGrid({
+            width: "100%", height: 710,
+            dataModel: {
+                location: "remote", dataType: "json", method: "POST", recIndx: 'INSPECT_SEQ',
+                url: "/paramQueryGridSelect",
+                postData: fnFormToJsonArrayData('inspection_history_form'),
+                getData: function (dataJSON) {
+                    return {data: dataJSON.data};
+                }
+            },
+            strNoRows: g_noData,
+            columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', editable: false, render: inspectionHistoryFilterRender},
+            filterModel: { mode: 'OR' },
+            scrollModel: {autoFit: true},
+            numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
+            // selectionModel: { type: 'row', mode: 'single'} ,
+            swipeModel: {on: false},
+            showTitle: false,
+            collapsible: false,
+            postRenderInterval: -1, //call postRender synchronously.
+            resizable: false,
+            trackModel: {on: true},
+            colModel: inspectionResultHistoryColModel01,
+            load: function( event, ui ) {
+                var filterOpts = '<option value=\"\">All Fields</option>';
+                var frozenOts = '<option value="0">Selected</option>';
+                this.getColModel().forEach(function(column){
+                    let hiddenYn = column.hidden == undefined ? true : false;
+                    if(hiddenYn && column.title){
+                        frozenOts +='<option value="'+(column.leftPos+1)+'">'+column.title+'</option>';
+                    }
+                });
+                $("#inspectionResultHistoryFilterColumn").html(filterOpts);
+                $("#inspectionResultHistoryFrozen").empty();
+                $("#inspectionResultHistoryFrozen").html(frozenOts);
+            },
+            complete: function () {
+                let data = inspectionResultHistoryGrid.pqGrid('option', 'dataModel.data');
+                let totalRecords = data.length;
+                $('#inspection_result_history_grid_records').html(totalRecords);
+            }
+        });
         /**  리스트 그리드 선언 끝 **/
 
         $('#inspection_history_form input').on('keyup', function (e) {
@@ -363,43 +490,60 @@
         });
 
         function searchInspectionHistory() {
-            // let SEL_INSPECT_GRADE_SELECT = $("#inspection_history_form").find("#SEL_INSPECT_GRADE_SELECT").val();
-            // let arr = SEL_INSPECT_GRADE_SELECT.trim().split(",");
-            // let rtn = "";
-            // if(SEL_INSPECT_GRADE_SELECT != ""){
-            //     $.each(arr, function(row, key) {
-            //         let id = $(".ComboTreeItemChlid").find("#check" + key.trim()).parent()[0].dataset.id
-            //         rtn += " '" + id + "',";
-            //     });
-            //     rtn = rtn.substring(0,rtn.length-1);
-            // }
-            // $("#inspection_history_form").find("#SEL_INSPECT_GRADE").val(rtn);
-
-            inspectionHistoryGridId01.pqGrid("option", "dataModel.postData", function(ui){
-                return fnFormToJsonArrayData('#inspection_history_form');
-            } );
-            inspectionHistoryGridId01.pqGrid("refreshDataAndView");
+            if($("#INSPECTION_HISTORY_TAB").css('display') != 'none') {
+                inspectionHistoryGridId01.pqGrid("option", "dataModel.postData", function(ui){
+                    return fnFormToJsonArrayData('#inspection_history_form');
+                } );
+                inspectionHistoryGridId01.pqGrid("refreshDataAndView");
+            }else {
+                $("#inspection_history_form").find("#queryId").val('inspection.selectInspectionResultHistoryList');
+                inspectionResultHistoryGrid.pqGrid("option", "dataModel.postData", function(ui){
+                    return fnFormToJsonArrayData('#inspection_history_form');
+                } );
+                inspectionResultHistoryGrid.pqGrid("refreshDataAndView");
+            }
         }
 
         $('#inspectionHistoryFilterKeyword').on({
             'keyup': function () {
-                fnFilterHandler(inspectionHistoryGridId01, 'inspectionHistoryFilterKeyword', 'inspectionHistoryFilterCondition', 'inspectionHistoryFilterColumn');
-
-                let data = inspectionHistoryGridId01.pqGrid('option', 'dataModel.data');
-                let totalRecords = data.length;
-                $('#inspection_history_grid_records').html(totalRecords);
+                historyKeywordFilter();
             },
             'search': function () {
-                fnFilterHandler(inspectionHistoryGridId01, 'inspectionHistoryFilterKeyword', 'inspectionHistoryFilterCondition', 'inspectionHistoryFilterColumn');
+                historyKeywordFilter();
+            }
+        });
 
-                let data = inspectionHistoryGridId01.pqGrid('option', 'dataModel.data');
-                let totalRecords = data.length;
-                $('#inspection_history_grid_records').html(totalRecords);
+        function historyKeywordFilter() {
+            fnFilterHandler(inspectionHistoryGridId01, 'inspectionHistoryFilterKeyword', 'inspectionHistoryFilterCondition', 'inspectionHistoryFilterColumn');
+
+            let data = inspectionHistoryGridId01.pqGrid('option', 'dataModel.data');
+            let totalRecords = data.length;
+            $('#inspection_history_grid_records').html(totalRecords);
+        }
+
+        function resultKeywordFilter() {
+            fnFilterHandler(inspectionResultHistoryGrid, 'inspectionResultHistoryFilterKeyword', 'inspectionResultHistoryFilterCondition', 'inspectionResultHistoryFilterColumn');
+
+            let data = inspectionResultHistoryGrid.pqGrid('option', 'dataModel.data');
+            let totalRecords = data.length;
+            $('#inspection_result_history_grid_records').html(totalRecords);
+        }
+
+        $('#inspectionResultHistoryFilterKeyword').on({
+            'keyup': function () {
+                resultKeywordFilter();
+            },
+            'search': function () {
+                resultKeywordFilter();
             }
         });
 
         $("#inspectionHistoryFrozen").on('change', function(e){
             fnFrozenHandler(inspectionHistoryGridId01, $(this).val());
+        });
+
+        $("#inspectionResultHistoryFrozen").on('change', function(e){
+            fnFrozenHandler(inspectionResultHistoryGrid, $(this).val());
         });
 
         function inspectionHistoryFilterRender(ui) {
@@ -413,11 +557,17 @@
                 if(index > -1) val = options[index].text;
             }
             if (val) {
-                var condition = $("#inspectionHistoryFilterCondition :selected").val(),
+                var condition = $("#inspectionResultHistoryFilterCondition :selected").val(),
                     valUpper = val.toString().toUpperCase(),
-                    txt = $("#inspectionHistoryFilterKeyword").val(),
+                    txt = $("#inspectionResultHistoryFilterKeyword").val(),
                     txtUpper = (txt == null) ? "" : txt.toString().toUpperCase(),
                     indx = -1;
+
+                if($("#INSPECTION_HISTORY_TAB").css('display') != 'none') {
+                    condition = $("#inspectionHistoryFilterCondition :selected").val();
+                    txt = $("#inspectionHistoryFilterKeyword").val();
+                    txtUpper = (txt == null) ? "" : txt.toString().toUpperCase();
+                }
 
                 if (condition == "end") {
                     indx = valUpper.lastIndexOf(txtUpper);
@@ -449,22 +599,45 @@
             }
         }
 
+        let inspectionResultPopup;
+        const inspectionResultPopupWindow = function (controlSeq, controlDetailSeq) {
+            let inspectFrom = document.inspection_history_result_data_form;
+
+            let strOption = '';
+            strOption += 'width=' + screen.width + ',';
+            strOption += 'height=' + screen.height + ',';
+            strOption += 'fullscreen=yes';
+
+            // 최초 클릭이면 팝업을 띄운다.
+            if (inspectionResultPopup === undefined || inspectionResultPopup.closed) {
+
+                inspectionResultPopup = window.open('', 'popForm', strOption);
+
+                $('#inspection_history_result_data_form').find("#CONTROL_SEQ").val(controlSeq);
+                $('#inspection_history_result_data_form').find("#CONTROL_DETAIL_SEQ").val(controlDetailSeq);
+
+                inspectFrom.action = "/inspectionResult";
+                inspectFrom.target = "popForm";
+                inspectFrom.submit();
+
+            } else {
+                inspectionResultPopup.focus();
+                setTimeout(function() {
+
+                    $(inspectionResultPopup.window.document).find("#CONTROL_SEQ").val(controlSeq);
+                    $(inspectionResultPopup.window.document).find("#CONTROL_SEQ").val(controlDetailSeq);
+
+                }, 500);
+            }
+        }
+
         $('#inspection_history_export_btn').on('click', function () {
             var blob = inspectionHistoryGridId01.pqGrid('getInstance').grid.exportData({
-                    //url: "/pro/demos/exportData",
                     format: 'xlsx',
                     render: true,
                     type: 'blob'
                 });
             saveAs(blob, "검사이력 관리.xlsx" );
-            // inspectionHistoryGridId01.pqGrid('getInstance').grid.exportData({
-            //     url: "/exportData",
-            //     filename: 'Inspection_history',
-            //     format: 'xlsx',
-            //     // zip: $("#export_zip").prop("checked"),
-            //     nopqdata: true, //applicable for JSON export.
-            //     render: true
-            // });
         });
 
         const noSelectedRowAlert = function () {
@@ -514,16 +687,24 @@
                 printJS(printParam);
             });
         });
-    });
 
-
-
-        $("#stock_manage_pop_form").find("#WAREHOUSE_CD").change(function(){
-            // let WAREHOUSE_CD = this.value;
-            // let paramData = {"url":"/json-list", "data": {"WAREHOUSE_CD": WAREHOUSE_CD, "queryId": 'inspection.selectWarehouseLocationList'}};
-            // fnCommCodeDatasourceSelectBoxCreate($("#stock_manage_pop_form").find("#LOC_SEQ"), 'all', paramData);
+        $("#inspection_history_tabs").tabs({
+            activate: function(event, ui) {
+                ui.newPanel.find('.pq-grid').pqGrid('refresh');
+                if(ui.newPanel.selector == "#INSPECTION_HISTORY_TAB") {
+                    $(".inspection_history_div").show();
+                    $(".inspection_result_history_div").hide();
+                    $("#inspection_history_form").find("#queryId").val('inspection.selectInspectionHistoryList');
+                    searchInspectionHistory()
+                }else {
+                    $(".inspection_history_div").hide();
+                    $(".inspection_result_history_div").show();
+                    $("#inspection_history_form").find("#queryId").val('inspection.selectInspectionResultHistoryList');
+                    searchInspectionHistory();
+                }
+            }
         });
-
+    });
 
     fnCommCodeDatasourceSelectBoxCreate($('#inspection_history_form').find('#SEL_ORDER_COMP_CD'), 'all', {
         'url': '/json-list',
@@ -533,24 +714,6 @@
         'url': '/json-list',
         'data': {'queryId': 'dataSource.getUserList'}
     });
-    // $('[name=SEL_OUTGOING_TERM]').change(function () {
-    //     let value = $(this).val(), today = new Date(), newDate = new Date();
-    //     if(value == "0"){
-    //         $('#SEL_ST_DT').val(today.yyyymmdd());
-    //         $('#SEL_END_DT').val(today.yyyymmdd());
-    //     }else  if(value == "3"){
-    //         newDate.setDate(newDate.getDate() - 3);
-    //         $('#SEL_ST_DT').val(newDate.yyyymmdd());
-    //         $('#SEL_END_DT').val(today.yyyymmdd());
-    //     }else{
-    //         let first   = new Date( today.getFullYear(), today.getMonth() , 1 );
-    //         let last   = new Date( today.getFullYear(), today.getMonth() + 1 );
-    //             last   = new Date( last - 1 );
-    //
-    //         $('#SEL_ST_DT').val(first.yyyymmdd());
-    //         $('#SEL_END_DT').val(last.yyyymmdd());
-    //     }
-    // });
 </script>
 <script>
 

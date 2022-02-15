@@ -1450,7 +1450,7 @@
              , X.ORDER_COMP_NM
              , X.OUTSIDE_COMP_NM
              , X.EMERGENCY_YN
-        FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.ORDER_SEQ, A.OUT_FINISH_DT, A.ORDER_QTY, B.CONTROL_NUM, A.DRAWING_NUM, SF_GET_CODE_NM('1059', B.MAIN_INSPECTION, 'KO') AS MAIN_INSPECTION_NM
+        FROM (  SELECT A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.ORDER_SEQ, A.OUT_FINISH_DT, A.ORDER_QTY, B.CONTROL_NUM, A.DRAWING_NUM, SF_GET_CODE_NM('1059', B.MAIN_INSPECTION, #{LOGIN_LOCALE}) AS MAIN_INSPECTION_NM
                      , A.ITEM_NM
                      , SF_GET_DATE_F(A.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT
                      , CASE
@@ -2070,108 +2070,129 @@
         <!-- 2. 검사 이력관리 쿼리 -->
         <!-- 항목은 검사리스트와 동일하게 하고 MCT 실적은 제거 -->
         <!-- 검색조건 확인필요 (불량코드콤보는 note값으로 처리, Show All seq 삭제) -->
-
-        SELECT V.CONTROL_SEQ, V.CONTROL_DETAIL_SEQ, SF_GET_CONTROL_PART_INFO(V.CONTROL_SEQ, V.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
-            , V.WORK_FINISH_DT, V.ORDER_COMP_NM, V.INNER_DUE_DT, V.EMERGENCY_YN, V.MAIN_INSPECTION_NM
-            , V.CONTROL_NUM, V.PART_NUM, V.DRAWING_NUM, V.WORK_TYPE_NM, V.WORK_FACTORY_NM, V.OUTSIDE_COMP_NM
-            , V.MATERIAL_DETAIL_NM, V.ORDER_QTY, V.SIZE_TXT, V.NOTE, V.POP_NM, V.PART_STATUS_NM
-            <!-- , V.MATERIAL_TYPE_NM -->
-            , W.INSPECT_SEQ
-            , W.INSPECT_NUM AS Q_SEQ
-            , (SELECT M.USER_NM FROM TBL_USER M WHERE M.USER_ID = W.INSPECT_USER_ID) AS Q_INSPECT_USER_NM
-            , SF_GET_CODE_NM('1060', W.INSPECT_METHOD, #{LOGIN_LOCALE}) AS Q_INSPECT_METHOD_NM
-            , SF_GET_CODE_NM('1040', W.INSPECT_GRADE, #{LOGIN_LOCALE}) AS Q_INSPECT_GRADE_NM
-            , (SELECT M.NOTE FROM TBL_CODE M WHERE M.HIGH_CD = '1040' AND M.CODE_CD = W.INSPECT_GRADE) AS Q_INSPECT_GRADE_NOTE
-            , W.ERROR_QTY AS Q_ERROR_QTY
-            , CASE WHEN W.INSPECT_TYPE = '2' THEN SF_GET_DATE_F(W.INSERT_DT,'YY','') END AS Q_RETURN_DT
-            , CASE WHEN W.INSPECT_TYPE = '1' THEN CASE WHEN W.INSPECT_GRADE = 'GRD040' THEN SF_GET_CODE_NM('1020', W.INSPECT_RESULT, #{LOGIN_LOCALE}) ELSE SF_GET_CODE_NM('1019', W.INSPECT_RESULT, #{LOGIN_LOCALE}) END
-                   WHEN W.INSPECT_TYPE = '2' THEN SF_GET_CODE_NM('1021', W.INSPECT_RESULT, #{LOGIN_LOCALE})
-              END AS Q_INSPECT_RESULT_NM
-            , W.INSPECT_DESC AS Q_INSPECT_DESC
-            , SF_GET_CODE_NM('1010', W.ERROR_PROCESS, #{LOGIN_LOCALE}) AS Q_ERROR_PROCESS_NM
-            , SF_GET_CODE_NM('1032', W.ERROR_REASON, #{LOGIN_LOCALE}) AS Q_ERROR_REASON_NM
-            , SF_GET_CODE_NM('1025', W.ERROR_ACTION, #{LOGIN_LOCALE}) AS Q_ERROR_ACTION_NM
-            , W.ERROR_NOTE AS Q_ERROR_NOTE
-            , SF_GET_DATE_F(W.INSERT_DT,'','M') AS INSEPCT_INSERT_DT
-            , V.IMG_GFILE_SEQ
-            , V.CONTROL_VER
-            , V.DRAWING_VER
-            , (SELECT X.REGIST_NUM FROM TBL_CONTROL_PART_ORDER_MAIN X WHERE X.CONTROL_SEQ = V.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = V.CONTROL_DETAIL_SEQ) AS REGIST_NUM
-        FROM (  SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
-                    , CASE WHEN IFNULL(X.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN
-                    , SF_GET_CODE_NM('1059', X.MAIN_INSPECTION, #{LOGIN_LOCALE}) MAIN_INSPECTION_NM
-                    , SF_GET_CODE_NM('1014', X.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
-                    , SF_GET_DATE_F(X.INNER_WORK_FINISH_DT, '', '') AS WORK_FINISH_DT
-                    <!-- , (SELECT SF_GET_DATE_F(M.POP_DT,'YY','M') FROM TBL_POP M WHERE M.POP_POSITION = 'POP100' AND M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ ORDER BY M.POP_SEQ LIMIT 1) AS WORK_FINISH_DT -->
-                    , SF_GET_DATE_F(X.INNER_DUE_DT,'','') AS INNER_DUE_DT
-                    <!-- , P.POP_POSITION_NM AS POP_NM  -->
-                    , SF_GET_CODE_NM('1009', P.POP_POSITION, #{LOGIN_LOCALE}) AS POP_NM <!-- 현재 등록된 위치 -->
-                    , SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM
-                    , SF_GET_COMP_NM(X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
-                    , SF_GET_PART_STATUS_NM(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
-                    , X.CONTROL_NUM
-                    , X.PART_NUM
-                    , X.DRAWING_NUM
-                    , SF_GET_CODE_NM('1027', X.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
-                    , SF_GET_CODE_NM('1033', X.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
-                    , SF_GET_CODE_NM('1035', X.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM
-                    , SF_GET_CONTROL_PART_QTY(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ) AS ORDER_QTY
-                    , X.SIZE_TXT
-                    , X.NOTE
-                    , X.IMG_GFILE_SEQ
-                    , X.CONTROL_VER
-                    , X.DRAWING_VER
-                FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
-                            , A.ORDER_COMP_CD , A.EMERGENCY_YN , A.MAIN_INSPECTION
-                            , B.WORK_FACTORY
-                            , B.INNER_DUE_DT, B.OUTSIDE_COMP_CD, B.PART_STATUS
-                            , A.CONTROL_NUM, B.PART_NUM, B.DRAWING_NUM
-                            , B.MATERIAL_DETAIL, B.WORK_TYPE, B.MATERIAL_TYPE
-                            , B.PART_UNIT_QTY, B.SIZE_TXT, A.NOTE, B.INNER_WORK_FINISH_DT
-                            , (SELECT MAX(M.POP_SEQ) FROM TBL_POP M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
-                            , B.IMG_GFILE_SEQ
-                            , A.CONTROL_VER
-                            , B.DRAWING_VER
-                        FROM TBL_CONTROL A
-                            , TBL_CONTROL_PART B
-                        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                            AND A.DEL_YN = 'N'
-                            AND A.CONTROL_STATUS IN ('ORD001', 'ORD003') <!-- TODO: 컬럼 -->
-                            <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
-                                AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
-                            </if>
-                            <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
-                                AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
-                            </if>
-                            <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
-                                AND UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
-                            </if>
-                            <if test="SEL_MATERIAL_DETAIL !='' and SEL_MATERIAL_DETAIL != null">
-                                AND B.MATERIAL_DETAIL = #{SEL_MATERIAL_DETAIL}
-                            </if>
-                    ) X LEFT OUTER JOIN TBL_POP P ON P.POP_SEQ = X.POP_SEQ
-              ) V, TBL_INSPECT W
-        WHERE W.CONTROL_SEQ = V.CONTROL_SEQ
-            AND W.CONTROL_DETAIL_SEQ = V.CONTROL_DETAIL_SEQ
+        SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+            , SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', '') AS WORK_FINISH_DT
+            , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
+            , SF_GET_DATE_F(B.INNER_DUE_DT,'','') AS INNER_DUE_DT
+            , CASE WHEN IFNULL(A.EMERGENCY_YN, 'N') = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN
+            , SF_GET_CODE_NM('1059', A.MAIN_INSPECTION, #{LOGIN_LOCALE}) AS MAIN_INSPECTION_NM
+            , A.CONTROL_NUM
+            , B.PART_NUM
+            , B.DRAWING_NUM
+            , SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+            , SF_GET_CODE_NM('1014', B.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
+            , SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
+            , SF_GET_CODE_NM('1027', B.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+            , SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS ORDER_QTY
+            , B.SIZE_TXT
+            , A.NOTE
+            , SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+            , D.INSPECT_SEQ
+            , D.INSPECT_NUM AS Q_SEQ
+            , (SELECT M.USER_NM FROM TBL_USER M WHERE M.USER_ID = D.INSPECT_USER_ID) AS Q_INSPECT_USER_NM
+            , SF_GET_CODE_NM('1060', D.INSPECT_METHOD, #{LOGIN_LOCALE}) AS Q_INSPECT_METHOD_NM
+            , SF_GET_CODE_NM('1040', D.INSPECT_GRADE, #{LOGIN_LOCALE}) AS Q_INSPECT_GRADE_NM
+            , (SELECT M.NOTE FROM TBL_CODE M WHERE M.HIGH_CD = '1040' AND M.CODE_CD = D.INSPECT_GRADE) AS Q_INSPECT_GRADE_NOTE
+            , D.ERROR_QTY AS Q_ERROR_QTY
+            , CASE WHEN D.INSPECT_TYPE = '2' THEN SF_GET_DATE_F(D.INSERT_DT,'YY','') END AS Q_RETURN_DT
+            , CASE WHEN D.INSPECT_TYPE = '1' THEN CASE WHEN D.INSPECT_GRADE = 'GRD040' THEN SF_GET_CODE_NM('1020', D.INSPECT_RESULT, #{LOGIN_LOCALE}) ELSE SF_GET_CODE_NM('1019', D.INSPECT_RESULT, #{LOGIN_LOCALE}) END
+            WHEN D.INSPECT_TYPE = '2' THEN SF_GET_CODE_NM('1021', D.INSPECT_RESULT, #{LOGIN_LOCALE})
+            END AS Q_INSPECT_RESULT_NM
+            , D.INSPECT_DESC AS Q_INSPECT_DESC
+            , SF_GET_CODE_NM('1010', D.ERROR_PROCESS, #{LOGIN_LOCALE}) AS Q_ERROR_PROCESS_NM
+            , SF_GET_CODE_NM('1032', D.ERROR_REASON, #{LOGIN_LOCALE}) AS Q_ERROR_REASON_NM
+            , SF_GET_CODE_NM('1025', D.ERROR_ACTION, #{LOGIN_LOCALE}) AS Q_ERROR_ACTION_NM
+            , D.ERROR_NOTE AS Q_ERROR_NOTE
+            , SF_GET_DATE_F(D.INSERT_DT,'','M') AS INSEPCT_INSERT_DT
+            , B.IMG_GFILE_SEQ
+            , A.CONTROL_VER
+            , B.DRAWING_VER
+            , (SELECT X.REGIST_NUM FROM TBL_CONTROL_PART_ORDER_MAIN X WHERE X.CONTROL_SEQ = B.CONTROL_SEQ AND X.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS REGIST_NUM
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_INSPECT D ON D.CONTROL_SEQ = B.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+        WHERE A.DEL_YN = 'N'
+            AND A.CONTROL_STATUS IN ('ORD001', 'ORD003')
+            <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
+                AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
+            </if>
+            <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
+                AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
+            </if>
+            <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
+                AND UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
+            </if>
+            <if test="SEL_MATERIAL_DETAIL !='' and SEL_MATERIAL_DETAIL != null">
+                AND B.MATERIAL_DETAIL = #{SEL_MATERIAL_DETAIL}
+            </if>
             <if test="SEL_INSPECT_METHOD !='' and SEL_INSPECT_METHOD != null">
-                AND W.INSPECT_METHOD = #{SEL_INSPECT_METHOD}   <!-- 측정방식('1060') -->
+                AND D.INSPECT_METHOD = #{SEL_INSPECT_METHOD}   <!-- 측정방식('1060') -->
             </if>
             <if test="HIDDEN_SEL_INSPECT_GRADE_SELECT !='' and HIDDEN_SEL_INSPECT_GRADE_SELECT != null">
-                AND W.INSPECT_GRADE IN (${HIDDEN_SEL_INSPECT_GRADE_SELECT})    <!-- 검사결과등급(복수) -->
+                AND D.INSPECT_GRADE IN (${HIDDEN_SEL_INSPECT_GRADE_SELECT})    <!-- 검사결과등급(복수) -->
             </if>
             <if test="SEL_INSPECT_RESULT !='' and SEL_INSPECT_RESULT != null">
-                AND W.INSPECT_RESULT = #{SEL_INSPECT_RESULT}            <!-- 불량코드 ('1020','1021') -->
+                AND D.INSPECT_RESULT = #{SEL_INSPECT_RESULT}            <!-- 불량코드 ('1020','1021') -->
             </if>
             <if test="SEL_ERROR_ACTION !='' and SEL_ERROR_ACTION != null">
-                AND W.ERROR_ACTION = #{SEL_ERROR_ACTION}   <!-- 조치('1025') -->
+                AND D.ERROR_ACTION = #{SEL_ERROR_ACTION}   <!-- 조치('1025') -->
             </if>
             <if test="SEL_INSPECT_USER_ID !='' and SEL_INSPECT_USER_ID != null">
-                AND W.INSPECT_USER_ID = #{SEL_INSPECT_USER_ID}   <!-- 검사자 -->
+                AND D.INSPECT_USER_ID = #{SEL_INSPECT_USER_ID}   <!-- 검사자 -->
             </if>
             <if test="SEL_INSPECTION_ST_DT !='' and SEL_INSPECTION_ST_DT != null and SEL_INSPECTION_END_DT !='' and SEL_INSPECTION_END_DT != null">
-                AND W.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_INSPECTION_ST_DT},'/',space(0)),'%Y%m%d') AND  DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_INSPECTION_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY)
+                AND D.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_INSPECTION_ST_DT},'/',space(0)),'%Y%m%d') AND  DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_INSPECTION_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY)
             </if>
-        ORDER BY V.CONTROL_SEQ, V.CONTROL_DETAIL_SEQ, W.INSPECT_SEQ DESC    <!-- 정렬도 확인필요 -->
+        ORDER BY A.CONTROL_SEQ , B.CONTROL_DETAIL_SEQ, D.INSPECT_SEQ DESC
+    </select>
+    <select id="selectInspectionResultHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+             , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
+             , B.DRAWING_NUM
+             , B.IMG_GFILE_SEQ
+             , B.SIZE_TXT
+             , B.MATERIAL_NOTE
+             , SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS ORDER_QTY
+             , SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+             , SF_GET_CODE_NM('1014', B.WORK_FACTORY, #{LOGIN_LOCALE}) AS WORK_FACTORY_NM
+             , SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
+             , SF_GET_COMP_NM(B.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
+             , D.PRODUCT_NUM
+             , (SELECT M.USER_NM FROM TBL_USER M WHERE M.USER_ID = D.INSERT_ID) AS INSPECT_RESULT_USER_NM
+             , C.LAYER_AREA_NAME
+             , COUNT(D.RESULT_VALUE) AS VALUE_CNT
+             , SF_GET_DATE_F(D.INSERT_DT,'','M') AS INSEPCT_RESULT_INSERT_DT
+             , D.INSPECT_RESULT_VALUE_SEQ
+             , C.INSPECT_RESULT_SEQ
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_INSPECT_RESULT C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_INSPECT_RESULT_VALUE D ON D.INSPECT_RESULT_SEQ = C.INSPECT_RESULT_SEQ
+        WHERE A.DEL_YN = 'N'
+            AND A.CONTROL_STATUS IN ('ORD001', 'ORD003')
+            <if test="SEL_ORDER_COMP_CD !='' and SEL_ORDER_COMP_CD != null">
+                AND A.ORDER_COMP_CD = #{SEL_ORDER_COMP_CD}
+            </if>
+            <if test="SEL_CONTROL_NUM !='' and SEL_CONTROL_NUM != null">
+                AND UPPER(A.CONTROL_NUM) LIKE CONCAT('%', UPPER(#{SEL_CONTROL_NUM}), '%')
+            </if>
+            <if test="SEL_NOTE !='' and SEL_NOTE != null">
+                AND UPPER(B.MATERIAL_NOTE) LIKE CONCAT('%', UPPER(#{SEL_NOTE}), '%')
+            </if>
+            <if test="SEL_DRAWING_NUM !='' and SEL_DRAWING_NUM != null">
+                AND UPPER(B.DRAWING_NUM) LIKE CONCAT('%', UPPER(#{SEL_DRAWING_NUM}), '%')
+            </if>
+            <if test="SEL_MATERIAL_DETAIL !='' and SEL_MATERIAL_DETAIL != null">
+                AND B.MATERIAL_DETAIL = #{SEL_MATERIAL_DETAIL}
+            </if>
+            <if test="SEL_INSPECT_USER_ID !='' and SEL_INSPECT_USER_ID != null">
+                AND D.INSERT_ID = #{SEL_INSPECT_USER_ID}   <!-- 검사자 -->
+            </if>
+            <if test="SEL_INSPECTION_ST_DT !='' and SEL_INSPECTION_ST_DT != null and SEL_INSPECTION_END_DT !='' and SEL_INSPECTION_END_DT != null">
+                AND D.INSERT_DT BETWEEN STR_TO_DATE(REPLACE(#{SEL_INSPECTION_ST_DT},'/',space(0)),'%Y%m%d') AND  DATE_ADD(STR_TO_DATE(REPLACE(#{SEL_INSPECTION_END_DT},'/',space(0)),'%Y%m%d'), INTERVAL+1 DAY)
+            </if>
+        GROUP BY C.INSPECT_RESULT_SEQ, D.PRODUCT_NUM
+        ORDER BY D.INSERT_DT DESC
     </select>
     <delete id="deleteOutgoingHistoryInspectionCancelStep1" parameterType="java.util.HashMap">
         DELETE FROM TBL_OUT WHERE OUT_SEQ = #{OUT_SEQ}

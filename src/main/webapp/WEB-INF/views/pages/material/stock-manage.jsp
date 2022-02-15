@@ -363,26 +363,6 @@
                 </ul>
             </div>
         </div>
-<%--        <div class="hWrap">--%>
-<%--        </div>--%>
-<%--        <div class="tableWrap" style="padding: 10px 0;">--%>
-<%--            <div class="conMainWrap">--%>
-<%--                <div id="stock_manage_grid"></div>--%>
-<%--                <div class="right_sort">--%>
-<%--                    전체 조회 건수 (Total : <span id="stock_manage_grid_records" style="color: #00b3ee">0</span>)--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--            <div>--%>
-<%--                <span style="font-size: 1.6rem;">불출 요청 현황</span>--%>
-<%--            </div>--%>
-<%--            <br/>--%>
-<%--            <div class="conWrap">--%>
-<%--                <div id="stock_manage_grid02"></div>--%>
-<%--                <div class="right_sort">--%>
-<%--                    전체 조회 건수 (Total : <span id="stock_manage_grid02_records" style="color: #00b3ee">0</span>)--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
     </div>
 </div>
 
