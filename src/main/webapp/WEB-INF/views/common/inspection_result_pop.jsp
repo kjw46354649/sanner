@@ -187,8 +187,26 @@
         }
         table.rowStyle td {
             text-align: center;
-            padding: 10px 10px;
+            padding: 10px 5px 10px 5px;
         }
+        #horizon_table th:nth-of-type(1), #horizon_table td:nth-of-type(1) { width: 63px; }
+        #horizon_table th:nth-of-type(2), #horizon_table td:nth-of-type(2) { width: 105px; }
+
+        #vertical_table th:nth-of-type(1), #vertical_table td:nth-of-type(1) { width: 63px; }
+        #vertical_table th:nth-of-type(2), #vertical_table td:nth-of-type(2) { width: 105px; }
+
+        #horizon_table, #vertical_table {
+            display: block;
+        }
+        #horizon_table td, #vertical_table td { border: 1px solid #92979a; border-top: 0; }
+
+        #horizon_table tbody, #vertical_table tbody  {
+            display: block;
+            height: 450px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
         .video-item > h2{
             text-align: center;
         }
@@ -318,7 +336,7 @@
                                 <td id="QTY_DIV" class="table-bg-gray"></td>
                                 <td id="WORK_TYPE_DIV" class="table-bg-gray"></td>
                                 <td class="table-bg-gray">
-                                    <input id="INSPECT_RESULT_NO" type="text" style="border: none;width: 50px;text-align: center;" disabled>
+                                    <input id="INSPECT_RESULT_NO" type="text" style="border: none;width: 65px;text-align: center;padding: 0;" disabled>
                                 </td>
                             </tr>
                         </tbody>
@@ -430,12 +448,9 @@
                     <div class="center-mt12" style="margin-top: 5%;">
                         <label class="wd_130">설정번호</label>
                         <select id="select_layer_name" class="wd_100">
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="C">C</option>
-                            <option value="D">D</option>
-                            <option value="E">E</option>
-                            <option value="F">F</option>
+                            <c:forEach var="code" items="${HighCode.H_1104}">
+                                <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
+                            </c:forEach>
                         </select>
                     </div>
                     <div class="d-flex">
@@ -446,7 +461,7 @@
                             <div class="center-mt12">
                                 <label class="wd_80">영역수</label>
                                 <select class="wd_50" id="horizontal_div_num">
-                                    <c:forEach var="i" begin="3" end="10">
+                                    <c:forEach var="i" begin="3" end="15">
                                         <option value="<c:out value='${i}'/>"><c:out value='${i}'/></option>
                                     </c:forEach>
                                 </select>
@@ -461,16 +476,14 @@
                             </div>
                             <div class="center-mt12" style="width: 100%;">
                                 <table id="horizon_table" class="rowStyle">
-                                    <colgroup>
-                                        <col style="width: 40%">
-                                        <col style="width: 60%">
-                                    </colgroup>
-                                    <tr>
-                                        <th>구역</th>
-                                        <th>좌표</th>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>구역</th>
+                                            <th>좌표</th>
+                                        </tr>
+                                    </thead>
                                     <tbody>
-                                        <c:forEach var="i" begin="1" end="10">
+                                        <c:forEach var="i" begin="1" end="15">
                                             <tr id="horizon_tr_<c:out value='${i}'/>" class="horizon_tr">
                                                 <td>
                                                     <input class="wd_50 horizontal_name" type="text">
@@ -498,7 +511,7 @@
                             <div class="center-mt12">
                                 <label class="wd_80">영역수</label>
                                 <select class="wd_50" id="vertical_div_num">
-                                    <c:forEach var="i" begin="3" end="10">
+                                    <c:forEach var="i" begin="3" end="15">
                                         <option value="<c:out value='${i}'/>"><c:out value='${i}'/></option>
                                     </c:forEach>
                                 </select>
@@ -513,16 +526,14 @@
                             </div>
                             <div class="center-mt12" style="width: 100%;">
                                 <table id="vertical_table" class="rowStyle">
-                                    <colgroup>
-                                        <col style="width: 40%">
-                                        <col style="width: 60%">
-                                    </colgroup>
-                                    <tr>
-                                        <th>구역</th>
-                                        <th>좌표</th>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>구역</th>
+                                            <th>좌표</th>
+                                        </tr>
+                                    </thead>
                                     <tbody>
-                                        <c:forEach var="i" begin="1" end="10">
+                                        <c:forEach var="i" begin="1" end="15">
                                             <tr id="vertical_tr_<c:out value='${i}'/>" class="vertical_tr">
                                                 <td>
                                                     <input class="wd_50 vertical_name" type="text">
@@ -860,14 +871,14 @@
                 },
                 editorKeyDown: function(evt, ui){
                     if(evt.keyCode == 13) {
-                        $("#inspection_result_pop_grid").pqGrid('setSelection', null);
-                        setTimeout(function () {
-                            let instance = inspectionResultPopGrid.pqGrid('getInstance').grid.colIndxs;
-
+                        let totalLength = inspectionResultPopGrid.pqGrid('option', 'dataModel.data').length;
+                        if(ui.rowData.pq_ri < totalLength -1) {
+                            $("#inspection_result_pop_grid").pqGrid('setSelection', null);
                             inspectionResultPopGrid.pqGrid('setSelection', {rowIndx: (ui.rowData.pq_ri +1)});
-                            // inspectionResultPopGrid.pqGrid('focus',{rowIndxPage:(ui.rowData.pq_ri +1), colIndx:instance['RESULT_VALUE']});
-                            inspectionResultPopGrid.pqGrid('editCell',{rowIndx:(ui.rowData.pq_ri +1), dataIndx:'RESULT_VALUE'});
-                        },150);
+                            setTimeout(function () {
+                                inspectionResultPopGrid.pqGrid('editCell',{rowIndx:(ui.rowData.pq_ri +1), dataIndx:'RESULT_VALUE'});
+                            },20);
+                        }
 
                     }
                 },
@@ -1465,6 +1476,7 @@
 
                     $.each(data,function (idx,Item) {
                         if(fnIsEmpty(Item.RESULT_VALUE)) {
+                            inspectionResultPopGrid.pqGrid('setSelection', {rowIndx: Item.pq_ri});
                             inspectionResultPopGrid.pqGrid('editCell',{rowIndx:Item.pq_ri, dataIndx:'RESULT_VALUE'});
                             return false;
                         }
@@ -1655,6 +1667,49 @@
                     $("#horizontal_batch_num").val("");
                 }
             });
+
+            // $("#vertical_div_num").on("change",function () {
+            //     let val = $(this).val();
+            //     let trLength = $(".vertical_tr").length;
+            //
+            //     console.log('vertical_div_num');
+            //     if(val < trLength) {
+            //         $(".vertical_tr").each(function(i,e){
+            //             if(i >= val) {
+            //                 $(this).remove();
+            //             }
+            //         })
+            //     }else if(val > trLength) {
+            //         for(let i=trLength;i<val;i++) {
+            //             let html = '<tr id="vertical_tr_'+i + '" class="vertical_tr">';
+            //             html += '<td><input class="wd_50 vertical_name" type="text"></td>';
+            //             html += '<td><input class="wd_80 vertical_coord" type="text"></td></tr>';
+            //             $("#vertical_table").find('tbody').append(html);
+            //         }
+            //     }
+            // });
+
+            // $("#horizontal_div_num").on("change",function () {
+            //     let val = $(this).val();
+            //     let trLength = $(".horizon_tr").length;
+            //
+            //     // console.log('horizontal_div_num');
+            //     if(val < trLength) {
+            //         $(".horizon_tr").each(function(i,e){
+            //             if(i >= val) {
+            //                 $(this).remove();
+            //             }
+            //         })
+            //     }else if(val > trLength) {
+            //         for(let i=trLength;i<val;i++) {
+            //             let html = '<tr id="horizon_tr_'+i + '" class="horizon_tr">';
+            //             html += '<td><input class="wd_50 horizontal_name" type="text"></td>';
+            //             html += '<td><input class="wd_80 horizontal_coord" type="text"></td></tr>';
+            //             $("#horizon_table").find('tbody').append(html);
+            //         }
+            //     }
+            // });
+
             $("#vertical_batch_btn").on("click",function () {
                 let batchNum = $("#vertical_batch_num").val();
                 let divNum = $("#vertical_div_num").val();
@@ -1692,27 +1747,6 @@
                     settingLayerGrid(data);
                 }, parameters, '');
             });
-
-            // $("#horizontal_div_num").on('change',function () {
-            //     $(".horizon_tr").removeClass("table-bg-gray");
-            //     $(".horizon_tr").find("input").prop("disabled",false);
-            //     let num = Number($(this).val());
-            //     let totalLength = $(".horizon_tr").length;
-            //     for(let i=num;i<=totalLength;i++) {
-            //         $(".horizon_tr").eq(i).addClass("table-bg-gray");
-            //         $(".horizon_tr").eq(i).find("input").prop("disabled",true);
-            //     }
-            // });
-            // $("#vertical_div_num").on('change',function () {
-            //     $(".vertical_tr").removeClass("table-bg-gray");
-            //     $(".vertical_tr").find("input").prop("disabled",false);
-            //     let num = Number($(this).val());
-            //     let totalLength = $(".vertical_tr").length;
-            //     for(let i=num;i<=totalLength;i++) {
-            //         $(".vertical_tr").eq(i).addClass("table-bg-gray");
-            //         $(".vertical_tr").eq(i).find("input").prop("disabled",true);
-            //     }
-            // });
 
             function changeHorizonVertical(btnId) {
                 let text = $("#" + btnId).text();
@@ -1837,7 +1871,7 @@
                                     if(type != 'main') {
                                         $('#vertical_mark_type').val(Item2.MARK_TYPE).prop("selected",true);
                                         $('#vertical_div_num').val(Item.length).prop("selected",true);
-                                        // $('#vertical_div_num').trigger('change');
+                                        // $('#vertical_div_num').val(Item.length).trigger('change');
                                     }else {
                                         $("#veritcal_change_btn").text(Item2.MARK_TYPE_NM)
                                     }
@@ -1858,7 +1892,7 @@
                                     if(type != 'main') {
                                         $('#horizontal_mark_type').val(Item2.MARK_TYPE).prop("selected",true);
                                         $('#horizontal_div_num').val(Item.length).prop("selected",true);
-                                        // $('#horizontal_div_num').trigger('change');
+                                        // $('#horizontal_div_num').val(Item.length).trigger('change');
                                     }else {
                                         $("#horizon_change_btn").text(Item2.MARK_TYPE_NM)
                                     }
@@ -1889,8 +1923,8 @@
                         'grid-template-columns':rowCss
                     })
                 }
-
             }
+
             $("#layer_setting_popup").on({
                 'show.bs.modal' :  function() {
                     let parameter = {
@@ -1903,6 +1937,7 @@
                     }, parameters, '');
                 }, 'hide.bs.modal' : function () {
                     settingLayerBtn();
+                    $("#select_layer_name").val("A").trigger('change');
                 }
             });
 
@@ -2086,6 +2121,7 @@
                 toolbar: false
             };
             inspectPointGrid.pqGrid(inspectPointObj);
+
 
             function settingCoordPop(controlSeq, controlDetailSeq, latestProductNum) {
                 let parameter = {

@@ -2344,6 +2344,30 @@
         WHERE LAYER_AREA_NAME = #{LAYER_AREA_NAME}
         ORDER BY AREA_TYPE, AREA_NAME
     </select>
+    <select id="selectHorizonLayer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT LAYER_AREA_NAME,
+               AREA_TYPE,
+               AREA_NAME,
+               AREA_COORDINATE,
+               MARK_TYPE,
+               SF_GET_CODE_NM('1101',MARK_TYPE,#{LOGIN_LOCALE}) AS MARK_TYPE_NM
+        FROM TBL_LAYER_AREA
+        WHERE AREA_TYPE = 'H'
+            AND LAYER_AREA_NAME = #{LAYER_AREA_NAME}
+        ORDER BY AREA_TYPE, AREA_NAME
+    </select>
+    <select id="selectVerticalLayer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT LAYER_AREA_NAME,
+               AREA_TYPE,
+               AREA_NAME,
+               AREA_COORDINATE,
+               MARK_TYPE,
+               SF_GET_CODE_NM('1101',MARK_TYPE,#{LOGIN_LOCALE}) AS MARK_TYPE_NM
+        FROM TBL_LAYER_AREA
+        WHERE AREA_TYPE = 'V'
+            AND LAYER_AREA_NAME = #{LAYER_AREA_NAME}
+        ORDER BY AREA_TYPE, AREA_NAME
+    </select>
     <select id="selectLayerInfoForBtn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.LAYER_AREA_NAME, GROUP_CONCAT(X.DIV_CNT ORDER BY AREA_TYPE SEPARATOR ', ') AS DIV_TXT
         FROM (
