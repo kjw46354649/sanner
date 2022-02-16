@@ -869,6 +869,9 @@
                 // console.log('complete',data);
                 loadCoordinate(data);
             },
+            // change: function (evt, ui) {
+            //     console.log('change',ui);
+            // },
             editorKeyDown: function(evt, ui){
                 if(evt.keyCode == 13) {
                     let totalLength = inspectionResultPopGrid.pqGrid('option', 'dataModel.data').length;
@@ -877,7 +880,7 @@
                         inspectionResultPopGrid.pqGrid('setSelection', {rowIndx: (ui.rowData.pq_ri +1)});
                         setTimeout(function () {
                             inspectionResultPopGrid.pqGrid('editCell',{rowIndx:(ui.rowData.pq_ri +1), dataIndx:'RESULT_VALUE'});
-                        },20);
+                        },5);
                     }
 
                 }
@@ -942,6 +945,7 @@
         }
 
         function addNewCoordinate(x,y) {
+            $("#inspection_result_pop_grid").pqGrid('setSelection', null);
             let pos1 = "";
             let pos2 = "";
             $.each(gridDivData.gridDivX,function (idx,Item) {
@@ -971,10 +975,7 @@
                 checkEditable: false
             });
 
-            $("#inspection_result_pop_grid").pqGrid('setSelection', null);
             setTimeout(function () {
-                // let instance = inspectionResultPopGrid.pqGrid('getInstance').grid.colIndxs;
-                // inspectionResultPopGrid.pqGrid('focus',{rowIndxPage:newIdx, colIndx:instance['RESULT_VALUE']});
                 inspectionResultPopGrid.pqGrid('editCell',{rowIndx:newIdx, dataIndx:'RESULT_VALUE'});
             },300)
         }
@@ -1477,7 +1478,9 @@
                 $.each(data,function (idx,Item) {
                     if(fnIsEmpty(Item.RESULT_VALUE)) {
                         inspectionResultPopGrid.pqGrid('setSelection', {rowIndx: Item.pq_ri});
-                        inspectionResultPopGrid.pqGrid('editCell',{rowIndx:Item.pq_ri, dataIndx:'RESULT_VALUE'});
+                        setTimeout(function () {
+                            inspectionResultPopGrid.pqGrid('editCell',{rowIndx:Item.pq_ri, dataIndx:'RESULT_VALUE'});
+                        },10);
                         return false;
                     }
                 })
