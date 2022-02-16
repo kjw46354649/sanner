@@ -1634,8 +1634,6 @@
         })
 
 
-
-
         $("#changeDraw1").on("click",function () {
             $("#layer_setting_img").attr("src", "/resource/asset/images/common/drawing_1.png");
         });
@@ -1646,20 +1644,64 @@
             $("#layer_setting_img").attr("src", "/resource/asset/images/common/drawing_3.png");
         });
 
+        function numValidation(elm, type) {
+            let val = elm.val();
+            let limitNum = (type == 'horizontal')?1300:900;
+            if(isNaN(val)) {
+                fnAlert(null,"숫자만 입력가능합니다.");
+                elm.val("");
+            }
+            if(Number(val) > limitNum) {
+                let msg = ((type == 'horizontal')?"가로":"세로") + "는 최대 " + limitNum + "까지만 입력가능합니다.";
+                fnAlert(null, msg);
+                elm.val("");
+            }
+        }
+
+        $(".horizontal_coord").on("keyup",function () {
+            numValidation($(this),"horizontal");
+        });
+
+        $(".vertical_coord").on("keyup",function () {
+            numValidation($(this),"vertical");
+        });
+
         $("#horizontal_batch_btn").on("click",function () {
-            let batchNum = $("#horizontal_batch_num").val();
-            let divNum = $("#horizontal_div_num").val();
-            let markType = $("#horizontal_mark_type").val();
+            batchBtn("horizontal");
+        });
+
+        function batchBtn(type) {
+            let batchNum = $("#"+ type +"_batch_num").val();
+            let divNum = $("#"+ type +"_div_num").val();
+            let markType = $("#"+ type +"_mark_type").val();
             let asciiNum = 65;
+            let areaLimit = (type == 'horizontal')?1500:900;
+
+            if(isNaN(batchNum)) {
+                fnAlert(null,"숫자만 입력가능합니다.");
+                $("#"+ type +"_batch_num").val("");
+                return false;
+            }
+
+            if(batchNum * divNum > areaLimit) {
+                if(type == 'horizontal') {
+                    fnAlert(null,"가로는 영역당 최대 1300까지만 입력가능합니다.");
+                }else {
+                    fnAlert(null,"세로는 영역당 최대 900까지만 입력가능합니다.");
+                }
+                $("#"+ type +"_batch_num").val("");
+                return false;
+            }
+
             if(!fnIsEmpty(batchNum)) {
-                $(".horizontal_coord").val("");
-                $(".horizontal_name").val("");
-                $(".horizontal_coord").each(function(i,e){
+                $("."+ type +"_coord").val("");
+                $("."+ type +"_name").val("");
+                $("."+ type +"_coord").each(function(i,e){
                     if(i < divNum) {
                         $(this).val(batchNum * (i+1));
                     }
                 })
-                $(".horizontal_name").each(function(i,e){
+                $("."+ type +"_name").each(function(i,e){
                     if(i < divNum) {
                         if(markType == 'M1') {
                             $(this).val(i+1);
@@ -1669,9 +1711,9 @@
                         }
                     }
                 })
-                $("#horizontal_batch_num").val("");
+                $("#"+ type +"_batch_num").val("");
             }
-        });
+        }
 
         // $("#vertical_div_num").on("change",function () {
         //     let val = $(this).val();
@@ -1716,30 +1758,7 @@
         // });
 
         $("#vertical_batch_btn").on("click",function () {
-            let batchNum = $("#vertical_batch_num").val();
-            let divNum = $("#vertical_div_num").val();
-            let markType = $("#vertical_mark_type").val();
-            let asciiNum = 65;
-            if(!fnIsEmpty(batchNum)) {
-                $(".vertical_coord").val("");
-                $(".vertical_name").val("");
-                $(".vertical_coord").each(function(i,e){
-                    if(i < divNum) {
-                        $(this).val(batchNum * (i+1));
-                    }
-                })
-                $(".vertical_name").each(function(i,e){
-                    if(i < divNum) {
-                        if(markType == 'M1') {
-                            $(this).val(i+1);
-                        }else {
-                            let text = String.fromCharCode(asciiNum + i);
-                            $(this).val(text);
-                        }
-                    }
-                })
-                $("#vertical_batch_num").val("");
-            }
+            batchBtn("vertical");
         });
         $("#select_layer_name").on('change',function () {
             let parameter = {
