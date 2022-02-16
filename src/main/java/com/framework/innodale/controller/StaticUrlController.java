@@ -413,6 +413,10 @@ public class StaticUrlController {
         mav.setViewName("/common/inspection_result_pop");
         mav.addObject("CONTROL_SEQ", map.get("CONTROL_SEQ"));
         mav.addObject("CONTROL_DETAIL_SEQ", map.get("CONTROL_DETAIL_SEQ"));
+        mav.addObject("callElement", map.get("callElement"));
+        if(map.get("PRODUCT_NUM") != null) {
+            mav.addObject("PRODUCT_NUM", map.get("PRODUCT_NUM"));
+        }
 
         return mav;
     }

@@ -182,6 +182,8 @@
 <form id="inspection_history_result_data_form" name="inspection_history_result_data_form" method="post">
     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ">
     <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ">
+    <input type="hidden" id="PRODUCT_NUM" name="PRODUCT_NUM">
+    <input type="hidden" id="callElement" name="callElement">
 </form>
 
 
@@ -430,7 +432,7 @@
                         $cell = grid.getCell(ui);
                     $cell.find(".inspectR").bind("click", function () {
                         let rowData = ui.rowData;
-                        inspectionResultPopupWindow(rowData.CONTROL_SEQ,rowData.CONTROL_DETAIL_SEQ);
+                        inspectionResultPopupWindow(rowData.CONTROL_SEQ,rowData.CONTROL_DETAIL_SEQ, rowData.PRODUCT_NUM);
                     });
                 }
             }
@@ -600,7 +602,7 @@
         }
 
         let inspectionResultPopup;
-        const inspectionResultPopupWindow = function (controlSeq, controlDetailSeq) {
+        const inspectionResultPopupWindow = function (controlSeq, controlDetailSeq, productNum) {
             let inspectFrom = document.inspection_history_result_data_form;
 
             let strOption = '';
@@ -615,19 +617,21 @@
 
                 $('#inspection_history_result_data_form').find("#CONTROL_SEQ").val(controlSeq);
                 $('#inspection_history_result_data_form').find("#CONTROL_DETAIL_SEQ").val(controlDetailSeq);
+                $('#inspection_history_result_data_form').find("#PRODUCT_NUM").val(productNum);
+                $('#inspection_history_result_data_form').find("#callElement").val('inspection_history_search_btn');
 
                 inspectFrom.action = "/inspectionResult";
                 inspectFrom.target = "popForm";
                 inspectFrom.submit();
 
             } else {
-                inspectionResultPopup.focus();
-                setTimeout(function() {
-
-                    $(inspectionResultPopup.window.document).find("#CONTROL_SEQ").val(controlSeq);
-                    $(inspectionResultPopup.window.document).find("#CONTROL_SEQ").val(controlDetailSeq);
-
-                }, 500);
+                // inspectionResultPopup.focus();
+                // setTimeout(function() {
+                //
+                //     $(inspectionResultPopup.window.document).find("#CONTROL_SEQ").val(controlSeq);
+                //     $(inspectionResultPopup.window.document).find("#CONTROL_DETAIL_SEQ").val(controlDetailSeq);
+                //
+                // }, 500);
             }
         }
 

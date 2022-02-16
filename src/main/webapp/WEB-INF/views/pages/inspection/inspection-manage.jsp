@@ -256,6 +256,7 @@
 <form id="inspection_result_data_form" name="inspection_result_data_form" method="post">
     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ">
     <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ">
+    <input type="hidden" id="callElement" name="callElement">
 </form>
 
 <script>
@@ -1277,6 +1278,7 @@
 
                 $('#inspection_result_data_form').find("#CONTROL_SEQ").val(controlSeq);
                 $('#inspection_result_data_form').find("#CONTROL_DETAIL_SEQ").val(controlDetailSeq);
+                $('#inspection_result_data_form').find("#callElement").val('inspection_manage_search_btn');
 
                 inspectFrom.action = "/inspectionResult";
                 inspectFrom.target = "popForm";
@@ -1284,13 +1286,13 @@
 
             } else {
                 inspectionResultPopup.focus();
-                setTimeout(function() {
-
-                    $(inspectionResultPopup.window.document).find("#CONTROL_SEQ").val(controlSeq);
-                    $(inspectionResultPopup.window.document).find("#CONTROL_SEQ").val(controlDetailSeq);
-
-                    // drawingUploadPopup.initDrawingLoad();
-                }, 500);
+                // setTimeout(function() {
+                //
+                //     $(inspectionResultPopup.window.document).find("#CONTROL_SEQ").val(controlSeq);
+                //     $(inspectionResultPopup.window.document).find("#CONTROL_DETAIL_SEQ").val(controlDetailSeq);
+                //
+                //     // drawingUploadPopup.initDrawingLoad();
+                // }, 500);
             }
         }
 

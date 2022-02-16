@@ -3288,8 +3288,8 @@
         }
     }
 
-    function callInspectionManageSearch(){
-        $("#inspection_manage_search_btn").trigger("click");
+    function callInspectionManageSearch(callElement){
+        $("#" + callElement).trigger("click");
     }
 
     let drawingRevPopup;

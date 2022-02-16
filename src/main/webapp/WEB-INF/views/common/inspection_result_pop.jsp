@@ -362,8 +362,9 @@
                     <input type="hidden" id="queryId" name="queryId" value="inspection.selectInspectionResult"/>
                     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value="${CONTROL_SEQ}"/>
                     <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value="${CONTROL_DETAIL_SEQ}"/>
+                    <input type="hidden" id="callElement" name="callElement" value="${callElement}"/>
                     <input type="hidden" id="QTY" name="QTY"/>
-                    <input type="hidden" id="PRODUCT_NUM" name="PRODUCT_NUM"/>
+                    <input type="hidden" id="PRODUCT_NUM" name="PRODUCT_NUM" value="${PRODUCT_NUM}"/>
                     <input type="hidden" id="LAYER_AREA_NAME" name="LAYER_AREA_NAME"/>
                     <input type="hidden" id="ORG_LAYER_AREA_NAME" name="ORG_LAYER_AREA_NAME"/>
                     <input type="hidden" id="INSPECT_RESULT_SEQ" name="INSPECT_RESULT_SEQ"/>
@@ -1586,13 +1587,14 @@
         });
 
         $("#closeInspectBtn").on("click",function () {
+            let callElement = $("#inspection_result_pop_form").find("#callElement").val();
             if($("#startInspectBtn").css( "display" ) == "none") {
                 fnConfirm(null, "저장하지 않고 종료 하시겠습니까?<br>(저장하지 않은 데이터는 삭제됩니다.)", function () {
-                    window.opener.callInspectionManageSearch();
+                    window.opener.callInspectionManageSearch(callElement);
                     window.close();
                 });
             }else {
-                window.opener.callInspectionManageSearch();
+                window.opener.callInspectionManageSearch(callElement);
                 window.close();
             }
         });
