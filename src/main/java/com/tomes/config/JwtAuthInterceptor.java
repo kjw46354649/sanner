@@ -25,9 +25,9 @@ public class JwtAuthInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
         String jwtToken = jwtTokenProvider.resolveToken(request);
-        if(!jwtTokenProvider.validateToken(jwtToken)){
+
+        if(!jwtTokenProvider.validateToken(jwtToken) && request.getRequestURL().indexOf("/drawing") < 0){
             throw new TokenException();
         }
         return true;
