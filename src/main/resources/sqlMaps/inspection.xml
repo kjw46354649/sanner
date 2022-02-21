@@ -2342,7 +2342,7 @@
                SF_GET_CODE_NM('1101',MARK_TYPE,#{LOGIN_LOCALE}) AS MARK_TYPE_NM
         FROM TBL_LAYER_AREA
         WHERE LAYER_AREA_NAME = #{LAYER_AREA_NAME}
-        ORDER BY AREA_TYPE, AREA_NAME
+        ORDER BY AREA_TYPE, AREA_COORDINATE
     </select>
     <select id="selectLayerInfoForBtn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.LAYER_AREA_NAME, GROUP_CONCAT(X.DIV_CNT ORDER BY AREA_TYPE SEPARATOR ', ') AS DIV_TXT

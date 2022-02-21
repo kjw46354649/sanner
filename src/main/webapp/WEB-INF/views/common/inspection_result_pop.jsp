@@ -1675,7 +1675,7 @@
             let divNum = $("#"+ type +"_div_num").val();
             let markType = $("#"+ type +"_mark_type").val();
             let asciiNum = 65;
-            let areaLimit = (type == 'horizontal')?1500:900;
+            let areaLimit = (type == 'horizontal')?1300:900;
 
             if(isNaN(batchNum)) {
                 fnAlert(null,"숫자만 입력가능합니다.");

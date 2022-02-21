@@ -179,6 +179,36 @@
 </div>
 
 
+<div class="popup_container in" id="inspection_history_export_popup" style="display: none;">
+    <div class="controlCloseLayerPopup" style="width: 490px; height: 280px;">
+        <h3>검사성적서 출력</h3>
+        <hr>
+        <form class="form-inline" id="inspection_history_export_form" role="form">
+            <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ">
+            <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ">
+            <div class="d-inline-block align-items-center ml-10 mt-10" style="margin-bottom: 7px;height: 60%;width: 100%;">
+                <div class="d-inline-block" style="margin-left: 12%;margin-top: 4%;">
+                    <span class="slt_wrap">
+                        <span class="mr-15" style="margin-bottom: 5%;font-size: 20px;color: black;vertical-align: middle;">템플릿 종류</span>
+                        <select class="wd_200 mr-20" name="SEL_TEMPLATE" id="SEL_TEMPLATE" style="font-size: 14px;">
+                            <c:forEach var="vlocale" items="${HighCode.H_1102}">
+                                <option value="${vlocale.ETC1}">${vlocale.CODE_NM_KR}</option>
+                            </c:forEach>
+                        </select>
+                    </span>
+                </div>
+                <div class="text-center" style="margin-top: 7%;font-size: 25px;color: black;font-weight: bold;">
+                    <span>검사 성적서 추출을 진행하시겠습니까?</span>
+                </div>
+            </div>
+        </form>
+        <div class="text-center">
+            <button type="button" id="history_exportExcelBtn" class="defaultBtn greenPopGra mr-15">저장</button>
+            <button type="button" class="defaultBtn grayPopGra black" data-dismiss="modal">닫기</button>
+        </div>
+    </div>
+</div>
+
 <form id="inspection_history_result_data_form" name="inspection_history_result_data_form" method="post">
     <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ">
     <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ">
@@ -416,7 +446,24 @@
             {title: '기타 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', minWidth: 120, width: 120},
             {
                 title: '성적서', datatype: 'string', align: 'center', colModel: [
-                    {title: '제품No', datatype: 'string', dataIndx: 'PRODUCT_NUM', minWidth: 60, width: 60},
+                    {title: '제품No', datatype: 'string', dataIndx: 'PRODUCT_NUM', minWidth: 60, width: 60,
+                        render: function (ui) {
+                            if (ui.cellData > 0)  {
+                                return '<span class="inspectValue" style="cursor: pointer;text-decoration: underline;">'+ui.cellData + '</span>'
+                            }else {
+                                return ''
+                            }
+                        },
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            $cell.find(".inspectValue").bind("click", function () {
+                                let rowData = ui.rowData;
+
+                                inspectionResultPopupWindow(rowData.CONTROL_SEQ,rowData.CONTROL_DETAIL_SEQ, rowData.PRODUCT_NUM);
+                            });
+                        }
+                    },
                     {title: '작성자', datatype: 'string', dataIndx: 'INSPECT_RESULT_USER_NM', minWidth: 90, width: 90},
                     {title: 'Area', datatype: 'string', dataIndx: 'LAYER_AREA_NAME', minWidth: 60, width: 60},
                     {title: 'Value', datatype: 'string', dataIndx: 'VALUE_CNT', minWidth: 50, width: 50}
@@ -432,7 +479,9 @@
                         $cell = grid.getCell(ui);
                     $cell.find(".inspectR").bind("click", function () {
                         let rowData = ui.rowData;
-                        inspectionResultPopupWindow(rowData.CONTROL_SEQ,rowData.CONTROL_DETAIL_SEQ, rowData.PRODUCT_NUM);
+                        $("#inspection_history_export_form").find("#CONTROL_SEQ").val(rowData.CONTROL_SEQ);
+                        $("#inspection_history_export_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ);
+                        $("#inspection_history_export_popup").modal('show');
                     });
                 }
             }
@@ -642,6 +691,22 @@
                     type: 'blob'
                 });
             saveAs(blob, "검사이력 관리.xlsx" );
+        });
+
+        $('#history_exportExcelBtn').on('click', function () {
+            let controlSeq = $("#inspection_history_export_form").find("#CONTROL_SEQ").val();
+            let controlDetailSeq = $("#inspection_history_export_form").find("#CONTROL_DETAIL_SEQ").val();
+            if(!fnIsEmpty(controlSeq) && !fnIsEmpty(controlDetailSeq)) {
+                $("#common_excel_form #sqlId").val('selectInspectResultControlInfoExcel:selectInspectResultValueListExcel:selectInspectResultPointListExcel:selectInspectionResultPrdNumListExcel');
+                $("#common_excel_form #mapInputId").val('info:data:data2:data3');
+                $("#common_excel_form #paramName").val('CONTROL_SEQ_STR');
+                $("#common_excel_form #paramData").val(controlSeq + "" + controlDetailSeq);
+                $("#common_excel_form #template").val($("#inspection_history_export_form").find("#SEL_TEMPLATE").val());
+
+                fnReportFormToHiddenFormPageAction("common_excel_form", "/downloadExcel");
+
+                $("#inspection_history_export_popup").modal('hide');
+            }
         });
 
         const noSelectedRowAlert = function () {
