@@ -104,18 +104,20 @@ public class ExcelController {
                     String pointSeq = String.valueOf(temp.get("POINT_SEQ"));
                     List<String> list = new ArrayList<>();
 
-                    for(int i=0;i<valueList.size();i++) {
-                        Map<String,Object> valueMap = valueList.get(i);
-                        String targetPoint = String.valueOf(valueMap.get("POINT_SEQ")+"");
-                        String resultValue = String.valueOf(valueMap.get("RESULT_VALUE")+"");
-
-                        if(targetPoint.equals(pointSeq)) {
-                            list.add(resultValue);
-                        }
-                    }
                     if(list.size() < prodList.size()) {
                         while (list.size() < prodList.size()) {
                             list.add("");
+                        }
+                    }
+
+                    for(int i=0;i<valueList.size();i++) {
+                        Map<String,Object> valueMap = valueList.get(i);
+                        String targetPoint = valueMap.get("POINT_SEQ")+"";
+                        String resultValue = valueMap.get("RESULT_VALUE")+"";
+
+                        if(targetPoint.equals(pointSeq)) {
+                            int idx = (int) valueMap.get("PRODUCT_NUM");
+                            list.set((idx - 1), resultValue);
                         }
                     }
                     temp.put("list",list);
