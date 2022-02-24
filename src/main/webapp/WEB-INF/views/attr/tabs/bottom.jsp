@@ -4544,7 +4544,7 @@
         let $comboId = $('#inspection_manage_pop_form').find('#INSPECT_RESULT');
         $comboId[0].options.length = 0;
 
-        if(targetId == "GRD040"){
+        if(targetId == "GRD040" || targetId == "GRD030"){
 
             $("#inspection_manage_pop_plus_btn").show();
             $("#inspection_manage_pop_plus_minus").show();
@@ -4600,13 +4600,14 @@
             $("#inspection_manage_grade_style").find("th").removeAttr("style","background: #e7eef7;color: #444;");
             $("#inspection_manage_inspection_code_style").attr("style","background: #e6e6e6;");
             $("#inspection_manage_pop_form").find("#INSPECT_RESULT").attr("disabled", true);
-        }else if(targetId == "GRD030"){
-            $(this).addClass("yellow");
-            $("#inspection_manage_grade_style").find("th").removeAttr("style","background: #e7eef7;color: #444;");
-            $("#inspection_manage_inspection_code_style").removeAttr("style","background: #e6e6e6;");
-            $("#inspection_manage_pop_form").find("#INSPECT_RESULT").attr("disabled", false);
-        }else if(targetId == "GRD040"){
-            $(this).addClass("red");
+        }else if(targetId == "GRD040" || targetId == "GRD030"){
+            let clsName = "red";
+            if(targetId == "GRD030") {
+                clsName = "yellow";
+            }else {
+                $("#inspection_manage_pop_form").find("#ERROR_ACTION").val("SLV01").prop("selected",true);
+            }
+            $(this).addClass(clsName);
             $("#inspection_manage_grade_style").find("th").attr("style","background: #e7eef7;color: #444;");
             $("#inspection_manage_inspection_code_style").removeAttr("style","background: #e6e6e6;");
             $("#inspection_manage_pop_form").find("#INSPECT_RESULT").attr("disabled", false);
