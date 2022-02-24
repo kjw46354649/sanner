@@ -918,12 +918,20 @@
         }
     }
 
+    function OnLoadImage(){
+        // console.log("onload");
+        $("#common_quick_drawing_form").find("#drawingImage").show();
+        $("#common_quick_drawing_form").find("#drawingLoadingImage").hide();
+    }
+
     function callQuickRowChangeDrawingImageViewer(imageSeq, rowData)
     {
+        // console.log("callQuickRowChangeDrawingImageViewer");
         // 팝업창이 열려 있는 경우만 처리
         let isOpen = $("#common_quick_drawing_popup").dialog("isOpen");
         if(isOpen) {
-
+            $("#common_quick_drawing_form").find("#drawingImage").hide();
+            $("#common_quick_drawing_form").find("#drawingLoadingImage").show();
             // 유사수행기록에서 뜬 팝업인 경우 z-index 조정
             if($("#cam_work_detail_popup").css('display') == 'block') {
                 let zIdx = Number($("#cam_work_detail_popup").css('z-index'));

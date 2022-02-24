@@ -494,7 +494,8 @@
         <input type="hidden" id="gFileSeq" name="gFileSeq" value="">
         <div>
             <div>
-                <img id="drawingImage" style='width: 785px;height: 555.084px;' src="/resource/main/blank.jpg">
+                <img id="drawingImage" style='width: 785px;height: 555.084px;' src="/resource/main/blank.jpg" onload="OnLoadImage();">
+                <img id="drawingLoadingImage" style='margin-left: 380px;margin-top: 268px;margin-bottom:255px;display: none;' src="/resource/asset/images/loading_4.gif">
             </div>
             <div style="padding: 3px 2px 5px 0px; float: left;">
                 <table class="quick_drawing_table">

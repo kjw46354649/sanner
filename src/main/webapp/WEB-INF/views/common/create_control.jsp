@@ -747,10 +747,10 @@
                     let lastRow = ui.selection._areas[i].r2;
                     for (let i = firstRow; i <= lastRow; i++)  {
                         let rowData = $createControlGrid.pqGrid("getRowData", {rowIndx: i});
-                        if(fnIsEmpty(rowData.CONTROL_SEQ)) {
+                        // if(fnIsEmpty(rowData.CONTROL_SEQ)) {
                             selectedCreateControlRowIndex.push(i);
                             rowList.push({rowIndx: i});
-                        }
+                        // }
                     }
                     sr.removeAll();
                     sr.add({rows:rowList});
@@ -1575,6 +1575,9 @@
         $createControlGrid = $('#' + gridId).pqGrid(obj);
 
         $('#CREATE_CONTROL_REFRESH').on('click', function () {
+            selectedCreateControlRowIndex = [];
+            $createControlGrid.pqGrid('setSelection', null);
+
             $createControlGrid.pqGrid('option', 'dataModel.postData', function () {
                 return (fnFormToJsonArrayData('#CREATE_CONTROL_SEARCH_FORM'));
             });
