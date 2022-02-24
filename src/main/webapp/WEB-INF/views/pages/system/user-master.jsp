@@ -6,14 +6,29 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page pageEncoding='UTF-8' contentType='text/html; charset=UTF-8' %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <div class="page onegrid">
     <div class="topWrap">
         <form class="form-inline" id="user_master_search_form" name="user_master_search_form" role="form" onsubmit="return false;">
             <input type="hidden" name="queryId" id="queryId" value="systemMapper.selectUserMasterList">
             <div class="hWrap">
                 <span class="ipu_wrap">
-                    <label for="sel_user_nm">사용자 이름</label>
-                    <input type="text" name="sel_user_nm" id="sel_user_nm" placeholder="사용자 이름" value="" class="pd-left5 wd_200 " title="사용자 이름">
+                    <label class="label_100" for="sel_user_nm" style="font-size: 12px;">사용자 성명/아이디</label>
+                    <input type="text" name="sel_user_nm" id="sel_user_nm" placeholder="사용자 성명/아이디" value="" class="pd-left5 wd_200 " title="사용자 성명/아이디">
+                </span>
+                <span class="slt_wrap">
+                   <label class="label_100" for="SEL_DEPARTMENT">부서</label>
+                   <select class="wd_150" name="SEL_DEPARTMENT" id="SEL_DEPARTMENT" title="부서">
+                        <option value=""><spring:message code="com.form.top.all.option" /></option>
+                        <c:forEach var="vlocale" items="${HighCode.H_1061}">
+                            <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>
+                        </c:forEach>
+                   </select>
+                </span>
+                <span class="chk_box">
+                    <input id="SEL_DEL_YN" name="SEL_DEL_YN" type="checkbox">
+                    <label for="SEL_DEL_YN">삭제대상 포함</label>
                 </span>
                 <div class="rightSpan">
                     <span class="buttonWrap">
@@ -56,6 +71,7 @@
 
     $(function () {
         'use strict';
+
 
         $userMasterNewBtn .click(function(event){
             fnResetForm("user_info_pop_form");

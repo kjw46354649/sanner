@@ -46,18 +46,21 @@
             JOB_TITLE,
             DEL_YN,
             DEPARTMENT,
-            SF_GET_CODE_NM(1061, DEPARTMENT, 'EN') AS DEPARTMENT_NM,
-            SF_GET_CODE_NM(1042, DEL_YN, 'EN') AS DEL_YN_NM,
+            SF_GET_CODE_NM(1061, DEPARTMENT, #{LOGIN_LOCALE}) AS DEPARTMENT_NM,
+            SF_GET_CODE_NM(1042, DEL_YN, #{LOGIN_LOCALE}) AS DEL_YN_NM,
             PHOTO_GFILE_SEQ,
             USER_PRINTER,
             INSERT_DT
         FROM TBL_USER
         WHERE 1=1
-            <if test="user_id != null and user_id != ''">
-                AND USER_ID LIKE CONCAT('%', #{user_id}, '%')
-            </if>
             <if test="sel_user_nm != null and sel_user_nm != ''">
-                AND upper(USER_NM) LIKE CONCAT('%', upper(#{sel_user_nm}), '%')
+                AND (UPPER(USER_NM) LIKE CONCAT('%', UPPER(#{sel_user_nm}), '%') OR UPPER(USER_ID) LIKE CONCAT('%', UPPER(#{sel_user_nm}), '%'))
+            </if>
+            <if test="SEL_DEPARTMENT != null and SEL_DEPARTMENT != ''">
+                AND DEPARTMENT = #{SEL_DEPARTMENT}
+            </if>
+            <if test="SEL_DEL_YN == null">
+                AND DEL_YN = 'N'
             </if>
         ORDER BY USER_ID
     </select>
