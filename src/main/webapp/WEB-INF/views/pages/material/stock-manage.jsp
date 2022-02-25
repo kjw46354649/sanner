@@ -2644,7 +2644,9 @@
             let orderQty = parseInt($("#stock_manage_pop_form").find("#ORDER_QTY").val());
             let popStockQty = parseInt($("#stock_manage_pop_form").find("#POP_STOCK_QTY").val());
             let popType = $("#stock_manage_form").find("#popType").val();
-            if(orderQty <= 0) {
+            let infoType = $("#stock_manage_pop_form").find("#INFO_TYPE").val();
+
+            if(infoType != 'STO009' && orderQty <= 0) {
                 fnAlert("","수량을 입력해주세요");
                 return;
             }

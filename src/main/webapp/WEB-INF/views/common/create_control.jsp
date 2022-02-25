@@ -1383,7 +1383,7 @@
         $('#create_control_draw_detail').on('click', function () {
             // let rowData = $createControlGrid.pqGrid('getRowData', {rowIndx: selectedCreateControlRowIndex[0]});
             if(!noSelectedRowAlert()) {
-                callWindowImageViewer($("#CREATE_CONTROL_SEARCH_FORM").find("#GFILE_SEQ").val());
+                callWindowImageViewerDupl($("#CREATE_CONTROL_SEARCH_FORM").find("#GFILE_SEQ").val());
             }
         });
 
