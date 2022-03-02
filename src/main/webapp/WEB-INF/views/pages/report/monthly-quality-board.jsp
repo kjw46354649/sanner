@@ -29,8 +29,8 @@
                     </span>
                     <span class="slt_wrap">
                         <!-- TODO: -->
-                        <label class="label_100">조회구분</label>
-                        <select class="wd_100" name="asdfasdfasdf" id="asdfasdfasdf">
+                        <label class="label_100">집계기준</label>
+                        <select class="wd_100" name="COUNTING_TYPE" id="COUNTING_TYPE">
                             <option value="ORDER">발주처</option>
                             <option value="OUTSIDE">외주업체</option>
                             <option value="MATERIAL">재질</option>
@@ -752,8 +752,8 @@
 
         const updateBotPostData = function (rowData) {
             // fnResetForm('monthly_quality_board_bot_form');
-            let asdfasdfasdf = $('#asdfasdfasdf').val();
-            switch (asdfasdfasdf) {
+            let counting_type = $('#COUNTING_TYPE').val();
+            switch (counting_type) {
                 case 'ORDER':
                     $('#monthly_quality_board_bot_form > #ORDER_COMP_CD').val(rowData.ORDER_COMP_CD);
                     break;
@@ -959,9 +959,9 @@
             },100);
             // $('#monthly_quality_board_bot_form').find("#BOTTOM_INSPECT_GRADE").val($("#INSPECT_GRADE").val());
             $("#monthly_quality_board_bot_form").find("#SEL_BOTT_INSPECT_GRADE").val("'"+$("#INSPECT_GRADE").val()+"'");
-            const asdfasdfasdf = $('#asdfasdfasdf').val();
-            updateTopPostData(asdfasdfasdf);
-            updateTopColModel(asdfasdfasdf);
+            const counting_type = $('#COUNTING_TYPE').val();
+            updateTopPostData(counting_type);
+            updateTopColModel(counting_type);
             topGridRefreshDataAndView();
 
             changeBadType();
