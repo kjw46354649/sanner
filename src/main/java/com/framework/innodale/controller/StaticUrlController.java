@@ -142,6 +142,34 @@ public class StaticUrlController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/qsimage/{gfileSeq}")
+    public ModelAndView quickSmallImageFileView(@PathVariable("gfileSeq") String GFILE_SEQ, HttpServletRequest req, HttpServletResponse res) throws Exception {
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        HashMap<String, Object> fileInfo = new HashMap<String, Object>();
+        fileInfo.put("GFILE_SEQ", GFILE_SEQ);
+        fileInfo.put("queryId", "common.selectQuickGfileFileImageInfo");
+
+        Map<String, Object> fileData = innodaleService.getInfo(fileInfo);
+
+        String filePath = (String) fileData.get("FILE_PATH");
+        String miniPath = filePath.replace(".thumbnail.png", ".mini.png");
+
+        File file = new File(miniPath);
+        if(file.exists()) {
+            fileData.put("FILE_PATH", miniPath);
+        }
+
+        modelAndView.addObject("imageInfo", fileData);
+        String rootPath = req.getSession().getServletContext().getRealPath("/");
+
+        modelAndView.setViewName("imageView");
+        modelAndView.addObject("blank_image", rootPath + File.separator + "resource" + File.separator + "main" + File.separator + "blank.jpg");
+
+        return modelAndView;
+    }
+
     @RequestMapping(value = "/checkDrawing")
     public String checkDrawing(Model model, HttpServletRequest req, HttpServletResponse res) throws Exception {
 

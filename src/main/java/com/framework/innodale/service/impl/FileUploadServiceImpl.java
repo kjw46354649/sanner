@@ -634,6 +634,9 @@ public class FileUploadServiceImpl implements FileUploadService {
         bim = pdfRenderer.renderImageWithDPI(0, 130, ImageType.RGB);
         ImageIOUtil.writeImage(bim, outImageFullPath + ".thumbnail.png" , 130);
 
+        bim = pdfRenderer.renderImageWithDPI(0, 30, ImageType.RGB);
+        ImageIOUtil.writeImage(bim, outImageFullPath + ".mini.png" , 30);
+
         document.close(); //모두 사용한 PDF 문서는 닫는다.
 
         File tempImagefile = new File(outImageFullPath);
