@@ -1283,7 +1283,7 @@
 				const materialFinishHeatSpanElement = dataInfo.MATERIAL_FINISH_HEAT === '열처리' ? '<span class="mark">열처리</span>' : '';
 				const controlStatusHoldSpanElement = dataInfo.CONTROL_STATUS === 'ORD005' ? '<span class="mark" style="background-color: #ff0000; color: #ffffff">보류</span>' : '';
 
-				$("#item_detail_pop_img").attr("src", '/qimage/' + dataInfo.IMG_GFILE_SEQ);
+				$("#item_detail_pop_img").attr("src", '/qsimage/' + dataInfo.IMG_GFILE_SEQ);
 				$itemDetailPopForm.find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
 				$itemDetailPopForm.find("#ORDER_QTY_INFO").html(dataInfo.ORDER_QTY_INFO);
 				$itemDetailPopForm.find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
@@ -2216,7 +2216,7 @@
 								html += '<div class="mctInfoTopRight">';
 								html += '	<div class="mctMapImg">';
 								if(Item2.WORK_PLAN_TYPE == 1 && typeof Item2.IMG_GFILE_SEQ != 'undefined') {
-									html += '		<img src="/qimage/'+Item2.IMG_GFILE_SEQ +'" alt="도면">';
+									html += '		<img src="/qsimage/'+Item2.IMG_GFILE_SEQ +'" alt="도면">';
 								}else {
 									html += '		<img src="/resource/asset/images/tv/img_thumb_3.png" class="machineImg" alt="도면">';
 								}
@@ -2421,7 +2421,7 @@
 
 							if(Item.WORK_PLAN_TYPE == 1 && typeof Item.IMG_GFILE_SEQ != 'undefined') {
 								$target.find(".mctMapImg").find("img").removeClass('machineImg');
-								$target.find(".mctMapImg").find("img").attr("src","/qimage/" + Item.IMG_GFILE_SEQ);
+								$target.find(".mctMapImg").find("img").attr("src","/qsimage/" + Item.IMG_GFILE_SEQ);
 							}else {
 								if(!$target.find(".mctMapImg").find("img").hasClass('machineImg')) {
 									$target.find(".mctMapImg").find("img").addClass('machineImg');
@@ -2724,7 +2724,7 @@
 				var tempHtml = '';
 				if(data.info != null) {
 					if(typeof data.info.IMG_GFILE_SEQ != 'undefined' && data.info.IMG_GFILE_SEQ != '' && data.info.IMG_GFILE_SEQ != null) {
-						$("#mapImgWrap").attr('src', '/qimage/'+data.info.IMG_GFILE_SEQ);
+						$("#mapImgWrap").attr('src', '/qsimage/'+data.info.IMG_GFILE_SEQ);
 						$("#mapImgWrap").attr('alt', data.info.IMG_GFILE_SEQ);
 						$("#mapImgWrap").attr('data-value', data.info.IMG_GFILE_SEQ);
 						$("#mct_machine_form").find("#GFILE_SEQ").val(data.info.IMG_GFILE_SEQ);
@@ -2798,7 +2798,7 @@
 			sr.removeAll();
 			var imgSeq = $(this).data('value');
 			if(typeof imgSeq != 'undefined' && imgSeq != '') {
-				$("#mapImgWrap").attr('src','/qimage/'+imgSeq);
+				$("#mapImgWrap").attr('src','/qsimage/'+imgSeq);
 				$("#mapImgWrap").attr('alt',imgSeq);
 				$("#mapImgWrap").attr('data-value', imgSeq);
 
@@ -2835,7 +2835,7 @@
 						$.each(ui.addList, function (idx,Item) {
 							if(idx === 0) {
 								// let imgUrl = '/resource/asset/images/common/'+Item.rowData.IMG_GFILE_SEQ + '.png';
-								let imgUrl = '/qimage/'+Item.rowData.IMG_GFILE_SEQ;
+								let imgUrl = '/qsimage/'+Item.rowData.IMG_GFILE_SEQ;
 								$("#mapImgWrap").attr('src',imgUrl);
 								$("#mapImgWrap").attr('alt',Item.rowData.IMG_GFILE_SEQ);
 								$("#mapImgWrap").attr('data-value', Item.rowData.IMG_GFILE_SEQ);
@@ -2858,7 +2858,7 @@
 							sr.add({rowIndx: rowIndx - 1});
 							nextRowData = this.getRowData({rowIndx: rowIndx -1});
 						}
-						let imgUrl = '/qimage/';
+						let imgUrl = '/qsimage/';
 						imgUrl += (typeof nextRowData != 'undefined' && nextRowData != "")?nextRowData.IMG_GFILE_SEQ:selRowData.IMG_GFILE_SEQ;
 						$("#mapImgWrap").attr('src',imgUrl);
 						$("#mapImgWrap").attr('alt',selRowData.IMG_GFILE_SEQ);

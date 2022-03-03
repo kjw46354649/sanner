@@ -682,7 +682,7 @@
 								mHtml += '</div>';
 
 								if(img_gfile_seq != undefined && img_gfile_seq != '') {
-									mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg ' + m_list[i].MACHINE_ICON + '" style="background:url(/qimage/' + img_gfile_seq + ');background-repeat:no-repeat;background-position:center;background-size: cover;">';
+									mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg ' + m_list[i].MACHINE_ICON + '" style="background:url(/qsimage/' + img_gfile_seq + ');background-repeat:no-repeat;background-position:center;background-size: cover;">';
 								}else {
 									mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg '+ m_list[i].MACHINE_ICON+'">';
 								}
@@ -774,7 +774,7 @@
 							if(typeof img_gfile_seq != 'undefined') {
 								$("#img_"+factory_area+"_"+layout_sort).css(
 										{
-											'background':'url(/qimage/'+img_gfile_seq +')',
+											'background':'url(/qsimage/'+img_gfile_seq +')',
 											'background-repeat':'no-repeat',
 											'background-size':'cover',
 											'background-position':'center'
@@ -968,7 +968,7 @@
 					fnPostAjax(function (data) {
 						if(data.info.IMG_GFILE_SEQ != undefined && data.info.IMG_GFILE_SEQ != '') {
 							$("#img_"+messageData.factoryArea + "_" + messageData.equipPosition).css({
-								'background':'url(/qimage/' + data.info.IMG_GFILE_SEQ + ')',
+								'background':'url(/qsimage/' + data.info.IMG_GFILE_SEQ + ')',
 								'background-repeat':'no-repeat',
 								'background-size':'cover',
 								'background-position':'center'
@@ -1226,7 +1226,7 @@
 					$.each(ui.addList, function (idx,Item) {
 						if(idx === 0) {
 							// let imgUrl = '/resource/asset/images/common/'+Item.rowData.IMG_GFILE_SEQ + '.png';
-							let imgUrl = '/qimage/'+Item.rowData.IMG_GFILE_SEQ;
+							let imgUrl = '/qsimage/'+Item.rowData.IMG_GFILE_SEQ;
 							$("#popMapImg").attr('src',imgUrl);
 							$("#popMapImg").attr('alt',Item.rowData.IMG_GFILE_SEQ);
 							$("#popMapImg").attr('data-value', Item.rowData.IMG_GFILE_SEQ);
@@ -1249,7 +1249,7 @@
 						sr.add({rowIndx: rowIndx - 1});
 						nextRowData = this.getRowData({rowIndx: rowIndx -1});
 					}
-					let imgUrl = '/qimage/';
+					let imgUrl = '/qsimage/';
 					imgUrl += (typeof nextRowData != 'undefined' && nextRowData != "")?nextRowData.IMG_GFILE_SEQ:selRowData.IMG_GFILE_SEQ;
 					$("#popMapImg").attr('src',imgUrl);
 					$("#popMapImg").attr('alt',selRowData.IMG_GFILE_SEQ);
@@ -1319,7 +1319,7 @@
 			sr.removeAll();
 			var imgSeq = $(this).data('value');
 			if(typeof imgSeq != 'undefined' && imgSeq != '') {
-				$("#mapImgWrap").attr('src','/qimage/'+imgSeq);
+				$("#mapImgWrap").attr('src','/qsimage/'+imgSeq);
 				$("#mapImgWrap").attr('alt',imgSeq);
 				$("#mapImgWrap").attr('data-value', imgSeq);
 
@@ -1399,7 +1399,7 @@
 				var tempHtml = '';
 				if(data.info != null) {
 					if(typeof data.info.IMG_GFILE_SEQ != 'undefined' && data.info.IMG_GFILE_SEQ != '' && data.info.IMG_GFILE_SEQ != null) {
-						$("#mapImgWrap").attr('src', '/qimage/'+data.info.IMG_GFILE_SEQ);
+						$("#mapImgWrap").attr('src', '/qsimage/'+data.info.IMG_GFILE_SEQ);
 						$("#mapImgWrap").attr('alt', data.info.IMG_GFILE_SEQ);
 						$("#mapImgWrap").attr('data-value', data.info.IMG_GFILE_SEQ);
 						$("#pop_machine_form").find("#GFILE_SEQ").val(data.info.IMG_GFILE_SEQ);
@@ -1495,7 +1495,7 @@
 						$.each(ui.addList, function (idx,Item) {
 							if(idx === 0) {
 								// let imgUrl = '/resource/asset/images/common/'+Item.rowData.IMG_GFILE_SEQ + '.png';
-								let imgUrl = '/qimage/'+Item.rowData.IMG_GFILE_SEQ;
+								let imgUrl = '/qsimage/'+Item.rowData.IMG_GFILE_SEQ;
 								$("#mapImgWrap").attr('src',imgUrl);
 								$("#mapImgWrap").attr('alt',Item.rowData.IMG_GFILE_SEQ);
 								$("#mapImgWrap").attr('data-value', Item.rowData.IMG_GFILE_SEQ);
@@ -1518,7 +1518,7 @@
 							sr.add({rowIndx: rowIndx - 1});
 							nextRowData = this.getRowData({rowIndx: rowIndx -1});
 						}
-						let imgUrl = '/qimage/';
+						let imgUrl = '/qsimage/';
 						imgUrl += (typeof nextRowData != 'undefined' && nextRowData != "")?nextRowData.IMG_GFILE_SEQ:selRowData.IMG_GFILE_SEQ;
 						$("#mapImgWrap").attr('src',imgUrl);
 						$("#mapImgWrap").attr('alt',selRowData.IMG_GFILE_SEQ);
