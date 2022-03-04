@@ -478,7 +478,6 @@ public class FileUploadServiceImpl implements FileUploadService {
                         mappingNumList.add(mappingDrawingNum);
 
                     fileUploadList.add(fileInfo);
-
                 } else {
 
                     fileInfo.put("FILE_NM", serverFullFileName + "." + originalExtName);
@@ -508,6 +507,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                     fileInfo.put("IMG_GFILE_SEQ", pngGfileKeyHashMap.get(mappingDrawingNum));
 
                 fileInfo.put("INSIDE_STOCK_SEQ", (String)hashMap.get("INSIDE_STOCK_SEQ"));
+                fileInfo.put("MAPPING_STR", mappingDrawingNum);
                 fileInfo.put("queryId", paramQueryId);    // 연결 주문 정보 조회
                 List<Map<String, Object>> controlList = innodaleDao.getList(fileInfo);
 

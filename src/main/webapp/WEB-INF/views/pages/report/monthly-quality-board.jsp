@@ -135,10 +135,10 @@
         topFormData.queryId = 'reportMapper.selectMonthlyQualityBoardFromOrder';
         const topGridId = 'monthly_quality_board_topGrid';
         const topGridColModel = [
+            {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {
                 title: '납품/검사현황', halign: 'center', colModel: [
-                    {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true},
-                    {title: '발주처', dataIndx: 'ORDER_COMP_NM', minWidth:85},
+                    {title: '발주처', minWidth:110, maxWidth:180, dataIndx: 'ORDER_COMP_NM'},
                     {title: '출고<br>품수', minWidth:50, maxWidth:55, dataIndx: 'PART_CNT'},
                     {title: '검사<br>품수', minWidth:50, maxWidth:55, dataIndx: 'INSPECT_CNT'},
                     {title: '검사<br>비율', minWidth:50, maxWidth:55, dataIndx: 'INSPECT_RATIO'},
@@ -179,17 +179,19 @@
                     }
 
                 ]
+            },
+            {title: '손실비용<i class="xi-help-o" style="font-size: 16px;" data-toggle="tooltip" data-placement="bottom" title="C 등급 공급금액 X 15% &#10;D 등급 공급금액 X 100% "></i>',
+                halign: 'center', dataIndx: 'LOSS_COST', minWidth:100, dataType: 'integer', format: '#,###'
             }
         ];
         const topGridObj = {
+            width: "100%",
             height: '100%',
             collapsible: false,
             postRenderInterval: -1,
-            resizable: false,
             showTitle: false,
             rowHtHead: 15,
             numberCell: {show: false},
-            scrollModel: {autoFit: true},
             trackModel: {on: true},
             editable: false,
             selectionModel: {type: 'row', mode: 'single'},
@@ -275,6 +277,9 @@
             {title: '수량', dataIndx: 'PART_QTY'},
             {title: '수행<br>공장', dataIndx: 'WORK_FACTORY_NM'},
             {title: '외주업체', width: 75, dataIndx: 'OUTSIDE_COMP_NM'},
+            {title: '손실비용<i class="xi-help-o" style="font-size: 16px;" data-toggle="tooltip" data-placement="bottom" title="C 등급 공급금액 X 15%&#10;D 등급 공급금액 X 100% "></i>',
+                halign: 'center', dataIndx: 'LOSS_COST', width:100, dataType: 'integer', format: '#,###'
+            },
             // {title: '수행<br>공장', dataIndx: 'WORK_FACTORY_NM'},    // 임시 감추기 처리 2021.05.07
             // {title: '외주업체', width: 75, dataIndx: 'OUTSIDE_COMP_NM'},
             // {title: '', dataIndx: 'na2'},
@@ -708,16 +713,16 @@
 
                 switch (value) {
                     case 'ORDER':
-                        colM[0].colModel[0] = {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true};
-                        colM[0].colModel[1] = {title: '발주처', dataIndx: 'ORDER_COMP_NM'};
+                        colM[0] = {title: '발주처', dataIndx: 'ORDER_COMP_CD', hidden: true};
+                        colM[1].colModel[0] = {title: '발주처', dataIndx: 'ORDER_COMP_NM', minWidth:110, maxWidth:180};
                         break;
                     case 'OUTSIDE':
-                        colM[0].colModel[0] = {title: '외주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true};
-                        colM[0].colModel[1] = {title: '외주업체', dataIndx: 'OUTSIDE_COMP_NM'};
+                        colM[0] = {title: '외주업체', dataIndx: 'OUTSIDE_COMP_CD', hidden: true};
+                        colM[1].colModel[0] = {title: '외주업체', dataIndx: 'OUTSIDE_COMP_NM', minWidth:110};
                         break;
                     case 'MATERIAL':
-                        colM[0].colModel[0] = {title: '재질', dataIndx: 'MATERIAL_TYPE', hidden: true};
-                        colM[0].colModel[1] = {title: '재질', dataIndx: 'MATERIAL_TYPE_NM'};
+                        colM[0] = {title: '재질', dataIndx: 'MATERIAL_TYPE', hidden: true};
+                        colM[1].colModel[0] = {title: '재질', dataIndx: 'MATERIAL_TYPE_NM', minWidth:110};
                         break;
                 }
 
