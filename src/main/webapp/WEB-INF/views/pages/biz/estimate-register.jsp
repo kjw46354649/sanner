@@ -1558,9 +1558,13 @@
             drawingUploadPopupWindow('estimate', 'estimate.manageEstimateCadFiles', '');
         });
 
-        /* 도면 등록 팝업 호출 */
+        /* 도면 보기 팝업 호출 */
         $btnEstimateRegisterDrawView.click(function () {
-            callWindowImageViewer($("#estimate_register_info_form").find("#GFILE_SEQ").val());
+            if(estimateRegisterSelectedRowIndex.length > 0) {
+                callWindowImageViewer($("#estimate_register_info_form").find("#IMG_GFILE_SEQ").val());
+            }else {
+                fnAlert(null, '대상을 선택해주세요');
+            }
         });
 
         /* CKEDITOR 부분 */

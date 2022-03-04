@@ -2093,7 +2093,7 @@
             , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.D_CNT,0) / Z.INSPECT_CNT * 100,1) END AS D_RATIO
             , IFNULL(Z.RETURN_CNT,0) AS RETURN_CNT
             , CASE WHEN IFNULL(Z.PART_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.RETURN_CNT,0) / Z.PART_CNT * 100,1) END AS RETURN_RATIO
-            , (IFNULL(Z.D_LOSS_COST,0) + IFNULL(Z.C_LOSS_COST,0)) AS LOSS_COST
+            , IFNULL(Z.LOSS_COST,0) AS LOSS_COST
         FROM (  SELECT Y.ORDER_COMP_CD
                     , SUM(Y.PART_CNT) AS PART_CNT
                     , SUM(Y.INSPECT_CNT) AS INSPECT_CNT
@@ -2103,13 +2103,14 @@
                     , SUM(Y.C_CNT) AS C_CNT
                     , SUM(Y.D_CNT) AS D_CNT
                     , SUM(Y.RETURN_CNT) AS RETURN_CNT
-                    , SUM(Y.D_LOSS_COST) AS D_LOSS_COST
-                    , SUM(Y.C_LOSS_COST) AS C_LOSS_COST
+                    , SUM(Y.LOSS_COST) AS LOSS_COST
                 FROM (  SELECT X.ORDER_COMP_CD
                             , X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.PART_CNT
                             , X.INSPECT_CNT, X.PASS_CNT, A_CNT, B_CNT, C_CNT, D_CNT
-                            , ((X.C_QTY * X.UNIT_FINAL_AMT) * 0.15) AS C_LOSS_COST
-                            , ((X.D_QTY * X.UNIT_FINAL_AMT) * 1) AS D_LOSS_COST
+                            , CASE WHEN X.INSPECT_GRADE = 'GRD030' THEN ((X.QTY * X.UNIT_FINAL_AMT) * 0.15)
+                                   WHEN X.INSPECT_GRADE = 'GRD040' THEN ((X.QTY * X.UNIT_FINAL_AMT) * 1)
+                                   ELSE 0
+                              END AS LOSS_COST
                             , ( SELECT COUNT(*) AS RETURN_CNT
                                 FROM jmes.TBL_INSPECT M
                                 WHERE M.CONTROL_SEQ = X.CONTROL_SEQ
@@ -2120,14 +2121,14 @@
                         FROM (  SELECT A.ORDER_COMP_CD
                                     , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, 1 AS PART_CNT
                                     , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
+                                    , SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS QTY
+                                    , C.INSPECT_GRADE
                                     , CASE WHEN C.INSPECT_SEQ IS NULL THEN 0 ELSE 1 END AS INSPECT_CNT
                                     , CASE WHEN C.INSPECT_GRADE IN ('GRD010','GRD020','GRD030') THEN 1 ELSE 0 END AS PASS_CNT
                                     , CASE WHEN C.INSPECT_GRADE = 'GRD010' THEN 1 ELSE 0 END AS A_CNT
                                     , CASE WHEN C.INSPECT_GRADE = 'GRD020' THEN 1 ELSE 0 END AS B_CNT
                                     , CASE WHEN C.INSPECT_GRADE = 'GRD030' THEN 1 ELSE 0 END AS C_CNT
-                                    , CASE WHEN C.INSPECT_GRADE = 'GRD030' THEN C.ERROR_QTY ELSE 0 END AS C_QTY
                                     , CASE WHEN C.INSPECT_GRADE = 'GRD040' THEN 1 ELSE 0 END AS D_CNT
-                                    , CASE WHEN C.INSPECT_GRADE = 'GRD040' THEN C.ERROR_QTY ELSE 0 END AS D_QTY
                                     , (
                                         SELECT MAX(Y.UNIT_FINAL_AMT)
                                         FROM TBL_CONTROL_PART_ORDER X
@@ -2170,7 +2171,7 @@
             , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.D_CNT,0) / Z.INSPECT_CNT * 100,1) END AS D_RATIO
             , IFNULL(Z.RETURN_CNT,0) AS RETURN_CNT
             , CASE WHEN IFNULL(Z.PART_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.RETURN_CNT,0) / Z.PART_CNT * 100,1) END AS RETURN_RATIO
-            , (IFNULL(Z.D_LOSS_COST,0) + IFNULL(Z.C_LOSS_COST,0)) AS LOSS_COST
+            , IFNULL(Z.LOSS_COST,0) AS LOSS_COST
         FROM (  SELECT Y.OUTSIDE_COMP_CD
                     , SUM(Y.PART_CNT) AS PART_CNT
                     , SUM(Y.INSPECT_CNT) AS INSPECT_CNT
@@ -2180,13 +2181,14 @@
                     , SUM(Y.C_CNT) AS C_CNT
                     , SUM(Y.D_CNT) AS D_CNT
                     , SUM(Y.RETURN_CNT) AS RETURN_CNT
-                    , SUM(Y.D_LOSS_COST) AS D_LOSS_COST
-                    , SUM(Y.C_LOSS_COST) AS C_LOSS_COST
+                    , SUM(Y.LOSS_COST) AS LOSS_COST
                 FROM (  SELECT X.OUTSIDE_COMP_CD
                             , X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.PART_CNT
                             , X.INSPECT_CNT, X.PASS_CNT, A_CNT, B_CNT, C_CNT, D_CNT
-                            , ((X.C_QTY * X.UNIT_FINAL_AMT) * 0.15) AS C_LOSS_COST
-                            , ((X.D_QTY * X.UNIT_FINAL_AMT) * 1) AS D_LOSS_COST
+                            , CASE WHEN X.INSPECT_GRADE = 'GRD030' THEN ((X.QTY * X.UNIT_FINAL_AMT) * 0.15)
+                                   WHEN X.INSPECT_GRADE = 'GRD040' THEN ((X.QTY * X.UNIT_FINAL_AMT) * 1)
+                                   ELSE 0
+                              END AS LOSS_COST
                             , ( SELECT COUNT(*) AS RETURN_CNT
                                 FROM jmes.TBL_INSPECT M
                                 WHERE M.CONTROL_SEQ = X.CONTROL_SEQ
@@ -2197,14 +2199,14 @@
                         FROM (  SELECT B.OUTSIDE_COMP_CD
                                     , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, 1 AS PART_CNT
                                     , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
+                                    , SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS QTY
+                                    , C.INSPECT_GRADE
                                     , CASE WHEN C.INSPECT_SEQ IS NULL THEN 0 ELSE 1 END AS INSPECT_CNT
                                     , CASE WHEN C.INSPECT_GRADE IN ('GRD010','GRD020','GRD030') THEN 1 ELSE 0 END AS PASS_CNT
                                     , CASE WHEN C.INSPECT_GRADE = 'GRD010' THEN 1 ELSE 0 END AS A_CNT
                                     , CASE WHEN C.INSPECT_GRADE = 'GRD020' THEN 1 ELSE 0 END AS B_CNT
                                     , CASE WHEN C.INSPECT_GRADE = 'GRD030' THEN 1 ELSE 0 END AS C_CNT
-                                    , CASE WHEN C.INSPECT_GRADE = 'GRD030' THEN C.ERROR_QTY ELSE 0 END AS C_QTY
                                     , CASE WHEN C.INSPECT_GRADE = 'GRD040' THEN 1 ELSE 0 END AS D_CNT
-                                    , CASE WHEN C.INSPECT_GRADE = 'GRD040' THEN C.ERROR_QTY ELSE 0 END AS D_QTY
                                     , (
                                         SELECT MAX(Y.UNIT_FINAL_AMT)
                                         FROM TBL_CONTROL_PART_ORDER X
@@ -2247,7 +2249,7 @@
             , CASE WHEN IFNULL(Z.INSPECT_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.D_CNT,0) / Z.INSPECT_CNT * 100,1) END AS D_RATIO
             , IFNULL(Z.RETURN_CNT,0) AS RETURN_CNT
             , CASE WHEN IFNULL(Z.PART_CNT,0) = 0 THEN 0 ELSE ROUND(IFNULL(Z.RETURN_CNT,0) / Z.PART_CNT * 100,1) END AS RETURN_RATIO
-            , (IFNULL(Z.D_LOSS_COST,0) + IFNULL(Z.C_LOSS_COST,0)) AS LOSS_COST
+            , IFNULL(Z.LOSS_COST,0) AS LOSS_COST
         FROM (  SELECT Y.MATERIAL_TYPE
                     , SUM(Y.PART_CNT) AS PART_CNT
                     , SUM(Y.INSPECT_CNT) AS INSPECT_CNT
@@ -2257,13 +2259,14 @@
                     , SUM(Y.C_CNT) AS C_CNT
                     , SUM(Y.D_CNT) AS D_CNT
                     , SUM(Y.RETURN_CNT) AS RETURN_CNT
-                    , SUM(Y.D_LOSS_COST) AS D_LOSS_COST
-                    , SUM(Y.C_LOSS_COST) AS C_LOSS_COST
+                    , SUM(Y.LOSS_COST) AS LOSS_COST
                 FROM (  SELECT X.MATERIAL_TYPE
                             , X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.PART_CNT
                             , X.INSPECT_CNT, X.PASS_CNT, A_CNT, B_CNT, C_CNT, D_CNT
-                            , ((X.C_QTY * X.UNIT_FINAL_AMT) * 0.15) AS C_LOSS_COST
-                            , ((X.D_QTY * X.UNIT_FINAL_AMT) * 1) AS D_LOSS_COST
+                            , CASE WHEN X.INSPECT_GRADE = 'GRD030' THEN ((X.QTY * X.UNIT_FINAL_AMT) * 0.15)
+                                   WHEN X.INSPECT_GRADE = 'GRD040' THEN ((X.QTY * X.UNIT_FINAL_AMT) * 1)
+                                   ELSE 0
+                              END AS LOSS_COST
                             , ( SELECT COUNT(*) AS RETURN_CNT
                                 FROM jmes.TBL_INSPECT M
                                 WHERE M.CONTROL_SEQ = X.CONTROL_SEQ
@@ -2274,14 +2277,14 @@
                         FROM (  SELECT B.MATERIAL_TYPE
                                     , B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, 1 AS PART_CNT
                                     , ROW_NUMBER() OVER (PARTITION BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ ORDER BY C.INSPECT_SEQ) AS INSPECT_RNUM
+                                    , SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS QTY
+                                    , C.INSPECT_GRADE
                                     , CASE WHEN C.INSPECT_SEQ IS NULL THEN 0 ELSE 1 END AS INSPECT_CNT
                                     , CASE WHEN C.INSPECT_GRADE IN ('GRD010','GRD020','GRD030') THEN 1 ELSE 0 END AS PASS_CNT
                                     , CASE WHEN C.INSPECT_GRADE = 'GRD010' THEN 1 ELSE 0 END AS A_CNT
                                     , CASE WHEN C.INSPECT_GRADE = 'GRD020' THEN 1 ELSE 0 END AS B_CNT
                                     , CASE WHEN C.INSPECT_GRADE = 'GRD030' THEN 1 ELSE 0 END AS C_CNT
-                                    , CASE WHEN C.INSPECT_GRADE = 'GRD030' THEN C.ERROR_QTY ELSE 0 END AS C_QTY
                                     , CASE WHEN C.INSPECT_GRADE = 'GRD040' THEN 1 ELSE 0 END AS D_CNT
-                                    , CASE WHEN C.INSPECT_GRADE = 'GRD040' THEN C.ERROR_QTY ELSE 0 END AS D_QTY
                                     , (
                                         SELECT MAX(Y.UNIT_FINAL_AMT)
                                         FROM TBL_CONTROL_PART_ORDER X
@@ -2619,8 +2622,8 @@
             ,Q.CONTROL_VER
             ,Q.SIZE_TXT
             ,(SELECT D.REGIST_NUM FROM TBL_CONTROL_PART_ORDER_MAIN D WHERE D.CONTROL_SEQ = Q.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = Q.CONTROL_DETAIL_SEQ) AS REGIST_NUM
-            , CASE WHEN Q.INSPECT_GRADE = 'GRD030' THEN (Q.ERROR_QTY * Q.UNIT_FINAL_AMT) * 0.15
-                   WHEN Q.INSPECT_GRADE = 'GRD040' THEN (Q.ERROR_QTY * Q.UNIT_FINAL_AMT) * 1
+            , CASE WHEN Q.INSPECT_GRADE = 'GRD030' THEN (Q.PART_QTY * Q.UNIT_FINAL_AMT) * 0.15
+                   WHEN Q.INSPECT_GRADE = 'GRD040' THEN (Q.PART_QTY * Q.UNIT_FINAL_AMT) * 1
                    ELSE 0
               END AS LOSS_COST
         FROM (
