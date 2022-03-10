@@ -616,8 +616,10 @@
                 $('.money_year_note_save_id').toggle();
                 if(ui.newPanel.selector == "#money_manage_status_tab") {
                     settingForm('money_receive_manage_search_form','money_manage_status_search_form');
+                    $("#moneyManageStatusSearchBtn").trigger('click');
                 }else {
                     settingForm('money_manage_status_search_form','money_receive_manage_search_form');
+                    $("#moneyReceiveStatusSearchBtn").trigger('click');
                 }
             }
         });

@@ -2848,12 +2848,14 @@
                     $("#stock_in_out_form").hide();
                     $("#stock_manage_form").show();
                     settingForm('stock_in_out_form','stock_manage_form');
+                    $("#stock_manage_search_btn").trigger('click');
                 }else {
                     $(".stock_manage_div").hide();
                     $(".stock_inout_div").show();
                     $("#stock_in_out_form").show();
                     $("#stock_manage_form").hide();
                     settingForm('stock_manage_form','stock_in_out_form')
+                    $("#stock_in_out_search_btn").trigger('click');
                     // $("#sales_status_save_id").hide();
                     // $(".month_sale_status_tab").show();
                 }
