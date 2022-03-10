@@ -1226,7 +1226,7 @@
 					$.each(ui.addList, function (idx,Item) {
 						if(idx === 0) {
 							// let imgUrl = '/resource/asset/images/common/'+Item.rowData.IMG_GFILE_SEQ + '.png';
-							let imgUrl = '/qsimage/'+Item.rowData.IMG_GFILE_SEQ;
+							let imgUrl = '/qimage/'+Item.rowData.IMG_GFILE_SEQ;
 							$("#popMapImg").attr('src',imgUrl);
 							$("#popMapImg").attr('alt',Item.rowData.IMG_GFILE_SEQ);
 							$("#popMapImg").attr('data-value', Item.rowData.IMG_GFILE_SEQ);
@@ -1249,7 +1249,7 @@
 						sr.add({rowIndx: rowIndx - 1});
 						nextRowData = this.getRowData({rowIndx: rowIndx -1});
 					}
-					let imgUrl = '/qsimage/';
+					let imgUrl = '/qimage/';
 					imgUrl += (typeof nextRowData != 'undefined' && nextRowData != "")?nextRowData.IMG_GFILE_SEQ:selRowData.IMG_GFILE_SEQ;
 					$("#popMapImg").attr('src',imgUrl);
 					$("#popMapImg").attr('alt',selRowData.IMG_GFILE_SEQ);
@@ -1319,7 +1319,7 @@
 			sr.removeAll();
 			var imgSeq = $(this).data('value');
 			if(typeof imgSeq != 'undefined' && imgSeq != '') {
-				$("#mapImgWrap").attr('src','/qsimage/'+imgSeq);
+				$("#mapImgWrap").attr('src','/qimage/'+imgSeq);
 				$("#mapImgWrap").attr('alt',imgSeq);
 				$("#mapImgWrap").attr('data-value', imgSeq);
 
@@ -1399,7 +1399,7 @@
 				var tempHtml = '';
 				if(data.info != null) {
 					if(typeof data.info.IMG_GFILE_SEQ != 'undefined' && data.info.IMG_GFILE_SEQ != '' && data.info.IMG_GFILE_SEQ != null) {
-						$("#mapImgWrap").attr('src', '/qsimage/'+data.info.IMG_GFILE_SEQ);
+						$("#mapImgWrap").attr('src', '/qimage/'+data.info.IMG_GFILE_SEQ);
 						$("#mapImgWrap").attr('alt', data.info.IMG_GFILE_SEQ);
 						$("#mapImgWrap").attr('data-value', data.info.IMG_GFILE_SEQ);
 						$("#pop_machine_form").find("#GFILE_SEQ").val(data.info.IMG_GFILE_SEQ);
@@ -1495,7 +1495,7 @@
 						$.each(ui.addList, function (idx,Item) {
 							if(idx === 0) {
 								// let imgUrl = '/resource/asset/images/common/'+Item.rowData.IMG_GFILE_SEQ + '.png';
-								let imgUrl = '/qsimage/'+Item.rowData.IMG_GFILE_SEQ;
+								let imgUrl = '/qimage/'+Item.rowData.IMG_GFILE_SEQ;
 								$("#mapImgWrap").attr('src',imgUrl);
 								$("#mapImgWrap").attr('alt',Item.rowData.IMG_GFILE_SEQ);
 								$("#mapImgWrap").attr('data-value', Item.rowData.IMG_GFILE_SEQ);
@@ -1518,7 +1518,7 @@
 							sr.add({rowIndx: rowIndx - 1});
 							nextRowData = this.getRowData({rowIndx: rowIndx -1});
 						}
-						let imgUrl = '/qsimage/';
+						let imgUrl = '/qimage/';
 						imgUrl += (typeof nextRowData != 'undefined' && nextRowData != "")?nextRowData.IMG_GFILE_SEQ:selRowData.IMG_GFILE_SEQ;
 						$("#mapImgWrap").attr('src',imgUrl);
 						$("#mapImgWrap").attr('alt',selRowData.IMG_GFILE_SEQ);
