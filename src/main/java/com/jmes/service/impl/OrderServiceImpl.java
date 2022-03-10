@@ -155,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
                     }
                 }
             }
-// test
+// test 2
             if(!flag) {
                 hashMap.put("LOGIN_USER_ID",userId);
 
