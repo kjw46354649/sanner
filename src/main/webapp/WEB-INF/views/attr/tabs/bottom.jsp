@@ -4544,6 +4544,11 @@
         let $comboId = $('#inspection_manage_pop_form').find('#INSPECT_RESULT');
         $comboId[0].options.length = 0;
 
+        $comboId[0].add(new Option("<spring:message code="com.form.top.sel.option" />", ""));
+        <c:forEach var="vlocale" items="${HighCode.H_1019}">
+        $comboId[0].add(new Option("${vlocale.CODE_NM_KR}", "${vlocale.CODE_CD}"));
+        </c:forEach>
+
         if(targetId == "GRD040" || targetId == "GRD030"){
 
             $("#inspection_manage_pop_plus_btn").show();
@@ -4562,11 +4567,14 @@
             $("#inspection_manage_pop_form").find("#ERROR_NOTE").attr("readonly", false);
 
 
-            $comboId[0].add(new Option("<spring:message code="com.form.top.sel.option" />", ""));
-            <c:forEach var="vlocale" items="${HighCode.H_1020}">
-            $comboId[0].add(new Option("${vlocale.CODE_NM_KR}", "${vlocale.CODE_CD}"));
-            </c:forEach>
+            if(targetId == 'GRD040') {
+                $comboId.empty();
 
+                $comboId[0].add(new Option("<spring:message code="com.form.top.sel.option" />", ""));
+                <c:forEach var="vlocale" items="${HighCode.H_1020}">
+                $comboId[0].add(new Option("${vlocale.CODE_NM_KR}", "${vlocale.CODE_CD}"));
+                </c:forEach>
+            }
         }else{
 
             $("#inspection_manage_pop_plus_btn").hide();
@@ -4580,11 +4588,6 @@
             $("#inspection_manage_pop_form").find("#ERROR_REASON").attr("disabled", true);
             $("#inspection_manage_pop_form").find("#ERROR_ACTION").attr("disabled", true);
             $("#inspection_manage_pop_form").find("#ERROR_NOTE").attr("readonly", true);
-
-            $comboId[0].add(new Option("<spring:message code="com.form.top.sel.option" />", ""));
-            <c:forEach var="vlocale" items="${HighCode.H_1019}">
-            $comboId[0].add(new Option("${vlocale.CODE_NM_KR}", "${vlocale.CODE_CD}"));
-            </c:forEach>
 
         }
         //display
@@ -4604,6 +4607,7 @@
             let clsName = "red";
             if(targetId == "GRD030") {
                 clsName = "yellow";
+                $("#inspection_manage_pop_form").find("#ERROR_ACTION").val("SLV02").prop("selected",true);
             }else {
                 $("#inspection_manage_pop_form").find("#ERROR_ACTION").val("SLV01").prop("selected",true);
             }
