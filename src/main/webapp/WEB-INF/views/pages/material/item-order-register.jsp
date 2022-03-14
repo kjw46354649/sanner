@@ -665,8 +665,11 @@
                 editor: { type: 'select', valueIndx: 'value', labelIndx: 'text',
                     options: function (ui) {
                         let rowData = ui.rowData;
-
-                        return fnGetCommCodeGridSelectBoxEtc('1027', rowData.MATERIAL_TYPE);
+                        if(fnIsEmpty(rowData.MATERIAL_TYPE)) {
+                            return fnGetCommCodeGridSelectBox('1027');
+                        }else {
+                            return fnGetCommCodeGridSelectBoxEtc('1027', rowData.MATERIAL_TYPE);
+                        }
                     }
                 },
                 render: function (ui) {
