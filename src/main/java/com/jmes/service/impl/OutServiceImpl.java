@@ -100,6 +100,7 @@ public class OutServiceImpl implements OutService {
         ArrayList<HashMap<String, Object>> controlPartList = null;
         ArrayList<HashMap<String, Object>> mailReceiverList = null;
         HashMap<String, Object> requestMailForm = null;
+        HashMap<String, Object> checkMap = new HashMap<String, Object>();
 
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
@@ -149,6 +150,7 @@ public class OutServiceImpl implements OutService {
                     flag = this.orderDao.getFlag(hashMap);
 
                     if (flag) {
+                        checkMap.putAll(hashMap);
                         if (i == 0) {
                             requestMailForm.put("queryId", "outMapper.createOutsideRequest");
                             this.innodaleDao.create(requestMailForm);
@@ -198,6 +200,10 @@ public class OutServiceImpl implements OutService {
                         }
                     }
                 }
+
+                checkMap.put("queryId", "outMapper.selectOutsideStatusCheckDupl");
+                this.innodaleDao.getInfo(checkMap);
+
             }
         }
 

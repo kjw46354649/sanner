@@ -1162,6 +1162,22 @@
             )) AS FLAG
     </select>
 
+    <select id="selectOutsideStatusCheckDupl" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT 1
+        FROM TBL_CONTROL_PART
+        WHERE OUTSIDE_STATUS = #{OUTSIDE_STATUS}
+        <choose>
+            <when test="PART_STATUS == 'PRO001'">
+                AND PART_STATUS = 'PRO001'
+            </when>
+            <otherwise>
+                AND PART_STATUS IS NULL
+            </otherwise>
+        </choose>
+        AND CONTROL_SEQ  = #{CONTROL_SEQ}
+        AND CONTROL_DETAIL_SEQ  = #{CONTROL_DETAIL_SEQ}
+    </select>
+
     <update id="updateOutsideRequestDetailDelete" parameterType="java.util.HashMap">
         UPDATE TBL_OUTSIDE_REQUEST_DETAIL
         SET
