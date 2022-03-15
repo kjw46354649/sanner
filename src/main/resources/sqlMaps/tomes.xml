@@ -139,4 +139,10 @@
         ORDER BY A.CONTROL_NUM, C.DRAWING_NUM, B.PART_NUM
     </select>
 
+    <insert id="insertNcIfWorkData" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_NC_WORK
+        (SEQ, EQUIP_NAME, TOOL_ID, EVENT_TIME, EXECUTION, ACTIVE_TYPE, PART_CNT, CYCLE_FINISH_YN)
+        VALUES(#{seq}, #{equip_name}, #{tool_id}, #{event_time}, #{execution}, #{active_type}, #{part_cnt}, #{cycleCheck})
+    </insert>
+
 </mapper>
