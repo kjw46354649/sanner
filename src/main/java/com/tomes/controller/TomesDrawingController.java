@@ -67,7 +67,7 @@ public class TomesDrawingController {
 
 //            simpMessagingTemplate.convertAndSend("/topic/notice", getNotificationUserMessage(alarmMap));
         }catch (ParameterException pe) {
-            result =  responseService.getFailResult(500, "파라미터를 확인해주세요.");
+            result =  responseService.getFailResult(400, "파라미터를 확인해주세요.");
         }catch (Exception e) {
             result =  responseService.getFailResult(500, "알수없는 오류가 발생하였습니다.");
         }
