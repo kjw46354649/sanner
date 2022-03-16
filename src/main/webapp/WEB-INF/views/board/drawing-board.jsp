@@ -31,6 +31,10 @@
     <!-- alertify -->
     <script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
 
+    <!-- socket -->
+    <script type="text/javascript" src='/resource/plugins/socket/sockjs.min.js'></script>
+    <script type="text/javascript" src='/resource/plugins/stomp/stomp.min.js'></script>
+
     <style type="text/css">
 
         html {
@@ -1519,6 +1523,27 @@
             }
         };
 
+
+        let iConnectCount = 0;
+        function jmesConnect() {
+            let socket = new SockJS('/jmes-ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, (frame) => {
+                stompClient.subscribe('/topic/notice', function (map) {
+                    console.log('/topic/notice', map)
+                });
+            }, () => {
+                setTimeout(() => {
+                    if(iConnectCount == 6) {
+                        fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+                        return;
+                    }else if(iConnectCount <= 5){
+                        jmesConnect();
+                    }
+                    iConnectCount++
+                }, 5000);
+            });
+        }
         // const fnDrawingAlertDialogAlert = function (elementId, autoClose) {
         //     let alertBox = alertify.drawingAlertDialog($('#' + elementId)[0]);
         //     if (autoClose) {
@@ -1553,6 +1578,7 @@
         };
         /** Main 페이지 로딩시 Body 기본으로 Focus 되도록 처리 **/
         setFocusBody();
+        jmesConnect();
 
         restartWorkControlNumFn($("#re_start_work_info_form").find("#CONTROL_NUM").val());
 

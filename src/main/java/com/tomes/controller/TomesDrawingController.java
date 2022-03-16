@@ -22,9 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Api
 @Controller
@@ -54,18 +52,32 @@ public class TomesDrawingController {
         try {
             if(parameters.containsKey("dataList")) {
                 List<Map<String,Object>> dataList = (List<Map<String, Object>>) parameters.get("dataList");
-                for(Map<String,Object> map : dataList) {
-                    if(!map.containsKey("seq") || !map.containsKey("equip_name") || !map.containsKey("part_cnt") || !map.containsKey("event_time") || !map.containsKey("execution")) {
-                        throw new ParameterException();
-                    }else {
-                        batchSqlSessionTemplate.insert("tomesMapper.insertNcIfWorkData", map);
+                if(dataList.size() > 0) {
+                    HashMap<String,Object> dataMap = new HashMap<>();
+                    for(Map<String,Object> map : dataList) {
+                        if(!map.containsKey("seq") || !map.containsKey("equip_name") || !map.containsKey("part_cnt") || !map.containsKey("event_time") || !map.containsKey("execution")) {
+                            throw new ParameterException();
+                        }else {
+                            String equipName = (String) map.get("equip_name");
+                            dataMap.put(equipName, map);
+                            batchSqlSessionTemplate.insert("tomesMapper.insertNcIfWorkData", map);
+                        }
                     }
+
+//                    Iterator<String> keys = dataMap.keySet().iterator();
+//                    while (keys.hasNext()) {
+//                        String key = keys.next();
+//
+//                        System.out.println(String.format("키 : %s, 값 : %s", key, dataMap.get(key)));
+//                    }
+                    System.out.println("dataMap >>>>>>>>>>>>>>>>>>" + dataMap.toString());
+
+                    simpMessagingTemplate.convertAndSend("/topic/notice", dataMap);
                 }
             }else {
                 throw new ParameterException();
             }
 
-//            simpMessagingTemplate.convertAndSend("/topic/notice", getNotificationUserMessage(alarmMap));
         }catch (ParameterException pe) {
             result =  responseService.getFailResult(400, "파라미터를 확인해주세요.");
         }catch (Exception e) {
