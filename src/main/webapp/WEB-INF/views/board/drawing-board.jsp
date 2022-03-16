@@ -1530,7 +1530,9 @@
             stompClient = Stomp.over(socket);
             stompClient.connect({}, (frame) => {
                 stompClient.subscribe('/topic/notice', function (map) {
-                    console.log('/topic/notice', map.body)
+                    var data = JSON.parse(map.body);
+                    console.log(data)
+
                 });
             }, () => {
                 setTimeout(() => {
