@@ -865,29 +865,8 @@
         ORDER BY T.CONTROL_NUM, T.ORDER_NUM, T.DRAWING_NUM
     </select>
 
-    <select id="selectOutgoingOutType1_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        /* 그리드 출고버튼시 */
-        SELECT
-              X.*
-              ,X.ORDER_QTY - X.OUT_QTY AS NEW_OUT_QTY
-        FROM(
-            SELECT C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
-                , A.CONTROL_NUM
-                , C.DRAWING_NUM
-                , C.IMG_GFILE_SEQ
-                , C.ORDER_NUM
-                , IFNULL(C.ORDER_QTY,0) AS ORDER_QTY
-                , (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM TBL_OUT M WHERE M.CONTROL_SEQ = C.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = C.ORDER_SEQ) AS OUT_QTY
-            FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C
-            WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                AND A.CONTROL_SEQ = C.CONTROL_SEQ
-                AND A.DEL_YN = 'N'
-                AND A.CONTROL_SEQ = #{CONTROL_SEQ}
-                AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-                AND C.ORDER_SEQ = #{ORDER_SEQ}
-        )X
-    </select>
     <select id="selectOutgoingOutType1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        /* 그리드 출고버튼시 */
         SELECT X.ORDER_SEQ,
             X.REGIST_NUM,
             X.ORDER_NUM,
