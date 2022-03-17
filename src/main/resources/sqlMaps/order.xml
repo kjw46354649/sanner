@@ -3614,8 +3614,8 @@
             <if test="WORK_FACTORY != null">
                 WORK_FACTORY = CASE WHEN #{WORK_FACTORY} = '' THEN NULL ELSE #{WORK_FACTORY} END,
             </if>
-            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (MATERIAL_SUPPLY_YN != null and MATERIAL_SUPPLY_YN != '')">
-                MATERIAL_SUPPLY_YN = IFNULL(#{MATERIAL_SUPPLY_YN}, 'N'),
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (MATERIAL_SUPPLY_YN != null)">
+                MATERIAL_SUPPLY_YN = CASE WHEN #{MATERIAL_SUPPLY_YN} = '' THEN 'N' ELSE #{MATERIAL_SUPPLY_YN} END,
             </if>
             <if test="(INNER_DUE_DT != null and INNER_DUE_DT != '')">
                 INNER_DUE_DT = DATE_FORMAT(#{INNER_DUE_DT}, '%Y%m%d'),
