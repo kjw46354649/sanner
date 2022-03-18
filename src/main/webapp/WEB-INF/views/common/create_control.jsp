@@ -1645,7 +1645,7 @@
                     if(typeof rowData.CONTROL_SEQ != 'undefined') {
                         list.push(rowData)
                     }else if(typeof rowData.ADD_ROW != 'undefined') {
-                        tempList.push(rowData);
+                        tempList.push({rowIndx : rowData.pq_ri});
                     }
                     let message =
                         '<h4>\n' +
@@ -1653,14 +1653,19 @@
                         '    <span>' + (selectedCreateControlRowIndex.length) + ' 건이 삭제됩니다. 진행하시겠습니까?</span>\n' +
                         '</h4>';
                     fnConfirm(null, message, function () {
-
-                        $createControlGrid.pqGrid('deleteRow', {rowList: tempList});//rowIndx
-
-                        let parameters = {'url': '/removeControl', 'data': {data: JSON.stringify(list)}};
-                        fnPostAjax(function () {
-                            fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
-                            $createControlGrid.pqGrid('refreshDataAndView');
-                        }, parameters, '');
+                        if(tempList.length > 0) {
+                            $createControlGrid.pqGrid('deleteRow', {rowList: tempList});//rowIndx
+                            if(list.length == 0) {
+                                fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
+                            }
+                        }
+                        if(list.length > 0) {
+                            let parameters = {'url': '/removeControl', 'data': {data: JSON.stringify(list)}};
+                            fnPostAjax(function () {
+                                fnAlert(null, "<spring:message code='com.alert.default.remove.success' />");
+                                $createControlGrid.pqGrid('refreshDataAndView');
+                            }, parameters, '');
+                        }
                     });
                 }
             }
