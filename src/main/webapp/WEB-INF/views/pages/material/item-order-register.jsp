@@ -1813,12 +1813,13 @@
                 if(typeof rowData.CONTROL_SEQ != 'undefined' && typeof rowData.CONTROL_DETAIL_SEQ != 'undefined') {
                     controlSeqStr += rowData.CONTROL_SEQ;
                     controlDetailSeqStr += rowData.CONTROL_DETAIL_SEQ;
+
+                    if (i < selectedRowCount - 1) {
+                        controlSeqStr += ',';
+                        controlDetailSeqStr += ',';
+                    }
                 }
 
-                if (i < selectedRowCount - 1) {
-                    controlSeqStr += ',';
-                    controlDetailSeqStr += ',';
-                }
                 if(rowData.M_ORDER_QTY <= 0) {
                     fnAlert(null, "주문수량이 0개인 작업이 존재합니다.");
                     return false;
@@ -1872,16 +1873,32 @@
                     let MATERIAL_ORDER_NUM = $("#item_order_register_material_order_num_temp").val();
                     let ORDER_USER_ID = $("#item_order_register_popup").find("#ORDER_USER_ID").val();
                     let data = itemOrderRegisterPopTopGrid.pqGrid('option', 'dataModel.data');
+                    let targetData = [];
                     for (let tempI = 0, totalRecords = data.length; tempI < totalRecords; tempI++) {
                         itemOrderRegisterPopTopGrid.pqGrid("updateRow", {
                             'rowIndx': tempI,
                             row: {'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM, 'ORDER_USER_ID': ORDER_USER_ID}
                         });
+                        let inputField = ['ADDITIONAL_QTY', 'MATERIAL_KIND', 'MATERIAL_DETAIL', 'M_SIZE_TXT',
+                            'M_ORDER_QTY', 'M_COMP_CD', 'REQUEST_NOTE', 'M_ORDER_NOTE', 'NOTE'];
+
+                        var rowData = data[tempI];
+                        var flag = false;
+                        for(key in data[tempI]) {
+                            if(inputField.includes(key) && !fnIsEmpty(rowData[key])) {
+                                flag = true;
+                            }
+                        }
+                        if(flag) {
+                            targetData.push(rowData);
+                        }
                     }
 
                     let gridInstance = itemOrderRegisterPopTopGrid.pqGrid('getInstance').grid;
+                    let changes = gridInstance.getChanges();
+
                     if (gridInstance.isDirty()) {
-                        let parameters = {'url': '/itemOrderRegisterPopSave', 'data': {data: JSON.stringify(data)}};
+                        let parameters = {'url': '/itemOrderRegisterPopSave', 'data': {data: JSON.stringify(targetData)}};
                         fnPostAjaxAsync(function (data) {
                             if (data.flag === true) {
                                 fnAlert(null, '<srping:message key="error.common"/>');
