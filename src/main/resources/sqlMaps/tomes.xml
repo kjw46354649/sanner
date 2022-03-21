@@ -140,9 +140,9 @@
     </select>
 
     <insert id="insertNcIfWorkData" parameterType="java.util.HashMap">
-        INSERT INTO jmes.TBL_MCT_WORRKING_LOG
+        INSERT INTO jmes.TBL_MCT_WORKING_LOG
         (
-         MCT_WORKKING_LOG_SEQ,
+         MCT_WORKING_LOG_SEQ,
          SEQ, EQUIP_SEQ,
          CONTROL_SEQ, CONTROL_DETAIL_SEQ,
          TOOL_ID, EVENT_TIME,
@@ -150,7 +150,7 @@
          PART_CNT, CYCLE_FINISH_YN
         )
         VALUES(
-         NEXTVAL(jmes.SEQ_MCT_WORRKING_LOG),
+         NEXTVAL(jmes.SEQ_MCT_WORKING_LOG),
          #{seq}, SF_GET_EQUIP_SEQ(#{equip_name}),
          #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
          #{tool_id}, #{event_time},
@@ -186,12 +186,12 @@
              , SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS ACTIVE_TOTAL
              , SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_STOP' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS STOP_TOTAL
         FROM (
-                 SELECT A.EVENT_TIME, A.ACTIVE_TYPE, PART_CNT, CYCLE_FINISH_YN, LAG(EVENT_TIME) OVER (ORDER BY A.MCT_WORKKING_LOG_SEQ) AS BEFORE_TIME,
-                         LAG(ACTIVE_TYPE) OVER (ORDER BY A.MCT_WORKKING_LOG_SEQ) AS BEFORE_TYPE
-                 FROM TBL_MCT_WORKKING_LOG A
+                 SELECT A.EVENT_TIME, A.ACTIVE_TYPE, PART_CNT, CYCLE_FINISH_YN, LAG(EVENT_TIME) OVER (ORDER BY A.MCT_WORKING_LOG_SEQ) AS BEFORE_TIME,
+                         LAG(ACTIVE_TYPE) OVER (ORDER BY A.MCT_WORKING_LOG_SEQ) AS BEFORE_TYPE
+                 FROM TBL_MCT_WORKING_LOG A
                  WHERE A.PART_CNT = #{part_cnt}
                    AND A.EQUIP_SEQ = #{EQUIP_SEQ}
-                 ORDER BY A.MCT_WORKKING_LOG_SEQ
+                 ORDER BY A.MCT_WORKING_LOG_SEQ
         ) X
     </select>
 
