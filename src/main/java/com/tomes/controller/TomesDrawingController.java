@@ -1,6 +1,7 @@
 package com.tomes.controller;
 
 import com.framework.innodale.component.CommonUtility;
+import com.framework.innodale.dao.InnodaleDao;
 import com.framework.innodale.entity.ActionType;
 import com.framework.innodale.entity.MessageType;
 import com.framework.innodale.entity.NotificationMessage;
@@ -37,16 +38,18 @@ public class TomesDrawingController {
 
     private final ResponseService responseService;
 
+//    @Autowired
+//    SqlSessionTemplate batchSqlSessionTemplate;
+
     @Autowired
-    SqlSessionTemplate batchSqlSessionTemplate;
+    SqlSessionTemplate sqlSessionTemplate;
 
+    @Autowired
+    private InnodaleDao innodaleDao;
 
-    private MessageSource messageSource;
 
     @PostMapping("/drawing")
     public CommonResult mctWork(HttpServletRequest request, @RequestBody Map<String,Object> parameters) {
-        Map<String, Object> paramMap = new HashMap<>();
-        HashMap<String, Object> alarmMap = new HashMap<>();
         CommonResult result = responseService.getSingleResult("200");
 
         try {
@@ -58,19 +61,52 @@ public class TomesDrawingController {
                         if(!map.containsKey("seq") || !map.containsKey("equip_name") || !map.containsKey("part_cnt") || !map.containsKey("event_time") || !map.containsKey("execution")) {
                             throw new ParameterException();
                         }else {
-                            String equipName = (String) map.get("equip_name");
-                            dataMap.put(equipName, map);
-                            batchSqlSessionTemplate.insert("tomesMapper.insertNcIfWorkData", map);
+                            map.put("queryId","tomesMapper.selectCurrentMctInfo");
+                            Map<String,Object> mctInfo = innodaleDao.getInfo(map);
+                            if(mctInfo != null) {
+                                map.put("MCT_WORK_SEQ", mctInfo.get("MCT_WORK_SEQ"));
+                                map.put("EQUIP_SEQ", mctInfo.get("EQUIP_SEQ"));
+                                map.put("CONTROL_SEQ", mctInfo.get("CONTROL_SEQ"));
+                                map.put("CONTROL_DETAIL_SEQ", mctInfo.get("CONTROL_DETAIL_SEQ"));
+
+                                if(map.get("IF_WORK_START_DT") == null && map.get("active_type").equals("PGM_STOP")) {
+                                    map.put("queryId", "tomesMapper.updateIfStartDt");
+                                    innodaleDao.update(map);
+                                }
+                            }
+                            sqlSessionTemplate.insert("tomesMapper.insertNcIfWorkData", map);
+
+                            if(mctInfo != null) { // cycle 완료 데이터
+                                if(map.get("cycleCheck") != null && map.get("cycleCheck").equals("Y")) {
+                                    map.put("queryId", "tomesMapper.selectCycleTime");
+                                    Map<String,Object> cycleInfo = innodaleDao.getInfo(map);
+
+                                    cycleInfo.put("MCT_WORK_SEQ", mctInfo.get("MCT_WORK_SEQ"));
+                                    cycleInfo.put("queryId", mctInfo.get("tomesMapper.updateCycleComplete"));
+                                    innodaleDao.update(cycleInfo);
+                                }
+
+                                String equipName = (String) map.get("equip_name");
+                                dataMap.put(equipName, map);
+                            }
                         }
                     }
 
-//                    Iterator<String> keys = dataMap.keySet().iterator();
-//                    while (keys.hasNext()) {
-//                        String key = keys.next();
-//
-//                        System.out.println(String.format("키 : %s, 값 : %s", key, dataMap.get(key)));
-//                    }
-                    System.out.println("dataMap >>>>>>>>>>>>>>>>>>" + dataMap.toString());
+                    Iterator<String> keys = dataMap.keySet().iterator();
+                    while (keys.hasNext()) {
+                        String key = keys.next();
+                        System.out.println(String.format("키 : %s", key));
+
+
+                        Map<String,Object> leadMap = (Map<String, Object>) dataMap.get(key);
+                        leadMap.put("queryId","tomesMapper.selectCurrentMctInfo");
+                        Map<String,Object> noticeMap = innodaleDao.getInfo(leadMap);
+
+                        if(noticeMap != null) {
+                            leadMap.putAll(noticeMap);
+                            dataMap.put(key, leadMap);
+                        }
+                    }
 
                     simpMessagingTemplate.convertAndSend("/topic/notice", dataMap);
                 }
@@ -86,35 +122,6 @@ public class TomesDrawingController {
         return result;
     }
 
-    // code정보에 해당하는 메시지를 조회합니다.
-    private String getMessage(String code) {
-        return getMessage(code, null);
-    }
+    // 1.
 
-    // code정보, 추가 argument로 현재 locale에 맞는 메시지를 조회합니다.
-    private String getMessage(String code, Object[] args) {
-        return messageSource.getMessage(code, args, LocaleContextHolder.getLocale());
-    }
-
-    public NotificationMessage getNotificationUserMessage(HashMap<String, Object> hashMap) throws Exception {
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>> NotificationMessage");
-        NotificationMessage notificationMessage = new NotificationMessage();
-
-        /** 사용자 정보 셋팅 */
-        notificationMessage.setType(MessageType.DRAWING);
-        notificationMessage.setActionType(ActionType.DB_START);
-        notificationMessage.setContent01("1123");
-        notificationMessage.setContent02("#@%32325");
-        notificationMessage.setContent03("235325235");
-        notificationMessage.setImageSeq(1232154);
-
-        notificationMessage.setEquipId("test");
-        notificationMessage.setEquipNm("testnm");
-        notificationMessage.setEquipCol(1);
-        notificationMessage.setEquipRow(2);
-        notificationMessage.setEquipPosition(10);
-        notificationMessage.setFactoryArea("FCT");
-
-        return notificationMessage;
-    }
 }
