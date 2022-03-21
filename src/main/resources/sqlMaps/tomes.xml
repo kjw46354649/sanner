@@ -195,6 +195,32 @@
         ) X
     </select>
 
+    <select id="selectCycleTimeTotal" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.EVENT_TIME
+             , X.ACTIVE_TYPE
+             , X.PART_CNT
+             , X.CYCLE_FINISH_YN
+             , SUM(TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME)) AS TOTAL
+             , SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS ACTIVE_TOTAL
+             , SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_STOP' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS STOP_TOTAL
+             , CASE WHEN IFNULL(#{cycleCheck},'N') = 'Y' THEN SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' AND X.PART_CNT = #{part_cnt} THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END)
+                    ELSE 0
+               END AS CYCLE_TOTAL
+        FROM (
+                 SELECT A.EVENT_TIME, A.ACTIVE_TYPE, PART_CNT, CYCLE_FINISH_YN, LAG(EVENT_TIME) OVER (ORDER BY A.MCT_WORKING_LOG_SEQ) AS BEFORE_TIME,
+                         LAG(ACTIVE_TYPE) OVER (ORDER BY A.MCT_WORKING_LOG_SEQ) AS BEFORE_TYPE
+                 FROM TBL_MCT_WORKING_LOG A
+                 WHERE 1=1
+                   AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+                   AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+                   AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                 <if test="cycleCheck != null and cycleCheck == 'Y'">
+                    AND A.PART_CNT = #{part_cnt}
+                 </if>
+                 ORDER BY A.MCT_WORKING_LOG_SEQ
+             ) X
+    </select>
+
     <update id="updateCycleComplete"  parameterType="java.util.HashMap" >
         UPDATE TBL_MCT_WORK
         SET
@@ -207,14 +233,17 @@
             AND DEL_YN = 'N'
     </update>
 
-    <update id="updateIfStartDt"  parameterType="java.util.HashMap" >
+    <update id="updateIfWorkingTime"  parameterType="java.util.HashMap" >
         UPDATE TBL_MCT_WORK
-        SET
-            IF_WORK_START_DT = #{event_time},
+            IF_WORK_START_DT = CASE WHEN IF_WORK_START_DT IS NULL AND #{active_type} = 'PGM_STOP' THEN #{event_time} END,
+            WORK_ACTIVE_TIME = (IFNULL(WORK_ACTIVE_TIME,0) + #{ACTIVE_TOTAL}),
+            WORK_STOP_TIME = (IFNULL(WORK_STOP_TIME,0) + #{STOP_TOTAL}),
+            <if test="cycleCheck != null and cycleCheck == 'Y'">
+                COMPLETE_CYCLE_COUNT = (IFNULL(COMPLETE_CYCLE_COUNT,0) + 1),
+                LATEST_CYCLE_TIME = #{CYCLE_TOTAL},
+            </if>
             UPDATE_DT = NOW()
         WHERE MCT_WORK_SEQ = #{MCT_WORK_SEQ}
-            AND DEL_YN = 'N'
-            AND IF_WORK_START_DT IS NULL
+          AND DEL_YN = 'N'
     </update>
-
 </mapper>

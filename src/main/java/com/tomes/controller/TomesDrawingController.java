@@ -71,24 +71,18 @@ public class TomesDrawingController {
                                 map.put("CONTROL_SEQ", mctInfo.get("CONTROL_SEQ"));
                                 map.put("CONTROL_DETAIL_SEQ", mctInfo.get("CONTROL_DETAIL_SEQ"));
 
-                                if(map.get("IF_WORK_START_DT") == null && map.get("active_type").equals("PGM_STOP")) {
-                                    map.put("queryId", "tomesMapper.updateIfStartDt");
-                                    innodaleDao.update(map);
-                                }
                             }
                             sqlSessionTemplate.insert("tomesMapper.insertNcIfWorkData", map);
 
                             if(mctInfo != null) { // cycle 완료 데이터
-                                if(map.get("cycleCheck") != null && map.get("cycleCheck").equals("Y")) {
-                                    map.put("queryId", "tomesMapper.selectCycleTime");
-                                    Map<String,Object> cycleInfo = innodaleDao.getInfo(map);
+                                map.put("queryId", "tomesMapper.selectCycleTimeTotal");
+                                Map<String,Object> cycleInfo = innodaleDao.getInfo(map);
+                                cycleInfo.put("MCT_WORK_SEQ", mctInfo.get("MCT_WORK_SEQ"));
 
-                                    System.out.println("cycleInfo >>>>>>>>>>>>>>>>>>>> " + cycleInfo);
+                                System.out.println("cycleInfo >>>>>>>>>>>>>>>>>>>> " + cycleInfo);
 
-                                    cycleInfo.put("MCT_WORK_SEQ", mctInfo.get("MCT_WORK_SEQ"));
-                                    cycleInfo.put("queryId", "tomesMapper.updateCycleComplete");
-                                    innodaleDao.update(cycleInfo);
-                                }
+                                map.put("queryId", "tomesMapper.updateIfWorkingTime");
+                                innodaleDao.update(map);
 
                                 String equipName = (String) map.get("equip_name");
                                 dataMap.put(equipName, map);
