@@ -83,8 +83,10 @@ public class TomesDrawingController {
                                     map.put("queryId", "tomesMapper.selectCycleTime");
                                     Map<String,Object> cycleInfo = innodaleDao.getInfo(map);
 
+                                    System.out.println("cycleInfo >>>>>>>>>>>>>>>>>>>> " + cycleInfo);
+
                                     cycleInfo.put("MCT_WORK_SEQ", mctInfo.get("MCT_WORK_SEQ"));
-                                    cycleInfo.put("queryId", mctInfo.get("tomesMapper.updateCycleComplete"));
+                                    cycleInfo.put("queryId", "tomesMapper.updateCycleComplete");
                                     innodaleDao.update(cycleInfo);
                                 }
 
