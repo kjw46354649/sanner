@@ -55,6 +55,7 @@ public class TomesDrawingController {
         try {
             if(parameters.containsKey("dataList")) {
                 List<Map<String,Object>> dataList = (List<Map<String, Object>>) parameters.get("dataList");
+                System.out.println("dataList >>>>>>>>>>>>>>>>>>>> " + dataList);
                 if(dataList.size() > 0) {
                     HashMap<String,Object> dataMap = new HashMap<>();
                     for(Map<String,Object> map : dataList) {
@@ -63,6 +64,7 @@ public class TomesDrawingController {
                         }else {
                             map.put("queryId","tomesMapper.selectCurrentMctInfo");
                             Map<String,Object> mctInfo = innodaleDao.getInfo(map);
+                            System.out.println("map >>>>>>>>>>>>>>>>>>>> " + map);
                             if(mctInfo != null) {
                                 map.put("MCT_WORK_SEQ", mctInfo.get("MCT_WORK_SEQ"));
                                 map.put("EQUIP_SEQ", mctInfo.get("EQUIP_SEQ"));
@@ -95,7 +97,6 @@ public class TomesDrawingController {
                     Iterator<String> keys = dataMap.keySet().iterator();
                     while (keys.hasNext()) {
                         String key = keys.next();
-                        System.out.println(String.format("키 : %s", key));
 
 
                         Map<String,Object> leadMap = (Map<String, Object>) dataMap.get(key);
@@ -106,9 +107,12 @@ public class TomesDrawingController {
                             leadMap.putAll(noticeMap);
                             dataMap.put(key, leadMap);
                         }
+                        System.out.println("leadMap >>>>>>>>>>>>>>>>>>>> " + leadMap);
+                    }
+                    if(!dataMap.isEmpty()) {
+                        simpMessagingTemplate.convertAndSend("/topic/notice", dataMap);
                     }
 
-                    simpMessagingTemplate.convertAndSend("/topic/notice", dataMap);
                 }
             }else {
                 throw new ParameterException();
@@ -118,6 +122,7 @@ public class TomesDrawingController {
             result =  responseService.getFailResult(400, "파라미터를 확인해주세요.");
         }catch (Exception e) {
             result =  responseService.getFailResult(500, "알수없는 오류가 발생하였습니다.");
+            e.printStackTrace();
         }
         return result;
     }

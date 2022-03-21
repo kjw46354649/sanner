@@ -155,7 +155,7 @@
          #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
          #{tool_id}, #{event_time},
          #{execution}, #{active_type},
-         #{part_cnt}, #{cycleCheck}
+         #{part_cnt}, IFNULL(#{cycleCheck}, 'N')
         )
     </insert>
 
