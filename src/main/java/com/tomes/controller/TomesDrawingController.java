@@ -77,12 +77,14 @@ public class TomesDrawingController {
                             if(mctInfo != null) { // cycle 완료 데이터
                                 map.put("queryId", "tomesMapper.selectCycleTimeTotal");
                                 Map<String,Object> cycleInfo = innodaleDao.getInfo(map);
-                                cycleInfo.put("MCT_WORK_SEQ", mctInfo.get("MCT_WORK_SEQ"));
+                                cycleInfo.put("active_type", map.get("active_type"));
+                                cycleInfo.put("cycleCheck", map.get("cycleCheck"));
+                                cycleInfo.put("event_time", map.get("event_time"));
 
                                 System.out.println("cycleInfo >>>>>>>>>>>>>>>>>>>> " + cycleInfo);
 
-                                map.put("queryId", "tomesMapper.updateIfWorkingTime");
-                                innodaleDao.update(map);
+                                cycleInfo.put("queryId", "tomesMapper.updateIfWorkingTime");
+                                innodaleDao.update(cycleInfo);
 
                                 String equipName = (String) map.get("equip_name");
                                 dataMap.put(equipName, map);
