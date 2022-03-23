@@ -27,7 +27,8 @@
         <div>
             <form class="form-inline" id="MONTH_REPORT_DETAIL_LIST_VIEW_FORM" name="MONTH_REPORT_DETAIL_LIST_VIEW_FORM" role="form">
                 <input type="hidden" name="queryId" id="queryId" value="reportMapper.selectMonthlyReportInspectionDetailList">
-                <input type="hidden" name="DT" id="DT">
+                <input type="hidden" name="SEARCH_START_DT" id="SEARCH_START_DT">
+                <input type="hidden" name="SEARCH_END_DT" id="SEARCH_END_DT">
                 <input type="hidden" name="INSPECT_TYPE" id="INSPECT_TYPE">
             </form>
         </div>
@@ -49,7 +50,8 @@
     $(function () {
         'use strict';
         /* init */
-        $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #DT').val($(opener.document).find('#PROCESS_TARGET_BEFORE_FORM > #DT').val());
+        $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #SEARCH_START_DT').val($(opener.document).find('#PROCESS_TARGET_BEFORE_FORM > #SEARCH_START_DT').val());
+        $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #SEARCH_END_DT').val($(opener.document).find('#PROCESS_TARGET_BEFORE_FORM > #SEARCH_END_DT').val());
         $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #INSPECT_TYPE').val($(opener.document).find('#PROCESS_TARGET_BEFORE_FORM > #INSPECT_TYPE').val());
 
         const monthReportInspectionDetailListViewGridId = 'DETAIL_LIST_VIEW_GRID';

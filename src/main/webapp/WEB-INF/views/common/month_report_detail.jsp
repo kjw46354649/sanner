@@ -143,10 +143,13 @@
             $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #OUT_FINISH_YN').val('').prop('selected', true);
             $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #DELAY_YN').val('').prop('selected', true);
         } else {
-            let date = $(opener.document).find('#PROCESS_TARGET_BEFORE_FORM > #DT').val();
-            let k = new Date(date.substring(0, 4), date.substring(4, 6) - 1, date.substring(6))
-            $('#MONTH_REPORT_DETAIL_START_DATE').datepicker('setDate', k);
-            $('#MONTH_REPORT_DETAIL_END_DATE').datepicker('setDate', k);
+            let strStDate = $(opener.document).find('#PROCESS_TARGET_BEFORE_FORM > #SEARCH_START_DT').val();
+            let strEndDate = $(opener.document).find('#PROCESS_TARGET_BEFORE_FORM > #SEARCH_END_DT').val();
+            let startDate = new Date(strStDate.substring(0, 4), strStDate.substring(4, 6) - 1, strStDate.substring(6));
+            let endDate = new Date(strEndDate.substring(0, 4), strEndDate.substring(4, 6) - 1, strEndDate.substring(6));
+
+            $('#MONTH_REPORT_DETAIL_START_DATE').datepicker('setDate',  startDate);
+            $('#MONTH_REPORT_DETAIL_END_DATE').datepicker('setDate', endDate);
             $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #COMP_CD').val($(opener.document).find('#PROCESS_TARGET_BEFORE_FORM > #COMP_CD').val()).prop('selected', true);
             $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #ORDER_COMP_CD').val($(opener.document).find('#PROCESS_TARGET_BEFORE_FORM > #ORDER_COMP_CD').val()).prop('selected', true);
             $('#MONTH_REPORT_DETAIL_LIST_VIEW_FORM #FACTORY_CLASSIFY_YN').val($(opener.document).find('#PROCESS_TARGET_BEFORE_FORM > #FACTORY_CLASSIFY_YN').val()).prop('selected', true);
