@@ -140,23 +140,53 @@
     </select>
 
     <insert id="insertNcIfWorkData" parameterType="java.util.HashMap">
+        <selectKey keyProperty="EQUIP_SEQ" resultType="string" order="BEFORE">
+            SELECT SF_GET_EQUIP_SEQ(#{equip_name}) AS EQUIP_SEQ FROM DUAL
+        </selectKey>
         INSERT INTO jmes.TBL_MCT_WORKING_LOG
         (
-         MCT_WORKING_LOG_SEQ,
-         SEQ, EQUIP_SEQ,
-         CONTROL_SEQ, CONTROL_DETAIL_SEQ,
-         TOOL_ID, EVENT_TIME,
-         EXECUTION, ACTIVE_TYPE,
-         PART_CNT, CYCLE_FINISH_YN
+             MCT_WORKING_LOG_SEQ,
+             SEQ, EQUIP_SEQ,
+             CONTROL_SEQ, CONTROL_DETAIL_SEQ,
+             TOOL_ID, EVENT_TIME,
+             EXECUTION, ACTIVE_TYPE,
+             PART_CNT, CYCLE_FINISH_YN
         )
-        VALUES(
-         NEXTVAL(jmes.SEQ_MCT_WORKING_LOG),
-         #{seq}, SF_GET_EQUIP_SEQ(#{equip_name}),
-         #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
-         #{tool_id}, #{event_time},
-         #{execution}, #{active_type},
-         #{part_cnt}, IFNULL(#{cycleCheck}, 'N')
-        )
+        SELECT X.MCT_WORKING_LOG_SEQ,
+            X.SEQ, X.EQUIP_SEQ,
+            CASE WHEN X.ACTIVE_TYPE = 'PGM_STOP' AND X.IF_WORK_START_DT IS NULL THEN NULL
+                 ELSE X.CONTROL_SEQ
+            END AS CONTROL_SEQ,
+            CASE WHEN X.ACTIVE_TYPE = 'PGM_STOP' AND X.IF_WORK_START_DT IS NULL THEN NULL
+                 ELSE X.CONTROL_DETAIL_SEQ
+            END AS CONTROL_DETAIL_SEQ,
+            X.TOOL_ID, X.EVENT_TIME,
+            X.EXECUTION, X.ACTIVE_TYPE,
+            X.PART_CNT, X.CYCLE_FINISH_YN
+        FROM (
+            SELECT NEXTVAL(jmes.SEQ_MCT_WORKING_LOG) AS MCT_WORKING_LOG_SEQ,
+                #{seq} AS SEQ,
+                #{EQUIP_SEQ} AS EQUIP_SEQ,
+                '' AS CONTROL_SEQ, '' AS CONTROL_DETAIL_SEQ,
+                #{tool_id} AS TOOL_ID, #{event_time} AS EVENT_TIME,
+                #{execution} AS EXECUTION, #{active_type} AS ACTIVE_TYPE,
+                #{part_cnt} AS PART_CNT, IFNULL(#{cycleCheck}, 'N') AS CYCLE_FINISH_YN,
+                '' AS IF_WORK_START_DT
+            FROM DUAL
+            UNION ALL
+            SELECT '' AS MCT_WORKING_LOG_SEQ, '' AS SEQ, '' AS EQUIP_SEQ,
+                A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
+                '' AS TOOL_ID, '' AS EVENT_TIME,
+                '' AS EXECUTION, '' AS ACTIVE_TYPE,
+                '' AS PART_CNT, '' AS CYCLE_FINISH_YN,
+                A.IF_WORK_START_DT
+            FROM TBL_MCT_WORK A
+            WHERE A.DEL_YN = 'N'
+                AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+                AND A.WORK_STATUS IN ('DBS010', 'DBS020')
+                AND A.WORK_START_DT IS NOT NULL
+                AND A.WORK_FINISH_DT IS NULL
+        ) X
     </insert>
 
     <select id="selectCurrentMctInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -214,30 +244,44 @@
              ) X
     </select>
 
-    <update id="updateCycleComplete"  parameterType="java.util.HashMap" >
-        UPDATE TBL_MCT_WORK
-        SET
-            COMPLETE_CYCLE_COUNT = (IFNULL(COMPLETE_CYCLE_COUNT,0) + 1),
-            LATEST_CYCLE_TIME = #{ACTIVE_TOTAL},
-            WORK_ACTIVE_TIME = (IFNULL(WORK_ACTIVE_TIME,0) + #{ACTIVE_TOTAL}),
-            WORK_STOP_TIME = (IFNULL(WORK_STOP_TIME,0) + #{STOP_TOTAL}),
-            UPDATE_DT = NOW()
-        WHERE MCT_WORK_SEQ = #{MCT_WORK_SEQ}
-            AND DEL_YN = 'N'
-    </update>
-
     <update id="updateIfWorkingTime"  parameterType="java.util.HashMap" >
-        UPDATE TBL_MCT_WORK
+        UPDATE TBL_MCT_WORK A
+            INNER JOIN (
+                SELECT SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS ACTIVE_TOTAL
+                    , SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_STOP' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS STOP_TOTAL
+                    , CASE WHEN IFNULL(#{cycleCheck},'N') = 'Y' THEN SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' AND X.PART_CNT = #{part_cnt} THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END)
+                           ELSE 0
+                      END AS CYCLE_TOTAL
+                    , X.MCT_WORK_SEQ
+                FROM (
+                    SELECT M.EVENT_TIME, M.ACTIVE_TYPE, M.PART_CNT, M.CYCLE_FINISH_YN,
+                        LAG(M.EVENT_TIME) OVER (ORDER BY M.MCT_WORKING_LOG_SEQ) AS BEFORE_TIME,
+                        LAG(M.ACTIVE_TYPE) OVER (ORDER BY M.MCT_WORKING_LOG_SEQ) AS BEFORE_TYPE,
+                        N.MCT_WORK_SEQ
+                    FROM TBL_MCT_WORKING_LOG M
+                        INNER JOIN TBL_MCT_WORK N ON M.EQUIP_SEQ = N.EQUIP_SEQ AND M.CONTROL_SEQ = N.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = N.CONTROL_DETAIL_SEQ
+                            AND N.DEL_YN = 'N'
+                            AND N.WORK_STATUS IN ('DBS010', 'DBS020')
+                            AND N.WORK_START_DT IS NOT NULL
+                            AND N.WORK_FINISH_DT IS NULL
+                    WHERE 1=1
+                        AND M.EQUIP_SEQ = #{EQUIP_SEQ}
+                    ORDER BY M.MCT_WORKING_LOG_SEQ
+                ) X
+            ) B ON B.MCT_WORK_SEQ = A.MCT_WORK_SEQ
         SET
-            IF_WORK_START_DT = CASE WHEN IF_WORK_START_DT IS NULL AND #{active_type} = 'PGM_STOP' THEN #{event_time} END,
-            WORK_ACTIVE_TIME = (IFNULL(WORK_ACTIVE_TIME,0) + #{ACTIVE_TOTAL}),
-            WORK_STOP_TIME = (IFNULL(WORK_STOP_TIME,0) + #{STOP_TOTAL}),
+            IF_WORK_START_DT = CASE WHEN IF_WORK_START_DT IS NULL AND #{active_type} = 'PGM_ACTIVE' THEN #{event_time} END,
+            A.WORK_ACTIVE_TIME = B.ACTIVE_TOTAL,
+            A.WORK_STOP_TIME = B.STOP_TOTAL,
+            A.WORK_STATUS = CASE WHEN #{active_type} = 'PGM_ACTIVE' THEN 'DBS020'
+                                 WHEN #{active_type} = 'PGM_STOP' THEN 'DBS010'
+                            END,
             <if test='cycleCheck != null and cycleCheck == "Y"'>
-                COMPLETE_CYCLE_COUNT = (IFNULL(COMPLETE_CYCLE_COUNT,0) + 1),
-                LATEST_CYCLE_TIME = #{CYCLE_TOTAL},
+                COMPLETE_CYCLE_COUNT = (IFNULL(A.COMPLETE_CYCLE_COUNT,0) + 1),
+                LATEST_CYCLE_TIME = B.CYCLE_TOTAL,
             </if>
-            UPDATE_DT = NOW()
-        WHERE MCT_WORK_SEQ = #{MCT_WORK_SEQ}
-          AND DEL_YN = 'N'
+            A.UPDATE_DT = NOW()
+        WHERE A.MCT_WORK_SEQ = B.MCT_WORK_SEQ
+            AND A.DEL_YN = 'N'
     </update>
 </mapper>
