@@ -1,6 +1,8 @@
 package com.framework.innodale.entity;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
+import java.util.Map;
 
 public class NotificationMessage {
 
@@ -47,6 +49,7 @@ public class NotificationMessage {
 
     /** 기타 정보 **/
     private int totalCount;
+    private List<Map<String,Object>> list;
 
     public String getPrePopPosition() { return prePopPostion; }
 
@@ -185,4 +188,7 @@ public class NotificationMessage {
             this.imageSeq = imageSeq;
         }
 
+    public List<Map<String, Object>> getList() { return list; }
+
+    public void setList(List<Map<String, Object>> list) { this.list = list; }
 }

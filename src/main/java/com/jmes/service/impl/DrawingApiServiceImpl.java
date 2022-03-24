@@ -1,6 +1,8 @@
 package com.jmes.service.impl;
 
 import com.framework.innodale.dao.InnodaleDao;
+import com.framework.innodale.entity.ActionType;
+import com.framework.innodale.entity.NotificationMessage;
 import com.jmes.service.DrawingApiService;
 import com.tomes.exception.ParameterException;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -8,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class DrawingApiServiceImpl implements DrawingApiService {
@@ -34,37 +33,35 @@ public class DrawingApiServiceImpl implements DrawingApiService {
 
             if(dataList.size() > 0) {
                 HashMap<String,Object> dataMap = new HashMap<>();
-                for(Map<String,Object> data : dataList) {
-                    System.out.println("data >>>>>>>>>>>>>>>>>>>> " + data);
+                for(int i=0;i<dataList.size();i++) {
+                    Map<String,Object> data = dataList.get(i);
+
                     data.put("queryId","drawingMapper.insertNcIfWorkData");
                     innodaleDao.create(data);
 
-                    data.put("queryId", "drawingMapper.updateIfWorkingTime");
-                    innodaleDao.update(data);
-
+                    dataList.set(i,data);
 
                     String equipName = (String) data.get("equip_name");
                     dataMap.put(equipName, data);
                 }
 
-//                Iterator<String> keys = dataMap.keySet().iterator();
-//                while (keys.hasNext()) {
-//                    String key = keys.next();
-//
-//                    Map<String,Object> leadMap = (Map<String, Object>) dataMap.get(key);
-//                    leadMap.put("queryId","drawingMapper.selectCurrentMctInfo");
-//                    Map<String,Object> noticeMap = innodaleDao.getInfo(leadMap);
-//
-//                    if(noticeMap != null) {
-//                        leadMap.putAll(noticeMap);
-//                        dataMap.put(key, leadMap);
-//                    }
-//                    System.out.println("leadMap >>>>>>>>>>>>>>>>>>>> " + leadMap);
-//                }
+                map.put("queryId", "drawingMapper.updateIfWorkingTime");
+                innodaleDao.update(map);
+
+                System.out.println("map >>>>>>>>>>>>>>>>>>>> " + map);
+                System.out.println("dataMap >>>>>>>>>>>>>>>>>>>> " + dataMap);
+
                 if(!dataMap.isEmpty()) {
+                    map.put("queryId", "drawingMapper.selectCurrentMctInfo");
+                    List<Map<String,Object>> currList = innodaleDao.getList(map);
+
+                    NotificationMessage notificationMessage = new NotificationMessage();
+                    notificationMessage.setActionType(ActionType.NC_IF);
+                    notificationMessage.setList(currList);
+                    notificationMessage.setEquipNm(dataMap.keySet().toString());
+
                     simpMessagingTemplate.convertAndSend("/topic/notice", dataMap);
                 }
-
             }
         }
 

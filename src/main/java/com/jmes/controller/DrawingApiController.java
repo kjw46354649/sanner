@@ -27,9 +27,6 @@ import java.util.Map;
 @CrossOrigin
 public class DrawingApiController {
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
     private final ResponseService responseService;
 
     @Autowired
@@ -51,4 +48,5 @@ public class DrawingApiController {
         }
         return result;
     }
+
 }
