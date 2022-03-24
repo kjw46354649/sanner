@@ -555,13 +555,13 @@
         INSERT INTO jmes.TBL_MCT_WORKING_LOG
         (
             MCT_LOG_SEQ,
-            SEQ, EQUIP_SEQ, MCT_WORK_SEQ,
+            IF_SEQ, EQUIP_SEQ, MCT_WORK_SEQ,
             TOOL_ID, EVENT_TIME,
             EXECUTION, ACTIVE_TYPE,
             PART_CNT, CYCLE_FINISH_YN
         )
         SELECT X.MCT_LOG_SEQ,
-            X.SEQ, X.EQUIP_SEQ,
+            X.IF_SEQ, X.EQUIP_SEQ,
             CASE WHEN X.ACTIVE_TYPE = 'PGM_STOP' AND X.IF_WORK_START_DT IS NULL THEN NULL
                  ELSE X.MCT_WORK_SEQ
             END AS MCT_WORK_SEQ,
@@ -570,27 +570,26 @@
             X.PART_CNT, X.CYCLE_FINISH_YN
         FROM (
             SELECT NEXTVAL(jmes.SEQ_MCT_LOG) AS MCT_LOG_SEQ,
-                #{seq} AS SEQ,
+                #{seq} AS IF_SEQ,
                 #{EQUIP_SEQ} AS EQUIP_SEQ,
-                '' AS MCT_WORK_SEQ,
+                (SELECT A.MCT_WORK_SEQ
+                 FROM TBL_MCT_WORK A
+                 WHERE A.DEL_YN = 'N'
+                   AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+                   AND A.WORK_STATUS IN ('DBS010', 'DBS020')
+                   AND A.WORK_START_DT IS NOT NULL
+                ) AS MCT_WORK_SEQ,
                 #{tool_id} AS TOOL_ID, #{event_time} AS EVENT_TIME,
                 #{execution} AS EXECUTION, #{active_type} AS ACTIVE_TYPE,
                 #{part_cnt} AS PART_CNT, IFNULL(#{cycleCheck}, 'N') AS CYCLE_FINISH_YN,
-                '' AS IF_WORK_START_DT
+                (SELECT A.IF_WORK_START_DT
+                FROM TBL_MCT_WORK A
+                WHERE A.DEL_YN = 'N'
+                    AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+                    AND A.WORK_STATUS IN ('DBS010', 'DBS020')
+                    AND A.WORK_START_DT IS NOT NULL
+                ) AS IF_WORK_START_DT
             FROM DUAL
-            UNION ALL
-            SELECT '' AS MCT_LOG_SEQ, '' AS SEQ, '' AS EQUIP_SEQ,
-                A.MCT_WORK_SEQ,
-                '' AS TOOL_ID, '' AS EVENT_TIME,
-                '' AS EXECUTION, '' AS ACTIVE_TYPE,
-                '' AS PART_CNT, '' AS CYCLE_FINISH_YN,
-                A.IF_WORK_START_DT
-            FROM TBL_MCT_WORK A
-            WHERE A.DEL_YN = 'N'
-                AND A.EQUIP_SEQ = #{EQUIP_SEQ}
-                AND A.WORK_STATUS IN ('DBS010', 'DBS020')
-                AND A.WORK_START_DT IS NOT NULL
-                AND A.WORK_FINISH_DT IS NULL
         ) X
     </insert>
 
