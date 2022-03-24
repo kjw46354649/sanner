@@ -36,10 +36,10 @@ public class DrawingApiServiceImpl implements DrawingApiService {
                 HashMap<String,Object> dataMap = new HashMap<>();
                 for(Map<String,Object> data : dataList) {
                     System.out.println("data >>>>>>>>>>>>>>>>>>>> " + data);
-                    data.put("queryId","tomesMapper.insertNcIfWorkData");
+                    data.put("queryId","drawingMapper.insertNcIfWorkData");
                     innodaleDao.create(data);
 
-                    data.put("queryId", "tomesMapper.updateIfWorkingTime");
+                    data.put("queryId", "drawingMapper.updateIfWorkingTime");
                     innodaleDao.update(data);
 
 
@@ -52,7 +52,7 @@ public class DrawingApiServiceImpl implements DrawingApiService {
 //                    String key = keys.next();
 //
 //                    Map<String,Object> leadMap = (Map<String, Object>) dataMap.get(key);
-//                    leadMap.put("queryId","tomesMapper.selectCurrentMctInfo");
+//                    leadMap.put("queryId","drawingMapper.selectCurrentMctInfo");
 //                    Map<String,Object> noticeMap = innodaleDao.getInfo(leadMap);
 //
 //                    if(noticeMap != null) {
