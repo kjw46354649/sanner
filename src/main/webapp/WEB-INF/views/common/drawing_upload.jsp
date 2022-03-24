@@ -188,6 +188,44 @@
             }
         });
     };
+    let fnFormToJsonArrayData = function (formid) {
+        if(formid.indexOf("#") == -1) formid = "#"+formid;
+        let elementArray = {};
+        let formArr = $(formid).serializeArray();
+        for(let i=0; i < formArr.length; i++) {
+            let tmp = formArr[i];
+            let name = tmp.name;
+            let value = "";
+            if(name != null){
+                let $ctrl = $(formid).find('[name='+name+']');
+                if ($ctrl.is('select')){
+                    value = $ctrl.val();
+                } else if ($ctrl.is('textarea')) {
+                    value = $ctrl.val();
+                } else {
+                    switch($ctrl.attr("type")) {
+                        case "text":
+                        case "number":
+                        case "date":
+                        case "password":
+                        case "hidden":
+                        case "search":
+                            value = $ctrl.val();
+                            break;
+                        case "checkbox":
+                            if($ctrl.prop('checked')) value = true;
+                            else value = false;
+                            break;
+                        case 'radio':
+                            value = $("input:radio[name=" + name + "]:checked").val();
+                            break;
+                    }
+                }
+                elementArray[name] = value;
+            }
+        }
+        return elementArray;
+    };
 
     /**
      * @description 그리드 생성
@@ -834,19 +872,27 @@
         $commonCadUploadFileGrid.pqGrid('refresh');
 
         if(actionType == 'controlRev' || actionType == 'controlPart') {  // 주문 도면 차수 변경의 경우 선택한 주문 정보를 조회한다.
-            let parameters = {'url': '/json-list', 'data': $("#common_cad_reversion_control_list_form").serialize()};
-            fnPostAjax(function (data) {
-                $commonCadFileAttachGrid.pqGrid('option', {editable: true});
-                $commonCadFileAttachGrid.pqGrid('addNodes', data.list, 0);
-                $commonCadFileAttachGrid.pqGrid('option', {editable: false});   // 수정 여부를 false 처리 한다.
-            }, parameters, '');
+            $commonCadFileAttachGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return fnFormToJsonArrayData('common_cad_reversion_control_list_form');
+            });
+            $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
+            // let parameters = {'url': '/json-list', 'data': $("#common_cad_reversion_control_list_form").serialize()};
+            // fnPostAjax(function (data) {
+            //     $commonCadFileAttachGrid.pqGrid('option', {editable: true});
+            //     $commonCadFileAttachGrid.pqGrid('addNodes', data.list, 0);
+            //     $commonCadFileAttachGrid.pqGrid('option', {editable: false});   // 수정 여부를 false 처리 한다.
+            // }, parameters, '');
         }else if(actionType == 'inside') {
-            let parameters = {'url': '/json-list', 'data': $("#common_cad_stock_form").serialize()};
-            fnPostAjax(function (data) {
-                $commonCadFileAttachGrid.pqGrid('option', {editable: true});
-                $commonCadFileAttachGrid.pqGrid('addNodes', data.list, 0);
-                $commonCadFileAttachGrid.pqGrid('option', {editable: false});   // 수정 여부를 false 처리 한다.
-            }, parameters, '');
+            $commonCadFileAttachGrid.pqGrid('option', 'dataModel.postData', function (ui) {
+                return fnFormToJsonArrayData('common_cad_stock_form');
+            });
+            $commonCadFileAttachGrid.pqGrid('refreshDataAndView');
+            // let parameters = {'url': '/json-list', 'data': $("#common_cad_stock_form").serialize()};
+            // fnPostAjax(function (data) {
+            //     $commonCadFileAttachGrid.pqGrid('option', {editable: true});
+            //     $commonCadFileAttachGrid.pqGrid('addNodes', data.list, 0);
+            //     $commonCadFileAttachGrid.pqGrid('option', {editable: false});   // 수정 여부를 false 처리 한다.
+            // }, parameters, '');
 
         }
     }
