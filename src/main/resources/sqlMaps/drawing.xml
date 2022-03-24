@@ -560,7 +560,7 @@
             EXECUTION, ACTIVE_TYPE,
             PART_CNT, CYCLE_FINISH_YN
         )
-        SELECT X.MCT_WORKING_LOG_SEQ,
+        SELECT X.MCT_LOG_SEQ,
             X.SEQ, X.EQUIP_SEQ,
             CASE WHEN X.ACTIVE_TYPE = 'PGM_STOP' AND X.IF_WORK_START_DT IS NULL THEN NULL
                  ELSE X.MCT_WORK_SEQ
@@ -579,7 +579,7 @@
                 '' AS IF_WORK_START_DT
             FROM DUAL
             UNION ALL
-            SELECT '' AS MCT_WORKING_LOG_SEQ, '' AS SEQ, '' AS EQUIP_SEQ,
+            SELECT '' AS MCT_LOG_SEQ, '' AS SEQ, '' AS EQUIP_SEQ,
                 A.MCT_WORK_SEQ,
                 '' AS TOOL_ID, '' AS EVENT_TIME,
                 '' AS EXECUTION, '' AS ACTIVE_TYPE,
@@ -623,8 +623,8 @@
                     , X.MCT_WORK_SEQ
                 FROM (
                     SELECT M.EVENT_TIME, M.ACTIVE_TYPE, M.PART_CNT, M.CYCLE_FINISH_YN,
-                        LAG(M.EVENT_TIME) OVER (ORDER BY M.MCT_WORKING_LOG_SEQ) AS BEFORE_TIME,
-                        LAG(M.ACTIVE_TYPE) OVER (ORDER BY M.MCT_WORKING_LOG_SEQ) AS BEFORE_TYPE,
+                        LAG(M.EVENT_TIME) OVER (ORDER BY M.MCT_LOG_SEQ) AS BEFORE_TIME,
+                        LAG(M.ACTIVE_TYPE) OVER (ORDER BY M.MCT_LOG_SEQ) AS BEFORE_TYPE,
                         N.MCT_WORK_SEQ
                     FROM TBL_MCT_WORKING_LOG M
                         INNER JOIN TBL_MCT_WORK N ON M.MCT_WORK_SEQ = N.MCT_WORK_SEQ AND M.EQUIP_SEQ = N.EQUIP_SEQ
@@ -634,7 +634,7 @@
                         AND N.WORK_FINISH_DT IS NULL
                     WHERE 1=1
                         AND M.EQUIP_SEQ = #{EQUIP_SEQ}
-                    ORDER BY M.MCT_WORKING_LOG_SEQ
+                    ORDER BY M.MCT_LOG_SEQ
                 ) X
             ) B ON B.MCT_WORK_SEQ = A.MCT_WORK_SEQ
         SET
