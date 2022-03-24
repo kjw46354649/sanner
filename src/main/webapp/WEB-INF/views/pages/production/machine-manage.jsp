@@ -100,7 +100,6 @@
 <%--                <button type="button" id="newBtn" class="defaultBtn yelllowGra">신규등록</button>--%>
 <%--            </div>--%>
 <%--        </div>--%>
-
         <div class="hWrap">
             <div class="d-inline">
 
@@ -109,12 +108,7 @@
                 </div>
             </div>
         </div>
-
-
-
-
         <div class="tableWrap jmestabs" id="div_tabs_machine_01">
-
             <ul class="smallTabMenuTabs">
                 <li class="active"><a href="#_TAB1" data-toggle="tab" aria-expanded="true">가공장비</a></li>
                 <li><a href="#_TAB2" data-toggle="tab" aria-expanded="false">기타장비</a></li>
@@ -145,16 +139,16 @@
             </ul>
              <div class="tab-content">
                  <ul class="active conWrap" id="_TAB1">
-                         <div id="machine_manage_current_grid"></div>
-                         <div class="right_sort">
-                             전체 조회 건수 (Total : <span id="MACHINE_MANAGE_CURRENT_GRID_TOTAL_RECORDS" style="color: #00b3ee">0</span>)
-                         </div>
+                     <div id="machine_manage_current_grid"></div>
+                     <div class="right_sort">
+                         전체 조회 건수 (Total : <span id="MACHINE_MANAGE_CURRENT_GRID_TOTAL_RECORDS" style="color: #00b3ee">0</span>)
+                     </div>
                  </ul>
                  <ul class="conWrap" id="_TAB2">
-                         <div id="machine_manage_etc_grid"></div>
-                         <div class="right_sort">
-                             전체 조회 건수 (Total : <span id="MACHINE_MANAGE_ETC_GRID_TOTAL_RECORDS" style="color: #00b3ee">0</span>)
-                         </div>
+                     <div id="machine_manage_etc_grid"></div>
+                     <div class="right_sort">
+                         전체 조회 건수 (Total : <span id="MACHINE_MANAGE_ETC_GRID_TOTAL_RECORDS" style="color: #00b3ee">0</span>)
+                     </div>
                  </ul>
              </div>
         </div>
@@ -198,13 +192,17 @@
         <input type="hidden" id="EQUIP_KIND" name="EQUIP_KIND" value="">
         <input type="hidden" id="EQUIP_SEQ" name="EQUIP_SEQ" value="" >
         <input type="hidden" id="historyGrid" name="historyGrid" value="" >
+        <input type="hidden" id="IF_USE_YN" name="IF_USE_YN" value="" >
         <div class="layerPopup">
             <h3>장비상세정보</h3>
             <button type="button" class="pop_close mt-10 mr-8" id="machine_manage_pop-close2">닫기</button>
             <div class="qualityWrap">
                 <div class="h_area">
 					<div class="right_sort ">
-
+                        <span class="chk_box mr-10">
+                            <input name="CHECK_IF_USE_YN" id="CHECK_IF_USE_YN" type="checkbox">
+                            <label for="CHECK_IF_USE_YN">IF 사용 여부</label>
+                        </span>
                         <button type="button" class="defaultBtn btn-120w red" id="saveBtn">저장</button>
                         <button type="button" class="defaultBtn btn-120w green" id="deleteBtn">삭제</button>
 					</div>
@@ -1113,6 +1111,10 @@
             }else{
                 fnJsonDataToForm("machine_manage_pop_form", dataInfo);
 
+                if(dataInfo.IF_USE_YN == 'Y') {
+                    $("#CHECK_IF_USE_YN").prop("checked",true);
+                }
+
                 // 파일 정보 셋팅
                 $("#machine_manage_pop_form").find("#PHOTO_GFILE_SEQ").val(dataInfo.PHOTO_GFILE_SEQ);
                 $("#machine_manage_pop_form").find("#PHOTO_GFILE_SRC").attr("src", "/image/" + dataInfo.PHOTO_GFILE_SEQ);
@@ -1325,4 +1327,12 @@
             }
         });
     });
+
+    $("#CHECK_IF_USE_YN").on('change', function () {
+        if($(this).prop('checked')) {
+            $("#machine_manage_pop_form").find("#IF_USE_YN").val("Y");
+        }else {
+            $("#machine_manage_pop_form").find("#IF_USE_YN").val("N");
+        }
+    })
 </script>
