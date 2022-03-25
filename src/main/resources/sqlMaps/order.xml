@@ -1114,7 +1114,7 @@
             WORK_FACTORY = CASE WHEN #{WORK_FACTORY} = 'null' THEN NULL ELSE #{WORK_FACTORY} END,
         </if>
         <if test="MATERIAL_SUPPLY_YN != null and MATERIAL_SUPPLY_YN != ''">
-            MATERIAL_SUPPLY_YN = #{MATERIAL_SUPPLY_YN},
+            MATERIAL_SUPPLY_YN = IFNULL(#{MATERIAL_SUPPLY_YN}, 'N'),
         </if>
         <if test="INNER_DUE_DT != null and INNER_DUE_DT != ''">
             INNER_DUE_DT = DATE_FORMAT(REPLACE(#{INNER_DUE_DT}, '/', SPACE(0)), '%Y%m%d'),
