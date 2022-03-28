@@ -390,11 +390,11 @@ public class OrderServiceImpl implements OrderService {
                 }
             } else if ("conversion".equals(type)) {
                 // 이미 가공확정 됐는지 확인
-                map.put("queryId", "orderMapper.selectHasPartStatusConfirm");
-                if (this.orderDao.getFlag(map) && !flag) {
-                    flag = true;
-                    message = "주문 확정 상태로 변경해주세요.";
-                }
+//                map.put("queryId", "orderMapper.selectHasPartStatusConfirm");
+//                if (this.orderDao.getFlag(map) && !flag) {
+//                    flag = true;
+//                    message = "주문 확정 상태로 변경해주세요.";
+//                }
                 // 이미 외주전환 됐는지 확인
                 map.put("queryId", "orderMapper.selectHasPartStatusConversion");
                 if (this.orderDao.getFlag(map) && !flag) {
@@ -402,11 +402,11 @@ public class OrderServiceImpl implements OrderService {
                     message = "이미 외주전환 된 도면입니다.";
                 }
                 // 출고 확인
-                map.put("queryId", "orderMapper.selectHasOut");
-                if (this.orderDao.getFlag(map) && !flag) {
-                    flag = true;
-                    message = "이미 출고된 대상입니다.";
-                }
+//                map.put("queryId", "orderMapper.selectHasOut");
+//                if (this.orderDao.getFlag(map) && !flag) {
+//                    flag = true;
+//                    message = "이미 출고된 대상입니다.";
+//                }
             }
 
             model.addAttribute("flag", flag);

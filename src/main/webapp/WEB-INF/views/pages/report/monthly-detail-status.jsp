@@ -112,7 +112,8 @@
 </div>
 
 <form id="PROCESS_TARGET_BEFORE_FORM">
-    <input type="hidden" name="DT" id="DT">
+    <input type="hidden" name="SEARCH_START_DT" id="SEARCH_START_DT">
+    <input type="hidden" name="SEARCH_END_DT" id="SEARCH_END_DT">
     <input type="hidden" name="COMP_CD" id="COMP_CD">
     <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD">
     <input type="hidden" name="FACTORY_CLASSIFY_YN" id="FACTORY_CLASSIFY_YN">
@@ -167,10 +168,12 @@
             {title: 'COMP_CD', dataIndx: 'COMP_CD', hidden: true},
             {title: 'ORDER_COMP_CD', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: 'DT', dataIndx: 'DT', hidden: true},
-            {title: '날짜', minWidth: 40, maxWidth: 40, dataIndx: 'CAL_DT_NM'},
+            {title: 'SEARCH_START_DT', dataIndx: 'SEARCH_START_DT', hidden: true},
+            {title: 'SEARCH_END_DT', dataIndx: 'SEARCH_END_DT', hidden: true},
+            {title: '가공<br>납기', minWidth: 40, maxWidth: 40, dataIndx: 'CAL_DT_NM'},
             {title: '요일', minWidth: 30, maxWidth: 30, dataIndx: 'WEEK_DAY_NM'},
             {
-                title: '납품대상', align: 'center', colModel: [
+                title: '작업지시<br>(주문)', align: 'center', colModel: [
                     {
                         title: '품', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'PART_CNT',
                         style: {'text-decoration': 'underline', 'cursor': 'pointer'},
@@ -179,14 +182,14 @@
                                 $cell = grid.getCell(ui);
                             let rowData = ui.rowData;
 
-                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind("click", function () {
                                     isProcessTargetListButtonClick = false;
 
-                                    changeProcessTargetBeforeForm(rowData.DT);
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT);
                                     openNewWindowMonthReportDetail('monthReportDetail');
                                 });
-                            }
+                            // }
                         }
                     },
                     {
@@ -207,20 +210,120 @@
                                 $cell = grid.getCell(ui);
                             let rowData = ui.rowData;
 
-                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
                                     isProcessTargetListButtonClick = false;
 
-                                    changeProcessTargetBeforeForm(rowData.DT);
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT);
                                     openNewWindowMonthReportDetail('monthReportDetail');
                                 });
-                            }
+                            // }
                         }
                     }
                 ]
             },
             {
-                title: '외주지정', align: 'center', colModel: [
+                title: '작업지시<br>(재고)', align: 'center', colModel: [
+                    {
+                        title: '품', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'STOCK_PART_CNT',
+                        style: {'text-decoration': 'underline', 'cursor': 'pointer'},
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind("click", function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT);
+                                    openNewWindowMonthReportDetail('monthReportDetail');
+                                });
+                            // }
+                        }
+                    },
+                    {
+                        title: 'EA', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'STOCK_PART_QTY',
+                        style: {'background': '#D6DCE4', 'text-decoration': 'underline', 'cursor': 'pointer'},
+                        render: function (ui) {
+                            const rowData = ui.rowData;
+
+                            switch (rowData.CAL_DT_NM) {
+                                case '합계':
+                                    return {style: {'background': '#FFFF00'}};
+                                case '총계':
+                                    return {style: {'background': '#FFE699'}};
+                            }
+                        },
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind('click', function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, '', 'Y');
+                                    openNewWindowMonthReportDetail('monthReportDetail');
+                                });
+                            // }
+                        }
+                    }
+                ]
+            },
+            {
+                title: '재고충당', align: 'center', colModel: [
+                    {
+                        title: '품', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'STOCK_OUT_CNT',
+                        style: {'text-decoration': 'underline', 'cursor': 'pointer'},
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind("click", function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT);
+                                    openNewWindowMonthReportDetail('monthReportDetail');
+                                });
+                            // }
+                        }
+                    },
+                    {
+                        title: 'EA', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'STOCK_OUT_QTY',
+                        style: {'background': '#D6DCE4', 'text-decoration': 'underline', 'cursor': 'pointer'},
+                        render: function (ui) {
+                            const rowData = ui.rowData;
+
+                            switch (rowData.CAL_DT_NM) {
+                                case '합계':
+                                    return {style: {'background': '#FFFF00'}};
+                                case '총계':
+                                    return {style: {'background': '#FFE699'}};
+                            }
+                        },
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind('click', function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT);
+                                    openNewWindowMonthReportDetail('monthReportDetail');
+                                });
+                            // }
+                        }
+                    }
+                ]
+            },
+            {
+                title: '외주가공', align: 'center', colModel: [
                     {
                         title: '품', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_CNT',
                         style: {'text-decoration': 'underline', 'cursor': 'pointer'},
@@ -229,14 +332,14 @@
                                 $cell = grid.getCell(ui);
                             let rowData = ui.rowData;
 
-                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind("click", function () {
                                     isProcessTargetListButtonClick = false;
 
-                                    changeProcessTargetBeforeForm(rowData.DT, '', 'Y');
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, '', 'Y');
                                     openNewWindowMonthReportDetail('monthReportDetail');
                                 });
-                            }
+                            // }
                         }
                     },
                     {
@@ -257,14 +360,64 @@
                                 $cell = grid.getCell(ui);
                             let rowData = ui.rowData;
 
-                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
                                     isProcessTargetListButtonClick = false;
 
-                                    changeProcessTargetBeforeForm(rowData.DT, '', 'Y');
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, 'Y');
                                     openNewWindowMonthReportDetail('monthReportDetail');
                                 });
+                            // }
+                        }
+                    }
+                ]
+            },
+            {
+                title: '가공중', align: 'center', colModel: [
+                    {
+                        title: '품', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'INNER_WORK_ING_CNT',
+                        style: {'text-decoration': 'underline', 'cursor': 'pointer'},
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind("click", function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, '');
+                                    openNewWindowMonthReportDetail('monthReportDetail');
+                                });
+                            // }
+                        }
+                    },
+                    {
+                        title: 'EA', minWidth: 50, maxWidth: 50, dataType: 'integer', format: '#,###', dataIndx: 'INNER_WORK_ING_QTY',
+                        style: {'background': '#D6DCE4', 'text-decoration': 'underline', 'cursor': 'pointer'},
+                        render: function (ui) {
+                            const rowData = ui.rowData;
+
+                            switch (rowData.CAL_DT_NM) {
+                                case '합계':
+                                    return {style: {'background': '#FFFF00'}};
+                                case '총계':
+                                    return {style: {'background': '#FFE699'}};
                             }
+                        },
+                        postRender: function (ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                                $cell.bind('click', function () {
+                                    isProcessTargetListButtonClick = false;
+
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, 'Y');
+                                    openNewWindowMonthReportDetail('monthReportDetail');
+                                });
+                            // }
                         }
                     }
                 ]
@@ -279,14 +432,14 @@
                                 $cell = grid.getCell(ui);
                             let rowData = ui.rowData;
 
-                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind("click", function () {
                                     isProcessTargetListButtonClick = false;
 
-                                    changeProcessTargetBeforeForm(rowData.DT, 'Y');
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, 'Y');
                                     openNewWindowMonthReportDetail('monthReportDetail');
                                 });
-                            }
+                            // }
                         }
                     },
                     {
@@ -307,14 +460,14 @@
                                 $cell = grid.getCell(ui);
                             let rowData = ui.rowData;
 
-                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
                                     isProcessTargetListButtonClick = false;
 
-                                    changeProcessTargetBeforeForm(rowData.DT, 'Y');
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, 'Y');
                                     openNewWindowMonthReportDetail('monthReportDetail');
                                 });
-                            }
+                            // }
                         }
                     }
                 ]
@@ -329,14 +482,14 @@
                                 $cell = grid.getCell(ui);
                             let rowData = ui.rowData;
 
-                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind("click", function () {
                                     isProcessTargetListButtonClick = false;
 
-                                    changeProcessTargetBeforeForm(rowData.DT, '', '', 'Y');
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, '', '', 'Y');
                                     openNewWindowMonthReportDetail('monthReportDetail');
                                 });
-                            }
+                            // }
                         }
                     },
                     {
@@ -357,14 +510,14 @@
                                 $cell = grid.getCell(ui);
                             let rowData = ui.rowData;
 
-                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
                                     isProcessTargetListButtonClick = false;
 
-                                    changeProcessTargetBeforeForm(rowData.DT, '', '', 'Y');
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, '', '', 'Y');
                                     openNewWindowMonthReportDetail('monthReportDetail');
                                 });
-                            }
+                            // }
                         }
                     }
                 ]
@@ -379,14 +532,14 @@
                                 $cell = grid.getCell(ui);
                             let rowData = ui.rowData;
 
-                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind("click", function () {
                                     isProcessTargetListButtonClick = false;
 
-                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', 'Y');
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, '', '', '', 'Y');
                                     openNewWindowMonthReportDetail('monthReportDetail');
                                 });
-                            }
+                            // }
                         }
                     },
                     {
@@ -407,14 +560,14 @@
                                 $cell = grid.getCell(ui);
                             let rowData = ui.rowData;
 
-                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
                                     isProcessTargetListButtonClick = false;
 
-                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', 'Y');
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, '', '', '', 'Y');
                                     openNewWindowMonthReportDetail('monthReportDetail');
                                 });
-                            }
+                            // }
                         }
                     }
                 ]
@@ -480,12 +633,12 @@
                                 $cell = grid.getCell(ui);
                             let rowData = ui.rowData;
 
-                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', '', 1);
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, '', '', '', '', 1);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
-                            }
+                            // }
                         }
                     },
                     {
@@ -506,12 +659,12 @@
                                 $cell = grid.getCell(ui);
                             let rowData = ui.rowData;
 
-                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', '', 1);
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, '', '', '', '', 1);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
-                            }
+                            // }
                         }
                     }
                 ]
@@ -536,12 +689,12 @@
                                 $cell = grid.getCell(ui);
                             let rowData = ui.rowData;
 
-                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', '', 2);
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, '', '', '', '', 2);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
-                            }
+                            // }
                         }
                     },
                     {
@@ -562,12 +715,12 @@
                                 $cell = grid.getCell(ui);
                             let rowData = ui.rowData;
 
-                            if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
+                            // if (!(rowData.CAL_DT_NM === '합계' || rowData.CAL_DT_NM === '총계')) {
                                 $cell.bind('click', function () {
-                                    changeProcessTargetBeforeForm(rowData.DT, '', '', '', '', 2);
+                                    changeProcessTargetBeforeForm(rowData.SEARCH_START_DT, rowData.SEARCH_END_DT, '', '', '', '', 2);
                                     openNewWindowMonthReportDetail('monthReportInspectionDetail');
                                 });
-                            }
+                            // }
                         }
                     }
                 ]
@@ -1258,8 +1411,9 @@
             changeTbody();
         };
 
-        const changeProcessTargetBeforeForm = function (a, b = '', c = '', d = '', e = '', f = '') {
-            $('#PROCESS_TARGET_BEFORE_FORM > #DT').val(a);
+        const changeProcessTargetBeforeForm = function (startDt, endDt, b = '', c = '', d = '', e = '', f = '') {
+            $('#PROCESS_TARGET_BEFORE_FORM > #SEARCH_START_DT').val(startDt);
+            $('#PROCESS_TARGET_BEFORE_FORM > #SEARCH_END_DT').val(endDt);
             $('#PROCESS_TARGET_BEFORE_FORM > #FACTORY_CLASSIFY_YN').val(b);
             $('#PROCESS_TARGET_BEFORE_FORM > #OUTSIDE_YN').val(c);
             $('#PROCESS_TARGET_BEFORE_FORM > #OUT_FINISH_YN').val(d);

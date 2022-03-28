@@ -96,6 +96,7 @@
             , A.SERIAL_NUM
             , A.COST_PER_HOUR
             , A.COMBO_BOX_SORT_NUM
+            , A.IF_USE_YN
         FROM TBL_EQUIP A
         WHERE A.EQUIP_SEQ = #{EQUIP_SEQ}
     </select>
@@ -108,12 +109,12 @@
                               , PROCESS_TYPE, EQUIP_TYPE, EQUIP_SIZE
                               , EQUIP_COMP_CD, FACTORY_AREA
                               , MAIN_USER_ID, SUB_USER_ID, PURCHASE_DT, RESELLER_CD, NOTE
-                              , PHOTO_GFILE_SEQ, ETC_GFILE_SEQ, INSERT_ID, MODEL_NUM, SERIAL_NUM, COST_PER_HOUR, COMBO_BOX_SORT_NUM)
+                              , PHOTO_GFILE_SEQ, ETC_GFILE_SEQ, INSERT_ID, MODEL_NUM, SERIAL_NUM, COST_PER_HOUR, COMBO_BOX_SORT_NUM, IF_USE_YN)
         VALUES (  #{EQUIP_SEQ}, #{EQUIP_ID}, #{EQUIP_KIND}, #{EQUIP_NM}
                 , #{PROCESS_TYPE, jdbcType=VARCHAR}, #{EQUIP_TYPE}, #{EQUIP_SIZE}
                 , #{EQUIP_COMP_CD}, #{FACTORY_AREA}
                 , #{MAIN_USER_ID}, #{SUB_USER_ID}, REPLACE(#{PURCHASE_DT},'/',space(0)), #{RESELLER_CD}, #{NOTE}
-                , #{PHOTO_GFILE_SEQ}, #{ETC_GFILE_SEQ}, #{LOGIN_USER_ID}, #{MODEL_NUM}, #{SERIAL_NUM}, #{COST_PER_HOUR}, #{COMBO_BOX_SORT_NUM})
+                , #{PHOTO_GFILE_SEQ}, #{ETC_GFILE_SEQ}, #{LOGIN_USER_ID}, #{MODEL_NUM}, #{SERIAL_NUM}, #{COST_PER_HOUR}, #{COMBO_BOX_SORT_NUM}, IFNULL(#{IF_USE_YN},'N'))
     </insert>
     <update id="updateMachineMaster" parameterType="java.util.HashMap">
         UPDATE TBL_EQUIP
@@ -141,6 +142,7 @@
             </if>
               , UPDATE_DT = NOW()
               , UPDATE_ID = #{LOGIN_USER_ID}
+              , IF_USE_YN = IFNULL(#{IF_USE_YN},'N')
         WHERE EQUIP_SEQ = #{EQUIP_SEQ}
     </update>
     <delete id="deleteMachineMaster" parameterType="java.util.HashMap">

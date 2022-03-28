@@ -15,5 +15,7 @@ public enum ActionType {
 
     /** D/B WORKER ACTION **/
     WK_LOGIN,
-    WK_LOGOUT
+    WK_LOGOUT,
+
+    NC_IF
 }
