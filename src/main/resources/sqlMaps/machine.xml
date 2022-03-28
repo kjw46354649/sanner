@@ -1099,7 +1099,7 @@
             A.SURFACE_TREAT, <!-- 표면처리 -->
             SF_GET_CODE_NM('1039', A.SURFACE_TREAT, #{LOGIN_LOCALE}) AS SURFACE_TREAT_NM,  <!-- 표면 처리 -->
             B.NOTE AS CONTROL_NOTE, <!-- 주문 확정 비고 -->
-            SF_GET_MCT_WORK_TIME(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MCT_WORK_TIME,	<!-- 작업 시간 (계획 + 실행) -->
+            <!-- SF_GET_MCT_WORK_TIME(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MCT_WORK_TIME,	 작업 시간 (계획 + 실행) 사용안함 20220323 -->
             A.MCT_WORK_TYPE, <!-- MCT 작업 구분 -->
             A.MCT_NOTE, <!-- MCT 가공계획 비고 -->
             IFNULL(SF_GET_CODE_NM('1011', A.MCT_WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS MCT_WORK_TYPE_NM, <!-- MCT 작업 구분 이름 -->

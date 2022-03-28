@@ -716,8 +716,6 @@
                      {title: '기기명', minWidth: 40, width: 60, datatype: 'string', dataIndx: 'EQUIP_NM'},
                      {title: '작업자', minWidth: 40, width: 80, dataType: 'string', dataIndx: 'NC_WORK_USER_NM'},
                      {title: 'R/T', minWidth: 50, width: 55, dataType: 'string', align: 'right', dataIndx: 'RECENT_WORKING_TIME'},
-                     // {title: 'WORK_STATUS', dataIndx: 'WORK_STATUS', hidden: true},
-                     // {title: 'WORK_STATUS_NM', dataIndx: 'WORK_STATUS_NM', hidden: true}
                 ]
             },
             {
@@ -740,59 +738,10 @@
                         }
                     },
                     {title: '가공위치', dataIndx: 'WORK_DIRECTION', minWidth: 30, width: 50},
-                    // {title: '작업내용', dataIndx: 'WORK_DESC', minWidth: 30, width: 80},
                     {title: '작업자', dataIndx: 'WORK_USER_NM', minWidth: 30, width: 100},
-                    /*{title: '파일', dataIndx: '', minWidth: 30, width: 60,
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let iconFiles = '';
-                            if(rowData.CAM_FILE_SEQ) iconFiles += '<span id="downloadCAMFIle" class="greenFileImageICon" style="cursor: pointer; margin-left:3px;"></span>&nbsp;&nbsp;';
-                            if(rowData.NC_FILE_SEQ) iconFiles += '<span id="downloadNCFile" class="purpleFileImageICon" style="cursor: pointer; margin-left:25px;"></span>';
-                            return iconFiles;
-                        },
-                        postRender: function (ui) {
-                            let grid = this;
-                            let $cell = grid.getCell(ui);
-                            let rowData = ui.rowData;
-                            $cell.find('#downloadCAMFIle').bind('click', function(e) {
-                                e.preventDefault();
-                                fnSingleFileDownloadFormPageAction(rowData.CAM_FILE_SEQ);
-                            });
-                            $cell.find('#downloadNCFile').bind('click', function(e) {
-                                e.preventDefault();
-                                fnSingleFileDownloadFormPageAction(rowData.NC_FILE_SEQ);
-                            });
-                        }
-                    },*/
-                    // {title: '비고 및 공유사항', dataIndx: 'NOTE', minWidth: 100, width: 150},
                     {title: '업데이트', dataIndx: 'CAM_FINISH_DT', minWidth: 75, width: 75}
                 ]
             },
-            // {title: 'MCT Actual', align: 'center',
-            //     colModel: [
-            //         {title: '1', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_1'},
-            //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_1'},
-            //         {title: 'STATUS_1', dataIndx: 'WORK_STATUS_1', hidden: true},
-            //         {title: '2', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_2'},
-            //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_2'},
-            //         {title: 'STATUS_2', dataIndx: 'WORK_STATUS_2', hidden: true},
-            //         {title: '3', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_3'},
-            //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_3'},
-            //         {title: 'STATUS_3', dataIndx: 'WORK_STATUS_3', hidden: true},
-            //         {title: '4', minWidth: 15, width: 50, dataIndx: 'WORK_EQUIP_NM_4'},
-            //         {title: 'R/T', minWidth: 40, width: 40, datatype: 'integer', dataIndx: 'WORK_WORKING_TIME_4'},
-            //         {title: 'STATUS_4', dataIndx: 'WORK_STATUS_4', hidden: true},
-            //     ]
-            // },
-            // {
-            //     title: '가공진행 현황', align: 'center', colModel: [
-            //         {title: 'NC', datatype: 'integer', dataIndx: 'PROCESS_NC', minWidth: 20, width: 30},
-            //         {title: '밀링', datatype: 'integer', dataIndx: 'PROCESS_MILLING', minWidth: 20, width: 30},
-            //         {title: '선반', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_RACK', minWidth: 20, width: 30},
-            //         {title: '연마', datatype: 'integer', dataIndx: 'PROCESS_PROGRESS_GRINDING', minWidth: 20, width: 30},
-            //     ]
-            // },
-            // {title: '예상가공<br>시간(M)', dataType: 'integer', dataIndx: 'MCT_WORK_TIME', minWidth: 15, width: 50},
             {title: '참<br>조', minWidth: 30, dataIndx: 'ETC_GFILE_SEQ', styleHead: {'background':'#a9d3f5'},
                 render: function (ui) {
                     let cellData = ui.cellData;
