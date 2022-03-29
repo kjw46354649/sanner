@@ -44,16 +44,15 @@ public class MailSenderAgent {
 
                 message.setFrom(environment.getRequiredProperty("smtp_useremail"), environment.getRequiredProperty("smtp_username"));
 
-//                String setToEmail [] = ((String)mailInfo.get("RECV_EMAIL")).split(",");
-                String setToEmail [] = {"tomes20@naver.com"};
+                String setToEmail [] = ((String)mailInfo.get("RECV_EMAIL")).split(",");
                 message.setTo(setToEmail);
 
-//                if(mailInfo.containsKey("CC_EMAIL") && !"".equals(mailInfo.get("CC_EMAIL"))){
-//                    String cc [] = ((String)mailInfo.get("CC_EMAIL")).split(",");
-//                    message.setCc(cc);
-//                }
+                if(mailInfo.containsKey("CC_EMAIL") && !"".equals(mailInfo.get("CC_EMAIL"))){
+                    String cc [] = ((String)mailInfo.get("CC_EMAIL")).split(",");
+                    message.setCc(cc);
+                }
 
-//                message.setBcc(new InternetAddress(environment.getRequiredProperty("smtp_cc_mail")));
+                message.setBcc(new InternetAddress(environment.getRequiredProperty("smtp_cc_mail")));
 
                 message.setSubject((String)mailInfo.get("TITLE"));
                 message.setText((String)mailInfo.get("CONTEXT"), true);
