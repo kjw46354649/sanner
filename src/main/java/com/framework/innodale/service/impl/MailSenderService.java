@@ -45,7 +45,7 @@ public class MailSenderService {
         try{
             String dbUrl = environment.getRequiredProperty("base.jdbc.url");
             // 운영 서버인 경우만 메일 발송 처리 된다.
-            if(CommonUtility.isScheduleRunning() && dbUrl.indexOf("106.240.243.250") >= 0){
+//            if(CommonUtility.isScheduleRunning() && dbUrl.indexOf("106.240.243.250") >= 0){
 
                 // Demon Key 생성, 자동화 발신 이메일 정보만 UPDATE 한다.
                 hashMap.put("SKEY", CommonUtility.getUUIDString("mail"));
@@ -70,7 +70,7 @@ public class MailSenderService {
                             if (mailAttachFiles.size() > 0) {
                                 Map<String, Object> fileInfo = mailAttachFiles.get(0);
                                 int fileTotalSize = Integer.parseInt(String.valueOf(fileInfo.get("TOTAL_FILE_SIZE")));
-                                if (fileTotalSize > 30){    // 30M byte 이상인 경우 압축 처리하고 그 이하 인 경우는 그대로 발송한다.
+                                if (fileTotalSize > 20){    // 30M byte 이상인 경우 압축 처리하고 그 이하 인 경우는 그대로 발송한다.
                                     // 0. 디렉토리 및 임시 정자 파일명을 저장한다.
                                     List<Map<String, Object>> newZipAttachFile = new ArrayList<Map<String, Object>>();
                                     SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss", new Locale("ko", "KR"));
@@ -127,7 +127,7 @@ public class MailSenderService {
                     // 5 second Next Mail Group 조회
                     Thread.sleep(5000);
                 }
-            }
+//            }
         } catch(Exception e) {
             e.printStackTrace();
             log.error("Exception in manageMailSenderActionService Service: " + e.toString());

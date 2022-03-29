@@ -1363,8 +1363,8 @@
                 })
             });
             if($("#common_file_download_form").find("#callElement").val() == 'REQUEST_OUTSIDE_FILE_UPLOAD' || $("#common_file_download_form").find("#callElement").val() == 'CANCEL_REQUEST_OUTSIDE_FILE_UPLOAD') {
-                if(orgFileSize + uploadFileSize > (22 * 1024 * 1024)) { // 파일사이즈가 22mb를 넘을경우
-                    fnAlert(null, "파일 첨부는 최대 22MB까지 가능합니다.");
+                if(orgFileSize + uploadFileSize > (50 * 1024 * 1024)) { // 파일사이즈가 50mb를 넘을경우
+                    fnAlert(null, "파일 첨부는 최대 50MB까지 가능합니다.");
                     processFlag = false;
                 }
             }

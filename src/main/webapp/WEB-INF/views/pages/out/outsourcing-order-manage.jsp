@@ -2316,8 +2316,8 @@
             $.each(cancelFileData,function (idx,Item) {
                 fileSize += Item.FILE_SIZE;
             })
-            if(fileSize > (22 * 1024 * 1024)) {
-                fnAlert(null, "파일 첨부는 최대 22MB까지 가능합니다.");
+            if(fileSize > (50 * 1024 * 1024)) {
+                fnAlert(null, "파일 첨부는 최대 50MB까지 가능합니다.");
                 return false;
             }
 
@@ -2469,8 +2469,8 @@
             $.each(fileData,function (idx,Item) {
                 fileSize += Item.FILE_SIZE;
             })
-            if(fileSize > (22 * 1024 * 1024)) {
-                fnAlert(null, "파일 첨부는 최대 22MB까지 가능합니다.");
+            if(fileSize > (50 * 1024 * 1024)) {
+                fnAlert(null, "파일 첨부는 최대 50MB까지 가능합니다.");
                 return false;
             }
 
