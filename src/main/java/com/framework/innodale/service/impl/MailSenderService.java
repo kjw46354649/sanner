@@ -45,7 +45,7 @@ public class MailSenderService {
         try{
             String dbUrl = environment.getRequiredProperty("base.jdbc.url");
             // 운영 서버인 경우만 메일 발송 처리 된다.
-            if(CommonUtility.isScheduleRunning() && dbUrl.indexOf("106.240.243.250") >= 0){
+//            if(CommonUtility.isScheduleRunning() && dbUrl.indexOf("106.240.243.250") >= 0){
 
                 // Demon Key 생성, 자동화 발신 이메일 정보만 UPDATE 한다.
                 hashMap.put("SKEY", CommonUtility.getUUIDString("mail"));
@@ -127,7 +127,7 @@ public class MailSenderService {
                     // 5 second Next Mail Group 조회
                     Thread.sleep(5000);
                 }
-            }
+//            }
         } catch(Exception e) {
             e.printStackTrace();
             log.error("Exception in manageMailSenderActionService Service: " + e.toString());

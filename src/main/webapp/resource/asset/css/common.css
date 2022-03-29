@@ -393,6 +393,7 @@ table.boardList .txtP{color: #7030a0;}
 .wd_60{width:60px !important;}
 .wd_65{width:65px !important;}
 .wd_70{width:70px !important;}
+.wd_75{width:75px !important;}
 .wd_80{width:80px !important;}
 .wd_85{width:85px !important;}
 .wd_90{width:90px !important; }
@@ -564,6 +565,22 @@ input[type=number] {
   0% { color: #ffffff; }
   100% { color: blue; }
 }
+
+.blink-red {
+  -webkit-animation: blink-red 2s linear 2s infinite normal;
+  animation: blink-red 2s linear 2s infinite normal;
+}
+
+@-webkit-keyframes blink-red {
+  0% { color: rgb(255, 255, 255); }
+  100% { color: #9b1313; }
+}
+
+@keyframes blink-red {
+  0% { color: #ffffff; }
+  100% { color: #9b1313; }
+}
+
 .mb05 {
   margin-bottom: 5px;
 }
