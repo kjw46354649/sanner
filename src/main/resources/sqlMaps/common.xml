@@ -129,14 +129,17 @@
         WHERE 1 = 1
     </select>
 
+    <!-- MAIL BOX 에서 호출 하여 사용한다. -->
     <select id="selectGfileFileListInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             A.GFILE_SEQ, B.FILE_SEQ, B.ORGINAL_FILE_NM, B.FILE_PATH, TIME_PATH, B.FILE_SIZE,
+            (SELECT ROUND(SUM(B.FILE_SIZE)/1024/1024, 0) FROM TBL_FILE B WHERE A.GFILE_SEQ = B.GFILE_SEQ) AS TOTAL_FILE_SIZE, <!-- 40Mbyte over check -->
             SF_GET_DATE_F(B.INSERT_DT,'YYYY','') AS INSERT_DT
         FROM jmes.TBL_FILE_GROUP A
                  INNER JOIN jmes.TBL_FILE B ON A.GFILE_SEQ = B.GFILE_SEQ
         WHERE A.GFILE_SEQ  = #{GFILE_SEQ}
     </select>
+
     <select id="selectFileListForDrawingCheck" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT B.GFILE_SEQ, B.FILE_NM, B.FILE_PATH, B.TIME_PATH, B.ORGINAL_FILE_NM, B.FILE_TYPE, B.FILE_EXT
         FROM TBL_FILE_GROUP A

@@ -42,21 +42,12 @@ public class MailSenderAgent {
 
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-                // message.setReplyTo(new InternetAddress(environment.getRequiredProperty("smtp_useremail")));
                 message.setFrom(environment.getRequiredProperty("smtp_useremail"), environment.getRequiredProperty("smtp_username"));
-//                message.setFrom((String)mailInfo.get("SEND_EMAIL"), (String)mailInfo.get("SEND_NAME"));
 
                 String setToEmail [] = ((String)mailInfo.get("RECV_EMAIL")).split(",");
                 message.setTo(setToEmail);
 
-//                if(mailInfo.containsKey("HCC_EMAIL") && !"".equals(mailInfo.get("HCC_EMAIL"))){
-//                    // 숨은 참조
-//                    String hcc [] = ((String)mailInfo.get("HCC_EMAIL")).split(",");
-//                    message.setBcc(hcc);
-//                }
                 if(mailInfo.containsKey("CC_EMAIL") && !"".equals(mailInfo.get("CC_EMAIL"))){
-                    // 참조
-                    //message.setCc(new InternetAddress((String)mailInfo.get("CC_EMAIL")));
                     String cc [] = ((String)mailInfo.get("CC_EMAIL")).split(",");
                     message.setCc(cc);
                 }
@@ -81,27 +72,4 @@ public class MailSenderAgent {
 
         logger.debug("Send Email Success!");
     }
-
-
-//    private JavaMailSender javaMailSender(String email, String password) {
-//        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-//
-//        Properties mailProperties = new Properties();
-//        mailProperties.put("mail.smtp.auth", smtpAuth);
-//        mailProperties.put("mail.smtp.starttls.enable", smtpSsl);
-////	    mailProperties.put("mail.smtp.starttls.required", startlls_required);
-//        mailProperties.put("mail.smtp.socketFactory.port", smtpPort);
-//        mailProperties.put("mail.smtp.debug", true);
-//        mailProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-//        mailProperties.put("mail.smtp.socketFactory.fallback", true);
-//
-//        mailSender.setJavaMailProperties(mailProperties);
-//        mailSender.setHost(smtpHost);
-//        mailSender.setPort(Integer.parseInt(smtpPort));
-//        mailSender.setProtocol(smtpProtocol);
-//        mailSender.setUsername(email);
-//        mailSender.setPassword(password);
-//
-//        return mailSender;
-//    }
 }

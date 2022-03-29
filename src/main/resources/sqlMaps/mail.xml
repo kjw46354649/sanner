@@ -5,7 +5,7 @@
 
     <!-- STATUS EMSTS001: 메일 발송 등록, EMSTS002: 메일 재발 송, EMSTS005: 메일 발송 대기, EMSTS999: 메일 발송 성공, EMSTS010:메일 발송 오류  -->
     <update id="setSendEmailSessionKey" parameterType="java.util.HashMap" >
-		<![CDATA[
+        <![CDATA[
         UPDATE TBL_MAIL_BOX
         SET STATUS = 'EMSTS005',
             SKEY = #{SKEY}
@@ -13,7 +13,7 @@
           AND STATUS IN ('EMSTS001', 'EMSTS002')
         LIMIT 10
         ]]>
-	</update>
+    </update>
 
     <update id="updateApplicationScheduleMailSenderInit" parameterType="java.util.HashMap">
         UPDATE TBL_MAIL_BOX
@@ -24,7 +24,7 @@
     </update>
 
     <select id="selectSendMailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		<![CDATA[
+        <![CDATA[
         SELECT
             A.MAIL_BOX_SEQ,
             A.TITLE,
@@ -42,7 +42,7 @@
           AND SKEY = #{SKEY}
           AND STATUS = 'EMSTS005'
         ]]>
-	</select>
+    </select>
 
     <update id="updateEmailCondi" parameterType="java.util.HashMap" >
         UPDATE TBL_MAIL_BOX

@@ -211,8 +211,8 @@
             </div>
         </form>
         <div class="tableWrap">
-            <div class="conWrap" style="display: flex;width: 100%;">
-                <div id="main_column_draw_div" style="width: 54%;height: 630px;margin-right: 15px;display: none;">
+            <div class="conWrap" style="display: flex;width: 100%;height: 100%;">
+                <div id="main_column_draw_div" style="width: 54%;height: auto;margin-right: 15px;display: none;">
                     <!--도면삽입-->
                     <img id="create_control_img" src="/resource/main/blank.jpg" style="width: 100%;height: 100%;max-height: inherit;max-width: inherit;">
                 </div>

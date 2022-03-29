@@ -9,10 +9,14 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class CommonUtility {
 
@@ -494,6 +498,84 @@ public class CommonUtility {
                 throw new Exception(
                         "Fail to create a directory for attached file [" + filePath + "]");
             }
+        }
+    }
+
+    /**
+     * Folder Copy
+     * @param sourceDir
+     * @param targetDir
+     * @throws IOException
+     */
+    public static void copyTransferFolder(File sourceDir, File targetDir) throws IOException {
+        if (sourceDir.isDirectory()) {
+            String[] files = sourceDir.list();
+            for (int i = 0; i < files.length; i++) {
+                String file = files[i];
+                copyTransferFolder(new File(sourceDir, file), new File(targetDir, file));
+            }
+        } else {
+            copyTransferFile(sourceDir, targetDir);
+        }
+    }
+
+    /**
+	 * File Copy
+     * @param sourceFile
+     * @param targetFile
+     * @throws IOException
+     */
+    public static void copyTransferFile(File sourceFile, File targetFile) throws IOException {
+
+    	String sTargetPath = targetFile.getParent();
+    	if(!new File(sTargetPath).exists()){
+    		targetFile.mkdirs();
+    	}
+    	Files.copy(sourceFile.toPath(), targetFile.toPath(), REPLACE_EXISTING);
+    }
+
+    /**
+     * Folder in File Delete
+     * @param sourceDir
+     * @throws IOException
+     */
+    public static void deleteFolder(String sourceDir) throws IOException {
+        deleteFolder(new File(sourceDir));
+    }
+
+    /**
+     * Folder in File Delete
+     *
+     * @param sourceDir
+     */
+    public static void deleteFolder(File sourceDir) throws IOException {
+        if (sourceDir.isDirectory()) {
+            String[] files = sourceDir.list();
+            for (int i = 0; i < files.length; i++) {
+                String file = files[i];
+                deleteFolder(new File(sourceDir, file));
+            }
+            sourceDir.delete();
+        } else {
+            deleteFile(sourceDir);
+        }
+    }
+
+    /**
+     * File Delete
+     * @param sourceFile
+     */
+    public static void deleteFile(String sourceFile) throws IOException {
+        deleteFile(new File(sourceFile));
+    }
+
+    /**
+     * Folder in File Delete
+     * @param sourceDir
+     */
+    public static void deleteFile(File sourceDir) throws IOException {
+        if (sourceDir.exists()){
+            Files.delete(Paths.get(sourceDir.getAbsolutePath()));
         }
     }
 
