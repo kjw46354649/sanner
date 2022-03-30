@@ -4,7 +4,7 @@
 <mapper namespace="drawingMapper">
 
     <select id="selectDrawingEquipmentInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT A.EQUIP_SEQ, A.EQUIP_NM, A.FACTORY_AREA, B.USER_ID, B.USER_NM, B.PHOTO_GFILE_SEQ
+        SELECT A.EQUIP_SEQ, A.EQUIP_NM, A.FACTORY_AREA, B.USER_ID, B.USER_NM, B.PHOTO_GFILE_SEQ, IFNULL(A.IF_USE_YN, 'N') AS IF_USE_YN
         FROM TBL_EQUIP A
         	LEFT OUTER JOIN TBL_USER B ON A.LOGIN_USER_ID = B.USER_ID
         WHERE 1 = 1
@@ -26,7 +26,7 @@
     </select>
 
     <select id="selectDrawingEquipment" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT EQUIP_SEQ, EQUIP_NM, FACTORY_AREA
+        SELECT EQUIP_SEQ, EQUIP_NM, FACTORY_AREA, IFNULL(IF_USE_YN, 'N') AS IF_USE_YN
         FROM TBL_EQUIP
         WHERE 1 = 1
             AND EQUIP_KIND = '1'
@@ -182,7 +182,7 @@
                  ELSE Z.ORDER_QTY
             END AS ORDER_QTY_INFO,<!--수량에 대칭 추가 -->
             CONCAT(IFNULL(Z.NOTE, SPACE(0)), ' ', IFNULL(Z.MATERIAL_NOTE, SPACE(0))) AS NOTE, Z.MCT_NOTE,
-            jmes.SF_GET_DATE_F(Y.INSERT_DT, 'YYYY', '') AS INSPECT_DT,
+            DATE_FORMAT(Y.INSERT_DT,'%y.%m.%d') AS INSPECT_DT,
             jmes.SF_GET_CODE_NM('1040', Y.INSPECT_GRADE, 'EN') AS INSPECT_GRADE_NM,
             CASE WHEN Y.INSPECT_TYPE = '1' THEN
                     CASE WHEN jmes.SF_GET_CODE_NM('1019', Y.INSPECT_RESULT, 'EN') IS NULL THEN jmes.SF_GET_CODE_NM('1020', Y.INSPECT_RESULT, 'EN')
@@ -190,7 +190,29 @@
                     END
                  WHEN Y.INSPECT_TYPE = '2' THEN jmes.SF_GET_CODE_NM('1021', Y.INSPECT_RESULT, 'EN')
             END AS INSPECT_RESULT_NM,
-            jmes.SF_GET_CODE_NM('1032', Y.ERROR_REASON, 'EN') AS ERROR_REASON_NM, Z.WORK_STATUS
+            jmes.SF_GET_CODE_NM('1032', Y.ERROR_REASON, 'EN') AS ERROR_REASON_NM, Z.WORK_STATUS,
+            (
+                SELECT CONCAT(SF_GET_EQUIP_NM(M.EQUIP_SEQ), <![CDATA[ '<br>' ]]>, SF_GET_USER_NM(M.WORK_USER_ID))
+                FROM TBL_MCT_WORK M
+                WHERE M.DEL_YN = 'N'
+                    AND M.CONTROL_SEQ = Z.CONTROL_SEQ
+                    AND M.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ
+                    AND M.MCT_WORK_SEQ = (
+                        SELECT MAX(N.MCT_WORK_SEQ)
+                        FROM TBL_MCT_WORK N
+                        WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                            AND M.CONTROL_DETAIL_SEQ = N.CONTROL_DETAIL_SEQ
+                            AND N.WORK_STATUS = 'DBS030'
+                            AND N.DEL_YN = 'N'
+                    )
+            ) AS LATEST_PROCESS,
+            Z.FINISH_QTY,
+            Z.GOAL_QTY,
+            Z.COMPLETE_CYCLE_COUNT,
+            Z.UNIT_QTY,
+            Z.LATEST_CYCLE_TIME,
+            Z.WORK_ACTIVE_TIME,
+            Z.WORK_STOP_TIME
         FROM (
             SELECT
                 'CUR' AS DATA_TYPE, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.MCT_WORK_SEQ, D.CONTROL_NUM,
@@ -212,8 +234,18 @@
                 IFNULL(jmes.SF_GET_SIDE_QTY(C.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0) AS OTHER_SIDE_QTY,<!--대칭_대칭 -->
                 D.SAME_SIDE_YN,<!-- 대칭 여부 -->
                 jmes.SF_GET_DATE_F(C.INNER_DUE_DT, '', '') AS INNER_DUE_DT,<!--내부가공납기 -->
-                D.NOTE AS NOTE, C.MATERIAL_NOTE, C.MCT_NOTE
-            FROM TBL_MCT_WORK A
+                D.NOTE AS NOTE, C.MATERIAL_NOTE, C.MCT_NOTE,
+                D.ORDER_COMP_CD,
+                C.MATERIAL_TYPE,
+                C.SIZE_TXT,
+                A.FINISH_QTY,
+                A.GOAL_QTY,
+                A.COMPLETE_CYCLE_COUNT,
+                A.UNIT_QTY,
+                A.LATEST_CYCLE_TIME,
+                A.WORK_ACTIVE_TIME,
+                A.WORK_STOP_TIME
+        FROM TBL_MCT_WORK A
                 INNER JOIN TBL_CONTROL_PART C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                 INNER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND D.DEL_YN = 'N'
             WHERE 1 = 1
@@ -228,18 +260,16 @@
         INNER JOIN TBL_CONTROL_BARCODE X ON Z.CONTROL_SEQ = X.CONTROL_SEQ AND Z.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
                 AND Z.CONTROL_VER = X.CONTROL_VER AND IFNULL(Z.DRAWING_VER, SPACE(0)) = IFNULL(X.DRAWING_VER, SPACE(0)) AND X.DEL_YN = 'N'
         LEFT OUTER JOIN TBL_INSPECT Y ON 1 = 1
-            AND Y.CONTROL_SEQ = Z.CONTROL_SEQ AND Y.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ
-            AND Y.INSPECT_SEQ =
-                (SELECT MAX(C.INSPECT_SEQ)
-                        FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_INSPECT C
-                        WHERE 1 = 1 AND A.DEL_YN = 'N' AND B.INNER_WORK_FINISH_DT IS NOT NULL
-                            AND A.CONTROL_SEQ = B.CONTROL_SEQ
-                            AND B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                            AND C.INSPECT_RESULT IS NOT NULL
-                            AND B.DRAWING_NUM = Z.DRAWING_NUM
-                            AND C.INSPECT_SEQ = (SELECT MAX(G.INSPECT_SEQ) FROM TBL_INSPECT G WHERE C.CONTROL_SEQ = G.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ)
-                )
-        WHERE 1 = 1
+            AND Y.INSPECT_SEQ = (
+                SELECT MAX(C.INSPECT_SEQ)
+                FROM TBL_CONTROL A
+                    INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
+                    INNER JOIN TBL_INSPECT C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND C.INSPECT_NUM = 1
+                WHERE A.DEL_YN = 'N'
+                    AND A.ORDER_COMP_CD = Z.ORDER_COMP_CD
+                    AND B.SIZE_TXT = Z.SIZE_TXT
+                    AND B.MATERIAL_TYPE = Z.MATERIAL_TYPE
+            )
     </select>
 
     <select id="selectDrawingBoardWorkPlanList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -654,11 +684,12 @@
                 GROUP BY X.MCT_WORK_SEQ
             ) B ON B.MCT_WORK_SEQ = A.MCT_WORK_SEQ
         SET
-            IF_WORK_START_DT = CASE WHEN IF_WORK_START_DT IS NULL AND #{active_type} = 'PGM_ACTIVE' THEN #{event_time} END,
+            A.IF_WORK_START_DT = CASE WHEN IF_WORK_START_DT IS NULL AND #{active_type} = 'PGM_ACTIVE' THEN #{event_time} ELSE A.IF_WORK_START_DT END,
             A.WORK_ACTIVE_TIME = B.ACTIVE_TOTAL,
             A.WORK_STOP_TIME = B.STOP_TOTAL,
             A.WORK_STATUS = CASE WHEN #{active_type} = 'PGM_ACTIVE' THEN 'DBS020'
                                  WHEN #{active_type} = 'PGM_STOP' THEN 'DBS010'
+                                 ELSE A.WORK_STATUS
                             END,
             <if test='cycleCheck != null and cycleCheck == "Y" and active_type == "PGM_STOP"'>
                 COMPLETE_CYCLE_COUNT = (IFNULL(A.COMPLETE_CYCLE_COUNT,0) + 1),
@@ -668,5 +699,46 @@
         WHERE A.MCT_WORK_SEQ = B.MCT_WORK_SEQ
             AND A.DEL_YN = 'N'
     </update>
+
+    <select id="selectDrawingQualityHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER () OVER(ORDER BY C.INSERT_DT DESC) AS RNUM,
+            SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_NUM,
+            B.IMG_GFILE_SEQ,
+            SF_GET_DATE_F(C.INSERT_DT,'YY','') AS INSPECT_DT,
+            C.INSPECT_GRADE,
+            SF_GET_CODE_NM('1040', C.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM,
+            C.ERROR_PROCESS,
+            C.ERROR_ACTION,
+            C.ERROR_REASON,
+            IFNULL((SELECT NOTE FROM TBL_CODE WHERE HIGH_CD = '1040' AND CODE_CD = C.INSPECT_GRADE),SPACE(0)) AS INSPECT_GRADE_NOTE,
+            IFNULL(CASE WHEN C.INSPECT_TYPE = '1' THEN CASE WHEN C.INSPECT_GRADE IN ('GRD030', 'GRD040') THEN SF_GET_CODE_NM('1019', C.INSPECT_RESULT, #{LOGIN_LOCALE}) END
+                 WHEN C.INSPECT_TYPE = '2' THEN SF_GET_CODE_NM('1021', C.INSPECT_RESULT, #{LOGIN_LOCALE})
+            END,SPACE(0)) AS INSPECT_RESULT_NM,
+            IFNULL(SF_GET_CODE_NM('1010', C.ERROR_PROCESS, #{LOGIN_LOCALE}),SPACE(0)) AS ERROR_PROCESS_NM,
+            IFNULL(SF_GET_CODE_NM('1032', C.ERROR_REASON, #{LOGIN_LOCALE}),SPACE(0)) AS ERROR_REASON_NM,
+            IFNULL(SF_GET_CODE_NM('1025', C.ERROR_ACTION, #{LOGIN_LOCALE}),SPACE(0)) AS ERROR_ACTION_NM,
+            IFNULL(C.ERROR_NOTE,SPACE(0)) AS ERROR_NOTE
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+            INNER JOIN TBL_INSPECT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                AND C.INSPECT_SEQ = (
+                    SELECT MAX(Q.INSPECT_SEQ)
+                    FROM TBL_INSPECT Q
+                    WHERE Q.CONTROL_SEQ = C.CONTROL_SEQ
+                      AND Q.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                      AND Q.INSPECT_NUM = 1
+                )
+        WHERE A.DEL_YN = 'N'
+          AND (A.ORDER_COMP_CD , B.MATERIAL_TYPE, B.SIZE_TXT) IN (
+            SELECT X.ORDER_COMP_CD, Y.MATERIAL_TYPE, Y.SIZE_TXT
+            FROM TBL_CONTROL X
+                INNER JOIN TBL_CONTROL_PART Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ
+            WHERE X.DEL_YN = 'N'
+                AND X.CONTROL_SEQ = #{CONTROL_SEQ}
+                AND Y.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+        )
+        ORDER BY C.INSERT_DT DESC
+    </select>
 
 </mapper>
