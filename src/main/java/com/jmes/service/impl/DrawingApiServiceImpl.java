@@ -48,7 +48,6 @@ public class DrawingApiServiceImpl implements DrawingApiService {
                 map.put("queryId", "drawingMapper.updateIfWorkingTime");
                 innodaleDao.update(map);
 
-                System.out.println("map >>>>>>>>>>>>>>>>>>>> " + map);
                 System.out.println("dataMap >>>>>>>>>>>>>>>>>>>> " + dataMap);
 
                 if(!dataMap.isEmpty()) {
@@ -60,7 +59,8 @@ public class DrawingApiServiceImpl implements DrawingApiService {
                     notificationMessage.setList(currList);
                     notificationMessage.setEquipNm(dataMap.keySet().toString());
 
-                    simpMessagingTemplate.convertAndSend("/topic/notice", dataMap);
+//                    simpMessagingTemplate.convertAndSend("/topic/notice", dataMap);
+                    simpMessagingTemplate.convertAndSend("/topic/notice", notificationMessage);
                 }
             }
         }
