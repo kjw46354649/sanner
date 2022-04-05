@@ -382,7 +382,10 @@ table.boardList .txtP{color: #7030a0;}
 .mt-10{margin-top: 10px !important}
 .mt-15{margin-top: 15px !important}
 .mt-20{margin-top: 20px !important}
+.mt-25{margin-top: 25px !important}
+.mt-30{margin-top: 30px !important}
 
+.mb-05{margin-bottom: 5px !important}
 .mb-10{margin-bottom: 10px !important}
 .mb-15{margin-bottom: 15px !important}
 .mb-20{margin-bottom: 20px !important}
@@ -398,8 +401,12 @@ table.boardList .txtP{color: #7030a0;}
 .wd_85{width:85px !important;}
 .wd_90{width:90px !important; }
 .wd_100{width:100px !important; }
+.wd_110{width:110px !important; }
+.wd_120{width:120px !important; }
 .wd_130{width:130px !important; }
+.wd_140{width:140px !important; }
 .wd_150{width:150px !important; }
+.wd_160{width:160px !important; }
 .wd_200{width:200px !important; }
 .wd_230{width:230px !important; }
 .wd_250{width:250px !important; }
@@ -408,6 +415,8 @@ table.boardList .txtP{color: #7030a0;}
 .wd_400{width:400px !important; }
 .wd_450{width:450px !important; }
 .wd_500{width:500px !important; }
+.wd_515{width:515px !important; }
+.wd_520{width:520px !important; }
 .wd_542{width:542px !important; }
 
 /* height */
@@ -421,6 +430,7 @@ table.boardList .txtP{color: #7030a0;}
 .hg_45{height:45px !important;font-size:15px !important;line-height: 43px !important}
 .hg_50{height:50px !important;font-size:16px !important;line-height: 48px !important}
 .hg_55{height:55px !important;font-size:17px !important;line-height: 53px !important}
+.hg_80{height:80px !important;font-size:18px !important;}
 
 /* popup */
 .popup_container { z-index: 1050; position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
