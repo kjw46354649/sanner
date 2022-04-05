@@ -666,7 +666,7 @@
             // {title: '도면번호', align: 'left', width: 150, dataIndx: 'CONCAT_DRAWING_NUM', hidden: true},
             {title: '규격', dataIndx: 'STANDARD_SIZE', minWidth: 40, width: 80},
             {title: '소재 Size', dataIndx: 'MATERAIL_ORDER_SIZE', minWidth: 40, width: 80},
-            {title: '수량<br>추가', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', width: 50, editable: false},
+            {title: '조정<br>수량', dataType: 'string', dataIndx: 'ADDITIONAL_QTY', width: 50, editable: false},
             {title: '발주<br>수량', dataType: 'string', dataIndx: 'ORDER_QTY', width: 50, editable: false,
                 render: function (ui) {
                     let cellData = ui.cellData;
@@ -887,6 +887,8 @@
             if (rowData.ORIGINAL_SIDE_QTY) controlPartQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.OTHER_SIDE_QTY + ") </span>";
             if(rowData.ADDITIONAL_QTY > 0) {
                 controlPartQty += (" + " + rowData.ADDITIONAL_QTY);
+            }else {
+                controlPartQty += (" - " + Math.abs(rowData.ADDITIONAL_QTY));
             }
             $("#cam_work_manage_pop_form").find("#CONTROL_PART_QTY").html(controlPartQty || '');
             let dueOutDt = rowData.INNER_DUE_DT;

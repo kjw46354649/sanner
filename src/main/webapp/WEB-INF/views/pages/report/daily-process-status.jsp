@@ -222,7 +222,7 @@
                 }
             },
             {title: '가공<br>납기', minWidth: 40, maxWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT'},
-            {title: '수량<br>추가', minWidth: 40, dataIndx: 'ADDITIONAL_QTY'},
+            {title: '조정<br>수량', minWidth: 40, dataIndx: 'ADDITIONAL_QTY'},
             {title: '발주<br>수량', minWidth: 40, maxWidth: 40, dataIndx: 'PART_QTY'},
             {title: '가공완료<br>일시', minWidth: 75, maxWidth: 75, dataIndx: 'INNER_WORK_FINISH_DT'},
             {title: '소요<br>시간(분)', align: 'right', minWidth: 55, dataIndx: 'WORK_TIME'},

@@ -96,7 +96,7 @@
             {title: '규격', width: 110, dataIndx: 'SIZE_TXT'},
             {title: '소재<br>종류', width: 80, dataIndx: 'MATERIAL_DETAIL_NM'},
             {title: '표면처리', width: 80, dataIndx: 'SURFACE_TREAT_NM'},
-            {title: '수량<br>추가', dataIndx: 'ADDITIONAL_QTY'},
+            {title: '조정<br>수량', dataIndx: 'ADDITIONAL_QTY'},
             {title: '발주<br>수량', dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: '대칭', align: 'center', colModel: [

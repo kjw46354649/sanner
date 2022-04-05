@@ -955,7 +955,7 @@
                     rowData.INNER_DUE_DT_COPY = ui.cellData;
                 }
             },
-            {title: '수량<br>추가', dataType: 'integer', format: '#,###', dataIndx: 'ADDITIONAL_QTY',
+            {title: '조정<br>수량', dataType: 'integer', format: '#,###', dataIndx: 'ADDITIONAL_QTY',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;

@@ -615,7 +615,7 @@
                     });
                 }
             },
-            {title: '수량<br>추가', width: 50, dataIndx: 'ADDITIONAL_QTY'},
+            {title: '조정<br>수량', width: 50, dataIndx: 'ADDITIONAL_QTY'},
             {title: '발주<br>수량', width: 50, dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: 'CAD 파일', align: 'center',
@@ -1108,6 +1108,8 @@
             if (rowData.ORIGINAL_SIDE_QTY) controlPartQty += " <span style='color: red'> ( " + rowData.ORIGINAL_SIDE_QTY + ", " + rowData.OTHER_SIDE_QTY + ") </span>";
             if(rowData.ADDITIONAL_QTY > 0) {
                 controlPartQty += (' + ' + rowData.ADDITIONAL_QTY);
+            }else {
+                controlPartQty += (' - '+ Math.abs(rowData.ADDITIONAL_QTY));
             }
             $("#cam_work_history_pop_form").find("#CONTROL_PART_QTY").html(controlPartQty || '');
             let dueOutDt = rowData.INNER_DUE_DT;

@@ -558,7 +558,7 @@
                 editable: true
             },
             {title: '입고일시', width: 100, dataIndx: 'OUTSIDE_IN_DT2'},
-            {title: '수량<br>추가', dataType: 'integer', dataIndx: 'ADDITIONAL_QTY'},
+            {title: '조정<br>수량', dataType: 'integer', dataIndx: 'ADDITIONAL_QTY'},
             {
                 title: '발주<br>수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY',
                 render: function (ui) {
@@ -947,7 +947,7 @@
             },
             {title: 'ORIGINAL_SIDE_QTY', dataIndx: 'DNJSCLD', hidden: true},
             {title: 'OTHER_SIDE_QTY', dataIndx: 'EOCLD', hidden: true},
-            {title: '수량<br>추가', dataIndx: 'ADDITIONAL_QTY'},
+            {title: '조정<br>수량', dataIndx: 'ADDITIONAL_QTY'},
             {title: '발주<br>수량', dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: '소재<br>제공', minWidth: 30, width: 40, dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',
@@ -1233,7 +1233,7 @@
             },
             {title: 'ORIGINAL_SIDE_QTY', dataIndx: 'DNJSCLD', hidden: true},
             {title: 'OTHER_SIDE_QTY', dataIndx: 'EOCLD', hidden: true},
-            {title: '수량<br>추가', dataIndx: 'ADDITIONAL_QTY'},
+            {title: '조정<br>수량', dataIndx: 'ADDITIONAL_QTY'},
             {title: '발주<br>수량', dataIndx: 'CONTROL_PART_QTY'},
             {
                 title: '소재<br>제공', dataType: 'bool', dataIndx: 'OUTSIDE_MATERIAL_SUPPLY_YN',

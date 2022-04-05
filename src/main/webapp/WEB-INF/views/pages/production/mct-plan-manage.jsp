@@ -514,7 +514,7 @@
                     }
                 }
             },
-            {title: '수량<br>추가', dataType: 'integer', dataIndx: 'ADDITIONAL_QTY'},
+            {title: '조정<br>수량', dataType: 'integer', dataIndx: 'ADDITIONAL_QTY'},
             {title: '발주<br>수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY'},
             {title: '규격', width: 100, dataIndx: 'STANDARD_SIZE'},
             {title: '주문소재 Size', width: 100, dataIndx: 'MATERAIL_ORDER_SIZE'},
