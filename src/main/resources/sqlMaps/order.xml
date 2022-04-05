@@ -4760,10 +4760,10 @@
                      (SELECT IFNULL(SUM(H.REQUEST_QTY),0) FROM TBL_INSIDE_OUT H WHERE H.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ AND H.OUT_STATUS = 'OUT001') AS INSIDE_STOCK_REQUEST_QTY,
                      (SELECT IFNULL(SUM(H.IN_QTY),0) FROM TBL_INSIDE_IN H WHERE H.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(I.OUT_QTY),0) FROM TBL_INSIDE_OUT I WHERE I.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ AND I.OUT_STATUS = 'OUT002') AS CURR_QTY,
                      (
-                        SELECT SUM(T.ORDER_QTY)
+                        SELECT SUM(IFNULL(T.ORDER_QTY,0) + IFNULL(X.ADDITIONAL_QTY,0))
                         FROM TBL_CONTROL_PART X
                             INNER JOIN TBL_CONTROL Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.DEL_YN = 'N' AND Y.OUT_FINISH_DT IS NULL
-                            INNER JOIN TBL_CONTROL_PART_ORDER T ON T.CONTROL_SEQ = X.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+                            INNER JOIN TBL_CONTROL_PART_ORDER T ON T.CONTROL_SEQ = X.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ AND T.OUT_FINISH_DT IS NULL
                             INNER JOIN TBL_INSIDE_STOCK Z ON X.INSIDE_STOCK_SEQ = Z.INSIDE_STOCK_SEQ
                             LEFT OUTER JOIN TBL_POP Q ON Q.CONTROL_SEQ = X.CONTROL_SEQ AND Q.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
                                 AND Q.POP_SEQ = (
@@ -4772,16 +4772,7 @@
                                     WHERE M.CONTROL_SEQ = X.CONTROL_SEQ
                                         AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
                                 )
-                        WHERE 1=1
-                            AND Z.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ
-                            AND (
-                                EXISTS (SELECT 1 FROM TBL_CONTROL_PROGRESS M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.ORDER_STATUS = 'ORD001')
-                                OR (
-                                    EXISTS(
-                                        SELECT 1 FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
-                                    )
-                                )
-                            )
+                        WHERE Z.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ
                      ) AS INSIDE_STOCK_PROCESS_QTY,
                      D.IMG_GFILE_SEQ, E.INSIDE_OUT_SEQ, D.INSIDE_STOCK_SEQ
                  FROM TBL_CONTROL A
@@ -4806,10 +4797,10 @@
                         (SELECT IFNULL(SUM(H.REQUEST_QTY),0) FROM TBL_INSIDE_OUT H WHERE H.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ AND H.OUT_STATUS = 'OUT001') AS INSIDE_STOCK_REQUEST_QTY,
                         (SELECT IFNULL(SUM(H.IN_QTY),0) FROM TBL_INSIDE_IN H WHERE H.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(I.OUT_QTY),0) FROM TBL_INSIDE_OUT I WHERE I.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ AND I.OUT_STATUS = 'OUT002') AS CURR_QTY,
                         (
-                            SELECT SUM(T.ORDER_QTY)
+                            SELECT SUM(IFNULL(T.ORDER_QTY,0) + IFNULL(X.ADDITIONAL_QTY,0))
                             FROM TBL_CONTROL_PART X
                                 INNER JOIN TBL_CONTROL Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.DEL_YN = 'N' AND Y.OUT_FINISH_DT IS NULL
-                                INNER JOIN TBL_CONTROL_PART_ORDER T ON T.CONTROL_SEQ = X.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+                                INNER JOIN TBL_CONTROL_PART_ORDER T ON T.CONTROL_SEQ = X.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ AND T.OUT_FINISH_DT IS NULL
                                 INNER JOIN TBL_INSIDE_STOCK Z ON X.INSIDE_STOCK_SEQ = Z.INSIDE_STOCK_SEQ
                                 LEFT OUTER JOIN TBL_POP Q ON Q.CONTROL_SEQ = X.CONTROL_SEQ AND Q.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
                                     AND Q.POP_SEQ = (
@@ -4818,16 +4809,7 @@
                                         WHERE M.CONTROL_SEQ = X.CONTROL_SEQ
                                             AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
                                     )
-                            WHERE 1=1
-                                AND Z.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ
-                                AND (
-                                    EXISTS (SELECT 1 FROM TBL_CONTROL_PROGRESS M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.ORDER_STATUS = 'ORD001')
-                                    OR (
-                                        EXISTS(
-                                            SELECT 1 FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
-                                        )
-                                    )
-                                )
+                            WHERE Z.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ
                         ) AS INSIDE_STOCK_PROCESS_QTY,
                         D.IMG_GFILE_SEQ, '' AS INSIDE_OUT_SEQ, D.INSIDE_STOCK_SEQ
                  FROM TBL_CONTROL A

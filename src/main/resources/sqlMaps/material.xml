@@ -1981,10 +1981,10 @@
             , 'WTP040' AS WORK_TYPE <!-- 재고작업지시 생성용 -->
             , '재고' AS WORK_TYPE_NM <!-- 재고작업지시 생성용 -->
             , (
-                SELECT SUM(T.ORDER_QTY)
+                SELECT SUM(IFNULL(T.ORDER_QTY,0) + IFNULL(X.ADDITIONAL_QTY,0))
                 FROM TBL_CONTROL_PART X
                     INNER JOIN TBL_CONTROL Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.DEL_YN = 'N' AND Y.OUT_FINISH_DT IS NULL
-                    INNER JOIN TBL_CONTROL_PART_ORDER T ON T.CONTROL_SEQ = X.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+                    INNER JOIN TBL_CONTROL_PART_ORDER T ON T.CONTROL_SEQ = X.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ AND T.OUT_FINISH_DT IS NULL
                     INNER JOIN TBL_INSIDE_STOCK Z ON X.INSIDE_STOCK_SEQ = Z.INSIDE_STOCK_SEQ
                     LEFT OUTER JOIN TBL_POP Q ON Q.CONTROL_SEQ = X.CONTROL_SEQ AND Q.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
                         AND Q.POP_SEQ = (
@@ -1993,16 +1993,7 @@
                             WHERE M.CONTROL_SEQ = X.CONTROL_SEQ
                                 AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
                         )
-                WHERE 1=1
-                    AND Z.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ
-                    /*AND (
-                        EXISTS (SELECT 1 FROM TBL_CONTROL_PROGRESS M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.ORDER_STATUS = 'ORD001')
-                        OR (
-                            EXISTS(
-                                SELECT 1 FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
-                            )
-                        )
-                    )*/
+                WHERE Z.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ
             ) AS INSIDE_STOCK_PROCESS_QTY
             , (
                 SELECT GROUP_CONCAT(D.STOCK_EQUIP_NM SEPARATOR ' , ')
@@ -2065,9 +2056,6 @@
                     AND X.STOCK_EQUIP_SEQ = #{SEL_EQUIP}
             )
         </if>
-        <!--        <if test="SEL_SIZE_TYPE !='' and SEL_SIZE_TYPE != null">-->
-        <!--            AND A.SIZE_TYPE = #{SEL_SIZE_TYPE}-->
-        <!--        </if>-->
         <if test="SIZE_TYPE != null and SIZE_TYPE != ''">
             AND A.SIZE_TYPE = #{SIZE_TYPE}
             <choose>
@@ -2645,10 +2633,10 @@
                E.LOC_SEQ, E.PDF_GFILE_SEQ, SF_GET_DATE_F(A.REQUEST_DT, 'YY', 'M') AS REQUEST_DT,
                ((SELECT IFNULL(SUM(F.IN_QTY),0) FROM TBL_INSIDE_IN F WHERE F.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ) - (SELECT IFNULL(SUM(G.OUT_QTY),0) FROM TBL_INSIDE_OUT G WHERE G.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ AND G.OUT_STATUS = 'OUT002') - A.REQUEST_QTY) AS INSIDE_STOCK_REMAIN_QTY,
                (
-                    SELECT SUM(T.ORDER_QTY)
+                    SELECT SUM(IFNULL(T.ORDER_QTY,0) + IFNULL(X.ADDITIONAL_QTY,0))
                     FROM TBL_CONTROL_PART X
                         INNER JOIN TBL_CONTROL Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.DEL_YN = 'N' AND Y.OUT_FINISH_DT IS NULL
-                        INNER JOIN TBL_CONTROL_PART_ORDER T ON T.CONTROL_SEQ = X.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+                        INNER JOIN TBL_CONTROL_PART_ORDER T ON T.CONTROL_SEQ = X.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ AND T.OUT_FINISH_DT IS NULL
                         INNER JOIN TBL_INSIDE_STOCK Z ON X.INSIDE_STOCK_SEQ = Z.INSIDE_STOCK_SEQ
                         LEFT OUTER JOIN TBL_POP Q ON Q.CONTROL_SEQ = X.CONTROL_SEQ AND Q.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
                             AND Q.POP_SEQ = (
@@ -2657,16 +2645,7 @@
                                 WHERE M.CONTROL_SEQ = X.CONTROL_SEQ
                                     AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
                             )
-                    WHERE 1=1
-                        AND Z.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ
-                        /*AND (
-                            EXISTS (SELECT 1 FROM TBL_CONTROL_PROGRESS M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.ORDER_STATUS = 'ORD001')
-                            OR (
-                                EXISTS(
-                                    SELECT 1 FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = X.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
-                                )
-                            )
-                        )*/
+                    WHERE Z.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ
                ) AS INSIDE_STOCK_PROCESS_QTY
         FROM TBL_INSIDE_OUT A
              INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N'
@@ -3002,6 +2981,7 @@
                CASE WHEN A.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM,'#',A.PART_NUM) END AS CONTROL_PART_INFO,
                A.WORK_TYPE,
                T.ORDER_QTY,
+               A.ADDITIONAL_QTY,
                IFNULL(SF_GET_CODE_NM('1033', A.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM,
                SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM,
                SF_GET_PART_STATUS_NM(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM,
@@ -3010,7 +2990,7 @@
                SF_GET_CODE_NM('1009', D.POP_POSITION, #{LOGIN_LOCALE}) AS POP_POSITION_NM
         FROM TBL_CONTROL_PART A
             INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N' AND B.OUT_FINISH_DT IS NULL
-            INNER JOIN TBL_CONTROL_PART_ORDER T ON T.CONTROL_SEQ = A.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+            INNER JOIN TBL_CONTROL_PART_ORDER T ON T.CONTROL_SEQ = A.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND T.OUT_FINISH_DT IS NULL
             INNER JOIN TBL_INSIDE_STOCK C ON A.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ AND C.INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
             LEFT OUTER JOIN TBL_POP D ON D.CONTROL_SEQ = A.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
                 AND D.POP_SEQ = (
@@ -3019,15 +2999,6 @@
                     WHERE X.CONTROL_SEQ = A.CONTROL_SEQ
                       AND X.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
                 )
-        WHERE 1=1
---             AND (
---                 EXISTS (SELECT 1 FROM TBL_CONTROL_PROGRESS M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.ORDER_STATUS = 'ORD001')
---                 OR (
---                     EXISTS(
---                             SELECT 1 FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
---                     )
---                 )
---             )
     </select>
     <select id="selectStockMappingEquip" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.STOCK_EQUIP_SEQ,

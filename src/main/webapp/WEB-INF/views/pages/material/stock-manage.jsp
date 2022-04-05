@@ -1710,6 +1710,7 @@
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 50, width: 50, editable: false},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM',minWidth: 70, width: 70, editable: false},
             {title: '수량', dataType: 'string', dataIndx: 'ORDER_QTY',minWidth: 40, width: 40, editable: false},
+            {title: '조정<br>수량', dataType: 'string', dataIndx: 'ADDITIONAL_QTY',minWidth: 40, width: 40, editable: false},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 65, width: 65, editable: false},
             {title: '현재위치', dataType: 'string', dataIndx: 'POP_POSITION_NM', minWidth: 70, width: 70, editable: false},
             {title: '작업확정', dataType: 'string', dataIndx: 'CONTROL_STATUS_DT', minWidth: 75, width: 75, editable: false},
