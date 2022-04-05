@@ -1352,9 +1352,7 @@
                     },
                     {title: '요청일시', align: 'center', dataType: 'string', width: 100, dataIndx: 'REQUEST_DT', editable: false}
                 ]
-            },
-            // {title: '재고수량', width: 50, dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', editable: false},
-            // {title: '남는수량', width: 50, dataType: 'integer', dataIndx: 'INSIDE_STOCK_REMAIN_QTY', editable: false}
+            }
         ];
 
 

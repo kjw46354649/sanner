@@ -4765,13 +4765,6 @@
                             INNER JOIN TBL_CONTROL Y ON X.CONTROL_SEQ = Y.CONTROL_SEQ AND Y.DEL_YN = 'N' AND Y.OUT_FINISH_DT IS NULL
                             INNER JOIN TBL_CONTROL_PART_ORDER T ON T.CONTROL_SEQ = X.CONTROL_SEQ AND T.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ AND T.OUT_FINISH_DT IS NULL
                             INNER JOIN TBL_INSIDE_STOCK Z ON X.INSIDE_STOCK_SEQ = Z.INSIDE_STOCK_SEQ
-                            LEFT OUTER JOIN TBL_POP Q ON Q.CONTROL_SEQ = X.CONTROL_SEQ AND Q.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
-                                AND Q.POP_SEQ = (
-                                    SELECT MAX(M.POP_SEQ)
-                                    FROM TBL_POP M
-                                    WHERE M.CONTROL_SEQ = X.CONTROL_SEQ
-                                        AND M.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
-                                )
                         WHERE Z.INSIDE_STOCK_SEQ = D.INSIDE_STOCK_SEQ
                      ) AS INSIDE_STOCK_PROCESS_QTY,
                      D.IMG_GFILE_SEQ, E.INSIDE_OUT_SEQ, D.INSIDE_STOCK_SEQ
