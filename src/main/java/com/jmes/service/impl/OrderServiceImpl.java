@@ -139,19 +139,42 @@ public class OrderServiceImpl implements OrderService {
 
         for (HashMap<String, Object> hashMap : jsonArray) {
             String controlStatus = (String) hashMap.get("CONTROL_STATUS");
-            if(controlStatus != null && "ORD002".equals(controlStatus)) {
+            String controlStatusNm = "";
+            String workType = (String) hashMap.get("WORK_TYPE");
+            switch (controlStatus) {
+                case "ORD002":
+                    controlStatusNm = "확정취소";
+                    break;
+                case "ORD005":
+                    controlStatusNm = "보류";
+                    break;
+            }
+            if("WTP020".equals(workType) || "WTP050".equals(workType)) {
+                hashMap.put("queryId", "orderMapper.selectCheckOutsideStatus");
+                HashMap<String,Object> checktemp = (HashMap<String, Object>) this.innodaleDao.getInfo(hashMap);
+                String outside_check_cnt = String.valueOf(checktemp.get("OUTSIDE_CHECK_CNT")) ;
+
+                if(checktemp != null) {
+                    if(!("0".equals(outside_check_cnt))) {
+                        flag = true;
+                        msg = "외주 요청 발송 건이 존재하여 상태 변경이 불가합니다.";
+                    }
+                }
+            }
+            if(controlStatus != null && ("ORD002".equals(controlStatus) || "ORD005".equals(controlStatus))) {
                 hashMap.put("queryId", "orderMapper.selectCheckControlStatus");
                 HashMap<String,Object> temp = (HashMap<String, Object>) this.innodaleDao.getInfo(hashMap);
+
                 if(temp != null) {
-                    if(temp.get("MCT_WORK_SEQ") != null) {
+                    if (temp.get("MCT_WORK_SEQ") != null) {
                         flag = true;
-                        msg = "가공 진행중인 작업건은 확정취소가 불가합니다.";
+                        msg = "가공 진행중인 작업건은 " + controlStatusNm + "가 불가합니다.";
                     }else if(temp.get("MATERIAL_ORDER_NUM") != null) {
                         flag = true;
-                        msg = "소재 주문중인 작업건은 확정취소가 불가합니다.";
+                        msg = "소재 주문중인 작업건은 " + controlStatusNm + "가 불가합니다.";
                     }else if(temp.get("OUTSIDE_STATUS") != null && "OST001".equals((String) temp.get("OUTSIDE_STATUS"))) {
                         flag = true;
-                        msg = "외주 가공중인 작업은 확정취소가 불가합니다.";
+                        msg = "외주 가공중인 작업은 " + controlStatusNm + "가 불가합니다.";
                     }
                 }
             }

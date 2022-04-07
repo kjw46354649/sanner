@@ -1765,7 +1765,7 @@
              * 이미 처리된 대상에 대해서 동일한 상태처리를 진행할 경우
              * 빈칸인 상태에서 취소를 진행하는 경우
              */
-            if ((controlStatusList.length > 1 && !(controlStatusList.includes('ORD002') && controlStatusList.includes(undefined))) || controlStatusList[0] === controlStatus || (controlStatusList[0] === undefined && controlStatus === 'ORD004')) {
+            if ((controlStatusList.length > 1 && !(controlStatusList.includes('ORD002') && controlStatusList.includes(undefined))) || controlStatusList.includes(controlStatus)) {
                 message =
                     '<h4>\n' +
                     '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
@@ -1779,7 +1779,7 @@
                 message =
                     '<h4>\n' +
                     '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                    '    <span>외주가공 중에는 취소가 불가능합니다.\n외주가공 취소 후 진행해주세요.</span>\n' +
+                    '    <span>외주가공 중에는 불가능합니다.</span>\n' +
                     '</h4>';
                 fnAlert(null, message);
                 $controlManagementGrid.pqGrid('refreshDataAndView');
@@ -1834,6 +1834,8 @@
                     }
                     $controlManagementGrid.pqGrid('refreshDataAndView');
                 }, parameters, '');
+            }, function () {
+                $controlManagementGrid.pqGrid('refreshDataAndView');
             });
         };
 

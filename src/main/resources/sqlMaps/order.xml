@@ -5868,4 +5868,15 @@
               </otherwise>
           </choose>
     </select>
+
+    <select id="selectCheckOutsideStatus" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT SUM(Z.CHECK_OUTSIDE) AS OUTSIDE_CHECK_CNT
+        FROM (
+            SELECT OUTSIDE_STATUS,
+            (CASE WHEN (OUTSIDE_YN = 'Y' OR OUTSIDE_STATUS = 'OST001' OR OUTSIDE_STATUS = 'OST003') THEN 1 ELSE 0 END) AS CHECK_OUTSIDE
+            FROM TBL_CONTROL_PART
+            WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+                AND WORK_TYPE != 'WTP020'
+        ) Z;
+    </select>
 </mapper>
