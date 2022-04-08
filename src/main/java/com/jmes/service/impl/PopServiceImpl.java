@@ -136,6 +136,9 @@ public class PopServiceImpl implements PopService {
                 controlPartInfo.put("queryId","popMapper.updateProcessingStock");
                 innodaleDao.update(controlPartInfo);
 
+                controlPartInfo.put("queryId","popMapper.updateProcessingStockQty");
+                innodaleDao.update(controlPartInfo);
+
 
                 NotificationMessage notificationMessage = new NotificationMessage();
 

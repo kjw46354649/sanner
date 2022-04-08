@@ -263,6 +263,18 @@
           AND A.OUT_DT IS NULL
     </update>
 
+    <update id="updateProcessingStockQty" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART A
+            INNER JOIN TBL_INSIDE_IN B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                AND B.DEL_YN = 'N' AND B.INSIDE_IN_SEQ = #{INSIDE_IN_SEQ}
+        SET
+            A.ADDITIONAL_QTY = (B.IN_QTY * -1),
+            A.UPDATE_DT = NOW(),
+            A.UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE A.WORK_TYPE = 'WTP040'
+            AND A.INSIDE_STOCK_SEQ IS NOT NULL
+    </update>
+
     <select id="selectScanBarcodeInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
