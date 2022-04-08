@@ -412,7 +412,7 @@ public class MaterialServiceImpl implements MaterialService {
             }else if("IN".equals(TYPE_CODE)) { //
 
                 map.put("queryId", "material.deleteInsideStockIn");
-                this.innodaleDao.remove(map);
+                this.innodaleDao.update(map);
 
                 // 21.09.29 재고번호 삭제 로직 제거
 //                map.put("queryId", "material.selectInsideStockInOutList");

@@ -2457,13 +2457,13 @@
                 fnPostAjax(function (data, callFunctionParam) {
                     if(data.list.length > 0) {
                         $.each(data.list, function (idx,Item) {
-                            if(Item.STOCK_REQUEST_STATUS == 'OUT002') {
+                            if(!fnIsEmpty(Item.OUT_DT)) {
                                 message =
                                     '<h4>\n' +
                                     '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                                     '    <span>' + ' 재고충당이 완료된 작업건이 존재합니다. 삭제하시겠습니까?</span>\n' +
                                     '</h4>';
-                            }else if(Item.STOCK_REQUEST_STATUS == 'OUT001') {
+                            }else if(!fnIsEmpty(Item.OUT_REQUEST_SEQ)) {
                                 message =
                                     '<h4>\n' +
                                     '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
@@ -3132,18 +3132,15 @@
             }
         }
 
+
         let matchStockColModel = [
             {title: 'RNUM', dataType: 'integer', dataIndx: 'RNUM', hidden: true},
             {title: 'RNUM_SUB', dataType: 'integer', dataIndx: 'RNUM_SUB', hidden: true},
-            {title: 'CONTROL_NUM', dataType: 'string', dataIndx: 'CONTROL_NUM', hidden: true},
-            {title: 'OUT_STATUS', dataType: 'string', dataIndx: 'OUT_STATUS', hidden: true},
             {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
             {title: 'CONTROL_PART_INFO', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', hidden: true},
-            {title: 'ORDER_QTY', dataType: 'integer', dataIndx: 'ORDER_QTY', hidden: true},
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true, editable: false},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true, editable: false},
-            {title: 'INSIDE_STOCK_SEQ', dataType: 'integer', dataIndx: 'INSIDE_STOCK_SEQ', hidden: true, editable: false},
-            {title: 'INSIDE_OUT_SEQ', dataType: 'integer', dataIndx: 'INSIDE_OUT_SEQ', hidden: true, editable: false},
+            {title: 'PROCESSING_QTY', dataType: 'integer', dataIndx: 'PROCESSING_QTY', hidden: true},
+            {title: 'INSIDE_STOCK_SEQ', dataType: 'integer', dataIndx: 'INSIDE_STOCK_SEQ', hidden: true},
+            {title: 'OUT_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUT_REQUEST_SEQ', hidden: true},
             {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
             {
                 dataIndx: 'CHECK_BOX',
@@ -3160,7 +3157,7 @@
                     if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
                         return {text: rowData.RNUM, cls : 'matchGrid_lightRed'};
                     }
-                    if(rowData.OUT_STATUS == 'OUT002') {
+                    if(typeof rowData.OUT_DT != 'undefined' && rowData.OUT_DT != null && rowData.OUT_DT != '') {
                         // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
                         return {cls: 'disabled', style: 'background-color: #d7d7d7;'};
                     }
@@ -3174,7 +3171,7 @@
                     if(typeof rowData.REQUEST_QTY == 'undefined' || rowData.REQUEST_QTY == null || rowData.REQUEST_QTY =='') {
                         $cell.find('input[type=checkbox]').prop('checked', false);
                         ui.rowData.CHECK_BOX = false;
-                    }else if(typeof rowData.INSIDE_OUT_SEQ != 'undefined' && rowData.INSIDE_OUT_SEQ != null && rowData.INSIDE_OUT_SEQ != '') {
+                    }else if(typeof rowData.OUT_REQUEST_SEQ != 'undefined' && rowData.OUT_REQUEST_SEQ != null && rowData.OUT_REQUEST_SEQ != '') {
                         $cell.find('input[type=checkbox]').prop('checked', true);
                         ui.rowData.CHECK_BOX = true;
                     }else {
@@ -3183,165 +3180,166 @@
                     }
                 }
             },
-            {title: '작업번호<br>재고번호', minWidth: 135, dataIndx: 'INSIDE_STOCK_NUM', sortable:false,
-                editable: false,
-                render: function (ui) {
-                    let rowData = ui.rowData;
-                    let grid = this;
-                    let $cell = grid.getCell(ui);
-                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return {text: rowData.CONTROL_PART_INFO, cls : 'matchGrid_lightRed'};
-                    }
-                    if(rowData.OUT_STATUS == 'OUT002') {
-                        // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
-                        return {style: 'background-color: #d7d7d7;'};
-                    }
-                }
-            },
-            {title: '소재', minWidth: 65, dataIndx: 'MATERIAL_DETAIL_NM', sortable:false,
-                editable: false,
-                render: function (ui) {
-                    let rowData = ui.rowData;
-                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return { cls : 'matchGrid_lightRed'};
-                    }
-                    if(rowData.OUT_STATUS == 'OUT002') {
-                        // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
-                        return {style: 'background-color: #d7d7d7;'};
-                    }
-                }
-            },
-            {title: '규격', minWidth: 90, dataIndx: 'SIZE_TXT', sortable:false,
-                editable: false,
-                render: function (ui) {
-                    let rowData = ui.rowData;
-                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return { cls : 'matchGrid_lightRed'};
-                    }
-                    if(rowData.OUT_STATUS == 'OUT002') {
-                        // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
-                        return {style: 'background-color: #d7d7d7;'};
-                    }
-                }
-            },
-            {title: '주문수량<br>불출요청', width: 50, dataType: 'integer', dataIndx: 'REQUEST_QTY', sortable:false,
-                editable: function (ui) {return gridCellEditable(ui);},
-                render: function (ui) {
-                    let rowData = ui.rowData;
-                    let grid = this;
-                    let $cell = grid.getCell(ui);
-                    let $row = grid.getRow(ui);
-                    if(rowData.OUT_STATUS == 'OUT002') {
-                        return {style: 'background-color: #d7d7d7;'};
-                    }else if( typeof rowData.RNUM == 'undefined' || rowData.RNUM == "" || rowData.RNUM == null) {
-                        if(ui.cellData != null && ui.cellData > 0) {
-                            ui.rowData.CHECK_BOX = true;
-                            $row.find('input[type=checkbox]').prop('checked', true);
-                        }else {
-                            ui.rowData.CHECK_BOX = false;
-                            $row.find('input[type=checkbox]').prop('checked', false);
-                        }
-                        return {style : 'background-color: #fff599;'};
-                    }else {
-                        return { cls : 'matchGrid_lightRed'};
-                    }
-                }
-            },
-            {title: '불출<br>수량', minWidth: 40, dataType: 'string', dataIndx: 'OUT_QTY', sortable:false,
-                editable: false,
-                render: function (ui) {
-                    let rowData = ui.rowData;
-                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                        return { cls : 'matchGrid_lightRed'};
-                    }
-                    if(rowData.OUT_STATUS == 'OUT002') {
-                        // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
-                        return {style: 'background-color: #d7d7d7;'};
-                    }
-                }
-            },
-            {
-                title: '재고현황', align: 'center', sortable:false,
+            {title: '작업번호(주문)', align: 'center', minWidth: 150, dataIndx: 'REQUEST_CONTROL_NUM', sortable:false,
                 colModel: [
-                    {
-                        title: '예약', dataType: 'integer', dataIndx: 'INSIDE_STOCK_REQUEST_QTY', minWidth: 35, sortable:false,
+                    {title: '재고번호/작업번호', align: 'center', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 160,
+                        styleHead: {'border-right-width': '0', 'align':'right'},
                         editable: false,
                         render: function (ui) {
                             let rowData = ui.rowData;
+                            let grid = this;
+                            let $cell = grid.getCell(ui);
                             if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                                return { cls : 'matchGrid_lightRed'};
+                                return {text: '<span class="controlDetail" style="cursor: pointer;text-decoration: underline;">' + rowData.CONTROL_PART_INFO + '</span>' , cls : 'matchGrid_lightRed'};
                             }
-                            if(rowData.OUT_STATUS == 'OUT002') {
-                                // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
-                                return {style: 'background-color: #d7d7d7;'};
+                            let renderTemplate = {};
+                            if(typeof rowData.OUT_DT != 'undefined' && rowData.OUT_DT != null && rowData.OUT_DT != '') {
+                                renderTemplate = {style: 'background-color: #d7d7d7;'};
                             }
-                        }
-                    },
-                    {
-                        title: '현)재고', dataType: 'integer', dataIndx: 'CURR_QTY', minWidth: 45, sortable:false,
-                        editable: false,
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                                return { cls : 'matchGrid_lightRed'};
+                            if(rowData.SORT == 3) {
+                                renderTemplate.text = '(' + rowData.INSIDE_STOCK_NUM + ') ' + '<span class="controlDetail" style="cursor: pointer;text-decoration: underline;">' + rowData.TARGET_CONTROL_NUM + '</span>';
                             }
-                            if(rowData.OUT_STATUS == 'OUT002') {
-                                // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
-                                return {style: 'background-color: #d7d7d7;'};
-                            }
-                        }
-                    },
-                    {
-                        title: '가공중', dataType: 'integer', dataIndx: 'INSIDE_STOCK_PROCESS_QTY', minWidth: 40, sortable:false,
-                        editable: false,
-                        render: function (ui) {
-                            let rowData = ui.rowData;
-                            let text = '';
-                            if (ui.cellData > 0)  {
-                                text = '<span id="processStockMatch" style="cursor: pointer;text-decoration: underline;">'+ui.cellData + '</span>';
-                            }
-                            if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
-                                return { cls : 'matchGrid_lightRed', text:text};
-                            }
-                            if(rowData.OUT_STATUS == 'OUT002') {
-                                // grid.addClass({ rowIndx: rowIndx, dataIndx: dataIndx, cls: 'disabled' });
-                                return {style: 'background-color: #d7d7d7;', text: text};
-                            }
-                            return {text: text}
+                            return renderTemplate;
                         },
                         postRender: function (ui) {
                             let grid = this,
-                                $cell = grid.getCell(ui);
-                            $cell.find("#processStockMatch").bind("click", function (e) {
-                                let rowData = ui.rowData;
-                                if($('#matchToolTipDiv').css("display") == "block" && $("#tooltip_stock_process_form").find("#INSIDE_STOCK_SEQ").val() == rowData.INSIDE_STOCK_SEQ) {
-                                    $('#matchToolTipDiv').hide();
+                                $cell = grid.getCell(ui),
+                                rowIndx = ui.rowIndx,
+                                rowData = ui.rowData;
+                            $cell.find(".controlDetail").bind("click", function (e) {
+                                if(rowData.SORT == 3) {
+                                    g_item_detail_pop_view(rowData.TARGET_CONTROL_SEQ, rowData.TARGET_CONTROL_DETAIL_SEQ);
                                 }else {
-                                    $("#tooltip_stock_process_form").find("#INSIDE_STOCK_SEQ").val(rowData.INSIDE_STOCK_SEQ);
-
-                                    toolTipStockProcessGrid.pqGrid('option', 'dataModel.postData', function () {
-                                        return fnFormToJsonArrayData('tooltip_stock_process_form')
-                                    });
-                                    if($('#tooltip_process_stock_grid').hasClass('pq-grid')) {
-                                        $('#tooltip_process_stock_grid').pqGrid('refreshDataAndView');
-                                    }
-                                    var divLeft = e.clientX - 497;
-                                    var divTop = e.clientY + 20;
-
-                                    $('#matchToolTipDiv').css({
-                                        "top": divTop,
-                                        "left": divLeft
-                                    }).show();
+                                    g_item_detail_pop_view(rowData.REQUEST_CONTROL_SEQ, rowData.REQUEST_CONTROL_DETAIL_SEQ);
                                 }
                             });
                         }
                     }
                 ]
+            },
+            {title: '소재', align: 'center', minWidth: 55, sortable:false,
+                colModel: [
+                    {title: '', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 55,
+                        editable: false,
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
+                                return { cls : 'matchGrid_lightRed'};
+                            }
+                            if(typeof rowData.OUT_DT != 'undefined' && rowData.OUT_DT != null && rowData.OUT_DT != '') {
+                                return {style: 'background-color: #d7d7d7;'};
+                            }
+                        }
+                    }
+                ]
+            },
+            {title: '규격', align: 'center', minWidth: 90, sortable:false,
+                colModel: [
+                    {
+                        title: '상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 75,
+                        editable: false,
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            if (typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
+                                return {text: rowData.SIZE_TXT, cls: 'matchGrid_lightRed'};
+                            }
+                            if (typeof rowData.OUT_DT != 'undefined' && rowData.OUT_DT != null && rowData.OUT_DT != '') {
+                                return {style: 'background-color: #d7d7d7;'};
+                            }
+                        }
+                    }
+                ]
+            },
+            {title: '주문수량', align: 'center', width: 50, sortable:false,
+                colModel: [
+                    {title: '충당요청', dataType: 'string', dataIndx: 'ORDER_QTY', minWidth: 60,
+                        editable: function (ui) {return gridCellEditable(ui);},
+                        render: function (ui) {
+                            let rowData = ui.rowData;
+                            let grid = this;
+                            let $cell = grid.getCell(ui);
+                            let $row = grid.getRow(ui);
+                            if(typeof rowData.OUT_DT != 'undefined' && rowData.OUT_DT != null && rowData.OUT_DT != '') {
+                                return {style: 'background-color: #d7d7d7;'};
+                            }else if( typeof rowData.RNUM == 'undefined' || rowData.RNUM == "" || rowData.RNUM == null) {
+                                if(ui.cellData != null && ui.cellData > 0) {
+                                    ui.rowData.CHECK_BOX = true;
+                                    $row.find('input[type=checkbox]').prop('checked', true);
+                                }else {
+                                    ui.rowData.CHECK_BOX = false;
+                                    $row.find('input[type=checkbox]').prop('checked', false);
+                                }
+                                return {style : 'background-color: #fff599;'};
+                            }else {
+                                return { cls : 'matchGrid_lightRed'};
+                            }
+                        }
+                    }
+                ]
+            },
+            {title: '재고<br>수량', minWidth: 40, dataType: 'string', dataIndx: 'CURR_QTY', sortable:false,
+                editable: false,
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
+                        return { cls : 'matchGrid_lightRed'};
+                    }
+
+                    if(typeof rowData.OUT_DT != 'undefined' && rowData.OUT_DT != null && rowData.OUT_DT != '') {
+                        return {style: 'background-color: #d7d7d7;'};
+                    }
+                }
+            },
+            {title: '현재위치', minWidth: 80, dataType: 'string', dataIndx: 'POP_POSITION', sortable:false,
+                editable: false,
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
+                        return { cls : 'matchGrid_lightRed'};
+                    }
+
+                    let renderTemplate = {};
+                    if(rowData.SORT == 2) {
+                        renderTemplate.text = rowData.WAREHOUSE_NM
+                    }
+
+                    if(typeof rowData.OUT_DT != 'undefined' && rowData.OUT_DT != null && rowData.OUT_DT != '') {
+                        renderTemplate = {style: 'background-color: #d7d7d7;'};
+                    }
+
+                    return renderTemplate
+                }
+            },
+            {
+                title: '충당<br>예약', dataType: 'integer', dataIndx: 'INSIDE_STOCK_RESERVE_QTY', minWidth: 45, sortable:false,
+                editable: false,
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
+                        return { cls : 'matchGrid_lightRed'};
+                    }
+                    if(typeof rowData.OUT_DT != 'undefined' && rowData.OUT_DT != null && rowData.OUT_DT != '') {
+                        return {style: 'background-color: #d7d7d7;'};
+                    }
+                }
+            },
+            {
+                title: '충당<br>완료', dataType: 'integer', dataIndx: 'OUT_QTY', minWidth: 45, sortable:false,
+                editable: false,
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    if(typeof rowData.RNUM != 'undefined' && rowData.RNUM != null && rowData.RNUM != '') {
+                        return { cls : 'matchGrid_lightRed'};
+                    }
+                    if(typeof rowData.OUT_DT != 'undefined' && rowData.OUT_DT != null && rowData.OUT_DT != '') {
+                        return {style: 'background-color: #d7d7d7;'};
+                    }
+                }
             }
         ];
 
         let matchStockObj = {
-            height: '81%', width: "auto",
+            height: '84%', width: "auto",
             selectionModel: { type: 'row', mode: 'single'}, rowHtHead: 15,
             swipeModel: {on: false}, trackModel: {on: true},
             sortModel: {on: false},
@@ -3362,7 +3360,7 @@
             },
             toolbar: false,
             rowSelect: function (event, ui) {
-                let dataArr = ['RNUM','INSIDE_STOCK_NUM','MATERIAL_DETAIL_NM','SIZE_TXT','REQUEST_QTY','OUT_QTY','CURR_QTY','INSIDE_STOCK_REQUEST_QTY','INSIDE_STOCK_PROCESS_QTY']
+                let dataArr = ['RNUM','INSIDE_STOCK_NUM','MATERIAL_DETAIL_NM','PART_STATUS_NM','ORDER_QTY','OUT_QTY','CURR_QTY','INSIDE_STOCK_RESERVE_QTY','INSIDE_STOCK_PROCESS_QTY', 'POP_POSITION']
                 if(ui.addList.length > 0) {
                     var rowData = ui.addList[0].rowData;
 
@@ -3419,6 +3417,32 @@
         };
         matchStockGrid.pqGrid(matchStockObj);
 
+        const MatchStockAutoMerge = function (grid, refresh) {
+            let mergeCellList = [],
+                colModelList = grid.getColModel(),
+                i = colModelList.length,
+                data = grid.option('dataModel.data');
+            const orderList = [
+                'INSIDE_STOCK_NUM'
+            ];
+            const includeList = orderList;
+
+            for(let i=0;i<data.length;i++) {
+                let sort = data[i].SORT;
+                var colIndx = grid.getColIndx( { dataIndx: "INSIDE_STOCK_NUM" } );
+                if(sort == 2) {
+                    mergeCellList.push({r1: i, c1: colIndx, rc: 1, cc: 3});
+                }else if(sort == 3) {
+                    mergeCellList.push({r1: i, c1: colIndx, rc: 1, cc: 2});
+                }
+            }
+
+            grid.option('mergeCells', mergeCellList);
+            if (refresh) {
+                grid.refreshView();
+            }
+        }
+
         $(".searchPopup").on('click', function (e) {
             if(e.target.id != 'processStockMatch') {
                 if($("#matchToolTipDiv").css("display") != 'none') {
@@ -3430,49 +3454,43 @@
         $('#matchStockDetailBtn').on('click', function (e) {
             let gFileSeq = $("#stock_match_pop_form").find("#GFILE_SEQ").val();
             if(gFileSeq != '') {
-                callWindowImageViewer(gFileSeq);
+                callWindowImageViewerDupl(gFileSeq);
             }
         })
         $('#matchStockBtnSave').on('click', function (e) {
             let gridInstance = matchStockGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
-            let duplChk = {};
+            console.log(changes);
+            let duplChkArr = [];
             var flag = false;
-            var dupFlag = false;
             $.each(changes.updateList, function (idx,Item) {
-                var id = Item.CONTROL_SEQ + '_' + Item.CONTROL_DETAIL_SEQ;
+                console.log(Item);
+                var id = Item.INSIDE_STOCK_SEQ;
                 if(Item.CHECK_BOX) {
-                    // if(Item.REQUEST_QTY == null || Item.REQUEST_QTY == '' || typeof Item.REQUEST_QTY == 'undefined' || Item.REQUEST_QTY <= 0) {
-                    //     flag = true;
-                    //     return;
-                    // }
-
-                    if(typeof duplChk[id] == 'undefined' || duplChk[id] == null) {
-                        duplChk[id] = [idx];
-                    }else {
-                        duplChk[id].push(idx);
-                        dupFlag = true;
-                        return;
+                    if(duplChkArr.indexOf(Item.INSIDE_STOCK_SEQ) < 0) {
+                        duplChkArr.push(Item.INSIDE_STOCK_SEQ);
                     }
                 }
             })
-
-            if(dupFlag) {
+            if(duplChkArr.length > 1) {
                 fnAlert(null,'불출 요청은 파트단위당 1개의 재고번호만 가능합니다.');
                 return;
             }
-            let parameters = {'url': '/matchStockSave', 'data': {data: JSON.stringify(changes)}};
 
-            fnPostAjaxAsync(function (data) {
-                if (data.flag) {
-                    fnAlert(null, data.message);
-                    return false;
-                }
-                $("#stock_match_pop_form").find("#SAVE_YN").val("Y");
-                fnAlert(null, '<spring:message code="com.alert.default.save.success"/>',function (){
-                    $("#stockMatchPopup").modal('hide')
-                });
-            }, parameters, '');
+            if (gridInstance.isDirty()) {
+                let parameters = {'url': '/matchStockSave', 'data': {data: JSON.stringify(changes)}};
+
+                fnPostAjaxAsync(function (data) {
+                    if (data.flag) {
+                        fnAlert(null, data.message);
+                        return false;
+                    }
+                    $("#stock_match_pop_form").find("#SAVE_YN").val("Y");
+                    fnAlert(null, '<spring:message code="com.alert.default.save.success"/>',function (){
+                        $("#stockMatchPopup").modal('hide')
+                    });
+                }, parameters, '');
+            }
         })
 
         $('#stock_match_pop_refresh').on('click', function (e) {

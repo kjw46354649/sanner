@@ -121,7 +121,7 @@ public class OrderServiceImpl implements OrderService {
             this.innodaleDao.remove(hashMap);
 
             hashMap.put("queryId", "orderMapper.deleteControlRequestStock");
-            this.innodaleDao.remove(hashMap);
+            this.innodaleDao.update(hashMap);
         }
     }
 
@@ -851,7 +851,7 @@ public class OrderServiceImpl implements OrderService {
                     String rnum = (String)hashMap.get("RNUM");
                     hashMap.put("LOGIN_USER_ID",userId);
                     if("".equals(rnum) && checkBox) {
-                        if(hashMap.get("INSIDE_OUT_SEQ") == null || "".equals(hashMap.get("INSIDE_OUT_SEQ"))) {
+                        if(hashMap.get("OUT_REQUEST_SEQ") == null || "".equals(hashMap.get("OUT_REQUEST_SEQ"))) {
                             hashMap.put("queryId", "orderMapper.insertRequestStock");
                             this.innodaleDao.insertGrid(hashMap);
                         }else {
@@ -868,11 +868,10 @@ public class OrderServiceImpl implements OrderService {
         if (updateList != null && updateList.size() > 0) {
             for (HashMap<String, Object> hashMap : updateList) {
                 try {
-                    String insideOutSeq = (String)hashMap.get("INSIDE_OUT_SEQ");
                     Boolean checkBox = (Boolean)hashMap.get("CHECK_BOX");
                     hashMap.put("LOGIN_USER_ID",userId);
                     if(checkBox) {
-                        if("".equals(insideOutSeq) || insideOutSeq == null){
+                        if(!hashMap.containsKey("OUT_REQUEST_SEQ")){
                             hashMap.put("queryId", "orderMapper.insertRequestStock");
                             this.innodaleDao.insertGrid(hashMap);
                         }else {
@@ -880,10 +879,10 @@ public class OrderServiceImpl implements OrderService {
                             this.innodaleDao.updateGrid(hashMap);
                         }
                     }else {
-                        if(!"".equals(insideOutSeq)) {
+                        if(hashMap.containsKey("OUT_REQUEST_SEQ") && !hashMap.get("OUT_REQUEST_SEQ").equals("")) {
                             hashMap.put("queryId", "orderMapper.selectRequestStockStatus");
                             Map<String,Object> tempData = this.innodaleDao.getInfo(hashMap);
-                            if("OUT002".equals(tempData.get("OUT_STATUS"))) {
+                            if(tempData != null) {
                                 flag = true;
                                 message = "불출 완료된 건은 취소 불가합니다.";
                             }else {
@@ -895,6 +894,7 @@ public class OrderServiceImpl implements OrderService {
                 } catch (Exception e) {
                     flag = true;
                     message = "에러가 발생하였습니다";
+                    e.printStackTrace();
                 }
             }
         }

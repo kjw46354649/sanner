@@ -171,80 +171,6 @@
         ORDER BY Y.FINISH_DT DESC, Y.CONTROL_NUM, Y.STEP_SEQ
     </select>
 
-    <select id="selectMainTodayMCTList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT X.CONTROL_SEQ
-            , X.CONTROL_DETAIL_SEQ
-            , SF_GET_DATE_F(X.WORK_CONFIRM_DT, '', 'M') AS WORK_CONFIRM_DT
-            , X.EMERGENCY_DELAY_NM
-            , CASE WHEN IFNULL(X.NOT_SETTLEMENT_RETURN_QTY,0) > 0 THEN '반품'
-                   ELSE (SELECT CASE WHEN COUNT(*) > 0 THEN '불량' END FROM TBL_INSPECT M WHERE M.INSPECT_SEQ = X.INSPECT_SEQ AND M.INSPECT_GRADE = 'GRD040')
-              END AS ERROR_RETURN_NM
-            , SF_GET_DATE_F(X.INNER_DUE_DT,'','') AS INNER_DUE_DT
-            , CASE WHEN DATE_FORMAT(X.INNER_DUE_DT,'%Y%m%d') <![CDATA[ < ]]> DATE_FORMAT(NOW(),'%Y%m%d') THEN 'Y' ELSE 'N' END AS DELAY_YN
-            , X.WORK_FACTORY_NM
-            , X.PART_STATUS_NM
-            , X.ORDER_COMP_NM
-            , X.CONTROL_NUM
-            , X.WORK_TYPE_NM
-            , X.PART_QTY
-            , X.SIZE_TXT
-            , ( SELECT SF_GET_CODE_NM('1009', M.POP_POSITION, #{LOGIN_LOCALE}) FROM TBL_POP M WHERE M.POP_SEQ = X.POP_SEQ) AS POP_POSITION_NM    -- 언어조건 확인
-            , X.NOTE
-            , X.WORK_STATUS_TYPE
-            , X.ASSEMBLY_YN
-            , X.IMG_GFILE_SEQ
-        FROM (  SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
-                    , CASE WHEN B.PART_STATUS = 'PRO002' THEN B.STATUS_DT
-                           ELSE (SELECT MAX(M.STATUS_DT) FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO002')
-                      END AS WORK_CONFIRM_DT
-                    , CASE WHEN A.CONTROL_STATUS = 'ORD005' THEN '보류'
-                           WHEN A.EMERGENCY_YN = 'Y' THEN '긴급'
-                      END AS EMERGENCY_DELAY_NM     <!-- 긴급,보류(보류 우선) -->
-                    , ( SELECT COUNT(*)
-                        FROM TBL_INSPECT M
-                        WHERE M.INSPECT_TYPE = '2'
-                            AND M.INSPECT_GRADE = 'GRD050'
-                            AND M.RETURN_SETTLEMENT_DT IS NULL
-                            AND M.CONTROL_SEQ = A.CONTROL_SEQ
-                      ) AS NOT_SETTLEMENT_RETURN_QTY
-                    , B.INNER_DUE_DT
-                    , SF_GET_CODE_NM('1014',B.WORK_FACTORY,#{LOGIN_LOCALE}) AS WORK_FACTORY_NM
-                    , SF_GET_PART_STATUS_NM(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
-                    , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
-                    , CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM ELSE CONCAT(A.CONTROL_NUM, ' #', B.PART_NUM) END AS CONTROL_NUM
-                    , SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS PART_QTY
-                    , SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
-                    , B.SIZE_TXT
-                    , B.IMG_GFILE_SEQ
-                    , (SELECT MAX(M.INSPECT_SEQ) FROM TBL_INSPECT M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '1') AS INSPECT_SEQ
-                    , (SELECT MAX(POP_SEQ) FROM TBL_POP M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ) AS POP_SEQ
-                    , A.NOTE
-                    , CASE WHEN B.PART_STATUS IN ('PRO002','PRO004','PRO005','PRO021','PRO022','PRO017') THEN '1'
-                           WHEN B.PART_STATUS IN ('PRO006','PRO007','PRO008','PRO018') THEN '2'
-                           WHEN B.PART_STATUS IN ('PRO009','PRO012','PRO013','PRO014','PRO015') THEN '3'
-                      END WORK_STATUS_TYPE
-                    , CASE WHEN B.WORK_TYPE = 'WTP020' THEN 'Y' ELSE 'N' END AS ASSEMBLY_YN
-                FROM TBL_CONTROL A, TBL_CONTROL_PART B
-                WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND A.CONTROL_STATUS IN ('ORD001','ORD003','ORD005')
-                    AND A.DEL_YN = 'N'
-                    AND A.OUT_FINISH_DT IS NULL
-                    AND B.PART_STATUS IS NOT NULL
-                    AND B.PART_STATUS IN (  'PRO002','PRO004','PRO005','PRO021','PRO022','PRO017'               <!-- 가공전 -->
-                                          , 'PRO006','PRO007','PRO008','PRO018'                                 <!-- 가공중 -->
-                                          , 'PRO009','PRO012','PRO013','PRO014','PRO015'                        <!-- 가공완료 -->
-                                        )
-                    <if test="WORK_FACTORY != null and WORK_FACTORY != ''">
-                        AND B.WORK_FACTORY = #{WORK_FACTORY}
-                    </if>
-            ) X
-        WHERE X.WORK_STATUS_TYPE = #{WORK_STATUS_TYPE}                  <!-- 가공전:1, 가공중:2, 가공완료:3 -->
-            <if test="ASSEMBLY_YN != null and ASSEMBLY_YN != ''">
-                AND X.ASSEMBLY_YN = 'N'
-            </if>
-        ORDER BY ISNULL(ERROR_RETURN_NM) ASC, X.INNER_DUE_DT
-    </select>
-
     <select id="selectMainTodayMCTList_new" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.CONTROL_SEQ
             , X.CONTROL_DETAIL_SEQ
@@ -268,8 +194,8 @@
             , X.ASSEMBLY_YN
             , X.IMG_GFILE_SEQ
             , X.OUT_FINISH_STATUS
-            , Z.REQUEST_QTY AS STOCK_REQUEST_QTY
-            , Z.OUT_QTY AS STOCK_OUT_QTY
+            , SUM(Z.REQUEST_QTY) AS STOCK_REQUEST_QTY
+            , SUM(Q.OUT_QTY) AS STOCK_OUT_QTY
             , X.CONTROL_VER
             , X.DRAWING_VER
             , X.DRAWING_NUM
@@ -372,11 +298,13 @@
                     AND B.WORK_FACTORY = #{WORK_FACTORY}
                 </if>
         ) X
-        LEFT OUTER JOIN TBL_INSIDE_OUT Z ON Z.CONTROL_SEQ = X.CONTROL_SEQ AND Z.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
+        LEFT OUTER JOIN TBL_INSIDE_OUT_REQUEST Z ON Z.REQUEST_CONTROL_SEQ = X.CONTROL_SEQ AND Z.REQUEST_CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ AND Z.DEL_YN = 'N'
+        LEFT OUTER JOIN TBL_INSIDE_OUT Q ON Q.OUT_REQUEST_SEQ = Z.OUT_REQUEST_SEQ AND Q.DEL_YN = 'N'
         WHERE 1 = 1
         <if test="ASSEMBLY_YN != null and ASSEMBLY_YN != ''">
             AND X.ASSEMBLY_YN = 'N'
         </if>
+        GROUP BY X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ
         ORDER BY X.OUT_FINISH_STATUS DESC, ISNULL(ERROR_RETURN_NM) ASC, X.INNER_DUE_DT
     </select>
 

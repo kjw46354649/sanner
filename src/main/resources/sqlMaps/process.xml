@@ -160,7 +160,8 @@
                             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.PART_STATUS IS NOT NULL
                                 AND B.PART_STATUS NOT IN ('PRO003', 'PRO010', 'PRO011', 'PRO016', 'PRO017', 'PRO018', 'PRO020')
                                 AND B.WORK_TYPE != 'WTP040'
-                            LEFT OUTER JOIN TBL_INSIDE_OUT C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND C.OUT_STATUS = 'OUT001'
+                            LEFT OUTER JOIN TBL_INSIDE_OUT_REQUEST C ON C.REQUEST_CONTROL_SEQ = B.CONTROL_SEQ AND C.REQUEST_CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                AND C.OUT_DT IS NULL AND C.DEL_YN = 'N'
                           WHERE A.DEL_YN = 'N'
                             AND A.CONTROL_STATUS IN ('ORD001','ORD003')
                             AND A.OUT_FINISH_DT IS NULL
@@ -496,11 +497,12 @@
                     </when>
                     <when test="PART_STATUS == 'MATCH_STOCK'">
                         AND EXISTS (
-                        SELECT 1
-                        FROM TBL_INSIDE_OUT X
-                        WHERE X.CONTROL_SEQ = B.CONTROL_SEQ
-                            AND X.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                            AND X.OUT_STATUS = 'OUT001'
+                            SELECT X.OUT_REQUEST_SEQ
+                            FROM TBL_INSIDE_OUT_REQUEST X
+                            WHERE X.REQUEST_CONTROL_SEQ = B.CONTROL_SEQ
+                                AND X.REQUEST_CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                AND X.DEL_YN = 'N'
+                                AND X.OUT_DT IS NULL
                         )
                     </when>
                     <when test="PART_STATUS == 'OUTSIDE'">
@@ -516,21 +518,23 @@
                         AND B.WORK_TYPE != 'WTP020'
                         AND B.PART_STATUS IN (#{PART_STATUS})
                         AND NOT EXISTS (
-                            SELECT 1
-                            FROM TBL_INSIDE_OUT X
-                            WHERE X.CONTROL_SEQ = B.CONTROL_SEQ
-                                AND X.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                AND X.OUT_STATUS = 'OUT001'
+                            SELECT X.OUT_REQUEST_SEQ
+                            FROM TBL_INSIDE_OUT_REQUEST X
+                            WHERE X.REQUEST_CONTROL_SEQ = B.CONTROL_SEQ
+                                AND X.REQUEST_CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                AND X.DEL_YN = 'N'
+                                AND X.OUT_DT IS NULL
                         )
                     </when>
                     <when test="PART_STATUS == 'PRO004'">
                         AND B.PART_STATUS IN (#{PART_STATUS})
                         AND NOT EXISTS (
-                            SELECT 1
-                            FROM TBL_INSIDE_OUT X
-                            WHERE X.CONTROL_SEQ = B.CONTROL_SEQ
-                                AND X.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                                AND X.OUT_STATUS = 'OUT001'
+                            SELECT X.OUT_REQUEST_SEQ
+                            FROM TBL_INSIDE_OUT_REQUEST X
+                            WHERE X.REQUEST_CONTROL_SEQ = B.CONTROL_SEQ
+                                AND X.REQUEST_CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                                AND X.DEL_YN = 'N'
+                                AND X.OUT_DT IS NULL
                         )
                     </when>
                     <when test="PART_STATUS == 'PROCESS_COMPLETE'">

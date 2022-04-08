@@ -126,19 +126,16 @@ public class PopServiceImpl implements PopService {
                 model.addAttribute("message", context02 + " " + context03 + " Already Existed."); // 현재와 같은 Location 스캔 처리
             }else {
 
-                hashMap.put("queryId", "popMapper.selectRequestStockInfo");
-                Map<String, Object> requestStockInfo = innodaleDao.getInfo(hashMap);
-                if(requestStockInfo != null) {
-                    requestStockInfo.put("LOGIN_USER_ID",hashMap.get("LOGIN_USER_ID"));
+                // 가공중의 충당요청건이 있는 경우 pop 스캔시 입출고 처리
+                controlPartInfo.put("queryId","popMapper.insertProcessingStockIn");
+                innodaleDao.create(controlPartInfo);
 
-                    requestStockInfo.put("INFO_TYPE","STO001");
-                    requestStockInfo.put("queryId","material.insertInsideStockIn");
-                    innodaleDao.create(requestStockInfo);
+                controlPartInfo.put("queryId","popMapper.insertProcessingStockOut");
+                innodaleDao.create(controlPartInfo);
 
-                    requestStockInfo.put("INFO_TYPE","STO002");
-                    requestStockInfo.put("queryId","material.updateInsideStockOut");
-                    innodaleDao.update(requestStockInfo);
-                }
+                controlPartInfo.put("queryId","popMapper.updateProcessingStock");
+                innodaleDao.update(controlPartInfo);
+
 
                 NotificationMessage notificationMessage = new NotificationMessage();
 
@@ -271,6 +268,8 @@ public class PopServiceImpl implements PopService {
                 model.addAttribute("returnCode", "RET00");
                 model.addAttribute("controlInfo", context02);
                 model.addAttribute("locationInfo", context03);
+
+                // 최종전에 체크해서 중복있으면 롤백
 
                 simpMessagingTemplate.convertAndSend("/topic/pop", notificationMessage);
             }
