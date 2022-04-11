@@ -3459,6 +3459,27 @@
         ORDER BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
     </select>
 
+    <select id="selectControlCadRequestStockList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.REQUEST_QTY,
+            CASE WHEN A.REQUEST_TYPE = 1 THEN SF_GET_INSIDE_STOCK_NM(A.INSIDE_STOCK_SEQ)
+                 WHEN A.REQUEST_TYPE = 2 THEN SF_GET_CONTROL_PART_INFO(A.TARGET_CONTROL_SEQ , A.TARGET_CONTROL_DETAIL_SEQ)
+                 ELSE SPACE(0)
+            END AS STOCK_NM,
+            CASE WHEN A.REQUEST_TYPE = 1 THEN (SELECT X.LOC_NM FROM TBL_WAREHOUSE_LOCATION X WHERE X.WAREHOUSE_CD = B.WAREHOUSE_CD AND X.LOC_SEQ = B.LOC_SEQ)
+                 WHEN A.REQUEST_TYPE = 2 THEN CONCAT(IFNULL(SF_GET_PART_STATUS_NM(A.TARGET_CONTROL_SEQ, A.TARGET_CONTROL_DETAIL_SEQ,'KO'),SPACE(0)),SPACE(1), IFNULL(SF_GET_POP_CURR_POSITION(A.TARGET_CONTROL_SEQ , A.TARGET_CONTROL_DETAIL_SEQ, 'KO'),SPACE(0)))
+                 ELSE SPACE(0)
+            END AS CENTER_TXT
+        FROM TBL_INSIDE_OUT_REQUEST A
+             INNER JOIN TBL_INSIDE_STOCK B ON A.INSIDE_STOCK_SEQ = B.INSIDE_STOCK_SEQ AND B.DEL_YN = 'N'
+        WHERE A.DEL_YN = 'N'
+          AND CONCAT(A.REQUEST_CONTROL_SEQ, A.REQUEST_CONTROL_DETAIL_SEQ) IN
+        <foreach collection="selectControlLists" item="bean" index="index"  open="(" close=")" separator=",">
+            #{bean}
+        </foreach>
+        ORDER BY A.REQUEST_TYPE
+    </select>
+
     <update id="updateControlPartDrawingPrintDt" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET DRAWING_PRINT_DT = CASE WHEN DRAWING_PRINT_DT IS NULL THEN NOW() ELSE DRAWING_PRINT_DT END

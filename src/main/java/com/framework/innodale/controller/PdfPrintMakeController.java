@@ -270,6 +270,50 @@ public class PdfPrintMakeController {
 //            table.addCell(createCell((String) controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("SPECIAL_TREATMENT"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("INNER_DUE_DT"), 2, 1, mediumBoldFont));
+
+
+            if(Integer.parseInt(stockRequestQty) > 0) {
+                PdfPCell blankCell = createCell("", 4, 1, mediumBoldFont);
+                blankCell.setBorder(0);
+                blankCell.setPadding(0);
+                table.addCell(blankCell);
+
+                PdfPTable requestTable = new PdfPTable(3);
+                requestTable.setWidthPercentage(100);
+                requestTable.setWidths(new int[]{4, 19, 13});
+                controlInfo.put("queryId", "orderMapper.selectControlCadRequestStockList");
+                controlInfo.put("selectControlLists", selectControlLists);
+                List<Map<String, Object>> requestList = innodaleService.getList(controlInfo);
+
+                for(int i=0;i<requestList.size();i++) {
+                    StringBuffer reqStockTxt = new StringBuffer();
+                    reqStockTxt.append(requestList.get(i).get("STOCK_NM"));
+                    reqStockTxt.append(" ");
+                    reqStockTxt.append(requestList.get(i).get("CENTER_TXT"));
+                    reqStockTxt.append(" ");
+                    reqStockTxt.append(requestList.get(i).get("REQUEST_QTY") + "ea");
+
+                    PdfPCell reqCell = createCell(reqStockTxt.toString(), 3, 1, mediumNormalFont);
+                    reqCell.setBorderWidthTop(0);
+                    if(i < requestList.size() - 1) {
+                        reqCell.setBorderWidthBottom(0);
+                    }
+                    reqCell.setFixedHeight(17f);
+                    reqCell.setBackgroundColor(BaseColor.WHITE);
+
+                    requestTable.addCell(reqCell);
+                }
+
+                PdfPCell cellTemp = new PdfPCell();
+                cellTemp.addElement(requestTable);
+                cellTemp.setVerticalAlignment(Element.ALIGN_BOTTOM);
+                cellTemp.setPadding(0);
+                cellTemp.setBorder(0);
+                cellTemp.setColspan(6);
+                table.addCell(cellTemp);
+            }
+
+
             PdfPCell cell1 = new PdfPCell();
             cell1.addElement(table);
             cell1.setVerticalAlignment(Element.ALIGN_TOP);
