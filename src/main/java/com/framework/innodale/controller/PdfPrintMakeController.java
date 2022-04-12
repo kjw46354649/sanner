@@ -185,7 +185,6 @@ public class PdfPrintMakeController {
             baos.close();
             Image barcodeImage = Image.getInstance(imageInByte);
 
-//            String verText = controlInfo.get("CONTROL_VER") + "\n" + controlInfo.get("DRAWING_VER");
             String verText = (String) controlInfo.get("DRAWING_VER");
             table.addCell(createCell(verText, 1, 1, smallNormalFont));
 
@@ -208,9 +207,6 @@ public class PdfPrintMakeController {
             }
             String qtyTxt = (String) controlInfo.get("CONTROL_ORDER_QTY");
 
-//            if(Integer.parseInt(additionalQty) > 0) {
-//                qtyTxt += ("+" + additionalQty);
-//            }
             phrase.add(new Chunk(qtyTxt,mediumBoldFont));
 
             if (controlInfo.get("WORK_TYPE").equals("WTP020")) { // 조립
@@ -282,7 +278,6 @@ public class PdfPrintMakeController {
                 requestTable.setWidthPercentage(100);
                 requestTable.setWidths(new int[]{4, 19, 13});
                 controlInfo.put("queryId", "orderMapper.selectControlCadRequestStockList");
-                controlInfo.put("selectControlLists", selectControlLists);
                 List<Map<String, Object>> requestList = innodaleService.getList(controlInfo);
 
                 for(int i=0;i<requestList.size();i++) {
@@ -321,24 +316,40 @@ public class PdfPrintMakeController {
             cell1.setPadding(0);
             masterTable.addCell(cell1);
 
-            if(controlInfo.get("WORK_TYPE").equals("WTP050")) { // 파트
-                String text = "PART " + controlInfo.get("PART_NUM");
-                PdfPCell cell2 = createCell(text,1,1,new Font(bf, 20f, Font.BOLD));
-                masterTable.addCell(cell2);
-            }else if(controlInfo.get("WORK_TYPE").equals("WTP040") && controlInfo.get("INSIDE_STOCK_NUM") != null && !"".equals(controlInfo.get("INSIDE_STOCK_NUM"))) { // 재고
+            if((controlInfo.get("WORK_TYPE").equals("WTP050")) || controlInfo.get("WORK_TYPE").equals("WTP040") && controlInfo.get("INSIDE_STOCK_NUM") != null && !"".equals(controlInfo.get("INSIDE_STOCK_NUM"))) { // 파트
                 Font tempFont = new Font(bf, saleSmall, Font.NORMAL);
                 Font tempBoldFont = new Font(bf, saleSmall, Font.BOLD);
 
-                Phrase phr = new Phrase();
-                phr.add(new Chunk("재고번호 ",tempFont));
-                phr.add(new Chunk(controlInfo.get("INSIDE_STOCK_NUM") + "\n\n",tempBoldFont));
+                PdfPTable tempTable = new PdfPTable(1);
+                tempTable.setWidthPercentage(100);
+                tempTable.setWidths(new int[]{85});
 
-                phr.add(new Chunk("품명 " + controlInfo.get("ITEM_NM"),tempFont));
+                PdfPCell tempCell = new PdfPCell();
+                if(controlInfo.get("WORK_TYPE").equals("WTP050")) {
+                    String text = "PART " + controlInfo.get("PART_NUM");
+                    tempCell = createCell(text,1,3,new Font(bf, 20f, Font.BOLD));
+                }else {
+                    Phrase phr = new Phrase();
+                    phr.add(new Chunk("재고번호 ",tempFont));
+                    phr.add(new Chunk(controlInfo.get("INSIDE_STOCK_NUM") + "\n\n",tempBoldFont));
 
-                PdfPCell cell2 = createCellPhrase(phr,1,1,Element.ALIGN_MIDDLE,Element.ALIGN_LEFT);
-                cell2.setPaddingLeft(5);
+                    phr.add(new Chunk("품명 " + controlInfo.get("ITEM_NM"),tempFont));
 
-                masterTable.addCell(cell2);
+                    tempCell = createCellPhrase(phr,1,1,Element.ALIGN_MIDDLE,Element.ALIGN_LEFT);
+                }
+
+                tempCell.setFixedHeight(40f);
+                tempCell.setPaddingLeft(5);
+                tempTable.addCell(tempCell);
+
+                PdfPCell testCell = new PdfPCell();
+                testCell.setVerticalAlignment(Element.ALIGN_TOP);
+                testCell.addElement(tempTable);
+                testCell.setRowspan(2);
+                testCell.setBorder(0);
+                testCell.setPadding(0);
+
+                masterTable.addCell(testCell);
             }else {
                 controlInfo.put("queryId", "orderMapper.selectControlCadOrderList");
                 List<Map<String, Object>> controlOrderList = innodaleService.getList(controlInfo);

@@ -3473,10 +3473,8 @@
         FROM TBL_INSIDE_OUT_REQUEST A
              INNER JOIN TBL_INSIDE_STOCK B ON A.INSIDE_STOCK_SEQ = B.INSIDE_STOCK_SEQ AND B.DEL_YN = 'N'
         WHERE A.DEL_YN = 'N'
-          AND CONCAT(A.REQUEST_CONTROL_SEQ, A.REQUEST_CONTROL_DETAIL_SEQ) IN
-        <foreach collection="selectControlLists" item="bean" index="index"  open="(" close=")" separator=",">
-            #{bean}
-        </foreach>
+            AND A.REQUEST_CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.REQUEST_CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
         ORDER BY A.REQUEST_TYPE
     </select>
 
@@ -3494,7 +3492,6 @@
             , IFNULL(C.REGIST_NUM, SPACE(0)) AS REGIST_NUM
             , IFNULL(C.ORDER_NUM, SPACE(0)) AS ORDER_NUM
             , IFNULL(C.DRAWING_NUM, SPACE(0)) AS DRAWING_NUM
---             , IFNULL(C.ORDER_QTY, SPACE(0)) AS ORDER_QTY
             , CASE WHEN C.ORDER_QTY > 9999 THEN 9999
                    ELSE IFNULL(C.ORDER_QTY,SPACE(0))
               END ORDER_QTY
