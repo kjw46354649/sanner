@@ -155,13 +155,13 @@ public class MaterialServiceImpl implements MaterialService {
     public void managerInsideStockPop(Model model, Map<String, Object> map) throws Exception {
         //popType : 그리드입출고 GRID_IN, GRID_OUT, 바코드 BARCODE
         String POP_TYPE = (String) map.get("POP_TYPE");
-        String USE_BARCODE = (String)map.get("USE_BARCODE"); // 바코드 사용여부
-        String CONTROL_SEQ = (String)map.get("CONTROL_SEQ"); // 바코드 사용여부
-        String INSIDE_OUT_SEQ = (String)map.get("INSIDE_OUT_SEQ"); // 바코드 사용여부
+        String USE_BARCODE = (String)map.get("USE_BARCODE");
+        String CONTROL_SEQ = (String)map.get("CONTROL_SEQ");
+        String OUT_REQUEST_SEQ = (String)map.get("OUT_REQUEST_SEQ");
         Boolean flag = false;
         String message = "";
-        if("GRID_IN".equals(POP_TYPE)){
-            map.put("INFO_TYPE","STO007"); // 버튼으로 입고
+        if("GRID_IN".equals(POP_TYPE)){ // 버튼으로 입고
+            map.put("INFO_TYPE","STO007");
 
             map.put("queryId", "material.updateInsideStockPop");
             this.innodaleDao.update(map);
@@ -172,21 +172,30 @@ public class MaterialServiceImpl implements MaterialService {
         }else if("GRID_OUT".equals(POP_TYPE) || "BARCODE_OUT".equals(POP_TYPE)){
             if("GRID_OUT".equals(POP_TYPE)) {
                 map.put("INFO_TYPE","STO008"); // 버튼으로 출고한 경우
+                map.put("REQUEST_TYPE",3);
             }else {
                 // 바코드 도면으로 출고 (현재는 매칭되는 도면이 없으면 출고가 불가능하므로, 수동매칭 출고는 사실상 불가)
                 // 수동매칭 출고 : STO006 , 재고지정 출고 : STO004
                 map.put("INFO_TYPE","STO004");
+                map.put("REQUEST_TYPE",4);
             }
 
-            if(!"".equals(INSIDE_OUT_SEQ)) {
+            if(!"".equals(OUT_REQUEST_SEQ)) {
+                map.put("queryId", "material.insertInsideStockOutNew");
+                this.innodaleDao.create(map);
+
                 map.put("queryId", "material.updateInsideStockOut");
                 this.innodaleDao.update(map);
             }else {
-                map.put("queryId", "material.insertInsideStockOut");
+                map.put("queryId", "material.insertRequestStockType3");
                 this.innodaleDao.create(map);
+
+                map.put("queryId", "material.insertInsideStockOutNew");
+                this.innodaleDao.create(map);
+
             }
 
-        }else if("BARCODE".equals(POP_TYPE)){
+        }else if("BARCODE".equals(POP_TYPE)){ // 바코드 입고
             String INSIDE_STOCK_NUM = (String) map.get("INSIDE_STOCK_NUM");
 
             if("".equals(INSIDE_STOCK_NUM)){ // 새로 등록하는 케이스

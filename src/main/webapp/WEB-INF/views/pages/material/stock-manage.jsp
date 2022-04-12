@@ -412,7 +412,7 @@
         <input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value="">
         <input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value="">
         <input type="hidden" id="INSIDE_STOCK_SEQ" name="INSIDE_STOCK_SEQ" value="">
-        <input type="hidden" id="INSIDE_OUT_SEQ" name="INSIDE_OUT_SEQ" value="">
+        <input type="hidden" id="OUT_REQUEST_SEQ" name="OUT_REQUEST_SEQ" value="">
         <input type="hidden" id="INSIDE_STOCK_NUM" name="INSIDE_STOCK_NUM" value="">
         <input type="hidden" id="TEMP_INSIDE_STOCK_NUM" name="TEMP_INSIDE_STOCK_NUM" value="">
         <input type="hidden" name="POP_TYPE" id="POP_TYPE" value="">
@@ -1417,7 +1417,7 @@
             {title: 'WAREHOUSE_CD', dataType: 'string', dataIndx: 'WAREHOUSE_CD', hidden: true},
             {title: 'LOC_SEQ', dataType: 'integer', dataIndx: 'LOC_SEQ', hidden: true},
             {title: 'INSIDE_STOCK_SEQ', dataType: 'integer', dataIndx: 'INSIDE_STOCK_SEQ', hidden: true},
-            {title: 'INSIDE_OUT_SEQ', dataType: 'integer', dataIndx: 'INSIDE_OUT_SEQ', hidden: true},
+            {title: 'OUT_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUT_REQUEST_SEQ', hidden: true},
             {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
             {title: '구분', minWidth: 80, dataIndx: 'TYPE', editable : false,
                 render: function (ui) {
@@ -1502,8 +1502,8 @@
                         if(typeof rowData.CONTROL_DETAIL_SEQ != 'undefined' && rowData.CONTROL_DETAIL_SEQ != '') {
                             $("#stock_manage_pop_form").find("#CONTROL_DETAIL_SEQ").val(rowData.CONTROL_DETAIL_SEQ);
                         }
-                        if(typeof rowData.INSIDE_OUT_SEQ != 'undefined' && rowData.INSIDE_OUT_SEQ != '') {
-                            $("#stock_manage_pop_form").find("#INSIDE_OUT_SEQ").val(rowData.INSIDE_OUT_SEQ);
+                        if(typeof rowData.OUT_REQUEST_SEQ != 'undefined' && rowData.OUT_REQUEST_SEQ != '') {
+                            $("#stock_manage_pop_form").find("#OUT_REQUEST_SEQ").val(rowData.OUT_REQUEST_SEQ);
                         }
 
                         if(typeof rowData.INSIDE_STOCK_SEQ != 'undefined') {
@@ -2315,7 +2315,7 @@
 
             let compareQty = $('#stock_manage_pop_form').find('#POP_STOCK_QTY').val();//현재수량
             let CONTROL_SEQ = $('#stock_manage_pop_form').find('#CONTROL_SEQ').val();
-            let INSIDE_OUT_SEQ = $('#stock_manage_pop_form').find('#INSIDE_OUT_SEQ').val();
+            let OUT_REQUEST_SEQ = $('#stock_manage_pop_form').find('#OUT_REQUEST_SEQ').val();
             let ORG_ORDER_QTY = parseInt($('#stock_manage_pop_form').find('#ORG_ORDER_QTY').val());// 원 입고수량
             let outQty = $(this).val();
             let stockQty;
@@ -2330,7 +2330,7 @@
                     stockQty = Number(compareQty) + Number(outQty); // 21.10.21 입고시 수량제한 X
                 // }
             } else {
-                if(CONTROL_SEQ != '' && INSIDE_OUT_SEQ != '') {
+                if(CONTROL_SEQ != '' && OUT_REQUEST_SEQ != '') {
                     fnAlert(null,"불출 요청건의 경우 수량을 변경할 수 없습니다.");
                     $(this).val(ORG_ORDER_QTY);
                     return false;
@@ -2367,7 +2367,7 @@
             let POP_ORDER_QTY = parseInt($('#stock_manage_pop_form').find('#ORDER_QTY').val());//입고수량
             let ORG_ORDER_QTY = parseInt($('#stock_manage_pop_form').find('#ORG_ORDER_QTY').val());// 원 입고수량
             let CONTROL_SEQ = $('#stock_manage_pop_form').find('#CONTROL_SEQ').val();
-            let INSIDE_OUT_SEQ = $('#stock_manage_pop_form').find('#INSIDE_OUT_SEQ').val();
+            let OUT_REQUEST_SEQ = $('#stock_manage_pop_form').find('#OUT_REQUEST_SEQ').val();
             let POP_STOCK_QTY_AFTER = parseInt($("#stock_manage_pop_form").find("#POP_STOCK_QTY_AFTER").val());//변경후수량
 
             let popType = $("#stock_manage_form").find("#popType").val();
@@ -2388,7 +2388,7 @@
                     }
                 }
             }else{
-                if(CONTROL_SEQ != '' && INSIDE_OUT_SEQ != '') {
+                if(CONTROL_SEQ != '' && OUT_REQUEST_SEQ != '') {
                     fnAlert(null,"불출 요청건의 경우 수량을 변경할 수 없습니다.");
                     return;
                 }else {
@@ -2534,7 +2534,7 @@
                                 fnResetForm("stock_manage_pop_form");
                                 tempDataList.push(data.info);
 
-                                if(typeof data.info.INSIDE_OUT_SEQ == 'undefined' || data.info.INSIDE_OUT_SEQ == '') {
+                                if(typeof data.info.OUT_REQUEST_SEQ == 'undefined' || data.info.OUT_REQUEST_SEQ == '') {
                                     let parameters2 = {
                                         'url': '/json-list',
                                         'data': {"TYPE":poptype,"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcode"}

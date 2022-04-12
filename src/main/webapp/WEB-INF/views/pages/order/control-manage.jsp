@@ -3460,20 +3460,26 @@
         $('#matchStockBtnSave').on('click', function (e) {
             let gridInstance = matchStockGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
-            console.log(changes);
             let duplChkArr = [];
             var flag = false;
+            var qtyFlag = false;
             $.each(changes.updateList, function (idx,Item) {
-                console.log(Item);
                 var id = Item.INSIDE_STOCK_SEQ;
                 if(Item.CHECK_BOX) {
                     if(duplChkArr.indexOf(Item.INSIDE_STOCK_SEQ) < 0) {
                         duplChkArr.push(Item.INSIDE_STOCK_SEQ);
                     }
                 }
+                if(Item.ORDER_QTY > Item.CURR_QTY) {
+                    qtyFlag = true;
+                }
             })
             if(duplChkArr.length > 1) {
                 fnAlert(null,'불출 요청은 파트단위당 1개의 재고번호만 가능합니다.');
+                return;
+            }
+            if(qtyFlag) {
+                fnAlert(null,'재고 수량을 확인해주세요.');
                 return;
             }
 

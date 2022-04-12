@@ -1987,6 +1987,7 @@
             CONCAT('S',LPAD(NEXTVAL(SEQ_BARCODE),9,'0'))
         )
     </insert>
+
     <update id="updateInsideStock" parameterType="java.util.HashMap">
         UPDATE TBL_INSIDE_STOCK
         SET COMP_CD = #{COMP_CD}
@@ -1999,6 +2000,7 @@
             , UPDATE_ID = #{LOGIN_USER_ID}
         WHERE INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
     </update>
+
     <update id="updateInsideStockPop" parameterType="java.util.HashMap">
         UPDATE TBL_INSIDE_STOCK
         SET   WAREHOUSE_CD = #{WAREHOUSE_CD}
@@ -2008,7 +2010,77 @@
             , UPDATE_ID = #{LOGIN_USER_ID}
         WHERE INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
     </update>
-    <insert id="insertInsideStockOut" parameterType="java.util.HashMap">
+
+    <insert id="insertRequestStockType3" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_INSIDE_OUT_REQUEST (
+            OUT_REQUEST_SEQ, REQUEST_CONTROL_SEQ, REQUEST_CONTROL_DETAIL_SEQ,
+            REQUEST_DT, REQUEST_ID, REQUEST_QTY, REQUEST_TYPE,
+            INSIDE_STOCK_SEQ, INSERT_ID, OUT_DT
+        )VALUES (
+            NEXTVAL(jmes.SEQ_INSIDE_OUT_REQUEST), #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
+            NOW(), #{LOGIN_USER_ID}, IFNULL(#{IN_OUT_QTY},0), #{REQUEST_TYPE},
+            #{INSIDE_STOCK_SEQ}, #{LOGIN_USER_ID}, NOW()
+        )
+    </insert>
+
+    <update id="updateInsideStockOut" parameterType="java.util.HashMap">
+        UPDATE TBL_INSIDE_OUT_REQUEST
+        SET OUT_DT = NOW(),
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE OUT_REQUEST_SEQ = #{OUT_REQUEST_SEQ}
+    </update>
+
+    <insert id="insertInsideStockOutNew" parameterType="java.util.HashMap">
+        INSERT INTO TBL_INSIDE_OUT (
+            INSIDE_OUT_SEQ,
+            INSIDE_STOCK_SEQ,
+            INSIDE_STOCK_NUM,
+            OUT_REQUEST_SEQ,
+            OUT_QTY,
+            OUT_DT,
+            INSERT_ID,
+            INFO_TYPE,
+            INSIDE_IN_SEQ
+        )
+        SELECT NEXTVAL(SEQ_INSIDE_OUT),
+            T.INSIDE_STOCK_SEQ,
+            T.INSIDE_STOCK_NUM,
+            #{OUT_REQUEST_SEQ},
+            CASE WHEN T.NUM = 1 THEN CASE WHEN T.STOCK_QTY <![CDATA[ <=> ]]> #{IN_OUT_QTY} THEN T.STOCK_QTY ELSE #{IN_OUT_QTY} END
+                 WHEN T.STOCK_QTY <![CDATA[ <= ]]> ABS(T.BEF) THEN T.STOCK_QTY
+                 WHEN T.STOCK_QTY > ABS(T.BEF) THEN T.STOCK_QTY - ABS(T.BEF)
+            END,
+            NOW(),
+            #{LOGIN_USER_ID},
+            #{INFO_TYPE},
+            T.INSIDE_IN_SEQ
+        FROM (
+            SELECT Z.*,
+                LAG(Z.ACCURE_QTY) OVER (ORDER BY Z.INSIDE_IN_SEQ) AS BEF,
+                LEAD(Z.ACCURE_QTY) OVER (ORDER BY Z.INSIDE_IN_SEQ) AS AFF
+            FROM (
+                SELECT
+                    ROW_NUMBER() OVER(ORDER BY A.INSIDE_IN_SEQ) AS NUM,
+                    A.INSIDE_IN_SEQ, A.INSIDE_STOCK_SEQ, A.INSIDE_STOCK_NUM,
+                    (A.IN_QTY - IFNULL((SELECT SUM(B.OUT_QTY) FROM jmes.TBL_INSIDE_OUT B
+                    WHERE A.INSIDE_IN_SEQ = B.INSIDE_IN_SEQ AND B.DEL_YN = 'N'), 0)
+                    ) AS STOCK_QTY,
+                    SUM((A.IN_QTY - IFNULL((SELECT SUM(B.OUT_QTY) FROM jmes.TBL_INSIDE_OUT B
+                    WHERE A.INSIDE_IN_SEQ = B.INSIDE_IN_SEQ AND B.DEL_YN = 'N'), 0)
+                    )) OVER(ORDER BY A.INSIDE_IN_SEQ) - #{IN_OUT_QTY} AS ACCURE_QTY,
+                    IFNULL((SELECT SUM(X.OUT_QTY) FROM TBL_INSIDE_OUT X WHERE X.OUT_REQUEST_SEQ = #{OUT_REQUEST_SEQ} AND X.DEL_YN = 'N'),0) AS INSERT_QTY
+                FROM jmes.TBL_INSIDE_IN A
+                WHERE 1 = 1
+                    AND A.INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
+                    AND A.IN_QTY > IFNULL((SELECT SUM(B.OUT_QTY) FROM jmes.TBL_INSIDE_OUT B WHERE A.INSIDE_IN_SEQ = B.INSIDE_IN_SEQ AND B.DEL_YN = 'N'), 0)
+                ORDER BY A.INSIDE_IN_SEQ
+            )Z
+        )T
+        WHERE IFNULL(T.BEF,-1) <![CDATA[ < ]]> 0
+    </insert>
+
+    <insert id="insertInsideStockOut_old" parameterType="java.util.HashMap">
         INSERT INTO TBL_INSIDE_OUT (
             INSIDE_OUT_SEQ,
             INSIDE_STOCK_SEQ,
@@ -2042,6 +2114,7 @@
             #{INFO_TYPE}
         )
     </insert>
+
     <insert id="insertInsideStockIn" parameterType="java.util.HashMap">
         INSERT INTO TBL_INSIDE_IN (INSIDE_IN_SEQ, INSIDE_STOCK_NUM, INSIDE_STOCK_SEQ, IN_QTY, CONTROL_SEQ, CONTROL_DETAIL_SEQ, INSERT_ID, INFO_TYPE)
         SELECT NEXTVAL(SEQ_INSIDE_IN)
@@ -2055,7 +2128,8 @@
         FROM DUAL
         WHERE #{IN_OUT_QTY} > 0
     </insert>
-    <update id="updateInsideStockOut" parameterType="java.util.HashMap">
+
+    <update id="updateInsideStockOut_old" parameterType="java.util.HashMap">
         UPDATE TBL_INSIDE_OUT
         SET OUT_QTY = #{IN_OUT_QTY},
             OUT_STATUS = 'OUT002',
@@ -2065,6 +2139,7 @@
             INFO_TYPE = #{INFO_TYPE}
         WHERE INSIDE_OUT_SEQ = #{INSIDE_OUT_SEQ}
     </update>
+
     <select id="selectWorkType" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.WORK_TYPE
         FROM TBL_CONTROL A
@@ -2187,7 +2262,7 @@
              , 'RED' AS COLOR
              , C.CONTROL_NUM
              , E.INSIDE_STOCK_SEQ
-             , D.INSIDE_OUT_SEQ
+             , D.OUT_REQUEST_SEQ
              , IFNULL(E.INSIDE_STOCK_NUM,'요청 대상 없음') AS INSIDE_STOCK_NUM
              , E.LOC_SEQ
              , (SELECT Z.LOC_NM FROM TBL_WAREHOUSE_LOCATION Z WHERE Z.WAREHOUSE_CD = E.WAREHOUSE_CD AND Z.LOC_SEQ = E.LOC_SEQ ) AS LOC_NM
@@ -2225,8 +2300,9 @@
         FROM TBL_CONTROL_BARCODE A
              INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
              INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ = A.CONTROL_SEQ AND C.DEL_YN = 'N'
-             LEFT OUTER JOIN TBL_INSIDE_OUT D ON A.CONTROL_SEQ = D.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-             LEFT OUTER JOIN TBL_INSIDE_STOCK E ON D.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ
+             LEFT OUTER JOIN TBL_INSIDE_OUT_REQUEST D ON D.REQUEST_CONTROL_SEQ = A.CONTROL_SEQ AND D.REQUEST_CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                    AND D.DEL_YN = 'N' AND D.REQUEST_TYPE = 1
+             LEFT OUTER JOIN TBL_INSIDE_STOCK E ON D.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ AND E.DEL_YN = 'N'
         WHERE A.DEL_YN = 'N'
           AND A.BARCODE_NUM = #{BARCODE_NUM}
     </select>
@@ -2453,8 +2529,8 @@
             E.LOC_SEQ, E.PDF_GFILE_SEQ, SF_GET_DATE_F(A.REQUEST_DT, 'YY', 'M') AS REQUEST_DT,
             SF_GET_STOCK_PROCESS_QTY(A.INSIDE_STOCK_SEQ) AS INSIDE_STOCK_PROCESS_QTY
         FROM TBL_INSIDE_OUT_REQUEST A
-             INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N'
-             INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+             INNER JOIN TBL_CONTROL B ON A.REQUEST_CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N'
+             INNER JOIN TBL_CONTROL_PART C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND A.REQUEST_CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
              INNER JOIN TBL_INSIDE_STOCK E ON A.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ AND E.DEL_YN = 'N'
         WHERE A.DEL_YN = 'N'
             AND A.OUT_DT IS NULL
