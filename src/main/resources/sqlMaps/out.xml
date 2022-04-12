@@ -1220,11 +1220,27 @@
             #{CONTROL_SEQ},
             #{CONTROL_DETAIL_SEQ},
             NEXTVAL(SEQ_CONTROL_PART_PROGRESS),
-            #{PART_STATUS},
+            CASE WHEN #{PART_STATUS} = 'null' THEN NULL ELSE #{PART_STATUS} END,
             NOW(),
             #{LOGIN_USER_ID}
         FROM DUAL
     </insert>
+
+    <update id="updateControlPart_outSide_cancel" parameterType="java.util.HashMap">
+        UPDATE TBL_CONTROL_PART
+        SET
+            PART_STATUS = CASE WHEN #{PART_STATUS} = 'null' THEN NULL ELSE #{PART_STATUS} END,
+            STATUS_DT = NOW(),
+            OUTSIDE_COMP_CD = NULL,
+            OUTSIDE_ORDER_NUM = NULL,
+            OUTSIDE_STATUS = #{OUTSIDE_STATUS},
+            OUTSIDE_STATUS_DT = NOW(),
+            UPDATE_DT = NOW(),
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+    </update>
+
     <update id="updateControlPart_outSide" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART
         SET

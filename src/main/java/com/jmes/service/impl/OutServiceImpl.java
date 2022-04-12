@@ -169,9 +169,13 @@ public class OutServiceImpl implements OutService {
                             this.innodaleDao.create(hashMap);
                         }
 
-                        hashMap.put("queryId", "outMapper.updateControlPart_outSide");
-                        this.innodaleDao.update(hashMap);
-
+                        if(status.equals("cancel")) {
+                            hashMap.put("queryId", "outMapper.updateControlPart_outSide_cancel");
+                            this.innodaleDao.update(hashMap);
+                        }else {
+                            hashMap.put("queryId", "outMapper.updateControlPart_outSide");
+                            this.innodaleDao.update(hashMap);
+                        }
                         hashMap.put("queryId", "outMapper.createControlPartProgress_outSide");
                         this.innodaleDao.create(hashMap);
                     } else {
