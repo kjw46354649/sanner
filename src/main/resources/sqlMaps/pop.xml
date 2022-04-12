@@ -134,7 +134,7 @@
                  WHEN Z.PART_STATUS = 'PRO002' AND IFNULL(Z.MATERIAL_SUPPLY_YN, 'N') = 'Y' THEN 'PRO022'
                     ELSE ''
             END PRO021, <!-- 소재입고(보), 소재입고(사) 처리 -->
-            CASE WHEN Z.OUTSIDE_YN = 'Y' AND Z.PRO001 IS NOT NULL AND Z.PRO019 IS NULL THEN 'PRO019' ELSE '' END PRO019,  <!-- 외주 가공 입고 상태 처리 -->
+            CASE WHEN Z.OUTSIDE_YN = 'Y' AND Z.PRO001 IS NOT NULL AND Z.PRO019 IS NULL AND Z.OUTSIDE_STATUS != 'OST002' THEN 'PRO019' ELSE '' END PRO019,  <!-- 외주 가공 입고 상태 처리 -->
             CASE WHEN Z.PRO004 IS NOT NULL AND ORDER_COUNT > 0 AND Z.PRO005 IS NULL THEN 'PRO005' ELSE '' END PRO005, <!-- 소재 입고 상태 처리 -->
             CASE WHEN Z.POP_PREV_POSITION = 'POP150' AND Z.POP_CUR_POSITION NOT IN ('POP150') THEN 'PRO013' ELSE '' END PRO013, <!-- 후가공 완료 상태 처리 -->
             CASE WHEN Z.POP_PREV_POSITION = 'POP160' AND Z.POP_CUR_POSITION NOT IN ('POP160') THEN 'PRO015' ELSE '' END PRO015, <!-- 표면처리 완료 상태 처리 -->
@@ -145,7 +145,8 @@
             CASE WHEN Z.OUTSIDE_YN = 'N' AND Z.PART_STATUS IS NOT NULL AND PRO002 IS NULL THEN 'X' ELSE '' END AS CHE_PRO002, <!-- NULL 이 아닌경우 가공 확정 이후 POP 스캔 가능 -->
             CASE WHEN Z.SCAN_DRAWING_VER != Z.CURR_DRAWING_VER THEN 'X' ELSE '' END AS CHE_VER, <!-- 최선 바코드 정보와 스캔 바코드의 DRAWING_NUM 가 다른경우 -->
             CASE WHEN Z.DEL_YN = 'Y' THEN 'X' ELSE '' END AS CHE_DEL_YN, <!-- 주문 정보가 삭제된 경우  -->
-            CASE WHEN Z.CONTROL_STATUS = 'ORD002' THEN 'X' ELSE '' END AS CHE_CANCEL_YN <!-- 주문 정보가 취소 된 경우  -->
+            CASE WHEN Z.CONTROL_STATUS = 'ORD002' THEN 'X' ELSE '' END AS CHE_CANCEL_YN, <!-- 주문 정보가 취소 된 경우  -->
+            CASE WHEN Z.OUTSIDE_YN = 'Y' AND Z.OUTSIDE_STATUS = 'OST002' THEN 'X' ELSE '' END AS CHE_OST002
         FROM (
             SELECT
                 A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, H.CONTROL_NUM, A.PART_NUM,
@@ -171,7 +172,8 @@
                 ) AS ORDER_COUNT,  <!-- 자재 주문 완료 건수 -->
                 B.BARCODE_NUM AS SCAN_BARCODE_NUM, B.CONTROL_VER AS SCAN_CONTROL_VER,  B.DRAWING_VER AS SCAN_DRAWING_VER, <!-- 바코드 스캔 정보 -->
                 Q.BARCODE_NUM AS CURR_BARCODE_NUM, Q.CONTROL_VER AS CURR_CONTROL_VER,  Q.DRAWING_VER AS CURR_DRAWING_VER, <!-- 바코드 최선 정보 -->
-                H.DEL_YN <!-- 주문정보 삭제 유무 -->
+                H.DEL_YN, <!-- 주문정보 삭제 유무 -->
+                A.OUTSIDE_STATUS
             FROM TBL_CONTROL_PART A
                 INNER JOIN TBL_CONTROL H ON A.CONTROL_SEQ = H.CONTROL_SEQ  <!-- 확정 상태 -->
                 INNER JOIN TBL_CONTROL_BARCODE B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
