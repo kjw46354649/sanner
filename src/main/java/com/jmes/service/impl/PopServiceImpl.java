@@ -274,8 +274,6 @@ public class PopServiceImpl implements PopService {
                 model.addAttribute("controlInfo", context02);
                 model.addAttribute("locationInfo", context03);
 
-                // 최종전에 체크해서 중복있으면 롤백
-
                 simpMessagingTemplate.convertAndSend("/topic/pop", notificationMessage);
             }
         }
