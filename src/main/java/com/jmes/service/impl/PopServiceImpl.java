@@ -127,6 +127,8 @@ public class PopServiceImpl implements PopService {
             }else {
 
                 // 가공중의 충당요청건이 있는 경우 pop 스캔시 입출고 처리
+                controlPartInfo.put("popBarcode",hashMap.get("popBarcode"));
+
                 controlPartInfo.put("queryId","popMapper.insertProcessingStockIn");
                 innodaleDao.create(controlPartInfo);
 

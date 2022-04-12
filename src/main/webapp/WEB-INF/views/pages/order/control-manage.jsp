@@ -926,6 +926,10 @@
                         {'value':'MATERIAL_FINISH_HEAT_YN', 'text':'열처리'}
                     ]
                 },
+                render: function (ui) {
+
+                    return {text: controlManageFilterRender(ui)};
+                }
             },
             {
                 title: '소재비고', dataIndx: 'MATERIAL_NOTE',
@@ -1354,23 +1358,6 @@
                         let newRowData = ui.updateList[i].newRow;
                         let rowIndx = ui.updateList[i].rowIndx;
 
-                        // 단가확인
-                        if (newRowData.hasOwnProperty('PRICE_CONFIRM')) {
-                            let priceConfirmList = fnGetCommCodeGridSelectBox('1017');
-                            let index = priceConfirmList.findIndex(function (element) {
-                                return element.text === newRowData.PRICE_CONFIRM;
-                            });
-
-                            if (index < 0) {
-                                index = priceConfirmList.findIndex(function (element) {
-                                    return element.value === newRowData.PRICE_CONFIRM;
-                                });
-                            }
-                            $controlManagementGrid.pqGrid('updateRow', {
-                                rowIndx: rowIndx,
-                                row: {'PRICE_CONFIRM': priceConfirmList[index].value}
-                            });
-                        }
                         // 사업자 구분
                         if (newRowData.hasOwnProperty('COMP_CD')) {
                             let index = FAMILY_COMPANY.findIndex(function (element) {
@@ -1544,6 +1531,26 @@
                             $controlManagementGrid.pqGrid('updateRow', {
                                 rowIndx: rowIndx,
                                 row: {'MATERIAL_FINISH_HEAT': materialFinishHeatList[index].value}
+                            });
+                        }
+
+                        if (newRowData.hasOwnProperty('SPECIAL_TREATMENT') && newRowData.SPECIAL_TREATMENT != "") {
+                            let specialTreatList = [
+                                {'value':'MATERIAL_FINISH_GRIND_YN', 'text':'연마'},
+                                {'value':'MATERIAL_FINISH_HEAT_YN', 'text':'열처리'}
+                            ];
+                            let index = specialTreatList.findIndex(function (element) {
+                                return element.text === newRowData.SPECIAL_TREATMENT;
+                            });
+
+                            if (index < 0) {
+                                index = specialTreatList.findIndex(function (element) {
+                                    return element.value === newRowData.SPECIAL_TREATMENT;
+                                });
+                            }
+                            $controlManagementGrid.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'SPECIAL_TREATMENT': specialTreatList[index].value}
                             });
                         }
                     }
@@ -2394,7 +2401,7 @@
 
             if (!flag) {
                 parameters = {'url': '/saveFromControlManage', 'data': {data: JSON.stringify(changes)}};
-
+                console.log('changes',changes)
                 fnPostAjaxAsync(function (data) {
                     if (data.flag) {
                         fnAlert(null, data.message);

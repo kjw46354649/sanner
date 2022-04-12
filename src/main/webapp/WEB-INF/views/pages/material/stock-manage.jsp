@@ -3081,7 +3081,7 @@
                     let grid = this;
                     let $cell = grid.getCell(ui);
                     let rowData = ui.rowData;
-                    if(rowData.LATEST_YN == '1') {
+                    if(rowData.LATEST_YN == '1' && rowData.INFO_CD != 'STO002' && rowData.INFO_CD != 'STO001') {
                         return '<button type="button" class="miniBtn black" id="INSIDE_STOCK_QTY_CANCEL_ACTION">취소</button>';
                     }
                 },
