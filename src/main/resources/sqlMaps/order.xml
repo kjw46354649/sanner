@@ -3628,8 +3628,8 @@
             <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (WORK_TYPE != null and WORK_TYPE != '')">
                 WORK_TYPE = #{WORK_TYPE},
             </if>
-            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (OUTSIDE_YN != null and OUTSIDE_YN != '')">
-                OUTSIDE_YN = #{OUTSIDE_YN},
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (OUTSIDE_YN != null)">
+                OUTSIDE_YN = CASE WHEN #{OUTSIDE_YN} = '' THEN 'N' ELSE #{OUTSIDE_YN} END,
             </if>
             <if test="WORK_FACTORY != null">
                 WORK_FACTORY = CASE WHEN #{WORK_FACTORY} = '' THEN NULL ELSE #{WORK_FACTORY} END,
