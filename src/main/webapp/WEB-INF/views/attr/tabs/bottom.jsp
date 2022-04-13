@@ -1755,7 +1755,11 @@
 
                 $itemDetailPopForm.find("#DRAWING_NUM").attr('title', dataInfo.DRAWING_NUM);
                 $itemDetailPopForm.find("#DRAWING_NUM").html(dataInfo.DRAWING_NUM);
-                $itemDetailPopForm.find("#INSIDE_STOCK").html(dataInfo.STOCK_TXT);
+                let stockText = "";
+                if(!fnIsEmpty(dataInfo.OUT_REQUEST_SEQ)) {
+                    stockText = dataInfo.INSIDE_STOCK_NUM + " (요:" + dataInfo.REQUEST_QTY + ", 충:" + dataInfo.OUT_QTY + ")";
+                }
+                $itemDetailPopForm.find("#INSIDE_STOCK").html(stockText);
                 $itemDetailPopForm.find("#PART_STATUS_NM").html(dataInfo.PART_STATUS_NM);
 
                 $itemDetailPopForm.find("#ITEM_NM").attr('title', dataInfo.ITEM_NM);
