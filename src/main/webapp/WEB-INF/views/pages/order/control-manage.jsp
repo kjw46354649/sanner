@@ -3147,7 +3147,6 @@
             {title: 'CONTROL_PART_INFO', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', hidden: true},
             {title: 'PROCESSING_QTY', dataType: 'integer', dataIndx: 'PROCESSING_QTY', hidden: true},
             {title: 'INSIDE_STOCK_SEQ', dataType: 'integer', dataIndx: 'INSIDE_STOCK_SEQ', hidden: true},
-            {title: 'OUT_REQUEST_SEQ', dataType: 'integer', dataIndx: 'OUT_REQUEST_SEQ', hidden: true},
             {title: 'IMG_GFILE_SEQ', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
             {
                 dataIndx: 'CHECK_BOX',
@@ -3174,7 +3173,7 @@
                     let grid = this;
                     let $cell = grid.getCell(ui);
                     let rowData = ui.rowData;
-
+                    console.log('postRender',rowData.CHECK_BOX)
                     if(rowData.CHECK_BOX) {
                         $cell.find('input[type=checkbox]').prop('checked',true);
                     }else {
@@ -3268,16 +3267,29 @@
                             if(typeof rowData.OUT_DT != 'undefined' && rowData.OUT_DT != null && rowData.OUT_DT != '') {
                                 return {style: 'background-color: #d7d7d7;'};
                             }else if( typeof rowData.RNUM == 'undefined' || rowData.RNUM == "" || rowData.RNUM == null) {
-                                if(ui.cellData != null && ui.cellData > 0) {
-                                    ui.rowData.CHECK_BOX = true;
-                                    $row.find('input[type=checkbox]').prop('checked', true);
-                                }else {
-                                    ui.rowData.CHECK_BOX = false;
-                                    $row.find('input[type=checkbox]').prop('checked', false);
-                                }
                                 return {style : 'background-color: #fff599;'};
                             }else {
                                 return { cls : 'matchGrid_lightRed'};
+                            }
+                        }
+                        ,postRender: function (ui) {
+                            let grid = this;
+                            let $cell = grid.getCell(ui);
+                            let rowData = ui.rowData;
+                            let $row = grid.getRow(ui);
+
+                            if(fnIsEmpty(rowData.OUT_DT) && (typeof rowData.RNUM == 'undefined' || rowData.RNUM == "" || rowData.RNUM == null)) {
+                                if(rowData.ORDER_QTY != null && rowData.ORDER_QTY > 0) {
+                                    // ui.rowData.CHECK_BOX = true;
+                                    $row.find('input[type=checkbox]').prop('checked', true);
+                                    matchStockGrid.pqGrid("updateRow", { 'rowIndx': rowData.pq_ri , newRow: { 'CHECK_BOX': $row.find('input[type=checkbox]').prop('checked')} });
+                                }else {
+                                    // ui.rowData.CHECK_BOX = false;
+                                    $row.find('input[type=checkbox]').prop('checked', false);
+                                    matchStockGrid.pqGrid("updateRow", { 'rowIndx': rowData.pq_ri , newRow: { 'CHECK_BOX': $row.find('input[type=checkbox]').prop('checked')}   });
+                                }
+                                console.log('render',rowData.CHECK_BOX)
+                                console.log('rowData',rowData)
                             }
                         }
                     }
@@ -3496,7 +3508,7 @@
                 fnAlert(null,'충당 요청 수량을 입력해주세요.');
                 return;
             }
-
+            console.log('changes',changes)
             // return;
             if (gridInstance.isDirty()) {
                 let parameters = {'url': '/matchStockSave', 'data': {data: JSON.stringify(changes)}};
