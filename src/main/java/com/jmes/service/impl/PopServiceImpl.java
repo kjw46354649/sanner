@@ -124,7 +124,7 @@ public class PopServiceImpl implements PopService {
             }else if (popLocation.equals(prevPopLocation)) {
                 model.addAttribute("returnCode", "RET01");
                 model.addAttribute("message", context02 + " " + context03 + " Already Existed."); // 현재와 같은 Location 스캔 처리
-            }else if(controlPartInfo.get("CHE_OST002").equals("X")) {
+            }else if("X".equals(controlPartInfo.get("CHE_OST002"))) {
                 model.addAttribute("returnCode","RET99");
                 model.addAttribute("message","외주주문 입니다. 진행상태를 확인해 주세요.");
             }else {
