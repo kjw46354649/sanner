@@ -98,7 +98,7 @@
 <body>
 <div id="order_manage_div" class="page estimate">
     <div class="div_bg"></div>
-    <div style="height: 740px;padding: 10px;">
+    <div style="height: 85%;padding: 10px;">
         <form class="form-inline" name="CREATE_CONTROL_SEARCH_FORM" id="CREATE_CONTROL_SEARCH_FORM" role="form" onsubmit="return false;">
             <input type="hidden" name="queryId" id="queryId" value="orderMapper.selectCreateControlList">
             <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
@@ -178,7 +178,7 @@
                         <select id="createControlFilterCondition" style="display: none;">
                             <option value="contain">Contains</option>
                         </select>
-                        <input type="text" class="wd_130 ml-75" name="BATCH_CONTROL_NUM" id="BATCH_CONTROL_NUM" title="일괄입력">
+                        <input type="text" class="wd_130 ml-55" name="BATCH_CONTROL_NUM" id="BATCH_CONTROL_NUM">
                         <select id="CONTROL_NUM_NUMBER" class="wd_70">
                             <option value="" selected>자리수</option>
                             <c:forEach var="i" begin="1" end="5">
@@ -703,7 +703,7 @@
         const obj = {
             minHeight: '100%',
             width: '100%',
-            height: 630,
+            height: '100%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             showTitle: false,

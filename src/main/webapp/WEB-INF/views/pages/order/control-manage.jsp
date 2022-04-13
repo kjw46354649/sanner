@@ -2501,7 +2501,7 @@
             let url = '/createControl';
             // 팝업 사이즈
             let nWidth = 1650;
-            let nHeight = 785;
+            let nHeight = 980;
             let winWidth = document.body.clientWidth;
             let winHeight = document.body.clientHeight;
             let winX = window.screenX || window.screenLeft || 0;
