@@ -3175,16 +3175,15 @@
                     let $cell = grid.getCell(ui);
                     let rowData = ui.rowData;
 
-                    if(typeof rowData.REQUEST_QTY == 'undefined' || rowData.REQUEST_QTY == null || rowData.REQUEST_QTY =='') {
-                        $cell.find('input[type=checkbox]').prop('checked', false);
-                        ui.rowData.CHECK_BOX = false;
-                    }else if(typeof rowData.OUT_REQUEST_SEQ != 'undefined' && rowData.OUT_REQUEST_SEQ != null && rowData.OUT_REQUEST_SEQ != '') {
-                        $cell.find('input[type=checkbox]').prop('checked', true);
-                        ui.rowData.CHECK_BOX = true;
+                    if(rowData.CHECK_BOX) {
+                        $cell.find('input[type=checkbox]').prop('checked',true);
                     }else {
-                        ui.rowData.CHECK_BOX = $cell.find('input[type=checkbox]').prop('checked');
-                        ui.cellData = $cell.find('input[type=checkbox]').prop('checked');
+                        $cell.find('input[type=checkbox]').prop('checked',false);
                     }
+
+                    $cell.find('input[type=checkbox]').bind("click", function (e) {
+                        matchStockGrid.pqGrid("updateRow", { 'rowIndx': rowData.pq_ri , row: { 'CHECK_BOX': $(this).prop('checked') } });
+                    });
                 }
             },
             {title: '작업번호(주문)', align: 'center', minWidth: 150, dataIndx: 'REQUEST_CONTROL_NUM', sortable:false,
@@ -3470,11 +3469,15 @@
             let duplChkArr = [];
             var flag = false;
             var qtyFlag = false;
+            var qtyFlag2 = false;
             $.each(changes.updateList, function (idx,Item) {
                 var id = Item.INSIDE_STOCK_SEQ;
                 if(Item.CHECK_BOX) {
                     if(duplChkArr.indexOf(Item.INSIDE_STOCK_SEQ) < 0) {
                         duplChkArr.push(Item.INSIDE_STOCK_SEQ);
+                    }
+                    if(fnIsEmpty(Item.ORDER_QTY) || Item.ORDER_QTY <= 0) {
+                        qtyFlag2 = true;
                     }
                 }
                 if(Item.ORDER_QTY > Item.CURR_QTY) {
@@ -3489,7 +3492,12 @@
                 fnAlert(null,'재고 수량을 확인해주세요.');
                 return;
             }
+            if(qtyFlag2) {
+                fnAlert(null,'충당 요청 수량을 입력해주세요.');
+                return;
+            }
 
+            // return;
             if (gridInstance.isDirty()) {
                 let parameters = {'url': '/matchStockSave', 'data': {data: JSON.stringify(changes)}};
 
