@@ -3288,8 +3288,6 @@
                                     $row.find('input[type=checkbox]').prop('checked', false);
                                     matchStockGrid.pqGrid("updateRow", { 'rowIndx': rowData.pq_ri , newRow: { 'CHECK_BOX': $row.find('input[type=checkbox]').prop('checked')}   });
                                 }
-                                console.log('render',rowData.CHECK_BOX)
-                                console.log('rowData',rowData)
                             }
                         }
                     }
