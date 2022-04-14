@@ -952,10 +952,6 @@
                     }
                 }
             },
-            // {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 150, width: 150,
-            //     editable: function (ui) { return gridCellEditable(ui);},
-            //     styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
-            // },
             {title: '사업자구분', dataType: 'string', dataIndx: 'COMP_CD', minWidth: 80, width: 80, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 editor: {
                     type: 'select',
@@ -971,19 +967,6 @@
                 title: '공급단가', width: 80, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_FINAL_AMT',
                 styleHead: {'font-weight': 'bold', 'background': '#aac8ed'}
             },
-            /*{title: '재질', width: 60, dataIndx: 'MATERIAL_TYPE', styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
-                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1035')},
-                postRender:function( ui ){
-                    let mt = ui.rowData.MATERIAL_TYPE;
-                    if(typeof mt != 'undefined' && mt != null && mt != '' && mt.indexOf('MTP') < 0) {
-                        $.each(listJson.MATERIAL_TYPE, function (idx,Item) {
-                            if(Item.CODE_NM_KR.toUpperCase() == ui.rowData.MATERIAL_TYPE.toUpperCase()) {
-                                ui.rowData.MATERIAL_TYPE = Item.CODE_CD;
-                            }
-                        })
-                    }
-                }
-            },*/
             {
                 title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
                 render: function (ui) {
@@ -1076,7 +1059,6 @@
                 }
             },
             {title: '생성일시', dataType: 'string', dataIndx: 'INSERT_TIME', minWidth: 100, width: 100, editable: false},
-            // {title: '수정일시', dataType: 'string', dataIndx: 'UPDATE_TIME', minWidth: 100, width: 100, editable: false},
             {
                 title: '최근실적', align: 'center', editable: false,
                 colModel: [
@@ -1215,36 +1197,12 @@
                         stockManageGridId01.pqGrid('updateRow', {rowIndx: rowIndx, row: {"LOC_SEQ": ""}});
                     }
                 }
-            },
-            cellClick: function (event, ui) {
-                let rowIndx = ui.rowIndx, $grid = this;
-
-                /*if (ui.dataIndx == 'DXF_GFILE_SEQ') {
-                    if (ui.rowData['DXF_GFILE_SEQ'] > 0) {
-                        callWindowImageViewer(ui.rowData.DXF_GFILE_SEQ);
-                    } else {
-                        callGridSingleFileUpload(stockManageGridId01, rowIndx, 'DXF_GFILE_SEQ');
-                    }
-
-                    return;
-                }
-                if (ui.dataIndx == 'IMG_GFILE_SEQ') {
-
-                    if (ui.rowData['IMG_GFILE_SEQ'] > 0) {
-                        callWindowImageViewer(ui.rowData.IMG_GFILE_SEQ);
-                    } else {
-                        callGridSingleFileUpload(stockManageGridId01, rowIndx, 'IMG_GFILE_SEQ');
-                    }
-
-                    return;
-                }*/
             }
         });
         stockManageColModel02 = [
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'INSIDE_STOCK_SEQ', dataType: 'integer', dataIndx: 'INSIDE_STOCK_SEQ', hidden: true},
-            // {title: 'ORDER_SEQ', dataType: 'integer', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: '재고번호', minWidth: 100, dataIndx: 'INSIDE_STOCK_NUM', editable: false},
             {title: '발주처', minWidth: 100, dataIndx: 'ORDER_COMP_NM', editable: false},
             {title: '규격', minWidth: 120, dataIndx: 'SIZE_TXT', editable: false},
@@ -1444,7 +1402,6 @@
                 }
             },
             {title: '재고수량', width: 70, dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', editable : false},
-            // {title: '창고명', align: 'center', width: 100, dataIndx: 'WAREHOUSE_CD_NM'},
             {title: '재고위치', align: 'center', width: 90, dataIndx: 'LOC_NM', editable : false}
         ];
         stockManageObj03 = {
@@ -1474,7 +1431,6 @@
             rowSelect: function (event, ui) {
                 if(ui.addList.length > 0) {
                     var rowData = ui.addList[0].rowData;
-                    // console.log(rowData)
                     if(typeof rowData != 'undefined') {
                         $("#stock_manage_pop").find(".stockPopupInfo").removeClass('stockPopupInfoEnter');
                         $("#stock_manage_pop").find(".stockPopupInfo").removeClass('stockPopupInfoOut');
@@ -1487,7 +1443,6 @@
                         $("#POP_ITEM_NM").html(rowData.ITEM_NM);
                         $("#POP_SIZE_TXT").html(rowData.SIZE_TXT);
                         if(typeof rowData.IMG_GFILE_SEQ != 'undefined' && rowData.IMG_GFILE_SEQ != ''){
-                            // $("#POP_DRAWING_IMG").css({'background':'url(/image/'+ rowData.IMG_GFILE_SEQ+ ')','background-repeat':'no-repeat','background-position':'center','background-size':'100% 100%'});
                             $("#POP_DRAWING_IMG").attr("src", '/image/' + rowData.IMG_GFILE_SEQ);
                         }else {
                             $("#POP_DRAWING_IMG").attr("src", '/resource/main/blank.jpg');
@@ -1507,14 +1462,11 @@
                         }
 
                         if(typeof rowData.INSIDE_STOCK_SEQ != 'undefined') {
-                            // $("#stock_manage_pop_form").find("#ORDER_QTY").val(0);
                             if(popType == 'GRID_OUT'|| popType == 'BARCODE_OUT') {
                                 $("#POP_GUBUN").html("불출");
                                 $("#stock_manage_pop").find(".stockPopupInfo").addClass('stockPopupInfoOut');
-                                // $("#stock_manage_pop_form").find("#ORDER_QTY").val(rowData.ORDER_QTY);
                             }else {
                                 $("#POP_GUBUN").html("입고");
-                                // $("#stock_manage_pop_form").find("#ORDER_QTY").val(0);
                                 $("#stock_manage_pop").find(".stockPopupInfo").addClass('stockPopupInfoEnter');
                             }
                             $(".stockPopupBtmRight .edit_td").addClass('tdBackColor');
@@ -1614,7 +1566,6 @@
             stockManageGridId03.pqGrid('refreshView');
 
             $.each(list, function (idx, Item) {
-                // let newRowIndex = stockManageGridId03.pqGrid('option', 'dataModel.data').length + 1;
                 stockManageGridId03.pqGrid('addRow', {
                     newRow: Item,
                     rowIndx: idx,
@@ -2060,28 +2011,11 @@
             }
             INSIDE_STOCK_SEQ = INSIDE_STOCK_SEQ.substr(0, INSIDE_STOCK_SEQ.length - 1);
 
-            // let deleteData = {
-            //     "url": '/json-info',
-            //     'data':
-            //         {
-            //             "queryId": 'material.selectInsideStockIn',
-            //             "INSIDE_STOCK_SEQ": INSIDE_STOCK_SEQ
-            //         }
-            // };
-            // fnPostAjaxAsync(function (data, callFunctionParam) {
-            //     rowCnt = data.info.CNT;
-            // }, deleteData, '');
-
-            // if (rowCnt > 0) {
-            //     fnAlert(null, "입고 이력이 존재 합니다.<br>삭제를 위해서 관리자에게 문의 하십시오.");
-            //     return;
-            // } else {
             fnConfirm(null, "선택한 대상의 모든 수불 이력까지 삭제됩니다.<br>진행하시겠습니까?", function () {
                 fnDeletePQGrid(stockManageGridId01, selectedRowIndex, "material.deleteInsideStockAll", function () {
                     $("#stock_manage_search_btn").trigger("click");
                 });
             });
-            // }
         });
 
         let createStockControlPopup;
@@ -2350,19 +2284,12 @@
         $('#inside_stock_qty_plus_btn').on('click', function(e) {
             calcQty("PLUS");
         });
+
         $('#inside_stock_qty_minus_btn').on('click', function(e) {
             calcQty("MINUS");
         });
-        // $('#inside_stock_qty_all_btn').on('click', function(e) {
-        //     let ORIGINAL_POP_STOCK_QTY_AFTER = $('#stock_manage_pop_form').find('#ORIGINAL_POP_STOCK_QTY_AFTER').val();
-        //     //let ORIGINAL_ORDER_QTY =  $('#stock_manage_pop_form').find('#ORIGINAL_ORDER_QTY').val();
-        //
-        //     $('#stock_manage_pop_form').find('#ORDER_QTY').val(ORIGINAL_POP_STOCK_QTY_AFTER);
-        //     $('#stock_manage_pop_form').find('#POP_STOCK_QTY_AFTER').val(0);
-        //
-        // });
-        let calcQty = function(type){
 
+        let calcQty = function(type){
             let POP_STOCK_QTY = parseInt($('#stock_manage_pop_form').find('#POP_STOCK_QTY').val());//현재수량
             let POP_ORDER_QTY = parseInt($('#stock_manage_pop_form').find('#ORDER_QTY').val());//입고수량
             let ORG_ORDER_QTY = parseInt($('#stock_manage_pop_form').find('#ORG_ORDER_QTY').val());// 원 입고수량
@@ -2701,7 +2628,6 @@
                 'url': '/managerInsideStockPop',
                 'data': $('#stock_manage_pop_form').serialize()
             };
-            // console.log($('#stock_manage_pop_form').serialize());
             fnPostAjax(function (data, callFunctionParam) {
                 if(data.flag) {
                     fnAlert(null,data.message);
@@ -2855,8 +2781,6 @@
                     $("#stock_manage_form").hide();
                     settingForm('stock_manage_form','stock_in_out_form')
                     $("#stock_in_out_search_btn").trigger('click');
-                    // $("#sales_status_save_id").hide();
-                    // $(".month_sale_status_tab").show();
                 }
             }
         });
@@ -3047,24 +2971,6 @@
             {title: '품명', dataType: 'string', dataIndx: 'ITEM_NM', minWidth: 150, width: 150,
                 editable: false
             },
-            // {title: '사업자구분', dataType: 'string', dataIndx: 'COMP_CD', minWidth: 100, width: 100, editable: false,
-            //     editor: {
-            //         type: 'select',
-            //         valueIndx: "value",
-            //         labelIndx: "text",
-            //         options: fnCommCodeDatasourceGridSelectBoxCreate({"url":"/json-list", "data": {"queryId": 'dataSource.getBusinessCompanyList'}})
-            //     },
-            //     postRender:function( ui ){
-            //         let cmpCd = ui.rowData.COMP_CD;
-            //         if(typeof cmpCd != 'undefined' && cmpCd != null && cmpCd != '' && cmpCd.indexOf('CMP') < 0) {
-            //             $.each(listJson.COMP_CD, function (idx,Item) {
-            //                 if(Item.CODE_NM.toUpperCase() == ui.rowData.COMP_CD.toUpperCase()) {
-            //                     ui.rowData.COMP_CD = Item.CODE_CD;
-            //                 }
-            //             })
-            //         }
-            //     }
-            // },
             {title: '비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 100, width: 100, editable: false},
             {title: '수불<br>구분', dataType: 'string', dataIndx: 'TYPE', minWidth: 40, width: 40, editable: false},
             {title: '수량', dataType: 'integer', dataIndx: 'QTY', format: '#,###', editable: false},
