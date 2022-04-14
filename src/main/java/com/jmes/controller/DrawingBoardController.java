@@ -62,6 +62,37 @@ public class DrawingBoardController {
     }
 
     /**
+     * Json update
+     */
+    @RequestMapping(value = "/drawing-json-update")
+    public String drawingJsonUpdate(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        innodaleService.update(hashMap);
+        return "jsonView";
+    }
+
+    /**
+     * Json delete
+     */
+    @RequestMapping(value = "/drawing-json-delete")
+    public String drawingJsonDelete(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        innodaleService.remove(hashMap);
+        return "jsonView";
+    }
+
+    /**
+     * Json create
+     */
+    @RequestMapping(value = "/drawing-json-create")
+    public String drawingJsonCreate(Model model, HttpServletRequest request, HttpSession session) throws Exception {
+        Map<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        innodaleService.create(hashMap);
+        return "jsonView";
+    }
+
+
+    /**
      * Drawing barcode Info
      */
     @RequestMapping(value = "/drawing/barcode")
@@ -133,6 +164,7 @@ public class DrawingBoardController {
         machineInfo.put("EQUIP_SEQ", searchMachineInfo.get("EQUIP_SEQ"));
         machineInfo.put("EQUIP_NM", searchMachineInfo.get("EQUIP_NM"));
         machineInfo.put("FACTORY_AREA", searchMachineInfo.get("FACTORY_AREA"));
+        machineInfo.put("IF_USE_YN", searchMachineInfo.get("IF_USE_YN"));
 
         drawingInfo.put("machineInfo", machineInfo);
 
@@ -186,6 +218,7 @@ public class DrawingBoardController {
 
             model.addAttribute("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
             model.addAttribute("FACTORY_AREA", machineInfo.get("FACTORY_AREA"));
+            System.out.println("machineInfo >>>>>>>>>>>>>> 2 >> " + machineInfo.toString());
 
             hashMap.put("FACTORY_AREA", machineInfo.get("FACTORY_AREA"));
         }
@@ -223,6 +256,7 @@ public class DrawingBoardController {
             machineInfo.put("EQUIP_SEQ", hashMap.get("EQUIP_SEQ"));
             machineInfo.put("EQUIP_NM", hashMap.get("EQUIP_NM"));
             machineInfo.put("FACTORY_AREA", hashMap.get("FACTORY_AREA"));
+            machineInfo.put("IF_USE_YN", hashMap.get("IF_USE_YN"));
 
             /** 최종 Session 에 저장되는 정보 **/
             drawingInfo.put("machineInfo", machineInfo);
@@ -445,6 +479,24 @@ public class DrawingBoardController {
         alarmHashMap.put("MCT_WORK_SEQ", hashMap.get("MCT_WORK_SEQ"));
         alarmHashMap.put("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
         simpMessagingTemplate.convertAndSend("/topic/drawing", getNotificationMessage(alarmHashMap, ActionType.DB_CANCEL, "작업취소"));
+
+        return "jsonView";
+    }
+
+    /** 불량실적 입력 **/
+    @RequestMapping(value="/drawing-error-regist",  method= RequestMethod.POST)
+    public String managerDrawingBoardErrorRegist(HttpSession session, HttpServletRequest request) throws Exception {
+
+        HashMap<String, Object> hashMap = CommonUtility.getParameterMap(request);
+        HashMap<String, Object> drawingInfo = (HashMap<String, Object>)(request.getSession().getAttribute("drawingInfo"));
+
+        HashMap<String, Object> machineInfo = (HashMap<String, Object>)drawingInfo.get("machineInfo");
+        HashMap<String, Object> userInfo = (HashMap<String, Object>)drawingInfo.get("userInfo");
+
+        hashMap.put("machineInfo", machineInfo);
+        hashMap.put("userInfo", userInfo);
+
+        drawingBoardService.managerDrawingBoardErrorRegist(hashMap);
 
         return "jsonView";
     }

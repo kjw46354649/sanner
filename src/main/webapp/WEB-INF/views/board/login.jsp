@@ -33,6 +33,7 @@
         <form id="drawing_login_form" name="drawing_login_form" method="POST" action="/drawing-worker">
             <input type="hidden" name="queryId" id="queryId" value="drawingMapper.selectDrawingEquipment">
             <input type="hidden" name="EQUIP_NM" id="EQUIP_NM" value="">
+            <input type="hidden" name="IF_USE_YN" id="IF_USE_YN" value="">
             <input type="hidden" name="SEL_EQUIP_SEQ" id="SEL_EQUIP_SEQ" value="${EQUIP_SEQ}">
             <div class="loginWrap">
                 <ul>
@@ -68,9 +69,18 @@
 <script type='text/javascript'>
 
     let equipment = $("#drawing_login_form").find("#EQUIP_SEQ");
-    let selEquipList = '${equipList}';
+    let selEquipList = [];
+    let jsonStr;
+
 
     $(function () {
+
+
+        <c:forEach var="equip" items="${equipList}">
+        selEquipList.push({EQUIP_SEQ: '${equip.EQUIP_SEQ}', IF_USE_YN: '${equip.IF_USE_YN}', EQUIP_NM: '${equip.EQUIP_NM}'});
+        </c:forEach>
+
+        console.log(selEquipList);
 
         $('#local_ko').click(function(){
             $("#locale-form").find("#lang").val("ko");
@@ -87,6 +97,12 @@
                 fnAlert(null, "<srping:message key='drawing.board.alert.08'/>");
                 return false;
             }
+            $.each(selEquipList, function (idx, Item) {
+                let selEquipSeq = $("#drawing_login_form").find("#EQUIP_SEQ option:checked").val();
+                if(Item.EQUIP_SEQ == selEquipSeq) {
+                    $("#drawing_login_form").find("#IF_USE_YN").val(Item.IF_USE_YN);
+                }
+            })
             $("#drawing_login_form").find("#EQUIP_NM").val($("#drawing_login_form").find("#EQUIP_SEQ option:checked").text());
             document.getElementById('drawing_login_form').submit();
         })
@@ -97,6 +113,7 @@
                 data: {"queryId":"drawingMapper.selectDrawingEquipment", "FACTORY_AREA" : $("#drawing_login_form").find("#FACTORY_AREA").val()},
                 success: function (data, textStatus, jqXHR) {
                     if (textStatus === 'success') {
+                        selEquipList = data.list;
                         equipment.find('option').remove();
                         for(let i=0; i < data.list.length; i++){
                             document.getElementById("EQUIP_SEQ").options.add(new Option(data.list[i].EQUIP_NM, data.list[i].EQUIP_SEQ));

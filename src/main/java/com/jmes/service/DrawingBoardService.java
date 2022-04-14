@@ -14,4 +14,6 @@ public interface DrawingBoardService {
 
     public void managerDrawingBoardCancel(HashMap<String, Object> hashMap) throws Exception;
 
+    public void managerDrawingBoardErrorRegist(HashMap<String, Object> hashMap) throws Exception;
+
 }

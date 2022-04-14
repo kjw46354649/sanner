@@ -55,8 +55,6 @@
         ORDER BY A.SORT_NUM
     </select>
 
-
-
     <select id="selectDrawingUser" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.USER_ID, A.USER_NM, IFNULL(A.PHOTO_GFILE_SEQ, SPACE(0)) AS PHOTO_GFILE_SEQ
         FROM TBL_USER A
@@ -97,7 +95,7 @@
                  ELSE Z.ORDER_QTY
             END AS ORDER_QTY_INFO,-- 수량에 대칭 추가 -->
             CONCAT(IFNULL(Z.NOTE, SPACE(0)), ' ', IFNULL(Z.MATERIAL_NOTE, SPACE(0))) AS NOTE, Z.MCT_NOTE,
-            jmes.SF_GET_DATE_F(Y.INSERT_DT, 'YYYY', '') AS INSPECT_DT,
+            DATE_FORMAT(Y.INSERT_DT,'%y.%m.%d') AS INSPECT_DT,
             jmes.SF_GET_CODE_NM('1040', Y.INSPECT_GRADE, 'EN') AS INSPECT_GRADE_NM,
             CASE WHEN Y.INSPECT_TYPE = '1' THEN
             		CASE WHEN jmes.SF_GET_CODE_NM('1019', Y.INSPECT_RESULT, 'EN') IS NULL THEN jmes.SF_GET_CODE_NM('1020', Y.INSPECT_RESULT, 'EN')
@@ -105,7 +103,69 @@
                     END
               	 WHEN Y.INSPECT_TYPE = '2' THEN jmes.SF_GET_CODE_NM('1021', Y.INSPECT_RESULT, 'EN')
             END AS INSPECT_RESULT_NM,
-            jmes.SF_GET_CODE_NM('1032', Y.ERROR_REASON, 'EN') AS ERROR_REASON_NM, Z.WORK_STATUS
+            jmes.SF_GET_CODE_NM('1032', Y.ERROR_REASON, 'EN') AS ERROR_REASON_NM, Z.WORK_STATUS,
+            (
+                SELECT CONCAT(SF_GET_EQUIP_NM(M.EQUIP_SEQ), <![CDATA[ '<br>' ]]>, SF_GET_USER_NM(M.WORK_USER_ID))
+                FROM TBL_MCT_WORK M
+                WHERE M.DEL_YN = 'N'
+                    AND M.CONTROL_SEQ = Z.CONTROL_SEQ
+                    AND M.CONTROL_DETAIL_SEQ = Z.CONTROL_DETAIL_SEQ
+                    AND M.MCT_WORK_SEQ = (
+                        SELECT MAX(N.MCT_WORK_SEQ)
+                        FROM TBL_MCT_WORK N
+                        WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
+                            AND M.CONTROL_DETAIL_SEQ = N.CONTROL_DETAIL_SEQ
+                            AND N.WORK_STATUS = 'DBS030'
+                            AND N.DEL_YN = 'N'
+                    )
+            ) AS LATEST_PROCESS,
+            (IFNULL(Z.UNIT_QTY,1) * IFNULL(Z.COMPLETE_CYCLE_COUNT,0) + IFNULL(Z.ADJUST_QTY,0)) AS COMPLETE_QTY,
+            Z.GOAL_QTY,
+            IFNULL(Z.ADJUST_QTY,0) AS ADJUST_QTY,
+            Z.PLAN_CYCLE_COUNT,
+            Z.COMPLETE_CYCLE_COUNT,
+            Z.UNIT_QTY,
+            IFNULL(CAST((SELECT SUM(M.ERROR_QTY) FROM TBL_MCT_WORK_INSPECT M WHERE M.MCT_WORK_SEQ = Z.MCT_WORK_SEQ AND M.DEL_YN = 'N') AS INT),SPACE(0)) AS ERROR_QTY,
+            Z.WORK_ACTIVE_TIME,
+            Z.WORK_STOP_TIME,
+            CASE WHEN Z.WORK_ACTIVE_TIME IS NOT NULL AND Z.WORK_ACTIVE_TIME > 0
+                    THEN CONCAT(
+                        TRUNCATE(IFNULL(Z.WORK_ACTIVE_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(Z.WORK_ACTIVE_TIME,0)%3600)/60,0), 'm ',
+                        TRUNCATE(((IFNULL(Z.WORK_ACTIVE_TIME,0)%3600) % 60),0), 's'
+                    )
+                ELSE '-'
+            END AS WORK_ACTIVE_TIME_FOMAT,
+            CASE WHEN Z.WORK_STOP_TIME IS NOT NULL AND Z.WORK_STOP_TIME > 0
+                    THEN CONCAT(
+                        TRUNCATE(IFNULL(Z.WORK_STOP_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(Z.WORK_STOP_TIME,0)%3600)/60,0), 'm ',
+                        TRUNCATE(((IFNULL(Z.WORK_STOP_TIME,0)%3600) % 60),0), 's'
+                    )
+                ELSE '-'
+            END AS WORK_STOP_TIME_FOMAT,
+            CASE WHEN Z.LATEST_CYCLE_TIME IS NOT NULL AND Z.LATEST_CYCLE_TIME > 0
+                    THEN CONCAT(
+                        TRUNCATE(IFNULL(Z.LATEST_CYCLE_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(Z.LATEST_CYCLE_TIME,0)%3600)/60,0), 'm ',
+                        TRUNCATE(((IFNULL(Z.LATEST_CYCLE_TIME,0)%3600) % 60),0), 's'
+                    )
+                ELSE '-'
+            END AS LATEST_CYCLE_TIME,
+            Z.ACTIVE_TYPE,
+            Z.EVENT_TIME,
+            IFNULL(Z.CURRENT_STATUS_TIME,0) AS CURRENT_STATUS_TIME,
+            CASE WHEN Z.ACTIVE_TYPE = 'PGM_ACTIVE'
+                    THEN CONCAT(
+                        TRUNCATE(IFNULL(Z.CURRENT_STATUS_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(Z.CURRENT_STATUS_TIME,0)%3600)/60,0), 'm ',
+                        TRUNCATE(((IFNULL(Z.CURRENT_STATUS_TIME,0)%3600) % 60),0), 's'
+                    )
+                ELSE '-'
+            END AS CURRENT_STATUS_TIME_FORMAT,
+            IFNULL(CASE WHEN Z.ACTIVE_TYPE = 'PGM_STOP' THEN CASE WHEN Z.LEFT_TIME <![CDATA[ < ]]> 0 THEN 0 ELSE Z.LEFT_TIME END
+                        WHEN Z.ACTIVE_TYPE = 'PGM_ACTIVE' THEN CASE WHEN (Z.LEFT_TIME - Z.CURRENT_STATUS_TIME) <![CDATA[ < ]]> 0 THEN 0 ELSE (Z.LEFT_TIME - Z.CURRENT_STATUS_TIME) END
+            END,0) AS LEFT_TIME
         FROM (
             SELECT
                 'LAST' AS DATA_TYPE, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.MCT_WORK_SEQ, D.CONTROL_NUM,
@@ -127,10 +187,27 @@
                 IFNULL(jmes.SF_GET_SIDE_QTY(C.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0) AS OTHER_SIDE_QTY,<!--대칭_대칭 -->
                 D.SAME_SIDE_YN,<!-- 대칭 여부 -->
                 jmes.SF_GET_DATE_F(C.INNER_DUE_DT, '', '') AS INNER_DUE_DT,<!--내부가공납기 -->
-                D.NOTE AS NOTE, C.MATERIAL_NOTE, C.MCT_NOTE
+                D.NOTE AS NOTE, C.MATERIAL_NOTE, C.MCT_NOTE,
+                D.ORDER_COMP_CD,
+                C.MATERIAL_TYPE,
+                C.SIZE_TXT,
+                A.ADJUST_QTY,
+                A.GOAL_QTY,
+                A.COMPLETE_CYCLE_COUNT,
+                A.UNIT_QTY,
+                A.LATEST_CYCLE_TIME,
+                A.WORK_ACTIVE_TIME,
+                A.WORK_STOP_TIME,
+                A.PLAN_CYCLE_COUNT,
+                ((A.LATEST_CYCLE_TIME * CEIL(A.GOAL_QTY / A.UNIT_QTY)) - A.WORK_ACTIVE_TIME) AS LEFT_TIME,
+                E.ACTIVE_TYPE,
+                E.CYCLE_FINISH_YN,
+                E.EVENT_TIME,
+                TIMESTAMPDIFF(SECOND, E.EVENT_TIME, NOW()) AS CURRENT_STATUS_TIME
             FROM TBL_MCT_WORK A
         	    INNER JOIN TBL_CONTROL_PART C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
         	    INNER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND D.DEL_YN = 'N'
+                LEFT OUTER JOIN TBL_MCT_WORKING_LOG E ON E.MCT_WORK_SEQ = A.MCT_WORK_SEQ AND E.MCT_LOG_SEQ = (SELECT MAX(Q.MCT_LOG_SEQ) FROM TBL_MCT_WORKING_LOG Q WHERE Q.MCT_WORK_SEQ = E.MCT_WORK_SEQ)
         	WHERE 1 = 1
                 AND A.MCT_WORK_SEQ = (SELECT MAX(H.MCT_WORK_SEQ) FROM TBL_MCT_WORK H
                                         WHERE A.EQUIP_SEQ = H.EQUIP_SEQ AND H.DEL_YN = 'N' AND H.WORK_FINISH_DT IS NOT NULL
@@ -142,22 +219,22 @@
         ) Z
         INNER JOIN TBL_CONTROL_BARCODE X ON Z.CONTROL_SEQ = X.CONTROL_SEQ AND Z.CONTROL_DETAIL_SEQ = X.CONTROL_DETAIL_SEQ
                	AND Z.CONTROL_VER = X.CONTROL_VER AND IFNULL(Z.DRAWING_VER, SPACE(0)) = IFNULL(X.DRAWING_VER, SPACE(0)) AND X.DEL_YN = 'N'
-        LEFT OUTER JOIN TBL_INSPECT Y ON Y.INSPECT_SEQ = (SELECT MAX(C.INSPECT_SEQ) AS INSPECT_SEQ
-        							FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_INSPECT C
-        							WHERE 1 = 1 AND A.DEL_YN = 'N' AND B.INNER_WORK_FINISH_DT IS NOT NULL
-        								AND A.CONTROL_SEQ = B.CONTROL_SEQ
-        								AND B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-        								AND C.INSPECT_SEQ = (SELECT MAX(G.INSPECT_SEQ) FROM TBL_INSPECT G WHERE C.CONTROL_SEQ = G.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = G.CONTROL_DETAIL_SEQ)
-        								AND C.INSPECT_RESULT IS NOT NULL
-        								AND B.DRAWING_NUM = Z.DRAWING_NUM)
-        WHERE 1 = 1
+        LEFT OUTER JOIN TBL_INSPECT Y ON Y.INSPECT_SEQ = (
+            SELECT MAX(C.INSPECT_SEQ)
+            FROM TBL_CONTROL A
+                INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
+                INNER JOIN TBL_INSPECT C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND C.INSPECT_NUM = 1
+            WHERE A.DEL_YN = 'N'
+                AND A.ORDER_COMP_CD = Z.ORDER_COMP_CD
+                AND B.SIZE_TXT = Z.SIZE_TXT
+                AND B.MATERIAL_TYPE = Z.MATERIAL_TYPE
+        )
     </select>
 
     <select id="selectDrawingBoardCurrentWork" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         <!-- 현재 작업 진행 중 내용 -->
         SELECT
-            Z.DATA_TYPE, Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ, Z.MCT_WORK_SEQ, Z.CONTROL_NUM,
-            Z.WORK_MINUTE, Z.WORK_SECOND, Z.STOP_MINUTE, Z.STOP_SECOND,  Z.INNER_DUE_DT,<!--내부가공납기 -->
+            Z.DATA_TYPE, Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ, Z.MCT_WORK_SEQ, Z.CONTROL_NUM,Z.INNER_DUE_DT,<!--내부가공납기 -->
             Z.WORK_START_DT, Z.WORK_FINISH_DT, Z.CONTROL_NUM_NM, Z.PART_NUM, X.BARCODE_NUM,
             Z.EMERGENCY_YN,<!--긴급 -->
             Z.MAIN_INSPECTION,<!--주요 검사품 -->
@@ -206,21 +283,57 @@
                             AND N.DEL_YN = 'N'
                     )
             ) AS LATEST_PROCESS,
-            Z.FINISH_QTY,
+            (IFNULL(Z.UNIT_QTY,1) * IFNULL(Z.COMPLETE_CYCLE_COUNT,0) + IFNULL(Z.ADJUST_QTY,0)) AS COMPLETE_QTY,
             Z.GOAL_QTY,
+            IFNULL(Z.ADJUST_QTY,0) AS ADJUST_QTY,
+            Z.PLAN_CYCLE_COUNT,
             Z.COMPLETE_CYCLE_COUNT,
             Z.UNIT_QTY,
-            Z.LATEST_CYCLE_TIME,
+            IFNULL(CAST((SELECT SUM(M.ERROR_QTY) FROM TBL_MCT_WORK_INSPECT M WHERE M.MCT_WORK_SEQ = Z.MCT_WORK_SEQ AND M.DEL_YN = 'N') AS INT),SPACE(0)) AS ERROR_QTY,
             Z.WORK_ACTIVE_TIME,
-            Z.WORK_STOP_TIME
+            Z.WORK_STOP_TIME,
+            CASE WHEN Z.WORK_ACTIVE_TIME IS NOT NULL AND Z.WORK_ACTIVE_TIME > 0
+                    THEN CONCAT(
+                        TRUNCATE(IFNULL(Z.WORK_ACTIVE_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(Z.WORK_ACTIVE_TIME,0)%3600)/60,0), 'm ',
+                        TRUNCATE(((IFNULL(Z.WORK_ACTIVE_TIME,0)%3600) % 60),0), 's'
+                    )
+                ELSE '-'
+            END AS WORK_ACTIVE_TIME_FOMAT,
+            CASE WHEN Z.WORK_STOP_TIME IS NOT NULL AND Z.WORK_STOP_TIME > 0
+                    THEN CONCAT(
+                        TRUNCATE(IFNULL(Z.WORK_STOP_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(Z.WORK_STOP_TIME,0)%3600)/60,0), 'm ',
+                        TRUNCATE(((IFNULL(Z.WORK_STOP_TIME,0)%3600) % 60),0), 's'
+                    )
+                ELSE '-'
+            END AS WORK_STOP_TIME_FOMAT,
+            CASE WHEN Z.LATEST_CYCLE_TIME IS NOT NULL AND Z.LATEST_CYCLE_TIME > 0
+                    THEN CONCAT(
+                        TRUNCATE(IFNULL(Z.LATEST_CYCLE_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(Z.LATEST_CYCLE_TIME,0)%3600)/60,0), 'm ',
+                        TRUNCATE(((IFNULL(Z.LATEST_CYCLE_TIME,0)%3600) % 60),0), 's'
+                    )
+                 ELSE '-'
+            END AS LATEST_CYCLE_TIME,
+            Z.ACTIVE_TYPE,
+            Z.EVENT_TIME,
+            IFNULL(Z.CURRENT_STATUS_TIME,0) AS CURRENT_STATUS_TIME,
+            CASE WHEN Z.ACTIVE_TYPE = 'PGM_ACTIVE'
+                    THEN CONCAT(
+                        TRUNCATE(IFNULL(Z.CURRENT_STATUS_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(Z.CURRENT_STATUS_TIME,0)%3600)/60,0), 'm ',
+                        TRUNCATE(((IFNULL(Z.CURRENT_STATUS_TIME,0)%3600) % 60),0), 's'
+                    )
+                ELSE '-'
+            END AS CURRENT_STATUS_TIME_FORMAT,
+            IFNULL(CASE WHEN Z.ACTIVE_TYPE = 'PGM_STOP' THEN CASE WHEN Z.LEFT_TIME <![CDATA[ < ]]> 0 THEN 0 ELSE Z.LEFT_TIME END
+                        WHEN Z.ACTIVE_TYPE = 'PGM_ACTIVE' THEN CASE WHEN (Z.LEFT_TIME - Z.CURRENT_STATUS_TIME) <![CDATA[ < ]]> 0 THEN 0 ELSE (Z.LEFT_TIME - Z.CURRENT_STATUS_TIME) END
+            END,0) AS LEFT_TIME
         FROM (
             SELECT
                 'CUR' AS DATA_TYPE, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.MCT_WORK_SEQ, D.CONTROL_NUM,
                 C.DRAWING_NUM, D.CONTROL_VER, C.DRAWING_VER, A.WORK_STATUS,
-                SF_GET_DRAWING_WORK_TIME('W_MINUTE', A.MCT_WORK_SEQ) AS WORK_MINUTE,
-                SF_GET_DRAWING_WORK_TIME('W_SECOND', A.MCT_WORK_SEQ) AS WORK_SECOND,
-                SF_GET_DRAWING_WORK_TIME('S_MINUTE', A.MCT_WORK_SEQ) AS STOP_MINUTE,
-                SF_GET_DRAWING_WORK_TIME('S_SECOND', A.MCT_WORK_SEQ) AS STOP_SECOND,
                 CASE WHEN D.EMERGENCY_YN = 'Y' THEN D.EMERGENCY_YN ELSE SPACE(0) END AS EMERGENCY_YN,<!--긴급 -->
                 IFNULL(SF_GET_CODE_NM('1059', D.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION,<!--주요 검사품 -->
                 IFNULL(SF_GET_CODE_NM('1058', C.MATERIAL_FINISH_HEAT, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
@@ -238,16 +351,22 @@
                 D.ORDER_COMP_CD,
                 C.MATERIAL_TYPE,
                 C.SIZE_TXT,
-                A.FINISH_QTY,
+                A.ADJUST_QTY,
                 A.GOAL_QTY,
                 A.COMPLETE_CYCLE_COUNT,
                 A.UNIT_QTY,
                 A.LATEST_CYCLE_TIME,
                 A.WORK_ACTIVE_TIME,
-                A.WORK_STOP_TIME
-        FROM TBL_MCT_WORK A
+                A.WORK_STOP_TIME,
+                A.PLAN_CYCLE_COUNT,
+                ((A.LATEST_CYCLE_TIME * CEIL(A.GOAL_QTY / A.UNIT_QTY)) - A.WORK_ACTIVE_TIME) AS LEFT_TIME,
+                E.ACTIVE_TYPE,
+                E.EVENT_TIME,
+                TIMESTAMPDIFF(SECOND, E.EVENT_TIME, NOW()) AS CURRENT_STATUS_TIME
+            FROM TBL_MCT_WORK A
                 INNER JOIN TBL_CONTROL_PART C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                 INNER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND D.DEL_YN = 'N'
+                LEFT OUTER JOIN TBL_MCT_WORKING_LOG E ON E.MCT_WORK_SEQ = A.MCT_WORK_SEQ AND E.MCT_LOG_SEQ = (SELECT MAX(Q.MCT_LOG_SEQ) FROM TBL_MCT_WORKING_LOG Q WHERE Q.MCT_WORK_SEQ = E.MCT_WORK_SEQ)
             WHERE 1 = 1
                 AND A.MCT_WORK_SEQ = (SELECT MAX(H.MCT_WORK_SEQ) FROM TBL_MCT_WORK H
                                         WHERE A.EQUIP_SEQ = H.EQUIP_SEQ AND H.DEL_YN = 'N' AND H.WORK_FINISH_DT IS NULL
@@ -315,17 +434,33 @@
 
     <insert id="insertMctWorkStart"  parameterType="java.util.HashMap" >
         INSERT INTO jmes.TBL_MCT_WORK
-        (MCT_WORK_SEQ, EQUIP_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, WORK_USER_ID, WORK_STATUS, WORK_START_DT, WORK_RESTART_DT, DEL_YN, INSERT_ID
+        (MCT_WORK_SEQ, EQUIP_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, WORK_USER_ID,
+         WORK_STATUS, WORK_START_DT, DEL_YN, INSERT_ID,
+         GOAL_QTY, PLAN_CYCLE_COUNT, UNIT_QTY, IF_WORK_START_DT
         <if test="PLAN_WORKING_TIME != null and PLAN_WORKING_TIME !=''">
-            ,PLAN_WORKING_TIME
+            , PLAN_WORKING_TIME
         </if>
         )
-        VALUES
-        (NEXTVAL(SEQ_MCT_WORK), #{machineInfo.EQUIP_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}, #{userInfo.USER_ID}, 'DBS020', NOW(), NOW(), 'N', #{userInfo.USER_ID}
-        <if test="PLAN_WORKING_TIME != null and PLAN_WORKING_TIME !=''">
-            , #{PLAN_WORKING_TIME}
-        </if>
-        )
+        SELECT
+            NEXTVAL(SEQ_MCT_WORK), #{machineInfo.EQUIP_SEQ}, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{userInfo.USER_ID},
+            'DBS020', NOW(), 'N', #{userInfo.USER_ID},
+            (SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0)),
+           <choose>
+               <when test='machineInfo.IF_USE_YN != null and machineInfo.IF_USE_YN != "Y"'>
+                   1, (SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0)), NOW()
+               </when>
+               <otherwise>
+                   (SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0)), 1, NULL
+               </otherwise>
+           </choose>
+            <if test="PLAN_WORKING_TIME != null and PLAN_WORKING_TIME !=''">
+                , #{PLAN_WORKING_TIME}
+            </if>
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+        WHERE A.DEL_YN = 'N'
+            AND B.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </insert>
 
     <select id="selectWorkingTime" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -380,30 +515,43 @@
             AND MCT_WORK_SEQ = #{MCT_WORK_SEQ}
     </update>
 
-    <update id="updateStopMctWork"  parameterType="java.util.HashMap" >
-        UPDATE jmes.TBL_MCT_WORK
+    <update id="updateMctCancelWorkingLog"  parameterType="java.util.HashMap" >
+        UPDATE jmes.TBL_MCT_WORKING_LOG
         SET
-            WORK_TEMP_STOP_DT = NOW(),
-            WORK_RESTART_DT = NULL,
-            WORK_STATUS = 'DBS010',
+            MCT_WORK_SEQ = NULL,
             UPDATE_DT = NOW(),
             UPDATE_ID = #{userInfo.USER_ID}
         WHERE 1 = 1
-            AND DEL_YN = 'N'
-            AND MCT_WORK_SEQ = #{MCT_WORK_SEQ}
+          AND MCT_WORK_SEQ = #{MCT_WORK_SEQ}
     </update>
 
-    <update id="updateRestartMctWork"  parameterType="java.util.HashMap" >
-        UPDATE jmes.TBL_MCT_WORK
+    <update id="updateMctWorkStatusNonIf"  parameterType="java.util.HashMap" >
+        UPDATE jmes.TBL_MCT_WORK A
+            INNER JOIN (
+                SELECT SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS ACTIVE_TOTAL
+                    , SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_STOP' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS STOP_TOTAL
+                    , X.MCT_WORK_SEQ
+                FROM (
+                    SELECT M.EVENT_TIME,
+                        LAG(M.EVENT_TIME) OVER (ORDER BY M.MCT_LOG_SEQ) AS BEFORE_TIME,
+                        LAG(M.ACTIVE_TYPE) OVER (ORDER BY M.MCT_LOG_SEQ) AS BEFORE_TYPE,
+                        N.MCT_WORK_SEQ
+                    FROM TBL_MCT_WORKING_LOG M
+                        INNER JOIN TBL_MCT_WORK N ON M.MCT_WORK_SEQ = N.MCT_WORK_SEQ AND M.EQUIP_SEQ = N.EQUIP_SEQ AND N.DEL_YN = 'N'
+                    WHERE 1=1
+                        AND M.MCT_WORK_SEQ = #{MCT_WORK_SEQ}
+                    ORDER BY M.MCT_LOG_SEQ
+                ) X
+                GROUP BY X.MCT_WORK_SEQ
+            ) B ON B.MCT_WORK_SEQ = A.MCT_WORK_SEQ
         SET
-            WORK_RESTART_DT = NOW(),
-            WORK_TEMP_STOP_DT = NULL,
-            WORK_STATUS = 'DBS020',
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{userInfo.USER_ID}
-        WHERE 1 = 1
-            AND DEL_YN = 'N'
-            AND MCT_WORK_SEQ = #{MCT_WORK_SEQ}
+            A.WORK_STATUS = #{WORK_STATUS},
+            A.WORK_ACTIVE_TIME = B.ACTIVE_TOTAL,
+            A.WORK_STOP_TIME = B.STOP_TOTAL,
+            A.UPDATE_DT = NOW(),
+            A.UPDATE_ID = #{userInfo.USER_ID}
+        WHERE A.MCT_WORK_SEQ = B.MCT_WORK_SEQ
+            AND A.DEL_YN = 'N'
     </update>
 
     <delete id="updateCancelMctControlPartWork" parameterType="java.util.HashMap" >
@@ -418,15 +566,48 @@
             )
     </delete>
 
+    <update id="updateCompleteMctWorkNonIf"  parameterType="java.util.HashMap" >
+        UPDATE TBL_MCT_WORK A
+            INNER JOIN (
+                SELECT SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS ACTIVE_TOTAL
+                    , SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_STOP' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS STOP_TOTAL
+                    , MAX(CASE WHEN X.ACTIVE_TYPE = 'PGM_STOP' AND X.CYCLE_FINISH_YN = 'Y' THEN X.EVENT_TIME END ) AS IF_WORK_FINISH_DT
+                    , X.MCT_WORK_SEQ
+                FROM (
+                    SELECT M.EVENT_TIME, M.ACTIVE_TYPE, M.PART_CNT, M.CYCLE_FINISH_YN,
+                        LAG(M.EVENT_TIME) OVER (ORDER BY M.MCT_LOG_SEQ) AS BEFORE_TIME,
+                        LAG(M.ACTIVE_TYPE) OVER (ORDER BY M.MCT_LOG_SEQ) AS BEFORE_TYPE,
+                        N.MCT_WORK_SEQ
+                    FROM TBL_MCT_WORKING_LOG M
+                        INNER JOIN TBL_MCT_WORK N ON M.MCT_WORK_SEQ = N.MCT_WORK_SEQ AND M.EQUIP_SEQ = N.EQUIP_SEQ AND N.DEL_YN = 'N'
+                    WHERE 1=1
+                        AND M.MCT_WORK_SEQ = #{MCT_WORK_SEQ}
+                    ORDER BY M.MCT_LOG_SEQ
+                ) X
+                GROUP BY X.MCT_WORK_SEQ
+            ) B ON B.MCT_WORK_SEQ = A.MCT_WORK_SEQ
+        SET
+            A.WORK_FINISH_DT = NOW(),
+            A.IF_WORK_FINISH_DT = B.IF_WORK_FINISH_DT,
+            A.WORK_STATUS = 'DBS030',
+            A.WORK_ACTIVE_TIME = B.ACTIVE_TOTAL,
+            A.WORK_STOP_TIME = B.STOP_TOTAL,
+            A.COMPLETE_CYCLE_COUNT = 1,
+            A.LATEST_CYCLE_TIME = B.ACTIVE_TOTAL,
+            FINISH_QTY = #{FINISH_QTY},
+            A.UPDATE_DT = NOW(),
+            A.UPDATE_ID = #{userInfo.USER_ID},
+            A.WORK_USER_ID = #{userInfo.USER_ID}
+        WHERE A.MCT_WORK_SEQ = B.MCT_WORK_SEQ
+            AND A.DEL_YN = 'N'
+    </update>
     <update id="updateCompleteMctWork"  parameterType="java.util.HashMap" >
         UPDATE jmes.TBL_MCT_WORK
         SET
             WORK_FINISH_DT = NOW(),
-            WORK_TEMP_STOP_DT = NULL,
+            IF_WORK_FINISH_DT = (SELECT MAX(EVENT_TIME) FROM TBL_MCT_WORKING_LOG A WHERE A. MCT_WORK_SEQ = #{MCT_WORK_SEQ} AND ACTIVE_TYPE = 'PGM_STOP' AND CYCLE_FINISH_YN = 'Y'),
             WORK_STATUS = 'DBS030',
             FINISH_QTY = #{FINISH_QTY},
-            ERROR_QTY = #{ERROR_QTY},
-            ERROR_REASON = #{ERROR_REASON},
             UPDATE_DT = NOW(),
             UPDATE_ID = #{userInfo.USER_ID},
             WORK_USER_ID = #{userInfo.USER_ID}
@@ -435,15 +616,26 @@
             AND MCT_WORK_SEQ = #{MCT_WORK_SEQ}
     </update>
 
-    <insert id="insertMctWorkTime"  parameterType="java.util.HashMap" >
-        INSERT INTO jmes.TBL_MCT_WORK_TIME
-            (MCT_WORK_SEQ, SEQ, WORK_START_DT, WORK_STOP_DT, INSERT_ID)
+    <insert id="insertWorkingLogNonIf"  parameterType="java.util.HashMap" >
+        INSERT INTO jmes.TBL_MCT_WORKING_LOG (
+            MCT_LOG_SEQ,
+            IF_SEQ, EQUIP_SEQ, MCT_WORK_SEQ,
+            EVENT_TIME,
+            EXECUTION, ACTIVE_TYPE,
+            PART_CNT, CYCLE_FINISH_YN,
+            INSERT_ID, IF_YN
+        )
         SELECT
-            A.MCT_WORK_SEQ, NEXTVAL(SEQ_MCT_WORK_TIME), A.WORK_RESTART_DT, NOW(), #{userInfo.USER_ID}
+            NEXTVAL(jmes.SEQ_MCT_LOG),
+            1, A.EQUIP_SEQ, A.MCT_WORK_SEQ,
+            NOW(),
+            #{EXECUTION}, #{ACTIVE_TYPE},
+            1, 'N',
+            #{userInfo.USER_ID}, #{CYCLE_FINISH_YN}
         FROM jmes.TBL_MCT_WORK A
         WHERE 1 = 1
-            AND A.DEL_YN = 'N'
-            AND A.MCT_WORK_SEQ = #{MCT_WORK_SEQ}
+          AND A.DEL_YN = 'N'
+          AND A.MCT_WORK_SEQ = #{MCT_WORK_SEQ}
     </insert>
 
     <update id="deleteFristMctPlan"  parameterType="java.util.HashMap" >
@@ -588,28 +780,9 @@
             IF_SEQ, EQUIP_SEQ, MCT_WORK_SEQ,
             TOOL_ID, EVENT_TIME,
             EXECUTION, ACTIVE_TYPE,
-            PART_CNT, CYCLE_FINISH_YN
+            PART_CNT, CYCLE_FINISH_YN,
+            MESSAGE, PROGRAM
         )
-<!--        VALUES-->
-<!--        <foreach collection="dataList" item="item" separator=",">-->
-<!--        (-->
-<!--            NEXTVAL(jmes.SEQ_MCT_LOG),-->
-<!--            #{item.seq},-->
-<!--            SF_GET_EQUIP_SEQ(#{item.seq.equip_name}),-->
-<!--            (SELECT CASE WHEN #{active_type} = 'PGM_STOP' AND A.IF_WORK_START_DT IS NULL THEN NULL-->
-<!--                         ELSE A.MCT_WORK_SEQ-->
-<!--                    END AS MCT_WORK_SEQ-->
-<!--             FROM TBL_MCT_WORK A-->
-<!--             WHERE A.DEL_YN = 'N'-->
-<!--                AND A.EQUIP_SEQ = SF_GET_EQUIP_SEQ(#{item.seq.equip_name})-->
-<!--                AND A.WORK_STATUS IN ('DBS010', 'DBS020')-->
-<!--                AND A.WORK_START_DT IS NOT NULL-->
-<!--            ) AS MCT_WORK_SEQ,-->
-<!--            #{tool_id}, #{event_time},-->
-<!--            #{execution}, #{active_type},-->
-<!--            #{part_cnt}, IFNULL(#{cycleCheck}, 'N')-->
-<!--        )-->
-<!--        </foreach>-->
         SELECT NEXTVAL(jmes.SEQ_MCT_LOG) AS MCT_LOG_SEQ,
             #{seq} AS IF_SEQ,
             #{EQUIP_SEQ} AS EQUIP_SEQ,
@@ -624,23 +797,37 @@
             ) AS MCT_WORK_SEQ,
             #{tool_id} AS TOOL_ID, #{event_time} AS EVENT_TIME,
             #{execution} AS EXECUTION, #{active_type} AS ACTIVE_TYPE,
-            #{part_cnt} AS PART_CNT, IFNULL(#{cycleCheck}, 'N') AS CYCLE_FINISH_YN
+            #{part_cnt} AS PART_CNT, IFNULL(#{cycleCheck}, 'N') AS CYCLE_FINISH_YN,
+            #{message}, #{program}
         FROM DUAL
     </insert>
 
     <select id="selectCurrentMctInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.MCT_WORK_SEQ, A.EQUIP_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
             A.IF_WORK_START_DT, A.IF_WORK_FINISH_DT,
-            A.WORK_STATUS, A.WORK_START_DT, A.WORK_FINISH_DT, A.UNIT_QTY,
-            (IFNULL(A.UNIT_QTY,1) * IFNULL(A.COMPLETE_CYCLE_COUNT,0)) AS COMPLETE_QTY,
-            A.COMPLETE_CYCLE_COUNT, A.LATEST_CYCLE_TIME,
+            A.WORK_STATUS, A.WORK_START_DT, A.WORK_FINISH_DT, A.UNIT_QTY, A.GOAL_QTY,
+            (IFNULL(A.UNIT_QTY,1) * IFNULL(A.COMPLETE_CYCLE_COUNT,0) + IFNULL(A.ADJUST_QTY,0)) AS COMPLETE_QTY,
+            A.COMPLETE_CYCLE_COUNT,
             A.WORK_ACTIVE_TIME, A.WORK_STOP_TIME,
-            CASE WHEN A.LATEST_CYCLE_TIME IS NOT NULL THEN (A.LATEST_CYCLE_TIME * A.PLAN_CYCLE_COUNT) - A.WORK_ACTIVE_TIME
+            CASE WHEN A.LATEST_CYCLE_TIME IS NOT NULL THEN
+                        CASE WHEN ((A.LATEST_CYCLE_TIME * CEIL(A.GOAL_QTY / A.UNIT_QTY)) - A.WORK_ACTIVE_TIME) <![CDATA[ < ]]> 0 THEN 0
+                             ELSE ((A.LATEST_CYCLE_TIME * CEIL(A.GOAL_QTY / A.UNIT_QTY)) - A.WORK_ACTIVE_TIME) END
                  ELSE SPACE(0)
-            END AS LEFT_TIME
+            END AS LEFT_TIME,
+            CASE WHEN A.LATEST_CYCLE_TIME IS NOT NULL AND A.LATEST_CYCLE_TIME > 0
+                    THEN CONCAT(
+                        TRUNCATE(IFNULL(A.LATEST_CYCLE_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(A.LATEST_CYCLE_TIME,0)%3600)/60,0), 'm ',
+                        TRUNCATE(((IFNULL(A.LATEST_CYCLE_TIME,0)%3600) % 60),0), 's'
+                    )
+                ELSE '-'
+            END AS LATEST_CYCLE_TIME,
+            TIMESTAMPDIFF(SECOND, B.EVENT_TIME, NOW()) AS CURRENT_STATUS_TIME
         FROM TBL_MCT_WORK A
+            LEFT OUTER JOIN TBL_MCT_WORKING_LOG B ON A.MCT_WORK_SEQ = B.MCT_WORK_SEQ
+                AND B.MCT_LOG_SEQ = (SELECT MAX(Q.MCT_LOG_SEQ) FROM TBL_MCT_WORKING_LOG Q WHERE Q.MCT_WORK_SEQ = B.MCT_WORK_SEQ)
         WHERE A.DEL_YN = 'N'
-          AND A.WORK_STATUS = 'DBS020'
+          AND A.WORK_STATUS IN ('DBS010', 'DBS020')
           AND A.WORK_START_DT IS NOT NULL
           AND A.WORK_FINISH_DT IS NULL
           AND A.EQUIP_SEQ IN
@@ -660,8 +847,8 @@
                     , X.MCT_WORK_SEQ
                 FROM (
                     SELECT M.EVENT_TIME, M.ACTIVE_TYPE, M.PART_CNT, M.CYCLE_FINISH_YN,
-                        LAG(M.EVENT_TIME) OVER (ORDER BY M.MCT_LOG_SEQ) AS BEFORE_TIME,
-                        LAG(M.ACTIVE_TYPE) OVER (ORDER BY M.MCT_LOG_SEQ) AS BEFORE_TYPE,
+                        LAG(M.EVENT_TIME) OVER (ORDER BY M.EVENT_TIME) AS BEFORE_TIME,
+                        LAG(M.ACTIVE_TYPE) OVER (ORDER BY M.EVENT_TIME) AS BEFORE_TYPE,
                         N.MCT_WORK_SEQ
                     FROM TBL_MCT_WORKING_LOG M
                         INNER JOIN TBL_MCT_WORK N ON M.MCT_WORK_SEQ = N.MCT_WORK_SEQ AND M.EQUIP_SEQ = N.EQUIP_SEQ
@@ -679,7 +866,7 @@
                         <foreach collection="dataList" item="item"  index="index"  open="(" close=")" separator=",">
                             #{item.EQUIP_SEQ}
                         </foreach>
-                    ORDER BY M.MCT_LOG_SEQ
+                    ORDER BY M.EVENT_TIME
                 ) X
                 GROUP BY X.MCT_WORK_SEQ
             ) B ON B.MCT_WORK_SEQ = A.MCT_WORK_SEQ
@@ -700,6 +887,50 @@
             AND A.DEL_YN = 'N'
     </update>
 
+    <select id="selectDrawingLatestProcessList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.RNUM
+             , X.PROCESS_TYPE
+             , X.PROCESS_TYPE_NM
+             , X.EQUIP_NM
+             , X.WORK_STATUS
+             , X.WORK_START_DT
+             , X.WORK_FINISH_DT
+             , X.WORK_USER
+             , X.FINISH_QTY
+             , X.ERROR_QTY
+        FROM (
+                 SELECT ROW_NUMBER() OVER(ORDER BY A.MCT_WORK_SEQ) AS RNUM
+                , B.PROCESS_TYPE, SF_GET_CODE_NM('1010', B.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM
+                      , B.EQUIP_NM
+                      , SF_GET_CODE_NM('1079', A.WORK_STATUS, #{LOGIN_LOCALE}) AS WORK_STATUS
+                      , SF_GET_DATE_F(A.WORK_START_DT,'YY','M') AS WORK_START_DT
+                      , SF_GET_DATE_F(A.WORK_FINISH_DT,'YY','M') AS WORK_FINISH_DT
+                      , (SELECT M.USER_NM FROM TBL_USER M WHERE M.USER_ID = A.WORK_USER_ID) AS WORK_USER
+                      , A.FINISH_QTY
+                      , A.ERROR_QTY
+                 FROM TBL_MCT_WORK A, TBL_EQUIP B
+                 WHERE A.EQUIP_SEQ = B.EQUIP_SEQ
+                   AND A.DEL_YN = 'N'
+                   AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+                   AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                 ORDER BY WORK_START_DT DESC
+             ) X
+    </select>
+
+    <select id="selectDrawingNoteList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER() OVER(ORDER BY X.NOTE_TYPE) AS RNUM,
+                SF_GET_CODE_NM('1078', X.NOTE_TYPE, 'KO') AS NOTE_TYPE_NM
+             , X.NOTE
+        FROM (  SELECT '1' AS NOTE_TYPE, A.NOTE FROM TBL_CONTROL A WHERE A.CONTROL_SEQ = #{CONTROL_SEQ} AND A.NOTE IS NOT NULL
+                UNION ALL
+                SELECT '2' AS NOTE_TYPE, A.MCT_NOTE AS NOTE FROM TBL_CONTROL_PART A WHERE A.CONTROL_SEQ = #{CONTROL_SEQ} AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ} AND A.MCT_NOTE IS NOT NULL
+                UNION ALL
+                SELECT '3' AS NOTE_TYPE, A.NOTE FROM TBL_CAM A WHERE A.CONTROL_SEQ = #{CONTROL_SEQ} AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ} AND A.NOTE IS NOT NULL
+                UNION ALL
+                SELECT '4' AS NOTE_TYPE, A.MATERIAL_NOTE AS NOTE FROM TBL_CONTROL_PART A WHERE A.CONTROL_SEQ = 610291 AND A.CONTROL_DETAIL_SEQ = 630742 AND A.MATERIAL_NOTE IS NOT NULL
+             ) X
+    </select>
+
     <select id="selectDrawingQualityHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER(ORDER BY C.INSERT_DT DESC) AS RNUM,
@@ -712,9 +943,12 @@
             C.ERROR_ACTION,
             C.ERROR_REASON,
             IFNULL((SELECT NOTE FROM TBL_CODE WHERE HIGH_CD = '1040' AND CODE_CD = C.INSPECT_GRADE),SPACE(0)) AS INSPECT_GRADE_NOTE,
-            IFNULL(CASE WHEN C.INSPECT_TYPE = '1' THEN CASE WHEN C.INSPECT_GRADE IN ('GRD030', 'GRD040') THEN SF_GET_CODE_NM('1019', C.INSPECT_RESULT, #{LOGIN_LOCALE}) END
-                 WHEN C.INSPECT_TYPE = '2' THEN SF_GET_CODE_NM('1021', C.INSPECT_RESULT, #{LOGIN_LOCALE})
-            END,SPACE(0)) AS INSPECT_RESULT_NM,
+            CASE WHEN C.INSPECT_TYPE = '1' THEN
+                     CASE WHEN jmes.SF_GET_CODE_NM('1019', C.INSPECT_RESULT, #{LOGIN_LOCALE}) IS NULL THEN jmes.SF_GET_CODE_NM('1020', C.INSPECT_RESULT, #{LOGIN_LOCALE})
+                          ELSE jmes.SF_GET_CODE_NM('1019', C.INSPECT_RESULT, #{LOGIN_LOCALE})
+                     END
+                 WHEN C.INSPECT_TYPE = '2' THEN jmes.SF_GET_CODE_NM('1021', C.INSPECT_RESULT, #{LOGIN_LOCALE})
+            END AS INSPECT_RESULT_NM,
             IFNULL(SF_GET_CODE_NM('1010', C.ERROR_PROCESS, #{LOGIN_LOCALE}),SPACE(0)) AS ERROR_PROCESS_NM,
             IFNULL(SF_GET_CODE_NM('1032', C.ERROR_REASON, #{LOGIN_LOCALE}),SPACE(0)) AS ERROR_REASON_NM,
             IFNULL(SF_GET_CODE_NM('1025', C.ERROR_ACTION, #{LOGIN_LOCALE}),SPACE(0)) AS ERROR_ACTION_NM,
@@ -741,4 +975,62 @@
         ORDER BY C.INSERT_DT DESC
     </select>
 
+    <select id="selectDrawingErrorList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+               A.MCT_INSPECT_SEQ,
+               SF_GET_DATE_F(A.INSERT_DT,'','') AS INSERT_DT,
+               SF_GET_USER_NM(A.INSERT_ID) AS INSERT_ID,
+               A.ERROR_QTY,
+               A.ERROR_REASON,
+               A.INSPECT_RESULT,
+               CASE WHEN jmes.SF_GET_CODE_NM('1019', A.INSPECT_RESULT, #{LOGIN_LOCALE}) IS NULL THEN jmes.SF_GET_CODE_NM('1020', A.INSPECT_RESULT, #{LOGIN_LOCALE})
+                    ELSE jmes.SF_GET_CODE_NM('1019', A.INSPECT_RESULT, #{LOGIN_LOCALE})
+               END AS INSPECT_RESULT_NM,
+               SUBSTRING(IFNULL(SF_GET_CODE_NM('1032', A.ERROR_REASON, #{LOGIN_LOCALE}),SPACE(0)),1,2) AS ERROR_REASON_NM
+        FROM TBL_MCT_WORK_INSPECT A
+        WHERE A.DEL_YN = 'N'
+          AND A.MCT_WORK_SEQ = #{MCT_WORK_SEQ};
+    </select>
+
+    <update id="updateMctWorkQty" parameterType="java.util.HashMap" >
+        UPDATE TBL_MCT_WORK
+        SET
+            UPDATE_DT = NOW(),
+            GOAL_QTY = #{GOAL_QTY},
+            <if test="UNIT_QTY != null and UNIT_QTY != ''">
+                UNIT_QTY = #{UNIT_QTY},
+            </if>
+            <if test="ADJUST_QTY != null and ADJUST_QTY != ''">
+                ADJUST_QTY = #{ADJUST_QTY},
+            </if>
+            UPDATE_ID = #{LOGIN_USER_ID}
+        WHERE DEL_YN = 'N'
+            AND MCT_WORK_SEQ = #{MCT_WORK_SEQ}
+    </update>
+
+    <insert id="insertErrorQty" parameterType="java.util.HashMap">
+        INSERT INTO jmes.TBL_MCT_WORK_INSPECT (
+            MCT_INSPECT_SEQ, MCT_WORK_SEQ, ERROR_QTY,
+            INSPECT_RESULT, ERROR_REASON, INSERT_ID
+        )VALUES (
+            NEXTVAL(SEQ_MCT_WORK_INSPECT), #{MCT_WORK_SEQ}, #{ERROR_QTY},
+            #{INSPECT_RESULT}, #{ERROR_REASON}, #{userInfo.USER_ID}
+        )
+    </insert>
+
+    <update id="deleteErrorQty" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_MCT_WORK_INSPECT
+        SET DEL_YN = 'Y',
+            UPDATE_ID = #{LOGIN_USER_ID},
+            UPDATE_DT = NOW()
+        WHERE MCT_INSPECT_SEQ = #{MCT_INSPECT_SEQ}
+    </update>
+
+    <update id="deleteAllErrorQty" parameterType="java.util.HashMap">
+        UPDATE jmes.TBL_MCT_WORK_INSPECT
+        SET DEL_YN = 'Y',
+            UPDATE_ID = #{LOGIN_USER_ID},
+            UPDATE_DT = NOW()
+        WHERE MCT_WORK_SEQ = #{MCT_WORK_SEQ}
+    </update>
 </mapper>

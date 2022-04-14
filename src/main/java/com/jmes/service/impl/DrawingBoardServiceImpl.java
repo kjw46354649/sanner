@@ -23,9 +23,6 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
     @Override
     public void managerDrawingBoardStart(HashMap<String, Object> hashMap) throws Exception {
 
-        /** 이전 작업이 있을 경우 완료 처리 하고 MCT 작업을 추가 한다. **/
-//        hashMap.put("queryId", "drawingMapper.insertMctWorkStart");
-//        innodaleDao.create(hashMap);
         /** 예상 작업시간 조회 **/
         hashMap.put("queryId", "drawingMapper.selectWorkingTime");
         Map<String, Object> tempMap =  innodaleDao.getInfo(hashMap);
@@ -59,15 +56,24 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
      * @param hashMap
      * @throws Exception
      */
+    // 22.04.01 장비 IF 기능이 추가되면서, 해당 기능은 IF를 사용하지 않는 장비에서만 사용.
+
     @Override
     public void managerDrawingBoardPause(HashMap<String, Object> hashMap) throws Exception {
 
-        /** MCT WORK TIME INSERT 처리 한다. **/
-        hashMap.put("queryId", "drawingMapper.insertMctWorkTime");
+        /** MCT WORKING LOG INSERT 처리 한다.
+         * active -> stop 이므로, 이전의 active에 대한 기록을 임의로 생성해준다.
+         * **/
+        hashMap.put("EXECUTION","ACTIVE");
+        hashMap.put("ACTIVE_TYPE","PGM_ACTIVE");
+        hashMap.put("CYCLE_FINISH_YN","N");
+        hashMap.put("queryId", "drawingMapper.insertWorkingLogNonIf");
         innodaleDao.create(hashMap);
 
+
         /** MCT WORK 임시 중지 상태 업데이트 처리 한다. **/
-        hashMap.put("queryId", "drawingMapper.updateStopMctWork");
+        hashMap.put("WORK_STATUS","DBS010");
+        hashMap.put("queryId", "drawingMapper.updateMctWorkStatusNonIf");
         innodaleDao.create(hashMap);
 
     }
@@ -77,24 +83,56 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
      * @param hashMap
      * @throws Exception
      */
+    // 22.04.01 장비 IF 기능이 추가되면서, 해당 기능은 IF를 사용하지 않는 장비에서만 사용.
     @Override
     public void managerDrawingBoardRestart(HashMap<String, Object> hashMap) throws Exception {
 
+        /** MCT WORKING LOG INSERT 처리 한다.
+         * stop -> active 이므로, 이전의 stop에 대한 기록을 임의로 생성해준다.
+         * **/
+        hashMap.put("EXECUTION","STOP");
+        hashMap.put("ACTIVE_TYPE","PGM_STOP");
+        hashMap.put("CYCLE_FINISH_YN","N");
+        hashMap.put("queryId", "drawingMapper.insertWorkingLogNonIf");
+        innodaleDao.create(hashMap);
+
         /** MCT WORK 임시 중지 상태 업데이트 처리 한다. **/
-        hashMap.put("queryId", "drawingMapper.updateRestartMctWork");
+        hashMap.put("WORK_STATUS","DBS020");
+        hashMap.put("queryId", "drawingMapper.updateMctWorkStatusNonIf");
         innodaleDao.create(hashMap);
 
     }
 
     @Override
     public void managerDrawingBoardComplete(HashMap<String, Object> hashMap) throws Exception {
-        /** MCT WORK TIME INSERT 처리 한다. **/
-        hashMap.put("queryId", "drawingMapper.insertMctWorkTime");
-        innodaleDao.create(hashMap);
 
-        /** MCT WORK 완료 상태 업데이트 처리 한다. **/
-        hashMap.put("queryId", "drawingMapper.updateCompleteMctWork");
-        innodaleDao.create(hashMap);
+        HashMap<String, Object> machineInfo = (HashMap<String, Object>)hashMap.get("machineInfo");
+
+        /** MCT WORKING LOG INSERT 처리 한다.
+         *
+         * **/
+        if(machineInfo.containsKey("IF_USE_YN") && machineInfo.get("IF_USE_YN").equals("Y")) {
+            /** MCT WORK 완료 상태 업데이트 처리 한다. **/
+            hashMap.put("queryId", "drawingMapper.updateCompleteMctWork");
+            innodaleDao.create(hashMap);
+        }else {
+            hashMap.put("EXECUTION","ACTIVE");
+            hashMap.put("ACTIVE_TYPE","PGM_ACTIVE");
+            hashMap.put("CYCLE_FINISH_YN","N");
+            hashMap.put("queryId", "drawingMapper.insertWorkingLogNonIf");
+            innodaleDao.create(hashMap);
+
+            hashMap.put("EXECUTION","STOP");
+            hashMap.put("ACTIVE_TYPE","PGM_STOP");
+            hashMap.put("CYCLE_FINISH_YN","Y");
+            hashMap.put("queryId", "drawingMapper.insertWorkingLogNonIf");
+            innodaleDao.create(hashMap);
+
+            hashMap.put("queryId", "drawingMapper.updateCompleteMctWorkNonIf");
+            innodaleDao.create(hashMap);
+
+        }
+
 
         /**
          * Part 상태를 변경한다.
@@ -112,11 +150,12 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
     public void managerDrawingBoardCancel(HashMap<String, Object> hashMap) throws Exception {
 
         /** MCT WORK 취소 업데이트 처리 한다. **/
-//        hashMap.put("queryId", "drawingMapper.updateMctWork");
         hashMap.put("queryId", "drawingMapper.updateMctCancelWork");
-        hashMap.put("DEL_YN", "Y");
         innodaleDao.create(hashMap);
 
+
+        hashMap.put("queryId", "drawingMapper.updateMctCancelWorkingLog");
+        innodaleDao.update(hashMap);
         /**
          * Part 상태가 가공 중 인 경우 현재 상태를 이전 상태로 되 돌린다.
          * Progress 상태를 먼저 변경하고 Part Status 상태를 매칭 하여 맞춘다.
@@ -128,5 +167,11 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
         hashMap.put("queryId", "drawingMapper.updateDrawingBoardControlPartStatusMapping");
         innodaleDao.create(hashMap);
 
+    }
+
+    @Override
+    public void managerDrawingBoardErrorRegist(HashMap<String, Object> hashMap) throws Exception {
+        hashMap.put("queryId", "drawingMapper.insertErrorQty");
+        innodaleDao.create(hashMap);
     }
 }
