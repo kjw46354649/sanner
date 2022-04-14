@@ -164,47 +164,6 @@
             AND A.DEL_YN = 'N'
     </update>
 
-    <insert id="manageControlCadRevPrevDataInsert_old" parameterType="java.util.HashMap">
-        INSERT INTO TBL_DRAWING_UPLOAD_CONTROL
-            (WORK_KEY, CONTROL_SEQ, CONTROL_NUM, ITEM_NM, CONTROL_DETAIL_SEQ, PART_NUM, ORDER_SEQ, ORDER_NUM, REGIST_NUM, DRAWING_NUM, DRAWING_VER, DRAWING_UP_DT)
-        SELECT
-            Z.WORK_KEY, Z.CONTROL_SEQ, Z.CONTROL_NUM, Z.ITEM_NM, Z.CONTROL_DETAIL_SEQ, Z.PART_NUM, CASE WHEN Z.ORDER_SEQ > 0 THEN Z.ORDER_SEQ END AS ORDER_SEQ, Z.ORDER_NUM, Z.REGIST_NUM,
-            Z.DRAWING_NUM, Z.DRAWING_VER, Z.DRAWING_UP_DT
-        FROM (
-            SELECT
-                #{WORK_KEY} AS WORK_KEY, A.CONTROL_SEQ, A.CONTROL_NUM, '' AS ITEM_NM, B.CONTROL_DETAIL_SEQ, B.PART_NUM, -1 AS ORDER_SEQ, '' AS ORDER_NUM, '' AS REGIST_NUM,
-                B.DRAWING_NUM, B.DRAWING_VER, B.DRAWING_UP_DT
-            FROM TBL_CONTROL A
-                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND B.WORK_TYPE = 'WTP050'
-            WHERE 1 = 1
-                AND A.DEL_YN = 'N'
-                AND IFNULL(A.CONTROL_STATUS, 'ORD002') IN ('ORD001', 'ORD003')
-                AND A.OUT_FINISH_DT IS NULL
-                AND A.CONTROL_SEQ IN
-                    <foreach collection="controlList" item="item"  index="index"  open="(" close=")" separator=",">
-                         #{item}
-                    </foreach>
-            UNION ALL
-            SELECT
-                #{WORK_KEY} AS WORK_KEY, A.CONTROL_SEQ, A.CONTROL_NUM, C.ITEM_NM AS ITEM_NM, B.CONTROL_DETAIL_SEQ, '' AS PART_NUM, C.ORDER_SEQ, C.ORDER_NUM, C.REGIST_NUM,
-                C.DRAWING_NUM, B.DRAWING_VER, B.DRAWING_UP_DT
-            FROM TBL_CONTROL A
-                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND B.WORK_TYPE <![CDATA[<>]]> 'WTP050'
-                INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ
-                    AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            WHERE 1 = 1
-                AND A.DEL_YN = 'N'
-                AND IFNULL(A.CONTROL_STATUS, 'ORD002') IN ('ORD001', 'ORD003')
-                AND A.OUT_FINISH_DT IS NULL
-                AND A.CONTROL_SEQ IN
-                    <foreach collection="controlList" item="item"  index="index"  open="(" close=")" separator=",">
-                         #{item}
-                    </foreach>
-        ) Z
-        WHERE 1 = 1
-    </insert>
     <insert id="manageControlCadRevPrevDataInsert" parameterType="java.util.HashMap">
         INSERT INTO TBL_DRAWING_UPLOAD_CONTROL
         (WORK_KEY, CONTROL_SEQ, CONTROL_NUM, ITEM_NM, CONTROL_DETAIL_SEQ, PART_NUM, ORDER_SEQ, ORDER_NUM, REGIST_NUM, DRAWING_NUM, DRAWING_VER, DRAWING_UP_DT, ORDER_COMP_CD)
