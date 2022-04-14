@@ -289,11 +289,13 @@ public class PdfPrintMakeController {
                     reqStockTxt.append(requestList.get(i).get("REQUEST_QTY") + "ea");
 
                     PdfPCell reqCell = createCell(reqStockTxt.toString(), 3, 1, mediumNormalFont);
+                    reqCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                     reqCell.setBorderWidthTop(0);
                     if(i < requestList.size() - 1) {
                         reqCell.setBorderWidthBottom(0);
                     }
                     reqCell.setFixedHeight(17f);
+                    reqCell.setPadding(3);
                     reqCell.setBackgroundColor(BaseColor.WHITE);
 
                     requestTable.addCell(reqCell);

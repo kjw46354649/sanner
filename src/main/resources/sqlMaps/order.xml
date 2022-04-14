@@ -298,36 +298,6 @@
             AND CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH})
     </select>
 
-    <select id="selectControlCloseLeftList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT X.COMP_CD <!-- 사업자 -->
-            , SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM <!-- 사업자 -->
-            , X.ORDER_COMP_CD <!-- 발주처 -->
-            , SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM <!-- 발주처 -->
-            , X.CLOSE_MONTH <!-- 마감 월 -->
-            , DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN <!-- 마감 월 -->
-            , CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER <!-- 차수 -->
-            , COUNT(*) AS CNT <!-- 품수 -->
-            , SUM(X.ORDER_QTY) AS ORDER_QTY <!-- 수량 -->
-            , FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT <!-- 공급가 -->
-            , FORMAT(X.FINAL_NEGO_AMT, 0) AS FINAL_NEGO_AMT <!-- 마감 금액 -->
-        FROM (  SELECT A.COMP_CD
-                    , A.ORDER_COMP_CD
-                    , E.CLOSE_MONTH
-                    , E.CLOSE_VER
-                    , C.ORDER_QTY
-                    , C.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT
-                    , E.FINAL_NEGO_AMT
-                FROM TBL_CONTROL A
-                    INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
-                    INNER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                    INNER JOIN TBL_MONTH_CLOSE_ORDER D ON D.CONTROL_SEQ = A.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND D.ORDER_SEQ = C.ORDER_SEQ AND D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD
-                    INNER JOIN TBL_MONTH_CLOSE E ON E.CLOSE_MONTH = D.CLOSE_MONTH AND E.CLOSE_VER = D.CLOSE_VER AND E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD AND E.CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH})
-                WHERE A.DEL_YN = 'N'
-                    AND A.COMP_CD = #{COMP_CD}
-                    AND A.ORDER_COMP_CD = #{ORDER_COMP_CD} ) X
-        GROUP BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_VER
-        ORDER BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_VER
-    </select>
     <select id="selectControlCloseLeftList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.COMP_CD <!-- 사업자 -->
             , SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM <!-- 사업자 -->
@@ -359,87 +329,6 @@
         ORDER BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_VER
     </select>
 
-    <select id="selectControlCloseRightList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            X.COMP_CD <!-- 사업자 -->
-            , SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM <!-- 사업자 -->
-            , X.ORDER_COMP_CD <!-- 발주처 -->
-            , SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM <!-- 발주처 -->
-            , X.CLOSE_MONTH <!-- 마감월 -->
-            , DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN <!-- 마감월 -->
-            , SUM(X.CNT) AS CNT <!-- 품수 -->
-            , X.CLOSE_VER <!-- 차수 -->
-            , CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER_TRAN <!-- 차수 -->
-            , CASE WHEN SUM(X.ORDER_QTY) > 0 THEN FORMAT(SUM(X.ORDER_QTY), 0) ELSE '-' END AS ORDER_QTY <!-- 수량 -->
-            , CASE WHEN SUM(X.TOTAL_AMT) > 0 THEN FORMAT(SUM(X.TOTAL_AMT), 0) ELSE '-' END AS TOTAL_AMT <!-- 공급가 -->
-            , CASE WHEN SUM(X.FINAL_NEGO_AMT) > 0 THEN FORMAT(SUM(X.FINAL_NEGO_AMT), 0) ELSE '-' END AS FINAL_NEGO_AMT <!-- 마감 금액 -->
-        FROM (
-            SELECT
-				P.COMP_CD
-				, P.ORDER_COMP_CD
-				, P.CLOSE_MONTH
-				, COUNT(*) AS CNT
-				, P.CLOSE_VER
-				, SUM(P.ORDER_QTY) AS ORDER_QTY
-				, SUM(P.TOTAL_AMT) AS TOTAL_AMT
-				, P.FINAL_NEGO_AMT
-            FROM (
-				SELECT
-					A.COMP_CD
-					, A.ORDER_COMP_CD
-					, E.CLOSE_MONTH
-					, E.CLOSE_VER
-					, C.ORDER_QTY
-					, C.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT
-					, E.FINAL_NEGO_AMT
-                FROM TBL_CONTROL A
-                    INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
-                    INNER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                    INNER JOIN TBL_MONTH_CLOSE_ORDER D ON D.CONTROL_SEQ = A.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND D.ORDER_SEQ = C.ORDER_SEQ AND D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD
-                    INNER JOIN TBL_MONTH_CLOSE E ON E.CLOSE_MONTH = D.CLOSE_MONTH AND E.CLOSE_VER = D.CLOSE_VER AND E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD AND E.CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH})
-                WHERE A.DEL_YN = 'N'
-                	AND A.COMP_CD = #{COMP_CD}
-                	AND A.ORDER_COMP_CD = #{ORDER_COMP_CD} ) P
-            GROUP BY P.COMP_CD, P.ORDER_COMP_CD, P.CLOSE_MONTH, P.CLOSE_VER
-            UNION ALL
-			SELECT
-				Q.COMP_CD
-				, Q.ORDER_COMP_CD
-				, Q.CLOSE_MONTH
-				, COUNT(*) AS CNT
-				, Q.CLOSE_VER
-				, SUM(Q.ORDER_QTY) AS ORDER_QTY
-				, SUM(Q.TOTAL_AMT) AS TOTAL_AMT
-				, SUM(Q.FINAL_NEGO_AMT) AS FINAL_NEGO_AMT
-            FROM (
-                SELECT
-					A.COMP_CD
-					, A.ORDER_COMP_CD
-					, CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH}) AS CLOSE_MONTH
-					, #{CLOSE_VER} AS CLOSE_VER
-					, C.ORDER_QTY
-					, C.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT
-	                , C.UNIT_FINAL_AMT * C.ORDER_QTY AS FINAL_NEGO_AMT
-                FROM TBL_CONTROL A
-	                INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
-	                INNER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND C.ORDER_SEQ IN (${ORDER_SEQ})
-                WHERE
-                	A.DEL_YN = 'N'
-                	AND A.COMP_CD = #{COMP_CD}
-                    AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-                    AND NOT EXISTS (SELECT *
-                                    FROM TBL_MONTH_CLOSE_ORDER M
-                                    WHERE 1 = 1
-                                        AND M.COMP_CD = A.COMP_CD
-                                        AND M.ORDER_COMP_CD = A.ORDER_COMP_CD
-                                        AND M.CONTROL_SEQ = C.CONTROL_SEQ
-                                        AND M.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                                        AND M.ORDER_SEQ = C.ORDER_SEQ
-                                        AND M.CLOSE_MONTH = CONCAT(#{CONTROL_CLOSE_YEAR}, #{CONTROL_CLOSE_MONTH}))) Q
-            GROUP BY Q.COMP_CD, Q.ORDER_COMP_CD, Q.CLOSE_MONTH, Q.CLOSE_VER) X
-        GROUP BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
-        ORDER BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
-    </select>
     <select id="selectControlCloseRightList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             X.COMP_CD <!-- 사업자 -->
@@ -553,38 +442,6 @@
         ) X
         GROUP BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
         ORDER BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
-
-    </select>
-    <select id="selectControlCloseCancelLeftList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            X.COMP_CD <!-- 사업자 -->
-            , SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM <!-- 사업자 -->
-            , X.ORDER_COMP_CD <!-- 발주처 -->
-            , SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM <!-- 발주처 -->
-            , X.CLOSE_MONTH <!-- 마감 월 -->
-            , DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN <!-- 마감 월 -->
-            , CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER <!-- 차수 -->
-            , COUNT(*) AS CNT <!-- 품수 -->
-            , SUM(X.ORDER_QTY) AS ORDER_QTY <!-- 수량 -->
-            , FORMAT(SUM(X.TOTAL_AMT), 0) AS TOTAL_AMT <!-- 공급가 -->
-            , FORMAT(X.FINAL_NEGO_AMT, 0) AS FINAL_NEGO_AMT <!-- 마감 금액 -->
-        FROM (  SELECT A.COMP_CD
-                    , A.ORDER_COMP_CD
-                    , E.CLOSE_MONTH
-                    , E.CLOSE_VER
-                    , C.ORDER_QTY
-                    , C.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT
-                    , E.FINAL_NEGO_AMT
-                FROM TBL_CONTROL A
-                    INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
-                    INNER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                    INNER JOIN TBL_MONTH_CLOSE_ORDER D ON D.CONTROL_SEQ = A.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND D.ORDER_SEQ = C.ORDER_SEQ AND D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD
-                    INNER JOIN TBL_MONTH_CLOSE E ON E.CLOSE_MONTH = D.CLOSE_MONTH AND E.CLOSE_VER = D.CLOSE_VER AND E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD
-                WHERE A.DEL_YN = 'N'
-                AND (A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH, D.CLOSE_VER) IN (SELECT M.COMP_CD, M.ORDER_COMP_CD, M.CLOSE_MONTH, M.CLOSE_VER FROM TBL_MONTH_CLOSE_ORDER M WHERE M.ORDER_SEQ IN (${ORDER_SEQ}))
-            ) X
-        GROUP BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
-        ORDER BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
     </select>
 
     <select id="selectControlCloseCancelRightList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -653,72 +510,6 @@
             ) Q
             GROUP BY Q.COMP_CD, Q.ORDER_COMP_CD, Q.CLOSE_MONTH, Q.CLOSE_VER
         ) X
-        GROUP BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
-        ORDER BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
-    </select>
-    <select id="selectControlCloseCancelRightList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT X.COMP_CD <!-- 사업자 -->
-            , SF_GET_COMP_NM(X.COMP_CD) AS COMP_NM <!-- 사업자 -->
-            , X.ORDER_COMP_CD <!-- 발주처 -->
-            , SF_GET_COMP_NM(X.ORDER_COMP_CD) AS ORDER_COMP_NM <!-- 발주처 -->
-            , X.CLOSE_MONTH <!-- 마감월 -->
-            , DATE_FORMAT(STR_TO_DATE(X.CLOSE_MONTH, '%Y%m'), '%Y.%m월') AS CLOSE_MONTH_TRAN <!-- 마감월 -->
-            , SUM(X.CNT) AS CNT <!-- 품수 -->
-            , X.CLOSE_VER <!-- 차수 -->
-            , CONCAT(X.CLOSE_VER, '차') AS CLOSE_VER_TRAN <!-- 차수 -->
-            , CASE WHEN SUM(X.ORDER_QTY) > 0 THEN FORMAT(SUM(X.ORDER_QTY), 0) ELSE '-' END AS ORDER_QTY <!-- 수량 -->
-            , CASE WHEN SUM(X.TOTAL_AMT) > 0 THEN FORMAT(SUM(X.TOTAL_AMT), 0) ELSE '-' END AS TOTAL_AMT <!-- 공급가 -->
-            , CASE WHEN SUM(X.FINAL_NEGO_AMT) > 0 THEN FORMAT(SUM(X.FINAL_NEGO_AMT), 0) ELSE '-' END AS FINAL_NEGO_AMT <!-- 마감 금액 -->
-        FROM (  SELECT
-                    P.COMP_CD
-                    , P.ORDER_COMP_CD
-                    , P.CLOSE_MONTH
-                    , COUNT(*) AS CNT
-                    , P.CLOSE_VER
-                    , SUM(P.ORDER_QTY) AS ORDER_QTY
-                    , SUM(P.TOTAL_AMT) AS TOTAL_AMT
-                    , P.FINAL_NEGO_AMT
-                FROM (  SELECT A.COMP_CD
-                            , A.ORDER_COMP_CD
-                            , E.CLOSE_MONTH
-                            , E.CLOSE_VER
-                            , C.ORDER_QTY
-                            , C.UNIT_FINAL_AMT * C.ORDER_QTY AS TOTAL_AMT
-                            , E.FINAL_NEGO_AMT
-                        FROM TBL_CONTROL A
-                            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
-                            INNER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                            INNER JOIN TBL_MONTH_CLOSE_ORDER D ON D.CONTROL_SEQ = A.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND D.ORDER_SEQ = C.ORDER_SEQ AND D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD
-                            INNER JOIN TBL_MONTH_CLOSE E ON E.CLOSE_MONTH = D.CLOSE_MONTH AND E.CLOSE_VER = D.CLOSE_VER AND E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD
-                        WHERE A.DEL_YN = 'N'
-                            AND (D.COMP_CD, D.CLOSE_MONTH, D.ORDER_COMP_CD, D.CLOSE_VER) IN (   SELECT M.COMP_CD, M.CLOSE_MONTH, M.ORDER_COMP_CD, M.CLOSE_VER
-                                                                                                FROM TBL_MONTH_CLOSE_ORDER M
-                                                                                                WHERE M.ORDER_SEQ IN (${ORDER_SEQ}))) P
-	            GROUP BY P.COMP_CD, P.ORDER_COMP_CD, P.CLOSE_MONTH, P.CLOSE_VER
-	            UNION ALL
-	            SELECT Q.COMP_CD
-					, Q.ORDER_COMP_CD
-					, Q.CLOSE_MONTH
-					, COUNT(*) * -1 AS CNT
-					, Q.CLOSE_VER
-					, SUM(Q.ORDER_QTY) AS ORDER_QTY
-					, SUM(Q.TOTAL_AMT) AS TOTAL_AMT
-					, Q.FINAL_NEGO_AMT
-	            FROM (  SELECT A.COMP_CD
-                            , A.ORDER_COMP_CD
-                            , E.CLOSE_MONTH
-                            , E.CLOSE_VER
-                            , C.ORDER_QTY * -1 AS ORDER_QTY
-                            , C.UNIT_FINAL_AMT * C.ORDER_QTY * -1 AS TOTAL_AMT
-                            , C.UNIT_FINAL_AMT * C.ORDER_QTY * -1 AS FINAL_NEGO_AMT
-                        FROM TBL_CONTROL A
-                            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
-                            INNER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-                            INNER JOIN TBL_MONTH_CLOSE_ORDER D ON D.CONTROL_SEQ = A.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND D.ORDER_SEQ = C.ORDER_SEQ AND D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD
-                                AND D.ORDER_SEQ IN (${ORDER_SEQ})
-                            INNER JOIN TBL_MONTH_CLOSE E ON E.CLOSE_MONTH = D.CLOSE_MONTH AND E.CLOSE_VER = D.CLOSE_VER AND E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD
-                        WHERE A.DEL_YN = 'N' ) Q
-	            GROUP BY Q.COMP_CD, Q.ORDER_COMP_CD, Q.CLOSE_MONTH, Q.CLOSE_VER ) X
         GROUP BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
         ORDER BY X.COMP_CD, X.ORDER_COMP_CD, X.CLOSE_MONTH, X.CLOSE_VER
     </select>
@@ -1315,32 +1106,6 @@
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-    </update>
-    <update id="updateControlPartOrderFromControlManage_old" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART_ORDER
-        SET
-            REGIST_NUM = UPPER(TRIM(#{REGIST_NUM})),
-            ORDER_NUM = #{ORDER_NUM},
-            ORDER_QTY = #{ORDER_QTY},
-            ORDER_DUE_DT = DATE_FORMAT(#{ORDER_DUE_DT}, '%Y%m%d'),
-            DELIVERY_DT = DATE_FORMAT(#{DELIVERY_DT}, '%Y%m%d'),
-            PROJECT_NM = #{PROJECT_NM},
-            MODULE_NM = #{MODULE_NM},
-            DELIVERY_COMP_NM = #{DELIVERY_COMP_NM},
-            LABEL_NOTE = #{LABEL_NOTE},
-            ORDER_STAFF_SEQ = #{ORDER_STAFF_SEQ},
-            DESIGNER_NM = #{DESIGNER_NM},
-            DRAWING_NUM = #{ORDER_DRAWING_NUM},
-            ITEM_NM = #{ITEM_NM},
-            ORIGINAL_SIDE_QTY = REPLACE(#{ORIGINAL_SIDE_QTY}, ',', SPACE(0)),
-            OTHER_SIDE_QTY = REPLACE(#{OTHER_SIDE_QTY}, ',', SPACE(0)),
-            UNIT_FINAL_EST_AMT = REPLACE(#{UNIT_FINAL_EST_AMT}, ',', SPACE(0)),
-            UNIT_FINAL_AMT = REPLACE(#{UNIT_FINAL_AMT}, ',', SPACE(0)),
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-              AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-              AND ORDER_SEQ = #{ORDER_SEQ}
     </update>
 
     <select id="selectConfirmOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -2364,139 +2129,6 @@
         GROUP BY K.YYYY, K.`TYPE`
         ORDER BY K.YYYY, K.`TYPE`
     </select>
-    <select id="selectMonthSaleStatusSummary_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT NULL AS ROW_NUM
-            , NULL AS COMP_CD
-            , NULL AS COMP_NM
-            , NULL AS ORDER_COMP_CD
-            , NULL AS ORDER_COMP_NM
-            , K.YYYY
-            , K.MM
-            , CASE WHEN K.`TYPE` = '1' THEN '입금' ELSE '매출' END AS `TYPE`
-            , K.CLOSE_MONTH
-            , SUM(K.AMT_01) AS AMT_01
-            , SUM(K.AMT_02) AS AMT_02
-            , SUM(K.AMT_03) AS AMT_03
-            , SUM(K.Q1_SUM) AS Q1_SUM
-            , SUM(K.AMT_04) AS AMT_04
-            , SUM(K.AMT_05) AS AMT_05
-            , SUM(K.AMT_06) AS AMT_06
-            , SUM(K.Q2_SUM) AS Q2_SUM
-            , SUM(K.AMT_07) AS AMT_07
-            , SUM(K.AMT_08) AS AMT_08
-            , SUM(K.AMT_09) AS AMT_09
-            , SUM(K.Q3_SUM) AS Q3_SUM
-            , SUM(K.AMT_10) AS AMT_10
-            , SUM(K.AMT_11) AS AMT_11
-            , SUM(K.AMT_12) AS AMT_12
-            , SUM(K.Q4_SUM) AS Q4_SUM
-            , SUM(K.TOTAL_AMT) AS TOTAL_AMT
-        FROM (	SELECT F.COMP_CD
-                    , F.COMP_NM
-                    , F.ORDER_COMP_CD
-                    , F.ORDER_COMP_NM
-                    , G.YYYY
-                    , G.MM
-                    , G.`TYPE`
-                    , H.CLOSE_MONTH
-                    , CASE WHEN G.MM = '01' THEN H.AMT ELSE 0 END AS AMT_01
-                    , CASE WHEN G.MM = '02' THEN H.AMT ELSE 0 END AS AMT_02
-                    , CASE WHEN G.MM = '03' THEN H.AMT ELSE 0 END AS AMT_03
-                    , CASE WHEN G.MM IN ('01', '02', '03') THEN H.AMT ELSE 0 END AS Q1_SUM
-                    , CASE WHEN G.MM = '04' THEN H.AMT ELSE 0 END AS AMT_04
-                    , CASE WHEN G.MM = '05' THEN H.AMT ELSE 0 END AS AMT_05
-                    , CASE WHEN G.MM = '06' THEN H.AMT ELSE 0 END AS AMT_06
-                    , CASE WHEN G.MM IN ('04', '05', '06') THEN H.AMT ELSE 0 END AS Q2_SUM
-                    , CASE WHEN G.MM = '07' THEN H.AMT ELSE 0 END AS AMT_07
-                    , CASE WHEN G.MM = '08' THEN H.AMT ELSE 0 END AS AMT_08
-                    , CASE WHEN G.MM = '09' THEN H.AMT ELSE 0 END AS AMT_09
-                    , CASE WHEN G.MM IN ('07', '08', '09') THEN H.AMT ELSE 0 END AS Q3_SUM
-                    , CASE WHEN G.MM = '10' THEN H.AMT ELSE 0 END AS AMT_10
-                    , CASE WHEN G.MM = '11' THEN H.AMT ELSE 0 END AS AMT_11
-                    , CASE WHEN G.MM = '12' THEN H.AMT ELSE 0 END AS AMT_12
-                    , CASE WHEN G.MM IN ('10', '11', '12') THEN H.AMT ELSE 0 END AS Q4_SUM
-                    , IFNULL(H.AMT, 0) AS TOTAL_AMT
-                FROM (	SELECT A.COMP_CD
-                            , A.COMP_NM
-                            , B.COMP_CD AS ORDER_COMP_CD
-                            , B.COMP_NM AS ORDER_COMP_NM
-                        FROM (	SELECT COMP_CD
-                                    , COMP_NM
-                                FROM TBL_COMPANY
-                                WHERE ACTIVE_YN = 'Y'
-                                    AND FAMILY_COMPANY_YN = 'Y' ) A
-                        CROSS JOIN (	SELECT COMP_CD
-                                            , COMP_NM
-                                        FROM TBL_COMPANY
-                                        WHERE ACTIVE_YN = 'Y'
-                                            AND ORDER_COMPANY_YN = 'Y' ) B ) F <!-- COMP * ORDER_COMP_CD -->
-                CROSS JOIN (	SELECT '1' AS `TYPE`
-                                    , YYYY
-                                    , MM
-                                FROM TBL_YYYYMMDD
-                                WHERE YYYY = #{MONTH_SALE_YEAR}
-                                GROUP BY YYYY, MM
-                                UNION ALL
-                                SELECT 2 AS `TYPE`
-                                    , YYYY
-                                    , MM
-                                FROM TBL_YYYYMMDD
-                                WHERE YYYY = #{MONTH_SALE_YEAR}
-                                GROUP BY YYYY, MM ) G <!-- 12Month * 2Type -->
-                LEFT OUTER JOIN (   SELECT '1' AS `TYPE` <!-- 입금 -->
-                                        , COMP_CD
-                                        , ORDER_COMP_CD
-                                        , DATE_FORMAT(DEPOSIT_DT, '%Y%m') AS CLOSE_MONTH
-                                        , DEPOSIT_AMT AS AMT
-                                    FROM TBL_MONEY_DEPOSIT
-                                    WHERE SUBSTR(DEPOSIT_DT, 1, 4) = #{MONTH_SALE_YEAR}
-                                    <if test="COMP_CD != null and COMP_CD != ''">
-                                        AND COMP_CD = #{COMP_CD}
-                                    </if>
-                                    <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-                                        AND ORDER_COMP_CD = #{ORDER_COMP_CD}
-                                    </if>
-                                    GROUP BY COMP_CD, ORDER_COMP_CD, DATE_FORMAT(DEPOSIT_DT, '%Y%m')
-                                    UNION ALL
-                                    SELECT '2' AS `TYPE` <!-- 매출 -->
-                                        , F.COMP_CD
-                                        , F.ORDER_COMP_CD
-                                        , F.CLOSE_MONTH
-                                        , SUM(F.AMT) AS AMT
-                                    FROM ( 	SELECT A.COMP_CD
-                                                , A.ORDER_COMP_CD
-                                                , D.CLOSE_MONTH
-                                                , E.FINAL_NEGO_AMT + E.FINAL_NEGO_AMT * 0.1 AS AMT
-                                            FROM TBL_CONTROL A
-											    INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
-											    INNER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-											    	AND IFNULL(B.PART_NUM, '0') = '0'
-											    INNER JOIN TBL_MONTH_CLOSE_ORDER D ON D.CONTROL_SEQ = A.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND D.ORDER_SEQ = C.ORDER_SEQ AND D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD
-											    INNER JOIN TBL_MONTH_CLOSE E ON E.CLOSE_MONTH = D.CLOSE_MONTH AND E.CLOSE_VER = D.CLOSE_VER AND E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD
-											    	AND SUBSTR(E.CLOSE_MONTH, 1, 4) = #{MONTH_SALE_YEAR}
-                                            WHERE A.DEL_YN = 'N'
-                                            <if test="COMP_CD != null and COMP_CD != ''">
-                                                AND A.COMP_CD = #{COMP_CD}
-                                            </if>
-                                            <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-                                                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-                                            </if>
-                                            GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH, D.CLOSE_VER ) F
-                                    GROUP BY F.COMP_CD, F.ORDER_COMP_CD, F.CLOSE_MONTH ) H ON H.COMP_CD = F.COMP_CD AND H.ORDER_COMP_CD = F.ORDER_COMP_CD AND H.CLOSE_MONTH = CONCAT(G.YYYY, G.MM) AND H.`TYPE` = G.`TYPE`
-                GROUP BY G.YYYY, G.MM, F.COMP_CD, F.ORDER_COMP_CD, G.`TYPE` ) K
-        WHERE 1 = 1
-        <if test="DEPOSIT_STATUS_INDICATION == null">
-            AND K.`TYPE` = '2' <!-- 매출 -->
-        </if>
-        <if test="COMP_CD != null and COMP_CD != ''">
-            AND K.COMP_CD = #{COMP_CD}
-        </if>
-        <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-            AND K.ORDER_COMP_CD = #{ORDER_COMP_CD}
-        </if>
-        GROUP BY K.YYYY, K.`TYPE`
-        ORDER BY K.YYYY, K.`TYPE`
-    </select>
 
     <insert id="createControlBarcode" parameterType="java.util.HashMap" >
         INSERT INTO TBL_CONTROL_BARCODE (
@@ -2543,29 +2175,6 @@
                                     AND X.DEL_YN = 'N')
     </insert>
 
-    <select id="selectControlTransactionStatementInfo_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            A.ORDER_COMP_CD, <!-- 발주사 -->
-            SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM , <!-- 발주사 -->
-            A.COMP_CD, <!-- 공급사 -->
-            (SELECT IFNULL(M.COMP_NM2, M.COMP_NM) FROM TBL_COMPANY M WHERE M.COMP_CD = A.COMP_CD) AS COMP_NM, <!-- 공급사 Full Name -->
-            E.INVOICE_NUM, <!-- 인보이스 넘버 -->
-            FORMAT(SUM(C.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ)), 0) AS TOTAL_AMT <!-- 금액 합계 -->
-        FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-            INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            LEFT JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ AND C.ORDER_SEQ = D.ORDER_SEQ
-            LEFT JOIN TBL_INVOICE E ON D.INVOICE_NUM = E.INVOICE_NUM
-        WHERE 1 = 1
-            AND A.DEL_YN = 'N'
-            AND IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050' <!-- Part 부속은 제외(작업형태 파트가공) -->
-            AND CONCAT(A.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.ORDER_SEQ) IN (${CONTROL_SEQ_STR})
-            AND A.COMP_CD = #{COMP_CD}
-            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-        GROUP BY
-            A.COMP_CD,
-            A.ORDER_COMP_CD
-    </select>
     <select id="selectControlTransactionStatementInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.ORDER_COMP_CD,
            SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM ,
@@ -2650,71 +2259,6 @@
              WHERE A.DEL_YN = 'N'
                AND IFNULL(A.WORK_TYPE,SPACE(0)) != 'WTP050'
                AND A.ORDER_SEQ IN (${ORDER_SEQ_STR})
-        ) X
-        ORDER BY X.CONTROL_NUM, X.ORDER_NUM
-    </select>
-
-    <select id="selectControlTransactionStatementList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            ROW_NUMBER () OVER () AS ROW_NUM,
-            X.*
-        FROM (
-            SELECT
-                A.CONTROL_SEQ,
-                B.CONTROL_DETAIL_SEQ,
-                C.ORDER_SEQ,
-                SF_GET_CODE_NM('1038', A.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
-                A.CONTROL_NUM, <!-- 작업지시번호 -->
-                C.REGIST_NUM, <!-- 접수번호 -->
-                C.ORDER_NUM, <!-- 발주번호 -->
-                C.DRAWING_NUM, <!-- 도면번호 -->
-                B.SIZE_TXT, <!-- 규격 -->
-                IFNULL(SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
-                C.UNIT_FINAL_AMT, <!-- 최종공급단가 -->
-                SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
-                SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
-                C.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
-                C.PACKING_CNT, <!-- 포장수량 -->
-                '' AS NOTE, <!-- 비고 -->
-                B.IMG_GFILE_SEQ
-            FROM TBL_CONTROL A
-                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050' <!-- Part 부속은 제외(작업형태 파트) -->
-                INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ
-            WHERE 1 = 1
-                AND A.DEL_YN = 'N'
-                AND CONCAT(A.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.ORDER_SEQ) IN (${CONTROL_SEQ_STR})
-                AND A.COMP_CD = #{COMP_CD}
-                AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-                AND NOT EXISTS (SELECT * FROM TBL_INVOICE WHERE INVOICE_NUM = #{INVOICE_NUM})
-            UNION ALL
-            SELECT
-                A.CONTROL_SEQ,
-                B.CONTROL_DETAIL_SEQ,
-                C.ORDER_SEQ,
-                SF_GET_CODE_NM('1038', A.CONTROL_STATUS, #{LOGIN_LOCALE}) AS CONTROL_STATUS_NM, <!-- 주문관리상태 -->
-                A.CONTROL_NUM, <!-- 작업지시번호 -->
-                C.REGIST_NUM, <!-- 접수번호 -->
-                C.ORDER_NUM, <!-- 발주번호 -->
-                C.DRAWING_NUM, <!-- 도면번호 -->
-                B.SIZE_TXT, <!-- 규격 -->
-                IFNULL(SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM, <!-- 작업형태 -->
-                C.UNIT_FINAL_AMT, <!-- 최종공급단가 -->
-                SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS CONTROL_ORDER_QTY,
-                SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_QTY, <!-- 수량 -->
-                C.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(C.CONTROL_SEQ, C.ORDER_SEQ) AS TOTAL_AMT, <!-- 금액 계 -->
-                C.PACKING_CNT, <!-- 포장수량 -->
-                D.NOTE, <!-- 비고 -->
-                B.IMG_GFILE_SEQ
-            FROM TBL_CONTROL A
-                INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                    AND IFNULL(B.WORK_TYPE, SPACE(0)) != 'WTP050' <!-- Part 부속은 제외(작업형태 파트) -->
-                INNER JOIN TBL_CONTROL_PART_ORDER C ON A.CONTROL_SEQ = C.CONTROL_SEQ
-                INNER JOIN TBL_INVOICE_DETAIL D ON B.CONTROL_SEQ = D.CONTROL_SEQ
-                                                   AND C.ORDER_SEQ = D.ORDER_SEQ
-                                                   AND D.INVOICE_NUM = #{INVOICE_NUM}
-            WHERE 1 = 1
-                AND A.DEL_YN = 'N'
         ) X
         ORDER BY X.CONTROL_NUM, X.ORDER_NUM
     </select>
@@ -2847,80 +2391,6 @@
             GROUP BY A.COMP_CD, A.ORDER_COMP_CD, DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y')
         ) Z
         LEFT OUTER JOIN TBL_MONEY_YEAR_NOTE Y ON Z.COMP_CD = Y.COMP_CD AND Z.ORDER_COMP_CD = Y.ORDER_COMP_CD AND Z.CLOSE_YEAR = Y.YYYY
-        WHERE 1 = 1
-        GROUP BY Z.COMP_CD, Z.ORDER_COMP_CD, Z.CLOSE_YEAR
-        ORDER BY Z.COMP_CD, Z.ORDER_COMP_CD
-    </select>
-
-    <select id="moneyReceiveStatusList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            1 AS GROUP_KEY,
-            ROW_NUMBER() OVER(ORDER BY Z.COMP_CD, Z.ORDER_COMP_CD) AS ROW_NUM,
-            Z.COMP_CD, (SELECT A.COMP_NM FORM FROM TBL_COMPANY A WHERE A.COMP_CD = Z.COMP_CD) AS COMP_CD_NM,
-            Z.ORDER_COMP_CD, (SELECT A.COMP_NM FORM FROM TBL_COMPANY A WHERE A.COMP_CD = Z.ORDER_COMP_CD) AS ORDER_COMP_NM,
-            Z.CLOSE_YEAR, SUM(Z.SALE_AMT) AS SALE_AMT, SUM(Z.CASH_AMT) AS CASH_AMT, SUM(Z.PAPER_AMT) AS PAPER_AMT,
-            SUM(Z.DEPOSIT_TOTAL_AMT) AS DEPOSIT_TOTAL_AMT, SUM(Z.NOT_DEPOSIT_AMT) AS NOT_DEPOSIT_AMT,
-            (SUM(Z.SALE_AMT) + SUM(Z.NOT_DEPOSIT_AMT)) - SUM(Z.DEPOSIT_TOTAL_AMT) AS NOT_DEPOSIT_TOTAL_AMT,
-            Y.NOTE
-        FROM (
-            SELECT
-                Z.COMP_CD, Z.ORDER_COMP_CD, Z.CLOSE_YEAR, SUM(Z.SALE_AMT) AS SALE_AMT,
-                0 AS CASH_AMT, 0 AS PAPER_AMT, 0 AS DEPOSIT_TOTAL_AMT, 0 AS NOT_DEPOSIT_AMT
-            FROM (
-                SELECT
-                    A.COMP_CD, A.ORDER_COMP_CD, DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y') as CLOSE_YEAR, E.FINAL_NEGO_AMT + E.FINAL_NEGO_AMT * 0.1 AS SALE_AMT
-                FROM TBL_CONTROL A
-                    INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND IFNULL(B.PART_NUM, '0') = '0'
-                    INNER JOIN TBL_CONTROL_PART_ORDER C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                    INNER JOIN TBL_MONTH_CLOSE_ORDER D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ AND C.ORDER_SEQ = D.ORDER_SEQ AND A.COMP_CD = D.COMP_CD AND A.ORDER_COMP_CD = D.ORDER_COMP_CD
-                    INNER JOIN TBL_MONTH_CLOSE E ON D.COMP_CD = E.COMP_CD AND D.CLOSE_MONTH = E.CLOSE_MONTH AND D.ORDER_COMP_CD = E.ORDER_COMP_CD AND D.CLOSE_VER = E.CLOSE_VER
-                        AND DATE_FORMAT(STR_TO_DATE(D.CLOSE_MONTH, '%Y%m'), '%Y') = #{MONEY_MANAGE_STATUS_YEAR}
-                WHERE A.DEL_YN = 'N'
-                    <if test="COMP_CD != null and COMP_CD != ''">
-                        AND A.COMP_CD = #{COMP_CD}
-                    </if>
-                    <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-                        AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-                    </if>
-                GROUP BY A.COMP_CD, A.ORDER_COMP_CD, D.CLOSE_MONTH, D.CLOSE_VER
-            ) Z
-            GROUP BY Z.COMP_CD, Z.ORDER_COMP_CD, Z.CLOSE_YEAR
-            UNION ALL
-            <!-- 선택 년도 금액 -->
-            SELECT
-                A.COMP_CD, A.ORDER_COMP_CD,
-                DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y') as CLOSE_YEAR,
-                0 as SALE_AMT,
-                SUM(CASE WHEN A.DEPOSIT_TYPE IN ('1') THEN A.DEPOSIT_AMT ELSE 0 END) AS CASH_AMT,
-                SUM(CASE WHEN A.DEPOSIT_TYPE IN ('2', '3') THEN A.DEPOSIT_AMT ELSE 0 END) AS PAPER_AMT,
-                SUM(A.DEPOSIT_AMT) AS DEPOSIT_TOTAL_AMT, 0 AS NOT_DEPOSIT_AMT <!-- 이미 입력할때 부가세 포함한 금액. 부가세 재계산 필요X -->
-            FROM TBL_MONEY_DEPOSIT A
-            WHERE DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y') = #{MONEY_MANAGE_STATUS_YEAR}
-                <if test="COMP_CD != null and COMP_CD != ''">
-                    AND A.COMP_CD = #{COMP_CD}
-                </if>
-                <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-                    AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-                </if>
-            GROUP BY A.COMP_CD, A.ORDER_COMP_CD, DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y')
-            UNION ALL
-            <!-- 전년도 미수 금액 -->
-            SELECT
-                A.COMP_CD, A.ORDER_COMP_CD,
-                #{MONEY_MANAGE_STATUS_YEAR} as CLOSE_YEAR,
-                0 as SALE_AMT, 0 AS CASH_AMT, 0 AS PAPER_AMT, 0 AS DEPOSIT_TOTAL_AMT, SUM(A.DEPOSIT_AMT) AS NOT_DEPOSIT_AMT <!-- 이미 입력할때 부가세 포함한 금액. 부가세 재계산 필요X -->
-            FROM TBL_MONEY_DEPOSIT A
-            WHERE DATE_FORMAT(STR_TO_DATE(A.DEPOSIT_DT, '%Y%m%d'), '%Y') <![CDATA[ < ]]> #{MONEY_MANAGE_STATUS_YEAR}
-                <if test="COMP_CD != null and COMP_CD != ''">
-                    AND A.COMP_CD = #{COMP_CD}
-                </if>
-                <if test="ORDER_COMP_CD != null and ORDER_COMP_CD != ''">
-                    AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
-                </if>
-                AND A.DEPOSIT_TYPE IN ('2', '3') AND A.DUE_PAY_YN = 'N'
-            GROUP BY A.COMP_CD, A.ORDER_COMP_CD
-        ) Z
-            LEFT OUTER JOIN TBL_MONEY_YEAR_NOTE Y ON Z.COMP_CD = Y.COMP_CD AND Z.ORDER_COMP_CD = Y.ORDER_COMP_CD AND Z.CLOSE_YEAR = Y.YYYY
         WHERE 1 = 1
         GROUP BY Z.COMP_CD, Z.ORDER_COMP_CD, Z.CLOSE_YEAR
         ORDER BY Z.COMP_CD, Z.ORDER_COMP_CD
@@ -3522,30 +2992,6 @@
             AND CLOSE_VER = #{CLOSE_VER}
     </update>
 
-    <select id="selectControlDetailList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            ROW_NUMBER () OVER (ORDER BY A.CONTROL_SEQ, B.PART_NUM, C.ORDER_NUM) AS ROW_NUM,
-            <include refid="control"/>,
-            <include refid="controlPart"/>,
-            <include refid="controlPartOrder"/>,
-            CASE WHEN B.WORK_TYPE != 'WTP040' THEN (SELECT T.UNIT_FINAL_AMT FROM TBL_ORDER T WHERE T.ORDER_SEQ = C.ORDER_SEQ)
-                 ELSE IFNULL(C.UNIT_FINAL_AMT, SPACE(0))
-            END AS UNIT_FINAL_AMT_ORDER,
-            CASE WHEN B.WORK_TYPE != 'WTP040' THEN (SELECT T.UNIT_FINAL_AMT FROM TBL_ORDER T WHERE T.ORDER_SEQ = C.ORDER_SEQ) * SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ,C.ORDER_SEQ)
-                 ELSE C.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ,C.ORDER_SEQ)
-            END AS FINAL_AMT
---             C.UNIT_FINAL_AMT * SF_GET_CONTROL_ORDER_QTY(B.CONTROL_SEQ, C.ORDER_SEQ) AS FINAL_AMT <!-- 합계 금액 -->
-        FROM TBL_CONTROL A
-            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
-            INNER JOIN TBL_CONTROL_PART_ORDER C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-            INNER JOIN TBL_MONTH_CLOSE_ORDER D ON D.CONTROL_SEQ = C.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ AND D.ORDER_SEQ = C.ORDER_SEQ AND D.COMP_CD = A.COMP_CD AND D.ORDER_COMP_CD = A.ORDER_COMP_CD
-            INNER JOIN TBL_MONTH_CLOSE E ON E.CLOSE_MONTH = D.CLOSE_MONTH AND E.CLOSE_VER = D.CLOSE_VER AND E.COMP_CD = D.COMP_CD AND E.ORDER_COMP_CD = D.ORDER_COMP_CD
-                AND E.COMP_CD = #{COMP_CD}
-                AND E.CLOSE_MONTH = #{CLOSE_MONTH}
-                AND E.ORDER_COMP_CD = #{ORDER_COMP_CD}
-                AND E.CLOSE_VER = #{CLOSE_VER}
-        WHERE A.DEL_YN = 'N'
-    </select>
     <select id="selectControlDetailList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             IFNULL(SF_GET_COMP_NM(A.COMP_CD), SPACE(0)) AS COMP_NM, A.COMP_CD,
@@ -3735,61 +3181,6 @@
         </choose>
     </update>
 
-    <update id="updateControlPartFromControlManage_old" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART
-        SET
-            PART_NUM = #{PART_NUM},
-            DRAWING_NUM = #{ORDER_DRAWING_NUM},
-            PREV_DRAWING_NUM = #{PREV_DRAWING_NUM},
-            WORK_TYPE = #{WORK_TYPE},
-            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (OUTSIDE_EDIT != null)">
-                OUTSIDE_YN = #{OUTSIDE_YN},
-            </if>
-            WORK_FACTORY = CASE WHEN #{WORK_FACTORY} = 'null' THEN NULL ELSE #{WORK_FACTORY} END,
-            MATERIAL_SUPPLY_YN = IFNULL(#{MATERIAL_SUPPLY_YN}, 'N'),
-            INNER_DUE_DT = DATE_FORMAT(#{INNER_DUE_DT}, '%Y%m%d'),
-            SIZE_TXT = #{SIZE_TXT},
-            SIZE_TYPE = SF_GET_SIZE_TXT('SIZE_TYPE', #{SIZE_TXT}),
-            SIZE_W = SF_GET_SIZE_TXT('SIZE_W', #{SIZE_TXT}),
-            SIZE_H = SF_GET_SIZE_TXT('SIZE_H', #{SIZE_TXT}),
-            SIZE_T = SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
-            SIZE_D = SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}),
-            SIZE_L = SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
-            MATERIAL_DETAIL = #{MATERIAL_DETAIL},
-            MATERIAL_TYPE = SF_GET_ETC_CD('1027', #{MATERIAL_DETAIL}),
-            MATERIAL_KIND = #{MATERIAL_KIND},
-            SURFACE_TREAT = #{SURFACE_TREAT},
-            MATERIAL_NOTE = #{MATERIAL_NOTE},
-            PART_UNIT_QTY = #{PART_UNIT_QTY},
-            ADDITIONAL_QTY = #{ADDITIONAL_QTY},
-            MATERIAL_FINISH_GRIND = #{MATERIAL_FINISH_GRIND},
-            MATERIAL_FINISH_HEAT = #{MATERIAL_FINISH_HEAT},
-            UNIT_MATERIAL_AMT = #{UNIT_MATERIAL_AMT},
-            UNIT_MATERIAL_FINISH_GRIND_AMT = #{UNIT_MATERIAL_FINISH_GRIND_AMT},
-            UNIT_MATERIAL_FINISH_HEAT_AMT = #{UNIT_MATERIAL_FINISH_HEAT_AMT},
-            UNIT_SURFACE_AMT = #{UNIT_SURFACE_AMT},
-            UNIT_PROCESS_AMT = #{UNIT_PROCESS_AMT},
-            UNIT_ETC_AMT = #{UNIT_ETC_AMT},
-            UNIT_AMT_NOTE = #{UNIT_AMT_NOTE},
-            ETC_GFILE_SEQ = #{ETC_GFILE_SEQ},
-            OUTSIDE_HOPE_DUE_DT = CASE WHEN OUTSIDE_YN = 'Y' AND OUTSIDE_HOPE_DUE_DT IS NULL THEN DATE_FORMAT(DATE_SUB(INNER_DUE_DT, INTERVAL 1 DAY), '%Y%m%d') ELSE OUTSIDE_HOPE_DUE_DT END,
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE 1 = 1
-        AND CONTROL_SEQ = #{CONTROL_SEQ}
-        <choose>
-            <when test="CONTROL_DETAIL_SEQ != null and CONTROL_DETAIL_SEQ != ''">
-                AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-            </when>
-            <otherwise>
-                AND CONTROL_DETAIL_SEQ = (  SELECT A.CONTROL_DETAIL_SEQ
-                FROM TBL_CONTROL_PART A
-                WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
-                AND A.PART_NUM = #{PART_NUM})
-            </otherwise>
-        </choose>
-    </update>
-
     <update id="updateControlPartFromCloseHistory" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART_ORDER
         SET
@@ -3828,23 +3219,6 @@
             <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (SAME_SIDE_YN != null and SAME_SIDE_YN != '')">
                 SAME_SIDE_YN = IFNULL(#{SAME_SIDE_YN}, 'N'),
             </if>
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-    </update>
-
-    <update id="updateControlFromControlManage_old" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL
-        SET
-            CONTROL_NUM = UPPER(#{CONTROL_NUM}),
-            COMP_CD = #{COMP_CD},
-            ORDER_COMP_CD = #{ORDER_COMP_CD},
-            NOTE = #{CONTROL_NOTE},
-            MAIN_INSPECTION = #{MAIN_INSPECTION},
-            EMERGENCY_YN = IFNULL(#{EMERGENCY_YN}, 'N'),
-            TOTAL_SHEET = #{TOTAL_SHEET},
-            PRICE_CONFIRM = #{PRICE_CONFIRM},
-            SAME_SIDE_YN = IFNULL(#{SAME_SIDE_YN}, 'N'),
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
@@ -4557,43 +3931,6 @@
         GROUP BY A.ORDER_SEQ
         ORDER BY A.ORDER_SEQ;
     </select>
-    <select id="selectControlSalesCadBarcodeList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            A.CONTROL_SEQ
-            , B.CONTROL_DETAIL_SEQ
-            , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
-            , SF_GET_COMP_NM(A.COMP_CD) AS COMP_NM
-            , C.PROJECT_NM
-            , C.MODULE_NM
-            , C.DRAWING_NUM
-            , IFNULL(C.REGIST_NUM,SPACE(0)) AS REGIST_NUM
-            , C.ORDER_NUM
-            , C.ITEM_NM
-            , B.SIZE_TXT
-            , SF_GET_CODE_NM('1039', B.SURFACE_TREAT, #{LOGIN_LOCALE}) AS SURFACE_TREAT_NM <!-- 표면처리 -->
-            , SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM <!-- 작업 형태 -->
-            , SF_GET_CODE_NM('1035', B.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM <!-- 재질 -->
-            , CAST(IFNULL(C.ORDER_QTY, 0) AS CHAR) AS ORDER_QTY
-            , A.SAME_SIDE_YN
-            , CASE
-                  WHEN A.SAME_SIDE_YN = 'Y' THEN CONCAT('(', IFNULL(IFNULL(C.ORIGINAL_SIDE_QTY,0) * IFNULL(B.PART_UNIT_QTY, 1), 0), ',', IFNULL(IFNULL(C.OTHER_SIDE_QTY,0) * IFNULL(B.PART_UNIT_QTY, 1), 0), ')')
-              END AS SIDE_QTY
-            , SF_GET_DATE_F(B.INNER_DUE_DT, '', '') AS INNER_DUE_DT
-            , SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT
-            , C.ORDER_BARCODE_NUM
-            , A.CONTROL_NUM
-            , A.TOTAL_SHEET
-            , (SELECT M.FILE_PATH FROM TBL_FILE M WHERE M.GFILE_SEQ = C.IMG_GFILE_SEQ) AS IMAGE_PATH
-        FROM TBL_CONTROL A, TBL_CONTROL_PART B, TBL_CONTROL_PART_ORDER C
-        WHERE C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-            AND B.CONTROL_SEQ = A.CONTROL_SEQ
-            AND A.DEL_YN = 'N'
-            AND CONCAT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN
-                <foreach collection="selectControlLists" item="bean" index="index"  open="(" close=")" separator=",">
-                    #{bean}
-                </foreach>
-        ORDER BY A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, C.ORDER_SEQ
-    </select>
 
     <update id="updateControlStatusFromMonthClose" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL
@@ -4797,14 +4134,20 @@
                 CASE WHEN D.TARGET_CONTROL_SEQ IS NOT NULL THEN 3 ELSE 2 END AS SORT, D.REQUEST_QTY,
                 (SELECT SUM(M.OUT_QTY) FROM TBL_INSIDE_OUT M WHERE M.OUT_REQUEST_SEQ = D.OUT_REQUEST_SEQ AND M.DEL_YN = 'N') AS OUT_QTY, D.OUT_DT AS OUT_DT,
                 CASE WHEN D.TARGET_CONTROL_SEQ IS NULL
-                        THEN (
-                            SELECT IFNULL(SUM(H.REQUEST_QTY),0)
-                            FROM TBL_INSIDE_OUT_REQUEST H
-                            WHERE H.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ
-                                AND H.OUT_DT IS NULL
-                                AND H.DEL_YN = 'N'
+                        THEN (SELECT SUM(H.REQUEST_QTY)
+                              FROM TBL_INSIDE_OUT_REQUEST H
+                              WHERE H.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ
+                                AND H.OUT_DT IS NULL AND H.DEL_YN = 'N'
+                                AND H.TARGET_CONTROL_SEQ IS NULL
+                                AND H.TARGET_CONTROL_DETAIL_SEQ IS NULL
                         )
-                     ELSE ''
+                    ELSE (SELECT SUM(H.REQUEST_QTY)
+                          FROM TBL_INSIDE_OUT_REQUEST H
+                          WHERE H.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ
+                            AND H.DEL_YN = 'N' AND H.OUT_DT IS NULL
+                            AND H.TARGET_CONTROL_SEQ = D.TARGET_CONTROL_SEQ
+                            AND H.TARGET_CONTROL_DETAIL_SEQ = D.TARGET_CONTROL_DETAIL_SEQ
+                    )
                 END AS INSIDE_STOCK_RESERVE_QTY,
                 SF_GET_STOCK_CURRENT_QTY(C.INSIDE_STOCK_SEQ) AS CURR_QTY, B.IMG_GFILE_SEQ, C.INSIDE_STOCK_SEQ, D.OUT_REQUEST_SEQ
             FROM TBL_CONTROL A
@@ -4833,7 +4176,13 @@
                     '' AS POP_POSITION, '' AS PART_STATUS_NM, jmes.SF_GET_CODE_NM('1049', C.WAREHOUSE_CD, #{LOGIN_LOCALE}) AS WAREHOUSE_NM,
                     C.SIZE_TXT, C.MATERIAL_DETAIL, SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM, '' AS ORDER_QTY, '' AS PROCESSING_QTY,
                     C.INSIDE_STOCK_NUM , 2 AS SORT, '' AS REQUEST_QTY, '' AS OUT_QTY, '' AS OUT_DT,
-                    (SELECT IFNULL(SUM(H.REQUEST_QTY),0) FROM TBL_INSIDE_OUT_REQUEST H WHERE H.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ AND H.OUT_DT IS NULL AND H.DEL_YN = 'N') AS INSIDE_STOCK_RESERVE_QTY,
+                    (SELECT SUM(H.REQUEST_QTY)
+                     FROM TBL_INSIDE_OUT_REQUEST H
+                     WHERE H.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ
+                        AND H.OUT_DT IS NULL AND H.DEL_YN = 'N'
+                        AND H.TARGET_CONTROL_SEQ IS NULL
+                        AND H.TARGET_CONTROL_DETAIL_SEQ IS NULL
+                    ) AS INSIDE_STOCK_RESERVE_QTY,
                     SF_GET_STOCK_CURRENT_QTY(C.INSIDE_STOCK_SEQ) AS CURR_QTY,
                     C.IMG_GFILE_SEQ, C.INSIDE_STOCK_SEQ, '' AS OUT_REQUEST_SEQ
                 FROM TBL_CONTROL A
@@ -4864,7 +4213,13 @@
                     D.POP_POSITION, D.PART_STATUS_NM, '' AS WAREHOUSE_NM,
                     C.SIZE_TXT, C.MATERIAL_DETAIL, SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM, '' AS ORDER_QTY, D.ORDER_QTY AS PROCESSING_QTY,
                     C.INSIDE_STOCK_NUM , 3 AS SORT, '' AS REQUEST_QTY, '' AS OUT_QTY, '' AS OUT_DT,
-                    '' AS INSIDE_STOCK_RESERVE_QTY,
+                    (SELECT SUM(H.REQUEST_QTY)
+                     FROM TBL_INSIDE_OUT_REQUEST H
+                     WHERE H.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ
+                        AND H.DEL_YN = 'N' AND H.OUT_DT IS NULL
+                        AND H.TARGET_CONTROL_SEQ = D.CONTROL_SEQ
+                        AND H.TARGET_CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                    ) AS INSIDE_STOCK_RESERVE_QTY,
                     SF_GET_STOCK_CURRENT_QTY(C.INSIDE_STOCK_SEQ) AS CURR_QTY,
                     C.IMG_GFILE_SEQ, C.INSIDE_STOCK_SEQ, '' AS OUT_REQUEST_SEQ
                 FROM TBL_CONTROL A
@@ -4948,6 +4303,7 @@
            #{LOGIN_USER_ID}
        )
     </insert>
+
     <update id="updateRequestStock_old" parameterType="java.util.HashMap">
         UPDATE TBL_INSIDE_OUT
         SET REQUEST_QTY = #{REQUEST_QTY},
@@ -4955,6 +4311,7 @@
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE INSIDE_OUT_SEQ = #{INSIDE_OUT_SEQ}
     </update>
+
     <select id="selectRequestStockStatus" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.INSIDE_OUT_SEQ
         FROM TBL_INSIDE_OUT A

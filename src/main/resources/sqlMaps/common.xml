@@ -252,39 +252,6 @@
             AND A.BARCODE_NUM = #{BARCODE_NUM}
         ORDER BY A.ORDER_SEQ ;
     </select>
-    <select id="selectBarcodePrintInfoOut_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        -- 출고라벨
-        SELECT A.BARCODE_NUM
-            , A.PACKING_NUM
-            , D.PACKING_CNT
-            , (SELECT IFNULL(M.COMP_NM2, M.COMP_NM)  FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = B.COMP_CD) AS COMP_NM
-            , D.ITEM_NM
-            , (SELECT IFNULL(M.COMP_NM2, M.COMP_NM) FROM jmes.TBL_COMPANY M WHERE M.COMP_CD = B.ORDER_COMP_CD) AS ORDER_COMP_NM
-            , jmes.SF_GET_SIDE_QTY(B.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1) AS ORIGINAL_SIDE_QTY <!-- 대칭_원칭 -->
-            , jmes.SF_GET_SIDE_QTY(B.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1) AS OTHER_SIDE_QTY <!-- 대칭_대칭 -->
-            , D.DRAWING_NUM
-            , D.IMG_GFILE_SEQ
-            , D.REGIST_NUM
-            , D.ORDER_NUM
-            , D.MODULE_NM
-            , jmes.SF_GET_DATE_F(D.ORDER_DUE_DT,'YYYY','') AS ORDER_DUE_DT
-            , B.CONTROL_NUM
-            , D.DELIVERY_COMP_NM
-            , D.PROJECT_NM
-            , CONCAT(C.SIZE_TXT, ' / ', IFNULL(D.ORDER_QTY, 0), 'EA') AS SIZE_QTY_INFO
-            , D.LABEL_NOTE
-        FROM jmes.TBL_OUT_BARCODE A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C, jmes.TBL_CONTROL_PART_ORDER D
-        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-            AND A.CONTROL_SEQ = C.CONTROL_SEQ
-            AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            AND A.CONTROL_SEQ = D.CONTROL_SEQ
-            AND A.CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
-            AND A.ORDER_SEQ = D.ORDER_SEQ
-            AND A.DEL_YN = 'N'
-            AND B.DEL_YN = 'N'
-            AND A.BARCODE_NUM = #{BARCODE_NUM}
-        ORDER BY B.CONTROL_NUM, D.ORDER_NUM
-    </select>
 
     <select id="selectBarcodePrintInfoWareHouse" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- 출고라벨
