@@ -4134,14 +4134,20 @@
                 CASE WHEN D.TARGET_CONTROL_SEQ IS NOT NULL THEN 3 ELSE 2 END AS SORT, D.REQUEST_QTY,
                 (SELECT SUM(M.OUT_QTY) FROM TBL_INSIDE_OUT M WHERE M.OUT_REQUEST_SEQ = D.OUT_REQUEST_SEQ AND M.DEL_YN = 'N') AS OUT_QTY, D.OUT_DT AS OUT_DT,
                 CASE WHEN D.TARGET_CONTROL_SEQ IS NULL
-                        THEN (
-                            SELECT IFNULL(SUM(H.REQUEST_QTY),0)
-                            FROM TBL_INSIDE_OUT_REQUEST H
-                            WHERE H.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ
-                                AND H.OUT_DT IS NULL
-                                AND H.DEL_YN = 'N'
+                        THEN (SELECT SUM(H.REQUEST_QTY)
+                              FROM TBL_INSIDE_OUT_REQUEST H
+                              WHERE H.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ
+                                AND H.OUT_DT IS NULL AND H.DEL_YN = 'N'
+                                AND H.TARGET_CONTROL_SEQ IS NULL
+                                AND H.TARGET_CONTROL_DETAIL_SEQ IS NULL
                         )
-                     ELSE ''
+                    ELSE (SELECT SUM(H.REQUEST_QTY)
+                          FROM TBL_INSIDE_OUT_REQUEST H
+                          WHERE H.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ
+                            AND H.DEL_YN = 'N' AND H.OUT_DT IS NULL
+                            AND H.TARGET_CONTROL_SEQ = D.TARGET_CONTROL_SEQ
+                            AND H.TARGET_CONTROL_DETAIL_SEQ = D.TARGET_CONTROL_DETAIL_SEQ
+                    )
                 END AS INSIDE_STOCK_RESERVE_QTY,
                 SF_GET_STOCK_CURRENT_QTY(C.INSIDE_STOCK_SEQ) AS CURR_QTY, B.IMG_GFILE_SEQ, C.INSIDE_STOCK_SEQ, D.OUT_REQUEST_SEQ
             FROM TBL_CONTROL A
@@ -4170,7 +4176,13 @@
                     '' AS POP_POSITION, '' AS PART_STATUS_NM, jmes.SF_GET_CODE_NM('1049', C.WAREHOUSE_CD, #{LOGIN_LOCALE}) AS WAREHOUSE_NM,
                     C.SIZE_TXT, C.MATERIAL_DETAIL, SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM, '' AS ORDER_QTY, '' AS PROCESSING_QTY,
                     C.INSIDE_STOCK_NUM , 2 AS SORT, '' AS REQUEST_QTY, '' AS OUT_QTY, '' AS OUT_DT,
-                    (SELECT IFNULL(SUM(H.REQUEST_QTY),0) FROM TBL_INSIDE_OUT_REQUEST H WHERE H.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ AND H.OUT_DT IS NULL AND H.DEL_YN = 'N') AS INSIDE_STOCK_RESERVE_QTY,
+                    (SELECT SUM(H.REQUEST_QTY)
+                     FROM TBL_INSIDE_OUT_REQUEST H
+                     WHERE H.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ
+                        AND H.OUT_DT IS NULL AND H.DEL_YN = 'N'
+                        AND H.TARGET_CONTROL_SEQ IS NULL
+                        AND H.TARGET_CONTROL_DETAIL_SEQ IS NULL
+                    ) AS INSIDE_STOCK_RESERVE_QTY,
                     SF_GET_STOCK_CURRENT_QTY(C.INSIDE_STOCK_SEQ) AS CURR_QTY,
                     C.IMG_GFILE_SEQ, C.INSIDE_STOCK_SEQ, '' AS OUT_REQUEST_SEQ
                 FROM TBL_CONTROL A
@@ -4201,7 +4213,13 @@
                     D.POP_POSITION, D.PART_STATUS_NM, '' AS WAREHOUSE_NM,
                     C.SIZE_TXT, C.MATERIAL_DETAIL, SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM, '' AS ORDER_QTY, D.ORDER_QTY AS PROCESSING_QTY,
                     C.INSIDE_STOCK_NUM , 3 AS SORT, '' AS REQUEST_QTY, '' AS OUT_QTY, '' AS OUT_DT,
-                    '' AS INSIDE_STOCK_RESERVE_QTY,
+                    (SELECT SUM(H.REQUEST_QTY)
+                     FROM TBL_INSIDE_OUT_REQUEST H
+                     WHERE H.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ
+                        AND H.DEL_YN = 'N' AND H.OUT_DT IS NULL
+                        AND H.TARGET_CONTROL_SEQ = D.CONTROL_SEQ
+                        AND H.TARGET_CONTROL_DETAIL_SEQ = D.CONTROL_DETAIL_SEQ
+                    ) AS INSIDE_STOCK_RESERVE_QTY,
                     SF_GET_STOCK_CURRENT_QTY(C.INSIDE_STOCK_SEQ) AS CURR_QTY,
                     C.IMG_GFILE_SEQ, C.INSIDE_STOCK_SEQ, '' AS OUT_REQUEST_SEQ
                 FROM TBL_CONTROL A

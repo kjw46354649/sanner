@@ -642,7 +642,7 @@
 </div>
 
 <div class="popup_container" id="stock_process_popup" style="display: none;">
-    <div class="layerPopup" style="width: 760px; height: 500px;">
+    <div class="layerPopup" style="width: 800px; height: 500px;">
         <h3>재고 가공현황</h3>
         <hr>
         <button type="button" class="pop_close stock_process_popup_close">닫기</button>
