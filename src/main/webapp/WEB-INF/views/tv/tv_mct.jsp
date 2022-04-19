@@ -54,7 +54,6 @@
 		a{text-decoration: none; color: black;}
 		ul,dl,ol { list-style: none;}
 		div.pq-grid * {font-size: 1.4rem;}
-		#mct_machine_grid .pq-grid-header-table>.pq-grid-row>.pq-grid-number-cell {background: #d8edf0;}
 		body {
 			font-family: 'notoM' !important;
 			color: black;
@@ -228,133 +227,238 @@
 		<input type="hidden" id="EQUIP_SEQ" name="EQUIP_SEQ" value="">
 		<input type="hidden" id="MCT_WORK_SEQ" name="MCT_WORK_SEQ" value="">
 		<input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
+		<input type="hidden" id="CONTROL_SEQ" name="CONTROL_SEQ" value="">
+		<input type="hidden" id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" value="">
 	</form>
-	<!--팝업 시작-->
-	<div id="popupWrap" class="popupWrap popupBackground" style="display: none;">
+	<div id="popupWrap" class="popupWrap popupBackground in" style="display: none;">
 		<!--팝업위치기준-->
 		<div id="popupContainer" class="popupContainer">
 			<!--팝업내용-->
 			<div id="popup" class="popup">
-				<h3><i class="xi-library-bookmark"></i>장비 상세화면</h3>
-				<div id="tableTop" class="tableTop">
-					<h4>가공진행현황</h4>
-					<table id="popHeadTopTable" class="popHeadTopTable">
-						<tr>
-							<td>장비번호 : </td>
-							<td>장비종류 : </td>
-							<td>설치위치 : </td>
-							<td>관리장(정) : </td>
-							<td>관리자(부) : </td>
-						</tr>
-					</table>
-				</div>
-
-				<!--상단 메인 테이블-->
-				<table id="popHeadMid" class="popHeadMid popTable">
-					<colgroup>
-						<col width="4%">
-						<col width="4%">
-						<col width="12.5%">
-						<col width="12.5%">
-						<col width="9.5%">
-						<col width="6%">
-						<col width="6%">
-						<col width="6%">
-						<col width="6%">
-						<col width="8.5%">
-						<col width="8.5%">
-						<col width="8.5%">
-					</colgroup>
-					<tbody>
-						<tr>
-							<td id="workStaff" class="th_color">작업자</td>
-							<td id="workStatu" class="th_color">작업상세</td>
-							<td id="workNum" class="th_color">작업번호</td>
-							<td id="mapNum" class="th_color">도면번호</td>
-							<td id="productSize" class="th_color">규격</td>
-							<td id="workType" class="th_color">작업형태</td>
-							<td id="material" class="th_color">소재종류</td>
-							<td id="orderNum" class="th_color">수량</td>
-							<td id="processDelivery" class="th_color">가공납기</td>
-							<td id="timeStop" class="th_color">정지시간</td>
-							<td id="timeRunning" class="th_color">진행시간</td>
-							<td id="timeExpect" class="th_color">예상시간(E/T)</td>
-						</tr>
-
-						<tr id="machine_popup_tbody">
-							<td id="workStaffImg" class="workStaffImg ">
-								<div id="staffImgWrap" class="staffImgWrap">
-									<img src="resource/pop/images/staff.jpg" alt="작업자사진">
-								</div>
-							</td>
-							<td id="running" class="running"></td>
-							<td id="numberWorking" class="numberWorking"></td>
-							<td id="mapNumInfo" class="mapNumInfo">
-								<div class="tableScroll">
-								</div>
-							</td>
-							<td id="sizeInfo" class="sizeInfo"></td>
-							<td id="workTypeInfo" class="workTypeInfo"></td>
-							<td id="materialInfo" class="materialInfo"></td>
-							<td id="productAmount" class="productAmount">
-							</td>
-							<td id="deliveryDate" class="deliveryDate"></td>
-							<td id="runningStop" class="runningStop"></td>
-							<td id="runningTime" class="runningTime"></td>
-							<td id="expectTime" class="expectTime"></td>
-						</tr>
-					</tbody>
-				</table>
-				<!--상단 메인 테이블 끝-->
-				<!--팝업 하단-->
-				<div id="popBtm" class="popBtm">
-					<!--왼쪽-->
-					<div id="popBtmLeft" class="popBtmLeft">
-						<div class="mapImgWrap">
-							<img id="mapImgWrap" src="resource/pop/images/map.jpg" alt="도면">
-						</div>
-					</div>
-					<!--왼쪽-->
-					<!--오른쪽-->
-					<div id="popBtmRight" class="popBtmRight">
-						<div id="tableTop" class="tableTop">
-							<h4>가공계획 List</h4>
-							<table id="popHeadTopTable" class="popHeadTopTable">
-								<tr id="popBtmGridHead">
-									<td>대기현황</td>
-									<td></td>
-									<td>예상시간 합계 :</td>
+				<h3><i class="xi-library-bookmark"></i>장비 가동 현황</h3>
+				<div style="display: flex;padding: 10px;height: 94%;">
+					<div style="width: 43%;margin-right: 2%;height: 100%;">
+						<h4 style="text-align: left;">
+							<i class="xi-tags mr-5"></i>가동장비 정보
+						</h4>
+						<table id="popHeadMid" class="popHeadMid popTable mt-10">
+								<colgroup>
+									<col width="20%">
+									<col width="20%">
+									<col width="30%">
+									<col width="30%">
+								<tbody>
+								<tr>
+									<td class="th_color">장비번호</td>
+									<td class="th_color">가동상태</td>
+									<td class="th_color">장비종류</td>
+									<td class="th_color">설치위치</td>
 								</tr>
-							</table>
-						</div>
-						<!--오른쪽 표 시작-->
-						<div id="mct_machine_grid" class="popBtmTable">
-							<!--표 삽입-->
-						</div>
-						<!--오른쪽 표 끝-->
+								<tr>
+									<td class="EQUIP_NM"></td>
+									<td class="EQUIP_STATUS"></td>
+									<td class="EQUIP_TYPE_NM"></td>
+									<td class="FACTORY_AREA_NM"></td>
+								</tr>
+							</tbody>
+						</table>
+						<h4 style="text-align: left;margin-top: 40px;">
+							<i class="xi-tags mr-5"></i>작업수행 현황
+						</h4>
+						<table id="popHeadMid2" class="popHeadMid popTable mt-10">
+							<colgroup>
+								<col width="17%">
+								<col width="10%">
+								<col width="10%">
+								<col width="33%">
+								<col width="33%">
+							</colgroup>
+							<tbody>
+								<tr>
+									<td class="workStaffImg" rowspan="7">
+										<div class="staffImgWrap">
+											<img id="table2_worker_img" src="/resource/main/blank.jpg">
+										</div>
+										<p class="WORK_USER_NM mt-15"></p>
+									</td>
+									<td class="th_color" colspan="2">작업번호</td>
+									<td class="text-red CONTROL_NUM" colspan="2"></td>
+								</tr>
+								<tr>
+									<td class="th_color" colspan="2">도면번호</td>
+									<td class="DRAWING_NUM machine_current_draw" colspan="2"></td>
+								</tr>
+								<tr>
+									<td class="th_color">규격</td>
+									<td class="th_color">형태</td>
+									<td class="SIZE_TXT"></td>
+									<td class="WORK_TYPE_NM"></td>
+								</tr>
+								<tr>
+									<td class="th_color">소재종류</td>
+									<td class="th_color">수량</td>
+									<td class="MATERIAL_DETAIL_NM"></td>
+									<td>
+										<span class="text-red same_side_span" style="display: none;">대</span>
+										<span class="QTY_FORMAT"></span>
+									</td>
+								</tr>
+								<tr>
+									<td class="th_color" colspan="2">작업수량</td>
+									<td colspan="2">
+										<span class="purple wd_50 d-inline-block radius">목표</span>
+										<span class="wd_80 GOAL_QTY d-inline-block radius"></span>
+										<span class="blue wd_50 d-inline-block radius">완료</span>
+										<span class="wd_80 FINISH_QTY d-inline-block radius"></span>
+										<span class="red wd_50 d-inline-block radius">불량</span>
+										<span class="wd_80 ERROR_QTY d-inline-block radius"></span>
+									</td>
+								</tr>
+								<tr>
+									<td class="th_color" colspan="2">가공수행시간</td>
+									<td colspan="2">
+										<span class="green wd_50 d-inline-block radius">가동</span>
+										<span class="wd_150 WORK_ACTIVE_TIME_FORMAT d-inline-block"></span>
+										<span class="yellow wd_50 d-inline-block radius">비가동</span>
+										<span class="wd_150 WORK_STOP_TIME_FORMAT d-inline-block"></span>
+									</td>
+								</tr>
+								<tr>
+									<td class="th_color" colspan="2">남은예상시간</td>
+									<td class="LEFT_TIME_FORMAT" colspan="2"></td>
+								</tr>
+							</tbody>
+						</table>
+						<h4 style="text-align: left;margin-top: 20px;">
+							<i class="xi-tags mr-5"></i>NC 수행 정보
+						</h4>
+						<table id="popHeadMid" class="popHeadMid popTable mt-15" >
+							<colgroup>
+								<col width="25%">
+								<col width="25%">
+								<col width="25%">
+								<col width="25%">
+							</colgroup>
+							<tbody>
+								<tr>
+									<td class="th_color_green">Program No.</td>
+									<td class="text-blue PROGRAM" colspan="3"></td>
+								</tr>
+								<tr>
+									<td class="th_color_green">Running Time</td>
+									<td class="text-blue WORK_ACTIVE_TIME_FORMAT"></td>
+									<td class="th_color_green">Execution</td>
+									<td class="EXECUTION"></td>
+								</tr>
+								<tr>
+									<td class="th_color_green">1 Cycle Time</td>
+									<td class="LATEST_CYCLE_TIME_FORMAT"></td>
+									<td class="th_color_green">Cycle 완료수</td>
+									<td class="COMPLETE_CYCLE_COUNT"></td>
+								</tr>
+								<tr>
+									<td class="th_color_green">Message</td>
+									<td class="MESSAGE" colspan="3"></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
-					<!--오른쪽 끝-->
+					<div style="width: 55%;height: 100%;">
+						<h4 style="text-align: left;">
+							<i class="xi-tags mr-5"></i>도면정보
+						</h4>
+						<div style="display: flex;margin-top: 10px;height: 68%;border: 1px solid gray;">
+							<div class="mapImgWrap">
+								<img id="mapImgWrap" src="/resource/main/blank.jpg" style="margin-right: 1%;">
+							</div>
+							<div style="width: 22%;">
+								<table id="popHeadMid4" class="popHeadMid popTable" style="overflow: hidden;">
+									<colgroup>
+										<col width="100%">
+									</colgroup>
+									<tbody>
+										<tr>
+											<td class="th_color">작업번호</td>
+										</tr>
+										<tr>
+											<td id="span_item_detail" class="bg-lightgray CONTROL_NUM" style="text-decoration: underline;cursor:pointer;"></td>
+										</tr>
+										<tr>
+											<td class="th_color">규격/소재</td>
+										</tr>
+										<tr>
+											<td class="bg-lightgray SIZE_MATERIAL"></td>
+										</tr>
+										<tr>
+											<td class="th_color">수량/형태</td>
+										</tr>
+										<tr>
+											<td class="bg-lightgray ">
+												<span class="text-red same_side_span" style="display: none;">대</span>
+												<span class="QTY_WORK_TYPE"></span>
+											</td>
+										</tr>
+										<tr>
+											<td class="th_color">가공납기</td>
+										</tr>
+										<tr>
+											<td class="bg-lightgray INNER_DUE_DT"></td>
+										</tr>
+										<tr>
+											<td class="th_color">진행상태</td>
+										</tr>
+										<tr>
+											<td class="bg-lightgray PART_STATUS_NM"></td>
+										</tr>
+										<tr>
+											<td class="th_color">현재위치</td>
+										</tr>
+										<tr>
+											<td class="bg-lightgray CURR_POSITION"></td>
+										</tr>
+										<tr>
+											<td class="th_color">비고</td>
+										</tr>
+										<tr>
+											<td class="bg-lightgray" style="padding: 0;">
+												<div class="CONTROL_NOTE" style="height: 30px;overflow-x: hidden;"></div>
+											</td>
+										</tr>
+										<tr>
+											<td class="blue">예상가공시간(수동입력)</td>
+										</tr>
+										<tr>
+											<td style="height: 38px;" class="bg-lightgray PLAN_WORKING_TIME_FORMAT">
+<%--												<input type="text" style="width: 90%;height: 100%;border: none;">--%>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<h4 class="mt-20">
+							<i class="xi-tags mr-5"></i>가공계획
+							<div class="right_float">
+								<span id="total_cnt_qty" class="mr-10">0 품 0 EA</span>
+								<span id="total_plan_time" class="mr-20">(0h 0m)</span>
+								<button id="machineMctDetailBtn" type="button" class="defaultBtn green">도면상세보기</button>
+							</div>
+						</h4>
+						<div class="planImgDiv mt-10">
+						</div>
+					</div>
 				</div>
-				<!--팝업 하단 끝-->
-				<!--버튼-->
-				<button id="machineMctDetailBtn" class="popMapDetailBtn">도면상세보기</button>
 				<button id="detailCloseBtn" class="detailCloseBtn">닫기</button>
-				<!--버튼 끝-->
 			</div>
 			<!--팝업내용끝-->
 		</div>
 		<!--팝업위치기준-->
 	</div>
-	<!--팝업 끝-->
 
 	<!-- 주문상세정보 layer popup : S -->
 	<div class="popup_container g_item_detail_pop" id="g_item_detail_pop" style="display: none;">
 		<div class="layerPopup">
 			<h3>작업상세정보</h3>
-			<span class="right_float" style="margin-right: 100px;">
-            <span class="barCodeTxt" style="margin-right: 5px;opacity: 0;">&nbsp;<input type="text" class="wd_270_barcode hg_30" name="g_item_detail_pop_barcode_num" id="g_item_detail_pop_barcode_num" placeholder="도면의 바코드를 스캔해 주세요"></span>
-            <span class="barCode" id="g_item_detail_pop_barcode_span"><img src="/resource/asset/images/common/img_barcode_long.png" alt="바코드" id="g_item_detail_pop_barcode_img"></span>
-        </span>
 			<button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close" style="float: right;right: 12px;position: absolute;">닫기</button>
 			<%--        <button type="button" class="pop_close mt-10 mr-8" id="popClose2">닫기</button>--%>
 			<div class="h_area"></div>
@@ -374,14 +478,11 @@
 								<button class="defaultBtn" name="view_assembly_or_part" id="WTP020" value="WTP020">조립</button>
 								<button class="defaultBtn" name="view_assembly_or_part" id="WTP050" value="WTP050">파트</button>
 								<span name="view_part" id="view_part_prev" style="cursor: pointer;">
-                                <img src="/resource/asset/images/common/img_left_arrow.png" alt="왼쪽 화살표">
-                            </span>
+                                	<img src="/resource/asset/images/common/img_left_arrow.png" alt="왼쪽 화살표">
+								</span>
 								<span name="view_part" id="view_part_next" style="cursor: pointer;">
-                                <img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표">
-                            </span>
-							</div>
-							<div style="margin-left: auto;">
-								<input id="item_detail_pop_input" name="item_detail_pop_input" type="text" placeholder="작업번호를 입력해주세요" value="">
+									<img src="/resource/asset/images/common/img_right_arrow.png" alt="오른쪽 화살표">
+								</span>
 							</div>
 						</div>
 						<div class="list1">
@@ -490,27 +591,27 @@
 							</table>
 						</div>
 						<div class="listdiv">
-								<ul class="conWrapPopLeft">
-									<h4>주문접수번호</h4>
-									<div id="g_item_detail_pop_grid_06" class="jqx-refresh"></div>
-								</ul>
-								<ul class="conWrapPopRight">
-									<h4>위치변동이력</h4>
-									<div id="g_item_detail_pop_grid_02" class="jqx-refresh"></div>
-								</ul>
+							<ul class="conWrapPopLeft">
+								<h4>주문접수번호</h4>
+								<div id="g_item_detail_pop_grid_06" class="jqx-refresh"></div>
+							</ul>
+							<ul class="conWrapPopRight">
+								<h4>위치변동이력</h4>
+								<div id="g_item_detail_pop_grid_02" class="jqx-refresh"></div>
+							</ul>
 						</div>
 						<div class="listdiv">
-								<ul class="conWrapPopLeft">
-									<h4>공유사항</h4>
-									<div id="g_item_detail_pop_grid_03" class="jqx-refresh"></div>
-								</ul>
-								<ul class="conWrapPopRight">
-									<h4>품질검사 이력</h4>
-									<span class="slt_wrap namePlusSlt rightName">
-                                    <label id="search_inspection_detail" class="inspectBtn">검색</label>
-                                </span>
-									<div id="g_item_detail_pop_grid_05" class="jqx-refresh"></div>
-								</ul>
+							<ul class="conWrapPopLeft">
+								<h4>공유사항</h4>
+								<div id="g_item_detail_pop_grid_03" class="jqx-refresh"></div>
+							</ul>
+							<ul class="conWrapPopRight">
+								<h4>품질검사 이력</h4>
+								<span class="slt_wrap namePlusSlt rightName">
+								<label id="search_inspection_detail" class="inspectBtn">검색</label>
+							</span>
+								<div id="g_item_detail_pop_grid_05" class="jqx-refresh"></div>
+							</ul>
 						</div>
 					</form>
 				</div>
@@ -518,7 +619,6 @@
 					<div class="d-flex align-items-center">
 						<h4></h4>
 						<div class="btnWrap ml-auto mb-10">
-<%--							<button id="ITEM_CAD_DOWNLOAD" class="d-none defaultBtn">캐드파일</button>--%>
 							<button id="ITEM_DRAWING_VIEW" class="defaultBtn" style="background-color: #ecf6de;">도면상세보기</button>
 							<button id="ITEM_WORK_HISTORY_INFO" class="defaultBtn">가공상세수행 기록</button>
 						</div>
@@ -527,38 +627,34 @@
 						<img id="item_detail_pop_img" src="/resource/main/blank.jpg" style="width: 100%;height: 100%;max-height: inherit;max-width: inherit;">
 					</div>
 					<div class="listdiv">
-							<ul class="conWrapPop60" style="width: 100%;">
-								<h4>가공이력</h4>
-								<span class="slt_wrap namePlusSlt rightName">
-                                <label for="g_item_detail_pop_grid_01_info_1">총시간</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_1" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="총시간">
-                                <label for="g_item_detail_pop_grid_01_info_2">선반</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_2" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="선반">
-                                <label for="g_item_detail_pop_grid_01_info_3">NC</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_3" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="NC">
-                                <label for="g_item_detail_pop_grid_01_info_4">밀링</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_4" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="밀링">
-                                <label for="g_item_detail_pop_grid_01_info_5">연마</label>
-                                <input type="text" id="g_item_detail_pop_grid_01_info_5" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="연마">
-                            </span>
-								<div id="g_item_detail_pop_grid_01" class="jqx-refresh"></div>
-							</ul>
+						<ul class="conWrapPop60" style="width: 100%;">
+							<h4>가공이력</h4>
+							<span class="slt_wrap namePlusSlt rightName">
+								<label for="g_item_detail_pop_grid_01_info_1">총시간</label>
+								<input type="text" id="g_item_detail_pop_grid_01_info_1" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="총시간">
+								<label for="g_item_detail_pop_grid_01_info_2">선반</label>
+								<input type="text" id="g_item_detail_pop_grid_01_info_2" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="선반">
+								<label for="g_item_detail_pop_grid_01_info_3">NC</label>
+								<input type="text" id="g_item_detail_pop_grid_01_info_3" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="NC">
+								<label for="g_item_detail_pop_grid_01_info_4">밀링</label>
+								<input type="text" id="g_item_detail_pop_grid_01_info_4" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="밀링">
+								<label for="g_item_detail_pop_grid_01_info_5">연마</label>
+								<input type="text" id="g_item_detail_pop_grid_01_info_5" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="연마">
+							</span>
+							<div id="g_item_detail_pop_grid_01" class="jqx-refresh"></div>
+						</ul>
 					</div>
 					<div class="listdiv">
-							<ul class="conWrapPop60" style="width: 100%;">
-								<h4>CAM작업이력 <span style="color:#7d1919" id="g_item_detail_pop_grid_04_info1"></span></h4>
-								<span class="slt_wrap namePlusSlt rightName">
-                                <label id="g_item_detail_pop_grid_04_info2">Update </label>
-                            </span>
-								<div id="g_item_detail_pop_grid_04" class="jqx-refresh"></div>
-							</ul>
+						<ul class="conWrapPop60" style="width: 100%;">
+							<h4>CAM작업이력 <span style="color:#7d1919" id="g_item_detail_pop_grid_04_info1"></span></h4>
+							<span class="slt_wrap namePlusSlt rightName">
+							<label id="g_item_detail_pop_grid_04_info2">Update </label>
+						</span>
+							<div id="g_item_detail_pop_grid_04" class="jqx-refresh"></div>
+						</ul>
 					</div>
 				</div>
 			</div>
-			<%--        <div class="btnWrap">--%>
-			<%--            &lt;%&ndash;                <button type="button" class="defaultBtn purple work_info_area" id="g_item_cam_work_start_btn" style="display: none;">CAM 작업시작</button>&ndash;%&gt;--%>
-			<%--            <button type="button" class="defaultBtn grayPopGra" id="g_item_detail_pop_grid_05_pop_close">닫기</button>--%>
-			<%--        </div>--%>
 		</div>
 	</div>
 	<!-- 주문상세정보 layer popup : E -->
@@ -667,21 +763,12 @@
 			data: param.data,
 			success: function (data, textStatus, jqXHR) {
 				if (textStatus === 'success') {
-					// if (data.exception === null) {
 					callback.add(callFunction);
 					callback.fire(data, callFunctionParam);
-					// } else {
-					<%--alert('<spring:message code='com.alert.default.failText' />');--%>
-					// }
 				} else {
-					// alert('fail=[' + json.msg + ']111');
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				// alert('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
-				// if (errorThrown == 'Forbidden') {
-				//     $(this).fnHiddenFormPageAction('/');
-				// }
 			}
 		});
 	};
@@ -698,24 +785,12 @@
 			async: false,
 			success: function (data, textStatus, jqXHR) {
 				if (textStatus === 'success') {
-					// if (data.exception === null) {
 					callback.add(callFunction);
 					callback.fire(data, callFunctionParam);
-					// } else {
-					<%--alert('<spring:message code='com.alert.default.failText' />');--%>
-					// }
 				} else {
-					// alert('fail=[' + json.msg + ']111');
 				}
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
-				//console.log(textStatus);
-				//console.log(jqXHR);
-				//console.log(errorThrown);
-				//console.log('error=[' + jqXHR + ' ' + "status" + ' ' + textStatus + ' ' + "errorThrown" + errorThrown+']');
-				// if (errorThrown == 'Forbidden') {
-				//     $(this).fnHiddenFormPageAction('/');
-				// }
 			}
 		});
 	};
@@ -854,103 +929,16 @@
 		return str === undefined || str === null || str === '';
 	};
 
-	/**
-	 * @description 바코드 첫글자 영문 변환
-	 * @param {string} text
-	 * @returns {string} text
-	 */
-	const fnBarcodeKo2En = function (text) {
-		let char = text.substring(0, 1);
+	function makeTimeStr(time) {
+		let hours = 0;
+		let minutes = 0;
 
-		switch (char) {
-			case 'ㅊ':
-				char = 'C';
-				break;
-			case 'ㅣ':
-				char = 'L';
-				break;
+		if(time > 0) {
+			hours = Math.floor(time / 3600);
+			minutes = Math.floor((time % 3600)/60);
 		}
-
-		return (char + text.substring(1)).toUpperCase();
-	};
-	/**
-	 *	Download Hidden Action 처리
-	 *   actionURL : 서버 호출 URL
-	 *	param : 호출 URL에 Parameter 정보
-	 **/
-	let fnFileDownloadFormPageAction = function(GfileSeq) {
-		let elem = document.getElementById('downloadActionForm');
-		if(elem != null && typeof(elem) !== undefined){
-			$('#downloadActionForm').remove()
-		}
-		let downloadActionForm = document.createElement("form");
-		downloadActionForm.setAttribute("id", "downloadActionForm");
-		downloadActionForm.setAttribute("name", "downloadActionForm");
-		downloadActionForm.hidden=true;
-		downloadActionForm.name='downloadActionForm';
-		downloadActionForm.method='POST';
-		downloadActionForm.target='_self';
-		downloadActionForm.action= '/downloadGfile/' + GfileSeq;
-
-		document.body.appendChild(downloadActionForm);
-		downloadActionForm.submit();
-	};
-
-	let fnSingleFileDownloadFormPageAction = function(fileSeq) {
-		let elem = document.getElementById('downloadSingleActionForm');
-		if(elem != null && typeof(elem) !== undefined){
-			$('#downloadSingleActionForm').remove()
-		}
-		let downloadSingleActionForm = document.createElement("form");
-		downloadSingleActionForm.setAttribute("id", "downloadSingleActionForm");
-		downloadSingleActionForm.setAttribute("name", "downloadSingleActionForm");
-		downloadSingleActionForm.hidden=true;
-		downloadSingleActionForm.name='downloadSingleActionForm';
-		downloadSingleActionForm.method='POST';
-		downloadSingleActionForm.target='_self';
-		downloadSingleActionForm.action= '/downloadfile/' + fileSeq;
-
-		document.body.appendChild(downloadSingleActionForm);
-		downloadSingleActionForm.submit();
-	};
-	let fnBarcodePrintCheck = function(callFunction, barcodeNumber, callFunctionParam){
-		//메세지
-		let queryId = "common.selectBarcodePrintControlCheck";
-		let barcodeType = barcodeNumber.charAt(0).toUpperCase();
-		let callback = $.Callbacks();
-
-		if(barcodeType == "L") {//라벨
-			queryId = "common.selectBarcodePrintOutCheck";
-		}
-		let postData = { 'queryId': queryId, 'BARCODE_NUM': barcodeNumber};
-		$.ajax({
-			type: 'POST',
-			url: '/tv/json-info',
-			dataType: 'json',
-			data: postData,
-			async: false,
-			success: function (data, textStatus, jqXHR) {
-				if (textStatus === 'success') {
-					if (data.info != null && data.info.USE_YN == 'Y') {
-						callback.add(callFunction);
-						callback.fire(true, callFunctionParam);
-						//callback(true);
-					} else {
-						let text = '조회대상이 없습니다.';
-						fnAlert(null, text);
-					}
-				} else {
-					// alert('fail=[' + json.msg + ']');
-				}
-			},
-			error: function (jqXHR, textStatus, errorThrown) {
-				console.log(textStatus);
-				console.log(jqXHR);
-				console.log(errorThrown);
-			}
-		});
-	};
-
+		return hours + "h " + minutes +"m ";
+	}
 
 	let windowImageViewer;
 	let machineListData;
@@ -1092,19 +1080,6 @@
 				if(rowData.CAM_FILE_SEQ) iconFiles += '<span id="downloadCAMFIle" class="greenFileImageICon" style="cursor: pointer; margin-left:3px;"></span>&nbsp;&nbsp;';
 				if(rowData.NC_FILE_SEQ) iconFiles += '<span id="downloadNCFile" class="purpleFileImageICon" style="cursor: pointer; margin-left:25px;"></span>';
 				return iconFiles;
-			},
-			postRender: function (ui) {
-				let grid = this;
-				let $cell = grid.getCell(ui);
-				let rowData = ui.rowData;
-				$cell.find('#downloadCAMFIle').bind('click', function(e) {
-					e.preventDefault();
-					fnSingleFileDownloadFormPageAction(rowData.CAM_FILE_SEQ);
-				});
-				$cell.find('#downloadNCFile').bind('click', function(e) {
-					e.preventDefault();
-					fnSingleFileDownloadFormPageAction(rowData.NC_FILE_SEQ);
-				});
 			}
 		}
 	];
@@ -1132,8 +1107,6 @@
 		colModel: g_ItemDetailPopColModel04,
 		dataReady: function (event, ui) {
 			let data = g_ItemDetailPopGrid04.pqGrid('option', 'dataModel.data');
-			// let totalRecords = data.length;
-			// let rowDataArray = g_ItemDetailPopGrid04.pqGrid('getRowData', {rowIndx: 0});
 			if(data[0]){
 				$("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info1").html(data[0].STATUS_INFO);
 				$("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info2").html("Update : " + data[0].UPDATE_TIME_INFO);
@@ -1147,16 +1120,8 @@
 	let g_ItemDetailPopGridId05 =  $("#g_item_detail_pop_grid_05");
 	let g_ItemDetailPopColModel05 = [
 		{title: 'Q_SEQ', dataType: 'string', dataIndx: 'Q_SEQ', hidden:true},
-		// {title: '작성자', dataType: 'string', dataIndx: 'Q_INSPECT_USER_NM', width: 95},
-		// {title: '측정방법', dataType: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', width: 95},
-		// {title: '반품일', dataType: 'string', dataIndx: 'Q_RETURN_DT', minWidth: 90, width: 95},
 		{title: '등급', dataType: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', width: 95},
-		// {title: '부적합 수량', dataType: 'string', dataIndx: 'Q_ERROR_QTY', width: 95},
 		{title: '불량코드', dataType: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', width: 95},
-		// {title: '상세 및 비고', dataType: 'string', dataIndx: 'Q_INSPECT_DESC', width: 95},
-		// {title: '원인', dataType: 'string', dataIndx: 'Q_ERROR_REASON_NM', width: 95},
-		// {title: '조치', dataType: 'string', dataIndx: 'Q_ERROR_ACTION_NM', width: 95},
-		// {title: '조치방안', dataType: 'string', dataIndx: 'Q_ERROR_NOTE', width: 95},
 		{title: '작성일시', dataType: 'string', dataIndx: 'Q_DT', minWidth: 90, width: 95}
 	];
 	let g_ItemDetailPopObj05 = {
@@ -1265,8 +1230,6 @@
 			let dxfFileDownloadYn = '${authUserInfo.DXF_FILE_DOWNLOAD_YN}';
 			fnJsonDataToForm('g_item_detail_pop_form', dataInfo);
 
-			$("#ITEM_CAD_DOWNLOAD").addClass('d-none');
-			$("#ITEM_CAD_DOWNLOAD").removeAttr('onClick');
 			$("#ITEM_DRAWING_VIEW").removeAttr('onClick');
 			$("#ITEM_WORK_HISTORY_INFO").removeAttr('onClick');
 			$itemDetailPopForm.find(".list1").find(".rowStyle").find("td").html('');
@@ -1331,34 +1294,10 @@
 				$itemDetailPopForm.find("#OUTSIDE_IN_DT").html(dataInfo.OUTSIDE_IN_DT);
 				$itemDetailPopForm.find("#OUT_FINISH_DT").html(dataInfo.OUT_FINISH_DT);
 
-				if (dxfFileDownloadYn === 'Y') {
-					if (fnIsEmpty(dataInfo.DXF_GFILE_SEQ)) {
-						$("#ITEM_CAD_DOWNLOAD").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
-						$("#ITEM_CAD_DOWNLOAD").removeClass('d-none');
-					} else {
-						let str = dataInfo.DRAWING_NUM;
-						let arr = str.split(',');
-
-						if (arr.length === 1) {
-							$("#ITEM_CAD_DOWNLOAD").attr('onClick', 'fnFileDownloadFormPageAction(' + dataInfo.DXF_GFILE_SEQ + ');');
-						} else if (arr.length > 1) {
-							$('#common_multi_download_pop_form').find('#MAIN_IMG_SEQ').val(dataInfo.IMG_GFILE_SEQ);
-							$("#ITEM_CAD_DOWNLOAD").attr('onClick', 'commonMultiDownloadPop(' + dataInfo.CONTROL_SEQ + ',' + dataInfo.CONTROL_DETAIL_SEQ + ');');
-						}
-
-						$("#ITEM_CAD_DOWNLOAD").removeClass('d-none');
-					}
-				}
-
 				if (fnIsEmpty(dataInfo.IMG_GFILE_SEQ)) {
 					$("#ITEM_DRAWING_VIEW").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
 				} else {
-					if(dataInfo.REGIST_CNT >= 2) {
-						$('#common_multi_download_pop_form').find('#MAIN_IMG_SEQ').val(dataInfo.IMG_GFILE_SEQ);
-						$("#ITEM_DRAWING_VIEW").attr('onClick', 'commonMultiDownloadPop(' + dataInfo.CONTROL_SEQ + ',' + dataInfo.CONTROL_DETAIL_SEQ + ');');
-					}else {
-						$("#ITEM_DRAWING_VIEW").attr('onClick', 'callWindowImageViewer(' + dataInfo.IMG_GFILE_SEQ + ');');
-					}
+					$("#ITEM_DRAWING_VIEW").attr('onClick', 'callWindowImageViewer(' + dataInfo.IMG_GFILE_SEQ + ');');
 				}
 
 				if (fnIsEmpty(dataInfo.WORK_HISTORY_INFO)) {
@@ -1372,12 +1311,6 @@
 					$("#ITEM_WORK_HISTORY_INFO").attr('onClick', "g_item_detail_pop_cam_pop('" + dataInfo.CONTROL_SEQ + "','" + dataInfo.CONTROL_DETAIL_SEQ + "');");
 				}
 
-				/** CAM 작업 여부에 따른 버튼 표시 **/
-				// if(dataInfo.CAM_STATUS == "CWS010" || dataInfo.CAM_STATUS == "CWS030"){ <!-- 대기 중일때 처리 -->
-				//     $('.work_info_area').show();
-				// }else{
-				//     $('.work_info_area').hide();
-				// }
 			}else {
 				$("#item_detail_pop_img").attr("src", "/resource/main/blank.jpg");
 				$("#ITEM_WORK_HISTORY_INFO").attr('disabled', true);
@@ -1485,7 +1418,6 @@
 			g_ItemDetailPopObj06.dataModel.postData = fnFormToJsonArrayData('g_item_detail_pop_form');
 			g_ItemDetailPopGridId06.pqGrid(g_ItemDetailPopObj06);
 		}
-		$itemDetailPop.find("#g_item_detail_pop_barcode_num").focus();
 	};
 
 	let camWorkDetailPopup;
@@ -1630,14 +1562,6 @@
 					render: function (ui) {
 						if (ui.cellData)
 							return '<span class="blueFileImageICon" name="downloadView" style="cursor: pointer"></span>';
-					},
-					postRender: function (ui) {
-						let grid = this,
-								$cell = grid.getCell(ui);
-						$cell.find('[name=downloadView]').bind('click', function () {
-							let rowData = ui.rowData;
-							fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
-						});
 					}
 				},
 			]
@@ -1678,22 +1602,6 @@
 						iconFiles += '<span id="downloadNCFile" class="purpleFileImageICon" style="visibility: ' + ncVisibility + '; cursor: pointer; margin-left: 10px;"></span>';
 
 						return iconFiles;
-					},
-					postRender: function (ui) {
-						let grid = this;
-						let $cell = grid.getCell(ui);
-						let rowData = ui.rowData;
-
-						$cell.find('#downloadCAMFIle').bind('click', function(e) {
-							// console.log(rowData.CAM_FILE_SEQ);
-							e.preventDefault();
-							fnSingleFileDownloadFormPageAction(rowData.CAM_FILE_SEQ);
-						});
-						$cell.find('#downloadNCFile').bind('click', function(e) {
-							// console.log(rowData.NC_FILE_SEQ);
-							e.preventDefault();
-							fnSingleFileDownloadFormPageAction(rowData.NC_FILE_SEQ);
-						});
 					}
 				},
 				{title: '작업자', width: 80, dataIndx: 'WORK_USER_NM'},
@@ -1800,37 +1708,6 @@
 		$('#g_item_detail_pop').modal('hide');
 	});
 
-	$("#g_item_detail_pop_barcode_span").on('click', function (e) {
-		$("#g_item_detail_pop_barcode_num").focus();
-	});
-
-	$("#item_detail_pop_input").on({
-		keyup: function (e) {
-			if (e.keyCode == 13) {
-				let controlNum = this.value;
-				let data = {'queryId': "inspection.selectCommItemDetailInfo", 'CONTROL_NUM': controlNum};
-				let parameters = {'url': '/tv/json-info', 'data': data};
-
-				fnPostAjax(function (data) {
-					let dataInfo = data.info;
-					if (dataInfo == null) {
-						fnAlert(null, "작업번호 정보가 존재하지 않습니다.");
-						return;
-					} else {
-						let CONTROL_SEQ = dataInfo.CONTROL_SEQ;
-						let CONTROL_DETAIL_SEQ = dataInfo.CONTROL_DETAIL_SEQ;
-						g_ItemDetailPopGridId01.pqGrid('destroy');
-						g_ItemDetailPopGridId02.pqGrid('destroy');
-						g_ItemDetailPopGridId03.pqGrid('destroy');
-						g_ItemDetailPopGridId04.pqGrid('destroy');
-						g_ItemDetailPopGridId05.pqGrid('destroy');
-						g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
-					}
-				}, parameters, '');
-			}
-		}
-	});
-
 	$('#g_item_detail_pop_form').find('[name=view_assembly_or_part]').on('click', function () {
 		$(this).siblings().removeClass('bg-moccasin');
 		$(this).addClass("bg-moccasin");
@@ -1864,45 +1741,6 @@
 		}
 
 		g_item_detail_pop_view(controlSeq, controlDetailSeq, orderDetailGrid, orderDetailRowIndx);
-	});
-
-	$("#g_item_detail_pop_barcode_num").on({
-		focus: function () {
-			this.value = '';
-			$("#g_item_detail_pop_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long_on.png");
-		},
-		blur: function () {
-			$("#g_item_detail_pop_barcode_img").attr("src", "/resource/asset/images/common/img_barcode_long.png");
-		},
-		keyup: function (e) {
-			if (e.keyCode == 13) {
-				fnBarcodePrintCheck(function (confirm, callFunctionParam) {
-					let barcodeN = callFunctionParam;
-					if (confirm) {
-						//0. 바코드 정보 가져오기
-						let data = {'queryId': "common.selectControlBarcodeInfo", 'BARCODE_NUM': barcodeN};
-						let parameters = {'url': '/tv/json-info', 'data': data};
-						fnPostAjax(function (data, callFunctionParam) {
-							let dataInfo = data.info;
-							if (dataInfo == null) {
-								fnAlert(null, "해당 바코드가 존재하지 않습니다.");
-								return;
-							} else {
-								let CONTROL_SEQ = dataInfo.CONTROL_SEQ;
-								let CONTROL_DETAIL_SEQ = dataInfo.CONTROL_DETAIL_SEQ;
-								g_ItemDetailPopGridId01.pqGrid('destroy');
-								g_ItemDetailPopGridId02.pqGrid('destroy');
-								g_ItemDetailPopGridId03.pqGrid('destroy');
-								g_ItemDetailPopGridId04.pqGrid('destroy');
-								g_ItemDetailPopGridId05.pqGrid('destroy');
-								g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
-							}
-						}, parameters, '');
-					}
-				}, fnBarcodeKo2En(this.value), fnBarcodeKo2En(this.value));
-				this.value = '';
-			}
-		}
 	});
 
 	$("#cam_work_detail_popup").on({
@@ -2114,6 +1952,12 @@
 		$("#inspection_detail_popup").modal("hide");
 	});
 
+	$("#span_item_detail").on('click',function() {
+		let controlSeq = $("#mct_machine_form").find("#CONTROL_SEQ").val();
+		let controlDetailSeq = $("#mct_machine_form").find("#CONTROL_DETAIL_SEQ").val();
+		g_item_detail_pop_view(controlSeq, controlDetailSeq);
+	});
+
 	$(function () {
 
 		$("#changeScreen").change(function(){
@@ -2181,17 +2025,6 @@
 							for(var i=0;i<sort_arr.length;i++) {
 								groups[idx].splice(sort_arr[i],0,json);
 							}
-							// if(Item.length % 6 != 0) {
-							// 	var first = Math.ceil(Item.length / 6);
-							// 	var add = (parseInt(first) * 6) - Item.length;
-							// 	for(var i=0;i<add;i++) {
-							// 		var json = {
-							// 			EQUIP_NM : 'BLANK',
-							// 			FACTORY_AREA : Item[0].FACTORY_AREA
-							// 		};
-							// 		groups[idx].push(json);
-							// 	}
-							// }
 						}
 						$.each(Item,function (idx2,Item2) {
 							var html = '';
@@ -2224,18 +2057,17 @@
 								}else {
 									html += '		<img src="/resource/asset/images/tv/img_thumb_3.png" class="machineImg" alt="도면">';
 								}
+								let activeTime = Number(Item2.WORK_ACTIVE_TIME);
+								if(Item2.WORK_STATUS == 'login') {
+									activeTime += Number(Item2.CURRENT_STATUS_TIME);
+								}
 								html += '		<div class="mctMapTime">';
-								html += '			<span>진행 : '+Item2.WORKING_TIME_FORMAT + '</span><br>예상 : ' + ((typeof Item2.PLAN_WORKING_TIME_FORMAT != 'undefined')?Item2.PLAN_WORKING_TIME_FORMAT:'');
+								html += '			<span>진행 : ' + makeTimeStr(activeTime) + '</span><br>예상 : ' + ((typeof Item2.PLAN_WORKING_TIME_FORMAT != 'undefined')?Item2.PLAN_WORKING_TIME_FORMAT:'');
 								html += '		</div>';
 								if(Item2.WORK_STATUS == 'pause') {
 									html += '<div id="pauseTime" class="pauseTime">';
 									html += '	일시중지<br>';
-									var startStopDt = new Date(Item2.WORK_TEMP_STOP_DT);
-									var today = new Date();
-									var diff = today - startStopDt;
-									var hour = Math.floor((diff) / (1000 * 60 * 60));
-									var minute = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-									html += '<span>' + hour + 'h ' + minute + 'm' + '</span>';
+									html += '<span>' + makeTimeStr(Item2.CURRENT_STATUS_TIME) + '</span>';
 									html += '</div>';
 								}
 								html += '		<span class="progressPercent mctProgressPercent">'+ ((typeof Item2.PERCENT != 'undefined')?Item2.PERCENT:'') + '</span>';
@@ -2309,15 +2141,14 @@
 							}
 							if(data.mct_info_list.length > 0) {
 								$.each(data.mct_info_list, function (idx,Item) {
+									let activeTime = Number(Item.WORK_ACTIVE_TIME);
 									if(Item.WORK_STATUS == 'pause') {
-										var startStopDt = new Date(Item.WORK_TEMP_STOP_DT);
-										var today = new Date();
-										var diff = today - startStopDt;
-										var hour = Math.floor((diff) / (1000 * 60 * 60));
-										var minute = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-										$("#EQUIP_"+ Item.EQUIP_SEQ).find(".pauseTime").find("span").text(hour + 'h ' + minute + 'm');
+										$("#EQUIP_"+ Item.EQUIP_SEQ).find(".pauseTime").find("span").text(makeTimeStr(Item.CURRENT_STATUS_TIME));
 									}
-									$("#EQUIP_"+ Item.EQUIP_SEQ).find(".mctMapTime").find("span").text('진행 : ' + Item.WORKING_TIME_FORMAT);
+									if(Item.WORK_STATUS == 'login') {
+										activeTime += Number(Item.CURRENT_STATUS_TIME);
+									}
+									$("#EQUIP_"+ Item.EQUIP_SEQ).find(".mctMapTime").find("span").text('진행 : ' + makeTimeStr(activeTime));
 									var html = "남은시간<br>" + Item.REMAIN_TIME;
 									$("#EQUIP_"+ Item.EQUIP_SEQ).find(".mctTime").html(html);
 								})
@@ -2333,22 +2164,7 @@
 							fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						}
 					});
-
 				}
-
-				// for (let i = 0; i < machineListData.length; i++) {
-
-					// let equip_seq = machineListData[i].EQUIP_SEQ;
-					// let equip_nm = machineListData[i].EQUIP_NM;
-					// let factory_area = machineListData[i].FACTORY_AREA;
-					// let layout_row = machineListData[i].LAYOUT_ROW;
-					// let layout_col = machineListData[i].LAYOUT_COL;
-					// let user_nm = machineListData[i].USER_NM;
-
-					// 장비의 작업 정보 조회
-					// getReLoadDrawingData(equip_seq, factory_area, layout_row, layout_col);
-
-				// }
 			}
 		};
 
@@ -2379,7 +2195,7 @@
 		};
 
 		/** DRAWING BOARD 정보 실시간 처리 **/
-		let getReLoadDrawingData = function (equipSeq, factoryArea, equipRow, equipCol) {
+		let getReLoadDrawingData = function (equipSeq) {
 			'use strict';
 			$.ajax({
 				type: 'POST', url: "/tv/mct/machineDrawingData", dataType: 'json',
@@ -2432,24 +2248,23 @@
 								}
 								$target.find(".mctMapImg").find("img").attr("src","/resource/asset/images/tv/img_thumb_3.png");
 							}
-							var html = "<span> 진행 : " + Item.WORKING_TIME_FORMAT + "</span><br>예상 : " +  ((typeof Item.PLAN_WORKING_TIME_FORMAT != 'undefined')?Item.PLAN_WORKING_TIME_FORMAT:'');
+							let activeTime = Number(Item.WORK_ACTIVE_TIME);
+							if(Item.WORK_STATUS == 'login') {
+								activeTime += Number(Item.CURRENT_STATUS_TIME);
+							}
+
+							var html = "<span> 진행 : " + makeTimeStr(activeTime) + "</span><br>예상 : " +  ((typeof Item.PLAN_WORKING_TIME_FORMAT != 'undefined')?Item.PLAN_WORKING_TIME_FORMAT:'');
 							$target.find(".mctMapTime").html(html);
 
 							if(Item.WORK_STATUS == 'pause') {
-								var startStopDt = new Date(Item.WORK_TEMP_STOP_DT);
-								var today = new Date();
-								var diff = today - startStopDt;
-								var hour = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-								var minute = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
 								if($target.find(".pauseTime").length > 0) {
 									html = "일시중지<br>";
-									html += "<span>" + hour + "h " + minute + "m" + "</span>";
+									html += "<span>" + makeTimeStr(Item.CURRENT_STATUS_TIME) + "</span>";
 									$target.find(".pauseTime").html(html)
 								}else {
 									html = '<div id="pauseTime" class="pauseTime">';
 									html += '	일시중지<br>';
-									html += '<span>' + hour + 'h ' + minute + 'm' + '</span>';
+									html += '<span>' + makeTimeStr(Item.CURRENT_STATUS_TIME) + '</span>';
 									html += '</div>';
 									$target.find(".mctMapTime").after(html);
 								}
@@ -2585,11 +2400,15 @@
 			stompClient.connect({}, (frame) => {
 				stompClient.subscribe('/topic/drawing', function (notificationMessage) { // 드로잉 보드 가공시작, 일시정지, 작업재개, 작업완료, 작업취소
 					let messageData = JSON.parse(notificationMessage.body);
-					getReLoadDrawingData(messageData.equipSeq, messageData.factoryArea, messageData.equipRow, messageData.equipCol);
+					getReLoadDrawingData(messageData.equipSeq);
 				});
 				stompClient.subscribe('/topic/worker', function (notificationMessage) { // 드로잉 보드 로그인, 로그아웃
 					let messageData = JSON.parse(notificationMessage.body);
 					workerMessageProcess(messageData);
+				});
+				stompClient.subscribe('/topic/notice', function (notificationMessage) { // 장비if
+					let messageData = JSON.parse(notificationMessage.body);
+					console.log(messageData);
 				});
 		    }, () => {
 			  	setTimeout(() => {
@@ -2638,95 +2457,36 @@
 		workSchedulerTimer();
 		// reloadTimer();
 	});
+
 	$(document).ready(function(){
-		function timeFormat(time) {
-			var text = "";
-			if(typeof time != 'undefined' && time != "" && time != null) {
-				if(time >= 60) {
-					if(time % 60 == 0) {
-						text = parseInt(time / 60) + 'h';
-					}else {
-						text = Math.floor(time / 60) + 'h  ' + parseInt(time % 60) + 'm';
-					}
-				}else {
-					text = time + 'm';
-				}
-			}
-			return text;
-		}
-
-		let mctMachineGrid = $("#mct_machine_grid");
-		let $mctMachineGrid;
-		let mctMachineColModel = [
-			{title: 'ROWNUM', dataIndx: 'ROWNUM', hidden: true},
-			{title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
-			{title: 'IMG_GFILE_SEQ', dataIndx: 'IMG_GFILE_SEQ', hidden: true},
-			{title: 'MCT_PLAN_SEQ', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
-			{title: '가공 납기', minWidth: 50, width: 50, dataIndx: 'INNER_DUE_DT', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'},
-				render: function (ui) {
-					const rowData = ui.rowData
-					if (rowData.DELAY_YN === 'Y') {
-						return {style: 'background-color: #ffff00;'};
-					}
-				}
-			},
-			{title: '진행상태', width: 70, dataIndx: 'PART_STATUS', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'}},
-			{title: '작업번호 / 규격', align: 'center', minWidth: 165, width: 165, dataIndx: 'CONTROL_NUM_PART_NUM', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'},
-				render: function (ui) {
-					const cellData = ui.cellData;
-					if (cellData) {
-						return cellData.replace(/&lt;/g, '<');
-					}
-				}
-			},
-			{title: '작업형태 / 소재', dataType: 'string', dataIndx: 'WORK_TYPE_MATERIAL', minWidth: 80, width:120, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'},
-				render: function (ui) {
-					const cellData = ui.cellData;
-					if (cellData) {
-						return cellData.replace(/&lt;/g, '<');
-					}
-				}
-			},
-			{title: '수량', dataType: 'integer', dataIndx: 'CONTROL_PART_QTY', minWidth: 40, width: 40, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'},
-				render: function (ui) {
-					const rowData = ui.rowData
-					if (rowData.ORDER_QTY_INFO != 'N') {
-						return '<span><span style="color: red;font-weight: bold">'+ rowData.ORDER_QTY_INFO +'&nbsp;</span>'+rowData.CONTROL_PART_QTY+'</span>';
-					}
-				}
-			},
-			{title: '예상시간<br>(E/T,분)', dataType: 'string', dataIndx: 'WORKING_TIME', minWidth: 55, width: 65, editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'blue'},
-				format: function(val){
-					return (typeof val != 'undefined')?(val+"'"):"";
-				},
-			},
-			{title: '과거수행기록(NC)', align: 'center', styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'},
-				colModel: [
-					{title: 'MCT_PLAN_SEQ', dataIndx: 'MCT_PLAN_SEQ', hidden: true},
-					{
-						title: '1EA L/T',
-						minWidth: 55,
-						width: 55,
-						dataIndx: 'LAST_UNIT_LEAD_TIME',
-						editable: false,
-						styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'}
-					},
-					{title: '작업자', minWidth: 60, width: 65, datatype: 'string', dataIndx: 'LAST_MCT_WORK_USER', editable: false, styleHead: {'font-weight': 'bold','background':'#d8edf0', 'color': 'black'}}
-				]
-			}
-		];
-		let mctMachineObj;
-
-
 		function settingOngoingInfo(equipSeq) {
 			const parameter2 = {'url': '/tv/json-info', 'data': {
-					'queryId':'machine.selectOngoingInfoForDetailPop',
+					'queryId':'tvMapper.selectMctOngoingInfoForDetailPop',
 					'EQUIP_SEQ':equipSeq
 				}
 			};
 			fnPostAjax(function (data) {
-				var tempHtml = '';
 				if(data.info != null) {
+					$(".same_side_span").hide();
+					$("#mct_machine_form").find("#CONTROL_SEQ").val(data.info.CONTROL_SEQ);
+					$("#mct_machine_form").find("#CONTROL_DETAIL_SEQ").val(data.info.CONTROL_DETAIL_SEQ);
+					for(let key in data.info){
+						let val = data.info[key];
+						if(key == 'SAME_SIDE_YN' && val == 'Y') {
+							$(".same_side_span").show();
+						}else if(key == "PHOTO_GFILE_SEQ") {
+							$("#popup").find("#table2_worker_img").attr('src', '/image/' + val);
+						}else if(key == 'EQUIP_STATUS') {
+							$("#popup").find("."+key).removeClass("green");
+							$("#popup").find("."+key).removeClass("yellow");
+							if(val == 'Active') {
+								$("#popup").find("."+key).addClass("green");
+							}else if(val == 'Stop') {
+								$("#popup").find("."+key).addClass("yellow");
+							}
+						}
+						$("#popup").find("."+key).text(val);
+					}
 					if(typeof data.info.IMG_GFILE_SEQ != 'undefined' && data.info.IMG_GFILE_SEQ != '' && data.info.IMG_GFILE_SEQ != null) {
 						$("#mapImgWrap").attr('src', '/qimage/'+data.info.IMG_GFILE_SEQ);
 						$("#mapImgWrap").attr('alt', data.info.IMG_GFILE_SEQ);
@@ -2736,162 +2496,109 @@
 						$("#mapImgWrap").attr('src', '/resource/main/blank.jpg');
 						$("#mct_machine_form").find("#GFILE_SEQ").val('');
 					}
-					var stopTime = ((typeof data.info.TEMP_STOP != 'undefined' && data.info.TEMP_STOP != null)?data.info.TEMP_STOP:'');
-					var onGoingTime = ((typeof data.info.ON_GOING != 'undefined' && data.info.ON_GOING != null)?data.info.ON_GOING:'');
-					var planWorkingTime = ((typeof data.info.PLAN_WORKING_TIME != 'undefined' && data.info.PLAN_WORKING_TIME != null)?data.info.PLAN_WORKING_TIME:'');
-					var arr = data.info.DRAWING_NUM.split(",");
-					var arr2 = data.info.DRAWING_SEQ.split(",");
-					tempHtml = '<td class="workStaffImg"><div class="staffImgWrap"><img src="/image/' + data.info.PHOTO_GFILE_SEQ + '"></div>'+ data.info.WORK_USER_NM + '</td>';
-					tempHtml += '<td>' + data.info.WORK_STATUS_NM + '</td>';
-					tempHtml += '<td class="numberWorking">' + data.info.CONTROL_NUM + '</td>';
-					tempHtml += '<td><div class="tableScroll"><div class="tableScrollCell">';
-					for(var i=0;i<arr.length;i++){
-						if(i>0) {
-							tempHtml += '<br>';
-						}
-						tempHtml += '<span class="machine_ongoing_draw" data-value="'+ arr2[i]+'">' + arr[i] + '</span>';
-					}
-					tempHtml += '</div></div></td>';
-					tempHtml += '<td class="sizeInfo">' + data.info.SIZE_TXT + '</td>';
-					tempHtml += '<td class="workTypeInfo">' + data.info.WORK_TYPE_NM + '</td>';
-					tempHtml += '<td class="materialInfo">' + data.info.MATERIAL_DETAIL_NM + '</td>';
-					tempHtml += '<td class="productAmount">';
-					if(data.info.ORDER_QTY_INFO != 'N') {
-						tempHtml += '<span>' + data.info.ORDER_QTY_INFO + '&nbsp;</span>';
-					}
-					tempHtml += data.info.CONTROL_PART_QTY + '</td>';
-					tempHtml += '<td class="deliveryDate">' + data.info.INNER_DUE_DT + '</td>';
-					tempHtml += '<td class="runningStop"">' + stopTime + '</td>';
-					tempHtml += '<td class="runningTime">' + onGoingTime + '</td>';
-					tempHtml += '<td class="expectTime">' + planWorkingTime+ '</td>';
 				}else {
-					tempHtml = '<td colspan="12" style="font-size: 35px;height: 141px;">Not Found Data</td>';
 					$("#mapImgWrap").attr('src', '/resource/main/blank.jpg');
 					$("#mct_machine_form").find("#GFILE_SEQ").val('');
 				}
-				$("#machine_popup_tbody").html(tempHtml);
 			}, parameter2, '');
+		}
+
+		function settingRightTable(data) {
+			if(data.info != null) {
+				$("#mct_machine_form").find("#CONTROL_SEQ").val(data.info.CONTROL_SEQ);
+				$("#mct_machine_form").find("#CONTROL_DETAIL_SEQ").val(data.info.CONTROL_DETAIL_SEQ);
+				$("#popHeadMid4").find(".same_side_span").hide();
+				for(let key in data.info){
+					let val = data.info[key];
+					if(key == 'SAME_SIDE_YN' && val == 'Y') {
+						$("#popHeadMid4").find(".same_side_span").show();
+					}
+					$("#popHeadMid4").find("."+key).text(val);
+				}
+				if(typeof data.info.IMG_GFILE_SEQ != 'undefined' && data.info.IMG_GFILE_SEQ != '' && data.info.IMG_GFILE_SEQ != null) {
+					$("#mapImgWrap").attr('src', '/qimage/'+data.info.IMG_GFILE_SEQ);
+					$("#mapImgWrap").attr('alt', data.info.IMG_GFILE_SEQ);
+					$("#mapImgWrap").attr('data-value', data.info.IMG_GFILE_SEQ);
+					$("#mct_machine_form").find("#GFILE_SEQ").val(data.info.IMG_GFILE_SEQ);
+				}else {
+					$("#mapImgWrap").attr('src', '/resource/main/blank.jpg');
+					$("#mct_machine_form").find("#GFILE_SEQ").val('');
+				}
+			}
 		}
 
 		$(document).on("click",".mctlogin,.mctpause",function(event){
 			var equipSeq = $(this).data('seq');
 			$("#mct_machine_form").find("#EQUIP_SEQ").val(equipSeq);
-			const parameter = {'url': '/tv/json-info', 'data': {
-					'queryId':'machine.selectMachineInfoForDetailPop',
-					'EQUIP_SEQ':equipSeq
-				}
-			};
-			fnPostAjax(function (data) {
-				var tempHtml = '<tr>'
-				tempHtml += '<td>장비번호 : ' + data.info.EQUIP_NM + '</td>';
-				tempHtml += '<td>장비종류 : ' + data.info.EQUIP_TYPE_NM + '</td>';
-				tempHtml += '<td>설치위치 : ' + data.info.FACTORY_AREA_NM + '</td>';
-				tempHtml += '<td>관리장(정) : ' + data.info.MAIN_USER_NM + '</td>';
-				tempHtml += '<td>관리장(부) : ' + data.info.SUB_USER_NM + '</td>';
-				tempHtml += '</tr>';
-				$("#popHeadTopTable").html(tempHtml);
-			}, parameter, '');
-
 			settingOngoingInfo(equipSeq);
 
 			$('#popupWrap').modal('show');
 		});
-		$(document).on("click",".machine_ongoing_draw",function(e){
-			var grid = $("#mct_machine_grid").pqGrid('getInstance').grid;
-			var sr = grid.SelectRow();
-			sr.removeAll();
-			var imgSeq = $(this).data('value');
-			if(typeof imgSeq != 'undefined' && imgSeq != '') {
-				$("#mapImgWrap").attr('src','/qimage/'+imgSeq);
-				$("#mapImgWrap").attr('alt',imgSeq);
-				$("#mapImgWrap").attr('data-value', imgSeq);
 
-				$("#mct_machine_form").find("#GFILE_SEQ").val(imgSeq);
-			}
+		$(document).on("click",".machine_plan_draw",function(e){
+			$(".machine_plan_draw").removeClass("bg_mct_green");
+			$(this).addClass("bg_mct_green");
+
+			const parameter2 = {'url': '/tv/json-info', 'data': {
+					'queryId':'tvMapper.selectMctPlanListForDetailPop',
+					'EQUIP_SEQ':$("#mct_machine_form").find("#EQUIP_SEQ").val(),
+					'MCT_PLAN_SEQ':$(this).data('value')
+				}
+			};
+			fnPostAjax(function (data) {
+				settingRightTable(data);
+			}, parameter2, '');
 		})
 
+		$(document).on("click",".machine_current_draw",function(e){
+			$(".machine_plan_draw").removeClass("bg_mct_green");
+			const parameter2 = {'url': '/tv/json-info', 'data': {
+					'queryId':'tvMapper.selectMctOngoingInfoForDetailPop',
+					'EQUIP_SEQ':$("#mct_machine_form").find("#EQUIP_SEQ").val()
+				}
+			};
+			fnPostAjax(function (data) {
+				settingRightTable(data);
+			}, parameter2, '');
+		});
 
 		$('#popupWrap').on({
 			'show.bs.modal': function () {
-				mctMachineObj = {
-					width: 'auto', height: 'auto',
-					dataModel: {
-						location: "remote", dataType: "json", method: "POST", recIndx: 'ROWNUM',
-						url: "/tv/paramQueryGridSelect",
-						postData: fnFormToJsonArrayData('mct_machine_form'),
-						getData: function (dataJSON) {
-							return {data: dataJSON.data};
-						}
-					},
-					strNoRows: '<div style="font-size:1.4rem;">No Data</div>',
-					columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
-					scrollModel: {autoFit: true},
-					numberCell: {width: 35, title: "No. ", show: true},
-					selectionModel: { type: 'row', mode: 'single'} ,
-					swipeModel: {on: false},
-					showTitle: false,
-					collapsible: false,
-					resizable: false,
-					trackModel: {on: true},
-					editModel: {clicksToEdit: 1},
-					colModel: mctMachineColModel,
-					rowSelect: function (evt, ui) {
-						$.each(ui.addList, function (idx,Item) {
-							if(idx === 0) {
-								// let imgUrl = '/resource/asset/images/common/'+Item.rowData.IMG_GFILE_SEQ + '.png';
-								let imgUrl = '/qimage/'+Item.rowData.IMG_GFILE_SEQ;
-								$("#mapImgWrap").attr('src',imgUrl);
-								$("#mapImgWrap").attr('alt',Item.rowData.IMG_GFILE_SEQ);
-								$("#mapImgWrap").attr('data-value', Item.rowData.IMG_GFILE_SEQ);
-
-								$("#mct_machine_form").find("#GFILE_SEQ").val(Item.rowData.IMG_GFILE_SEQ);
-							}
-						})
-					},
-					cellKeyDown: function (event, ui) {
-						const rowIndx = ui.rowIndx;
-						const sr = this.SelectRow();
-						const selRowData = this.getRowData({rowIndx: rowIndx});
-						let nextRowData = "";
-						if (event.keyCode == $.ui.keyCode.DOWN) {
-							sr.removeAll();
-							sr.add({rowIndx: rowIndx + 1});
-							nextRowData = this.getRowData({rowIndx: rowIndx +1});
-						} else if (event.keyCode == $.ui.keyCode.UP) {
-							sr.removeAll();
-							sr.add({rowIndx: rowIndx - 1});
-							nextRowData = this.getRowData({rowIndx: rowIndx -1});
-						}
-						let imgUrl = '/qimage/';
-						imgUrl += (typeof nextRowData != 'undefined' && nextRowData != "")?nextRowData.IMG_GFILE_SEQ:selRowData.IMG_GFILE_SEQ;
-						$("#mapImgWrap").attr('src',imgUrl);
-						$("#mapImgWrap").attr('alt',selRowData.IMG_GFILE_SEQ);
-						$("#mapImgWrap").attr('data-value', selRowData.IMG_GFILE_SEQ);
-						$("#mct_machine_form").find("#GFILE_SEQ").val(selRowData.IMG_GFILE_SEQ);
-					},
-					refresh : function (evt, ui) {
-						data = mctMachineGrid.pqGrid('option', 'dataModel.data');
-						var totalQty = 0;
-						var totalTime = 0;
-						for (var i = 0; i < data.length; i++) {
-							var row = data[i];
-							totalQty += parseInt(row.CONTROL_PART_QTY)
-							if(typeof row.WORKING_TIME != 'undefined' && row.WORKING_TIME != '') {
-								totalTime += parseInt(row.WORKING_TIME);
-							}
-						}
-
-						var html = '<td>대기현황</td><td>' + data.length +' Rows  ' + totalQty + ' EA</td>';
-						html += '<td>예상시간합계 : ' + timeFormat(totalTime) + '</td>';
-						$("#popBtmGridHead").html(html);
+				const parameter2 = {'url': '/tv/json-list', 'data': {
+						'queryId':'tvMapper.selectMctPlanListForDetailPop',
+						'EQUIP_SEQ':$("#mct_machine_form").find("#EQUIP_SEQ").val()
 					}
 				};
-				$mctMachineGrid = mctMachineGrid.pqGrid(mctMachineObj);
+				fnPostAjax(function (data) {
+					$(".planImgDiv").empty();
+					let totalQty = 0;
+					let totalTime = 0;
+					if(data.list.length > 0) {
+						$.each(data.list, function (idx, Item) {
+							totalQty += Number(Item.SUM_QTY);
+							totalTime += Number(Item.PLAN_WORKING_TIME);
+							let html = '<div class="mctInfoWrap machine_plan_draw" data-value="'+Item.MCT_PLAN_SEQ+'">';
+							html += '		<div class="mctMapImg">';
+							html += '			<img src="/qsimage/'+ Item.IMG_GFILE_SEQ+'">';
+							html += '			<div class="mctMapTime">';
+							html += '				<span class="text-red left_float">'+Item.INNER_DUE_DT +'</span>'
+							html += '				<span class="text-blue right_float">'+ Item.PLAN_WORKING_TIME_FORMAT +'</span>'
+							html += '			</div>'
+							html += '			<p>'+ Item.WORK_TYPE_MATERIAL + '</p>'
+							html += '			<p>'+ Item.QTY + '</p>'
+							html += '		</div>'
+							html += '</div>'
+
+							$(".planImgDiv").append(html);
+						});
+					}else {
+						$(".planImgDiv").append('<div style="text-align: center;margin-top: 7%;">No Data</div>');
+					}
+					$("#total_cnt_qty").text(data.list.length + " 품 " + totalQty + " EA");
+					$("#total_plan_time").text("( "+ makeTimeStr(totalTime) + " )");
+				}, parameter2, '');
 			},
 			'hide.bs.modal': function () {
-				if ($('#mct_machine_grid').pqGrid('instance')) {
-					$mctMachineGrid.pqGrid('destroy');
-				}
 			}
 		});
 	});

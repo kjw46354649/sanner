@@ -525,9 +525,13 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 		top: 40%;
 		height: 78%;
 		transform: translate(-40%,-40%);
+		padding: 20px;
 	}
 	.popup > h3 {
 		font-size: 1.3rem;
+	}
+	.popup h4 {
+		font-size: 1.0rem;
 	}
 	.popHeadTopTable {
 		width: 900px;
@@ -545,11 +549,11 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 	}
 	.popTable {
 		font-size: 0.85rem;
-		font-weight: bold;
+		/*font-weight: bold;*/
 	}
 	.workStaffImg .staffImgWrap {
-		width: 50px;
-		height: 50px;
+		width: 80px;
+		height: 80px;
 	}
 	.tableScroll {
 		height: 70px;
@@ -569,8 +573,8 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 		height: 91.5%;
 	}
 	.mapImgWrap img {
-		width: 731.34px;
-		height: 517.14px;
+		width: 98%;
+		height: 100%
 	}
 	.popBtmTable {
 		height: 91.5%;
@@ -642,5 +646,64 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 
 	#cam_work_detail_popup .qualityWrap {
 		height: 550px;
+	}
+
+	#popupWrap .planImgDiv {
+		height: 20%;
+		overflow-y: hidden;
+		overflow-x: scroll;
+		white-space: nowrap;;
+		width: 100%;
+		border: 1px solid gray;
+		padding: 1px 4px 5px 4px;
+		text-align: left;
+	}
+
+	#popupWrap .mctInfoWrap {
+		width: 17%;
+		height: 100%;
+		background: lightgrey;
+		position: relative;
+		margin-right: 4px;
+		display: inline-block;
+		border: 1px solid gray;
+		margin-top: 3px;
+		text-align: center;
+	}
+
+	#popupWrap .mctMapImg {
+		width: 100%;
+		height: 100%;
+		font-size: 11px;
+	}
+	#popupWrap .mctMapImg img {
+		width: 96%;
+		height: 73%;
+		border: 1px solid grey;
+	}
+
+	#popupWrap .mctMapTime {
+		position: absolute;
+		top: 1%;
+		font-size: 12px;
+		padding-left: 10px;
+		width: 93%;
+	}
+
+	#popupWrap .popTable th, .popTable td {
+		border: 0.5px solid #9d9d9d;
+		padding: 5px 0;
+		height: 36px;
+	}
+
+	#popHeadMid2 th, #popHeadMid2 td {
+		border: 0.5px solid #9d9d9d;
+		padding: 5px 0;
+		height: 50px;
+	}
+	#popHeadMid4 th, #popHeadMid4 td {
+		border: 0.5px solid #9d9d9d;
+		padding: 5px 0;
+		height: 30px;
 	}
 }

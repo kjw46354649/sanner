@@ -384,6 +384,10 @@ table.boardList .txtP{color: #7030a0;}
 .mt-20{margin-top: 20px !important}
 .mt-25{margin-top: 25px !important}
 .mt-30{margin-top: 30px !important}
+.mt-40{margin-top: 40px !important}
+.mt-50{margin-top: 50px !important}
+.mt-60{margin-top: 60px !important}
+.mt-70{margin-top: 70px !important}
 
 .mb-05{margin-bottom: 5px !important}
 .mb-10{margin-bottom: 10px !important}
@@ -392,6 +396,7 @@ table.boardList .txtP{color: #7030a0;}
 
 /* width */
 .wd_30{width:30px !important;}
+.wd_40{width:40px !important;}
 .wd_50{width:50px !important;}
 .wd_60{width:60px !important;}
 .wd_65{width:65px !important;}

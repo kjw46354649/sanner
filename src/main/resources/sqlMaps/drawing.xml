@@ -135,7 +135,7 @@
                         TRUNCATE(((IFNULL(Z.WORK_ACTIVE_TIME,0)%3600) % 60),0), 's'
                     )
                 ELSE '-'
-            END AS WORK_ACTIVE_TIME_FOMAT,
+            END AS WORK_ACTIVE_TIME_FORMAT,
             CASE WHEN Z.WORK_STOP_TIME IS NOT NULL AND Z.WORK_STOP_TIME > 0
                     THEN CONCAT(
                         TRUNCATE(IFNULL(Z.WORK_STOP_TIME,0)/3600,0) , 'h ',
@@ -143,7 +143,7 @@
                         TRUNCATE(((IFNULL(Z.WORK_STOP_TIME,0)%3600) % 60),0), 's'
                     )
                 ELSE '-'
-            END AS WORK_STOP_TIME_FOMAT,
+            END AS WORK_STOP_TIME_FORMAT,
             CASE WHEN Z.LATEST_CYCLE_TIME IS NOT NULL AND Z.LATEST_CYCLE_TIME > 0
                     THEN CONCAT(
                         TRUNCATE(IFNULL(Z.LATEST_CYCLE_TIME,0)/3600,0) , 'h ',
@@ -299,7 +299,7 @@
                         TRUNCATE(((IFNULL(Z.WORK_ACTIVE_TIME,0)%3600) % 60),0), 's'
                     )
                 ELSE '-'
-            END AS WORK_ACTIVE_TIME_FOMAT,
+            END AS WORK_ACTIVE_TIME_FORMAT,
             CASE WHEN Z.WORK_STOP_TIME IS NOT NULL AND Z.WORK_STOP_TIME > 0
                     THEN CONCAT(
                         TRUNCATE(IFNULL(Z.WORK_STOP_TIME,0)/3600,0) , 'h ',
@@ -307,7 +307,7 @@
                         TRUNCATE(((IFNULL(Z.WORK_STOP_TIME,0)%3600) % 60),0), 's'
                     )
                 ELSE '-'
-            END AS WORK_STOP_TIME_FOMAT,
+            END AS WORK_STOP_TIME_FORMAT,
             CASE WHEN Z.LATEST_CYCLE_TIME IS NOT NULL AND Z.LATEST_CYCLE_TIME > 0
                     THEN CONCAT(
                         TRUNCATE(IFNULL(Z.LATEST_CYCLE_TIME,0)/3600,0) , 'h ',
@@ -785,7 +785,7 @@
         )
         SELECT NEXTVAL(jmes.SEQ_MCT_LOG) AS MCT_LOG_SEQ,
             #{seq} AS IF_SEQ,
-            #{EQUIP_SEQ} AS EQUIP_SEQ,
+            X.EQUIP_SEQ,
             (SELECT CASE WHEN #{active_type} = 'PGM_STOP' AND A.IF_WORK_START_DT IS NULL THEN NULL
                          ELSE MAX(A.MCT_WORK_SEQ)
                     END AS MCT_WORK_SEQ
@@ -799,7 +799,9 @@
             #{execution} AS EXECUTION, #{active_type} AS ACTIVE_TYPE,
             #{part_cnt} AS PART_CNT, IFNULL(#{cycleCheck}, 'N') AS CYCLE_FINISH_YN,
             #{message}, #{program}
-        FROM DUAL
+        FROM TBL_EQUIP X
+        WHERE X.EQUIP_SEQ = #{EQUIP_SEQ}
+            AND IFNULL(X.IF_USE_YN,'N') = 'Y'
     </insert>
 
     <select id="selectCurrentMctInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -827,10 +829,17 @@
             LEFT OUTER JOIN TBL_MCT_WORKING_LOG B ON A.MCT_WORK_SEQ = B.MCT_WORK_SEQ
                 AND B.MCT_LOG_SEQ = (SELECT MAX(Q.MCT_LOG_SEQ) FROM TBL_MCT_WORKING_LOG Q WHERE Q.MCT_WORK_SEQ = B.MCT_WORK_SEQ)
         WHERE A.DEL_YN = 'N'
-          AND A.WORK_STATUS IN ('DBS010', 'DBS020')
-          AND A.WORK_START_DT IS NOT NULL
-          AND A.WORK_FINISH_DT IS NULL
-          AND A.EQUIP_SEQ IN
+            AND A.WORK_STATUS IN ('DBS010', 'DBS020')
+            AND A.WORK_START_DT IS NOT NULL
+            AND A.WORK_FINISH_DT IS NULL
+            AND EXISTS (
+                SELECT Q.EQUIP_SEQ
+                FROM TBL_EQUIP Q
+                WHERE Q.EQUIP_SEQ = A.EQUIP_SEQ
+                    AND Q.DEL_YN = 'N'
+                    AND IFNULL(Q.IF_USE_YN,'N') = 'Y'
+            )
+            AND A.EQUIP_SEQ IN
             <foreach collection="dataList" item="item"  index="index"  open="(" close=")" separator=",">
                 #{item.EQUIP_SEQ}
             </foreach>
@@ -885,6 +894,13 @@
             A.UPDATE_DT = NOW()
         WHERE A.MCT_WORK_SEQ = B.MCT_WORK_SEQ
             AND A.DEL_YN = 'N'
+            AND EXISTS (
+                SELECT Q.EQUIP_SEQ
+                FROM TBL_EQUIP Q
+                WHERE Q.EQUIP_SEQ = A.EQUIP_SEQ
+                    AND Q.DEL_YN = 'N'
+                    AND IFNULL(Q.IF_USE_YN,'N') = 'Y'
+            )
     </update>
 
     <select id="selectDrawingLatestProcessList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -925,9 +941,7 @@
                 UNION ALL
                 SELECT '2' AS NOTE_TYPE, A.MCT_NOTE AS NOTE FROM TBL_CONTROL_PART A WHERE A.CONTROL_SEQ = #{CONTROL_SEQ} AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ} AND A.MCT_NOTE IS NOT NULL
                 UNION ALL
-                SELECT '3' AS NOTE_TYPE, A.NOTE FROM TBL_CAM A WHERE A.CONTROL_SEQ = #{CONTROL_SEQ} AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ} AND A.NOTE IS NOT NULL
-                UNION ALL
-                SELECT '4' AS NOTE_TYPE, A.MATERIAL_NOTE AS NOTE FROM TBL_CONTROL_PART A WHERE A.CONTROL_SEQ = 610291 AND A.CONTROL_DETAIL_SEQ = 630742 AND A.MATERIAL_NOTE IS NOT NULL
+                SELECT '4' AS NOTE_TYPE, A.MATERIAL_NOTE AS NOTE FROM TBL_CONTROL_PART A WHERE A.CONTROL_SEQ = #{CONTROL_SEQ} AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ} AND A.MATERIAL_NOTE IS NOT NULL
              ) X
     </select>
 
