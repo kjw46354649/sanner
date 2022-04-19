@@ -129,6 +129,7 @@ public class PdfPrintMakeController {
         Font smallNormalFont = new Font(bf, small, Font.NORMAL);
         Font smallBoldFont = new Font(bf, small, Font.BOLD);
         Font mediumNormalFont = new Font(bf, medium, Font.NORMAL);
+        Font mediumNormalFont9f = new Font(bf, saleMedium, Font.NORMAL);
         Font mediumBoldFont = new Font(bf, medium, Font.BOLD);
         Font largeNormalFont = new Font(bf, large, Font.NORMAL);
         Font largeBoldFont = new Font(bf, large, Font.BOLD);
@@ -280,15 +281,18 @@ public class PdfPrintMakeController {
                 controlInfo.put("queryId", "orderMapper.selectControlCadRequestStockList");
                 List<Map<String, Object>> requestList = innodaleService.getList(controlInfo);
 
-                for(int i=0;i<requestList.size();i++) {
+                for(int i=0;i<2;i++) {
                     StringBuffer reqStockTxt = new StringBuffer();
-                    reqStockTxt.append(requestList.get(i).get("STOCK_NM"));
+//                    reqStockTxt.append(requestList.get(i).get("STOCK_NM"));
+                    reqStockTxt.append("TEST-220415-0005");
                     reqStockTxt.append(" ");
-                    reqStockTxt.append(requestList.get(i).get("CENTER_TXT"));
+//                    reqStockTxt.append(requestList.get(i).get("CENTER_TXT"));
+                    reqStockTxt.append("공정완료 소형MCT2");
                     reqStockTxt.append(" ");
-                    reqStockTxt.append(requestList.get(i).get("REQUEST_QTY") + "ea");
+//                    reqStockTxt.append(requestList.get(i).get("REQUEST_QTY") + "ea");
+                    reqStockTxt.append("122ea");
 
-                    PdfPCell reqCell = createCell(reqStockTxt.toString(), 3, 1, mediumNormalFont);
+                    PdfPCell reqCell = createCell(reqStockTxt.toString(), 3, 1, mediumNormalFont9f);
                     reqCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                     reqCell.setBorderWidthTop(0);
                     if(i < requestList.size() - 1) {

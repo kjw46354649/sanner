@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -129,20 +130,26 @@ public class PopServiceImpl implements PopService {
                 model.addAttribute("message","외주주문 입니다. 진행상태를 확인해 주세요.");
             }else {
 
-                // 가공중의 충당요청건이 있는 경우 pop 스캔시 입출고 처리
-                controlPartInfo.put("popBarcode",hashMap.get("popBarcode"));
+                hashMap.put("queryId", "popMapper.selectRequestStockInfo");
+                List<Map<String, Object>> requestStockList = innodaleDao.getList(hashMap);
+                if(requestStockList.size() > 0) {
+                    for(Map<String,Object> requestStockInfo : requestStockList) {
+                        requestStockInfo.put("LOGIN_USER_ID",hashMap.get("LOGIN_USER_ID"));
 
-                controlPartInfo.put("queryId","popMapper.insertProcessingStockIn");
-                innodaleDao.create(controlPartInfo);
+                        requestStockInfo.put("queryId","popMapper.insertProcessingStockIn");
+                        innodaleDao.create(requestStockInfo);
 
-                controlPartInfo.put("queryId","popMapper.insertProcessingStockOut");
-                innodaleDao.create(controlPartInfo);
+                        requestStockInfo.put("queryId","popMapper.insertProcessingStockOut");
+                        innodaleDao.create(requestStockInfo);
 
-                controlPartInfo.put("queryId","popMapper.updateProcessingStock");
-                innodaleDao.update(controlPartInfo);
+                        requestStockInfo.put("queryId","popMapper.updateProcessingStock");
+                        innodaleDao.update(requestStockInfo);
 
-                controlPartInfo.put("queryId","popMapper.updateProcessingStockQty");
-                innodaleDao.update(controlPartInfo);
+                        requestStockInfo.put("queryId","popMapper.updateProcessingStockQty");
+                        innodaleDao.update(requestStockInfo);
+                    }
+                }
+
 
 
                 NotificationMessage notificationMessage = new NotificationMessage();

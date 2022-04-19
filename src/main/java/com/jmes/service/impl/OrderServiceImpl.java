@@ -868,7 +868,7 @@ public class OrderServiceImpl implements OrderService {
         if (updateList != null && updateList.size() > 0) {
             for (HashMap<String, Object> hashMap : updateList) {
                 try {
-                    Boolean checkBox = (Boolean)hashMap.get("CHECK_BOX");
+                    Boolean checkBox = Boolean.parseBoolean(hashMap.get("CHECK_BOX")+"");
                     hashMap.put("LOGIN_USER_ID",userId);
                     if(checkBox) {
                         if(!hashMap.containsKey("OUT_REQUEST_SEQ")){
