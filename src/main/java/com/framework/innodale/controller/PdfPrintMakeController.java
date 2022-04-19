@@ -283,14 +283,11 @@ public class PdfPrintMakeController {
 
                 for(int i=0;i<2;i++) {
                     StringBuffer reqStockTxt = new StringBuffer();
-//                    reqStockTxt.append(requestList.get(i).get("STOCK_NM"));
-                    reqStockTxt.append("TEST-220415-0005");
+                    reqStockTxt.append(requestList.get(i).get("STOCK_NM"));
                     reqStockTxt.append(" ");
-//                    reqStockTxt.append(requestList.get(i).get("CENTER_TXT"));
-                    reqStockTxt.append("공정완료 소형MCT2");
+                    reqStockTxt.append(requestList.get(i).get("CENTER_TXT"));
                     reqStockTxt.append(" ");
-//                    reqStockTxt.append(requestList.get(i).get("REQUEST_QTY") + "ea");
-                    reqStockTxt.append("122ea");
+                    reqStockTxt.append(requestList.get(i).get("REQUEST_QTY") + "ea");
 
                     PdfPCell reqCell = createCell(reqStockTxt.toString(), 3, 1, mediumNormalFont9f);
                     reqCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
