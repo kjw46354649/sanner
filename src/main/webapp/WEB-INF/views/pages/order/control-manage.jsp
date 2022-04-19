@@ -2401,7 +2401,6 @@
 
             if (!flag) {
                 parameters = {'url': '/saveFromControlManage', 'data': {data: JSON.stringify(changes)}};
-                console.log('changes',changes)
                 fnPostAjaxAsync(function (data) {
                     if (data.flag) {
                         fnAlert(null, data.message);
@@ -3173,7 +3172,6 @@
                     let grid = this;
                     let $cell = grid.getCell(ui);
                     let rowData = ui.rowData;
-                    console.log('postRender',rowData.CHECK_BOX)
                     if(rowData.CHECK_BOX) {
                         $cell.find('input[type=checkbox]').prop('checked',true);
                     }else {
@@ -3288,8 +3286,6 @@
                                     $row.find('input[type=checkbox]').prop('checked', false);
                                     matchStockGrid.pqGrid("updateRow", { 'rowIndx': rowData.pq_ri , newRow: { 'CHECK_BOX': $row.find('input[type=checkbox]').prop('checked')}   });
                                 }
-                                console.log('render',rowData.CHECK_BOX)
-                                console.log('rowData',rowData)
                             }
                         }
                     }
@@ -3508,7 +3504,6 @@
                 fnAlert(null,'충당 요청 수량을 입력해주세요.');
                 return;
             }
-            console.log('changes',changes)
             // return;
             if (gridInstance.isDirty()) {
                 let parameters = {'url': '/matchStockSave', 'data': {data: JSON.stringify(changes)}};
