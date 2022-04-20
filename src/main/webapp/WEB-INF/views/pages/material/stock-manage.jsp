@@ -1421,7 +1421,7 @@
             columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
             colModel: stockManageColModel03,
             dataModel: {
-                location: "remote", dataType: "json", method: "POST", recIndx: 'INSIDE_STOCK_SEQ',
+                location: "remote", dataType: "json", method: "POST", recIndx: 'RNUM',
                 url: "/paramQueryGridSelect",
                 postData: {'queryId': 'dataSource.emptyGrid'},
                 getData: function (dataJSON) {
@@ -1499,8 +1499,6 @@
                                 $("#pop_note_input").attr("disabled",false);
                                 $("#POP_GUBUN").html(rowData.TYPE);
                             }
-                            // $("#stock_manage_pop_form").find("#ORDER_QTY").val(rowData.ORDER_QTY);
-                            // $("#stock_manage_pop_form").find("#ORG_ORDER_QTY").val(rowData.ORDER_QTY);
                             $("#stock_manage_pop_form").find("#INSIDE_STOCK_SEQ").val('');
                             $("#stock_manage_pop_form").find("#INSIDE_STOCK_NUM").val('');
                             if(typeof rowData.INSIDE_STOCK_NUM != 'undefined') {
@@ -1565,13 +1563,15 @@
             stockManageGridId03.pqGrid('option' , 'dataModel.data',[]);
             stockManageGridId03.pqGrid('refreshView');
 
+            let newDataList = [];
             $.each(list, function (idx, Item) {
-                stockManageGridId03.pqGrid('addRow', {
-                    newRow: Item,
-                    rowIndx: idx,
-                    checkEditable: false
+                newDataList.push({
+                        newRow:Item,
+                        rowIndx: idx,
+                        checkEditable: false
                 })
             });
+            stockManageGridId03.pqGrid('addRow', {rowList: newDataList});
 
             stockManageGridId03.pqGrid('refreshView');
             stockManageGridId03.pqGrid('setSelection', {rowIndx: 0});
@@ -1846,12 +1846,6 @@
 
         $('#stock_manage_add_btn').on('click', function () {
 
-            // stockManageGridId01.pqGrid('addRow', {
-            //     newRow: {  },
-            //     rowIndx: 0,
-            //     checkEditable: true
-            // });
-            // stockManageGridId01.pqGrid( "addRow",{rowData: {editable: true } });
             stockManageGridId01.pqGrid('addNodes', [{dataIndx: 'INSIDE_STOCK_CURR_QTY', editable:true, 'INFO_TYPE': 'STO010'}], 0);
             stockManageGridId01.pqGrid('addClass', { rowIndx: 0, cls: 'pg-new-row' });
 
@@ -2232,16 +2226,6 @@
             comboData.push({title: '${vlocale.CODE_NM_KR}', id: '${vlocale.CODE_CD}'});
             </c:forEach>
 
-            // $('#stock_manage_form').find('#SEL_MATERIAL_DETAIL').comboTree({
-            //     source: comboData,
-            //     isMultiple: true,
-            //     cascadeSelect: false
-            // });
-            // $('#stock_in_out_form').find('#SEL_MATERIAL_DETAIL').comboTree({
-            //     source: comboData,
-            //     isMultiple: true,
-            //     cascadeSelect: false
-            // });
         })();
 
         $("#stock_manage_pop_form #ORDER_QTY").on("keyup", function(e) {
@@ -2454,14 +2438,13 @@
                     if(barcodeType == 'C') {
                         if(poptype == 'GRID_OUT'|| poptype == 'BARCODE_OUT') {
                             let parameters = {
-                                'url': '/json-info',
+                                'url': '/json-list',
                                 'data': {"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoOutBarcode"}
                             };
                             fnPostAjax(function (data, callFunctionParam) {
                                 fnResetForm("stock_manage_pop_form");
-                                tempDataList.push(data.info);
-
-                                if(typeof data.info.OUT_REQUEST_SEQ == 'undefined' || data.info.OUT_REQUEST_SEQ == '') {
+                                // tempDataList.push(data.info);
+                                if(data.list.length <= 0) {
                                     let parameters2 = {
                                         'url': '/json-list',
                                         'data': {"TYPE":poptype,"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcode"}
@@ -2475,8 +2458,26 @@
                                         settingPopGrid(tempDataList);
                                     }, parameters2, '');
                                 }else {
+                                    tempDataList = data.list;
                                     settingPopGrid(tempDataList);
                                 }
+
+                                // if(typeof data.info.OUT_REQUEST_SEQ == 'undefined' || data.info.OUT_REQUEST_SEQ == '') {
+                                //     let parameters2 = {
+                                //         'url': '/json-list',
+                                //         'data': {"TYPE":poptype,"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcode"}
+                                //     };
+                                //     fnPostAjax(function (data2, callFunctionParam) {
+                                //         if(data2.list.length > 0) {
+                                //             $.each(data2.list, function (idx, Item) {
+                                //                 tempDataList.push(Item);
+                                //             })
+                                //         }
+                                //         settingPopGrid(tempDataList);
+                                //     }, parameters2, '');
+                                // }else {
+                                //     settingPopGrid(tempDataList);
+                                // }
 
                             }, parameters, '');
                         }else {
@@ -2577,7 +2578,7 @@
                 return;
             }
             if(popType == 'GRID_OUT' || popType == 'BARCODE_OUT') {
-                if((typeof controlSeq != 'undefined' && controlSeq != '')|| (typeof insideSeq != 'undefined' && insideSeq != '')){
+                if(!fnIsEmpty(controlSeq) && !fnIsEmpty(insideSeq)){
                     if(orderQty > popStockQty) {
                         fnAlert(null,"불출 수량이 재고 수량보다 많습니다. 수량 확인바랍니다.");
                         return;
@@ -2589,7 +2590,7 @@
                     return;
                 }
             }else {
-                if (typeof insideSeq != 'undefined' && insideSeq != '' && insideSeq != null) {
+                if (!fnIsEmpty(insideSeq)) {
                     $("#stock_pop_in").modal('show');
                 } else if (typeof controlSeq != 'undefined' && controlSeq != '' && controlSeq != null) {
                     $("#stock_pop_location").modal('show');
