@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="drawingAPI">
+
+    <insert id="insertNcIfWorkData" parameterType="java.util.HashMap">
+        <selectKey keyProperty="EQUIP_SEQ" resultType="string" order="BEFORE">
+            SELECT SF_GET_EQUIP_SEQ(#{equip_name}) AS EQUIP_SEQ FROM DUAL
+        </selectKey>
+        INSERT INTO jmes.TBL_MCT_WORKING_LOG
+        (
+            MCT_LOG_SEQ,
+            IF_SEQ, EQUIP_SEQ, MCT_WORK_SEQ,
+            TOOL_ID, EVENT_TIME,
+            EXECUTION, ACTIVE_TYPE,
+            PART_CNT, CYCLE_FINISH_YN,
+            MESSAGE, PROGRAM
+        )
+        SELECT NEXTVAL(jmes.SEQ_MCT_LOG) AS MCT_LOG_SEQ,
+            #{seq} AS IF_SEQ,
+            X.EQUIP_SEQ,
+            (SELECT CASE WHEN #{active_type} = 'PGM_STOP' AND A.IF_WORK_START_DT IS NULL THEN NULL
+                         ELSE MAX(A.MCT_WORK_SEQ)
+                    END AS MCT_WORK_SEQ
+            FROM TBL_MCT_WORK A
+            WHERE A.DEL_YN = 'N'
+                AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+                AND A.WORK_STATUS IN ('DBS010', 'DBS020')
+                AND A.WORK_START_DT IS NOT NULL
+            ) AS MCT_WORK_SEQ,
+            #{tool_id} AS TOOL_ID, #{event_time} AS EVENT_TIME,
+            #{execution} AS EXECUTION, #{active_type} AS ACTIVE_TYPE,
+            #{part_cnt} AS PART_CNT, IFNULL(#{cycleCheck}, 'N') AS CYCLE_FINISH_YN,
+            #{message}, #{program}
+        FROM TBL_EQUIP X
+        WHERE X.EQUIP_SEQ = #{EQUIP_SEQ}
+            AND IFNULL(X.IF_USE_YN,'N') = 'Y'
+    </insert>
+
+    <update id="updateIfWorkingTime" parameterType="java.util.HashMap" >
+        UPDATE TBL_MCT_WORK A
+            INNER JOIN (
+                SELECT SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS ACTIVE_TOTAL
+                    , SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_STOP' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS STOP_TOTAL
+                    , CASE WHEN IFNULL(#{cycleCheck},'N') = 'Y' THEN SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' AND X.PART_CNT = #{part_cnt} THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END)
+                           ELSE 0
+                    END AS CYCLE_TOTAL
+                    , X.MCT_WORK_SEQ
+                FROM (
+                    SELECT M.EVENT_TIME, M.ACTIVE_TYPE, M.PART_CNT, M.CYCLE_FINISH_YN,
+                        LAG(M.EVENT_TIME) OVER (ORDER BY M.EVENT_TIME) AS BEFORE_TIME,
+                        LAG(M.ACTIVE_TYPE) OVER (ORDER BY M.EVENT_TIME) AS BEFORE_TYPE,
+                        N.MCT_WORK_SEQ
+                    FROM TBL_MCT_WORKING_LOG M
+                        INNER JOIN TBL_MCT_WORK N ON M.MCT_WORK_SEQ = N.MCT_WORK_SEQ AND M.EQUIP_SEQ = N.EQUIP_SEQ
+                            AND N.MCT_WORK_SEQ = (
+                                SELECT MAX(Q.MCT_WORK_SEQ)
+                                FROM TBL_MCT_WORK Q
+                                WHERE Q.DEL_YN = 'N'
+                                    AND Q.EQUIP_SEQ = N.EQUIP_SEQ
+                                    AND Q.WORK_STATUS IN ('DBS010', 'DBS020')
+                                    AND Q.WORK_START_DT IS NOT NULL
+                                    AND Q.WORK_FINISH_DT IS NULL
+                            )
+                    WHERE 1=1
+                        AND M.EQUIP_SEQ IN
+                        <foreach collection="dataList" item="item"  index="index"  open="(" close=")" separator=",">
+                            #{item.EQUIP_SEQ}
+                        </foreach>
+                    ORDER BY M.EVENT_TIME
+                ) X
+                GROUP BY X.MCT_WORK_SEQ
+            ) B ON B.MCT_WORK_SEQ = A.MCT_WORK_SEQ
+        SET
+            A.IF_WORK_START_DT = CASE WHEN IF_WORK_START_DT IS NULL AND #{active_type} = 'PGM_ACTIVE' THEN #{event_time} ELSE A.IF_WORK_START_DT END,
+            A.WORK_ACTIVE_TIME = B.ACTIVE_TOTAL,
+            A.WORK_STOP_TIME = B.STOP_TOTAL,
+            A.WORK_STATUS = CASE WHEN #{active_type} = 'PGM_ACTIVE' THEN 'DBS020'
+                                 WHEN #{active_type} = 'PGM_STOP' THEN 'DBS010'
+                                 ELSE A.WORK_STATUS
+                            END,
+            <if test='cycleCheck != null and cycleCheck == "Y" and active_type == "PGM_STOP"'>
+                COMPLETE_CYCLE_COUNT = (IFNULL(A.COMPLETE_CYCLE_COUNT,0) + 1),
+                LATEST_CYCLE_TIME = B.CYCLE_TOTAL,
+            </if>
+            A.UPDATE_DT = NOW()
+        WHERE A.MCT_WORK_SEQ = B.MCT_WORK_SEQ
+            AND A.DEL_YN = 'N'
+            AND EXISTS (
+                SELECT Q.EQUIP_SEQ
+                FROM TBL_EQUIP Q
+                WHERE Q.EQUIP_SEQ = A.EQUIP_SEQ
+                    AND Q.DEL_YN = 'N'
+                    AND IFNULL(Q.IF_USE_YN,'N') = 'Y'
+            )
+    </update>
+
+    <select id="selectCurrentMctInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.MCT_WORK_SEQ, A.EQUIP_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
+            A.IF_WORK_START_DT, A.IF_WORK_FINISH_DT,
+            A.WORK_STATUS, A.WORK_START_DT, A.WORK_FINISH_DT, A.UNIT_QTY, A.GOAL_QTY,
+            (IFNULL(A.UNIT_QTY,1) * IFNULL(A.COMPLETE_CYCLE_COUNT,0) + IFNULL(A.ADJUST_QTY,0)) AS COMPLETE_QTY,
+            A.COMPLETE_CYCLE_COUNT,
+            A.WORK_ACTIVE_TIME, A.WORK_STOP_TIME,
+            CASE WHEN A.LATEST_CYCLE_TIME IS NOT NULL THEN
+                    CASE WHEN ((A.LATEST_CYCLE_TIME * CEIL(A.GOAL_QTY / A.UNIT_QTY)) - A.WORK_ACTIVE_TIME) <![CDATA[ < ]]> 0 THEN 0
+                         ELSE ((A.LATEST_CYCLE_TIME * CEIL(A.GOAL_QTY / A.UNIT_QTY)) - A.WORK_ACTIVE_TIME) END
+                 ELSE SPACE(0)
+            END AS LEFT_TIME,
+            CASE WHEN A.LATEST_CYCLE_TIME IS NOT NULL AND A.LATEST_CYCLE_TIME > 0
+                    THEN CONCAT(
+                        TRUNCATE(IFNULL(A.LATEST_CYCLE_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(A.LATEST_CYCLE_TIME,0)%3600)/60,0), 'm ',
+                        TRUNCATE(((IFNULL(A.LATEST_CYCLE_TIME,0)%3600) % 60),0), 's'
+                    )
+                 ELSE '-'
+            END AS LATEST_CYCLE_TIME,
+            TIMESTAMPDIFF(SECOND, B.EVENT_TIME, NOW()) AS CURRENT_STATUS_TIME
+        FROM TBL_MCT_WORK A
+            LEFT OUTER JOIN TBL_MCT_WORKING_LOG B ON A.MCT_WORK_SEQ = B.MCT_WORK_SEQ
+            AND B.MCT_LOG_SEQ = (SELECT MAX(Q.MCT_LOG_SEQ) FROM TBL_MCT_WORKING_LOG Q WHERE Q.MCT_WORK_SEQ = B.MCT_WORK_SEQ)
+        WHERE A.DEL_YN = 'N'
+            AND A.WORK_STATUS IN ('DBS010', 'DBS020')
+            AND A.WORK_START_DT IS NOT NULL
+            AND A.WORK_FINISH_DT IS NULL
+            AND EXISTS (
+                SELECT Q.EQUIP_SEQ
+                FROM TBL_EQUIP Q
+                WHERE Q.EQUIP_SEQ = A.EQUIP_SEQ
+                    AND Q.DEL_YN = 'N'
+                    AND IFNULL(Q.IF_USE_YN,'N') = 'Y'
+            )
+            AND A.EQUIP_SEQ IN
+            <foreach collection="dataList" item="item"  index="index"  open="(" close=")" separator=",">
+                #{item.EQUIP_SEQ}
+            </foreach>
+    </select>
+</mapper>
