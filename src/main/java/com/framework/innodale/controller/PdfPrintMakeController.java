@@ -129,6 +129,7 @@ public class PdfPrintMakeController {
         Font smallNormalFont = new Font(bf, small, Font.NORMAL);
         Font smallBoldFont = new Font(bf, small, Font.BOLD);
         Font mediumNormalFont = new Font(bf, medium, Font.NORMAL);
+        Font mediumNormalFont9f = new Font(bf, saleMedium, Font.NORMAL);
         Font mediumBoldFont = new Font(bf, medium, Font.BOLD);
         Font largeNormalFont = new Font(bf, large, Font.NORMAL);
         Font largeBoldFont = new Font(bf, large, Font.BOLD);
@@ -288,7 +289,7 @@ public class PdfPrintMakeController {
                     reqStockTxt.append(" ");
                     reqStockTxt.append(requestList.get(i).get("REQUEST_QTY") + "ea");
 
-                    PdfPCell reqCell = createCell(reqStockTxt.toString(), 3, 1, mediumNormalFont);
+                    PdfPCell reqCell = createCell(reqStockTxt.toString(), 3, 1, mediumNormalFont9f);
                     reqCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                     reqCell.setBorderWidthTop(0);
                     if(i < requestList.size() - 1) {
