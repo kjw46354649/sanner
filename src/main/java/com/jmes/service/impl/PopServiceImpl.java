@@ -129,27 +129,41 @@ public class PopServiceImpl implements PopService {
                 model.addAttribute("returnCode","RET99");
                 model.addAttribute("message","외주주문 입니다. 진행상태를 확인해 주세요.");
             }else {
+//  2022.04.20 프로세스 미확정으로 임시주석
+//                hashMap.put("queryId", "popMapper.selectRequestStockInfo");
+//                List<Map<String, Object>> requestStockList = innodaleDao.getList(hashMap);
+//                if(requestStockList.size() > 0) {
+//                    for(Map<String,Object> requestStockInfo : requestStockList) {
+//                        requestStockInfo.put("LOGIN_USER_ID",hashMap.get("LOGIN_USER_ID"));
+//
+//                        requestStockInfo.put("queryId","popMapper.insertProcessingStockIn");
+//                        innodaleDao.create(requestStockInfo);
+//
+//                        requestStockInfo.put("queryId","popMapper.insertProcessingStockOut");
+//                        innodaleDao.create(requestStockInfo);
+//
+//                        requestStockInfo.put("queryId","popMapper.updateProcessingStock");
+//                        innodaleDao.update(requestStockInfo);
+//
+//                        requestStockInfo.put("queryId","popMapper.updateProcessingStockQty");
+//                        innodaleDao.update(requestStockInfo);
+//                    }
+//                }
 
-                hashMap.put("queryId", "popMapper.selectRequestStockInfo");
-                List<Map<String, Object>> requestStockList = innodaleDao.getList(hashMap);
-                if(requestStockList.size() > 0) {
-                    for(Map<String,Object> requestStockInfo : requestStockList) {
-                        requestStockInfo.put("LOGIN_USER_ID",hashMap.get("LOGIN_USER_ID"));
+                // 가공중의 충당요청건이 있는 경우 pop 스캔시 입출고 처리
+                controlPartInfo.put("popBarcode",hashMap.get("popBarcode"));
 
-                        requestStockInfo.put("queryId","popMapper.insertProcessingStockIn");
-                        innodaleDao.create(requestStockInfo);
+                controlPartInfo.put("queryId","popMapper.insertProcessingStockIn");
+                innodaleDao.create(controlPartInfo);
 
-                        requestStockInfo.put("queryId","popMapper.insertProcessingStockOut");
-                        innodaleDao.create(requestStockInfo);
+                controlPartInfo.put("queryId","popMapper.insertProcessingStockOut");
+                innodaleDao.create(controlPartInfo);
 
-                        requestStockInfo.put("queryId","popMapper.updateProcessingStock");
-                        innodaleDao.update(requestStockInfo);
+                controlPartInfo.put("queryId","popMapper.updateProcessingStock");
+                innodaleDao.update(controlPartInfo);
 
-                        requestStockInfo.put("queryId","popMapper.updateProcessingStockQty");
-                        innodaleDao.update(requestStockInfo);
-                    }
-                }
-
+                controlPartInfo.put("queryId","popMapper.updateProcessingStockQty");
+                innodaleDao.update(controlPartInfo);
 
 
                 NotificationMessage notificationMessage = new NotificationMessage();

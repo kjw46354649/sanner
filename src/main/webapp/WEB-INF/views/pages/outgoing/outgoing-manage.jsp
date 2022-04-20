@@ -2072,7 +2072,11 @@
                                     fnMakeScanTableTdOnDataFail('작업지시 상태를 확인해주세요',dataInfo);
                                     return false;
                                 }
-
+                                if(dataInfo.WORK_TYPE == 'WTP040') {
+                                    setDiv('fail_div','success_div','재고는 출고대상이 아닙니다',dataInfo.CONTROL_NUM,dataInfo.PLAN_QTY)
+                                    fnMakeScanTableTdOnDataFail('재고는 출고대상이 아닙니다');
+                                    return  false;
+                                }
                                 // 파트는 출고대상 X
                                 if(dataInfo.WORK_TYPE == 'WTP050') {
                                     setDiv('fail_div','success_div','파트는 출고대상이 아닙니다',dataInfo.CONTROL_NUM,dataInfo.PLAN_QTY)

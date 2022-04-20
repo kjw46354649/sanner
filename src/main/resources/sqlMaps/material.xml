@@ -2012,12 +2012,15 @@
     </update>
 
     <insert id="insertRequestStockType3" parameterType="java.util.HashMap">
+        <selectKey keyProperty="OUT_REQUEST_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_INSIDE_OUT_REQUEST) FROM DUAL
+        </selectKey>
         INSERT INTO jmes.TBL_INSIDE_OUT_REQUEST (
             OUT_REQUEST_SEQ, REQUEST_CONTROL_SEQ, REQUEST_CONTROL_DETAIL_SEQ,
             REQUEST_DT, REQUEST_ID, REQUEST_QTY, REQUEST_TYPE,
             INSIDE_STOCK_SEQ, INSERT_ID, OUT_DT
         )VALUES (
-            NEXTVAL(jmes.SEQ_INSIDE_OUT_REQUEST), #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
+            #{OUT_REQUEST_SEQ}, #{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ},
             NOW(), #{LOGIN_USER_ID}, IFNULL(#{IN_OUT_QTY},0), #{REQUEST_TYPE},
             #{INSIDE_STOCK_SEQ}, #{LOGIN_USER_ID}, NOW()
         )
@@ -2081,41 +2084,21 @@
         )T
         WHERE IFNULL(T.BEF,-1) <![CDATA[ < ]]> 0
     </insert>
-
-    <insert id="insertInsideStockOut_old" parameterType="java.util.HashMap">
-        INSERT INTO TBL_INSIDE_OUT (
-            INSIDE_OUT_SEQ,
-            INSIDE_STOCK_SEQ,
-            INSIDE_STOCK_NUM,
-            OUT_STATUS,
-            OUT_QTY,
-            OUT_DT,
-            <if test="CONTROL_SEQ != null and CONTROL_SEQ !=''">
-                CONTROL_SEQ,
-            </if>
-            <if test="CONTROL_DETAIL_SEQ != null and CONTROL_DETAIL_SEQ !=''">
-                CONTROL_DETAIL_SEQ,
-            </if>
-            INSERT_ID,
-            INFO_TYPE
-        )
-        VALUES (
-            NEXTVAL(SEQ_INSIDE_OUT),
-            #{INSIDE_STOCK_SEQ},
-            #{INSIDE_STOCK_NUM},
-            'OUT002',
-            #{IN_OUT_QTY},
-            now(),
-            <if test="CONTROL_SEQ != null and CONTROL_SEQ !=''">
-                #{CONTROL_SEQ},
-            </if>
-            <if test="CONTROL_DETAIL_SEQ != null and CONTROL_DETAIL_SEQ !=''">
-                #{CONTROL_DETAIL_SEQ},
-            </if>
-            #{LOGIN_USER_ID},
-            #{INFO_TYPE}
-        )
-    </insert>
+    <select id="selectRequestStockList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT X.OUT_REQUEST_SEQ, X.INSIDE_STOCK_SEQ
+        FROM TBL_INSIDE_OUT_REQUEST X
+        WHERE X.DEL_YN = 'N'
+          AND X.REQUEST_CONTROL_SEQ = #{CONTROL_SEQ}
+          AND X.REQUEST_CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+          AND CASE WHEN X.REQUEST_TYPE = 2 THEN EXISTS (
+                    SELECT Z.CONTROL_SEQ
+                    FROM TBL_CONTROL Z
+                    WHERE Z.CONTROL_SEQ = X.TARGET_CONTROL_SEQ
+                      AND Z.DEL_YN ='N'
+                      AND Z.OUT_FINISH_DT IS NOT NULL
+                )
+            ELSE X.REQUEST_TYPE = 1 END
+    </select>
 
     <insert id="insertInsideStockIn" parameterType="java.util.HashMap">
         INSERT INTO TBL_INSIDE_IN (INSIDE_IN_SEQ, INSIDE_STOCK_NUM, INSIDE_STOCK_SEQ, IN_QTY, CONTROL_SEQ, CONTROL_DETAIL_SEQ, INSERT_ID, INFO_TYPE)
@@ -2131,17 +2114,6 @@
         WHERE #{IN_OUT_QTY} > 0
     </insert>
 
-    <update id="updateInsideStockOut_old" parameterType="java.util.HashMap">
-        UPDATE TBL_INSIDE_OUT
-        SET OUT_QTY = #{IN_OUT_QTY},
-            OUT_STATUS = 'OUT002',
-            OUT_DT = DATE_ADD(NOW(), INTERVAL 5 SECOND),
-            UPDATE_DT = DATE_ADD(NOW(), INTERVAL 5 SECOND),
-            UPDATE_ID = #{LOGIN_USER_ID},
-            INFO_TYPE = #{INFO_TYPE}
-        WHERE INSIDE_OUT_SEQ = #{INSIDE_OUT_SEQ}
-    </update>
-
     <select id="selectWorkType" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, B.WORK_TYPE
         FROM TBL_CONTROL A
@@ -2150,8 +2122,8 @@
             AND B.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </select>
     <select id="selectInsideStockPopInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            A.DRAWING_NUM
+        SELECT ROW_NUMBER() OVER(ORDER BY A.INSIDE_STOCK_SEQ) AS RNUM
+            , A.DRAWING_NUM
             , CASE
                 WHEN #{TYPE} = 'GRID_OUT' THEN '출고대상'
                 WHEN #{TYPE} = 'BARCODE_OUT' THEN '출고대상'
@@ -2209,8 +2181,8 @@
         </choose>
     </select>
     <select id="selectInsideStockPopInfoBarcode" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-             C.DRAWING_NUM, C.INSIDE_STOCK_NUM, C.SIZE_TXT, C.IMG_GFILE_SEQ, C.PDF_GFILE_SEQ, C.DXF_GFILE_SEQ
+        SELECT ROW_NUMBER() OVER(ORDER BY C.INSIDE_STOCK_SEQ) AS RNUM
+             , C.DRAWING_NUM, C.INSIDE_STOCK_NUM, C.SIZE_TXT, C.IMG_GFILE_SEQ, C.PDF_GFILE_SEQ, C.DXF_GFILE_SEQ
              , '유사재고' AS TYPE
              , 'YELLOW' AS COLOR
              , C.WAREHOUSE_CD, C.LOC_SEQ
@@ -2257,8 +2229,9 @@
             AND A.BARCODE_NUM = #{BARCODE_NUM}
         GROUP BY C.INSIDE_STOCK_NUM
     </select>
-    <select id="selectInsideStockPopInfoOutBarcode" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT B.IMG_GFILE_SEQ
+    <select id="selectInsideStockPopInfoOutBarcode_temp_20220420" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER() OVER(ORDER BY E.INSIDE_STOCK_SEQ) AS RNUM
+             , B.IMG_GFILE_SEQ
              , B.PDF_GFILE_SEQ
              , '출고대상' AS TYPE
              , 'RED' AS COLOR
@@ -2273,8 +2246,8 @@
              , E.COMP_CD
              , SF_GET_COMP_NM(E.COMP_CD) AS COMP_NM
              , IFNULL(E.ITEM_NM,SPACE(0)) AS ITEM_NM
-             , IFNULL(D.REQUEST_QTY,SPACE(0)) AS ORDER_QTY
-             , IFNULL(D.REQUEST_QTY,SPACE(0)) AS ORG_ORDER_QTY
+             , CAST(SUM(IFNULL(D.REQUEST_QTY,0)) AS INT) AS ORDER_QTY
+             , CAST(SUM(IFNULL(D.REQUEST_QTY,0)) AS INT) AS ORG_ORDER_QTY
              , CASE
                     WHEN D.INSIDE_STOCK_SEQ IS NULL THEN SPACE(0)
                     ELSE SF_GET_STOCK_CURRENT_QTY(E.INSIDE_STOCK_SEQ)
@@ -2303,16 +2276,76 @@
              INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
              INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ = A.CONTROL_SEQ AND C.DEL_YN = 'N'
              LEFT OUTER JOIN TBL_INSIDE_OUT_REQUEST D ON D.REQUEST_CONTROL_SEQ = A.CONTROL_SEQ AND D.REQUEST_CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
-                    AND D.DEL_YN = 'N' AND D.REQUEST_TYPE = 1
+                    AND D.DEL_YN = 'N' AND D.OUT_DT IS NULL
+                    AND CASE WHEN D.REQUEST_TYPE = 2 THEN EXISTS (
+                                SELECT Z.CONTROL_SEQ
+                                FROM TBL_CONTROL Z
+                                WHERE Z.CONTROL_SEQ = D.TARGET_CONTROL_SEQ
+                                    AND Z.DEL_YN ='N'
+                                    AND Z.OUT_FINISH_DT IS NOT NULL
+                            ) ELSE D.REQUEST_TYPE = 1 END
+        LEFT OUTER JOIN TBL_INSIDE_STOCK E ON D.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ AND E.DEL_YN = 'N'
+        WHERE A.DEL_YN = 'N'
+          AND A.BARCODE_NUM = #{BARCODE_NUM}
+        GROUP BY D.OUT_REQUEST_SEQ
+    </select>
+
+    <select id="selectInsideStockPopInfoOutBarcode" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER() OVER(ORDER BY E.INSIDE_STOCK_SEQ) AS RNUM
+             , B.IMG_GFILE_SEQ
+             , B.PDF_GFILE_SEQ
+             , '출고대상' AS TYPE
+             , 'RED' AS COLOR
+             , C.CONTROL_NUM
+             , E.INSIDE_STOCK_SEQ
+             , D.OUT_REQUEST_SEQ
+             , IFNULL(E.INSIDE_STOCK_NUM,'요청 대상 없음') AS INSIDE_STOCK_NUM
+             , E.LOC_SEQ
+             , (SELECT Z.LOC_NM FROM TBL_WAREHOUSE_LOCATION Z WHERE Z.WAREHOUSE_CD = E.WAREHOUSE_CD AND Z.LOC_SEQ = E.LOC_SEQ ) AS LOC_NM
+             , E.ORDER_COMP_CD
+             , SF_GET_COMP_NM(E.ORDER_COMP_CD) AS ORDER_COMP_NM
+             , E.COMP_CD
+             , SF_GET_COMP_NM(E.COMP_CD) AS COMP_NM
+             , IFNULL(E.ITEM_NM,SPACE(0)) AS ITEM_NM
+             , IFNULL(D.REQUEST_QTY,SPACE(0)) AS ORDER_QTY
+             , IFNULL(D.REQUEST_QTY,SPACE(0)) AS ORG_ORDER_QTY
+             , CASE
+                    WHEN D.INSIDE_STOCK_SEQ IS NULL THEN SPACE(0)
+                    ELSE SF_GET_STOCK_CURRENT_QTY(E.INSIDE_STOCK_SEQ)
+               END INSIDE_STOCK_CURR_QTY
+             , CASE
+                    WHEN D.INSIDE_STOCK_SEQ IS NULL THEN SPACE(0)
+    	            ELSE SF_GET_STOCK_CURRENT_QTY(E.INSIDE_STOCK_SEQ)
+              END POP_STOCK_QTY
+             , CASE
+    	            WHEN D.INSIDE_STOCK_SEQ IS NULL THEN SPACE(0)
+    	            ELSE SF_GET_STOCK_CURRENT_QTY(E.INSIDE_STOCK_SEQ) - IFNULL(D.REQUEST_QTY,0)
+               END POP_STOCK_QTY_AFTER
+             , A.CONTROL_SEQ
+             , A.CONTROL_DETAIL_SEQ
+             , E.MATERIAL_DETAIL
+             , E.MATERIAL_KIND
+             , IFNULL(E.SIZE_TXT, SPACE(0)) AS SIZE_TXT
+             , IFNULL(E.NOTE,SPACE(0)) AS NOTE
+             , CASE WHEN E.SAME_SIDE_YN IS NOT NULL THEN E.SAME_SIDE_YN
+                    ELSE C.SAME_SIDE_YN
+               END AS SAME_SIDE_YN
+             , CASE WHEN E.INSIDE_STOCK_NUM IS NOT NULL THEN 'STO004'
+                    ELSE SPACE(0)
+               END AS INFO_TYPE
+        FROM TBL_CONTROL_BARCODE A
+             INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+             INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ = A.CONTROL_SEQ AND C.DEL_YN = 'N'
+             LEFT OUTER JOIN TBL_INSIDE_OUT_REQUEST D ON D.REQUEST_CONTROL_SEQ = A.CONTROL_SEQ AND D.REQUEST_CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                    AND D.DEL_YN = 'N' AND D.REQUEST_TYPE = 1 AND D.OUT_DT IS NULL
              LEFT OUTER JOIN TBL_INSIDE_STOCK E ON D.INSIDE_STOCK_SEQ = E.INSIDE_STOCK_SEQ AND E.DEL_YN = 'N'
         WHERE A.DEL_YN = 'N'
           AND A.BARCODE_NUM = #{BARCODE_NUM}
     </select>
 
     <select id="selectInsideStockPopInfoBarcodeNew" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
---             (SELECT CONCAT(ABBR_NM,'-XXXX') FROM TBL_COMPANY tc WHERE tc.COMP_CD = B.ORDER_COMP_CD AND tc.DEL_YN = 'N') AS INSIDE_STOCK_NUM
-            (SELECT CONCAT(Y.ABBR_NM,'-',LPAD(IFNULL(MAX(SUBSTRING_INDEX(X.INSIDE_STOCK_NUM , '-', -1 )), 0) +1, 4, '0'))
+        SELECT '' AS RNUM
+            , (SELECT CONCAT(Y.ABBR_NM,'-',LPAD(IFNULL(MAX(SUBSTRING_INDEX(X.INSIDE_STOCK_NUM , '-', -1 )), 0) +1, 4, '0'))
                FROM TBL_INSIDE_STOCK X
                         INNER JOIN TBL_COMPANY Y ON X.ORDER_COMP_CD = Y.COMP_CD
                WHERE X.ORDER_COMP_CD = B.ORDER_COMP_CD
