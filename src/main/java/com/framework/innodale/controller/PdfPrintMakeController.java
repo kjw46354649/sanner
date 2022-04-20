@@ -281,7 +281,7 @@ public class PdfPrintMakeController {
                 controlInfo.put("queryId", "orderMapper.selectControlCadRequestStockList");
                 List<Map<String, Object>> requestList = innodaleService.getList(controlInfo);
 
-                for(int i=0;i<2;i++) {
+                for(int i=0;i<requestList.size();i++) {
                     StringBuffer reqStockTxt = new StringBuffer();
                     reqStockTxt.append(requestList.get(i).get("STOCK_NM"));
                     reqStockTxt.append(" ");
