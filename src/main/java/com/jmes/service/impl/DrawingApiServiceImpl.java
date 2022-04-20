@@ -36,7 +36,7 @@ public class DrawingApiServiceImpl implements DrawingApiService {
                 for(int i=0;i<dataList.size();i++) {
                     Map<String,Object> data = dataList.get(i);
 
-                    data.put("queryId","drawingMapper.insertNcIfWorkData");
+                    data.put("queryId","drawingAPI.insertNcIfWorkData");
                     innodaleDao.create(data);
 
                     dataList.set(i,data);
@@ -45,13 +45,13 @@ public class DrawingApiServiceImpl implements DrawingApiService {
                     dataMap.put(equipName, data);
                 }
 
-                map.put("queryId", "drawingMapper.updateIfWorkingTime");
+                map.put("queryId", "drawingAPI.updateIfWorkingTime");
                 innodaleDao.update(map);
 
                 System.out.println("dataMap >>>>>>>>>>>>>>>>>>>> " + dataMap);
 
                 if(!dataMap.isEmpty()) {
-                    map.put("queryId", "drawingMapper.selectCurrentMctInfo");
+                    map.put("queryId", "drawingAPI.selectCurrentMctInfo");
                     List<Map<String,Object>> currList = innodaleDao.getList(map);
 
                     if(currList.size() > 0) {
