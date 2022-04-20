@@ -2578,16 +2578,19 @@
                 return;
             }
             if(popType == 'GRID_OUT' || popType == 'BARCODE_OUT') {
-                if(!fnIsEmpty(controlSeq) && !fnIsEmpty(insideSeq)){
+                if(fnIsEmpty(insideSeq)) {
+                    fnAlert("","불출 정보를 확인해주세요.");
+                    return;
+                }else if(popType == 'BARCODE_OUT' && fnIsEmpty(controlSeq)) {
+                    fnAlert("","불출 정보를 확인해주세요.");
+                    return;
+                }else {
                     if(orderQty > popStockQty) {
                         fnAlert(null,"불출 수량이 재고 수량보다 많습니다. 수량 확인바랍니다.");
                         return;
                     }else {
                         $("#stock_pop_in").modal('show');
                     }
-                }else {
-                    fnAlert("","불출 정보를 확인해주세요.");
-                    return;
                 }
             }else {
                 if (!fnIsEmpty(insideSeq)) {
