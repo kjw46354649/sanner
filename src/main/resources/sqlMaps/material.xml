@@ -2643,7 +2643,7 @@
 
 
     <select id="selectInsideStockInoutHistory" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT Z.*, ROW_NUMBER() OVER (PARTITION BY Z.INSIDE_STOCK_NUM ORDER BY Z.INSERT_DT DESC) AS LATEST_YN
+        SELECT Z.*, ROW_NUMBER() OVER (PARTITION BY Z.INSIDE_STOCK_NUM ORDER BY Z.SEQ DESC) AS LATEST_YN
         FROM (
             SELECT A.INSERT_DT, SF_GET_DATE_F(A.INSERT_DT, 'YY', 'M') AS INSERT_TIME, B.INSIDE_STOCK_NUM, B.IMG_GFILE_SEQ, A.INSIDE_IN_SEQ AS SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, B.INSIDE_STOCK_SEQ,
                 B.WAREHOUSE_CD, SF_GET_CODE_NM('1049', B.WAREHOUSE_CD, #{LOGIN_LOCALE}) AS WAREHOUSE_CD_NM,
@@ -2747,8 +2747,9 @@
             SELECT MAX(H.OUT_REQUEST_SEQ)
             FROM TBL_INSIDE_OUT_REQUEST H
                 INNER JOIN TBL_INSIDE_STOCK I ON H.INSIDE_STOCK_SEQ = I.INSIDE_STOCK_SEQ AND I.DEL_YN = 'N'
-            WHERE I.INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
-                AND H.DEL_YN = 'N'
+                    AND I.INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
+            WHERE H.DEL_YN = 'N'
+              AND H.OUT_DT IS NOT NULL
         )) AS flag
         FROM DUAL
     </select>
@@ -2757,8 +2758,8 @@
             SELECT MAX(H.INSIDE_IN_SEQ)
             FROM TBL_INSIDE_IN H
                 INNER JOIN TBL_INSIDE_STOCK I ON H.INSIDE_STOCK_SEQ = I.INSIDE_STOCK_SEQ AND I.DEL_YN = 'N'
-            WHERE I.INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
-                AND H.DEL_YN = 'N'
+                    AND I.INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
+            WHERE H.DEL_YN = 'N'
         )) AS flag
         FROM DUAL
     </select>
