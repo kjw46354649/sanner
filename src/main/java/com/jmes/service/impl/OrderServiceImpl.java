@@ -420,10 +420,16 @@ public class OrderServiceImpl implements OrderService {
 //                }
                 // 이미 외주전환 됐는지 확인
                 map.put("queryId", "orderMapper.selectHasPartStatusConversion");
-                if (this.orderDao.getFlag(map) && !flag) {
+                Map<String,Object> outMap = this.innodaleDao.getInfo(map);
+
+                if("Y".equals(outMap.get("OUTSIDE_YN"))) {
                     flag = true;
                     message = "이미 외주전환 된 도면입니다.";
+                }else if(outMap.get("OUT_REQUEST_SEQ") != null && !"".equals(outMap.get("OUT_REQUEST_SEQ"))) {
+                    flag = true;
+                    message = "충당 요청이 존재하는 경우 외주전환이 불가합니다.";
                 }
+
                 // 출고 확인
 //                map.put("queryId", "orderMapper.selectHasOut");
 //                if (this.orderDao.getFlag(map) && !flag) {
@@ -957,6 +963,42 @@ public class OrderServiceImpl implements OrderService {
 
         model.addAttribute("flag", flag);
         model.addAttribute("message", message);
+    }
+
+    @Override
+    public void managerBeforeOutside(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<Map<String, Object>> jsonMap = null;
+        Map<String, Object> hashMap = new HashMap<String, Object>();
+
+        Boolean flag = false;
+        String message = "";
+
+        if (jsonObject != null) {
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<ArrayList<Map<String, Object>>>() {});
+        }
+
+        hashMap.put("list", jsonMap);
+        hashMap.put("queryId","orderMapper.selectCheckBeforeOutside");
+        List<Map<String,Object>> arrayList = this.innodaleDao.getList(hashMap);
+
+        for(Map<String,Object> resMap : arrayList) {
+            if(!"ORD001".equals(resMap.get("CONTROL_STATUS"))) {
+                flag = true;
+                message = "외주전환은 작업이 확정된 이후에만 가능합니다.";
+            }else if("Y".equals(resMap.get("OUTSIDE_YN"))) {
+                flag = true;
+                message = "이미 외주 작업인 건이 존재합니다.";
+            }else if(resMap.get("OUT_REQUEST_SEQ") != null && !"".equals(resMap.get("OUT_REQUEST_SEQ"))) {
+                flag = true;
+                message = "충당 요청이 존재하는 경우 외주전환이 불가합니다.";
+            }
+        }
+
+        model.addAttribute("flag",flag);
+        model.addAttribute("message",message);
+
     }
 
     @Override
