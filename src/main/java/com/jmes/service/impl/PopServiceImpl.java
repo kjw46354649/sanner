@@ -128,6 +128,9 @@ public class PopServiceImpl implements PopService {
             }else if("X".equals(controlPartInfo.get("CHE_OST002"))) {
                 model.addAttribute("returnCode","RET99");
                 model.addAttribute("message","외주주문 입니다. 진행상태를 확인해 주세요.");
+            }else if("X".equals(controlPartInfo.get("STOCK_OUT_FINISH"))) {
+                model.addAttribute("returnCode","RET99");
+                model.addAttribute("message","재고불출 불가한 건이 존재합니다. 사무실에 확인 바랍니다.");
             }else {
 //  2022.04.20 프로세스 미확정으로 임시주석
 //                hashMap.put("queryId", "popMapper.selectRequestStockInfo");

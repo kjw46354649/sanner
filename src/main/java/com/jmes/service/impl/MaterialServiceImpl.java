@@ -192,34 +192,7 @@ public class MaterialServiceImpl implements MaterialService {
 
                 map.put("queryId", "material.insertInsideStockOutNew");
                 this.innodaleDao.create(map);
-
             }
-
-//            if("GRID_OUT".equals(POP_TYPE)) {
-//                map.put("queryId", "material.insertRequestStockType3");
-//                this.innodaleDao.create(map);
-//
-//                map.put("queryId", "material.insertInsideStockOutNew");
-//                this.innodaleDao.create(map);
-//            }else {
-//                map.put("queryId","material.selectRequestStockList");
-//                List<Map<String,Object>> reqList = this.innodaleDao.getList(map);
-//
-//                if(reqList.size() > 0) {
-//                    for(Map<String,Object> reqMap : reqList) {
-//                        reqMap.put("INFO_TYPE","STO004");
-//                        reqMap.put("REQUEST_TYPE",4);
-//                        reqMap.put("LOGIN_USER_ID",map.get("LOGIN_USER_ID"));
-//                        reqMap.put("IN_OUT_QTY",map.get("IN_OUT_QTY"));
-//
-//                        reqMap.put("queryId", "material.insertInsideStockOutNew");
-//                        this.innodaleDao.create(reqMap);
-//
-//                        reqMap.put("queryId", "material.updateInsideStockOut");
-//                        this.innodaleDao.update(reqMap);
-//                    }
-//                }
-//            }
 
         }else if("BARCODE".equals(POP_TYPE)){ // 바코드 입고
             String INSIDE_STOCK_NUM = (String) map.get("INSIDE_STOCK_NUM");
