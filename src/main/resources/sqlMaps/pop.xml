@@ -239,7 +239,7 @@
             )
     </select>
 
-    <insert id="insertProcessingStockIn_temp_20220420" parameterType="java.util.HashMap">
+    <insert id="insertProcessingStockIn" parameterType="java.util.HashMap">
         <selectKey keyProperty="INSIDE_IN_SEQ" resultType="int" order="BEFORE">
             SELECT NEXTVAL(SEQ_INSIDE_IN) FROM DUAL
         </selectKey>
@@ -259,7 +259,7 @@
         )
     </insert>
 
-    <insert id="insertProcessingStockIn" parameterType="java.util.HashMap">
+    <insert id="insertProcessingStockIn_old" parameterType="java.util.HashMap">
         <selectKey keyProperty="INSIDE_IN_SEQ" resultType="int" order="BEFORE">
             SELECT NEXTVAL(SEQ_INSIDE_IN) FROM DUAL
         </selectKey>
@@ -268,23 +268,23 @@
             IN_QTY, CONTROL_SEQ, CONTROL_DETAIL_SEQ, INSERT_ID, INFO_TYPE
         )
         SELECT #{INSIDE_IN_SEQ}
-        , SF_GET_INSIDE_STOCK_NM(A.INSIDE_STOCK_SEQ)
-        , A.INSIDE_STOCK_SEQ
-        , A.REQUEST_QTY
-        , A.TARGET_CONTROL_SEQ
-        , A.TARGET_CONTROL_DETAIL_SEQ
-        , #{LOGIN_USER_ID}
-        , 'STO001'
+            , SF_GET_INSIDE_STOCK_NM(A.INSIDE_STOCK_SEQ)
+            , A.INSIDE_STOCK_SEQ
+            , A.REQUEST_QTY
+            , A.TARGET_CONTROL_SEQ
+            , A.TARGET_CONTROL_DETAIL_SEQ
+            , #{LOGIN_USER_ID}
+            , 'STO001'
         FROM TBL_INSIDE_OUT_REQUEST A
-        INNER JOIN TBL_CONTROL_BARCODE B ON A.REQUEST_CONTROL_SEQ = B.CONTROL_SEQ AND A.REQUEST_CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND B.DEL_YN = 'N'
-        AND B.BARCODE_NUM = #{popBarcode}
-        INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND C.DEL_YN = 'N'
+            INNER JOIN TBL_CONTROL_BARCODE B ON A.REQUEST_CONTROL_SEQ = B.CONTROL_SEQ AND A.REQUEST_CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND B.DEL_YN = 'N'
+                AND B.BARCODE_NUM = #{popBarcode}
+            INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND C.DEL_YN = 'N'
         WHERE A.DEL_YN = 'N'
-        AND A.REQUEST_TYPE = 2
-        AND A.OUT_DT IS NULL
+            AND A.REQUEST_TYPE = 2
+            AND A.OUT_DT IS NULL
     </insert>
 
-    <insert id="insertProcessingStockOut_temp_20220420" parameterType="java.util.HashMap">
+    <insert id="insertProcessingStockOut" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_INSIDE_OUT (
             INSIDE_OUT_SEQ, INSIDE_STOCK_SEQ, INSIDE_STOCK_NUM,
             OUT_REQUEST_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ,
@@ -299,7 +299,7 @@
         )
     </insert>
 
-    <insert id="insertProcessingStockOut" parameterType="java.util.HashMap">
+    <insert id="insertProcessingStockOut_old" parameterType="java.util.HashMap">
         INSERT INTO jmes.TBL_INSIDE_OUT (
             INSIDE_OUT_SEQ, INSIDE_STOCK_SEQ, INSIDE_STOCK_NUM,
             OUT_REQUEST_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ,
@@ -311,15 +311,15 @@
                A.REQUEST_QTY, NOW(), #{LOGIN_USER_ID}, 'STO002',
                #{INSIDE_IN_SEQ}
         FROM TBL_INSIDE_OUT_REQUEST A
-                 INNER JOIN TBL_CONTROL_BARCODE B ON A.REQUEST_CONTROL_SEQ = B.CONTROL_SEQ AND A.REQUEST_CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND B.DEL_YN = 'N'
-            AND B.BARCODE_NUM = #{popBarcode}
-                 INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND C.DEL_YN = 'N'
+            INNER JOIN TBL_CONTROL_BARCODE B ON A.REQUEST_CONTROL_SEQ = B.CONTROL_SEQ AND A.REQUEST_CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND B.DEL_YN = 'N'
+                AND B.BARCODE_NUM = #{popBarcode}
+            INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ AND C.DEL_YN = 'N'
         WHERE A.DEL_YN = 'N'
           AND A.REQUEST_TYPE = 2
           AND A.OUT_DT IS NULL
     </insert>
 
-    <update id="updateProcessingStock_temp_20220420" parameterType="java.util.HashMap">
+    <update id="updateProcessingStock" parameterType="java.util.HashMap">
         UPDATE TBL_INSIDE_OUT_REQUEST A
         SET A.OUT_DT = NOW(),
             A.UPDATE_DT = NOW(),
@@ -330,7 +330,7 @@
             AND A.OUT_REQUEST_SEQ = #{OUT_REQUEST_SEQ}
     </update>
 
-    <update id="updateProcessingStock" parameterType="java.util.HashMap">
+    <update id="updateProcessingStock_old" parameterType="java.util.HashMap">
         UPDATE TBL_INSIDE_OUT_REQUEST A
             INNER JOIN TBL_CONTROL_BARCODE B ON A.REQUEST_CONTROL_SEQ = B.CONTROL_SEQ AND A.REQUEST_CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND B.DEL_YN = 'N'
                 AND B.BARCODE_NUM = #{popBarcode}

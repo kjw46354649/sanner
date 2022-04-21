@@ -2632,13 +2632,17 @@
                 'url': '/managerInsideStockPop',
                 'data': $('#stock_manage_pop_form').serialize()
             };
+            $(".custom_loading_bar").show();
             fnPostAjax(function (data, callFunctionParam) {
                 if(data.flag) {
-                    fnAlert(null,data.message);
+                    fnAlert(null,data.message,function () {
+                        $(".custom_loading_bar").hide();
+                    });
                 }else {
                     $("#completePopup").modal('show');
 
                     setTimeout(function () {
+                        $(".custom_loading_bar").hide();
                         $("#completePopup").modal('hide');
                         $("#stock_pop_in").modal('hide');
                         $("#stock_pop_location").modal('hide');

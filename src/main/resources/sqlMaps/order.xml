@@ -1182,18 +1182,14 @@
     </select>
 
     <!-- 이미 외주 전환(바코드 스캔) -->
-    <select id="selectHasPartStatusConversion" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
-        SELECT EXISTS ( SELECT PART_STATUS
-                        FROM TBL_CONTROL_PART
-                        WHERE 1 = 1
-                            AND (CONTROL_SEQ, CONTROL_DETAIL_SEQ) IN (  SELECT CONTROL_SEQ, CONTROL_DETAIL_SEQ
-                                                                        FROM TBL_CONTROL_BARCODE
-                                                                        WHERE 1 = 1
-                                                                            AND BARCODE_NUM = #{BARCODE_NUM}
-                                                                            AND DEL_YN = 'N'
-                                                                     )
-                            AND PART_STATUS = 'PRO001'
-                      ) AS FLAG
+    <select id="selectHasPartStatusConversion" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.CONTROL_STATUS, B.OUTSIDE_YN, B.PART_STATUS,
+               (SELECT MAX(X.OUT_REQUEST_SEQ) FROM TBL_INSIDE_OUT_REQUEST X WHERE X.TARGET_CONTROL_SEQ = B.CONTROL_SEQ AND X.TARGET_CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND X.DEL_YN = 'N' AND X.OUT_DT IS NULL) AS OUT_REQUEST_SEQ
+        FROM TBL_CONTROL A
+                 INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+                 INNER JOIN TBL_CONTROL_BARCODE C ON C.CONTROL_SEQ = B.CONTROL_SEQ AND C.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND C.DEL_YN = 'N'
+            AND C.BARCODE_NUM = #{BARCODE_NUM}
+        WHERE A.DEL_YN = 'N'
     </select>
 
     <!-- 외주 확정 -->
@@ -5535,5 +5531,18 @@
             WHERE CONTROL_SEQ = #{CONTROL_SEQ}
                 AND WORK_TYPE != 'WTP020'
         ) Z;
+    </select>
+
+    <select id="selectCheckBeforeOutside" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT IFNULL(A.CONTROL_STATUS,'TEMP') AS CONTROL_STATUS, IFNULL(B.OUTSIDE_YN,'N') AS OUTSIDE_YN,
+            (SELECT MAX(X.OUT_REQUEST_SEQ) FROM TBL_INSIDE_OUT_REQUEST X WHERE X.TARGET_CONTROL_SEQ = B.CONTROL_SEQ AND X.TARGET_CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND X.DEL_YN = 'N' AND X.OUT_DT IS NULL) AS OUT_REQUEST_SEQ
+        FROM TBL_CONTROL A
+            INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ
+        WHERE A.DEL_YN = 'N'
+        AND CONCAT(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN
+        <foreach collection="list" item="item"  index="index"  open="(" close=")" separator=",">
+            #{item.CONTROL_SEQ}#{item.CONTROL_DETAIL_SEQ}
+        </foreach>
+
     </select>
 </mapper>

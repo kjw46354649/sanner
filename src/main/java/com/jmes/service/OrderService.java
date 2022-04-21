@@ -51,4 +51,6 @@ public interface OrderService {
     void createNewControl(Model model, Map<String, Object> map) throws Exception;
 
     void createNewStockControl(Model model, Map<String, Object> map) throws Exception;
+
+    void managerBeforeOutside(Model model, Map<String, Object> map) throws Exception;
 }

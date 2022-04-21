@@ -269,4 +269,13 @@ public class OrderController {
 
         return "jsonView";
     }
+
+    @RequestMapping(value = "/managerBeforeOutside", method = RequestMethod.POST)
+    public String managerBeforeOutside(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.orderService.managerBeforeOutside(model, map);
+
+        return "jsonView";
+    }
 }

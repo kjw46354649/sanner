@@ -8,6 +8,12 @@
 <audio id='success_play' src='/resource/sound/success.wav'></audio>
 <form id="hidden_action_frm" name="hidden_action_frm" action="" target="_self" method="post">
 </form>
+<div class="custom_loading_bar" style="z-index:99999;display: none;position: absolute;width: 100%;height: 100%;top: 0%;">
+    <span style="position: absolute;left: 50%;top: 50%;">
+        <img src="/resource/asset/images/loading_5.gif">
+    </span>
+    <div style="width: 100%;height: 100%;background: white;opacity: 0.1;"></div>
+</div>
 <form id="common_formdata_multi_upload_form" method="post">
     <input type="file" id="click_singfile_chose_btn" name="click_singfile_chose_btn" style="display: none;">
     <input type="file" id="click_multifile_chose_btn" name="click_multifile_chose_btn" multiple  style="display: none;">
@@ -3831,8 +3837,11 @@
         }
 
         $('#cam_work_detail_form').find('#queryId').val('inspection.selectCamWorkDetail');
-        let postData = fnFormToJsonArrayData('cam_work_detail_form');
-        fnRequestGridData($('#cam_work_detail_grid'), postData);
+
+        $('#cam_work_detail_grid').pqGrid('option', 'dataModel.postData', function () {
+            return (fnFormToJsonArrayData('#cam_work_detail_form'));
+        });
+        $('#cam_work_detail_grid').pqGrid('refreshDataAndView');
     });
     $("#cam_work_detail_popup").on({
         'show.bs.modal': function () {
@@ -3901,9 +3910,13 @@
                 },
                 complete: function () {
                     this.flex();
+                    console.log('complete');
                 },
                 load: function () {
                     camCellMerge(this, true);
+                    const data = this.option('dataModel.data');
+                    console.log(data)
+                    console.log('load');
                 }
             };
             $('#cam_work_detail_form').find('#queryId').val('inspection.selectCamWorkDetail');

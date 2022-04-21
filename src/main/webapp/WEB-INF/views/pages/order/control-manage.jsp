@@ -2767,87 +2767,6 @@
             }
         });
 
-        // 바코드 출력
-        // $('#CONTROL_MANAGE_BARCODE_PRINT').on('click', function () {
-        //     if (noSelectedRowAlert()) return false;
-        //     let selectedRowCount = selectedControlManagementRowIndex.length;
-        //     let selectControlPartCount = 0;
-        //     let selectControlPartInfo = '';
-        //     let formData = [];
-        //     for (let i = 0; i < selectedRowCount; i++) {
-        //         let rowData = $controlManagementGrid.pqGrid('getRowData', {rowIndx: selectedControlManagementRowIndex[i]});
-        //         let curControlPartInfo = rowData.CONTROL_SEQ + '' + rowData.CONTROL_DETAIL_SEQ;
-        //         if (!(rowData.CONTROL_STATUS === 'ORD001')) {
-        //             fnAlert(null, '주문상태 확정 이후 출력 가능합니다');
-        //             return false;
-        //         }
-        //         if (!rowData.ORDER_IMG_GFILE_SEQ) {
-        //             fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
-        //             return;
-        //         // } else if(rowData.WORK_TYPE != 'WTP020' && selectControlPartInfo != curControlPartInfo){
-        //         } else if(selectControlPartInfo != curControlPartInfo){
-        //             selectControlPartCount++;
-        //             selectControlPartInfo = curControlPartInfo;
-        //             formData.push(rowData.CONTROL_BARCODE_NUM);
-        //         }
-        //     }
-        //     let message =
-        //         '<h4>\n' +
-        //         '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-        //         '    <span>선택하신 ' + selectControlPartCount + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
-        //         '</h4>';
-        //
-        //     fnConfirm(null, message, function () {
-        //         fnBarcodePrint(function(data){
-        //             fnAlert(null, data.message);
-        //         }, formData, '');
-        //     });
-        // });
-        // 라벨 출력
-        // $('#CONTROL_MANAGE_LABEL_PRINT').on('click', function () {
-        //     if (noSelectedRowAlert()) return false;
-        //
-        //     let barcodeList = [];
-        //     let selectedRowCount = selectedControlManagementRowIndex.length;
-        //
-        //     for (let i = 0; i < selectedRowCount; i++) {
-        //         let rowData = $controlManagementGrid.pqGrid('getRowData', {rowIndx: selectedControlManagementRowIndex[i]});
-        //
-        //         if (!(rowData.CONTROL_STATUS === 'ORD001')) {
-        //             fnAlert(null, '주문상태 확정 이후 출력 가능합니다');
-        //             return false;
-        //         }
-        //
-        //         let postData = {
-        //             'queryId': 'inspection.selectOutgoingLabelType2',
-        //             'CONTROL_SEQ': rowData.CONTROL_SEQ,
-        //             'CONTROL_DETAIL_SEQ': rowData.CONTROL_DETAIL_SEQ,
-        //             'ORDER_SEQ': rowData.ORDER_SEQ
-        //         };
-        //         let parameter = {'url': '/json-list', 'data': postData};
-        //         fnPostAjaxAsync(function (data) {
-        //             for (let i = 0, DATALIST_LENGTH = data.list.length; i < DATALIST_LENGTH; i++) {
-        //                 barcodeList.push(data.list[i].BARCODE_NUM);
-        //             }
-        //         }, parameter, '');
-        //     }
-        //     let bCodePrintLen = barcodeList.length;
-        //     if (bCodePrintLen) {
-        //         let message =
-        //             '<h4>\n' +
-        //             '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-        //             '    <span>선택하신 ' + bCodePrintLen + '건을 처리합니다. \n진행하시겠습니까?</span>\n' +
-        //             '</h4>';
-        //         fnConfirm(null, message, function () {
-        //             fnBarcodePrint(function (data) {
-        //                 fnAlert(null, data.message);
-        //             }, barcodeList, '');
-        //         });
-        //     } else {
-        //         fnAlert(null, '출력할 바코드가 존재 하지 않습니다.');
-        //     }
-        // });
-
         /** 도면 등록 팝업 호출 **/
         $('#DRAWING_REGISTRATION').on('click', function () {
             let controlDetailSeqList = new Set(); // 선택 된 row 작업지시번호
@@ -2883,76 +2802,40 @@
                 fnAlert(null, '하나 이상의 작업을 선택해주세요');
                 return false;
             }
+            let list = [];
             let changes = {updateList:[]};
             for (let i = 0, selectedRowCount = selectedControlManagementRowIndex.length; i < selectedRowCount; i++) {
                 const rowData = $controlManagementGrid.pqGrid('getRowData', {rowIndx: selectedControlManagementRowIndex[i]});
-                if(rowData.CONTROL_STATUS != 'ORD001') {
-                    fnAlert(null, '외주전환은 작업이 확정된 이후에만 가능합니다.');
-                    return false;
-                }else if(rowData.OUTSIDE_YN == 'Y') {
-                    fnAlert(null, '이미 외주 작업인 건이 존재합니다.');
-                    return false;
-                }else {
-                    changes.updateList.push(rowData);
-                }
+                list.push(rowData);
+                changes.updateList.push(rowData);
             }
-            const message =
-                '<h4>\n' +
-                '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
-                '    <span>' + selectedControlManagementRowIndex.length + ' 건의 작업에 대해서 외주가공으로 전환합니다. \n진행하시겠습니까?</span>\n' +
-                '</h4>';
-            fnConfirm(null, message, function () {
-                let QUERY_ID_ARRAY;
-                let parameters;
 
-                QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateOutsideConversion', 'orderMapper.updateOutsideConfirmDt']};
-                changes.queryIdList = QUERY_ID_ARRAY;
-                parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
+            let parameters = {'url': '/managerBeforeOutside', 'data': {data: JSON.stringify(list)}};
 
-                fnPostAjaxAsync(function () {
-                    $("#CONTROL_MANAGE_SEARCH").trigger('click');
+            fnPostAjax(function (data) {
+                if(data.flag) {
+                    fnAlert(null,data.message);
+                }else {
+                    const message =
+                        '<h4>\n' +
+                        '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                        '    <span>' + changes.updateList.length + ' 건의 작업에 대해서 외주가공으로 전환합니다. \n진행하시겠습니까?</span>\n' +
+                        '</h4>';
+                    fnConfirm(null, message, function () {
+                        let QUERY_ID_ARRAY;
+                        let parameters;
 
-                }, parameters, '');
-            });
+                        QUERY_ID_ARRAY = {'updateQueryId': ['orderMapper.updateOutsideConversion', 'orderMapper.updateOutsideConfirmDt']};
+                        changes.queryIdList = QUERY_ID_ARRAY;
+                        parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
 
+                        fnPostAjaxAsync(function () {
+                            $("#CONTROL_MANAGE_SEARCH").trigger('click');
+                        }, parameters, '');
+                    });
+                }
+            }, parameters, '');
         })
-        // 도면 출력
-        // $('#CONTROL_MANAGE_DRAWING_PRINT').on('click', function () {
-        //     if (noSelectedRowAlert()) return false;
-        //     const gridData = $controlManagementGrid.pqGrid('option', 'dataModel.data');
-        //     const groupedControlSeq = fnGroupBy(gridData, 'CONTROL_SEQ');
-        //     let controlSeqList = new Set(); // 선택 된 row 작업지시번호
-        //     let drawingNumList = new Set();
-        //     let selectControlList = '';
-        //
-        //     for (let i = 0, selectedRowCount = selectedControlManagementRowIndex.length; i < selectedRowCount; i++) {
-        //         const rowData = $controlManagementGrid.pqGrid('getRowData', {rowIndx: selectedControlManagementRowIndex[i]});
-        //         controlSeqList.add(rowData.CONTROL_SEQ);
-        //     }
-        //     // 작업지시번호
-        //     for(let controlSeq of controlSeqList) {
-        //         // 발주 개수 + 파트 개수
-        //         for (let j = 0, GROUPED_CONTROL_SEQ_LENGTH =  groupedControlSeq[controlSeq].length; j < GROUPED_CONTROL_SEQ_LENGTH; j++) {
-        //             const rowData = groupedControlSeq[controlSeq][j];
-        //             if (fnIsEmpty(rowData.ORDER_IMG_GFILE_SEQ)) {
-        //                 fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
-        //                 return;
-        //             } else {
-        //                 selectControlList += String(rowData.CONTROL_SEQ) + String(rowData.CONTROL_DETAIL_SEQ) + '|';
-        //                 drawingNumList.add(rowData.ORDER_DRAWING_NUM);
-        //             }
-        //         }
-        //     }
-        //
-        //     const message =
-        //         '<h4>' +
-        //         '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-        //         '   <span>' + drawingNumList.size + ' 건의 도면이 출력 됩니다.</span> 진행하시겠습니까?' +
-        //         '</h4>';
-        //     fnConfirm(null, message, function () {
-        //         printJS({printable:'/makeCadPrint', properties: {selectControl:selectControlList}, type: 'pdf', showModal:true});
-        //     });
-        // });
 
         $('[name=CONTROL_MANGE_CLOSE]').on('click', function () {
             $('#CONTROL_MANGE_POPUP').modal('hide');
