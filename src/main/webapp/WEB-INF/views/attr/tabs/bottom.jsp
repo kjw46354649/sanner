@@ -3837,8 +3837,11 @@
         }
 
         $('#cam_work_detail_form').find('#queryId').val('inspection.selectCamWorkDetail');
-        let postData = fnFormToJsonArrayData('cam_work_detail_form');
-        fnRequestGridData($('#cam_work_detail_grid'), postData);
+
+        $('#cam_work_detail_grid').pqGrid('option', 'dataModel.postData', function () {
+            return (fnFormToJsonArrayData('#cam_work_detail_form'));
+        });
+        $('#cam_work_detail_grid').pqGrid('refreshDataAndView');
     });
     $("#cam_work_detail_popup").on({
         'show.bs.modal': function () {
@@ -3907,9 +3910,13 @@
                 },
                 complete: function () {
                     this.flex();
+                    console.log('complete');
                 },
                 load: function () {
                     camCellMerge(this, true);
+                    const data = this.option('dataModel.data');
+                    console.log(data)
+                    console.log('load');
                 }
             };
             $('#cam_work_detail_form').find('#queryId').val('inspection.selectCamWorkDetail');
