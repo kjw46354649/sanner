@@ -3010,9 +3010,9 @@
         let matchStockGrid = $("#match_stock_grid");
         let gridCellEditable = function(ui){
             let rowData = matchStockGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-            let OUT_STATUS = rowData["OUT_STATUS"];
+            let OUT_DT = rowData["OUT_DT"];
             let RNUM = rowData["RNUM"];
-            if(OUT_STATUS == 'OUT002') {
+            if(!fnIsEmpty(OUT_DT)) {
                 return false;
             }else if(typeof RNUM != 'undefined' && RNUM != '' && RNUM != null) {
                 return false;
@@ -3079,11 +3079,19 @@
                                 return {text: '<span class="controlDetail" style="cursor: pointer;text-decoration: underline;">' + rowData.CONTROL_PART_INFO + '</span>' , cls : 'matchGrid_lightRed'};
                             }
                             let renderTemplate = {};
+                            let style = '';
+
                             if(typeof rowData.OUT_DT != 'undefined' && rowData.OUT_DT != null && rowData.OUT_DT != '') {
-                                renderTemplate = {style: 'background-color: #d7d7d7;'};
+                                style += 'background-color: #d7d7d7;'
                             }
-                            if(rowData.SORT == 3) {
-                                renderTemplate.text = '(' + rowData.INSIDE_STOCK_NUM + ') ' + '<span class="controlDetail" style="cursor: pointer;text-decoration: underline;">' + rowData.TARGET_CONTROL_NUM + '</span>';
+                            if(rowData.SORT == 2) {
+                                style += 'font-weight:bold;';
+                                renderTemplate.text = '<div style="text-align: left;margin-left: 5px;">' + rowData.INSIDE_STOCK_NUM + '</div>';
+                            }else if(rowData.SORT == 3) {
+                                renderTemplate.text = '<div style="text-align: right;margin-right: 5px;"><span class="controlDetail" style="cursor: pointer;text-decoration: underline;">' + rowData.TARGET_CONTROL_NUM + '</span></div>';
+                            }
+                            if(style != '') {
+                                renderTemplate.style = style;
                             }
                             return renderTemplate;
                         },
@@ -3236,7 +3244,7 @@
         ];
 
         let matchStockObj = {
-            height: '84%', width: "auto",
+            height: '86%', width: "auto",
             selectionModel: { type: 'row', mode: 'single'}, rowHtHead: 15,
             swipeModel: {on: false}, trackModel: {on: true},
             sortModel: {on: false},
@@ -3244,7 +3252,8 @@
             strNoRows: g_noData,
             collapsible: false, resizable: false, flexWidth: false, showTitle: false,
             postRenderInterval: -1, //call postRender synchronously.
-            // scrollModel: { autoFit: true },
+            scrollModel: { autoFit: true },
+            stripeRows: false,
             columnTemplate: { align: 'center', hvalign: 'center', valign: 'center' }, //to vertically center align the header cells.
             colModel: matchStockColModel,
             dataModel: {
@@ -3398,7 +3407,7 @@
                     }
                     $("#stock_match_pop_form").find("#SAVE_YN").val("Y");
                     fnAlert(null, '<spring:message code="com.alert.default.save.success"/>',function (){
-                        $("#stockMatchPopup").modal('hide')
+                        $("#stock_match_pop_refresh").trigger('click');
                     });
                 }, parameters, '');
             }

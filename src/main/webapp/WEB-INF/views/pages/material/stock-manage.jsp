@@ -1203,24 +1203,28 @@
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'INSIDE_STOCK_SEQ', dataType: 'integer', dataIndx: 'INSIDE_STOCK_SEQ', hidden: true},
-            {title: '재고번호', minWidth: 100, dataIndx: 'INSIDE_STOCK_NUM', editable: false},
+            {title: '충당구분', minWidth: 70, dataIndx: 'REQUEST_TYPE', editable: false,
+                render: function (ui) {
+                    let text = '';
+                    if(ui.cellData == 1) {
+                        text = '창고불출';
+                    }else if(ui.cellData == 2) {
+                        text = '현장충당';
+                    }
+                    return {text : text};
+                }
+            },
+            {title: '재고번호', minWidth: 80, dataIndx: 'INSIDE_STOCK_NUM', editable: false},
+            {title: '재고작업지시', minWidth: 140, dataIndx: 'TARGET_CONTROL_NUM', editable: false},
             {title: '발주처', minWidth: 100, dataIndx: 'ORDER_COMP_NM', editable: false},
-            {title: '규격', minWidth: 120, dataIndx: 'SIZE_TXT', editable: false},
-            {title: '소재종류', minWidth: 80, dataIndx: 'MATERIAL_DETAIL_NM', editable: false},
+            {title: '규격', minWidth: 100, dataIndx: 'SIZE_TXT', editable: false},
+            {title: '소재종류', minWidth: 70, dataIndx: 'MATERIAL_DETAIL_NM', editable: false},
             {title: '불출요청', dataType: 'integer', align: 'center', width: 50, dataIndx: 'REQUEST_QTY', editable: false},
             {
                 title: '재고현황', align: 'center', editable: false,
                 colModel: [
                     {title: '예약', dataType: 'integer', dataIndx: 'INSIDE_STOCK_REQUEST_QTY', minWidth: 40, width: 40, editable: false},
-                    {title: '현)재고', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', minWidth: 50, width: 50, editable: function (ui) {
-                            var isEditable = stockManageGridId01.pqGrid('hasClass',{rowIndx: ui.rowIndx, cls: 'pg-new-row'});
-                            if(isEditable) {
-                                return true;
-                            }else {
-                                return false;
-                            }
-                        }
-                    },
+                    {title: '현)재고', dataType: 'integer', dataIndx: 'INSIDE_STOCK_CURR_QTY', minWidth: 50, width: 50, editable: false},
                     {title: '가공중', dataType: 'integer', dataIndx: 'INSIDE_STOCK_PROCESS_QTY', minWidth: 40, width: 40, editable: false,
                         render: function (ui) {
                             if (ui.cellData > 0)  {
@@ -1257,8 +1261,8 @@
                     });
                 }
             },
-            {title: '창고명', align: 'center', width: 90, dataIndx: 'WAREHOUSE_NM', editable: false},
-            {title: '재고위치', align: 'center', width: 90, dataIndx: 'LOC_NM', editable: false},
+            {title: '위치', align: 'center', width: 90, dataIndx: 'WAREHOUSE_NM', editable: false},
+            {title: '상태', align: 'center', width: 80, dataIndx: 'LOC_NM', editable: false},
             {title: '사업자구분', align: 'center', width: 80, dataIndx: 'COMP_CD_NM', editable: false},
             {
                 title: 'PDF', dataType: 'string', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false, sortable: false,
@@ -2089,40 +2093,7 @@
 
             });
         });
-        $('#inside_stock_pop_save_btn').on('click', function () {
-            //규격 validation
 
-            $("#stock_manage_pop_form").find("#POP_TYPE").val($("#stock_manage_form").find("#popType").val());
-            $("#stock_manage_pop_form").find("#IN_OUT_QTY").val($("#stock_manage_pop_form").find("#ORDER_QTY").val());
-
-            $("#stock_manage_pop_form").find("#WAREHOUSE_CD").attr("disabled", false);
-            $("#stock_manage_pop_form").find("#LOC_SEQ").attr("disabled", false);
-
-            let parameters = {
-                'url': '/managerInsideStockPop',
-                'data': $('#stock_manage_pop_form').serialize()
-            };
-            fnPostAjax(function (data, callFunctionParam) {
-                // console.log(data);
-                let footer_msg ="";
-                let popType = $("#stock_manage_pop_form").find("#POP_TYPE").val();
-                if(popType == "BARCODE"){
-                    footer_msg = pop_msg_in_done;
-                    $("#stock_manage_pop_form").find("#footer_msg").html(footer_msg);
-                    $("#stock_manage_pop_form").find("#INSIDE_STOCK_NUM").val(data.INSIDE_STOCK_NUM);
-                    $("#stock_manage_pop_form").find("#inside_stock_pop_save_btn").hide();
-                }else if(popType == "GRID_IN"){
-                    footer_msg = pop_msg_in_done;
-                    $("#stock_manage_pop_form").find("#footer_msg").html(footer_msg);
-                    $("#stock_manage_pop_form").find("#inside_stock_pop_save_btn").hide();
-                }else if(popType == "GRID_OUT"){
-                    footer_msg = pop_msg_out_done;
-                    $('#stock_manage_pop').modal('hide');
-                }
-            }, parameters, '');
-
-
-        });
         $('#locationBarcodeSpan').on('click', function () {
             $("#LOCATION_BARCODE_NUM").focus();
         });
