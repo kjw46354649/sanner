@@ -871,7 +871,7 @@
             END AS PHOTO_GFILE_SEQ,
             SF_GET_CODE_NM('1012', X.EQUIP_TYPE, 'KO') AS EQUIP_TYPE_NM,
             SF_GET_CODE_NM('1005', X.FACTORY_AREA, 'KO') AS FACTORY_AREA_NM,
-            X.IF_USE_YN,
+            IFNULL(X.IF_USE_YN,'N') AS IF_USE_YN,
             CONCAT(Y.SIZE_TXT, ' / ', Y.MATERIAL_DETAIL_NM) AS SIZE_MATERIAL,
             CONCAT((Y.CONTROL_PART_QTY + Y.ADDITIONAL_QTY),' EA / ', Y.WORK_TYPE_NM) AS QTY_WORK_TYPE,
             DATE_FORMAT(Y.INNER_DUE_DT,'%Y-%m-%d') AS INNER_DUE_DT,
@@ -930,10 +930,17 @@
                        TRUNCATE(((IFNULL(Y.CURRENT_STATUS_TIME,0)%3600) % 60),0), 's'
                    )
                 ELSE '-'
-            END AS CURRENT_STATUS_TIME_FORMAT
+            END AS CURRENT_STATUS_TIME_FORMAT,
+            CASE WHEN Y.PLAN_WORKING_TIME IS NOT NULL AND Y.PLAN_WORKING_TIME > 0
+                     THEN CONCAT(
+                        TRUNCATE(IFNULL(Y.PLAN_WORKING_TIME,0)/60,0) , 'h ',
+                        TRUNCATE((IFNULL(Y.PLAN_WORKING_TIME,0)%60),0), 'm '
+                    )
+                 ELSE SPACE(0)
+            END AS PLAN_WORKING_TIME_FORMAT
         FROM TBL_EQUIP X
             LEFT OUTER JOIN (
-                SELECT A.EQUIP_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.WORK_USER_ID, A.WORK_STATUS,
+                SELECT A.EQUIP_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.WORK_USER_ID, A.WORK_STATUS, A.MCT_WORK_SEQ,
                     CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, ' # ', C.PART_NUM) END AS CONTROL_NUM,
                     C.DRAWING_NUM,
                     C.SIZE_TXT,
@@ -978,6 +985,7 @@
     </select>
     <select id="selectMctPlanListForDetailPop" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
+            '' AS MCT_WORK_SEQ,
             CONCAT(X.MATERIAL_DETAIL_NM,' / ', X.WORK_TYPE_NM) AS WORK_TYPE_MATERIAL,
             CONCAT(X.SIZE_TXT, ' / ', X.MATERIAL_DETAIL_NM) AS SIZE_MATERIAL,
             CONCAT((X.CONTROL_PART_QTY + X.ADDITIONAL_QTY),' EA / ', X.WORK_TYPE_NM) AS QTY_WORK_TYPE,
@@ -988,11 +996,11 @@
             END AS SAME_SIDE_YN,
             CASE WHEN X.PLAN_WORKING_TIME IS NOT NULL AND X.PLAN_WORKING_TIME > 0
                      THEN CONCAT(
-                        TRUNCATE(IFNULL(X.PLAN_WORKING_TIME,0)/3600,0) , 'h ',
-                        TRUNCATE((IFNULL(X.PLAN_WORKING_TIME,0)%3600)/60,0), 'm '
+                        TRUNCATE(IFNULL(X.PLAN_WORKING_TIME,0)/60,0) , 'h ',
+                        TRUNCATE((IFNULL(X.PLAN_WORKING_TIME,0)%60),0), 'm '
                     )
                  ELSE SPACE(0)
-            END AS PLAN_WORKING_TIME_FORMAT,
+            END AS PLAN_WORKING_TIME_FORMAT, -- 예상가공시간은 분단위
             X.*
         FROM (
             SELECT

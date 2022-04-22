@@ -471,7 +471,8 @@ button:disabled {
     height: 900px;
 }
 .mct_plan_detail_pop .layerPopup .rightwrap .rightName{ float: right; margin-top: 0px;display: inline-block; }
-.mct_plan_detail_pop .th_color {background: #e8f0f0; font-weight: bold; color: black;}
+.mct_plan_detail_pop .th_color {background: #e5f9fc; font-weight: bold; color: black;}
+.mct_plan_detail_pop .th_color_green {background: #ddfbda; font-weight: bold; color: black;}
 .mct_plan_detail_pop .namePlusSlt label {padding: 0px 14px;background: #002060;border: 1px solid #002060;border-right: 0;box-sizing: border-box;width: 170px;font-size: 14px;border-radius:0;color: #ffffff;}
 .mct_plan_detail_pop .barcode_div {background: #e8e8e8;margin-top: 2%;line-height: 6vh;height: 69px;}
 .mct_plan_detail_pop .barcode_label {font-size: 17px;float: left;margin-left: 4%;margin-right: 5%;}
@@ -483,7 +484,104 @@ button:disabled {
 .mct_plan_detail_pop .userImg {width: 100px; height: 80px; border-radius: 50%; border: 1px solid #d6d6d6; margin: 0 auto; overflow: hidden;}
 .mct_plan_detail_pop .userImg img{width:100%; height: 100%;}
 
+#mct_plan_detail_pop .popTable {
+	font-size: 1.3rem;
+	text-align: center;
+	color: black;
+	/*font-weight: bold;*/
+}
+#mct_plan_detail_pop .staffImgWrap {
+	width: 150px;
+	height: 150px;
+	overflow: hidden;
+	text-align: center;
+	border-radius: 50%;
+	margin: 0 auto;
+	border: 1px solid #666;
+}
+#mct_plan_detail_pop .staffImgWrap > img {
+	width: 100%;
+}
 
+#mct_plan_detail_pop .mapImgWrap img {
+	width: 98%;
+	height: 100%
+}
+
+#mct_plan_detail_pop .popMapDetailBtn, #mct_plan_detail_pop .detailCloseBtn {
+	font-size: 1.4rem;
+	height: 30px;
+	width: 130px;
+}
+
+#mct_plan_detail_pop .planImgDiv {
+	height: 20%;
+	overflow-y: hidden;
+	overflow-x: scroll;
+	white-space: nowrap;;
+	width: 99%;
+	border: 1px solid gray;
+	padding: 1px 4px 5px 4px;
+	text-align: left;
+	margin-top: 7px;
+	color: black;
+}
+
+#mct_plan_detail_pop .workStaffImg .staffImgWrap {
+	width: 80px;
+	height: 80px;
+}
+#mct_plan_detail_pop .mctInfoWrap {
+	width: 17%;
+	height: 100%;
+	background: lightgrey;
+	position: relative;
+	margin-right: 4px;
+	display: inline-block;
+	border: 1px solid gray;
+	margin-top: 3px;
+	text-align: center;
+	color: black;
+}
+
+#mct_plan_detail_pop .mctMapImg {
+	width: 100%;
+	height: 100%;
+	font-size: 11px;
+}
+#mct_plan_detail_pop .mctMapImg img {
+	width: 96%;
+	height: 73%;
+	border: 1px solid grey;
+}
+
+#mct_plan_detail_pop .mctMapTime {
+	position: absolute;
+	top: 1%;
+	font-size: 12px;
+	padding-left: 5px;
+	width: 92%;
+}
+
+#mct_plan_detail_pop .popTable th, #mct_plan_detail_pop .popTable td {
+	border: 0.5px solid #9d9d9d;
+	padding: 5px 0;
+	height: 30px;
+}
+
+#mct_plan_detail_pop #popHeadMid2 th, #mct_plan_detail_pop #popHeadMid2 td {
+	border: 0.5px solid #9d9d9d;
+	padding: 5px 0;
+	height: 42px;
+}
+#mct_plan_detail_pop #popHeadMid4 th, #mct_plan_detail_pop #popHeadMid4 td {
+	border: 0.5px solid #9d9d9d;
+	padding: 5px 0;
+	height: 20px;
+}
+.bg_mct_green {
+	background: #d7eda6 !important
+}
 /*210607*/
 
 

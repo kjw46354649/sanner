@@ -245,20 +245,23 @@
 								<colgroup>
 									<col width="20%">
 									<col width="20%">
-									<col width="30%">
-									<col width="30%">
+									<col width="20%">
+									<col width="20%">
+									<col width="10%">
 								<tbody>
 								<tr>
 									<td class="th_color">장비번호</td>
 									<td class="th_color">가동상태</td>
 									<td class="th_color">장비종류</td>
 									<td class="th_color">설치위치</td>
+									<td class="th_color">I/F</td>
 								</tr>
 								<tr>
 									<td class="EQUIP_NM"></td>
 									<td class="EQUIP_STATUS"></td>
 									<td class="EQUIP_TYPE_NM"></td>
 									<td class="FACTORY_AREA_NM"></td>
+									<td class="IF_USE_YN"></td>
 								</tr>
 							</tbody>
 						</table>
@@ -358,7 +361,10 @@
 								</tr>
 								<tr>
 									<td class="th_color_green">Message</td>
-									<td class="MESSAGE" colspan="3"></td>
+									<td colspan="3">
+										<div class="MESSAGE ml-10" style="overflow-x: hidden;height: 30px;width: 500px;">
+										</div>
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -367,7 +373,7 @@
 						<h4 style="text-align: left;">
 							<i class="xi-tags mr-5"></i>도면정보
 						</h4>
-						<div style="display: flex;margin-top: 10px;height: 68%;border: 1px solid gray;">
+						<div class="d-flex mt-10" style="height: 68%;border: 1px solid gray;">
 							<div class="mapImgWrap">
 								<img id="mapImgWrap" src="/resource/main/blank.jpg" style="margin-right: 1%;">
 							</div>
@@ -448,7 +454,7 @@
 						</div>
 					</div>
 				</div>
-				<button id="detailCloseBtn" class="detailCloseBtn">닫기</button>
+				<button id="detailCloseBtn" class="detailCloseBtn" style="position:absolute;left: 44%;">닫기</button>
 			</div>
 			<!--팝업내용끝-->
 		</div>
@@ -938,6 +944,22 @@
 			minutes = Math.floor((time % 3600)/60);
 		}
 		return hours + "h " + minutes +"m ";
+	}
+
+	function makeTimeMin(time) {
+		var text = "";
+		if(typeof time != 'undefined' && time != "" && time != null) {
+			if(time >= 60) {
+				if(time % 60 == 0) {
+					text = parseInt(time / 60) + 'h';
+				}else {
+					text = Math.floor(time / 60) + 'h  ' + parseInt(time % 60) + 'm';
+				}
+			}else {
+				text = time + 'm';
+			}
+		}
+		return text;
 	}
 
 	let windowImageViewer;
@@ -2595,7 +2617,7 @@
 						$(".planImgDiv").append('<div style="text-align: center;margin-top: 7%;">No Data</div>');
 					}
 					$("#total_cnt_qty").text(data.list.length + " 품 " + totalQty + " EA");
-					$("#total_plan_time").text("( "+ makeTimeStr(totalTime) + " )");
+					$("#total_plan_time").text("( "+ makeTimeMin(totalTime) + " )");
 				}, parameter2, '');
 			},
 			'hide.bs.modal': function () {
