@@ -1628,7 +1628,7 @@
                     }
                 },1000);
             },'hide.bs.modal': function () {
-
+                clearInterval(timer);
             }
         });
 
@@ -2461,24 +2461,6 @@
                                     tempDataList = data.list;
                                     settingPopGrid(tempDataList);
                                 }
-
-                                // if(typeof data.info.OUT_REQUEST_SEQ == 'undefined' || data.info.OUT_REQUEST_SEQ == '') {
-                                //     let parameters2 = {
-                                //         'url': '/json-list',
-                                //         'data': {"TYPE":poptype,"BARCODE_NUM":BARCODE_NUM,"queryId":"material.selectInsideStockPopInfoBarcode"}
-                                //     };
-                                //     fnPostAjax(function (data2, callFunctionParam) {
-                                //         if(data2.list.length > 0) {
-                                //             $.each(data2.list, function (idx, Item) {
-                                //                 tempDataList.push(Item);
-                                //             })
-                                //         }
-                                //         settingPopGrid(tempDataList);
-                                //     }, parameters2, '');
-                                // }else {
-                                //     settingPopGrid(tempDataList);
-                                // }
-
                             }, parameters, '');
                         }else {
                             let parameters3 = {
