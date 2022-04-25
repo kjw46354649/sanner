@@ -564,6 +564,7 @@ input[type=number] {
 /* color */
 .text-blue { color: blue; }
 .text-red { color: red; }
+.text-indigo { color: indigo;}
 
 
 .blink-blue {

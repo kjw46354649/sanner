@@ -279,7 +279,8 @@
             CASE WHEN Y.WORK_STATUS = 'DBS010' THEN 'pause'
                  WHEN Y.WORK_STATUS = 'DBS020' THEN 'login'
                  ELSE SPACE(0)
-            END WORK_STATUS
+            END WORK_STATUS,
+            IFNULL(X.IF_USE_YN, 'N') AS IF_USE_YN
         FROM jmes.TBL_EQUIP X
          LEFT OUTER JOIN (
             SELECT COUNT(*) AS TOTAL_CNT
@@ -330,8 +331,12 @@
                         , A.WORK_ACTIVE_TIME
                         , A.WORK_STOP_TIME
                         , D.ACTIVE_TYPE
-                        , D.EVENT_TIME
-                        , TIMESTAMPDIFF(SECOND, D.EVENT_TIME, NOW()) AS CURRENT_STATUS_TIME
+                        , CASE WHEN D.EVENT_TIME IS NULL THEN A.WORK_START_DT
+                               ELSE D.EVENT_TIME
+                          END AS EVENT_TIME
+                        , CASE WHEN D.EVENT_TIME IS NULL THEN TIMESTAMPDIFF(SECOND, A.WORK_START_DT, NOW())
+                               ELSE TIMESTAMPDIFF(SECOND, D.EVENT_TIME, NOW())
+                          END AS CURRENT_STATUS_TIME
                      FROM jmes.TBL_MCT_WORK A
                         INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N'
                         INNER JOIN jmes.TBL_CONTROL_PART C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ

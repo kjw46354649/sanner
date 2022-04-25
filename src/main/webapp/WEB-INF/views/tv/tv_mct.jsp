@@ -2055,7 +2055,13 @@
 							}else {
 								html = '<div id="EQUIP_'+ Item2.EQUIP_SEQ + '" class="mctInfo_'+idx2+' mct'+Item2.WORK_STATUS +'" data-seq="'+Item2.EQUIP_SEQ+'">';
 								html += '<div class="mctInfoWrap">';
-								html += '<span class="mctName '+ Item2.WORK_STATUS + '">' + Item2.EQUIP_NM + '</span>';
+								html += '	<span class="mctName '+ Item2.WORK_STATUS + '">' + Item2.EQUIP_NM;
+								if(Item2.IF_USE_YN == 'Y') {
+									html += '<p class="text-blue">(I/F)</p>';
+								}else {
+									html += '<p class="text-indigo">(Manual)</p>';
+								}
+								html += '	</span>';
 								html += '<div class="mctInfoTopLeft">';
 								if(typeof Item2.PHOTO_GFILE_SEQ != 'undefined') {
 									html += '	<div class="staffImg mctStaffImg">';
@@ -2067,9 +2073,6 @@
 								html += '	</div>';
 								html += '	<div class="staffInfoWrap">';
 								html += '		<p class="mctStaffName">'+((typeof Item2.USER_NM != 'undefined')? Item2.USER_NM : '-') +'</p>';
-								html += '		<p class="mctTime">남은시간';
-								html += '		<br>' + Item2.REMAIN_TIME;
-								html += '		</p>';
 								html += '	</div>';
 								html += '</div>';
 								html += '<div class="mctInfoTopRight">';
@@ -2094,9 +2097,9 @@
 								}
 								html += '		<span class="progressPercent mctProgressPercent">'+ ((typeof Item2.PERCENT != 'undefined')?Item2.PERCENT:'') + '</span>';
 								html += '	</div>';
-								html += '	<div class="mctMapBtmInfo '+ Item2.WORK_STATUS + '">';
-								html +=  ((typeof Item2.CUR_TEXT != 'undefined')?Item2.CUR_TEXT:'') + '<br>' + ((typeof Item2.CONTROL_PART_INFO != 'undefined')?Item2.CONTROL_PART_INFO:'');
-								html += '	</div>';
+								html += '</div>';
+								html += '<div class="mctMapBtmInfo '+ Item2.WORK_STATUS + '">';
+								html +=  ((typeof Item2.CUR_TEXT != 'undefined')?Item2.CUR_TEXT:'') + '&nbsp;' + ((typeof Item2.CONTROL_PART_INFO != 'undefined')?Item2.CONTROL_PART_INFO:'');
 								html += '</div>';
 								html += '<div class="mctInfoBtm">';
 								html += '	<table id="EQUIP_PLAN_'+ Item2.EQUIP_SEQ + '">';
@@ -2218,6 +2221,97 @@
 
 		/** DRAWING BOARD 정보 실시간 처리 **/
 		let getReLoadDrawingData = function (equipSeq) {
+			'use strict';
+			$.ajax({
+				type: 'POST', url: "/tv/mct/machineDrawingData", dataType: 'json',
+				data: {"EQUIP_SEQ": equipSeq},
+				success: function (data, textStatus, jqXHR) {
+					if (textStatus !== 'success' || data == null) {
+						fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+						return;
+					}
+					let $target = $("#EQUIP_" + equipSeq);
+					let mct_list = data.mct_drawing_list; //mct
+					if (mct_list != '') {
+						$.each(mct_list,function (idx,Item) {
+							if($target.hasClass('mctlogin')) {
+								$target.find(".mctName").removeClass("login");
+								$target.find(".mctMapBtmInfo").removeClass("login");
+								$target.removeClass('mctlogin');
+							}
+							if($target.hasClass('mctpause')){
+								$target.find(".mctName").removeClass("pause");
+								$target.find(".mctMapBtmInfo").removeClass("pause");
+								$target.removeClass('mctpause');
+							}
+							$target.addClass('mct'+Item.WORK_STATUS);
+							$target.find(".mctName").addClass(Item.WORK_STATUS);
+							$target.find(".mctMapBtmInfo").addClass(Item.WORK_STATUS);
+
+							if(typeof Item.PHOTO_GFILE_SEQ != 'undefined') {
+								$target.find(".mctStaffImg").removeClass("staffIcon");
+								$target.find(".mctStaffImg").find("img").attr("src","/image/" + Item.PHOTO_GFILE_SEQ);
+							}else {
+								if(!$target.find(".mctStaffImg").hasClass("staffIcon")) {
+									$target.find(".mctStaffImg").addClass("staffIcon");
+								}
+								$target.find(".mctStaffImg").find("img").attr("src","/resource/pop/images/user.svg");
+							}
+
+							if(typeof Item.IMG_GFILE_SEQ != 'undefined') {
+								$target.find(".mctStaffName").text(Item.USER_NM);
+							}else {
+								$target.find(".mctStaffName").text("-");
+							}
+
+							if(Item.WORK_PLAN_TYPE == 1 && typeof Item.IMG_GFILE_SEQ != 'undefined') {
+								$target.find(".mctMapImg").find("img").removeClass('machineImg');
+								$target.find(".mctMapImg").find("img").attr("src","/qsimage/" + Item.IMG_GFILE_SEQ);
+							}else {
+								if(!$target.find(".mctMapImg").find("img").hasClass('machineImg')) {
+									$target.find(".mctMapImg").find("img").addClass('machineImg');
+								}
+								$target.find(".mctMapImg").find("img").attr("src","/resource/asset/images/tv/img_thumb_3.png");
+							}
+							let activeTime = Number(Item.WORK_ACTIVE_TIME);
+							if(Item.WORK_STATUS == 'login') {
+								activeTime += Number(Item.CURRENT_STATUS_TIME);
+							}
+
+							var html = "<span> 진행 : " + makeTimeStr(activeTime) + "</span><br>예상 : " +  ((typeof Item.PLAN_WORKING_TIME_FORMAT != 'undefined')?Item.PLAN_WORKING_TIME_FORMAT:'');
+							$target.find(".mctMapTime").html(html);
+
+							if(Item.WORK_STATUS == 'pause') {
+								if($target.find(".pauseTime").length > 0) {
+									html = "일시중지<br>";
+									html += "<span>" + makeTimeStr(Item.CURRENT_STATUS_TIME) + "</span>";
+									$target.find(".pauseTime").html(html)
+								}else {
+									html = '<div id="pauseTime" class="pauseTime">';
+									html += '	일시중지<br>';
+									html += '<span>' + makeTimeStr(Item.CURRENT_STATUS_TIME) + '</span>';
+									html += '</div>';
+									$target.find(".mctMapTime").after(html);
+								}
+							}else {
+								if($target.find(".pauseTime").length > 0) {
+									$target.find(".pauseTime").remove();
+								}
+							}
+							$target.find(".mctProgressPercent").text(((typeof Item.PERCENT != 'undefined')?Item.PERCENT:''));
+							html = ((typeof Item.CUR_TEXT != 'undefined')?Item.CUR_TEXT:'') + '<br>' + ((typeof Item.CONTROL_PART_INFO != 'undefined')?Item.CONTROL_PART_INFO:'');
+							$target.find(".mctMapBtmInfo").html(html);
+
+						})
+					}
+				},
+				error: function (jqXHR, textStatus, errorThrown) {
+					fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+				}
+			});
+		};
+
+		let getReLoadDrawingDataForIF = function (list) {
 			'use strict';
 			$.ajax({
 				type: 'POST', url: "/tv/mct/machineDrawingData", dataType: 'json',
@@ -2430,7 +2524,9 @@
 				});
 				stompClient.subscribe('/topic/notice', function (notificationMessage) { // 장비if
 					let messageData = JSON.parse(notificationMessage.body);
-					console.log(messageData);
+					if(messageData.list.length > 0) {
+						getReLoadDrawingDataForIF(messageData.list)
+					}
 				});
 		    }, () => {
 			  	setTimeout(() => {
