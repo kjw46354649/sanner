@@ -396,4 +396,7 @@
             NEXTVAL(SEQ_LOG), #{REQUEST_URL}, #{ERROR_NAME}, #{ERROR_MSG}, #{REQUEST_PARAM}, #{LOGIN_USER_ID}
         )
     </insert>
+    <select id="selectHealthCheck" parameterType="java.util.HashMap" resultType="string">
+        SELECT NOW() FROM DUAL;
+    </select>
 </mapper>
