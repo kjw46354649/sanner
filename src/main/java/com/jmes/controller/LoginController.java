@@ -5,6 +5,7 @@ import com.framework.innodale.component.HttpUtil;
 import com.framework.innodale.service.InnodaleService;
 import com.google.gson.JsonObject;
 import com.jmes.service.LoginService;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class LoginController {
 
     @Autowired
     private Environment environment;
+
+    @Autowired
+    private SqlSessionTemplate sqlSessionTemplate;
 
     @RequestMapping(value="/")
     public String index(Model model, HttpServletRequest request,  Locale locale) throws Exception {
@@ -192,6 +196,15 @@ public class LoginController {
 
 //        return "redirect:/drawing-worker";
         return "board/drawing-worker";
+    }
+
+    @RequestMapping(value = "/healthCheck", method = RequestMethod.GET)
+    public String healthCheck(HttpServletRequest request, HttpServletResponse response) {
+        HashMap<String,Object> hashMap = new HashMap<>();
+
+        sqlSessionTemplate.selectOne("common.selectHealthCheck",hashMap);
+
+        return "jsonView";
     }
 
 }
