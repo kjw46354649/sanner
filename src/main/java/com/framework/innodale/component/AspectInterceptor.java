@@ -128,7 +128,6 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         passList.add("/change-locale");
         passList.add("/userLogin");
         passList.add("/userLogout");
-        passList.add("/healthCheck");
         passList.add("/popParamQueryGridSelect");
         passList.add("/popScanningBarcodePop");
 
