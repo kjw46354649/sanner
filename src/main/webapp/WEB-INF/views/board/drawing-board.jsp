@@ -346,10 +346,13 @@
 </c:if>
 <c:choose>
     <c:when test="${workInfo.WORK_STATUS eq 'DBS010'}">
-        <div class="bodyWrap stop <c:if test="${drawingInfo.machineInfo.IF_USE_YN ne 'Y'}">none_if</c:if>" id="bodyWrap">
+        <div class="bodyWrap stop <c:if test="${drawingInfo.machineInfo.IF_USE_YN ne 'Y'}">none_if</c:if> <c:if test="${drawingInfo.machineInfo.EQUIP_OFF_YN eq 'Y'}">nc_off</c:if>" id="bodyWrap">
+    </c:when>
+    <c:when test="${workInfo.WORK_STATUS eq 'DBS020'}">
+        <div class="bodyWrap work <c:if test="${drawingInfo.machineInfo.IF_USE_YN ne 'Y'}">none_if</c:if> <c:if test="${drawingInfo.machineInfo.EQUIP_OFF_YN eq 'Y'}">nc_off</c:if>" id="bodyWrap">
     </c:when>
     <c:otherwise>
-        <div class="bodyWrap work <c:if test="${drawingInfo.machineInfo.IF_USE_YN ne 'Y'}">none_if</c:if>" id="bodyWrap">
+        <div class="bodyWrap complete <c:if test="${drawingInfo.machineInfo.IF_USE_YN ne 'Y'}">none_if</c:if> <c:if test="${drawingInfo.machineInfo.EQUIP_OFF_YN eq 'Y'}">nc_off</c:if>" id="bodyWrap">
     </c:otherwise>
 </c:choose>
     <div id="waitMeContainerDiv">
@@ -420,9 +423,10 @@
                 </c:if>
                 <c:if test="${not empty drawingInfo.currentWork}">
                     <input type="hidden" name="curStatus" id="curStatus" value="work">
-                    <div class="contsTitWrap" id="workMainProgressConts" style="">
+                    <div class="contsTitWrap" id="workMainProgressConts">
                         <div class="contsTit blink-blue" style="padding-left: 0"><srping:message key='drawing.board.label.13'/></div>
                         <div class="contsTit blink-red" style="padding-left: 0"><srping:message key='drawing.board.button.07'/></div>
+                        <div class="contsTit blink-red-2" style="padding-left: 0">Stop (NC OFF)</div>
                         <div id="workReserveTimeInfo" class="contsTit"></div>
                         <div class="right_sort">
                             <button type="button" id="workCancelBtn" class="graDbBtn red" style="min-width: 90px; padding: 0 5px;"><srping:message key='drawing.board.button.06'/></button>&nbsp;
@@ -518,10 +522,15 @@
         </div>
         <div class="bottomDbWrap">
             <div style="float: left;padding: 0 30px 0 30px;">
-                <div class="nc_process_title">
-                    <span>NC 가공 Cycle 정보</span>
+                <div class="d-flex">
+                    <div class="nc_process_title">
+                        <span>NC 가공 Cycle 정보</span>
+                    </div>
+                    <div class="nc_off_div">
+                        <span>(NC OFF)</span>
+                    </div>
                 </div>
-                <div class="workInWrap nc_disabled">
+                <div class="workInWrap nc_disabled ncOffWorkWrap">
                     <div class="topConts" style="color: black;font-weight: bold;width: 350px;height: 155px;">
                         <div class="timeWrap">
                             <span class="timeTit">Unit Qty.</span>
@@ -2400,33 +2409,42 @@
                         var data = JSON.parse(notificationMessage.body);
                         let dataList = data.list;
                         let equipSeq = $("#drawing_log_out_form").find("#EQUIP_SEQ").val();
-                        let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
+                        let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val().replace("-","");
                         let curWorkStatus = $("#drawing_action_form").find("#WORK_STATUS").val();
                         if(data.equipNm.includes(equipNm)) {
                             $.each(dataList, function (idx,Item) {
                                 if(Item.EQUIP_SEQ == equipSeq) {
                                     $("#bodyWrap").removeClass("stop");
                                     $("#bodyWrap").removeClass("work");
+                                    $("#bodyWrap").removeClass("nc_off");
+
                                     if(Item.WORK_STATUS == 'DBS010') {
                                         $("#bodyWrap").addClass("stop");
-                                    }else {
+                                    }else if(Item.WORK_STATUS == 'DBS020'){
                                         $("#bodyWrap").addClass("work");
                                     }
-                                    $(".UNIT_QTY").text(Item.UNIT_QTY);
-                                    $(".COMPLETE_CYCLE_COUNT").text(Item.COMPLETE_CYCLE_COUNT);
-                                    $(".COMPLETE_QTY").text(Item.COMPLETE_QTY);
-                                    $("#finish_cycle_time").text(Item.LATEST_CYCLE_TIME);
-                                    $("#drawing_edit_qty_form").find("#UNIT_QTY").val(Item.UNIT_QTY);
-                                    $("#drawing_action_form").find("#COMPLETE_CYCLE_COUNT").val(Item.COMPLETE_CYCLE_COUNT);
-                                    $("#drawing_action_form").find("#WORK_STATUS").val(Item.WORK_STATUS);
-                                    $("#drawing_action_form").find("#COMPLETE_QTY").val(Item.COMPLETE_QTY);
-                                    $("#drawing_edit_qty_form").find("#COMPLETE_QTY").val(Item.COMPLETE_QTY);
-                                    $("#drawing_action_form").find("#LEFT_TIME").val(Item.LEFT_TIME);
-                                    $("#drawing_action_form").find("#CURRENT_STATUS_TIME").val(Item.CURRENT_STATUS_TIME);
-                                    $("#drawing_action_form").find("#WORK_ACTIVE_TIME").val(Item.WORK_ACTIVE_TIME);
-                                    $("#drawing_action_form").find("#WORK_STOP_TIME").val(Item.WORK_STOP_TIME);
-                                    clearAllTimer();
-                                    setFocusBody();
+
+                                    if(Item.EQUIP_OFF_YN == 'Y') {
+                                        $("#bodyWrap").addClass("nc_off");
+                                    }
+
+                                    if(!fnIsEmpty(Item.MCT_WORK_SEQ)) {
+                                        $(".UNIT_QTY").text(Item.UNIT_QTY);
+                                        $(".COMPLETE_CYCLE_COUNT").text(Item.COMPLETE_CYCLE_COUNT);
+                                        $(".COMPLETE_QTY").text(Item.COMPLETE_QTY);
+                                        $("#finish_cycle_time").text(Item.LATEST_CYCLE_TIME);
+                                        $("#drawing_edit_qty_form").find("#UNIT_QTY").val(Item.UNIT_QTY);
+                                        $("#drawing_action_form").find("#COMPLETE_CYCLE_COUNT").val(Item.COMPLETE_CYCLE_COUNT);
+                                        $("#drawing_action_form").find("#WORK_STATUS").val(Item.WORK_STATUS);
+                                        $("#drawing_action_form").find("#COMPLETE_QTY").val(Item.COMPLETE_QTY);
+                                        $("#drawing_edit_qty_form").find("#COMPLETE_QTY").val(Item.COMPLETE_QTY);
+                                        $("#drawing_action_form").find("#LEFT_TIME").val(Item.LEFT_TIME);
+                                        $("#drawing_action_form").find("#CURRENT_STATUS_TIME").val(Item.CURRENT_STATUS_TIME);
+                                        $("#drawing_action_form").find("#WORK_ACTIVE_TIME").val(Item.WORK_ACTIVE_TIME);
+                                        $("#drawing_action_form").find("#WORK_STOP_TIME").val(Item.WORK_STOP_TIME);
+                                        clearAllTimer();
+                                        setFocusBody();
+                                    }
                                 }
                             })
                         }

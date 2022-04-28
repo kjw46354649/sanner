@@ -41,6 +41,7 @@
 .bodyWrap.work{background: #83bfe1;}
 .bodyWrap.work .status_work {color:blue;}
 .bodyWrap.stop{background: #ffeba0;}
+.bodyWrap.nc_off{background: yellow;}
 .bodyWrap.stop .status_stop {color:blue;}
 .bodyWrap.complete{background: #c5c5c5;}
 .leftLogWrap{width: 284px; float: left; padding: 0 30px 0 30px;}
@@ -706,16 +707,56 @@ button.close {
 }
 
 .none_if .nc_disabled {
-    background-color: #bababa !important;
+    background-color: #7b7676 !important;
     color: #626262 !important;
     border: none !important;
+}
+
+.none_if .nc_disabled .timeTit {
+    background-color: #b2b2b2 !important;
+    color: #626262 !important;
+    border: none !important;
+}
+
+.nc_off_div {
+    font-size: 22px;
+    margin-left: 15%;
+    color: red;
+    font-weight: bold;
+}
+
+.nc_off .ncOffWorkWrap  {
+    background:#928d8d;
+}
+
+.nc_off .ncOffWorkWrap .timeTit  {
+    background:#bbbbbb;
+}
+
+.blink-red-2 {
+    color: red;
 }
 
 .bodyWrap .blink-red {
     display: none;
 }
 
+.bodyWrap .blink-red-2, .bodyWrap .nc_off_div {
+    display: none;
+}
+
+.bodyWrap.stop.nc_off .blink-red {
+    display: none;
+}
+
 .bodyWrap.stop .blink-red {
+    display: block;
+}
+
+.bodyWrap.stop.nc_off .blink-red-2, .bodyWrap.stop.nc_off .nc_off_div {
+    display: block;
+}
+.bodyWrap.complete.nc_off .nc_off_div {
     display: block;
 }
 

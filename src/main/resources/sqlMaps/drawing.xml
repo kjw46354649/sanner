@@ -4,7 +4,8 @@
 <mapper namespace="drawingMapper">
 
     <select id="selectDrawingEquipmentInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT A.EQUIP_SEQ, A.EQUIP_NM, A.FACTORY_AREA, B.USER_ID, B.USER_NM, B.PHOTO_GFILE_SEQ, IFNULL(A.IF_USE_YN, 'N') AS IF_USE_YN
+        SELECT A.EQUIP_SEQ, A.EQUIP_NM, A.FACTORY_AREA, B.USER_ID, B.USER_NM, B.PHOTO_GFILE_SEQ, IFNULL(A.IF_USE_YN, 'N') AS IF_USE_YN,
+               IFNULL(A.EQUIP_OFF_YN, 'N') AS EQUIP_OFF_YN
         FROM TBL_EQUIP A
         	LEFT OUTER JOIN TBL_USER B ON A.LOGIN_USER_ID = B.USER_ID
         WHERE 1 = 1
@@ -26,7 +27,8 @@
     </select>
 
     <select id="selectDrawingEquipment" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT EQUIP_SEQ, EQUIP_NM, FACTORY_AREA, IFNULL(IF_USE_YN, 'N') AS IF_USE_YN
+        SELECT EQUIP_SEQ, EQUIP_NM, FACTORY_AREA, IFNULL(IF_USE_YN, 'N') AS IF_USE_YN,
+               IFNULL(EQUIP_OFF_YN, 'N') AS EQUIP_OFF_YN
         FROM TBL_EQUIP
         WHERE 1 = 1
             AND EQUIP_KIND = '1'

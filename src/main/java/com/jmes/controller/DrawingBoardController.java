@@ -165,6 +165,7 @@ public class DrawingBoardController {
         machineInfo.put("EQUIP_NM", searchMachineInfo.get("EQUIP_NM"));
         machineInfo.put("FACTORY_AREA", searchMachineInfo.get("FACTORY_AREA"));
         machineInfo.put("IF_USE_YN", searchMachineInfo.get("IF_USE_YN"));
+        machineInfo.put("EQUIP_OFF_YN", searchMachineInfo.get("EQUIP_OFF_YN"));
 
         drawingInfo.put("machineInfo", machineInfo);
 
@@ -257,6 +258,7 @@ public class DrawingBoardController {
             machineInfo.put("EQUIP_NM", hashMap.get("EQUIP_NM"));
             machineInfo.put("FACTORY_AREA", hashMap.get("FACTORY_AREA"));
             machineInfo.put("IF_USE_YN", hashMap.get("IF_USE_YN"));
+            machineInfo.put("EQUIP_OFF_YN", hashMap.get("EQUIP_OFF_YN"));
 
             /** 최종 Session 에 저장되는 정보 **/
             drawingInfo.put("machineInfo", machineInfo);
