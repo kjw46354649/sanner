@@ -1580,7 +1580,7 @@
         };
         /** Main 페이지 로딩시 Body 기본으로 Focus 되도록 처리 **/
         setFocusBody();
-        jmesConnect();
+        // jmesConnect();
 
         restartWorkControlNumFn($("#re_start_work_info_form").find("#CONTROL_NUM").val());
 
