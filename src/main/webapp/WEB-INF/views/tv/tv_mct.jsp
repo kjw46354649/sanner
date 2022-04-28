@@ -2382,7 +2382,6 @@
 		};
 
 		let getReLoadDrawingDataForIF = function (list) {
-			console.log(list);
 			refreshHtml(list)
 		};
 

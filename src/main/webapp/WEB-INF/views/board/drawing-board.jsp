@@ -1534,7 +1534,6 @@
             let style =  $(this).attr('style');
             let display = style.split(":")[1];
             let currTime = Number($("#drawing_action_form").find("#CURRENT_STATUS_TIME").val());
-            console.log('style',style)
             let hours = 0;
             let minutes = 0;
             let seconds = 0;
@@ -1695,7 +1694,6 @@
                 let workerListHtml = "";
                 innerHtmlObj.html("");
                 if(data.list.length > 0 ) {
-                    console.log(data.list);
                     workHistoryList = data.list;
                     for (let i = 0; i < data.list.length; i++) {
                         workerListHtml += ' <tr class="tr_row rnum_' + data.list[i].RNUM +'">';
@@ -2449,8 +2447,6 @@
                             })
                         }
                     }
-                    console.log('if_use_yn',if_use_yn)
-                    console.log(data)
                 });
             }, () => {
                 setTimeout(() => {
