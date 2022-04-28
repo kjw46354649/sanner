@@ -449,6 +449,9 @@
     </select>
 
     <insert id="insertMctWorkStart"  parameterType="java.util.HashMap" >
+        <selectKey keyProperty="MCT_WORK_SEQ" resultType="int" order="BEFORE">
+            SELECT NEXTVAL(SEQ_MCT_WORK) FROM DUAL
+        </selectKey>
         INSERT INTO jmes.TBL_MCT_WORK
         (MCT_WORK_SEQ, EQUIP_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, WORK_USER_ID,
          WORK_STATUS, WORK_START_DT, DEL_YN, INSERT_ID,
@@ -458,7 +461,7 @@
         </if>
         )
         SELECT
-            NEXTVAL(SEQ_MCT_WORK), #{machineInfo.EQUIP_SEQ}, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{userInfo.USER_ID},
+            #{MCT_WORK_SEQ}, #{machineInfo.EQUIP_SEQ}, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{userInfo.USER_ID},
             'DBS020', NOW(), 'N', #{userInfo.USER_ID},
             (SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0)),
            <choose>
@@ -646,8 +649,8 @@
             1, A.EQUIP_SEQ, A.MCT_WORK_SEQ,
             NOW(),
             #{EXECUTION}, #{ACTIVE_TYPE},
-            1, 'N',
-            #{userInfo.USER_ID}, #{CYCLE_FINISH_YN}
+            1, #{CYCLE_FINISH_YN},
+            #{userInfo.USER_ID}, 'N'
         FROM jmes.TBL_MCT_WORK A
         WHERE 1 = 1
           AND A.DEL_YN = 'N'

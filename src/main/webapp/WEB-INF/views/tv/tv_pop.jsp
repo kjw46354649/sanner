@@ -838,7 +838,7 @@
 			hours = Math.floor(time / 3600);
 			minutes = Math.floor((time % 3600)/60);
 		}
-		return hours + "h " + minutes +"m ";
+		return hours + "h " + minutes +"m";
 	}
 
 	function makeTimeMin(time) {
@@ -940,18 +940,25 @@
 									mHtml += '<div id="img_'+(factory_area + '_' + layout_sort)+'" class="backImg '+ m_list[i].MACHINE_ICON+'">';
 								}
 
-								mHtml += '<span class="progressPercent '+((m_list[i].WORK_STATUS == 'pause')?'pausePercent':'') + '">'+ ((m_list[i].PERCENT != undefined)?m_list[i].PERCENT:'') + '</span>';
+								if(m_list[i].IF_USE_YN == 'Y' && !fnIsEmpty(m_list[i].WORK_STATUS)) {
+									mHtml += '<span class="progressPercent">완료 : '+ m_list[i].COMPLETE_QTY + ' EA ('+ m_list[i].COMPLETE_PERCENT + '%)</span>';
+								}
 
 								if(m_list[i].WORK_STATUS == 'pause') {
 									mHtml += '<div id="pauseTime" class="pauseTime">';
-									mHtml += '일시중지<br>';
-									var startStopDt = new Date(m_list[i].WORK_TEMP_STOP_DT);
-									var today = new Date();
-									var diff = today - startStopDt;
-									var minute = Math.floor((diff) / (1000 * 60));
-									mHtml += '<span>('+minute +'\')</span>';
+									mHtml += 'Stopped<br>';
+									mHtml += '<span>('+m_list[i].STOP_TIME +')</span>';
 									mHtml += '</div>';
+								}else if(fnIsEmpty(m_list[i].WORK_STATUS)) {
+									mHtml += '<span class="no_work">No Work <p>('+ makeTimeSec(m_list[i].LAST_WORK_TIME) +')</p></span>'
 								}
+
+								if(m_list[i].EQUIP_OFF_YN == 'Y') {
+									mHtml += '<div class="nc_off">NC OFF<br>	<span>('+ makeTimeSec(m_list[i].EQUIP_OFF_TIME) +')</span></div>';
+								}else if(m_list[i].DISCONNECT_YN == 'Y') {
+									mHtml += '<div class="disconnect">Network<br>Disconnected</div>';
+								}
+
 								if(user_photo_gfile_seq != undefined && user_photo_gfile_seq != ''){
 									mHtml += '<div class="staffImg">';
 									mHtml += '<img src="/image/'+user_photo_gfile_seq +'" alt="직원사진">';
@@ -960,9 +967,9 @@
 									mHtml += '<img src="/resource/pop/images/user.svg" alt="직원사진">';
 								}
 								mHtml += '</div>';
-								if(m_list[i].WORKING_TIME != undefined && m_list[i].WORKING_TIME != '') {
+								if(m_list[i].ACTIVE_TOTAL != undefined && m_list[i].ACTIVE_TOTAL != '') {
 									mHtml += '<div class="progressTime">';
-									mHtml += '<span>'+ m_list[i].WORKING_TIME + '</span>';
+									mHtml += '<span>'+ m_list[i].ACTIVE_TOTAL + '</span>';
 									if(m_list[i].PLAN_WORKING_TIME != undefined && m_list[i].PLAN_WORKING_TIME != ''){
 										mHtml += (' / ' + m_list[i].PLAN_WORKING_TIME)
 									}
@@ -979,9 +986,11 @@
 			}, parameter, '');
 		};
 
-		let getWorkDrawingData = function () {
-			const parameter = {'url': '/tv/pop/schedulerPopDrawingData', 'data': {}};
-
+		let getWorkDrawingData = function (equipList) {
+			let parameter = {'url': '/tv/pop/schedulerPopDrawingData', 'data': {}};
+			if(!fnIsEmpty(equipList) && equipList.length > 0 ) {
+				parameter.data.dataList = equipList;
+			}
 			fnPostAjax(function (data) {
 				// console.log('getWorkDrawingData',data);
 				let m_list = data.m_list;//장비
@@ -1039,31 +1048,47 @@
 									$("#img_"+factory_area+"_"+layout_sort).addClass(m_list[i].MACHINE_ICON);
 								}
 							}
-							$target.find(".progressPercent").text(((m_list[i].PERCENT != undefined)?m_list[i].PERCENT:''));
+
+							if(m_list[i].IF_USE_YN == 'Y' && !fnIsEmpty(m_list[i].WORK_STATUS)) {
+								if($target.find(".progressPercent").length > 0) {
+									$target.find(".progressPercent").text('완료 : ' + m_list[i].COMPLETE_QTY + 'EA (' + m_list[i].COMPLETE_PERCENT + '%)');
+								}else {
+									let html = '<span class="progressPercent">완료 : '+ m_list[i].COMPLETE_QTY + ' EA ('+ m_list[i].COMPLETE_PERCENT + '%)</span>';
+									$target.find(".backImg").append(html);
+								}
+							}
+
+							$target.find(".no_work").remove();
+							$target.find(".disconnect").remove();
+							$target.find(".nc_off").remove();
 
 							if(m_list[i].WORK_STATUS == 'pause') {
-								if(!$target.find(".progressPercent").hasClass("pausePercent")) {
-									$target.find(".progressPercent").addClass("pausePercent");
-								}
-								var startStopDt = new Date(m_list[i].WORK_TEMP_STOP_DT);
-								var today = new Date();
-								var diff = today - startStopDt;
-								var minute = Math.floor((diff) / (1000 * 60));
 								var html = '';
 								if($target.find(".pauseTime").length > 0) {
-									html = '일시중지<br>';
-									html += '<span>(' + minute + '\')</span>';
+									html = 'Stopped<br>';
+									html += '<span>(' + m_list[i].STOP_TIME + ')</span>';
 									$target.find(".pauseTime").html(html)
 								}else {
 									html = '<div id="pauseTime" class="pauseTime">';
-									html += '	일시중지<br>';
-									html += '<span>(' + minute + '\')</span>';
+									html += '	Stopped<br>';
+									html += '<span>(' + m_list[i].STOP_TIME + ')</span>';
 									html += '</div>';
-									$target.find(".progressPercent").after(html);
+									$target.find(".backImg").append(html);
 								}
-							}else {
-								$target.find(".progressPercent").removeClass("pausePercent");
+							}else if(m_list[i].WORK_STATUS == 'login') {
 								$target.find(".pauseTime").remove();
+							}else {
+								$target.find(".pauseTime").remove();
+								let html ='<span class="no_work">No Work <p>('+ makeTimeSec(m_list[i].LAST_WORK_TIME) +')</p></span>';
+								$target.find(".backImg").append(html);
+							}
+
+							if(m_list[i].EQUIP_OFF_YN == 'Y') {
+								let html = '<div class="nc_off">NC OFF<br>	<span>('+ makeTimeSec(m_list[i].EQUIP_OFF_TIME) +')</span></div>';
+								$target.find(".backImg").append(html);
+							}else if(m_list[i].DISCONNECT_YN == 'Y') {
+								let html = '<div class="disconnect">Network<br>Disconnected</div>';
+								$target.find(".backImg").append(html);
 							}
 
 							if(typeof user_photo_gfile_seq != 'undefined'){
@@ -1075,17 +1100,17 @@
 								}
 								$target.find(".staffImg").find("img").attr("src","/resource/pop/images/user.svg");
 							}
-							if(typeof m_list[i].WORKING_TIME != 'undefined' && m_list[i].WORKING_TIME != '') {
+							if(typeof m_list[i].ACTIVE_TOTAL != 'undefined' && m_list[i].ACTIVE_TOTAL != '') {
 								var timeHtml = '';
 								if($target.find(".progressTime").length > 0) {
-									timeHtml = '<span>' + m_list[i].WORKING_TIME + '</span>';
+									timeHtml = '<span>' + m_list[i].ACTIVE_TOTAL + '</span>';
 									if(m_list[i].PLAN_WORKING_TIME != undefined && m_list[i].PLAN_WORKING_TIME != '') {
 										timeHtml += ' / ' + m_list[i].PLAN_WORKING_TIME;
 									}
 									$target.find(".progressTime").html(timeHtml);
 								}else {
 									timeHtml = '<div class="progressTime">';
-									timeHtml += '	<span>' + m_list[i].WORKING_TIME + '</span>';
+									timeHtml += '	<span>' + m_list[i].ACTIVE_TOTAL + '</span>';
 									if(m_list[i].PLAN_WORKING_TIME != undefined && m_list[i].PLAN_WORKING_TIME != '') {
 										timeHtml += ' / ' + m_list[i].PLAN_WORKING_TIME;
 									}
@@ -1205,8 +1230,8 @@
 					$target.addClass("pause");
 					if($target.find(".pauseTime").length <= 0) {
 						var html = '<div id="pauseTime" class="pauseTime">';
-						html += '일시중지<br>';
-						html += '<span>(0\')</span>';
+						html += 'Stopped<br>';
+						html += '<span>(0h 0m)</span>';
 						html += '</div>';
 
 						$target.find(".progressPercent").after(html);
@@ -1257,7 +1282,6 @@
 				case 'DB_RESTART' :
 					$target.addClass("login");
 					$target.removeClass("pause");
-					$target.removeClass("pausePercent");
 					$target.find(".pauseTime").remove();
 					break;
 			}
@@ -1324,6 +1348,18 @@
 					let messageData = JSON.parse(notificationMessage.body);
 					console.log('/topic/alarm',messageData)
 					alarmMessageProcess(messageData);
+				});
+				stompClient.subscribe('/topic/notice', function (notificationMessage) {
+					let messageData = JSON.parse(notificationMessage.body);
+					console.log('/topic/notice',messageData)
+
+					let equipList = [];
+					if(messageData.list.length > 0) {
+						$.each(messageData.list, function (idx, Item) {
+							equipList.push(Item.EQUIP_SEQ);
+						})
+					}
+					getWorkDrawingData(equipList);
 				});
 			}, () => {
 				setTimeout(() => {

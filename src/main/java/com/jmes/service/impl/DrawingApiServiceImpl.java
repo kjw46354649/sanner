@@ -57,9 +57,6 @@ public class DrawingApiServiceImpl implements DrawingApiService {
                     map.put("queryId", "drawingAPI.selectCurrentMctInfo");
                     List<Map<String,Object>> currList = innodaleDao.getList(map);
 
-                    map.put("queryId", "tvMapper.selectMctAreInfoList");
-                    List<Map<String,Object>> mctList = innodaleDao.getList(map);
-
                     if(currList.size() > 0) {
                         NotificationMessage notificationMessage = new NotificationMessage();
                         notificationMessage.setActionType(ActionType.NC_IF);
@@ -68,15 +65,6 @@ public class DrawingApiServiceImpl implements DrawingApiService {
 
 //                    simpMessagingTemplate.convertAndSend("/topic/notice", dataMap);
                         simpMessagingTemplate.convertAndSend("/topic/notice", notificationMessage);
-                    }
-                    if(mctList.size() > 0) {
-                        NotificationMessage notificationMessage = new NotificationMessage();
-                        notificationMessage.setActionType(ActionType.NC_IF);
-                        notificationMessage.setList(mctList);
-                        notificationMessage.setEquipNm(dataMap.keySet().toString());
-
-                        simpMessagingTemplate.convertAndSend("/topic/mct", notificationMessage);
-
                     }
                 }
             }

@@ -2364,25 +2364,18 @@
 
 		/** DRAWING BOARD 정보 실시간 처리 **/
 		let getReLoadDrawingData = function (equipSeq) {
-			'use strict';
-			$.ajax({
-				type: 'POST', url: "/tv/mct/machineDrawingData", dataType: 'json',
-				data: {"EQUIP_SEQ": equipSeq},
-				success: function (data, textStatus, jqXHR) {
-					if (textStatus !== 'success' || data == null) {
-						fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
-						return;
-					}
-					refreshHtml(data.mct_drawing_list)
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-					fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
-				}
-			});
+			let parameter = {'url': '/tv/mct/machineDrawingData', 'data': {'EQUIP_SEQ':equipSeq}};
+
+			fnPostAjax(function (data) {
+				refreshHtml(data.mct_drawing_list)
+			}, parameter, '');
 		};
 
-		let getReLoadDrawingDataForIF = function (list) {
-			refreshHtml(list)
+		let getReLoadDrawingDataForIF = function (equipList) {
+			let parameter = {'url': '/tv/mct/machineDrawingData', 'data': {'dataList':equipList}};
+			fnPostAjax(function (data) {
+				refreshHtml(data.mct_drawing_list)
+			}, parameter, '');
 		};
 
 		$("#mct_main_form").find("#FACTORY_AREA").val($("#changeScreen").val().toUpperCase());
@@ -2505,11 +2498,15 @@
 					let messageData = JSON.parse(notificationMessage.body);
 					workerMessageProcess(messageData);
 				});
-				stompClient.subscribe('/topic/mct', function (notificationMessage) { // 장비if
+				stompClient.subscribe('/topic/notice', function (notificationMessage) { // 장비if
 					let messageData = JSON.parse(notificationMessage.body);
+					let equipList = [];
 					if(messageData.list.length > 0) {
-						getReLoadDrawingDataForIF(messageData.list)
+						$.each(messageData.list, function (idx, Item) {
+							equipList.push(Item.EQUIP_SEQ);
+						})
 					}
+					getReLoadDrawingDataForIF(equipList)
 				});
 		    }, () => {
 			  	setTimeout(() => {

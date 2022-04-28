@@ -139,7 +139,7 @@
         UPDATE TBL_EQUIP
         SET DISCONNECT_YN = CASE WHEN UPPER(#{active_type}) = 'DISCONNECT' THEN 'Y' ELSE 'N' END,
             EQUIP_OFF_YN = CASE WHEN UPPER(#{active_type}) = 'EQUIP_OFF' THEN 'Y' ELSE 'N' END,
-            EQUIP_OFF_DT = CASE WHEN UPPER(#{active_type}) = 'EQUIP_OFF' THEN NOW() ELSE NULL END
+            EQUIP_OFF_DT = CASE WHEN UPPER(#{active_type}) = 'EQUIP_OFF' THEN #{event_time} ELSE NULL END
         WHERE EQUIP_SEQ = #{EQUIP_SEQ}
             AND DEL_YN = 'N'
     </update>

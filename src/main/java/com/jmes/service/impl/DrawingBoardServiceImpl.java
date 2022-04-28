@@ -22,6 +22,7 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
      */
     @Override
     public void managerDrawingBoardStart(HashMap<String, Object> hashMap) throws Exception {
+        HashMap<String, Object> machineInfo = (HashMap<String, Object>)hashMap.get("machineInfo");
 
         /** 예상 작업시간 조회 **/
         hashMap.put("queryId", "drawingMapper.selectWorkingTime");
@@ -33,6 +34,16 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
         /** 신규 MCT 작업을 추가 한다. **/
         hashMap.put("queryId", "drawingMapper.insertMctWorkStart");
         innodaleDao.create(hashMap);
+
+        if(machineInfo.containsKey("IF_USE_YN") && !machineInfo.get("IF_USE_YN").equals("Y")) {
+            /** MCT WORKING LOG INSERT 처리 한다. **/
+            hashMap.put("EXECUTION","DB_ACTIVE");
+            hashMap.put("ACTIVE_TYPE","PGM_ACTIVE");
+            hashMap.put("CYCLE_FINISH_YN","N");
+            hashMap.put("queryId", "drawingMapper.insertWorkingLogNonIf");
+            innodaleDao.create(hashMap);
+        }
+
 
         /** MCT PLAN 에서 우선순위가 높은 생산계획을 삭제 처리 한다. **/
         hashMap.put("queryId", "drawingMapper.deleteFristMctPlan");
@@ -62,20 +73,18 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
     public void managerDrawingBoardPause(HashMap<String, Object> hashMap) throws Exception {
 
         /** MCT WORKING LOG INSERT 처리 한다.
-         * active -> stop 이므로, 이전의 active에 대한 기록을 임의로 생성해준다.
+         * stop에 대한 기록을 임의로 생성해준다.
          * **/
-        hashMap.put("EXECUTION","ACTIVE");
-        hashMap.put("ACTIVE_TYPE","PGM_ACTIVE");
+        hashMap.put("EXECUTION","DB_STOP");
+        hashMap.put("ACTIVE_TYPE","PGM_STOP");
         hashMap.put("CYCLE_FINISH_YN","N");
         hashMap.put("queryId", "drawingMapper.insertWorkingLogNonIf");
         innodaleDao.create(hashMap);
-
 
         /** MCT WORK 임시 중지 상태 업데이트 처리 한다. **/
         hashMap.put("WORK_STATUS","DBS010");
         hashMap.put("queryId", "drawingMapper.updateMctWorkStatusNonIf");
         innodaleDao.create(hashMap);
-
     }
 
     /**
@@ -88,10 +97,10 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
     public void managerDrawingBoardRestart(HashMap<String, Object> hashMap) throws Exception {
 
         /** MCT WORKING LOG INSERT 처리 한다.
-         * stop -> active 이므로, 이전의 stop에 대한 기록을 임의로 생성해준다.
+         * active에 대한 기록을 임의로 생성해준다.
          * **/
-        hashMap.put("EXECUTION","STOP");
-        hashMap.put("ACTIVE_TYPE","PGM_STOP");
+        hashMap.put("EXECUTION","DB_ACTIVE");
+        hashMap.put("ACTIVE_TYPE","PGM_ACTIVE");
         hashMap.put("CYCLE_FINISH_YN","N");
         hashMap.put("queryId", "drawingMapper.insertWorkingLogNonIf");
         innodaleDao.create(hashMap);
@@ -116,13 +125,7 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
             hashMap.put("queryId", "drawingMapper.updateCompleteMctWork");
             innodaleDao.create(hashMap);
         }else {
-            hashMap.put("EXECUTION","ACTIVE");
-            hashMap.put("ACTIVE_TYPE","PGM_ACTIVE");
-            hashMap.put("CYCLE_FINISH_YN","N");
-            hashMap.put("queryId", "drawingMapper.insertWorkingLogNonIf");
-            innodaleDao.create(hashMap);
-
-            hashMap.put("EXECUTION","STOP");
+            hashMap.put("EXECUTION","DB_STOP");
             hashMap.put("ACTIVE_TYPE","PGM_STOP");
             hashMap.put("CYCLE_FINISH_YN","Y");
             hashMap.put("queryId", "drawingMapper.insertWorkingLogNonIf");

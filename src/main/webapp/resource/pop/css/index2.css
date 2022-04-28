@@ -190,30 +190,31 @@ a { color: black; text-decoration: none;}
 							position: relative;
 						}
 						.readyImg {
-							background: url(../images/machine.png) no-repeat center;
+							background: url(../images/machine.png) no-repeat 55% 40%;
 						}
 						.readyImgNct {
-							background: url(../../asset/images/tv/img_thumb_3.png) no-repeat center;
+							background: url(../../asset/images/tv/img_thumb_3.png) no-repeat 55% 40%;
 						}
 						.readyImgGrinding {
-							background: url(../../asset/images/tv/img_thumb_1.png) no-repeat center;
+							background: url(../../asset/images/tv/img_thumb_1.png) no-repeat 55% 40%;
 						}
 						.readyImgTurnning {
-							background: url(../../asset/images/tv/img_thumb_2.png) no-repeat center;
+							background: url(../../asset/images/tv/img_thumb_2.png) no-repeat 55% 40%;
 						}
 					 	.readyImgMilling {
-						 background: url(../../asset/images/tv/img_thumb_4.png) no-repeat center;
+						 background: url(../../asset/images/tv/img_thumb_4.png) no-repeat 55% 40%;
 					 	}
 							.progressPercent {
 								display: inline-block;
 								color: blue;
-								font-size: 1.5rem;
+								font-size: 1.2rem;
 								line-height: 20px;
 								position: absolute;
 								height: 25px;
-								width: 60px;
+								width: 200px;
 								top: 5px;
-								left: 5px;
+								left: 8px;
+								text-align: left;
 							}
 							.pausePercent {
 								color: rgb(190, 22, 0);
@@ -263,6 +264,41 @@ a { color: black; text-decoration: none;}
 								border: 2px solid black;
 								background: rgb(245, 252, 184);
 								color: rgb(190, 22, 0);
+							}
+							.nc_off {
+								font-size: 1.5rem;
+								z-index: 11;
+								border: 1px solid black;
+								background: rgb(0 0 0 / 55%);
+								color: white;
+								position: absolute;
+								left: 50%;
+								top: 52%;
+								transform: translate(-50%,-70%);
+								width: 60%;
+								height: 40%;
+								padding-top:5px;
+							}
+							.disconnect {
+								font-size: 1.6rem;
+								z-index: 11;
+								border: 1px solid black;
+								background: yellow;
+								position: absolute;
+								left: 52%;
+								top: 55%;
+								transform: translate(-50%,-70%);
+								width: 70%;
+								height: 45%;
+								font-weight: bold;
+								padding-top: 10px;
+								color: red;
+							}
+							.no_work {
+								position: absolute;
+								left: 36%;
+								top: 68%;
+								font-size: 1.3rem;
 							}
 			.alarmWrap h3 {
 				font-size: 2rem;

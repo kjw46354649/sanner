@@ -159,19 +159,8 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .nc_off {
 }
 
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .disconnect {
-	font-size: 1.6rem;
-	z-index: 11;
-	border: 1px solid black;
-	background: yellow;
-	position: absolute;
 	left: 48%;
 	top: 82%;
-	transform: translate(-50%,-70%);
-	width: 70%;
-	height: 45%;
-	font-weight: bold;
-	padding-top: 10px;
-	color: red;
 }
 
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .mctProgressPercent {
