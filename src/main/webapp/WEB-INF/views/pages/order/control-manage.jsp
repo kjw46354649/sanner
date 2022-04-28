@@ -3023,8 +3023,8 @@
 
 
         let matchStockColModel = [
-            {title: 'RNUM', dataType: 'integer', dataIndx: 'RNUM', hidden: true},
-            {title: 'RNUM_SUB', dataType: 'integer', dataIndx: 'RNUM_SUB', hidden: true},
+            {title: 'RNUM', dataType: 'string', dataIndx: 'RNUM', hidden: true},
+            {title: 'RNUM_SUB', dataType: 'string', dataIndx: 'RNUM_SUB', hidden: true},
             {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden: true},
             {title: 'CONTROL_PART_INFO', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', hidden: true},
             {title: 'PROCESSING_QTY', dataType: 'integer', dataIndx: 'PROCESSING_QTY', hidden: true},
@@ -3216,7 +3216,7 @@
                 }
             },
             {
-                title: '충당<br>예약', dataType: 'integer', dataIndx: 'INSIDE_STOCK_RESERVE_QTY', minWidth: 45, sortable:false,
+                title: '충당<br>예약', dataType: 'string', dataIndx: 'INSIDE_STOCK_RESERVE_QTY', minWidth: 45, sortable:false,
                 editable: false,
                 render: function (ui) {
                     let rowData = ui.rowData;
@@ -3229,7 +3229,7 @@
                 }
             },
             {
-                title: '충당<br>완료', dataType: 'integer', dataIndx: 'OUT_QTY', minWidth: 45, sortable:false,
+                title: '충당<br>완료', dataType: 'string', dataIndx: 'OUT_QTY', minWidth: 45, sortable:false,
                 editable: false,
                 render: function (ui) {
                     let rowData = ui.rowData;
@@ -3261,6 +3261,7 @@
                 url: "/paramQueryGridSelect",
                 postData: fnFormToJsonArrayData('stock_match_pop_form'),
                 getData: function (dataJSON) {
+                    console.log(dataJSON.data);
                     return {data: dataJSON.data};
                 }
             },
