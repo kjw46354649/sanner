@@ -238,6 +238,254 @@
             CASE WHEN X.LOGIN_USER_ID IS NOT NULL THEN (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID)
                  WHEN Y.WORK_STATUS = 'DBS020'    THEN (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.UPDATE_ID)
             END AS PHOTO_GFILE_SEQ,
+            EQUIP_OFF_YN, DISCONNECT_YN,
+            CASE WHEN X.EQUIP_OFF_DT IS NOT NULL THEN TIMESTAMPDIFF(SECOND, X.EQUIP_OFF_DT, NOW()) ELSE SPACE(0) END AS EQUIP_OFF_TIME,
+            FACTORY_AREA, LAYOUT_ROW, LAYOUT_COL,
+            IFNULL(Y.TOTAL_CNT,0) AS TOTAL_CNT,
+            IFNULL(Y.TOTAL_PART_QTY,0) AS TOTAL_PART_QTY,
+            Y.TOTAL_PLAN_WORKING_TIME,
+            CASE WHEN Y.TOTAL_PLAN_WORKING_TIME IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(Y.TOTAL_PLAN_WORKING_TIME,0)/60,0),'h ',TRUNCATE((IFNULL(Y.TOTAL_PLAN_WORKING_TIME,0)%60),0),'m')
+                 ELSE '0h 0m'
+            END TOTAL_PLAN_WORKING_TIME_FORMAT,
+            CASE WHEN Y.WORK_PLAN_TYPE = 1 THEN Y.CONTROL_PART_INFO
+                 ELSE ''
+            END AS CONTROL_PART_INFO,
+            Y.WORK_PLAN_TYPE,
+            Y.WORK_TEMP_STOP_DT,
+            IFNULL(Y.WORK_ACTIVE_TIME,0) AS WORK_ACTIVE_TIME,
+            Y.WORK_STOP_TIME,
+            Y.ACTIVE_TYPE,
+            Y.EVENT_TIME,
+            IFNULL(Y.CURRENT_STATUS_TIME,0) AS CURRENT_STATUS_TIME,
+            CASE WHEN X.IF_USE_YN = 'Y' AND Y.CURRENT_STATUS_TIME IS NOT NULL
+                    THEN CONCAT(
+                        TRUNCATE(IFNULL(Y.CURRENT_STATUS_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(Y.CURRENT_STATUS_TIME,0)%3600)/60,0), 'm'
+                    )
+                 ELSE '-'
+            END AS CURR_CYCLE_TIME,
+            CASE WHEN Y.WORK_STATUS IS NULL THEN '-'
+                 ELSE CONCAT(
+                    TRUNCATE(((IFNULL(Y.CURRENT_STATUS_TIME,0) + IFNULL(Y.WORK_ACTIVE_TIME,0))/3600),0), 'h ',
+                    TRUNCATE((((IFNULL(Y.CURRENT_STATUS_TIME,0) + IFNULL(Y.WORK_ACTIVE_TIME,0))%3600)/60),0),'m'
+                 )
+            END AS ACTIVE_TOTAL,
+            CASE WHEN Y.WORK_PLAN_TYPE = 1 AND Y.PLAN_WORKING_TIME IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(Y.PLAN_WORKING_TIME,0)/60,0),'h ',TRUNCATE((IFNULL(Y.PLAN_WORKING_TIME,0)%60),0),'m')
+                 ELSE '-'
+            END PLAN_WORKING_TIME_FORMAT,
+            Y.MATERIAL_DETAIL_NM,
+            Y.MATERIAL_TYPE_NM,
+            Y.WORK_TYPE_NM,
+            Y.PART_QTY,
+            Y.IMG_GFILE_SEQ,
+            CASE WHEN Y.WORK_PLAN_TYPE = '1' THEN CONCAT(IFNULL(Y.MATERIAL_TYPE_NM,SPACE(0)),SPACE(1),IFNULL(Y.WORK_TYPE_NM,SPACE(0)),SPACE(1),IFNULL(Y.PART_QTY,SPACE(0)),CASE WHEN Y.PART_QTY IS NULL THEN SPACE(0) ELSE 'EA' END)
+                 ELSE ''
+            END AS CUR_TEXT,
+            CASE WHEN Y.WORK_STATUS IS NULL THEN (
+                    SELECT TIMESTAMPDIFF(SECOND, MAX(Q.WORK_FINISH_DT), NOW())
+                    FROM TBL_MCT_WORK Q
+                    WHERE Q.DEL_YN = 'N'
+                        AND Q.WORK_START_DT IS NOT NULL
+                        AND Q.WORK_FINISH_DT IS NOT NULL
+                        AND Q.EQUIP_SEQ = X.EQUIP_SEQ
+                )
+                ELSE 0
+            END AS LAST_WORK_TIME,
+            CASE WHEN Y.WORK_STATUS = 'DBS010' THEN 'pause'
+                 WHEN Y.WORK_STATUS = 'DBS020' THEN 'login'
+                 ELSE 'log_off'
+            END WORK_STATUS,
+            IFNULL(X.IF_USE_YN, 'N') AS IF_USE_YN,
+            CASE WHEN X.IF_USE_YN = 'Y' AND Y.LATEST_CYCLE_TIME IS NOT NULL
+                    THEN CONCAT(
+                        TRUNCATE(IFNULL(Y.LATEST_CYCLE_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(Y.LATEST_CYCLE_TIME,0)%3600)/60,0), 'm'
+                    )
+                 ELSE '-'
+            END AS LATEST_CYCLE_TIME,
+            CASE WHEN X.IF_USE_YN = 'Y' AND Y.EXPECT_TIME IS NOT NULL
+                    THEN CONCAT(
+                        TRUNCATE(IFNULL(Y.EXPECT_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(Y.EXPECT_TIME,0)%3600)/60,0), 'm'
+                    )
+                 ELSE '-'
+            END AS EXPECT_TIME,
+            IFNULL(Y.GOAL_QTY,'-') AS GOAL_QTY,
+            IFNULL(Y.COMPLETE_QTY,'-') AS COMPLETE_QTY,
+            CASE WHEN Y.LEFT_TIME IS NOT NULL AND Y.LEFT_TIME > 0
+                    THEN CONCAT(
+                        TRUNCATE(IFNULL(Y.LEFT_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(Y.LEFT_TIME,0)%3600)/60,0), 'm'
+                    )
+                 ELSE '0h 0m'
+            END AS LEFT_TIME,
+            IFNULL(Y.ERROR_QTY,'-') AS ERROR_QTY,
+            CASE WHEN Y.LEFT_QTY <![CDATA[ < ]]> 0 THEN 0
+                 ELSE IFNULL(Y.LEFT_QTY,0)
+            END AS LEFT_QTY
+        FROM jmes.TBL_EQUIP X
+            LEFT OUTER JOIN (
+                SELECT COUNT(*) AS TOTAL_CNT
+                    , SUM(T.PART_QTY) AS TOTAL_PART_QTY
+                    , SUM(T.PLAN_WORKING_TIME) AS TOTAL_PLAN_WORKING_TIME
+                    , T.CONTROL_SEQ
+                    , T.CONTROL_DETAIL_SEQ
+                    , T.WORK_PLAN_TYPE
+                    , T.KEY_SEQ
+                    , T.EQUIP_SEQ
+                    , T.INNER_DUE_DT
+                    , T.WORK_USER_ID
+                    , T.WORK_TYPE_NM
+                    , T.CONTROL_PART_INFO
+                    , T.SIZE_TXT
+                    , T.MATERIAL_DETAIL_NM
+                    , T.MATERIAL_TYPE_NM
+                    , T.PART_QTY
+                    , T.PLAN_WORKING_TIME
+                    , T.IMG_GFILE_SEQ
+                    , T.WORK_STATUS
+                    , T.WORK_TEMP_STOP_DT
+                    , T.WORK_ACTIVE_TIME
+                    , T.WORK_STOP_TIME
+                    , T.ACTIVE_TYPE
+                    , T.EVENT_TIME
+                    , T.CURRENT_STATUS_TIME
+                    , T.LATEST_CYCLE_TIME
+                    , T.GOAL_QTY
+                    , T.COMPLETE_QTY
+                    , T.LEFT_TIME
+                    , T.EXPECT_TIME
+                    , T.ERROR_QTY
+                    , (T.GOAL_QTY - T.COMPLETE_QTY) AS LEFT_QTY
+                FROM (    -- 드로잉보드 진행
+                    SELECT '1' AS WORK_PLAN_TYPE
+                        , C.CONTROL_SEQ
+                        , C.CONTROL_DETAIL_SEQ
+                        , A.MCT_WORK_SEQ AS KEY_SEQ
+                        , A.EQUIP_SEQ
+                        , C.INNER_DUE_DT
+                        , A.WORK_USER_ID
+                        , jmes.SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+                        , CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, '#', C.PART_NUM) END AS CONTROL_PART_INFO
+                        , C.SIZE_TXT
+                        , jmes.SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM
+                        , jmes.SF_GET_CODE_NM('1035', C.MATERIAL_TYPE, #{LOGIN_LOCALE}) AS MATERIAL_TYPE_NM
+                        , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
+                        , IFNULL(A.PLAN_WORKING_TIME,0) AS PLAN_WORKING_TIME
+                        , C.IMG_GFILE_SEQ
+                        , A.WORK_STATUS
+                        , A.WORK_TEMP_STOP_DT
+                        , A.WORK_ACTIVE_TIME
+                        , A.WORK_STOP_TIME
+                        , D.ACTIVE_TYPE
+                        , CASE WHEN D.EVENT_TIME IS NULL THEN A.WORK_START_DT
+                               ELSE D.EVENT_TIME
+                          END AS EVENT_TIME
+                        , CASE WHEN D.EVENT_TIME IS NULL THEN TIMESTAMPDIFF(SECOND, A.WORK_START_DT, NOW())
+                               ELSE TIMESTAMPDIFF(SECOND, D.EVENT_TIME, NOW())
+                          END AS CURRENT_STATUS_TIME
+                        , A.LATEST_CYCLE_TIME
+                        , A.GOAL_QTY
+                        , ((A.LATEST_CYCLE_TIME * CEIL(A.GOAL_QTY / A.UNIT_QTY))) AS EXPECT_TIME
+                        , ((A.LATEST_CYCLE_TIME * CEIL(A.GOAL_QTY / A.UNIT_QTY)) - A.WORK_ACTIVE_TIME) AS LEFT_TIME
+                        , (IFNULL(A.UNIT_QTY,1)  * IFNULL(A.COMPLETE_CYCLE_COUNT,0) + IFNULL(A.ADJUST_QTY,0))  AS COMPLETE_QTY
+                        , A.ERROR_QTY
+                    FROM jmes.TBL_MCT_WORK A
+                        INNER JOIN jmes.TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N'
+                        INNER JOIN jmes.TBL_CONTROL_PART C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                        LEFT OUTER JOIN TBL_MCT_WORKING_LOG D ON D.MCT_WORK_SEQ = A.MCT_WORK_SEQ AND D.MCT_LOG_SEQ = (
+                            SELECT MAX(X.MCT_LOG_SEQ)
+                            FROM TBL_MCT_WORKING_LOG X
+                            WHERE X.MCT_WORK_SEQ = D.MCT_WORK_SEQ
+                                AND X.ACTIVE_TYPE != 'DISCONNECT'
+                        )
+                    WHERE A.DEL_YN = 'N'
+                        AND A.WORK_STATUS IN ('DBS010', 'DBS020')
+                        AND A.WORK_FINISH_DT IS NULL
+                        AND EXISTS (
+                            SELECT 1
+                            FROM jmes.TBL_EQUIP D
+                            WHERE A.EQUIP_SEQ = D.EQUIP_SEQ AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
+                            AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                        )
+                    UNION ALL
+                    -- PLAN
+                    SELECT '2' AS WORK_PLAN_TYPE
+                        , C.CONTROL_SEQ
+                        , C.CONTROL_DETAIL_SEQ
+                        , A.MCT_PLAN_SEQ AS KEY_SEQ
+                        , A.EQUIP_SEQ
+                        , C.INNER_DUE_DT
+                        , '' AS WORK_USER_ID
+                        , jmes.SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM
+                        , CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, '#', C.PART_NUM) END AS CONTROL_PART_INFO
+                        , '' AS SIZE_TXT
+                        , '' AS MATERIAL_DETAIL_NM
+                        , '' AS MATERIAL_TYPE_NM
+                        , jmes.SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) AS PART_QTY
+                        , SUM(IFNULL(A.WORKING_TIME,0)) AS PLAN_WORKING_TIME
+                        , C.IMG_GFILE_SEQ
+                        , '' AS WORK_STATUS
+                        , '' AS WORK_TEMP_STOP_DT
+                        , '' AS WORK_ACTIVE_TIME
+                        , '' AS WORK_STOP_TIME
+                        , '' AS ACTIVE_TYPE
+                        , '' AS EVENT_TIME
+                        , '' AS CURRENT_STATUS_TIME
+                        , '' AS LATEST_CYCLE_TIME
+                        , '' AS GOAL_QTY
+                        , '' AS EXPECT_TIME
+                        , '' AS LEFT_TIME
+                        , '' AS COMPLETE_QTY
+                        , '' AS ERROR_QTY
+                    FROM jmes.TBL_MCT_PLAN A, jmes.TBL_CONTROL B, jmes.TBL_CONTROL_PART C
+                    WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                        AND A.CONTROL_SEQ = C.CONTROL_SEQ
+                        AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                        AND A.DEL_YN = 'N'
+                        AND B.DEL_YN = 'N'
+                        AND EXISTS (
+                            SELECT 1
+                            FROM jmes.TBL_EQUIP D
+                            WHERE A.EQUIP_SEQ = D.EQUIP_SEQ
+                                AND D.EQUIP_KIND = '1' AND D.DEL_YN = 'N'
+                                AND D.FACTORY_AREA IN ('ARE01', 'ARE02', 'ARE11', 'ARE05', 'ARE06')
+                        )
+                    GROUP BY A.EQUIP_SEQ
+                ) T
+                GROUP BY T.EQUIP_SEQ
+            ) Y ON Y.EQUIP_SEQ = X.EQUIP_SEQ
+        WHERE EQUIP_KIND = '1'
+            AND DEL_YN = 'N'
+            <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
+                AND X.EQUIP_SEQ = #{EQUIP_SEQ}
+            </if>
+            <if test="dataList != null and dataList != ''">
+                AND X.EQUIP_SEQ IN
+                <foreach collection="dataList" item="item"  index="index"  open="(" close=")" separator=",">
+                    #{item.EQUIP_SEQ}
+                </foreach>
+            </if>
+            AND LAYOUT_SORT IS NOT NULL
+        ORDER BY FACTORY_AREA, LAYOUT_SORT_MCT
+
+    </select>
+
+    <select id="selectMctAreInfoList_old" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            X.EQUIP_SEQ, EQUIP_ID, EQUIP_NM,
+            CASE WHEN X.PROCESS_TYPE = 'MPR010' THEN 'NCT'
+                 WHEN X.PROCESS_TYPE = 'MPR020' THEN 'MILLING'
+                 WHEN X.PROCESS_TYPE = 'MPR030' THEN 'GRINDING'
+                 WHEN X.PROCESS_TYPE = 'MPR040' THEN 'TURNNING'
+                 ELSE 'DEFAULT'
+            END MACHINE_ICON,
+            CASE WHEN X.LOGIN_USER_ID IS NOT NULL THEN (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID)
+                 WHEN Y.WORK_STATUS = 'DBS020'    THEN (SELECT M.USER_NM FROM jmes.TBL_USER M WHERE M.USER_ID = X.UPDATE_ID)
+            END AS USER_NM,
+            CASE WHEN X.LOGIN_USER_ID IS NOT NULL THEN (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.LOGIN_USER_ID)
+                 WHEN Y.WORK_STATUS = 'DBS020'    THEN (SELECT M.PHOTO_GFILE_SEQ FROM jmes.TBL_USER M WHERE M.USER_ID = X.UPDATE_ID)
+            END AS PHOTO_GFILE_SEQ,
             FACTORY_AREA, LAYOUT_ROW, LAYOUT_COL,
             IFNULL(Y.TOTAL_CNT,0) AS TOTAL_CNT,
             IFNULL(Y.TOTAL_PART_QTY,0) AS TOTAL_PART_QTY,

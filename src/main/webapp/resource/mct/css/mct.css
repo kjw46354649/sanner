@@ -57,13 +57,13 @@ div[class^="mctInfo_"]:last-of-type {
 div[class^="mctInfo_"] .mctName {
 	background: #CCC;
 	display: block;
-	padding: 5px 15px;
-	width: 28%;
-	height: 18%;
+	padding: 5px 10px;
+	width: 20%;
+	height: 15%;
 	position: absolute;
 	left: 2%;
 	top: 2.4%;
-	font-size: 1.5rem;
+	font-size: 1.2rem;
 }
 .mctLogin, .mctPause {
 	cursor: pointer;
@@ -86,18 +86,23 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopLeft {
 	position: relative;
 }
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopLeft .mctStaffImg {
-	top: 40%;
-	left: 50%;
+	top: 52%;
+	left: 46%;
 	transform: translate(-50%,-35%);
 	border: none;
+}
+.staffImg {
+	width: 90px;
+	height: 90px;
 }
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopLeft .staffInfoWrap {
 	position: absolute;
 	width: 100%;
 	height: 15%;
-	top: 75%;
-	left: 50%;
+	top: 87%;
+	left: 48%;
 	transform: translate(-50%,-70%);
+	font-size: 1.2rem;
 }
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopLeft .staffInfoWrap .mctStaffName {
 	color: white;
@@ -113,7 +118,7 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight {
 }
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg {
 	width: 100%;
-	height: 73%;
+	height: 97%;
 	background: #CCC;
 	position: relative;
 	margin-bottom: 2%;
@@ -123,18 +128,52 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg img {
 	height: 100%;
 }
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .machineImg {
-	width: auto !important;
+	width: 50% !important;
 	height: auto !important;
 }
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .pauseTime {
 	position: absolute;
 	left: 50%;
-	top: 80%;
+	top: 88%;
 	transform: translate(-50%,-70%);
 	width: 50%;
 	height: 35%;
 	padding-top: 5px;
+	font-size: 1.5rem;
+	font-weight: bold;
 }
+
+div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .nc_off {
+	font-size: 1.5rem;
+	z-index: 11;
+	border: 1px solid black;
+	background: rgb(0 0 0 / 55%);
+	color: white;
+	position: absolute;
+	left: 50%;
+	top: 52%;
+	transform: translate(-50%,-70%);
+	width: 60%;
+	height: 40%;
+	padding-top:5px;
+}
+
+div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .disconnect {
+	font-size: 1.6rem;
+	z-index: 11;
+	border: 1px solid black;
+	background: yellow;
+	position: absolute;
+	left: 48%;
+	top: 82%;
+	transform: translate(-50%,-70%);
+	width: 70%;
+	height: 45%;
+	font-weight: bold;
+	padding-top: 10px;
+	color: red;
+}
+
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .mctProgressPercent {
 	top: 80%;
 }
@@ -145,21 +184,38 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .mctMapTime {
 	width: 100%;
 	height: 30%;
 	top: 5%;
-	padding-left: 5px;
+	padding-left: 10px;
 }
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .mctMapTime span {
 	color: blue;
 }
+div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .no_work {
+ 	position: absolute;
+	left: 15%;
+	top: 73%;
+	font-size: 1.5rem;
+}
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapBtmInfo {
 	background: #CCC;
 	width: 100%;
-	height: 25%;
+	height: 35%;
 	padding: 1.5%;
 	font-size: 1.1rem;
 }
+
+div[class^="mctInfo_"] .mctInfoWrap .mctMapBtmInfo {
+	font-size: 1.3rem;
+	font-weight: bold;
+	height: 10%;
+	padding: 1%;
+	width: 100%;
+	background: #cccccc;
+	float: left;
+}
+
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm {
 	width: 100%;
-	height: 45%;
+	height: 34%;
 	float: left;
 	margin-top: 1.5%;
 }
@@ -174,13 +230,96 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table {
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table th {
 	background: #005da2;
 	color: white;
-	width: 50%;
+	/*width: 50%;*/
 }
+
+.mctlog_off .mctInfoWrap .mctInfoBtm .tableDiv th {
+	background: #646363 !important;
+	color: white !important;
+}
+
+.mctpause.non_if .mctInfoWrap .mctInfoBtm .disabled, .mctlogin.non_if .mctInfoWrap .mctInfoBtm .disabled {
+	background: gray !important;
+	color: #cccccc !important;
+	border:1px solid gray !important;
+}
+
+div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm .qtyWrap {
+	width: 58%;
+	display: flex;
+	flex-direction: column;
+	color: white;
+	height: 100%;
+}
+div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm .qtyWrap .spanWrap {
+	width: 100%;
+	display: flex;
+	height: 32%;
+}
+
+div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm .qty_txt {
+	border-radius: 10%;
+	width: 50%;
+	height: 86%;
+	font-size: 1.4rem;
+	padding-top: 2px;
+}
+
+div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm .qty_val {
+	padding: 0px 5px;
+	text-align: center;
+	width: 50%;
+	height: 86%;
+	font-size: 1.4rem;
+	padding-top: 2px;
+}
+
+div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm .mctLeftDiv {
+	width: 49%;
+	font-size: 12px;
+	height: 100%;
+	display: flex;
+	float: right;
+}
+div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm .tableDiv {
+	width: 50%;
+	float: left;
+	height: 100%;
+}
+
+div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm .plan_div th {
+	height: 33%;
+}
+
+div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm .plan_div td {
+	padding: 3px;
+}
+
+.mctlog_off .qty_txt {
+	background: #646363 !important;
+	border:1px solid #646363 !important;
+}
+
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table th span {
 	color: yellow;
 }
 div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 	background: #dae3f3;
+}
+
+.mctlog_off .mctInfoWrap .mctInfoBtm .tableDiv td {
+	background: #cfcfcf !important;
+	color: black !important;
+}
+
+.mctpause.non_if .curr_cycle, .mctpause.non_if .expect_cycle, .mctlogin.non_if .curr_cycle, .mctlogin.non_if .expect_cycle {
+	background: gray !important;
+	color: #d7d6d6 !important;
+}
+
+.mctpause.non_if .th_cycle, .mctlogin.non_if .th_cycle {
+	background:#bdbdbd !important;
+	color: #827979 !important;
 }
 
 .rightContainer {
@@ -426,6 +565,7 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 		font-size: 11px;
 		left: 4px;
 		width: 20.5%;
+		height: 18%;
 		top: 4px;
 		font-weight: bold;
 	}
@@ -437,6 +577,7 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 		top: 48%;
 		transform: translate(-50%,-20%);
 	}
+
 	div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopLeft .staffInfoWrap {
 		top: 88%;
 		transform: translate(-50%,-55%);
@@ -446,29 +587,74 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 		height: 96%;
 	}
 	div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .mctMapTime {
-		font-size: 10px;
+		font-size: 11px;
+		padding-left: 5px;
 	}
 	div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .pauseTime {
-		font-size: 10px;
-		width: 65%;
-		height: 50%;
+		font-size: 14px;
+		width: 50%;
+		height: 33%;
 		z-index: 9;
 		border: 1px solid black;
-		padding-top: 3.5px;
+		padding-top: 0.5px;
+		line-height: 16px;
+		font-weight: bold;
 	}
+	div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .pauseTime span {
+		font-size: 12px;
+		font-weight: normal;
+	}
+
+	div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .nc_off {
+		font-size: 14px;
+		padding-top: 0;
+	}
+
+	div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .disconnect {
+		font-size: 14px;
+		line-height: 18px;
+		padding-top: 5px;
+	}
+
 	div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .mctProgressPercent {
 		top: 60%;
 		width: auto;
 		font-size: 1rem;
 	}
-	/*div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapBtmInfo {*/
-	/*	font-size: 10px;*/
-	/*	height: 30%;*/
-	/*	padding: 1%;*/
-	/*}*/
-	div[class^="mctInfo_"] .mctInfoWrap .mctMapBtmInfo {
+
+	div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm .qty_txt {
+		border-radius: 3px;
+		/*padding: 0px 4px;*/
+		width: 50%;
+		height: 18px;
+		line-height: 15px;
+		font-size: 12px;
+		margin: 0;
+		padding: 0;
+	}
+	div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm .qty_val {
+		padding: 0px 5px;
+		text-align: center;
+		width: 50%;
+		height: 18px;
+		line-height: 15px;
+		font-size: 12px;
+		margin: 0;
+		padding: 0;
+	}
+
+	div[class^="mctInfo_"] .mctInfoWrap .mctInfoTopRight .mctMapImg .no_work {
+		font-size: 14px;
+	}
+
+	div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm .plan_div td {
 		font-size: 10px;
-		height: 10%;
+	}
+
+	div[class^="mctInfo_"] .mctInfoWrap .mctMapBtmInfo {
+		font-size: 11px;
+		font-weight: bold;
+		height: 9%;
 		padding: 1%;
 		width: 100%;
 		background: #cccccc;
@@ -476,10 +662,10 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 	}
 	div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm {
 		margin-top: 5px;
-		height: 43%;
+		height: 33%;
 	}
 	div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table {
-		font-size: 10px;
+		font-size: 11px;
 	}
 	div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table th{
 		font-weight: normal;

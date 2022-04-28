@@ -29,7 +29,8 @@
                 AND A.WORK_START_DT IS NOT NULL
             ) AS MCT_WORK_SEQ,
             #{tool_id} AS TOOL_ID, #{event_time} AS EVENT_TIME,
-            #{execution} AS EXECUTION, #{active_type} AS ACTIVE_TYPE,
+            #{execution} AS EXECUTION,
+            CASE WHEN #{active_type} = 'EQUIP_OFF' THEN 'PGM_STOP' ELSE #{active_type} END AS ACTIVE_TYPE,
             #{part_cnt} AS PART_CNT, IFNULL(#{cycleCheck}, 'N') AS CYCLE_FINISH_YN,
             #{message}, #{program}
         FROM TBL_EQUIP X
@@ -42,15 +43,19 @@
             INNER JOIN (
                 SELECT SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS ACTIVE_TOTAL
                     , SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_STOP' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS STOP_TOTAL
-                    , CASE WHEN IFNULL(#{cycleCheck},'N') = 'Y' THEN SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' AND X.PART_CNT = #{part_cnt} THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END)
+                    , CASE WHEN IFNULL(Y.CYCLE_FINISH_YN,'N') = 'Y' THEN SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' AND X.PART_CNT = Y.PART_CNT THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END)
                            ELSE 0
                     END AS CYCLE_TOTAL
                     , X.MCT_WORK_SEQ
+                    , Y.ACTIVE_TYPE
+                    , Y.EVENT_TIME
+                    , Y.CYCLE_FINISH_YN
                 FROM (
-                    SELECT M.EVENT_TIME, M.ACTIVE_TYPE, M.PART_CNT, M.CYCLE_FINISH_YN,
+                    SELECT M.MCT_LOG_SEQ, M.EVENT_TIME, M.ACTIVE_TYPE, M.PART_CNT, M.CYCLE_FINISH_YN,
                         LAG(M.EVENT_TIME) OVER (ORDER BY M.EVENT_TIME) AS BEFORE_TIME,
                         LAG(M.ACTIVE_TYPE) OVER (ORDER BY M.EVENT_TIME) AS BEFORE_TYPE,
-                        N.MCT_WORK_SEQ
+                        N.MCT_WORK_SEQ,
+                        (SELECT MAX(T.MCT_LOG_SEQ) FROM TBL_MCT_WORKING_LOG T WHERE T.MCT_WORK_SEQ = M.MCT_WORK_SEQ AND T.EQUIP_SEQ = M.EQUIP_SEQ) AS MAX_SEQ
                     FROM TBL_MCT_WORKING_LOG M
                         INNER JOIN TBL_MCT_WORK N ON M.MCT_WORK_SEQ = N.MCT_WORK_SEQ AND M.EQUIP_SEQ = N.EQUIP_SEQ
                             AND N.MCT_WORK_SEQ = (
@@ -69,20 +74,20 @@
                         </foreach>
                     ORDER BY M.EVENT_TIME
                 ) X
+                INNER JOIN TBL_MCT_WORKING_LOG Y ON Y.MCT_LOG_SEQ = X.MAX_SEQ
                 GROUP BY X.MCT_WORK_SEQ
             ) B ON B.MCT_WORK_SEQ = A.MCT_WORK_SEQ
         SET
-            A.IF_WORK_START_DT = CASE WHEN IF_WORK_START_DT IS NULL AND #{active_type} = 'PGM_ACTIVE' THEN #{event_time} ELSE A.IF_WORK_START_DT END,
+            A.IF_WORK_START_DT = CASE WHEN IF_WORK_START_DT IS NULL AND B.ACTIVE_TYPE = 'PGM_ACTIVE' THEN B.EVENT_TIME ELSE A.IF_WORK_START_DT END,
             A.WORK_ACTIVE_TIME = B.ACTIVE_TOTAL,
             A.WORK_STOP_TIME = B.STOP_TOTAL,
-            A.WORK_STATUS = CASE WHEN #{active_type} = 'PGM_ACTIVE' THEN 'DBS020'
-                                 WHEN #{active_type} = 'PGM_STOP' THEN 'DBS010'
+            A.WORK_STATUS = CASE WHEN B.ACTIVE_TYPE = 'PGM_ACTIVE' THEN 'DBS020'
+                                 WHEN B.ACTIVE_TYPE = 'PGM_STOP' THEN 'DBS010'
+                                 WHEN B.ACTIVE_TYPE = 'EQUIP_OFF' THEN 'DBS010'
                                  ELSE A.WORK_STATUS
                             END,
-            <if test='cycleCheck != null and cycleCheck == "Y" and active_type == "PGM_STOP"'>
-                COMPLETE_CYCLE_COUNT = (IFNULL(A.COMPLETE_CYCLE_COUNT,0) + 1),
-                LATEST_CYCLE_TIME = B.CYCLE_TOTAL,
-            </if>
+            A.COMPLETE_CYCLE_COUNT = CASE WHEN B.CYCLE_FINISH_YN = 'Y' AND B.ACTIVE_TYPE = 'PGM_STOP' THEN (IFNULL(A.COMPLETE_CYCLE_COUNT,0) + 1) END,
+            A.LATEST_CYCLE_TIME = CASE WHEN B.CYCLE_FINISH_YN = 'Y' AND B.ACTIVE_TYPE = 'PGM_STOP' THEN B.CYCLE_TOTAL END,
             A.UPDATE_DT = NOW()
         WHERE A.MCT_WORK_SEQ = B.MCT_WORK_SEQ
             AND A.DEL_YN = 'N'
@@ -93,6 +98,7 @@
                     AND Q.DEL_YN = 'N'
                     AND IFNULL(Q.IF_USE_YN,'N') = 'Y'
             )
+            AND B.ACTIVE_TYPE != 'DISCONNECT'
     </update>
 
     <select id="selectCurrentMctInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -135,4 +141,13 @@
                 #{item.EQUIP_SEQ}
             </foreach>
     </select>
+
+    <update id="updateEquipStatus" parameterType="java.util.HashMap" >
+        UPDATE TBL_EQUIP
+        SET DISCONNECT_YN = CASE WHEN UPPER(#{active_type}) = 'DISCONNECT' THEN 'Y' ELSE 'N' END,
+            EQUIP_OFF_YN = CASE WHEN UPPER(#{active_type}) = 'EQUIP_OFF' THEN 'Y' ELSE 'N' END,
+            EQUIP_OFF_DT = CASE WHEN UPPER(#{active_type}) = 'EQUIP_OFF' THEN NOW() ELSE NULL END
+        WHERE EQUIP_SEQ = #{EQUIP_SEQ}
+            AND DEL_YN = 'N'
+    </update>
 </mapper>

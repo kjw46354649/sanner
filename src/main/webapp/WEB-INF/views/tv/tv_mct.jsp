@@ -943,7 +943,7 @@
 			hours = Math.floor(time / 3600);
 			minutes = Math.floor((time % 3600)/60);
 		}
-		return hours + "h " + minutes +"m ";
+		return hours + "h " + minutes +"m";
 	}
 
 	function makeTimeMin(time) {
@@ -2053,7 +2053,7 @@
 							if(Item2.EQUIP_NM == 'BLANK') {
 								html = '<div class="mctInfo_'+idx2+' blank"></div>';
 							}else {
-								html = '<div id="EQUIP_'+ Item2.EQUIP_SEQ + '" class="mctInfo_'+idx2+' mct'+Item2.WORK_STATUS +'" data-seq="'+Item2.EQUIP_SEQ+'">';
+								html = '<div id="EQUIP_'+ Item2.EQUIP_SEQ + '" class="mctInfo_'+idx2+' mct'+Item2.WORK_STATUS +' '+((Item2.IF_USE_YN != 'Y')?'non_if':'')+'" data-seq="'+Item2.EQUIP_SEQ+'">';
 								html += '<div class="mctInfoWrap">';
 								html += '	<span class="mctName '+ Item2.WORK_STATUS + '">' + Item2.EQUIP_NM;
 								if(Item2.IF_USE_YN == 'Y') {
@@ -2082,54 +2082,101 @@
 								}else {
 									html += '		<img src="/resource/asset/images/tv/img_thumb_3.png" class="machineImg" alt="도면">';
 								}
-								let activeTime = Number(Item2.WORK_ACTIVE_TIME);
-								if(Item2.WORK_STATUS == 'login') {
-									activeTime += Number(Item2.CURRENT_STATUS_TIME);
+
+								if(Item2.EQUIP_OFF_YN == 'Y') {
+									html += '<div class="nc_off">NC OFF<br>	<span>('+ makeTimeStr(Item2.EQUIP_OFF_TIME) +')</span></div>';
+								}else if(Item2.DISCONNECT_YN == 'Y') {
+									html += '<div class="disconnect">Network<br>Disconnected</div>';
 								}
-								html += '		<div class="mctMapTime">';
-								html += '			<span>진행 : ' + makeTimeStr(activeTime) + '</span><br>예상 : ' + ((typeof Item2.PLAN_WORKING_TIME_FORMAT != 'undefined')?Item2.PLAN_WORKING_TIME_FORMAT:'');
-								html += '		</div>';
-								if(Item2.WORK_STATUS == 'pause') {
-									html += '<div id="pauseTime" class="pauseTime">';
-									html += '	일시중지<br>';
-									html += '<span>' + makeTimeStr(Item2.CURRENT_STATUS_TIME) + '</span>';
-									html += '</div>';
+
+								if(Item2.WORK_STATUS == 'log_off') {
+									html += '<span class="no_work">작업없음 <span>(' + makeTimeStr(Item2.LAST_WORK_TIME)+')</span></span>';
+								}else {
+									if(Item2.IF_USE_YN == 'Y') {
+										html += '		<div class="mctMapTime">';
+										html += '			<span>남은수량 : ' + Item2.LEFT_QTY + ' EA </span>';
+										html += '			<p>남은시간 : ' + ((typeof Item2.LEFT_TIME != 'undefined')?Item2.LEFT_TIME:'') + '</p>';
+										html += '		</div>';
+									}
+									if(Item2.WORK_STATUS == 'pause') {
+										html += '<div id="pauseTime" class="pauseTime">';
+										html += '	Stopped<br>';
+										html += '	<span>( ' + makeTimeStr(Item2.CURRENT_STATUS_TIME) + ')</span>';
+										html += '</div>';
+									}
 								}
-								html += '		<span class="progressPercent mctProgressPercent">'+ ((typeof Item2.PERCENT != 'undefined')?Item2.PERCENT:'') + '</span>';
+
 								html += '	</div>';
 								html += '</div>';
 								html += '<div class="mctMapBtmInfo '+ Item2.WORK_STATUS + '">';
-								html +=  ((typeof Item2.CUR_TEXT != 'undefined')?Item2.CUR_TEXT:'') + '&nbsp;' + ((typeof Item2.CONTROL_PART_INFO != 'undefined')?Item2.CONTROL_PART_INFO:'');
+								html +=  '	<span class="mr-10">'+ ((typeof Item2.CONTROL_PART_INFO != 'undefined')?Item2.CONTROL_PART_INFO:'') + '</span>' + ((typeof Item2.CUR_TEXT != 'undefined')?Item2.CUR_TEXT:'');
 								html += '</div>';
+
 								html += '<div class="mctInfoBtm">';
-								html += '	<table id="EQUIP_PLAN_'+ Item2.EQUIP_SEQ + '">';
-								html += '	<colgroup>';
-								html += '		<col width="58%">';
-								html += '		<col width="42%">';
-								html += '	</colgroup>';
-								html += '		<tr>';
-								html += '			<th>계획 List</th>';
-								html += '			<th>'+Item2.TOTAL_CNT +'품 '+Item2.TOTAL_PART_QTY +' EA (<span>'+Item2.TOTAL_PLAN_WORKING_TIME_FORMAT +'</span>)</th>';
-								html += '		</tr>';
-								html += '		<tr>';
-								html += '			<td>&nbsp;</td>';
-								html += '			<td>&nbsp;</td>';
-								html += '		</tr>';
-								html += '		<tr>';
-								html += '			<td>&nbsp;</td>';
-								html += '			<td>&nbsp;</td>';
-								html += '		</tr>';
-								html += '		<tr>';
-								html += '			<td>&nbsp;</td>';
-								html += '			<td>&nbsp;</td>';
-								html += '		</tr>';
-								html += '		<tr>';
-								html += '			<td>&nbsp;</td>';
-								html += '			<td>&nbsp;</td>';
-								html += '		</tr>';
-								html += '	</table>';
-								html += '</div>';
-								html += '</div>';
+								html += '	<div class="tableDiv">';
+								html += '		<table id="EQUIP_PLAN_'+ Item2.EQUIP_SEQ + '">';
+								html += '			<colgroup>';
+								html += '				<col width="15%">';
+								html += '				<col width="30%">';
+								html += '				<col width="30%">';
+								html += '			</colgroup>';
+								if(Item2.WORK_STATUS == 'log_off') {
+									html += '			<tbody class="log_off">';
+								}else {
+									html += '			<tbody>';
+								}
+								html += '				<tr>';
+								html += '					<th>&nbsp;</th>';
+								html += '					<th class="th_cycle">1 Cycle</th>';
+								html += '					<th>Total</th>';
+								html += '				</tr>';
+								html += '				<tr class="text-blue">';
+								html += '					<td>진행</td>';
+								html += '					<td class="curr_cycle">'+Item2.CURR_CYCLE_TIME +'</td>';
+								html += '					<td class="active_total">'+Item2.ACTIVE_TOTAL+'</td>';
+								html += '				</tr>';
+								html += '				<tr>';
+								html += '					<td>예상</td>';
+								html += '					<td class="expect_cycle">'+Item2.LATEST_CYCLE_TIME+'</td>';
+								html += '					<td class="expect_total">'+Item2.EXPECT_TIME+'</td>';
+								html += '				</tr>';
+								html += '			</tbody>';
+								html += '		</table>';
+								html += '	</div>';
+								html += '	<div class="mctLeftDiv">';
+								html += '		<div class="qtyWrap">';
+								html += '			<div class="mt-05 spanWrap">';
+								html += '				<span class="purple qty_txt">목표</span>';
+								html += '				<span class="qty_val GOAL_QTY_SPAN">'+Item2.GOAL_QTY +'</span>';
+								html += '			</div>';
+								html += '			<div class="spanWrap">';
+								html += '				<span class="green qty_txt disabled">완료</span>';
+								html += '				<span class="qty_val COMPLETE_QTY_SPAN">'+ Item2.COMPLETE_QTY +'</span>';
+								html += '			</div>';
+								html += '			<div class="spanWrap">';
+								html += '				<span class="red qty_txt">불량</span>';
+								html += '				<span class="qty_val ERROR_QTY_SPAN">'+ Item2.ERROR_QTY +'</span>';
+								html += '			</div>';
+								html += '		</div>';
+								html += '		<div class="right_float plan_div" style="width: 48%;">';
+								html += '			<table>';
+								html += '				<colgroup>';
+								html += '					<col width="15%">';
+								html += '				</colgroup>';
+								html += '				<tbody>';
+								html += '					<tr>';
+								html += '						<th>가공 계획</th>';
+								html += '					</tr>';
+								html += '					<tr>';
+								html += '						<td>';
+								html += '							<span class="plan_cnt">'+Item2.TOTAL_CNT +'품 '+Item2.TOTAL_PART_QTY +' EA</span>';
+								html += '							<p class="plan_time">('+Item2.TOTAL_PLAN_WORKING_TIME_FORMAT +')</p>';
+								html += '						</td>';
+								html += '					</tr>';
+								html += '				</tbody>';
+								html += '			</table>';
+								html += '		</div>';
+								html += '	</div>';
 								html += '</div>';
 							}
 
@@ -2148,13 +2195,6 @@
 							}
 						})
 					})
-					let groups2 = fnGroupBy(machineAreListData,'EQUIP_SEQ');
-					$.each(groups2,function (idx,Item) {
-						$.each(Item,function (idx2,Item2) {
-							$("#EQUIP_PLAN_"+Item2.EQUIP_SEQ).find('tr').eq(Item2.ROWNUM).find('td').eq(0).text(Item2.CONTROL_PART_INFO);
-							$("#EQUIP_PLAN_"+Item2.EQUIP_SEQ).find('tr').eq(Item2.ROWNUM).find('td').eq(1).html(Item2.MATERIAL_TYPE_NM +'&nbsp;'+ Item2.WORK_TYPE_NM + '&nbsp;'+ Item2.PART_QTY + ' EA');
-						})
-					})
 				}else {
 
 					$.ajax({
@@ -2165,24 +2205,7 @@
 								return;
 							}
 							if(data.mct_info_list.length > 0) {
-								$.each(data.mct_info_list, function (idx,Item) {
-									let activeTime = Number(Item.WORK_ACTIVE_TIME);
-									if(Item.WORK_STATUS == 'pause') {
-										$("#EQUIP_"+ Item.EQUIP_SEQ).find(".pauseTime").find("span").text(makeTimeStr(Item.CURRENT_STATUS_TIME));
-									}
-									if(Item.WORK_STATUS == 'login') {
-										activeTime += Number(Item.CURRENT_STATUS_TIME);
-									}
-									$("#EQUIP_"+ Item.EQUIP_SEQ).find(".mctMapTime").find("span").text('진행 : ' + makeTimeStr(activeTime));
-									var html = "남은시간<br>" + Item.REMAIN_TIME;
-									$("#EQUIP_"+ Item.EQUIP_SEQ).find(".mctTime").html(html);
-								})
-							}
-							if(data.mct_list.length > 0) {
-								$.each(data.mct_list, function (idx,Item) {
-									$("#EQUIP_PLAN_"+Item.EQUIP_SEQ).find('tr').eq(Item.ROWNUM).find('td').eq(0).text(Item.CONTROL_PART_INFO)
-									$("#EQUIP_PLAN_"+Item.EQUIP_SEQ).find('tr').eq(Item.ROWNUM).find('td').eq(1).html(Item.MATERIAL_TYPE_NM +'&nbsp;'+ Item.WORK_TYPE_NM + '&nbsp;'+ Item.PART_QTY + ' EA')
-								});
+								refreshHtml(data.mct_info_list)
 							}
 						},
 						error: function (jqXHR, textStatus, errorThrown) {
@@ -2219,6 +2242,126 @@
 			});
 		};
 
+		function refreshHtml(list) {
+			$.each(list, function (idx,Item) {
+				let $target = $("#EQUIP_" + Item.EQUIP_SEQ);
+				$target.removeClass('mctlogin');
+				$target.removeClass('mctpause');
+				$target.removeClass('mctlog_off');
+				$target.find(".mctName").removeClass("login");
+				$target.find(".mctMapBtmInfo").removeClass("login");
+				$target.find(".mctName").removeClass("pause");
+				$target.find(".mctMapBtmInfo").removeClass("pause");
+				$target.find(".mctName").removeClass("log_off");
+				$target.find(".mctMapBtmInfo").removeClass("log_off");
+
+				$target.addClass('mct'+Item.WORK_STATUS);
+				$target.find(".mctName").addClass(Item.WORK_STATUS);
+				$target.find(".mctMapBtmInfo").addClass(Item.WORK_STATUS);
+
+				if(typeof Item.PHOTO_GFILE_SEQ != 'undefined') {
+					$target.find(".mctStaffImg").removeClass("staffIcon");
+					$target.find(".mctStaffImg").find("img").attr("src","/image/" + Item.PHOTO_GFILE_SEQ);
+				}else {
+					if(!$target.find(".mctStaffImg").hasClass("staffIcon")) {
+						$target.find(".mctStaffImg").addClass("staffIcon");
+					}
+					$target.find(".mctStaffImg").find("img").attr("src","/resource/pop/images/user.svg");
+				}
+
+				if(typeof Item.PHOTO_GFILE_SEQ != 'undefined') {
+					$target.find(".mctStaffName").text(Item.USER_NM);
+				}else {
+					$target.find(".mctStaffName").text("-");
+				}
+
+				if(Item.WORK_PLAN_TYPE == 1 && typeof Item.IMG_GFILE_SEQ != 'undefined') {
+					$target.find(".mctMapImg").find("img").removeClass('machineImg');
+					$target.find(".mctMapImg").find("img").attr("src","/qsimage/" + Item.IMG_GFILE_SEQ);
+				}else {
+					if(!$target.find(".mctMapImg").find("img").hasClass('machineImg')) {
+						$target.find(".mctMapImg").find("img").addClass('machineImg');
+					}
+					$target.find(".mctMapImg").find("img").attr("src","/resource/asset/images/tv/img_thumb_3.png");
+				}
+
+				$target.find(".qtyWrap").find(".GOAL_QTY_SPAN").text(Item.GOAL_QTY);
+				$target.find(".qtyWrap").find(".COMPLETE_QTY_SPAN").text(Item.COMPLETE_QTY);
+				$target.find(".qtyWrap").find(".ERROR_QTY_SPAN").text(Item.ERROR_QTY);
+
+				$target.find(".mctInfoBtm").find(".curr_cycle").text(Item.CURR_CYCLE_TIME);
+				$target.find(".mctInfoBtm").find(".active_total").text(Item.ACTIVE_TOTAL);
+				$target.find(".mctInfoBtm").find(".expect_cycle").text(Item.LATEST_CYCLE_TIME);
+				$target.find(".mctInfoBtm").find(".expect_total").text(Item.EXPECT_TIME);
+
+				$target.find(".mctInfoBtm").find(".plan_cnt").text(Item.TOTAL_CNT + '품 ' + Item.TOTAL_PART_QTY + ' EA');
+				$target.find(".mctInfoBtm").find(".plan_time").text('(' + Item.TOTAL_PLAN_WORKING_TIME_FORMAT + ')');
+
+				$target.find(".mctMapImg").find(".nc_off").remove();
+				$target.find(".mctMapImg").find(".disconnect").remove();
+				if(Item.EQUIP_OFF_YN == 'Y') {
+					let html = '<div class="nc_off">NC OFF<br><span>('+ makeTimeStr(Item.EQUIP_OFF_TIME) +')</span></div>';
+					$target.find(".mctMapImg").append(html);
+				}else if(Item.DISCONNECT_YN == 'Y') {
+					let html = '<div class="disconnect">Network<br>Disconnected</div>';
+					$target.find(".mctMapImg").append(html);
+				}
+
+				if(Item.WORK_STATUS == 'pause') {
+					if($target.find(".pauseTime").length > 0) {
+						let html = "	Stopped<br>";
+						html += "	<span>(" + makeTimeStr(Item.CURRENT_STATUS_TIME) + ")</span>";
+						$target.find(".pauseTime").html(html)
+					}else {
+						let html = '<div id="pauseTime" class="pauseTime">';
+						html += '	Stopped<br>';
+						html += '	<span>(' + makeTimeStr(Item.CURRENT_STATUS_TIME) + ')</span>';
+						html += '</div>';
+						$target.find(".mctMapTime").after(html);
+					}
+
+					if(Item.IF_USE_YN == 'Y') {
+						if ($target.find(".mctMapTime").length > 0) {
+							$target.find(".mctMapTime").find("span").text('남은수량 : ' + Item.LEFT_QTY + ' EA');
+							$target.find(".mctMapTime").find("p").text('남은시간 : ' + Item.LEFT_TIME);
+						} else {
+							let html = '		<div class="mctMapTime">';
+							html += '			<span>남은수량 : ' + Item.LEFT_QTY + ' EA </span>';
+							html += '			<p>남은시간 : ' + ((typeof Item.LEFT_TIME != 'undefined') ? Item.LEFT_TIME : '') + '</p>';
+							html += '		</div>';
+							$target.find(".mctMapImg").append(html);
+						}
+					}
+				}else if(Item.WORK_STATUS == 'login'){
+					$target.find(".pauseTime").remove();
+					$target.find('.no_work').remove();
+
+					if(Item.IF_USE_YN == 'Y') {
+						if($target.find(".mctMapTime").length > 0) {
+							$target.find(".mctMapTime").find("span").text('남은수량 : ' + Item.LEFT_QTY + ' EA');
+							$target.find(".mctMapTime").find("p").text('남은시간 : ' + Item.LEFT_TIME);
+						}else {
+							let html = '		<div class="mctMapTime">';
+							html += '			<span>남은수량 : ' + Item.LEFT_QTY + ' EA </span>';
+							html += '			<p>남은시간 : ' + ((typeof Item.LEFT_TIME != 'undefined')?Item.LEFT_TIME:'') + '</p>';
+							html += '		</div>';
+							$target.find(".mctMapImg").append(html);
+						}
+					}
+				}else {
+					$target.find(".pauseTime").remove();
+					$target.find('.no_work').remove();
+
+					let html = '<span class="no_work">작업없음 <span>(' + makeTimeStr(Item.LAST_WORK_TIME)+')</span></span>';
+					$target.find(".mctMapImg").append(html);
+				}
+
+				let html2 = '	<span class="mr-10">'+ ((typeof Item.CONTROL_PART_INFO != 'undefined')?Item.CONTROL_PART_INFO:'') + '</span>' + ((typeof Item.CUR_TEXT != 'undefined')?Item.CUR_TEXT:'');
+				$target.find(".mctMapBtmInfo").html(html2);
+			})
+		}
+
+
 		/** DRAWING BOARD 정보 실시간 처리 **/
 		let getReLoadDrawingData = function (equipSeq) {
 			'use strict';
@@ -2230,80 +2373,7 @@
 						fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
-					let $target = $("#EQUIP_" + equipSeq);
-					let mct_list = data.mct_drawing_list; //mct
-					if (mct_list != '') {
-						$.each(mct_list,function (idx,Item) {
-							if($target.hasClass('mctlogin')) {
-								$target.find(".mctName").removeClass("login");
-								$target.find(".mctMapBtmInfo").removeClass("login");
-								$target.removeClass('mctlogin');
-							}
-							if($target.hasClass('mctpause')){
-								$target.find(".mctName").removeClass("pause");
-								$target.find(".mctMapBtmInfo").removeClass("pause");
-								$target.removeClass('mctpause');
-							}
-							$target.addClass('mct'+Item.WORK_STATUS);
-							$target.find(".mctName").addClass(Item.WORK_STATUS);
-							$target.find(".mctMapBtmInfo").addClass(Item.WORK_STATUS);
-
-							if(typeof Item.PHOTO_GFILE_SEQ != 'undefined') {
-								$target.find(".mctStaffImg").removeClass("staffIcon");
-								$target.find(".mctStaffImg").find("img").attr("src","/image/" + Item.PHOTO_GFILE_SEQ);
-							}else {
-								if(!$target.find(".mctStaffImg").hasClass("staffIcon")) {
-									$target.find(".mctStaffImg").addClass("staffIcon");
-								}
-								$target.find(".mctStaffImg").find("img").attr("src","/resource/pop/images/user.svg");
-							}
-
-							if(typeof Item.IMG_GFILE_SEQ != 'undefined') {
-								$target.find(".mctStaffName").text(Item.USER_NM);
-							}else {
-								$target.find(".mctStaffName").text("-");
-							}
-
-							if(Item.WORK_PLAN_TYPE == 1 && typeof Item.IMG_GFILE_SEQ != 'undefined') {
-								$target.find(".mctMapImg").find("img").removeClass('machineImg');
-								$target.find(".mctMapImg").find("img").attr("src","/qsimage/" + Item.IMG_GFILE_SEQ);
-							}else {
-								if(!$target.find(".mctMapImg").find("img").hasClass('machineImg')) {
-									$target.find(".mctMapImg").find("img").addClass('machineImg');
-								}
-								$target.find(".mctMapImg").find("img").attr("src","/resource/asset/images/tv/img_thumb_3.png");
-							}
-							let activeTime = Number(Item.WORK_ACTIVE_TIME);
-							if(Item.WORK_STATUS == 'login') {
-								activeTime += Number(Item.CURRENT_STATUS_TIME);
-							}
-
-							var html = "<span> 진행 : " + makeTimeStr(activeTime) + "</span><br>예상 : " +  ((typeof Item.PLAN_WORKING_TIME_FORMAT != 'undefined')?Item.PLAN_WORKING_TIME_FORMAT:'');
-							$target.find(".mctMapTime").html(html);
-
-							if(Item.WORK_STATUS == 'pause') {
-								if($target.find(".pauseTime").length > 0) {
-									html = "일시중지<br>";
-									html += "<span>" + makeTimeStr(Item.CURRENT_STATUS_TIME) + "</span>";
-									$target.find(".pauseTime").html(html)
-								}else {
-									html = '<div id="pauseTime" class="pauseTime">';
-									html += '	일시중지<br>';
-									html += '<span>' + makeTimeStr(Item.CURRENT_STATUS_TIME) + '</span>';
-									html += '</div>';
-									$target.find(".mctMapTime").after(html);
-								}
-							}else {
-								if($target.find(".pauseTime").length > 0) {
-									$target.find(".pauseTime").remove();
-								}
-							}
-							$target.find(".mctProgressPercent").text(((typeof Item.PERCENT != 'undefined')?Item.PERCENT:''));
-							html = ((typeof Item.CUR_TEXT != 'undefined')?Item.CUR_TEXT:'') + '<br>' + ((typeof Item.CONTROL_PART_INFO != 'undefined')?Item.CONTROL_PART_INFO:'');
-							$target.find(".mctMapBtmInfo").html(html);
-
-						})
-					}
+					refreshHtml(data.mct_drawing_list)
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
@@ -2312,94 +2382,8 @@
 		};
 
 		let getReLoadDrawingDataForIF = function (list) {
-			'use strict';
-			$.ajax({
-				type: 'POST', url: "/tv/mct/machineDrawingData", dataType: 'json',
-				data: {"EQUIP_SEQ": equipSeq},
-				success: function (data, textStatus, jqXHR) {
-					if (textStatus !== 'success' || data == null) {
-						fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
-						return;
-					}
-					let $target = $("#EQUIP_" + equipSeq);
-					let mct_list = data.mct_drawing_list; //mct
-					if (mct_list != '') {
-						$.each(mct_list,function (idx,Item) {
-							if($target.hasClass('mctlogin')) {
-								$target.find(".mctName").removeClass("login");
-								$target.find(".mctMapBtmInfo").removeClass("login");
-								$target.removeClass('mctlogin');
-							}
-							if($target.hasClass('mctpause')){
-								$target.find(".mctName").removeClass("pause");
-								$target.find(".mctMapBtmInfo").removeClass("pause");
-								$target.removeClass('mctpause');
-							}
-							$target.addClass('mct'+Item.WORK_STATUS);
-							$target.find(".mctName").addClass(Item.WORK_STATUS);
-							$target.find(".mctMapBtmInfo").addClass(Item.WORK_STATUS);
-
-							if(typeof Item.PHOTO_GFILE_SEQ != 'undefined') {
-								$target.find(".mctStaffImg").removeClass("staffIcon");
-								$target.find(".mctStaffImg").find("img").attr("src","/image/" + Item.PHOTO_GFILE_SEQ);
-							}else {
-								if(!$target.find(".mctStaffImg").hasClass("staffIcon")) {
-									$target.find(".mctStaffImg").addClass("staffIcon");
-								}
-								$target.find(".mctStaffImg").find("img").attr("src","/resource/pop/images/user.svg");
-							}
-
-							if(typeof Item.IMG_GFILE_SEQ != 'undefined') {
-								$target.find(".mctStaffName").text(Item.USER_NM);
-							}else {
-								$target.find(".mctStaffName").text("-");
-							}
-
-							if(Item.WORK_PLAN_TYPE == 1 && typeof Item.IMG_GFILE_SEQ != 'undefined') {
-								$target.find(".mctMapImg").find("img").removeClass('machineImg');
-								$target.find(".mctMapImg").find("img").attr("src","/qsimage/" + Item.IMG_GFILE_SEQ);
-							}else {
-								if(!$target.find(".mctMapImg").find("img").hasClass('machineImg')) {
-									$target.find(".mctMapImg").find("img").addClass('machineImg');
-								}
-								$target.find(".mctMapImg").find("img").attr("src","/resource/asset/images/tv/img_thumb_3.png");
-							}
-							let activeTime = Number(Item.WORK_ACTIVE_TIME);
-							if(Item.WORK_STATUS == 'login') {
-								activeTime += Number(Item.CURRENT_STATUS_TIME);
-							}
-
-							var html = "<span> 진행 : " + makeTimeStr(activeTime) + "</span><br>예상 : " +  ((typeof Item.PLAN_WORKING_TIME_FORMAT != 'undefined')?Item.PLAN_WORKING_TIME_FORMAT:'');
-							$target.find(".mctMapTime").html(html);
-
-							if(Item.WORK_STATUS == 'pause') {
-								if($target.find(".pauseTime").length > 0) {
-									html = "일시중지<br>";
-									html += "<span>" + makeTimeStr(Item.CURRENT_STATUS_TIME) + "</span>";
-									$target.find(".pauseTime").html(html)
-								}else {
-									html = '<div id="pauseTime" class="pauseTime">';
-									html += '	일시중지<br>';
-									html += '<span>' + makeTimeStr(Item.CURRENT_STATUS_TIME) + '</span>';
-									html += '</div>';
-									$target.find(".mctMapTime").after(html);
-								}
-							}else {
-								if($target.find(".pauseTime").length > 0) {
-									$target.find(".pauseTime").remove();
-								}
-							}
-							$target.find(".mctProgressPercent").text(((typeof Item.PERCENT != 'undefined')?Item.PERCENT:''));
-							html = ((typeof Item.CUR_TEXT != 'undefined')?Item.CUR_TEXT:'') + '<br>' + ((typeof Item.CONTROL_PART_INFO != 'undefined')?Item.CONTROL_PART_INFO:'');
-							$target.find(".mctMapBtmInfo").html(html);
-
-						})
-					}
-				},
-				error: function (jqXHR, textStatus, errorThrown) {
-					fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
-				}
-			});
+			console.log(list);
+			refreshHtml(list)
 		};
 
 		$("#mct_main_form").find("#FACTORY_AREA").val($("#changeScreen").val().toUpperCase());
@@ -2522,7 +2506,7 @@
 					let messageData = JSON.parse(notificationMessage.body);
 					workerMessageProcess(messageData);
 				});
-				stompClient.subscribe('/topic/notice', function (notificationMessage) { // 장비if
+				stompClient.subscribe('/topic/mct', function (notificationMessage) { // 장비if
 					let messageData = JSON.parse(notificationMessage.body);
 					if(messageData.list.length > 0) {
 						getReLoadDrawingDataForIF(messageData.list)
