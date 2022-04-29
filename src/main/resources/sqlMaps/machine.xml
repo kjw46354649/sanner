@@ -278,7 +278,13 @@
             C.MATERIAL_TYPE,
             UPPER(SUBSTRING(SF_GET_CODE_NM('1035', C.MATERIAL_TYPE, #{LOGIN_LOCALE}), 1, 2)) AS MATERIAL_TYPE_NM_SUBSTR, <!-- 재질 -->
             (SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) + IFNULL(C.ADDITIONAL_QTY,0)) AS CONTROL_PART_QTY,
-            CONCAT(SF_GET_DRAWING_WORK_TIME('W_MINUTE', B.MCT_WORK_SEQ), '''', ' / ', CASE WHEN B.PLAN_WORKING_TIME IS NOT NULL AND B.PLAN_WORKING_TIME > 0 THEN CONCAT(B.PLAN_WORKING_TIME, '''') ELSE '-' END )  AS WORK_TIME
+            CONCAT(
+                TRUNCATE(SF_GET_DRAWING_WORK_TIME('WORK', B.MCT_WORK_SEQ)/60,0), '''', ' / ',
+                CASE WHEN B.PLAN_WORKING_TIME IS NOT NULL AND B.PLAN_WORKING_TIME > 0
+                        THEN CONCAT(B.PLAN_WORKING_TIME, '''')
+                     ELSE '-'
+                END
+            )  AS WORK_TIME
         FROM TBL_EQUIP A
             LEFT OUTER JOIN TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ
                 AND B.MCT_WORK_SEQ = (SELECT MAX(MCT_WORK_SEQ) FROM TBL_MCT_WORK WHERE EQUIP_SEQ = TRIM(#{EQUIP_SEQ}) AND DEL_YN = 'N')
@@ -797,16 +803,12 @@
             , SF_GET_USER_NM(A.WORK_USER_ID) AS WORK_USER_NM <!-- 작업자 -->
             , SF_GET_DATE_F(A.WORK_START_DT, 'YY', 'M') AS WORK_START_DT <!-- 착수일시 -->
             , SF_GET_DATE_F(A.WORK_FINISH_DT, 'YY', 'M') AS WORK_FINISH_DT <!-- 완료일시 -->
-            , CASE
-                WHEN A.WORK_FINISH_DT IS NOT NULL THEN TRUNCATE(SF_GET_DRAWING_WORK_TIME('STOP', A.MCT_WORK_SEQ), 0)
-            END AS WORK_STOP_SECOND <!-- 작업 중지 전체 분 -->
-            , CASE
-                WHEN A.WORK_FINISH_DT IS NOT NULL THEN TRUNCATE(SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ), 0)
-            END AS WORK_WORK_SECOND <!-- 작업 전체 분 -->
-            , CASE
-                <!-- WHEN A.WORK_FINISH_DT IS NOT NULL THEN TRUNCATE(SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) / (SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) + IFNULL(C.ADDITIONAL_QTY,0)), 0) -->
-                WHEN A.WORK_FINISH_DT IS NOT NULL THEN TRUNCATE(SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) / (A.FINISH_QTY), 0)
-            END AS LEAD_TIME
+            , CASE WHEN A.WORK_FINISH_DT IS NOT NULL THEN TRUNCATE(SF_GET_DRAWING_WORK_TIME('STOP', A.MCT_WORK_SEQ), 0)
+              END AS WORK_STOP_SECOND <!-- 작업 중지 전체 초-->
+            , CASE WHEN A.WORK_FINISH_DT IS NOT NULL THEN TRUNCATE(SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ), 0)
+              END AS WORK_WORK_SECOND <!-- 작업 전체 초 -->
+            , CASE WHEN A.WORK_FINISH_DT IS NOT NULL THEN TRUNCATE(SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) / (A.FINISH_QTY), 0)
+              END AS LEAD_TIME
             , A.FINISH_QTY <!-- 완료 수량 -->
             , A.GOAL_QTY
             , (SELECT SUM(Q.ERROR_QTY) FROM TBL_MCT_WORK_INSPECT Q WHERE Q.MCT_WORK_SEQ = A.MCT_WORK_SEQ) AS ERROR_QTY
@@ -1451,96 +1453,9 @@
              , SF_GET_USER_NM(MAIN_USER_ID) AS MAIN_USER_NM, MAIN_USER_ID
              , SF_GET_USER_NM(SUB_USER_ID) AS SUB_USER_NM, SUB_USER_ID
         FROM TBL_EQUIP
-        WHERE EQUIP_SEQ = #{EQUIP_SEQ}
+        WHERE EQUIP_SEQ = #{EQUIP_SEQ}f
     </select>
 
-    <select id="selectOngoingInfoForDetailPop" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            CASE WHEN ORIGINAL_SIDE_QTY  = 0 AND X.OTHER_SIDE_QTY > 0 THEN '대'
-                 ELSE 'N'
-                END AS ORDER_QTY_INFO,
-            X.CONTROL_PART_QTY,
-            SF_GET_DATE_F(X.INNER_DUE_DT, '', '') AS INNER_DUE_DT,
-            X.WORK_USER_NM, X.WORK_STATUS_NM, X.CONTROL_NUM, X.SIZE_TXT,
-            X.MATERIAL_DETAIL_NM, X.CONTROL_PART_QTY,
-            CASE WHEN X.ON_GOING IS NOT NULL AND TRUNCATE(IFNULL(X.ON_GOING,0)/60,0) <![CDATA[ < ]]> 1 THEN CONCAT(TRUNCATE((IFNULL(X.ON_GOING,0)%60),0),'m')
-                 WHEN X.ON_GOING IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(X.ON_GOING,0)/60,0),'h ',TRUNCATE((IFNULL(X.ON_GOING,0)%60),0),'m')
-                 ELSE SPACE(0)
-            END AS ON_GOING,
-            CASE WHEN X.PLAN_WORKING_TIME IS NOT NULL AND TRUNCATE(IFNULL(X.PLAN_WORKING_TIME,0)/60,0) <![CDATA[ < ]]> 1 THEN CONCAT(TRUNCATE((IFNULL(X.PLAN_WORKING_TIME,0)%60),0),'m')
-                 WHEN X.PLAN_WORKING_TIME IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(X.PLAN_WORKING_TIME,0)/60,0),'h ',TRUNCATE((IFNULL(X.PLAN_WORKING_TIME,0)%60),0),'m')
-                 ELSE SPACE(0)
-            END AS PLAN_WORKING_TIME,
-            CASE WHEN X.TEMP_STOP IS NOT NULL AND TRUNCATE(IFNULL(X.TEMP_STOP,0)/60,0) <![CDATA[ < ]]> 1 THEN CONCAT(TRUNCATE((IFNULL(X.TEMP_STOP,0)%60),0),'m')
-                 WHEN X.TEMP_STOP IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(X.TEMP_STOP,0)/60,0),'h ',TRUNCATE((IFNULL(X.TEMP_STOP,0)%60),0),'m')
-                 ELSE SPACE(0)
-            END AS TEMP_STOP,
-            IFNULL(X.TEMP_STOP,SPACE(0)) AS TEMP_STOP,
-            X.DRAWING_NUM, X.DRAWING_SEQ, X.WORK_TYPE_NM, X.IMG_GFILE_SEQ, X.MCT_WORK_SEQ,
-            X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.PHOTO_GFILE_SEQ
-        FROM (
-                 SELECT B.CONTROL_SEQ ,C.CONTROL_DETAIL_SEQ ,
-                        CASE WHEN D.LOGIN_USER_ID IS NOT NULL THEN SF_GET_USER_NM(D.LOGIN_USER_ID)
-                             ELSE SF_GET_USER_NM(D.UPDATE_ID)
-                        END AS WORK_USER_NM,
-                        A.WORK_USER_ID,
-                        CASE WHEN D.LOGIN_USER_ID IS NOT NULL THEN (SELECT PHOTO_GFILE_SEQ FROM TBL_USER H WHERE H.USER_ID = D.LOGIN_USER_ID AND H.DEL_YN = 'N')
-                             ELSE (SELECT PHOTO_GFILE_SEQ FROM TBL_USER H WHERE H.USER_ID = D.UPDATE_ID AND H.DEL_YN = 'N')
-                        END AS PHOTO_GFILE_SEQ,
-                        IFNULL(SF_GET_CODE_NM('1079', A.WORK_STATUS, #{LOGIN_LOCALE}),'-') AS WORK_STATUS_NM,
-                        CASE WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, ' # ', C.PART_NUM) END AS CONTROL_NUM, C.SIZE_TXT,
-                        C.WORK_TYPE, IFNULL(SF_GET_CODE_NM('1033', C.WORK_TYPE, #{LOGIN_LOCALE}), SPACE(0)) AS WORK_TYPE_NM,
-                        C.MATERIAL_DETAIL, IFNULL(SF_GET_CODE_NM('1027', C.MATERIAL_DETAIL, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_DETAIL_NM,
-                        (SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ) + IFNULL(C.ADDITIONAL_QTY,0)) AS CONTROL_PART_QTY,
-                        C.IMG_GFILE_SEQ, C.INNER_DUE_DT, A.WORK_TEMP_STOP_DT,
-                        SF_GET_DRAWING_WORK_TIME('W_MINUTE', A.MCT_WORK_SEQ) AS ON_GOING,
---                         TIMESTAMPDIFF(MINUTE ,A.WORK_START_DT,now()) AS ON_GOING,
-                        TIMESTAMPDIFF(MINUTE ,A.WORK_TEMP_STOP_DT,now()) AS TEMP_STOP,
-                        A.PLAN_WORKING_TIME, A.MCT_WORK_SEQ,
-                        IFNULL(SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0) AS ORIGINAL_SIDE_QTY, -- 대칭_원칭 -->
-                        IFNULL(SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0) AS OTHER_SIDE_QTY, -- 대칭_대칭 -->
-                        CASE WHEN C.WORK_TYPE = 'WTP050' THEN (SELECT
-                                                                   GROUP_CONCAT(DISTINCT DRAWING_NUM SEPARATOR ',')
-                                                               FROM TBL_CONTROL_PART
-                                                               WHERE CONTROL_SEQ = A.CONTROL_SEQ
-                                                                 AND CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
-                                                               ORDER BY CONTROL_SEQ,CONTROL_DETAIL_SEQ
-                                                        )
-                             ELSE (SELECT
-                                       GROUP_CONCAT(DISTINCT DRAWING_NUM SEPARATOR ',')
-                                   FROM TBL_CONTROL_PART_ORDER
-                                   WHERE CONTROL_SEQ = A.CONTROL_SEQ
-                                     AND CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
-                                   ORDER BY CONTROL_SEQ,CONTROL_DETAIL_SEQ
-                             )
-                        END DRAWING_NUM,
-                        CASE WHEN C.WORK_TYPE = 'WTP050' THEN (SELECT
-                                                                   GROUP_CONCAT(DISTINCT IMG_GFILE_SEQ SEPARATOR ',')
-                                                               FROM TBL_CONTROL_PART
-                                                               WHERE CONTROL_SEQ = A.CONTROL_SEQ
-                                                                 AND CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
-                                                               ORDER BY CONTROL_SEQ,CONTROL_DETAIL_SEQ
-                                                        )
-                             ELSE (SELECT
-                                       GROUP_CONCAT(DISTINCT IMG_GFILE_SEQ SEPARATOR ',')
-                                   FROM TBL_CONTROL_PART_ORDER
-                                   WHERE CONTROL_SEQ = A.CONTROL_SEQ
-                                     AND CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
-                                   ORDER BY CONTROL_SEQ,CONTROL_DETAIL_SEQ
-                             )
-                        END DRAWING_SEQ
-                 FROM TBL_MCT_WORK A
-                    INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ
-                    INNER JOIN TBL_CONTROL_PART C ON A.CONTROL_SEQ  = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-                    INNER JOIN TBL_EQUIP D ON A.EQUIP_SEQ = D.EQUIP_SEQ AND D.DEL_YN = 'N'
-                 WHERE A.WORK_START_DT IS NOT NULL
-                   AND A.EQUIP_SEQ = #{EQUIP_SEQ}
-                   AND A.DEL_YN = 'N'
-                   AND A.WORK_FINISH_DT IS NULL
-                   AND A.WORK_STATUS != 'DBS040'
-                 LIMIT 1
-             ) X
-    </select>
     <select id="selectPlanListForDetailPop" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER(ORDER BY A.SORT_NUM) AS ROW_NUM,
