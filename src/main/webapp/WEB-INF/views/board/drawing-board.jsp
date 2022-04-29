@@ -2426,7 +2426,7 @@
                                         $("#bodyWrap").addClass("nc_off");
                                     }
 
-                                    if(!fnIsEmpty(Item.MCT_WORK_SEQ)) {
+                                    if(typeof Item.MCT_WORK_SEQ != 'undefined' && Item.MCT_WORK_SEQ != null && Item.MCT_WORK_SEQ != '') {
                                         $(".UNIT_QTY").text(Item.UNIT_QTY);
                                         $(".COMPLETE_CYCLE_COUNT").text(Item.COMPLETE_CYCLE_COUNT);
                                         $(".COMPLETE_QTY").text(Item.COMPLETE_QTY);
