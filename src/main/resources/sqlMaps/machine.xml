@@ -155,19 +155,34 @@
 
     <select id="selectMachineLogList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT ROW_NUMBER() OVER(ORDER BY A.MCT_WORK_SEQ) AS RNUM
-          , B.PROCESS_TYPE, SF_GET_CODE_NM('1010', B.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM
-          , B.EQUIP_NM
-          , SF_GET_CODE_NM('1079', A.WORK_STATUS, #{LOGIN_LOCALE}) AS WORK_STATUS
-          , SF_GET_DATE_F(A.WORK_START_DT,'','M') AS WORK_START_DT
-          , SF_GET_DATE_F(A.WORK_FINISH_DT,'','M') AS WORK_FINISH_DT
-          , (SELECT SUM(TIMESTAMPDIFF(MINUTE, M.WORK_START_DT, M.WORK_STOP_DT)) FROM TBL_MCT_WORK_TIME M WHERE M.MCT_WORK_SEQ = A.MCT_WORK_SEQ) AS WORKING_TIME     -- 확인
-          , (SELECT M.USER_NM FROM TBL_USER M WHERE M.USER_ID = A.WORK_USER_ID) AS WORK_USER
-          , A.FINISH_QTY
-          , A.ERROR_QTY
-        FROM TBL_MCT_WORK A, TBL_EQUIP B
-        WHERE A.EQUIP_SEQ = B.EQUIP_SEQ
-          AND A.DEL_YN = 'N'
+             , B.PROCESS_TYPE, SF_GET_CODE_NM('1010', B.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM
+             , B.EQUIP_NM
+             , SF_GET_CODE_NM('1079', A.WORK_STATUS, #{LOGIN_LOCALE}) AS WORK_STATUS
+             , SF_GET_DATE_F(A.WORK_START_DT,'','M') AS WORK_START_DT
+             , SF_GET_DATE_F(A.WORK_FINISH_DT,'','M') AS WORK_FINISH_DT
+             , CASE WHEN A.WORK_FINISH_DT IS NULL THEN SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ)
+                    ELSE A.WORK_ACTIVE_TIME
+               END AS WORKING_TIME
+             , CASE WHEN A.WORK_FINISH_DT IS NULL THEN SF_GET_DRAWING_WORK_TIME('STOP', A.MCT_WORK_SEQ)
+                    ELSE A.WORK_STOP_TIME
+               END AS STOP_TIME
+             , B.IF_USE_YN
+             , (SELECT M.USER_NM FROM TBL_USER M WHERE M.USER_ID = A.WORK_USER_ID) AS WORK_USER
+             , SF_GET_CONTROL_PART_INFO(A.CONTROL_SEQ,A.CONTROL_DETAIL_SEQ) AS CONTROL_NUM
+             , A.FINISH_QTY
+             , (SELECT SUM(M.ERROR_QTY) FROM TBL_MCT_WORK_INSPECT M WHERE M.MCT_WORK_SEQ = A.MCT_WORK_SEQ) AS ERROR_QTY
+             , SF_GET_CODE_NM('1032', C.ERROR_REASON, #{LOGIN_LOCALE}) AS ERROR_REASON_NM
+        FROM TBL_MCT_WORK A
+            INNER JOIN TBL_EQUIP B ON A.EQUIP_SEQ = B.EQUIP_SEQ
+            LEFT OUTER JOIN TBL_MCT_WORK_INSPECT C ON C.MCT_WORK_SEQ = A.MCT_WORK_SEQ AND C.MCT_INSPECT_SEQ = (
+                SELECT MAX(Q.MCT_INSPECT_SEQ)
+                FROM TBL_MCT_WORK_INSPECT Q
+                WHERE Q.MCT_WORK_SEQ = A.MCT_WORK_SEQ
+            )
+        WHERE A.DEL_YN = 'N'
           AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+          AND A.WORK_START_DT BETWEEN #{MACHINE_MANAGE_POP_ST_DT} AND #{MACHINE_MANAGE_POP_END_DT}
+        GROUP BY A.MCT_WORK_SEQ
         ORDER BY 1 DESC
     </select>
     <select id="selectMachineHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -184,6 +199,25 @@
           , A.AFTER_GFILE_SEQ
         FROM TBL_EQUIP_REPAIR A
         WHERE A.EQUIP_SEQ = #{EQUIP_SEQ}
+    </select>
+    <select id="selectMachineEquipLogList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT ROW_NUMBER() OVER(ORDER BY A.MCT_WORK_SEQ) AS RNUM
+          , B.PROCESS_TYPE, SF_GET_CODE_NM('1010', B.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM
+             , B.EQUIP_NM
+             , C.ACTIVE_TYPE
+             , C.EXECUTION
+             , SF_GET_DATE_F(C.EVENT_TIME ,'','M') AS EVENT_DT    -- 확인
+             , (SELECT M.USER_NM FROM TBL_USER M WHERE M.USER_ID = A.WORK_USER_ID) AS WORK_USER
+             , SF_GET_CONTROL_PART_INFO(A.CONTROL_SEQ,A.CONTROL_DETAIL_SEQ) AS CONTROL_NUM
+             , C.PROGRAM
+        FROM TBL_MCT_WORK A
+            INNER JOIN TBL_EQUIP B ON A.EQUIP_SEQ = B.EQUIP_SEQ
+            INNER JOIN TBL_MCT_WORKING_LOG C ON C.MCT_WORK_SEQ = A.MCT_WORK_SEQ
+        WHERE A.DEL_YN = 'N'
+            AND A.EQUIP_SEQ = #{EQUIP_SEQ}
+            AND A.WORK_START_DT BETWEEN #{MACHINE_MANAGE_POP_ST_DT} AND #{MACHINE_MANAGE_POP_END_DT}
+        GROUP BY A.MCT_WORK_SEQ
+        ORDER BY C.EVENT_TIME DESC
     </select>
     <insert id="insertMachineMasterHistory" parameterType="java.util.HashMap">
         INSERT INTO TBL_EQUIP_REPAIR ( EQUIP_SEQ, SEQ, REPAIR_TYPE
@@ -765,18 +799,18 @@
             , SF_GET_DATE_F(A.WORK_FINISH_DT, 'YY', 'M') AS WORK_FINISH_DT <!-- 완료일시 -->
             , CASE
                 WHEN A.WORK_FINISH_DT IS NOT NULL THEN TRUNCATE(SF_GET_DRAWING_WORK_TIME('STOP', A.MCT_WORK_SEQ), 0)
-            END AS WORK_STOP_MINUTE <!-- 작업 중지 전체 분 -->
+            END AS WORK_STOP_SECOND <!-- 작업 중지 전체 분 -->
             , CASE
                 WHEN A.WORK_FINISH_DT IS NOT NULL THEN TRUNCATE(SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ), 0)
-            END AS WORK_WORK_MINUTE <!-- 작업 전체 분 -->
+            END AS WORK_WORK_SECOND <!-- 작업 전체 분 -->
             , CASE
                 <!-- WHEN A.WORK_FINISH_DT IS NOT NULL THEN TRUNCATE(SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) / (SF_GET_CONTROL_PART_QTY(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) + IFNULL(C.ADDITIONAL_QTY,0)), 0) -->
                 WHEN A.WORK_FINISH_DT IS NOT NULL THEN TRUNCATE(SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) / (A.FINISH_QTY), 0)
             END AS LEAD_TIME
             , A.FINISH_QTY <!-- 완료 수량 -->
-            , A.ERROR_QTY <!-- 불량 -->
-            , A.ERROR_REASON <!-- 불량 원인 -->
-            , SF_GET_CODE_NM('1015', A.ERROR_REASON, #{LOGIN_LOCALE}) AS ERROR_REASON_NM <!-- 불량 원인 -->
+            , A.GOAL_QTY
+            , (SELECT SUM(Q.ERROR_QTY) FROM TBL_MCT_WORK_INSPECT Q WHERE Q.MCT_WORK_SEQ = A.MCT_WORK_SEQ) AS ERROR_QTY
+            , SF_GET_CODE_NM('1032', E.ERROR_REASON, 'KO') AS ERROR_REASON_NM -- 불량 원인 -->
             , CASE
                 WHEN C.PART_NUM IS NULL THEN B.CONTROL_NUM
                 ELSE CONCAT(B.CONTROL_NUM, ' #', C.PART_NUM)
@@ -852,6 +886,11 @@
                 <if test="EQUIP_SEQ != null and EQUIP_SEQ != ''">
                     AND D.EQUIP_SEQ = #{EQUIP_SEQ}
                 </if>
+            LEFT OUTER JOIN TBL_MCT_WORK_INSPECT E ON E.MCT_WORK_SEQ = A.MCT_WORK_SEQ AND E.MCT_INSPECT_SEQ = (
+                SELECT MAX(Q.MCT_INSPECT_SEQ)
+                FROM TBL_MCT_WORK_INSPECT Q
+                WHERE Q.MCT_WORK_SEQ = A.MCT_WORK_SEQ
+            )
         WHERE 1 = 1
             AND A.DEL_YN = 'N'
             <if test="CONTROL_NUM_OR_DRAWING_NUM != null and CONTROL_NUM_OR_DRAWING_NUM != ''">

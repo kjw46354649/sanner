@@ -407,7 +407,14 @@
             , X.WORK_STATUS
             , X.WORK_START_DT
             , X.WORK_FINISH_DT
-            , CONCAT(TRUNCATE(X.WORKING_TIME / 3600, 0), 'h ', TRUNCATE((X.WORKING_TIME % 3600) / 60, 0), 'm')  AS WORKING_TIME
+            , CONCAT(
+                TRUNCATE(IFNULL(X.WORKING_TIME,0)/3600,0) , 'h ',
+                TRUNCATE((IFNULL(X.WORKING_TIME,0)%3600)/60,0), 'm'
+            )  AS WORKING_TIME
+            , CONCAT(
+                TRUNCATE(IFNULL(X.STOP_TIME,0)/3600,0) , 'h ',
+                TRUNCATE((IFNULL(X.STOP_TIME,0)%3600)/60,0), 'm'
+            )  AS STOP_TIME
             , X.WORK_USER
             , X.FINISH_QTY
             , X.ERROR_QTY
@@ -418,13 +425,14 @@
                 , SF_GET_CODE_NM('1079', A.WORK_STATUS, #{LOGIN_LOCALE}) AS WORK_STATUS
                 , SF_GET_DATE_F(A.WORK_START_DT,'','M') AS WORK_START_DT
                 , SF_GET_DATE_F(A.WORK_FINISH_DT,'','M') AS WORK_FINISH_DT
-                , (SELECT SUM(TIMESTAMPDIFF(SECOND, M.WORK_START_DT, M.WORK_STOP_DT)) FROM TBL_MCT_WORK_TIME M WHERE M.MCT_WORK_SEQ = A.MCT_WORK_SEQ) AS WORKING_TIME
+                , SF_GET_DRAWING_WORK_TIME('WORK', A.MCT_WORK_SEQ) AS WORKING_TIME
+                , SF_GET_DRAWING_WORK_TIME('STOP', A.MCT_WORK_SEQ) AS STOP_TIME
                 , (SELECT M.USER_NM FROM TBL_USER M WHERE M.USER_ID = A.WORK_USER_ID) AS WORK_USER
                 , A.FINISH_QTY
-                , A.ERROR_QTY
-            FROM TBL_MCT_WORK A, TBL_EQUIP B
-            WHERE A.EQUIP_SEQ = B.EQUIP_SEQ
-              AND A.DEL_YN = 'N'
+                , (SELECT SUM(Q.ERROR_QTY) FROM TBL_MCT_WORK_INSPECT Q WHERE Q.MCT_WORK_SEQ = A.MCT_WORK_SEQ) AS ERROR_QTY
+            FROM TBL_MCT_WORK A
+                INNER JOIN TBL_EQUIP B ON A.EQUIP_SEQ = B.EQUIP_SEQ
+            WHERE A.DEL_YN = 'N'
               AND A.CONTROL_SEQ = #{CONTROL_SEQ}
               AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
             ORDER BY 1 DESC

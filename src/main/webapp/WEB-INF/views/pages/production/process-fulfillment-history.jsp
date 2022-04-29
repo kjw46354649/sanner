@@ -211,7 +211,7 @@
                     {title: '착수일시', width: 90, dataIndx: 'WORK_START_DT'},
                     {title: '완료일시', width: 90, dataIndx: 'WORK_FINISH_DT'},
                     {
-                        title: '정지시간', width: 60, dataIndx: 'WORK_STOP_MINUTE',
+                        title: '정지시간', width: 60, dataIndx: 'WORK_STOP_SECOND',
                         render: function (ui) {
                             const cellData = ui.cellData;
                             const min = Math.floor(cellData % 3600 / 60);
@@ -226,7 +226,7 @@
                             }
                         }},
                     {
-                        title: '총 R/T', width: 60, dataIndx: 'WORK_WORK_MINUTE',
+                        title: '총 R/T', width: 60, dataIndx: 'WORK_WORK_SECOND',
                         render: function (ui) {
                             const cellData = ui.cellData;
                             const min = Math.floor(cellData % 3600 / 60);
@@ -255,9 +255,10 @@
                             }
                         }
                     },
+                    {title: '목표수량', width: 60, dataIndx: 'GOAL_QTY'},
                     {title: '완료수량', width: 60, dataIndx: 'FINISH_QTY'},
                     {title: '불량', width: 60, dataIndx: 'ERROR_QTY'},
-                    {title: '불량원인', width: 100, dataIndx: 'ERROR_REASON_NM'},
+                    {title: '불량내용', width: 100, dataIndx: 'ERROR_REASON_NM'},
                 ]
             },
             {title: '작업지시번호', width: 180, align: 'left', dataIndx: 'CONTROL_NUM'},
@@ -499,22 +500,6 @@
                     $processFulfillmentHistorySearchForm.find('.for_diabled').attr('disabled',true);
             }
         });
-
-        //TODO: 공정 콤보박스 변경하면 가공기기 변경
-        // $('#PROCESS_TYPE').on('change', function () {
-        //     console.log('change');
-        //     console.log(this.value);
-        //     const factoryArea = this.value;
-        //     console.log(EQUIP);
-        //     console.log(typeof EQUIP);
-        //     let k = EQUIP.filter(value => {
-        //         console.log('this.value', this.value);
-        //         return factoryArea === value.factoryArea;
-        //     });
-        //     console.log('k', k);
-        //     console.log('EQUIP', EQUIP);
-        // });
-        /* event */
 
         /* init */
         $processFulfillmentHistoryGrid = $('#' + tab2GridId).pqGrid(tab2Obj);
