@@ -137,7 +137,7 @@
             <if test="PHOTO_GFILE_SEQ != null and PHOTO_GFILE_SEQ != ''">
                   , PHOTO_GFILE_SEQ = #{PHOTO_GFILE_SEQ}
             </if>
-            <if test="ETC_GFILE_SEQ != null and ETC_GFILE_SEQ != ''">
+            <if test="ETC_GFILE_SEQ != null">
               , ETC_GFILE_SEQ = #{ETC_GFILE_SEQ}
             </if>
               , UPDATE_DT = NOW()

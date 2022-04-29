@@ -140,7 +140,7 @@
 
 <!-- layer popup : S -->
 <div class="popup_container" id="CURRENT_POPUP" style="display: none;">
-    <form class="form-inline" id="machine_manage_pop_form" name="machine_manage_pop_form" role="form">
+    <form class="form-inline" id="machine_manage_pop_form" name="machine_manage_pop_form" role="form" onsubmit="return false">
         <input type="hidden" id="queryId" name="queryId" value="machine.selectMachineInfo">
         <input type="hidden" id="SEQ" name="SEQ" value="">
         <input type="hidden" id="EQUIP_KIND" name="EQUIP_KIND" value="">
@@ -286,8 +286,9 @@
                                 <th scope="row">첨부파일</th>
                                 <td colspan="3">
                                     <input type="hidden" id="ETC_GFILE_SEQ" name="ETC_GFILE_SEQ" value="">
-                                    <input type="text" id="ETC_GFILE_SEQ_NM" name="ETC_GFILE_SEQ_NM" placeholder="첨부파일" readonly style="width:75%;">
+                                    <input type="text" id="ETC_GFILE_SEQ_NM" name="ETC_GFILE_SEQ_NM" placeholder="첨부파일" readonly style="width:60%;">
                                     <input type="button" id="etc_attach_file" name="etc_attach_file" value="fileUpload" class="smallBtn blue">
+                                    <button id="delete_etc_file" class="smallBtn green ml-5" style="width: 15%;padding: 0;">삭제</button>
                                 </td>
                             </tr>
                             <tr>
@@ -1289,6 +1290,13 @@
                 }
             });
         });
+        $("#machine_manage_pop_form").find("#delete_etc_file").on('click', function () {
+            let etcSeq = $("#machine_manage_pop_form").find("#ETC_GFILE_SEQ").val();
+            if(!fnIsEmpty(etcSeq)) {
+                $("#machine_manage_pop_form").find("#ETC_GFILE_SEQ_NM").val('');
+                $("#machine_manage_pop_form").find("#ETC_GFILE_SEQ").val('');
+            }
+        })
 
         /** 장비 파일 업로드 */
         $("#machine_manage_pop_form").find("#photo_upload").click(function (e) {
