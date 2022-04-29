@@ -471,7 +471,10 @@
 						<tbody>
 							<tr>
 								<td class="th_color_green">Program No.</td>
-								<td class="text-blue PROGRAM" colspan="3"></td>
+								<td class="text-blue" colspan="3">
+									<div class="PROGRAM ml-15" style="overflow-x: hidden;height: 45px;width: 990px;">
+									</div>
+								</td>
 							</tr>
 							<tr>
 								<td class="th_color_green">Running Time</td>
@@ -488,7 +491,7 @@
 							<tr>
 								<td class="th_color_green">Message</td>
 								<td colspan="3">
-									<div class="MESSAGE ml-15" style="overflow-x: hidden;height: 30px;width: 990px;">
+									<div class="MESSAGE ml-15" style="overflow-x: hidden;height: 45px;width: 990px;">
 									</div>
 								</td>
 							</tr>

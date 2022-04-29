@@ -867,7 +867,10 @@
                             <tbody>
                             <tr>
                                 <td class="th_color_green">Program No.</td>
-                                <td class="text-blue PROGRAM" colspan="3"></td>
+                                <td class="text-blue" colspan="3">
+                                    <div class="PROGRAM ml-10" style="overflow-x: hidden;height: 30px;width: 440px;">
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="th_color_green">Running Time</td>
