@@ -214,7 +214,13 @@
         	    INNER JOIN TBL_CONTROL_PART C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
         	    INNER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND D.DEL_YN = 'N'
                 INNER JOIN TBL_EQUIP F ON F.EQUIP_SEQ = A.EQUIP_SEQ AND F.DEL_YN = 'N'
-                LEFT OUTER JOIN TBL_MCT_WORKING_LOG E ON E.MCT_WORK_SEQ = A.MCT_WORK_SEQ AND E.MCT_LOG_SEQ = (SELECT MAX(Q.MCT_LOG_SEQ) FROM TBL_MCT_WORKING_LOG Q WHERE Q.MCT_WORK_SEQ = E.MCT_WORK_SEQ)
+                LEFT OUTER JOIN TBL_MCT_WORKING_LOG E ON E.MCT_WORK_SEQ = A.MCT_WORK_SEQ
+        	        AND E.MCT_LOG_SEQ = (
+        	            SELECT MAX(Q.MCT_LOG_SEQ)
+        	            FROM TBL_MCT_WORKING_LOG Q
+        	            WHERE Q.MCT_WORK_SEQ = E.MCT_WORK_SEQ
+        	                AND Q.ACTIVE_TYPE != 'DISCONNECT'
+        	        )
         	WHERE 1 = 1
                 AND A.MCT_WORK_SEQ = (SELECT MAX(H.MCT_WORK_SEQ) FROM TBL_MCT_WORK H
                                         WHERE A.EQUIP_SEQ = H.EQUIP_SEQ AND H.DEL_YN = 'N' AND H.WORK_FINISH_DT IS NOT NULL
@@ -382,7 +388,13 @@
                 INNER JOIN TBL_CONTROL_PART C ON A.CONTROL_SEQ = C.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                 INNER JOIN TBL_CONTROL D ON C.CONTROL_SEQ = D.CONTROL_SEQ AND D.DEL_YN = 'N'
                 INNER JOIN TBL_EQUIP F ON F.EQUIP_SEQ = A.EQUIP_SEQ AND F.DEL_YN = 'N'
-                LEFT OUTER JOIN TBL_MCT_WORKING_LOG E ON E.MCT_WORK_SEQ = A.MCT_WORK_SEQ AND E.MCT_LOG_SEQ = (SELECT MAX(Q.MCT_LOG_SEQ) FROM TBL_MCT_WORKING_LOG Q WHERE Q.MCT_WORK_SEQ = E.MCT_WORK_SEQ)
+                LEFT OUTER JOIN TBL_MCT_WORKING_LOG E ON E.MCT_WORK_SEQ = A.MCT_WORK_SEQ
+                    AND E.MCT_LOG_SEQ = (
+                        SELECT MAX(Q.MCT_LOG_SEQ)
+                        FROM TBL_MCT_WORKING_LOG Q
+                        WHERE Q.MCT_WORK_SEQ = E.MCT_WORK_SEQ
+                            AND Q.ACTIVE_TYPE != 'DISCONNECT'
+                    )
             WHERE 1 = 1
                 AND A.MCT_WORK_SEQ = (SELECT MAX(H.MCT_WORK_SEQ) FROM TBL_MCT_WORK H
                                         WHERE A.EQUIP_SEQ = H.EQUIP_SEQ AND H.DEL_YN = 'N' AND H.WORK_FINISH_DT IS NULL
@@ -559,6 +571,7 @@
                         INNER JOIN TBL_MCT_WORK N ON M.MCT_WORK_SEQ = N.MCT_WORK_SEQ AND M.EQUIP_SEQ = N.EQUIP_SEQ AND N.DEL_YN = 'N'
                     WHERE 1=1
                         AND M.MCT_WORK_SEQ = #{MCT_WORK_SEQ}
+                        AND M.ACTIVE_TYPE != 'DISCONNECT'
                     ORDER BY M.MCT_LOG_SEQ
                 ) X
                 GROUP BY X.MCT_WORK_SEQ
@@ -601,6 +614,7 @@
                         INNER JOIN TBL_MCT_WORK N ON M.MCT_WORK_SEQ = N.MCT_WORK_SEQ AND M.EQUIP_SEQ = N.EQUIP_SEQ AND N.DEL_YN = 'N'
                     WHERE 1=1
                         AND M.MCT_WORK_SEQ = #{MCT_WORK_SEQ}
+                        AND M.ACTIVE_TYPE != 'DISCONNECT'
                     ORDER BY M.MCT_LOG_SEQ
                 ) X
                 GROUP BY X.MCT_WORK_SEQ

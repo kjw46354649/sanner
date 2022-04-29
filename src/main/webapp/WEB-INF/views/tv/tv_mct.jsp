@@ -309,21 +309,21 @@
 								<tr>
 									<td class="th_color" colspan="2">작업수량</td>
 									<td colspan="2">
-										<span class="purple wd_50 d-inline-block radius">목표</span>
-										<span class="wd_80 GOAL_QTY d-inline-block radius"></span>
-										<span class="blue wd_50 d-inline-block radius">완료</span>
-										<span class="wd_80 FINISH_QTY d-inline-block radius"></span>
-										<span class="red wd_50 d-inline-block radius">불량</span>
-										<span class="wd_80 ERROR_QTY d-inline-block radius"></span>
+										<span class="purple d-inline-block radius" style="width: 10%;">목표</span>
+										<span class="GOAL_QTY d-inline-block radius" style="width: 20%;"></span>
+										<span class="blue d-inline-block radius" style="width: 10%;">완료</span>
+										<span class="FINISH_QTY d-inline-block radius" style="width: 20%;"></span>
+										<span class="red d-inline-block radius" style="width: 10%;">불량</span>
+										<span class="ERROR_QTY d-inline-block radius" style="width: 20%;"></span>
 									</td>
 								</tr>
 								<tr>
 									<td class="th_color" colspan="2">가공수행시간</td>
 									<td colspan="2">
-										<span class="green wd_50 d-inline-block radius">가동</span>
-										<span class="wd_150 WORK_ACTIVE_TIME_FORMAT d-inline-block"></span>
-										<span class="yellow wd_50 d-inline-block radius">비가동</span>
-										<span class="wd_150 WORK_STOP_TIME_FORMAT d-inline-block"></span>
+										<span class="green d-inline-block radius" style="width: 12%;">가동</span>
+										<span class="WORK_ACTIVE_TIME_FORMAT d-inline-block" style="width: 34%;"></span>
+										<span class="yellow d-inline-block radius" style="width: 12%;">비가동</span>
+										<span class="WORK_STOP_TIME_FORMAT d-inline-block" style="width: 34%;"></span>
 									</td>
 								</tr>
 								<tr>
@@ -349,7 +349,7 @@
 								</tr>
 								<tr>
 									<td class="th_color_green">Running Time</td>
-									<td class="text-blue WORK_ACTIVE_TIME_FORMAT"></td>
+									<td class="text-blue CURRENT_STATUS_TIME_FORMAT"></td>
 									<td class="th_color_green">Execution</td>
 									<td class="EXECUTION"></td>
 								</tr>

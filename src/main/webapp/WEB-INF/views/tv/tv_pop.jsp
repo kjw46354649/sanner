@@ -475,7 +475,7 @@
 							</tr>
 							<tr>
 								<td class="th_color_green">Running Time</td>
-								<td class="text-blue WORK_ACTIVE_TIME_FORMAT"></td>
+								<td class="text-blue CURRENT_STATUS_TIME_FORMAT"></td>
 								<td class="th_color_green">Execution</td>
 								<td class="EXECUTION"></td>
 							</tr>
@@ -967,10 +967,10 @@
 									mHtml += '<img src="/resource/pop/images/user.svg" alt="직원사진">';
 								}
 								mHtml += '</div>';
-								if(m_list[i].ACTIVE_TOTAL != undefined && m_list[i].ACTIVE_TOTAL != '') {
+								if(!fnIsEmpty(m_list[i].ACTIVE_TOTAL)) {
 									mHtml += '<div class="progressTime">';
 									mHtml += '<span>'+ m_list[i].ACTIVE_TOTAL + '</span>';
-									if(m_list[i].PLAN_WORKING_TIME != undefined && m_list[i].PLAN_WORKING_TIME != ''){
+									if(!fnIsEmpty(m_list[i].PLAN_WORKING_TIME)){
 										mHtml += (' / ' + m_list[i].PLAN_WORKING_TIME)
 									}
 									mHtml += '</div>';
@@ -985,6 +985,125 @@
 				}
 			}, parameter, '');
 		};
+
+		function refreshHtml(m_list) {
+			for (let i = 0; i < m_list.length; i++) {
+				let factory_area = m_list[i].FACTORY_AREA;
+				let layout_sort = m_list[i].LAYOUT_SORT;
+				let equip_nm = m_list[i].EQUIP_NM;
+				let img_gfile_seq = m_list[i].IMG_GFILE_SEQ;
+				let material_type = ((typeof m_list[i].MATERIAL_TYPE_NM != 'undefined') ?m_list[i].MATERIAL_TYPE_NM:'');
+				let work_type_nm = ((typeof m_list[i].WORK_TYPE_NM != 'undefined') ?m_list[i].WORK_TYPE_NM:'');
+				let part_qty = ((typeof m_list[i].PART_QTY != 'undefined') ?m_list[i].PART_QTY:'');
+
+				let user_nm = m_list[i].USER_NM;
+				let user_photo_gfile_seq = m_list[i].USER_PHOTO_GFILE_SEQ;
+
+				$("#"+factory_area + '_WORK').html('<span>진행</span> ' + m_list[i].WORK_TOTAL);
+				$("#"+factory_area + '_WAIT').html('<span>대기</span> ' + m_list[i].WAIT_TOTAL);
+
+				let $target = $("#" + factory_area+"_"+layout_sort);
+				if($target.length > 0){
+					$target.removeClass("login")
+					$target.removeClass("pause")
+
+					$target.addClass(m_list[i].WORK_STATUS);
+
+					$target.find(".machineName").text(((typeof equip_nm != 'undefined')? equip_nm:''));
+					$target.find(".staffName").text(((typeof user_nm != 'undefined')? user_nm:''));
+					$target.find(".productName").html(material_type+'&nbsp;'+work_type_nm+'&nbsp;'+part_qty);
+
+
+					if(typeof img_gfile_seq != 'undefined') {
+						$("#img_"+factory_area+"_"+layout_sort).css(
+								{
+									'background':'url(/qsimage/'+img_gfile_seq +')',
+									'background-repeat':'no-repeat',
+									'background-size':'cover',
+									'background-position':'center'
+								}
+						);
+					}else {
+						$("#img_"+factory_area+"_"+layout_sort).css({'background':''});
+						if(!$("#img_"+factory_area+"_"+layout_sort).hasClass(m_list[i].MACHINE_ICON)) {
+							$("#img_"+factory_area+"_"+layout_sort).addClass(m_list[i].MACHINE_ICON);
+						}
+					}
+
+					if(m_list[i].IF_USE_YN == 'Y' && !fnIsEmpty(m_list[i].WORK_STATUS)) {
+						if($target.find(".progressPercent").length > 0) {
+							$target.find(".progressPercent").text('완료 : ' + m_list[i].COMPLETE_QTY + 'EA (' + m_list[i].COMPLETE_PERCENT + '%)');
+						}else {
+							let html = '<span class="progressPercent">완료 : '+ m_list[i].COMPLETE_QTY + ' EA ('+ m_list[i].COMPLETE_PERCENT + '%)</span>';
+							$target.find(".backImg").append(html);
+						}
+					}
+
+					$target.find(".no_work").remove();
+					$target.find(".disconnect").remove();
+					$target.find(".nc_off").remove();
+
+					if(m_list[i].WORK_STATUS == 'pause') {
+						var html = '';
+						if($target.find(".pauseTime").length > 0) {
+							html = 'Stopped<br>';
+							html += '<span>(' + m_list[i].STOP_TIME + ')</span>';
+							$target.find(".pauseTime").html(html)
+						}else {
+							html = '<div id="pauseTime" class="pauseTime">';
+							html += '	Stopped<br>';
+							html += '<span>(' + m_list[i].STOP_TIME + ')</span>';
+							html += '</div>';
+							$target.find(".backImg").append(html);
+						}
+					}else if(m_list[i].WORK_STATUS == 'login') {
+						$target.find(".pauseTime").remove();
+					}else {
+						$target.find(".pauseTime").remove();
+						let html ='<span class="no_work">No Work <p>('+ makeTimeSec(m_list[i].LAST_WORK_TIME) +')</p></span>';
+						$target.find(".backImg").append(html);
+					}
+
+					if(m_list[i].EQUIP_OFF_YN == 'Y') {
+						let html = '<div class="nc_off">NC OFF<br>	<span>('+ makeTimeSec(m_list[i].EQUIP_OFF_TIME) +')</span></div>';
+						$target.find(".backImg").append(html);
+					}else if(m_list[i].DISCONNECT_YN == 'Y') {
+						let html = '<div class="disconnect">Network<br>Disconnected</div>';
+						$target.find(".backImg").append(html);
+					}
+
+					if(typeof user_photo_gfile_seq != 'undefined'){
+						$target.find(".staffImg").removeClass("staffIcon");
+						$target.find(".staffImg").find("img").attr("src","/image/"+user_photo_gfile_seq);
+					}else {
+						if(!$target.find(".staffImg").hasClass("staffIcon")) {
+							$target.find(".staffImg").addClass("staffIcon");
+						}
+						$target.find(".staffImg").find("img").attr("src","/resource/pop/images/user.svg");
+					}
+					if(!fnIsEmpty(m_list[i].ACTIVE_TOTAL)) {
+						var timeHtml = '';
+						if($target.find(".progressTime").length > 0) {
+							timeHtml = '<span>' + m_list[i].ACTIVE_TOTAL + '</span>';
+							if(!fnIsEmpty(m_list[i].PLAN_WORKING_TIME)) {
+								timeHtml += ' / ' + m_list[i].PLAN_WORKING_TIME;
+							}
+							$target.find(".progressTime").html(timeHtml);
+						}else {
+							timeHtml = '<div class="progressTime">';
+							timeHtml += '	<span>' + m_list[i].ACTIVE_TOTAL + '</span>';
+							if(!fnIsEmpty(m_list[i].PLAN_WORKING_TIME)) {
+								timeHtml += ' / ' + m_list[i].PLAN_WORKING_TIME;
+							}
+							timeHtml += '</div>';
+							$target.find(".staffImg").after(timeHtml);
+						}
+					}
+
+				}
+			}
+		}
+
 
 		let getWorkDrawingData = function (equipList) {
 			let parameter = {'url': '/tv/pop/schedulerPopDrawingData', 'data': {}};
@@ -1006,121 +1125,7 @@
 				}
 
 				if (m_list != '') {//장비
-					for (let i = 0; i < m_list.length; i++) {
-						let factory_area = m_list[i].FACTORY_AREA;
-						let layout_sort = m_list[i].LAYOUT_SORT;
-						let equip_nm = m_list[i].EQUIP_NM;
-						let img_gfile_seq = m_list[i].IMG_GFILE_SEQ;
-						let material_type = ((typeof m_list[i].MATERIAL_TYPE_NM != 'undefined') ?m_list[i].MATERIAL_TYPE_NM:'');
-						let work_type_nm = ((typeof m_list[i].WORK_TYPE_NM != 'undefined') ?m_list[i].WORK_TYPE_NM:'');
-						let part_qty = ((typeof m_list[i].PART_QTY != 'undefined') ?m_list[i].PART_QTY:'');
-
-						let user_nm = m_list[i].USER_NM;
-						let user_photo_gfile_seq = m_list[i].USER_PHOTO_GFILE_SEQ;
-
-						$("#"+factory_area + '_WORK').html('<span>진행</span> ' + m_list[i].WORK_TOTAL);
-						$("#"+factory_area + '_WAIT').html('<span>대기</span> ' + m_list[i].WAIT_TOTAL);
-
-						let $target = $("#" + factory_area+"_"+layout_sort);
-						if($target.length > 0){
-							$target.removeClass("login")
-							$target.removeClass("pause")
-
-							$target.addClass(m_list[i].WORK_STATUS);
-
-							$target.find(".machineName").text(((typeof equip_nm != 'undefined')? equip_nm:''));
-							$target.find(".staffName").text(((typeof user_nm != 'undefined')? user_nm:''));
-							$target.find(".productName").html(material_type+'&nbsp;'+work_type_nm+'&nbsp;'+part_qty);
-
-
-							if(typeof img_gfile_seq != 'undefined') {
-								$("#img_"+factory_area+"_"+layout_sort).css(
-										{
-											'background':'url(/qsimage/'+img_gfile_seq +')',
-											'background-repeat':'no-repeat',
-											'background-size':'cover',
-											'background-position':'center'
-										}
-								);
-							}else {
-								$("#img_"+factory_area+"_"+layout_sort).css({'background':''});
-								if(!$("#img_"+factory_area+"_"+layout_sort).hasClass(m_list[i].MACHINE_ICON)) {
-									$("#img_"+factory_area+"_"+layout_sort).addClass(m_list[i].MACHINE_ICON);
-								}
-							}
-
-							if(m_list[i].IF_USE_YN == 'Y' && !fnIsEmpty(m_list[i].WORK_STATUS)) {
-								if($target.find(".progressPercent").length > 0) {
-									$target.find(".progressPercent").text('완료 : ' + m_list[i].COMPLETE_QTY + 'EA (' + m_list[i].COMPLETE_PERCENT + '%)');
-								}else {
-									let html = '<span class="progressPercent">완료 : '+ m_list[i].COMPLETE_QTY + ' EA ('+ m_list[i].COMPLETE_PERCENT + '%)</span>';
-									$target.find(".backImg").append(html);
-								}
-							}
-
-							$target.find(".no_work").remove();
-							$target.find(".disconnect").remove();
-							$target.find(".nc_off").remove();
-
-							if(m_list[i].WORK_STATUS == 'pause') {
-								var html = '';
-								if($target.find(".pauseTime").length > 0) {
-									html = 'Stopped<br>';
-									html += '<span>(' + m_list[i].STOP_TIME + ')</span>';
-									$target.find(".pauseTime").html(html)
-								}else {
-									html = '<div id="pauseTime" class="pauseTime">';
-									html += '	Stopped<br>';
-									html += '<span>(' + m_list[i].STOP_TIME + ')</span>';
-									html += '</div>';
-									$target.find(".backImg").append(html);
-								}
-							}else if(m_list[i].WORK_STATUS == 'login') {
-								$target.find(".pauseTime").remove();
-							}else {
-								$target.find(".pauseTime").remove();
-								let html ='<span class="no_work">No Work <p>('+ makeTimeSec(m_list[i].LAST_WORK_TIME) +')</p></span>';
-								$target.find(".backImg").append(html);
-							}
-
-							if(m_list[i].EQUIP_OFF_YN == 'Y') {
-								let html = '<div class="nc_off">NC OFF<br>	<span>('+ makeTimeSec(m_list[i].EQUIP_OFF_TIME) +')</span></div>';
-								$target.find(".backImg").append(html);
-							}else if(m_list[i].DISCONNECT_YN == 'Y') {
-								let html = '<div class="disconnect">Network<br>Disconnected</div>';
-								$target.find(".backImg").append(html);
-							}
-
-							if(typeof user_photo_gfile_seq != 'undefined'){
-								$target.find(".staffImg").removeClass("staffIcon");
-								$target.find(".staffImg").find("img").attr("src","/image/"+user_photo_gfile_seq);
-							}else {
-								if(!$target.find(".staffImg").hasClass("staffIcon")) {
-									$target.find(".staffImg").addClass("staffIcon");
-								}
-								$target.find(".staffImg").find("img").attr("src","/resource/pop/images/user.svg");
-							}
-							if(typeof m_list[i].ACTIVE_TOTAL != 'undefined' && m_list[i].ACTIVE_TOTAL != '') {
-								var timeHtml = '';
-								if($target.find(".progressTime").length > 0) {
-									timeHtml = '<span>' + m_list[i].ACTIVE_TOTAL + '</span>';
-									if(m_list[i].PLAN_WORKING_TIME != undefined && m_list[i].PLAN_WORKING_TIME != '') {
-										timeHtml += ' / ' + m_list[i].PLAN_WORKING_TIME;
-									}
-									$target.find(".progressTime").html(timeHtml);
-								}else {
-									timeHtml = '<div class="progressTime">';
-									timeHtml += '	<span>' + m_list[i].ACTIVE_TOTAL + '</span>';
-									if(m_list[i].PLAN_WORKING_TIME != undefined && m_list[i].PLAN_WORKING_TIME != '') {
-										timeHtml += ' / ' + m_list[i].PLAN_WORKING_TIME;
-									}
-									timeHtml += '</div>';
-									$target.find(".staffImg").after(timeHtml);
-								}
-							}
-
-						}
-					}
+					refreshHtml(m_list);
 				}
 			}, parameter, '');
 		};
@@ -1234,7 +1239,7 @@
 						html += '<span>(0h 0m)</span>';
 						html += '</div>';
 
-						$target.find(".progressPercent").after(html);
+						$target.find(".backImg").append(html);
 					}
 					break;
 				case 'DB_START' :
@@ -1244,40 +1249,10 @@
 						}
 					};
 					fnPostAjax(function (data) {
-						if(data.info.IMG_GFILE_SEQ != undefined && data.info.IMG_GFILE_SEQ != '') {
-							$("#img_"+messageData.factoryArea + "_" + messageData.equipPosition).css({
-								'background':'url(/qsimage/' + data.info.IMG_GFILE_SEQ + ')',
-								'background-repeat':'no-repeat',
-								'background-size':'cover',
-								'background-position':'center'
-							})
-						}
-						var pName = ((data.info.MATERIAL_TYPE_NM != undefined)?data.info.MATERIAL_TYPE_NM:'') + '&nbsp;';
-						pName += ((data.info.WORK_TYPE_NM != undefined)?data.info.WORK_TYPE_NM:'') + '&nbsp;';
-						pName += ((data.info.PART_QTY != undefined)?data.info.PART_QTY:'');
-						$target.find(".productName").html(pName);
+						let m_list = [];
+						m_list.push(data.info);
 
-						if(data.info.WORKING_TIME != undefined && data.info.WORKING_TIME != '') {
-							var html = '';
-							if($target.find(".progressTime") > 0) {
-								html = '<span>' + data.info.WORKING_TIME + '</span>';
-								if(data.info.PLAN_WORKING_TIME != undefined && data.info.PLAN_WORKING_TIME != '') {
-									html += ' / ' + data.info.PLAN_WORKING_TIME;
-								}
-								$target.find(".progressTime").html(html);
-							}else {
-								html = '<div class="progressTime">';
-								html += '	<span>' + data.info.WORKING_TIME + '</span>';
-								if(data.info.PLAN_WORKING_TIME != undefined && data.info.PLAN_WORKING_TIME != '') {
-									html += ' / ' + data.info.PLAN_WORKING_TIME;
-								}
-								html += '</div>';
-								$target.find(".staffImg").after(html);
-							}
-						}
-						$target.addClass("login");
-						$target.removeClass("pause");
-
+						refreshHtml(m_list);
 					}, parameter2, '');
 				case 'DB_RESTART' :
 					$target.addClass("login");
@@ -1601,7 +1576,7 @@
 					}
 					$("#popHeadMid4").find("."+key).text(val);
 				}
-				if(typeof data.info.IMG_GFILE_SEQ != 'undefined' && data.info.IMG_GFILE_SEQ != '' && data.info.IMG_GFILE_SEQ != null) {
+				if(!fnIsEmpty(data.info.IMG_GFILE_SEQ)) {
 					$("#mapImgWrap").attr('src', '/qimage/'+data.info.IMG_GFILE_SEQ);
 					$("#mapImgWrap").attr('alt', data.info.IMG_GFILE_SEQ);
 					$("#mapImgWrap").attr('data-value', data.info.IMG_GFILE_SEQ);
@@ -1670,7 +1645,7 @@
 						}
 						$("#machinePopupWrap").find("."+key).text(val);
 					}
-					if(typeof data.info.IMG_GFILE_SEQ != 'undefined' && data.info.IMG_GFILE_SEQ != '' && data.info.IMG_GFILE_SEQ != null) {
+					if(!fnIsEmpty(data.info.IMG_GFILE_SEQ)) {
 						$("#mapImgWrap").attr('src', '/qimage/'+data.info.IMG_GFILE_SEQ);
 						$("#mapImgWrap").attr('alt', data.info.IMG_GFILE_SEQ);
 						$("#mapImgWrap").attr('data-value', data.info.IMG_GFILE_SEQ);
