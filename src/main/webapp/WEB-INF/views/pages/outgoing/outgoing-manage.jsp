@@ -688,13 +688,10 @@
 
         let outgoingManageGridId01 = $("#outgoing_manage_grid");
         let outgoingManageColModel01;
-        // let outgoingManagePostData01;
 
         /**  리스트 그리드 선언 시작 **/
         $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
-        // outgoingManagePostData01 = fnFormToJsonArrayData('#outgoing_manage_form');
         outgoingManageColModel01 = [
-            // {title: 'BARCODE_NUM', dataIndx: 'BARCODE_NUM', hidden:true},
             {title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'ORDER_SEQ', dataIndx: 'ORDER_SEQ', hidden: true},
@@ -750,18 +747,8 @@
                     });
                 }
             },
-            {title: '도면번호', dataIndx: 'DRAWING_NUM', width: 170,
-                // postRender: function (ui) {
-                //     let grid = this,
-                //         $cell = grid.getCell(ui);
-                //     $cell.bind("click", function () {
-                //         let rowData = ui.rowData;
-                //         callQuickDrawingImageViewer(rowData.IMG_GFILE_SEQ,rowData);
-                //     });
-                // }
-            },
+            {title: '도면번호', dataIndx: 'DRAWING_NUM', width: 170},
             {title: '작업<br>형태', dataIndx: 'WORK_TYPE_NM', minWidth: 40},
-            // {title: 'MATERIAL_DETAIL', dataIndx: 'MATERIAL_DETAIL', hidden:true},
             {title: '소재종류', dataIndx: 'MATERIAL_DETAIL_NM', width: 80},
             {title: '표면처리', dataIndx: 'SURFACE_TREAT_NM', width: 80},
             {title: '규격', dataIndx: 'SIZE_TXT', width: 100},
@@ -787,13 +774,10 @@
             {
                 title: '수동 입력 버튼', minWidth: 150, width: 150, dataIndx: 'BTN',
                 render: function (ui) {
-                    // let grid = this;
-                    // let $cell = grid.getCell(ui);
                     let rowData = ui.rowData;
                     let outBtn = '';
                     let returnBtn = '';
                     let labelBtn = '';
-                    // console.log("ui.rowData['PART_NUM']",ui.rowData['PART_NUM']);
                     if (ui.rowData['PART_NUM'] === undefined && ui.rowData['ORDER_SEQ'] !== undefined) {//part 있음 모든 버튼 안보이게
                         if (ui.rowData['SCRAP_YN'] === 'Y') {
                             outBtn = '<button type="button" class="miniBtn gray" style="color: #777777 !important;">출고</button>' + '&nbsp;';
@@ -818,45 +802,6 @@
 
                     return outBtn + returnBtn + labelBtn;
                 }
-                /* , postRender: function (ui) {
-                                  let grid = this;
-                                  let $cell = grid.getCell(ui);
-                                  //let rowData = ui.rowData;
-                      alert(1);
-                                  if (ui.rowData['ORDER_SEQ'] !== undefined && ui.rowData['ORDER_SEQ'] >0) {
-                                          $cell.find('#outBtn').bind('click', function(e) {
-                                              alert(2);
-                                            e.preventDefault();
-                                              alert(3);
-                                              fnResetForm("outgoing_manage_pop_type_1_form");
-                                             $("#outgoing_manage_pop_type_1_form").find("#CONTROL_SEQ").val(ui.rowData['CONTROL_SEQ']);
-                                             $("#outgoing_manage_pop_type_1_form").find("#CONTROL_DETAIL_SEQ").val(ui.rowData['CONTROL_DETAIL_SEQ']);
-                                             $("#outgoing_manage_pop_type_1_form").find("#ORDER_SEQ").val(ui.rowData['ORDER_SEQ']);
-                                             $('#outgoing_manage_pop_type_1').modal('show');
-                                          });
-                                          $cell.find('#returnBtn').bind('click', function(e) {
-                                            e.preventDefault();
-                                              fnResetForm("outgoing_manage_return_form");
-                                              $("#outgoing_manage_return_form").find("#CONTROL_SEQ").val(ui.rowData['CONTROL_SEQ']);
-                                              $("#outgoing_manage_return_form").find("#CONTROL_DETAIL_SEQ").val(ui.rowData['CONTROL_DETAIL_SEQ']);
-                                              $("#outgoing_manage_return_form").find("#ORDER_SEQ").val(ui.rowData['ORDER_SEQ']);
-                                              $('#outgoing_manage_return_pop').modal('show');
-                                          });
-                                          $cell.find('#labelBtn').bind('click', function(e) {
-                                            e.preventDefault();
-                                              /!*그리드에 바코드 하나
-                                              let formData = new Array();
-                                              formData[0] = ui.rowData['BARCODE_NUM'];*!/
-
-                                              fnResetForm("outgoing_manage_pop_label_type_1_form");
-                                              $("#outgoing_manage_pop_label_type_1_form").find("#CONTROL_SEQ").val(ui.rowData['CONTROL_SEQ']);
-                                              $("#outgoing_manage_pop_label_type_1_form").find("#CONTROL_DETAIL_SEQ").val(ui.rowData['CONTROL_DETAIL_SEQ']);
-                                              $("#outgoing_manage_pop_label_type_1_form").find("#ORDER_SEQ").val(ui.rowData['ORDER_SEQ']);
-                                              $('#outgoing_manage_pop_label_type_1').modal('show');
-                                          });
-
-                                  }
-                            }*/
             },
             {title: '가공<br>납기', dataIndx: 'INNER_DUE_DT', width: 60},
             {title: '가공<br>완료', dataIndx: 'WORK_FINISH_DT', width: 60},
@@ -883,39 +828,13 @@
             },
             {title: '소재입고<br>일시', dataIndx: 'MATERIAL_RECEIPT_DT', width: 60},
             {title: '외주입고<br>일시', dataIndx: 'OUTSIDE_IN_DT', width: 60},
-            // {title: '반품일시', dataIndx: 'OUT_RETURN_DT', width: 60},
-
-            // {title: '', align: 'center', dataIndx: 'MANUAL_OUT', width: 70, minWidth: 70,
-            //     render: function (ui) {
-            //         let rowIndx = ui.rowIndx, grid = this;
-            //         if (ui.rowData['ORDER_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn black\">출고</button>";
-            //         return '';
-            //     }
-            // },
-            // {title: '', align: 'center', dataIndx: 'MANUAL_RETURN', width: 70, minWidth: 70,
-            //     render: function (ui) {
-            //         let rowIndx = ui.rowIndx, grid = this;
-            //         if (ui.rowData['ORDER_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn blue\">반품</button>";
-            //         return '';
-            //     }
-            // },
-            // {title: '', align: 'center', dataIndx: 'MANUAL_LABEL', width: 70, minWidth: 70,
-            //     render: function (ui) {
-            //         let rowIndx = ui.rowIndx, grid = this;
-            //         if (ui.rowData['ORDER_SEQ'] > 0) return "<button type=\"button\" class="miniBtn orange">라벨</button>";
-            //         return '';
-            //     }
-            // },
             {
                 title: '최근 품질 실적', align: 'center', colModel: [
                     {title: 'Seq.', dataIndx: 'Q_SEQ', minWidth: 40},
                     {title: '등급', dataIndx: 'Q_INSPECT_GRADE_NM', minWidth: 40},
                     {title: '부적합 수량', dataIndx: 'Q_ERROR_QTY', minWidth: 40},
-                    // {title: '검사결과', dataIndx: 'Q_INSPECT_GRADE_NOTE', width: 80},
                     {title: '검사코드', dataIndx: 'Q_INSPECT_RESULT_NM', width: 100},
-                    // {title: '비고', dataIndx: 'Q_INSPECT_DESC', width: 100},
                     {title: '조치', dataIndx: 'Q_ERROR_ACTION_NM', width: 100},
-                    // {title: '조치방안', dataIndx: 'Q_ERROR_NOTE', width: 100}
                     {title: '작성일시', dataIndx: 'Q_DT', width: 90}
                 ]
             }
@@ -1002,9 +921,7 @@
             editable: false,
             columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: outgoingManageFilterRender},
             filterModel: {mode: 'OR'},
-            //scrollModel: {autoFit: true},
             numberCell: {width: 30, title: "No", show: true, styleHead: {'vertical-align': 'middle'}},
-            //selectionModel: { type: 'row', mode: 'multiple'} ,
             swipeModel: {on: false},
             showTitle: false,
             collapsible: false,
@@ -1080,7 +997,6 @@
                     };
                     let parameters = {'url': '/json-manager', 'data': data};
                     fnPostAjax(function () {
-                        // alert("등록이 완료되었습니다.");
                         $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
                         $("#outgoing_manage_search_btn").trigger("click");
                     }, parameters, '');
@@ -1096,12 +1012,6 @@
         let outgoingReturnCompleteObj;
         let $outgoingReturnCompleteGrid;
 
-
-        // let outgoingManageGridId02 = $("#outgoing_manage_return_complete_pop_grid");
-        // let outgoingManageColModel02;
-        // let outgoingManageObj02;
-        // let outgoingManagePostData02;
-
         outgoingReturnCompleteColModel = [
             {title: 'ORDER_SEQ', dataIndx: 'ORDER_SEQ', hidden: true},
             {title: 'CONTROL_SEQ', dataIndx: 'CONTROL_SEQ', hidden: true},
@@ -1110,7 +1020,6 @@
             {
                 title: '', align: 'center', dataIndx: 'MANUAL_ACTION', width: 80, editable: false,
                 render: function (ui) {
-                    // let rowIndx = ui.rowIndx, grid = this;
                     if (ui.rowData['ORDER_SEQ'] > 0) return "<button type=\"button\" class=\"miniBtn black\">조치완료</button>";
                     return '';
 
@@ -1171,7 +1080,6 @@
             {title: '현재위치', dataIndx: 'POP_NM', width: 80, editable: false}
 
         ];
-        //outgoingManageGridId02.pqGrid({
         outgoingReturnCompleteObj = {
             width: "100%", height: 400,
             dataModel: {
@@ -1184,9 +1092,6 @@
             },
             strNoRows: g_noData,
             columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
-            //scrollModel: {autoFit: true},
-            //numberCell: {width: 30, title: "No", show: true , styleHead: {'vertical-align':'middle'}},
-            //selectionModel: { type: 'row', mode: 'multiple'} ,
             swipeModel: {on: false},
             showTitle: false,
             collapsible: false,
@@ -1200,13 +1105,10 @@
                 $('#outgoing_manage_return_complete_pop_grid_records').html(totalRecords);
             },
             cellClick: function (event, ui) {
-                // let rowIndx = ui.rowIndx, $grid = this;
                 if (ui.rowData['INSPECT_SEQ'] !== undefined && ui.rowData['INSPECT_SEQ'] > 0) {
                     if (ui.dataIndx === 'MANUAL_ACTION') {
                         let data = {
                             'queryId': 'inspection.updateOutgoingReturnComplete,inspection.updateOutFinishStatusUseOrderSeq,inspection.updateOrderOutFinishStatus',
-                            // 'CONTROL_SEQ': ui.rowData['CONTROL_SEQ'],
-                            // 'CONTROL_DETAIL_SEQ': ui.rowData['CONTROL_DETAIL_SEQ'],
                             'ORDER_SEQ': ui.rowData['ORDER_SEQ'],
                             'INSPECT_SEQ': ui.rowData['INSPECT_SEQ']
                         };
@@ -1220,7 +1122,6 @@
                     }
                 }
             }
-            //});
         };
         /**  반품 현황 조회 그리드 선언 끝 **/
 
@@ -1235,7 +1136,6 @@
                 return false;
             }
 
-            // $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn,inspection.updateOutFinishStatus");
             $("#outgoing_manage_return_form").find("#queryId").val("inspection.insertOutgoingReturn,inspection.updateOutFinishStatus,inspection.updateOrderOutFinishStatus");
 
             let parameters = {'url': '/json-manager', 'data': $("#outgoing_manage_return_form").serialize()};
@@ -1354,7 +1254,6 @@
 
         $('#outgoing_manage_pop_label_type_1').on({
             'show.bs.modal': function () {
-                // $("#outgoing_manage_pop_label_type_1_form").find("#queryId").val("inspection.selectOutgoingLabelType1");
                 $("#outgoing_manage_pop_label_type_1_form").find("#queryId").val("inspection.selectOutgoingLabelType1OrderVer");
                 let parameters = {
                     'url': '/json-info',
@@ -1370,7 +1269,6 @@
                         $("#outgoing_manage_pop_label_type_1_form").find("#outgoing_manage_pop_label_type_1_form_view_1").html(dataInfo.ORDER_QTY);
                         $("#outgoing_manage_pop_label_type_1_form").find("#outgoing_manage_pop_label_type_1_form_view_2").html(dataInfo.PACKING_CNT);
 
-                        // $("#outgoing_manage_pop_label_type_1_form").find("#queryId").val("inspection.selectOutgoingLabelType1Combo");
                         $("#outgoing_manage_pop_label_type_1_form").find("#queryId").val("inspection.selectOutgoingLabelType1ComboOrderVer");
                         fnCommCodeDatasourceSelectBoxCreate($('#outgoing_manage_pop_label_type_1_form').find('#SEL_BARCODE_NUM'), '', {
                             'url': '/json-list',
@@ -1474,7 +1372,6 @@
             let ORG_REAL_OUT_QTY = $('#outgoing_manage_return_form').find('#ORG_REAL_OUT_QTY').val();
             let ERROR_QTY = $('#outgoing_manage_return_form').find('#ERROR_QTY').val();
 
-            // console.log("ERROR_QTY", ERROR_QTY);
             if (type === "PLUS") {
                 if (parseInt(ORG_REAL_OUT_QTY) > parseInt(ERROR_QTY)) {
                     ERROR_QTY = parseInt(ERROR_QTY) + 1;
@@ -1497,38 +1394,30 @@
                 let target = $('#outgoing_manage_mini_pop_save_btn').data('target');
                 $("#outgoing_manage_pop_type_1_form").find("#TYPE").val(target);
 
-                switch (target) {
-                    case 'disposal':
-                        // $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.deleteOutgoingDisposal,inspection.updateOutgoingDisposal,inspection.updateOutgoingOutType1After2,inspection.updateOutFinishStatus,machine.deleteMctPlanAll");
-                        break;
-                    default:
-                        // $("#outgoing_manage_pop_type_1_form").find("#queryId").val("inspection.insertOutgoingOutType1,inspection.updateOutgoingOutType1After1,inspection.updateOutgoingOutType1After2,inspection.updateOutgoingOutType1After3,inspection.updateOutFinishStatus,inspection.updateOrderOutFinishStatus,machine.deleteMctPlanAll");
-                }
-
                 let parameters = {'url': '/createOutGoing', 'data': $("#outgoing_manage_pop_type_1_form").serialize()};
+                $(".custom_loading_bar").show();
                 fnPostAjax(function () {
                     fnAlert(null, "등록이 완료되었습니다.");
+                    $(".custom_loading_bar").hide();
                     $('#outgoing_manage_pop_type_1').modal('hide');
                 }, parameters, '');
             }
-
         });
-        $('#outgoing_manage_return_complete_btn').on('click', function () {
 
-            // $('#' + logGridId).pqGrid("option", "dataModel.postData", function(ui){
-            //     return fnFormToJsonArrayData('#machine_manage_pop_form');
-            // } );
+        $('#outgoing_manage_return_complete_btn').on('click', function () {
             $('#outgoing_manage_return_complete_pop').modal('show');
         });
+
         $("#outgoing_manage_return_complete_pop").on('show.bs.modal', function () {
-            //outgoingManageGridId02.pqGrid("refreshDataAndView");
             $outgoingReturnCompleteGrid = $('#' + outgoingReturnCompleteGridId).pqGrid(outgoingReturnCompleteObj);
             $outgoingReturnCompleteGrid.pqGrid("option", "dataModel.data", {queryId: 'inspection.selectOutgoingReturnCompleteList'});
             $outgoingReturnCompleteGrid.pqGrid("refreshDataAndView");
         });
+
         $('#outgoing_manage_return_complete_pop_close').on('click', function () {
             $('#outgoing_manage_return_complete_pop').modal('hide');
         });
+
         $('#outgoing_manage_out_btn').on('click', function () {
             if (outgoingManageSelectedRowIndex.length === 0) {
                 fnAlert(null, "출고등록할 항목을 선택하여 주십시오.");
@@ -1564,14 +1453,12 @@
                     let changes = {
                         'groupList': groupList
                     };
-                    // changes.queryIdList = {
-                    //     'insertQueryId': ['inspection.insertOutgoingOutType2'],
-                    //     'updateQueryId': ['inspection.updateOutgoingOutSelectGridType1After1', 'inspection.updateOutgoingOutSelectGridType1After2', 'inspection.updateOutgoingOutSelectGridType1After3', 'inspection.updateOutFinishStatusUseOrderSeq', 'inspection.updateOrderOutFinishStatus', 'machine.deleteMctPlanAllUseOrderSeq']
-                    // };
                     let parameters = {'url': '/createOutGoingForGrid', 'data': {data: JSON.stringify(changes)}};
 
+                    $(".custom_loading_bar").show();
                     fnPostAjax(function () {
                         fnAlert(null, "등록이 완료되었습니다.");
+                        $(".custom_loading_bar").hide();
                         fnResetForm("outgoing_manage_pop_type_1_form");
                         $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
                         $("#outgoing_manage_search_btn").trigger("click");
@@ -1586,10 +1473,7 @@
                 for (let i = 0; i < outgoingManageSelectedRowIndex.length; i++) {
                     let rowData = outgoingManageGridId01.pqGrid('getRowData', {rowIndx: outgoingManageSelectedRowIndex[i]});
                     let postData = {
-                        // 'queryId': 'inspection.selectOutgoingLabelType2',
                         'queryId': 'inspection.selectOutgoingLabelType2OrderVer',
-                        // 'CONTROL_SEQ': rowData.CONTROL_SEQ,
-                        // 'CONTROL_DETAIL_SEQ': rowData.CONTROL_DETAIL_SEQ,
                         'ORDER_SEQ': rowData.ORDER_SEQ
                     };
 
@@ -1729,9 +1613,6 @@
             let control_seq = event.target.dataset.control_seq;
             let control_detail_seq = event.target.dataset.control_detail_seq;
             let order_seq = event.target.dataset.order_seq;
-            /*그리드에 바코드 하나
-              let formData = new Array();
-              formData[0] = ui.rowData['BARCODE_NUM'];*/
 
             fnResetForm("outgoing_manage_pop_label_type_1_form");
             $("#outgoing_manage_pop_label_type_1_form").find("#CONTROL_SEQ").val(control_seq);
@@ -1819,9 +1700,6 @@
             $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY_VIEW').val(NEW_OUT_QTY);
             $('#outgoing_manage_pop_type_1_form').find('#NEW_OUT_QTY').val(NEW_OUT_QTY);
         });
-
-        // $('#SEL_OUTGOING_DATE_TYPE').val(4); // 확정일자 Default 검색조건
-        // $('#SEL_OUTGOING_DATE_TYPE option[value=4]').prop('selected',true);
 
         $('#SEL_OUTGOING_DATE_TYPE').on('change', function () {
             const $selOutgoingTerm = $('[name=SEL_OUTGOING_TERM]');
@@ -2047,7 +1925,6 @@
                                 $("#outgoing_manage_pop_type_label_form").find("#outgoing_manage_pop_type_label_form_view_3").html(dataInfo.MY_PACKING_NUM);
 
                                 //. 저장하기
-                                // $("#outgoing_manage_pop_type_label_form").find("#queryId").val("inspection.insertOutgoingOutType4,inspection.updateOutgoingOutType4After1,inspection.updateOutgoingOutType4After2,inspection.updateOutgoingOutType4After3,inspection.updateOutFinishStatus,machine.deleteMctPlanAll");
                                 $("#outgoing_manage_pop_type_label_form").find("#queryId").val("inspection.insertOutgoingOutType4OrderVer,inspection.updateOutgoingOutType4After1OrderVer,inspection.updateOutgoingOutSelectGridType1After2,inspection.updateOutgoingOutSelectGridType1After3,inspection.updateOutFinishStatusUseOrderSeq,inspection.updateOutFinishDt,inspection.updateOrderOutFinishStatus,machine.deleteMctPlanAllUseOrderSeq");
                                 $("#outgoing_manage_pop_type_label_form").find("#BARCODE_NUM").val(barcodeNum);
                                 let parameters = {
@@ -2055,7 +1932,6 @@
                                     'data': $('#outgoing_manage_pop_type_label_form').serialize()
                                 };
                                 fnPostAjaxAsync(function () {
-                                    // alertify.notify('출고처리되었습니다', 'success');
                                     setDiv('success_div','fail_div','출고완료',dataInfo.REGIST_NUM,'')
                                     fnMakeScanTableTdOnDataSuccess(dataInfo);
                                 }, parameters, '');
@@ -2105,7 +1981,6 @@
                                 if (barcodeType === "C") {
                                     $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType3,inspection.updateOutgoingOutType3After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3,inspection.updateOutFinishDtForBarcode,inspection.updateOutFinishStatus,inspection.updateOrderOutFinishStatusForBarcode,machine.deleteMctPlanAll");
                                 } else if (barcodeType === "O") {
-                                    // $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType5,inspection.updateOutgoingOutType5After1,inspection.updateOutgoingOutType3After2,inspection.updateOutgoingOutType3After3,inspection.updateOutFinishDt,inspection.updateOutFinishStatus,inspection.updateOrderOutFinishStatus,machine.deleteMctPlanAll");
                                     $("#outgoing_manage_pop_type_control_form").find("#queryId").val("inspection.insertOutgoingOutType1UseOrderSeq,inspection.updateOutgoingOutType1After1UseOrderSeq,inspection.updateOutFinishDt,inspection.updateOutFinishStatusUseOrderSeq,inspection.updateOrderOutFinishStatus,machine.deleteMctPlanAllUseOrderSeq");
                                 }
                                 let parameters = {
@@ -2113,7 +1988,6 @@
                                     'data': $('#outgoing_manage_pop_type_control_form').serialize()
                                 };
                                 fnPostAjaxAsync(function () {
-                                    // alertify.notify('출고처리되었습니다', 'success');
                                     setDiv('success_div','fail_div','출고완료',dataInfo.CONTROL_NUM,dataInfo.PLAN_QTY)
                                     fnMakeScanTableTdOnDataSuccess(dataInfo);
                                 }, parameters, '');
@@ -2133,8 +2007,6 @@
                                     'data': $('#outgoing_manage_pop_type_control_form').serialize()
                                 };
                                 fnPostAjaxAsync(function () {
-                                    // alertify.notify('출고처리되었습니다', 'success');
-
                                     dataInfo.PLAN_QTY = "0";
 
                                     setDiv('success_div','fail_div','출고완료',dataInfo.CONTROL_NUM,dataInfo.PLAN_QTY)

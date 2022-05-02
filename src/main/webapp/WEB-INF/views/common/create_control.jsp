@@ -1133,26 +1133,7 @@
                                 mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
                                 rc = 1;
                             }
-                        } /*else if (partList.includes(dataIndx)) {
-                            let controlDetailSeq = data[j]['CONTROL_DETAIL_SEQ'],
-                                controlDetailSeqPrev = data[j - 1] ? data[j - 1]['CONTROL_DETAIL_SEQ'] : undefined;
-
-                            if (controlNum === controlNumPrev && controlDetailSeq === controlDetailSeqPrev) {
-                                // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
-                                if (cellDataPrev !== undefined && cellData == cellDataPrev) {
-                                    rc++;
-                                }
-                            } else if (rc > 1) {
-                                /!**
-                                 * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
-                                 * c1: colIndx of first column. 첫 번째 열의 colIndx.
-                                 * rc: number of rows in the range. 범위 내 행 수.
-                                 * cc: number of columns in the range. 범위 내 열 수.
-                                 *!/
-                                mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
-                                rc = 1;
-                            }
-                        }*/
+                        }
                     }
                 }
             }
@@ -1281,27 +1262,10 @@
         const inputErrorCheck = function (rowData) {
             let list = [];
             const singleList = ['PART_NUM']; // 단품
-            // const assemblyList = ['MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'PART_UNIT_QTY']; // 조립
-            const modifiedList = ['PART_NUM']; // 수정
-            // const stockList = ['PART_UNIT_QTY', 'ORDER_NUM', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'REGIST_NUM']; // 재고
-            // const partList = ['ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'DELIVERY_DT', 'UNIT_FINAL_EST_AMT', 'UNIT_FINAL_AMT', 'REGIST_NUM']; // 파트
-
             switch (rowData.WORK_TYPE) {
                 case 'WTP010':
                     list = singleList;
                     break;
-                // case 'WTP020':
-                //     list = assemblyList;
-                //     break;
-                case 'WTP030':
-                    list = modifiedList;
-                    break;
-                // case 'WTP040':
-                //     list = stockList;
-                //     break;
-                // case 'WTP050':
-                //     list = partList;
-                //     break;
             }
 
             for (let i in list) {
@@ -1507,9 +1471,6 @@
         $('#toggleImageView').on('click', function () {
             isActiveDrawingView = !isActiveDrawingView;
             if(isActiveDrawingView) {
-                // if(!$('#MAIN_COLUMN').prop('checked')) {
-                //     $('#MAIN_COLUMN').trigger('click');
-                // }
                 $("#grid_top_div").css({width:'46%'});
                 var width = document.getElementsByClassName("pq-cont-right")[1].scrollWidth
 
@@ -1519,9 +1480,6 @@
                     $("#CREATE_CONTROL_GRID").find(".pq-body-outer").find(".pq-cont-right").scrollLeft(width);
                 }, 300);
             }else {
-                // if($('#MAIN_COLUMN').prop('checked')) {
-                //     $('#MAIN_COLUMN').trigger('click');
-                // }
                 $("#grid_top_div").css({width:'100%'});
                 $("#main_column_draw_div").hide();
                 $createControlGrid.pqGrid('option', 'width', '100%').pqGrid('refresh');

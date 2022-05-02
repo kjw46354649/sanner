@@ -1028,19 +1028,6 @@
         AND EXISTS( SELECT X.CONTROL_SEQ FROM TBL_CONTROL X WHERE X.CONTROL_SEQ = A.CONTROL_SEQ AND X.DEL_YN = 'N' AND X.CONTROL_STATUS IN ('ORD001','ORD003'))
     </update>
 
-    <insert id="insertOutgoingOutType2" parameterType="java.util.HashMap">
-    /* 그리드 여러개 출고버튼시 */
-        INSERT INTO TBL_OUT (OUT_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, ORDER_SEQ, OUT_QTY, INSERT_ID)
-        SELECT NEXTVAL(OUT_SEQ) AS OUT_SEQ
-          , A.CONTROL_SEQ
-          , A.CONTROL_DETAIL_SEQ
-          , A.ORDER_SEQ
-          , (A.ORDER_QTY - (SELECT IFNULL(SUM(M.OUT_QTY),0) FROM TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ))
-          , #{LOGIN_USER_ID} AS INSERT_ID
-        FROM TBL_CONTROL_PART_ORDER A
-        WHERE A.ORDER_SEQ = #{ORDER_SEQ}
-          AND EXISTS(SELECT X.CONTROL_SEQ FROM TBL_CONTROL X WHERE X.CONTROL_SEQ = A.CONTROL_SEQ AND X.DEL_YN = 'N' AND X.CONTROL_STATUS IN ('ORD001','ORD003'))
-    </insert>
     <update id="updateControlPartOrderPackingCnt1" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART_ORDER
         SET PACKING_CNT = #{PACKING_CNT}
@@ -1232,56 +1219,14 @@
             AND A.ORDER_SEQ = #{ORDER_SEQ}
             AND EXISTS(SELECT X.CONTROL_SEQ FROM TBL_CONTROL X WHERE X.CONTROL_SEQ = B.CONTROL_SEQ AND X.DEL_YN = 'N' AND X.CONTROL_STATUS IN ('ORD001','ORD003'))
     </insert>
-    <insert id="insertOutgoingOutType4" parameterType="java.util.HashMap">
-        INSERT INTO TBL_OUT (OUT_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, ORDER_SEQ, PACKING_NUM, INSERT_ID)
-        SELECT NEXTVAL(OUT_SEQ) AS OUT_SEQ
-          , A.CONTROL_SEQ
-          , A.CONTROL_DETAIL_SEQ
-          , A.ORDER_SEQ
-          , A.PACKING_NUM
-          , #{LOGIN_USER_ID} AS INSERT_ID
-        FROM TBL_OUT_BARCODE A
-        WHERE A.BARCODE_NUM = #{BARCODE_NUM}
-          AND IFNULL(DEL_YN,'N') = 'N'
-          AND EXISTS(SELECT X.CONTROL_SEQ FROM TBL_CONTROL X WHERE X.CONTROL_SEQ = A.CONTROL_SEQ AND X.DEL_YN = 'N' AND X.CONTROL_STATUS IN ('ORD001','ORD003'))
-          AND NOT EXISTS (SELECT 1 FROM TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ AND (M.PACKING_NUM IS NULL OR M.PACKING_NUM = A.PACKING_NUM))
-    </insert>
+
     <update id="updateOutgoingOutType4After1OrderVer" parameterType="java.util.HashMap">
         UPDATE TBL_CONTROL_PART_ORDER A
         SET A.OUT_FINISH_DT = NOW()
         WHERE A.ORDER_SEQ = #{ORDER_SEQ}
           AND EXISTS(SELECT X.CONTROL_SEQ FROM TBL_CONTROL X WHERE X.CONTROL_SEQ = A.CONTROL_SEQ AND X.DEL_YN = 'N' AND X.CONTROL_STATUS IN ('ORD001','ORD003'))
     </update>
-    <update id="updateOutgoingOutType4After1" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART_ORDER A
-        SET A.OUT_FINISH_DT = NOW()
-        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
-          AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-          AND A.ORDER_SEQ = #{ORDER_SEQ}
-          AND A.PACKING_CNT = (SELECT COUNT(M.PACKING_NUM) FROM TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ)
-          AND EXISTS(SELECT X.CONTROL_SEQ FROM TBL_CONTROL X WHERE X.CONTROL_SEQ = A.CONTROL_SEQ AND X.DEL_YN = 'N' AND X.CONTROL_STATUS IN ('ORD001','ORD003'))
-    </update>
-    <update id="updateOutgoingOutType4After2" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL A
-        SET A.OUT_FINISH_DT = CASE WHEN A.OUT_FINISH_DT IS NULL THEN NOW() ELSE A.OUT_FINISH_DT END
-        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-            AND A.DEL_YN = 'N'
-            AND A.CONTROL_STATUS IN ('ORD001','ORD003')
-            AND EXISTS( SELECT 1 FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ)
-            AND NOT EXISTS( SELECT 1 FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.OUT_FINISH_DT IS NULL)
-    </update>
-    <update id="updateOutgoingOutType4After3" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART A
-        SET
-            A.INNER_WORK_FINISH_DT = CASE WHEN A.INNER_WORK_FINISH_DT IS NULL THEN NOW() ELSE A.INNER_WORK_FINISH_DT END
-        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
-            AND EXISTS( SELECT 1 FROM TBL_MCT_WORK T
-                               	     WHERE A.CONTROL_SEQ = T.CONTROL_SEQ AND T.DEL_YN = 'N'
-                               	    )
-            AND EXISTS( SELECT 1 FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ)
-            AND NOT EXISTS( SELECT 1 FROM TBL_CONTROL_PART_ORDER M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.OUT_FINISH_DT IS NULL)
-            AND EXISTS(SELECT X.CONTROL_SEQ FROM TBL_CONTROL X WHERE X.CONTROL_SEQ = A.CONTROL_SEQ AND X.DEL_YN = 'N' AND X.CONTROL_STATUS IN ('ORD001','ORD003'))
-    </update>
+
     <select id="selectOutgoingOutType5OrderVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT D.CONTROL_NUM
             , D.CONTROL_STATUS
@@ -1377,30 +1322,6 @@
                 </choose>
         ) D
     </select>
-
-    <insert id="insertOutgoingOutType5" parameterType="java.util.HashMap">
-        INSERT INTO TBL_OUT (OUT_SEQ, CONTROL_SEQ, CONTROL_DETAIL_SEQ, ORDER_SEQ, OUT_QTY, INSERT_ID)
-        SELECT NEXTVAL(OUT_SEQ) AS OUT_SEQ
-            , A.CONTROL_SEQ
-            , A.CONTROL_DETAIL_SEQ
-            , A.ORDER_SEQ
-            , A.ORDER_QTY
-            , #{LOGIN_USER_ID} AS INSERT_ID
-        FROM TBL_CONTROL_PART_ORDER A
-        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
-            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-            AND A.ORDER_SEQ = #{ORDER_SEQ}
-            AND EXISTS(SELECT X.CONTROL_SEQ FROM TBL_CONTROL X WHERE X.CONTROL_SEQ = A.CONTROL_SEQ AND X.DEL_YN = 'N' AND X.CONTROL_STATUS IN ('ORD001','ORD003'))
-    </insert>
-
-    <update id="updateOutgoingOutType5After1" parameterType="java.util.HashMap">
-        UPDATE TBL_CONTROL_PART_ORDER A
-        SET A.OUT_FINISH_DT = CASE WHEN A.OUT_FINISH_DT IS NULL THEN NOW() ELSE A.OUT_FINISH_DT END
-        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
-            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-            AND A.ORDER_SEQ = #{ORDER_SEQ}
-            AND IFNULL(A.ORDER_QTY, 0) = (SELECT IFNULL(SUM(M.OUT_QTY), 0) FROM TBL_OUT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.ORDER_SEQ = A.ORDER_SEQ)
-    </update>
 
     <select id="selectOutgoingReturnInfo1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, X.ORDER_SEQ
@@ -1608,28 +1529,6 @@
         UPDATE TBL_INSPECT SET RETURN_SETTLEMENT_DT = NOW() WHERE INSPECT_SEQ = #{INSPECT_SEQ}
     </update>
 
-    <select id="selectOutgoingLabelType1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT A.CONTROL_NUM
-            , C.DRAWING_NUM
-            , C.REGIST_NUM
-            , C.IMG_GFILE_SEQ
-            , C.ORDER_NUM
-            , C.ORDER_QTY
-            , C.PACKING_CNT
-            , C.CONTROL_SEQ
-            , C.CONTROL_DETAIL_SEQ
-            , C.ORDER_SEQ
-        FROM TBL_CONTROL A
-            , TBL_CONTROL_PART B
-            , TBL_CONTROL_PART_ORDER C
-        WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
-            AND B.CONTROL_SEQ = C.CONTROL_SEQ
-            AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
-            AND A.DEL_YN = 'N'
-            AND C.CONTROL_SEQ = #{CONTROL_SEQ}
-            AND C.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-            AND C.ORDER_SEQ = #{ORDER_SEQ}
-     </select>
     <select id="selectOutgoingLabelType1OrderVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.REGIST_NUM,
                A.ORDER_NUM,
@@ -1647,17 +1546,7 @@
             AND A.ORDER_SEQ = #{ORDER_SEQ}
         GROUP BY A.ORDER_SEQ
     </select>
-    <select id="selectOutgoingLabelType1Combo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-            BARCODE_NUM AS CODE_CD, PACKING_NUM AS CODE_NM
-        FROM TBL_OUT_BARCODE
-        WHERE 1=1
-        AND CONTROL_SEQ = #{CONTROL_SEQ}
-        AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-        AND ORDER_SEQ = #{ORDER_SEQ}
-        AND DEL_YN = 'N'
-        ORDER BY PACKING_NUM
-    </select>
+
     <select id="selectOutgoingLabelType1ComboOrderVer" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             BARCODE_NUM AS CODE_CD, PACKING_NUM AS CODE_NM
@@ -1675,14 +1564,7 @@
             AND ORDER_SEQ = #{ORDER_SEQ}
             AND CONTROL_SEQ IS NULL
     </select>
-    <select id="selectOutgoingLabelType2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT BARCODE_NUM
-        FROM TBL_OUT_BARCODE
-        WHERE DEL_YN = 'N'
-            AND CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-            AND ORDER_SEQ = #{ORDER_SEQ}
-    </select>
+
     <select id="selectOutgoingLabelType3" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.BARCODE_NUM
         FROM TBL_OUT_BARCODE A
@@ -2209,12 +2091,6 @@
         DELETE FROM TBL_INSPECT WHERE INSPECT_SEQ = #{INSPECT_SEQ}
     </delete>
 
-    <delete id="deleteOutgoingDisposal" parameterType="java.util.HashMap">
-        DELETE FROM TBL_OUT
-        WHERE CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-            AND ORDER_SEQ = #{ORDER_SEQ}
-    </delete>
     <delete id="deleteOutgoingDisposalOrderVer" parameterType="java.util.HashMap">
         DELETE FROM TBL_OUT
         WHERE ORDER_SEQ = #{ORDER_SEQ}
@@ -2238,20 +2114,6 @@
           , UPDATE_DT = NOW()
           , UPDATE_ID = #{LOGIN_USER_ID}
         WHERE ORDER_SEQ = #{ORDER_SEQ}
-    </update>
-
-    <update id="updateOutgoingDisposal" parameterType="java.util.HashMap">
-        UPDATE
-            TBL_CONTROL_PART_ORDER
-        SET
-            SCRAP_YN = 'Y'
-            , OUT_FINISH_DT = NOW()
-            , UPDATE_DT = NOW()
-            , UPDATE_ID = #{LOGIN_USER_ID}
-        WHERE
-            CONTROL_SEQ = #{CONTROL_SEQ}
-            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-            AND ORDER_SEQ = #{ORDER_SEQ}
     </update>
 
     <update id="updateOutgoingCancelDisposalOrderVer" parameterType="java.util.HashMap">
