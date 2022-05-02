@@ -224,23 +224,7 @@
             'data': {'queryId': 'machine.selectNCMachineList'}
         });
         let isActiveDrawingView = false;
-        let $processPlanGrid1, $processPlanGrid2, $processPlanGrid3, $processPlanGrid4, $processPlanGrid5,
-            $processPlanGrid6, $processPlanGrid7, $processPlanGrid8, $processPlanGrid9, $processPlanGrid10,
-            $processPlanGrid11, $processPlanGrid12, $processPlanGrid13, $processPlanGrid14;
-        const processPlanGrid1Id = 'PROCESS_PLAN_GRID1';
-        const processPlanGrid2Id = 'PROCESS_PLAN_GRID2';
-        const processPlanGrid3Id = 'PROCESS_PLAN_GRID3';
-        const processPlanGrid4Id = 'PROCESS_PLAN_GRID4';
-        const processPlanGrid5Id = 'PROCESS_PLAN_GRID5';
-        const processPlanGrid6Id = 'PROCESS_PLAN_GRID6';
-        const processPlanGrid7Id = 'PROCESS_PLAN_GRID7';
-        const processPlanGrid8Id = 'PROCESS_PLAN_GRID8';
-        const processPlanGrid9Id = 'PROCESS_PLAN_GRID9';
-        const processPlanGrid10Id = 'PROCESS_PLAN_GRID10';
-        const processPlanGrid11Id = 'PROCESS_PLAN_GRID11';
-        const processPlanGrid12Id = 'PROCESS_PLAN_GRID12';
-        const processPlanGrid13Id = 'PROCESS_PLAN_GRID13';
-        const processPlanGrid14Id = 'PROCESS_PLAN_GRID14';
+        let equipCnt;
 
         const createDynamicForm = function (row, col, order, equipSeq, equipNm) {
             let str = '';
@@ -287,6 +271,7 @@
             let parameters = {'url': '/json-list', 'data': postData};
 
             fnPostAjaxAsync(function (data) {
+                equipCnt = data.list.length;
                 for (let i = 0, listLength = data.list.length; i < listLength; i++) {
                     let thisParameter = data.list[i];
                     let row = thisParameter.LAYOUT_ROW;
@@ -603,20 +588,9 @@
 
         /* function */
         const refreshMctPlanGrids = function () {
-            $processPlanGrid1.pqGrid('refreshDataAndView');
-            $processPlanGrid2.pqGrid('refreshDataAndView');
-            $processPlanGrid3.pqGrid('refreshDataAndView');
-            $processPlanGrid4.pqGrid('refreshDataAndView');
-            $processPlanGrid5.pqGrid('refreshDataAndView');
-            $processPlanGrid6.pqGrid('refreshDataAndView');
-            $processPlanGrid7.pqGrid('refreshDataAndView');
-            $processPlanGrid8.pqGrid('refreshDataAndView');
-            $processPlanGrid9.pqGrid('refreshDataAndView');
-            $processPlanGrid10.pqGrid('refreshDataAndView');
-            $processPlanGrid11.pqGrid('refreshDataAndView');
-            $processPlanGrid12.pqGrid('refreshDataAndView');
-            $processPlanGrid13.pqGrid('refreshDataAndView');
-            $processPlanGrid14.pqGrid('refreshDataAndView');
+            for(let i=1;i<=equipCnt;i++) {
+                $('#PROCESS_PLAN_GRID' + i).pqGrid('refreshDataAndView');
+            }
         };
 
         const refreshTargetGrid = function () {
@@ -792,54 +766,17 @@
         };
 
         let createPlanGrid = function () {
-            const processPlanPostData1 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC1_PLAN_FORM')}};
-            const processPlanPostData2 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC2_PLAN_FORM')}};
-            const processPlanPostData3 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC3_PLAN_FORM')}};
-            const processPlanPostData4 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC4_PLAN_FORM')}};
-            const processPlanPostData5 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC5_PLAN_FORM')}};
-            const processPlanPostData6 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC6_PLAN_FORM')}};
-            const processPlanPostData7 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC7_PLAN_FORM')}};
-            const processPlanPostData8 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC8_PLAN_FORM')}};
-            const processPlanPostData9 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC9_PLAN_FORM')}};
-            const processPlanPostData10 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC10_PLAN_FORM')}};
-            const processPlanPostData11 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC11_PLAN_FORM')}};
-            const processPlanPostData12 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC12_PLAN_FORM')}};
-            const processPlanPostData13 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC13_PLAN_FORM')}};
-            const processPlanPostData14 = {dataModel: {postData: fnFormToJsonArrayData('#MCT_NC14_PLAN_FORM')}};
+            for(let i=1;i<=equipCnt;i++) {
+                let id = 'MCT_NC'+i+'_PLAN_FORM';
 
-            const processPlanObj1 = $.extend(true, {}, planObj, processPlanPostData1);
-            const processPlanObj2 = $.extend(true, {}, planObj, processPlanPostData2);
-            const processPlanObj3 = $.extend(true, {}, planObj, processPlanPostData3);
-            const processPlanObj4 = $.extend(true, {}, planObj, processPlanPostData4);
-            const processPlanObj5 = $.extend(true, {}, planObj, processPlanPostData5);
-            const processPlanObj6 = $.extend(true, {}, planObj, processPlanPostData6);
-            const processPlanObj7 = $.extend(true, {}, planObj, processPlanPostData7);
-            const processPlanObj8 = $.extend(true, {}, planObj, processPlanPostData8);
-            const processPlanObj9 = $.extend(true, {}, planObj, processPlanPostData9);
-            const processPlanObj10 = $.extend(true, {}, planObj, processPlanPostData10);
-            const processPlanObj11 = $.extend(true, {}, planObj, processPlanPostData11);
-            const processPlanObj12 = $.extend(true, {}, planObj, processPlanPostData12);
-            const processPlanObj13 = $.extend(true, {}, planObj, processPlanPostData13);
-            const processPlanObj14 = $.extend(true, {}, planObj, processPlanPostData14);
-
-            $processPlanGrid1 = $('#' + processPlanGrid1Id).pqGrid(processPlanObj1);
-            $processPlanGrid2 = $('#' + processPlanGrid2Id).pqGrid(processPlanObj2);
-            $processPlanGrid3 = $('#' + processPlanGrid3Id).pqGrid(processPlanObj3);
-            $processPlanGrid4 = $('#' + processPlanGrid4Id).pqGrid(processPlanObj4);
-            $processPlanGrid5 = $('#' + processPlanGrid5Id).pqGrid(processPlanObj5);
-            $processPlanGrid6 = $('#' + processPlanGrid6Id).pqGrid(processPlanObj6);
-            $processPlanGrid7 = $('#' + processPlanGrid7Id).pqGrid(processPlanObj7);
-            $processPlanGrid8 = $('#' + processPlanGrid8Id).pqGrid(processPlanObj8);
-            $processPlanGrid9 = $('#' + processPlanGrid9Id).pqGrid(processPlanObj9);
-            $processPlanGrid10 = $('#' + processPlanGrid10Id).pqGrid(processPlanObj10);
-            $processPlanGrid11 = $('#' + processPlanGrid11Id).pqGrid(processPlanObj11);
-            $processPlanGrid12 = $('#' + processPlanGrid12Id).pqGrid(processPlanObj12);
-            $processPlanGrid13 = $('#' + processPlanGrid13Id).pqGrid(processPlanObj13);
-            $processPlanGrid14 = $('#' + processPlanGrid14Id).pqGrid(processPlanObj14);
+                const processPlanPostData = {dataModel: {postData: fnFormToJsonArrayData('#'+id)}}
+                const processPlanObj = $.extend(true, {}, planObj, processPlanPostData);
+                $('#PROCESS_PLAN_GRID' + i).pqGrid(processPlanObj);
+            }
         };
 
         const setPlanSelection = function (rowData) {
-            for (let i = 1; i <= 14; i++) {
+            for (let i = 1; i <= equipCnt; i++) {
                 if ($('#PROCESS_PLAN_GRID' + i).hasClass('pq-grid')) {
                     //deselect everything.
                     $('#PROCESS_PLAN_GRID' + i).pqGrid('setSelection', null);
