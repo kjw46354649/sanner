@@ -88,7 +88,7 @@
 </head>
 <body>
 <div class="page estimate">
-    <div style="height: 740px;padding: 10px;">
+    <div style="height: 90%;padding: 10px;">
         <form class="form-inline" name="CREATE_STOCK_CONTROL_SEARCH_FORM" id="CREATE_STOCK_CONTROL_SEARCH_FORM" role="form" onsubmit="return false;">
             <input type="hidden" name="queryId" id="queryId" value="material.selectInsideStockList">
             <input type="hidden" id="GFILE_SEQ" name="GFILE_SEQ" value="">
@@ -117,12 +117,14 @@
             </div>
         </form>
         <div class="tableWrap">
-            <div class="conWrap" style="display: flex;width: 100%;">
-                <div id="main_column_draw_div" style="width: 65%;height: 630px;margin-right: 15px;display: none;">
+            <div class="conWrap" style="display: flex;width: 100%;height: 90%;">
+                <div id="main_column_draw_div" style="width: 54%;height: auto;margin-right: 15px;display: none;">
                     <!--도면삽입-->
                     <img id="create_stock_control_img" src="/resource/main/blank.jpg" style="width: 100%;height: 100%;max-height: inherit;max-width: inherit;">
                 </div>
-                <div id="CREATE_STOCK_CONTROL_GRID"></div>
+                <div id="grid_top_div" style="width: 100%;">
+                    <div id="CREATE_STOCK_CONTROL_GRID"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -168,7 +170,7 @@
         const gridId = 'CREATE_STOCK_CONTROL_GRID';
         const colModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
-            {title: '재고번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 100, width: 100, maxWidth: 130, editable: false},
+            {title: '재고번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 80, width: 80, maxWidth: 100, editable: false},
             {title: '발주업체', width: 80, dataIndx: 'ORDER_COMP_CD_NM', editable: false},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 60, width: 60, editable: false},
             {
@@ -180,7 +182,7 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 100, width: 100, maxWidth: 130},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 90, width: 90, maxWidth: 110},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
                 minWidth: 80, width: 80, maxWidth: 100,
                 editor: {
@@ -220,15 +222,10 @@
                 }
             },
             {
-                title: '작업지시번호', align: 'left', width: 140, maxWidth: 160, dataIndx: 'CONTROL_NUM',
+                title: '작업지시번호', align: 'left', minWidth: 120, width: 140, maxWidth: 160, dataIndx: 'CONTROL_NUM',
                 editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#aac8ed'}
             },
-            // {
-            //     title: '도면번호', align: 'left', width: 140, maxWidth: 160, dataIndx: 'DRAWING_NUM',
-            //     styleHead: {'font-weight': 'bold', 'background': '#aac8ed'},
-            //     editable: true
-            // },
             {title: 'INNER_DUE_DT_COPY', dataType: 'String', dataIndx: 'INNER_DUE_DT_COPY', hidden: true},
             {title: '가공<br>납기', width: 50, maxWidth: 80, dataIndx: 'INNER_DUE_DT', dataType: 'date', format: 'mm/dd',
                 editor: {type: 'textbox', init: fnDateEditor},
@@ -265,7 +262,7 @@
         const obj = {
             minHeight: '100%',
             width: '100%',
-            height: 600,
+            height: '100%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             showTitle: false,
@@ -274,7 +271,7 @@
             copyModel: {render: true},
             numberCell: {show:false},
             trackModel: {on: true},
-            scrollModel: {autoFit: true},
+            // scrollModel: {autoFit: true},
             editable: false,
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: controlManageFilterRender},
             filterModel: {mode: 'OR'},
@@ -288,9 +285,6 @@
                 }
             },
             sortModel: {on: false},
-            // load: function () {
-            //     autoMerge(this, true);
-            // },
             selectChange: function (event, ui) {
                 selectedCreateControlRowIndex = [];
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
@@ -559,26 +553,7 @@
                                 mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
                                 rc = 1;
                             }
-                        } /*else if (partList.includes(dataIndx)) {
-                            let controlDetailSeq = data[j]['CONTROL_DETAIL_SEQ'],
-                                controlDetailSeqPrev = data[j - 1] ? data[j - 1]['CONTROL_DETAIL_SEQ'] : undefined;
-
-                            if (controlNum === controlNumPrev && controlDetailSeq === controlDetailSeqPrev) {
-                                // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
-                                if (cellDataPrev !== undefined && cellData == cellDataPrev) {
-                                    rc++;
-                                }
-                            } else if (rc > 1) {
-                                /!**
-                                 * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
-                                 * c1: colIndx of first column. 첫 번째 열의 colIndx.
-                                 * rc: number of rows in the range. 범위 내 행 수.
-                                 * cc: number of columns in the range. 범위 내 열 수.
-                                 *!/
-                                mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
-                                rc = 1;
-                            }
-                        }*/
+                        }
                     }
                 }
             }
@@ -759,12 +734,14 @@
         $('#toggleImageView').on('click', function () {
             isActiveDrawingView = !isActiveDrawingView;
             if(isActiveDrawingView) {
+                $("#grid_top_div").css({width:'46%'});
                 if(!$('#MAIN_COLUMN').prop('checked')) {
                     $('#MAIN_COLUMN').trigger('click');
                 }
                 $("#main_column_draw_div").show();
                 $createStockControlGrid.pqGrid('option', 'width', 'auto').pqGrid('refresh');
             }else {
+                $("#grid_top_div").css({width:'100%'});
                 if($('#MAIN_COLUMN').prop('checked')) {
                     $('#MAIN_COLUMN').trigger('click');
                 }
@@ -839,11 +816,7 @@
         $('#MAIN_COLUMN').on('change', function () {
             if($(this).prop('checked')) {
                 changeViewColumn('MAIN')
-                $createStockControlGrid.pqGrid('option', 'width', 'auto');
-                $createStockControlGrid.pqGrid('option', 'scrollModel', {autoFit: false});
             }else {
-                $createStockControlGrid.pqGrid('option', 'width', 'auto');
-                $createStockControlGrid.pqGrid('option', 'scrollModel', {autoFit: true});
                 changeViewColumn('ALL');
             }
             $createStockControlGrid.pqGrid('refreshView');
