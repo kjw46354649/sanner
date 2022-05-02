@@ -428,7 +428,6 @@
 								<td class="th_color">수량</td>
 								<td class="MATERIAL_DETAIL_NM"></td>
 								<td>
-									<span class="text-red same_side_span" style="display: none;">대</span>
 									<span class="QTY_FORMAT"></span>
 								</td>
 							</tr>
@@ -506,8 +505,8 @@
 						<div class="mapImgWrap">
 							<img id="mapImgWrap" src="/qimage/739396" alt="513045" data-value="513045" style="margin-right: 1%;">
 						</div>
-						<div style="width: 22%;">
-							<table id="popHeadMid4" class="popHeadMid popTable">
+						<div style="width: 22%;overflow:hidden;">
+							<table id="popHeadMid4" class="popHeadMid popTable" style="height: 100%;">
 								<colgroup>
 									<col width="100%">
 								</colgroup>
@@ -529,7 +528,6 @@
 									</tr>
 									<tr>
 										<td class="bg-lightgray ">
-											<span class="text-red same_side_span" style="display: none;">대</span>
 											<span class="QTY_WORK_TYPE"></span>
 										</td>
 									</tr>
@@ -563,7 +561,7 @@
 										<td class="blue">예상가공시간(수동입력)</td>
 									</tr>
 									<tr>
-										<td style="height: 60px;" class="bg-lightgray PLAN_WORKING_TIME_FORMAT"></td>
+										<td class="bg-lightgray PLAN_WORKING_TIME_FORMAT"></td>
 									</tr>
 								</tbody>
 							</table>
@@ -574,7 +572,7 @@
 						<div class="right_float">
 							<span id="total_cnt_qty" class="mr-10">0 품 0 EA</span>
 							<span id="total_plan_time" class="mr-20">(0h 0m)</span>
-							<button type="button" class="popMapDetailBtn green" style="margin: 0;">도면상세보기</button>
+							<button id="machinePopDetailBtn" type="button" class="popMapDetailBtn green" style="margin: 0;">도면상세보기</button>
 						</div>
 					</h4>
 					<div class="planImgDiv mt-15">
@@ -1558,6 +1556,7 @@
 			callWindowImageViewer(gFileSeq);
 		}
 	});
+
 	$("#popMapDetailBtn").on("click",function(){
 		let gFileSeq = $("#pop_search_form").find("#GFILE_SEQ").val();
 		if(gFileSeq != '') {
@@ -1571,12 +1570,8 @@
 			if(data.info != null) {
 				$("#pop_machine_form").find("#CONTROL_SEQ").val(data.info.CONTROL_SEQ);
 				$("#pop_machine_form").find("#CONTROL_DETAIL_SEQ").val(data.info.CONTROL_DETAIL_SEQ);
-				$("#popHeadMid4").find(".same_side_span").hide();
 				for(let key in data.info){
 					let val = data.info[key];
-					if(key == 'SAME_SIDE_YN' && val == 'Y') {
-						$("#popHeadMid4").find(".same_side_span").show();
-					}
 					$("#popHeadMid4").find("."+key).text(val);
 				}
 				if(!fnIsEmpty(data.info.IMG_GFILE_SEQ)) {
@@ -1628,14 +1623,11 @@
 				var tempHtml = '';
 				console.log('settingOngoingInfo',data);
 				if(data.info != null) {
-					$(".same_side_span").hide();
 					$("#pop_machine_form").find("#CONTROL_SEQ").val(data.info.CONTROL_SEQ);
 					$("#pop_machine_form").find("#CONTROL_DETAIL_SEQ").val(data.info.CONTROL_DETAIL_SEQ);
 					for(let key in data.info){
 						let val = data.info[key];
-						if(key == 'SAME_SIDE_YN' && val == 'Y') {
-							$(".same_side_span").show();
-						}else if(key == "PHOTO_GFILE_SEQ") {
+						if(key == "PHOTO_GFILE_SEQ") {
 							$("#machinePopupWrap").find("#table2_worker_img").attr('src', '/image/' + val);
 						}else if(key == 'EQUIP_STATUS') {
 							$("#machinePopupWrap").find("."+key).removeClass("green");

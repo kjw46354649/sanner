@@ -302,7 +302,6 @@
 									<td class="th_color">수량</td>
 									<td class="MATERIAL_DETAIL_NM"></td>
 									<td>
-										<span class="text-red same_side_span" style="display: none;">대</span>
 										<span class="QTY_FORMAT"></span>
 									</td>
 								</tr>
@@ -380,8 +379,8 @@
 							<div class="mapImgWrap">
 								<img id="mapImgWrap" src="/resource/main/blank.jpg" style="margin-right: 1%;">
 							</div>
-							<div style="width: 22%;">
-								<table id="popHeadMid4" class="popHeadMid popTable" style="overflow: hidden;">
+							<div style="width: 22%;overflow: hidden;">
+								<table id="popHeadMid4" class="popHeadMid popTable" style="height: 100%;">
 									<colgroup>
 										<col width="100%">
 									</colgroup>
@@ -403,7 +402,6 @@
 										</tr>
 										<tr>
 											<td class="bg-lightgray ">
-												<span class="text-red same_side_span" style="display: none;">대</span>
 												<span class="QTY_WORK_TYPE"></span>
 											</td>
 										</tr>
@@ -437,8 +435,7 @@
 											<td class="blue">예상가공시간(수동입력)</td>
 										</tr>
 										<tr>
-											<td style="height: 38px;" class="bg-lightgray PLAN_WORKING_TIME_FORMAT">
-<%--												<input type="text" style="width: 90%;height: 100%;border: none;">--%>
+											<td class="bg-lightgray PLAN_WORKING_TIME_FORMAT">
 											</td>
 										</tr>
 									</tbody>
@@ -2568,14 +2565,11 @@
 			};
 			fnPostAjax(function (data) {
 				if(data.info != null) {
-					$(".same_side_span").hide();
 					$("#mct_machine_form").find("#CONTROL_SEQ").val(data.info.CONTROL_SEQ);
 					$("#mct_machine_form").find("#CONTROL_DETAIL_SEQ").val(data.info.CONTROL_DETAIL_SEQ);
 					for(let key in data.info){
 						let val = data.info[key];
-						if(key == 'SAME_SIDE_YN' && val == 'Y') {
-							$(".same_side_span").show();
-						}else if(key == "PHOTO_GFILE_SEQ") {
+						if(key == "PHOTO_GFILE_SEQ") {
 							$("#popup").find("#table2_worker_img").attr('src', '/image/' + val);
 						}else if(key == 'EQUIP_STATUS') {
 							$("#popup").find("."+key).removeClass("green");
@@ -2608,12 +2602,8 @@
 			if(data.info != null) {
 				$("#mct_machine_form").find("#CONTROL_SEQ").val(data.info.CONTROL_SEQ);
 				$("#mct_machine_form").find("#CONTROL_DETAIL_SEQ").val(data.info.CONTROL_DETAIL_SEQ);
-				$("#popHeadMid4").find(".same_side_span").hide();
 				for(let key in data.info){
 					let val = data.info[key];
-					if(key == 'SAME_SIDE_YN' && val == 'Y') {
-						$("#popHeadMid4").find(".same_side_span").show();
-					}
 					$("#popHeadMid4").find("."+key).text(val);
 				}
 				if(typeof data.info.IMG_GFILE_SEQ != 'undefined' && data.info.IMG_GFILE_SEQ != '' && data.info.IMG_GFILE_SEQ != null) {

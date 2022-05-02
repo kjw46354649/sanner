@@ -779,11 +779,11 @@
                                 <td class="th_color">I/F</td>
                             </tr>
                             <tr>
-                                <td class="EQUIP_NM"></td>
-                                <td class="EQUIP_STATUS"></td>
-                                <td class="EQUIP_TYPE_NM"></td>
-                                <td class="FACTORY_AREA_NM"></td>
-                                <td class="IF_USE_YN"></td>
+                                <td class="EQUIP_NM val_text"></td>
+                                <td class="EQUIP_STATUS val_text"></td>
+                                <td class="EQUIP_TYPE_NM val_text"></td>
+                                <td class="FACTORY_AREA_NM val_text"></td>
+                                <td class="IF_USE_YN val_text"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -807,50 +807,50 @@
                                     <p class="WORK_USER_NM mt-10"></p>
                                 </td>
                                 <td class="th_color" colspan="2">작업번호</td>
-                                <td class="text-red CONTROL_NUM" colspan="2"></td>
+                                <td class="text-red CONTROL_NUM val_text" colspan="2"></td>
                             </tr>
                             <tr>
                                 <td class="th_color" colspan="2">도면번호</td>
-                                <td class="DRAWING_NUM machine_current_draw" colspan="2"></td>
+                                <td class="DRAWING_NUM machine_current_draw val_text" colspan="2"></td>
                             </tr>
                             <tr>
                                 <td class="th_color">규격</td>
                                 <td class="th_color">형태</td>
-                                <td class="SIZE_TXT"></td>
-                                <td class="WORK_TYPE_NM"></td>
+                                <td class="SIZE_TXT val_text"></td>
+                                <td class="WORK_TYPE_NM val_text"></td>
                             </tr>
                             <tr>
                                 <td class="th_color">소재종류</td>
                                 <td class="th_color">수량</td>
-                                <td class="MATERIAL_DETAIL_NM"></td>
+                                <td class="MATERIAL_DETAIL_NM val_text"></td>
                                 <td>
                                     <span class="text-red same_side_span" style="display: none;">대</span>
-                                    <span class="QTY_FORMAT"></span>
+                                    <span class="QTY_FORMAT val_text"></span>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="th_color" colspan="2">작업수량</td>
                                 <td colspan="2">
                                     <span class="purple d-inline-block radius" style="width: 10%;">목표</span>
-                                    <span class="GOAL_QTY d-inline-block radius" style="width: 20%;"></span>
+                                    <span class="GOAL_QTY d-inline-block radius val_text" style="width: 20%;"></span>
                                     <span class="blue d-inline-block radius" style="width: 10%;">완료</span>
-                                    <span class="FINISH_QTY d-inline-block radius" style="width: 20%;"></span>
+                                    <span class="FINISH_QTY d-inline-block radius val_text" style="width: 20%;"></span>
                                     <span class="red d-inline-block radius" style="width: 10%;">불량</span>
-                                    <span class="ERROR_QTY d-inline-block radius" style="width: 20%;"></span>
+                                    <span class="ERROR_QTY d-inline-block radius val_text" style="width: 20%;"></span>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="th_color" colspan="2">가공수행시간</td>
                                 <td colspan="2">
                                     <span class="green d-inline-block radius" style="width: 12%;">가동</span>
-                                    <span class="CURRENT_STATUS_TIME_FORMAT d-inline-block" style="width: 34%;"></span>
+                                    <span class="CURRENT_STATUS_TIME_FORMAT d-inline-block val_text" style="width: 34%;"></span>
                                     <span class="yellow d-inline-block radius" style="width: 12%;">비가동</span>
-                                    <span class="WORK_STOP_TIME_FORMAT d-inline-block" style="width: 34%;"></span>
+                                    <span class="WORK_STOP_TIME_FORMAT d-inline-block val_text" style="width: 34%;"></span>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="th_color" colspan="2">남은예상시간</td>
-                                <td class="LEFT_TIME_FORMAT" colspan="2"></td>
+                                <td class="LEFT_TIME_FORMAT val_text" colspan="2"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -868,26 +868,26 @@
                             <tr>
                                 <td class="th_color_green">Program No.</td>
                                 <td class="text-blue" colspan="3">
-                                    <div class="PROGRAM ml-10" style="overflow-x: hidden;height: 30px;width: 440px;">
+                                    <div class="PROGRAM ml-10 val_text" style="overflow-x: hidden;height: 30px;width: 440px;">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="th_color_green">Running Time</td>
-                                <td class="text-blue WORK_ACTIVE_TIME_FORMAT"></td>
+                                <td class="text-blue WORK_ACTIVE_TIME_FORMAT val_text"></td>
                                 <td class="th_color_green">Execution</td>
-                                <td class="EXECUTION"></td>
+                                <td class="EXECUTION val_text"></td>
                             </tr>
                             <tr>
                                 <td class="th_color_green">1 Cycle Time</td>
-                                <td class="LATEST_CYCLE_TIME_FORMAT"></td>
+                                <td class="LATEST_CYCLE_TIME_FORMAT val_text"></td>
                                 <td class="th_color_green">Cycle 완료수</td>
-                                <td class="COMPLETE_CYCLE_COUNT"></td>
+                                <td class="COMPLETE_CYCLE_COUNT val_text"></td>
                             </tr>
                             <tr>
                                 <td class="th_color_green">Message</td>
                                 <td colspan="3">
-                                    <div class="MESSAGE ml-10" style="overflow-x: hidden;height: 30px;width: 440px;">
+                                    <div class="MESSAGE ml-10 val_text" style="overflow-x: hidden;height: 30px;width: 440px;">
                                     </div>
                                 </td>
                             </tr>
@@ -902,8 +902,8 @@
                             <div class="mapImgWrap">
                                 <img id="mct_plan_pop_img" src="/resource/main/blank.jpg" style="margin-right: 1%;">
                             </div>
-                            <div style="width: 22%;">
-                                <table id="popHeadMid4" class="popHeadMid popTable">
+                            <div style="width: 22%;overflow: hidden;">
+                                <table id="popHeadMid4" class="popHeadMid popTable" style="height: 100%;">
                                     <colgroup>
                                         <col width="100%">
                                     </colgroup>
@@ -912,54 +912,53 @@
                                             <td class="th_color">작업번호</td>
                                         </tr>
                                         <tr>
-                                            <td id="span_item_detail" class="bg-lightgray CONTROL_NUM" style="text-decoration: underline;cursor:pointer;"></td>
+                                            <td id="span_item_detail" class="bg-lightgray CONTROL_NUM val_text" style="text-decoration: underline;cursor:pointer;"></td>
                                         </tr>
                                         <tr>
                                             <td class="th_color">규격/소재</td>
                                         </tr>
                                         <tr>
-                                            <td class="bg-lightgray SIZE_MATERIAL"></td>
+                                            <td class="bg-lightgray SIZE_MATERIAL val_text"></td>
                                         </tr>
                                         <tr>
                                             <td class="th_color">수량/형태</td>
                                         </tr>
                                         <tr>
                                             <td class="bg-lightgray ">
-                                                <span class="text-red same_side_span" style="display: none;">대</span>
-                                                <span class="QTY_WORK_TYPE"></span>
+                                                <span class="QTY_WORK_TYPE val_text"></span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="th_color">가공납기</td>
                                         </tr>
                                         <tr>
-                                            <td class="bg-lightgray INNER_DUE_DT"></td>
+                                            <td class="bg-lightgray INNER_DUE_DT val_text"></td>
                                         </tr>
                                         <tr>
                                             <td class="th_color">진행상태</td>
                                         </tr>
                                         <tr>
-                                            <td class="bg-lightgray PART_STATUS_NM"></td>
+                                            <td class="bg-lightgray PART_STATUS_NM val_text"></td>
                                         </tr>
                                         <tr>
                                             <td class="th_color">현재위치</td>
                                         </tr>
                                         <tr>
-                                            <td class="bg-lightgray CURR_POSITION"></td>
+                                            <td class="bg-lightgray CURR_POSITION val_text"></td>
                                         </tr>
                                         <tr>
                                             <td class="th_color">비고</td>
                                         </tr>
                                         <tr>
                                             <td class="bg-lightgray" style="padding: 0;">
-                                                <div class="CONTROL_NOTE" style="height: 30px;overflow-x: hidden;line-height: 30px;"></div>
+                                                <div class="CONTROL_NOTE val_text" style="height: 30px;overflow-x: hidden;line-height: 30px;"></div>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="blue">예상가공시간(수동입력)</td>
                                         </tr>
                                         <tr>
-                                            <td style="height: 28.5px;">
+                                            <td>
                                                 <input id="ongoing_work_input" type="text" style="width: 100%;height: 90%;border: none;text-align: center;">
                                             </td>
                                         </tr>
@@ -976,7 +975,7 @@
                             <div class="right_float">
                                 <span id="total_cnt_qty" class="mr-10">0 품 0 EA</span>
                                 <span id="total_plan_time" class="mr-20">(0h 0m)</span>
-                                <button type="button" class="popMapDetailBtn green" style="margin: 0;">도면상세보기</button>
+                                <button id="planDetailBtn" type="button" class="popMapDetailBtn green" style="margin: 0;">도면상세보기</button>
                             </div>
                         </h4>
                         <div class="planImgDiv">
@@ -3505,6 +3504,7 @@
         };
         fnPostAjax(function (data) {
             var tempHtml = '';
+
             if(data.info != null) {
                 $(".same_side_span").hide();
                 $("#mct_plan_detail_pop_form").find("#MCT_WORK_SEQ").val(data.info.MCT_WORK_SEQ);
@@ -3512,9 +3512,7 @@
                 $("#mct_plan_detail_pop_form").find("#CONTROL_DETAIL_SEQ").val(data.info.CONTROL_DETAIL_SEQ);
                 for(let key in data.info){
                     let val = data.info[key];
-                    if(key == 'SAME_SIDE_YN' && val == 'Y') {
-                        $(".same_side_span").show();
-                    }else if(key == "PHOTO_GFILE_SEQ") {
+                    if(key == "PHOTO_GFILE_SEQ") {
                         $("#mct_plan_detail_pop").find("#table2_worker_img").attr('src', '/image/' + val);
                     }else if(key == 'EQUIP_STATUS') {
                         $("#mct_plan_detail_pop").find("."+key).removeClass("green");
@@ -3574,6 +3572,13 @@
         setTimeout(function() {
             $("#mct_plan_detail_pop_form").find("#BARCODE_NUM").focus();
         }, 100);
+    });
+
+    $("#planDetailBtn").on("click",function(){
+        let gFileSeq = $("#mct_plan_detail_pop_form").find("#GFILE_SEQ").val();
+        if(gFileSeq != '') {
+            callWindowImageViewer(gFileSeq);
+        }
     });
 
     const $camWorkDetailGrid =  $('#cam_work_detail_grid');
@@ -3945,6 +3950,11 @@
         },
         'hide.bs.modal': function () {
             fnResetForm('mct_plan_detail_pop_form');
+            $("#mct_plan_detail_pop").find(".val_text").text("");
+            $("#mct_plan_detail_pop").find(".val_text").text("");
+            $("#mct_plan_detail_pop").find(".EQUIP_STATUS").removeClass("green");
+            $("#mct_plan_detail_pop").find(".EQUIP_STATUS").removeClass("yellow");
+            $("#ongoing_work_input").val("");
         }
     });
     $("#mct_plan_detail_pop_form").find("#mct_plan_detail_pop_form_barcode_img").on('click',function (){
@@ -4533,9 +4543,7 @@
             $("#popHeadMid4").find(".same_side_span").hide();
             for(let key in data.info){
                 let val = data.info[key];
-                if(key == 'SAME_SIDE_YN' && val == 'Y') {
-                    $("#popHeadMid4").find(".same_side_span").show();
-                }else if(key == 'PLAN_WORKING_TIME') {
+                if(key == 'PLAN_WORKING_TIME') {
                     $("#ongoing_work_input").val(val);
                 }
                 $("#popHeadMid4").find("."+key).text(val);

@@ -44,8 +44,8 @@
 .bodyWrap.nc_off{background: yellow;}
 .bodyWrap.stop .status_stop {color:blue;}
 .bodyWrap.complete{background: #c5c5c5;}
-.leftLogWrap{width: 284px; float: left; padding: 0 30px 0 30px;}
-.logInWrap{width: 222px; height: 375px; border: 1px solid #d7d8d9; background: linear-gradient(to bottom, #f9f9f9, #ebebeb); position: relative;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;}
+.leftLogWrap{width: 270px; float: left; padding: 0 30px 0 30px;}
+.logInWrap{width: 215px; height: 375px; border: 1px solid #d7d8d9; background: linear-gradient(to bottom, #f9f9f9, #ebebeb); position: relative;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;}
 .logInWrap div{text-align: center;}
 .logInWrap .mainTit{font-size: 36px; font-weight:bold; color: #fff; background: url(../images/work/bg_tit.png) no-repeat 0 0; width: 249px; height: 89px; line-height: 72px; position: absolute; top: 27px; left: -15px;}
 .logInWrap .userWrap .userImg{width: 155px; height: 155px; margin: 120px auto 15px;}

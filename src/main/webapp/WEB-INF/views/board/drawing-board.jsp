@@ -481,7 +481,7 @@
                         <div class="timeWrap ml-5"><!-- 공유사항 -->
                             <span class="timeTit"><srping:message key='drawing.board.label.24'/></span>
                             <div class="arrow-sm-right" style="left: 733px;top:221px;"></div>
-                            <span class="time hg_80" id="note_list" style="width: 182px;margin-right: 7px;cursor: pointer;">
+                            <span class="time hg_80" id="note_list" style="width: 182px;margin-right: 5px;cursor: pointer;overflow: hidden;">
                                 <span><c:if test="${not empty workInfo}">${workInfo.NOTE}</c:if></span>
                                 <span><c:if test="${not empty workInfo}">${workInfo.MCT_NOTE}</c:if></span>
                             </span>
