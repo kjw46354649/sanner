@@ -121,7 +121,7 @@
                             AND N.DEL_YN = 'N'
                     )
             ) AS LATEST_PROCESS,
-            (IFNULL(Z.UNIT_QTY,1) * IFNULL(Z.COMPLETE_CYCLE_COUNT,0) + IFNULL(Z.ADJUST_QTY,0)) AS COMPLETE_QTY,
+            IFNULL(Z.FINISH_QTY,0) AS COMPLETE_QTY,
             Z.GOAL_QTY,
             IFNULL(Z.ADJUST_QTY,0) AS ADJUST_QTY,
             Z.PLAN_CYCLE_COUNT,
@@ -192,6 +192,7 @@
                 C.MATERIAL_TYPE,
                 C.SIZE_TXT,
                 A.ADJUST_QTY,
+                A.FINISH_QTY,
                 A.GOAL_QTY,
                 A.COMPLETE_CYCLE_COUNT,
                 A.UNIT_QTY,
@@ -474,7 +475,7 @@
             (SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0)),
            <choose>
                <when test='machineInfo.IF_USE_YN != null and machineInfo.IF_USE_YN != "Y"'>
-                   1, (SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0)), NOW()
+                   1, 1, NOW()
                </when>
                <otherwise>
                    (SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0)), 1, NULL
@@ -623,7 +624,8 @@
             A.WORK_STOP_TIME = B.STOP_TOTAL,
             A.COMPLETE_CYCLE_COUNT = 1,
             A.LATEST_CYCLE_TIME = B.ACTIVE_TOTAL,
-            FINISH_QTY = #{FINISH_QTY},
+            A.FINISH_QTY = #{COMPLETE_QTY},
+            A.UNIT_QTY = #{COMPLETE_QTY},
             A.UPDATE_DT = NOW(),
             A.UPDATE_ID = #{userInfo.USER_ID},
             A.WORK_USER_ID = #{userInfo.USER_ID}
@@ -636,7 +638,7 @@
             WORK_FINISH_DT = NOW(),
             IF_WORK_FINISH_DT = (SELECT MAX(EVENT_TIME) FROM TBL_MCT_WORKING_LOG A WHERE A. MCT_WORK_SEQ = #{MCT_WORK_SEQ} AND ACTIVE_TYPE = 'PGM_STOP' AND CYCLE_FINISH_YN = 'Y'),
             WORK_STATUS = 'DBS030',
-            FINISH_QTY = #{FINISH_QTY},
+            FINISH_QTY = #{COMPLETE_QTY},
             UPDATE_DT = NOW(),
             UPDATE_ID = #{userInfo.USER_ID},
             WORK_USER_ID = #{userInfo.USER_ID}
@@ -761,7 +763,8 @@
             CASE WHEN Z.SCAN_BARCODE_NUM != Z.CURR_BARCODE_NUM THEN 'X' ELSE '' END AS CHE_VER, <!-- 최선 바코드 정보와 스캔 바코드의 DRAWING_NUM 가 다른경우 -->
             CASE WHEN Z.DEL_YN = 'Y' THEN 'X' ELSE '' END AS CHE_DEL_YN, <!-- 주문 정보가 삭제된 경우  -->
             CASE WHEN Z.CONTROL_STATUS = 'ORD002' THEN 'X' ELSE '' END AS CHE_CANCEL_YN, <!-- 주문 취소가 된 경우  -->
-            CASE WHEN Z.CONTROL_STATUS = 'ORD005' THEN 'X' ELSE '' END AS CHE_HOLD_YN <!-- 주문 보류 된 경우  -->
+            CASE WHEN Z.CONTROL_STATUS = 'ORD005' THEN 'X' ELSE '' END AS CHE_HOLD_YN, <!-- 주문 보류 된 경우  -->
+            CASE WHEN (Z.ORDER_QTY + IFNULL(Z.ADDITIONAL_QTY,0)) <![CDATA[ <= ]]> 0 THEN 'X' ELSE '' END AS CHE_QTY
         FROM (
             SELECT
                 A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, H.CONTROL_NUM, A.PART_NUM, A.INNER_DUE_DT, H.SAME_SIDE_YN, <!-- 대칭 여부 -->

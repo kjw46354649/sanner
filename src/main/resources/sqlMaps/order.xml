@@ -891,9 +891,6 @@
         <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
             DRAWING_NUM = #{DRAWING_NUM},
         </if>
-        <if test="DRAWING_VER != null and DRAWING_VER != ''">
-            DRAWING_VER = #{DRAWING_VER},
-        </if>
         <if test="PREV_DRAWING_NUM != null and PREV_DRAWING_NUM != ''">
             PREV_DRAWING_NUM = #{PREV_DRAWING_NUM},
         </if>

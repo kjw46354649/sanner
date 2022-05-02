@@ -443,7 +443,7 @@
                         <div class="timeWrap"><!-- 작업번호 -->
                             <span class="timeTit"><srping:message key='drawing.board.button.19'/></span>
                             <span class="time mr-5" style="width: 337px;">
-                                <span><c:if test="${not empty workInfo}">${workInfo.CONTROL_NUM}</c:if></span>
+                                <span><c:if test="${not empty workInfo}">${workInfo.CONTROL_NUM_NM}</c:if></span>
                             </span>
                         </div>
                         <div class="timeWrap ml-5"><!-- 시작 -->
@@ -474,7 +474,7 @@
                         <div class="timeWrap"><!-- 이전 공정 -->
                             <span class="timeTit"><srping:message key='drawing.board.label.23'/></span>
                             <div class="arrow-sm-right" style="left: 478px;top:221px;"></div>
-                            <span class="time" id="latest_process_list" style="width: 125px;cursor: pointer;font-size: 20px;line-height: 30px;height: 80px;">
+                            <span class="time" id="latest_process_list" style="width: 125px;cursor: pointer;font-size: 20px;line-height: 22px;height: 80px;">
                                 <span><c:if test="${not empty workInfo}">${workInfo.LATEST_PROCESS}</c:if></span>
                             </span>
                         </div>
@@ -898,7 +898,7 @@
             <div class="modal-body" style="overflow: hidden;">
                 <div class="tableWrap">
                     <h3>불량실적 입력
-                        <span class="mr-10" style="color: black;float: right;"><c:if test="${not empty workInfo}">${workInfo.CONTROL_NUM}</c:if></span>
+                        <span class="mr-10" style="color: black;float: right;"><c:if test="${not empty workInfo}">${workInfo.CONTROL_NUM_NM}</c:if></span>
                     </h3>
                     <div class="tab-content mt-5">
                         <form id="drawing_error_qty_form">
@@ -985,7 +985,7 @@
                             <span>${drawingInfo.machineInfo.EQUIP_NM} ${drawingInfo.userInfo.USER_NM}</span>
                         </div>
                         <div style="width: 60%;text-align: center;background: #b7f7ff;">
-                            <span><c:if test="${not empty workInfo}">${workInfo.CONTROL_NUM}</c:if></span>
+                            <span><c:if test="${not empty workInfo}">${workInfo.CONTROL_NUM_NM}</c:if></span>
                         </div>
                     </div>
                     <div class="mb-20 mt-10" style="height: 195px;background: #e7fefe;text-align: center;color: black;padding: 10px;">
@@ -2134,7 +2134,10 @@
         })
 
         $("#closeErrorQtyBtn").on('click', function(){
-            fnResetForm('drawing_error_qty_form');
+            $("#drawing_error_qty_form #INSPECT_RESULT option:eq(0)").prop("selected", true);
+            $("#drawing_error_qty_form #ER7ROR_REASON option:eq(0)").prop("selected", true);
+            $("#drawing_error_qty_form").find("#ERROR_QTY").val(1);
+            $("#drawing_error_qty_form").find("#ERROR_QTY_SPAN").text(1);
             fnPopupCloseNotReload('drawing_error_qty_popup');
         })
 
