@@ -28,7 +28,7 @@
         WHERE 1=1
             AND DEL_YN = 'N'
             <if test="userId != null and userId != ''">
-                AND USER_ID LIKE CONCAT('%', #{userId}, '%')
+                AND USER_ID = #{userId}
             </if>
     </select>
 

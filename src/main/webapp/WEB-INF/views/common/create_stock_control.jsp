@@ -170,7 +170,7 @@
         const gridId = 'CREATE_STOCK_CONTROL_GRID';
         const colModel = [
             {title: 'ROW_NUM', dataType: 'integer', dataIndx: 'ROW_NUM', hidden: true},
-            {title: '재고번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 80, width: 80, maxWidth: 100, editable: false},
+            {title: '재고번호', dataType: 'string', dataIndx: 'INSIDE_STOCK_NUM', minWidth: 80, width: 80, editable: false},
             {title: '발주업체', width: 80, dataIndx: 'ORDER_COMP_CD_NM', editable: false},
             {title: '작업<br>형태', dataType: 'string', dataIndx: 'WORK_TYPE_NM', minWidth: 60, width: 60, editable: false},
             {
@@ -182,9 +182,9 @@
                     return cellData === 'Y' ? cellData : '';
                 }
             },
-            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', minWidth: 90, width: 90, maxWidth: 110},
+            {title: '규격', dataType: 'string', dataIndx: 'SIZE_TXT', width: 90},
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL',
-                minWidth: 80, width: 80, maxWidth: 100,
+                width: 80,
                 editor: {
                     type: 'select',
                     valueIndx: "value",
@@ -193,11 +193,11 @@
                 }
             },
             {
-                title: '소재<br>형태', dataIndx: 'MATERIAL_KIND', maxWidth: 80,
+                title: '소재<br>형태', dataIndx: 'MATERIAL_KIND',
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text',options: fnGetCommCodeGridSelectBox('1029')},
             },
             {
-                title: '표면<br>처리', width: 60, maxWidth: 100, dataIndx: 'SURFACE_TREAT',
+                title: '표면<br>처리', width: 60, dataIndx: 'SURFACE_TREAT',
                 styleHead: {'font-weight': 'bold', 'background': '#aac8ed'},
                 editable: true,
                 editor: {
@@ -208,7 +208,7 @@
                 }
             },
             {
-                title: '특수<br>처리', align: 'center', dataIndx: 'SPECIAL_TREATMENT', width: 60, maxWidth: 100,
+                title: '특수<br>처리', align: 'center', dataIndx: 'SPECIAL_TREATMENT', width: 60,
                 styleHead: {'font-weight': 'bold', 'background': '#aac8ed'},
                 editable: true,
                 editor: {
@@ -222,12 +222,12 @@
                 }
             },
             {
-                title: '작업지시번호', align: 'left', minWidth: 120, width: 140, maxWidth: 160, dataIndx: 'CONTROL_NUM',
+                title: '작업지시번호', align: 'left', width: 160, dataIndx: 'CONTROL_NUM',
                 editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#aac8ed'}
             },
             {title: 'INNER_DUE_DT_COPY', dataType: 'String', dataIndx: 'INNER_DUE_DT_COPY', hidden: true},
-            {title: '가공<br>납기', width: 50, maxWidth: 80, dataIndx: 'INNER_DUE_DT', dataType: 'date', format: 'mm/dd',
+            {title: '가공<br>납기', width: 70, dataIndx: 'INNER_DUE_DT', dataType: 'date', format: 'mm/dd',
                 editor: {type: 'textbox', init: fnDateEditor},
                 editable: true,
                 styleHead: {'font-weight': 'bold', 'background': '#aac8ed'},
@@ -237,7 +237,7 @@
                 }
             },
             {
-                title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY', maxWidth: 50,
+                title: '수량', dataType: 'integer', format: '#,###', dataIndx: 'ORDER_QTY', width: 60,
                 styleHead: {'font-weight': 'bold', 'background': '#aac8ed'},
                 editable: true,
             },
@@ -247,12 +247,12 @@
                 colModel: [
                     {
                         title: '원칭', dataType: 'integer', format: '#,###', dataIndx: 'ORIGINAL_SIDE_QTY',
-                        styleHead: {'font-weight': 'bold', 'background': '#aac8ed'}, maxWidth: 50,
+                        styleHead: {'font-weight': 'bold', 'background': '#aac8ed'},
                         editable: true
                     },
                     {
                         title: '대칭', dataType: 'integer', format: '#,###', dataIndx: 'OTHER_SIDE_QTY',
-                        styleHead: {'font-weight': 'bold', 'background': '#aac8ed'}, maxWidth: 50,
+                        styleHead: {'font-weight': 'bold', 'background': '#aac8ed'},
                         editable: true
                     }
                 ]
@@ -271,7 +271,7 @@
             copyModel: {render: true},
             numberCell: {show:false},
             trackModel: {on: true},
-            // scrollModel: {autoFit: true},
+            scrollModel: {autoFit: true},
             editable: false,
             columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: controlManageFilterRender},
             filterModel: {mode: 'OR'},
@@ -739,7 +739,8 @@
                     $('#MAIN_COLUMN').trigger('click');
                 }
                 $("#main_column_draw_div").show();
-                $createStockControlGrid.pqGrid('option', 'width', 'auto').pqGrid('refresh');
+                $createStockControlGrid.pqGrid('option', 'width', '100%').pqGrid('refresh');
+                $createStockControlGrid.pqGrid('option', 'scrollModel', {autoFit: false});
             }else {
                 $("#grid_top_div").css({width:'100%'});
                 if($('#MAIN_COLUMN').prop('checked')) {
@@ -747,6 +748,7 @@
                 }
                 $("#main_column_draw_div").hide();
                 $createStockControlGrid.pqGrid('option', 'width', '100%').pqGrid('refresh');
+                $createStockControlGrid.pqGrid('option', 'scrollModel', {autoFit: true});
             }
             $createStockControlGrid.pqGrid('refreshView');
         });
@@ -840,6 +842,12 @@
                 }
             }
         }, '#CREATE_STOCK_CONTROL_GRID .pq-grid-row');
+
+
+        $(window).on('resize', function() {
+            console.log("resize");
+            $createStockControlGrid.pqGrid('refreshView');
+        });
     });
 </script>
 </body>
