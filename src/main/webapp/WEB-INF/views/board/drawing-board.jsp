@@ -370,6 +370,7 @@
                 <input id="ORDER_QTY" name="ORDER_QTY" type="hidden" value="${workInfo.ORDER_QTY}">
                 <input id="INNER_DUE_DT" name="INNER_DUE_DT" type="hidden" value="${workInfo.INNER_DUE_DT}">
                 <input id="FINISH_QTY" name="FINISH_QTY" type="hidden" value="${workInfo.FINISH_QTY}">
+                <input id="FINISH_QTY_COPY" name="FINISH_QTY_COPY" type="hidden" value="${workInfo.FINISH_QTY}">
                 <input id="COMPLETE_QTY" name="COMPLETE_QTY" type="hidden" value="${workInfo.COMPLETE_QTY}">
                 <input id="GOAL_QTY" name="GOAL_QTY" type="hidden" value="${workInfo.GOAL_QTY}">
                 <input id="COMPLETE_CYCLE_COUNT" name="COMPLETE_CYCLE_COUNT" type="hidden" value="${workInfo.COMPLETE_CYCLE_COUNT}">
@@ -1002,7 +1003,7 @@
                                 </span>
                                 <div class="div_sm_section">
                                     <div id="complete_success_qty_pop_minus_btn" class="arrow-left-25" data-type="minus"></div>
-                                    <span id="completeControlCompleteQtyHtml" class="wd_130 COMPLETE_QTY" style="text-align: center;font-size: 45px;">${workInfo.COMPLETE_QTY}</span>
+                                    <span id="completeControlCompleteQtyHtml" class="wd_130 COMPLETE_QTY" style="text-align: center;font-size: 45px;">${workInfo.FINISH_QTY}</span>
                                     <div id="complete_success_qty_pop_plus_btn" class="arrow-right-25" data-type="plus"></div>
                                 </div>
                             </div>
@@ -1862,6 +1863,12 @@
         $("#workCompletelBtn").on('click', function(){
             $("#drawing_work_complete_popup").css("display", "block");
             $(".bodyWrap").addClass("modal-open-body");
+            let goalQty = $("#drawing_action_form").find("#GOAL_QTY").val();
+            let finishQty = $("#drawing_action_form").find("#FINISH_QTY_COPY").val();
+            if(goalQty != finishQty) {
+                $("#drawing_work_complete_popup").find("#completeControlCompleteQtyHtml").text(goalQty);
+                $("#drawing_action_form").find("#FINISH_QTY").val(goalQty);
+            }
             if(if_use_yn != "Y") {
                 workTimeIntervalIsPause = true;
             }
@@ -1928,10 +1935,10 @@
             clearTimeout(stopInterval);
             $("#drawing_work_complete_popup").find("#complete_count_span").text("");
             let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
-            let completeQty = $("#drawing_action_form").find("#COMPLETE_QTY").val();
-            let afterQty = parseInt(completeQty) + 1;
+            let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
+            let afterQty = parseInt(finishQty) + 1;
 
-            $("#drawing_action_form").find("#COMPLETE_QTY").val(afterQty);
+            $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
             $("#drawing_work_complete_popup").find("#completeControlCompleteQtyHtml").html(afterQty);
         });
 
@@ -1940,10 +1947,10 @@
             clearTimeout(stopInterval);
             $("#drawing_work_complete_popup").find("#complete_count_span").text("");
             let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
-            let completeQty = $("#drawing_action_form").find("#COMPLETE_QTY").val();
-            let afterQty = parseInt(completeQty) - 1;
+            let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
+            let afterQty = parseInt(finishQty) - 1;
             if(afterQty < 0) return false;
-            $("#drawing_action_form").find("#COMPLETE_QTY").val(afterQty);
+            $("#drawing_action_form").find("#FINISH_QTY").val(afterQty);
             $("#drawing_work_complete_popup").find("#completeControlCompleteQtyHtml").html(afterQty);
         });
 
@@ -1953,7 +1960,7 @@
             $("#drawing_worker_end_popup .scan-time").html("");
             let orderQty = $("#drawing_action_form").find("#ORDER_QTY").val();
             let errorQty = $("#drawing_action_form").find("#ERROR_QTY").val();
-            let finishQty = $("#drawing_action_form").find("#FINISH_QTY").val();
+            let finishQty = $("#drawing_action_form").find("#FINISH_QTY_COPY").val();
 
             let finishParseQty = isNaN(parseInt(finishQty)) ? 0 : parseInt(finishQty);
             let errorParseQty = isNaN(parseInt(errorQty)) ? 0 : parseInt(errorQty);
@@ -1995,6 +2002,7 @@
             fnPopupCloseNotReload('drawing_quality_history_popup');
 
             $("#drawing_quality_history_popup").find("#drawing_history_image").attr("src", "/resource/main/blank.jpg");
+            $("#drawing_quality_history_popup").find(".drawing_history_img_table").hide();
             $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_INSPECT_RESULT_NM").val("");
             $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_PROCESS_NM").val("");
             $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_REASON_NM").val("");
@@ -2073,7 +2081,7 @@
             let target = $(this).data('target');
             let newQty = Number($(this).parents('form').find("#"+target).val());
             let targetQty = Number($(this).parents('form').find("#"+target).val());
-            let finishQty = Number($("#drawing_action_form").find("#FINISH_QTY").val());
+            let finishQty = Number($("#drawing_action_form").find("#FINISH_QTY_COPY").val());
 
             if(type == 'plus') {
                 newQty = Number(targetQty) + 1;
@@ -2104,7 +2112,7 @@
             let type = $(this).data('type');
             let target = $(this).data('target');
             let newQty = Number($(this).parents('form').find("#"+target).val());
-            let finishQty = Number($("#drawing_action_form").find("#FINISH_QTY").val());
+            let finishQty = Number($("#drawing_action_form").find("#FINISH_QTY_COPY").val());
             let finishCycle = Number($("#drawing_action_form").find("#COMPLETE_CYCLE_COUNT").val());
             let unitQty = Number($("#drawing_edit_qty_form").find("#UNIT_QTY").val());
 
@@ -2165,7 +2173,7 @@
 
         $(".error_arrow_btn").on('click', function() {
             let type = $(this).data('type');
-            let finishQty = Number($("#drawing_action_form").find("#FINISH_QTY").val());
+            let finishQty = Number($("#drawing_action_form").find("#FINISH_QTY_COPY").val());
             let errorQty = Number($("#drawing_error_qty_form").find("#ERROR_QTY").val());
 
             if(type == 'plus') {
@@ -2185,7 +2193,7 @@
 
         $(".error_qty_btn").on('click', function() {
             let type = $(this).data('type');
-            let finishQty = Number($("#drawing_action_form").find("#FINISH_QTY").val());
+            let finishQty = Number($("#drawing_action_form").find("#FINISH_QTY_COPY").val());
             let errorQty = Number($("#drawing_error_qty_form").find("#ERROR_QTY").val());
 
             if(type == 'min') {
@@ -2509,7 +2517,13 @@
 
         $.each(workHistoryList, function (idx,Item) {
             if(Item.RNUM == rnum) {
+                console.log(Item);
                 $("#drawing_quality_history_popup").find("#drawing_history_image").attr("src", "/qimage/" + Item.IMG_GFILE_SEQ);
+                if(Item.INSPECT_GRADE == 'GRD010' || Item.INSPECT_GRADE == 'GRD020') {
+                    $("#drawing_quality_history_popup").find(".drawing_history_img_table").hide();
+                }else {
+                    $("#drawing_quality_history_popup").find(".drawing_history_img_table").show();
+                }
                 $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_INSPECT_RESULT_NM").text(Item.INSPECT_RESULT_NM);
                 $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_PROCESS_NM").text(Item.ERROR_PROCESS_NM);
                 $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_REASON_NM").text(Item.ERROR_REASON_NM);

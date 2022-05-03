@@ -46,7 +46,7 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
 
 
         /** MCT PLAN 에서 우선순위가 높은 생산계획을 삭제 처리 한다. **/
-        hashMap.put("queryId", "drawingMapper.deleteFristMctPlan");
+        hashMap.put("queryId", "drawingMapper.deleteFirstMctPlan");
         innodaleDao.create(hashMap);
 
         /**

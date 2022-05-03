@@ -80,20 +80,25 @@
             Z.MATERIAL_FINISH_HEAT, <!-- 열처리 -->
             Z.ORDER_QTY,<!--수량 -->
             CAST((Z.ORDER_QTY + IFNULL(Z.ADDITIONAL_QTY,0)) AS INT) AS FINISH_QTY,
-            CASE WHEN ORIGINAL_SIDE_QTY > 0 AND Z.OTHER_SIDE_QTY > 0 AND Z.ADDITIONAL_QTY > 0
-                    THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY, ")", ' + ', Z.ADDITIONAL_QTY)
-                 WHEN ORIGINAL_SIDE_QTY  > 0 AND Z.OTHER_SIDE_QTY > 0
-                    THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY, ")")
-                 WHEN ORIGINAL_SIDE_QTY  > 0 AND Z.OTHER_SIDE_QTY = 0 AND Z.ADDITIONAL_QTY > 0
-                    THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ")", ' + ', Z.ADDITIONAL_QTY)
+            CASE WHEN ORIGINAL_SIDE_QTY > 0 AND Z.OTHER_SIDE_QTY > 0
+                    THEN CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY, ")",' + ', Z.ADDITIONAL_QTY)
+                              WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY, ")", ' - ', ABS(Z.ADDITIONAL_QTY))
+                              ELSE CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY)
+                         END
                  WHEN ORIGINAL_SIDE_QTY  > 0 AND Z.OTHER_SIDE_QTY = 0
-                    THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ")")
-                 WHEN ORIGINAL_SIDE_QTY  = 0 AND Z.OTHER_SIDE_QTY > 0 AND Z.ADDITIONAL_QTY > 0
-                    THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.OTHER_SIDE_QTY, ")", ' + ', Z.ADDITIONAL_QTY)
+                    THEN CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ")", ' + ', Z.ADDITIONAL_QTY)
+                              WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ")", ' - ', ABS(Z.ADDITIONAL_QTY))
+                              ELSE CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ")")
+                         END
                  WHEN ORIGINAL_SIDE_QTY  = 0 AND Z.OTHER_SIDE_QTY > 0
-                    THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.OTHER_SIDE_QTY, ")")
+                    THEN CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.OTHER_SIDE_QTY, ")", ' + ', Z.ADDITIONAL_QTY)
+                              WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.OTHER_SIDE_QTY, ")", ' - ', ABS(Z.ADDITIONAL_QTY))
+                              ELSE CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.OTHER_SIDE_QTY, ")")
+                         END
                  WHEN Z.ADDITIONAL_QTY > 0
                     THEN CONCAT(Z.ORDER_QTY, ' + ', Z.ADDITIONAL_QTY)
+                 WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0
+                    THEN CONCAT(Z.ORDER_QTY, ' - ', ABS(Z.ADDITIONAL_QTY))
                  ELSE Z.ORDER_QTY
             END AS ORDER_QTY_INFO,-- 수량에 대칭 추가 -->
             CONCAT(IFNULL(Z.NOTE, SPACE(0)), ' ', IFNULL(Z.MATERIAL_NOTE, SPACE(0))) AS NOTE, Z.MCT_NOTE,
@@ -252,22 +257,27 @@
             Z.MATERIAL_FINISH_HEAT, <!-- 열처리 -->
             Z.ORDER_QTY,<!--수량 -->
             CAST((Z.ORDER_QTY + IFNULL(Z.ADDITIONAL_QTY,0)) AS INT) AS FINISH_QTY,
-            CASE WHEN ORIGINAL_SIDE_QTY > 0 AND Z.OTHER_SIDE_QTY > 0 AND Z.ADDITIONAL_QTY > 0
-                    THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY, ")",' + ', Z.ADDITIONAL_QTY)
-                 WHEN ORIGINAL_SIDE_QTY > 0 AND Z.OTHER_SIDE_QTY > 0
-                    THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY, ")")
-                 WHEN ORIGINAL_SIDE_QTY  > 0 AND Z.OTHER_SIDE_QTY = 0 AND Z.ADDITIONAL_QTY > 0
-                    THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ")", ' + ', Z.ADDITIONAL_QTY)
+            CASE WHEN ORIGINAL_SIDE_QTY > 0 AND Z.OTHER_SIDE_QTY > 0
+                    THEN CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY, ")",' + ', Z.ADDITIONAL_QTY)
+                              WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY, ")", ' - ', ABS(Z.ADDITIONAL_QTY))
+                              ELSE CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY)
+                         END
                  WHEN ORIGINAL_SIDE_QTY  > 0 AND Z.OTHER_SIDE_QTY = 0
-                    THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ")")
-                 WHEN ORIGINAL_SIDE_QTY  = 0 AND Z.OTHER_SIDE_QTY > 0 AND Z.ADDITIONAL_QTY > 0
-                    THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.OTHER_SIDE_QTY, ")", ' + ', Z.ADDITIONAL_QTY)
+                    THEN CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ")", ' + ', Z.ADDITIONAL_QTY)
+                              WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ")", ' - ', ABS(Z.ADDITIONAL_QTY))
+                              ELSE CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ")")
+                         END
                  WHEN ORIGINAL_SIDE_QTY  = 0 AND Z.OTHER_SIDE_QTY > 0
-                    THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.OTHER_SIDE_QTY, ")")
+                    THEN CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.OTHER_SIDE_QTY, ")", ' + ', Z.ADDITIONAL_QTY)
+                              WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.OTHER_SIDE_QTY, ")", ' - ', ABS(Z.ADDITIONAL_QTY))
+                              ELSE CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.OTHER_SIDE_QTY, ")")
+                         END
                  WHEN Z.ADDITIONAL_QTY > 0
                     THEN CONCAT(Z.ORDER_QTY, ' + ', Z.ADDITIONAL_QTY)
+                 WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0
+                    THEN CONCAT(Z.ORDER_QTY, ' - ', ABS(Z.ADDITIONAL_QTY))
                  ELSE Z.ORDER_QTY
-            END AS ORDER_QTY_INFO,<!--수량에 대칭 추가 -->
+            END AS ORDER_QTY_INFO,-- 수량에 대칭 추가 -->
             CONCAT(IFNULL(Z.NOTE, SPACE(0)), ' ', IFNULL(Z.MATERIAL_NOTE, SPACE(0))) AS NOTE, Z.MCT_NOTE,
             DATE_FORMAT(Y.INSERT_DT,'%y.%m.%d') AS INSPECT_DT,
             jmes.SF_GET_CODE_NM('1040', Y.INSPECT_GRADE, 'EN') AS INSPECT_GRADE_NM,
@@ -624,30 +634,52 @@
             A.WORK_STOP_TIME = B.STOP_TOTAL,
             A.COMPLETE_CYCLE_COUNT = 1,
             A.LATEST_CYCLE_TIME = B.ACTIVE_TOTAL,
-            A.FINISH_QTY = #{COMPLETE_QTY},
-            A.UNIT_QTY = #{COMPLETE_QTY},
+            A.FINISH_QTY = #{FINISH_QTY},
+            A.UNIT_QTY = #{FINISH_QTY},
             A.UPDATE_DT = NOW(),
             A.UPDATE_ID = #{userInfo.USER_ID},
             A.WORK_USER_ID = #{userInfo.USER_ID}
         WHERE A.MCT_WORK_SEQ = B.MCT_WORK_SEQ
             AND A.DEL_YN = 'N'
     </update>
-    <update id="updateCompleteMctWork"  parameterType="java.util.HashMap" >
-        UPDATE jmes.TBL_MCT_WORK
+    <update id="updateCompleteMctWork" parameterType="java.util.HashMap" >
+        UPDATE jmes.TBL_MCT_WORK A
+            LEFT OUTER JOIN (
+                SELECT SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS ACTIVE_TOTAL
+                , SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_STOP' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS STOP_TOTAL
+                , MAX(CASE WHEN X.ACTIVE_TYPE = 'PGM_STOP' AND X.CYCLE_FINISH_YN = 'Y' THEN X.EVENT_TIME END ) AS IF_WORK_FINISH_DT
+                , X.MCT_WORK_SEQ
+                FROM (
+                    SELECT M.EVENT_TIME, M.ACTIVE_TYPE, M.PART_CNT, M.CYCLE_FINISH_YN,
+                        LAG(M.EVENT_TIME) OVER (ORDER BY M.MCT_LOG_SEQ) AS BEFORE_TIME,
+                        LAG(M.ACTIVE_TYPE) OVER (ORDER BY M.MCT_LOG_SEQ) AS BEFORE_TYPE,
+                        N.MCT_WORK_SEQ
+                    FROM TBL_MCT_WORKING_LOG M
+                        INNER JOIN TBL_MCT_WORK N ON M.MCT_WORK_SEQ = N.MCT_WORK_SEQ AND M.EQUIP_SEQ = N.EQUIP_SEQ AND N.DEL_YN = 'N'
+                    WHERE 1=1
+                        AND M.MCT_WORK_SEQ = #{MCT_WORK_SEQ}
+                        AND M.MCT_LOG_SEQ <![CDATA[ <= ]]> (SELECT MAX(MCT_LOG_SEQ) FROM TBL_MCT_WORKING_LOG A WHERE A.MCT_WORK_SEQ = M.MCT_WORK_SEQ AND ACTIVE_TYPE = 'PGM_STOP' AND CYCLE_FINISH_YN = 'Y')
+                        AND M.ACTIVE_TYPE != 'DISCONNECT'
+                    ORDER BY M.MCT_LOG_SEQ
+                ) X
+                GROUP BY X.MCT_WORK_SEQ
+            ) B ON B.MCT_WORK_SEQ = A.MCT_WORK_SEQ
         SET
-            WORK_FINISH_DT = NOW(),
-            IF_WORK_FINISH_DT = (SELECT MAX(EVENT_TIME) FROM TBL_MCT_WORKING_LOG A WHERE A. MCT_WORK_SEQ = #{MCT_WORK_SEQ} AND ACTIVE_TYPE = 'PGM_STOP' AND CYCLE_FINISH_YN = 'Y'),
-            WORK_STATUS = 'DBS030',
-            FINISH_QTY = #{COMPLETE_QTY},
-            UPDATE_DT = NOW(),
-            UPDATE_ID = #{userInfo.USER_ID},
-            WORK_USER_ID = #{userInfo.USER_ID}
+            A.WORK_FINISH_DT = NOW(),
+            A.IF_WORK_FINISH_DT = B.IF_WORK_FINISH_DT,
+            A.WORK_ACTIVE_TIME = B.ACTIVE_TOTAL,
+            A.WORK_STOP_TIME = B.STOP_TOTAL,
+            A.WORK_STATUS = 'DBS030',
+            A.FINISH_QTY = #{FINISH_QTY},
+            A.UPDATE_DT = NOW(),
+            A.UPDATE_ID = #{userInfo.USER_ID},
+            A.WORK_USER_ID = #{userInfo.USER_ID}
         WHERE 1 = 1
-            AND DEL_YN = 'N'
-            AND MCT_WORK_SEQ = #{MCT_WORK_SEQ}
+            AND A.DEL_YN = 'N'
+            AND A.MCT_WORK_SEQ = #{MCT_WORK_SEQ}
     </update>
 
-    <insert id="insertWorkingLogNonIf"  parameterType="java.util.HashMap" >
+    <insert id="insertWorkingLogNonIf" parameterType="java.util.HashMap" >
         INSERT INTO jmes.TBL_MCT_WORKING_LOG (
             MCT_LOG_SEQ,
             IF_SEQ, EQUIP_SEQ, MCT_WORK_SEQ,
@@ -669,7 +701,7 @@
           AND A.MCT_WORK_SEQ = #{MCT_WORK_SEQ}
     </insert>
 
-    <update id="deleteFristMctPlan"  parameterType="java.util.HashMap" >
+    <update id="deleteFirstMctPlan" parameterType="java.util.HashMap" >
         UPDATE jmes.TBL_MCT_PLAN A
             SET
                 A.DEL_YN = 'Y',
