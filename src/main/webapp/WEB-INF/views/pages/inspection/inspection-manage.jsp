@@ -32,10 +32,6 @@
                               </c:forEach>
                             </select>
                         </span>
-<%--                        <span class="ipu_wrap">--%>
-<%--                            <label class="label_100" for="SEL_DRAWING_NUM">도면번호</label>--%>
-<%--                            <input type="search" class="wd_200" name="SEL_DRAWING_NUM" id="SEL_DRAWING_NUM" title="도면번호">--%>
-<%--                        </span>--%>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label class="label_100" for="SEL_WORK_TYPE">작업형태</label>
@@ -46,15 +42,6 @@
                                 </c:forEach>
                             </select>
                         </span>
-<%--                        <span class="ipu_wrap">--%>
-<%--                            <label class="label_100" for="SEL_POP_POSITION">현재위치</label>--%>
-<%--                             <select id="SEL_POP_POSITION" name="SEL_POP_POSITION" title="현재위치" data-required="true" class="wd_200">--%>
-<%--                                <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
-<%--                                <c:forEach var="vlocale" items="${HighCode.H_1009}">--%>
-<%--                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>--%>
-<%--                                </c:forEach>--%>
-<%--                            </select>--%>
-<%--                        </span>--%>
                         <span class="gubun"></span>
                     </li>
                     <li>
@@ -67,9 +54,6 @@
                         <span class="gubun"></span>
                         <span class="txt_span"><label class="label_100" for="INSPECTION_MANAGE_SEL_INSPECT_GRADE">Option</label></span>
                         <span class="chk_box"><input id="INSPECTION_MANAGE_SEL_INSPECT_GRADE" name="SEL_INSPECT_PASS" type="checkbox" checked><label for="INSPECTION_MANAGE_SEL_INSPECT_GRADE">검사합격품 제외</label></span>
-<%--                        <span class="chk_box"><input id="INSPECTION_MANAGE_SEL_INSPECT_GRADE" name="SEL_INSPECT_GRADE" type="checkbox" checked><label for="INSPECTION_MANAGE_SEL_INSPECT_GRADE">검사완료제외</label></span>--%>
-<%--                        <span class="chk_box"><input id="INSPECTION_MANAGE_SEL_OUTSIDE_YN" name="SEL_OUTSIDE_YN" type="checkbox" checked><label for="INSPECTION_MANAGE_SEL_OUTSIDE_YN">외주제외</label></span>--%>
-<%--                        <span class="chk_box"><input id="INSPECTION_MANAGE_SEL_INNER_WORK_FINISH_YN" name="SEL_INNER_WORK_FINISH_YN" type="checkbox" checked><label for="INSPECTION_MANAGE_SEL_INNER_WORK_FINISH_YN">가공완료</label></span>--%>
                         <span class="ipu_wrap right_float">
                             <button type="button" id="INSPECTION_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="inspection_manage_search_btn">검색</button>
@@ -320,13 +304,6 @@
             {title: '긴<br>급', minWidth: 25, width: 25, dataType: 'string', dataIndx: 'EMERGENCY_YN_NM', editable: false},
             {title: '불량<br>반품', minWidth: 30, width: 30, dataType: 'string', dataIndx: 'INSPECT_GRADE_SHORT_NM', editable: false},
             {title: '주요<br>검사', width: 65, dataType: 'string', dataIndx: 'MAIN_INSPECTION_NM', editable: false},
-            // {title: '카ㄴㅇㄹ드', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40, editable: false,
-            //     render: function (ui) {
-            //         let rowIndx = ui.rowIndx, grid = this;
-            //         if (ui.rowData.DXF_GFILE_SEQ > 0) return "[카]";
-            //         return '';
-            //     }
-            // },
             {title: '', align: 'center', dataType: 'string', dataIndx: 'DETAIL_INFO', width: 30, minWidth: 30, editable: false,
                 render: function (ui) {
                     if (ui.rowData.CONTROL_SEQ > 0) return '<span id="detailView" class="shareIcon"></span>';
@@ -341,7 +318,6 @@
                 }
             },
             {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', minWidth: 135, width: 140, editable: false},
-            // {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 40, width: 40, editable: false},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
@@ -375,8 +351,6 @@
             {title: '출하<br>일자', dataType: 'string', dataIndx: 'OUT_FINISH_DT', minWidth: 50, width: 50, editable: false},
             {title: '주문사항 비고', dataType: 'string', dataIndx: 'NOTE', minWidth: 110, width: 150, editable: false},
             {title: '기타 비고', dataType: 'string', dataIndx: 'MATERIAL_NOTE', minWidth: 100, width: 100, editable: false},
-            // {title: '도면번호', dataType: 'string', dataIndx: 'DRAWING_NUM', minWidth: 210, width: 210, editable: false},
-            // {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', minWidth: 80, width: 80, editable: false},
             {title: '검사 성적서', datatype: 'string', align: 'center', colModel: [
                     {title: 'Qty.', datatype: 'string', dataIndx: 'INSPECT_RESULT_QTY', minWidth: 40, width: 40, editable: false,
                         render: function (ui) {
@@ -414,55 +388,6 @@
                     },
                 ]
             }
-            // {
-            //     title: '최근 MCT 실적', datatype: 'string', align: 'center', colModel: [
-            //         {title: '날짜', datatype: 'string', dataIndx: 'MCT_WORK_DT', minWidth: 100, width: 100, editable: false},
-            //         {title: '작업자', datatype: 'string', dataIndx: 'WORK_USER_NM', minWidth: 100, width: 100, editable: false},
-            //         {title: 'NC No.', datatype: 'string', dataIndx: 'EQUIP_NM', minWidth: 70, width: 70, editable: false},
-            //         {title: '비고', datatype: 'string', dataIndx: 'CAM_NOTE', minWidth: 300, width: 300, editable: false}
-            //     ]
-            // },
-            // {
-            //     title: '최근 품질 실적', datatype: 'string', align: 'center', colModel: [
-            //         {title: 'seq', datatype: 'string', dataIndx: 'Q_SEQ', minWidth: 40, width: 40, editable: false},
-            //         {title: '담당관', datatype: 'string', dataIndx: 'Q_INSPECT_USER_NM', minWidth: 80, width: 80, editable: false},
-            //         {title: '측정방법', datatype: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', minWidth: 100, width: 100, editable: false},
-            //         {title: '등급', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NM', minWidth: 60, width: 60, editable: false,
-            //             render: function (ui) {
-            //                 let cellData = ui.cellData;
-            //
-            //                 if (cellData === '' || cellData === undefined) {
-            //                     return '';
-            //                 } else {
-            //                     let text = cellData, style = '';
-            //                     let rowData = ui.rowData;
-            //
-            //                     if (rowData.INSPECT_GRADE === 'GRD040' || rowData.INSPECT_GRADE === 'GRD050') {
-            //                         style = 'color: #FF0000;font-weight: bold;';
-            //                     }
-            //
-            //                     return {text: text, style: style};
-            //                 }
-            //             }
-            //         },
-            //         {title: '합/불', datatype: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', minWidth: 70, width: 70, editable: false},
-            //         {title: '불량수량', datatype: 'string', dataIndx: 'Q_ERROR_QTY', minWidth: 50, width: 50, editable: false},
-            //         {title: '반품일시', datatype: 'string', dataIndx: 'Q_RETURN_DT', minWidth: 80, width: 80, editable: false},
-            //         {title: '검사코드', datatype: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', minWidth: 100, width: 100, editable: false},
-            //         {title: '상세 내용', datatype: 'string', dataIndx: 'Q_INSPECT_DESC', minWidth: 200, width: 200, editable: false},
-            //         {title: '발생공정', datatype: 'string', dataIndx: 'Q_ERROR_PROCESS_NM', minWidth: 120, width: 120, editable: false},
-            //         {title: '원인', datatype: 'string', dataIndx: 'Q_ERROR_REASON_NM', minWidth: 100, width: 100, editable: false},
-            //         {title: '조치', datatype: 'string', dataIndx: 'Q_ERROR_ACTION_NM', minWidth: 80, width: 80, editable: false},
-            //         {title: '조치방안 및 비고', datatype: 'string', dataIndx: 'Q_ERROR_NOTE', minWidth: 120, width: 120, editable: false},
-            //         {title: '작성일시', datatype: 'string', dataIndx: 'Q_DT', minWidth: 80, width: 80, editable: false},
-            //         {title: '최근 실적<br>삭제', align: 'center', dataType: 'string', dataIndx: 'CONTROL_SEQ_DELETE', width: 80, minWidth: 80, editable: false,
-            //             render: function (ui) {
-            //                 if (ui.rowData.INSPECT_SEQ > 0) return "<button type=\"button\" class=\"miniBtn black\">삭제</button>";
-            //                 return '';
-            //             }
-            //         }
-            //     ]
-            // }
         ];
 
         inspectionManageGridId01.pqGrid({
@@ -509,7 +434,6 @@
                 SelectedRowIndex = [];
                 let selectList = ui.addList;
                 for (let i = 0; i < selectList.length; i++) {
-                    // console.log(selectList[i].rowIndx);
                     SelectedRowIndex.push(selectList[i].rowIndx);
                 }
             },
@@ -566,15 +490,6 @@
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
             {title: 'PRODUCT_NUM', dataIndx: 'PRODUCT_NUM', hidden: true},
-            // {title: 'No.', minWidth: 60, dataIndx: 'POINT_NUM', sortable:false, editable:false,
-            //     styleHead: {'font-weight': 'bold', 'background': '#abc3e9','font-size':'12px'},
-            //     render: function (ui) {
-            //         const cellData = ui.cellData;
-            //         if(cellData){
-            //             return '<input id="POINT_CHECK_'+cellData + '" name="POINT_CHECK" class="point_check" data-target="'+cellData+'" style="margin-right: 10px;" type="checkbox"/>' + cellData;
-            //         }
-            //     }
-            // },
             {title: 'No.', datatype: 'string', align: 'center', sortable:false, editable:false, colModel: [
                     {
                         title: '<input id="vertical_check" type="checkbox"/>',
