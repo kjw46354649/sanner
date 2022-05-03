@@ -2499,7 +2499,7 @@
         $('#NEW_CONTROL_REGISTRATION').on('click', function () {
             let url = '/createControl';
             // 팝업 사이즈
-            let nWidth = 1650;
+            let nWidth = 1880;
             let nHeight = 980;
             let winWidth = document.body.clientWidth;
             let winHeight = document.body.clientHeight;

@@ -212,13 +212,13 @@
         </form>
         <div class="tableWrap">
             <div class="conWrap" style="display: flex;width: 100%;height: 100%;">
-                <div id="main_column_draw_div" style="width: 54%;height: auto;margin-right: 15px;display: none;">
+                <div id="main_column_draw_div" style="width: 62%;height: auto;margin-right: 15px;display: none;">
                     <!--도면삽입-->
                     <img id="create_control_img" src="/resource/main/blank.jpg" style="width: 100%;height: 100%;max-height: inherit;max-width: inherit;">
                 </div>
-                <div id="grid_top_div" style="width: 100%;">
+                <div id="grid_top_div" style="width: 100%;height: 100%;">
                     <div id="CREATE_CONTROL_GRID"></div>
-                    <div class="right_sort">
+                    <div class="right_sort mt-05" style="font-size: 11px;">
                         전체 조회 건수 (Total : <span id="CREATE_CONTROL_GRID_RECORDS" style="color: #00b3ee">0</span>)
                     </div>
                 </div>
@@ -703,7 +703,7 @@
         const obj = {
             minHeight: '100%',
             width: '100%',
-            height: '100%',
+            height: '99%',
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             showTitle: false,
@@ -1471,7 +1471,7 @@
         $('#toggleImageView').on('click', function () {
             isActiveDrawingView = !isActiveDrawingView;
             if(isActiveDrawingView) {
-                $("#grid_top_div").css({width:'46%'});
+                $("#grid_top_div").css({width:'37%'});
                 var width = document.getElementsByClassName("pq-cont-right")[1].scrollWidth
 
                 $("#main_column_draw_div").show();
