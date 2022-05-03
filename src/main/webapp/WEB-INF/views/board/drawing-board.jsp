@@ -770,7 +770,7 @@
                                 </div>
                                 <div>
                                     <img id="drawing_history_image" src="/resource/main/blank.jpg" style="width: 500px;height:353.8px;border: 1px solid gray;">
-                                    <table class="drawing_history_img_table">
+                                    <table class="drawing_history_img_table" style="display: none;">
                                         <tbody style="border: 1px solid gray;">
                                             <tr>
                                                 <td id="DRAWING_HISTORY_INSPECT_RESULT_NM" style="border: 1px solid gray;width: 40%;"></td>
