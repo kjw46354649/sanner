@@ -807,11 +807,11 @@
                                     <p class="WORK_USER_NM mt-10"></p>
                                 </td>
                                 <td class="th_color" colspan="2">작업번호</td>
-                                <td class="text-red CONTROL_NUM val_text" colspan="2"></td>
+                                <td class="text-red CONTROL_NUM val_text machine_current_draw" colspan="2"></td>
                             </tr>
                             <tr>
                                 <td class="th_color" colspan="2">도면번호</td>
-                                <td class="DRAWING_NUM machine_current_draw val_text" colspan="2"></td>
+                                <td class="DRAWING_NUM val_text" colspan="2"></td>
                             </tr>
                             <tr>
                                 <td class="th_color">규격</td>
@@ -824,7 +824,7 @@
                                 <td class="th_color">수량</td>
                                 <td class="MATERIAL_DETAIL_NM val_text"></td>
                                 <td>
-                                    <span class="text-red same_side_span" style="display: none;">대</span>
+                                    <span class="text-red SAME_SIDE_TXT val_text"></span>
                                     <span class="QTY_FORMAT val_text"></span>
                                 </td>
                             </tr>
@@ -924,7 +924,8 @@
                                             <td class="th_color">수량/형태</td>
                                         </tr>
                                         <tr>
-                                            <td class="bg-lightgray ">
+                                            <td class="bg-lightgray">
+                                                <span class="text-red SAME_SIDE_TXT val_text"></span>
                                                 <span class="QTY_WORK_TYPE val_text"></span>
                                             </td>
                                         </tr>
@@ -3506,7 +3507,6 @@
             var tempHtml = '';
 
             if(data.info != null) {
-                $(".same_side_span").hide();
                 $("#mct_plan_detail_pop_form").find("#MCT_WORK_SEQ").val(data.info.MCT_WORK_SEQ);
                 $("#mct_plan_detail_pop_form").find("#CONTROL_SEQ").val(data.info.CONTROL_SEQ);
                 $("#mct_plan_detail_pop_form").find("#CONTROL_DETAIL_SEQ").val(data.info.CONTROL_DETAIL_SEQ);
@@ -4535,12 +4535,13 @@
     }
 
     function settingRightTable(data) {
+        $("#popHeadMid4").find(".val_text").text("");
+        $("#popHeadMid4").find("#ongoing_work_input").val("");
         if(data.info != null) {
             $("#mct_plan_detail_pop_form").find("#MCT_WORK_SEQ").val(data.info.MCT_WORK_SEQ);
             $("#mct_plan_detail_pop_form").find("#MCT_PLAN_SEQ").val(data.info.MCT_PLAN_SEQ);
             $("#mct_plan_detail_pop_form").find("#CONTROL_SEQ").val(data.info.CONTROL_SEQ);
             $("#mct_plan_detail_pop_form").find("#CONTROL_DETAIL_SEQ").val(data.info.CONTROL_DETAIL_SEQ);
-            $("#popHeadMid4").find(".same_side_span").hide();
             for(let key in data.info){
                 let val = data.info[key];
                 if(key == 'PLAN_WORKING_TIME') {
