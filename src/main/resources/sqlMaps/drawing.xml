@@ -80,10 +80,13 @@
             Z.MATERIAL_FINISH_HEAT, <!-- 열처리 -->
             Z.ORDER_QTY,<!--수량 -->
             CAST((Z.ORDER_QTY + IFNULL(Z.ADDITIONAL_QTY,0)) AS INT) AS FINISH_QTY,
+            CASE WHEN Z.SAME_SIDE_YN = 'Y' THEN '대'
+                 ELSE SPACE(1)
+            END AS SAME_SIDE_TEXT,
             CASE WHEN ORIGINAL_SIDE_QTY > 0 AND Z.OTHER_SIDE_QTY > 0
                     THEN CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY, ")",' + ', Z.ADDITIONAL_QTY)
                               WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY, ")", ' - ', ABS(Z.ADDITIONAL_QTY))
-                              ELSE CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY)
+                              ELSE CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY,")")
                          END
                  WHEN ORIGINAL_SIDE_QTY  > 0 AND Z.OTHER_SIDE_QTY = 0
                     THEN CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ")", ' + ', Z.ADDITIONAL_QTY)
@@ -190,7 +193,7 @@
                 IFNULL(C.ADDITIONAL_QTY,0) AS ADDITIONAL_QTY,
                 IFNULL(jmes.SF_GET_SIDE_QTY(C.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0)AS ORIGINAL_SIDE_QTY,<!--대칭_원칭 -->
                 IFNULL(jmes.SF_GET_SIDE_QTY(C.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0) AS OTHER_SIDE_QTY,<!--대칭_대칭 -->
-                D.SAME_SIDE_YN,<!-- 대칭 여부 -->
+                IFNULL(D.SAME_SIDE_YN,'N') AS SAME_SIDE_YN,<!-- 대칭 여부 -->
                 jmes.SF_GET_DATE_F(C.INNER_DUE_DT, '', '') AS INNER_DUE_DT,<!--내부가공납기 -->
                 D.NOTE AS NOTE, C.MATERIAL_NOTE, C.MCT_NOTE,
                 D.ORDER_COMP_CD,
@@ -257,10 +260,13 @@
             Z.MATERIAL_FINISH_HEAT, <!-- 열처리 -->
             Z.ORDER_QTY,<!--수량 -->
             CAST((Z.ORDER_QTY + IFNULL(Z.ADDITIONAL_QTY,0)) AS INT) AS FINISH_QTY,
+            CASE WHEN Z.SAME_SIDE_YN = 'Y' THEN '대'
+                 ELSE SPACE(1)
+            END AS SAME_SIDE_TEXT,
             CASE WHEN ORIGINAL_SIDE_QTY > 0 AND Z.OTHER_SIDE_QTY > 0
                     THEN CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY, ")",' + ', Z.ADDITIONAL_QTY)
                               WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY, ")", ' - ', ABS(Z.ADDITIONAL_QTY))
-                              ELSE CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY)
+                              ELSE CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ",", Z.OTHER_SIDE_QTY,")")
                          END
                  WHEN ORIGINAL_SIDE_QTY  > 0 AND Z.OTHER_SIDE_QTY = 0
                     THEN CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(Z.ORDER_QTY, SPACE(1), "(", Z.ORIGINAL_SIDE_QTY, ")", ' + ', Z.ADDITIONAL_QTY)
@@ -367,7 +373,7 @@
                 IFNULL(C.ADDITIONAL_QTY,0) AS ADDITIONAL_QTY,
                 IFNULL(jmes.SF_GET_SIDE_QTY(C.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0)AS ORIGINAL_SIDE_QTY,<!--대칭_원칭 -->
                 IFNULL(jmes.SF_GET_SIDE_QTY(C.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0) AS OTHER_SIDE_QTY,<!--대칭_대칭 -->
-                D.SAME_SIDE_YN,<!-- 대칭 여부 -->
+                IFNULL(D.SAME_SIDE_YN, 'N') AS SAME_SIDE_YN,<!-- 대칭 여부 -->
                 jmes.SF_GET_DATE_F(C.INNER_DUE_DT, '', '') AS INNER_DUE_DT,<!--내부가공납기 -->
                 D.NOTE AS NOTE, C.MATERIAL_NOTE, C.MCT_NOTE,
                 D.ORDER_COMP_CD,

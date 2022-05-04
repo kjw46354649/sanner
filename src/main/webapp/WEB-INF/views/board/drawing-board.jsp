@@ -443,20 +443,20 @@
                     <div class="topConts" style="color: black;font-weight: bold;">
                         <div class="timeWrap"><!-- 작업번호 -->
                             <span class="timeTit"><srping:message key='drawing.board.button.19'/></span>
-                            <span class="time mr-5" style="width: 337px;">
+                            <span class="time mr-5" style="width: 343px;">
                                 <span><c:if test="${not empty workInfo}">${workInfo.CONTROL_NUM_NM}</c:if></span>
                             </span>
                         </div>
                         <div class="timeWrap ml-5"><!-- 시작 -->
                             <span class="timeTit"><i class="xi-play-circle-o"></i><srping:message key='drawing.board.button.01'/></span>
-                            <span class="time" style="width:132px;height: 50px;">
+                            <span class="time" style="width:125px;height: 50px;padding: 10px 5px;">
                                 <span><c:if test="${not empty workInfo}">${workInfo.WORK_START_DT}</c:if></span>
                             </span>
                         </div>
                         <div class="timeWrap"><!-- 수량 -->
-                            <span class="timeTit" style="width: 106px;"><srping:message key='drawing.board.label.05'/></span>
-                            <span class="time" style="width: 149px;height: 50px;">
-<%--                                <span style="color: red;font-size: 20px;margin-right: 5px;">대</span>--%>
+                            <span class="timeTit" style="width: 85px;"><srping:message key='drawing.board.label.05'/></span>
+                            <span class="time" style="width: 175px;height: 50px;padding: 10px 5px;">
+                                <span class="text-red"><c:if test="${not empty workInfo}">${workInfo.SAME_SIDE_TEXT}</c:if></span>
                                 <span><c:if test="${not empty workInfo}">${workInfo.ORDER_QTY_INFO}</c:if></span>
                             </span>
                         </div>
@@ -468,7 +468,7 @@
                         </div>
                         <div class="timeWrap ml-5"> <!-- 종료 -->
                             <span class="timeTit"><i class="xi-check-circle"></i><srping:message key='drawing.board.button.02'/></span>
-                            <span class="time" style="width:132px;height: 50px;">
+                            <span class="time" style="width:125px;height: 50px;padding: 10px 5px;">
                                 <span><c:if test="${not empty workInfo}">${workInfo.WORK_FINISH_DT}</c:if></span>
                             </span>
                         </div>
@@ -481,16 +481,16 @@
                         </div>
                         <div class="timeWrap ml-5"><!-- 공유사항 -->
                             <span class="timeTit"><srping:message key='drawing.board.label.24'/></span>
-                            <div class="arrow-sm-right" style="left: 733px;top:221px;"></div>
-                            <span class="time hg_80" id="note_list" style="width: 182px;margin-right: 5px;cursor: pointer;overflow: hidden;">
+                            <div class="arrow-sm-right" style="left: 738px;top:220px;"></div>
+                            <span class="time hg_80" id="note_list" style="width: 186px;margin-right: 5px;cursor: pointer;overflow: hidden;">
                                 <span><c:if test="${not empty workInfo}">${workInfo.NOTE}</c:if></span>
                                 <span><c:if test="${not empty workInfo}">${workInfo.MCT_NOTE}</c:if></span>
                             </span>
                         </div>
                         <div class="timeWrap ml-5"><!-- 품질기록 -->
                             <span class="timeTit"><srping:message key='drawing.board.label.25'/></span>
-                            <div class="arrow-sm-right" style="left: 965px;top:221px;"></div>
-                            <span class="time hg_80" id="drawing_quality_history" style="width: 152px;cursor: pointer;padding: 5px;">
+                            <div class="arrow-sm-right" style="left: 965px;top:220px;"></div>
+                            <span class="time hg_80" id="drawing_quality_history" style="width: 150px;cursor: pointer;padding: 5px;">
                                 <span><c:if test="${not empty workInfo}">${workInfo.INSPECT_DT}</c:if>
                                     <c:if test="${not empty workInfo && not empty workInfo.INSPECT_GRADE_NM}">&nbsp;등급 ${workInfo.INSPECT_GRADE_NM}</c:if>
                                 </span>
