@@ -146,16 +146,9 @@
                         </span>
                         <span class="gubun"></span>
                     </li>
-<%--                    <li>--%>
-<%--                        <span>--%>
-<%--                            <span class="ipu_wrap"><label class="label_100">Option</label></span>--%>
-<%--                            <span class="chk_box"><input name="HIDE_CONTROL_NUM" id="HIDE_CONTROL_NUM" type="checkbox"><label for="HIDE_CONTROL_NUM"> 작업지시정보 제외</label></span>--%>
-<%--                        </span>--%>
-<%--                    </li>--%>
                 </ul>
             </div>
         </form>
-<%--        <button type="button" class="topWrap_btn" id="ORDER_MANAGE_TOP_WRAP_BTN">펼치기 / 접기</button>--%>
     </div>
     <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap mb-10">
@@ -163,18 +156,13 @@
                 <button type="button" class="defaultBtn btn-100w" id="NEW_ORDER_REGISTRATION">신규 주문 등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="ORDER_DRAWING_REGISTRATION">도면 등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_CHANGE">도면변경(Rev. up)</button>
-<%--                <button type="button" class="defaultBtn btn-70w" id="MATCH_STOCK">재고충당</button>--%>
                 <button type="button" class="defaultBtn btn-70w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>
                 <button type="button" class="defaultBtn btn-70w" id="TRANSACTION_STATEMENT">거래명세표</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="ORDER_CONFIRMATION" data-control_status="REG001" style="color: blue;">확정</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="ORDER_CANCEL" data-control_status="REG002" style="color: #FF0000;">취소</button>
                 <button type="button" class="defaultBtn btn-50w" id="ORDER_MONTH_CLOSE">마감</button>
                 <button type="button" class="defaultBtn btn-70w" id="CANCEL_ORDER_MONTH_CLOSE">마감취소</button>
-<%--                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="HOLD" data-control_status="ORD005">보류</button>--%>
-<%--                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="TERMINATION" data-control_status="ORD004">종료</button>--%>
                 <div class="rightSpan">
-<%--                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_DRAWING_VIEW">도면 View</button>--%>
-
                     <button type="button" class="defaultBtn btn-100w" id="ORDER_MANAGE_CODE_EXPORT">코드 추출</button>
                     <button type="button" class="defaultBtn btn-100w" id="ORDER_MANAGE_DRAWING_PRINT">도면 출력</button>
                     <button type="button" class="defaultBtn btn-100w" id="ORDER_MANAGE_LABEL_PRINT">라벨 출력</button>
@@ -193,7 +181,6 @@
                         <option value="contain">Contains</option>
                     </select>
                 </div>
-<%--                <button type="button" name="ORDER_MANAGE_VIEW" id="CONTROL_MANAGE_NORMAL_MODE">일반모드</button>--%>
                 <button type="button" name="ORDER_MANAGE_VIEW" id="CONTROL_MANAGE_ALL_MODE">전체모드</button>
                 <button type="button" class="virtual-disable" name="ORDER_MANAGE_VIEW" id="CONTROL_MANAGE_INPUT_MODE">입력필드</button>
                 <button type="button" class="virtual-disable" name="ORDER_MANAGE_VIEW" id="CONTROL_MANAGE_CLOSE_MODE">마감모드</button>
@@ -207,7 +194,6 @@
                             </c:forEach>
                         </select>
                     </span>
-<%--                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MERGE" style="background-color: #5b9bd5">Merge</button>--%>
                     <button type="button" class="defaultBtn btn-100w lightGray" id="ORDER_MANAGE_COPY">복제</button>
                     <button type="button" class="defaultBtn btn-100w red" id="ORDER_MANAGE_DELETE">삭제</button>
                     <button type="button" class="defaultBtn btn-100w green" id="ORDER_MANAGE_SAVE">저장</button>
@@ -235,10 +221,6 @@
     </div>
     <div class="controlCloseLayerPopup">
         <h3>월 마감 취소 진행
-<%--            <span class="chk_box mr-30" style="float: right;">--%>
-<%--                <input name="CHECK_TIME_CANCEL" id="CHECK_TIME_CANCEL" type="checkbox">--%>
-<%--                <label for="CHECK_TIME_CANCEL">test</label>--%>
-<%--            </span>--%>
         </h3>
         <hr>
         <button type="button" class="pop_close" name="CONTROL_CLOSE_CANCEL_NO">닫기</button>
@@ -444,7 +426,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -460,7 +442,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -475,7 +457,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -517,7 +499,7 @@
                     rowData.ORDER_DUE_DT_COPY = ui.cellData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -618,7 +600,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -639,7 +621,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -674,7 +656,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -706,7 +688,7 @@
                     let cls = null;
                     rowData.DELIVERY_DT_COPY = ui.cellData;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -721,7 +703,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {title: 'UNIT_FINAL_AMT_COPY', dataType: 'String', dataIndx: 'UNIT_FINAL_AMT_COPY', hidden: true},
@@ -737,7 +719,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -746,7 +728,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             // {
@@ -755,7 +737,7 @@
             //         let rowData = ui.rowData;
             //         let cls = null;
             //
-            //         return {cls: cls, text: controlManageFilterRender(ui)};
+            //         return {cls: cls, text: orderManageFilterRender(ui)};
             //     }
             // },
             {
@@ -764,7 +746,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -773,7 +755,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -788,7 +770,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -803,7 +785,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -818,7 +800,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -833,7 +815,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -848,7 +830,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -901,7 +883,7 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
             {
@@ -961,7 +943,7 @@
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            return {cls: cls, text: controlManageFilterRender(ui)};
+                            return {cls: cls, text: orderManageFilterRender(ui)};
                         }
                     },
                     {
@@ -970,7 +952,7 @@
                             let rowData = ui.rowData;
                             let cls = null;
 
-                            return {cls: cls, text: controlManageFilterRender(ui)};
+                            return {cls: cls, text: orderManageFilterRender(ui)};
                         }
                     }
                 ]
@@ -995,7 +977,7 @@
             numberCell: {title: 'No.'},
             trackModel: {on: true},
             editable: false,
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: controlManageFilterRender},
+            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center', render: orderManageFilterRender},
             filterModel: {mode: 'OR'},
             colModel: colModel,
             dataModel: {
@@ -1526,7 +1508,7 @@
             $('#SUPPLY_UNIT_COST_APPLY option:eq(0)').prop('selected', true); // 공급단가적용 초기화?
         };
 
-        function controlManageFilterRender(ui) {
+        function orderManageFilterRender(ui) {
             let val = ui.cellData === undefined ? '' : ui.cellData,
                 options = ui.column.editor === undefined ? '' : ui.column.editor.options;
             let index = -1;
@@ -1622,26 +1604,7 @@
                                 mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
                                 rc = 1;
                             }
-                        } /*else if (partList.includes(dataIndx)) {
-                            let controlDetailSeq = data[j]['CONTROL_DETAIL_SEQ'],
-                                controlDetailSeqPrev = data[j - 1] ? data[j - 1]['CONTROL_DETAIL_SEQ'] : undefined;
-
-                            if (controlNum === controlNumPrev && controlDetailSeq === controlDetailSeqPrev) {
-                                // 이전데이터가 있고 cellData와 cellDataPrev가 같으면 rc증감
-                                if (cellDataPrev !== undefined && cellData == cellDataPrev) {
-                                    rc++;
-                                }
-                            } else if (rc > 1) {
-                                /!**
-                                 * r1: rowIndx of first row. 첫 번째 행의 rowIndx.
-                                 * c1: colIndx of first column. 첫 번째 열의 colIndx.
-                                 * rc: number of rows in the range. 범위 내 행 수.
-                                 * cc: number of columns in the range. 범위 내 열 수.
-                                 *!/
-                                mergeCellList.push({r1: j, c1: i, rc: rc, cc: 1});
-                                rc = 1;
-                            }
-                        }*/
+                        }
                     }
                 }
             }
