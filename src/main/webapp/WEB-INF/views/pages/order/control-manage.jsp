@@ -137,6 +137,7 @@
                 </ul>
             </div>
         </form>
+<%--        <button type="button" class="topWrap_btn" id="CONTROL_MANAGE_TOP_WRAP_BTN">펼치기 / 접기</button>--%>
     </div>
     <div class="bottomWrap row3_bottomWrap">
         <div class="hWrap mb-10">
@@ -157,13 +158,25 @@
                 <button type="button" class="defaultBtn btn-100w" name="CHANGE_STATUS" id="CONFIRMATION" data-control_status="ORD001" style="color: blue;">작업지시확정</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="HOLD" data-control_status="ORD005">보류</button>
                 <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="CANCEL" data-control_status="ORD002" style="color: #FF0000;">취소</button>
+                <%--                <button type="button" class="defaultBtn btn-100w" id="DRAWING_CHANGE">도면변경(Rev. up)</button>--%>
                 <button type="button" class="defaultBtn btn-70w" id="MATCH_STOCK">재고매칭</button>
                 <button type="button" class="defaultBtn btn-100w" id="DRAWING_REGISTRATION">파트도면 등록</button>
                 <button type="button" class="defaultBtn btn-100w" id="CONTROL_MANAGE_BARCODE_DRAWING_PRINT">작업지시서 출력</button>
                 <button type="button" class="defaultBtn btn-80w orange" id="CHANGE_OUTSIDE_YN">외주전환</button>
+                <%--                <button type="button" class="defaultBtn btn-70w" id="ESTIMATE_REGISTER_FROM_CONTROL">견적등록</button>--%>
+                <%--                <button type="button" class="defaultBtn btn-100w" id="ESTIMATE_LIST_PRINT">견적List출력</button>--%>
+                <%--                <button type="button" class="defaultBtn btn-70w" id="TRANSACTION_STATEMENT">거래명세표</button>--%>
+                <%--                <button type="button" class="defaultBtn btn-50w" id="CONTROL_MONTH_CLOSE">마감</button>--%>
+                <%--                <button type="button" class="defaultBtn btn-50w" name="CHANGE_STATUS" id="TERMINATION" data-control_status="ORD004">종료</button>--%>
+
+<%--                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_INPUT_MODE">입력필드</button>--%>
+<%--                <button type="button" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_NORMAL_MODE">일반모드</button>--%>
+<%--                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_CLOSE_MODE">마감모드</button>--%>
+<%--                <button type="button" class="virtual-disable" name="CONTROL_MANAGE_VIEW" id="CONTROL_MANAGE_ALL_MODE">전체모드</button>--%>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn btn-80w" id="ESTIMATE_LIST_PRINT">견적 List</button>
                     <button type="button" class="defaultBtn btn-100w" id="ORDER_ESTIMATE_DRAWING_PRINT">견적도면 출력</button>
+<%--                    <button type="button" class="defaultBtn btn-100w" id="CONTROL_MERGE" style="background-color: #5b9bd5">Merge</button>--%>
                     <button type="button" class="defaultBtn btn-100w red" id="CONTROL_MANAGE_DELETE">삭제</button>
                     <button type="button" class="defaultBtn btn-100w green" id="CONTROL_MANAGE_SAVE">저장</button>
                 </div>
@@ -331,6 +344,17 @@
                             return renderData;
                         }
                     },
+                    // {title: '', minWidth: 20, dataType: 'integer', dataIndx: 'CONTROL_VER',
+                    //     render: function (ui) {
+                    //         let cellData = ui.cellData;
+                    //         let cls = 'bg-lightgray';
+                    //         if(ui.rowData.CONTROL_STATUS === undefined || ui.rowData.CONTROL_STATUS === 'ORD002') {
+                    //             cls = '';
+                    //         }
+                    //
+                    //         return {cls: cls, text: cellData};
+                    //     }
+                    // },
                     {title: '일자', dataIndx: 'CONTROL_STATUS_DT',
                         render: function (ui) {
                             let cellData = ui.cellData;
@@ -396,7 +420,27 @@
                 title: '주요<br>검사', dataIndx: 'MAIN_INSPECTION',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 editable: true,
-                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1059')}
+                editor: { type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1059')},
+                /*render: function (ui) {
+                    let cellData = ui.cellData;
+
+                    if (cellData === undefined || cellData === '') {
+                        return '';
+                    } else {
+                        let mainInspection = fnGetCommCodeGridSelectBox('1059');
+                        let index = mainInspection.findIndex(function (element) {
+                            return element.text === cellData;
+                        });
+
+                        if (index < 0) {
+                            index = mainInspection.findIndex(function (element) {
+                                return element.value === cellData;
+                            });
+                        }
+
+                        return (index < 0) ? cellData : mainInspection[index].text;
+                    }
+                }*/
             },
             {title: '주요<br>검사', width: 50, dataIndx: 'MAIN_INSPECTION_NM', hidden: true},
             {
@@ -423,12 +467,20 @@
                 }
             },
             {
-                title: '발주업체', width: 100, dataIndx: 'ORDER_COMP_NM',
+                title: '발주업체', width: 100, dataIndx: 'ORDER_COMP_CD',
                 editable: false,
+                editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: ORDER_COMPANY},
                 render: function (ui) {
+                    let cellData = ui.cellData;
                     let cls = 'bg-lightgray';
+                    let index = -1;
 
-                    return {cls: cls, text:controlManageFilterRender(ui)};
+                    index = ORDER_COMPANY.findIndex(function (element) {
+                        return element.value === cellData;
+                    });
+                    if (index > -1) cellData = ORDER_COMPANY[index].text;
+
+                    return {cls: cls, text: cellData};
                 }
             },
             {
@@ -436,9 +488,10 @@
                 styleHead: {'font-weight': 'bold', 'color': '#FF0000'},
                 editable: false,
                 render: function (ui) {
+                    let cellData = ui.cellData;
                     let cls = 'bg-lightgray';
 
-                    return {cls: cls, text:controlManageFilterRender(ui)};
+                    return {cls: cls, text: cellData};
                 }
             },
             {
@@ -494,13 +547,42 @@
                         newRowData.PREV_DRAWING_NUM = null;
                         newRowData.OUTSIDE_YN = 'N';
                         newRowData.ORDER_QTY = null;
+                        // newRowData.WORK_FACTORY = null;
+                        // newRowData.MATERIAL_SUPPLY_YN = null;
+                        // newRowData.INNER_DUE_DT = null;
                         newRowData.SIZE_TXT = null;
+                        // newRowData.SIZE_TYPE = null;
+                        // newRowData.SIZE_W = null;
+                        // newRowData.SIZE_H = null;
+                        // newRowData.SIZE_T = null;
+                        // newRowData.SIZE_D = null;
+                        // newRowData.SIZE_L = null;
+                        // newRowData.MATERIAL_TYPE = null;
+                        // newRowData.MATERIAL_DETAIL = null;
+                        // newRowData.MATERIAL_KIND = null;
+                        // newRowData.SURFACE_TREAT = null;
+                        // newRowData.MATERIAL_NOTE = null;
                         newRowData.PART_UNIT_QTY = null;
                         newRowData.ORIGINAL_SIDE_QTY = null;
                         newRowData.OTHER_SIDE_QTY = null;
                         newRowData.MATERIAL_FINISH_GRIND = null;
                         newRowData.MATERIAL_FINISH_HEAT = null;
+                        // newRowData.UNIT_MATERIAL_AMT = null;
+                        // newRowData.UNIT_MATERIAL_FINISH_GRIND_AMT = null;
+                        // newRowData.UNIT_MATERIAL_FINISH_HEAT_AMT = null;
+                        // newRowData.UNIT_SURFACE_AMT = null;
+                        // newRowData.UNIT_PROCESS_AMT = null;
+                        // newRowData.UNIT_ETC_AMT = null;
+                        // newRowData.UNIT_AMT_NOTE = null;
+                        // newRowData.UNIT_FINAL_AMT = null;
+                        // newRowData.DWG_GFILE_SEQ = null;
+                        // newRowData.ORDER_DXF_GFILE_SEQ = null;
+                        // newRowData.ORDER_PDF_GFILE_SEQ = null;
+                        // newRowData.ORDER_IMG_GFILE_SEQ = null;
+                        // newRowData.VIEW_GFILE_SEQ = null;
+                        // newRowData.ETC_GFILE_SEQ = null;
                         newRowData.PART_STATUS = null;
+                        // newRowData.STATUS_DT = null;
                         newRowData.OUTSIDE_COMP_CD = null;
                         newRowData.OUTSIDE_ORDER_NUM = null;
                         newRowData.OUTSIDE_NOTE = null;
@@ -515,6 +597,8 @@
                         newRowData.OUTSIDE_CONFIRM_DT = null;
                         newRowData.OUTSIDE_IN_DT = null;
                         newRowData.OUTSIDE_STATUS = null;
+                        // 발주
+                        // newRowData.OUT_FINISH_DT = null;
                         newRowData.ITEM_NM = null;
                         newRowData.ORIGINAL_SIDE_QTY = null;
                         newRowData.OTHER_SIDE_QTY = null;
@@ -527,6 +611,7 @@
                             rowIndx: lastRowIndex + 1,
                             checkEditable: false
                         });
+                        // $controlManagementGrid.pqGrid('setSelection', {rowIndx: lastRowIndex + 1});
                         event.preventDefault();
                     });
                 }
@@ -571,6 +656,8 @@
                 render: function (ui) {
                     let cellData = ui.cellData;
                     let cls = 'bg-lightgray';
+                    let index = -1;
+                    let options = fnGetCommCodeGridSelectBox('1033');
 
                     if(ui.rowData.CONTROL_STATUS === undefined || ui.rowData.CONTROL_STATUS === 'ORD002') {
                         cls = '';
@@ -579,7 +666,12 @@
                         cls = '';
                     }
 
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    index = options.findIndex(function (element) {
+                        return element.value === cellData;
+                    });
+                    if (index > -1) cellData = options[index].text;
+
+                    return {cls: cls, text: cellData};
                 }
             },
             {
@@ -591,6 +683,7 @@
                     return rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD002';
                 },
                 render: function (ui) {
+                    let cellData = ui.cellData;
                     let cls = 'bg-lightgray';
                     if(ui.rowData.CONTROL_STATUS === undefined || ui.rowData.CONTROL_STATUS === 'ORD002') {
                         cls = '';
@@ -598,7 +691,7 @@
                     if (ui.rowData.WORK_TYPE == 'WTP050') {
                         cls = '';
                     }
-                    return {cls: cls, text: controlManageFilterRender(ui)};
+                    return {cls: cls, text: cellData};
                 }
             },
             {title: '', minWidth: 25, dataIndx: 'DRAWING_NUM_BUTTON', styleHead: {'background':'#a9d3f5'},
@@ -691,8 +784,15 @@
                 editable: true,
                 editor: {type: 'select', valueIndx: 'value', labelIndx: 'text', options: fnGetCommCodeGridSelectBox('1014')},
                 render: function (ui) {
+                    let cellData = ui.cellData;
+                    let index = -1;
+                    let options = fnGetCommCodeGridSelectBox('1014');
 
-                    return {text: controlManageFilterRender(ui)};
+                    index = options.findIndex(function (element) {
+                        return element.value === cellData;
+                    });
+                    if (index > -1) cellData = options[index].text;
+                    return {text: cellData};
                 }
             },
             {
@@ -716,10 +816,24 @@
                         cls = 'bg-lightgray';
                     }
 
-                    return {cls: cls};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
-            {title: '재질', dataIndx: 'MATERIAL_TYPE_NM'},
+            {title: '재질', dataIndx: 'MATERIAL_TYPE',
+                render: function (ui) {
+                    let cellData = ui.cellData;
+                    let rowData = ui.rowData;
+                    let index = -1;
+                    let options = fnGetCommCodeGridSelectBox('1035');
+
+                    index = options.findIndex(function (element) {
+                        return element.value === cellData;
+                    });
+                    if (index > -1) cellData = options[index].text;
+
+                    return {text: cellData};
+                }
+            },
             {
                 title: '소재종류', width: 80, dataIndx: 'MATERIAL_DETAIL',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
@@ -743,6 +857,12 @@
                     let index = -1;
                     let options = fnGetCommCodeGridSelectBox('1027');
 
+                    // if (rowData.WORK_TYPE === 'WTP020') {
+                    //     cls = 'bg-lightgray';
+                    //     cellData = "";
+                    //     ui.rowData.MATERIAL_DETAIL = "";
+                    // }
+
                     index = options.findIndex(function (element) {
                         return element.value === cellData;
                     });
@@ -760,6 +880,13 @@
                     let rowData = ui.rowData;
                     let cls = null;
 
+                    // if (rowData.WORK_TYPE === 'WTP020') {
+                    //     cls = 'bg-lightgray';
+                    //     ui.cellData = "";
+                    //     ui.rowData.MATERIAL_KIND = "";
+                    //
+                    // }
+
                     return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
@@ -772,6 +899,18 @@
                     valueIndx: 'value',
                     labelIndx: 'text',
                     options: fnGetCommCodeGridSelectBox('1039')
+                },
+                render: function (ui) {
+                    let rowData = ui.rowData;
+                    let cls = null;
+
+                    // if (rowData.WORK_TYPE === 'WTP020') {
+                    //     cls = 'bg-lightgray';
+                    //     ui.cellData = "";
+                    //     ui.rowData.SURFACE_TREAT = "";
+                    // }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -786,6 +925,10 @@
                         {'value':'MATERIAL_FINISH_GRIND_YN', 'text':'연마'},
                         {'value':'MATERIAL_FINISH_HEAT_YN', 'text':'열처리'}
                     ]
+                },
+                render: function (ui) {
+
+                    return {text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -793,9 +936,16 @@
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#2777ef'},
                 editable: true,
                 render: function (ui) {
+                    let rowData = ui.rowData;
                     let cls = null;
 
-                    return {cls: cls};
+                    // if (rowData.WORK_TYPE === 'WTP020') {
+                    //     cls = 'bg-lightgray';
+                    //     ui.cellData = "";
+                    //     ui.rowData.MATERIAL_NOTE = "";
+                    // }
+
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {title: 'INNER_DUE_DT_COPY', dataType: 'String', dataIndx: 'INNER_DUE_DT_COPY', hidden: true},
@@ -832,7 +982,7 @@
                 render: function (ui) {
                     let cls = 'bg-lightgray';
 
-                    return {cls: cls};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -879,15 +1029,23 @@
 
                             return {cls: cls};
                         }
-                    }
+                    },
+                    // {title: '입고', dataType: 'integer', format: '#,###', dataIndx: 'STOCK_IN_QTY', width: 40, minWidth: 40,
+                    //     render: function (ui) {
+                    //         let cls = 'bg-lightgray';
+                    //
+                    //         return {cls: cls};
+                    //     }
+                    // }
                 ]
             },
             {
                 title: '계산<br>견적가', width: 80, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SUM_AUTO_AMT',
                 render: function (ui) {
-                    let cls = 'bg-lightgray';
+                    let rowData = ui.rowData;
+                    let cls = 'bg-lightgray';;
 
-                    return {cls: cls};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -920,17 +1078,19 @@
                     {
                         title: '기타추가', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_ETC_AMT', editable:true,
                         render: function (ui) {
+                            let rowData = ui.rowData;
                             let cls = null;
 
-                            return {cls: cls};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     },
                     {
                         title: '견적비고', align: 'left', dataIndx: 'UNIT_AMT_NOTE', editable:true,
                         render: function (ui) {
+                            let rowData = ui.rowData;
                             let cls = null;
 
-                            return {cls: cls};
+                            return {cls: cls, text: controlManageFilterRender(ui)};
                         }
                     }
                 ]
@@ -969,18 +1129,20 @@
                 title: '진행상태', dataType: 'String', dataIndx: 'PART_STATUS_NM',
                 editable: false,
                 render: function (ui) {
+                    let rowData = ui.rowData;
                     let cls = 'bg-lightgray';
 
-                    return {cls: cls};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
                 title: '발주납기', width: 70, dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_DUE_DT',
                 editable: false,
                 render: function (ui) {
+                    let rowData = ui.rowData;
                     let cls = 'bg-lightgray';
 
-                    return {cls: cls};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -989,15 +1151,16 @@
                     let rowData = ui.rowData;
                     let cls = 'bg-lightgray';
 
-                    return {cls: cls};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
                 title: '출고일자', dataType: 'date', format: 'mm/dd', dataIndx: 'ORDER_OUT_FINISH_DT',
                 render: function (ui) {
+                    let rowData = ui.rowData;
                     let cls = 'bg-lightgray';
 
-                    return {cls: cls};
+                    return {cls: cls, text: controlManageFilterRender(ui)};
                 }
             },
             {
@@ -1123,6 +1286,8 @@
         const obj = {
             minHeight: '100%',
             height: 700,
+            // virtualX: true,
+            // virtualY: true,
             collapsible: false,
             postRenderInterval: -1, //call postRender synchronously.
             showTitle: false,
@@ -1144,14 +1309,18 @@
             },
             sortModel: {on: false},
             load: function () {
+                if($('#controlManageFilterKeyword').val() !== '')
+                    fnFilterHandler($controlManagementGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
                 autoMerge(this, true);
                 let data = $controlManagementGrid.pqGrid('option', 'dataModel.data');
                 $('#CONTROL_MANAGE_RECORDS').html(data.length);
             },
             cellClick: function (event, ui) {
                 supplyUnitCostInit(); // 공급단가적용 초기화
+                // if(ui.rowData.ORDER_IMG_GFILE_SEQ && typeof(windowImageViewer) != 'undefined' && !windowImageViewer.closed) callQuickRowChangeDrawingImageViewer(ui.rowData.ORDER_IMG_GFILE_SEQ);  // 셀 선택 시 도면 View 실행 중인경우 이미지 표시 하기
             },
             selectChange: function (event, ui) {
+                // alert("selectChange");
                 supplyUnitCostInit(); // 공급단가적용 초기화
                 selectedControlManagementRowIndex = [];
                 for (let i = 0, AREAS_LENGTH = ui.selection._areas.length; i < AREAS_LENGTH; i++) {
@@ -1722,7 +1891,7 @@
             let index = -1;
             if (options) {
                 index = options.findIndex(function (element) {
-                    return element.value == val;
+                    return element.value === val;
                 });
                 if (index > -1) val = options[index].text;
             }
@@ -1740,7 +1909,19 @@
                     txtUpper = (txt == null) ? '' : txt.toString().toUpperCase(),
                     indx = -1;
 
-                indx = valUpper.indexOf(txtUpper);
+                if (condition === 'end') {
+                    indx = valUpper.lastIndexOf(txtUpper);
+                    if (indx + txtUpper.length !== valUpper.length) {
+                        indx = -1;
+                    }
+                } else if (condition === 'contain') {
+                    indx = valUpper.indexOf(txtUpper);
+                } else if (condition === 'begin') {
+                    indx = valUpper.indexOf(txtUpper);
+                    if (indx > 0) {
+                        indx = -1;
+                    }
+                }
 
                 if (indx >= 0 && txt) {
                     let txt1 = val.toString().substring(0, indx);
@@ -2258,6 +2439,10 @@
                     fnAlert(null, message);
                     return false;
                 }
+                // if(thisRowData.ORDER_CONNECT_CNT > 0) {
+                //     fnAlert(null, '연결된 주문이 존재하는 경우 삭제가 불가합니다.');
+                //     return false;
+                // }
             }
 
             if(controlStr.length > 0) {
@@ -3399,7 +3584,6 @@
 
         $('#controlManageFilterKeyword').on({
             'keyup': function () {
-                console.log("controlManageFilterKeyword", $("#controlManageFilterKeyword").val());
                 fnFilterHandler($controlManagementGrid, 'controlManageFilterKeyword', 'controlManageFilterCondition', 'controlManageFilterColumn');
                 autoMerge($controlManagementGrid.pqGrid('getInstance').grid, true);
 
