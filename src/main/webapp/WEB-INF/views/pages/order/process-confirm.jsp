@@ -482,7 +482,7 @@
             {title: 'PART_STATUS', dataType: 'integer', dataIndx: 'PART_STATUS', hidden: true},
             {title: '발주업체', dataIndx: 'ORDER_COMP_CD', hidden: true},
             {title: '발주업체', width: '10%', dataIndx: 'ORDER_COMP_NM'},
-            {title: '외주확정<br>일시', width: '10%', dataIndx: 'OUTSIDE_CONFIRM_DT'},
+            {title: '외주확정', width: '7%', dataIndx: 'OUTSIDE_CONFIRM_DT_FORMAT'},
             {
                 title: '긴<br>급', minWidth: 30, width: 30, maxWidth: 30, dataIndx: 'EMERGENCY_YN',
                 render: function (ui) {
@@ -527,7 +527,7 @@
                 title: '외주발송', align: 'center', colModel: [
                     {title: '업체명', dataIndx: 'OUTSIDE_COMP_CD', hidden: true},
                     {title: '업체명', width: '10%', dataIndx: 'OUTSIDE_COMP_NM'},
-                    {title: '일시', width: '12.5%', dataIndx: 'OUTSIDE_HOPE_DUE_DT'},
+                    {title: '일시', width: '12.5%', dataIndx: 'OUTSIDE_PROCESS_CONFIRM_DT'},
                 ]
             },
             {title: '자재<br>사급', minWidth: 40, dataIndx: 'MATERIAL_SUPPLY_YN',

@@ -1364,6 +1364,16 @@
             <include refid="control"/>,
             <include refid="controlPart"/>,
             SF_GET_DATE_F(C.ORDER_DUE_DT, '', '') AS ORDER_DUE_DT,
+            IFNULL(SF_GET_DATE_F(B.OUTSIDE_CONFIRM_DT, '', ''), SPACE(0)) AS OUTSIDE_CONFIRM_DT_FORMAT,
+            CASE WHEN B.OUTSIDE_STATUS IN ('OST001', 'OST003', 'OST004')
+                    THEN (
+                        SELECT SF_GET_DATE_F(MAX(M.INSERT_DT), '', 'M')
+                        FROM TBL_OUTSIDE_REQUEST_DETAIL M
+                        WHERE M.DEL_YN = 'N'
+                          AND M.CONTROL_SEQ = B.CONTROL_SEQ
+                          AND M.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
+                    )
+            END AS OUTSIDE_PROCESS_CONFIRM_DT,
             IFNULL(C.REGIST_NUM,SPACE(0)) AS REGIST_NUM
         FROM TBL_CONTROL A
             INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ
