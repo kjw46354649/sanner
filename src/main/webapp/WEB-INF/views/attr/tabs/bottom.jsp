@@ -758,7 +758,7 @@
             <!--팝업내용-->
                 <h3><i class="xi-library-bookmark"></i>장비 가동 현황</h3>
                 <div style="display: flex;padding: 10px;height: 92%;">
-                    <div style="width: 43%;margin-right: 2%;height: 100%;">
+                    <div style="width: 41%;margin-right: 2%;height: 100%;">
                         <h4>
                             <i class="xi-tags mr-10"></i>가동장비 정보
                         </h4>
@@ -899,10 +899,10 @@
                             <i class="xi-tags mr-10"></i>도면정보
                         </h4>
                         <div class="d-flex" style="margin-top: 11px;height: 63.5%;border: 1px solid gray;">
-                            <div class="mapImgWrap">
+                            <div class="mapImgWrap" style="width: 83%;">
                                 <img id="mct_plan_pop_img" src="/resource/main/blank.jpg" style="margin-right: 1%;">
                             </div>
-                            <div style="width: 22%;overflow: hidden;">
+                            <div style="width: 17%;overflow: hidden;">
                                 <table id="popHeadMid4" class="popHeadMid popTable" style="height: 100%;">
                                     <colgroup>
                                         <col width="100%">

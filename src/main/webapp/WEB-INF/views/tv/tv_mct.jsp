@@ -380,7 +380,7 @@
 							<div class="mapImgWrap">
 								<img id="mapImgWrap" src="/resource/main/blank.jpg" style="margin-right: 1%;">
 							</div>
-							<div style="width: 22%;overflow: hidden;">
+							<div style="width: 20%;overflow: hidden;">
 								<table id="popHeadMid4" class="popHeadMid popTable" style="height: 100%;">
 									<colgroup>
 										<col width="100%">

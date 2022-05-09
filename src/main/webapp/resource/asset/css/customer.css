@@ -467,7 +467,7 @@ button:disabled {
     background-color: #ffffff;
 }
 .mct_plan_detail_pop .layerPopup {
-    width: 1500px;
+    width: 1550px;
     height: 900px;
 }
 .mct_plan_detail_pop .layerPopup .rightwrap .rightName{ float: right; margin-top: 0px;display: inline-block; }
@@ -504,7 +504,7 @@ button:disabled {
 }
 
 #mct_plan_detail_pop .mapImgWrap img {
-	width: 98%;
+	width: 99%;
 	height: 100%
 }
 
@@ -532,7 +532,7 @@ button:disabled {
 	height: 80px;
 }
 #mct_plan_detail_pop .mctInfoWrap {
-	width: 17%;
+	width: 19%;
 	height: 100%;
 	background: lightgrey;
 	position: relative;

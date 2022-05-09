@@ -506,7 +506,7 @@
 						<div class="mapImgWrap">
 							<img id="mapImgWrap" src="/qimage/739396" alt="513045" data-value="513045" style="margin-right: 1%;">
 						</div>
-						<div style="width: 22%;overflow:hidden;">
+						<div style="width: 20%;overflow:hidden;">
 							<table id="popHeadMid4" class="popHeadMid popTable" style="height: 100%;">
 								<colgroup>
 									<col width="100%">

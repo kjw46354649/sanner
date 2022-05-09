@@ -757,7 +757,7 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 		height: 91.5%;
 	}
 	.mapImgWrap img {
-		width: 98%;
+		width: 99%;
 		height: 100%
 	}
 	.popBtmTable {
@@ -844,7 +844,7 @@ div[class^="mctInfo_"] .mctInfoWrap .mctInfoBtm table td {
 	}
 
 	#popupWrap .mctInfoWrap {
-		width: 17%;
+		width: 18%;
 		height: 100%;
 		background: lightgrey;
 		position: relative;
