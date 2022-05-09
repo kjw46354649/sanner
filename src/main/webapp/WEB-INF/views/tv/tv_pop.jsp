@@ -1180,23 +1180,23 @@
 		let alarmMessageProcess = function(messageData){
 			let maxCnt = 9;
 			if (messageData) {
-				if(messageData.actionType == 'NC_IF') {
-					$.each(messageData.list, function (idx,Item) {
-						let messageKey = randomKey();
-						let messBody = Item.CONTEXT03 + " : " + Item.CONTEXT02;
-						if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
-						let alarmMsg  = '<p id=' + messageKey + ' class="alarmList">';
-						alarmMsg += Item.CONTEXT01;
-						alarmMsg += messBody;
-						alarmMsg += '</p>';
-						alarmMsg += '<span id="new_'+messageKey + '">[New]</span>';
-						$("#alarm_list").prepend($(alarmMsg));
-
-						setTimeout(function() {
-							$("#new_" + messageKey).remove();
-						}, 30000);
-					})
-				}else {
+				// if(messageData.actionType == 'NC_IF') {
+				// 	$.each(messageData.list, function (idx,Item) {
+				// 		let messageKey = randomKey();
+				// 		let messBody = Item.CONTEXT03 + " : " + Item.CONTEXT02;
+				// 		if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
+				// 		let alarmMsg  = '<p id=' + messageKey + ' class="alarmList">';
+				// 		alarmMsg += Item.CONTEXT01;
+				// 		alarmMsg += messBody;
+				// 		alarmMsg += '</p>';
+				// 		alarmMsg += '<span id="new_'+messageKey + '">[New]</span>';
+				// 		$("#alarm_list").prepend($(alarmMsg));
+				//
+				// 		setTimeout(function() {
+				// 			$("#new_" + messageKey).remove();
+				// 		}, 30000);
+				// 	})
+				// }else {
 					let messageKey = randomKey();
 					let messBody = messageData.content03 + " : " + messageData.content02;
 					if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
@@ -1210,7 +1210,7 @@
 					setTimeout(function() {
 						$("#new_" + messageKey).remove();
 					}, 30000);
-				}
+				// }
 			}
 		};
 
@@ -1349,7 +1349,7 @@
 				stompClient.subscribe('/topic/notice', function (notificationMessage) {
 					let messageData = JSON.parse(notificationMessage.body);
 					console.log('/topic/notice',messageData)
-					alarmMessageProcess(messageData);
+					// alarmMessageProcess(messageData);
 
 					let equipList = [];
 					if(messageData.list.length > 0) {
