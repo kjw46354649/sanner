@@ -124,7 +124,7 @@
             , CASE WHEN X.IF_USE_YN = 'Y' THEN Y.COMPLETE_QTY
                    ELSE SPACE(1)
               END AS COMPLETE_QTY
-            , CASE WHEN X.IF_USE_YN = 'Y' THEN TRUNCATE((Y.COMPLETE_QTY / Y.GOAL_QTY),0) * 100
+            , CASE WHEN X.IF_USE_YN = 'Y' THEN TRUNCATE((Y.COMPLETE_QTY / IFNULL(Y.GOAL_QTY,1)),0) * 100
                    ELSE SPACE(1)
               END AS COMPLETE_PERCENT
             , Y.ACTIVE_TYPE
