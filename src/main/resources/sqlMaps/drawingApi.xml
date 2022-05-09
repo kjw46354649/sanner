@@ -103,43 +103,62 @@
     </update>
 
     <select id="selectCurrentMctInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT B.MCT_WORK_SEQ, A.EQUIP_SEQ, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
-            B.IF_WORK_START_DT, B.IF_WORK_FINISH_DT,
-            B.WORK_STATUS, B.WORK_START_DT, B.WORK_FINISH_DT, B.UNIT_QTY, B.GOAL_QTY,
-            (IFNULL(B.UNIT_QTY,1) * IFNULL(B.COMPLETE_CYCLE_COUNT,0) + IFNULL(B.ADJUST_QTY,0)) AS COMPLETE_QTY,
-            B.COMPLETE_CYCLE_COUNT,
-            B.WORK_ACTIVE_TIME, B.WORK_STOP_TIME,
-            CASE WHEN B.LATEST_CYCLE_TIME IS NOT NULL THEN
-                    CASE WHEN ((B.LATEST_CYCLE_TIME * CEIL(B.GOAL_QTY / B.UNIT_QTY)) - B.WORK_ACTIVE_TIME) <![CDATA[ < ]]> 0 THEN 0
-                         ELSE ((B.LATEST_CYCLE_TIME * CEIL(B.GOAL_QTY / B.UNIT_QTY)) - B.WORK_ACTIVE_TIME) END
-                ELSE SPACE(0)
-            END AS LEFT_TIME,
-            CASE WHEN B.LATEST_CYCLE_TIME IS NOT NULL AND B.LATEST_CYCLE_TIME > 0
+        SELECT Z.MCT_WORK_SEQ, Z.EQUIP_SEQ, Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ,
+            Z.IF_WORK_START_DT, Z.IF_WORK_FINISH_DT,
+            Z.WORK_STATUS, Z.WORK_START_DT, Z.WORK_FINISH_DT, Z.UNIT_QTY, Z.GOAL_QTY,
+            Z.COMPLETE_QTY, Z.COMPLETE_CYCLE_COUNT, Z.WORK_ACTIVE_TIME, Z.WORK_STOP_TIME,
+            IFNULL(CASE WHEN Z.ACTIVE_TYPE = 'PGM_STOP' THEN CASE WHEN Z.LEFT_TIME <![CDATA[ < ]]> 0 THEN 0 ELSE Z.LEFT_TIME END
+                        WHEN Z.ACTIVE_TYPE = 'PGM_ACTIVE' THEN CASE WHEN (Z.LEFT_TIME - Z.CURRENT_STATUS_TIME) <![CDATA[ < ]]> 0 THEN 0 ELSE (Z.LEFT_TIME - Z.CURRENT_STATUS_TIME) END
+            END,0) AS LEFT_TIME,
+            CASE WHEN Z.LATEST_CYCLE_TIME IS NOT NULL AND Z.LATEST_CYCLE_TIME > 0
                     THEN CONCAT(
-                        TRUNCATE(IFNULL(B.LATEST_CYCLE_TIME,0)/3600,0) , 'h ',
-                        TRUNCATE((IFNULL(B.LATEST_CYCLE_TIME,0)%3600)/60,0), 'm ',
-                        TRUNCATE(((IFNULL(B.LATEST_CYCLE_TIME,0)%3600) % 60),0), 's'
+                        TRUNCATE(IFNULL(Z.LATEST_CYCLE_TIME,0)/3600,0) , 'h ',
+                        TRUNCATE((IFNULL(Z.LATEST_CYCLE_TIME,0)%3600)/60,0), 'm ',
+                        TRUNCATE(((IFNULL(Z.LATEST_CYCLE_TIME,0)%3600) % 60),0), 's'
                     )
                  ELSE '-'
             END AS LATEST_CYCLE_TIME,
-            TIMESTAMPDIFF(SECOND, C.EVENT_TIME, NOW()) AS CURRENT_STATUS_TIME,
-            A.DISCONNECT_YN, A.EQUIP_OFF_YN, A.EQUIP_OFF_DT
-        FROM TBL_EQUIP A
-            LEFT OUTER JOIN TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.DEL_YN = 'N'
-                AND B.WORK_STATUS IN ('DBS010', 'DBS020') AND B.WORK_START_DT IS NOT NULL AND B.WORK_FINISH_DT IS NULL
-            LEFT OUTER JOIN TBL_MCT_WORKING_LOG C ON C.MCT_WORK_SEQ = B.MCT_WORK_SEQ
-                AND C.MCT_LOG_SEQ = (
-                    SELECT MAX(Q.MCT_LOG_SEQ)
-                    FROM TBL_MCT_WORKING_LOG Q
-                    WHERE Q.MCT_WORK_SEQ = C.MCT_WORK_SEQ
-                        AND Q.ACTIVE_TYPE != 'DISCONNECT'
-                )
-        WHERE A.DEL_YN = 'N'
-            AND IFNULL(A.IF_USE_YN, 'N') = 'Y'
-            AND A.EQUIP_SEQ IN
-            <foreach collection="dataList" item="item"  index="index"  open="(" close=")" separator=",">
-                #{item.EQUIP_SEQ}
-            </foreach>
+            IFNULL(Z.CURRENT_STATUS_TIME,0) AS CURRENT_STATUS_TIME,
+            Z.DISCONNECT_YN, Z.EQUIP_OFF_YN, Z.EQUIP_OFF_DT,
+            CONCAT('[', DATE_FORMAT(NOW(), '%m/%d %H:%i:%s'), '] ') AS CONTEXT01,
+            SF_GET_CONTROL_PART_INFO(Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ) AS CONTEXT02,
+            CASE WHEN Z.ACTIVE_TYPE = 'PGM_STOP' THEN '일시정지'
+                 WHEN Z.ACTIVE_TYPE = 'PGM_ACTIVE' THEN '작업재개'
+            END AS CONTEXT03
+        FROM (
+            SELECT B.MCT_WORK_SEQ, A.EQUIP_SEQ, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
+                B.IF_WORK_START_DT, B.IF_WORK_FINISH_DT,
+                B.WORK_STATUS, B.WORK_START_DT, B.WORK_FINISH_DT, B.UNIT_QTY, B.GOAL_QTY,
+                (IFNULL(B.UNIT_QTY,1) * IFNULL(B.COMPLETE_CYCLE_COUNT,0) + IFNULL(B.ADJUST_QTY,0)) AS COMPLETE_QTY,
+                B.COMPLETE_CYCLE_COUNT,
+                B.WORK_ACTIVE_TIME, B.WORK_STOP_TIME,
+                ((B.LATEST_CYCLE_TIME * CEIL(B.GOAL_QTY / B.UNIT_QTY)) - B.WORK_ACTIVE_TIME) AS LEFT_TIME,
+                B.LATEST_CYCLE_TIME,
+                C.ACTIVE_TYPE,
+                CASE WHEN C.EVENT_TIME IS NULL THEN B.WORK_START_DT
+                     ELSE C.EVENT_TIME
+                END AS EVENT_TIME,
+                CASE WHEN C.EVENT_TIME IS NULL THEN TIMESTAMPDIFF(SECOND, B.WORK_START_DT, NOW())
+                     ELSE TIMESTAMPDIFF(SECOND, C.EVENT_TIME, NOW())
+                END AS CURRENT_STATUS_TIME,
+                A.DISCONNECT_YN, A.EQUIP_OFF_YN, A.EQUIP_OFF_DT
+            FROM TBL_EQUIP A
+                LEFT OUTER JOIN TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.DEL_YN = 'N'
+                    AND B.WORK_STATUS IN ('DBS010', 'DBS020') AND B.WORK_START_DT IS NOT NULL AND B.WORK_FINISH_DT IS NULL
+                LEFT OUTER JOIN TBL_MCT_WORKING_LOG C ON C.MCT_WORK_SEQ = B.MCT_WORK_SEQ
+                    AND C.MCT_LOG_SEQ = (
+                        SELECT MAX(Q.MCT_LOG_SEQ)
+                        FROM TBL_MCT_WORKING_LOG Q
+                        WHERE Q.MCT_WORK_SEQ = C.MCT_WORK_SEQ
+                            AND Q.ACTIVE_TYPE != 'DISCONNECT'
+                    )
+            WHERE A.DEL_YN = 'N'
+                AND IFNULL(A.IF_USE_YN, 'N') = 'Y'
+                AND A.EQUIP_SEQ IN
+                <foreach collection="dataList" item="item"  index="index"  open="(" close=")" separator=",">
+                    #{item.EQUIP_SEQ}
+                </foreach>
+        ) Z
     </select>
 
     <update id="updateEquipStatus" parameterType="java.util.HashMap" >

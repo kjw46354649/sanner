@@ -2400,8 +2400,8 @@
             let workStatus = $("#drawing_action_form").find("#WORK_STATUS").val();
             let dataType = $("#drawing_action_form").find("#DATA_TYPE").val();
             let leftTime = $("#drawing_action_form").find("#LEFT_TIME").val();
+            $("#LEFT_TIME_SPAN").text(makeTimeSec(leftTime));
             if (dataType === "CUR") {
-                $("#LEFT_TIME_SPAN").text(makeTimeSec(leftTime));
                 if(workStatus == 'DBS010'){ // 임시중지상태
                     if(if_use_yn != 'Y') {
                         $("#drawing_worker_stop_popup").css("display", "block");
@@ -2449,6 +2449,7 @@
                         if(data.equipNm.includes(equipNm)) {
                             $.each(dataList, function (idx,Item) {
                                 if(Item.EQUIP_SEQ == equipSeq) {
+                                    console.log(Item);
                                     $("#bodyWrap").removeClass("stop");
                                     $("#bodyWrap").removeClass("work");
                                     $("#bodyWrap").removeClass("nc_off");

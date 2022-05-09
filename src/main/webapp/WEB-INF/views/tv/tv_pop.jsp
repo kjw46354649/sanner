@@ -1180,23 +1180,41 @@
 		let alarmMessageProcess = function(messageData){
 			let maxCnt = 9;
 			if (messageData) {
-				let messageKey = randomKey();
-				let messBody = messageData.content03 + " : " + messageData.content02;
-				// if(messageData.content04) messBody += "     (" + messageData.content04 + ")";
-				if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
-				let alarmMsg  = '<p id=' + messageKey + ' class="alarmList">';
-				alarmMsg += messageData.content01;
-				alarmMsg += messBody;
-				alarmMsg += '</p>';
-				alarmMsg += '<span id="new_'+messageKey + '">[New]</span>';
-				// $("#alarm_list").prepend($(alarmMsg).fadeIn(2000));
-				$("#alarm_list").prepend($(alarmMsg));
+				if(messageData.actionType == 'NC_IF') {
+					$.each(messageData.list, function (idx,Item) {
+						let messageKey = randomKey();
+						let messBody = Item.CONTEXT03 + " : " + Item.CONTEXT02;
+						if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
+						let alarmMsg  = '<p id=' + messageKey + ' class="alarmList">';
+						alarmMsg += Item.CONTEXT01;
+						alarmMsg += messBody;
+						alarmMsg += '</p>';
+						alarmMsg += '<span id="new_'+messageKey + '">[New]</span>';
+						$("#alarm_list").prepend($(alarmMsg));
 
-				setTimeout(function() {
-					$("#new_" + messageKey).remove();
-				}, 30000);
+						setTimeout(function() {
+							$("#new_" + messageKey).remove();
+						}, 30000);
+					})
+				}else {
+					let messageKey = randomKey();
+					let messBody = messageData.content03 + " : " + messageData.content02;
+					if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
+					let alarmMsg  = '<p id=' + messageKey + ' class="alarmList">';
+					alarmMsg += messageData.content01;
+					alarmMsg += messBody;
+					alarmMsg += '</p>';
+					alarmMsg += '<span id="new_'+messageKey + '">[New]</span>';
+					$("#alarm_list").prepend($(alarmMsg));
+
+					setTimeout(function() {
+						$("#new_" + messageKey).remove();
+					}, 30000);
+				}
 			}
 		};
+
+
 
 		/** POP 알람을 정보 실시간 처리 **/
 		let popMessageProcess = function(messageData){
@@ -1331,6 +1349,7 @@
 				stompClient.subscribe('/topic/notice', function (notificationMessage) {
 					let messageData = JSON.parse(notificationMessage.body);
 					console.log('/topic/notice',messageData)
+					alarmMessageProcess(messageData);
 
 					let equipList = [];
 					if(messageData.list.length > 0) {
