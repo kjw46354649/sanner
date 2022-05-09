@@ -2360,25 +2360,39 @@
             let hours = 0;
             let minutes = 0;
             let seconds = 0;
-            if(currTime > 0) {
-                hours = Math.floor(currTime / 3600);
-                minutes = Math.floor((currTime % 3600)/60);
-                seconds = Math.floor((currTime % 3600) % 60);
-            }
+
             work_left_interval = setInterval(function() {
                 if (!workTimeIntervalIsPause){
-                    seconds--;
-                    if(seconds == 60){
-                        seconds = 0;
-                        minutes--;
+                    if(currTime > 0) {
+                        currTime--;
+
+                        if(currTime < 0) {
+                            currTime = 0;
+                        }
+
+                        hours = Math.floor(currTime / 3600);
+                        minutes = Math.floor((currTime % 3600)/60);
+                        seconds = Math.floor((currTime % 3600) % 60);
+
+                        $("#LEFT_TIME_SPAN").text(hours +'h ' + minutes +'m ' + seconds + 's');
+                    }else {
+                        clearInterval(work_left_interval);
                     }
-                    if(minutes == 60){
-                        minutes = 0;
-                        hours--;
-                    }
-                    $("#LEFT_TIME_SPAN").text(hours +'h ' + minutes +'m ' + seconds + 's');
                 }
             },1000);
+        }
+
+        function makeTimeSec(time) {
+            let hours = 0;
+            let minutes = 0;
+            let seconds = 0;
+            if(time > 0) {
+                hours = Math.floor(time / 3600);
+                minutes = Math.floor((time % 3600)/60);
+                seconds = Math.floor((time % 3600) % 60);
+            }
+
+            return hours + 'h ' + minutes +'m ' + seconds + 's';
         }
 
         let setFocusBody = function(){
@@ -2387,6 +2401,7 @@
             let dataType = $("#drawing_action_form").find("#DATA_TYPE").val();
             let leftTime = $("#drawing_action_form").find("#LEFT_TIME").val();
             if (dataType === "CUR") {
+                $("#LEFT_TIME_SPAN").text(makeTimeSec(leftTime));
                 if(workStatus == 'DBS010'){ // 임시중지상태
                     if(if_use_yn != 'Y') {
                         $("#drawing_worker_stop_popup").css("display", "block");
