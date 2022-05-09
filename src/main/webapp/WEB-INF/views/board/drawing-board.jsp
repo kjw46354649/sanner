@@ -1697,16 +1697,27 @@
                 if(data.list.length > 0 ) {
                     workHistoryList = data.list;
                     for (let i = 0; i < data.list.length; i++) {
-                        workerListHtml += ' <tr class="tr_row rnum_' + data.list[i].RNUM +'">';
+                        workerListHtml += ' <tr class="tr_row rnum_' + data.list[i].RNUM +' '+((i == 0)?'select':'') +'">';
                         workerListHtml += '    <td class="modal-table-contents" style="width:33%;">' + data.list[i].RNUM + '</td>';
                         workerListHtml += '    <td class="modal-table-contents" style="width:69%;">' + data.list[i].INSPECT_DT + '</td>';
                         workerListHtml += '    <td class="modal-table-contents" style="width:70px;" rowspan="2">' + data.list[i].INSPECT_GRADE_NM + '<br>'
                         workerListHtml += '     (' + data.list[i].INSPECT_GRADE_NOTE + ')';
                         workerListHtml += '     </td>';
                         workerListHtml += ' </tr>';
-                        workerListHtml += ' <tr class="tr_row rnum_'+ data.list[i].RNUM +'">';
+                        workerListHtml += ' <tr class="tr_row rnum_'+ data.list[i].RNUM + ' ' + ((i == 0)?'select':'') +'">';
                         workerListHtml += '    <td class="modal-table-contents" style="width:70px;" colspan="2">' + data.list[i].CONTROL_NUM + '</td>';
                         workerListHtml += ' </tr>';
+
+                        if(i == 0) {
+                            $("#drawing_quality_history_popup").find("#drawing_history_image").attr("src", "/qimage/" + data.list[i].IMG_GFILE_SEQ);
+                            if(data.list[i].INSPECT_GRADE != 'GRD010' && data.list[i].INSPECT_GRADE != 'GRD020') {
+                                $("#drawing_quality_history_popup").find(".drawing_history_img_table").show();
+                                $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_INSPECT_RESULT_NM").text(data.list[i].INSPECT_RESULT_NM);
+                                $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_PROCESS_NM").text(data.list[i].ERROR_PROCESS_NM);
+                                $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_REASON_NM").text(data.list[i].ERROR_REASON_NM);
+                                $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_NOTE").text(data.list[i].ERROR_NOTE);
+                            }
+                        }
                     }
                 }else{
                     workerListHtml += '<tr>';
@@ -2142,11 +2153,11 @@
         })
 
         $("#closeErrorQtyBtn").on('click', function(){
-            $("#drawing_error_qty_form #INSPECT_RESULT option:eq(0)").prop("selected", true);
-            $("#drawing_error_qty_form #ER7ROR_REASON option:eq(0)").prop("selected", true);
-            $("#drawing_error_qty_form").find("#ERROR_QTY").val(1);
-            $("#drawing_error_qty_form").find("#ERROR_QTY_SPAN").text(1);
-            fnPopupCloseNotReload('drawing_error_qty_popup');
+            // $("#drawing_error_qty_form #INSPECT_RESULT option:eq(0)").prop("selected", true);
+            // $("#drawing_error_qty_form #ER7ROR_REASON option:eq(0)").prop("selected", true);
+            // $("#drawing_error_qty_form").find("#ERROR_QTY").val(1);
+            // $("#drawing_error_qty_form").find("#ERROR_QTY_SPAN").text(1);
+            fnPopupClose('drawing_error_qty_popup');
         })
 
         $("#registErrorQtyBtn").on('click', function(){
@@ -2523,7 +2534,7 @@
                     $("#drawing_quality_history_popup").find(".drawing_history_img_table").hide();
                 }else {
                     $("#drawing_quality_history_popup").find(".drawing_history_img_table").show();
-                }
+            }
                 $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_INSPECT_RESULT_NM").text(Item.INSPECT_RESULT_NM);
                 $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_PROCESS_NM").text(Item.ERROR_PROCESS_NM);
                 $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_REASON_NM").text(Item.ERROR_REASON_NM);
