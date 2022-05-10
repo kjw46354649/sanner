@@ -31,7 +31,6 @@
 .userWrap .userBox a{display: block;}
 .userWrap .userImg{width: 168px; height: 168px; border-radius: 50%; border: 1px solid #d6d6d6; margin: 0 auto; overflow: hidden;}
 .userWrap .userImg img{width:100%;}
-/*.userWrap .userBox .userImg img{width: 168px; height: 168px; border-radius: 100%; border: 1px solid #d6d6d6; display: block; margin: 0 auto;}*/
 .userWrap .userBox .userName{color: #aaaaaa; padding-top: 20px; font-size: 30px; text-align: center;}
 .userWrap .userBox .userName span.ko{font-weight: bold; color: #000;}
 .userWrap .userBox .userName span.en{font-size: 24px; color: #000;}
@@ -44,38 +43,30 @@
 .bodyWrap.nc_off{background: yellow;}
 .bodyWrap.stop .status_stop {color:blue;}
 .bodyWrap.complete{background: #c5c5c5;}
-.leftLogWrap{width: 270px; float: left; padding: 0 30px 0 30px;}
-.logInWrap{width: 215px; height: 375px; border: 1px solid #d7d8d9; background: linear-gradient(to bottom, #f9f9f9, #ebebeb); position: relative;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;}
+.leftLogWrap{width: 27%; float: left; padding: 0 30px 0 30px;}
+.logInWrap{width: 100%; height: 375px; border: 1px solid #d7d8d9; background: linear-gradient(to bottom, #f9f9f9, #ebebeb); position: relative;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;}
 .logInWrap div{text-align: center;}
-.logInWrap .mainTit{font-size: 36px; font-weight:bold; color: #fff; background: url(../images/work/bg_tit.png) no-repeat 0 0; width: 249px; height: 89px; line-height: 72px; position: absolute; top: 27px; left: -15px;}
+.logInWrap .mainTit{font-size: 36px; font-weight:bold; color: #fff; background: url(../images/work/bg_tit.png) no-repeat 0 0; width: 115%; height: 24%; line-height: 72px; position: absolute; top: 27px; left: -15px;}
 .logInWrap .userWrap .userImg{width: 155px; height: 155px; margin: 120px auto 15px;}
 .userInfo p{font-size: 24px; color: #333;}
 .userInfo .name{font-size: 25px; font-weight:bold; color: #000;}
-/*.logStatus button{background: url(../images/work/bg_onoff.png) no-repeat 0 0; width: 160px; height: 47px; line-height: 47px; font-size: 24px; color: #fff; font-weight:bold; margin: 35px 0 28px;}*/
 .logStatus button{background: linear-gradient(180deg, #30b530, #1e7f1e); width: 120px; height: 35px; font-size: 20px; color: #fff; font-weight:bold; border-radius: 10px;border: 1px solid #267b26;}
 .logInWrap .langBtn{padding-top:0;}
-.rightDbWorkWrap{width: 740px; float: right; padding: 37px 30px 0px 0;}
+.rightDbWorkWrap{width: 73%; float: right; padding: 37px 30px 0px 0;}
 .workInWrap{background-color: #fff; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;}
 .contsTitWrap,.topConts,.middleConts{overflow: hidden;}
-.contsTit{font-size: 24px; color: #000; position: relative; padding-left: 15px; float: left;font-weight: bold;}
+.contsTit{font-size: 1.5rem; color: #000; position: relative; padding-left: 15px; float: left;font-weight: bold;}
 .contsTit:before{content: ''; position: absolute; top: 0; left: 0; width: 25px; height: 25px; background: url(../images/common/chk.png) no-repeat 0 0;background-size: 100% auto;}
 .slecBox{background: url(../images/work/bg_select.png) no-repeat 0   0; width: 193px; height: 42px; float: right;line-height: 42px;color: #fff;text-align: center;font-size: 18px;background-size: 100% 100%;font-weight: bold;}
 .closeBox{width: 93px; height: 42px; float: right;line-height: 42px;color: #fff;text-align: center;font-size: 18px;background-size: 100% 100%;}
 .slecBox a{display: block;}
 .topConts{padding: 5px 15px 15px;}
 .timeWrap{float: left;display: flex;margin-top: 10px;}
-/*.timeWrap~.timeWrap{margin-left: 5px;margin-top: 5px;}*/
-.timeTit{font-size: 22px; position: relative;font-weight: bold;background: #dbdbdb;padding: 10px;border-radius: 5px;text-align: center;}
-/*.timeTit:before{content: ''; position: absolute; top: -3px; left: 0; background: url(../images/work/icon_1.png) no-repeat 0 0; width: 29px; height: 29px;}*/
-/*.timeWrap:nth-child(2) .timeTit:before{background: url(../images/work/icon_2.png) no-repeat 0 0;}*/
-/*.timeWrap:nth-child(3) .timeTit:before{background: url(../images/work/icon_3.png) no-repeat 0 0;}*/
+.timeTit{font-size: 1.3rem; position: relative;font-weight: bold;background: #dbdbdb;padding: 10px;border-radius: 5px;text-align: center;}
 .timeWrap:nth-child(4) .timeTit:before{background: none;}
-.time{font-size: 22px; color: #2d2d2d;margin-left: 5px;background: aliceblue;padding: 10px;border-radius: 5px;text-align: center;}
+.time{font-size: 1.3rem; color: #2d2d2d;margin-left: 5px;background: aliceblue;padding: 10px;border-radius: 5px;text-align: center;}
 .middleConts>div~div{margin-top:2px;}
 .tbl,.share,.qual{padding: 2px; text-align: center; color: #000; overflow: hidden; border: 1px solid #c2c2c2; border-radius: 5px; background: linear-gradient(to bottom, #fff, #f4f4f4);}
-/*.tbl table th{background: url(../images/work/bg_th.png) no-repeat 0 0; height: 44px; line-height: 44px; font-size: 20px; color: #000;font-weight: bold;}*/
-/*.tbl table th:nth-child(2),.tbl table th:nth-child(3){background: url(../images/work/bg_th_2.png) no-repeat 0 0;}*/
-/*.tbl table th:last-child{background: url(../images/work/bg_th_3.png) no-repeat 0 0;}*/
 
 .tbl table th{background-color: #c6c4c4; height: 44px; line-height: 44px; font-size: 20px; color: #000;font-weight: bold;}
 .tbl table th:nth-child(2),.tbl table th:nth-child(3){background-color: #c6c4c4;}
@@ -97,12 +88,9 @@
 .qualConts span.txtR{background: url(../images/work/bg_st_4_2.png) no-repeat 0 0; width: 113px; color: #b50000; font-weight: bold;}
 .qualConts span:nth-child(3){background: url(../images/work/bg_st_4_3.png) no-repeat 0 0; width: 313px; text-align: left; }
 .qualConts span~span{margin-left: 6px;}
-/*.alertConts{padding: 19px 19px 0px 30px; font-size: 0;}*/
 .alertConts{padding: 7px 0px 0px 0px; font-size: 0;}
-.alertBox{display: inline-block; width: 100px; height: 40px; line-height: 40px; font-size: 18px; font-weight: bold; color: black; background-color: #ffe9e9; border: 1px solid #9b1313; position: relative; text-align: center;}
-/*.alertBox:before{content: ''; position: absolute; top: 4px; left: 7px; width: 24px; height: 22px; background: url(../images/work/alert.png) no-repeat 0 0;}*/
+.alertBox{display: inline-block; width: 100px; height: 40px; line-height: 40px; font-size: 1.1rem; font-weight: bold; color: black; background-color: #ffe9e9; border: 1px solid #9b1313; position: relative; text-align: center;}
 .alertBox~.alertBox{margin-left: 13px;}
-/*.alertBox:nth-child(2){width: 77px;}*/
 
 .close {
     float: right;
@@ -206,7 +194,6 @@ button.close {
 .modal-end-dialog .workList table thead{float:left; width:568px;}
 .modal-end-dialog .workList table tbody{overflow-y:auto; overflow-x:hidden; float:left; width:568px; height: 300px;}
 .modal-end-dialog .workList table tbody tr{display:table; width:568px; line-height: 18px;}
-/*-.modal-dialog .workList table td{width:100px}*/
 .modal-end-content { position: relative; background-color: #fff; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid #999; border: 1px solid rgba(0, 0, 0, .2); border-radius: 6px;  -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5); box-shadow: 0 5px 15px rgba(0, 0, 0, .5); }
 .modal-end-body {position: relative; padding: 15px;}
 
@@ -237,7 +224,6 @@ button.close {
 .modal-start-dialog .workList table tbody{overflow-y:auto; overflow-x:hidden; float:left; width:568px; height: 300px;}
 .modal-start-dialog .workList table tbody tr{display:table; width:568px; line-height: 18px;}
 
-/*-.modal-dialog .workList table td{width:100px}*/
 .modal-start-content { position: relative; background-color: #000000; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid #999; border: 1px solid rgba(0, 0, 0, .2); border-radius: 6px;  -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, .5); box-shadow: 0 5px 15px rgba(0, 0, 0, .5); }
 .modal-start-body {position: relative; padding: 15px;}
 
@@ -264,7 +250,6 @@ button.close {
 .modal-hold-dialog .workList table tbody{overflow-y:auto; overflow-x:hidden; float:left; width:568px; height: 300px;}
 .modal-hold-dialog .workList table tbody tr{display:table; width:568px; line-height: 18px;}
 
-/*-.modal-dialog .workList table td{width:100px}*/
 .modal-hold-content { position: relative; background-color: #fcfcec; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid #999; border: 1px solid rgba(0, 0, 0, .2); border-radius: 6px;  -webkit-box-shadow: 0 5px 15px rgb(252, 252, 236); box-shadow: 0 5px 15px rgba(0, 0, 0, .5); }
 .modal-hold-body {position: relative; padding: 15px;}
 
@@ -429,16 +414,6 @@ button.close {
     padding-top: 10px;
 }
 
-/*.modal-dialog button {*/
-/*    width: 150px;*/
-/*    height: 40px;*/
-/*    font-size: 30px;*/
-/*    border: 1px solid #9D9D9D;*/
-/*    padding: 5px;*/
-/*    background: #CCCCCC;*/
-/*    color: #000000;*/
-/*}*/
-
 .cancelBox {
     width: 90px;
     height: 46px;
@@ -495,7 +470,6 @@ button.close {
 .modal-dialog .workList table thead{float:left; width:568px;}
 .modal-dialog .workList table tbody{overflow-y:auto; overflow-x:hidden; float:left; width:568px; height: 300px;}
 .modal-dialog .workList table tbody tr{display:table; width:568px; line-height: 18px;}
-/*-.modal-dialog .workList table td{width:100px}*/
 
 
 .btn_plus{ width: 50px; height: 50px; font-size: 0; background: url(../images/common/btn_plus.png)no-repeat 0 0; background-size: 50px 50px;}
@@ -684,19 +658,20 @@ button.close {
 .bottomDbWrap {
     float: left;
     max-width: 1024px;
+    width: 100%;
     margin-top: 25px;
 }
 
 .bottomDbWrap .timeTit {
     height:40px;
-    width:140px;
+    width:50%;
     padding:5px;
     line-height: 30px;
 }
 
 .bottomDbWrap .time {
     height:40px;
-    width: 175px;
+    width: 54%;
     padding:5px;
     background: none;
     line-height: 30px;

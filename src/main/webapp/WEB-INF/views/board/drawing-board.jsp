@@ -441,56 +441,56 @@
                 </c:if>
                 <div class="workInWrap mt-10">
                     <div class="topConts" style="color: black;font-weight: bold;">
-                        <div class="timeWrap"><!-- 작업번호 -->
+                        <div class="timeWrap" style="width: 67%;"><!-- 작업번호 -->
                             <span class="timeTit"><srping:message key='drawing.board.button.19'/></span>
-                            <span class="time mr-5" style="width: 343px;">
+                            <span class="time mr-5" style="width: 75%;">
                                 <span><c:if test="${not empty workInfo}">${workInfo.CONTROL_NUM_NM}</c:if></span>
                             </span>
                         </div>
-                        <div class="timeWrap ml-5"><!-- 시작 -->
+                        <div class="timeWrap ml-5" style="width: 32%"><!-- 시작 -->
                             <span class="timeTit"><i class="xi-play-circle-o"></i><srping:message key='drawing.board.button.01'/></span>
-                            <span class="time" style="width:125px;height: 50px;padding: 10px 5px;">
+                            <span class="time" style="width:59%;padding: 10px 5px;">
                                 <span><c:if test="${not empty workInfo}">${workInfo.WORK_START_DT}</c:if></span>
                             </span>
                         </div>
-                        <div class="timeWrap"><!-- 수량 -->
-                            <span class="timeTit" style="width: 85px;"><srping:message key='drawing.board.label.05'/></span>
-                            <span class="time" style="width: 175px;height: 50px;padding: 10px 5px;">
+                        <div class="timeWrap" style="width: 38%;"><!-- 수량 -->
+                            <span class="timeTit"><srping:message key='drawing.board.label.05'/></span>
+                            <span class="time" style="width: 74%;padding: 10px 5px;">
                                 <span class="text-red"><c:if test="${not empty workInfo}">${workInfo.SAME_SIDE_TEXT}</c:if></span>
                                 <span><c:if test="${not empty workInfo}">${workInfo.ORDER_QTY_INFO}</c:if></span>
                             </span>
                         </div>
-                        <div class="timeWrap ml-5"><!-- 가공납기 -->
+                        <div class="timeWrap ml-5" style="width: 28%;"><!-- 가공납기 -->
                             <span class="timeTit"><srping:message key='drawing.board.label.06'/></span>
-                            <span class="time mr-5" style="width: 72px;">
+                            <span class="time mr-5" style="width: 40%;">
                                 <span><c:if test="${not empty workInfo}">${workInfo.INNER_DUE_DT}</c:if></span>
                             </span>
                         </div>
-                        <div class="timeWrap ml-5"> <!-- 종료 -->
+                        <div class="timeWrap ml-5" style="width: 32%;"> <!-- 종료 -->
                             <span class="timeTit"><i class="xi-check-circle"></i><srping:message key='drawing.board.button.02'/></span>
-                            <span class="time" style="width:125px;height: 50px;padding: 10px 5px;">
+                            <span class="time" style="width:59%;padding: 10px 5px;">
                                 <span><c:if test="${not empty workInfo}">${workInfo.WORK_FINISH_DT}</c:if></span>
                             </span>
                         </div>
-                        <div class="timeWrap"><!-- 이전 공정 -->
+                        <div class="timeWrap" style="width: 28%;"><!-- 이전 공정 -->
                             <span class="timeTit"><srping:message key='drawing.board.label.23'/></span>
-                            <div class="arrow-sm-right" style="left: 478px;top:221px;"></div>
-                            <span class="time" id="latest_process_list" style="width: 125px;cursor: pointer;font-size: 20px;line-height: 22px;height: 80px;">
+                            <span class="time" id="latest_process_list" style="width: 65%;cursor: pointer;font-size: 1.2rem;line-height: 22px;position:relative;">
+                                <div class="arrow-sm-right" style="left: 89%;top:-2%;"></div>
                                 <span><c:if test="${not empty workInfo}">${workInfo.LATEST_PROCESS}</c:if></span>
                             </span>
                         </div>
-                        <div class="timeWrap ml-5"><!-- 공유사항 -->
+                        <div class="timeWrap ml-5" style="width: 38%;"><!-- 공유사항 -->
                             <span class="timeTit"><srping:message key='drawing.board.label.24'/></span>
-                            <div class="arrow-sm-right" style="left: 738px;top:220px;"></div>
-                            <span class="time hg_80" id="note_list" style="width: 186px;margin-right: 5px;cursor: pointer;overflow: hidden;">
+                            <span class="time" id="note_list" style="width: 72%;font-size:1.1rem;margin-right: 5px;cursor: pointer;overflow: hidden;position:relative;">
+                            <div class="arrow-sm-right" style="left: 92%;top:-2%;"></div>
                                 <span><c:if test="${not empty workInfo}">${workInfo.NOTE}</c:if></span>
                                 <span><c:if test="${not empty workInfo}">${workInfo.MCT_NOTE}</c:if></span>
                             </span>
                         </div>
-                        <div class="timeWrap ml-5"><!-- 품질기록 -->
+                        <div class="timeWrap ml-5" style="width: 32%;"><!-- 품질기록 -->
                             <span class="timeTit"><srping:message key='drawing.board.label.25'/></span>
-                            <div class="arrow-sm-right" style="left: 965px;top:220px;"></div>
-                            <span class="time hg_80" id="drawing_quality_history" style="width: 150px;cursor: pointer;padding: 5px;">
+                            <span class="time" id="drawing_quality_history" style="width: 70%;font-size:1.1rem;cursor: pointer;padding: 5px;position:relative;">
+                                <div class="arrow-sm-right" style="left: 91%;top:-2%;"></div>
                                 <span><c:if test="${not empty workInfo}">${workInfo.INSPECT_DT}</c:if>
                                     <c:if test="${not empty workInfo && not empty workInfo.INSPECT_GRADE_NM}">&nbsp;등급 ${workInfo.INSPECT_GRADE_NM}</c:if>
                                 </span>
@@ -522,7 +522,7 @@
             </div>
         </div>
         <div class="bottomDbWrap">
-            <div style="float: left;padding: 0 30px 0 30px;">
+            <div style="float: left;padding: 0 30px 0 30px;width: 40%;">
                 <div class="d-flex">
                     <div class="nc_process_title">
                         <span>NC 가공 Cycle 정보</span>
@@ -532,60 +532,60 @@
                     </div>
                 </div>
                 <div class="workInWrap nc_disabled ncOffWorkWrap">
-                    <div class="topConts" style="color: black;font-weight: bold;width: 350px;height: 155px;">
-                        <div class="timeWrap">
+                    <div class="topConts" style="color: black;font-weight: bold;width: 100%;">
+                        <div class="timeWrap" style="width: 100%;">
                             <span class="timeTit">Unit Qty.</span>
-                            <span class="time wd_150">
+                            <span class="time">
                                 <span class="UNIT_QTY"><c:if test="${not empty workInfo && drawingInfo.machineInfo.IF_USE_YN eq 'Y'}">${workInfo.UNIT_QTY}</c:if></span>
                             </span>
                         </div>
-                        <div class="timeWrap">
+                        <div class="timeWrap" style="width: 100%;">
                             <span class="timeTit" style="padding: 5px;">Finish Cycle</span>
-                            <span class="time wd_150">
+                            <span class="time">
                                 <span class="COMPLETE_CYCLE_COUNT"><c:if test="${not empty workInfo && drawingInfo.machineInfo.IF_USE_YN eq 'Y'}">${workInfo.COMPLETE_CYCLE_COUNT}</c:if></span>
                             </span>
                         </div>
-                        <div class="timeWrap" style="width: 320px;text-align: center;display: flex;font-size: 24px;line-height: 40px;">
-                            <span class="wd_150 status_work" id="CYCLE_ACTIVE_SPAN">
+                        <div class="timeWrap d-flex" style="width: 100%;text-align: center;font-size: 24px;line-height: 40px;">
+                            <span class="status_work" id="CYCLE_ACTIVE_SPAN" style="width: 50%;">
                                 <c:if test="${drawingInfo.machineInfo.IF_USE_YN eq 'Y'}">${workInfo.CURRENT_STATUS_TIME_FORMAT}</c:if>
                             </span>
                             <span>/</span>
-                            <span class="wd_150" id="finish_cycle_time">
+                            <span id="finish_cycle_time" style="width: 50%;">
                                 <c:if test="${drawingInfo.machineInfo.IF_USE_YN eq 'Y'}">${workInfo.LATEST_CYCLE_TIME}</c:if>
                             </span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div style="float: right;">
+            <div class="right_float" style="width: 59%;">
                 <div class="nc_process_title">
                     <span>가공수행 정보</span>
                 </div>
-                <div class="workInWrap">
-                    <div class="d-flex topConts" style="color: black;font-weight: bold;width: 582px;height: 155px;">
+                <div class="workInWrap" style="width: 95%;">
+                    <div class="d-flex topConts" style="color: black;font-weight: bold;width: 100%;">
                         <div style="width: 85%;height: 100%;">
-                            <div class="timeWrap">
-                                <span class="timeTit wd_100 green">Active</span>
+                            <div class="timeWrap" style="width: 100%;">
+                                <span class="timeTit green" style="width: 30%;">Active</span>
                                 <span class="time status_work">
                                     <span id="WORK_ACTIVE_TIME_SPAN">${workInfo.WORK_ACTIVE_TIME_FORMAT}</span>
                                 </span>
-                                <span class="timeTit wd_80 purple">목표</span>
-                                <span class="time wd_75">
+                                <span class="timeTit purple" style="width: 25%;">목표</span>
+                                <span class="time" style="width: 35%;">
                                     <span><c:if test="${not empty workInfo}">${workInfo.GOAL_QTY}</c:if></span>
                                 </span>
                             </div>
-                            <div class="timeWrap">
-                                <span class="timeTit wd_100 orange">Stop</span>
+                            <div class="timeWrap" style="width: 100%;">
+                                <span class="timeTit orange" style="width: 30%;">Stop</span>
                                 <span class="time status_stop">
                                     <span id="WORK_STOP_TIME_SPAN">${workInfo.WORK_STOP_TIME_FORMAT}</span>
                                 </span>
-                                <span class="timeTit wd_80 green nc_disabled">완료</span>
-                                <span class="time wd_75 COMPLETE_QTY">
+                                <span class="timeTit green nc_disabled" style="width: 25%;">완료</span>
+                                <span class="time COMPLETE_QTY" style="width: 35%;">
                                     <span id="COMPLETE_QTY_MAIN">${workInfo.COMPLETE_QTY}</span>
                                 </span>
                             </div>
-                            <div class="timeWrap">
-                                <span class="timeTit wd_100 darkBlue nc_disabled">Left</span>
+                            <div class="timeWrap" style="width: 100%;">
+                                <span class="timeTit darkBlue nc_disabled" style="width: 30%;">Left</span>
                                 <span class="time">
                                     <span id="LEFT_TIME_SPAN">
                                         <c:choose>
@@ -598,8 +598,8 @@
                                         </c:choose>
                                     </span>
                                 </span>
-                                <span class="timeTit wd_80 red">불량</span>
-                                <span class="time wd_75" style="color: #9b1313;">
+                                <span class="timeTit red" style="width: 25%;">불량</span>
+                                <span class="time" style="color: #9b1313;width: 35%;">
                                     <span><c:if test="${not empty workInfo}">${workInfo.ERROR_QTY}</c:if></span>
                                 </span>
                             </div>
