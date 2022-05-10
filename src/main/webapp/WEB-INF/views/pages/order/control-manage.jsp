@@ -488,7 +488,7 @@
                         newRowData.TEMP_REGIST = rowData.REGIST_NUM;
                         newRowData.WORK_TYPE = 'WTP050';
                         newRowData.CONTROL_DETAIL_SEQ = null;
-                        newRowData.ORDER_DRAWING_NUM = null;
+                        newRowData.DRAWING_NUM = null;
                         newRowData.DRAWING_VER = null;
                         newRowData.DRAWING_UP_DT = null;
                         newRowData.PREV_DRAWING_NUM = null;
@@ -583,7 +583,7 @@
                 }
             },
             {
-                title: '도면번호', align: 'left', width: 150, dataIndx: 'ORDER_DRAWING_NUM',
+                title: '도면번호', align: 'left', width: 150, dataIndx: 'DRAWING_NUM',
                 styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
                 editable: function (ui) {
                     let rowData = ui.rowData;
@@ -1475,7 +1475,7 @@
             let Cols = $controlManagementGridInstance.Columns();
             let commArray = [
                 'CONTROL_STATUS_NM'/*, 'CONTROL_VER'*/, 'CONTROL_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NOTE', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON',
-                'PART_NUM','EMERGENCY_YN', 'MAIN_INSPECTION', 'DRAWING_NUM_BUTTON', 'ORDER_DRAWING_NUM', 'ORDER_NUM_PLUS_BUTTON', 'REGIST_NUM', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
+                'PART_NUM','EMERGENCY_YN', 'MAIN_INSPECTION', 'DRAWING_NUM_BUTTON', 'DRAWING_NUM', 'ORDER_NUM_PLUS_BUTTON', 'REGIST_NUM', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT',
                 'DELIVERY_DT', 'PART_UNIT_QTY', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'INNER_DUE_DT', 'OUTSIDE_YN', 'MATERIAL_SUPPLY_YN',
                 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_NOTE', 'MATERIAL_FINISH_HEAT', 'UNIT_FINAL_AMT', 'PREV_DRAWING_NUM',
                 'INSIDE_STOCK_NUM', 'STOCK_REQUEST_QTY', 'STOCK_OUT_QTY', 'ADDITIONAL_QTY'
@@ -1933,12 +1933,12 @@
 
                 for (let i in orderNum) {
                     if (!fnIsEmpty(i) && i !== 'undefined') {
-                        const ORDER_DRAWING_NUM = fnGroupBy(orderNum[i], 'ORDER_DRAWING_NUM');
+                        const DRAWING_NUM = fnGroupBy(orderNum[i], 'DRAWING_NUM');
 
-                        for (let j in ORDER_DRAWING_NUM) {
-                            if (ORDER_DRAWING_NUM[j].length > 1) {
-                                for (let k in ORDER_DRAWING_NUM[j]) {
-                                    addErrorList(ORDER_DRAWING_NUM[j][k].pq_ri, 'ORDER_DRAWING_NUM');
+                        for (let j in DRAWING_NUM) {
+                            if (DRAWING_NUM[j].length > 1) {
+                                for (let k in DRAWING_NUM[j]) {
+                                    addErrorList(DRAWING_NUM[j][k].pq_ri, 'DRAWING_NUM');
                                 }
                             }
                         }
@@ -1949,7 +1949,7 @@
         // required 체크
         const requiredCheck = function (rowData) {
             let list;
-            const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NUM', 'ORDER_DRAWING_NUM', /*'ITEM_NM', FIXME 확인*/ 'INNER_DUE_DT', 'SIZE_TXT'];
+            const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'CONTROL_NUM', 'DRAWING_NUM', /*'ITEM_NM', FIXME 확인*/ 'INNER_DUE_DT', 'SIZE_TXT'];
             const singleList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'ORDER_QTY']; // 단품
             const assemblyList = ['ORDER_QTY']; // 조립
             const modifiedList = ['MATERIAL_KIND', 'SURFACE_TREAT', 'ORDER_QTY']; // 수정
@@ -2379,8 +2379,8 @@
                     return false;
                 }
 
-                if (fnIsEmpty(rowData.ORDER_DRAWING_NUM)) {
-                    fnAlert(null, '발주 도면 번호를 등록 후 다시 시도해주세요');
+                if (fnIsEmpty(rowData.DRAWING_NUM)) {
+                    fnAlert(null, '도면 번호를 등록 후 다시 시도해주세요');
                     return false;
                 }
 
@@ -2536,7 +2536,7 @@
                         let controlDetailSeqNext = rowDataNext ? rowDataNext.CONTROL_DETAIL_SEQ : undefined;
 
                         if (controlDetailSeq === controlDetailSeqNext) {
-                            if (rowData.ORDER_DRAWING_NUM !== rowDataNext.ORDER_DRAWING_NUM) {
+                            if (rowData.DRAWING_NUM !== rowDataNext.DRAWING_NUM) {
                                 multiOrderControlNumList.add(rowData.CONTROL_NUM);
                             }
                         }
