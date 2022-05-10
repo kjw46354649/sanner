@@ -693,11 +693,6 @@
                 }
             },
             editModel: {clicksToEdit: 1},
-            /*cellSave: function (evt, ui) {
-                if (ui.oldVal === undefined && ui.newVal === null) {
-                    $orderRegisterGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                }
-            },*/
             change: function (evt, ui) {
                 if (ui.source === 'paste') {
                     let rowListConvert = [];
