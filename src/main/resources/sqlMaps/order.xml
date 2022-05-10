@@ -258,7 +258,7 @@
             </when>
             <!-- 가공확정일시 -->
             <when test="CONTROL_SEARCH_CONDITION == 'OCM01'">
-                AND DATE_FORMAT(C.ORDER_DUE_DT, '%Y/%m/%d') BETWEEN #{CONTROL_MANAGE_START_DATE} AND #{CONTROL_MANAGE_END_DATE}
+                AND (SELECT MAX(M.STATUS_DT) FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = B.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ AND M.PART_STATUS = 'PRO002') BETWEEN #{CONTROL_MANAGE_START_DATE} AND #{CONTROL_MANAGE_END_DATE}
             </when>
             <!-- 가공 납기 -->
             <when test="CONTROL_SEARCH_CONDITION == 'OCM02'">
@@ -4829,7 +4829,7 @@
             SF_GET_SIZE_TXT('SIZE_T', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_D', #{SIZE_TXT}),
             SF_GET_SIZE_TXT('SIZE_L', #{SIZE_TXT}),
-            #{SURFACE_TREAT},
+            IFNULL(#{SURFACE_TREAT},'SAL000'),
              <choose>
                  <when test="SPECIAL_TREATMENT == 'MATERIAL_FINISH_GRIND_YN'">
                      'Y',
