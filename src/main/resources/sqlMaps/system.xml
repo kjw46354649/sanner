@@ -1009,7 +1009,7 @@
         SELECT ROW_NUMBER () OVER () AS ROW_NUM
             , SEARCH_SEQ
             , MATERIAL_KIND
-            , jmes.SF_GET_CODE_NM('1029', MATERIAL_KIND, 'KO') AS MATERIAL_KIND_NM
+            , jmes.SF_GET_CODE_NM('1029', MATERIAL_KIND, 'KR') AS MATERIAL_KIND_NM
             , SEARCH_NM
             , SEARCH_TEXT
             , SIZE_W_START
