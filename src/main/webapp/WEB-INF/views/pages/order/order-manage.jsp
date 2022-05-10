@@ -625,15 +625,6 @@
                 }
             },
             {
-                title: '소재<br>비고', width: 80, dataIndx: 'MATERIAL_NOTE',
-                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
-                editable: function (ui) {
-                    let rowData = ui.rowData;
-
-                    return rowData.ORDER_STATUS != 'REG003';
-                }
-            },
-            {
                 title: '특수처리', align: 'center', dataIndx: 'SPECIAL_TREATMENT',
                 styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
                 editable: function (ui) {
@@ -650,6 +641,15 @@
                         {'value':'MATERIAL_FINISH_HEAT_YN', 'text':'열처리'}
                     ]
                 },
+            },
+            {
+                title: '소재<br>비고', width: 80, dataIndx: 'MATERIAL_NOTE',
+                styleHead: {'font-weight': 'bold', 'background': '#A9D3F5', 'color': '#000000'},
+                editable: function (ui) {
+                    let rowData = ui.rowData;
+
+                    return rowData.ORDER_STATUS != 'REG003';
+                }
             },
             {title: 'INV No.', width: 100, dataIndx: 'INVOICE_NUM',
                 render: function (ui) {
@@ -1229,6 +1229,26 @@
                                 row: {'MATERIAL_FINISH_HEAT': materialFinishHeatList[index].value}
                             });
                         }
+
+                        if (newRowData.hasOwnProperty('SPECIAL_TREATMENT') && newRowData.SPECIAL_TREATMENT != "") {
+                            let specialTreatList = [
+                                {'value':'MATERIAL_FINISH_GRIND_YN', 'text':'연마'},
+                                {'value':'MATERIAL_FINISH_HEAT_YN', 'text':'열처리'}
+                            ];
+                            let index = specialTreatList.findIndex(function (element) {
+                                return element.text === newRowData.SPECIAL_TREATMENT;
+                            });
+
+                            if (index < 0) {
+                                index = specialTreatList.findIndex(function (element) {
+                                    return element.value === newRowData.SPECIAL_TREATMENT;
+                                });
+                            }
+                            $orderManagementGrid.pqGrid('updateRow', {
+                                rowIndx: rowIndx,
+                                row: {'SPECIAL_TREATMENT': specialTreatList[index].value}
+                            });
+                        }
                     }
                 }
 
@@ -1321,7 +1341,7 @@
             let commArray = [
                 'ORDER_STATUS_NM', 'ORDER_STATUS_DT', 'PRICE_CONFIRM', 'COMP_CD', 'ORDER_COMP_CD', 'NOTE', 'REGIST_NUM', 'CONTROL_NUM', 'CONTROL_NUM_BUTTON',
                 'MAIN_INSPECTION', 'DRAWING_NUM_BUTTON', 'ORDER_NUM', 'ORDER_QTY', 'ORDER_DUE_DT', 'CONTROL_STATUS', 'DRAWING_NUM',
-                'DELIVERY_DT', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'MATERIAL_SUPPLY_YN',
+                'DELIVERY_DT', 'ORIGINAL_SIDE_QTY', 'OTHER_SIDE_QTY', 'ITEM_NM', 'SIZE_TXT', 'WORK_TYPE', 'MATERIAL_SUPPLY_YN', 'SPECIAL_TREATMENT',
                 'MATERIAL_DETAIL', 'MATERIAL_KIND', 'SURFACE_TREAT', 'MATERIAL_FINISH_HEAT', 'CONTROL_EST_AMT', 'UNIT_FINAL_AMT', 'PREV_DRAWING_NUM', 'UNIT_FINAL_EST_AMT'
             ];
             let array = [];
