@@ -671,7 +671,7 @@
             #{CONTROL_SEQ},
             NEXTVAL(SEQ_CONTROL_PART),
             #{PART_NUM},
-            #{ORDER_DRAWING_NUM},
+            #{DRAWING_NUM},
             #{DRAWING_VER},
             #{DRAWING_UP_DT},
             #{PREV_DRAWING_NUM},
@@ -798,7 +798,7 @@
             #{LABEL_NOTE},
             #{ORDER_STAFF_SEQ},
             #{DESIGNER_NM},
-            #{ORDER_DRAWING_NUM},
+            #{DRAWING_NUM},
             #{DWG_GFILE_SEQ},
             #{DXF_GFILE_SEQ},
             #{PDF_GFILE_SEQ},
@@ -1085,8 +1085,8 @@
             <if test="DESIGNER_NM != null">
                 DESIGNER_NM = #{DESIGNER_NM},
             </if>
-            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (ORDER_DRAWING_NUM != null and ORDER_DRAWING_NUM != '')">
-                DRAWING_NUM = #{ORDER_DRAWING_NUM},
+            <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (DRAWING_NUM != null and DRAWING_NUM != '')">
+                DRAWING_NUM = #{DRAWING_NUM},
             </if>
             <if test="ITEM_NM != null">
                 ITEM_NM = #{ITEM_NM},
@@ -1106,6 +1106,7 @@
             UPDATE_DT = NOW(),
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE CONTROL_SEQ = #{CONTROL_SEQ}
+            AND CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
 
     <select id="selectConfirmOrderList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -3071,8 +3072,8 @@
             <if test="(CONTROL_STATUS == null or CONTROL_STATUS == 'ORD002') and (PART_NUM != null and PART_NUM != '')">
                 PART_NUM = #{PART_NUM},
             </if>
-            <if test="ORDER_DRAWING_NUM != null and ORDER_DRAWING_NUM != ''">
-                DRAWING_NUM = #{ORDER_DRAWING_NUM},
+            <if test="DRAWING_NUM != null and DRAWING_NUM != ''">
+                DRAWING_NUM = #{DRAWING_NUM},
             </if>
             <if test="PREV_DRAWING_NUM != null and PREV_DRAWING_NUM != ''">
                 PREV_DRAWING_NUM = #{PREV_DRAWING_NUM},
@@ -3115,7 +3116,7 @@
                 MATERIAL_NOTE = #{MATERIAL_NOTE},
             </if>
             <if test="PART_UNIT_QTY != null and PART_UNIT_QTY != ''">
-                PART_UNIT_QTY = #{PART_UNIT_QTY},
+                PART_UNIT_QTY = CASE WHEN WORK_TYPE = 'WTP050' THEN #{PART_UNIT_QTY} END,
             </if>
             <if test="ADDITIONAL_QTY != null">
                 ADDITIONAL_QTY = #{ADDITIONAL_QTY},
