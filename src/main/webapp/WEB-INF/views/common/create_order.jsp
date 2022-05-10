@@ -635,7 +635,6 @@
                             let data = $orderRegisterGrid.pqGrid('option', 'dataModel.data');
 
                             validationCheck(data);
-                            console.log('data',data);
                             changeCellColor(errorList, prevErrorList);
 
                             if (errorList.length) {
@@ -971,11 +970,8 @@
         $orderRegisterGrid = $('#' + popupGridId).pqGrid(popupObj);
 
         const validationCheck = function (dataList) {
-            // workTypeCheck(dataList);
             registNumCheck(dataList)
             sameSideCheck(dataList);
-            // dateCheck(dataList)
-            // controlNumCheck(dataList)
 
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 const rowData = dataList[i];
@@ -984,7 +980,6 @@
                 for (const key in rowData) {
                     if (rowData.hasOwnProperty(key)) {
                         const value = rowData[key];
-                        console.log('value',value);
                         if (key !== 'pq_cellcls' && value !== undefined) {
                             ObjectWithData[key] = value;
                         }
@@ -994,7 +989,6 @@
                 if (Object.keys(ObjectWithData).length > 2) {
                     requiredCheck(ObjectWithData);
                     badCodeCheck(ObjectWithData);
-                    // inputErrorCheck(ObjectWithData);
                 }
             }
         };
