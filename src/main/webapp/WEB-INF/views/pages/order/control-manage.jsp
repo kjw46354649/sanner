@@ -1580,12 +1580,17 @@
             let message;
             let outsideFlag = false;
             let closeFlag = false;
+            let processingFlag = false;
+
             for (let i = 0, selectedRowCount = selectedControlManagementRowIndex.length; i < selectedRowCount; i++) {
                 list[i] = $controlManagementGrid.pqGrid('getRowData', {rowIndx: selectedControlManagementRowIndex[i]});
                 // 값 변경 전 이상 case 확인하기 위해 배열에 담는다.
                 controlStatusList[i] = list[i].CONTROL_STATUS || undefined;
                 list[i].CONTROL_STATUS = controlStatus;
                 controlSeqList[i] = list[i].CONTROL_SEQ;
+                if(list[i].PART_STATUS == 'PRO007') {
+                    processingFlag = true;
+                }
                 if(list[i].OUTSIDE_YN == 'Y' && (list[i].OUTSIDE_STATUS == 'OST001' || list[i].OUTSIDE_STATUS == 'OST003')) {
                     outsideFlag = true;
                 }
@@ -1608,6 +1613,16 @@
                     '<h4>\n' +
                     '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
                     '    <span>상태변경이 불가한 대상이 있습니다.\n선택목록을 확인해주세요</span>\n' +
+                    '</h4>';
+                fnAlert(null, message);
+                $controlManagementGrid.pqGrid('refreshDataAndView');
+                return false;
+            }
+            if(processingFlag) {
+                message =
+                    '<h4>\n' +
+                    '    <img alt="alert" style=\'width: 32px; height: 32px;\' src="/resource/asset/images/work/alert.png">\n' +
+                    '    <span>가공중에는 불가능합니다.</span>\n' +
                     '</h4>';
                 fnAlert(null, message);
                 $controlManagementGrid.pqGrid('refreshDataAndView');
