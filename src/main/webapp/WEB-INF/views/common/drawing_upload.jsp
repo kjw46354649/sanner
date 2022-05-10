@@ -654,9 +654,7 @@
                 let gridData = $commonCadFileAttachGrid.pqGrid('option', 'dataModel.data')
                 let delKdys = [];
                 $.each(gridData, function (key, rowData) {
-                    if (!rowData.CONTROL_NUM) {
                         delKdys.push({'rowIndx': rowData});
-                    }
                 });
                 $commonCadFileAttachGrid.pqGrid('deleteRow', {rowList: delKdys});
                 $commonCadFileAttachGrid.pqGrid('option', {editable: true});
