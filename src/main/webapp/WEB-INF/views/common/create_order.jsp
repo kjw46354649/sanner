@@ -40,8 +40,10 @@
         const materialDetailList = fnGetCommCodeGridSelectBox('1027');
         const materialKindList = fnGetCommCodeGridSelectBox('1029');
         const surfaceTreatList = fnGetCommCodeGridSelectBox('1039');
-        const materialFinishHeatList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN030');
-        const materialFinishGrindList = fnGetCommCodeGridSelectBoxEtc('1058', 'MFN020');
+        const specialTreatList = [
+            {'value':'MATERIAL_FINISH_GRIND_YN', 'text':'연마'},
+            {'value':'MATERIAL_FINISH_HEAT_YN', 'text':'열처리'}
+        ];
         const FAMILY_COMPANY = fnCommCodeDatasourceGridSelectBoxCreate({
             'url': '/json-list',
             'data': {'queryId': 'dataSource.getBusinessCompanyList'}
@@ -691,11 +693,6 @@
                 }
             },
             editModel: {clicksToEdit: 1},
-            /*cellSave: function (evt, ui) {
-                if (ui.oldVal === undefined && ui.newVal === null) {
-                    $orderRegisterGrid.pqGrid('updateRow', {rowIndx: ui.rowIndx, row: {[ui.dataIndx]: ui.oldVal}});
-                }
-            },*/
             change: function (evt, ui) {
                 if (ui.source === 'paste') {
                     let rowListConvert = [];
@@ -712,8 +709,7 @@
                         let materialDetail = null;
                         let materialKind = null;
                         let surfaceTreat = null;
-                        let materialFinishHeat = null;
-                        let materialFinishGrind = null;
+                        let specialTreat = null;
 
                         // 단가확인
                         if (newRowData.PRICE_CONFIRM !== undefined) {
@@ -786,21 +782,15 @@
 
                             if (index >= 0) surfaceTreat = surfaceTreatList[index].value;
                         }
-                        // 열처리
-                        if (newRowData.MATERIAL_FINISH_HEAT !== undefined) {
-                            let index = materialFinishHeatList.findIndex(function (element) {
-                                return element.text === newRowData.MATERIAL_FINISH_HEAT;
+
+                        // 특수처리 (연마, 열처리)
+                        if (newRowData.SPECIAL_TREATMENT !== undefined) {
+
+                            let index = specialTreatList.findIndex(function (element) {
+                                return element.text === newRowData.SPECIAL_TREATMENT;
                             });
 
-                            if (index >= 0) materialFinishHeat = materialFinishHeatList[index].value;
-                        }
-                        // 연마
-                        if (newRowData.MATERIAL_FINISH_GRIND !== undefined) {
-                            let index = materialFinishGrindList.findIndex(function (element) {
-                                return element.text === newRowData.MATERIAL_FINISH_GRIND;
-                            });
-
-                            if (index >= 0) materialFinishGrind = materialFinishGrindList[index].value;
+                            if (index >= 0) specialTreat = specialTreatList[index].value;
                         }
 
                         ui.addList[i].newRow.PRICE_CONFIRM = priceConfirm;
@@ -813,8 +803,7 @@
                         ui.addList[i].newRow.MATERIAL_DETAIL = materialDetail;
                         ui.addList[i].newRow.MATERIAL_KIND = materialKind;
                         ui.addList[i].newRow.SURFACE_TREAT = surfaceTreat;
-                        ui.addList[i].newRow.MATERIAL_FINISH_HEAT = materialFinishHeat;
-                        ui.addList[i].newRow.MATERIAL_FINISH_GRIND = materialFinishGrind;
+                        ui.addList[i].newRow.SPECIAL_TREATMENT = specialTreat;
                     }
 
                     for (let i = 0, updateLength = ui.updateList.length; i < updateLength; i++) {
@@ -831,8 +820,7 @@
                         let materialDetail = null;
                         let materialKind = null;
                         let surfaceTreat = null;
-                        let materialFinishHeat = null;
-                        let materialFinishGrind = null;
+                        let specialTreat = null;
 
                         // 단가확인
                         if (newRowData.PRICE_CONFIRM !== undefined) {
@@ -932,26 +920,16 @@
                                 tempNewRow.SURFACE_TREAT = surfaceTreat;
                             }
                         }
-                        // 열처리
-                        if (newRowData.MATERIAL_FINISH_HEAT !== undefined) {
-                            let index = materialFinishHeatList.findIndex(function (element) {
-                                return element.text === newRowData.MATERIAL_FINISH_HEAT;
+
+                        // 특수처리 (연마, 열처리)
+                        if (newRowData.SPECIAL_TREATMENT !== undefined) {
+                            let index = specialTreatList.findIndex(function (element) {
+                                return element.text === newRowData.SPECIAL_TREATMENT;
                             });
 
                             if (index >= 0) {
-                                materialFinishHeat = materialFinishHeatList[index].value;
-                                tempNewRow.MATERIAL_FINISH_HEAT = materialFinishHeat;
-                            }
-                        }
-                        // 연마
-                        if (newRowData.MATERIAL_FINISH_GRIND !== undefined) {
-                            let index = materialFinishGrindList.findIndex(function (element) {
-                                return element.text === newRowData.MATERIAL_FINISH_GRIND;
-                            });
-
-                            if (index >= 0) {
-                                materialFinishGrind = materialFinishGrindList[index].value;
-                                tempNewRow.MATERIAL_FINISH_GRIND = materialFinishGrind;
+                                specialTreat = specialTreatList[index].value;
+                                tempNewRow.SPECIAL_TREATMENT = specialTreat;
                             }
                         }
 
@@ -987,11 +965,8 @@
         $orderRegisterGrid = $('#' + popupGridId).pqGrid(popupObj);
 
         const validationCheck = function (dataList) {
-            // workTypeCheck(dataList);
             registNumCheck(dataList)
             sameSideCheck(dataList);
-            // dateCheck(dataList)
-            // controlNumCheck(dataList)
 
             for (let i = 0, LENGTH = dataList.length; i < LENGTH; i++) {
                 const rowData = dataList[i];
@@ -1000,7 +975,6 @@
                 for (const key in rowData) {
                     if (rowData.hasOwnProperty(key)) {
                         const value = rowData[key];
-
                         if (key !== 'pq_cellcls' && value !== undefined) {
                             ObjectWithData[key] = value;
                         }
@@ -1010,7 +984,6 @@
                 if (Object.keys(ObjectWithData).length > 2) {
                     requiredCheck(ObjectWithData);
                     badCodeCheck(ObjectWithData);
-                    // inputErrorCheck(ObjectWithData);
                 }
             }
         };
@@ -1095,7 +1068,7 @@
         const requiredCheck = function (rowData) {
             let list;
             // 21.09.07 개선 버전에서는 신규주문에 작업형태 - 단품, 조립, 수정만 생성가능함
-            const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'REGIST_NUM', 'DRAWING_NUM', 'ORDER_DUE_DT', 'SIZE_TXT', 'ORDER_QTY', 'WORK_TYPE', 'MATERIAL_KIND', 'SURFACE_TREAT'];
+            const commonRequiredList = ['COMP_CD', 'ORDER_COMP_CD', 'REGIST_NUM', 'DRAWING_NUM', 'ORDER_DUE_DT', 'SIZE_TXT', 'ORDER_QTY', 'WORK_TYPE', 'MATERIAL_KIND'];
             const modifiedList = ['MATERIAL_SUPPLY_YN']; // 수정
 
             if(rowData.WORK_TYPE == 'WTP030') {
@@ -1107,12 +1080,12 @@
             for (let i in list) {
                 var tempArr = [];
                 for(let i2 in rowData) {
-                    if(i2 != 'ROWNUM' && i2 != 'pq_ri' && rowData[i2] != '' && typeof rowData[i2] != 'undefined') {
+                    if(i2 != 'ROWNUM' && i2 != 'pq_ri' && !fnIsEmpty(rowData[i2])) {
                         tempArr.push(i2);
                     }
                 }
                 if(tempArr.length > 0) {
-                    if (rowData[list[i]] === undefined || rowData[list[i]] == null || rowData[list[i]] === '' || (rowData[list[i]] != null && typeof rowData[list[i]] == 'object' && !Object.keys(rowData[list[i]]).length)) {
+                    if (fnIsEmpty(rowData[list[i]]) || (rowData[list[i]] != null && typeof rowData[list[i]] == 'object' && !Object.keys(rowData[list[i]]).length)) {
                         addErrorList(rowData.pq_ri, list[i]);
                     }
                 }
@@ -1184,30 +1157,6 @@
                 });
 
                 if (index < 0) addErrorList(rowIndex, 'MATERIAL_KIND');
-            }
-            // 표면처리
-            if (rowData.SURFACE_TREAT !== undefined && rowData.SURFACE_TREAT !== null && rowData.SURFACE_TREAT !== '') {
-                let index = surfaceTreatList.findIndex(function (element) {
-                    return element.value === rowData.SURFACE_TREAT;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'SURFACE_TREAT');
-            }
-            // 열처리
-            if (rowData.MATERIAL_FINISH_HEAT !== undefined && rowData.MATERIAL_FINISH_HEAT !== null && rowData.MATERIAL_FINISH_HEAT !== '') {
-                let index = materialFinishHeatList.findIndex(function (element) {
-                    return element.value === rowData.MATERIAL_FINISH_HEAT;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_HEAT');
-            }
-            // 연마
-            if (rowData.MATERIAL_FINISH_GRIND !== undefined && rowData.MATERIAL_FINISH_GRIND !== null && rowData.MATERIAL_FINISH_GRIND !== '') {
-                let index = materialFinishGrindList.findIndex(function (element) {
-                    return element.value === rowData.MATERIAL_FINISH_GRIND;
-                });
-
-                if (index < 0) addErrorList(rowIndex, 'MATERIAL_FINISH_GRIND');
             }
         };
         // 잘못 입력된 데이터 체크
