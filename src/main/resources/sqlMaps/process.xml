@@ -338,7 +338,7 @@
                     , 'PRO009','PRO012','PRO013','PRO014','PRO015'                        <!-- 가공완료 -->
                 )
                 AND IFNULL(B.OUTSIDE_YN,'N') = 'N'
-            INNER JOIN TBL_INSIDE_STOCK C ON B.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ
+            INNER JOIN TBL_INSIDE_STOCK C ON B.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ AND C.DEL_YN = 'N'
         WHERE A.DEL_YN = 'N'
             AND A.OUT_FINISH_DT IS NULL
             AND A.CONTROL_STATUS IN ('ORD001','ORD003')
@@ -413,9 +413,10 @@
                     AND B.WORK_TYPE = 'WTP040'
                     AND B.INSIDE_STOCK_SEQ IS NOT NULL
                     AND EXISTS (
-                        SELECT 1
+                        SELECT X.INSIDE_STOCK_SEQ
                         FROM TBL_INSIDE_STOCK X
                         WHERE X.INSIDE_STOCK_SEQ = B.INSIDE_STOCK_SEQ
+                            AND X.DEL_YN = 'N'
                     )
              WHERE A.DEL_YN = 'N'
                 AND A.CONTROL_STATUS IN ('ORD001','ORD003')

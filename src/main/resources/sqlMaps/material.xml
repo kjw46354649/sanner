@@ -1825,6 +1825,7 @@
                 ORDER BY X.DT DESC
             ) Y ON Y.INSIDE_STOCK_SEQ = A.INSIDE_STOCK_SEQ
         WHERE 1=1
+            AND A.DEL_YN ='N'
         <if test="INSIDE_STOCK_SEQ !='' and INSIDE_STOCK_SEQ != null">
             AND A.INSIDE_STOCK_SEQ IN (${INSIDE_STOCK_SEQ})
         </if>
@@ -1999,6 +2000,7 @@
             , UPDATE_DT = NOW()
             , UPDATE_ID = #{LOGIN_USER_ID}
         WHERE INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
+            AND DEL_YN = 'N'
     </update>
 
     <update id="updateInsideStockPop" parameterType="java.util.HashMap">
@@ -2009,6 +2011,7 @@
             , UPDATE_DT = NOW()
             , UPDATE_ID = #{LOGIN_USER_ID}
         WHERE INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
+            AND DEL_YN = 'N'
     </update>
 
     <insert id="insertRequestStockType3" parameterType="java.util.HashMap">
@@ -2332,6 +2335,7 @@
         SELECT 1
         FROM TBL_INSIDE_STOCK A
         WHERE A.INSIDE_STOCK_NUM = #{TEMP_INSIDE_STOCK_NUM}
+            AND A.DEL_YN = 'N'
     </select>
     <select id="selectInsideStockNumBarcodeIn" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT B.INSIDE_STOCK_NUM, B.INSIDE_STOCK_SEQ, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
@@ -2370,6 +2374,7 @@
         FROM TBL_INSIDE_STOCK A
         WHERE 1 = 1
             AND A.INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
+            AND A.DEL_YN = 'N'
         ORDER BY A.INSIDE_STOCK_NUM
     </select>
 
@@ -2389,31 +2394,8 @@
             UPDATE_ID = #{LOGIN_USER_ID}
         WHERE
             INSIDE_STOCK_SEQ = #{INSIDE_STOCK_SEQ}
+            AND DEL_YN = 'N'
     </update>
-
-    <!--<update id="manageStockCadFiles" parameterType="java.util.HashMap">
-        UPDATE TBL_INSIDE_STOCK
-        SET
-            /*DRAWING_NUM = #{NEW_DRAWING_NUM},*/
-            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ},
-            PDF_GFILE_SEQ = NULL,
-            IMG_GFILE_SEQ = NULL,
-            UPDATE_DT = NOW()
-            &lt;!&ndash; ,UPDATE_ID = #{LOGIN_USER_ID} &ndash;&gt;
-        WHERE
-            INSIDE_STOCK_NUM = #{INSIDE_STOCK_NUM}
-    </update>
-
-    <update id="manageStockCadFiles_mapping" parameterType="java.util.HashMap">
-        UPDATE TBL_INSIDE_STOCK
-        SET
-            PDF_GFILE_SEQ = #{PDF_GFILE_SEQ},
-            IMG_GFILE_SEQ = #{IMG_GFILE_SEQ},
-            UPDATE_DT = NOW()
-            &lt;!&ndash; ,UPDATE_ID = #{LOGIN_USER_ID} &ndash;&gt;
-        WHERE
-            DXF_GFILE_SEQ = #{DXF_GFILE_SEQ}
-    </update>-->
 
     <select id="selectItemOrderRegisterOrderDatetime" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT SF_GET_DATE_F(ORDER_DT,'YYYY','M') AS ORDER_DT
@@ -2623,6 +2605,7 @@
             , (SELECT M.FILE_PATH FROM TBL_FILE M WHERE M.GFILE_SEQ = A.IMG_GFILE_SEQ) AS IMAGE_PATH
         FROM TBL_INSIDE_STOCK A
         WHERE 1=1
+            AND A.DEL_YN = 'N'
             AND A.INSIDE_STOCK_SEQ IN
             <foreach collection="selectStockList" item="bean" index="index"  open="(" close=")" separator=",">
                 #{bean}
@@ -3005,7 +2988,7 @@
                C.INSIDE_STOCK_SEQ
         FROM TBL_STOCK_EQUIP A
             INNER JOIN TBL_STOCK_EQUIP_MAPPING B ON A.STOCK_EQUIP_SEQ = B.STOCK_EQUIP_SEQ
-            INNER JOIN TBL_INSIDE_STOCK C ON B.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ
+            INNER JOIN TBL_INSIDE_STOCK C ON B.INSIDE_STOCK_SEQ = C.INSIDE_STOCK_SEQ AND C.DEL_YN ='N'
         WHERE A.DEL_YN = 'N'
             AND A.STOCK_EQUIP_SEQ = #{STOCK_EQUIP_SEQ}
             AND C.INSIDE_STOCK_SEQ IN (${INSIDE_STOCK_SEQ_STR})
