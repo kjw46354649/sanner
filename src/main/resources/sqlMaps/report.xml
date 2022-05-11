@@ -2757,7 +2757,7 @@
                 , Y.CONTROL_VER
                 , Y.SIZE_TXT
                 ,(
-                    SELECT MAX(M.UNIT_FINAL_AMT)
+                    SELECT MAX(N.UNIT_FINAL_AMT)
                     FROM TBL_CONTROL_PART_ORDER M
                         INNER JOIN TBL_ORDER N ON M.ORDER_SEQ = N.ORDER_SEQ AND N.DEL_YN = 'N'
                     WHERE M.CONTROL_SEQ = Y.CONTROL_SEQ
