@@ -487,8 +487,8 @@
                                 <span><c:if test="${not empty workInfo}">${workInfo.MCT_NOTE}</c:if></span>
                             </span>
                         </div>
-                        <div class="timeWrap ml-5" style="width: 32%;"><!-- 품질기록 -->
-                            <span class="timeTit"><srping:message key='drawing.board.label.25'/></span>
+                        <div class="timeWrap ml-5" style="width: 32%;"><!-- 과거기록 -->
+                            <span class="timeTit"><srping:message key='drawing.board.label.08'/></span>
                             <span class="time" id="drawing_quality_history" style="width: 70%;font-size:1.1rem;cursor: pointer;padding: 5px;position:relative;">
                                 <div class="arrow-sm-right" style="left: 91%;top:-2%;"></div>
                                 <span><c:if test="${not empty workInfo}">${workInfo.INSPECT_DT}</c:if>
