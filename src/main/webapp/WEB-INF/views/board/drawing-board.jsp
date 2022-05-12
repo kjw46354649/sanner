@@ -745,7 +745,7 @@
                     <h3>유사형태가공 품질기록</h3>
                     <div class="tab-content mt-10">
                         <form id="drawing_quality_history_form">
-                            <input type="hidden" id="queryId" name="queryId" value="drawingMapper.selectDrawingWorkHistoryList">
+                            <input type="hidden" id="queryId" name="queryId" value="drawingMapper.selectDrawingQualityHistoryList">
                             <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${workInfo.CONTROL_SEQ}">
                             <input id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" type="hidden" value="${workInfo.CONTROL_DETAIL_SEQ}">
                         </form>
