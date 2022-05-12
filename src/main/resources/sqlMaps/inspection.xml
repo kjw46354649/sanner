@@ -18,7 +18,7 @@
                 , (SELECT M.COMP_NM FROM TBL_COMPANY M WHERE M.COMP_CD = X.OUTSIDE_COMP_CD) AS OUTSIDE_COMP_NM
                 , SF_GET_DATE_F(X.OUTSIDE_IN_DT,'','M') AS OUTSIDE_IN_DT
                 , SF_GET_PART_STATUS_NM(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ, #{LOGIN_LOCALE}) AS PART_STATUS_NM
-                , SF_GET_CONTROL_PART_INFO(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+                , SF_GET_CONTROL_PART_INFO(X.CONTROL_SEQ, X.CONTROL_DETAIL_SEQ) AS CONTROL_PART_NUM
                 , X.CONTROL_NUM
                 , X.PART_NUM
                 , X.DRAWING_NUM
@@ -233,16 +233,10 @@
                   , #{LOGIN_USER_ID}, '1', (SELECT COUNT(*) + 1 FROM TBL_INSPECT M WHERE M.CONTROL_SEQ = #{CONTROL_SEQ} AND M.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ})
                 )
     </insert>
+
     <delete id="deleteInspectionMaster" parameterType="java.util.HashMap">
        DELETE FROM TBL_INSPECT WHERE INSPECT_SEQ = #{INSPECT_SEQ} AND INSPECT_TYPE = '1'
     </delete>
-    <select id="selectInspectionPopInfoGrid01" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        select 1 from dual
-    </select>
-    <select id="selectInspectionPopInfoGrid02" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        select 1 from dual
-    </select>
-
 
     <select id="selectCommItemDetailInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.CONTROL_STATUS
@@ -373,6 +367,7 @@
             </otherwise>
         </choose>
     </select>
+
     <select id="selectCommItemDetailInfo2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         -- MPR040(선반), MPR010(NC), MPR020(밀링), MPR030(연마)
         SELECT CONCAT(TRUNCATE(X.WORK_TIME_TOTAL / 3600, 0), 'h ', TRUNCATE((X.WORK_TIME_TOTAL % 3600) / 60, 0), 'm') AS WORK_TIME_TOTAL
@@ -399,6 +394,7 @@
             ) Q
         ) X
     </select>
+
     <select id="selectCommItemDetailInfoGrid1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.RNUM
             , X.PROCESS_TYPE
@@ -1933,7 +1929,7 @@
         <!-- 2. 검사 이력관리 쿼리 -->
         <!-- 항목은 검사리스트와 동일하게 하고 MCT 실적은 제거 -->
         <!-- 검색조건 확인필요 (불량코드콤보는 note값으로 처리, Show All seq 삭제) -->
-        SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+        SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_NUM
             , SF_GET_DATE_F(B.INNER_WORK_FINISH_DT, '', '') AS WORK_FINISH_DT
             , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
             , SF_GET_DATE_F(B.INNER_DUE_DT,'','') AS INNER_DUE_DT
@@ -2011,7 +2007,7 @@
         ORDER BY A.CONTROL_SEQ , B.CONTROL_DETAIL_SEQ, D.INSPECT_SEQ DESC
     </select>
     <select id="selectInspectionResultHistoryList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_INFO
+        SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, SF_GET_CONTROL_PART_INFO(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) AS CONTROL_PART_NUM
              , SF_GET_COMP_NM(A.ORDER_COMP_CD) AS ORDER_COMP_NM
              , B.DRAWING_NUM
              , B.IMG_GFILE_SEQ

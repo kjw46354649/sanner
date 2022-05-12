@@ -272,7 +272,7 @@
             // {title: '가공완료<br>일시', dataType: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 80, width: 80},
             {title: '등록일시', dataType: 'string', dataIndx: 'INSEPCT_INSERT_DT', minWidth: 80, width: 80},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 90, width: 90},
-            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', minWidth: 140, width: 140},
+            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_PART_NUM', minWidth: 140, width: 140},
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
@@ -406,7 +406,7 @@
             // {title: '가공완료<br>일시', dataType: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 80, width: 80},
             {title: '등록일시', dataType: 'string', dataIndx: 'INSEPCT_RESULT_INSERT_DT', minWidth: 80, width: 80},
             {title: '발주처', dataType: 'string', dataIndx: 'ORDER_COMP_NM', minWidth: 90, width: 90},
-            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', minWidth: 140, width: 140},
+            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_PART_NUM', minWidth: 140, width: 140},
             {title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25,
                 render: function (ui) {
                     if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
