@@ -93,9 +93,9 @@ public class InspectionServiceImpl implements InspectionService {
             String uploadDatePath = formatter.format(new Date()).substring(0, 8) + File.separator + formatter.format(new Date());
             String uploadTimePath = File.separator + formatter.format(new Date());
             String uploadFilePath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.upload.inspect.path") + File.separator + uploadDatePath;
-//
+
             CommonUtility.createFileDirectory(new File(uploadFilePath));
-//
+
             String serverFileName = CommonUtility.getUUIDString();
             String serverFullFileName = "file-" + serverFileName;
 
@@ -104,12 +104,9 @@ public class InspectionServiceImpl implements InspectionService {
 
             byte[] file = Base64.decodeBase64(binaryData);
 
-            FileOutputStream stream = null;
-            try {
-                File newFile = new File(uploadFilePath + File.separator + serverFullFileName + ".png");
-                stream = new FileOutputStream(newFile);
+            File newFile = new File(uploadFilePath + File.separator + serverFullFileName + ".png");
+            try(FileOutputStream stream = new FileOutputStream(newFile)) {
                 stream.write(file);
-                stream.close();
 
                 fileMap.put("FILE_NM", serverFullFileName + ".png");
                 fileMap.put("FILE_PATH", uploadFilePath + File.separator + serverFullFileName + ".png");
@@ -125,10 +122,6 @@ public class InspectionServiceImpl implements InspectionService {
                 fileMap.put("queryId","common.insertFile");
                 innodaleDao.create(fileMap);
 
-            }catch (Exception e) {
-                e.printStackTrace();
-            }finally {
-                if (stream != null) stream.close();
             }
         }
 
