@@ -65,7 +65,6 @@ public class FileUploadController {
             json.addProperty("fileName","");
             printWriter = resp.getWriter();
             printWriter.println(json);
-//            printWriter.println("<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction('1', '"+imgPath+ "', '업로드 완료')</script>");
             printWriter.flush();
         }catch (IOException e) {
             e.printStackTrace();

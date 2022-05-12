@@ -293,11 +293,6 @@ public class EstimateServiceImpl implements EstimateService {
 
 
         try {
-//            HashMap<String, Object> hashMap1 = new HashMap<String, Object>();
-//            hashMap1.put("queryId", "estimate.deleteEstimateDetailProcess");
-//            hashMap1.put("EST_SEQ", seq1);
-//            hashMap1.put("SEQ", seq2);
-//            this.innodaleDao.deleteGrid(hashMap1);
             if (addList != null && addList.size() > 0) {
                 for (HashMap<String, Object> hashMap : addList) {
                     hashMap.put("EST_SEQ", seq1);

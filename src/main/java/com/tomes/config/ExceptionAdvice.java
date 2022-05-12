@@ -35,7 +35,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult exception(HttpServletRequest request, Exception e) {
 
-        insertErrorLog(request,e);
+//        insertErrorLog(request,e);
 
         e.printStackTrace();
         return responseService.getFailResult(Integer.parseInt(getMessage("unKnown.code")), getMessage("unKnown.msg"));
