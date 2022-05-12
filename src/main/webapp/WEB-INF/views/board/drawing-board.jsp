@@ -754,14 +754,14 @@
                                 <div style="width: 38%;margin-right: 1%;">
 <%--                                    <div id="work_history_grid"></div>--%>
                                     <table id="work_history_table" class="modal-table" style="word-wrap:break-word;word-break:break-all;">
-                                        <thead style="float: left;">
+                                        <thead style="float: left;width: 304px;">
                                             <tr>
-                                                <th class="modal-table-header wd_70" style="font-size: 16px;">No</th>
-                                                <th class="modal-table-header wd_160" >검사일시</th>
-                                                <th class="modal-table-header wd_100" rowspan="2">등급</th>
+                                                <th class="modal-table-header" style="font-size: 16px;width: 15%;">검사일시</th>
+                                                <th class="modal-table-header" style="width: 28%;">수행작업자</th>
+                                                <th class="modal-table-header" style="width: 14%;" rowspan="2">등급</th>
                                             </tr>
                                             <tr>
-                                                <th class="modal-table-header" style="width:75%;" colspan="2">작업번호</th>
+                                                <th class="modal-table-header" colspan="2">작업번호</th>
                                             </tr>
                                         </thead>
                                         <tbody id="drawingWorkHistoryHtml" style="cursor: pointer;">
@@ -1688,7 +1688,8 @@
                 'url': '/drawing-json-list',
                 'data': {"queryId":"drawingMapper.selectDrawingQualityHistoryList",
                     "CONTROL_SEQ" : $("#drawing_action_form").find("#CONTROL_SEQ").val(),
-                    "CONTROL_DETAIL_SEQ": $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val()
+                    "CONTROL_DETAIL_SEQ": $("#drawing_action_form").find("#CONTROL_DETAIL_SEQ").val(),
+                    "EQUIP_SEQ": $("#drawing_log_out_form").find("#EQUIP_SEQ").val()
                 }
             };
             fnPostAjax(function (data, callFunctionParam) {
@@ -1698,14 +1699,14 @@
                     workHistoryList = data.list;
                     for (let i = 0; i < data.list.length; i++) {
                         workerListHtml += ' <tr class="tr_row rnum_' + data.list[i].RNUM +' '+((i == 0)?'select':'') +'">';
-                        workerListHtml += '    <td class="modal-table-contents" style="width:33%;">' + data.list[i].RNUM + '</td>';
-                        workerListHtml += '    <td class="modal-table-contents" style="width:69%;">' + data.list[i].INSPECT_DT + '</td>';
-                        workerListHtml += '    <td class="modal-table-contents" style="width:70px;" rowspan="2">' + data.list[i].INSPECT_GRADE_NM + '<br>'
+                        workerListHtml += '    <td class="modal-table-contents" style="width: 36%;">' + data.list[i].INSPECT_DT + '</td>';
+                        workerListHtml += '    <td class="modal-table-contents" style="width: 57%;">' + ((data.list[i].WORKER_NM !== undefined)?data.list[i].WORKER_NM:'') + '</td>';
+                        workerListHtml += '    <td class="modal-table-contents" rowspan="2">' + data.list[i].INSPECT_GRADE_NM + '<br>'
                         workerListHtml += '     (' + data.list[i].INSPECT_GRADE_NOTE + ')';
                         workerListHtml += '     </td>';
                         workerListHtml += ' </tr>';
                         workerListHtml += ' <tr class="tr_row rnum_'+ data.list[i].RNUM + ' ' + ((i == 0)?'select':'') +'">';
-                        workerListHtml += '    <td class="modal-table-contents" style="width:70px;" colspan="2">' + data.list[i].CONTROL_NUM + '</td>';
+                        workerListHtml += '    <td class="modal-table-contents"colspan="2">' + data.list[i].CONTROL_NUM + '</td>';
                         workerListHtml += ' </tr>';
 
                         if(i == 0) {
@@ -2449,7 +2450,6 @@
                         if(data.equipNm.includes(equipNm)) {
                             $.each(dataList, function (idx,Item) {
                                 if(Item.EQUIP_SEQ == equipSeq) {
-                                    console.log(Item);
                                     $("#bodyWrap").removeClass("stop");
                                     $("#bodyWrap").removeClass("work");
                                     $("#bodyWrap").removeClass("nc_off");
