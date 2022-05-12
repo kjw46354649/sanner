@@ -41,19 +41,8 @@ public class FileDownloadView extends AbstractView {
         res.setHeader("Content-Transfer-Encoding", "binary");
 
         OutputStream os = res.getOutputStream();
-        FileInputStream fis = null;
-
-        try{
-            fis = new FileInputStream(file);
+        try(FileInputStream fis = new FileInputStream(file)) {
             FileCopyUtils.copy(fis, os);
-        }finally{
-            if(fis != null){
-                try{
-                    fis.close();
-                }catch(IOException e){
-                    System.out.println("exception : " + e.toString());
-                }
-            }
         }
         os.flush();
 

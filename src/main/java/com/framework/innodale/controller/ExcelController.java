@@ -54,8 +54,7 @@ public class ExcelController {
 
         InputStream is = null;
         Workbook workbook = null;
-        FileOutputStream fos = null;
-        FileInputStream fileInputStream = null;
+        InputStream ips = null;
 
         try {
 
@@ -137,10 +136,9 @@ public class ExcelController {
 
                 XSSFSheet sheet = (XSSFSheet) workbook.getSheetAt(0);
 
-                InputStream ips = new FileInputStream(imgInfo.get("FILE_PATH")+"");
+                ips = new FileInputStream(imgInfo.get("FILE_PATH")+"");
                 byte[] bytes = IOUtils.toByteArray(ips);
                 int pictureIdx = workbook.addPicture(bytes, XSSFWorkbook.PICTURE_TYPE_JPEG);
-                ips.close();
 
                 XSSFCreationHelper helper = (XSSFCreationHelper) workbook.getCreationHelper();
                 XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
@@ -206,8 +204,7 @@ public class ExcelController {
         } finally {
             if (is != null) is.close();
             if (workbook != null) workbook.close();
-            if (fos != null) fos.close();
-            if (fileInputStream != null) fileInputStream.close();
+            if(ips != null) ips.close();
         }
     }
 
@@ -260,7 +257,6 @@ public class ExcelController {
         InputStream is = null;
         Workbook workbook = null;
         FileOutputStream fos = null;
-        FileInputStream fileInputStream = null;
         XLSTransformer transformer = new XLSTransformer();
 
         try {
@@ -313,15 +309,6 @@ public class ExcelController {
             workbook.write(fos);
             fos.close();
 
-            // System.out.println(excelDir + File.separator + templateFileName + date + ".xlsx");
-
-            /*res.setHeader("Content-Disposition", CommonUtility.getDisposition(templateFileName + date + ".xlsx", CommonUtility.getBrowser(req)));
-            res.setHeader("Content-Transfer-Encoding", "binary");
-            res.setContentType("application/x-msexcel");
-            res.setContentType("application/octet-stream; charset=utf-8");
-            workbook.write(res.getOutputStream());*/
-
-
             //First we read the Excel file in binary format into FileInputStream
             FileInputStream input_document = new FileInputStream(new File(excelDir + File.separator + "excel" + File.separator + templateFileName + date + ".xlsx"));
             // Read workbook into HSSFWorkbook
@@ -373,7 +360,6 @@ public class ExcelController {
             if (is != null) is.close();
             if (workbook != null) workbook.close();
             if (fos != null) fos.close();
-            if (fileInputStream != null) fileInputStream.close();
         }
     }
 }
