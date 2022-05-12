@@ -162,6 +162,7 @@
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
+                $(".custom_loading_bar").hide();
                 if ($waitMeMainContainer !== undefined) $(this).stopWaitMe();
                 var errorDatas = jqXHR.responseJSON;
                 if(errorDatas){
