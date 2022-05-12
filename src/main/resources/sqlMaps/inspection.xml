@@ -373,32 +373,7 @@
             </otherwise>
         </choose>
     </select>
-    <select id="selectCommItemDetailInfo2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        -- MPR040(선반), MPR010(NC), MPR020(밀링), MPR030(연마)
-        SELECT CONCAT(TRUNCATE(X.WORK_TIME_TOTAL / 3600, 0), 'h ', TRUNCATE((X.WORK_TIME_TOTAL % 3600) / 60, 0), 'm') AS WORK_TIME_TOTAL
-            , CONCAT(TRUNCATE(X.WORK_TIME_MPR040 / 3600, 0), 'h ', TRUNCATE((X.WORK_TIME_MPR040 % 3600) / 60, 0), 'm') AS WORK_TIME_MPR040
-            , CONCAT(TRUNCATE(X.WORK_TIME_MPR010 / 3600, 0), 'h ', TRUNCATE((X.WORK_TIME_MPR010 % 3600) / 60, 0), 'm') AS WORK_TIME_MPR010
-            , CONCAT(TRUNCATE(X.WORK_TIME_MPR020 / 3600, 0), 'h ', TRUNCATE((X.WORK_TIME_MPR020 % 3600) / 60, 0), 'm') AS WORK_TIME_MPR020
-            , CONCAT(TRUNCATE(X.WORK_TIME_MPR030 / 3600, 0), 'h ', TRUNCATE((X.WORK_TIME_MPR030 % 3600) / 60, 0), 'm')  AS WORK_TIME_MPR030
-        FROM (
-            SELECT IFNULL(SUM(Q.WORK_TIME),0) AS WORK_TIME_TOTAL
-                , IFNULL(SUM(CASE WHEN Q.PROCESS_TYPE = 'MPR040' THEN WORK_TIME END),0) AS WORK_TIME_MPR040
-                , IFNULL(SUM(CASE WHEN Q.PROCESS_TYPE = 'MPR010' THEN WORK_TIME END),0) AS WORK_TIME_MPR010
-                , IFNULL(SUM(CASE WHEN Q.PROCESS_TYPE = 'MPR020' THEN WORK_TIME END),0) AS WORK_TIME_MPR020
-                , IFNULL(SUM(CASE WHEN Q.PROCESS_TYPE = 'MPR030' THEN WORK_TIME END),0) AS WORK_TIME_MPR030
-            FROM (  SELECT C.PROCESS_TYPE
-                        , SUM(TIMESTAMPDIFF(SECOND, B.WORK_START_DT, B.WORK_STOP_DT)) AS WORK_TIME
-                    FROM TBL_MCT_WORK A, TBL_MCT_WORK_TIME B, TBL_EQUIP C
-                    WHERE A.MCT_WORK_SEQ = B.MCT_WORK_SEQ
-                        AND A.EQUIP_SEQ = C.EQUIP_SEQ
-                        AND A.DEL_YN = 'N'
-                        AND A.CONTROL_SEQ = #{CONTROL_SEQ}
-                        AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-                        AND C.PROCESS_TYPE IN ('MPR010','MPR020','MPR030','MPR040')
-                    GROUP BY C.PROCESS_TYPE
-            ) Q
-        ) X
-    </select>
+
     <select id="selectCommItemDetailInfoGrid1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT X.RNUM
             , X.PROCESS_TYPE
@@ -1748,14 +1723,9 @@
                                             A.PROCESS_TYPE
                                             , B.CONTROL_SEQ
                                             , B.CONTROL_DETAIL_SEQ
-                                            , SUM(TIMESTAMPDIFF(SECOND, C.WORK_START_DT, C.WORK_STOP_DT)) AS WORK_TIME
-                                        FROM
-                                            TBL_EQUIP A
-                                            , TBL_MCT_WORK B
-                                            , TBL_MCT_WORK_TIME C
-                                        WHERE
-                                            A.EQUIP_SEQ = B.EQUIP_SEQ
-                                            AND B.MCT_WORK_SEQ = C.MCT_WORK_SEQ
+                                            , SUM(SF_GET_DRAWING_WORK_TIME('WORK', B.MCT_WORK_SEQ)) AS WORK_TIME
+                                        FROM TBL_EQUIP A, TBL_MCT_WORK B
+                                        WHERE A.EQUIP_SEQ = B.EQUIP_SEQ
                                             AND B.DEL_YN = 'N'
                                         GROUP BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.PROCESS_TYPE
                                     ) D

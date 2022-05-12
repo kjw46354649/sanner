@@ -21,12 +21,18 @@
             , SF_GET_DATE_F(A.PURCHASE_DT,'YY','') AS PURCHASE_DT
             , (SELECT USER_NM FROM TBL_USER WHERE USER_ID = A.MAIN_USER_ID) AS MAIN_USER_NM
             , (SELECT USER_NM FROM TBL_USER WHERE USER_ID = A.SUB_USER_ID) AS SUB_USER_NM
-            , (SELECT CONCAT(FLOOR(SUM(TIMESTAMPDIFF(MINUTE, Y.WORK_START_DT, Y.WORK_STOP_DT) / 60)),'H ', MOD(SUM(TIMESTAMPDIFF(MINUTE, Y.WORK_START_DT, Y.WORK_STOP_DT)), 60), 'M')
-                FROM TBL_MCT_WORK X, TBL_MCT_WORK_TIME Y
-                WHERE X.MCT_WORK_SEQ = Y.MCT_WORK_SEQ
-                    AND X.DEL_YN = 'N'
-                    AND Y.WORK_STOP_DT IS NOT NULL
-                    AND X.EQUIP_SEQ = A.EQUIP_SEQ) AS WORKING_TIME
+            , (SELECT
+                CONCAT(TRUNCATE(SUM(CASE WHEN X.WORK_STATUS = 'DBS030' THEN X.WORK_ACTIVE_TIME
+                                         ELSE SF_GET_DRAWING_WORK_TIME('WORK', X.MCT_WORK_SEQ)
+                                    END)/3600,0), 'H ',
+                       TRUNCATE((SUM(CASE WHEN X.WORK_STATUS = 'DBS030' THEN X.WORK_ACTIVE_TIME
+                                          ELSE SF_GET_DRAWING_WORK_TIME('WORK', X.MCT_WORK_SEQ)
+                                     END)%3600)/60,0), 'M')
+                FROM TBL_MCT_WORK X
+                WHERE X.DEL_YN = 'N'
+                    AND X.EQUIP_SEQ = A.EQUIP_SEQ
+                GROUP BY X.EQUIP_SEQ
+              ) AS WORKING_TIME
             , (SELECT SF_GET_DATE_F(MAX(REPAIR_END_DT),'YY','') FROM TBL_EQUIP_REPAIR WHERE EQUIP_SEQ = A.EQUIP_SEQ) AS LAST_REPAIR_DT
             , (SELECT SF_GET_DATE_F(MAX(M.WORK_FINISH_DT),'YY','') FROM TBL_MCT_WORK M WHERE M.EQUIP_SEQ = A.EQUIP_SEQ) AS LAST_WORK_FINISH_DT
             , ( SELECT Y.CONTROL_NUM
@@ -620,23 +626,25 @@
             , SF_GET_CODE_NM('1027', A.MATERIAL_DETAIL, #{LOGIN_LOCALE}) AS MATERIAL_DETAIL_NM <!-- 소재 종류 -->
             , SF_GET_CODE_NM('1029', A.MATERIAL_KIND, #{LOGIN_LOCALE}) AS MATERIAL_KIND_NM <!-- 소재 형태 -->
             , SF_GET_MATERIAL_SIZE_TXT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS MATERAIL_ORDER_SIZE	<!-- 소재 주문 규격 -->
-            , ( SELECT CONCAT(TRUNCATE(TRUNCATE(SUM(TIMESTAMPDIFF(SECOND, N.WORK_START_DT, N.WORK_STOP_DT)) / 60, 0) / SF_GET_CONTROL_PART_QTY(M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ), 1), '''')
+            , ( SELECT CONCAT(TRUNCATE(TRUNCATE(SUM(CASE WHEN M.WORK_STATUS = 'DBS030' THEN M.WORK_ACTIVE_TIME
+                                                         ELSE SF_GET_DRAWING_WORK_TIME('WORK', M.MCT_WORK_SEQ)
+                                                    END) / 60, 0) / SF_GET_CONTROL_PART_QTY(M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ), 1), '''')
                 FROM TBL_MCT_WORK M
-                    , TBL_MCT_WORK_TIME N
-                WHERE N.MCT_WORK_SEQ = M.MCT_WORK_SEQ
+                WHERE M.DEL_YN = 'N'
                     AND M.CONTROL_SEQ = A.CONTROL_SEQ
                     AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
                     AND M.EQUIP_SEQ IN (SELECT EQUIP_SEQ FROM TBL_EQUIP WHERE PROCESS_TYPE = 'MPR010')
                 GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
-              ) AS NC_WORK_TIME <!-- CNC -->
-            , ( SELECT CONCAT(TRUNCATE(TRUNCATE(SUM(TIMESTAMPDIFF(SECOND, N.WORK_START_DT, N.WORK_STOP_DT)) / 60, 0) / SF_GET_CONTROL_PART_QTY(M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ), 1), '''')
+            ) AS NC_WORK_TIME <!-- CNC -->
+            , ( SELECT CONCAT(TRUNCATE(TRUNCATE(SUM(CASE WHEN M.WORK_STATUS = 'DBS030' THEN M.WORK_ACTIVE_TIME
+                                                         ELSE SF_GET_DRAWING_WORK_TIME('WORK', M.MCT_WORK_SEQ)
+                                                    END)/ 60, 0) / SF_GET_CONTROL_PART_QTY(M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ), 1), '''')
                 FROM TBL_MCT_WORK M
-                    , TBL_MCT_WORK_TIME N
-                WHERE N.MCT_WORK_SEQ = M.MCT_WORK_SEQ
+                WHERE M.DEL_YN = 'N'
                     AND M.CONTROL_SEQ = A.CONTROL_SEQ
                     AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
                 GROUP BY M.CONTROL_SEQ, M.CONTROL_DETAIL_SEQ
-              ) AS TOTAL_WORK_TIME <!-- 전공정 -->
+            ) AS TOTAL_WORK_TIME <!-- 전공정 -->
             , H.SEQ AS CAM_STEP <!-- CAM 스탭 -->
             , SF_GET_CODE_NM('1080', H.WORK_DIRECTION, #{LOGIN_LOCALE}) AS WORK_DIRECTION <!-- CAM 가공위치 -->
             , H.WORK_DESC <!-- CAM 작업 내용 -->

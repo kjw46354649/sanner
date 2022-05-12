@@ -637,18 +637,6 @@
 					<div class="listdiv">
 						<ul class="conWrapPop60" style="width: 100%;">
 							<h4>가공이력</h4>
-							<span class="slt_wrap namePlusSlt rightName">
-								<label for="g_item_detail_pop_grid_01_info_1">총시간</label>
-								<input type="text" id="g_item_detail_pop_grid_01_info_1" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="총시간">
-								<label for="g_item_detail_pop_grid_01_info_2">선반</label>
-								<input type="text" id="g_item_detail_pop_grid_01_info_2" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="선반">
-								<label for="g_item_detail_pop_grid_01_info_3">NC</label>
-								<input type="text" id="g_item_detail_pop_grid_01_info_3" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="NC">
-								<label for="g_item_detail_pop_grid_01_info_4">밀링</label>
-								<input type="text" id="g_item_detail_pop_grid_01_info_4" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="밀링">
-								<label for="g_item_detail_pop_grid_01_info_5">연마</label>
-								<input type="text" id="g_item_detail_pop_grid_01_info_5" class="detailPop_info_input" style="text-align: right; padding: 0 5px;" title="연마">
-							</span>
 							<div id="g_item_detail_pop_grid_01" class="jqx-refresh"></div>
 						</ul>
 					</div>
@@ -999,7 +987,16 @@
 		{title: '상태', dataType: 'string', dataIndx: 'WORK_STATUS', width: 60},
 		{title: '시작', dataType: 'string', dataIndx: 'WORK_START_DT', minWidth: 75, width: 100},
 		{title: '종료', dataType: 'string', dataIndx: 'WORK_FINISH_DT', minWidth: 75, width: 100},
-		{title: '소요시간', dataType: 'string', dataIndx: 'WORKING_TIME', width: 95},
+		{title: '가동', dataType: 'string', dataIndx: 'WORKING_TIME', width: 95,
+			render: function (ui) {
+				return {style: {'color': 'blue'}};
+			}
+		},
+		{title: '비가동', dataType: 'string', dataIndx: 'STOP_TIME', width: 95,
+			render: function (ui) {
+				return {style: {'color': 'red'}};
+			}
+		},
 		{title: '작업자', dataType: 'string', dataIndx: 'WORK_USER', width: 95},
 		{title: '수량', dataType: 'string', dataIndx: 'FINISH_QTY', width: 95},
 		{title: '불량', dataType: 'string', dataIndx: 'ERROR_QTY', width: 95}
@@ -1343,31 +1340,6 @@
 				$("#ITEM_DRAWING_VIEW").attr('onClick', 'fnAlert(null, "도면파일이 없습니다.");');
 			}
 		}, parameters, '');
-
-		//가공이력 정보
-		$itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfo2');
-		let parameters2 = {
-			'url': '/tv/json-info',
-			'data': fnFormToJsonArrayData('g_item_detail_pop_form')
-		};
-		fnPostAjaxAsync(function (data, callFunctionParam) {
-			let dataInfo = data.info;
-
-			if (dataInfo == null) {
-				$("#g_item_detail_pop_grid_01_info_1").val('');
-				$("#g_item_detail_pop_grid_01_info_2").val('');
-				$("#g_item_detail_pop_grid_01_info_3").val('');
-				$("#g_item_detail_pop_grid_01_info_4").val('');
-				$("#g_item_detail_pop_grid_01_info_5").val('');
-			} else {
-				//fnJsonDataToForm("stock_manage_pop_form", dataInfo);
-				$("#g_item_detail_pop_grid_01_info_1").val(dataInfo.WORK_TIME_TOTAL);
-				$("#g_item_detail_pop_grid_01_info_2").val(dataInfo.WORK_TIME_MPR040);
-				$("#g_item_detail_pop_grid_01_info_3").val(dataInfo.WORK_TIME_MPR010);
-				$("#g_item_detail_pop_grid_01_info_4").val(dataInfo.WORK_TIME_MPR020);
-				$("#g_item_detail_pop_grid_01_info_5").val(dataInfo.WORK_TIME_MPR030);
-			}
-		}, parameters2, '');
 
 		if ($("#g_item_detail_pop_grid_01").hasClass('pq-grid')) {
 			$itemDetailPopForm.find("#queryId").val('inspection.selectCommItemDetailInfoGrid1');
