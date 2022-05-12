@@ -317,7 +317,7 @@
                     });
                 }
             },
-            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_PART_INFO', minWidth: 135, width: 140, editable: false},
+            {title: '작업지시번호', dataType: 'string', dataIndx: 'CONTROL_PART_NUM', minWidth: 135, width: 140, editable: false},
             {title: '', dataType: 'string', dataIndx: 'IMG_GFILE_SEQ', minWidth: 25, width: 25, editable: false,
                 render: function (ui) {
                     if (ui.cellData) return '<span id="imageView" class="fileSearchIcon" style="cursor: pointer"></span>'
@@ -697,7 +697,7 @@
             $("#inspection_result_value_form").find("#IMG_GFILE_SEQ").val(data.IMG_GFILE_SEQ);
             $("#inspection_result_value_form").find("#ORDER_QTY").val(data.ORDER_QTY);
 
-            $("#inspection_result_value_popup").find("#CONTROL_PART_INFO").text(data.CONTROL_PART_INFO);
+            $("#inspection_result_value_popup").find("#CONTROL_PART_INFO").text(data.CONTROL_PART_NUM);
             $("#inspection_result_value_popup").find("#WORK_TYPE_NM").text(data.WORK_TYPE_NM);
             $("#inspection_result_value_popup").find("#ORDER_QTY_DIV").text(data.ORDER_QTY);
 
