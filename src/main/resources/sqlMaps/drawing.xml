@@ -889,16 +889,23 @@
             B.IMG_GFILE_SEQ,
             SF_GET_DATE_F(C.INSERT_DT,'YY','') AS INSPECT_DT,
             C.INSPECT_GRADE,
-            (SELECT CASE WHEN N.PROCESS_TYPE = (SELECT Q.PROCESS_TYPE FROM TBL_EQUIP Q WHERE Q.EQUIP_SEQ = #{EQUIP_SEQ} AND Q.DEL_YN= 'N') THEN M.WORK_USER_ID
-                         ELSE SPACE(0)
-                    END
+            (SELECT SF_GET_USER_NM(M.WORK_USER_ID)
              FROM TBL_MCT_WORK M
                 INNER JOIN TBL_EQUIP N ON M.EQUIP_SEQ = N.EQUIP_SEQ AND N.DEL_YN = 'N'
              WHERE M.DEL_YN = 'N'
-            	AND M.CONTROL_SEQ = B.CONTROL_SEQ
-            	AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
-            	AND M.WORK_STATUS = 'DBS030'
-            	AND M.WORK_ACTIVE_TIME >= (SELECT MAX(Q.WORK_ACTIVE_TIME) FROM TBL_MCT_WORK Q WHERE Q.CONTROL_SEQ = M.CONTROL_SEQ AND Q.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ AND Q.DEL_YN = 'N' AND Q.WORK_STATUS = 'DBS030')
+               AND M.CONTROL_SEQ = B.CONTROL_SEQ
+               AND M.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+               AND M.WORK_STATUS = 'DBS030'
+               AND CASE WHEN N.PROCESS_TYPE = D.PROCESS_TYPE
+                            THEN M.WORK_ACTIVE_TIME >= (SELECT MAX(Q.WORK_ACTIVE_TIME)
+                                                        FROM TBL_MCT_WORK Q
+                                                            INNER JOIN TBL_EQUIP W ON Q.EQUIP_SEQ = W.EQUIP_SEQ AND W.DEL_YN = 'N' AND W.PROCESS_TYPE = N.PROCESS_TYPE
+                                                        WHERE Q.CONTROL_SEQ = M.CONTROL_SEQ
+                                                            AND Q.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
+                                                            AND Q.DEL_YN = 'N'
+                                                            AND Q.WORK_STATUS = 'DBS030')
+                        ELSE FALSE
+                   END
             ) AS WORKER_NM,
             SF_GET_CODE_NM('1040', C.INSPECT_GRADE, #{LOGIN_LOCALE}) AS INSPECT_GRADE_NM,
             C.ERROR_PROCESS,
@@ -925,7 +932,10 @@
                       AND Q.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
                       AND Q.INSPECT_NUM = 1
                 )
+           , TBL_EQUIP D
         WHERE A.DEL_YN = 'N'
+          AND D.DEL_YN = 'N'
+          AND D.EQUIP_SEQ = #{EQUIP_SEQ}
           AND (A.ORDER_COMP_CD , B.MATERIAL_TYPE, B.SIZE_TXT) IN (
             SELECT X.ORDER_COMP_CD, Y.MATERIAL_TYPE, Y.SIZE_TXT
             FROM TBL_CONTROL X
