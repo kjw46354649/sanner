@@ -2304,7 +2304,7 @@
 						type: 'POST', url: "/tv/mct/mctAreInfo", dataType: 'json', data: {},
 						success: function (data, textStatus, jqXHR) {
 							if (textStatus !== 'success' || data == null) {
-								fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+								fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 								return;
 							}
 							if(data.mct_info_list.length > 0) {
@@ -2330,7 +2330,7 @@
 							}
 						},
 						error: function (jqXHR, textStatus, errorThrown) {
-							fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+							fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						}
 					});
 
@@ -2361,7 +2361,7 @@
 				type: 'POST', url: "/tv/mct/gridDataList", dataType: 'json', data: {'data': JSON.stringify(type)},
 				success: function (data, textStatus, jqXHR) {
 					if (textStatus !== 'success' || data == null) {
-						fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
 					createGrid1();	// 불량/반품
@@ -2373,7 +2373,7 @@
 					$('#NOT_RUN').html(rateInfo.NOT_RUN + '대');
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-					fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 				}
 			});
 		};
@@ -2386,7 +2386,7 @@
 				data: {"EQUIP_SEQ": equipSeq},
 				success: function (data, textStatus, jqXHR) {
 					if (textStatus !== 'success' || data == null) {
-						fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+						fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 						return;
 					}
 					let $target = $("#EQUIP_" + equipSeq);
@@ -2466,7 +2466,7 @@
 					}
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
-					fnAlert(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+					fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
 				}
 			});
 		};
