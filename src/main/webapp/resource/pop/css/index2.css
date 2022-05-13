@@ -221,14 +221,14 @@ a { color: black; text-decoration: none;}
 							}
 							.progressTime {
 								position: absolute;
-								width: 150px;
+								width: 185px;
 								height: 25px;
 								bottom: 5px;
 								right: 5px;
 								display: inline-block;
 								background: rgb(207, 237, 255);
 								border: 1px solid black;
-								padding: 0 10px;
+								padding: 0 5px;
 								font-size: 0.9rem;
 							}
 								.progressTime span {

@@ -2143,7 +2143,7 @@
 								html += '					</tr>';
 								html += '					<tr>';
 								html += '						<td>';
-								html += '							<span class="plan_cnt">'+Item2.TOTAL_CNT +'품 '+Item2.TOTAL_PART_QTY +' EA</span>';
+								html += '							<span class="plan_cnt">'+Item2.TOTAL_PLAN_CNT +'품 '+Item2.TOTAL_PLAN_QTY +' EA</span>';
 								html += '							<p class="plan_time">('+Item2.TOTAL_PLAN_WORKING_TIME_FORMAT +')</p>';
 								html += '						</td>';
 								html += '					</tr>';
@@ -2268,7 +2268,7 @@
 				$target.find(".mctInfoBtm").find(".expect_cycle").text(Item.LATEST_CYCLE_TIME);
 				$target.find(".mctInfoBtm").find(".expect_total").text(Item.EXPECT_TIME);
 
-				$target.find(".mctInfoBtm").find(".plan_cnt").text(Item.TOTAL_CNT + '품 ' + Item.TOTAL_PART_QTY + ' EA');
+				$target.find(".mctInfoBtm").find(".plan_cnt").text(Item.TOTAL_PLAN_CNT + '품 ' + Item.TOTAL_PLAN_QTY + ' EA');
 				$target.find(".mctInfoBtm").find(".plan_time").text('(' + Item.TOTAL_PLAN_WORKING_TIME_FORMAT + ')');
 
 				$target.find(".mctMapImg").find(".nc_off").remove();

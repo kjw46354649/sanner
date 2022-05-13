@@ -973,8 +973,8 @@
 								if(!fnIsEmpty(m_list[i].ACTIVE_TOTAL)) {
 									mHtml += '<div class="progressTime">';
 									mHtml += '<span>'+ m_list[i].ACTIVE_TOTAL + '</span>';
-									if(!fnIsEmpty(m_list[i].PLAN_WORKING_TIME)){
-										mHtml += (' / ' + m_list[i].PLAN_WORKING_TIME)
+									if(!fnIsEmpty(m_list[i].LEFT_TIME_FORMAT)){
+										mHtml += (' / ' + m_list[i].LEFT_TIME_FORMAT)
 									}
 									mHtml += '</div>';
 								}
@@ -1089,15 +1089,15 @@
 						var timeHtml = '';
 						if($target.find(".progressTime").length > 0) {
 							timeHtml = '<span>' + m_list[i].ACTIVE_TOTAL + '</span>';
-							if(!fnIsEmpty(m_list[i].PLAN_WORKING_TIME)) {
-								timeHtml += ' / ' + m_list[i].PLAN_WORKING_TIME;
+							if(!fnIsEmpty(m_list[i].LEFT_TIME_FORMAT)) {
+								timeHtml += ' / ' + m_list[i].LEFT_TIME_FORMAT;
 							}
 							$target.find(".progressTime").html(timeHtml);
 						}else {
 							timeHtml = '<div class="progressTime">';
 							timeHtml += '	<span>' + m_list[i].ACTIVE_TOTAL + '</span>';
-							if(!fnIsEmpty(m_list[i].PLAN_WORKING_TIME)) {
-								timeHtml += ' / ' + m_list[i].PLAN_WORKING_TIME;
+							if(!fnIsEmpty(m_list[i].LEFT_TIME_FORMAT)) {
+								timeHtml += ' / ' + m_list[i].LEFT_TIME_FORMAT;
 							}
 							timeHtml += '</div>';
 							$target.find(".staffImg").after(timeHtml);
