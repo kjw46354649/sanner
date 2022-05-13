@@ -34,6 +34,9 @@ public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult exception(HttpServletRequest request, Exception e) {
+
+//        insertErrorLog(request,e);
+
         e.printStackTrace();
         return responseService.getFailResult(Integer.parseInt(getMessage("unKnown.code")), getMessage("unKnown.msg"));
     }
@@ -72,6 +75,25 @@ public class ExceptionAdvice {
     // code정보, 추가 argument로 현재 locale에 맞는 메시지를 조회합니다.
     private String getMessage(String code, Object[] args) {
         return messageSource.getMessage(code, args, LocaleContextHolder.getLocale());
+    }
+    private void insertErrorLog(HttpServletRequest request, Exception e) {
+
+        try {
+            HashMap<String,Object> requestMap = CommonUtility.getParameterMap(request);
+
+            HashMap<String,Object> hashMap = new HashMap<>();
+            hashMap.put("queryId","common.insertErrorLog");
+            hashMap.put("REQUEST_URL",request.getRequestURI());
+            hashMap.put("ERROR_NAME",e.getClass().getName());
+            hashMap.put("ERROR_MSG",e.getMessage());
+            hashMap.put("REQUEST_PARAM",requestMap.toString());
+            hashMap.put("LOGIN_USER_ID",requestMap.get("LOGIN_USER_ID"));
+
+            sqlSessionTemplate.insert((String)hashMap.get("queryId"), hashMap);
+
+        }catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
 }
