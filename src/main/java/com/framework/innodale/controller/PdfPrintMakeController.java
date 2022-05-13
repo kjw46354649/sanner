@@ -86,9 +86,10 @@ public class PdfPrintMakeController {
             PDPage addPage = new PDPage(PDRectangle.A4);
             //Adding the blank page to the document
             PDImageXObject pdImageXObject = PDImageXObject.createFromFile((String) fileInfo.get("FILE_PATH") + ".print.png", document);
-            PDPageContentStream contentStream = new PDPageContentStream(document, addPage);
-            contentStream.drawImage(pdImageXObject, 0, 0, PDRectangle.A4.getWidth(), PDRectangle.A4.getHeight());
-            contentStream.close();
+            try(PDPageContentStream contentStream = new PDPageContentStream(document, addPage);) {
+                contentStream.drawImage(pdImageXObject, 0, 0, PDRectangle.A4.getWidth(), PDRectangle.A4.getHeight());
+            }
+
             document.addPage(addPage);
         }
 
@@ -125,14 +126,12 @@ public class PdfPrintMakeController {
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
         BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
-        Font verySmallFont = new Font(bf, verySmall, Font.NORMAL);
         Font smallNormalFont = new Font(bf, small, Font.NORMAL);
         Font smallBoldFont = new Font(bf, small, Font.BOLD);
         Font mediumNormalFont = new Font(bf, medium, Font.NORMAL);
         Font mediumNormalFont9f = new Font(bf, saleMedium, Font.NORMAL);
         Font mediumBoldFont = new Font(bf, medium, Font.BOLD);
         Font largeNormalFont = new Font(bf, large, Font.NORMAL);
-        Font largeBoldFont = new Font(bf, large, Font.BOLD);
 
         PdfWriter.getInstance(document, out);
 
@@ -179,20 +178,22 @@ public class PdfPrintMakeController {
                     image.setRGB(x, y, bitMatrix.get(x, y) ? BLACK : WHITE);
                 }
             }
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(image, "png", baos);
-            baos.flush();
-            byte[] imageInByte = baos.toByteArray();
-            baos.close();
-            Image barcodeImage = Image.getInstance(imageInByte);
+
 
             String verText = (String) controlInfo.get("DRAWING_VER");
             table.addCell(createCell(verText, 1, 1, smallNormalFont));
 
-            PdfPCell imgCell = createImageCell(barcodeImage,1,1,20f,smallNormalFont);
-            imgCell.setPaddingLeft(1);
-            imgCell.setPaddingRight(1);
-            table.addCell(imgCell);
+            try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                ImageIO.write(image, "png", baos);
+                baos.flush();
+                byte[] imageInByte = baos.toByteArray();
+                Image barcodeImage = Image.getInstance(imageInByte);
+
+                PdfPCell imgCell = createImageCell(barcodeImage,1,1,20f,smallNormalFont);
+                imgCell.setPaddingLeft(1);
+                imgCell.setPaddingRight(1);
+                table.addCell(imgCell);
+            }
 
             table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 2, 1, mediumNormalFont)); // 소재종류
@@ -264,7 +265,6 @@ public class PdfPrintMakeController {
             table.addCell(createCell((String) controlInfo.get("SIZE_TXT"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("WORK_TYPE_NM"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("MATERIAL_NM"), 1, 1, mediumNormalFont));
-//            table.addCell(createCell((String) controlInfo.get("MATERIAL_FINISH_HEAT"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("SPECIAL_TREATMENT"), 1, 1, mediumNormalFont));
             table.addCell(createCell((String) controlInfo.get("INNER_DUE_DT"), 2, 1, mediumBoldFont));
 
@@ -647,12 +647,7 @@ public class PdfPrintMakeController {
                     image.setRGB(x, y, bitMatrix.get(x, y) ? BLACK : WHITE);
                 }
             }
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(image, "png", baos);
-            baos.flush();
-            byte[] imageInByte = baos.toByteArray();
-            baos.close();
-            Image barcodeImage = Image.getInstance(imageInByte);
+
             // 1st line
             table.addCell(createCell("영업도면", 1, 3, largeBoldFont));
             table.addCell(createCell((String) controlInfo.get("ORDER_COMP_NM"), 1, 1, mediumNormalFont));
@@ -672,7 +667,15 @@ public class PdfPrintMakeController {
                     table.addCell(createEACell(content, 1, 2, mediumNormalFont));
                 }
             }
-            table.addCell(createImageCell(barcodeImage, 2, 1, 20.0f, mediumNormalFont));
+            try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                ImageIO.write(image, "png", baos);
+                baos.flush();
+                byte[] imageInByte = baos.toByteArray();
+                baos.close();
+                Image barcodeImage = Image.getInstance(imageInByte);
+
+                table.addCell(createImageCell(barcodeImage, 2, 1, 20.0f, mediumNormalFont));
+            }
             // 2nd line
             table.addCell(createCell((String) controlInfo.get("PROJECT_NM"), 2, 1, mediumNormalFont));
             table.addCell(createCell("도번", 1, 1, smallBoldFont));
@@ -683,18 +686,14 @@ public class PdfPrintMakeController {
                 table.addCell(createCellPartUnit((String) controlInfo.get("SIDE_QTY"), 2, 1, mediumNormalFont));
             }
             table.addCell(createCell(controlInfo.get("REGIST_NUM") != null ? (String) controlInfo.get("REGIST_NUM") : "", 2, 1, mediumNormalFont));
-//            table.addCell(createCell(controlInfo.get("INNER_DUE_DT") != null ? "가 " + controlInfo.get("INNER_DUE_DT") : "", 1, 1, mediumNormalFont));
-//            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? "발 " + controlInfo.get("ORDER_DUE_DT") : "", 1, 1, mediumNormalFont));
             // 3rd line
             table.addCell(createCell((String) controlInfo.get("MODULE_NM"), 2, 1, mediumNormalFont));
             table.addCell(createCell("품명", 1, 1, smallBoldFont));
             table.addCell(createCell((String) controlInfo.get("ITEM_NM"), 1, 1, mediumNormalFont));
             table.addCell(createCell("표면", 1, 1, smallBoldFont));
             table.addCell(createCell((String) controlInfo.get("SURFACE_TREAT_NM"), 1, 1, mediumNormalFont));
-//            table.addCell(createCell(controlInfo.get("REGIST_NUM") != null && controlInfo.get("TOTAL_SHEET") != null ? controlInfo.get("REGIST_NUM") + " / " + controlInfo.get("TOTAL_SHEET"): controlInfo.get("REGIST_NUM") != null ? (String) controlInfo.get("REGIST_NUM") : "" + controlInfo.get("TOTAL_SHEET") != null ? String.valueOf(controlInfo.get("TOTAL_SHEET")) : "", 4, 1, smallNormalFont));
             Font tempNormalFont = new Font(bf, 8.5f, Font.NORMAL);
             table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? ""+controlInfo.get("ORDER_DUE_DT"): "", 2, 1, tempNormalFont));
-//            table.addCell(createCell(controlInfo.get("ORDER_DUE_DT") != null ? controlInfo.get("INNER_DUE_DT") + "-" + controlInfo.get("ORDER_DUE_DT"): "", 3, 1, tempNormalFont));
             table.addCell(createCell(controlInfo.get("CONTROL_NUM") != null ? controlInfo.get("CONTROL_NUM") + "" : "", 2, 1, tempNormalFont));
             document.add(table);
             table.flushContent();
@@ -733,8 +732,6 @@ public class PdfPrintMakeController {
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
         BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
-        Font smallNormalFont = new Font(bf, saleSmall, Font.NORMAL);
-        Font smallBoldFont = new Font(bf, small, Font.BOLD);
         Font mediumNormalFont = new Font(bf, 9.5f, Font.NORMAL);
         Font mediumBoldFont = new Font(bf, 9.5f, Font.BOLD);
         Font largeBoldFont = new Font(bf, 15.0f, Font.BOLD);
@@ -768,12 +765,7 @@ public class PdfPrintMakeController {
                     image.setRGB(x, y, bitMatrix.get(x, y) ? BLACK : WHITE);
                 }
             }
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(image, "png", baos);
-            baos.flush();
-            byte[] imageInByte = baos.toByteArray();
-            baos.close();
-            Image barcodeImage = Image.getInstance(imageInByte);
+
             // 1st line
             table.addCell(createCell("재고도면", 1, 2, largeBoldFont));
             table.addCell(createCell("재고번호", 1, 1, mediumBoldFont));
@@ -782,7 +774,13 @@ public class PdfPrintMakeController {
             table.addCell(createCell((String) stockInfo.get("MATERIAL_DETAIL_NM"), 1, 1, mediumNormalFont));
             table.addCell(createCell("등록일시", 1, 1, mediumBoldFont));
             table.addCell(createCell((String) stockInfo.get("INSERT_DT"), 1, 1, mediumNormalFont));
-            table.addCell(createImageCell(barcodeImage, 1, 2, 20.0f, mediumNormalFont));
+            try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                ImageIO.write(image, "png", baos);
+                baos.flush();
+                byte[] imageInByte = baos.toByteArray();
+                Image barcodeImage = Image.getInstance(imageInByte);
+                table.addCell(createImageCell(barcodeImage, 1, 2, 20.0f, mediumNormalFont));
+            }
             // 2nd line
             table.addCell(createCell("품명", 1, 1, mediumBoldFont));
             table.addCell(createCell((String) stockInfo.get("ITEM_NM"), 1, 1, mediumNormalFont));
@@ -828,8 +826,6 @@ public class PdfPrintMakeController {
         String fontPath = environment.getRequiredProperty(CommonUtility.getServerType() + ".base.font.path") + "/malgun/malgun.ttf";
         BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
-        Font smallNormalFont = new Font(bf, saleSmall, Font.NORMAL);
-        Font smallBoldFont = new Font(bf, small, Font.BOLD);
         Font mediumNormalFont = new Font(bf, 8.0f, Font.NORMAL);
         Font mediumNormalFont2 = new Font(bf, 7.4f, Font.NORMAL);
         Font mediumBoldFont = new Font(bf, 8.0f, Font.BOLD);
@@ -838,9 +834,6 @@ public class PdfPrintMakeController {
         PdfWriter.getInstance(document, out);
 
         String[] selectOrderList = ((String) jsonMap.get("selectOrderList")).split("\\|");
-//        hashMap.put("selectOrderLists", selectOrderList);
-//        hashMap.put("queryId", "orderMapper.selectEstimateCadInfo");
-//        List<Map<String, Object>> orderInfoList = innodaleService.getList(hashMap);
 
         int iCount = 0;
 
@@ -852,7 +845,6 @@ public class PdfPrintMakeController {
             hashMap.put("CONTROL_SEQ",selectControlInfo[0]);
             hashMap.put("CONTROL_DETAIL_SEQ",selectControlInfo[1]);
             hashMap.put("queryId", "orderMapper.selectEstimateCadInfo_control");
-//            hashMap.put("queryId", "orderMapper.selectEstimateCadInfo");
             Map<String,Object> orderInfo = innodaleService.getInfo(hashMap);
 
             PdfPTable table = new PdfPTable(25);
@@ -935,83 +927,6 @@ public class PdfPrintMakeController {
             iCount++;
         }
 
-//        for (Map<String, Object> orderInfo : orderInfoList) {
-//            if (iCount > 0) document.newPage();
-//
-//            PdfPTable table = new PdfPTable(25);
-//            table.init();
-//            table.setWidthPercentage(100);
-//            table.setWidths(new float[]{3.5f, 2.5f, 3.5f, 4.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 2.5f, 2.5f, 4.5f, 4.5f, 2.5f, 2.5f});
-//
-//            // 1st line
-//            table.addCell(createRotateCell("견적도면", 1, 3, largeBoldFont, 90));
-//            table.addCell(createRotateCell("접번", 1, 3, mediumNormalFont, 90));
-//            table.addCell(createRotateCell("소재", 1, 3, mediumNormalFont, 90));
-//            table.addCell(createRotateCell("소재비", 1, 3, mediumNormalFont, 90));
-//
-//            table.addCell(createRotateCell("2", 1, 1, mediumNormalFont, 90, 18f)); // 가공-밀링
-//            table.addCell(createRotateCell("1", 1, 1, mediumNormalFont, 90, 18f)); // 가공-TAP
-//            table.addCell(createRotateCell("1", 1, 1, mediumNormalFont, 90, 18f)); // 치수공차-일반
-//            table.addCell(createRotateCell("3", 1, 1, mediumNormalFont, 90, 18f)); // 치수공차-정밀
-//            table.addCell(createRotateCell("3", 1, 1, mediumNormalFont, 90, 18f)); // 외곽가공-15T이하
-//            table.addCell(createRotateCell("2", 1, 1, mediumNormalFont, 90, 18f)); // 외곽가공-15T초과
-//            table.addCell(createRotateCell("3", 1, 1, mediumNormalFont, 90, 18f)); // 일반포켓-15T이하
-//            table.addCell(createRotateCell("2", 1, 1, mediumNormalFont, 90, 18f)); // 일반포켓-15T초과
-//            table.addCell(createRotateCell("3", 1, 1, mediumNormalFont, 90, 18f)); // 관통포켓-15T이하
-//            table.addCell(createRotateCell("2", 1, 1, mediumNormalFont, 90, 18f)); // 관통포켓-15T초과
-//            table.addCell(createRotateCell("2", 1, 1, mediumNormalFont, 90, 18f)); // 드릴가공-일반 Hole
-//            table.addCell(createRotateCell("124", 1, 1, mediumNormalFont, 90, 18f)); // 드릴가공-TAP
-//            table.addCell(createRotateCell("1", 1, 1, mediumNormalFont, 90, 18f)); // 드릴가공-공차 Hole
-//            table.addCell(createRotateCell("1", 1, 1, mediumNormalFont, 90, 18f)); // 드릴가공-특수 Hole
-//            table.addCell(createRotateCell("", 1, 1, mediumNormalFont, 90, 18f)); // 드릴가공-C/B
-//
-//            table.addCell(createRotateCell("가공비 135,000", 1, 3, mediumNormalFont, 90));
-//            table.addCell(createRotateColorCell("특수가공", 1, 3, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-//            table.addCell(createRotateCell("연마-평면연마", 1, 3, mediumNormalFont, 90));
-//            table.addCell(createRotateCell("각가공-T맞춤", 1, 3, mediumNormalFont, 90));
-//            table.addCell(createRotateCell("가공합계 315,000", 1, 3, mediumBoldFont, 90));
-//            table.addCell(createRotateCell("전체 895,000", 1, 3, mediumBoldFont, 90));
-//
-//            table.addCell(createRotateCell("밀링", 1, 1, mediumNormalFont, 90, 28f));
-//            table.addCell(createRotateCell("TAP", 1, 1, mediumNormalFont, 90, 28f));
-//            table.addCell(createRotateCell("일반", 1, 1, mediumNormalFont, 90, 28f));
-//            table.addCell(createRotateCell("정밀", 1, 1, mediumNormalFont, 90, 28f));
-//            table.addCell(createRotateCell("15T 이하", 1, 1, mediumNormalFont, 90, 28f));
-//            table.addCell(createRotateCell("15T 초과", 1, 1, mediumNormalFont, 90, 28f));
-//            table.addCell(createRotateCell("15T 이하", 1, 1, mediumNormalFont, 90, 28f));
-//            table.addCell(createRotateCell("15T 초과", 1, 1, mediumNormalFont, 90, 28f));
-//            table.addCell(createRotateCell("15T 이하", 1, 1, mediumNormalFont, 90, 28f));
-//            table.addCell(createRotateCell("15T 초과", 1, 1, mediumNormalFont, 90, 28f));
-//            table.addCell(createRotateCell("일반 Hole", 1, 1, mediumNormalFont, 90, 28f));
-//            table.addCell(createRotateCell("TAP", 1, 1, mediumNormalFont, 90, 28f));
-//            table.addCell(createRotateCell("공차 Hole", 1, 1, mediumNormalFont, 90, 28f));
-//            table.addCell(createRotateCell("특수 Hole", 1, 1, mediumNormalFont, 90, 28f));
-//            table.addCell(createRotateCell("C/B", 1, 1, mediumNormalFont, 90, 28f));
-//
-//            table.addCell(createRotateColorCell("가공면수", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-//            table.addCell(createRotateColorCell("치수공차", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-//            table.addCell(createRotateColorCell("외곽가공", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-//            table.addCell(createRotateColorCell("일반포켓", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-//            table.addCell(createRotateColorCell("관통포켓", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-//            table.addCell(createRotateColorCell("드릴가공", 5, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-//
-//            document.add(table);
-//            table.flushContent();
-//
-//            if (orderInfo.get("IMAGE_PATH") != null && !orderInfo.get("IMAGE_PATH").equals("")) {
-//                try {
-//                    Image pngImage = Image.getInstance((String) orderInfo.get("IMAGE_PATH") + ".print.png");
-//                    pngImage.setAbsolutePosition(15, 10);
-//                    pngImage.scaleAbsolute(PageSize.A4.getWidth() - 30, PageSize.A4.getHeight() - 90);
-//                    pngImage.setRotationDegrees(180);
-//                    document.add(pngImage);
-//                } catch (Exception e){
-//                    log.error(e.getMessage(), e.getCause());
-//                    e.printStackTrace();
-//                }
-//            }
-//            iCount++;
-//        }
         document.close();
     }
 
