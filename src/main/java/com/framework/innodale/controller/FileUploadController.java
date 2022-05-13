@@ -44,7 +44,6 @@ public class FileUploadController {
 
     @RequestMapping(value = "/uploadFileEditor")
     public ModelAndView showImage(Model model, MultipartHttpServletRequest request, HttpServletResponse resp) throws Exception {
-        PrintWriter printWriter = null;
         JsonObject json = new JsonObject();
         model.addAttribute("result", "false");
         model.addAttribute("message", "처리 할수 없는 파일 형식 입니다.");
@@ -59,17 +58,13 @@ public class FileUploadController {
         }
 
         ModelAndView mv = new ModelAndView("jsonView");
-        try {
+
+        try(PrintWriter printWriter = resp.getWriter()) {
             json.addProperty("url",imgPath);
             json.addProperty("uploaded",1);
             json.addProperty("fileName","");
-            printWriter = resp.getWriter();
             printWriter.println(json);
             printWriter.flush();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if(printWriter != null) { printWriter.close(); }
         }
 
         mv.addObject("uploaded", true);
