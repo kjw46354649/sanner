@@ -388,15 +388,6 @@
         SELECT NEXTVAL(SEQ_DUMMY) AS SEQ_DUMMY FROM DUAL
     </select>
 
-    <insert id="insertErrorLog" parameterType="java.util.HashMap">
-        INSERT INTO jmes.TBL_ERROR_LOG (
-            LOG_SEQ, REQUEST_URL, ERROR_NAME, ERROR_MSG, REQUEST_PARAM, INSERT_ID
-        )
-        VALUES (
-            NEXTVAL(SEQ_LOG), #{REQUEST_URL}, #{ERROR_NAME}, #{ERROR_MSG}, #{REQUEST_PARAM}, #{LOGIN_USER_ID}
-        )
-    </insert>
-
     <select id="selectHealthCheck" parameterType="java.util.HashMap" resultType="string">
         SELECT NOW() FROM DUAL
     </select>
