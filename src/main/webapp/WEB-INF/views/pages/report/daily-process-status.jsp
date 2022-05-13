@@ -224,11 +224,14 @@
             {title: '가공<br>납기', minWidth: 40, maxWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT'},
             {title: '조정<br>수량', minWidth: 40, dataIndx: 'ADDITIONAL_QTY'},
             {title: '발주<br>수량', minWidth: 40, maxWidth: 40, dataIndx: 'PART_QTY'},
+            {title: '재고<br>충당', minWidth: 40, maxWidth: 40, dataIndx: 'STOCK_REQUEST_QTY'},
             {title: '가공완료<br>일시', minWidth: 75, maxWidth: 75, dataIndx: 'INNER_WORK_FINISH_DT'},
             {title: '소요<br>시간(분)', align: 'right', minWidth: 55, dataIndx: 'WORK_TIME'},
+            {title: '합계금액', minWidth: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
                 title: '예상단가', minWidth: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'FORECAST_UNIT_AMT', editable: true,
-                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'}
+                styleHead: {'font-weight': 'bold', 'background': '#a9d3f5', 'color': '#2777ef'},
+                style: {'color': 'blue'}
             },
             {
                 title: '단가정보', align: 'center', colModel: [
@@ -276,18 +279,16 @@
                     }
                 ]
             },
-            {title: '합계금액', minWidth: 65, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'TOTAL_AMT'},
             {
                 // title: 'P/H', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PRICE_PER_HOUR',
-                title: '계산가공원가', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CP_TOTAL', minWidth: 75,
-                style: {'color': 'blue'}
+                title: '가공원가<br>계산 합', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CP_TOTAL', minWidth: 75
             },
+            {title: '가공비<br>(임율 x 시간)', minWidth: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CP_VAL', hidden: true},
             {
                 title: '계산원가 단가', align: 'center', colModel: [
                     {title: '소재비', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', hidden: true},
-                    {title: '연마비', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', hidden: true},
-                    {title: '열처리', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', hidden: true},
-                    {title: '표면처리', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AUTO_AMT', hidden: true}
+                    {title: '표면처리', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SURFACE_AUTO_AMT', hidden: true},
+                    {title: '기타추가', minWidth: 50, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'UNIT_ETC_AMT', hidden: true}
                 ]
             },
             {
@@ -353,7 +354,7 @@
         const changeViewColumn = function (checked) {
             const $dailyProcessStatusRightGridInstance = $dailyProcessStatusRightGrid.pqGrid('getInstance').grid;
             const Cols = $dailyProcessStatusRightGridInstance.Columns();
-            const array = ['PREV_UNIT_FINAL_AMT','UNIT_FINAL_EST_AMT','UNIT_FINAL_AMT','UNIT_MATERIAL_AUTO_AMT','UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT','UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT','UNIT_SURFACE_AUTO_AMT'];
+            const array = ['PREV_UNIT_FINAL_AMT','UNIT_FINAL_EST_AMT','UNIT_FINAL_AMT','UNIT_MATERIAL_AUTO_AMT','UNIT_SURFACE_AUTO_AMT','UNIT_ETC_AMT','CP_VAL'];
             const parameter = checked ? 'diShow' : 'diHide';
             Cols.hide({[parameter]: array});
         };
