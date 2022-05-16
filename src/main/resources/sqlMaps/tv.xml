@@ -152,7 +152,8 @@
                    )
               END AS STOP_TIME
             , CASE WHEN Y.WORK_STATUS IS NOT NULL
-                    THEN CASE WHEN Y.ACTIVE_TYPE = 'PGM_STOP' THEN CONCAT(
+                    THEN CASE WHEN Y.LEFT_TIME <![CDATA[ < ]]> 0 THEN '0h 0m'
+                              WHEN Y.ACTIVE_TYPE = 'PGM_STOP' THEN CONCAT(
                                                                 TRUNCATE(IFNULL(Y.LEFT_TIME,0)/3600,0) , 'h ',
                                                                 TRUNCATE((IFNULL(Y.LEFT_TIME,0)%3600)/60,0), 'm'
                                                               )
@@ -329,9 +330,13 @@
                  ELSE '-'
             END AS CURR_CYCLE_TIME,
             CASE WHEN Y.WORK_STATUS IS NULL THEN '-'
-                 ELSE CONCAT(
+                 WHEN Y.ACTIVE_TYPE = 'PGM_ACTIVE' THEN CONCAT(
                     TRUNCATE(((IFNULL(Y.CURRENT_STATUS_TIME,0) + IFNULL(Y.WORK_ACTIVE_TIME,0))/3600),0), 'h ',
                     TRUNCATE((((IFNULL(Y.CURRENT_STATUS_TIME,0) + IFNULL(Y.WORK_ACTIVE_TIME,0))%3600)/60),0),'m'
+                 )
+                 ELSE CONCAT(
+                    TRUNCATE((IFNULL(Y.WORK_ACTIVE_TIME,0)/3600),0), 'h ',
+                    TRUNCATE(((IFNULL(Y.WORK_ACTIVE_TIME,0)%3600)/60),0),'m'
                  )
             END AS ACTIVE_TOTAL,
             CASE WHEN Y.WORK_PLAN_TYPE = 1 AND Y.PLAN_WORKING_TIME IS NOT NULL THEN CONCAT(TRUNCATE(IFNULL(Y.PLAN_WORKING_TIME,0)/60,0),'h ',TRUNCATE((IFNULL(Y.PLAN_WORKING_TIME,0)%60),0),'m')
@@ -1070,8 +1075,12 @@
                     IFNULL(A.GOAL_QTY,SPACE(0)) AS GOAL_QTY,
                     IFNULL(A.FINISH_QTY,SPACE(0)) AS FINISH_QTY,
                     IFNULL(CAST((SELECT SUM(M.ERROR_QTY) FROM TBL_MCT_WORK_INSPECT M WHERE M.MCT_WORK_SEQ = A.MCT_WORK_SEQ AND M.DEL_YN = 'N') AS INT),SPACE(0)) AS ERROR_QTY,
-                    A.WORK_ACTIVE_TIME,
-                    A.WORK_STOP_TIME,
+                    CASE WHEN D.ACTIVE_TYPE IS NOT NULL AND D.ACTIVE_TYPE = 'PGM_ACTIVE' THEN A.WORK_ACTIVE_TIME + TIMESTAMPDIFF(SECOND, D.EVENT_TIME, NOW())
+                         ELSE A.WORK_ACTIVE_TIME
+                    END AS WORK_ACTIVE_TIME,
+                    CASE WHEN D.ACTIVE_TYPE IS NOT NULL AND D.ACTIVE_TYPE = 'PGM_STOP' THEN A.WORK_STOP_TIME + TIMESTAMPDIFF(SECOND, D.EVENT_TIME, NOW())
+                         ELSE A.WORK_STOP_TIME
+                    END AS WORK_STOP_TIME,
                     IFNULL(A.COMPLETE_CYCLE_COUNT,SPACE(1)) AS COMPLETE_CYCLE_COUNT,
                     A.LATEST_CYCLE_TIME,
                     A.PLAN_CYCLE_COUNT,
@@ -1085,7 +1094,9 @@
                     IFNULL(SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0) AS ORIGINAL_SIDE_QTY, -- 대칭_원칭 -->
                     IFNULL(SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0) AS OTHER_SIDE_QTY, -- 대칭_대칭 -->
                     ((A.LATEST_CYCLE_TIME * CEIL(A.GOAL_QTY / A.UNIT_QTY)) - A.WORK_ACTIVE_TIME) AS LEFT_TIME,
-                    TIMESTAMPDIFF(SECOND, D.EVENT_TIME, NOW()) AS CURRENT_STATUS_TIME,
+                    CASE WHEN D.EVENT_TIME IS NULL THEN TIMESTAMPDIFF(SECOND, A.WORK_START_DT, NOW())
+                         ELSE TIMESTAMPDIFF(SECOND, D.EVENT_TIME, NOW())
+                    END AS CURRENT_STATUS_TIME,
                     IFNULL(B.SAME_SIDE_YN, 'N') AS SAME_SIDE_YN
                 FROM TBL_MCT_WORK A
                     INNER JOIN TBL_CONTROL B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND B.DEL_YN = 'N'
