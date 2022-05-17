@@ -159,7 +159,7 @@
                                                               )
                               WHEN Y.ACTIVE_TYPE = 'PGM_ACTIVE' THEN CASE WHEN (IFNULL(Y.LEFT_TIME,0) - IFNULL(Y.CURRENT_STATUS_TIME,0)) <![CDATA[ < ]]> 0 THEN '0h 0m'
                                                                           ELSE CONCAT(
-                                                                            TRUNCATE(IFNULL(Y.LEFT_TIME,0) - IFNULL(Y.CURRENT_STATUS_TIME,0)/3600,0) , 'h ',
+                                                                            TRUNCATE((IFNULL(Y.LEFT_TIME,0) - IFNULL(Y.CURRENT_STATUS_TIME,0))/3600,0) , 'h ',
                                                                             TRUNCATE(((IFNULL(Y.LEFT_TIME,0) - IFNULL(Y.CURRENT_STATUS_TIME,0))%3600)/60,0), 'm'
                                                                           )
                                                                      END
@@ -323,10 +323,12 @@
             Y.EVENT_TIME,
             IFNULL(Y.CURRENT_STATUS_TIME,0) AS CURRENT_STATUS_TIME,
             CASE WHEN X.IF_USE_YN = 'Y' AND Y.CURRENT_STATUS_TIME IS NOT NULL
-                    THEN CONCAT(
-                        TRUNCATE(IFNULL(Y.CURRENT_STATUS_TIME,0)/3600,0) , 'h ',
-                        TRUNCATE((IFNULL(Y.CURRENT_STATUS_TIME,0)%3600)/60,0), 'm'
-                    )
+                    THEN CASE WHEN Y.ACTIVE_TYPE = 'PGM_ACTIVE' THEN CONCAT(
+                                TRUNCATE(IFNULL(Y.CURRENT_STATUS_TIME,0)/3600,0) , 'h ',
+                                TRUNCATE((IFNULL(Y.CURRENT_STATUS_TIME,0)%3600)/60,0), 'm'
+                              )
+                              ELSE '-'
+                         END
                  ELSE '-'
             END AS CURR_CYCLE_TIME,
             CASE WHEN Y.WORK_STATUS IS NULL THEN '-'
