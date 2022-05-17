@@ -2840,9 +2840,9 @@
             }
             if(factorCdArr.length > 0) {
                 if ($processingRequirementsType === 'ESTIMATE') {
-                    parameter2.queryId = 'estimate.insertEstiateEtcProcess,estimate.updateEstimateEtcAutomaticQuote';
+                    parameter2.queryId = 'estimate.insertEstiateEtcProcess,estimate.updateEstimateEtcAutomaticQuote,estimate.updateEstimateDetailEtcAutomaticQuote';
                 }else if ($processingRequirementsType === 'CONTROL') {
-                    parameter2.queryId = 'orderMapper.insertControlPartEtcProcess,orderMapper.updateControlPartEtcAutomaticQuote';
+                    parameter2.queryId = 'orderMapper.insertControlPartEtcProcess,orderMapper.updateControlPartEtcProcessAutomaticQuote,orderMapper.updateControlPartEtcAutomaticQuote';
                 }
                 $.each(factorCdArr,function (idx,Item) {
                     insertFactorStr += "'" + Item + "',";
