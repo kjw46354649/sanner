@@ -176,7 +176,6 @@
 
         let data = {
             'queryId': "orderMapper.selectRevisionInfo",
-            'ORDER_SEQ': $("#DRAWING_REVISION_FORM").find("#ORDER_SEQ").val(),
             'CONTROL_SEQ': $("#DRAWING_REVISION_FORM").find("#CONTROL_SEQ").val(),
             'CONTROL_DETAIL_SEQ': $("#DRAWING_REVISION_FORM").find("#CONTROL_DETAIL_SEQ").val()
         };

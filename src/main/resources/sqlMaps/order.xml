@@ -5090,9 +5090,11 @@
              FROM TBL_DRAWING_UPLOAD_HIST A
                       INNER JOIN TBL_FILE_GROUP B ON (A.PDF_GFILE_SEQ = B.GFILE_SEQ OR A.DXF_GFILE_SEQ = B.GFILE_SEQ)
                       INNER JOIN TBL_FILE C ON B.GFILE_SEQ = C.GFILE_SEQ
-             WHERE A.ORDER_SEQ = #{ORDER_SEQ}
-               AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+             WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
                AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+                <if test="ORDER_SEQ != null and ORDER_SEQ != ''">
+                    AND A.ORDER_SEQ = #{ORDER_SEQ}
+                </if>
              GROUP BY A.DRAWING_VER
              UNION ALL
              SELECT #{ORDER_SEQ}, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
@@ -5109,9 +5111,18 @@
         ORDER BY X.DRAWING_VER
     </select>
     <select id="selectRevisionInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT A.DRAWING_NUM, A.REGIST_NUM, SF_GET_CONTROL_PART_INFO(#{CONTROL_SEQ}, #{CONTROL_DETAIL_SEQ}) AS CONTROL_NUM
-        FROM TBL_ORDER A
-        WHERE A.ORDER_SEQ = #{ORDER_SEQ}
+        SELECT A.DRAWING_NUM, SF_GET_CONTROL_PART_INFO(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS CONTROL_NUM,
+           (SELECT MIN(Y.REGIST_NUM)
+            FROM TBL_CONTROL_PART_ORDER X
+                     INNER JOIN TBL_ORDER Y ON X.ORDER_SEQ = Y.ORDER_SEQ AND Y.DEL_YN = 'N'
+            WHERE X.CONTROL_SEQ = A.CONTROL_SEQ
+                AND CASE WHEN A.WORK_TYPE = 'WTP050' THEN X.CONTROL_DETAIL_SEQ = (SELECT Q.CONTROL_DETAIL_SEQ FROM TBL_CONTROL_PART Q WHERE Q.CONTROL_SEQ = X.CONTROL_SEQ AND Q.WORK_TYPE = 'WTP020')
+                       ELSE X.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
+                    END
+           ) AS REGIST_NUM
+        FROM TBL_CONTROL_PART A
+        WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
+            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </select>
 
     <select id="selectEstimateCadInfo_control" parameterType="java.util.HashMap" resultType="java.util.HashMap">
