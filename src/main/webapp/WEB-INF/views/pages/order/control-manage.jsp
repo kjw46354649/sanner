@@ -908,7 +908,7 @@
                             return {cls: cls};
                         }
                     },
-                    {title: '가공비', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_PROCESS_AUTO_AMT',
+                    {title: '가공비', minWidth:80, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_PROCESS_TOTAL_AUTO_AMT',
                         render: function (ui) {
                             let cls = 'bg-lightgray';
 
