@@ -73,7 +73,7 @@
                     , A.WORK_FINISH_DT
                     , A.FINISH_QTY
                     , C.IMG_GFILE_SEQ
-                    , A.ERROR_QTY
+                    , (SELECT SUM(M.ERROR_QTY) FROM TBL_MCT_WORK_INSPECT M WHERE M.MCT_WORK_SEQ = A.MCT_WORK_SEQ AND M.DEL_YN = 'N') AS ERROR_QTY
                     , (SELECT MAX(M.INSPECT_SEQ) FROM TBL_INSPECT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '1') AS LAST_INSPECT_SEQ
                     , (SELECT MAX(M.INSPECT_SEQ) FROM TBL_INSPECT M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.INSPECT_TYPE = '2' AND M.INSPECT_GRADE IN ('GRD050','GRD060')) AS LAST_RETURN_SEQ
                 FROM TBL_MCT_WORK A
@@ -86,8 +86,7 @@
                     AND A.EQUIP_SEQ = D.EQUIP_SEQ
                     AND A.DEL_YN = 'N'
                     AND A.WORK_FINISH_DT >= SF_GET_SHIFT_DAY_TIME('START', DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'))
-                    AND A.WORK_FINISH_DT <![CDATA[ <  SF_GET_SHIFT_DAY_TIME('END', DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'))
---                     AND A.WORK_FINISH_DT <![CDATA[ < ]]> SF_GET_SHIFT_DAY_TIME('END', '20210129')
+                    AND A.WORK_FINISH_DT <![CDATA[ < ]]> SF_GET_SHIFT_DAY_TIME('END', DATE_FORMAT(#{BATCH_DT}, '%Y%m%d'))
                     <if test="USER_ID != null and USER_ID != ''">
                         AND A.WORK_USER_ID = #{USER_ID}
                     </if>

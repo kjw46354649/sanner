@@ -850,7 +850,6 @@
              , X.WORK_FINISH_DT
              , X.WORK_USER
              , X.FINISH_QTY
-             , X.ERROR_QTY
         FROM (
                  SELECT ROW_NUMBER() OVER(ORDER BY A.MCT_WORK_SEQ) AS RNUM
                 , B.PROCESS_TYPE, SF_GET_CODE_NM('1010', B.PROCESS_TYPE, #{LOGIN_LOCALE}) AS PROCESS_TYPE_NM
@@ -860,7 +859,6 @@
                       , SF_GET_DATE_F(A.WORK_FINISH_DT,'YY','M') AS WORK_FINISH_DT
                       , (SELECT M.USER_NM FROM TBL_USER M WHERE M.USER_ID = A.WORK_USER_ID) AS WORK_USER
                       , A.FINISH_QTY
-                      , A.ERROR_QTY
                  FROM TBL_MCT_WORK A, TBL_EQUIP B
                  WHERE A.EQUIP_SEQ = B.EQUIP_SEQ
                    AND A.DEL_YN = 'N'
