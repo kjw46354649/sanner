@@ -223,7 +223,7 @@
             },
             {title: '가공<br>납기', minWidth: 40, maxWidth: 40, dataType: 'date', format: 'mm/dd', dataIndx: 'INNER_DUE_DT'},
             {title: '조정<br>수량', minWidth: 40, dataIndx: 'ADDITIONAL_QTY'},
-            {title: '발주<br>수량', minWidth: 40, maxWidth: 40, dataIndx: 'PART_QTY'},
+            {title: '주문<br>수량', minWidth: 40, maxWidth: 40, dataIndx: 'PART_QTY'},
             {title: '재고<br>충당', minWidth: 40, maxWidth: 40, dataIndx: 'STOCK_REQUEST_QTY'},
             {title: '가공완료<br>일시', minWidth: 75, maxWidth: 75, dataIndx: 'INNER_WORK_FINISH_DT'},
             {title: '소요<br>시간(분)', align: 'right', minWidth: 55, dataIndx: 'WORK_TIME'},
@@ -281,7 +281,7 @@
             },
             {
                 // title: 'P/H', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PRICE_PER_HOUR',
-                title: '가공원가<br>계산 합', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CP_TOTAL', minWidth: 75
+                title: '가공원가<br>계산 합', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PROCESS_COST_TOTAL', minWidth: 75
             },
             {title: '가공비<br>(임율 x 시간)', minWidth: 75, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'CP_VAL', hidden: true},
             {
