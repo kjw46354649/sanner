@@ -472,7 +472,7 @@
 							<tr>
 								<td class="th_color_green">Program No.</td>
 								<td class="text-blue" colspan="3">
-									<div class="PROGRAM ml-15 val_text" style="overflow-x: hidden;height: 45px;width: 990px;">
+									<div class="PROGRAM ml-15 val_text" style="overflow-x: hidden;height: 75%;width: 98%;">
 									</div>
 								</td>
 							</tr>
