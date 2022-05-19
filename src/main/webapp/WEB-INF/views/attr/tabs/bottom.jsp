@@ -875,7 +875,7 @@
                             <tr>
                                 <td class="th_color_green">Message</td>
                                 <td colspan="3">
-                                    <div class="MESSAGE ml-10 val_text" style="overflow-x: hidden;height: 30px;width: 440px;">
+                                    <div class="MESSAGE ml-10 val_text" style="overflow-x: hidden;height: 75%;width: 98%;">
                                     </div>
                                 </td>
                             </tr>

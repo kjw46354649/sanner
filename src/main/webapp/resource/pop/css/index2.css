@@ -748,12 +748,12 @@ a { color: black; text-decoration: none;}
 	width: 93%;
 }
 
-#machinePopupWrap #popHeadMid2 th, #machinePopupWrap #popHeadMid2 td {
+#popHeadMid2 th, #popHeadMid2 td {
 	border: 1px solid #9d9d9d;
 	padding: 5px 0;
 	height: 90px;
 }
-#machinePopupWrap #popHeadMid4 th, #machinePopupWrap #popHeadMid4 td {
+#popHeadMid4 th, #popHeadMid4 td {
 	border: 1px solid #9d9d9d;
 	padding: 5px 0;
 	height: 55px;
