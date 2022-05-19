@@ -391,7 +391,7 @@
 							</tr>
 						</tbody>
 					</table>
-					<h4 class="mt-60">
+					<h4 style="margin-top: 4%;">
 						<i class="xi-tags mr-10"></i>작업수행 현황
 					</h4>
 					<table id="popHeadMid2" class="popHeadMid popTable mt-10">

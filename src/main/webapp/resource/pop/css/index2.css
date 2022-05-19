@@ -705,7 +705,7 @@ a { color: black; text-decoration: none;}
 						}
 
 
-#machinePopupWrap .planImgDiv {
+.planImgDiv {
 	height: 21%;
 	overflow-y: hidden;
 	overflow-x: scroll;

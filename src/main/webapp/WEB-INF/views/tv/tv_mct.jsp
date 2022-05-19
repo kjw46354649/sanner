@@ -265,7 +265,7 @@
 								</tr>
 							</tbody>
 						</table>
-						<h4 style="text-align: left;margin-top: 40px;">
+						<h4 style="text-align: left;margin-top: 6%;">
 							<i class="xi-tags mr-5"></i>작업수행 현황
 						</h4>
 						<table id="popHeadMid2" class="popHeadMid popTable mt-10">
