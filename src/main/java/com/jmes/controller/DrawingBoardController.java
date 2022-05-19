@@ -117,7 +117,6 @@ public class DrawingBoardController {
             String chkQty = (String) controlPartInfo.get("CHE_QTY");// 주문 보류 된 경우
 
             String controlInfo = (String) controlPartInfo.get("CONTROL_INFO"); // 일자
-            // System.out.println(controlInfo);
 
             if("X".equals(chkDelYn)){
                 model.addAttribute("returnCode", "RET99");
@@ -223,7 +222,6 @@ public class DrawingBoardController {
 
             model.addAttribute("EQUIP_SEQ", machineInfo.get("EQUIP_SEQ"));
             model.addAttribute("FACTORY_AREA", machineInfo.get("FACTORY_AREA"));
-            System.out.println("machineInfo >>>>>>>>>>>>>> 2 >> " + machineInfo.toString());
 
             hashMap.put("FACTORY_AREA", machineInfo.get("FACTORY_AREA"));
         }
