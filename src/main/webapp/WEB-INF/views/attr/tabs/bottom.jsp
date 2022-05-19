@@ -831,7 +831,7 @@
                                 <td class="th_color" colspan="2">가공수행시간</td>
                                 <td colspan="2">
                                     <span class="green d-inline-block radius" style="width: 12%;">가동</span>
-                                    <span class="CURRENT_STATUS_TIME_FORMAT d-inline-block val_text" style="width: 34%;"></span>
+                                    <span class="WORK_ACTIVE_TIME_FORMAT d-inline-block val_text" style="width: 34%;"></span>
                                     <span class="yellow d-inline-block radius" style="width: 12%;">비가동</span>
                                     <span class="WORK_STOP_TIME_FORMAT d-inline-block val_text" style="width: 34%;"></span>
                                 </td>
@@ -862,7 +862,7 @@
                             </tr>
                             <tr>
                                 <td class="th_color_green">Running Time</td>
-                                <td class="text-blue WORK_ACTIVE_TIME_FORMAT val_text"></td>
+                                <td class="text-blue CURRENT_STATUS_TIME_FORMAT val_text"></td>
                                 <td class="th_color_green">Execution</td>
                                 <td class="EXECUTION val_text"></td>
                             </tr>
