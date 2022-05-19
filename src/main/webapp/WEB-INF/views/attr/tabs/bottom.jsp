@@ -2942,8 +2942,14 @@
                 delFactorStr = delFactorStr.substring(0,delFactorStr.length - 1);
                 if ($processingRequirementsType === 'ESTIMATE') {
                     parameter2.queryId = 'estimate.deleteEstimateEtcProcess,' + parameter2.queryId;
+                    if(factorCdArr.length <= 0) {
+                        parameter2.queryId += 'estimate.updateEstimateDetailEtcAutomaticQuote';
+                    }
                 }else if ($processingRequirementsType === 'CONTROL') {
                     parameter2.queryId = 'orderMapper.deleteControlPartEtcProcess,' + parameter2.queryId;
+                    if(factorCdArr.length <= 0) {
+                        parameter2.queryId += 'orderMapper.updateControlPartEtcAutomaticQuote';
+                    }
                 }
                 parameter2.DEL_ETC_FACTOR_CD = delFactorStr;
             }
