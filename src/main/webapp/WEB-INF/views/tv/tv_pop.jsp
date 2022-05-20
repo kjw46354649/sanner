@@ -944,7 +944,7 @@
 								}
 
 								if(m_list[i].IF_USE_YN == 'Y' && !fnIsEmpty(m_list[i].WORK_STATUS)) {
-									mHtml += '<span class="progressPercent">완료 : '+ m_list[i].COMPLETE_QTY + ' EA ('+ ((m_list[i].COMPLETE_PERCENT != undefined)? m_list[i].COMPLETE_PERCENT:'0')  + '%)</span>';
+									mHtml += '<span class="progressPercent">'+ m_list[i].COMPLETE_QTY + ' ('+ ((m_list[i].COMPLETE_PERCENT != undefined)? m_list[i].COMPLETE_PERCENT:'0')  + '%)</span>';
 								}
 
 								if(m_list[i].WORK_STATUS == 'pause') {
@@ -1036,9 +1036,9 @@
 					if(m_list[i].IF_USE_YN == 'Y' && !fnIsEmpty(m_list[i].WORK_STATUS)) {
 						let percent = ((m_list[i].COMPLETE_PERCENT != undefined)? m_list[i].COMPLETE_PERCENT:'0');
 						if($target.find(".progressPercent").length > 0) {
-							$target.find(".progressPercent").text('완료 : ' + m_list[i].COMPLETE_QTY + 'EA (' + percent + '%)');
+							$target.find(".progressPercent").text(m_list[i].COMPLETE_QTY + ' (' + percent + '%)');
 						}else {
-							let html = '<span class="progressPercent">완료 : '+ m_list[i].COMPLETE_QTY + ' EA ('+ percent + '%)</span>';
+							let html = '<span class="progressPercent">'+ m_list[i].COMPLETE_QTY + ' ('+ percent + '%)</span>';
 							$target.find(".backImg").append(html);
 						}
 					}

@@ -43,7 +43,7 @@
             INNER JOIN (
                 SELECT SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS ACTIVE_TOTAL
                     , SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_STOP' THEN TIMESTAMPDIFF(SECOND,X.BEFORE_TIME,X.EVENT_TIME) ELSE 0 END) AS STOP_TOTAL
-                    , CASE WHEN IFNULL(Y.CYCLE_FINISH_YN,'N') = 'Y' AND Y.ACTIVE_TYPE = 'PGM_STOP' THEN TIMESTAMPDIFF(SECOND, MAX(X.CYCLE_BEFORE_TIME), Y.EVENT_TIME)
+                    , CASE WHEN IFNULL(Y.CYCLE_FINISH_YN,'N') = 'Y' AND Y.ACTIVE_TYPE = 'PGM_STOP' THEN SUM(CASE WHEN X.BEFORE_TYPE = 'PGM_ACTIVE' AND X.PART_CNT = Y.PART_CNT THEN X.BEF_TIME ELSE 0 END)
                            ELSE 0
                       END AS CYCLE_TOTAL
                     , X.MCT_WORK_SEQ
@@ -52,12 +52,11 @@
                     , Y.CYCLE_FINISH_YN
                 FROM (
                     SELECT M.MCT_LOG_SEQ, M.EVENT_TIME, M.ACTIVE_TYPE, M.PART_CNT, M.CYCLE_FINISH_YN,
-                        LAG(M.EVENT_TIME) OVER (ORDER BY M.EVENT_TIME) AS BEFORE_TIME,
-                        LAG(M.ACTIVE_TYPE) OVER (ORDER BY M.EVENT_TIME) AS BEFORE_TYPE,
+                        LAG(M.EVENT_TIME) OVER (PARTITION BY M.EQUIP_SEQ ORDER BY M.EVENT_TIME) AS BEFORE_TIME,
+                        LAG(M.ACTIVE_TYPE) OVER (PARTITION BY M.EQUIP_SEQ ORDER BY M.EVENT_TIME) AS BEFORE_TYPE,
                         N.MCT_WORK_SEQ,
                         (SELECT MAX(T.MCT_LOG_SEQ) FROM TBL_MCT_WORKING_LOG T WHERE T.MCT_WORK_SEQ = M.MCT_WORK_SEQ AND T.EQUIP_SEQ = M.EQUIP_SEQ) AS MAX_SEQ,
-                        CASE WHEN M.MCT_LOG_SEQ = (SELECT MAX(T.MCT_LOG_SEQ) FROM TBL_MCT_WORKING_LOG T WHERE T.MCT_WORK_SEQ = M.MCT_WORK_SEQ AND T.EQUIP_SEQ = M.EQUIP_SEQ) THEN LAG(M.EVENT_TIME) OVER (ORDER BY M.EVENT_TIME)
-                        END AS CYCLE_BEFORE_TIME
+                        TIMESTAMPDIFF(SECOND, LAG(M.EVENT_TIME) OVER (PARTITION BY M.EQUIP_SEQ  ORDER BY M.EVENT_TIME), M.EVENT_TIME) AS BEF_TIME
                     FROM TBL_MCT_WORKING_LOG M
                         INNER JOIN TBL_MCT_WORK N ON M.MCT_WORK_SEQ = N.MCT_WORK_SEQ AND M.EQUIP_SEQ = N.EQUIP_SEQ
                             AND N.MCT_WORK_SEQ = (
@@ -70,7 +69,6 @@
                                     AND Q.WORK_FINISH_DT IS NULL
                             )
                     WHERE 1=1
-                        AND M.ACTIVE_TYPE != 'DISCONNECT'
                         AND M.EQUIP_SEQ IN
                         <foreach collection="dataList" item="item"  index="index"  open="(" close=")" separator=",">
                             #{item.EQUIP_SEQ}
@@ -101,7 +99,6 @@
                     AND Q.DEL_YN = 'N'
                     AND IFNULL(Q.IF_USE_YN,'N') = 'Y'
             )
-            AND B.ACTIVE_TYPE != 'DISCONNECT'
     </update>
 
     <select id="selectCurrentMctInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
