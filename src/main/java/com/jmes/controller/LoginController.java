@@ -90,19 +90,6 @@ public class LoginController {
             session.setAttribute("ipAddress", ipAddress);
             model.addAttribute("ipAddress", ipAddress);
 
-//            System.out.println("클라이언트IP 주소: "+ipAddress);
-//            System.out.println("tempMap : "+tempMap);
-//
-//            JsonObject json = new JsonObject();
-//            json.addProperty("crtfcKey",environment.getProperty("semes.log.key"));
-//            json.addProperty("logDt",sdf.format(new Date()));
-//            json.addProperty("useSe","접속");
-//            json.addProperty("sysUser",(String) tempMap.get("USER_ID"));
-//            json.addProperty("conectIp",ipAddress);
-//            json.addProperty("dataUsgqty",tempMap.toString().getBytes().length);
-//
-//            HttpUtil.callApi("https://log.smart-factory.kr/apisvc/sendLogData.json",json,"POST");
-
             session.setMaxInactiveInterval(-1);
         }else{
             String autoReturnCode = String.valueOf(hashMap.get("autoReturnCode"));
