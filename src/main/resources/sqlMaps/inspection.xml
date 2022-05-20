@@ -1732,9 +1732,20 @@
                                             , B.CONTROL_SEQ
                                             , B.CONTROL_DETAIL_SEQ
                                             , SUM(SF_GET_DRAWING_WORK_TIME('WORK', B.MCT_WORK_SEQ)) AS WORK_TIME
-                                        FROM TBL_EQUIP A, TBL_MCT_WORK B
-                                        WHERE A.EQUIP_SEQ = B.EQUIP_SEQ
-                                            AND B.DEL_YN = 'N'
+                                        FROM TBL_EQUIP A
+                                            INNER JOIN TBL_MCT_WORK B ON A.EQUIP_SEQ = B.EQUIP_SEQ AND B.DEL_YN = 'N'
+                                                AND (B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) IN (
+                                                    SELECT B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ
+                                                    FROM TBL_CONTROL A, TBL_CONTROL_PART B
+                                                    WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
+                                                        AND A.DEL_YN = 'N'
+                                                        <if test="ORDER_COMP_YN != null and ORDER_COMP_YN == ''">
+                                                            AND A.ORDER_COMP_CD = #{ORDER_COMP_CD}
+                                                        </if>
+                                                        AND B.SIZE_TXT = #{SIZE_TXT}
+                                                        AND B.MATERIAL_TYPE = #{MATERIAL_TYPE}
+                                                )
+                                        WHERE A.DEL_YN = 'N'
                                         GROUP BY B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, A.PROCESS_TYPE
                                     ) D
                                     GROUP BY D.CONTROL_SEQ, D.CONTROL_DETAIL_SEQ) E ON D.CONTROL_SEQ = E.CONTROL_SEQ AND D.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
