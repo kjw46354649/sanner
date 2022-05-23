@@ -1457,6 +1457,7 @@
 
                     $(".custom_loading_bar").show();
                     fnPostAjax(function () {
+                        $(".custom_loading_bar").hide();
                         fnAlert(null, "등록이 완료되었습니다.");
                         fnResetForm("outgoing_manage_pop_type_1_form");
                         $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
