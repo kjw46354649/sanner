@@ -1035,18 +1035,12 @@
                 ELSE '-'
             END AS LATEST_CYCLE_TIME_FORMAT,
             CASE WHEN Y.LEFT_TIME IS NULL THEN SPACE(0)
-                 WHEN Y.ACTIVE_TYPE = 'PGM_STOP' THEN CASE WHEN Y.LEFT_TIME <![CDATA[ < ]]> 0 THEN '0h 0m'
-                                                           ELSE CONCAT(
-                                                                TRUNCATE(IFNULL(Y.LEFT_TIME,0)/3600,0) , 'h ',
-                                                                TRUNCATE((IFNULL(Y.LEFT_TIME,0)%3600)/60,0), 'm ',
-                                                                TRUNCATE(((IFNULL(Y.LEFT_TIME,0)%3600) % 60),0), 's'
-                                                           ) END
-                 WHEN Y.ACTIVE_TYPE = 'PGM_ACTIVE' THEN CASE WHEN (Y.LEFT_TIME - Y.CURRENT_STATUS_TIME) <![CDATA[ < ]]> 0 THEN '0h 0m'
-                                                            ELSE CONCAT(
-                                                                TRUNCATE(IFNULL(Y.LEFT_TIME - Y.CURRENT_STATUS_TIME,0)/3600,0) , 'h ',
-                                                                TRUNCATE((IFNULL(Y.LEFT_TIME - Y.CURRENT_STATUS_TIME,0)%3600)/60,0), 'm ',
-                                                                TRUNCATE(((IFNULL(Y.LEFT_TIME - Y.CURRENT_STATUS_TIME,0)%3600) % 60),0), 's'
-                                                            ) END
+                 WHEN Y.LEFT_TIME <![CDATA[ < ]]> 0 THEN '0h 0m'
+                 ELSE CONCAT(
+                    TRUNCATE(IFNULL(Y.LEFT_TIME,0)/3600,0) , 'h ',
+                    TRUNCATE((IFNULL(Y.LEFT_TIME,0)%3600)/60,0), 'm ',
+                    TRUNCATE(((IFNULL(Y.LEFT_TIME,0)%3600) % 60),0), 's'
+                 )
             END AS LEFT_TIME_FORMAT,
             CASE WHEN Y.CURRENT_STATUS_TIME IS NOT NULL AND Y.CURRENT_STATUS_TIME > 0
                     THEN CONCAT(
@@ -1097,7 +1091,7 @@
                     D.EVENT_TIME,
                     IFNULL(SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'ORIGINAL_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0) AS ORIGINAL_SIDE_QTY, -- 대칭_원칭 -->
                     IFNULL(SF_GET_SIDE_QTY(A.CONTROL_SEQ, 'OTHER_SIDE_QTY') * IFNULL(C.PART_UNIT_QTY, 1), 0) AS OTHER_SIDE_QTY, -- 대칭_대칭 -->
-                    ((A.LATEST_CYCLE_TIME * CEIL(A.GOAL_QTY / A.UNIT_QTY)) - A.WORK_ACTIVE_TIME) AS LEFT_TIME,
+                    (A.LATEST_CYCLE_TIME * CEIL(A.GOAL_QTY / A.UNIT_QTY)) AS LEFT_TIME,
                     CASE WHEN D.EVENT_TIME IS NULL THEN TIMESTAMPDIFF(SECOND, A.WORK_START_DT, NOW())
                          ELSE TIMESTAMPDIFF(SECOND, D.EVENT_TIME, NOW())
                     END AS CURRENT_STATUS_TIME,
