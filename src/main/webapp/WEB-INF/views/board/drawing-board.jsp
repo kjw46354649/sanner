@@ -1716,7 +1716,7 @@
                                 $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_INSPECT_RESULT_NM").text(data.list[i].INSPECT_RESULT_NM);
                                 $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_PROCESS_NM").text(data.list[i].ERROR_PROCESS_NM);
                                 $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_REASON_NM").text(data.list[i].ERROR_REASON_NM);
-                                $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_NOTE").text(data.list[i].ERROR_NOTE);
+                                $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_NOTE").text(data.list[i].INSPECT_DESC);
                             }
                         }
                     }
@@ -2544,7 +2544,6 @@
 
         $.each(workHistoryList, function (idx,Item) {
             if(Item.RNUM == rnum) {
-                console.log(Item);
                 $("#drawing_quality_history_popup").find("#drawing_history_image").attr("src", "/qimage/" + Item.IMG_GFILE_SEQ);
                 if(Item.INSPECT_GRADE == 'GRD010' || Item.INSPECT_GRADE == 'GRD020') {
                     $("#drawing_quality_history_popup").find(".drawing_history_img_table").hide();
@@ -2554,7 +2553,7 @@
                 $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_INSPECT_RESULT_NM").text(Item.INSPECT_RESULT_NM);
                 $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_PROCESS_NM").text(Item.ERROR_PROCESS_NM);
                 $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_REASON_NM").text(Item.ERROR_REASON_NM);
-                $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_NOTE").text(Item.ERROR_NOTE);
+                $("#drawing_quality_history_popup").find("#DRAWING_HISTORY_ERROR_NOTE").text(Item.INSPECT_DESC);
             }
         })
 

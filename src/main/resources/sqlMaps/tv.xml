@@ -156,10 +156,8 @@
                    )
               END AS STOP_TIME
             , CASE WHEN Y.WORK_STATUS IS NOT NULL
-                    THEN CASE WHEN Y.LEFT_TIME <![CDATA[ < ]]> 0 THEN CONCAT(
-                                TRUNCATE((IFNULL(Y.WORK_ACTIVE_TIME,0))/3600,0) , 'h ',
-                                TRUNCATE(((IFNULL(Y.WORK_ACTIVE_TIME,0))%3600)/60,0), 'm'
-                              )
+                    THEN CASE WHEN Y.LEFT_TIME IS NULL THEN '-'
+                              WHEN Y.LEFT_TIME <![CDATA[ < ]]> 0 THEN NULL
                               ELSE CONCAT(
                                 TRUNCATE((IFNULL(Y.LEFT_TIME,0) + IFNULL(Y.WORK_ACTIVE_TIME,0))/3600,0) , 'h ',
                                 TRUNCATE(((IFNULL(Y.LEFT_TIME,0) + IFNULL(Y.WORK_ACTIVE_TIME,0))%3600)/60,0), 'm'
