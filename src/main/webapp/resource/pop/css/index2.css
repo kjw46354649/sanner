@@ -523,6 +523,9 @@ a { color: black; text-decoration: none;}
 									background: #ddfbda;
 									font-weight: bold;
 								}
+								.non_if .th_color_green {
+									background: #dbdbdb;
+								}
 
 								.bg_mct_green {
 									background: #d7eda6 !important
@@ -754,4 +757,12 @@ a { color: black; text-decoration: none;}
 	border: 1px solid #9d9d9d;
 	padding: 5px 0;
 	height: 55px;
+}
+
+.non_if#popHeadMid {
+	background:#dbdbdb;
+	color:gray;
+}
+.non_if .text-blue {
+	color:gray;
 }

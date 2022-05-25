@@ -750,7 +750,7 @@
                         <h4>
                             <i class="xi-tags mr-10"></i>가동장비 정보
                         </h4>
-                        <table id="popHeadMid" class="popHeadMid popTable mt-10">
+                        <table class="popTable mt-10">
                             <colgroup>
                                 <col width="20%">
                                 <col width="20%">
@@ -3474,6 +3474,7 @@
         };
         fnPostAjax(function (data) {
             var tempHtml = '';
+            $("#mct_plan_detail_pop").find("#popHeadMid").removeClass("non_if");
 
             if(data.info != null) {
                 $("#mct_plan_detail_pop_form").find("#MCT_WORK_SEQ").val(data.info.MCT_WORK_SEQ);
@@ -3493,6 +3494,8 @@
                         }
                     }else if(key == 'PLAN_WORKING_TIME') {
                         $("#ongoing_work_input").val(val);
+                    }else if(key == 'IF_USE_YN' && val != 'Y') {
+                        $("#mct_plan_detail_pop").find("#popHeadMid").addClass("non_if");
                     }
                     $("#mct_plan_detail_pop").find("."+key).text(val);
                 }

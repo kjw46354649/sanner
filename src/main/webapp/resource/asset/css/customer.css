@@ -582,6 +582,17 @@ button:disabled {
 .bg_mct_green {
 	background: #d7eda6 !important
 }
+.non_if#popHeadMid {
+	background:#dbdbdb;
+	color:gray;
+}
+.non_if .text-blue {
+	color:gray;
+}
+.non_if .th_color_green {
+	background: #dbdbdb;
+	color:gray;
+}
 /*210607*/
 
 

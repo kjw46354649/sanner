@@ -241,7 +241,7 @@
 						<h4 style="text-align: left;">
 							<i class="xi-tags mr-5"></i>가동장비 정보
 						</h4>
-						<table id="popHeadMid" class="popHeadMid popTable mt-10">
+						<table class="popTable mt-10">
 								<colgroup>
 									<col width="20%">
 									<col width="20%">
@@ -2548,6 +2548,7 @@
 				}
 			};
 			fnPostAjax(function (data) {
+				$("#popup").find("#popHeadMid").removeClass("non_if");
 				if(data.info != null) {
 					$("#mct_machine_form").find("#CONTROL_SEQ").val(data.info.CONTROL_SEQ);
 					$("#mct_machine_form").find("#CONTROL_DETAIL_SEQ").val(data.info.CONTROL_DETAIL_SEQ);
@@ -2563,6 +2564,8 @@
 							}else if(val == 'Stop') {
 								$("#popup").find("."+key).addClass("yellow");
 							}
+						}else if(key == 'IF_USE_YN' && val != 'Y') {
+							$("#popup").find("#popHeadMid").addClass("non_if");
 						}
 						$("#popup").find("."+key).text(val);
 					}

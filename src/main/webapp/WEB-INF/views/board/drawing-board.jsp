@@ -1329,7 +1329,7 @@
         });
         $("#reserveMinuteUpBtn").on('click', function(){
             if(reserveMinute >= 60) return;
-            reserveMinute+=1;
+            reserveMinute+=5;
             reserveDisplayTime();
         });
         $("#reserveMinuteDownBtn").on('click', function(){

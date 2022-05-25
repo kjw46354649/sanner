@@ -366,7 +366,7 @@
 					<h4>
 						<i class="xi-tags mr-10"></i>가동장비 정보
 					</h4>
-					<table id="popHeadMid" class="popHeadMid popTable mt-10">
+					<table class="popTable mt-10">
 						<colgroup>
 							<col width="20%">
 							<col width="20%">
@@ -504,7 +504,7 @@
 					</h4>
 					<div class="d-flex" style="margin-top: 11px;height: 67%;border: 1px solid gray;">
 						<div class="mapImgWrap">
-							<img id="mapImgWrap" src="/qimage/739396" alt="513045" data-value="513045" style="margin-right: 1%;">
+							<img id="mapImgWrap" src="/resource/main/blank.jpg" alt="" data-value="" style="margin-right: 1%;">
 						</div>
 						<div style="width: 20%;overflow:hidden;">
 							<table id="popHeadMid4" class="popHeadMid popTable" style="height: 100%;">
@@ -1645,6 +1645,7 @@
 			};
 			fnPostAjax(function (data) {
 				var tempHtml = '';
+				$("#machinePopupWrap").find("#popHeadMid").removeClass("non_if");
 				if(data.info != null) {
 					$("#pop_machine_form").find("#CONTROL_SEQ").val(data.info.CONTROL_SEQ);
 					$("#pop_machine_form").find("#CONTROL_DETAIL_SEQ").val(data.info.CONTROL_DETAIL_SEQ);
@@ -1660,6 +1661,8 @@
 							}else if(val == 'Stop') {
 								$("#machinePopupWrap").find("."+key).addClass("yellow");
 							}
+						}else if(key == 'IF_USE_YN' && val != 'Y') {
+							$("#machinePopupWrap").find("#popHeadMid").addClass("non_if");
 						}
 						$("#machinePopupWrap").find("."+key).text(val);
 					}
