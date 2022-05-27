@@ -683,9 +683,9 @@
                                     <tr>
                                         <th class="modal-table-header" style="width:8%;">No</th>
                                         <th class="modal-table-header" style="width:11%;">공정</th>
-                                        <th class="modal-table-header" style="width:28%;">기기 및 작업자</th>
+                                        <th class="modal-table-header" style="width:27%;">기기 및 작업자</th>
                                         <th class="modal-table-header" style="width:30%;">작업시작/종료</th>
-                                        <th class="modal-table-header" style="width:70px;">상태</th>
+                                        <th class="modal-table-header" style="width:80px;">상태</th>
                                         <th class="modal-table-header" style="width:80px;">수량</th>
                                     </tr>
                                 </thead>
@@ -1637,10 +1637,10 @@
                         workerListHtml += '<tr class="workListAction">';
                         workerListHtml += '    <td class="modal-table-contents" style="width:8%;">' + data.list[i].RNUM + '</td>';
                         workerListHtml += '    <td class="modal-table-contents" style="width:11%;">' + data.list[i].PROCESS_TYPE_NM + '</td>';
-                        workerListHtml += '    <td class="modal-table-contents" style="width:28%;">' + data.list[i].EQUIP_NM +'&nbsp;' + data.list[i].WORK_USER + '</td>';
-                        workerListHtml += '    <td class="modal-table-contents" style="width:30%;"><span class="ml-5" style="float: left;">' + data.list[i].WORK_START_DT +'</span><span class="mr-5 mt-05" style="float:right;min-width: 110px;"> - ' + ((typeof data.list[i].WORK_FINISH_DT != 'undefined')?data.list[i].WORK_FINISH_DT:'') + '</span></td>';
-                        workerListHtml += '    <td class="modal-table-contents" style="width:70px;">' + ((typeof data.list[i].WORK_STATUS != 'undefined')?data.list[i].WORK_STATUS:'') + '</td>';
-                        workerListHtml += '    <td class="modal-table-contents" style="width:75px;">' + ((typeof data.list[i].FINISH_QTY != 'undefined')?data.list[i].FINISH_QTY:'') + '</td>';
+                        workerListHtml += '    <td class="modal-table-contents" style="width:27%;">' + data.list[i].EQUIP_NM +'&nbsp;' + ((data.list[i].WORK_USER !== undefined)?data.list[i].WORK_USER:'') + '</td>';
+                        workerListHtml += '    <td class="modal-table-contents" style="width:30%;"><span class="ml-5" style="float: left;">' + data.list[i].WORK_START_DT +'</span><span class="mr-5 mt-05" style="float:right;min-width: 110px;"> - ' + ((data.list[i].WORK_FINISH_DT !== undefined)?data.list[i].WORK_FINISH_DT:'') + '</span></td>';
+                        workerListHtml += '    <td class="modal-table-contents" style="width:71px;">' + ((data.list[i].WORK_STATUS !== undefined)?data.list[i].WORK_STATUS:'') + '</td>';
+                        workerListHtml += '    <td class="modal-table-contents" style="width:75px;">' + ((data.list[i].FINISH_QTY !== undefined)?data.list[i].FINISH_QTY:'') + '</td>';
                         workerListHtml += '</tr>';
                     }
                 }else{
@@ -1668,8 +1668,8 @@
                     for (let i = 0; i < data.list.length; i++) {
                         workerListHtml += '<tr class="workListAction">';
                         workerListHtml += '    <td class="modal-table-contents" style="width:68px;">' + data.list[i].RNUM + '</td>';
-                        workerListHtml += '    <td class="modal-table-contents" style="width:150px;">' + data.list[i].NOTE_TYPE_NM + '</td>';
-                        workerListHtml += '    <td class="modal-table-contents" style="width:340px;">' + data.list[i].NOTE + '</td>';
+                        workerListHtml += '    <td class="modal-table-contents" style="width:150px;">' + ((data.list[i].NOTE_TYPE_NM !== undefined)?data.list[i].NOTE_TYPE_NM:'') + '</td>';
+                        workerListHtml += '    <td class="modal-table-contents" style="width:340px;">' + ((data.list[i].NOTE !== undefined)?data.list[i].NOTE:'') + '</td>';
                         workerListHtml += '</tr>';
                     }
                 }else{
@@ -1698,7 +1698,7 @@
                     workHistoryList = data.list;
                     for (let i = 0; i < data.list.length; i++) {
                         workerListHtml += ' <tr class="tr_row rnum_' + data.list[i].RNUM +' '+((i == 0)?'select':'') +'">';
-                        workerListHtml += '    <td class="modal-table-contents" style="width: 33%;">' + data.list[i].INSPECT_DT + '</td>';
+                        workerListHtml += '    <td class="modal-table-contents" style="width: 33%;">' + ((data.list[i].INSPECT_DT !== undefined)?data.list[i].INSPECT_DT:'') + '</td>';
                         workerListHtml += '    <td class="modal-table-contents" style="width: 48%;">' + ((data.list[i].WORKER_NM !== undefined)?data.list[i].WORKER_NM:'') + '</td>';
                         workerListHtml += '    <td class="modal-table-contents" rowspan="2">' + data.list[i].INSPECT_GRADE_NM + '<br>'
                         workerListHtml += '     (' + data.list[i].INSPECT_GRADE_NOTE + ')';
