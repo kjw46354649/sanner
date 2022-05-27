@@ -903,7 +903,6 @@
                     </h3>
                     <div class="tab-content mt-5">
                         <form id="drawing_error_qty_form">
-                            <input type="hidden" id="queryId" name="queryId" value="drawingMapper.selectDrawingWorkHistoryList">
                             <input id="MCT_WORK_SEQ" name="MCT_WORK_SEQ" type="hidden" value="${workInfo.MCT_WORK_SEQ}">
                             <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${workInfo.CONTROL_SEQ}">
                             <input id="CONTROL_DETAIL_SEQ" name="CONTROL_DETAIL_SEQ" type="hidden" value="${workInfo.CONTROL_DETAIL_SEQ}">
@@ -2154,10 +2153,6 @@
         })
 
         $("#closeErrorQtyBtn").on('click', function(){
-            // $("#drawing_error_qty_form #INSPECT_RESULT option:eq(0)").prop("selected", true);
-            // $("#drawing_error_qty_form #ER7ROR_REASON option:eq(0)").prop("selected", true);
-            // $("#drawing_error_qty_form").find("#ERROR_QTY").val(1);
-            // $("#drawing_error_qty_form").find("#ERROR_QTY_SPAN").text(1);
             fnPopupClose('drawing_error_qty_popup');
         })
 
