@@ -947,7 +947,7 @@
                                         <div class="div_flex_column mt-20" style="width: 43%;font-size: 40px;margin-left: 2%;">
                                             <select class="mb-20" id="INSPECT_RESULT" name="INSPECT_RESULT" title="검사종류 코드">
                                                 <option value="">- 검사종류 코드 -</option>
-                                                <c:forEach var="code" items="${HighCode.H_1015}">
+                                                <c:forEach var="code" items="${HighCode.H_1020}">
                                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                                 </c:forEach>
                                             </select>
