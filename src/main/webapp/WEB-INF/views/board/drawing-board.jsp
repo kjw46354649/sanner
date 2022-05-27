@@ -1211,7 +1211,17 @@
         }, parameters, '');
     };
 
+
     $(function () {
+
+        window.onpageshow = function (event) {
+            console.log('onpageshow', event.persisted);
+            console.log(window.performance);
+            if(event.persisted || (window.performance && window.performance.navigation.type == 2)) {
+                console.log("???????????????");
+                $("#drawing_log_out_form").submit();
+            }
+        }
 
         $(document).ajaxStart(function() {
             // show loader on start
@@ -1491,7 +1501,7 @@
                 }else {
                     let parameters = {
                         'url': '/drawing-json-info',
-                        'data': { 'queryId': 'drawingMapper.selectNfcData', 'NFC_ID': barcodeNum}
+                        'data': { 'queryId': 'drawingMapper.selectNfcData', 'LOGIN_ID': barcodeNum}
                     };
                     fnPostAjax(function (data, callFunctionParam) {
                         if(data.info == null) {
@@ -2522,7 +2532,6 @@
         // if(if_use_yn == "Y") {
             jmesConnect();
         // }
-
         restartWorkControlNumFn($("#re_start_work_info_form").find("#CONTROL_NUM").val());
 
     });

@@ -42,12 +42,6 @@
                     </select>
                 </span>
             </div>
-<%--            <div style="display: none;">--%>
-<%--                <input id="nfc_tag_input" type="text" style="height: 30px;margin-left: 50px;align-items: center;" autofocus >--%>
-<%--            </div>--%>
-<%--            <div class="langBtn">--%>
-<%--                <button type="button" id="main" name="main" ><img src="/resource/asset/images/common/logo-01.png" style="width: 50px;height: 40px; margin-top: 0px;">Home</button>--%>
-<%--            </div>--%>
             <div class="langBtn">
                 <button type="button" id="local_ko" name="local_ko" <c:if test="${LocalInfo eq 'ko'}"> class="on" </c:if> ><srping:message key="index.locale.language.kr"/></button>
                 <button type="button" id="local_en" name="local_en" <c:if test="${LocalInfo ne 'ko'}"> class="on" </c:if> ><srping:message key="index.locale.language.en"/></button>
@@ -104,41 +98,6 @@
             $("#no_nfc_popup").css("display", "none");
             $(".bodyWrap").removeClass("modal-open-body");
         });
-        $("#nfc_tag_input").on({
-            keyup: function (e) {
-                e.stopPropagation();
-                e.preventDefault();
-
-                if (e.keyCode == 13) {
-                    console.log(this.value);
-                    $.ajax({
-                        type: 'POST', url: '/drawing-json-info', dataType: 'json', async: false,
-                        data: {"queryId":"drawingMapper.selectNfcData", "NFC_ID" : this.value},
-                        success: function (data, textStatus, jqXHR) {
-                            if (textStatus === 'success') {
-                                if(data.info == null) {
-                                    $("#no_nfc_popup").css("display", "block");
-                                    $(".bodyWrap").addClass("modal-open-body");
-                                }else {
-                                    $("#drawing_worker_form").find("#USER_ID").val(data.info.USER_ID);
-                                    $("#drawing_worker_form").find("#USER_NM").val(data.info.USER_NM);
-                                    $("#drawing_worker_form").find("#USER_GFILE_SEQ").val(data.info.PHOTO_GFILE_SEQ);
-                                    $("#drawing_worker_form").submit();
-                                }
-                            }
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            console.log('err',textStatus);
-                        }
-                    });
-                    $("#nfc_tag_input").val("");
-                    $("#nfc_tag_input").focus();
-                }
-            },
-            focusout: function(e) {
-                // $("#nfc_tag_input").focus();
-            }
-        })
 
         $("#DEPT").on('change', function(){
             let selDept = $(this).val();
@@ -175,7 +134,7 @@
                 }else {
                     $.ajax({
                         type: 'POST', url: '/drawing-json-info', dataType: 'json', async: false,
-                        data: {"queryId":"drawingMapper.selectNfcData", "NFC_ID" : nfcId},
+                        data: {"queryId":"drawingMapper.selectNfcData", "LOGIN_ID" : nfcId},
                         success: function (data, textStatus, jqXHR) {
                             if (textStatus === 'success') {
                                 if(data.info == null) {
@@ -196,9 +155,7 @@
                 }
             }
         });
-
     });
-
     $(document).on('click', '.userTag', function(event){
         $("#USER_ID").val($(this).attr("attr"));
         $("#USER_NM").val($(this).attr("attrNm"));
