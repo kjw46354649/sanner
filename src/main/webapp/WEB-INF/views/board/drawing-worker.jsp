@@ -159,10 +159,12 @@
                                 }else {
                                     $("#login_complete_popup").css("display", "block");
                                     $(".bodyWrap").addClass("modal-open-body");
-                                    $("#drawing_worker_form").find("#USER_ID").val(data.info.USER_ID);
-                                    $("#drawing_worker_form").find("#USER_NM").val(data.info.USER_NM);
-                                    $("#drawing_worker_form").find("#USER_GFILE_SEQ").val(data.info.PHOTO_GFILE_SEQ);
-                                    $("#drawing_worker_form").submit();
+                                    setTimeout(function () {
+                                        $("#drawing_worker_form").find("#USER_ID").val(data.info.USER_ID);
+                                        $("#drawing_worker_form").find("#USER_NM").val(data.info.USER_NM);
+                                        $("#drawing_worker_form").find("#USER_GFILE_SEQ").val(data.info.PHOTO_GFILE_SEQ);
+                                        $("#drawing_worker_form").submit();
+                                    },1000);
                                 }
                             }
                         },
