@@ -32,7 +32,7 @@
 				scanButtonLongPressTime:500, // How long (ms) the hardware button should be pressed, until a callback gets executed
 				timeBeforeScanTest:100, // Wait duration (ms) after keypress event to check if scanning is finished
 				avgTimeByChar:30, // Average time (ms) between 2 chars. Used to do difference between keyboard typing and scanning
-				minLength:6, // Minimum length for a scanning
+				minLength:4, // Minimum length for a scanning
 				suffixKeyCodes:[9,13], // Chars to remove and means end of scanning
 				prefixKeyCodes:[], // Chars to remove and means start of scanning
 				ignoreIfFocusOn:false, // do not handle scans if the currently focused element matches this selector or object
