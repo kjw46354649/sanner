@@ -77,6 +77,22 @@
         </div>
     </div>
 </div>
+    <div class="modal-scan" id="login_complete_popup" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-stop-content">
+                <div class="modal-stop-body">
+                    <div class="tableWrap">
+                        <div>
+                            <p class="stop-txt">Login successfully</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <button type="button" class="gradeMidBtn red close_pop" style="width: auto; padding: 0 20px;">닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 <script type='text/javascript'>
 
     $(function () {
@@ -141,6 +157,8 @@
                                     $("#no_nfc_popup").css("display", "block");
                                     $(".bodyWrap").addClass("modal-open-body");
                                 }else {
+                                    $("#login_complete_popup").css("display", "block");
+                                    $(".bodyWrap").addClass("modal-open-body");
                                     $("#drawing_worker_form").find("#USER_ID").val(data.info.USER_ID);
                                     $("#drawing_worker_form").find("#USER_NM").val(data.info.USER_NM);
                                     $("#drawing_worker_form").find("#USER_GFILE_SEQ").val(data.info.PHOTO_GFILE_SEQ);

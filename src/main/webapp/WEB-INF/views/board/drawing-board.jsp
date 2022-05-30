@@ -83,6 +83,25 @@
     </style>
 </head>
 <body onresize="parent.resizeTo(1024,600)" onload="parent.resizeTo(1024,600)" >
+<div id="loginCompleteDiv" style="display: none">
+    <div id="loginCompleteDivHtml">
+        <table>
+            <tr>
+                <td width="15%">&nbsp;</td>
+                <td><h3 style="font-size: 30px;font-weight: bold; text-align: center;">Login successfully.</h3></td>
+                <td width="15%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td width="15%">&nbsp;</td>
+                <td style="text-align: center;"><img src="/resource/asset/images/work/icon_4_1.png" width="40px"></td>
+                <td width="15%">&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+</div>
 <div id="startDiv" style="display: none">
     <div id="startDivHtml">
         <table>
@@ -1507,6 +1526,7 @@
                         if(data.info == null) {
                             showMessage("등록되지 않은 기기입니다.");
                         }else {
+                            fnDrawingAlertDialogAlert('loginCompleteDivHtml', 3)
                             $("#drawing_worker_form").find("#USER_ID").val(data.info.USER_ID)
                             $("#drawing_worker_form").find("#USER_NM").val(data.info.USER_NM)
                             $("#drawing_worker_form").find("#USER_GFILE_SEQ").val(data.info.PHOTO_GFILE_SEQ)
