@@ -1501,7 +1501,7 @@
                 }else {
                     let parameters = {
                         'url': '/drawing-json-info',
-                        'data': { 'queryId': 'drawingMapper.selectNfcData', 'LOGIN_ID': barcodeNum}
+                        'data': { 'queryId': 'drawingMapper.selectNfcData', 'LOGIN_KEY': barcodeNum}
                     };
                     fnPostAjax(function (data, callFunctionParam) {
                         if(data.info == null) {

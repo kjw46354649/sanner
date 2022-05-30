@@ -837,7 +837,7 @@
         FROM TBL_SIMPLE_LOGIN A
              INNER JOIN TBL_USER B ON A.USER_ID = B.USER_ID AND B.DEL_YN = 'N'
         WHERE A.DEL_YN = 'N'
-          AND REPLACE(A.LOGIN_ID,'-',SPACE(0)) = #{LOGIN_ID}
+          AND REPLACE(A.LOGIN_KEY,'-',SPACE(0)) = #{LOGIN_KEY}
     </select>
 
     <select id="selectDrawingLatestProcessList" parameterType="java.util.HashMap" resultType="java.util.HashMap">

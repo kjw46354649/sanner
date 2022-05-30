@@ -134,7 +134,7 @@
                 }else {
                     $.ajax({
                         type: 'POST', url: '/drawing-json-info', dataType: 'json', async: false,
-                        data: {"queryId":"drawingMapper.selectNfcData", "LOGIN_ID" : nfcId},
+                        data: {"queryId":"drawingMapper.selectNfcData", "LOGIN_KEY" : nfcId},
                         success: function (data, textStatus, jqXHR) {
                             if (textStatus === 'success') {
                                 if(data.info == null) {
