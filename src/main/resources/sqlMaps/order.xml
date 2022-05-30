@@ -5205,7 +5205,7 @@
                 FROM TBL_ESTIMATE_DETAIL_ETC_PROCESS X
             ) E ON E.EST_SEQ = A.EST_SEQ AND E.SEQ = B.SEQ
         WHERE A.EST_SEQ = #{EST_SEQ}
-        AND B.SEQ = #{SEQ};
+            AND B.SEQ = #{SEQ}
     </select>
     <select id="selectEstimateCadInfo_control" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.CONTROL_NUM
