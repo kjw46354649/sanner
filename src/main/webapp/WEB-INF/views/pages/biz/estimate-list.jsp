@@ -75,7 +75,6 @@
                 <%--<span class="chk_box ml-15"><input id="chkEstimateListDetail" type="checkbox"><label for="chkEstimateListDetail"> 견적상세요건</label></span>--%>
                 <div class="rightSpan">
                     <button type="button" class="defaultBtn radius red" id="btnEstimateListDelete">삭제</button>
-                    <%--<button type="button" class="defaultBtn radius green" id="btnEstimateListSave">저장</button>--%>
                 </div>
             </div>
         </div>
@@ -303,21 +302,6 @@
                     }
                 }
             },
-            /*{title: '재질', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM' ,
-                editor: {
-                    type: 'select',
-                    mapIndices: { name: "MATERIAL_TYPE_NM", id: "MATERIAL_TYPE" },
-                    valueIndx: "value",
-                    labelIndx: "text",
-                    options: fnGetCommCodeGridSelectBox('1035'),
-                    getData: function(ui) {
-                        let clave = ui.$cell.find("select").val();
-                        let rowData = estimateRegisterTopGrid.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-                        rowData["MATERIAL_TYPE"]=clave;
-                        return ui.$cell.find("select option[value='"+clave+"']").text();
-                    }
-                }
-            },*/
             {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', sortable: false,
                 editor: {
                     type: 'select',
@@ -731,16 +715,6 @@
             }, parameters, '');
         });
 
-        // $("#btnEstimateListSave").on('click', function(){
-        //     let estimateDetailInsertQueryList = ['insertEstimateDetail'];
-        //     let estimateDetailUpdateQueryList = ['updateEstimateDetail'];
-        //     fnModifyPQGrid(estimateMasterBotGrid, estimateDetailInsertQueryList, estimateDetailUpdateQueryList);
-        //
-        //     let estimateMasterInsertQueryList = ['insertEstimateMaster'];
-        //     let estimateMasterUpdateQueryList = ['updateEstimateMaster'];
-        //     fnModifyPQGrid(estimateMasterTopGrid, estimateMasterInsertQueryList, estimateMasterUpdateQueryList);
-        // });
-
         $("#btnEstimateExcel").on('click', function(){
             $("#common_excel_form #sqlId").val('selectEstimateDetailListExcel:selectEstimateMasterInfoExcel');
             $("#common_excel_form #mapInputId").val('data:info');
@@ -977,11 +951,9 @@
     function btnDisabled(status) {
         if(status == 'EST020'){
             $("#btnEstimateListDelete").attr('disabled', true);
-            // $("#btnEstimateListSave").attr('disabled', true);
 
         }else {
             $("#btnEstimateListDelete").attr('disabled', false);
-            // $("#btnEstimateListSave").attr('disabled', false);
         }
     }
 
