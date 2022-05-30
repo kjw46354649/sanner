@@ -837,6 +837,7 @@ public class PdfPrintMakeController {
         PdfWriter.getInstance(document, out);
 
         String[] selectOrderList = ((String) jsonMap.get("selectOrderList")).split("\\|");
+        String type = (String) jsonMap.get("TYPE");
 
         int iCount = 0;
 
@@ -845,9 +846,14 @@ public class PdfPrintMakeController {
         for(int i=0;i<selectOrderList.length;i++) {
             if (iCount > 0) document.newPage();
             String[] selectControlInfo = selectOrderList[i].split("-");
-            hashMap.put("CONTROL_SEQ",selectControlInfo[0]);
-            hashMap.put("CONTROL_DETAIL_SEQ",selectControlInfo[1]);
-            hashMap.put("queryId", "orderMapper.selectEstimateCadInfo_control");
+            if(type.equals("control")) {
+                hashMap.put("CONTROL_SEQ",selectControlInfo[0]);
+                hashMap.put("CONTROL_DETAIL_SEQ",selectControlInfo[1]);
+            }else {
+                hashMap.put("EST_SEQ",selectControlInfo[0]);
+                hashMap.put("SEQ",selectControlInfo[1]);
+            }
+            hashMap.put("queryId", "orderMapper.selectEstimateCadInfo_" + type);
             Map<String,Object> orderInfo = innodaleService.getInfo(hashMap);
 
             PdfPTable table = new PdfPTable(25);
@@ -857,7 +863,13 @@ public class PdfPrintMakeController {
 
             // 1st line
             table.addCell(createRotateCell("견적도면", 1, 3, largeBoldFont, 90));
-            table.addCell(createRotateCell("작업번호 " + (String)orderInfo.get("CONTROL_NUM"), 1, 3, mediumNormalFont, 90));
+
+            if(type.equals("control")) {
+                table.addCell(createRotateCell("작업번호 " + (String)orderInfo.get("CONTROL_NUM"), 1, 3, mediumNormalFont, 90));
+            }else {
+                String estTxt = orderInfo.get("CONTROL_NUM") + "\n" + orderInfo.get("DRAWING_NUM");
+                table.addCell(createRotateCell(estTxt, 1, 3, mediumNormalFont, 90));
+            }
             String sizeTxt = orderInfo.get("SIZE_TXT") + "\n";
             if(orderInfo.get("MATERIAL_DETAIL_NM") != null) {
                 sizeTxt += orderInfo.get("MATERIAL_DETAIL_NM") + " / ";

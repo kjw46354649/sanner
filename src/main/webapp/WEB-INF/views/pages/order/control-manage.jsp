@@ -2732,7 +2732,7 @@
                 '   <span>' + selectedControlManagementRowIndex.length + ' 건의 견적도면이 출력 됩니다.</span> 진행하시겠습니까?' +
                 '</h4>';
             fnConfirm(null, message, function () {
-                printJS({printable: '/makeEstimateDrawingPrint', properties: {selectOrderList:selectOrderList, flag:'N'}, type: 'pdf', showModal: true});
+                printJS({printable: '/makeEstimateDrawingPrint', properties: {selectOrderList:selectOrderList, flag:'N', TYPE:'control'}, type: 'pdf', showModal: true});
             });
         });
         /* event */

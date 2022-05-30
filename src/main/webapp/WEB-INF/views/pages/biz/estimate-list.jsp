@@ -94,6 +94,7 @@
                     <select id="estimateListFrozen" name="estimateListFrozen">
                     </select>
                     <div class="slt_wrap namePlusSlt right_float">
+                        <button type="button" class="defaultBtn grayGra" id="btnEstimateCadPrint">견적도면 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateListExcel">견적List 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateExcel">견적서 출력</button>
                         <button type="button" class="defaultBtn grayGra" id="btnEstimateListDrawView">도면 보기</button>
@@ -128,7 +129,8 @@
 
 <script type="text/javascript">
     'use strict';
-    let estimateMasterSelectedRowIndex;
+    let estimateTopSelectedRowIndex = [];
+    let estimateBotSelectedRowIndex = [];
     let estimateMasterTopGrid = $("#estimate_master_top_grid");
     let estimateMasterBotGrid = $("#estimate_master_bot_grid");
 
@@ -567,8 +569,10 @@
             },
             rowSelect: function( event, ui ) {
                 //if(ui.addList.length > 0 ) {
+                console.log('top', ui.addList);
                 let EST_STATUS = ui.addList[0].rowData.EST_STATUS;
                 btnDisabled(EST_STATUS);
+                estimateTopSelectedRowIndex = [ui.addList[0].rowIndx];
 
                 let EST_SEQ = ui.addList[0].rowData.EST_SEQ;
                 let EST_VER = ui.addList[0].rowData.EST_VER;
@@ -609,7 +613,7 @@
                 scrollModel: { autoFit: false },
                 columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
                 numberCell: {width: 30, title: "No", show: true },
-                //selectionModel: { type: 'row', mode: 'single'} ,
+                selectionModel: { type: 'row', mode: 'single'} ,
                 swipeModel: {on: false},
                 collapsible: false,
                 trackModel: {on: true},
@@ -624,6 +628,10 @@
                     let data = estimateMasterBotGrid.pqGrid('option', 'dataModel.data');
 
                     $('#estimate_master_bot_grid_records').html(data.length);
+                },
+                rowSelect: function( event, ui ) {
+                    console.log('bot', ui.addList);
+                    estimateBotSelectedRowIndex = [ui.addList[0].rowIndx];
                 },
                 change: function( event, ui ) {
                     if(ui.source == 'edit'){
@@ -726,6 +734,49 @@
 
         $("#btnEstimateListDrawView").on('click', function(){
             callWindowImageViewer(999);
+        });
+
+        $("#btnEstimateCadPrint").on('click', function(){
+            if(estimateTopSelectedRowIndex.length <= 0) {
+                fnAlert(null, "대상을 선택해주세요");
+                return false;
+            }
+
+            let selectOrderList = '';
+            let message = '';
+            let count = 0;
+            if(estimateBotSelectedRowIndex.length > 0) {
+                for(let i =0;i<estimateBotSelectedRowIndex.length;i++) {
+                    const rowData = estimateMasterBotGrid.pqGrid('getRowData', {rowIndx: estimateBotSelectedRowIndex[i]});
+                    if (fnIsEmpty(rowData.IMG_GFILE_SEQ)) {
+                        fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
+                        return;
+                    }
+                    selectOrderList += (String(rowData.EST_SEQ) + '-' + String(rowData.SEQ)) + '|';
+                    count++;
+                }
+            }else if(estimateTopSelectedRowIndex.length > 0) {
+                const gridData = estimateMasterBotGrid.pqGrid('option', 'dataModel.data');
+
+                for(let i =0;i<gridData.length;i++) {
+                    const rowData = gridData[i];
+                    if (fnIsEmpty(rowData.IMG_GFILE_SEQ)) {
+                        fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
+                        return;
+                    }
+                    selectOrderList += (String(rowData.EST_SEQ) + '-' + String(rowData.SEQ)) + '|';
+                    count++;
+                }
+            }
+
+            message =
+                '<h4>' +
+                '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
+                '   <span>' + count + ' 건의 견적도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                '</h4>';
+            fnConfirm(null, message, function () {
+                printJS({printable: '/makeEstimateDrawingPrint', properties: {selectOrderList:selectOrderList, flag:'N', TYPE:'estimate'}, type: 'pdf', showModal: true});
+            });
         });
 
         $("#btnEstimateListExcel").on('click', function(){
