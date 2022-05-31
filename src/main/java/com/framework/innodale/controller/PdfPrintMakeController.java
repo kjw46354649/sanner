@@ -909,7 +909,7 @@ public class PdfPrintMakeController {
             table.addCell(createRotateCell(orderInfo.get("TOTAL_ETC") != null ? "가공합계 "+orderInfo.get("TOTAL_ETC"): "가공합계", 1, 3, mediumBoldFont, 90));
             table.addCell(createRotateCell(orderInfo.get("TOTAL_AMT") != null ? "전체 "+orderInfo.get("TOTAL_AMT"): "전체", 1, 3, mediumBoldFont, 90));
 
-            String[] columnList = {"밀링", "TAP", "일반", "정밀", "15T 이하", "15T 초과", "15T 이하", "15T 초과", "15T 이하", "15T 초과", "일반 Hole", "TAP", "공차 Hole", "특수 Hole", "C/B" };
+            String[] columnList = {"밀링", "TAP", "일반", "정밀", "15T 이하", "15T 초과", "15T 이하", "15T 초과", "15T 이하", "15T 초과", "일반 Hole", "TAP", "C/B", "공차 Hole", "특수 Hole"};
             for(int j=0;j<columnList.length;j++) {
                 PdfPCell tempCell = createRotateCell(columnList[j], 1, 1, mediumNormalFont2, 90, 38f);
                 tempCell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
