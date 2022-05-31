@@ -956,6 +956,7 @@ public class PdfPrintMakeController {
         cell.setPaddingBottom(0);
         cell.setUseAscender(true);
         cell.setRotation(degree);
+        cell.setBackgroundColor(BaseColor.WHITE);
         return cell;
     }
 
@@ -985,6 +986,7 @@ public class PdfPrintMakeController {
         cell.setPaddingBottom(0);
         cell.setUseAscender(true);
         cell.setRotation(degree);
+        cell.setBackgroundColor(BaseColor.WHITE);
         return cell;
     }
 
