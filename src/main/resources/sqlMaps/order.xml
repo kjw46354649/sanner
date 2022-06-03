@@ -3662,7 +3662,9 @@
     </select>
     <select id="selectProcessingRequirementsBasicInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
-            A.CONTROL_NUM
+            CASE WHEN B.PART_NUM IS NULL THEN A.CONTROL_NUM
+                 ELSE CONCAT(A.CONTROL_NUM,' #',B.PART_NUM)
+            END AS CONTROL_NUM
             , B.CONTROL_SEQ AS SEQ1
             , B.CONTROL_DETAIL_SEQ AS SEQ2
             , IFNULL(C.DRAWING_NUM, B.DRAWING_NUM) AS DRAWING_NUM
