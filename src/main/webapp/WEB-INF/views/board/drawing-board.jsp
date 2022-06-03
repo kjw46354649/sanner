@@ -1527,12 +1527,7 @@
                             showMessage("등록되지 않은 기기입니다.");
                         }else {
                             fnDrawingAlertDialogAlert('loginCompleteDivHtml', 2).then(result =>
-                                function () {
-                                    $("#drawing_worker_form").find("#USER_ID").val(data.info.USER_ID)
-                                    $("#drawing_worker_form").find("#USER_NM").val(data.info.USER_NM)
-                                    $("#drawing_worker_form").find("#USER_GFILE_SEQ").val(data.info.PHOTO_GFILE_SEQ)
-                                    $("#drawing_worker_form").submit();
-                                }
+                                loginNewUser(data)
                             );
                         }
                     }, parameters, '');
@@ -1540,6 +1535,13 @@
                 }
             }
         });
+
+        function loginNewUser(data) {
+            $("#drawing_worker_form").find("#USER_ID").val(data.info.USER_ID)
+            $("#drawing_worker_form").find("#USER_NM").val(data.info.USER_NM)
+            $("#drawing_worker_form").find("#USER_GFILE_SEQ").val(data.info.PHOTO_GFILE_SEQ)
+            $("#drawing_worker_form").submit();
+        }
 
         $(".slecBox").on('click', function(){
             /** 대기 리스트와 plan 리스트를 조회한다. **/
