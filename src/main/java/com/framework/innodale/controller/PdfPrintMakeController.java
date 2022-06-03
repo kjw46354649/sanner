@@ -877,6 +877,10 @@ public class PdfPrintMakeController {
             if(orderInfo.get("WORK_TYPE_NM") != null) {
                 sizeTxt += orderInfo.get("WORK_TYPE_NM");
             }
+            // 소재 비고
+            if(orderInfo.get("MATERIAL_NOTE") != null) {
+                sizeTxt +=  "\n" + orderInfo.get("MATERIAL_NOTE");
+            }
             table.addCell(createRotateCell(sizeTxt, 1, 3, mediumNormalFont, 90));
 
             String autoAmt = "";
@@ -886,7 +890,12 @@ public class PdfPrintMakeController {
             if(orderInfo.get("UNIT_SURFACE_AUTO_AMT") != null) {
                 autoAmt += ("표면 " + orderInfo.get("UNIT_SURFACE_AUTO_AMT") + "\n");
             }
-            if(orderInfo.get("SIZE_LEVEL") != null && orderInfo.get("UNIT_BASIC_AMT") != null) {
+            // 기타 추가
+            if(orderInfo.get("UNIT_ETC_AMT") != null) {
+                autoAmt += ("기타 " + orderInfo.get("UNIT_ETC_AMT")+ "\n");
+            }
+            // 가공요건이 없는 경우 Lv 표기 x
+            if(orderInfo.get("SIZE_LEVEL") != null && orderInfo.get("UNIT_BASIC_AMT") != null && orderInfo.get("PROCESS_TOTAL_FORMAT") != null) {
                 autoAmt += ("Lv." + orderInfo.get("SIZE_LEVEL") + " " + orderInfo.get("UNIT_BASIC_AMT")  + "\n");
             }
             table.addCell(createRotateCell(autoAmt, 1, 3, mediumNormalFont, 90));

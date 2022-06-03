@@ -473,9 +473,9 @@
                     {title: '합계', dataType: 'integer', dataIndx: 'UNIT_SUM_AUTO_AMT', format: '#,###', sortable: false},
                     {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AUTO_AMT', format: '#,###', sortable: false},
                     // {title: '소재비', dataType: 'integer', dataIndx: 'UNIT_MATERIAL_AMT', format: '#,###'},
-                    {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###', sortable: false},
+                    // {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT', format: '#,###', sortable: false},
                     // {title: '연마비', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AMT', format: '#,###'},
-                    {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###', sortable: false},
+                    // {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT', format: '#,###', sortable: false},
                     // {title: '열처리', datatype: 'integer', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AMT', format: '#,###'},
                     {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AUTO_AMT', format: '#,###', sortable: false},
                     // {title: '표면처리', dataType: 'integer', dataIndx: 'UNIT_SURFACE_AMT', format: '#,###'},
@@ -573,6 +573,7 @@
                 let EST_STATUS = ui.addList[0].rowData.EST_STATUS;
                 btnDisabled(EST_STATUS);
                 estimateTopSelectedRowIndex = [ui.addList[0].rowIndx];
+                estimateBotSelectedRowIndex = []; // 선택시 하단 그리드 초기화
 
                 let EST_SEQ = ui.addList[0].rowData.EST_SEQ;
                 let EST_VER = ui.addList[0].rowData.EST_VER;
