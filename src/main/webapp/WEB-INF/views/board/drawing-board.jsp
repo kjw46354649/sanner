@@ -401,6 +401,7 @@
                 <input id="WORK_STATUS" name="WORK_STATUS" type="hidden" value="${workInfo.WORK_STATUS}">
                 <input id="WORK_STOP_TIME" name="WORK_STOP_TIME" type="hidden" value="${workInfo.WORK_STOP_TIME}">
                 <input id="CURRENT_STATUS_TIME" name="CURRENT_STATUS_TIME" type="hidden" value="${workInfo.CURRENT_STATUS_TIME}">
+                <input id="START_TIMER" name="START_TIMER" type="hidden" value="${workInfo.START_TIMER}">
             </form>
             <form id="re_start_work_info_form" name="re_start_work_info_form" method="POST" onsubmit="return false;">
                 <input id="CONTROL_SEQ" name="CONTROL_SEQ" type="hidden" value="${reStartWorkinfo.CONTROL_SEQ}">
@@ -2309,80 +2310,95 @@
         let work_stop_interval;
         function stopTimer() {
             let currTime = Number($("#drawing_action_form").find("#CURRENT_STATUS_TIME").val()) + Number($("#drawing_action_form").find("#WORK_STOP_TIME").val());
-            let hours = 0;
-            let minutes = 0;
-            let seconds = 0;
-            if(currTime > 0) {
-                hours = Math.floor(currTime / 3600);
-                minutes = Math.floor((currTime % 3600)/60);
-                seconds = Math.floor((currTime % 3600) % 60);
+            let startTimer = $("#drawing_action_form").find("#START_TIMER").val();
+            if(startTimer == 'N') {
+                $("#WORK_STOP_TIME_SPAN").text("-");
+            }else {
+                let hours = 0;
+                let minutes = 0;
+                let seconds = 0;
+                if(currTime > 0) {
+                    hours = Math.floor(currTime / 3600);
+                    minutes = Math.floor((currTime % 3600)/60);
+                    seconds = Math.floor((currTime % 3600) % 60);
+                }
+                work_stop_interval = setInterval(function() {
+                    seconds++;
+                    if(seconds == 60){
+                        seconds = 0;
+                        minutes++;
+                    }
+                    if(minutes == 60){
+                        minutes = 0;
+                        hours++;
+                    }
+                    $("#WORK_STOP_TIME_SPAN").text(hours +'h ' + minutes +'m ' + seconds + 's');
+                },1000);
             }
-            work_stop_interval = setInterval(function() {
-                seconds++;
-                if(seconds == 60){
-                    seconds = 0;
-                    minutes++;
-                }
-                if(minutes == 60){
-                    minutes = 0;
-                    hours++;
-                }
-                $("#WORK_STOP_TIME_SPAN").text(hours +'h ' + minutes +'m ' + seconds + 's');
-            },1000);
         }
 
         let work_active_interval;
         function activeTimer() {
             let currTime = Number($("#drawing_action_form").find("#CURRENT_STATUS_TIME").val()) + Number($("#drawing_action_form").find("#WORK_ACTIVE_TIME").val());
-            let hours = 0;
-            let minutes = 0;
-            let seconds = 0;
-            if(currTime > 0) {
-                hours = Math.floor(currTime / 3600);
-                minutes = Math.floor((currTime % 3600)/60);
-                seconds = Math.floor((currTime % 3600) % 60);
-            }
-            work_active_interval = setInterval(function() {
-                if (!workTimeIntervalIsPause){
-                    seconds++;
-                    if(seconds == 60){
-                        seconds = 0;
-                        minutes++;
-                    }
-                    if(minutes == 60){
-                        minutes = 0;
-                        hours++;
-                    }
-                    $("#WORK_ACTIVE_TIME_SPAN").text(hours +'h ' + minutes +'m ' + seconds + 's');
+            let startTimer = $("#drawing_action_form").find("#START_TIMER").val();
+            if(startTimer == 'N') {
+                $("#WORK_ACTIVE_TIME_SPAN").text("-");
+            }else {
+                let hours = 0;
+                let minutes = 0;
+                let seconds = 0;
+                if(currTime > 0) {
+                    hours = Math.floor(currTime / 3600);
+                    minutes = Math.floor((currTime % 3600)/60);
+                    seconds = Math.floor((currTime % 3600) % 60);
                 }
-            },1000);
+                work_active_interval = setInterval(function() {
+                    if (!workTimeIntervalIsPause){
+                        seconds++;
+                        if(seconds == 60){
+                            seconds = 0;
+                            minutes++;
+                        }
+                        if(minutes == 60){
+                            minutes = 0;
+                            hours++;
+                        }
+                        $("#WORK_ACTIVE_TIME_SPAN").text(hours +'h ' + minutes +'m ' + seconds + 's');
+                    }
+                },1000);
+            }
         }
 
         let work_cycle_active_interval;
         function cycleActiveTimer() {
             let currTime = Number($("#drawing_action_form").find("#CURRENT_STATUS_TIME").val());
-            let hours = 0;
-            let minutes = 0;
-            let seconds = 0;
-            if(currTime > 0) {
-                hours = Math.floor(currTime / 3600);
-                minutes = Math.floor((currTime % 3600)/60);
-                seconds = Math.floor((currTime % 3600) % 60);
-            }
-            work_cycle_active_interval = setInterval(function() {
-                if (!workTimeIntervalIsPause){
-                    seconds++;
-                    if(seconds == 60){
-                        seconds = 0;
-                        minutes++;
-                    }
-                    if(minutes == 60){
-                        minutes = 0;
-                        hours++;
-                    }
-                    $("#CYCLE_ACTIVE_SPAN").text(hours +'h ' + minutes +'m ' + seconds + 's');
+            let startTimer = $("#drawing_action_form").find("#START_TIMER").val();
+            if(startTimer == 'N') {
+                $("#CYCLE_ACTIVE_SPAN").text("-");
+            }else {
+                let hours = 0;
+                let minutes = 0;
+                let seconds = 0;
+                if(currTime > 0) {
+                    hours = Math.floor(currTime / 3600);
+                    minutes = Math.floor((currTime % 3600)/60);
+                    seconds = Math.floor((currTime % 3600) % 60);
                 }
-            },1000);
+                work_cycle_active_interval = setInterval(function() {
+                    if (!workTimeIntervalIsPause){
+                        seconds++;
+                        if(seconds == 60){
+                            seconds = 0;
+                            minutes++;
+                        }
+                        if(minutes == 60){
+                            minutes = 0;
+                            hours++;
+                        }
+                        $("#CYCLE_ACTIVE_SPAN").text(hours +'h ' + minutes +'m ' + seconds + 's');
+                    }
+                },1000);
+            }
         }
 
         let work_left_interval;
@@ -2508,6 +2524,7 @@
                                         $("#drawing_action_form").find("#CURRENT_STATUS_TIME").val(Item.CURRENT_STATUS_TIME);
                                         $("#drawing_action_form").find("#WORK_ACTIVE_TIME").val(Item.WORK_ACTIVE_TIME);
                                         $("#drawing_action_form").find("#WORK_STOP_TIME").val(Item.WORK_STOP_TIME);
+                                        $("#drawing_action_form").find("#START_TIMER").val(Item.START_TIMER);
                                         clearAllTimer();
                                         setFocusBody();
                                     }

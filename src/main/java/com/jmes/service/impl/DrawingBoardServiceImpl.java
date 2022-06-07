@@ -31,17 +31,29 @@ public class DrawingBoardServiceImpl implements DrawingBoardService {
             hashMap.put("PLAN_WORKING_TIME",tempMap.get("PLAN_WORKING_TIME"));
         }
 
+        hashMap.put("queryId", "drawingMapper.selectDrawingPrevLogData");
+        Map<String,Object> prevMap = innodaleDao.getInfo(hashMap);
+
+        if(prevMap != null) {
+            hashMap.putAll(prevMap);
+        }
+
         /** 신규 MCT 작업을 추가 한다. **/
         hashMap.put("queryId", "drawingMapper.insertMctWorkStart");
         innodaleDao.create(hashMap);
 
-        if(machineInfo.containsKey("IF_USE_YN") && !machineInfo.get("IF_USE_YN").equals("Y")) {
-            /** MCT WORKING LOG INSERT 처리 한다. **/
-            hashMap.put("EXECUTION","DB_ACTIVE");
-            hashMap.put("ACTIVE_TYPE","PGM_ACTIVE");
-            hashMap.put("CYCLE_FINISH_YN","N");
-            hashMap.put("queryId", "drawingMapper.insertWorkingLogNonIf");
-            innodaleDao.create(hashMap);
+        if(machineInfo.containsKey("IF_USE_YN")) {
+            if(machineInfo.get("IF_USE_YN").equals("Y") && hashMap.containsKey("PREV_MCT_LOG_SEQ")) {
+                hashMap.put("queryId", "drawingMapper.updateMctLogPrevData");
+                innodaleDao.update(hashMap);
+            }else {
+                /** MCT WORKING LOG INSERT 처리 한다. **/
+                hashMap.put("EXECUTION","DB_ACTIVE");
+                hashMap.put("ACTIVE_TYPE","PGM_ACTIVE");
+                hashMap.put("CYCLE_FINISH_YN","N");
+                hashMap.put("queryId", "drawingMapper.insertWorkingLogNonIf");
+                innodaleDao.create(hashMap);
+            }
         }
 
 

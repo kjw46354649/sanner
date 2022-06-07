@@ -344,6 +344,9 @@
             END AS LATEST_CYCLE_TIME,
             Z.ACTIVE_TYPE,
             Z.EVENT_TIME,
+            CASE WHEN Z.IF_USE_YN = 'Y' AND Z.ACTIVE_TYPE IS NULL THEN 'N'
+                 ELSE 'Y'
+            END AS START_TIMER,
             IFNULL(Z.CURRENT_STATUS_TIME,0) AS CURRENT_STATUS_TIME,
             CASE WHEN Z.ACTIVE_TYPE = 'PGM_ACTIVE'
                     THEN CONCAT(
@@ -361,7 +364,7 @@
         FROM (
             SELECT
                 'CUR' AS DATA_TYPE, A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, A.MCT_WORK_SEQ, D.CONTROL_NUM,
-                C.DRAWING_NUM, D.CONTROL_VER, C.DRAWING_VER, A.WORK_STATUS,
+                C.DRAWING_NUM, D.CONTROL_VER, C.DRAWING_VER, A.WORK_STATUS, F.IF_USE_YN,
                 CASE WHEN D.EMERGENCY_YN = 'Y' THEN D.EMERGENCY_YN ELSE SPACE(0) END AS EMERGENCY_YN,<!--긴급 -->
                 IFNULL(SF_GET_CODE_NM('1059', D.MAIN_INSPECTION, #{LOGIN_LOCALE}), SPACE(0)) AS MAIN_INSPECTION,<!--주요 검사품 -->
                 IFNULL(SF_GET_CODE_NM('1058', C.MATERIAL_FINISH_HEAT, #{LOGIN_LOCALE}), SPACE(0)) AS MATERIAL_FINISH_HEAT, <!-- 열처리 -->
@@ -473,6 +476,14 @@
         ORDER BY A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ
     </select>
 
+    <select id="selectDrawingPrevLogData" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.ACTIVE_TYPE AS PREV_ACTIVE_TYPE, A.MCT_WORK_SEQ AS PREV_MCT_WORK_SEQ, A.EVENT_TIME AS PREV_EVENT_TIME,
+               A.MCT_LOG_SEQ AS PREV_MCT_LOG_SEQ
+        FROM TBL_MCT_WORKING_LOG A
+        WHERE A.EQUIP_SEQ = #{machineInfo.EQUIP_SEQ}
+          AND A.MCT_LOG_SEQ = (SELECT MAX(X.MCT_LOG_SEQ) FROM TBL_MCT_WORKING_LOG X WHERE X.EQUIP_SEQ = A.EQUIP_SEQ )
+    </select>
+
     <insert id="insertMctWorkStart"  parameterType="java.util.HashMap" >
         <selectKey keyProperty="MCT_WORK_SEQ" resultType="int" order="BEFORE">
             SELECT NEXTVAL(SEQ_MCT_WORK) FROM DUAL
@@ -487,14 +498,20 @@
         )
         SELECT
             #{MCT_WORK_SEQ}, #{machineInfo.EQUIP_SEQ}, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ, #{userInfo.USER_ID},
-            'DBS020', NOW(), 'N', #{userInfo.USER_ID},
+            CASE WHEN #{machineInfo.IF_USE_YN} = 'N' THEN 'DBS020'
+                 WHEN #{PREV_ACTIVE_TYPE} IS NOT NULL AND #{PREV_ACTIVE_TYPE} = 'PGM_ACTIVE' THEN 'DBS020'
+                 ELSE 'DBS010'
+            END AS WORK_STATUS, NOW(), 'N', #{userInfo.USER_ID},
             (SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0)),
            <choose>
                <when test='machineInfo.IF_USE_YN != null and machineInfo.IF_USE_YN != "Y"'>
                    1, 1, NOW()
                </when>
                <otherwise>
-                   (SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0)), 1, NULL
+                   (SF_GET_CONTROL_PART_QTY(B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ) + IFNULL(B.ADDITIONAL_QTY,0)), 1,
+                   CASE WHEN #{PREV_ACTIVE_TYPE} = 'PGM_ACTIVE' AND #{PREV_MCT_WORK_SEQ} IS NULL THEN #{PREV_EVENT_TIME}
+                        ELSE NULL
+                   END AS IF_WORK_START_DT
                </otherwise>
            </choose>
             <if test="PLAN_WORKING_TIME != null and PLAN_WORKING_TIME !=''">
@@ -706,6 +723,14 @@
           AND A.DEL_YN = 'N'
           AND A.MCT_WORK_SEQ = #{MCT_WORK_SEQ}
     </insert>
+
+    <update id="updateMctLogPrevData" parameterType="java.util.HashMap" >
+        UPDATE TBL_MCT_WORKING_LOG
+        SET MCT_WORK_SEQ = #{MCT_WORK_SEQ}
+        WHERE MCT_LOG_SEQ = #{PREV_MCT_LOG_SEQ}
+            AND MCT_WORK_SEQ IS NULL
+            AND ACTIVE_TYPE = 'PGM_ACTIVE'
+    </update>
 
     <update id="deleteFirstMctPlan" parameterType="java.util.HashMap" >
         UPDATE jmes.TBL_MCT_PLAN A

@@ -117,6 +117,9 @@
                     )
                  ELSE '-'
             END AS LATEST_CYCLE_TIME,
+            CASE WHEN Z.IF_USE_YN = 'Y' AND Z.ACTIVE_TYPE IS NULL THEN 'N'
+                 ELSE 'Y'
+            END AS START_TIMER,
             IFNULL(Z.CURRENT_STATUS_TIME,0) AS CURRENT_STATUS_TIME,
             Z.DISCONNECT_YN, Z.EQUIP_OFF_YN, Z.EQUIP_OFF_DT,
             CONCAT('[', DATE_FORMAT(NOW(), '%m/%d %H:%i:%s'), '] ') AS CONTEXT01,
@@ -126,7 +129,7 @@
             END AS CONTEXT03
         FROM (
             SELECT B.MCT_WORK_SEQ, A.EQUIP_SEQ, B.CONTROL_SEQ, B.CONTROL_DETAIL_SEQ,
-                B.IF_WORK_START_DT, B.IF_WORK_FINISH_DT,
+                B.IF_WORK_START_DT, B.IF_WORK_FINISH_DT, A.IF_USE_YN,
                 B.WORK_STATUS, B.WORK_START_DT, B.WORK_FINISH_DT, B.UNIT_QTY, B.GOAL_QTY,
                 (IFNULL(B.UNIT_QTY,1) * IFNULL(B.COMPLETE_CYCLE_COUNT,0) + IFNULL(B.ADJUST_QTY,0)) AS COMPLETE_QTY,
                 B.COMPLETE_CYCLE_COUNT,
