@@ -2228,7 +2228,7 @@
                 flag = data.flag;
 
                 if (flag) {
-                    fnAlert(null, data.message);
+                    fnAlert(null, data.message,null);
                     return false;
                 }
             }, parameters, '');
@@ -2237,12 +2237,12 @@
                 parameters = {'url': '/saveFromControlManage', 'data': {data: JSON.stringify(changes)}};
                 fnPostAjaxAsync(function (data) {
                     if (data.flag) {
-                        fnAlert(null, data.message);
+                        fnAlert(null, data.message,null);
                         return false;
+                    }else {
+                        fnAlert(null, '<spring:message code="com.alert.default.save.success"/>',null);
+                        $controlManagementGrid.pqGrid('refreshDataAndView');
                     }
-
-                    fnAlert(null, '<spring:message code="com.alert.default.save.success"/>');
-                    $controlManagementGrid.pqGrid('refreshDataAndView');
                 }, parameters, '');
             }
         });
@@ -3091,7 +3091,6 @@
                 url: "/paramQueryGridSelect",
                 postData: fnFormToJsonArrayData('stock_match_pop_form'),
                 getData: function (dataJSON) {
-                    console.log(dataJSON.data);
                     return {data: dataJSON.data};
                 }
             },
