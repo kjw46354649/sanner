@@ -536,39 +536,7 @@
             },
             {title: '.', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: '.', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: '.', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true},
-            /*{title: '주문 발주 상태', align: "center", colModel: [
-                    {title: '상태', dataIndx: 'PART_STATUS_NM', width: 70, editable: false},
-                    {title: '확정/취소 일시', dataType: 'date', dataIndx: 'STATUS_DT', width: 120, editable: false}
-                ]},
-            {title: '도면Rev.', dataIndx: 'DRAWING_VER ', editable: false},
-            {title: 'DXF', dataIndx: 'DXF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
-                render: function (ui) {
-                    if (ui.cellData) return '<span id="downloadView" class="blueFileImageICon" style="cursor: pointer"></span>'
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#downloadView").bind("click", function () {
-                        let rowData = ui.rowData;
-                        fnFileDownloadFormPageAction(rowData.DXF_GFILE_SEQ);
-                    });
-                }
-            },
-            {
-                title: 'PDF', dataIndx: 'PDF_GFILE_SEQ', minWidth: 35, width: 35, editable: false,
-                render: function (ui) {
-                    if (ui.cellData) return '<span id="imageView" class="redFileImageICon" style="cursor: pointer"></span>'
-                },
-                postRender: function (ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#imageView").bind("click", function () {
-                        let rowData = ui.rowData;
-                        fnFileDownloadFormPageAction(rowData.PDF_GFILE_SEQ);
-                    });
-                }
-            }*/
+            {title: '.', dataIndx: 'MATERIAL_ORDER_SEQ', hidden: true}
         ];
 
         let itemOrderRegisterRightColModel = [

@@ -309,24 +309,6 @@
             {title: '수행<br>공장', dataType: 'string', dataIndx: 'WORK_FACTORY_NM', minWidth: 70, width: 70},
             {title: '진행상태', dataType: 'string', dataIndx: 'PART_STATUS_NM', minWidth: 100, width: 100},
             {title: '외주업체', dataType: 'string', dataIndx: 'OUTSIDE_COMP_NM', minWidth: 90, width: 90},
-            // {title: '납기', dataType: 'string', dataIndx: 'INNER_DUE_DT', minWidth: 80, width: 80},
-            // {title: '긴<br>급', dataType: 'string', dataIndx: 'EMERGENCY_YN', minWidth: 35, width: 35},
-            // {title: '주요 검사', dataType: 'string', dataIndx: 'MAIN_INSPECTION_NM', minWidth: 80, width: 80},
-            // {title: '카드', align: 'center', dataType: 'string', dataIndx: 'DXF_GFILE_SEQ', width: 40, minWidth: 40,
-            //     render: function (ui) {
-            //         let rowIndx = ui.rowIndx, grid = this;
-            //         if (ui.rowData['DXF_GFILE_SEQ'] > 0) return "[카]";
-            //         return '';
-            //     }
-            // },
-            // {title: '파<br>트', dataType: 'string', dataIndx: 'PART_NUM', minWidth: 35, width: 35},
-            // {title: 'WORK_TYPE', dataType: 'string', dataIndx: 'WORK_TYPE', hidden:true},
-            // {title: 'MATERIAL_TYPE', dataType: 'string', dataIndx: 'MATERIAL_TYPE', hidden:true},
-            // {title: '소재분류', dataType: 'string', dataIndx: 'MATERIAL_TYPE_NM', minWidth: 120, width: 120},
-            // {title: 'MATERIAL_DETAIL', dataType: 'string', dataIndx: 'MATERIAL_DETAIL', hidden:true},
-            // {title: '소재종류', dataType: 'string', dataIndx: 'MATERIAL_DETAIL_NM', minWidth: 110, width: 110},
-            // {title: '주문 비고사항', dataType: 'string', dataIndx: 'NOTE', minWidth: 120, width: 120},
-            // {title: '현재위치', dataType: 'string', dataIndx: 'POP_NM', minWidth: 100, width: 100},
             {
                 title: '품질 실적', datatype: 'string', align: 'center', colModel: [
                     {title: 'seq', datatype: 'string', dataIndx: 'Q_SEQ', minWidth: 40, width: 40},

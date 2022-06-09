@@ -759,8 +759,6 @@
                         }
                         let GfileKey = ui.rowData.ETC_GFILE_SEQ;
                         $('#common_file_download_form').find('#GFILE_SEQ').val(GfileKey);
-                        // $('#ATTACHMENT_BUTTON').data('rowIndx', ui.rowIndx);
-                        // $('#ATTACHMENT_BUTTON').data('GfileKey', GfileKey);
                         commonFileDownUploadPopupCall(GfileKey, 'MCT_RESULT_MANAGE');
                     });
                 }
@@ -768,15 +766,6 @@
             {title: '작업<br>구분', dataIndx: 'MCT_WORK_TYPE_NM', minWidth: 15, width: 50},
             {title: '가공확정<br>일시', dataIndx: 'PROCESS_CONFIRM_DT', minWidth: 75, width: 100},
             {title: '소재입고<br>일시', dataIndx: 'MATERIAL_RECEIPT_DT', minWidth: 75, width: 100},
-            // {title: '이전<br>위치', dataIndx: 'POP_PREV_POSITION', minWidth: 70, width: 70},
-            // {title: '1ea L/T', dataIndx: '1ea L/T', minWidth: 60, width: 60},
-            /*{
-                title: '과거 경험(NC 기준)', align: 'center', colModel: [
-                    {title: '1ea L/T', dataIndx: '1ea L/T', minWidth: 60, width: 60},
-                    {title: '날짜', dataIndx: '날짜', minWidth: 75, width: 75},
-                    {title: '수행자', dataIndx: '수행자', minWidth: 50, width: 50}
-                ]
-            },*/
             {
                 title: '품질현황', align: 'center', colModel: [
                     {title: 'Seq.', datatype: 'integer', dataIndx: 'INSPECT_STEP', minWidth: 30, width: 35},
