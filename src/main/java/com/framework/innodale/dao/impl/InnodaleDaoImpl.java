@@ -49,6 +49,11 @@ public class InnodaleDaoImpl implements InnodaleDao {
         return (Integer)sqlSessionTemplate.selectOne("common.getBeforeQueryTotalCount");
     }*/
 
+    @Override
+    public boolean getFlag(Map<String, Object> hashMap) throws SQLException {
+        return sqlSessionTemplate.selectOne((String)hashMap.get("queryId"), hashMap);
+    }
+
     public int callProcedureMethod(Map<String, Object> hashMap) throws SQLException {
         return (Integer)sqlSessionTemplate.update((String)hashMap.get("queryId"), hashMap);
     }

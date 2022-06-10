@@ -2187,81 +2187,18 @@
                     list.push(rowData);
                 }
                 let changes = {
-                    'addList': list,
                     'updateList': list
                 };
-                changes.queryIdList = {
-                    'insertQueryId': ['material.insertUpdateItemOrderRegisterPopStatus', 'material.insertItemOrderRegisterControlPartProgress'],
-                    'updateQueryId': ['material.updateItemOrderRegisterPartStatus', 'material.insertItemOrderRegisterControlPartProgress']
-                };
-                let parameters = {'url': '/paramQueryModifyGrid', 'data': {data: JSON.stringify(changes)}};
+                changes.MATERIAL_ORDER_NUM = MATERIAL_ORDER_NUM;
+                let parameters = {'url': '/itemOrderSubmit', 'data': {data: JSON.stringify(changes)}};
 
-                fnPostAjax(function () {
-                    let parameter = {
-                        'queryId': 'material.selectItemOrderRegisterPopMailTable',
-                        'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM
-                    };
-                    let parameters = {'url': '/json-list', 'data': parameter};
-                    fnPostAjaxAsync(function (data) {
-                        if(data.list.length == 0 && list.length == 1) {
-                            if(list[0].OUT_QTY == list[0].ORDER_QTY) {
-                                let parameter = {
-                                    'queryId': 'material.updateItemOrderRegisterOrderStatus',
-                                    'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
-                                };
-                                let parameters = {'url': '/json-update', 'data': parameter};
-                                fnPostAjaxAsync(function () {
-                                    itemOrderRegisterPopOrderSheet('N');
-                                }, parameters, '');
-                            }
-                        }else {
-                            let list = data.list;
-                            let compareCd = list[0].MATERIAL_COMP_CD;
-                            let compCd = '';
-                            let tableList = [];
-                            let innerTable = '';
-
-                            for (let i = 0, LENGTH = list.length; i < LENGTH; i++) {
-                                compCd = list[i].MATERIAL_COMP_CD;
-                                if (compareCd !== compCd) {
-                                    innerTable = makeMailInnerTable(tableList);
-                                    let parameter = {
-                                        'queryId': 'mail.insertItemOrderRegisterPopSubmitMail',
-                                        'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
-                                        'MATERIAL_COMP_CD': compareCd,
-                                        'INNER_TABLE': innerTable
-                                    };
-                                    let parameters = {'url': '/json-create', 'data': parameter};
-
-                                    tableList = [];
-                                    fnPostAjaxAsync(function (data, callFunctionParam) {
-                                    }, parameters, '');
-
-                                    compareCd = compCd;
-                                }
-                                tableList.push(list[i]);
-                            }
-
-                            innerTable = makeMailInnerTable(tableList);
-                            let parameter = {
-                                'queryId': 'mail.insertItemOrderRegisterPopSubmitMail',
-                                'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
-                                'MATERIAL_COMP_CD': compareCd,
-                                'INNER_TABLE': innerTable
-                            };
-                            let parameters = {'url': '/json-create', 'data': parameter};
-                            fnPostAjaxAsync(function () {
-                                let parameter = {
-                                    'queryId': 'material.updateItemOrderRegisterOrderStatus',
-                                    'MATERIAL_ORDER_NUM': MATERIAL_ORDER_NUM,
-                                };
-                                let parameters = {'url': '/json-update', 'data': parameter};
-                                fnPostAjaxAsync(function () {
-                                    itemOrderRegisterPopOrderSheet('Y');
-                                }, parameters, '');
-                            }, parameters, '');
-                        }
-                    }, parameters, '');
+                fnPostAjax(function (data) {
+                    console.log('data',data)
+                    if(data.flag) {
+                        itemOrderRegisterPopOrderSheet(data.sheetYn);
+                    }else {
+                        fnAlert(null, data.message, null);
+                    }
                 }, parameters, '');
             });
         }

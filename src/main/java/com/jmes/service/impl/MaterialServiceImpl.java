@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.framework.innodale.dao.InnodaleDao;
 import com.jmes.service.MaterialService;
-import com.jmes.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -52,6 +51,132 @@ public class MaterialServiceImpl implements MaterialService {
         }
 
         model.addAttribute("flag", flag);
+    }
+
+    @Override
+    public void itemOrderSubmit(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+        HashMap<String, Object> queryIdList = null;
+        boolean flag = true;
+        String message = "";
+        String sheetYn = "Y";
+
+        ArrayList<HashMap<String, Object>> updateList = null;
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if (jsonMap.containsKey("updateList"))
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+        for(int i=0;i<updateList.size();i++) {
+            HashMap<String, Object> hashMap = (HashMap<String, Object>) updateList.get(i);
+            hashMap.put("LOGIN_USER_ID",userId);
+
+            hashMap.put("queryId", "material.selectControlPartStatus");
+            if(innodaleDao.getFlag(hashMap)) {
+
+                hashMap.put("queryId", "material.insertUpdateItemOrderRegisterPopStatus");
+                innodaleDao.create(hashMap);
+
+                hashMap.put("queryId", "material.updateItemOrderRegisterPartStatus");
+                innodaleDao.update(hashMap);
+
+                hashMap.put("queryId", "material.insertItemOrderRegisterControlPartProgress");
+                innodaleDao.create(hashMap);
+
+            }else {
+                flag = false;
+                message = "소재주문이 불가능한 주문 건이 있습니다. 확인해주세요";
+            }
+        }
+
+        if(flag) {
+            jsonMap.put("queryId", "material.selectItemOrderRegisterPopMailTable");
+            List<Map<String, Object>> tableList = innodaleDao.getList(jsonMap);
+
+            if(tableList.size() == 0 && updateList.size() == 1) {
+                Integer outQty = (int) updateList.get(0).get("OUT_QTY");
+                Integer orderQty = (int) updateList.get(0).get("ORDER_QTY");
+
+                if(outQty == orderQty) {
+                    jsonMap.put("queryId", "material.updateItemOrderRegisterOrderStatus");
+                    innodaleDao.update(jsonMap);
+
+                    sheetYn = "N";
+                }
+            }else {
+                HashMap<String, List<Map<String,Object>>> tableGroupMap = new HashMap<>();
+
+                for(int i=0;i<tableList.size();i++) {
+                    String materialCompCd = (String) tableList.get(i).get("MATERIAL_COMP_CD");
+                    if(tableGroupMap.containsKey(materialCompCd)) {
+                        ArrayList<Map<String, Object>> list1 = (ArrayList<Map<String, Object>>) tableGroupMap.get(materialCompCd);
+                        list1.add(tableList.get(i));
+
+                        tableGroupMap.put(materialCompCd, list1);
+                    }else {
+                        ArrayList<Map<String, Object>> newList = new ArrayList<>();
+                        newList.add(tableList.get(i));
+                        tableGroupMap.put(materialCompCd, newList);
+                    }
+                }
+
+                HashMap<String, Object> tableMap = new HashMap<>();
+                tableMap.put("MATERIAL_ORDER_NUM", jsonMap.get("MATERIAL_ORDER_NUM"));
+                tableMap.put("queryId", "mail.insertItemOrderRegisterPopSubmitMail");
+                final String st_center = "border:1px solid #d0d0d0; text-align:center; padding:0px 15px 0px 15px; ";
+                final String font_header = "background:lightgray; font-weight:600;";
+
+                for(String key : tableGroupMap.keySet()) {
+                    ArrayList<Map<String, Object>> groupList = (ArrayList<Map<String, Object>>) tableGroupMap.get(key);
+
+                    StringBuffer sb = new StringBuffer();
+                    sb.append("<table style=\"border-spacing:0; min-width:50%;\"><tr>");
+                    sb.append("<td style=\""+ st_center + font_header +"\">발주업체</td>");
+                    sb.append("<td style=\""+ st_center + font_header +"\">공급업체</td>");
+                    sb.append("<td style=\""+ st_center + font_header +"\">형태</td>");
+                    sb.append("<td style=\""+ st_center + font_header +"\">소재종류</td>");
+                    sb.append("<td style=\""+ st_center + font_header +"\">주문 Size</td>");
+                    sb.append("<td style=\""+ st_center + font_header +"\">수량</td>");
+                    sb.append("<td style=\""+ st_center + font_header +"\">요청사항</td>");
+                    sb.append("<td style=\""+ st_center + font_header +"\">비고</td>");
+                    sb.append("<td style=\""+ st_center + font_header +"\">납기</td></tr>");
+
+                    for(int i=0; i<groupList.size();i++) {
+                        sb.append("<tr>");
+                        sb.append("<td style=\"" + st_center + "\">진성정밀</td>");
+                        sb.append("<td style=\"" + st_center + "\">" + groupList.get(i).get("MATERIAL_COMP_NM") + "</td>");
+                        sb.append("<td style=\"" + st_center + "\">" + groupList.get(i).get("MATERIAL_KIND_NM") + "</td>");
+                        sb.append("<td style=\"" + st_center + "\">" + groupList.get(i).get("MATERIAL_DETAIL_NM") + "</td>");
+                        sb.append("<td style=\"" + st_center + "\">" + groupList.get(i).get("SIZE_TXT") + "</td>");
+                        sb.append("<td style=\"" + st_center + "\">" + groupList.get(i).get("ORDER_QTY") + "</td>");
+                        sb.append("<td style=\"" + st_center + "\">" + groupList.get(i).get("REQUEST_NOTE") + "</td>");
+                        sb.append("<td style=\"" + st_center + "\">" + groupList.get(i).get("ORDER_NOTE") + "</td>");
+                        sb.append("<td style=\"" + st_center + "\">" + groupList.get(i).get("ORDER_DT") + "</td>");
+                        sb.append("</tr>");
+                    }
+                    sb.append("</table>");
+
+                    tableMap.put("INNER_TABLE", sb.toString());
+
+                    tableMap.put("MATERIAL_COMP_CD", key);
+                    innodaleDao.create(tableMap);
+                }
+
+                tableMap.put("queryId", "material.updateItemOrderRegisterOrderStatus");
+                innodaleDao.update(tableMap);
+
+                sheetYn = "Y";
+            }
+        }
+
+        model.addAttribute("flag", flag);
+        model.addAttribute("message", message);
+        model.addAttribute("sheetYn", sheetYn);
     }
 
     /**

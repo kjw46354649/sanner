@@ -20,6 +20,8 @@ public interface InnodaleDao {
 
     public void getPageList(Map<String, Object> hashMap) throws SQLException;
 
+    public boolean getFlag(Map<String, Object> hashMap) throws SQLException;
+
     /*public int getPageTotalCount() throws SQLException;*/
 
     public int callProcedureMethod(Map<String, Object> hashMap) throws SQLException;

@@ -459,10 +459,23 @@
             UPDATE_ID = #{LOGIN_USER_ID},
             UPDATE_DT = NOW()
         WHERE 1 = 1
-            AND A.PART_STATUS = 'PRO002'
-            AND A.CONTROL_SEQ = #{CONTROL_SEQ}
-            AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+          AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+          AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
     </update>
+
+    <select id="selectControlPartStatus" parameterType="java.util.HashMap" resultType="java.lang.Boolean">
+        SELECT
+            CASE WHEN IFNULL(MAX(CASE WHEN Z.PART_STATUS = 'PRO002' THEN Z.SEQ END),0) > IFNULL(MAX(CASE WHEN Z.PART_STATUS = 'PRO003' THEN Z.SEQ END),0) THEN TRUE
+                 ELSE FALSE
+            END AS FLAG
+        FROM (
+            SELECT MAX(X.SEQ) AS SEQ,X.PART_STATUS, X.CONTROL_SEQ
+            FROM TBL_CONTROL_PART_PROGRESS X
+            WHERE X.CONTROL_SEQ = #{CONTROL_SEQ}
+                AND X.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            GROUP BY X.PART_STATUS
+        ) Z
+    </select>
 
     <update id="updateItemOrderRegisterOrderStatus" parameterType="java.util.HashMap">
         UPDATE TBL_MATERIAL_ORDER
@@ -483,7 +496,6 @@
             AND A.PART_STATUS = 'PRO004'
             AND A.CONTROL_SEQ = #{CONTROL_SEQ}
             AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-            AND NOT EXISTS (SELECT 1 FROM TBL_CONTROL_PART_PROGRESS M WHERE M.CONTROL_SEQ = A.CONTROL_SEQ AND M.CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ AND M.PART_STATUS = A.PART_STATUS)
     </insert>
 
     <update id="insertUpdateItemOrderRegister" parameterType="java.util.HashMap">

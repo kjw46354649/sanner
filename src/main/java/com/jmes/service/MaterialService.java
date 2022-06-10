@@ -9,6 +9,8 @@ public interface MaterialService {
 
     void itemOrderRegisterPopSave(Model model, Map<String, Object> map) throws Exception;
 
+    void itemOrderSubmit(Model model, Map<String, Object> map) throws Exception;
+
     void managerInsideStock(Model model, Map<String, Object> map) throws Exception;
 
     void managerInsideStockPop(Model model, Map<String, Object> map) throws Exception;

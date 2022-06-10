@@ -27,6 +27,15 @@ public class MaterialController {
         return "jsonView";
     }
 
+    @RequestMapping(value = "/itemOrderSubmit", method = RequestMethod.POST)
+    public String itemOrderSubmit(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.materialService.itemOrderSubmit(model, map);
+
+        return "jsonView";
+    }
+
     @RequestMapping(value = "/managerInsideStock", method = RequestMethod.POST)
     public String managerInsideStock(Model model, HttpServletRequest request) throws Exception {
         Map<String, Object> map = CommonUtility.getParameterMap(request);
