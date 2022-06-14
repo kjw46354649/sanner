@@ -17,5 +17,7 @@ public enum ActionType {
     WK_LOGIN,
     WK_LOGOUT,
 
-    NC_IF
+    NC_IF,
+    FILE_SEND_NOTICE,
+    FILE_SEND_COMPLETE
 }

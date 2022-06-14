@@ -224,6 +224,62 @@
         </table>
     </div>
 </div>
+<div id="file_complete_div" style="display: none">
+    <div id="fileCompleteDivHtml">
+        <table>
+            <tr>
+                <td width="15%">&nbsp;</td>
+                <td><h3 style="font-size: 30px;font-weight: bold; text-align: center;">전송완료되었습니다.</h3></td>
+                <td width="15%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td width="15%">&nbsp;</td>
+                <td style="text-align: center;"><img src="/resource/asset/images/work/icon_4_1.png" width="40px"></td>
+                <td width="15%">&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="file_error_div" style="display: none">
+    <div id="fileErrorDivHtml">
+        <table>
+            <tr>
+                <td width="15%">&nbsp;</td>
+                <td><h3 style="font-size: 30px;font-weight: bold; text-align: center;">오류가 발생했습니다.</h3></td>
+                <td width="15%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3">&nbsp;</td>
+            </tr>
+            <tr>
+                <td width="15%">&nbsp;</td>
+                <td style="text-align: center;"><img src="/resource/asset/images/work/alarm.png" width="40px"></td>
+                <td width="15%">&nbsp;</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div id="file_progress_div" style="display: none;">
+    <div style="background: #252525;opacity: .5;position: fixed;z-index: 1950;top: 0;left: 0;bottom: 0;width: 100%;height: 100%;"></div>
+    <div style="z-index: 1950;position: fixed;left: 24%;top: 16%;border-radius: 3px;width: 52%;font-size: 1.8rem;height: 40%;text-align: center;" class="modal-content">
+        <div style="margin-top: 7%;word-spacing: 7px;">
+            <span style="color: #db2222;font-weight: bold;" class="blink-red">전송중 ..</span>
+            <span id="progress_timer" class="text-blue">(0h 0m)</span>
+        </div>
+        <div style="margin-top: 5%;color: black;">
+            <span id="progress_file_nm"></span>
+            <span id="progress_file_size" style="margin-left: 10%;"></span>
+        </div>
+        <div class="center_sort" style="margin-top: 5%;">
+            <button type="button" id="cancelFileSendBtn" class="gradeMaxBtn">취소</button>
+        </div>
+    </div>
+</div>
+
 <!-- Target Modal Start -->
 <div class="modal" id="drawing_worker_target_list_popup" style="display: none;">
     <div class="modal-dialog">
@@ -578,8 +634,13 @@
                 </div>
             </div>
             <div class="right_float" style="width: 59%;">
-                <div class="nc_process_title">
-                    <span>가공수행 정보</span>
+                <div class="d-flex">
+                    <div class="nc_process_title">
+                        <span>가공수행 정보</span>
+                    </div>
+                    <div id="sendNcFileBtn" class="nc_process_title" style="width: 110px;background: #191f64;border-radius: 0;margin-left: 46%;cursor: pointer;">
+                        <span>NC 파일전송</span>
+                    </div>
                 </div>
                 <div class="workInWrap" style="width: 95%;">
                     <div class="d-flex topConts" style="color: black;font-weight: bold;width: 100%;">
@@ -746,6 +807,41 @@
                             <br>
                             <div class="mt-05 center_sort">
                                 <button type="button" id="closeNoteListBtn" class="gradeMaxBtn"><srping:message key="drawing.board.button.09"/></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Target Modal End -->
+
+<!-- Target Modal Start -->
+<div class="modal" id="nc_file_transfer_popup" style="display: none;">
+    <input type="hidden" id="SEND_NC_FILE" value="">
+    <input type="hidden" id="SEND_NC_FILE_SIZE" value="">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" style="height: 360px;">
+                <div class="tableWrap">
+                    <div class="tab-content mt-10">
+                        <div class="areaWrap workList">
+                            <table class="modal-table" style="word-wrap:break-word;word-break:break-all;">
+                                <thead>
+                                    <tr>
+                                        <th class="modal-table-header" style="width: 8%;"></th>
+                                        <th class="modal-table-header" style="width: 50%;">파일명</th>
+                                        <th class="modal-table-header wd_150">추가일시</th>
+                                        <th class="modal-table-header wd_100">Size</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ncFileTransferHtml" style="height: 198px;"></tbody>
+                            </table>
+                            <br>
+                            <div class="mt-05 center_sort">
+                                <button type="button" id="submitNcFileBtn" class="gradeMaxBtn green"><srping:message key="drawing.board.button.20"/></button>
+                                <button type="button" id="closeNcPopBtn" class="gradeMaxBtn"><srping:message key="drawing.board.button.09"/></button>
                             </div>
                         </div>
                     </div>
@@ -1118,10 +1214,44 @@
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                showMessage('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
+                console.log(textStatus);
+                console.log(jqXHR);
+                console.log(errorThrown);
+                // showMessage('error=[' + response.responseText + ' ' + status + ' ' + errorThrown + ']');
             }
         });
     };
+
+    let fnPostAjaxForCORS = function (callFunction, params, callFunctionParam) {
+        let callback = $.Callbacks();
+        let param = $.extend({url: null, data: ''}, params || {});
+        $.ajax({
+            type: 'POST',
+            url: param.url,
+            dataType: 'json',
+            data: JSON.stringify(params.data),
+            xhrFields: {
+                withCredentials: false
+            },
+            contentType : 'application/json; charset=utf-8',
+            success: function (data, textStatus, jqXHR) {
+                if (textStatus === 'success') {
+                    callback.add(callFunction);
+                    callback.fire(data, callFunctionParam);
+                } else {
+                    showMessage('<srping:message key='error.common'/>');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if(jqXHR.status == 400) {
+                    callback.add(callFunction);
+                    callback.fire(jqXHR, callFunctionParam);
+                }else {
+                    showMessage('<srping:message key='error.common'/>');
+                }
+            }
+        });
+    }
 
     /**
      *	Form reset 처리
@@ -2039,6 +2169,10 @@
             fnPopupCloseNotReload('drawing_note_list_popup');
         });
 
+        $("#closeNcPopBtn").on('click', function(){
+            fnPopupCloseNotReload('nc_file_transfer_popup');
+        });
+
         $("#drawing_quality_history").on('click', function(){
             getDrawingQualityHistory();
             $("#drawing_quality_history_popup").css("display", "block");
@@ -2271,10 +2405,132 @@
             }
         })
 
+        let openNcFilePopup = function () {
+            let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
+            // equipNm = "TEST1";
+
+            let parameters = {
+                'url': 'http://1.220.196.5:18000/IF/list',
+                'data': {
+                    'name':equipNm
+                }
+            };
+
+            fnPostAjaxForCORS(function (data, callFunctionParam) {
+                resetNcFileInfo();
+                let innerHtmlObj = $("#nc_file_transfer_popup").find("#ncFileTransferHtml");
+                innerHtmlObj.html("");
+                if(data.status == 400) {
+                    showMessage('파일 전송이 불가능한 장비입니다.');
+                }else {
+                    let fileHtml = '';
+                    let dataList = data[equipNm];
+                    if(dataList.length > 0) {
+                        for(let i=0;i<dataList.length;i++) {
+                            fileHtml += '<tr class="workListAction '+((i == 0)?'select':'') + '">';
+                            fileHtml += '    <td class="modal-table-contents" style="width: 8%;"><input name="chk_nc_file" class="chk_nc_file" type="checkbox" style="zoom:2.0;" '+((i == 0)?'checked':'') +'></td>';
+                            fileHtml += '    <td class="modal-table-contents nc_file_name" style="width: 50%;text-align: left;padding-left: 3%;">' + dataList[i].file_name + '</td>';
+                            fileHtml += '    <td class="modal-table-contents" style="width: 142px;">' + ((dataList[i].modify_time !== undefined)?dataList[i].modify_time:'') + '</td>';
+                            fileHtml += '    <td class="modal-table-contents nc_file_size">' + ((dataList[i].file_size !== undefined)?dataList[i].file_size:'') + '</td>';
+                            fileHtml += '</tr>';
+
+                            if(i == 0) {
+                                $("#nc_file_transfer_popup").find("#SEND_NC_FILE").val(dataList[i].file_name);
+                                $("#nc_file_transfer_popup").find("#SEND_NC_FILE_SIZE").val(dataList[i].file_size);
+                            }
+                        }
+                    }else {
+                        fileHtml += '<tr>';
+                        fileHtml += '    <td class="modal-table-contents" style="width: 360px;" colspan="3">Data Not Found.</td>';
+                        fileHtml += '</tr>';
+
+                    }
+                    innerHtmlObj.append(fileHtml);
+
+                    $("#nc_file_transfer_popup").css("display", "block");
+                    $(".bodyWrap").addClass("modal-open-body");
+                }
+            }, parameters, '');
+        }
+
+
+        $("#sendNcFileBtn").on('click', function () {
+            openNcFilePopup();
+        });
+
+        let progress_timer_interval;
+        function progressTimer() {
+            let minutes = 0;
+            let seconds = 0;
+
+            progress_timer_interval = setInterval(function() {
+                seconds++;
+                if(seconds == 60){
+                    seconds = 0;
+                    minutes++;
+                }
+                $("#progress_timer").text('(' + minutes +'m ' + seconds + 's)');
+            },1000);
+
+        }
+
+        $("#submitNcFileBtn").on('click', function () {
+            let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
+            equipNm = "TEST1";
+            let fileNm = $("#nc_file_transfer_popup").find("#SEND_NC_FILE").val();
+            let parameters = {
+                'url': 'http://1.220.196.5:18000/IF/sendFile',
+                'data': {
+                    'name':equipNm,
+                    "file_name":fileNm
+                }
+            }
+
+            fnPostAjaxForCORS(function (data, callFunctionParam) {
+                if(data[equipNm] == fileNm) {
+                    $("#file_progress_div").find("#progress_file_nm").text(fileNm);
+                    $("#file_progress_div").find("#progress_file_size").text($("#nc_file_transfer_popup").find("#SEND_NC_FILE_SIZE").val());
+                    $("#file_progress_div").show();
+                    progressTimer();
+                }else {
+                    fnDrawingAlertDialogAlert('fileErrorDivHtml',3);
+                }
+            }, parameters, '');
+        })
+
+        $("#cancelFileSendBtn").on('click', function () {
+            let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
+            equipNm = "TEST1";
+            let parameters = {
+                'url': 'http://1.220.196.5:18000/IF/cancelFile',
+                'data': {
+                    'name':equipNm
+                }
+            }
+
+            fnPostAjaxForCORS(function (data, callFunctionParam) {
+                if(data[equipNm].toLowerCase() == 'ok') {
+                    $("#file_progress_div").hide();
+                    fnPopupCloseNotReload("nc_file_transfer_popup");
+                    resetNcFileInfo();
+                }else {
+                    fnDrawingAlertDialogAlert('fileErrorDivHtml',3);
+                }
+            }, parameters, '');
+        });
+
         /* POPUP */
         let reloadDrawingBoard = function(){
             $("#drawing_action_form").submit();
         };
+
+        let resetNcFileInfo = function () {
+            $("#file_progress_div").find("#progress_file_nm").text("");
+            $("#file_progress_div").find("#progress_file_size").text("");
+            $("#nc_file_transfer_popup").find("#SEND_NC_FILE").val("");
+            $("#nc_file_transfer_popup").find("#SEND_NC_FILE_SIZE").val("");
+            clearTimeout(progress_timer_interval);
+        }
 
         function fnDrawingBoardSave(){
             /** todo 최신 작업과 같은 Part 작업인 경우 진행 안되도록 처리 **/
@@ -2481,11 +2737,33 @@
             clearTimeout(work_stop_interval);
         }
 
+        function closeNcFilePopAll() {
+            $("#file_progress_div").hide();
+            fnPopupCloseNotReload("nc_file_transfer_popup");
+            resetNcFileInfo();
+        }
+
         let iConnectCount = 0;
         function jmesConnect() {
             let socket = new SockJS('/jmes-ws');
             stompClient = Stomp.over(socket);
             stompClient.connect({}, (frame) => {
+                stompClient.subscribe('/topic/file', function (notificationMessage) {
+                    let data = JSON.parse(notificationMessage.body);
+                    let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
+                    if(data.equipNm == equipNm) {
+                        if(data.actionType == "FILE_SEND_NOTICE") {
+                            openNcFilePopup();
+                        }else if(data.actionType == "FILE_SEND_COMPLETE") {
+                            let fileNm = $("#nc_file_transfer_popup").find("#SEND_NC_FILE").val();
+                            if(fileNm == data.content01) {
+                                fnDrawingAlertDialogAlert('fileCompleteDivHtml',3).then(result =>
+                                    closeNcFilePopAll()
+                                );
+                            }
+                        }
+                    }
+                });
                 stompClient.subscribe('/topic/notice', function (notificationMessage) {
                     if(if_use_yn == "Y") {
                         var data = JSON.parse(notificationMessage.body);
@@ -2536,7 +2814,7 @@
             }, () => {
                 setTimeout(() => {
                     if(iConnectCount == 6) {
-                        fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+                        // fnConfirm(null, "시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
                         return;
                     }else if(iConnectCount <= 5){
                         jmesConnect();
@@ -2631,6 +2909,18 @@
                 $("#drawing_error_qty_form").find("#ERROR_QTY").val(1);
                 $("#drawing_error_qty_form").find("#ERROR_QTY_SPAN").text(1);
             }, parameters, '');
+        }
+    });
+
+
+    // nc_file 1개만 체크 가능
+    $(document).on("click",".chk_nc_file",function(e){
+        $("#ncFileTransferHtml tr").removeClass("select");
+        if($(this).prop('checked')) {
+            $(".chk_nc_file").not(this).prop('checked',false)
+            $(this).parents("tr").addClass("select");
+            $("#nc_file_transfer_popup").find("#SEND_NC_FILE").val($(this).parents("td").next(".nc_file_name").text());
+            $("#nc_file_transfer_popup").find("#SEND_NC_FILE_SIZE").val($(this).parents("td").nextAll(".nc_file_size").text());
         }
     });
 </script>
