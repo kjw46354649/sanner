@@ -2407,7 +2407,7 @@
 
         let openNcFilePopup = function () {
             let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
-            equipNm = "TEST1";
+            // equipNm = "TEST1";
 
             let parameters = {
                 'url': 'http://1.220.196.5:18000/IF/list',
