@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @Api
@@ -29,8 +30,11 @@ public class FileApiController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    private final int BAD_REQUEST = 400;
+    private final int INTERNAL_SERVER_ERROR = 500;
+
     @PostMapping("/fileSendNotice")
-    public CommonResult fileSendNotice(HttpServletRequest request, @RequestBody Map<String,Object> parameters) {
+    public CommonResult fileSendNotice(HttpServletRequest request, @RequestBody Map<String,Object> parameters, HttpServletResponse response) {
         CommonResult result = responseService.getSingleResult("200");
 
         try {
@@ -45,16 +49,18 @@ public class FileApiController {
                 throw new ParameterException();
             }
         }catch (ParameterException pe) {
-            result =  responseService.getFailResult(400, "파라미터를 확인해주세요.");
+            response.setStatus(BAD_REQUEST);
+            result =  responseService.getFailResult(BAD_REQUEST, "파라미터를 확인해주세요.");
         }catch (Exception e) {
-            result =  responseService.getFailResult(500, "알수없는 오류가 발생하였습니다.");
+            response.setStatus(INTERNAL_SERVER_ERROR);
+            result =  responseService.getFailResult(INTERNAL_SERVER_ERROR, "알수없는 오류가 발생하였습니다.");
             e.printStackTrace();
         }
         return result;
     }
 
     @PostMapping("/fileSendFinish")
-    public CommonResult fileSendFinish(HttpServletRequest request, @RequestBody Map<String,Object> parameters) {
+    public CommonResult fileSendFinish(HttpServletRequest request, @RequestBody Map<String,Object> parameters, HttpServletResponse response) {
         CommonResult result = responseService.getSingleResult("200");
 
         try {
@@ -69,9 +75,11 @@ public class FileApiController {
                 throw new ParameterException();
             }
         }catch (ParameterException pe) {
-            result =  responseService.getFailResult(400, "파라미터를 확인해주세요.");
+            response.setStatus(BAD_REQUEST);
+            result =  responseService.getFailResult(BAD_REQUEST, "파라미터를 확인해주세요.");
         }catch (Exception e) {
-            result =  responseService.getFailResult(500, "알수없는 오류가 발생하였습니다.");
+            response.setStatus(INTERNAL_SERVER_ERROR);
+            result =  responseService.getFailResult(INTERNAL_SERVER_ERROR, "알수없는 오류가 발생하였습니다.");
             e.printStackTrace();
         }
         return result;
