@@ -821,9 +821,9 @@
 <div class="modal" id="nc_file_transfer_popup" style="display: none;">
     <input type="hidden" id="SEND_NC_FILE" value="">
     <input type="hidden" id="SEND_NC_FILE_SIZE" value="">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width: 700px;margin-top:8%;">
         <div class="modal-content">
-            <div class="modal-body" style="height: 360px;">
+            <div class="modal-body">
                 <div class="tableWrap">
                     <div class="tab-content mt-10">
                         <div class="areaWrap workList">
@@ -832,11 +832,11 @@
                                     <tr>
                                         <th class="modal-table-header" style="width: 8%;"></th>
                                         <th class="modal-table-header" style="width: 50%;">파일명</th>
-                                        <th class="modal-table-header wd_150">추가일시</th>
-                                        <th class="modal-table-header wd_100">Size</th>
+                                        <th class="modal-table-header wd_180">추가일시</th>
+                                        <th class="modal-table-header wd_150">Size</th>
                                     </tr>
                                 </thead>
-                                <tbody id="ncFileTransferHtml" style="height: 198px;"></tbody>
+                                <tbody id="ncFileTransferHtml" style="height: 278px;"></tbody>
                             </table>
                             <br>
                             <div class="mt-05 center_sort">
@@ -2407,7 +2407,7 @@
 
         let openNcFilePopup = function () {
             let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
-            // equipNm = "TEST1";
+            equipNm = "TEST1";
 
             let parameters = {
                 'url': 'http://1.220.196.5:18000/IF/list',
@@ -2427,10 +2427,10 @@
                     let dataList = data[equipNm];
                     if(dataList.length > 0) {
                         for(let i=0;i<dataList.length;i++) {
-                            fileHtml += '<tr class="workListAction '+((i == 0)?'select':'') + '">';
+                            fileHtml += '<tr class="file_row workListAction '+((i == 0)?'select':'') + '">';
                             fileHtml += '    <td class="modal-table-contents" style="width: 8%;"><input name="chk_nc_file" class="chk_nc_file" type="checkbox" style="zoom:2.0;" '+((i == 0)?'checked':'') +'></td>';
                             fileHtml += '    <td class="modal-table-contents nc_file_name" style="width: 50%;text-align: left;padding-left: 3%;">' + dataList[i].file_name + '</td>';
-                            fileHtml += '    <td class="modal-table-contents" style="width: 142px;">' + ((dataList[i].modify_time !== undefined)?dataList[i].modify_time:'') + '</td>';
+                            fileHtml += '    <td class="modal-table-contents" style="width: 153px;">' + ((dataList[i].modify_time !== undefined)?dataList[i].modify_time:'') + '</td>';
                             fileHtml += '    <td class="modal-table-contents nc_file_size">' + ((dataList[i].file_size !== undefined)?dataList[i].file_size:'') + '</td>';
                             fileHtml += '</tr>';
 
@@ -2923,5 +2923,15 @@
             $("#nc_file_transfer_popup").find("#SEND_NC_FILE_SIZE").val($(this).parents("td").nextAll(".nc_file_size").text());
         }
     });
+    $(document).on("click",".file_row",function(e){
+        $("#ncFileTransferHtml tr").removeClass("select");
+        $(".chk_nc_file").prop('checked',false)
+        if(!$(this).find(".chk_nc_file").prop('checked')) {
+            $(this).find(".chk_nc_file").prop('checked',true);
+            $(this).addClass("select");
+            $("#nc_file_transfer_popup").find("#SEND_NC_FILE").val($(this).find(".nc_file_name").text());
+            $("#nc_file_transfer_popup").find("#SEND_NC_FILE_SIZE").val($(this).find(".nc_file_size").text());
+        }
+    })
 </script>
 </body>

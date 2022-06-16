@@ -914,3 +914,11 @@ button.close {
     border: 1px solid gray;
     color: black;
 }
+
+
+#nc_file_transfer_popup .modal-dialog .workList table thead{width:100%;}
+#nc_file_transfer_popup .modal-dialog .workList table tbody{width:100%;}
+#nc_file_transfer_popup .modal-dialog .workList table tbody tr{width:100%;}
+
+#nc_file_transfer_popup .modal-table-header{font-size: 1.4rem;}
+#nc_file_transfer_popup .modal-table-contents{font-size: 1.3rem;}
