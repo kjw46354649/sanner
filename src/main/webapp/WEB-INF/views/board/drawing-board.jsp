@@ -2407,7 +2407,7 @@
 
         let openNcFilePopup = function () {
             let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
-            equipNm = "TEST1";
+            // equipNm = "TEST1";
 
             let parameters = {
                 'url': 'http://1.220.196.5:18000/IF/list',
@@ -2431,7 +2431,7 @@
                                 fileHtml += '<tr class="file_row workListAction '+((i == 0)?'select':'') + '">';
                                 fileHtml += '    <td class="modal-table-contents" style="width: 8%;"><input name="chk_nc_file" class="chk_nc_file" type="checkbox" style="zoom:2.0;" '+((i == 0)?'checked':'') +'></td>';
                                 fileHtml += '    <td class="modal-table-contents nc_file_name" style="width: 50%;text-align: left;padding-left: 3%;">' + dataList[i].file_name + '</td>';
-                                fileHtml += '    <td class="modal-table-contents" style="width: 153px;">' + ((dataList[i].modify_time !== undefined)?dataList[i].modify_time:'') + '</td>';
+                                fileHtml += '    <td class="modal-table-contents" style="width: 173px;">' + ((dataList[i].modify_time !== undefined)?dataList[i].modify_time:'') + '</td>';
                                 fileHtml += '    <td class="modal-table-contents nc_file_size">' + ((dataList[i].file_size !== undefined)?dataList[i].file_size:'') + '</td>';
                                 fileHtml += '</tr>';
 
@@ -2478,7 +2478,7 @@
 
         $("#submitNcFileBtn").on('click', function () {
             let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
-            equipNm = "TEST1";
+            // equipNm = "TEST1";
             let fileNm = $("#nc_file_transfer_popup").find("#SEND_NC_FILE").val();
             let parameters = {
                 'url': 'http://1.220.196.5:18000/IF/sendFile',
@@ -2502,7 +2502,7 @@
 
         $("#cancelFileSendBtn").on('click', function () {
             let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
-            equipNm = "TEST1";
+            // equipNm = "TEST1";
             let parameters = {
                 'url': 'http://1.220.196.5:18000/IF/cancelFile',
                 'data': {
