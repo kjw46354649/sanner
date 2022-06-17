@@ -265,7 +265,7 @@
 
 <div id="file_progress_div" style="display: none;">
     <div style="background: #252525;opacity: .5;position: fixed;z-index: 1950;top: 0;left: 0;bottom: 0;width: 100%;height: 100%;"></div>
-    <div style="z-index: 1950;position: fixed;left: 24%;top: 16%;border-radius: 3px;width: 52%;font-size: 1.8rem;height: 40%;text-align: center;" class="modal-content">
+    <div style="z-index: 1950;position: fixed;left: 21%;top: 24%;border-radius: 3px;width: 60%;font-size: 2.5rem;height: 45%;text-align: center;" class="modal-content">
         <div style="margin-top: 7%;word-spacing: 7px;">
             <span style="color: #db2222;font-weight: bold;" class="blink-red">전송중 ..</span>
             <span id="progress_timer" class="text-blue">(0h 0m)</span>
@@ -821,9 +821,9 @@
 <div class="modal" id="nc_file_transfer_popup" style="display: none;">
     <input type="hidden" id="SEND_NC_FILE" value="">
     <input type="hidden" id="SEND_NC_FILE_SIZE" value="">
-    <div class="modal-dialog" style="width: 700px;margin-top:8%;">
+    <div class="modal-dialog" style="width: 800px;margin-top:7%;">
         <div class="modal-content">
-            <div class="modal-body">
+            <div class="modal-body" style="height: 450px;">
                 <div class="tableWrap">
                     <div class="tab-content mt-10">
                         <div class="areaWrap workList">
@@ -836,7 +836,7 @@
                                         <th class="modal-table-header wd_150">Size</th>
                                     </tr>
                                 </thead>
-                                <tbody id="ncFileTransferHtml" style="height: 278px;"></tbody>
+                                <tbody id="ncFileTransferHtml" style="height: 305px;"></tbody>
                             </table>
                             <br>
                             <div class="mt-05 center_sort">
@@ -2407,7 +2407,7 @@
 
         let openNcFilePopup = function () {
             let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
-            // equipNm = "TEST1";
+            equipNm = "TEST1";
 
             let parameters = {
                 'url': 'http://1.220.196.5:18000/IF/list',
@@ -2427,16 +2427,18 @@
                     let dataList = data[equipNm];
                     if(dataList.length > 0) {
                         for(let i=0;i<dataList.length;i++) {
-                            fileHtml += '<tr class="file_row workListAction '+((i == 0)?'select':'') + '">';
-                            fileHtml += '    <td class="modal-table-contents" style="width: 8%;"><input name="chk_nc_file" class="chk_nc_file" type="checkbox" style="zoom:2.0;" '+((i == 0)?'checked':'') +'></td>';
-                            fileHtml += '    <td class="modal-table-contents nc_file_name" style="width: 50%;text-align: left;padding-left: 3%;">' + dataList[i].file_name + '</td>';
-                            fileHtml += '    <td class="modal-table-contents" style="width: 153px;">' + ((dataList[i].modify_time !== undefined)?dataList[i].modify_time:'') + '</td>';
-                            fileHtml += '    <td class="modal-table-contents nc_file_size">' + ((dataList[i].file_size !== undefined)?dataList[i].file_size:'') + '</td>';
-                            fileHtml += '</tr>';
+                            if(dataList[i].file_name !== undefined && dataList[i].file_name != '' && dataList[i].file_name != null) {
+                                fileHtml += '<tr class="file_row workListAction '+((i == 0)?'select':'') + '">';
+                                fileHtml += '    <td class="modal-table-contents" style="width: 8%;"><input name="chk_nc_file" class="chk_nc_file" type="checkbox" style="zoom:2.0;" '+((i == 0)?'checked':'') +'></td>';
+                                fileHtml += '    <td class="modal-table-contents nc_file_name" style="width: 50%;text-align: left;padding-left: 3%;">' + dataList[i].file_name + '</td>';
+                                fileHtml += '    <td class="modal-table-contents" style="width: 153px;">' + ((dataList[i].modify_time !== undefined)?dataList[i].modify_time:'') + '</td>';
+                                fileHtml += '    <td class="modal-table-contents nc_file_size">' + ((dataList[i].file_size !== undefined)?dataList[i].file_size:'') + '</td>';
+                                fileHtml += '</tr>';
 
-                            if(i == 0) {
-                                $("#nc_file_transfer_popup").find("#SEND_NC_FILE").val(dataList[i].file_name);
-                                $("#nc_file_transfer_popup").find("#SEND_NC_FILE_SIZE").val(dataList[i].file_size);
+                                if(i == 0) {
+                                    $("#nc_file_transfer_popup").find("#SEND_NC_FILE").val(dataList[i].file_name);
+                                    $("#nc_file_transfer_popup").find("#SEND_NC_FILE_SIZE").val(dataList[i].file_size);
+                                }
                             }
                         }
                     }else {
@@ -2476,7 +2478,7 @@
 
         $("#submitNcFileBtn").on('click', function () {
             let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
-            // equipNm = "TEST1";
+            equipNm = "TEST1";
             let fileNm = $("#nc_file_transfer_popup").find("#SEND_NC_FILE").val();
             let parameters = {
                 'url': 'http://1.220.196.5:18000/IF/sendFile',
@@ -2500,7 +2502,7 @@
 
         $("#cancelFileSendBtn").on('click', function () {
             let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
-            // equipNm = "TEST1";
+            equipNm = "TEST1";
             let parameters = {
                 'url': 'http://1.220.196.5:18000/IF/cancelFile',
                 'data': {
