@@ -821,9 +821,9 @@
 <div class="modal" id="nc_file_transfer_popup" style="display: none;">
     <input type="hidden" id="SEND_NC_FILE" value="">
     <input type="hidden" id="SEND_NC_FILE_SIZE" value="">
-    <div class="modal-dialog" style="width: 800px;margin-top:7%;">
+    <div class="modal-dialog" style="width: 800px;margin-top:6%;">
         <div class="modal-content">
-            <div class="modal-body" style="height: 450px;">
+            <div class="modal-body" style="height: 462px;">
                 <div class="tableWrap">
                     <div class="tab-content mt-10">
                         <div class="areaWrap workList">
@@ -840,7 +840,7 @@
                             </table>
                             <br>
                             <div class="mt-05 center_sort">
-                                <button type="button" id="submitNcFileBtn" class="gradeMaxBtn green"><srping:message key="drawing.board.button.20"/></button>
+                                <button type="button" id="submitNcFileBtn" class="gradeMaxBtn green" style="margin-right: 18%;"><srping:message key="drawing.board.button.20"/></button>
                                 <button type="button" id="closeNcPopBtn" class="gradeMaxBtn"><srping:message key="drawing.board.button.09"/></button>
                             </div>
                         </div>
@@ -2404,7 +2404,14 @@
                 }, parameters, '');
             }
         })
+        function dateFormat(val) {
+            let date = new Date(val);
+            let str = ("0"+(date.getMonth()+1)).slice(-2) + "/" + ("0"+(date.getDate()+1)).slice(-2) + " " + ('00'+date.getHours()).substr(-2)+ ':' + ('00'+date.getMinutes()).substr(-2);
 
+            return str;
+        }
+
+        const equipArr = ['1N-03','1N-04','1N-06','1N-08','1N-09','1N-10'];
         let openNcFilePopup = function () {
             let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
 
@@ -2414,6 +2421,9 @@
                     'name':equipNm
                 }
             };
+            if(equipArr.includes(equipNm)) {
+                parameters.url = 'http://172.16.0.207/IF/list'
+            }
 
             fnPostAjaxForCORS(function (data, callFunctionParam) {
                 resetNcFileInfo();
@@ -2430,7 +2440,7 @@
                                 fileHtml += '<tr class="file_row workListAction '+((i == 0)?'select':'') + '">';
                                 fileHtml += '    <td class="modal-table-contents" style="width: 8%;"><input name="chk_nc_file" class="chk_nc_file" type="checkbox" style="zoom:2.0;" '+((i == 0)?'checked':'') +'></td>';
                                 fileHtml += '    <td class="modal-table-contents nc_file_name" style="width: 50%;text-align: left;padding-left: 3%;">' + dataList[i].file_name + '</td>';
-                                fileHtml += '    <td class="modal-table-contents" style="width: 173px;">' + ((dataList[i].modify_time !== undefined)?dataList[i].modify_time:'') + '</td>';
+                                fileHtml += '    <td class="modal-table-contents" style="width: 173px;">' + ((dataList[i].modify_time !== undefined)? dateFormat(dataList[i].modify_time):'') + '</td>';
                                 fileHtml += '    <td class="modal-table-contents nc_file_size">' + ((dataList[i].file_size !== undefined)?dataList[i].file_size:'') + '</td>';
                                 fileHtml += '</tr>';
 
@@ -2485,6 +2495,9 @@
                     "file_name":fileNm
                 }
             }
+            if(equipArr.includes(equipNm)) {
+                parameters.url = 'http://172.16.0.207/IF/sendFile'
+            }
 
             fnPostAjaxForCORS(function (data, callFunctionParam) {
                 if(data[equipNm] == fileNm) {
@@ -2505,6 +2518,9 @@
                 'data': {
                     'name':equipNm
                 }
+            }
+            if(equipArr.includes(equipNm)) {
+                parameters.url = 'http://172.16.0.207/IF/sendFile'
             }
 
             fnPostAjaxForCORS(function (data, callFunctionParam) {

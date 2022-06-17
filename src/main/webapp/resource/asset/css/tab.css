@@ -921,4 +921,6 @@ button.close {
 #nc_file_transfer_popup .modal-dialog .workList table tbody tr{width:100%;}
 
 #nc_file_transfer_popup .modal-table-header{font-size: 1.6rem;}
-#nc_file_transfer_popup .modal-table-contents{font-size: 1.5rem;height: 40px;}
+#nc_file_transfer_popup .modal-table-contents{font-size: 1.5rem;height: 45px;}
+
+#nc_file_transfer_popup .gradeMaxBtn{width: 150px;height: 60px;font-size: 2.3rem;}
