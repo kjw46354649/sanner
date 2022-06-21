@@ -52,10 +52,6 @@
                                 </c:forEach>
                             </select>
                         </span>
-<%--                        <span class="ipu_wrap">--%>
-<%--                            <label class="label_100" for="SEL_MATERIAL_DETAIL">소재종류</label>--%>
-<%--                            <input type="text" class="wd_200" name="SEL_MATERIAL_DETAIL" id="SEL_MATERIAL_DETAIL" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" readonly>--%>
-<%--                        </span>--%>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label for="SEL_EQUIP" class="label_100">장비</label>
@@ -63,15 +59,6 @@
                                 <option value=""><spring:message code="com.form.top.all.option" /></option>
                             </select>
                         </span>
-<%--                        <span class="slt_wrap">--%>
-<%--                            <label class="label_100" for="material_type">재질</label>--%>
-<%--                            <select class="wd_200" name="MATERIAL_TYPE" id="material_type" title="재질">--%>
-<%--                                <option value=""><spring:message code="com.form.top.all.option"/></option>--%>
-<%--                                <c:forEach var="code" items="${HighCode.H_1035}">--%>
-<%--                                    <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>--%>
-<%--                                </c:forEach>--%>
-<%--                            </select>--%>
-<%--                        </span>--%>
                         <span class="gubun"></span>
                         <span class="slt_wrap">
                             <label for="WAREHOUSE_CD" class="label_100">창고</label>
@@ -131,12 +118,6 @@
                                 <input class="wd_50 for_diabled" type="number" name="SIZE_L_T" id="SIZE_L_T" placeholder="To" disabled>
                             </span>
                             <span class="gubun"></span>
-                            <%--                            <select class="wd_100" class="two" name="SEL_SIZE_SEARCH_TYPE" id="SEL_SIZE_SEARCH_TYPE" style="display: none">--%>
-                            <%--                                <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
-                            <%--                                <c:forEach var="vlocale" items="${HighCode.H_1056}">--%>
-                            <%--                                    <option value="${vlocale.CODE_CD}">${vlocale.CODE_NM_KR}</option>--%>
-                            <%--                                </c:forEach>--%>
-                            <%--                            </select>--%>
                         </div>
                         <span class="ipu_wrap right_float">
                             <span class="mr-10" id="locationBarcodeSpan">
@@ -148,13 +129,6 @@
                             <button type="button" id="STOCK_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="stock_manage_search_btn">검색</button>
                         </span>
-                        <%--<span class="txt_span pd-right20">조회 Option</span>
-                        <span class="chk_box"><input type="checkbox" name="DEADLINE" id="DEADLINE"><label for="DEADLINE">마감</label></span>
-                        <span class="chk_box"><input type="checkbox" name="END" id="END"><label for="END">종료</label></span>
-                        <span class="gubun"></span>
-                        <span class="txt_span pd-right20">항목 Option</span>
-                        <span class="chk_box"><input type="checkbox" name="PART_NUM" id="PART_NUM"><label for="PART_NUM">Part</label></span>
-                        <span class="chk_box"><input type="checkbox" name="ORDER_NUM" id="ORDER_NUM"><label for="ORDER_NUM">발주번호</label></span>--%>
                     </li>
                 </ul>
             </div>
@@ -189,16 +163,8 @@
                             <label class="label_100" for="SEL_ITEM_NM">품명</label>
                             <input type="search" class="wd_200" name="SEL_ITEM_NM" id="SEL_ITEM_NM" title="품명">
                         </span>
-<%--                        <span class="ipu_wrap">--%>
-<%--                            <label class="label_100" for="SEL_NOTE">비고</label>--%>
-<%--                            <input type="search" class="wd_200" name="SEL_NOTE" id="SEL_NOTE" title="비고">--%>
-<%--                        </span>--%>
                     </li>
                     <li>
-                        <%--                        <span class="ipu_wrap">--%>
-                        <%--                            <label class="label_100" for="SEL_MATERIAL_DETAIL">소재종류</label>--%>
-                        <%--                            <input type="text" class="wd_200" name="SEL_MATERIAL_DETAIL" id="SEL_MATERIAL_DETAIL" placeholder="<spring:message code='com.form.top.all.option' />(복수개 선택)" readonly>--%>
-                        <%--                        </span>--%>
                         <span class="slt_wrap">
                             <label class="label_100" for="MATERIAL_DETAIL">소재종류</label>
                             <select name="MATERIAL_DETAIL" id="MATERIAL_DETAIL" class="wd_200">
@@ -2939,6 +2905,23 @@
                 title: '연계 작업번호', align: 'center', editable: false,
                 colModel: [
                     {title: '작업번호', dataType: 'string', dataIndx: 'CONTROL_NUM', minWidth: 140, width: 140, editable: false},
+                    {
+                        title: '', align: 'center', dataType: 'string', dataIndx: '', width: 25, minWidth: 25, editable: false,
+                        render: function (ui) {
+                            if (ui.rowData['CONTROL_SEQ'] > 0) return '<span id="detailView" class="shareIcon" style="cursor: pointer"></span>';
+                            return '';
+                        },
+                        postRender: function(ui) {
+                            let grid = this,
+                                $cell = grid.getCell(ui),
+                                rowIndx = ui.rowIndx,
+                                rowData = ui.rowData;
+
+                            $cell.find("#detailView").bind("click", function () {
+                                g_item_detail_pop_view(rowData.CONTROL_SEQ, rowData.CONTROL_DETAIL_SEQ, grid, rowIndx);
+                            });
+                        }
+                    },
                     {title: '요청수량', dataType: 'integer', dataIndx: 'REQUEST_QTY', editable: false}
                 ]
             },
