@@ -1651,6 +1651,35 @@
 			},1000);
 		}
 
+		let work_left_interval;
+		function leftTimer(val) {
+			let currTime = Number(val);
+			let hours = 0;
+			let minutes = 0;
+			let seconds = 0;
+
+			work_left_interval = setInterval(function() {
+				if (!workTimeIntervalIsPause){
+					if(currTime > 0) {
+						currTime--;
+
+						if(currTime < 0) {
+							currTime = 0;
+						}
+
+						hours = Math.floor(currTime / 3600);
+						minutes = Math.floor((currTime % 3600)/60);
+						seconds = Math.floor((currTime % 3600) % 60);
+
+						$(".LEFT_TIME_FORMAT").text(hours +'h ' + minutes +'m ' + seconds + 's');
+					}else {
+						clearInterval(work_left_interval);
+					}
+				}
+			},1000);
+		}
+
+
 		function settingRightTable(data) {
 			$("#popHeadMid4").find(".val_text").text("");
 			if(data.info != null) {
@@ -1748,6 +1777,7 @@
 							cycleActiveTimer(data.info.CURRENT_STATUS_TIME);
 						}
 						activeTimer(data.info.WORK_ACTIVE_TIME);
+						leftTimer(data.info.LEFT_TIME);
 					}
 
 				}else {
