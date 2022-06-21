@@ -1180,37 +1180,19 @@
 		let alarmMessageProcess = function(messageData){
 			let maxCnt = 9;
 			if (messageData) {
-				// if(messageData.actionType == 'NC_IF') {
-				// 	$.each(messageData.list, function (idx,Item) {
-				// 		let messageKey = randomKey();
-				// 		let messBody = Item.CONTEXT03 + " : " + Item.CONTEXT02;
-				// 		if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
-				// 		let alarmMsg  = '<p id=' + messageKey + ' class="alarmList">';
-				// 		alarmMsg += Item.CONTEXT01;
-				// 		alarmMsg += messBody;
-				// 		alarmMsg += '</p>';
-				// 		alarmMsg += '<span id="new_'+messageKey + '">[New]</span>';
-				// 		$("#alarm_list").prepend($(alarmMsg));
-				//
-				// 		setTimeout(function() {
-				// 			$("#new_" + messageKey).remove();
-				// 		}, 30000);
-				// 	})
-				// }else {
-					let messageKey = randomKey();
-					let messBody = messageData.content03 + " : " + messageData.content02;
-					if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
-					let alarmMsg  = '<p id=' + messageKey + ' class="alarmList">';
-					alarmMsg += messageData.content01;
-					alarmMsg += messBody;
-					alarmMsg += '</p>';
-					alarmMsg += '<span id="new_'+messageKey + '">[New]</span>';
-					$("#alarm_list").prepend($(alarmMsg));
+				let messageKey = randomKey();
+				let messBody = messageData.content03 + " : " + messageData.content02;
+				if($(".alarmList").length > maxCnt) $(".alarmList").last().remove();
+				let alarmMsg  = '<p id=' + messageKey + ' class="alarmList">';
+				alarmMsg += messageData.content01;
+				alarmMsg += messBody;
+				alarmMsg += '</p>';
+				alarmMsg += '<span id="new_'+messageKey + '">[New]</span>';
+				$("#alarm_list").prepend($(alarmMsg));
 
-					setTimeout(function() {
-						$("#new_" + messageKey).remove();
-					}, 30000);
-				// }
+				setTimeout(function() {
+					$("#new_" + messageKey).remove();
+				}, 30000);
 			}
 		};
 
@@ -1589,6 +1571,86 @@
 
 	$(document).ready(function(){
 
+		let workTimeIntervalIsPause = false;
+		let work_stop_interval;
+		function stopTimer(val) {
+			let currTime = Number(val);
+			let hours = 0;
+			let minutes = 0;
+			let seconds = 0;
+			if(currTime > 0) {
+				hours = Math.floor(currTime / 3600);
+				minutes = Math.floor((currTime % 3600)/60);
+				seconds = Math.floor((currTime % 3600) % 60);
+			}
+			work_stop_interval = setInterval(function() {
+				seconds++;
+				if(seconds == 60){
+					seconds = 0;
+					minutes++;
+				}
+				if(minutes == 60){
+					minutes = 0;
+					hours++;
+				}
+				$(".WORK_STOP_TIME_FORMAT").text(hours +'h ' + minutes +'m ' + seconds + 's');
+			},1000);
+		}
+
+		let work_active_interval;
+		function activeTimer(val) {
+			let currTime = Number(val);
+			let hours = 0;
+			let minutes = 0;
+			let seconds = 0;
+			if(currTime > 0) {
+				hours = Math.floor(currTime / 3600);
+				minutes = Math.floor((currTime % 3600)/60);
+				seconds = Math.floor((currTime % 3600) % 60);
+			}
+			work_active_interval = setInterval(function() {
+				if (!workTimeIntervalIsPause){
+					seconds++;
+					if(seconds == 60){
+						seconds = 0;
+						minutes++;
+					}
+					if(minutes == 60){
+						minutes = 0;
+						hours++;
+					}
+					$(".WORK_ACTIVE_TIME_FORMAT").text(hours +'h ' + minutes +'m ' + seconds + 's');
+				}
+			},1000);
+		}
+
+		let work_cycle_active_interval;
+		function cycleActiveTimer(val) {
+			let currTime = Number(val);
+			let hours = 0;
+			let minutes = 0;
+			let seconds = 0;
+			if(currTime > 0) {
+				hours = Math.floor(currTime / 3600);
+				minutes = Math.floor((currTime % 3600)/60);
+				seconds = Math.floor((currTime % 3600) % 60);
+			}
+			work_cycle_active_interval = setInterval(function() {
+				if (!workTimeIntervalIsPause){
+					seconds++;
+					if(seconds == 60){
+						seconds = 0;
+						minutes++;
+					}
+					if(minutes == 60){
+						minutes = 0;
+						hours++;
+					}
+					$(".CURRENT_STATUS_TIME_FORMAT").text(hours +'h ' + minutes +'m ' + seconds + 's');
+				}
+			},1000);
+		}
+
 		function settingRightTable(data) {
 			$("#popHeadMid4").find(".val_text").text("");
 			if(data.info != null) {
@@ -1645,6 +1707,9 @@
 			};
 			fnPostAjax(function (data) {
 				var tempHtml = '';
+				clearInterval(work_cycle_active_interval);
+				clearInterval(work_stop_interval);
+				clearInterval(work_active_interval);
 				$("#machinePopupWrap").find("#popHeadMid").removeClass("non_if");
 				if(data.info != null) {
 					$("#pop_machine_form").find("#CONTROL_SEQ").val(data.info.CONTROL_SEQ);
@@ -1675,6 +1740,16 @@
 						$("#mapImgWrap").attr('src', '/resource/main/blank.jpg');
 						$("#pop_machine_form").find("#GFILE_SEQ").val('');
 					}
+
+					if(data.info.EQUIP_STATUS == 'Stop') {
+						stopTimer(data.info.WORK_STOP_TIME);
+					}else if(data.info.EQUIP_STATUS == 'Active') {
+						if(data.info.IF_USE_YN == 'Y') {
+							cycleActiveTimer(data.info.CURRENT_STATUS_TIME);
+						}
+						activeTimer(data.info.WORK_ACTIVE_TIME);
+					}
+
 				}else {
 					$("#mapImgWrap").attr('src', '/resource/main/blank.jpg');
 					$("#pop_machine_form").find("#GFILE_SEQ").val('');
