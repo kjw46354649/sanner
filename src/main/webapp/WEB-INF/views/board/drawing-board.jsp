@@ -2411,7 +2411,6 @@
             return str;
         }
 
-        const equipArr = ['1N-03','1N-04','1N-06','1N-08','1N-09','1N-10'];
         let openNcFilePopup = function () {
             let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
 
@@ -2421,9 +2420,6 @@
                     'name':equipNm
                 }
             };
-            if(equipArr.includes(equipNm)) {
-                parameters.url = 'http://172.16.0.207/IF/list'
-            }
 
             fnPostAjaxForCORS(function (data, callFunctionParam) {
                 resetNcFileInfo();
@@ -2495,9 +2491,6 @@
                     "file_name":fileNm
                 }
             }
-            if(equipArr.includes(equipNm)) {
-                parameters.url = 'http://172.16.0.207/IF/sendFile'
-            }
 
             fnPostAjaxForCORS(function (data, callFunctionParam) {
                 if(data[equipNm] == fileNm) {
@@ -2518,9 +2511,6 @@
                 'data': {
                     'name':equipNm
                 }
-            }
-            if(equipArr.includes(equipNm)) {
-                parameters.url = 'http://172.16.0.207/IF/sendFile'
             }
 
             fnPostAjaxForCORS(function (data, callFunctionParam) {
