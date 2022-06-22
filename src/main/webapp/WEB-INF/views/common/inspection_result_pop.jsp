@@ -949,13 +949,15 @@
             $("#inspection_result_pop_grid").pqGrid('setSelection', null);
             let pos1 = "";
             let pos2 = "";
+            let pWidth = Math.floor($(".spanPosition").width()/2);
+            let pHeight = Math.floor($(".spanPosition").height()/2);
             $.each(gridDivData.gridDivX,function (idx,Item) {
-                if(x < Item.AREA_COORDINATE && pos1 == "") {
+                if((x + pWidth) < (Item.AREA_COORDINATE) && pos1 == "") {
                     pos1 = Item.AREA_NAME;
                 }
             })
             $.each(gridDivData.gridDivY,function (idx,Item) {
-                if(y < Item.AREA_COORDINATE && pos2 == "") {
+                if((y + pHeight) < (Item.AREA_COORDINATE) && pos2 == "") {
                     pos2 = Item.AREA_NAME;
                 }
             })
@@ -1023,8 +1025,15 @@
                 var x = e.clientX - rect.left;
                 var y = e.clientY - rect.top;
 
-                targetX = Math.floor(($("#drawing_touch_div").width()/Math.floor(rect.width)) * x);
-                targetY = Math.floor(($("#drawing_touch_div").height()/Math.floor(rect.height)) * y);
+                targetX = Math.floor(($("#drawing_touch_div").width()/Math.floor(rect.width)) * x) - 25;
+                targetY = Math.floor(($("#drawing_touch_div").height()/Math.floor(rect.height)) * y) - 25;
+
+                if(targetX < 0) {
+                    targetX = 0;
+                }
+                if(targetY < 0) {
+                    targetY = 0;
+                }
 
                 let id = "code_" + ($(".spanPosition").length+1)
                 let html = '<span id="'+id+ '" class="spanPosition" style="top:'+targetY+'px;left: '+targetX+'px;" data-target="'+($(".spanPosition").length+1)+'">'+($(".spanPosition").length+1) +'</span>';
@@ -1715,48 +1724,6 @@
             }
         }
 
-        // $("#vertical_div_num").on("change",function () {
-        //     let val = $(this).val();
-        //     let trLength = $(".vertical_tr").length;
-        //
-        //     console.log('vertical_div_num');
-        //     if(val < trLength) {
-        //         $(".vertical_tr").each(function(i,e){
-        //             if(i >= val) {
-        //                 $(this).remove();
-        //             }
-        //         })
-        //     }else if(val > trLength) {
-        //         for(let i=trLength;i<val;i++) {
-        //             let html = '<tr id="vertical_tr_'+i + '" class="vertical_tr">';
-        //             html += '<td><input class="wd_50 vertical_name" type="text"></td>';
-        //             html += '<td><input class="wd_80 vertical_coord" type="text"></td></tr>';
-        //             $("#vertical_table").find('tbody').append(html);
-        //         }
-        //     }
-        // });
-
-        // $("#horizontal_div_num").on("change",function () {
-        //     let val = $(this).val();
-        //     let trLength = $(".horizon_tr").length;
-        //
-        //     // console.log('horizontal_div_num');
-        //     if(val < trLength) {
-        //         $(".horizon_tr").each(function(i,e){
-        //             if(i >= val) {
-        //                 $(this).remove();
-        //             }
-        //         })
-        //     }else if(val > trLength) {
-        //         for(let i=trLength;i<val;i++) {
-        //             let html = '<tr id="horizon_tr_'+i + '" class="horizon_tr">';
-        //             html += '<td><input class="wd_50 horizontal_name" type="text"></td>';
-        //             html += '<td><input class="wd_80 horizontal_coord" type="text"></td></tr>';
-        //             $("#horizon_table").find('tbody').append(html);
-        //         }
-        //     }
-        // });
-
         $("#vertical_batch_btn").on("click",function () {
             batchBtn("vertical");
         });
@@ -1960,8 +1927,18 @@
                     settingLayerGrid(data);
                 }, parameters, '');
             }, 'hide.bs.modal' : function () {
-                settingLayerBtn();
-                $("#select_layer_name").val("A").trigger('change');
+                settingLayerBtn(function () {
+                    $("#select_layer_name").val("A");
+
+                    let parameter = {
+                        'queryId': 'inspection.selectLayerInfo',
+                        'LAYER_AREA_NAME': $("#inspection_result_pop_form").find("#LAYER_AREA_NAME").val()
+                    };
+                    let parameters = {'url': '/json-list', 'data': parameter};
+                    fnPostAjaxAsync(function(data, callFunctionParam){
+                        settingLayerGrid(data,'main');
+                    }, parameters, '');
+                });
             }
         });
 
@@ -2231,7 +2208,7 @@
             }
         }
 
-        function settingLayerBtn() {
+        function settingLayerBtn(callback) {
             // selectLayerInfoForBtn
 
             let params = {
@@ -2247,6 +2224,9 @@
                         html += '<span style="font-size: 18px;">(' + Item.DIV_TXT + ')</span></span>';
                         $("button[data-target='"+Item.LAYER_AREA_NAME +"']").html(html);
                     })
+                }
+                if(callback != null && callback !== undefined) {
+                    callback();
                 }
             },params,'');
         }
