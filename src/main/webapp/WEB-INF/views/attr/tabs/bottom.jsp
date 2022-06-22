@@ -121,6 +121,7 @@
                     <input type="hidden" id="FIRST_PART_CONTROL_DETAIL_SEQ" name="FIRST_PART_CONTROL_DETAIL_SEQ"/>
                     <input type="hidden" id="PREV_PART_CONTROL_DETAIL_SEQ" name="PREV_PART_CONTROL_DETAIL_SEQ" value=""/>
                     <input type="hidden" id="NEXT_PART_CONTROL_DETAIL_SEQ" name="NEXT_PART_CONTROL_DETAIL_SEQ" value=""/>
+                    <input type="hidden" id="IMG_GFILE_SEQ" name="IMG_GFILE_SEQ" value=""/>
                     <div class="d-flex align-items-center" style="width:100%;height: 50px;">
                         <h4>기본정보</h4>
                         <div id="view_part_wrap" style="margin-left: 95px;">
@@ -1904,6 +1905,7 @@
                 const controlStatusHoldSpanElement = dataInfo.CONTROL_STATUS === 'ORD005' ? '<span class="mark" style="background-color: #ff0000; color: #ffffff">보류</span>' : '';
 
                 $("#item_detail_pop_img").attr("src", '/qimage/' + dataInfo.IMG_GFILE_SEQ);
+                $itemDetailPopForm.find("#IMG_GFILE_SEQ").html(dataInfo.IMG_GFILE_SEQ);
                 $itemDetailPopForm.find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
                 $itemDetailPopForm.find("#ORDER_QTY_INFO").html(dataInfo.ORDER_QTY_INFO);
                 $itemDetailPopForm.find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
@@ -2092,6 +2094,13 @@
         if (g_ItemDetailPopGridId04.hasClass('pq-grid')) g_ItemDetailPopGridId04.pqGrid('destroy');
         if (g_ItemDetailPopGridId05.hasClass('pq-grid')) g_ItemDetailPopGridId05.pqGrid('destroy');
         if (g_ItemDetailPopGridId06.hasClass('pq-grid')) g_ItemDetailPopGridId06.pqGrid('destroy');
+    });
+
+    $("#item_detail_pop_img").on('dblclick', function() {
+        let imgSeq = $("#g_item_detail_pop_form").find("#IMG_GFILE_SEQ").val();
+        if(imgSeq != null && imgSeq != "" && imgSeq !== undefined) {
+            callWindowImageViewer(imgSeq);
+        }
     });
 
     $('#g_item_detail_pop_form').find('[name=control_num_arrow]').on('click', function () {

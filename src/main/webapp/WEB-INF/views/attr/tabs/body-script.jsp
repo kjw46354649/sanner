@@ -967,7 +967,7 @@
     {
         // 팝업창 열려 있는지 확인
         if(typeof(windowImageViewer)=='undefined' || windowImageViewer.closed) {
-            windowImageViewer = window.open("/imageViewer", "jmesImageViewChildForm", "width=1024, height=768, resizable = no, scrollbars = no");
+            windowImageViewer = window.open("/imageViewer", "jmesImageViewChildForm", "width=1400, height=990, resizable = no, scrollbars = no");
             windowImageViewer.onload = function () {
                 setTimeout(function () {
                     $(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
@@ -983,7 +983,7 @@
         }
     }
     function callWindowImageViewerDupl(imageSeq) {
-        var windowImageViewerDupl = window.open("/imageViewer", "", "width=1024, height=768, resizable = no, scrollbars = no");
+        var windowImageViewerDupl = window.open("/imageViewer", "", "width=1400, height=768, resizable = no, scrollbars = no");
         windowImageViewerDupl.onload = function () {
             setTimeout(function () {
                 $(windowImageViewerDupl.window.document).find("#image_seq").val(imageSeq);

@@ -480,6 +480,7 @@
 						<input type="hidden" id="FIRST_PART_CONTROL_DETAIL_SEQ" name="FIRST_PART_CONTROL_DETAIL_SEQ"/>
 						<input type="hidden" id="PREV_PART_CONTROL_DETAIL_SEQ" name="PREV_PART_CONTROL_DETAIL_SEQ" value=""/>
 						<input type="hidden" id="NEXT_PART_CONTROL_DETAIL_SEQ" name="NEXT_PART_CONTROL_DETAIL_SEQ" value=""/>
+						<input type="hidden" id="IMG_GFILE_SEQ" name="IMG_GFILE_SEQ" value=""/>
 						<div class="d-flex align-items-center" style="width:100%;height: 6%;">
 							<h4>기본정보</h4>
 							<div id="view_part_wrap" style="margin-left: 95px;">
@@ -532,18 +533,12 @@
 									<td id="ORDER_QTY_INFO"></td>
 									<th class="lightGreen">프로젝트</th>
 									<td id="PROJECT_NM"></td>
-									<%--<th>소재주문상태</th>--%>
-									<%--<td id="MATERIAL_ORDER_STATUS_NM"></td>--%>
 								</tr>
 								<tr>
 									<th>규격</th>
 									<td id="SIZE_TXT"></td>
 									<th class="lightGreen">발주처</th>
 									<td id="ORDER_COMP_NM"></td>
-									<%--<th>도면수정Rev.</th>--%>
-									<%--<td id="DRAWING_VER"></td>--%>
-									<%--<th>도면파일</th>--%>
-									<%--<td id="DXF_GFILE_SEQ"></td>--%>
 								</tr>
 								<tr>
 									<th>소재</th>
@@ -961,7 +956,7 @@
     {
         // 팝업창 열려 있는지 확인
         if(typeof(windowImageViewer)=='undefined' || windowImageViewer.closed) {
-            windowImageViewer = window.open("/imageViewer", "jmesImageViewChildForm", "width=1024, height=768, resizable = no, scrollbars = no");
+            windowImageViewer = window.open("/imageViewer", "jmesImageViewChildForm", "width=1400, height=990, resizable = no, scrollbars = no");
             windowImageViewer.onload = function () {
                 setTimeout(function () {
                     $(windowImageViewer.window.document).find("#image_seq").val(imageSeq);
@@ -1268,6 +1263,7 @@
 				const controlStatusHoldSpanElement = dataInfo.CONTROL_STATUS === 'ORD005' ? '<span class="mark" style="background-color: #ff0000; color: #ffffff">보류</span>' : '';
 
 				$("#item_detail_pop_img").attr("src", '/qimage/' + dataInfo.IMG_GFILE_SEQ);
+				$itemDetailPopForm.find("#IMG_GFILE_SEQ").html(dataInfo.IMG_GFILE_SEQ);
 				$itemDetailPopForm.find("#CONTROL_NUM").html(dataInfo.CONTROL_NUM);
 				$itemDetailPopForm.find("#ORDER_QTY_INFO").html(dataInfo.ORDER_QTY_INFO);
 				$itemDetailPopForm.find("#SIZE_TXT").html(dataInfo.SIZE_TXT);
@@ -1686,6 +1682,13 @@
 	$(".close_cam_work_detail").on('click',function () {
 		$("#cam_work_detail_popup").modal('hide');
 	})
+
+	$("#item_detail_pop_img").on('dblclick', function() {
+		let imgSeq = $("#g_item_detail_pop_form").find("#IMG_GFILE_SEQ").val();
+		if(imgSeq != null && imgSeq != "" && imgSeq !== undefined) {
+			callWindowImageViewer(imgSeq);
+		}
+	});
 
 	$('[name=ORDER_COMP_CHECK]').on('change', function () {
 		if($('#ORDER_COMP_CHECK').is(":checked")) {
