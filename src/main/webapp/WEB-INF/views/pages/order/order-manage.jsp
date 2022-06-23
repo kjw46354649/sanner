@@ -2811,8 +2811,8 @@
         // changeDate();
         const $orderManageStartDate = $('#ORDER_MANAGE_START_DATE');
         const $orderManageEndDate = $('#ORDER_MANAGE_END_DATE');
-        $orderManageStartDate.datepicker({dateFormat: 'yy/mm/dd'});
-        $orderManageEndDate.datepicker({dateFormat: 'yy/mm/dd'});
+        $orderManageStartDate.datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth:true});
+        $orderManageEndDate.datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth:true});
         var today = new Date();
         var startDay = new Date(today.getFullYear(),today.getMonth()-3,1);
         $orderManageStartDate.datepicker('setDate', startDay);
