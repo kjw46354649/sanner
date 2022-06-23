@@ -643,6 +643,7 @@
 
     const previewPlayer = document.getElementById("preview");
     const recordingPlayer = document.getElementById("recording");
+    const ASCII_NUM = 65;
 
     let recorder;
     let recordedChunks;
@@ -1683,7 +1684,6 @@
             let batchNum = $("#"+ type +"_batch_num").val();
             let divNum = $("#"+ type +"_div_num").val();
             let markType = $("#"+ type +"_mark_type").val();
-            let asciiNum = 65;
             let areaLimit = (type == 'horizontal')?1300:900;
 
             if(isNaN(batchNum)) {
@@ -1715,7 +1715,7 @@
                         if(markType == 'M1') {
                             $(this).val(i+1);
                         }else {
-                            let text = String.fromCharCode(asciiNum + i);
+                            let text = String.fromCharCode(ASCII_NUM + i);
                             $(this).val(text);
                         }
                     }
@@ -1739,6 +1739,35 @@
             }, parameters, '');
         });
 
+        $("#horizontal_mark_type").on('change', function () {
+            let val = $(this).val();
+            $('.horizontal_name').each(function(idx) {
+                let targetVal = $(this).val();
+                if(targetVal != null && targetVal != "" && targetVal !== undefined) {
+                    if(val == 'M1') {
+                        $(this).val(idx + 1);
+                    }else {
+                        let text = String.fromCharCode(ASCII_NUM + idx);
+                        $(this).val(text);
+                    }
+                }
+            });
+        });
+        $("#vertical_mark_type").on('change', function () {
+            let val = $(this).val();
+            $('.vertical_name').each(function(idx) {
+                let targetVal = $(this).val();
+                if(targetVal != null && targetVal != "" && targetVal !== undefined) {
+                    if(val == 'M1') {
+                        $(this).val(idx + 1);
+                    }else {
+                        let text = String.fromCharCode(ASCII_NUM + idx);
+                        $(this).val(text);
+                    }
+                }
+            });
+        });
+
         function changeHorizonVertical(btnId) {
             let text = $("#" + btnId).text();
             let divName = (btnId.indexOf("horizon") >= 0) ? 'gridDivX' : 'gridDivY';
@@ -1750,9 +1779,8 @@
                 }
             }else {
                 $("#" + btnId).text("ABC");
-                let asciiNum = 65;
                 for(var i=0;i<gridDivData[divName].length;i++) {
-                    gridDivData[divName][i].AREA_NAME = String.fromCharCode(asciiNum + i);
+                    gridDivData[divName][i].AREA_NAME = String.fromCharCode(ASCII_NUM + i);
                 }
             }
 
