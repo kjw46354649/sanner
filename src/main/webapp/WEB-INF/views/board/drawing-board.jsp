@@ -635,7 +635,7 @@
             </div>
             <div class="right_float" style="width: 59%;">
                 <div class="d-flex">
-                    <div class="nc_process_title">
+                    <div class="nc_process_title" id="testNc">
                         <span>가공수행 정보</span>
                     </div>
                     <div id="sendNcFileBtn" class="nc_process_title" style="width: 110px;background: #191f64;border-radius: 0;margin-left: 46%;cursor: pointer;">
@@ -2411,6 +2411,7 @@
             return str;
         }
 
+        const equipArr = ['1N-03','1N-04','1N-06','1N-08','1N-09','1N-10'];
         let openNcFilePopup = function () {
             let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
 
@@ -2420,6 +2421,9 @@
                     'name':equipNm
                 }
             };
+            if(equipArr.includes(equipNm)) {
+                parameters.url = 'http://172.16.0.207/IF/list'
+            }
 
             fnPostAjaxForCORS(function (data, callFunctionParam) {
                 resetNcFileInfo();
@@ -2461,9 +2465,32 @@
         }
 
 
-        $("#sendNcFileBtn").on('click', function () {
+        $("#sendNcFileBtn").on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
             openNcFilePopup();
         });
+
+        $("#testNc").on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $.ajax({
+                type:'POST',
+                url:'http://172.16.0.207',
+                dataType: 'json',
+                data : JSON.stringify({}),
+                contentType : 'application/json; charset=utf-8',
+                // crossDomain: true,
+                // cache:false,
+                success: function (data, textStatus, jqXHR) {
+                    console.log('success',data)
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log('error')
+                }
+            });
+
+        })
 
         let progress_timer_interval;
         function progressTimer() {
@@ -2491,6 +2518,9 @@
                     "file_name":fileNm
                 }
             }
+            if(equipArr.includes(equipNm)) {
+                parameters.url = 'http://172.16.0.207/IF/sendFile'
+            }
 
             fnPostAjaxForCORS(function (data, callFunctionParam) {
                 if(data[equipNm] == fileNm) {
@@ -2511,6 +2541,9 @@
                 'data': {
                     'name':equipNm
                 }
+            }
+            if(equipArr.includes(equipNm)) {
+                parameters.url = 'http://172.16.0.207/IF/sendFile'
             }
 
             fnPostAjaxForCORS(function (data, callFunctionParam) {
