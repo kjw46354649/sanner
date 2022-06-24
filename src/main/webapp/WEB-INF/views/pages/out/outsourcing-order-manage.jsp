@@ -592,6 +592,16 @@
             {title: '금액<br>합계', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'OUTSIDE_TOTAL_AMT'},
             {title: '외주<br>종전가', width: 90, align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'PREV_OUTSIDE_UNIT_AMT'},
             {
+                title: '상세 견적가', align: 'center',
+                colModel: [
+                    {title: '소재비', minWidth:65, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_AUTO_AMT'},
+                    {title: '표면처리비', minWidth:65, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_SURFACE_AUTO_AMT'},
+                    {title: '가공비', minWidth:80, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_PROCESS_TOTAL_AUTO_AMT'},
+                    {title: '기타추가', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_ETC_AMT'},
+                    {title: '견적비고', align: 'left', dataIndx: 'UNIT_AMT_NOTE'}
+                ]
+            },
+            {
                 title: '품질결과', align: 'center', colModel: [
                     {title: 'Seq.', minWidth: 30, width: 35, datatype: 'integer', dataIndx: 'INSPECT_NUM'},
                     {title: '등급', minWidth: 30, width: 35, dataIndx: 'INSPECT_GRADE_NM'},
