@@ -1805,30 +1805,63 @@
         $("#saveAreaBtn").on("click",function () {
             let arr = [];
             let layerAreaName = $("#select_layer_name").val();
+            let flag = false;
+            let msg = "";
             $(".horizontal_name").each(function(i,e){
-                if(!fnIsEmpty($(this).val())) {
+                let nameVal = $(this).val();
+                let coordVal = $(this).parent().next().children(".horizontal_coord").val();
+                if(!fnIsEmpty(nameVal) && !fnIsEmpty(coordVal)) {
                     let json = {
                         'LAYER_AREA_NAME':layerAreaName,
                         'AREA_TYPE':'H',
                         'MARK_TYPE':$("#horizontal_mark_type").val(),
-                        'AREA_NAME':$(this).val(),
-                        'AREA_COORDINATE':$(this).parent().next().children(".horizontal_coord").val()
+                        'AREA_NAME':nameVal,
+                        'AREA_COORDINATE':coordVal
                     }
                     arr.push(json)
+                }else {
+                    if(fnIsEmpty(nameVal) && !fnIsEmpty(coordVal)) {
+                        msg = "구역값을 입력해주세요";
+                        flag = true;
+                    }else if(!fnIsEmpty(nameVal) && fnIsEmpty(coordVal)) {
+                        msg = "좌표값을 입력해주세요";
+                        flag = true;
+                    }
                 }
             });
             $(".vertical_name").each(function(i,e){
-                if(!fnIsEmpty($(this).val())) {
+                let nameVal = $(this).val();
+                let coordVal = $(this).parent().next().children(".vertical_coord").val();
+                if(!fnIsEmpty(nameVal) && !fnIsEmpty(coordVal)) {
                     let json = {
                         'LAYER_AREA_NAME':layerAreaName,
                         'AREA_TYPE':'V',
                         'MARK_TYPE':$("#vertical_mark_type").val(),
-                        'AREA_NAME':$(this).val(),
-                        'AREA_COORDINATE':$(this).parent().next().children(".vertical_coord").val()
+                        'AREA_NAME':nameVal,
+                        'AREA_COORDINATE':coordVal
                     }
                     arr.push(json)
+                }else {
+                    if(fnIsEmpty(nameVal) && !fnIsEmpty(coordVal)) {
+                        msg = "구역값을 입력해주세요";
+                        flag = true;
+                    }else if(!fnIsEmpty(nameVal) && fnIsEmpty(coordVal)) {
+                        msg = "좌표값을 입력해주세요";
+                        flag = true;
+                    }
                 }
             });
+
+            if(flag) {
+                fnAlert(null, msg);
+                return false;
+            }
+
+            let areaTotal = Number($("#horizontal_div_num").val()) + Number($("#vertical_div_num").val())
+            if((arr.length > areaTotal) || (arr.length < areaTotal)) {
+                fnAlert(null, "영역수를 확인해주세요");
+                return false;
+            }
 
             let parameters = {'url': '/saveLayer', 'data': {data: JSON.stringify(arr)}};
             fnPostAjaxAsync(function(data, callFunctionParam){
