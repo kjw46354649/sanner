@@ -2422,7 +2422,7 @@
                 }
             };
             if(equipArr.includes(equipNm)) {
-                parameters.url = 'http://172.16.0.207/IF/list'
+                parameters.url = 'http://172.16.0.207:8000/IF/list'
             }
 
             fnPostAjaxForCORS(function (data, callFunctionParam) {
@@ -2476,7 +2476,7 @@
             e.stopPropagation();
             $.ajax({
                 type:'POST',
-                url:'http://172.16.0.207',
+                url:'http://172.16.0.207:8000',
                 dataType: 'json',
                 data : JSON.stringify({}),
                 contentType : 'application/json; charset=utf-8',
@@ -2519,7 +2519,7 @@
                 }
             }
             if(equipArr.includes(equipNm)) {
-                parameters.url = 'http://172.16.0.207/IF/sendFile'
+                parameters.url = 'http://172.16.0.207:8000/IF/sendFile'
             }
 
             fnPostAjaxForCORS(function (data, callFunctionParam) {
@@ -2543,7 +2543,7 @@
                 }
             }
             if(equipArr.includes(equipNm)) {
-                parameters.url = 'http://172.16.0.207/IF/sendFile'
+                parameters.url = 'http://172.16.0.207:8000/IF/sendFile'
             }
 
             fnPostAjaxForCORS(function (data, callFunctionParam) {
