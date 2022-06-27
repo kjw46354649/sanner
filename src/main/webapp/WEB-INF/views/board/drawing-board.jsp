@@ -2411,7 +2411,7 @@
             return str;
         }
 
-        const equipArr = ['1N-03','1N-04','1N-06','1N-08','1N-09','1N-10'];
+        const equipArr = ['1N-03','1N-04','1N-06','1N-08','1N-09','1N-10','1L-3'];
         let openNcFilePopup = function () {
             let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
 
@@ -2543,7 +2543,7 @@
                 }
             }
             if(equipArr.includes(equipNm)) {
-                parameters.url = 'http://172.16.0.207:8000/IF/sendFile'
+                parameters.url = 'http://172.16.0.207:8000/IF/cancelFile'
             }
 
             fnPostAjaxForCORS(function (data, callFunctionParam) {
