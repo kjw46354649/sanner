@@ -2511,6 +2511,7 @@
         $("#submitNcFileBtn").on('click', function () {
             let equipNm = $("#drawing_log_out_form").find("#EQUIP_NM").val();
             let fileNm = $("#nc_file_transfer_popup").find("#SEND_NC_FILE").val();
+
             let parameters = {
                 'url': 'http://1.220.196.5:18000/IF/sendFile',
                 'data': {
@@ -2521,17 +2522,20 @@
             if(equipArr.includes(equipNm)) {
                 parameters.url = 'http://172.16.0.207:8000/IF/sendFile'
             }
-
-            fnPostAjaxForCORS(function (data, callFunctionParam) {
-                if(data[equipNm] == fileNm) {
-                    $("#file_progress_div").find("#progress_file_nm").text(fileNm);
-                    $("#file_progress_div").find("#progress_file_size").text($("#nc_file_transfer_popup").find("#SEND_NC_FILE_SIZE").val());
-                    $("#file_progress_div").show();
-                    progressTimer();
-                }else {
-                    fnDrawingAlertDialogAlert('fileErrorDivHtml',3);
-                }
-            }, parameters, '');
+            if(fileNm !== undefined && fileNm != "" && fileNm != null) {
+                fnPostAjaxForCORS(function (data, callFunctionParam) {
+                    if(data[equipNm] == fileNm) {
+                        $("#file_progress_div").find("#progress_file_nm").text(fileNm);
+                        $("#file_progress_div").find("#progress_file_size").text($("#nc_file_transfer_popup").find("#SEND_NC_FILE_SIZE").val());
+                        $("#file_progress_div").show();
+                        progressTimer();
+                    }else {
+                        fnDrawingAlertDialogAlert('fileErrorDivHtml',3);
+                    }
+                }, parameters, '');
+            }else {
+                showMessage('전송할 파일이 없습니다.');
+            }
         })
 
         $("#cancelFileSendBtn").on('click', function () {
