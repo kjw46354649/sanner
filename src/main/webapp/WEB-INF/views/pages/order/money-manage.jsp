@@ -269,14 +269,14 @@
                 title: '최근 마감정보', align: 'center',
                 colModel: [
                     {title: '마감월', dataType: 'String', dataIndx: 'LATEST_CLOSE_DT', minWidth: 60},
-                    {title: '금액', dataType: 'integer', format: '#,###', dataIndx: 'LATEST_CLOSE_AMT', minWidth: 80}
+                    {title: '금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'LATEST_CLOSE_AMT', minWidth: 80}
                 ]
             },
             {
                 title: '최근 수금정보', align: 'center',
                 colModel: [
                     {title: '수금일', dataType: 'String', dataIndx: 'DEPOSIT_DT', minWidth: 80},
-                    {title: '금액', dataType: 'integer', format: '#,###', dataIndx: 'DEPOSIT_AMT', minWidth: 80}
+                    {title: '금액', align: 'right', dataType: 'integer', format: '#,###', dataIndx: 'DEPOSIT_AMT', minWidth: 80}
                 ]
             },
             {title: '비고', align: 'left', minWidth: 30, width: 350, dataIndx: 'NOTE', editable: true, styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}}
