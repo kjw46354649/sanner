@@ -1257,7 +1257,7 @@
             .setting({
                 'title': title,
                 'message': message,
-                'onok': onok,
+                'onok': (onok !== undefined)?onok:null,
                 'movable': false,
                 'transitionOff': true
             }).show();
