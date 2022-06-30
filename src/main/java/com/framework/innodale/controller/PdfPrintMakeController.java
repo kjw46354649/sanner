@@ -838,6 +838,8 @@ public class PdfPrintMakeController {
 
         String[] selectOrderList = ((String) jsonMap.get("selectOrderList")).split("\\|");
         String type = (String) jsonMap.get("TYPE");
+        String printPart = (String) jsonMap.get("PRINT_PART");
+        String printAssemble = (String) jsonMap.get("PRINT_ASSEMBLE");
 
         int iCount = 0;
 
@@ -852,103 +854,109 @@ public class PdfPrintMakeController {
             }else {
                 hashMap.put("EST_SEQ",selectControlInfo[0]);
                 hashMap.put("SEQ",selectControlInfo[1]);
+                hashMap.put("PRINT_PART",printPart);
+                hashMap.put("PRINT_ASSEMBLE",printAssemble);
             }
             hashMap.put("queryId", "orderMapper.selectEstimateCadInfo_" + type);
             Map<String,Object> orderInfo = innodaleService.getInfo(hashMap);
+            if(orderInfo != null) {
+                PdfPTable table = new PdfPTable(25);
+                table.init();
+                table.setWidthPercentage(100);
+                table.setWidths(new float[]{3.0f, 3.0f, 4.0f, 4.0f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 2.5f, 2.5f, 4.5f, 4.5f, 2.5f, 2.5f});
 
-            PdfPTable table = new PdfPTable(25);
-            table.init();
-            table.setWidthPercentage(100);
-            table.setWidths(new float[]{3.5f, 3.0f, 3.0f, 4.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 2.5f, 2.5f, 4.5f, 4.5f, 2.5f, 2.5f});
+                // 1st line
+                table.addCell(createRotateCell("견적도면", 1, 3, largeBoldFont, 90));
 
-            // 1st line
-            table.addCell(createRotateCell("견적도면", 1, 3, largeBoldFont, 90));
-
-            if(type.equals("control")) {
-                table.addCell(createRotateCell("작업번호 " + (String)orderInfo.get("CONTROL_NUM"), 1, 3, mediumNormalFont, 90));
-            }else {
-                String estTxt = orderInfo.get("CONTROL_NUM") + "\n" + orderInfo.get("DRAWING_NUM");
-                table.addCell(createRotateCell(estTxt, 1, 3, mediumNormalFont, 90));
-            }
-            String sizeTxt = orderInfo.get("SIZE_TXT") + "\n";
-            if(orderInfo.get("MATERIAL_DETAIL_NM") != null) {
-                sizeTxt += orderInfo.get("MATERIAL_DETAIL_NM") + " / ";
-            }
-            if(orderInfo.get("WORK_TYPE_NM") != null) {
-                sizeTxt += orderInfo.get("WORK_TYPE_NM");
-            }
-            // 소재 비고
-            if(orderInfo.get("MATERIAL_NOTE") != null) {
-                sizeTxt +=  "\n" + orderInfo.get("MATERIAL_NOTE");
-            }
-            table.addCell(createRotateCell(sizeTxt, 1, 3, mediumNormalFont, 90));
-
-            String autoAmt = "";
-            if(orderInfo.get("UNIT_MATERIAL_AUTO_AMT") != null) {
-                autoAmt += ("소재 " + orderInfo.get("UNIT_MATERIAL_AUTO_AMT") + "\n");
-            }
-            if(orderInfo.get("UNIT_SURFACE_AUTO_AMT") != null) {
-                autoAmt += ("표면 " + orderInfo.get("UNIT_SURFACE_AUTO_AMT") + "\n");
-            }
-            // 기타 추가
-            if(orderInfo.get("UNIT_ETC_AMT") != null) {
-                autoAmt += ("기타 " + orderInfo.get("UNIT_ETC_AMT")+ "\n");
-            }
-            // 가공요건이 없는 경우 Lv 표기 x
-            if(orderInfo.get("SIZE_LEVEL") != null && orderInfo.get("UNIT_BASIC_AMT") != null && orderInfo.get("PROCESS_TOTAL_FORMAT") != null) {
-                autoAmt += ("Lv." + orderInfo.get("SIZE_LEVEL") + " " + orderInfo.get("UNIT_BASIC_AMT")  + "\n");
-            }
-            table.addCell(createRotateCell(autoAmt, 1, 3, mediumNormalFont, 90));
-
-            for(int j=1;j<=15;j++) {
-                String mapkey = "DATA_VALUE_" + j;
-                table.addCell(createRotateCell(orderInfo.get(mapkey) != null ? ""+orderInfo.get(mapkey): "", 1, 1, mediumNormalFont2, 90, 15f));
-            }
-
-            table.addCell(createRotateCell( orderInfo.get("PROCESS_TOTAL_FORMAT") != null ? "가공비 "+orderInfo.get("PROCESS_TOTAL_FORMAT"): "가공비", 1, 3, mediumNormalFont, 90));
-            table.addCell(createRotateColorCell("특수가공", 1, 3, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-            String etcText = orderInfo.get("ETC_TEXT") != null ? ""+orderInfo.get("ETC_TEXT"): "";
-            if(etcText.indexOf("<br>") >= 0) {
-                etcText = etcText.replaceAll("<br>","\n");
-            }
-            PdfPCell tempCell2 = createRotateCell(etcText, 2, 6, mediumNormalFont, 90);
-            tempCell2.setVerticalAlignment(Element.ALIGN_TOP);
-            tempCell2.setPaddingLeft(5);
-            table.addCell(tempCell2);
-            table.addCell(createRotateCell(orderInfo.get("TOTAL_ETC") != null ? "가공합계 "+orderInfo.get("TOTAL_ETC"): "가공합계", 1, 3, mediumBoldFont, 90));
-            table.addCell(createRotateCell(orderInfo.get("TOTAL_AMT") != null ? "전체 "+orderInfo.get("TOTAL_AMT"): "전체", 1, 3, mediumBoldFont, 90));
-
-            String[] columnList = {"밀링", "TAP", "일반", "정밀", "15T 이하", "15T 초과", "15T 이하", "15T 초과", "15T 이하", "15T 초과", "일반 Hole", "TAP", "C/B", "공차 Hole", "특수 Hole"};
-            for(int j=0;j<columnList.length;j++) {
-                PdfPCell tempCell = createRotateCell(columnList[j], 1, 1, mediumNormalFont2, 90, 38f);
-                tempCell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-                tempCell.setPaddingBottom(2);
-                table.addCell(tempCell);
-            }
-
-            table.addCell(createRotateColorCell("가공면수", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-            table.addCell(createRotateColorCell("치수공차", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-            table.addCell(createRotateColorCell("외곽가공", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-            table.addCell(createRotateColorCell("일반포켓", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-            table.addCell(createRotateColorCell("관통포켓", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-            table.addCell(createRotateColorCell("드릴가공", 5, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
-
-            document.add(table);
-            table.flushContent();
-
-            if (orderInfo.get("IMAGE_PATH") != null && !orderInfo.get("IMAGE_PATH").equals("")) {
-                try {
-                    Image pngImage = Image.getInstance((String) orderInfo.get("IMAGE_PATH") + ".print.png");
-                    pngImage.setAbsolutePosition(15, 10);
-                    pngImage.scaleAbsolute(PageSize.A4.getWidth() - 40, PageSize.A4.getHeight() - 95);
-                    pngImage.setRotationDegrees(180);
-                    document.add(pngImage);
-                } catch (Exception e){
-                    log.error(e.getMessage(), e.getCause());
-                    e.printStackTrace();
+                if(type.equals("control")) {
+                    table.addCell(createRotateCell("작업번호 " + (String)orderInfo.get("CONTROL_NUM"), 1, 3, mediumNormalFont, 90));
+                }else {
+                    String estTxt = orderInfo.get("CONTROL_NUM") + "\n" + orderInfo.get("DRAWING_NUM");
+                    table.addCell(createRotateCell(estTxt, 1, 3, mediumNormalFont, 90));
                 }
+                String sizeTxt = orderInfo.get("SIZE_TXT") + "\n";
+                if(orderInfo.get("MATERIAL_DETAIL_NM") != null) {
+                    sizeTxt += orderInfo.get("MATERIAL_DETAIL_NM") + " / ";
+                }
+                if(orderInfo.get("WORK_TYPE_NM") != null) {
+                    sizeTxt += orderInfo.get("WORK_TYPE_NM");
+                }
+                if(orderInfo.get("QTY") != null) {
+                    sizeTxt += "\n수량" + orderInfo.get("QTY");
+                }
+                // 소재 비고
+                if(orderInfo.get("MATERIAL_NOTE") != null) {
+                    sizeTxt +=  "\n" + orderInfo.get("MATERIAL_NOTE");
+                }
+                table.addCell(createRotateCell(sizeTxt, 1, 3, mediumNormalFont, 90));
+
+                String autoAmt = "";
+                if(orderInfo.get("UNIT_MATERIAL_AUTO_AMT") != null) {
+                    autoAmt += ("소재 " + orderInfo.get("UNIT_MATERIAL_AUTO_AMT") + "\n");
+                }
+                if(orderInfo.get("UNIT_SURFACE_AUTO_AMT") != null) {
+                    autoAmt += ("표면 " + orderInfo.get("UNIT_SURFACE_AUTO_AMT") + "\n");
+                }
+                // 기타 추가
+                if(orderInfo.get("UNIT_ETC_AMT") != null) {
+                    autoAmt += ("기타 " + orderInfo.get("UNIT_ETC_AMT")+ "\n");
+                }
+                // 가공요건이 없는 경우 Lv 표기 x
+                if(orderInfo.get("SIZE_LEVEL") != null && orderInfo.get("UNIT_BASIC_AMT") != null && orderInfo.get("PROCESS_TOTAL_FORMAT") != null) {
+                    autoAmt += ("Lv." + orderInfo.get("SIZE_LEVEL") + " " + orderInfo.get("UNIT_BASIC_AMT")  + "\n");
+                }
+                table.addCell(createRotateCell(autoAmt, 1, 3, mediumNormalFont, 90));
+
+                for(int j=1;j<=15;j++) {
+                    String mapkey = "DATA_VALUE_" + j;
+                    table.addCell(createRotateCell(orderInfo.get(mapkey) != null ? ""+orderInfo.get(mapkey): "", 1, 1, mediumNormalFont2, 90, 15f));
+                }
+
+                table.addCell(createRotateCell( orderInfo.get("PROCESS_TOTAL_FORMAT") != null ? "가공비 "+orderInfo.get("PROCESS_TOTAL_FORMAT"): "가공비", 1, 3, mediumNormalFont, 90));
+                table.addCell(createRotateColorCell("특수가공", 1, 3, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+                String etcText = orderInfo.get("ETC_TEXT") != null ? ""+orderInfo.get("ETC_TEXT"): "";
+                if(etcText.indexOf("<br>") >= 0) {
+                    etcText = etcText.replaceAll("<br>","\n");
+                }
+                PdfPCell tempCell2 = createRotateCell(etcText, 2, 6, mediumNormalFont, 90);
+                tempCell2.setVerticalAlignment(Element.ALIGN_TOP);
+                tempCell2.setPaddingLeft(5);
+                table.addCell(tempCell2);
+                table.addCell(createRotateCell(orderInfo.get("TOTAL_ETC") != null ? "가공합계 "+orderInfo.get("TOTAL_ETC"): "가공합계", 1, 3, mediumBoldFont, 90));
+                table.addCell(createRotateCell(orderInfo.get("TOTAL_AMT") != null ? "전체 "+orderInfo.get("TOTAL_AMT"): "전체", 1, 3, mediumBoldFont, 90));
+
+                String[] columnList = {"밀링", "TAP", "일반", "정밀", "15T 이하", "15T 초과", "15T 이하", "15T 초과", "15T 이하", "15T 초과", "일반 Hole", "TAP", "C/B", "공차 Hole", "특수 Hole"};
+                for(int j=0;j<columnList.length;j++) {
+                    PdfPCell tempCell = createRotateCell(columnList[j], 1, 1, mediumNormalFont2, 90, 38f);
+                    tempCell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+                    tempCell.setPaddingBottom(2);
+                    table.addCell(tempCell);
+                }
+
+                table.addCell(createRotateColorCell("가공면수", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+                table.addCell(createRotateColorCell("치수공차", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+                table.addCell(createRotateColorCell("외곽가공", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+                table.addCell(createRotateColorCell("일반포켓", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+                table.addCell(createRotateColorCell("관통포켓", 2, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+                table.addCell(createRotateColorCell("드릴가공", 5, 1, mediumNormalFont, 90, BaseColor.LIGHT_GRAY));
+
+                document.add(table);
+                table.flushContent();
+
+                if (orderInfo.get("IMAGE_PATH") != null && !orderInfo.get("IMAGE_PATH").equals("")) {
+                    try {
+                        Image pngImage = Image.getInstance((String) orderInfo.get("IMAGE_PATH") + ".print.png");
+                        pngImage.setAbsolutePosition(15, 10);
+                        pngImage.scaleAbsolute(PageSize.A4.getWidth() - 40, PageSize.A4.getHeight() - 95);
+                        pngImage.setRotationDegrees(180);
+                        document.add(pngImage);
+                    } catch (Exception e){
+                        log.error(e.getMessage(), e.getCause());
+                        e.printStackTrace();
+                    }
+                }
+                iCount++;
             }
-            iCount++;
         }
 
         document.close();

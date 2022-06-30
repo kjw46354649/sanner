@@ -746,6 +746,7 @@
             let selectOrderList = '';
             let message = '';
             let count = 0;
+            let workTypeFlag = false;
             if(estimateBotSelectedRowIndex.length > 0) {
                 for(let i =0;i<estimateBotSelectedRowIndex.length;i++) {
                     const rowData = estimateMasterBotGrid.pqGrid('getRowData', {rowIndx: estimateBotSelectedRowIndex[i]});
@@ -765,18 +766,40 @@
                         fnAlert(null, '이미지 파일이 없습니다. 확인 후 재 실행해 주십시오.');
                         return;
                     }
+                    if(rowData.WORK_TYPE == 'WTP020' || rowData.WORK_TYPE == 'WTP050') {
+                        workTypeFlag = true;
+                    }
                     selectOrderList += (String(rowData.EST_SEQ) + '-' + String(rowData.SEQ)) + '|';
-                    count++;
+
+                    if(rowData.WORK_TYPE != 'WTP020') {
+                        count++;
+                    }
                 }
             }
 
             message =
                 '<h4>' +
                 '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-                '   <span>' + count + ' 건의 견적도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                '   <span><span id="estimate_cnt">' + count + '</span> 건의 견적도면이 출력 됩니다.</span> 진행하시겠습니까?' +
                 '</h4>';
+
+            if(workTypeFlag) {
+                alertify.confirm().settings.labels = 'estimate';
+            }
+
             fnConfirm(null, message, function () {
-                printJS({printable: '/makeEstimateDrawingPrint', properties: {selectOrderList:selectOrderList, flag:'N', TYPE:'estimate'}, type: 'pdf', showModal: true});
+                let printParams = {
+                    selectOrderList : selectOrderList,
+                    flag: 'N',
+                    TYPE: 'estimate'
+                }
+                if($("#estimate_part").length > 0 && $("#estimate_part").prop('checked')) {
+                    printParams.PRINT_PART = "Y"
+                }
+                if($("#estimate_assemble").length > 0 && $("#estimate_assemble").prop('checked')) {
+                    printParams.PRINT_ASSEMBLE = "Y"
+                }
+                printJS({printable: '/makeEstimateDrawingPrint', properties: printParams, type: 'pdf', showModal: true});
             });
         });
 
@@ -972,6 +995,44 @@
         clickEstimateRegisterReloadBtn(seq);
     });
 
+    $(document).on('click', '#estimate_part', function (event) {
+        let gridData = $("#estimate_master_bot_grid").pqGrid('option', 'dataModel.data');
+        let count = 0;
+        let asseble_check = $("#estimate_assemble").prop('checked');
+        $.each(gridData, function (idx,Item) {
+            if(Item.WORK_TYPE == 'WTP020') {
+                if(asseble_check) {
+                    count++;
+                }
+            }else if(Item.WORK_TYPE == 'WTP050') {
+                if($("#estimate_part").prop('checked')) {
+                    count++;
+                }
+            }else {
+                count++;
+            }
+        });
+        $("#estimate_cnt").text(count);
+    });
+    $(document).on('click', '#estimate_assemble', function (event) {
+        let gridData = $("#estimate_master_bot_grid").pqGrid('option', 'dataModel.data');
+        let count = 0;
+        let part_check = $("#estimate_part").prop('checked');
+        $.each(gridData, function (idx,Item) {
+            if(Item.WORK_TYPE == 'WTP020') {
+                if($("#estimate_assemble").prop('checked')) {
+                    count++;
+                }
+            }else if(Item.WORK_TYPE == 'WTP050') {
+                if(part_check) {
+                    count++;
+                }
+            }else {
+                count++;
+            }
+        });
+        $("#estimate_cnt").text(count);
+    });
 
     let role_seq = '${authUserInfo.ROLE_SEQ}';
     // topWrap 확장 함수

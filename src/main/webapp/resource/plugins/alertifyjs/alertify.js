@@ -3250,6 +3250,7 @@
             },
             prepare: function () {
                 //nothing
+                $(".ajs-footer").find(".ajs-auxiliary").empty();
             },
             setMessage: function (message) {
                 this.setContent(message);
@@ -3396,6 +3397,15 @@
             },
             prepare: function () {
                 //nothing
+                $(".ajs-footer").find(".ajs-auxiliary").empty();
+                if(this.settings.labels != null && this.settings.labels.toLowerCase() == 'estimate') {
+                    let checkboxHtml = '<input id="estimate_part" name="estimate_part" type="checkbox" class="ml-30 mt-05" style="zoom: 1.5;" checked>';
+                    checkboxHtml += '<label for="estimate_part" style="font-size: medium;color: black;" class="ml-10 mt-05">파트 도면</label>';
+                    checkboxHtml += '<input id="estimate_assemble" name="estimate_assemble" class="ml-10 mt-05" type="checkbox" style="zoom: 1.5;">';
+                    checkboxHtml += '<label for="estimate_assemble" class="ml-10 mt-05" style="font-size: medium;color: black;">조립 도면</label>';
+                    $(".ajs-footer").find(".ajs-auxiliary").append(checkboxHtml);
+                    this.settings.labels = null;
+                }
             },
             setMessage: function (message) {
                 this.setContent(message);
