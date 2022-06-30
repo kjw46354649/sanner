@@ -989,6 +989,8 @@ public class OrderServiceImpl implements OrderService {
                 flag = true;
                 message = "이미 외주 작업인 건이 존재합니다.";
             }else if(resMap.get("OUT_REQUEST_SEQ") != null && !"".equals(resMap.get("OUT_REQUEST_SEQ"))) {
+                // 재고 작업지시인경우 기본적으로는 외주전환이 가능하나
+                // 다른 작업번호에서 해당 재고 작업지시의 수량을 재고충당요청한 상태라면 외주 전환 불가능
                 flag = true;
                 message = "충당 요청이 존재하는 경우 외주전환이 불가합니다.";
             }
