@@ -133,6 +133,7 @@
     let estimateBotSelectedRowIndex = [];
     let estimateMasterTopGrid = $("#estimate_master_top_grid");
     let estimateMasterBotGrid = $("#estimate_master_bot_grid");
+    let selectOrderList = '';
 
     $(function () {
         // $('#dateOneIp').datepicker({dateFormat: 'yy/mm/dd'});
@@ -743,10 +744,10 @@
                 return false;
             }
 
-            let selectOrderList = '';
             let message = '';
             let count = 0;
             let workTypeFlag = false;
+            selectOrderList = '';
             if(estimateBotSelectedRowIndex.length > 0) {
                 for(let i =0;i<estimateBotSelectedRowIndex.length;i++) {
                     const rowData = estimateMasterBotGrid.pqGrid('getRowData', {rowIndx: estimateBotSelectedRowIndex[i]});
@@ -769,10 +770,10 @@
                     if(rowData.WORK_TYPE == 'WTP020' || rowData.WORK_TYPE == 'WTP050') {
                         workTypeFlag = true;
                     }
-                    selectOrderList += (String(rowData.EST_SEQ) + '-' + String(rowData.SEQ)) + '|';
 
                     if(rowData.WORK_TYPE != 'WTP020') {
                         count++;
+                        selectOrderList += (String(rowData.EST_SEQ) + '-' + String(rowData.SEQ)) + '|';
                     }
                 }
             }
@@ -780,12 +781,13 @@
             message =
                 '<h4>' +
                 '   <img alt="print" style=\'width: 32px; height: 32px;\' src=\'/resource/main/images/print.png\'>&nbsp;&nbsp;' +
-                '   <span><span id="estimate_cnt">' + count + '</span> 건의 견적도면이 출력 됩니다.</span> 진행하시겠습니까?' +
+                '   <span><span class="estimate_cnt">' + count + '</span> 건의 견적도면이 출력 됩니다.</span> 진행하시겠습니까?' +
                 '</h4>';
 
             if(workTypeFlag) {
                 alertify.confirm().settings.labels = 'estimate';
             }
+            alertify.confirm().setMessage(message);
 
             fnConfirm(null, message, function () {
                 let printParams = {
@@ -996,42 +998,53 @@
     });
 
     $(document).on('click', '#estimate_part', function (event) {
+        console.log('part',selectOrderList);
         let gridData = $("#estimate_master_bot_grid").pqGrid('option', 'dataModel.data');
         let count = 0;
         let asseble_check = $("#estimate_assemble").prop('checked');
+        selectOrderList = '';
         $.each(gridData, function (idx,Item) {
             if(Item.WORK_TYPE == 'WTP020') {
                 if(asseble_check) {
                     count++;
+                    selectOrderList += (String(Item.EST_SEQ) + '-' + String(Item.SEQ)) + '|';
                 }
             }else if(Item.WORK_TYPE == 'WTP050') {
                 if($("#estimate_part").prop('checked')) {
                     count++;
+                    selectOrderList += (String(Item.EST_SEQ) + '-' + String(Item.SEQ)) + '|';
                 }
             }else {
                 count++;
+                selectOrderList += (String(Item.EST_SEQ) + '-' + String(Item.SEQ)) + '|';
             }
         });
-        $("#estimate_cnt").text(count);
+        $(".estimate_cnt").text(count);
     });
+
     $(document).on('click', '#estimate_assemble', function (event) {
+        console.log('assem',selectOrderList);
         let gridData = $("#estimate_master_bot_grid").pqGrid('option', 'dataModel.data');
         let count = 0;
         let part_check = $("#estimate_part").prop('checked');
+        selectOrderList = '';
         $.each(gridData, function (idx,Item) {
             if(Item.WORK_TYPE == 'WTP020') {
                 if($("#estimate_assemble").prop('checked')) {
                     count++;
+                    selectOrderList += (String(Item.EST_SEQ) + '-' + String(Item.SEQ)) + '|';
                 }
             }else if(Item.WORK_TYPE == 'WTP050') {
                 if(part_check) {
                     count++;
+                    selectOrderList += (String(Item.EST_SEQ) + '-' + String(Item.SEQ)) + '|';
                 }
             }else {
                 count++;
+                selectOrderList += (String(Item.EST_SEQ) + '-' + String(Item.SEQ)) + '|';
             }
         });
-        $("#estimate_cnt").text(count);
+        $(".estimate_cnt").text(count);
     });
 
     let role_seq = '${authUserInfo.ROLE_SEQ}';

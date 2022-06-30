@@ -5020,12 +5020,6 @@
               END AS TOTAL_AMT
         FROM TBL_ESTIMATE A
             INNER JOIN TBL_ESTIMATE_DETAIL B ON A.EST_SEQ = B.EST_SEQ
-            <if test='(PRINT_PART != null and PRINT_PART != "" and PRINT_PART == "Y") and (PRINT_ASSEMBLE == null or PRINT_ASSEMBLE == "")'>
-                AND B.WORK_TYPE = 'WTP050'
-            </if>
-            <if test='(PRINT_ASSEMBLE != null and PRINT_ASSEMBLE != "" and PRINT_ASSEMBLE == "Y") and (PRINT_PART == null or PRINT_PART == "")'>
-                AND B.WORK_TYPE = 'WTP020'
-            </if>
             LEFT OUTER JOIN TBL_CALC_PROCESS C ON C.CALC_SEQ = SF_GET_CALC_PROCESS_SEQ('ESTIMATE', B.EST_SEQ , B.SEQ)
             LEFT OUTER JOIN (
                 SELECT
