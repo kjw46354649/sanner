@@ -998,7 +998,6 @@
     });
 
     $(document).on('click', '#estimate_part', function (event) {
-        console.log('part',selectOrderList);
         let gridData = $("#estimate_master_bot_grid").pqGrid('option', 'dataModel.data');
         let count = 0;
         let asseble_check = $("#estimate_assemble").prop('checked');
@@ -1023,7 +1022,6 @@
     });
 
     $(document).on('click', '#estimate_assemble', function (event) {
-        console.log('assem',selectOrderList);
         let gridData = $("#estimate_master_bot_grid").pqGrid('option', 'dataModel.data');
         let count = 0;
         let part_check = $("#estimate_part").prop('checked');
