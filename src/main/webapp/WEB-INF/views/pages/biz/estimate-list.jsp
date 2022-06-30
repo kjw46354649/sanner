@@ -570,7 +570,6 @@
             },
             rowSelect: function( event, ui ) {
                 //if(ui.addList.length > 0 ) {
-                console.log('top', ui.addList);
                 let EST_STATUS = ui.addList[0].rowData.EST_STATUS;
                 btnDisabled(EST_STATUS);
                 estimateTopSelectedRowIndex = [ui.addList[0].rowIndx];
@@ -632,7 +631,6 @@
                     $('#estimate_master_bot_grid_records').html(data.length);
                 },
                 rowSelect: function( event, ui ) {
-                    console.log('bot', ui.addList);
                     estimateBotSelectedRowIndex = [ui.addList[0].rowIndx];
                 },
                 change: function( event, ui ) {
@@ -972,7 +970,6 @@
     const clickEstimateRegisterReloadBtn = function (seq) {
         let estimateRegisterCount = 0;
         estimateRegisterTimer = setInterval(function () {
-            // console.log(estimateRegisterCount);
             if ($('#view_tab_10000102').length > 0 || estimateRegisterCount > 3) {
                 $("#estimate_version_up_sequence_form #hidden_est_seq").val(seq);
                 $("#estimateRegisterReloadBtn").trigger('click');
