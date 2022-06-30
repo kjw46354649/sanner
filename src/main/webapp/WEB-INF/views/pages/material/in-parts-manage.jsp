@@ -44,13 +44,6 @@
                             </select>
                         </span>
                         <span class="gubun"></span>
-<%--                        <span class="slt_wrap">--%>
-<%--                            <label for="SEL_CONSUMABLE_DETAIL" class="label_100">자재상세종류</label>--%>
-<%--                            <select id="SEL_CONSUMABLE_DETAIL" name="SEL_CONSUMABLE_DETAIL" title="자재상세종류" data-required="true" class="wd_200">--%>
-<%--                                <option value=""><spring:message code="com.form.top.all.option" /></option>--%>
-<%--                            </select>--%>
-<%--                        </span>--%>
-
                     </li>
                     <li>
                         <span class="ipu_wrap"><label for="SEL_CONSUMABLE_NUM" class="label_100">자재 관리번호</label>
@@ -78,15 +71,6 @@
                                 <option value="1">입력일시</option>
                             </select>
                         </span>
-<%--                        <span class="radio_box">--%>
-<%--                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_1" value="today" ><label for="fr_1001_1">오늘</label>--%>
-<%--                        </span>--%>
-<%--                        <span class="radio_box">--%>
-<%--                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_2" value="current_month"><label for="fr_1001_2">현재월</label>--%>
-<%--                        </span>--%>
-<%--                        <span class="radio_box">--%>
-<%--                            <input reqcd="R" type="radio" name="CONTROL_MANAGE_TERM" id="fr_1001_3" value="three_months"><label for="fr_1001_3">3개월</label>--%>
-<%--                        </span>--%>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
                                 <input class="datepicker-input" type="text" name="MATERIAL_CONSUMABLE_ST_DT" id="MATERIAL_CONSUMABLE_ST_DT" title="시작날짜">
@@ -98,7 +82,6 @@
                                 <button type="button" id="MATERIAL_CONSUMABLE_END_DT_BUTTON">달력선택</button>
                             </span>
                         </div>
-<%--                        <span class="chk_box ml-20">&nbsp;&nbsp;<input id="SEL_TERM_DT_USE" name="SEL_TERM_DT_USE" type="checkbox"><label for="SEL_TERM_DT_USE">선택</label></span>--%>
                         <span class="ipu_wrap right_float">
                             <button type="button" id="CONTROL_MANAGE_EXCEL_EXPORT"><img src="/resource/asset/images/common/export_excel.png" alt="엑셀 이미지"></button>
                             <button type="button" class="defaultBtn radius blue" id="searchBtn">검색</button>
@@ -106,24 +89,11 @@
 
                     </li>
                 </ul>
-
             </div>
         </form>
-<%--        <button type="button" class="topWrap_btn">펼치기 / 접기</button>--%>
     </div>
 
     <div class="bottomWrap row3_bottomWrap">
-<%--        <div class="hWrap">--%>
-<%--            <div class="d-inline">--%>
-
-<%--                <div class="rightSpan">--%>
-
-
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-
-
         <div class="tableWrap jmestabs" id="div_tabs_part">
             <ul class="smallTabMenuTabs">
                 <li class="active"><a href="#_TAB1" data-toggle="tab" aria-expanded="true">현황관리</a></li>
@@ -299,14 +269,11 @@
                 POP_OUT_QTY = Number(POP_OUT_QTY)-1;
                 POP_CURR_QTY = Number(POP_CURR_QTY)+1;
             }
-
         }
 
         $('#pop_form #POP_CURR_QTY').html(POP_CURR_QTY);
         $('#pop_form #POP_OUT_QTY').html(POP_OUT_QTY);
         $('#pop_form #OUT_QTY').val(POP_OUT_QTY);
-        //console.log("POP_CURR_QTY",POP_CURR_QTY);
-        //console.log("POP_OUT_QTY",POP_OUT_QTY);
     };
     /**  선언 **/
     let SelectedRowIndex = [];
@@ -456,26 +423,6 @@
                     }
                 }
             },
-            // {title: '자재상세종류', dataType: 'string', dataIndx: 'CONSUMABLE_DETAIL_NM', minWidth: 120,
-            //     editor: {
-            //         type: 'select',
-            //         mapIndices: { name: "CONSUMABLE_DETAIL_NM", id: "CONSUMABLE_DETAIL" },
-            //         valueIndx: "value",
-            //         labelIndx: "text",
-            //         options: function(ui) {
-            //             let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-            //             let CONSUMABLE_TYPE = rowData["CONSUMABLE_TYPE"];
-            //
-            //             return fnGetCommCodeRefCdGridSelectBox('1054', CONSUMABLE_TYPE);
-            //         },
-            //         getData: function(ui) {
-            //             let clave = ui.$cell.find("select").val();
-            //             let rowData = mainGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
-            //             rowData["CONSUMABLE_DETAIL"]=clave;
-            //             return ui.$cell.find("select option[value='"+clave+"']").text();
-            //         }
-            //     }
-            // },
             {title: '보유수량', dataType: 'string', dataIndx: 'STOCK_QTY', styleHead: {'font-weight': 'bold','background':'#a9d3f5', 'color': '#2777ef'}
                 ,editable: false, format: '#,###'
             },
@@ -666,7 +613,7 @@
 /**  이벤트  **/
 
         $(".datepicker-input").each(function () {
-            $(this).datepicker({dateFormat: 'yy/mm/dd'});
+            $(this).datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
             $(this).datepicker('setDate', 'today');
         });
 
@@ -675,12 +622,7 @@
             let paramData = {"url":"/json-list", "data": {"WAREHOUSE_CD": WAREHOUSE_CD, "queryId": 'material.selectWarehouseLocationList'}};
             fnCommCodeDatasourceSelectBoxCreate($("#search_form").find("#SEL_LOC_SEQ"), 'all', paramData);
         });
-        // $("#search_form").find("#SEL_CONSUMABLE_TYPE").change(function(){
-        //     let highCd =  1054;
-        //     let refCD =  this.value;
-        //     fnCommCodeRefCdDynamicSelectBoxCreate($("#search_form").find("#SEL_CONSUMABLE_DETAIL"), highCd, 'all', refCD);
-        //
-        // });
+
         let fnGetCommCodeRefCdGridSelectBox = function (highCd, refCd) {
             'use strict';
             let selectBoxContents = [];

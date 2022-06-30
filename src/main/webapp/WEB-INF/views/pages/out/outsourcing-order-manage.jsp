@@ -2420,8 +2420,8 @@
         /* event */
 
         /* init */
-        $('#OUTSIDE_MANAGE_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#OUTSIDE_MANAGE_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#OUTSIDE_MANAGE_START_DATE').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
+        $('#OUTSIDE_MANAGE_END_DATE').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
         $('#OUTSIDE_MANAGE_START_DATE').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH, TODAY.getDate() - 7));
         $('#OUTSIDE_MANAGE_END_DATE').datepicker('setDate', 'today');
 

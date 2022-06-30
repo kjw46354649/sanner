@@ -2742,7 +2742,7 @@
         const $controlManageStartDate = $('#CONTROL_MANAGE_START_DATE');
         const $controlManageEndDate = $('#CONTROL_MANAGE_END_DATE');
         $controlManageStartDate.datepicker({
-            dateFormat: 'yy/mm/dd',
+            dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true,
             onClose: function (selectedDate) {
                 var date = $(this).datepicker('getDate');
                 var endDate = $controlManageEndDate.datepicker('getDate');
@@ -2753,7 +2753,8 @@
                 }
             }
         });
-        $controlManageEndDate.datepicker({dateFormat: 'yy/mm/dd',
+        $controlManageEndDate.datepicker({
+            dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true,
             onClose: function (selectedDate) {
                 var date = $(this).datepicker('getDate');
                 var startDate = $controlManageStartDate.datepicker('getDate');

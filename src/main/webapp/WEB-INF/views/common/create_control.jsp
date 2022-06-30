@@ -233,8 +233,8 @@
     var selectedCreateControlRowIndex = [];
     const $createControlStartDate = $('#CREATE_CONTROL_START_DATE');
     const $createControlEndDate = $('#CREATE_CONTROL_END_DATE');
-    $createControlStartDate.datepicker({dateFormat: 'yy/mm/dd'});
-    $createControlEndDate.datepicker({dateFormat: 'yy/mm/dd'});
+    $createControlStartDate.datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
+    $createControlEndDate.datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
     $createControlStartDate.datepicker('setDate', 'today');
     $createControlEndDate.datepicker('setDate', 'today');
     let isActiveDrawingView = false;

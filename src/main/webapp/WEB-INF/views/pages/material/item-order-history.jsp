@@ -454,8 +454,8 @@
             itemOrderHistoryOrderCancel();
         });
 
-        $('#ITEM_ORDER_HISTORY_START_DATE').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#ITEM_ORDER_HISTORY_END_DATE').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#ITEM_ORDER_HISTORY_START_DATE').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
+        $('#ITEM_ORDER_HISTORY_END_DATE').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
         $('#ITEM_ORDER_HISTORY_START_DATE').datepicker('setDate', -1);
         $('#ITEM_ORDER_HISTORY_END_DATE').datepicker('setDate', 'today');
 

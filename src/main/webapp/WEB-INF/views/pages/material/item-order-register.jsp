@@ -273,8 +273,8 @@
         'use strict';
         const $itemOrderRegisterStartDate = $('#ITEM_ORDER_REGISTER_START_DATE');
         const $itemOrderRegisterEndDate = $('#ITEM_ORDER_REGISTER_END_DATE');
-        $itemOrderRegisterStartDate.datepicker({dateFormat: 'yy/mm/dd'});
-        $itemOrderRegisterEndDate.datepicker({dateFormat: 'yy/mm/dd'});
+        $itemOrderRegisterStartDate.datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
+        $itemOrderRegisterEndDate.datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
         $itemOrderRegisterStartDate.datepicker('setDate', 'today');
         $itemOrderRegisterEndDate.datepicker('setDate', 'today');
 
