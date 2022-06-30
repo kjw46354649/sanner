@@ -790,18 +790,20 @@
             alertify.confirm().setMessage(message);
 
             fnConfirm(null, message, function () {
-                let printParams = {
-                    selectOrderList : selectOrderList,
-                    flag: 'N',
-                    TYPE: 'estimate'
+                if(selectOrderList != "") {
+                    let printParams = {
+                        selectOrderList : selectOrderList,
+                        flag: 'N',
+                        TYPE: 'estimate'
+                    }
+                    if($("#estimate_part").length > 0 && $("#estimate_part").prop('checked')) {
+                        printParams.PRINT_PART = "Y"
+                    }
+                    if($("#estimate_assemble").length > 0 && $("#estimate_assemble").prop('checked')) {
+                        printParams.PRINT_ASSEMBLE = "Y"
+                    }
+                    printJS({printable: '/makeEstimateDrawingPrint', properties: printParams, type: 'pdf', showModal: true});
                 }
-                if($("#estimate_part").length > 0 && $("#estimate_part").prop('checked')) {
-                    printParams.PRINT_PART = "Y"
-                }
-                if($("#estimate_assemble").length > 0 && $("#estimate_assemble").prop('checked')) {
-                    printParams.PRINT_ASSEMBLE = "Y"
-                }
-                printJS({printable: '/makeEstimateDrawingPrint', properties: printParams, type: 'pdf', showModal: true});
             });
         });
 
