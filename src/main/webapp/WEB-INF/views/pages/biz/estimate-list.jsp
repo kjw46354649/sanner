@@ -997,6 +997,8 @@
     });
 
     $(document).on('click', '#estimate_part', function (event) {
+        event.stopPropagation();
+        console.log('part',$("#estimate_part").prop('checked'))
         let gridData = $("#estimate_master_bot_grid").pqGrid('option', 'dataModel.data');
         let count = 0;
         let asseble_check = $("#estimate_assemble").prop('checked');
@@ -1021,6 +1023,8 @@
     });
 
     $(document).on('click', '#estimate_assemble', function (event) {
+        event.stopPropagation();
+        console.log('assemble',$("#estimate_assemble").prop('checked'))
         let gridData = $("#estimate_master_bot_grid").pqGrid('option', 'dataModel.data');
         let count = 0;
         let part_check = $("#estimate_part").prop('checked');

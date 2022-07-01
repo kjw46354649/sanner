@@ -168,13 +168,10 @@
             NOTE, DWG_GFILE_SEQ, DXF_GFILE_SEQ, PDF_GFILE_SEQ, IMG_GFILE_SEQ,
             CASE WHEN UNIT_FINAL_EST_AMT IS NOT NULL THEN UNIT_FINAL_EST_AMT * ITEM_QTY
                  WHEN WORK_TYPE = 'WTP020' THEN (
-                    SELECT
-                        SUM((IFNULL(PART_UNIT_QTY * UNIT_MATERIAL_AUTO_AMT, SPACE(0))
-                                            		+ IFNULL(PART_UNIT_QTY * UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, SPACE(0))
-                                            		+ IFNULL(PART_UNIT_QTY * UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, SPACE(0))
-                                            		+ IFNULL(PART_UNIT_QTY * UNIT_SURFACE_AUTO_AMT, SPACE(0))
-                                            		+ IFNULL(PART_UNIT_QTY * UNIT_PROCESS_AUTO_AMT, SPACE(0))
-                                            		+ IFNULL(B.UNIT_ETC_AMT, 0)) * B.PART_UNIT_QTY)
+                    SELECT SUM(CASE WHEN UNIT_FINAL_EST_AMT IS NOT NULL THEN IFNULL(UNIT_FINAL_EST_AMT,0) * IFNULL(B.ITEM_QTY,1)
+                                    ELSE (IFNULL(UNIT_MATERIAL_AUTO_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT, 0) + IFNULL(UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT, 0) + IFNULL(UNIT_SURFACE_AUTO_AMT, 0) + IFNULL(UNIT_PROCESS_AUTO_AMT, 0) + IFNULL(UNIT_ETC_AMT, 0)) * PART_UNIT_QTY
+                               END
+                           )
                     FROM TBL_ESTIMATE_DETAIL B
                     WHERE B.EST_SEQ = A.EST_SEQ
                         AND A.DRAWING_NUM = B.DRAWING_NUM

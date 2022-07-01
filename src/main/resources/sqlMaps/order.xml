@@ -4985,6 +4985,7 @@
                         SELECT FORMAT(SUM(IFNULL(X.UNIT_MATERIAL_AUTO_AMT,0)),0)
                         FROM TBL_ESTIMATE_DETAIL X
                         WHERE X.EST_SEQ = A.EST_SEQ
+                            AND X.DRAWING_NUM = B.DRAWING_NUM
                             AND X.WORK_TYPE = 'WTP050'
                    ) ELSE FORMAT(B.UNIT_MATERIAL_AUTO_AMT, 0)
               END AS UNIT_MATERIAL_AUTO_AMT
@@ -4992,6 +4993,7 @@
                         SELECT FORMAT(SUM(IFNULL(X.UNIT_SURFACE_AUTO_AMT,0)),0)
                         FROM TBL_ESTIMATE_DETAIL X
                         WHERE X.EST_SEQ = A.EST_SEQ
+                            AND X.DRAWING_NUM = B.DRAWING_NUM
                             AND X.WORK_TYPE = 'WTP050'
                    ) ELSE FORMAT(B.UNIT_SURFACE_AUTO_AMT, 0)
               END AS UNIT_SURFACE_AUTO_AMT
@@ -4999,6 +5001,7 @@
                         SELECT FORMAT(SUM(IFNULL(X.UNIT_ETC_AMT,0)),0)
                         FROM TBL_ESTIMATE_DETAIL X
                         WHERE X.EST_SEQ = A.EST_SEQ
+                            AND X.DRAWING_NUM = B.DRAWING_NUM
                             AND X.WORK_TYPE = 'WTP050'
                    ) ELSE FORMAT(B.UNIT_ETC_AMT, 0)
               END AS UNIT_ETC_AMT
