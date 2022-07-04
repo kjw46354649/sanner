@@ -428,6 +428,9 @@ public class OrderServiceImpl implements OrderService {
                 }else if(outMap.get("OUT_REQUEST_SEQ") != null && !"".equals(outMap.get("OUT_REQUEST_SEQ"))) {
                     flag = true;
                     message = "충당 요청이 존재하는 경우 외주전환이 불가합니다.";
+                }else if(outMap.get("OUT_REQUEST_STOCK_SEQ") != null && !"".equals(outMap.get("OUT_REQUEST_STOCK_SEQ"))) {
+                    flag = true;
+                    message = "재고창고 불출 진행중에는 외주전환이 불가합니다.";
                 }
 
                 // 출고 확인
@@ -993,6 +996,9 @@ public class OrderServiceImpl implements OrderService {
                 // 다른 작업번호에서 해당 재고 작업지시의 수량을 재고충당요청한 상태라면 외주 전환 불가능
                 flag = true;
                 message = "충당 요청이 존재하는 경우 외주전환이 불가합니다.";
+            }else if(resMap.get("OUT_REQUEST_STOCK_SEQ") != null && !"".equals(resMap.get("OUT_REQUEST_STOCK_SEQ"))) {
+                flag = true;
+                message = "재고창고 불출 진행중에는 외주전환이 불가합니다.";
             }
         }
 

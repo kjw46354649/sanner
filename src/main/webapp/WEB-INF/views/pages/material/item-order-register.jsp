@@ -1804,6 +1804,7 @@
                 fnPostAjaxAsync(function (data, callFunctionParam) {
                     if(data.list.length > 0) {
                         var flag = false;
+                        let msg = '소재주문이 불가능한 주문 건이 있습니다. 확인해주세요';
                         $.each(data.list, function(idx,Item) {
                             if(Item.OUTSIDE_YN == 'Y') { // 외주가공건인 경우.
                                 if(Item.OUTSIDE_MATERIAL_SUPPLY_YN == 'N') {
@@ -1816,11 +1817,15 @@
                             }else if(Item.PART_STATUS == 'PRO003') { //가공확정 취소인 경우
                                 flag = true;
                                 return;
+                            }else if(!fnIsEmpty(Item.OUT_REQUEST_SEQ)) {
+                                flag = true;
+                                msg = '재고창고 불출 진행중에는 소재주문이 불가합니다.';
+                                return;
                             }
                         })
 
                         if(flag) {
-                            fnAlert('','소재주문이 불가능한 주문 건이 있습니다. 확인해주세요');
+                            fnAlert('', msg);
                             // $("#OUTSIDE_ORDER_MANAGE_SEARCH_FORM #OUTSIDE_ORDER_SEARCH").trigger('click');
                         }
                         callback(flag);

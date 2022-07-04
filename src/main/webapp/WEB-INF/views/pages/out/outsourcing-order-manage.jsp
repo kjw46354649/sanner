@@ -1947,6 +1947,9 @@
                             }else if(Item.OUTSIDE_STATUS != 'OST002' && Item.OUTSIDE_STATUS != '') { //외주상태가 요청취소, 요청전이 아닌 경우
                                 flag = true;
                                 return;
+                            }else if(!fnIsEmpty(Item.OUT_REQUEST_SEQ)) {
+                                flag = true;
+                                return;
                             }
                         }else {
                             if(Item.OUTSIDE_STATUS != 'OST002' && Item.OUTSIDE_STATUS != '') { //외주상태가 요청취소, 요청전이 아닌 경우

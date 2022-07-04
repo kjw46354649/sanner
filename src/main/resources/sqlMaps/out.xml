@@ -1427,8 +1427,16 @@
 
     <select id="selectOrderStatusBeforeOutsideRequest" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT IFNULL(A.CONTROL_STATUS,SPACE(0)) AS CONTROL_STATUS
-              , B.OUTSIDE_YN
-              , IFNULL(B.OUTSIDE_STATUS,SPACE(0)) AS OUTSIDE_STATUS
+            , B.OUTSIDE_YN
+            , IFNULL(B.OUTSIDE_STATUS,SPACE(0)) AS OUTSIDE_STATUS
+            , (SELECT MAX(X.OUT_REQUEST_SEQ)
+               FROM TBL_INSIDE_OUT_REQUEST X
+               WHERE X.DEL_YN = 'N'
+                   AND X.REQUEST_CONTROL_SEQ = B.CONTROL_SEQ
+                   AND X.REQUEST_CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
+                   AND X.REQUEST_TYPE = 1
+                   AND X.OUT_DT IS NULL
+            ) AS OUT_REQUEST_SEQ
         FROM TBL_CONTROL A, TBL_CONTROL_PART B
         WHERE A.CONTROL_SEQ = B.CONTROL_SEQ
           AND A.DEL_YN = 'N'
