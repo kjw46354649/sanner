@@ -893,7 +893,6 @@
             {
                 title: '상세 견적가', align: 'center',
                 colModel: [
-                    // {title: '합계', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_SUM_AUTO_AMT'},
                     {title: '소재비', minWidth:65, dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_AUTO_AMT',
                         render: function (ui) {
                             let cls = 'bg-lightgray';
@@ -915,8 +914,6 @@
                             return {cls: cls};
                         }
                     },
-                    // {title: '연마비', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_FINISH_GRIND_AUTO_AMT'},
-                    // {title: '열처리', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_MATERIAL_FINISH_HEAT_AUTO_AMT'},
                     {
                         title: '기타추가', dataType: 'integer', format: '#,###', align: 'right', dataIndx: 'UNIT_ETC_AMT', editable:true,
                         render: function (ui) {
@@ -937,7 +934,6 @@
             },
             {
                 title: '가공요건', width: 85, dataIndx: 'DETAIL_MACHINE_REQUIREMENT',
-                // hidden: true, // 20210331 임시 hidden 처리
                 editable: function (ui) {
                     let rowData = ui.rowData;
                     return (rowData.CONTROL_STATUS === undefined || rowData.CONTROL_STATUS === 'ORD001' || rowData.CONTROL_STATUS === 'ORD002') && !(rowData.WORK_TYPE === 'WTP020' || rowData.WORK_TYPE === 'WTP040');
@@ -947,10 +943,6 @@
                     let cls = null;
                     let text = '';
                     let isDisabled = rowData.WORK_TYPE === 'WTP020' ? 'disabled' : '';
-
-                    // if (rowData.WORK_TYPE === 'WTP020') {
-                    //     cls = 'bg-lightgray';
-                    // }
 
                     text = '<button class="miniBtn" name="processing_requirements"' + isDisabled + ' style="background-color: #ffffd1">가공요건</button>';
 

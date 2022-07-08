@@ -731,20 +731,14 @@
                     return {cls: cls, text: orderManageFilterRender(ui)};
                 }
             },
-            // {
-            //     title: '입력<br>견적단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'CONTROL_EST_AMT',
-            //     render: function (ui) {
-            //         let rowData = ui.rowData;
-            //         let cls = null;
-            //
-            //         return {cls: cls, text: orderManageFilterRender(ui)};
-            //     }
-            // },
             {
                 title: '계산<br>견적단가', width: 90, dataType: 'integer', format: '#,###', dataIndx: 'UNIT_SUM_AUTO_AMT',
                 render: function (ui) {
                     let rowData = ui.rowData;
                     let cls = null;
+                    if(ui.cellData <= 0) {
+                        ui.cellData = "";
+                    }
 
                     return {cls: cls, text: orderManageFilterRender(ui)};
                 }
