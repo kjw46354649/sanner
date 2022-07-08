@@ -2663,6 +2663,7 @@
 				clearInterval(work_cycle_active_interval);
 				clearInterval(work_stop_interval);
 				clearInterval(work_active_interval);
+				clearInterval(work_left_interval);
 				$("#popup").find("#popHeadMid").removeClass("non_if");
 				if(data.info != null) {
 					$("#mct_machine_form").find("#CONTROL_SEQ").val(data.info.CONTROL_SEQ);
