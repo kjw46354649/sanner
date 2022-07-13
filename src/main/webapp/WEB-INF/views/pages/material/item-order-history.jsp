@@ -114,6 +114,13 @@
     let itemOrderHistoryRightGrid = $("#item_order_history_right_grid");
 
     $(function () {
+
+        // datepicker 설정이 pqGrid init 하는 것보다 앞에 있으면, 처음 화면 오픈시 default 로 해당 기간에 해당하는 정보 검색되어 보여짐
+        $('#ITEM_ORDER_HISTORY_START_DATE').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
+        $('#ITEM_ORDER_HISTORY_END_DATE').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
+        $('#ITEM_ORDER_HISTORY_START_DATE').datepicker('setDate', -1);
+        $('#ITEM_ORDER_HISTORY_END_DATE').datepicker('setDate', 'today');
+
         let itemOrderHistoryLeftColModel = [
             {title: '주문번호', dataType: 'string', dataIndx: 'MATERIAL_ORDER_NUM', width: 120, sortable: false},
             {title: '주문업체', dataType: 'string', dataIndx: 'MATERIAL_COMP_NM', width: 85, sortable: false},
@@ -453,11 +460,6 @@
         $("#btnItemOrderHistoryCancel").on('click', function(){
             itemOrderHistoryOrderCancel();
         });
-
-        $('#ITEM_ORDER_HISTORY_START_DATE').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
-        $('#ITEM_ORDER_HISTORY_END_DATE').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
-        $('#ITEM_ORDER_HISTORY_START_DATE').datepicker('setDate', -1);
-        $('#ITEM_ORDER_HISTORY_END_DATE').datepicker('setDate', 'today');
 
         /** 공통 코드 이외의 처리 부분 **/
         fnCommCodeDatasourceSelectBoxCreate($("#item_order_history_search_form").find("#MATERIAL_COMP_CD"), 'sel', {"url":"/json-list", "data": {"queryId": 'dataSource.getOutsourceMaterialCompanyList'}});
