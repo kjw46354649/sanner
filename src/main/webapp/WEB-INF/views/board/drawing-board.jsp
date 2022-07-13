@@ -1061,14 +1061,14 @@
                                             </div>
                                         </div>
                                         <div class="div_flex_column mt-20" style="width: 43%;font-size: 40px;margin-left: 2%;">
-                                            <select class="mb-20" id="INSPECT_RESULT" name="INSPECT_RESULT" title="검사종류 코드">
-                                                <option value="">- 검사종류 코드 -</option>
+                                            <select class="mb-20" id="INSPECT_RESULT" name="INSPECT_RESULT" title="불량/검사 코드">
+                                                <option value="">- 불량/검사 코드 -</option>
                                                 <c:forEach var="code" items="${HighCode.H_1020}">
                                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                                 </c:forEach>
                                             </select>
-                                            <select id="ERROR_REASON" name="ERROR_REASON" title="불량원인 코드">
-                                                <option value="">- 불량원인 코드 -</option>
+                                            <select id="ERROR_REASON" name="ERROR_REASON" title="발생원인 코드">
+                                                <option value="">- 발생원인 코드 -</option>
                                                 <c:forEach var="code" items="${HighCode.H_1032}">
                                                     <option value="${code.CODE_CD}">${code.CODE_NM_KR}</option>
                                                 </c:forEach>
