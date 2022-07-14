@@ -206,8 +206,12 @@ public class OutServiceImpl implements OutService {
                 }
 
                 checkMap.put("queryId", "outMapper.selectOutsideStatusCheckDupl");
-                this.innodaleDao.getInfo(checkMap);
+                flag = this.innodaleDao.getFlag(checkMap);
 
+                if(!flag) {
+                    model.addAttribute("result", "error");
+                    throw new Exception();
+                }
             }
         }
 
