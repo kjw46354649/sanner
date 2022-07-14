@@ -2527,9 +2527,11 @@
 
                         if(receiveEmail == "") {
                             fnConfirm(null, "메일 주소를 입력하지 않으신 경우, 메일이 발송되지않습니다. 진행하시겠습니까?", function () {
+                                $(".custom_loading_bar").show();
                                 managerRequestOutsideSave();
                             });
                         }else {
+                            $(".custom_loading_bar").show();
                             managerRequestOutsideSave();
                         }
                     }
@@ -2563,6 +2565,7 @@
             };
             let parameters = {'url': '/managerRequestOutside', 'data': {data: JSON.stringify(postData)}};
             fnPostAjax(function (data, callFunctionParam) {
+                $(".custom_loading_bar").hide();
                 if (data.result === 'success') {
                     fnAlert(null, "<spring:message code='com.alert.default.save.success'/>");
                 } else {
