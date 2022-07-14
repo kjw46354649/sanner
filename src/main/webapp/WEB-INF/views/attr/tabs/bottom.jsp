@@ -2295,7 +2295,8 @@
                 return {data: dataJSON.data};
             }
         },
-        columnTemplate: {align: 'center', hvalign: 'center', valign: 'center'},
+        columnTemplate: {align: 'center', hvalign: 'center', valign: 'center', render: commonWarehouseManageFilterRender},
+        filterModel: { mode: 'OR' },
         scrollModel: {autoFit: false},
         numberCell: {width: 30, title: "No", show: true },
         // selectionModel: { type: 'row', mode: 'multiple'} ,
@@ -2399,13 +2400,102 @@
             }
         }
     }
+
+    function commonWarehouseManageFilterRender(ui) {
+        let val = ui.cellData === undefined ? '' : ui.cellData,
+            options = ui.column.editor === undefined ? '' : ui.column.editor.options;
+        let index = -1;
+        if (options) {
+            index = options.findIndex(function (element) {
+                return element.value === val;
+            });
+            if (index > -1) val = options[index].text;
+        }
+        if (val) {
+            if (ui.column.dataType === 'integer') {
+                val = numberWithCommas(val);
+            } else if (ui.column.dataType === 'date' && ui.column.format !== undefined) {
+                let o = new Date(val);
+                val = o && !isNaN(o.getTime()) && $.datepicker.formatDate(ui.column.format, o);
+            }
+
+            let condition = $('#locationPopFilterCondition :selected').val(),
+                valUpper = val.toString().toUpperCase(),
+                txt = $('#locationPopFilterKeyword').val(),
+                txtUpper = (txt == null) ? '' : txt.toString().toUpperCase(),
+                indx = -1;
+
+            if (condition === 'end') {
+                indx = valUpper.lastIndexOf(txtUpper);
+                if (indx + txtUpper.length !== valUpper.length) {
+                    indx = -1;
+                }
+            } else if (condition === 'contain') {
+                indx = valUpper.indexOf(txtUpper);
+            } else if (condition === 'begin') {
+                indx = valUpper.indexOf(txtUpper);
+                if (indx > 0) {
+                    indx = -1;
+                }
+            }
+
+            if (indx >= 0 && txt) {
+                let txt1 = val.toString().substring(0, indx);
+                let txt2 = val.toString().substring(indx, indx + txtUpper.length);
+                let txt3 = val.toString().substring(indx + txtUpper.length);
+                return txt1 + "<span style='background: #FFFF00; color: #333;'>" + txt2 + "</span>" + txt3;
+                // return val;
+            } else {
+                return val;
+            }
+        } else {
+            return val;
+        }
+    }
+
     function fnCommonWarehouse() {
         $('#common_warehouse_manage_popup').modal('show');
-        $("#common_warehouse_manage_popup_form").find("#queryId").val('material.selectCommonWarehouseManageList');
-        commonWarehouseManageObj.dataModel.postData = fnFormToJsonArrayData('common_warehouse_manage_popup_form');
-        commonWarehouseManageGrid.pqGrid(commonWarehouseManageObj);
-        commonWarehouseManageGrid.pqGrid('refreshDataAndView');
+        if (!commonWarehouseManageGrid.hasClass('pq-grid')) {
+            $("#common_warehouse_manage_popup_form").find("#queryId").val('material.selectCommonWarehouseManageList');
+            commonWarehouseManageObj.dataModel.postData = fnFormToJsonArrayData('common_warehouse_manage_popup_form');
+            commonWarehouseManageGrid.pqGrid(commonWarehouseManageObj);
+        } else {
+            commonWarehouseManageGrid.pqGrid('refreshDataAndView');
+        }
     }
+
+    $('#common_warehouse_manage_popup_form').on('submit', function() {
+        event.preventDefault();
+    })
+
+    $('#locationPopFilterKeyword').on({
+        'keyup': function () {
+            fnFilterHandler(commonWarehouseManageGrid, 'locationPopFilterKeyword', 'locationPopFilterCondition', 'locationPopFilterColumn');
+
+            let data = commonWarehouseManageGrid.pqGrid('option', 'dataModel.data');
+            $('#common_warehouse_manage_grid_records').html(data.length);
+        },
+        'search': function () {
+            fnFilterHandler(commonWarehouseManageGrid, 'locationPopFilterKeyword', 'locationPopFilterCondition', 'locationPopFilterColumn');
+
+            let data = commonWarehouseManageGrid.pqGrid('option', 'dataModel.data');
+            $('#common_warehouse_manage_grid_records').html(data.length);
+        }
+    });
+
+    $('#locationPopFilterCondition').on('change', function () {
+            fnFilterHandler(commonWarehouseManageGrid, 'locationPopFilterKeyword', 'locationPopFilterCondition', 'locationPopFilterColumn');
+
+            let data = commonWarehouseManageGrid.pqGrid('option', 'dataModel.data');
+            $('#common_warehouse_manage_grid_records').html(data.length);
+    });
+
+    $('#locationPopFilterColumn').on('change', function () {
+            fnFilterHandler(commonWarehouseManageGrid, 'locationPopFilterKeyword', 'locationPopFilterCondition', 'locationPopFilterColumn');
+
+            let data = commonWarehouseManageGrid.pqGrid('option', 'dataModel.data');
+            $('#common_warehouse_manage_grid_records').html(data.length);
+    });
 
     $("#common_warehouse_manage_popup_form #WAREHOUSE_CD").on('change', function(){
         commonWarehouseManageGrid.pqGrid('option', "dataModel.postData", function (ui) {

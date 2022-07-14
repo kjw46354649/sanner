@@ -4,6 +4,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<style>
+    .ui-autocomplete {
+        max-height: 150px;
+        overflow-y: auto;   /* prevent horizontal scrollbar */
+        overflow-x: hidden; /* add padding to account for vertical scrollbar */
+        z-index:1000 !important;
+    }
+</style>
 <div class="page estimate">
     <div class="topWrap">
         <form class="form-inline" id="stock_manage_form" name="stock_manage_form" role="form">
@@ -732,6 +740,48 @@
         let pop_msg_in_done = "<b class=\"block\">입고가 완료되었습니다.</b>추가 진행하려면 바코드를 스캔해주세요";
         let pop_msg_out_done = "<b class=\"block\">불출 완료되었습니다.</b>";
 
+        function autocompleteEditor(ui, source){
+            source.forEach(d => d.label = d.text);
+
+            ui.$cell.addClass('ui-front');//so that dropdown remains with input.
+
+            //initialize the editor
+            ui.$editor.autocomplete({
+                //appendTo: ui.$cell, //for grid in maximized state.
+                source: source,
+                position: {
+                    collision: 'flipfit',
+                    within: ui.$editor.closest(".pq-grid")
+                },
+                selectItem: { on: true }, //custom option
+                highlightText: { on: true }, //custom option
+                minLength: 0,
+                close: function(event, ui) {
+                    source.forEach(function(row){
+                        if(row.value == event.target.value)
+                            event.target.value = row.text;
+                    });
+                },
+                response: function(event, ui) {
+                    let locList = ui.content;
+                    locList.forEach(function(loc){
+                        if(loc.value == event.target.value)
+                            event.target.value = loc.text;
+                    });
+                }
+            }).focus(function (event, ui) {
+                $(this).autocomplete("search", "");
+            }).keydown(function(event){
+                if (event.keyCode === 40 || event.keyCode === 38) {
+                    let value = $('.ui-autocomplete-input').val();
+                    source.forEach(function(row){
+                        if(row.value == value)
+                            $('.ui-autocomplete-input').val(row.text);
+                    });
+                }
+            });
+        }
+
         /**  리스트 그리드 선언 시작 **/
         $("#stock_manage_form").find("#queryId").val("material.selectInsideStockList");
         stockManagePostData01 = fnFormToJsonArrayData('#stock_manage_form');
@@ -852,14 +902,37 @@
             },
             {title: '재고위치', dataType: 'string', dataIndx: 'LOC_SEQ', editable: true, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 minWidth: 80, width: 80,
-                editor: { type: 'select', valueIndx: "value", labelIndx: "text",
-                    options: function(ui) {
-                        let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+
+                editor: { type: 'textbox',
+                // editor: { type: 'select', valueIndx: "value", labelIndx: "text",
+                //     options: function(ui) {
+                //         let rowData = stockManageGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
+                //         let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
+                //
+                //         if(typeof WAREHOUSE_LIST != 'undefined' && WAREHOUSE_LIST != null && WAREHOUSE_LIST != '') {
+                //             const warehouseGroup = fnGroupBy(WAREHOUSE_LIST, 'WAREHOUSE_CD');
+                //             return warehouseGroup[WAREHOUSE_CD];
+                //         }else {
+                //             let warehouseData = {
+                //                 "url" : '/json-list',
+                //                 'data' :{"queryId": 'dataSource.getLocationListWithWarehouse', "WAREHOUSE_CD" : WAREHOUSE_CD}
+                //             };
+                //             let ajaxData = "";
+                //             fnPostAjaxAsync(function (data, callFunctionParam) {
+                //                 ajaxData = data.list;
+                //             }, warehouseData, '');
+                //             return ajaxData;
+                //         }
+                //     },
+                    init: function (ui) {
+                        let datalist = "";
+                        let rowData = ui.rowData;
                         let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
 
                         if(typeof WAREHOUSE_LIST != 'undefined' && WAREHOUSE_LIST != null && WAREHOUSE_LIST != '') {
                             const warehouseGroup = fnGroupBy(WAREHOUSE_LIST, 'WAREHOUSE_CD');
-                            return warehouseGroup[WAREHOUSE_CD];
+                            datalist = warehouseGroup[WAREHOUSE_CD];
+                            autocompleteEditor(ui, datalist);
                         }else {
                             let warehouseData = {
                                 "url" : '/json-list',
@@ -867,9 +940,8 @@
                             };
                             let ajaxData = "";
                             fnPostAjaxAsync(function (data, callFunctionParam) {
-                                ajaxData = data.list;
+                                autocompleteEditor(ui, data.list);
                             }, warehouseData, '');
-                            return ajaxData;
                         }
                     }
                 },
@@ -901,7 +973,6 @@
                                 text = Item.text;
                             }
                         });
-
                         return (text == '') ? cellData : text;
                     }
                 },
@@ -916,7 +987,43 @@
                             }
                         })
                     }
-                }
+                },
+                validations: [
+                    {
+                        type: function (ui) {
+                            var value = ui.value,
+                                _found = false;
+
+                            let WAREHOUSE_CD = ui.rowData.WAREHOUSE_CD;
+                            let ajaxData = "";
+
+                            if(typeof WAREHOUSE_LIST != 'undefined' && WAREHOUSE_LIST != null && WAREHOUSE_LIST != '') {
+                                const warehouseGroup = fnGroupBy(WAREHOUSE_LIST, 'WAREHOUSE_CD');
+                                ajaxData = warehouseGroup[WAREHOUSE_CD];
+                            }else {
+                                let warehouseData = {
+                                    "url" : '/json-list',
+                                    'data' :{"queryId": 'dataSource.getLocationListWithWarehouse', "WAREHOUSE_CD" : WAREHOUSE_CD}
+                                };
+                                fnPostAjaxAsync(function (data, callFunctionParam) {
+                                    ajaxData = data.list;
+                                }, warehouseData, '');
+                            }
+
+                            let text = "";
+                            $.each(ajaxData,function (idx,Item) {
+                                if(Item.text == value || Item.value == value) {
+                                    _found = true;
+                                }
+                            });
+
+                            if (!_found) {
+                                ui.msg = value + " not found in list";
+                                return false;
+                            }
+                        }
+                    }
+                ]
             },
             {title: '사업자구분', dataType: 'string', dataIndx: 'COMP_CD', minWidth: 80, width: 80, styleHead: {'font-weight': 'bold','background':'#aac8ed', 'color': 'block'},
                 editor: {
@@ -1060,6 +1167,10 @@
             trackModel: {on: true},
             copyModel: {render: true},
             colModel: stockManageColModel01,
+            editModel: {
+                clicksToEdit: 1,
+                keyUpDown: false
+            },
             load: function( event, ui ) {
                 var filterOpts = '<option value=\"\">All Fields</option>';
                 var frozenOts = '<option value="0">Selected</option>';
@@ -1165,6 +1276,8 @@
                 }
             }
         });
+
+
         stockManageColModel02 = [
             {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
             {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
@@ -2797,6 +2910,7 @@
                 minWidth: 100, width: 100,
                 editor: { type: 'select', valueIndx: "value", labelIndx: "text",
                     options: function(ui) {
+                        console.log('options', ui);
                         let rowData = stockInoutGridId01.pqGrid("getRowData", {rowIndx: ui.rowIndx});
                         let WAREHOUSE_CD = rowData["WAREHOUSE_CD"];
 
@@ -2838,6 +2952,7 @@
                                 ajaxData = data.list;
                             }, warehouseData, '');
                         }
+
                         let text = "";
                         $.each(ajaxData,function (idx,Item) {
                             if(Item.text == cellData || Item.value == cellData) {
