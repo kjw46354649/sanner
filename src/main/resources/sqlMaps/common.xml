@@ -334,26 +334,6 @@
     </select>
 
     <select id="selectMultiDownloadList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-<!--        SELECT A.CONTROL_SEQ-->
-<!--            , A.CONTROL_DETAIL_SEQ-->
-<!--            , A.ORDER_NUM-->
-<!--            , A.DRAWING_NUM-->
-<!--            , SF_GET_CODE_NM('1033', B.WORK_TYPE, #{LOGIN_LOCALE}) AS WORK_TYPE_NM-->
-<!--            , CASE-->
-<!--                WHEN B.PART_NUM IS NULL THEN C.CONTROL_NUM-->
-<!--                ELSE CONCAT(C.CONTROL_NUM, '#', B.PART_NUM)-->
-<!--              END AS CONTROL_PART_INFO-->
-<!--            , A.IMG_GFILE_SEQ-->
-<!--            , A.DXF_GFILE_SEQ-->
-<!--        FROM TBL_CONTROL_PART_ORDER A-->
-<!--            INNER JOIN TBL_CONTROL_PART B ON B.CONTROL_SEQ = A.CONTROL_SEQ-->
-<!--            INNER JOIN TBL_CONTROL C ON C.CONTROL_SEQ  = B.CONTROL_SEQ-->
-<!--        WHERE C.DEL_YN = 'N'-->
-<!--            AND A.CONTROL_SEQ = #{CONTROL_SEQ}-->
-<!--            <if test="CONTROL_DETAIL_SEQ !='' and CONTROL_DETAIL_SEQ != null">-->
-<!--                AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}-->
-<!--            </if>-->
-
         SELECT A.CONTROL_SEQ
              , B.CONTROL_DETAIL_SEQ
              , IFNULL(C.ORDER_NUM, SPACE(0)) AS ORDER_NUM
@@ -389,5 +369,15 @@
 
     <select id="selectHealthCheck" parameterType="java.util.HashMap" resultType="string">
         SELECT NOW() FROM DUAL
+    </select>
+
+    <select id="selectCodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            A.CODE_CD, B.CODE_NM
+        FROM TBL_CODE A
+            INNER JOIN TBL_CODE_LANG B ON A.HIGH_CD = B.HIGH_CD AND A.CODE_CD = B.CODE_CD AND B.LANG_CD = CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'EN' ELSE 'KR' END
+        WHERE 1 = 1
+          AND A.HIGH_CD = #{HIGH_CD}
+        ORDER BY A.SORT_NUM
     </select>
 </mapper>

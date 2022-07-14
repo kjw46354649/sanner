@@ -43,6 +43,12 @@ public class PopController {
         return "pop/pop_action";
     }
 
+    @RequestMapping(value="/popVue")
+    public String popActionVue(Model model, HttpServletRequest request, Locale locale) throws Exception {
+        logger.info("pop page submit");
+        return "pop/pop_action_vue";
+    }
+
     @RequestMapping(value="/pop/{popLocation}")
     public String popActionLocation(@PathVariable("popLocation") String popLocation, Model model) throws Exception {
         logger.info("pop page submit");
