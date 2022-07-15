@@ -495,14 +495,6 @@
 
                 $('.planImgDiv').empty();
                 $('.planImgDiv').html(html);
-            },
-            afterInit: function () {
-                // let totalPage = pageContents.pagination('getTotalPage');
-                // if(totalPage > 16) {
-                //     pageContents.pagination('show');
-                // }else {
-                //     pageContents.pagination('hide');
-                // }
             }
         });
 
