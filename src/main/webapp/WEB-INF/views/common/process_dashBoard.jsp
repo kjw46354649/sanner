@@ -12,6 +12,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>J-MES</title>
+    <script type="text/javascript" src="https://pagination.js.org/dist/2.1.5/pagination.js"></script>
+
     <!-- Firefox, Opera (Chrome and Safari say thanks but no thanks) -->
     <link rel="shortcut icon" href="/favicon.ico">
     <!-- Chrome, Safari, IE -->
@@ -24,6 +26,7 @@
     <link rel="stylesheet" type="text/css" href="/resource/plugins/paramquery/pqSelect/pqselect.min.css" />
     <link rel="stylesheet" type="text/css" href="/resource/asset/css/customer.css" />
     <link rel="stylesheet" type="text/css" href="/resource/asset/css/common.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
 
     <style type="text/css">
         *{margin: 0; padding: 0; box-sizing: border-box;}
@@ -60,9 +63,6 @@
         #process_complete_grid .pq-grid-row.pq-striped, #process_dash_board_main_grid .pq-grid-row.pq-striped {
             background: #eaf1fd;
         }
-        /*#process_dash_board_main_grid .pq-grid-cell {
-            height: 40px !important;
-        }*/
         .pq-grid {
             font-family: 'notoM'
         }
@@ -93,6 +93,11 @@
 
         .pq-grid-header-table .pq-title-span {
             text-decoration : none !important;
+        }
+
+        .quick_drawing_table {
+            width: 100%;
+            font-size: 1.1rem;
         }
     </style>
 </head>
@@ -284,6 +289,8 @@
                     <form class="form-inline" name="PROCESS_POP_FORM" id="PROCESS_POP_FORM" role="form">
                         <input type="hidden" name="queryId" id="queryId" value="process.selectProcessPop_company">
                         <input type="hidden" name="IMG_GFILE_SEQ" id="IMG_GFILE_SEQ" value="">
+                        <input type="hidden" name="CONTROL_SEQ" id="CONTROL_SEQ" value="">
+                        <input type="hidden" name="CONTROL_DETAIL_SEQ" id="CONTROL_DETAIL_SEQ" value="">
                         <input type="hidden" name="ORDER_COMP_CD" id="ORDER_COMP_CD" value="">
                         <input type="hidden" name="MATERIAL_TYPE" id="MATERIAL_TYPE" value="">
                         <input type="hidden" name="PART_STATUS" id="PART_STATUS" value="">
@@ -356,13 +363,44 @@
                             <span class="lineH15">(<span id="ASSEMBLE_QTY"></span>)</span>
                         </div>
                     </div>
-                    <div id="processPop_grid" class="h90 w100 border_color left_wrap2">
+<%--                    <div id="processPop_grid" class="h90 w100 border_color left_wrap2">--%>
+<%--                    </div>--%>
+                    <div style="height: 80%;">
+                        <div class="planImgDiv"></div>
+                    </div>
+                    <div class="btn_wrap" style="margin-top: 2%;">
+                        <div id="pagination-container" class="d-inline-block" ></div>
                     </div>
                 </div>
                 <div class="right_wrap map_image_wrap h100 text-center" style="width: 53%;margin-left: 1%;">
                     <img id="processPop_img" src="/resource/main/blank.jpg" alt="">
+                    <table class="quick_drawing_table">
+                        <tbody>
+                            <tr>
+                                <th>작업 번호</th>
+                                <td id="QUICK_CONTROL_NUM" style="width: 20%;"></td>
+                                <th>발주처</th>
+                                <td id="QUICK_ORDER_COMP_NM"></td>
+                                <th>소재</th>
+                                <td id="QUICK_MATERIAL_DETAIL" style="width: 13%;"></td>
+                                <th>진행상태</th>
+                                <td id="QUICK_PART_STATUS_NM" style="width: 13%;"></td>
+                            </tr>
+                            <tr class="trHeight">
+                                <th>규격</th>
+                                <td id="QUICK_SIZE_TXT"></td>
+                                <th>형태/수량</th>
+                                <td id="QUICK_WORK_QTY" ></td>
+                                <th>가공납기</th>
+                                <td id="QUICK_INNER_DUE_DT"></td>
+                                <th>현재위치</th>
+                                <td id="QUICK_CURR_POSITION"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <div class="btn_wrap">
-                        <button id="processPopMapBtn">도면상세보기</button>
+                        <button id="processPopMapBtn" class="green">도면상세보기</button>
+                        <button id="processPopControlBtn" class="blue">작업상세보기</button>
                         <button id="detailCloseBtn" class="detailCloseBtn">닫기</button>
                     </div>
                 </div>
@@ -372,9 +410,9 @@
 </div>
 </body>
 
-
-
 <script>
+
+    let pageContents = $('#pagination-container');
 
     const fnConfirmForDashBoard = function (title, message) {
         alertify.confirm().setting({
@@ -418,18 +456,64 @@
         });
     };
 
+    let createPagination = function () {
+        pageContents.pagination({
+            dataSource: function (done) {
+                let parameter = {'url': '/tv/paramQueryGridSelect', 'data': fnFormToJsonArrayData('PROCESS_POP_FORM')};
+                fnPostAjaxForDashBoard(function (data) {
+                    done(data.data);
+                },parameter,'');
+            },
+            pageSize:16,
+            callback: function(data, pagination) {
+                let html = '';
+                $.each(data, function (index, item) {
+                    html += '<div class="mctInfoWrap">';
+                    html += '   <div class="mctMapImg" data-seq="'+item.IMG_GFILE_SEQ+'" data-control="'+item.CONTROL_SEQ +'" data-control2="'+item.CONTROL_DETAIL_SEQ+'">';
+                    html += '       <input type="hidden" class="ORDER_COMP_NM" value="'+item.ORDER_COMP_NM +'">';
+                    html += '       <input type="hidden" class="MATERIAL_DETAIL" value="'+ item.MATERIAL_DETAIL_NM+'">';
+                    html += '       <input type="hidden" class="PART_STATUS_NM" value="'+item.PART_STATUS_NM+'">';
+                    html += '       <input type="hidden" class="INNER_DUE_DT" value="'+ item.INNER_DUE_DT+'">';
+                    html += '       <input type="hidden" class="SIZE_TXT" value="'+ item.SIZE_TXT+'">';
+                    html += '       <input type="hidden" class="CONTROL_NUM" value="'+ item.CONTROL_NUM+'">';
+                    html += '       <input type="hidden" class="WORK_QTY" value="'+ item.WORK_QTY+'">';
+                    html += '       <input type="hidden" class="CURR_POSITION" value="'+ item.POP_POSITION_NM+'">';
+                    html += '       <div class="mctMapTime">';
+                    html += '           <span class="left_float">' + item.CONTROL_NUM + '</span>';
+                    html += '           <span class="text-blue ml-5">' + item.SIZE_TXT + '</span>';
+                    html += '       </div>';
+                    html += '       <img src="/qsimage/'+ item.IMG_GFILE_SEQ + '">';
+                    html += '       <div class="mapNote">';
+                    html += '           <span>'+ item.MATERIAL_TYPE_NM + '</span><span>'+ item.WORK_QTY + '</span>';
+                    if(item.POP_POSITION_NM !== 'undefined' && item.POP_POSITION_NM != null && item.POP_POSITION_NM != '') {
+                        html += '           / <span>'+ item.POP_POSITION_NM + '</span>';
+                    }
+                    html += '       </div>';
+                    html += '   </div>';
+                    html += '</div>';
+                });
+
+                $('.planImgDiv').empty();
+                $('.planImgDiv').html(html);
+            },
+            afterInit: function () {
+                // let totalPage = pageContents.pagination('getTotalPage');
+                // if(totalPage > 16) {
+                //     pageContents.pagination('show');
+                // }else {
+                //     pageContents.pagination('hide');
+                // }
+            }
+        });
+
+    }
     let settingDataUseId = function (target, data) {
         if(target.indexOf("#") == -1) target = "#"+target;
         $.each(data, function(key, value) {
             $(target).find("#"+key).text(value);
         });
     }
-    let refreshPopGrid = function () {
-        $("#processPop_grid").pqGrid("option", "dataModel.postData", function(ui){
-            return fnFormToJsonArrayData('PROCESS_POP_FORM');
-        } );
-        $("#processPop_grid").pqGrid("refreshDataAndView");
-    }
+
     let openProcessPopup = function(type,rowData) {
         if(!fnIsEmpty(rowData)) {
             fnResetForm("PROCESS_POP_FORM");
@@ -490,27 +574,8 @@
             $("#PROCESS_POP_FORM").find("#queryId").val(queryId);
             $("#processPopup").find(divName).show();
 
-            let $processPopGridInstance = $("#processPop_grid").pqGrid('getInstance').grid;
-            let Cols = $processPopGridInstance.Columns();
 
-            Cols.alter(function () {
-                Cols.each(function (col) {
-                    if(col.dataIndx == 'ORDER_DUE_DT') {
-                        col.hidden = true;
-                        if(type == 'DELAY') {
-                            col.hidden = false;
-                        }
-                    }
-                    if(col.dataIndx == 'INNER_DUE_DT') {
-                        col.hidden = false;
-                        if(type == 'DELAY') {
-                            col.hidden = true;
-                        }
-                    }
-                });
-            });
-
-            refreshPopGrid();
+            createPagination();
 
             $("#processPopup").show();
         }
@@ -1393,131 +1458,9 @@
             })
         }
 
-        const processPopGrid = $("#processPop_grid");
-        const processPopColModel = [
-            {title: 'CONTROL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_SEQ', hidden: true},
-            {title: 'CONTROL_DETAIL_SEQ', dataType: 'integer', dataIndx: 'CONTROL_DETAIL_SEQ', hidden: true},
-            {title: '발주납기', width: 60, dataIndx: 'ORDER_DUE_DT',editable: false,
-                styleHead: {'background-color':'#aedcff'}, hidden: true
-            },
-            {title: '가공납기', width: 60, dataIndx: 'INNER_DUE_DT',editable: false,
-                styleHead: {'background-color':'#aedcff'}, hidden: false
-            },
-            {title: '진행상태', width: 90, dataIndx: 'PART_STATUS_NM',editable: false,
-                styleHead: {'background-color':'#aedcff'}
-            },
-            {title: '작업번호<br>/ 규격', width: 140, dataIndx: 'CONTROL_SIZE',editable: false,
-                styleHead: {'background-color':'#aedcff'},
-                render: function (ui) {
-                    const cellData = ui.cellData;
-                    if (cellData) {
-                        return cellData.replace(/&lt;/g, '<');
-                    }
-                }
-            },
-            {title: '작업형태<br>/ 소재', width: 80, dataIndx: 'WORK_TYPE_MATERIAL',editable: false,
-                styleHead: {'background-color':'#aedcff'},
-                render: function (ui) {
-                    const cellData = ui.cellData;
-                    if (cellData) {
-                        return cellData.replace(/&lt;/g, '<');
-                    }
-                }
-            },
-            {title: '수량', width: 50, dataIndx: 'QTY',editable: false,
-                styleHead: {'background-color':'#aedcff'}
-            },
-            {title: '', align: 'center', dataType: 'string', dataIndx: 'DETAIL_INFO', width: 30, minWidth: 30, editable: false,
-                styleHead: {'background-color':'#aedcff'},
-                render: function (ui) {
-                    if (ui.rowData.CONTROL_SEQ > 0) return '<span id="detailView" class="shareIcon"></span>';
-                    return '';
-                },
-                postRender: function(ui) {
-                    let grid = this,
-                        $cell = grid.getCell(ui);
-                    $cell.find("#detailView").bind("click", function () {
-                        g_item_detail_pop_view(ui.rowData.CONTROL_SEQ, ui.rowData.CONTROL_DETAIL_SEQ);
-                    });
-                }
-            },
-            {title: '현재위치', width: 90, dataIndx: 'POP_POSITION',editable: false,
-                styleHead: {'background-color':'#aedcff'}
-            },
-            {title: '가공진행 현황', align: 'center',
-                styleHead: {'background-color':'#aedcff'},
-                colModel: [
-                    {title: '공정', dataIndx: 'PROCESS_TYPE_NM', width: 50,
-                        styleHead: {'background-color':'#aedcff'},
-                        editable: false,
-                    },
-                    {title: '작업자', dataIndx: 'WORK_USER_NM', width: 70,
-                        styleHead: {'background-color':'#aedcff'},
-                        editable: false,
-                    },
-                    {title: 'RT', dataIndx: 'WORKING_TIME', width: 80,
-                        styleHead: {'background-color':'#aedcff'},
-                        editable: false,
-                    }
-                ]
-            },
-            {title: 'IMG_GFILE_SEQ', dataIndx: 'IMG_GFILE_SEQ', hidden: true}
-        ]
-        const processPopObj = {
-            height:'86.5%',
-            width:'100%',
-            collapsible: false,
-            resizable: false,
-            postRenderInterval: -1, //call postRender synchronously.
-            showTitle: false,
-            rowHtHead: 25,
-            strNoRows: g_noData,
-            numberCell: {title: 'No.'},
-            trackModel: {on: true},
-            editable: false,
-            columnTemplate: {align: 'center', halign: 'center', hvalign: 'center', valign: 'center'},
-            filterModel: {mode: 'OR'},
-            colModel: processPopColModel,
-            dataModel: {
-                location: 'remote', dataType: 'json', method: 'POST', recIndx: 'RNUM',
-                url: '/tv/paramQueryGridSelect',
-                postData: fnFormToJsonArrayData('PROCESS_POP_FORM'),
-                getData: function (dataJSON) {
-                    return {data: dataJSON.data};
-                }
-            },
-            selectionModel: { type: 'row', mode: 'single'},
-            rowSelect: function (evt, ui) {
-                $.each(ui.addList, function (idx,Item) {
-                    if(idx === 0) {
-                        var rowData = ui.addList[0].rowData;
-
-                        if(typeof rowData.IMG_GFILE_SEQ != 'undefined' && rowData.IMG_GFILE_SEQ != ''){
-                            $("#processPop_img").attr("src", '/qimage/' + rowData.IMG_GFILE_SEQ);
-                                $("#PROCESS_POP_FORM").find("#IMG_GFILE_SEQ").val(rowData.IMG_GFILE_SEQ);
-                        }else {
-                            $("#processPop_img").attr("src", '/resource/main/blank.jpg');
-                            $("#PROCESS_POP_FORM").find("#IMG_GFILE_SEQ").val("");
-                        }
-                    }
-                })
-            },
-            complete: function (event, ui) {
-                setTimeout(function (){
-                    if(processPopGrid.hasClass('pq-grid')){
-                        processPopGrid.pqGrid('setSelection', {rowIndx: 0});
-                    }
-                },300);
-            },
-            sortModel: {on: false}
-        }
-        processPopGrid.pqGrid(processPopObj);
-
         $("#detailCloseBtn").on("click",function(){
             $(".popupBackground").hide();
-            if (processPopGrid.hasClass('pq-grid')) {
-                fnResetForm("PROCESS_POP_FORM");
-            }
+            fnResetForm("PROCESS_POP_FORM");
         });
         $(".from_main_grid > .pt-3").on("click",function (e) {
             let type = e.currentTarget.id.substring(4);
@@ -1527,7 +1470,7 @@
             $("#PROCESS_POP_FORM").find("#PART_STATUS").val(getPartStatus(type));
             $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_company");
 
-            refreshPopGrid();
+            createPagination();
         })
         $("#processPopMapBtn").on("click",function(){
             let gFileSeq = $("#PROCESS_POP_FORM").find("#IMG_GFILE_SEQ").val();
@@ -1535,7 +1478,16 @@
                 callWindowImageViewer(gFileSeq);
             }
         });
+
+        $("#processPopControlBtn").on("click", function () {
+            let controlSeq = $("#PROCESS_POP_FORM").find("#CONTROL_SEQ").val();
+            let controlDetailSeq = $("#PROCESS_POP_FORM").find("#CONTROL_DETAIL_SEQ").val();
+            if(controlSeq != '' && controlDetailSeq != '') {
+                g_item_detail_pop_view(controlSeq, controlDetailSeq);
+            }
+        })
     });
+
     $(document).ready(function(){
 
         $(document).on("click",".outside_process_div",function(e){
@@ -1564,7 +1516,7 @@
             $("#PROCESS_POP_FORM").find("#ORDER_COMP_CD").val($(this).data('target'));
             $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_outside");
 
-            refreshPopGrid();
+            createPagination();
         });
 
         $(document).on("click",".pop_material_div",function(e){
@@ -1574,8 +1526,25 @@
             $("#PROCESS_POP_FORM").find("#MATERIAL_TYPE").val($(this).data('target'));
             $("#PROCESS_POP_FORM").find("#queryId").val("process.selectProcessPop_material");
 
-            refreshPopGrid();
+            createPagination();
         });
+
+        $(document).on("click",".mctMapImg",function(e){
+            let imgSeq = $(this).data('seq')
+            let controlSeq = $(this).data('control')
+            let controlDetailSeq = $(this).data('control2')
+
+            $(this).find('input').each(function(i,e){
+                let val = ($(this).val() !== undefined)?$(this).val():'';
+                $("#processPopup").find("#QUICK_" + $(this)[0].className).text(val);
+            });
+
+            $("#processPop_img").attr("src", '/qimage/' + imgSeq);
+            $("#PROCESS_POP_FORM").find("#IMG_GFILE_SEQ").val(imgSeq);
+            $("#PROCESS_POP_FORM").find("#CONTROL_SEQ").val(controlSeq);
+            $("#PROCESS_POP_FORM").find("#CONTROL_DETAIL_SEQ").val(controlDetailSeq);
+        });
+
     });
 </script>
 </body>
