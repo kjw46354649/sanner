@@ -99,6 +99,11 @@
             width: 100%;
             font-size: 1.1rem;
         }
+
+        .selectDraw {
+            border: 2px solid blue !important;
+            background: #dfedf9 !important;
+        }
     </style>
 </head>
 
@@ -1525,6 +1530,11 @@
             let imgSeq = $(this).data('seq')
             let controlSeq = $(this).data('control')
             let controlDetailSeq = $(this).data('control2')
+
+            if(!$(this).hasClass('selectDraw')){
+                $("#processPopup").find(".mctMapImg").removeClass("selectDraw");
+                $(this).addClass('selectDraw');
+            }
 
             $(this).find('input').each(function(i,e){
                 let val = ($(this).val() !== undefined)?$(this).val():'';
