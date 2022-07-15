@@ -316,6 +316,10 @@
     <script src="https://unpkg.com/vue@2.7.2/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script type='text/javascript'>
+        let pLocation = '${popLocation}';
+        if(pLocation === undefined || pLocation == null || pLocation == '') {
+            pLocation = 'POP010';
+        }
         let fnFetchPost = function (url, data, callFunction, callFunctionParam) {
             let callback = $.Callbacks();
 
@@ -343,7 +347,7 @@
                 overlay:false,
                 items : [],
                 popList : [],
-                popLocation:'POP010',
+                popLocation:pLocation,
                 checkbox1:true,
                 selectedItem:{},
                 statusList : [
