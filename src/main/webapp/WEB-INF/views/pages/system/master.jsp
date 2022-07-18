@@ -83,9 +83,9 @@
                 </ul>
             </section>
         </div>
-        <c:if test="${authUserInfo.USER_ID eq 'manager1'}">
-            <button type="button" class="defaultBtn btn-100w" id="DRAWING_FILE_MAKE" style="background-color: #5b9bd5">누락도면생성</button>
-        </c:if>
+<%--        <c:if test="${authUserInfo.USER_ID eq 'manager1'}">--%>
+<%--            <button type="button" class="defaultBtn btn-100w" id="DRAWING_FILE_MAKE" style="background-color: #5b9bd5">누락도면생성</button>--%>
+<%--        </c:if>--%>
     </div>
 </div>
 <!-- 생산 목표금액 설정 -->
@@ -364,6 +364,7 @@
         }
     });
 
+    // 22.07.18 운영서버 누락도면 파일 생성을 위한 기능. 현재는 필요없을듯하여 주석
     $('#DRAWING_FILE_MAKE').on('click', function () {
         var parameters = {
             'url': '/checkDrawing',
