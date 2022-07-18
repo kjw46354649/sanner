@@ -2779,13 +2779,14 @@
                 },
                 load: function () {
                     const data = this.option('dataModel.data');
+                    console.log(data);
                     const summary = function (data) {
                         const lastRow = data[data.length - 1];
                         const costTotal = lastRow ? lastRow.VALUE : '';
                         const array = [
                             {NAME: 'Sub Total', VALUE: costTotal}
                         ];
-
+                        console.log(array);
                         return array;
                     };
                     const merge = function (grid, refresh, data) {
@@ -2799,6 +2800,7 @@
                                 mc.push({r1: j, c1: 10, rc: 1, cc: 2});
                             }
                         }
+
                         grid.option('mergeCells', mc);
                         if (refresh) {
                             grid.refreshView();
@@ -2806,7 +2808,6 @@
                     };
 
                     this.option('summaryData', summary(data));
-                    data.pop(); // 총계(마지막 행) 제외
                     merge(this, true, data);
                 },
                 complete : function () {
