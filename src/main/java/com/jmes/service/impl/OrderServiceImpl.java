@@ -809,8 +809,8 @@ public class OrderServiceImpl implements OrderService {
         if(jsonMap != null) {
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
 
-            seq1 = (String) jsonMap.get("SEQ1");
-            seq2 = (String) jsonMap.get("SEQ2");
+            seq1 = String.valueOf(jsonMap.get("SEQ1"));
+            seq2 = String.valueOf(jsonMap.get("SEQ2"));
         }
 
         try {
