@@ -215,6 +215,52 @@ public class StaticUrlController {
         return "jsonView";
     }
 
+    @RequestMapping(value = "/makeThumbnail")
+    public String makeThumbnail(Model model, HttpServletRequest req, HttpServletResponse res) {
+        HashMap<String, Object> imgMap = new HashMap<String, Object>();
+        ArrayList<Map<String, Object>> resultList = new ArrayList<>();
+        imgMap.put("queryId", "common.selectStockImageList");
+        boolean flag = false;
+        try {
+            List<Map<String,Object>> fileList = (List<Map<String, Object>>) innodaleService.getList(imgMap);
+
+            for(Map<String,Object> temp : fileList) {
+                String filePath = (String) temp.get("FILE_PATH");
+                String fileName = (String) temp.get("FILE_NM");
+
+                if(filePath != null && fileName != null) {
+                    File orgFile = new File(filePath);
+                    if(!orgFile.exists()) {
+                        File thumbNailFile = new File(filePath + ".thumbnail.png");
+                        if(thumbNailFile.exists()) {
+                            thumbNailFile.delete();
+
+                            String pdfName = filePath.replace(".png",".pdf");
+                            File pdfFile = new File(pdfName);
+                            if(pdfFile.exists()) {
+                                PDDocument document = PDDocument.load(pdfFile);
+                                PDFRenderer pdfRenderer = new PDFRenderer(document);
+
+                                BufferedImage bim = pdfRenderer.renderImageWithDPI(0, 130, ImageType.RGB);
+                                ImageIOUtil.writeImage(bim, filePath + ".thumbnail.png" , 130);
+                                resultList.add(temp);
+                            }
+
+                        }
+                    }
+                }
+            }
+        }catch(Exception e) {
+            flag = true;
+        }
+        if(resultList.size() > 0) {
+            model.addAttribute("resultList", resultList);
+        }
+        model.addAttribute("flag", flag);
+
+        return "jsonView";
+    }
+
     /**
      * 하나의 Gfile로 구성되면 다운로드 처리
      * @param GFILE_SEQ

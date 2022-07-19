@@ -380,4 +380,16 @@
           AND A.HIGH_CD = #{HIGH_CD}
         ORDER BY A.SORT_NUM
     </select>
+
+    <select id="selectStockImageList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.FILE_NM, A.FILE_PATH, A.TIME_PATH, A.ORGINAL_FILE_NM, A.UPDATE_DT
+        FROM TBL_FILE A
+        WHERE GFILE_SEQ IN (
+            SELECT IMG_GFILE_SEQ
+            FROM TBL_INSIDE_STOCK tis
+            WHERE INSERT_DT <![CDATA[ < ]]> '2022/01/01'
+                AND DEL_YN = 'N'
+        );
+    </select>
+
 </mapper>
