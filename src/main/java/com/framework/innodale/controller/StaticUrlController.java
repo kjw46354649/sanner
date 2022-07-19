@@ -232,16 +232,13 @@ public class StaticUrlController {
                 if(filePath != null && fileName != null) {
                     File orgFile = new File(filePath);
                     if(orgFile.exists()) {
-                        System.out.println(">>>>>>>>>>>>>>>>>>>>>>> 1");
                         File thumbNailFile = new File(filePath + ".thumbnail.png");
                         if(thumbNailFile.exists()) {
                             thumbNailFile.delete();
 
-                            System.out.println(">>>>>>>>>>>>>>>>>>>>>>> 2");
                             String pdfName = filePath.replace(".png",".pdf");
                             File pdfFile = new File(pdfName);
                             if(pdfFile.exists()) {
-                                System.out.println(">>>>>>>>>>>>>>>>>>>>>>> 3");
                                 PDDocument document = PDDocument.load(pdfFile);
                                 PDFRenderer pdfRenderer = new PDFRenderer(document);
 

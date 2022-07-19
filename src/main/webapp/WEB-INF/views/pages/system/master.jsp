@@ -372,7 +372,9 @@
             'url': '/makeThumbnail',
             'data': {}
         };
+        $(".custom_loading_bar").show();
         fnPostAjax(function (data) {
+            $(".custom_loading_bar").hide();
             console.log(data);
         }, parameters, '');
     });
