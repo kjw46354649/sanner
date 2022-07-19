@@ -230,7 +230,7 @@ public class StaticUrlController {
 
                 if(filePath != null && fileName != null) {
                     File orgFile = new File(filePath);
-                    if(!orgFile.exists()) {
+                    if(orgFile.exists()) {
                         File thumbNailFile = new File(filePath + ".thumbnail.png");
                         if(thumbNailFile.exists()) {
                             thumbNailFile.delete();
