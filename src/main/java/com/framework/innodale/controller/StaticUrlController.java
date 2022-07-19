@@ -224,7 +224,6 @@ public class StaticUrlController {
         try {
             List<Map<String,Object>> fileList = (List<Map<String, Object>>) innodaleService.getList(imgMap);
 
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>> fileList : " + fileList);
             for(Map<String,Object> temp : fileList) {
                 String filePath = (String) temp.get("FILE_PATH");
                 String fileName = (String) temp.get("FILE_NM");
