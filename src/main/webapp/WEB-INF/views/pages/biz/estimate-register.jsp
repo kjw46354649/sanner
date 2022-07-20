@@ -591,7 +591,7 @@
                     const rowData = ui.rowData;
 
                     $cell.find("[name=processing_requirements]").bind("click", function () {
-                        processingRequirementsPop('ESTIMATE');
+                        processingRequirementsPop('ESTIMATE','estimate_register_top_grid');
                     });
                 }
             },

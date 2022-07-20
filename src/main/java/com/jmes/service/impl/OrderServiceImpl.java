@@ -820,7 +820,10 @@ public class OrderServiceImpl implements OrderService {
                     hashMap.put("SEQ1", seq1);
                     hashMap.put("SEQ2", seq2);
                     hashMap.put("queryId", "orderMapper.updateControlPartEtcProcess");
-                    this.innodaleDao.updateGrid(hashMap);
+                    this.innodaleDao.update(hashMap);
+
+                    hashMap.put("queryId", "orderMapper.updateControlPartEtcAutomaticQuote");
+                    this.innodaleDao.update(hashMap);
                 }
             }
         } catch (Exception e) {

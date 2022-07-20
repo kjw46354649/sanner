@@ -349,7 +349,10 @@ public class EstimateServiceImpl implements EstimateService {
                     hashMap.put("SEQ1", seq1);
                     hashMap.put("SEQ2", seq2);
                     hashMap.put("queryId", "estimate.updateEstimateEtcProcess");
-                    this.innodaleDao.updateGrid(hashMap);
+                    this.innodaleDao.update(hashMap);
+
+                    hashMap.put("queryId", "estimate.updateEstimateDetailEtcAutomaticQuote");
+                    this.innodaleDao.update(hashMap);
                 }
             }
         } catch (Exception e) {

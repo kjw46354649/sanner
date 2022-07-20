@@ -953,7 +953,7 @@
                         $cell = grid.getCell(ui);
 
                     $cell.find("[name=processing_requirements]").bind("click", function () {
-                        processingRequirementsPop('CONTROL');
+                        processingRequirementsPop('CONTROL', 'CONTROL_MANAGE_GRID');
                     });
                 }
             },

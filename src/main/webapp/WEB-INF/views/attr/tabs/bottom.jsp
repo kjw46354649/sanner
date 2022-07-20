@@ -629,6 +629,7 @@
                                     <input type="hidden" name="WORK_TYPE" id="WORK_TYPE">
                                     <input type="hidden" name="SEQ1" id="SEQ1">
                                     <input type="hidden" name="SEQ2" id="SEQ2">
+                                    <input type="hidden" name="refreshGridId" id="refreshGridId">
                                     <div id="processing_requirements_grid"></div>
                                 </form>
                             </div>
@@ -2671,8 +2672,9 @@
         $('#common_multi_download_pop').modal('hide');
     });
 
-    const processingRequirementsPop = function (actionType) {
+    const processingRequirementsPop = function (actionType, refreshGridId) {
         $('#processing_requirements_form').find('#TYPE').val(actionType);
+        $('#processing_requirements_form').find('#refreshGridId').val(refreshGridId);
 
         $('#processingRequirementsModal').modal('show');
     };
@@ -2959,6 +2961,10 @@
         'hide.bs.modal': function () {
             $processingRequirementsGrid.pqGrid('destroy');
             $processingRequirementsEtcGrid.pqGrid('destroy');
+            let refreshId = $("#processing_requirements_form").find("#refreshGridId").val();
+            if($("#"+refreshId).hasClass('pq-grid')) {
+                $("#"+refreshId).pqGrid('refreshDataAndView');
+            }
             $("input[name=GRIND_CHECK]").prop("checked",false);
             $("input[name=HEAT_CHECK]").prop("checked",false);
             $("input[name=ANGLE_CHECK]").prop("checked",false);
@@ -3332,7 +3338,7 @@
         if($("#processing_requirements_special_sub_grid .pq-header-outer").css('display') !== 'none') {
             let headerT = $("#processing_requirements_special_sub_grid .pq-header-outer").height();
             let bodyT = $("#processing_requirements_special_sub_grid .pq-body-outer").height();
-            let afterT = bodyT + headerT;
+            let afterT = bodyT + headerT - 2;
             $("#processing_requirements_special_sub_grid .pq-body-outer").height( afterT + "px");
         }
     })
