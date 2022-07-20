@@ -18,4 +18,6 @@ public interface EstimateService {
     void deleteMaterialCost(Map<String, Object> map) throws Exception;
 
     void processingRequirementsEstimateSave(Model model, Map<String, Object> map) throws Exception;
+
+    void processingRequirementsEstimateEtcSave(Model model, Map<String, Object> map) throws Exception;
 }

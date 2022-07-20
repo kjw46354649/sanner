@@ -3359,15 +3359,16 @@
         const gridInstance = $processingRequirementsEtcGrid.pqGrid('getInstance').grid;
         if (gridInstance.isDirty()) {
             let $processingRequirementsType = $('#processing_requirements_form').find('#TYPE').val();
+            let $basicInformation = $('.basic_information');
             let gridInstance = $processingRequirementsEtcGrid.pqGrid('getInstance').grid;
             let changes = gridInstance.getChanges({format: 'byVal'});
             changes.TYPE = $processingRequirementsType;
-            changes.SEQ1 = rowData.CONTROL_SEQ;
-            changes.SEQ2 = rowData.CONTROL_DETAIL_SEQ;
+            changes.SEQ1 = $basicInformation.find('#seq1').html();
+            changes.SEQ2 = $basicInformation.find('#seq2').html();
             let url = '';
 
             if ($processingRequirementsType === 'ESTIMATE') {
-                url = 'processingRequirementsEstimateSave';
+                url = 'processingRequirementsEstimateEtcSave';
             } else if ($processingRequirementsType === 'CONTROL') {
                 url = 'processingRequirementsEtcControlSave';
             }

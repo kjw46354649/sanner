@@ -273,8 +273,8 @@ public class EstimateServiceImpl implements EstimateService {
         ArrayList<HashMap<String, Object>> addList = null;
         ArrayList<HashMap<String, Object>> updateList = null;
         boolean flag = false;
-        Integer seq1 = null;
-        Integer seq2 = null;
+        String seq1 = null;
+        String seq2 = null;
 
         if (jsonObject != null)
             jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
@@ -286,10 +286,10 @@ public class EstimateServiceImpl implements EstimateService {
             updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
 
         if (jsonMap.containsKey("SEQ1"))
-            seq1 = Integer.parseInt(String.valueOf(jsonMap.get("SEQ1")));
+            seq1 = String.valueOf(jsonMap.get("SEQ1"));
 
         if (jsonMap.containsKey("SEQ2"))
-            seq2 = Integer.parseInt(String.valueOf(jsonMap.get("SEQ2")));
+            seq2 = String.valueOf(jsonMap.get("SEQ2"));
 
 
         try {
@@ -315,8 +315,49 @@ public class EstimateServiceImpl implements EstimateService {
             }
         } catch (Exception e) {
             flag = true;
+            e.printStackTrace();
         }
 
         model.addAttribute("flag", flag);
+    }
+
+    @Override
+    public void processingRequirementsEstimateEtcSave(Model model, Map<String, Object> map) throws Exception {
+        String jsonObject = (String) map.get("data");
+        String userId = (String)map.get("LOGIN_USER_ID");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jsonMap = null;
+        ArrayList<HashMap<String, Object>> updateList = null;
+        boolean flag = false;
+        String seq1 = null;
+        String seq2 = null;
+
+        if (jsonObject != null)
+            jsonMap = objectMapper.readValue(jsonObject, new TypeReference<Map<String, Object>>() {});
+
+        if(jsonMap != null) {
+            updateList = (ArrayList<HashMap<String, Object>>) jsonMap.get("updateList");
+
+            seq1 = String.valueOf(jsonMap.get("SEQ1"));
+            seq2 = String.valueOf(jsonMap.get("SEQ2"));
+        }
+
+        try {
+            if (updateList != null && updateList.size() > 0) {
+                for (HashMap<String, Object> hashMap : updateList) {
+                    hashMap.put("LOGIN_USER_ID",userId);
+                    hashMap.put("SEQ1", seq1);
+                    hashMap.put("SEQ2", seq2);
+                    hashMap.put("queryId", "estimate.updateEstimateEtcProcess");
+                    this.innodaleDao.updateGrid(hashMap);
+                }
+            }
+        } catch (Exception e) {
+            flag = true;
+            e.printStackTrace();
+        }
+
+        model.addAttribute("flag", flag);
+
     }
 }

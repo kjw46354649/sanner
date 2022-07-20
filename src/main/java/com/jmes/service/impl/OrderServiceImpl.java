@@ -825,6 +825,7 @@ public class OrderServiceImpl implements OrderService {
             }
         } catch (Exception e) {
             flag = true;
+            e.printStackTrace();
         }
 
         model.addAttribute("flag", flag);
@@ -869,6 +870,7 @@ public class OrderServiceImpl implements OrderService {
                 } catch (Exception e) {
                     flag = true;
                     message = "에러가 발생하였습니다";
+                    e.printStackTrace();
                 }
             }
         }
@@ -1087,6 +1089,7 @@ public class OrderServiceImpl implements OrderService {
                 } catch (Exception e) {
                     flag = true;
                     message = "에러가 발생하였습니다";
+                    e.printStackTrace();
                 }
             }
         }

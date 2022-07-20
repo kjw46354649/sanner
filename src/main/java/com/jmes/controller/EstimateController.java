@@ -97,4 +97,19 @@ public class EstimateController {
 
         return "jsonView";
     }
+
+    /**
+     * @description
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/processingRequirementsEstimateEtcSave", method = RequestMethod.POST)
+    public String processingRequirementsEstimateEtcSave(Model model, HttpServletRequest request) throws Exception {
+        Map<String, Object> map = CommonUtility.getParameterMap(request);
+
+        this.estimateService.processingRequirementsEstimateEtcSave(model, map);
+
+        return "jsonView";
+    }
 }
