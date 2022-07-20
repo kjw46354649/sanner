@@ -1627,21 +1627,6 @@
                          UNION ALL SELECT 5 AS T
                      ) Y
                  ) Z
-                 UNION ALL
-                 SELECT '' AS ETC_FACTOR_CD,
-                     '' AS NAME,
-                     SUM(B.CALC_AMT) AS VALUE,
-                     '' AS COLUMN_TYPE,
-                     '' AS EDIT_YN,
-                     '' AS CALC_UNIT_NM,
-                     '' AS T,
-                     '' AS CALC_METHOD_1_EDIT_YN,
-                     '' AS CALC_METHOD_2_EDIT_YN,
-                     '' AS CALC_UNIT_AMT_EDIT_YN,
-                     '' AS CALC_AMT_EDIT_YN
-                 FROM TBL_CALC_PROCESS_ETC_FACTOR A
-                     INNER JOIN TBL_ESTIMATE_DETAIL_ETC_PROCESS B ON A.ETC_FACTOR_CD = B.ETC_FACTOR_CD AND B.EST_SEQ = #{SEQ1} AND B.SEQ = #{SEQ2}
-                     INNER JOIN TBL_CALC_PROCESS C ON A.CALC_SEQ = C.CALC_SEQ AND C.CALC_SEQ = SF_GET_CALC_PROCESS_SEQ('ESTIMATE', #{SEQ1}, #{SEQ2})
              ) Q
         ORDER BY ETC_FACTOR_CD IS NULL ASC, ETC_FACTOR_CD ASC, T
     </select>
