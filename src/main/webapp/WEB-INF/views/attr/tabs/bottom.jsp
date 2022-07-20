@@ -2780,7 +2780,6 @@
                 summaryTitle: {sum: '{0}'},
                 load: function () {
                     const data = this.option('dataModel.data');
-                    console.log(data);
                     const summary = function (data) {
                         // const lastRow = data[data.length - 1];
                         // const costTotal = lastRow ? lastRow.VALUE : '';
@@ -2790,10 +2789,12 @@
                                 costTotal += Number(Item.VALUE);
                             }
                         });
+                        if(costTotal == 0) {
+                            costTotal = "";
+                        }
                         let array = [
                             {NAME: 'Sub Total', VALUE: costTotal}
                         ];
-                        console.log(array);
                         return array;
                     };
                     const merge = function (grid, refresh, data) {
