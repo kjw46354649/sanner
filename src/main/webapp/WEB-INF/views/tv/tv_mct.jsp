@@ -996,13 +996,11 @@
 		{title: '수량', dataType: 'string', dataIndx: 'FINISH_QTY', width: 95},
 		{title: '불량', dataType: 'string', dataIndx: 'ERROR_QTY', width: 95}
 	];
-	//g_ItemDetailPopGridId01.pqGrid({
 	let g_ItemDetailPopObj01 = {
 		width: "100%", height: "80%",
 		dataModel: {
 			location: "remote", dataType: "json", method: "POST", recIndx: 'RNUM',
 			url: "/tv/paramQueryGridSelect",
-			//postData: fnFormToJsonArrayData('g_item_detail_pop_form'),
 			postData: {queryId: 'inspection.selectCommItemDetailInfo', 'V_PARAM': ''},
 			getData: function (dataJSON) {
 				return {data: dataJSON.data};
@@ -1019,7 +1017,13 @@
 		collapsible: false,
 		resizable: false,
 		trackModel: {on: true},
-		colModel: g_ItemDetailPopColModel01
+		colModel: g_ItemDetailPopColModel01,
+		complete: function() {
+			const data = this.option('dataModel.data');
+			if(data.length > 0) {
+				g_ItemDetailPopGridId01.pqGrid('scrollRow', {rowIndxPage:data[data.length-1].pq_ri});
+			}
+		}
 	};
 
 
@@ -1049,7 +1053,13 @@
 		collapsible: false,
 		resizable: false,
 		trackModel: {on: true},
-		colModel: g_ItemDetailPopColModel02
+		colModel: g_ItemDetailPopColModel02,
+		complete: function() {
+			const data = this.option('dataModel.data');
+			if(data.length > 0) {
+				g_ItemDetailPopGridId02.pqGrid('scrollRow', {rowIndxPage:data[data.length-1].pq_ri});
+			}
+		}
 	};
 
 	let g_ItemDetailPopGridId03 =  $("#g_item_detail_pop_grid_03");
@@ -1161,7 +1171,13 @@
 		collapsible: false,
 		resizable: false,
 		trackModel: {on: true},
-		colModel: g_ItemDetailPopColModel05
+		colModel: g_ItemDetailPopColModel05,
+		complete: function() {
+			const data = this.option('dataModel.data');
+			if(data.length > 0) {
+				g_ItemDetailPopGridId05.pqGrid('scrollRow', {rowIndxPage:data[data.length-1].pq_ri});
+			}
+		}
 	};
 
 	let g_ItemDetailPopGridId06 =  $("#g_item_detail_pop_grid_06");

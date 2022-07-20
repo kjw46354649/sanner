@@ -390,7 +390,7 @@
             WHERE A.DEL_YN = 'N'
               AND A.CONTROL_SEQ = #{CONTROL_SEQ}
               AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-            ORDER BY 1 DESC
+            ORDER BY A.WORK_START_DT
         ) X
     </select>
 
@@ -401,7 +401,7 @@
         FROM TBL_POP A
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
           AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-        ORDER BY A.POP_SEQ DESC
+        ORDER BY A.POP_SEQ
     </select>
 
     <select id="selectCommItemDetailInfoGrid3" parameterType="java.util.HashMap" resultType="java.util.HashMap">
@@ -444,7 +444,6 @@
                         WHEN A.INSPECT_GRADE = 'GRD040' THEN '부적합'
                         WHEN A.INSPECT_GRADE IN ('GRD050', 'GRD060') THEN '반품'
                     END, '(', SF_GET_CODE_NM('1040', A.INSPECT_GRADE, #{LOGIN_LOCALE}), ')') AS Q_INSPECT_GRADE_NOTE
-<!--           , (SELECT NOTE FROM TBL_CODE WHERE HIGH_CD = '1040' AND CODE_CD = A.INSPECT_GRADE) AS Q_INSPECT_GRADE_NOTE -->
           , CASE WHEN A.INSPECT_TYPE = '1' THEN ( SELECT IFNULL(SUM(N.ORDER_QTY) * M.PART_UNIT_QTY,0)
                                                   FROM TBL_CONTROL_PART M, TBL_CONTROL_PART_ORDER N
                                                   WHERE M.CONTROL_SEQ = N.CONTROL_SEQ
@@ -467,7 +466,7 @@
         FROM TBL_INSPECT A
         WHERE A.CONTROL_SEQ = #{CONTROL_SEQ}
           AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
-        ORDER BY 1 DESC
+        ORDER BY A.INSERT_DT
     </select>
     <select id="selectCommItemDetailInfoGrid6" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT A.REGIST_NUM,

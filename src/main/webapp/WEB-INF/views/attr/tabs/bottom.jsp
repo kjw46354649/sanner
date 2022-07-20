@@ -1605,7 +1605,6 @@
         dataModel: {
             location: "remote", dataType: "json", method: "POST", recIndx: 'RNUM',
             url: "/tv/paramQueryGridSelect",
-            //postData: fnFormToJsonArrayData('g_item_detail_pop_form'),
             postData: {queryId: 'inspection.selectCommItemDetailInfo', 'V_PARAM': ''},
             getData: function (dataJSON) {
                 return {data: dataJSON.data};
@@ -1622,7 +1621,13 @@
         collapsible: false,
         resizable: false,
         trackModel: {on: true},
-        colModel: g_ItemDetailPopColModel01
+        colModel: g_ItemDetailPopColModel01,
+        complete: function() {
+            const data = this.option('dataModel.data');
+            if(data.length > 0) {
+                g_ItemDetailPopGridId01.pqGrid('scrollRow', {rowIndxPage:data[data.length-1].pq_ri});
+            }
+        }
     };
 
 
@@ -1652,7 +1657,13 @@
         collapsible: false,
         resizable: false,
         trackModel: {on: true},
-        colModel: g_ItemDetailPopColModel02
+        colModel: g_ItemDetailPopColModel02,
+        complete: function() {
+            const data = this.option('dataModel.data');
+            if(data.length > 0) {
+                g_ItemDetailPopGridId02.pqGrid('scrollRow', {rowIndxPage:data[data.length-1].pq_ri});
+            }
+        }
     };
 
     let g_ItemDetailPopGridId03 =  $("#g_item_detail_pop_grid_03");
@@ -1739,8 +1750,6 @@
         colModel: g_ItemDetailPopColModel04,
         dataReady: function (event, ui) {
             let data = g_ItemDetailPopGrid04.pqGrid('option', 'dataModel.data');
-            // let totalRecords = data.length;
-            // let rowDataArray = g_ItemDetailPopGrid04.pqGrid('getRowData', {rowIndx: 0});
             if(data[0]){
                 $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info1").html(data[0].STATUS_INFO);
                 $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info2").html("Update : " + data[0].UPDATE_TIME_INFO);
@@ -1749,31 +1758,13 @@
                 $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info2").html("");
             }
         }
-        // let data4 = g_ItemDetailPopGrid04.pqGrid('option', 'dataModel.data');
-        // if(data4 != null){
-        //     setTimeout(function() {
-        //         let rowDataArray = g_ItemDetailPopGrid04.pqGrid('getRowData', {rowIndx: 0});
-        //         if(rowDataArray != null){
-        //              $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info1").html(rowDataArray.STATUS_INFO);
-        //              $("#g_item_detail_pop_form").find("#g_item_detail_pop_grid_04_info2").val(rowDataArray['UPDATE_TIME_INFO']);
-        //         }
-        //     }, 2000);
-        // }
     };
 
     let g_ItemDetailPopGridId05 =  $("#g_item_detail_pop_grid_05");
     let g_ItemDetailPopColModel05 = [
         {title: 'Q_SEQ', dataType: 'string', dataIndx: 'Q_SEQ', hidden:true},
-        // {title: '작성자', dataType: 'string', dataIndx: 'Q_INSPECT_USER_NM', width: 95},
-        // {title: '측정방법', dataType: 'string', dataIndx: 'Q_INSPECT_METHOD_NM', width: 95},
-        // {title: '반품일', dataType: 'string', dataIndx: 'Q_RETURN_DT', minWidth: 90, width: 95},
         {title: '등급', dataType: 'string', dataIndx: 'Q_INSPECT_GRADE_NOTE', width: 95},
-        // {title: '부적합 수량', dataType: 'string', dataIndx: 'Q_ERROR_QTY', width: 95},
         {title: '불량코드', dataType: 'string', dataIndx: 'Q_INSPECT_RESULT_NM', width: 95},
-        // {title: '상세 및 비고', dataType: 'string', dataIndx: 'Q_INSPECT_DESC', width: 95},
-        // {title: '원인', dataType: 'string', dataIndx: 'Q_ERROR_REASON_NM', width: 95},
-        // {title: '조치', dataType: 'string', dataIndx: 'Q_ERROR_ACTION_NM', width: 95},
-        // {title: '조치방안', dataType: 'string', dataIndx: 'Q_ERROR_NOTE', width: 95},
         {title: '작성일시', dataType: 'string', dataIndx: 'Q_DT', minWidth: 90, width: 95}
     ];
     let g_ItemDetailPopObj05 = {
@@ -1797,7 +1788,13 @@
         collapsible: false,
         resizable: false,
         trackModel: {on: true},
-        colModel: g_ItemDetailPopColModel05
+        colModel: g_ItemDetailPopColModel05,
+        complete: function() {
+            const data = this.option('dataModel.data');
+            if(data.length > 0) {
+                g_ItemDetailPopGridId05.pqGrid('scrollRow', {rowIndxPage:data[data.length-1].pq_ri});
+            }
+        }
     };
 
     let g_ItemDetailPopGridId06 =  $("#g_item_detail_pop_grid_06");
@@ -1830,11 +1827,6 @@
         trackModel: {on: true},
         colModel: g_ItemDetailPopColModel06
     };
-
-    // let g_item_detail_cam_work_pop_view = function(CONTROL_SEQ, CONTROL_DETAIL_SEQ){
-    //     $("#g_item_detail_pop_form").find("#CAM_INFO_YN").val("Y");
-    //     g_item_detail_pop_view(CONTROL_SEQ, CONTROL_DETAIL_SEQ);
-    // }
 
     let orderDetailGrid;
     let orderDetailRowIndx;
