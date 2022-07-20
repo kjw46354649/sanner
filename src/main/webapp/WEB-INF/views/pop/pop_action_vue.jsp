@@ -377,6 +377,9 @@
                     fnFetchPost('/popParamQueryGridSelect', parameter, function (data) {
                         app.items = data.data;
                         app.overlay = false;
+                        if(data.data.length > 0) {
+                            app.selectedItem = data.data[0];
+                        }
                     })
                 }
             },
