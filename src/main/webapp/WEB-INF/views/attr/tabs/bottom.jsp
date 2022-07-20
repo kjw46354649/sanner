@@ -2781,8 +2781,6 @@
                 load: function () {
                     const data = this.option('dataModel.data');
                     const summary = function (data) {
-                        // const lastRow = data[data.length - 1];
-                        // const costTotal = lastRow ? lastRow.VALUE : '';
                         let costTotal = 0;
                         $.each(data, function(idx,Item) {
                             if(Item.T == 5) {
