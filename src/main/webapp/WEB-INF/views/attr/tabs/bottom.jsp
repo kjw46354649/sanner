@@ -2753,7 +2753,7 @@
                 }
             ]
             const processingRequirementsSpecialSubObj = {
-                height: 345,
+                height: 348,
                 collapsible: false,
                 showTitle: false,
                 strNoRows: g_noData,
@@ -2777,13 +2777,20 @@
                         return {data: dataJSON.data};
                     }
                 },
+                summaryTitle: {sum: '{0}'},
                 load: function () {
                     const data = this.option('dataModel.data');
                     console.log(data);
                     const summary = function (data) {
-                        const lastRow = data[data.length - 1];
-                        const costTotal = lastRow ? lastRow.VALUE : '';
-                        const array = [
+                        // const lastRow = data[data.length - 1];
+                        // const costTotal = lastRow ? lastRow.VALUE : '';
+                        let costTotal = 0;
+                        $.each(data, function(idx,Item) {
+                            if(Item.T == 5) {
+                                costTotal += Number(Item.VALUE);
+                            }
+                        });
+                        let array = [
                             {NAME: 'Sub Total', VALUE: costTotal}
                         ];
                         console.log(array);
@@ -2813,7 +2820,7 @@
                 complete : function () {
                     let headerT = $("#processing_requirements_special_sub_grid .pq-header-outer").height();
                     let bodyT = $("#processing_requirements_special_sub_grid .pq-body-outer").height();
-                    let afterT = bodyT + headerT;
+                    let afterT = bodyT + headerT - 2;
                     $("#processing_requirements_special_sub_grid .pq-body-outer").height( afterT + "px");
                 },
                 editorKeyDown: function (evt, ui) {
@@ -2828,7 +2835,7 @@
                     if($("#processing_requirements_special_sub_grid .pq-header-outer").css('display') !== 'none') {
                         let headerT = $("#processing_requirements_special_sub_grid .pq-header-outer").height();
                         let bodyT = $("#processing_requirements_special_sub_grid .pq-body-outer").height();
-                        let afterT = bodyT + headerT;
+                        let afterT = bodyT + headerT - 2;
                         $("#processing_requirements_special_sub_grid .pq-body-outer").height( afterT + "px");
                     }
                 }
