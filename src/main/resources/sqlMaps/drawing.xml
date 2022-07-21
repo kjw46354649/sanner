@@ -808,21 +808,25 @@
                     THEN CONCAT(CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'Qty.' ELSE '수량' END, SPACE(1), Z.ORDER_QTY, ' EA', SPACE(1), '(', CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'ori. ' ELSE '원 ' END, Z.ORIGINAL_SIDE_QTY, ',', CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN ' sym. ' ELSE ' 대 ' END, Z.OTHER_SIDE_QTY, ')',
                          CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(' + ', ADDITIONAL_QTY)
                               WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0 THEN CONCAT(' - ', ABS(ADDITIONAL_QTY))
+                              ELSE SPACE(0)
                          END)
                  WHEN ORIGINAL_SIDE_QTY  > 0
                     THEN CONCAT(CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'Qty.' ELSE '수량' END, SPACE(1), Z.ORDER_QTY, ' EA', SPACE(1), '(', CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'ori. ' ELSE '원 ' END, Z.ORIGINAL_SIDE_QTY, ')',
                          CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(' + ', Z.ADDITIONAL_QTY)
                               WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0 THEN CONCAT(' - ', ABS(ADDITIONAL_QTY))
+                              ELSE SPACE(0)
                          END)
                  WHEN Z.OTHER_SIDE_QTY > 0
                     THEN CONCAT(CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'Qty.' ELSE '수량' END, SPACE(1), Z.ORDER_QTY, ' EA', SPACE(1), '(', CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'sym. ' ELSE '대 ' END, Z.OTHER_SIDE_QTY, ')',
                          CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(' + ', Z.ADDITIONAL_QTY)
                               WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0 THEN CONCAT(' - ', ABS(ADDITIONAL_QTY))
+                              ELSE SPACE(0)
                          END)
-                    ELSE CONCAT(CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'Qty.' ELSE '수량' END, SPACE(1), Z.ORDER_QTY, ' EA', SPACE(1),
-                         CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(' + ', Z.ADDITIONAL_QTY)
-                              WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0 THEN CONCAT(' - ', ABS(ADDITIONAL_QTY))
-                         END)
+                ELSE CONCAT(CASE WHEN UPPER(#{LOGIN_LOCALE}) = 'EN' THEN 'Qty.' ELSE '수량' END, SPACE(1), Z.ORDER_QTY, ' EA', SPACE(1),
+                     CASE WHEN Z.ADDITIONAL_QTY > 0 THEN CONCAT(' + ', Z.ADDITIONAL_QTY)
+                          WHEN Z.ADDITIONAL_QTY <![CDATA[ < ]]> 0 THEN CONCAT(' - ', ABS(ADDITIONAL_QTY))
+                          ELSE SPACE(0)
+                     END)
             END AS ORDER_QTY_INFO, <!-- 수량에 대칭 추가 -->
             jmes.SF_GET_DATE_F(Z.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
             CASE WHEN Z.POP_COUNT = 0 THEN 'X' ELSE '' END CHE_POP, <!-- pop 선작업이 필요한 경우 -->
