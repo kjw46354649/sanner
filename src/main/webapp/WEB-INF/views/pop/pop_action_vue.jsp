@@ -17,27 +17,28 @@
     <link rel="stylesheet" href="/resource/main/css/bootstrap.css" />
     <!--add pqgrid.bootstrap.css for bootstrap related classes-->
     <link rel="stylesheet" href="/resource/plugins/dhtmlx/suite.css" />
-    <!-- print -->
-<%--    <link rel="stylesheet" type="text/css" href="/resource/asset/css/webFont.css" />--%>
-<%--    <link rel="stylesheet" type="text/css" href="/resource/asset/css/reset.css" />--%>
-<%--    <link rel="stylesheet" type="text/css" href="/resource/asset/css/common.css" />--%>
-<%--    <link rel="stylesheet" type="text/css" href="/resource/asset/css/layout.css" />--%>
-<%--    <link rel="stylesheet" type="text/css" href="/resource/asset/css/style.css" />--%>
 
     <script type="text/javascript" src="/resource/asset/js/jquery-1.12.4.min.js"></script>
-    <!-- Bootstrap -->
-    <script type="text/javascript" src='/resource/main/js/bootstrap.js'></script>
     <script type="text/javascript" src="/resource/asset/js/jquery.easing.1.3.js"></script>
-    <script type="text/javascript" src="/resource/asset/js/front.js"></script>
     <!--jQuery dependencies-->
     <script type="text/javascript" src="/resource/plugins/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/resource/asset/js/front.js"></script>
+
+    <!-- alertify -->
+    <script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
+    <!-- Bootstrap -->
+    <script type="text/javascript" src='/resource/main/js/bootstrap.js'></script>
 
     <script type="text/javascript" src="/resource/plugins/dhtmlx/suite.min.js"></script>
     <!-- barcode -->
     <script type="text/javascript" src="/resource/plugins/scanner/onscan.js" ></script>
 
-    <!-- alertify -->
-    <script type="text/javascript" src='/resource/plugins/alertifyjs/alertify.js'></script>
+    <!-- socket -->
+    <script type="text/javascript" src='/resource/plugins/socket/sockjs.min.js'></script>
+    <script type="text/javascript" src='/resource/plugins/stomp/stomp.min.js'></script>
+
+    <script src="https://unpkg.com/vue@2.7.2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
@@ -180,7 +181,7 @@
                         <v-row class="align-center mb-5">
                             <template v-for="(item, index) in items">
                                 <v-col
-                                        :key="item.ROWNUM"
+                                        :key="item.TEMP_KEY"
                                         class="d-flex child-flex pa-2"
                                         cols="3"
                                         v-if="index < perPage * page && index >= (perPage * (page -1))"
@@ -188,7 +189,7 @@
                                     <v-item v-slot="{ active, toggle }">
                                         <v-card
                                                 class="mx-auto"
-                                                :class="{selectedItem:(selectedItem.ROWNUM == item.ROWNUM)}"
+                                                :class="{selectedItem:(selectedItem.TEMP_KEY == item.TEMP_KEY)}"
                                                 :style="{ border: (item.IS_TODAY == 'Y')?'1px solid blue':'1px solid #636363'}"
 
                                                 @click="clickImage(item)"
@@ -313,8 +314,6 @@
             </v-main>
         </v-app>
     </div>
-    <script src="https://unpkg.com/vue@2.7.2/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script type='text/javascript'>
         let pLocation = '${popLocation}';
         if(pLocation === undefined || pLocation == null || pLocation == '') {
@@ -377,9 +376,9 @@
                     fnFetchPost('/popParamQueryGridSelect', parameter, function (data) {
                         app.items = data.data;
                         app.overlay = false;
-                        if(data.data.length > 0) {
-                            app.selectedItem = data.data[0];
-                        }
+                        // if(data.data.length > 0) {
+                        //     app.selectedItem = data.data[0];
+                        // }
                     })
                 }
             },
@@ -425,7 +424,6 @@
                 }
             });
 
-
             var sendDrawingNum = function(barcodeNum){
                 'use strict';
                 var message = "";
@@ -435,7 +433,6 @@
                     success: function (data, textStatus, jqXHR) {
                         // $(this).stopWaitMe();
                         var returnCode = data.returnCode;
-                        console.log('sendDrawingNum',data);
                         if (textStatus === 'success') {
                             if(returnCode == "RET00") {
                                 message = data.controlInfo + '\n' + data.locationInfo;
@@ -447,11 +444,9 @@
                                 message = data.message;
                                 showFailMessage(message);
                             }
-                            refreshListData();
                         }else{
                             message = "시스템에 문제가 발생하였습니다. 잠시 후 재작업 부탁 드립니다.";
                             showFailMessage(message);
-                            refreshListData();
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
@@ -479,10 +474,64 @@
                 });
             }
 
-            /** 5분 마다 refresh **/
+            let iConnectCount = 0;
+            function jmesConnect() {
+                let socket = new SockJS('/jmes-ws');
+                let stompClient = Stomp.over(socket);
+                stompClient.connect({}, (frame) => {
+                    stompClient.subscribe('/topic/pop', function (notificationMessage) {
+                        let messageData = JSON.parse(notificationMessage.body);
+                        console.log('/topic/pop',messageData)
+
+                        if(messageData.popPosition == app.popLocation) {
+                            let parameter = {
+                                queryId: 'popMapper.selectPopList',
+                                popLocation: app.popLocation,
+                                CONTROL_SEQ : messageData.controlSeq,
+                                CONTROL_DETAIL_SEQ: messageData.controlDetailSeq
+                            }
+
+                            fnFetchPost('/popParamQueryGridSelect', parameter, function (data) {
+                                if(data.data.length > 0) {
+                                    app.items = data.data.concat(app.items);
+                                    app.selectedItem = app.items[0];
+                                }
+                            })
+                        }else if(messageData.prePopPosition == app.popLocation) {
+                            let delIdx;
+                            $.each(app.items, function (idx,Item) {
+                                if(Item.CONTROL_SEQ == messageData.controlSeq && Item.CONTROL_DETAIL_SEQ == messageData.controlDetailSeq) {
+                                    delIdx = idx;
+                                }
+                            })
+                            app.items.splice(delIdx,1);
+                            if(app.selectedItem.CONTROL_SEQ == messageData.controlSeq && app.selectedItem.CONTROL_DETAIL_SEQ == messageData.controlDetailSeq) {
+                                app.selectedItem = {};
+                            }
+                        }
+                    });
+                }, () => {
+                    setTimeout(() => {
+                        if(iConnectCount == 6) {
+                            // showFailMessage("시스템에 문제가 발생하였습니다. 60초 후 페이지 새로고침 됩니다.");
+                            // setTimeout(function () {
+                            //     location.reload();
+                            // },1000 * 60 * 1)
+                            return;
+                        }else if(iConnectCount <= 5){
+                            jmesConnect();
+                        }
+                        iConnectCount++
+                    }, 5000);
+                });
+            }
+
+            jmesConnect();
+
+            /** 30분 마다 refresh **/
             setInterval(function() {
                 refreshListData();
-            }, 1000 * 60 * 5);
+            }, 1000 * 60 * 30);
 
         });
 

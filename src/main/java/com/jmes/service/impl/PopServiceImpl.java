@@ -164,6 +164,8 @@ public class PopServiceImpl implements PopService {
                 notificationMessage.setContent01(context01);
                 notificationMessage.setContent02(context02);
                 notificationMessage.setContent03(context03);
+                notificationMessage.setControlSeq((int) controlPartInfo.get("CONTROL_SEQ"));
+                notificationMessage.setControlDetailSeq((int) controlPartInfo.get("CONTROL_DETAIL_SEQ"));
 
                 // 가공확정 이후에 POP 스캔되면 소재사급(보), 사급인 경우 소재사급(사) 처리 한다.
                 if (createPRO021 != null && !"".equals(createPRO021)) {

@@ -25,6 +25,8 @@ public class NotificationMessage {
     private String content05;
 
     private int imageSeq;   // 도면 파일 처리
+    private int controlSeq;
+    private int controlDetailSeq;
 
     /** 사용자 관련 정보 **/
     private String userId;
@@ -191,4 +193,12 @@ public class NotificationMessage {
     public List<Map<String, Object>> getList() { return list; }
 
     public void setList(List<Map<String, Object>> list) { this.list = list; }
+
+    public int getControlSeq() { return controlSeq; }
+
+    public void setControlSeq(int controlSeq) { this.controlSeq = controlSeq; }
+
+    public int getControlDetailSeq() { return controlDetailSeq; }
+
+    public void setControlDetailSeq(int controlDetailSeq) { this.controlDetailSeq = controlDetailSeq; }
 }

@@ -6,7 +6,7 @@
     <select id="selectPopList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
         SELECT
             ROW_NUMBER () OVER (ORDER BY C.POP_DT) AS ROWNUM,
-            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ,
+            A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ, CONCAT(A.CONTROL_SEQ, A.CONTROL_DETAIL_SEQ) AS TEMP_KEY,
             CASE WHEN B.EMERGENCY_YN = 'Y' THEN '긴' ELSE SPACE(0) END AS EMERGENCY_YN, <!-- 긴급 -->
             SF_GET_DATE_F(A.INNER_DUE_DT, '', '') AS INNER_DUE_DT, <!-- 내부가공납기 -->
             CASE WHEN A.PART_NUM IS NULL THEN B.CONTROL_NUM ELSE CONCAT(B.CONTROL_NUM, ' #', A.PART_NUM) END AS CONTROL_NUM, <!-- 작업지시번호 -->
@@ -74,6 +74,12 @@
                             WHERE A.CONTROL_SEQ = E.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = E.CONTROL_DETAIL_SEQ
                                 AND E.PART_STATUS = 'PRO018' AND E.WORK_TYPE = 'WTP050'
             )
+            <if test="CONTROL_SEQ != null and CONTROL_SEQ !='' ">
+                AND A.CONTROL_SEQ = #{CONTROL_SEQ}
+            </if>
+            <if test="CONTROL_DETAIL_SEQ != null and CONTROL_DETAIL_SEQ !='' ">
+                AND A.CONTROL_DETAIL_SEQ = #{CONTROL_DETAIL_SEQ}
+            </if>
         ORDER BY C.POP_DT DESC
     </select>
 
@@ -146,7 +152,7 @@
             CONCAT('[', DATE_FORMAT(NOW(), '%m/%d %H:%i:%s'), '] ') AS CONTEXT01,
             CONCAT(Z.CONTROL_NUM, CASE WHEN Z.PART_NUM IS NOT NULL THEN CONCAT(' #', Z.PART_NUM) ELSE SPACE(0) END) AS CONTEXT02,
             SF_GET_CODE_NM(1009, Z.POP_CUR_POSITION, #{LOGIN_LOCALE}) AS CONTEXT03,
-            Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ, Z.POP_CUR_POSITION, Z.POP_PREV_POSITION, Z.CONTROL_STATUS, Z.OUTSIDE_YN, Z.PART_STATUS,
+            Z.CONTROL_SEQ, Z.CONTROL_DETAIL_SEQ, Z.POP_CUR_POSITION, Z.POP_PREV_POSITION, Z.CONTROL_STATUS, Z.OUTSIDE_YN, Z.PART_STATUS, Z.IMG_GFILE_SEQ,
             Z.WORK_TYPE, <!-- 작업 구분 WTP010:단품 , WTP020:조립 , WTP030:수정 , WTP040:재고 , WTP050:파트 , WTP060:용접  -->
             CASE WHEN Z.PART_STATUS = 'PRO002' AND IFNULL(Z.MATERIAL_SUPPLY_YN, 'N') = 'N' THEN 'PRO021'
                  WHEN Z.PART_STATUS = 'PRO002' AND IFNULL(Z.MATERIAL_SUPPLY_YN, 'N') = 'Y' THEN 'PRO022'
@@ -208,7 +214,8 @@
                     AND X.REQUEST_CONTROL_DETAIL_SEQ = A.CONTROL_DETAIL_SEQ
                     AND X.OUT_DT IS NULL
                     AND X.DEL_YN = 'N' AND X.REQUEST_TYPE = 1
-                ) AS WAREHOUSE_STOCK
+                ) AS WAREHOUSE_STOCK,
+                A.IMG_GFILE_SEQ
         FROM TBL_CONTROL_PART A
                 INNER JOIN TBL_CONTROL H ON A.CONTROL_SEQ = H.CONTROL_SEQ  <!-- 확정 상태 -->
                 INNER JOIN TBL_CONTROL_BARCODE B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.CONTROL_DETAIL_SEQ = B.CONTROL_DETAIL_SEQ
