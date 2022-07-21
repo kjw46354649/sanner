@@ -149,7 +149,8 @@
                                     :items="popList"
                                     item-text="CODE_NM"
                                     item-value="CODE_CD"
-                                    @input="changePop"
+                                    @change="changePop"
+                                    ref="selPop"
                                     outlined
                             ></v-select>
                         </v-col>
@@ -347,7 +348,6 @@
                 items : [],
                 popList : [],
                 popLocation:pLocation,
-                checkbox1:true,
                 selectedItem:{},
                 statusList : [
                     {name:'가공완료', value:'PRO009'},
@@ -367,7 +367,6 @@
                     this.selectedItem = {};
                     this.popLocation = value;
                     this.page = 1;
-
                     let parameter = {
                         queryId: 'popMapper.selectPopList',
                         popLocation: this.popLocation
@@ -376,10 +375,8 @@
                     fnFetchPost('/popParamQueryGridSelect', parameter, function (data) {
                         app.items = data.data;
                         app.overlay = false;
-                        // if(data.data.length > 0) {
-                        //     app.selectedItem = data.data[0];
-                        // }
                     })
+                    this.$refs.selPop.blur();
                 }
             },
             computed: {
