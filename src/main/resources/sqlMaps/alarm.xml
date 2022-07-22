@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="alarmMapper">
+
+    <insert id="insertAlarmList" parameterType="java.util.HashMap">
+            INSERT INTO jmes.TBL_ALARM
+            (ALARM_SEQ, EQUIP_SEQ, WORK_USER_ID, EVENT_TIME, MCT_WORK_SEQ, EXECUTION, CYCLE_FINISH_YN, INSERT_DT)
+            SELECT NEXTVAL(SEQ_ALARM) AS ALARM_SEQ,
+                    M.EQUIP_SEQ AS EQUIP_SEQ,
+                    Q.WORK_USER_ID AS WORK_USER_ID,
+                    M.EVENT_TIME AS EVENT_TIME,
+                    M.MCT_WORK_SEQ AS MCT_WORK_SEQ,
+                    M.EXECUTION AS EXECUTION,
+                    M.CYCLE_FINISH_YN AS CYCLE_FINISH_YN,
+                    NOW() AS INSERT_DT
+            FROM TBL_MCT_WORKING_LOG M
+                INNER JOIN TBL_MCT_WORK Q ON Q.MCT_WORK_SEQ = M.MCT_WORK_SEQ
+            WHERE MCT_LOG_SEQ = #{MCT_LOG_SEQ}
+    </insert>
+
+    <select id="selectAlarmList" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        SELECT
+            ROW_NUMBER() OVER(ORDER BY A.ALARM_SEQ DESC) AS ROW_NUM,
+            A.ALARM_SEQ, A.EQUIP_SEQ, E.EQUIP_NM, A.WORK_USER_ID, A.EVENT_TIME,
+            DATE_FORMAT(A.EVENT_TIME, '%m/%d %H:%i:%s') AS EVENT_TIME_FORMAT,
+            CASE WHEN A.CYCLE_FINISH_YN = 'Y' THEN 'FINISH'
+                 WHEN A.CYCLE_FINISH_YN = 'N' THEN 'STOP'
+                 ELSE ''
+            END AS CYCLE_FINISH_YN
+        FROM TBL_ALARM A
+            INNER JOIN TBL_EQUIP E ON A.EQUIP_SEQ = E.EQUIP_SEQ AND E.DEL_YN = 'N'
+        WHERE A.ALARM_HANDLE_YN = 'N' AND E.ALARM_AREA = #{ARM_CD}
+        ORDER BY A.ALARM_SEQ DESC
+    </select>
+
+    <update id="updateHandleAlarm" parameterType="java.util.HashMap">
+        UPDATE TBL_ALARM
+        SET ALARM_HANDLE_YN = 'Y'
+        WHERE EQUIP_SEQ = #{EQUIP_SEQ}
+    </update>
+
+
+    <select id="selectWorkingStatus" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        -- 가공현황
+        SELECT N.TITLE, M.DT, M.RATE, N.COMPLETE_CNT, N.COMPLETE_QTY
+        FROM ( -- 공정 완료 수
+                 SELECT P.TITLE, P.STATUS_DT AS DT, IFNULL(COUNT(Q.SEQ), 0) AS COMPLETE_CNT, IFNULL(SUM(Q.QTY), 0) AS COMPLETE_QTY
+                 FROM (
+                          SELECT DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY), '%Y-%m-%d') AS STATUS_DT, '어제' AS TITLE
+                          UNION ALL
+                          SELECT DATE_FORMAT(NOW(), '%Y-%m-%d') AS STATUS_DT, '현재' AS TITLE
+                      ) P
+                          LEFT OUTER JOIN	(
+                     SELECT C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ, C.SEQ,
+                            IFNULL(SF_GET_CONTROL_PART_QTY(C.CONTROL_SEQ, C.CONTROL_DETAIL_SEQ),0) AS QTY,
+                            C.PART_STATUS, DATE_FORMAT(C.STATUS_DT, '%Y-%m-%d') AS STATUS_DT,
+                            B.WORK_FACTORY
+                     FROM TBL_CONTROL A
+                              INNER JOIN TBL_CONTROL_PART B ON A.CONTROL_SEQ = B.CONTROL_SEQ AND A.DEL_YN = 'N'
+                              INNER JOIN TBL_CONTROL_PART_PROGRESS C ON A.CONTROL_SEQ = C.CONTROL_SEQ
+                         AND B.CONTROL_DETAIL_SEQ = C.CONTROL_DETAIL_SEQ
+                     WHERE C.PART_STATUS = 'PRO008'
+                       AND B.WORK_FACTORY = (SELECT REF_CD FROM TBL_CODE WHERE HIGH_CD = 1108 AND CODE_CD = #{ARM_CD})
+                 ) Q ON Q.STATUS_DT = P.STATUS_DT
+                 GROUP BY P.STATUS_DT
+             ) N
+                 INNER JOIN ( -- 가동률
+            SELECT Z.DT, Z.RATE
+            FROM ( -- 현재 가동률
+                     SELECT DATE_FORMAT(NOW(), '%Y-%m-%d') AS DT , CONCAT(ROUND(IFNULL(((SUM(CASE WHEN B.MCT_WORK_SEQ IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*)) * 100), 0), 0), ' %') AS RATE
+                     FROM TBL_EQUIP A
+                              LEFT OUTER JOIN (
+                         SELECT B.MCT_WORK_SEQ, B.EQUIP_SEQ
+                         FROM TBL_MCT_WORK B
+                                  INNER JOIN TBL_CONTROL C ON B.CONTROL_SEQ = C.CONTROL_SEQ  AND C.DEL_YN = 'N'
+                         WHERE B.DEL_YN = 'N'
+                           AND  B.WORK_FINISH_DT IS NULL
+                           AND B.WORK_STATUS IN ('DBS010', 'DBS020')
+                     ) B  ON A.EQUIP_SEQ = B.EQUIP_SEQ
+                     WHERE 1 = 1
+                       AND A.EQUIP_KIND = '1' AND A.DEL_YN = 'N'
+                       AND LAYOUT_ROW IS NOT NULL
+                       AND LAYOUT_COL IS NOT NULL
+                       AND A.FACTORY_AREA IN (SELECT CODE_CD
+                                              FROM TBL_CODE
+                                              WHERE HIGH_CD = 1005
+                                                AND REF_CD = (SELECT REF_CD
+                                                              FROM TBL_CODE
+                                                              WHERE HIGH_CD = 1108 AND CODE_CD = #{ARM_CD} AND DEL_YN = 'N')
+                                                AND DEL_YN = 'N')
+                     UNION ALL -- 어제 가동률
+                     SELECT DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY), '%Y-%m-%d') AS DT,
+                            CONCAT(ROUND(CASE WHEN IFNULL(SUM(Y.DUTY_TIME),0) = 0 THEN 0 ELSE IFNULL(SUM(Y.WORK_TIME),0) / SUM(Y.DUTY_TIME) * 100 END,0), ' %') AS RATE
+                     FROM (
+                              SELECT X.EQUIP_SEQ , X.WORK_FACTORY, X.DUTY_TIME, X.WORK_TIME
+                              FROM TBL_BATCH_MCT_WORK X
+                              WHERE X.EQUIP_SEQ
+                                AND X.BATCH_DT = DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 DAY), '%Y%m%d')
+                                AND X.WORK_FACTORY = (SELECT REF_CD FROM TBL_CODE WHERE HIGH_CD = 1108 AND CODE_CD = #{ARM_CD} AND DEL_YN = 'N')
+                          ) Y
+                 ) Z
+        ) M ON N.DT = M.DT
+        ORDER BY M.DT DESC;
+    </select>
+
+    <select id="selectDefectiveStatus" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        SELECT CASE WHEN SUBSTR(B.YYYYMM, 5, 1) = '0' THEN SUBSTR(B.YYYYMM, 6)
+                   ELSE SUBSTR(B.YYYYMM, 5)
+               END AS TITLE, (B.MCT_INSPECT_CNT + B.INSPECT_CNT) AS DEFECT_CNT, (B.MCT_INSPECT_QTY + B.INSPECT_QTY) AS DEFECT_QTY,
+               CASE WHEN (B.MCT_TOTAL_QTY + B.TOTAL_QTY) = 0 THEN 0
+                   ELSE FORMAT(ROUND((B.MCT_INSPECT_QTY + B.INSPECT_QTY)/(B.MCT_TOTAL_QTY + B.TOTAL_QTY)*100, 1),1)
+               END AS DEFECT_RATE
+        FROM (
+                 SELECT Y.YYYYMM,
+                        IFNULL(X.MCT_INSPECT_CNT,0) AS MCT_INSPECT_CNT, IFNULL(X.MCT_INSPECT_QTY,0) AS MCT_INSPECT_QTY, IFNULL(Y.MCT_TOTAL_QTY,0) AS MCT_TOTAL_QTY,
+                        IFNULL(Z.INSPECT_CNT,0) AS INSPECT_CNT, IFNULL(Z.INSPECT_QTY,0) AS INSPECT_QTY, IFNULL(A.TOTAL_QTY,0) AS TOTAL_QTY
+                 FROM (
+                          SELECT DATE_FORMAT(N.WORK_FINISH_DT, '%Y%m') AS YYYYMM,
+                                 SUM(SF_GET_CONTROL_PART_QTY(N.CONTROL_SEQ, N.CONTROL_DETAIL_SEQ)) AS MCT_TOTAL_QTY
+                          FROM TBL_MCT_WORK N
+                                   INNER JOIN TBL_CONTROL_PART M ON N.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
+                          WHERE 1 = 1
+                            AND N.DEL_YN = 'N'
+                            AND DATE_FORMAT(N.WORK_FINISH_DT, '%Y%m') IN (DATE_FORMAT(NOW(), '%Y%m'), DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y%m'))
+                            AND M.WORK_FACTORY = (SELECT REF_CD FROM TBL_CODE WHERE HIGH_CD = 1108 AND CODE_CD = #{ARM_CD})
+                          GROUP BY YYYYMM
+                      ) Y
+                          LEFT OUTER JOIN (
+                     SELECT DATE_FORMAT(N.INSERT_DT, '%Y%m') AS YYYYMM, COUNT(N.MCT_INSPECT_SEQ) AS MCT_INSPECT_CNT, SUM(N.ERROR_QTY) AS MCT_INSPECT_QTY
+                     FROM TBL_MCT_WORK_INSPECT N
+                              INNER JOIN TBL_MCT_WORK M ON N.MCT_WORK_SEQ = M.MCT_WORK_SEQ AND M.DEL_YN = 'N'
+                              INNER JOIN TBL_CONTROL_PART P ON P.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
+                     WHERE 1 = 1
+                       AND N.DEL_YN = 'N'
+                       AND DATE_FORMAT(N.INSERT_DT, '%Y%m') IN (DATE_FORMAT(NOW(), '%Y%m'), DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y%m'))
+                       AND P.WORK_FACTORY = (SELECT REF_CD FROM TBL_CODE WHERE HIGH_CD = 1108 AND CODE_CD = #{ARM_CD})
+                     GROUP BY YYYYMM
+                 ) X ON X.YYYYMM = Y.YYYYMM
+                          LEFT OUTER JOIN (
+                     SELECT DATE_FORMAT(N.INSERT_DT, '%Y%m') AS YYYYMM,  COUNT(N.INSPECT_SEQ) AS INSPECT_CNT, SUM(N.ERROR_QTY) AS INSPECT_QTY
+                     FROM TBL_INSPECT N
+                              INNER JOIN TBL_CONTROL_PART M ON N.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
+                     WHERE 1 = 1
+                       AND N.INSPECT_GRADE IN ('GRD030', 'GRD040')
+                       AND DATE_FORMAT(N.INSERT_DT, '%Y%m') IN (DATE_FORMAT(NOW(), '%Y%m'), DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y%m'))
+                       AND M.WORK_FACTORY = (SELECT REF_CD FROM TBL_CODE WHERE HIGH_CD = 1108 AND CODE_CD = #{ARM_CD})
+                     GROUP BY YYYYMM
+                 ) Z ON Z.YYYYMM = Y.YYYYMM
+                          LEFT OUTER JOIN (
+                     SELECT DATE_FORMAT(N.INSERT_DT, '%Y%m') AS YYYYMM, SUM(SF_GET_CONTROL_PART_QTY(N.CONTROL_SEQ, N.CONTROL_DETAIL_SEQ)) AS TOTAL_QTY
+                     FROM TBL_INSPECT N
+                              INNER JOIN TBL_CONTROL_PART M ON N.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
+                     WHERE 1 = 1
+                       AND DATE_FORMAT(N.INSERT_DT, '%Y%m') IN (DATE_FORMAT(NOW(), '%Y%m'), DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y%m'))
+                       AND M.WORK_FACTORY = (SELECT REF_CD FROM TBL_CODE WHERE HIGH_CD = 1108 AND CODE_CD = #{ARM_CD})
+                     GROUP BY YYYYMM
+                 ) A ON A.YYYYMM = Y.YYYYMM
+             ) B
+        ORDER BY YYYYMM DESC
+    </select>
+</mapper>

@@ -151,7 +151,7 @@ public class AspectInterceptor extends HandlerInterceptorAdapter {
         passList.add("/imageViewer");
         passList.add("/drawingPrint");
 
-        String patterns[] = {"/image", "/qsimage", "/qimage", "/barcode", "/static", "/downloadGfile", "/downloadfile", "/drawing", "/pop", "/tv"};
+        String patterns[] = {"/image", "/qsimage", "/qimage", "/barcode", "/static", "/downloadGfile", "/downloadfile", "/drawing", "/pop", "/tv", "/Alarm"};
 
         if(passList.contains(url)) return true;
 
