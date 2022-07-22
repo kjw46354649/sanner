@@ -836,7 +836,9 @@
         setInterval(blinking, 800, curOperatingRateRow, 'lime', 'accent-1');
         setInterval(blinking, 800, curDefectiveRateRow, 'lime', 'accent-1');
         setInterval(renderElapsedTime, 1000 * 60);
+        setInterval(renderDefectiveRate, 1000 * 60 * 5); // 5분에 1회
         setInterval(renderOperatingRate, 1000 * 60 * 5); // 5분에 1회
+
     });
 </script>
 </body>

@@ -65,7 +65,7 @@
                  ) Q ON Q.STATUS_DT = P.STATUS_DT
                  GROUP BY P.STATUS_DT
              ) N
-                 INNER JOIN ( -- 가동률
+                 LEFT OUTER JOIN ( -- 가동률
             SELECT Z.DT, Z.RATE
             FROM ( -- 현재 가동률
                      SELECT DATE_FORMAT(NOW(), '%Y-%m-%d') AS DT , CONCAT(ROUND(IFNULL(((SUM(CASE WHEN B.MCT_WORK_SEQ IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*)) * 100), 0), 0), ' %') AS RATE
