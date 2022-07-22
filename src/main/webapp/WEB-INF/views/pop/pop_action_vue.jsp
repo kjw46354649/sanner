@@ -93,8 +93,8 @@
 
         .img_note {
             position: absolute;
-            top: 85%;
-            left:52%;
+            top: 80%;
+            left:45%;
             border: 1px solid #333333 !important;
         }
 
@@ -129,7 +129,6 @@
             font-size: 1rem !important;
         }
         .v-image__image {
-            image-rendering: pixelated;
             backface-visibility: hidden;
             transform: translateZ(0);
         }
@@ -140,7 +139,7 @@
     <div id="app">
         <v-app id="inspire">
             <v-main>
-                <v-container max-width="1050" md="auto">
+                <v-container max-width="1050" md="auto" class="mb-2">
                     <v-overlay :value="overlay">
                         <v-progress-circular
                                 indeterminate
@@ -188,7 +187,7 @@
                             <template v-for="(item, index) in items">
                                 <v-col
                                         :key="item.TEMP_KEY"
-                                        class="d-flex child-flex pa-2 pt-3 pb-3"
+                                        class="d-flex child-flex pa-2 pb-3"
                                         cols="3"
                                         v-if="index < perPage * page && index >= (perPage * (page -1))"
                                 >
@@ -210,7 +209,7 @@
 <%--                                                        aspect-ratio="1.8"--%>
                                                         style="border: 1px solid gray;"
                                                         class="pa-1"
-                                                        max-height="170"
+                                                        max-height="180"
                                                 >
                                                     <v-list-item class="grow d-flex pa-3 pt-0 pl-0 align-start" style="min-height: 125px;">
                                                         <v-card v-show="item.EQUIP_NM != null && item.EQUIP_NM != ''"
@@ -223,7 +222,7 @@
                                                                     :src="item.USER_IMG_URL"
                                                             ></v-img>
                                                         </v-list-item-avatar>
-                                                        <v-card min-width="120" max-width="200" class="text-center rounded-sm grey lighten-4 img_note"
+                                                        <v-card min-width="115" max-width="200" class="text-center rounded-sm grey lighten-4 img_note"
                                                                 :style="{ backgroundColor: (item.IS_TODAY == 'Y')?'#c6e5ff !important':''}">
                                                             {{item.MATERIAL_TYPE_NM}} {{item.ORDER_QTY}} ea <br>
                                                             {{item.POP_DT}}
