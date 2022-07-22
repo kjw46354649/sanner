@@ -93,14 +93,14 @@
 
         .img_note {
             position: absolute;
-            top: 71%;
-            left:45%;
+            top: 85%;
+            left:52%;
             border: 1px solid #333333 !important;
         }
 
         .staff_img {
             position: absolute;
-            top: 67%;
+            top: 80%;
             left: 1%;
         }
 
@@ -127,6 +127,11 @@
 
         .v-data-table>.v-data-table__wrapper>table>tbody>tr>td,.v-data-table>.v-data-table__wrapper>table>tfoot>tr>td,.v-data-table>.v-data-table__wrapper>table>thead>tr>td {
             font-size: 1rem !important;
+        }
+        .v-image__image {
+            image-rendering: pixelated;
+            backface-visibility: hidden;
+            transform: translateZ(0);
         }
     </style>
 </head>
@@ -183,7 +188,7 @@
                             <template v-for="(item, index) in items">
                                 <v-col
                                         :key="item.TEMP_KEY"
-                                        class="d-flex child-flex pa-2"
+                                        class="d-flex child-flex pa-2 pt-3 pb-3"
                                         cols="3"
                                         v-if="index < perPage * page && index >= (perPage * (page -1))"
                                 >
@@ -195,16 +200,17 @@
 
                                                 @click="clickImage(item)"
                                         >
-                                            <v-row no-gutters class="d-inline-block">
-                                                    <span class="text-sm-body-2 font-weight-medium pl-1 text-truncate">{{item.CONTROL_NUM}}</span>
-                                                    <span class="text-subtitle-2 font-weight-light blue--text text--darken-4 text-truncate pl-1">{{item.SIZE_TXT}}</span>
+                                            <v-row no-gutters>
+                                                    <span class="text-sm-body-2 font-weight-medium pl-2 text-truncate">{{item.CONTROL_NUM}}</span>
+                                                    <span class="text-subtitle-2 font-weight-light blue--text text--darken-4 text-truncate pr-2 ml-auto">{{item.SIZE_TXT}}</span>
                                             </v-row>
-                                            <v-card-actions class="pt-0 pb-1" style="min-height:140px;">
+                                            <v-card-actions class="pt-1 pb-1" style="min-height:140px;">
                                                 <v-img
                                                         :src="item.QS_IMG_URL"
-                                                        aspect-ratio="1.8"
+<%--                                                        aspect-ratio="1.8"--%>
                                                         style="border: 1px solid gray;"
-                                                        class="grey lighten-2 pa-1"
+                                                        class="pa-1"
+                                                        max-height="170"
                                                 >
                                                     <v-list-item class="grow d-flex pa-3 pt-0 pl-0 align-start" style="min-height: 125px;">
                                                         <v-card v-show="item.EQUIP_NM != null && item.EQUIP_NM != ''"
@@ -375,6 +381,9 @@
                     fnFetchPost('/popParamQueryGridSelect', parameter, function (data) {
                         app.items = data.data;
                         app.overlay = false;
+                        if(data.data.length > 0) {
+                            app.selectedItem = app.items[0];
+                        }
                     })
                     this.$refs.selPop.blur();
                 }
@@ -396,6 +405,9 @@
                 }
                 fnFetchPost('/popParamQueryGridSelect', parameter, function (data) {
                     app.items = data.data;
+                    if(data.data.length > 0) {
+                        app.selectedItem = app.items[0];
+                    }
                 })
 
                 parameter.queryId = 'common.selectCodeList'
