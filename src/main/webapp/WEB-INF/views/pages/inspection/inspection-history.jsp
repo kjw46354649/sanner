@@ -231,8 +231,8 @@
         let inspectionHistoryPostData01;
 
         let today = new Date();
-        $('#SEL_INSPECTION_ST_DT').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#SEL_INSPECTION_END_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#SEL_INSPECTION_ST_DT').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
+        $('#SEL_INSPECTION_END_DT').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
         $('#SEL_INSPECTION_ST_DT').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH, TODAY));
         $('#SEL_INSPECTION_END_DT').datepicker('setDate', 'today');
         $("#inspection_history_form").find("#SEL_INSPECTION_RETURN_TERM_1").trigger("click");

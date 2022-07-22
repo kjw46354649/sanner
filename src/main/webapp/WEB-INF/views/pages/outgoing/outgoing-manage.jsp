@@ -54,12 +54,12 @@
                         </span>
                         <div class="calendar_wrap">
                             <span class="calendar_span">
-                                <input class="datepicker-input" type="text" name="SEL_ST_DT" id="SEL_ST_DT" placeholder="" value="" title="시작날짜" readonly>
+                                <input type="text" name="SEL_ST_DT" id="SEL_ST_DT" placeholder="" value="" title="시작날짜" readonly>
 <%--                                <button type="button">달력선택</button>--%>
                             </span>
                             <span class="nbsp">~</span>
                             <span class="calendar_span">
-                                <input class="datepicker-input" type="text" name="SEL_END_DT" id="SEL_END_DT" placeholder="" value="" title="종료날짜" readonly>
+                                <input type="text" name="SEL_END_DT" id="SEL_END_DT" placeholder="" value="" title="종료날짜" readonly>
 <%--                                <button type="button">달력선택</button>--%>
                             </span>
                         </div>
@@ -688,6 +688,8 @@
 
         let outgoingManageGridId01 = $("#outgoing_manage_grid");
         let outgoingManageColModel01;
+        $('#SEL_ST_DT').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
+        $('#SEL_END_DT').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
 
         /**  리스트 그리드 선언 시작 **/
         $("#outgoing_manage_form").find("#queryId").val("inspection.selectOutgoingList");
@@ -1318,9 +1320,9 @@
             outgoingManageGridId01.pqGrid("refreshDataAndView");
         }
 
-        $(".datepicker-input").each(function () {
-            $(this).datepicker({dateFormat: 'yy/mm/dd'});
-        });
+        // $(".datepicker-input").each(function () {
+        //     $(this).datepicker({dateFormat: 'yy/mm/dd'});
+        // });
 
         $('#outgoing_manage_mini_pop_plus_btn').on('click', function () {
             outgoingManageMiniPopCalcQty("PLUS");

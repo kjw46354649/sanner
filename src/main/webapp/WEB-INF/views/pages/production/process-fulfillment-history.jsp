@@ -162,8 +162,8 @@
 <script>
     $(function () {
         'use strict';
-        $('#process_fulfillment_history_start_dt').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#process_fulfillment_history_end_dt').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#process_fulfillment_history_start_dt').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
+        $('#process_fulfillment_history_end_dt').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
         $('#process_fulfillment_history_start_dt').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH, TODAY.getDate() - 7));
         $('#process_fulfillment_history_end_dt').datepicker('setDate', 'today');
 

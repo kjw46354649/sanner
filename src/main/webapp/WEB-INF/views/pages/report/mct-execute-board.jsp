@@ -200,7 +200,7 @@
         'use strict';
         /* init */
         const $mctExecuteBoardDate = $('#mct_execute_board_date');
-        $mctExecuteBoardDate.datepicker({dateFormat: 'yy/mm/dd'});
+        $mctExecuteBoardDate.datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
         $mctExecuteBoardDate.datepicker('setDate', -1);
         let mctExecuteBoardDateYear = $('#mct_execute_board_date').datepicker('getDate').getFullYear();
 

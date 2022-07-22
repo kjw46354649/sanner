@@ -103,8 +103,8 @@
     $(function () {
         'use strict';
 
-        $("#outgoing_history_form").find('#SEL_OUTGOING_RETURN_ST_DT').datepicker({dateFormat: 'yy/mm/dd'});
-        $("#outgoing_history_form").find('#SEL_OUTGOING_RETURN_END_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $("#outgoing_history_form").find('#SEL_OUTGOING_RETURN_ST_DT').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
+        $("#outgoing_history_form").find('#SEL_OUTGOING_RETURN_END_DT').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
         $("#outgoing_history_form").find(".datepicker-input").each(function(){ $(this).datepicker();});
         $("#outgoing_history_form").find(".datepicker-input").each(function(){ $(this).datepicker('setDate', 'today');});
         $("#outgoing_history_form").find("#SEL_OUTGOING_RETURN_TERM_1").trigger("click");

@@ -486,8 +486,8 @@
 <script>
     $(function () {
         'use strict';
-        $('#CAM_WORK_HISTORY_START_DT').datepicker({dateFormat: 'yy/mm/dd'});
-        $('#CAM_WORK_HISTORY_END_DT').datepicker({dateFormat: 'yy/mm/dd'});
+        $('#CAM_WORK_HISTORY_START_DT').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
+        $('#CAM_WORK_HISTORY_END_DT').datepicker({dateFormat: 'yy/mm/dd', changeYear: true, changeMonth: true});
         $('#CAM_WORK_HISTORY_START_DT').datepicker('setDate', new Date(CURRENT_YEAR, CURRENT_MONTH, TODAY.getDate() - 6));
         $('#CAM_WORK_HISTORY_END_DT').datepicker('setDate', 'today');
 
