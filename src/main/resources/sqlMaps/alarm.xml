@@ -36,7 +36,7 @@
 
     <update id="updateHandleAlarm" parameterType="java.util.HashMap">
         UPDATE TBL_ALARM
-        SET ALARM_HANDLE_YN = 'Y'
+        SET ALARM_HANDLE_YN = 'Y', UPDATE_DT = NOW()
         WHERE EQUIP_SEQ = #{EQUIP_SEQ}
     </update>
 
@@ -112,20 +112,25 @@
                    ELSE FORMAT(ROUND((B.MCT_INSPECT_QTY + B.INSPECT_QTY)/(B.MCT_TOTAL_QTY + B.TOTAL_QTY)*100, 1),1)
                END AS DEFECT_RATE
         FROM (
-                 SELECT Y.YYYYMM,
+                 SELECT P.YYYYMM,
                         IFNULL(X.MCT_INSPECT_CNT,0) AS MCT_INSPECT_CNT, IFNULL(X.MCT_INSPECT_QTY,0) AS MCT_INSPECT_QTY, IFNULL(Y.MCT_TOTAL_QTY,0) AS MCT_TOTAL_QTY,
                         IFNULL(Z.INSPECT_CNT,0) AS INSPECT_CNT, IFNULL(Z.INSPECT_QTY,0) AS INSPECT_QTY, IFNULL(A.TOTAL_QTY,0) AS TOTAL_QTY
                  FROM (
-                          SELECT DATE_FORMAT(N.WORK_FINISH_DT, '%Y%m') AS YYYYMM,
-                                 SUM(SF_GET_CONTROL_PART_QTY(N.CONTROL_SEQ, N.CONTROL_DETAIL_SEQ)) AS MCT_TOTAL_QTY
-                          FROM TBL_MCT_WORK N
-                                   INNER JOIN TBL_CONTROL_PART M ON N.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
-                          WHERE 1 = 1
-                            AND N.DEL_YN = 'N'
-                            AND DATE_FORMAT(N.WORK_FINISH_DT, '%Y%m') IN (DATE_FORMAT(NOW(), '%Y%m'), DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y%m'))
-                            AND M.WORK_FACTORY = (SELECT REF_CD FROM TBL_CODE WHERE HIGH_CD = 1108 AND CODE_CD = #{ARM_CD})
-                          GROUP BY YYYYMM
-                      ) Y
+                      SELECT DATE_FORMAT(NOW(), '%Y%m') AS YYYYMM
+                      UNION ALL
+                      SELECT DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y%m') AS YYYYMM
+                 ) P
+                          LEFT OUTER JOIN (
+                      SELECT DATE_FORMAT(N.WORK_FINISH_DT, '%Y%m') AS YYYYMM,
+                             SUM(SF_GET_CONTROL_PART_QTY(N.CONTROL_SEQ, N.CONTROL_DETAIL_SEQ)) AS MCT_TOTAL_QTY
+                      FROM TBL_MCT_WORK N
+                               INNER JOIN TBL_CONTROL_PART M ON N.CONTROL_DETAIL_SEQ = M.CONTROL_DETAIL_SEQ
+                      WHERE 1 = 1
+                        AND N.DEL_YN = 'N'
+                        AND DATE_FORMAT(N.WORK_FINISH_DT, '%Y%m') IN (DATE_FORMAT(NOW(), '%Y%m'), DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y%m'))
+                        AND M.WORK_FACTORY = (SELECT REF_CD FROM TBL_CODE WHERE HIGH_CD = 1108 AND CODE_CD = #{ARM_CD})
+                      GROUP BY YYYYMM
+                 ) Y ON Y.YYYYMM = P.YYYYMM
                           LEFT OUTER JOIN (
                      SELECT DATE_FORMAT(N.INSERT_DT, '%Y%m') AS YYYYMM, COUNT(N.MCT_INSPECT_SEQ) AS MCT_INSPECT_CNT, SUM(N.ERROR_QTY) AS MCT_INSPECT_QTY
                      FROM TBL_MCT_WORK_INSPECT N
@@ -136,7 +141,7 @@
                        AND DATE_FORMAT(N.INSERT_DT, '%Y%m') IN (DATE_FORMAT(NOW(), '%Y%m'), DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y%m'))
                        AND P.WORK_FACTORY = (SELECT REF_CD FROM TBL_CODE WHERE HIGH_CD = 1108 AND CODE_CD = #{ARM_CD})
                      GROUP BY YYYYMM
-                 ) X ON X.YYYYMM = Y.YYYYMM
+                 ) X ON X.YYYYMM = P.YYYYMM
                           LEFT OUTER JOIN (
                      SELECT DATE_FORMAT(N.INSERT_DT, '%Y%m') AS YYYYMM,  COUNT(N.INSPECT_SEQ) AS INSPECT_CNT, SUM(N.ERROR_QTY) AS INSPECT_QTY
                      FROM TBL_INSPECT N
@@ -146,7 +151,7 @@
                        AND DATE_FORMAT(N.INSERT_DT, '%Y%m') IN (DATE_FORMAT(NOW(), '%Y%m'), DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y%m'))
                        AND M.WORK_FACTORY = (SELECT REF_CD FROM TBL_CODE WHERE HIGH_CD = 1108 AND CODE_CD = #{ARM_CD})
                      GROUP BY YYYYMM
-                 ) Z ON Z.YYYYMM = Y.YYYYMM
+                 ) Z ON Z.YYYYMM = P.YYYYMM
                           LEFT OUTER JOIN (
                      SELECT DATE_FORMAT(N.INSERT_DT, '%Y%m') AS YYYYMM, SUM(SF_GET_CONTROL_PART_QTY(N.CONTROL_SEQ, N.CONTROL_DETAIL_SEQ)) AS TOTAL_QTY
                      FROM TBL_INSPECT N
@@ -155,7 +160,7 @@
                        AND DATE_FORMAT(N.INSERT_DT, '%Y%m') IN (DATE_FORMAT(NOW(), '%Y%m'), DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y%m'))
                        AND M.WORK_FACTORY = (SELECT REF_CD FROM TBL_CODE WHERE HIGH_CD = 1108 AND CODE_CD = #{ARM_CD})
                      GROUP BY YYYYMM
-                 ) A ON A.YYYYMM = Y.YYYYMM
+                 ) A ON A.YYYYMM = P.YYYYMM
              ) B
         ORDER BY YYYYMM DESC
     </select>
