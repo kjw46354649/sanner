@@ -182,7 +182,7 @@
                             </v-row>
                         </v-col>
                     </v-row>
-                    <v-item-group>
+                    <v-item-group style="min-height:1075px;">
                         <v-row class="align-center mb-5">
                             <template v-for="(item, index) in items">
                                 <v-col
